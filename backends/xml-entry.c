@@ -21,6 +21,7 @@
 #include <gconf/gconf-internals.h>
 #include <stdlib.h>
 #include <gnome-xml/entities.h>
+#include <gnome-xml/xmlmemory.h>
 
 static void
 entry_sync_if_needed(Entry* e, GConfValue* val);
@@ -328,7 +329,7 @@ entry_fill_from_node(Entry* e)
           g_free(why_bad);
         }
           
-      free(tmp);
+      xmlFree(tmp);
     }
       
   tmp = my_xmlGetProp(e->node, "mtime");
@@ -336,7 +337,7 @@ entry_fill_from_node(Entry* e)
   if (tmp != NULL)
     {
       e->mod_time = gconf_string_to_gulong(tmp);
-      free(tmp);
+      xmlFree(tmp);
     }
   else
     e->mod_time = 0;
@@ -346,7 +347,7 @@ entry_fill_from_node(Entry* e)
   if (tmp != NULL)
     {
       e->mod_user = g_strdup(tmp);
-      free(tmp);
+      xmlFree(tmp);
     }
   else
     e->mod_user = NULL;
@@ -540,7 +541,7 @@ node_set_value(xmlNodePtr node, GConfValue* value)
         
         child = xmlNewChild(node, NULL, "stringvalue",
                             encoded);
-        free(encoded);
+        xmlFree(encoded);
       }
       break;      
     case GCONF_VALUE_SCHEMA:
@@ -617,7 +618,7 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
               strcmp(locale, this_locale) == 0)
             {
               found = iter;
-              free(this_locale);
+              xmlFree(this_locale);
               break;
             }
           else if (this_locale == NULL &&
@@ -627,7 +628,7 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
               break;
             }
           else if (this_locale != NULL)
-            free(this_locale);
+            xmlFree(this_locale);
         }
       iter = iter->next;
     }
@@ -686,14 +687,14 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
   if (sd_str)
     {
       gconf_schema_set_short_desc(sc, sd_str);
-      free(sd_str);
+      xmlFree(sd_str);
     }
 
   if (locale_str)
     {
       gconf_log(GCL_DEBUG, "found locale `%s'", locale_str);
       gconf_schema_set_locale(sc, locale_str);
-      free(locale_str);
+      xmlFree(locale_str);
     }
   else
     {
@@ -767,7 +768,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
       if (ld_str)
         {
           gconf_schema_set_long_desc(sc, ld_str);
-          free(ld_str);
+          xmlFree(ld_str);
         }
     }
 }
@@ -802,35 +803,35 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
   if (owner_str)
     {
       gconf_schema_set_owner(sc, owner_str);
-      free(owner_str);
+      xmlFree(owner_str);
     }
   if (stype_str)
     {
       GConfValueType stype;
       stype = gconf_value_type_from_string(stype_str);
       gconf_schema_set_type(sc, stype);
-      free(stype_str);
+      xmlFree(stype_str);
     }
   if (list_type_str)
     {
       GConfValueType type;
       type = gconf_value_type_from_string(list_type_str);
       gconf_schema_set_list_type(sc, type);
-      free(list_type_str);
+      xmlFree(list_type_str);
     }
   if (car_type_str)
     {
       GConfValueType type;
       type = gconf_value_type_from_string(car_type_str);
       gconf_schema_set_car_type(sc, type);
-      free(car_type_str);
+      xmlFree(car_type_str);
     }
   if (cdr_type_str)
     {
       GConfValueType type;
       type = gconf_value_type_from_string(cdr_type_str);
       gconf_schema_set_cdr_type(sc, type);
-      free(cdr_type_str);
+      xmlFree(cdr_type_str);
     }
 
   if (locales != NULL)
@@ -867,7 +868,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
                       ++i;
                     }
 
-                  free(locale_name);
+                  xmlFree(locale_name);
                   
                   /* Quit as soon as we have the best possible locale */
                   if (localized_nodes[0] != NULL)
@@ -941,7 +942,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
       
   type = gconf_value_type_from_string(type_str);
 
-  free(type_str);
+  xmlFree(type_str);
   
   switch (type)
     {
@@ -969,7 +970,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
             
         value = gconf_value_new_from_string(type, value_str, err);
 
-        free(value_str);
+        xmlFree(value_str);
 
         g_return_val_if_fail( (value != NULL) ||
                               (err == NULL) ||
@@ -1003,7 +1004,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
                        difference */
                     gconf_value_set_string(v, s ? s : "");
                     if (s)
-                      free(s);
+                      xmlFree(s);
                         
                     return v;
                   }
@@ -1035,7 +1036,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
           if (s != NULL)
             {
               list_type = gconf_value_type_from_string(s);
-              free(s);
+              xmlFree(s);
             }
         }
 
@@ -1271,7 +1272,7 @@ my_xmlGetProp(xmlNodePtr node,
 
   if (prop && *prop == '\0')
     {
-      free(prop);
+      xmlFree(prop);
       return NULL;
     }
   else
