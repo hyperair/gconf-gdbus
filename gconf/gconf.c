@@ -68,46 +68,69 @@ typedef struct _GConfPrivate GConfPrivate;
 struct _GConfPrivate {
   GSList* sources;
 
-  /* FIXME FIXME change this to be an array; we'll use client-specific 
-     connection numbers to return to library users, so if gconfd dies
-     we can transparently re-register all our listener functions.
-  */
-
-  GHashTable* connections;
 };
-
-static GConfPrivate* global_gconf = NULL;
 
 typedef struct _GConfCnxn GConfCnxn;
 
 struct _GConfCnxn {
-  CORBA_long cnxn; /* id returned from server */
+  guint client_id;
+  CORBA_unsigned_long server_id; /* id returned from server */
+  GConf* conf;     /* conf we're associated with */
   GConfNotifyFunc func;
   gpointer user_data;
 };
 
-static GConfCnxn* g_conf_cnxn_new(GConfNotifyFunc func, gpointer user_data);
+static GConfCnxn* g_conf_cnxn_new(GConf* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data);
 static void       g_conf_cnxn_destroy(GConfCnxn* cnxn);
-static void       g_conf_cnxn_notify(GConfCnxn* cnxn, GConf* conf, const gchar* key, GConfValue* value);
+static void       g_conf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfValue* value);
 
 static ConfigServer g_conf_get_config_server(void);
 static ConfigListener g_conf_get_config_listener(void);
 static CORBA_ORB g_conf_get_orb(void);
+
+
+/* We'll use client-specific connection numbers to return to library
+   users, so if gconfd dies we can transparently re-register all our
+   listener functions.  */
+
+typedef struct _CnxnTable CnxnTable;
+
+struct _CnxnTable {
+  /* Hash from server-returned connection ID to GConfCnxn */
+  GHashTable* server_ids;
+  /* Hash from our connection ID to GConfCnxn */
+  GHashTable* client_ids;
+};
+
+static CnxnTable* ctable = NULL;
+
+static CnxnTable* ctable_new(void);
+static void       ctable_insert(CnxnTable* ct, GConfCnxn* cnxn);
+static void       ctable_remove(CnxnTable* ct, GConfCnxn* cnxn);
+static void       ctable_remove_by_client_id(CnxnTable* ct, guint client_id);
+static GConfCnxn* ctable_lookup_by_client_id(CnxnTable* ct, guint client_id);
+static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id);
+
+
 /*
  *  Public Interface
  */
 
-GConf*
-g_conf_global_conf    (void)
+GConf*       
+g_conf_new            (void)
 {
-  if (global_gconf == NULL)
-    {
-      global_gconf = g_new0(GConfPrivate, 1);
+  GConfPrivate* priv;
 
-      global_gconf->connections = g_hash_table_new(g_int_hash, g_int_equal);
-    }
-  
-  return (GConf*)global_gconf;
+  priv = g_new0(GConfPrivate, 1);
+
+  return (GConf*) priv;
+}
+
+void         
+g_conf_destroy        (GConf* conf)
+{
+  /* FIXME remove all connections associated with this GConf */
+
 }
 
 guint
@@ -121,6 +144,7 @@ g_conf_notify_add(GConf* conf,
   ConfigListener cl;
   gulong id;
   CORBA_Environment ev;
+  GConfCnxn* cnxn;
 
   cs = g_conf_get_config_server();
 
@@ -149,18 +173,47 @@ g_conf_notify_add(GConf* conf,
       return 0;
     }
 
-  g_hash_table_insert(priv->connections, &id,
-                      g_conf_cnxn_new(func, user_data));
+  cnxn = g_conf_cnxn_new(conf, id, func, user_data);
+
+  ctable_insert(ctable, cnxn);
+
+  printf("Received ID %u from server, and mapped to client ID %u\n",
+         (guint)id, cnxn->client_id);
   
-  return id;
+  return cnxn->client_id;
 }
 
 void         
 g_conf_notify_remove(GConf* conf,
-                     guint cnxn)
+                     guint client_id)
 {
+  GConfCnxn* gcnxn;
+  CORBA_Environment ev;
+
+  CORBA_exception_init(&ev);
+
+  gcnxn = ctable_lookup_by_client_id(ctable, client_id);
+
+  g_return_if_fail(gcnxn != NULL);
+
+  ConfigServer_remove_listener(g_conf_get_config_server(), 
+                               gcnxn->server_id,
+                               &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure removing listener from the config server: %s",
+                CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+    }
   
 
+  /* We want to do this even if the CORBA fails, so if we restart gconfd and 
+     reinstall listeners we don't reinstall this one. */
+  ctable_remove(ctable, gcnxn);
+
+  g_conf_cnxn_destroy(gcnxn);
 }
 
 GConfValue*  
@@ -173,8 +226,26 @@ g_conf_lookup(GConf* conf, const gchar* key)
 void
 g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 {
-  
+  ConfigValue* cv;
+  CORBA_Environment ev;
 
+  cv = corba_value_from_g_conf_value(value);
+
+  CORBA_exception_init(&ev);
+
+  ConfigServer_set(g_conf_get_config_server(), 
+                   key, cv,
+                   &ev);
+
+  CORBA_free(cv);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure sending value to config server: %s",
+                CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+    }
 }
 
 /*
@@ -182,14 +253,20 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
  */
 
 static GConfCnxn* 
-g_conf_cnxn_new(GConfNotifyFunc func, gpointer user_data)
+g_conf_cnxn_new(GConf* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data)
 {
   GConfCnxn* cnxn;
+  static guint next_id = 1;
   
   cnxn = g_new0(GConfCnxn, 1);
 
+  cnxn->conf = conf;
+  cnxn->server_id = server_id;
+  cnxn->client_id = next_id;
   cnxn->func = func;
   cnxn->user_data = user_data;
+
+  ++next_id;
 
   return cnxn;
 }
@@ -201,10 +278,10 @@ g_conf_cnxn_destroy(GConfCnxn* cnxn)
 }
 
 static void       
-g_conf_cnxn_notify(GConfCnxn* cnxn, GConf* conf, 
+g_conf_cnxn_notify(GConfCnxn* cnxn,
                    const gchar* key, GConfValue* value)
 {
-  (*cnxn->func)(conf, key, value, cnxn->user_data);
+  (*cnxn->func)(cnxn->conf, cnxn->client_id, key, value, cnxn->user_data);
 }
 
 /*
@@ -303,7 +380,7 @@ g_conf_get_config_server(void)
             struct timeval tv;
             
             tv.tv_sec = 0;
-            tv.tv_usec = 5000;
+            tv.tv_usec = 10000;
             
             select(0, NULL, NULL, NULL, &tv);
           }
@@ -325,9 +402,9 @@ ConfigListener listener = CORBA_OBJECT_NIL;
 
 static void 
 notify(PortableServer_Servant servant, 
-       CORBA_long cnxn,
+       CORBA_unsigned_long cnxn,
        const CORBA_char* key, 
-       const CORBA_any* value,
+       const ConfigValue* value,
        CORBA_Environment *ev);
 
 PortableServer_ServantBase__epv base_epv = {
@@ -342,19 +419,83 @@ POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 
 static void 
 notify(PortableServer_Servant servant, 
-       CORBA_long cnxn,
+       CORBA_unsigned_long server_id,
        const CORBA_char* key, 
-       const CORBA_any* value,
+       const ConfigValue* value,
        CORBA_Environment *ev)
 {
+  GConfCnxn* cnxn;
+  GConfValue* gvalue;
+
+  cnxn = ctable_lookup_by_server_id(ctable, server_id);
   
-  
+  if (cnxn == NULL)
+    {
+      g_warning("Client received notify for unknown connection ID %u", (guint)server_id);
+      return;
+    }
+
+  gvalue = g_conf_value_from_corba_value(value);
+
+  g_conf_cnxn_notify(cnxn, key, gvalue);
+
+  g_conf_value_destroy(gvalue);
 }
 
 /* Broken as hell, need an init function, bleh */
 static ConfigListener 
 g_conf_get_config_listener(void)
 {
+  return listener;
+}
+
+/* Broken, we should have an init function, and let the user pass this
+   in anyway because they might already have the ORB from Gnome, plus
+   this function will retry forever, etc., anyway, it's hosed.  */
+static CORBA_ORB orb = CORBA_OBJECT_NIL;
+
+static CORBA_ORB 
+g_conf_get_orb(void)
+{
+  return orb;
+}
+
+static gboolean have_initted = FALSE;
+
+gboolean     
+g_conf_init           (void)
+{
+  if (have_initted)
+    {
+      g_warning("Attempt to init GConf a second time");
+      return FALSE;
+    }
+
+  if (orb == CORBA_OBJECT_NIL)
+    {
+      CORBA_Environment ev;
+      gchar* fake_argv[] = { "gconf", NULL };
+      int fake_argc = 1;
+
+      CORBA_exception_init(&ev);
+      
+      orb = CORBA_ORB_init(&fake_argc, fake_argv, "orbit-local-orb", &ev);
+
+      if (ev._major != CORBA_NO_EXCEPTION)
+        {
+          g_warning("Failed to init orb: %s",
+                    CORBA_exception_id(&ev));
+        }
+
+      if (orb == CORBA_OBJECT_NIL)
+        {
+          g_warning("Failed to get orb");
+          return FALSE;
+        }
+          
+      CORBA_exception_free(&ev);
+    }
+
   if (listener == CORBA_OBJECT_NIL)
     {
       CORBA_Environment ev;
@@ -375,42 +516,81 @@ g_conf_get_config_listener(void)
       if (listener == CORBA_OBJECT_NIL) 
         {
           g_warning("Didn't get listener object ref");
-          return CORBA_OBJECT_NIL;
+          return FALSE;
         }
     }
 
-  return listener;
+  ctable = ctable_new();
+
+  return TRUE;
 }
 
-/* Broken, we should have an init function, and let the user pass this
-   in anyway because they might already have the ORB from Gnome, plus
-   this function will retry forever, etc., anyway, it's hosed.  */
-static CORBA_ORB orb = CORBA_OBJECT_NIL;
+/*
+ * Table of connections 
+ */ 
 
-static CORBA_ORB 
-g_conf_get_orb(void)
+static gint
+corba_unsigned_long_equal (gconstpointer v1,
+                  gconstpointer v2)
 {
-  if (orb == CORBA_OBJECT_NIL)
-    {
-      CORBA_Environment ev;
-      gchar* fake_argv[] = { "gconf", NULL };
-      int fake_argc = 1;
-
-      CORBA_exception_init(&ev);
-      
-      orb = CORBA_ORB_init(&fake_argc, fake_argv, "orbit-local-orb", &ev);
-
-      if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          g_warning("Failed to init orb: %s",
-                    CORBA_exception_id(&ev));
-        }
-
-      if (orb == CORBA_OBJECT_NIL)
-        g_warning("Failed to get orb");
-
-      CORBA_exception_free(&ev);
-    }
-
-  return orb;
+  return *((const CORBA_unsigned_long*) v1) == *((const CORBA_unsigned_long*) v2);
 }
+
+static guint
+corba_unsigned_long_hash (gconstpointer v)
+{
+  /* for our purposes we can just assume 32 bits are significant */
+  return (guint)(*(const CORBA_unsigned_long*) v);
+}
+
+static CnxnTable* 
+ctable_new(void)
+{
+  CnxnTable* ct;
+
+  ct = g_new(CnxnTable, 1);
+
+  ct->server_ids = g_hash_table_new(corba_unsigned_long_hash, corba_unsigned_long_equal);  
+  ct->client_ids = g_hash_table_new(g_int_hash, g_int_equal);
+
+  return ct;
+}
+
+static void       
+ctable_insert(CnxnTable* ct, GConfCnxn* cnxn)
+{
+  g_hash_table_insert(ct->server_ids, &cnxn->server_id, cnxn);
+  g_hash_table_insert(ct->client_ids, &cnxn->client_id, cnxn);
+}
+
+static void       
+ctable_remove(CnxnTable* ct, GConfCnxn* cnxn)
+{
+  g_hash_table_remove(ct->server_ids, &cnxn->server_id);
+  g_hash_table_remove(ct->client_ids, &cnxn->client_id);
+}
+
+static void       
+ctable_remove_by_client_id(CnxnTable* ct, guint client_id)
+{
+  GConfCnxn* cnxn;
+
+  cnxn = ctable_lookup_by_client_id(ct, client_id);
+
+  g_return_if_fail(cnxn != NULL);
+
+  ctable_remove(ctable, cnxn);
+}
+
+static GConfCnxn* 
+ctable_lookup_by_client_id(CnxnTable* ct, guint client_id)
+{
+  return g_hash_table_lookup(ctable->client_ids, &client_id);
+}
+
+static GConfCnxn* 
+ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id)
+{
+  return g_hash_table_lookup(ctable->server_ids, &server_id);
+}
+

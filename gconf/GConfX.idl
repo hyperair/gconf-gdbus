@@ -1,19 +1,31 @@
 
+enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal };
+
+union ConfigValue switch (ConfigValueType) {
+ case InvalidVal:
+   long dummy;
+ case IntVal: 
+   long int_value;
+ case StringVal:
+   string string_value;
+ case FloatVal:
+   float float_value;
+};
 
 interface ConfigListener {
-  oneway void notify (in long cnxn, in string key, in any value);
+  oneway void notify (in unsigned long cnxn, in string key, in ConfigValue value);
 };
 
 interface ConfigServer {
   // "where" is the portion of the namespace to listen to
   // Returns a connection ID for removal
-  long add_listener(in string where, in ConfigListener who);  
+  unsigned long add_listener(in string where, in ConfigListener who);  
 
-  void remove_listener(in long cnxn);
+  void remove_listener(in unsigned long cnxn);
   
-  any lookup(in string key);
+  ConfigValue lookup(in string key);
 
-  void set(in string key, in any value);
+  void set(in string key, in ConfigValue value);
 
   void sync();
 

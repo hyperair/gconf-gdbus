@@ -23,6 +23,7 @@
 
 #include <glib.h>
 #include "gconf.h"
+#include "GConf.h"
 
 /* Sources are not interchangeable; different backend engines will return 
  * GConfSource with different private elements.
@@ -64,6 +65,9 @@ gboolean g_conf_file_exists (const gchar* filename);
 gchar*   g_conf_server_info_file(void);
 gchar*   g_conf_server_info_dir(void);
 gchar*   g_conf_read_server_ior(void);
+
+GConfValue* g_conf_value_from_corba_value(const ConfigValue* value);
+ConfigValue*  corba_value_from_g_conf_value(GConfValue* value);
 
 #endif
 

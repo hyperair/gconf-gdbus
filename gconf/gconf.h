@@ -75,9 +75,12 @@ struct _GConf {
   gpointer dummy;
 };
 
-typedef void (*GConfNotifyFunc)(GConf* conf, const gchar* key, GConfValue* value, gpointer user_data);
+typedef void (*GConfNotifyFunc)(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
-GConf*       g_conf_global_conf    (void);
+gboolean     g_conf_init           (void);
+
+GConf*       g_conf_new            (void);
+void         g_conf_destroy        (GConf* conf);
 
 const gchar* g_conf_error          (void);
 gboolean     g_conf_error_pending  (void);
@@ -99,6 +102,7 @@ GConfValue*  g_conf_lookup(GConf* conf, const gchar* key);
 
 /* ditto, higher-level version planned. */
 void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
+
 
 
 #endif

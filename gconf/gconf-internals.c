@@ -402,10 +402,12 @@ g_conf_server_info_file(void)
   gchar* info_dir;
   gchar* entire_file;
   gchar buf[256];
-  gchar* host_name;
+  gchar* host_name = NULL;
 
   info_dir = g_conf_server_info_dir();
 
+  /* Decided different machines should share the same gconfd. */
+#if 0
   if (gethostname(buf, 256) < 0)
     {
       g_warning("GConf failed to get host name; may cause trouble if you're using the same home dir on > 1 machines");
@@ -415,7 +417,8 @@ g_conf_server_info_file(void)
     {
       host_name = buf;
     }
-  
+#endif  
+
   entire_file = g_strconcat(info_dir, "/.gconfd.info", host_name ? "." : NULL, host_name, NULL);
 
   g_free(info_dir);
@@ -483,4 +486,76 @@ g_conf_read_server_ior(void)
     }
 }
 
+GConfValue* 
+g_conf_value_from_corba_value(const ConfigValue* value)
+{
+  GConfValue* gval;
+  GConfValueType type = G_CONF_VALUE_INVALID;
+  
+  switch (value->_d)
+    {
+    case IntVal:
+      type = G_CONF_VALUE_INT;
+      break;
+    case StringVal:
+      type = G_CONF_VALUE_STRING;
+      break;
+    case FloatVal:
+      type = G_CONF_VALUE_FLOAT;
+      break;
+    default:
+      g_warning("Invalid type in %s", __FUNCTION__);
+      return NULL;
+    }
+
+  gval = g_conf_value_new(type);
+
+  switch (gval->type)
+    {
+    case G_CONF_VALUE_INT:
+      g_conf_value_set_int(gval, value->_u.int_value);
+      break;
+    case G_CONF_VALUE_STRING:
+      g_conf_value_set_string(gval, value->_u.string_value);
+      break;
+    case G_CONF_VALUE_FLOAT:
+      g_conf_value_set_float(gval, value->_u.float_value);
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+  
+  return gval;
+}
+
+ConfigValue*  
+corba_value_from_g_conf_value(GConfValue* value)
+{
+  ConfigValue* cv;
+
+  cv = ConfigValue__alloc();
+
+  switch (value->type)
+    {
+    case G_CONF_VALUE_INT:
+      cv->_d = IntVal;
+      cv->_u.int_value = g_conf_value_int(value);
+      break;
+    case G_CONF_VALUE_STRING:
+      cv->_d = StringVal;
+      cv->_u.string_value = CORBA_string_dup(g_conf_value_string(value));
+      break;
+    case G_CONF_VALUE_FLOAT:
+      cv->_d = FloatVal;
+      cv->_u.float_value = g_conf_value_float(value);
+      break;
+    default:
+      g_warning("Unknown type in %s", __FUNCTION__);
+      return NULL;
+      break;
+    }
+
+  return cv;
+}
 

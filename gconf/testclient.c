@@ -24,7 +24,7 @@
 
 
 static void testclient_main(void);
-static void notify_func(GConf* conf, const gchar* key, GConfValue* value, gpointer user_data);
+static void notify_func(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
 
 int 
@@ -32,8 +32,15 @@ main (int argc, char** argv)
 {
   GConf* conf;
   guint cnxn;
+  GConfValue* val;
 
-  conf = g_conf_global_conf();
+  if (!g_conf_init())
+    {
+      g_warning("Failed to init GConf");
+      return 1;
+    }
+
+  conf = g_conf_new();
 
   cnxn = g_conf_notify_add(conf, "/hello/world", notify_func, NULL);
 
@@ -44,17 +51,25 @@ main (int argc, char** argv)
       fprintf(stderr, "Failed to add listener\n");
       return 1;
     }
-  
+
+  val = g_conf_value_new(G_CONF_VALUE_INT);
+
+  g_conf_value_set_int(val, 100);
+ 
+  g_conf_set(conf, "/hello/world/whoo", val);
+ 
   testclient_main();
+
+  g_conf_destroy(conf);
 
   return 0;
 }
 
 static void 
-notify_func(GConf* conf, const gchar* key, GConfValue* value, gpointer user_data)
+notify_func(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data)
 {
   int pid = getpid();
-  printf("PID %d received notify on key `%s'\n", pid, key);
+  printf("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
 }
 
 /*

@@ -102,7 +102,8 @@ static LTable* ltable_new(void);
 static void    ltable_insert(LTable* ltable, const gchar* where, Listener* listener);
 static void    ltable_remove(LTable* ltable, guint cnxn);
 static void    ltable_destroy(LTable* ltable);
-static void    ltable_notify_listeners(LTable* ltable, const gchar* key, const CORBA_any* value);
+static void    ltable_notify_listeners(LTable* ltable, const gchar* key, const ConfigValue* value);
+static void    ltable_spew(LTable* ltable);
 
 static LTableEntry* ltable_entry_new(const gchar* name);
 static void         ltable_entry_destroy(LTableEntry* entry);
@@ -158,19 +159,19 @@ orb_remove_connection(GIOPConnection *cnx)
 
 ConfigServer server = CORBA_OBJECT_NIL;
 
-CORBA_long 
+CORBA_unsigned_long 
 gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where, 
-                        const ConfigListener who, CORBA_Environment *ev);
+                    const ConfigListener who, CORBA_Environment *ev);
 void 
 gconfd_remove_listener(PortableServer_Servant servant,
-                     const CORBA_long cnxn,
-                     CORBA_Environment *ev);
-CORBA_any* 
+                       const CORBA_unsigned_long cnxn,
+                       CORBA_Environment *ev);
+ConfigValue* 
 gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key, 
-                  CORBA_Environment *ev);
+              CORBA_Environment *ev);
 void
 gconfd_set(PortableServer_Servant servant, const CORBA_char * key, 
-           const CORBA_any* value, CORBA_Environment *ev);
+           const ConfigValue* value, CORBA_Environment *ev);
 void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 
@@ -196,7 +197,7 @@ POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
 POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
 
-CORBA_long
+CORBA_unsigned_long
 gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where, 
                     const ConfigListener who, CORBA_Environment *ev)
 {
@@ -206,16 +207,19 @@ gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where,
 
   ltable_insert(ltable, where, l);
 
+  syslog(LOG_DEBUG, "Added listener %u", (guint)l->cnxn);
+
   return l->cnxn;
 }
 
 void 
-gconfd_remove_listener(PortableServer_Servant servant, const CORBA_long cnxn, CORBA_Environment *ev)
+gconfd_remove_listener(PortableServer_Servant servant, const CORBA_unsigned_long cnxn, CORBA_Environment *ev)
 {
+  syslog(LOG_DEBUG, "Removing listener %u", (guint)cnxn);
   ltable_remove(ltable, cnxn);
 }
 
-CORBA_any* 
+ConfigValue*
 gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key, 
               CORBA_Environment *ev)
 {
@@ -225,9 +229,19 @@ gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key,
 
 void
 gconfd_set(PortableServer_Servant servant, const CORBA_char * key, 
-           const CORBA_any* value, CORBA_Environment *ev)
+           const ConfigValue* value, CORBA_Environment *ev)
 {
   /* FIXME actually set. :-) */
+  gchar* str;
+  GConfValue* val;
+
+  val = g_conf_value_from_corba_value(value);
+
+  str = g_conf_value_to_string(val);
+
+  syslog(LOG_DEBUG, "Received request to set key `%s' to `%s'", key, str);
+
+  g_free(str);
 
   ltable_notify_listeners(ltable, key, value);
 }
@@ -471,7 +485,8 @@ main(int argc, char** argv)
   
   /* Logs */
   openlog ("gconfd", LOG_NDELAY, LOG_USER);
-  syslog (LOG_INFO, "starting");
+  syslog (LOG_INFO, "starting, pid %u user `%s'", 
+          (guint)getpid(), g_get_user_name());
   
   /* Session setup */
   sigemptyset (&empty_mask);
@@ -735,6 +750,8 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   /* Add tree node to the flat table */
   g_ptr_array_set_size(lt->listeners, next_cnxn);
   g_ptr_array_index(lt->listeners, l->cnxn) = found;
+
+  ltable_spew(lt);
 }
 
 static void    
@@ -812,12 +829,14 @@ ltable_destroy(LTable* ltable)
 }
 
 static void
-notify_listener_list(GList* list, const gchar* key, const CORBA_any* value)
+notify_listener_list(GList* list, const gchar* key, const ConfigValue* value)
 {
   CORBA_Environment ev;
   GList* tmp;
 
   CORBA_exception_init(&ev);
+
+  syslog(LOG_DEBUG, "%u listeners to notify", g_list_length(list));
 
   tmp = list;
   while (tmp != NULL)
@@ -828,13 +847,19 @@ notify_listener_list(GList* list, const gchar* key, const CORBA_any* value)
       
       if(ev._major != CORBA_NO_EXCEPTION) 
         {
-          g_warning("Failed to notify listener %u", l->cnxn);
+          syslog(LOG_WARNING, "Failed to notify listener %u: %s", 
+                 (guint)l->cnxn, CORBA_exception_id(&ev));
           /* FIXME FIXME remove these dead listeners */
           /* FIXME Actually I think we won't get an error from oneway,
              so we need to periodically ping all the listeners or something.
           */
 
           CORBA_exception_free(&ev);
+        }
+      else
+        {
+          syslog(LOG_DEBUG, "Notified listener %u of change to key `%s'",
+                 (guint)l->cnxn, key);
         }
 
 
@@ -843,7 +868,7 @@ notify_listener_list(GList* list, const gchar* key, const CORBA_any* value)
 }
 
 static void    
-ltable_notify_listeners(LTable* lt, const gchar* key, const CORBA_any* value)
+ltable_notify_listeners(LTable* lt, const gchar* key, const ConfigValue* value)
 {
   gchar** dirs;
   guint i;
@@ -861,12 +886,18 @@ ltable_notify_listeners(LTable* lt, const gchar* key, const CORBA_any* value)
     {
       GNode* child = cur->children;
 
+      syslog(LOG_DEBUG, "scanning for %s", dirs[i]);
+
       while (child != NULL)
         {
           LTableEntry* lte = child->data;
 
+          syslog(LOG_DEBUG, "Looking at %s", lte->name);
+
           if (strcmp(lte->name, dirs[i]) == 0)
             {
+              syslog(LOG_DEBUG, "Notifying listeners attached to `%s'",
+                     lte->name);
               notify_listener_list(lte->listeners, key, value);
               break;
             }
@@ -874,18 +905,11 @@ ltable_notify_listeners(LTable* lt, const gchar* key, const CORBA_any* value)
           child = g_node_next_sibling(child);
         }
 
+      if (child != NULL) /* we found a child, scan below it */
+        cur = child;
+      else               /* end of the line */
+        cur = NULL;
 
-      if (child != NULL)
-        {
-          /* We found and notified a dir */
-          cur = child->children;
-        }
-      else
-        {
-          /* End of the line, no more listeners along this path */
-          cur = NULL;
-        }
-        
       ++i;
     }
   
@@ -910,4 +934,32 @@ ltable_entry_destroy(LTableEntry* lte)
   g_return_if_fail(lte->listeners == NULL); /* should destroy all listeners first. */
   g_free(lte->name);
   g_free(lte);
+}
+
+/* Debug */
+gboolean
+spew_func(GNode* node, gpointer data)
+{
+  LTableEntry* lte = node->data;  
+  GList* tmp;
+
+  syslog(LOG_DEBUG, " Spewing node `%s'", lte->name);
+
+  tmp = lte->listeners;
+  while (tmp != NULL)
+    {
+      Listener* l = tmp->data;
+
+      syslog(LOG_DEBUG, "   listener %u is here", (guint)l->cnxn);
+
+      tmp = g_list_next(tmp);
+    }
+
+  return FALSE;
+}
+
+static void    
+ltable_spew(LTable* lt)
+{
+  g_node_traverse(lt->tree, G_LEVEL_ORDER, G_TRAVERSE_ALL, -1, spew_func, NULL);
 }
