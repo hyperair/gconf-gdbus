@@ -523,7 +523,7 @@ node_set_value(xmlNodePtr node, GConfValue* value)
         free_childs(node);
 
         my_xmlSetProp(node, "ltype",
-                   gconf_value_type_to_string(gconf_value_list_type(value)));
+                      gconf_value_type_to_string(gconf_value_list_type(value)));
         
         /* Add a new child for each node */
         list = gconf_value_list(value);

@@ -1,3 +1,13 @@
+2000-01-14  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c (gconfd_all_entries): remove bad assertion that 
+	the value in an entry was non-NULL
+
+	* gconf/gconf.c (gconf_set): check for invalid list type
+
+	* gconf/gconf-internals.c (gconf_value_from_corba_value): Be more 
+	paranoid about list types coming from gconfd
+
 2000-01-13  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.c (gconf_unique_key): function to generate

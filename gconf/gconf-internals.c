@@ -245,31 +245,38 @@ gconf_value_from_corba_value(const ConfigValue* value)
             break;
           }
 
-        i = 0;
-        while (i < value->_u.list_value.seq._length)
+        if (gconf_value_list_type(gval) != GCONF_VALUE_INVALID)
           {
-            GConfValue* val;
-
-            /* This is a bit dubious; we cast a ConfigBasicValue to ConfigValue
-               because they have the same initial members, but by the time
-               the CORBA and C specs kick in, not sure we are guaranteed
-               to be able to do this.
-            */
-            val = gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[i]);
-
-            if (val == NULL)
-              gconf_log(GCL_ERR, _("Couldn't interpret CORBA value for list element"));
-            else if (val->type != gconf_value_list_type(gval))
-              gconf_log(GCL_ERR, _("Incorrect type for list element in %s"), __FUNCTION__);
-            else
-              list = g_slist_prepend(list, val);
-
-            ++i;
-          }
+            i = 0;
+            while (i < value->_u.list_value.seq._length)
+              {
+                GConfValue* val;
+                
+                /* This is a bit dubious; we cast a ConfigBasicValue to ConfigValue
+                   because they have the same initial members, but by the time
+                   the CORBA and C specs kick in, not sure we are guaranteed
+                   to be able to do this.
+                */
+                val = gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[i]);
+                
+                if (val == NULL)
+                  gconf_log(GCL_ERR, _("Couldn't interpret CORBA value for list element"));
+                else if (val->type != gconf_value_list_type(gval))
+                  gconf_log(GCL_ERR, _("Incorrect type for list element in %s"), __FUNCTION__);
+                else
+                  list = g_slist_prepend(list, val);
+                
+                ++i;
+              }
         
-        list = g_slist_reverse(list);
+            list = g_slist_reverse(list);
             
-        gconf_value_set_list_nocopy(gval, list);
+            gconf_value_set_list_nocopy(gval, list);
+          }
+        else
+          {
+            gconf_log(GCL_ERR, _("Received list from gconfd with a bad list type"));
+          }
       }
       break;
     case GCONF_VALUE_PAIR:
@@ -365,7 +372,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
             
           default:
             cv->_u.list_value.list_type = BInvalidVal;
-            g_warning("Invalid list type in %s", __FUNCTION__);
+            gconf_log(GCL_DEBUG, "Invalid list type in %s", __FUNCTION__);
             break;
           }
         

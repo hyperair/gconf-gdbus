@@ -654,7 +654,6 @@ gconfd_all_entries (PortableServer_Servant servant,
 
       g_assert(p != NULL);
       g_assert(p->key != NULL);
-      g_assert(p->value != NULL);
 
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
