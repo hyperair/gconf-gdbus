@@ -1064,7 +1064,7 @@ gconf_set_exception(GError** error,
     CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
                         ex_ConfigException, ce);
 
-    gconf_log(GCL_ERR, _("Returning exception: %s"), (*error)->message);
+    gconf_log(GCL_DEBUG, _("Returning exception: %s"), (*error)->message);
       
     g_error_free(*error);
     *error = NULL;
