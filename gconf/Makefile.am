@@ -15,7 +15,9 @@ gconfinclude_HEADERS =     \
 	gconf.h            \
 	gconf-orbit.h      \
 	gconf-schema.h 	   \
-	gconf-value.h
+	gconf-value.h	   \
+	gconf-error.h	   \
+	gconf-conf.h
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
@@ -46,6 +48,7 @@ libgconf_client_la_SOURCES = \
 	gconf-backend.c		\
 	gconf-schema.h		\
 	gconf-schema.c		\
+	gconf-value.c		\
 	gconf.h			\
 	gconf.c			\
 	$(CORBA_SOURCES)

@@ -800,6 +800,7 @@ signal_handler (int signo)
   switch(signo) {
   case SIGSEGV:
     abort();
+    break;
     
   default:
     exit (1);

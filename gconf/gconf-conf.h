@@ -1,0 +1,51 @@
+/* GConf
+ * Copyright (C) 1999 Red Hat Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef GCONF_GCONF_CONF_H
+#define GCONF_GCONF_CONF_H
+
+#include <glib.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
+/* A configuration engine (stack of config sources); normally there's
+ * just one of these on the system.  
+ */
+typedef struct _GConf GConf;
+
+struct _GConf {
+  gpointer dummy;
+};
+  
+GConf*       g_conf_new             (void); /* Default source stack */
+/* returns NULL on error; requests single specified source */
+GConf*       g_conf_new_from_address(const gchar* address);
+void         g_conf_unref           (GConf* conf);
+void         g_conf_ref             (GConf* conf);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif
+
+
+

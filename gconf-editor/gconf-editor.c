@@ -70,7 +70,7 @@ main(int argc, char** argv)
       return 1;
     }
 
-  if (!g_conf_init(PACKAGE))
+  if (!g_conf_init())
     {
       fprintf(stderr, _("Failed to init GConf\n"));
       return 1;

@@ -941,19 +941,9 @@ g_conf_get_config_listener(void)
 }
 
 static gboolean have_initted = FALSE;
-static gchar* global_appname = NULL;
-
-const gchar*
-g_conf_global_appname(void)
-{
-  if (global_appname)
-    return global_appname;
-  else
-    return "";
-}
 
 gboolean     
-g_conf_init           (const gchar* appname)
+g_conf_init           (void)
 {
   static CORBA_ORB orb = CORBA_OBJECT_NIL;
 
@@ -1034,15 +1024,13 @@ g_conf_init           (const gchar* appname)
 
   ctable = ctable_new();
 
-  global_appname = g_strdup(appname);
-  
   return TRUE;
 }
 
 gboolean
 g_conf_is_initialized (void)
 {
-        return (have_initted);
+  return (have_initted);
 }
 
 /* 

@@ -28,99 +28,14 @@ extern "C" {
 
 #include "gconf-schema.h"
 #include "gconf-orbit.h"
-
-/* Errors */
-
-typedef enum {
-  G_CONF_SUCCESS = 0,
-  G_CONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
-                               so there's no point having a more specific errno */
-
-  G_CONF_NO_SERVER = 2,     /* Server can't be launched/contacted */
-  G_CONF_NO_PERMISSION = 3, /* don't have permission for that */
-  G_CONF_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
-  G_CONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
-                               characters, or malformed slash arrangement) */
-  G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
-  G_CONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
-  G_CONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
-  G_CONF_IS_DIR = 9,        /* Requested key operation on a dir */
-  G_CONF_IS_KEY = 10,       /* Requested dir operation on a key */
-  G_CONF_OVERRIDDEN = 11    /* Read-only source at front of path has set the value */
-} GConfErrNo;
-
-const gchar* g_conf_error          (void); /* returns strerror of current errno,
-                                              combined with additional details 
-                                              that may exist 
-                                           */
-const gchar* g_conf_strerror       (GConfErrNo en);
-GConfErrNo   g_conf_errno          (void);
-void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-void         g_conf_clear_error    (void); /* like setting errno to 0 */
-
-
-/* Meta-information about a key. Not the same as a schema; a schema
- * is normative, this is descriptive.
- */
-
-typedef struct _GConfMetaInfo GConfMetaInfo;
-
-struct _GConfMetaInfo {
-  gchar* schema;
-  gchar* mod_user; /* user owning the daemon that made the last modification */
-  GTime  mod_time; /* time of the modification */
-  /* anything else? */
-};
-
-#define g_conf_meta_info_schema(x)    ((x)->schema)
-#define g_conf_meta_info_mod_user(x)  ((x)->mod_user)
-#define g_conf_meta_info_mod_time(x)  ((x)->mod_time)
-
-GConfMetaInfo* g_conf_meta_info_new         (void);
-void           g_conf_meta_info_destroy     (GConfMetaInfo* gcmi);
-void           g_conf_meta_info_set_schema  (GConfMetaInfo* gcmi,
-                                             const gchar* schema_name);
-void           g_conf_meta_info_set_mod_user(GConfMetaInfo* gcmi,
-                                             const gchar* mod_user);
-void           g_conf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
-                                             GTime mod_time);
-
-
-/* Key-value pairs; used to list the contents of
- *  a directory
- */  
-
-typedef struct _GConfEntry GConfEntry;
-
-struct _GConfEntry {
-  gchar* key;
-  GConfValue* value;
-};
-
-/* Pair takes memory ownership of both key and value */
-GConfEntry* g_conf_entry_new    (gchar* key, GConfValue* val);
-void        g_conf_entry_destroy(GConfEntry* pair);
-
-/* A configuration engine (stack of config sources); normally there's
- * just one of these on the system.  
- */
-typedef struct _GConf GConf;
-
-struct _GConf {
-  gpointer dummy;
-};
-
-typedef void (*GConfNotifyFunc)(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
-
-gboolean     g_conf_init            (const gchar* appname);
+#include "gconf-conf.h"
+#include "gconf-error.h"
+  
+gboolean     g_conf_init            (void);
 gboolean     g_conf_is_initialized  (void);
 
-GConf*       g_conf_new             (void); /* Default source stack */
-/* returns NULL on error; requests single specified source */
-GConf*       g_conf_new_from_address(const gchar* address);
-void         g_conf_unref           (GConf* conf);
-void         g_conf_ref             (GConf* conf);
-
+typedef void (*GConfNotifyFunc)(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
+  
 /* Returns ID of the notification */
 guint        g_conf_notify_add(GConf* conf,
                                const gchar* namespace_section, /* dir or key to listen to */

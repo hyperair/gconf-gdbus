@@ -1,3 +1,22 @@
+1999-09-26  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/Makefile.am: add gconf-error.h, gconf-conf.h headers,
+	gconf-value.c file
+
+	* gconf/gconf-error.h, gconf/gconf-conf.h, gconf/gconf-value.c: 
+	New files, just rearranging old files, no new code (well, there is 
+	a new GConfError object but it's unused)
+
+	* gconf/gconf-internals.c: Move the value, metainfo, and entry
+	datatypes to gconf-value.c
+
+	* gconf/gconf.c, gconf/gconf.h: Remove appname argument from
+	g_conf_init(), remove g_conf_global_appname() function.
+
+	* gconf/gconftool.c: don't pass appname to g_conf_init()
+
+	* gconf-editor/gconf-editor.c: Ditto
+	
 1999-09-25  Kjartan Maraas  <kmaraas@online.no>
 
 	* configure.in: Added "da" to ALL_LINGUAS.
