@@ -1320,8 +1320,17 @@ try_to_contact_server(GConfError** err)
       /* Make the errno more specific */
       if (err && *err)
 	(*err)->num = GCONF_NO_SERVER;
+      else if (err && !*err)
+        *err = gconf_error_new(GCONF_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
     }
-      
+
+#ifdef GCONF_ENABLE_DEBUG      
+  if (server == CORBA_OBJECT_NIL)
+    {
+      g_return_val_if_fail(err == NULL || *err != NULL, server);
+    }
+#endif
+
   return server;
 }
 
@@ -1330,6 +1339,8 @@ try_to_contact_server(GConfError** err)
 static ConfigServer
 gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
 {
+  g_return_val_if_fail(err == NULL || *err == NULL, server);
+  
   if (server != CORBA_OBJECT_NIL)
     return server;
 

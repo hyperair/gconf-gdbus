@@ -557,6 +557,79 @@ gconf_client_clear_cache(GConfClient* client)
   g_assert(g_hash_table_size(client->cache_hash) == 0);
 }
 
+static void
+cache_pairs_in_dir(GConfClient* client, const gchar* path);
+
+static void 
+recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
+{
+  GSList* tmp;
+
+  tmp = subdirs;
+  
+  while (tmp != NULL)
+    {
+      gchar* s = tmp->data;
+      gchar* full = gconf_concat_key_and_dir(parent, s);
+      
+      cache_pairs_in_dir(client, full);
+
+      recurse_subdir_list(client, gconf_all_dirs(client->engine, full, NULL), full);
+
+      g_free(s);
+      g_free(full);
+      
+      tmp = g_slist_next(tmp);
+    }
+  
+  g_slist_free(subdirs);
+}
+
+static void 
+cache_pairs_in_dir(GConfClient* client, const gchar* dir)
+{
+  GSList* pairs;
+  GSList* tmp;
+  GConfError* error = NULL;
+
+  pairs = gconf_all_entries(client->engine, dir, &error);
+          
+  if (error != NULL)
+    {
+      fprintf(stderr, _("GConf warning: failure listing pairs in `%s': %s"),
+              dir, error->str);
+      gconf_error_destroy(error);
+      error = NULL;
+    }
+
+  if (pairs != NULL)
+    {
+      tmp = pairs;
+
+      while (tmp != NULL)
+        {
+          GConfEntry* pair = tmp->data;
+          gchar* full_key;
+
+          full_key = gconf_concat_key_and_dir(dir, gconf_entry_key(pair));
+          
+          gconf_client_cache(client,
+                             full_key,
+                             /* It can't be the default, all_entries() only
+                                returns values that are actually set */
+                             FALSE,
+                             gconf_entry_steal_value(pair));
+
+          
+          gconf_entry_destroy(pair);
+
+          tmp = g_slist_next(tmp);
+        }
+
+      g_slist_free(pairs);
+    }
+}
+
 void
 gconf_client_preload    (GConfClient* client,
                          const gchar* dirname,
@@ -564,10 +637,38 @@ gconf_client_preload    (GConfClient* client,
                          GConfError** err)
 {
 
-  /* FIXME */
+  g_return_if_fail(client != NULL);
+  g_return_if_fail(GCONF_IS_CLIENT(client));
+  g_return_if_fail(dirname != NULL);
   
-  /* Include a check that the dirname is in dir_list */
+#ifndef G_DISABLE_CHECKS
+  {
+    GSList* tmp;
+    gboolean found = FALSE;
+    
+    tmp = client->dir_list;
 
+    while (tmp != NULL)
+      {
+        Dir* d = tmp->data;
+        
+        /* Must be preloading something actually in the directory list */
+        if (strcmp(d->name, dirname) == 0)
+          {
+            found = TRUE;
+            break;
+          }
+        
+        tmp = g_slist_next(tmp);
+      }
+
+    if (!found)
+      {
+        g_warning("Can only preload directories you've added with gconf_client_add_dir()");
+        return;
+      }
+  }
+#endif
 
   
   switch (type)
@@ -577,11 +678,25 @@ gconf_client_preload    (GConfClient* client,
       break;
 
     case GCONF_CLIENT_PRELOAD_ONELEVEL:
-      /* FIXME */
+      {
+        GSList* subdirs;
+        
+        subdirs = gconf_all_dirs(client->engine, dirname, NULL);
+        
+        cache_pairs_in_dir(client, dirname);
+      }
       break;
 
     case GCONF_CLIENT_PRELOAD_RECURSIVE:
-      /* FIXME */
+      {
+        GSList* subdirs;
+        
+        subdirs = gconf_all_dirs(client->engine, dirname, NULL);
+        
+        cache_pairs_in_dir(client, dirname);
+          
+        recurse_subdir_list(client, subdirs, dirname);
+      }
       break;
 
     default:

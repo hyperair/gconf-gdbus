@@ -17,7 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gconf-listeners.h>
+#include <gconf/gconf-listeners.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>

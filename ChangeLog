@@ -1,3 +1,11 @@
+1999-12-20  Havoc Pennington  <hp@redhat.com>
+
+	* tests/testlisteners.c: fix include
+
+	* wrappers/gtk/gconf-client.c (gconf_client_preload): Actually
+	implement preloading. We have some "issues" here to resolve I
+	think, because of the defaults stuff and schemas.
+	
 1999-12-14  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf.c (gconf_engine_new_from_address): Add a g_warning()
