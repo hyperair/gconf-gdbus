@@ -126,6 +126,7 @@ static void          context_remove_listener(GConfContext* ctx,
 
 static GConfValue*   context_query_value(GConfContext* ctx,
                                          const gchar* key,
+                                         const gchar* locale,
                                          GConfError** err);
 
 static void          context_set(GConfContext* ctx, const gchar* key,
@@ -181,6 +182,13 @@ static ConfigValue*
 gconfd_lookup(PortableServer_Servant servant, ConfigServer_Context ctx,
               CORBA_char * key, 
               CORBA_Environment *ev);
+
+static ConfigValue* 
+gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
+                          CORBA_char * key,
+                          CORBA_char * locale,
+                          CORBA_Environment *ev);
+
 static void
 gconfd_set(PortableServer_Servant servant, ConfigServer_Context ctx,
            CORBA_char * key, 
@@ -245,7 +253,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_get_context,
   gconfd_add_listener, 
   gconfd_remove_listener, 
-  gconfd_lookup, 
+  gconfd_lookup,
+  gconfd_lookup_with_locale, 
   gconfd_set,
   gconfd_unset,
   gconfd_dir_exists,
@@ -341,6 +350,16 @@ gconfd_lookup(PortableServer_Servant servant,
               CORBA_char * key, 
               CORBA_Environment *ev)
 {
+  /* CORBA_char* normally can't be NULL but we cheat here */
+  return gconfd_lookup_with_locale(servant, ctx, key, NULL, ev);
+}
+
+static ConfigValue* 
+gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
+                          CORBA_char * key,
+                          CORBA_char * locale,
+                          CORBA_Environment *ev)
+{
   GConfValue* val;
   GConfContext* gcc;
   GConfError* error = NULL;
@@ -350,7 +369,7 @@ gconfd_lookup(PortableServer_Servant servant,
   if (gconf_set_exception(&error, ev))
     return invalid_corba_value();
   
-  val = context_query_value(gcc, key, &error);
+  val = context_query_value(gcc, key, locale, &error);
 
   if (val != NULL)
     {
@@ -1426,6 +1445,7 @@ context_notify_listeners(GConfContext* ctx, const gchar* key, ConfigValue* value
 static GConfValue*
 context_query_value(GConfContext* ctx,
                     const gchar* key,
+                    const gchar* locale,
                     GConfError** err)
 {
   GConfValue* val;
@@ -1435,7 +1455,7 @@ context_query_value(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  val = gconf_sources_query_value(ctx->sources, key, err);
+  val = gconf_sources_query_value(ctx->sources, key, locale, err);
 
   if (err && *err != NULL)
     {

@@ -1,5 +1,34 @@
 1999-10-28  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-backend.c (query_value): Add locale
+	(dir_get_value): add locale
+	(entry_value): new function gets the value from an entry, 
+	looking up a new value by locale if necessary.
+
+	(xentry_extract_value): locale argument added, but needs to 
+	be implemented.
+
+	* gconf/gconf-backend.h: Add locale to query_value in vtable
+
+	* gconf/gconf-sources.c (gconf_source_query_value): Add locale
+	(gconf_sources_query_value): Add locale
+
+	* gconf/gconfd.c (gconfd_lookup_with_locale): Implement new 
+	IDL method
+	(context_query_value): Add locale
+
+	* gconf/GConf.idl: Add lookup_with_locale() method
+
+	* gconf/gconf-internals.c (fill_corba_schema_from_gconf_schema): 
+	Handle case where some schema fields are NULL, handle locale field.
+	(gconf_schema_from_corba_schema): Handle locale field.
+
+	* gconf/gconf-schema.c (gconf_schema_set_locale): New function
+
+	* gconf/gconftool.c: Clean up so it is easier to deal with
+
+1999-10-28  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconfd.c: Rework the sync code; now, any change queues a
 	sync in 1 minute. If a client calls suggest_sync(), we sync in an
 	idle (as soon as the event loop quiets down). Also, we now sync 

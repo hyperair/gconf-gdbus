@@ -504,10 +504,11 @@ fill_corba_schema_from_gconf_schema(GConfSchema* sc,
       g_assert_not_reached();
       break;
     }
-  
-  cs->short_desc = CORBA_string_dup(sc->short_desc);
-  cs->long_desc = CORBA_string_dup(sc->long_desc);
-  cs->owner = CORBA_string_dup(sc->owner);
+
+  cs->locale = CORBA_string_dup(sc->locale ? sc->locale : "");
+  cs->short_desc = CORBA_string_dup(sc->short_desc ? sc->short_desc : "");
+  cs->long_desc = CORBA_string_dup(sc->long_desc ? sc->long_desc : "");
+  cs->owner = CORBA_string_dup(sc->owner ? sc->owner : "");
 }
 
 ConfigSchema* 
@@ -562,6 +563,7 @@ gconf_schema_from_corba_schema(const ConfigSchema* cs)
 
   gconf_schema_set_type(sc, type);
 
+  gconf_schema_set_locale(sc, cs->locale);
   gconf_schema_set_short_desc(sc, cs->short_desc);
   gconf_schema_set_long_desc(sc, cs->long_desc);
   gconf_schema_set_owner(sc, cs->owner);

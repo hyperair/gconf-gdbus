@@ -34,9 +34,10 @@
 
 struct _GConfSchema {
   GConfValueType type; /* Type of the described entry */
+  gchar* locale;       /* Schema locale */
+  gchar* owner;        /* Name of creating application */
   gchar* short_desc;   /* 40 char or less description, no newlines */
   gchar* long_desc;    /* could be a paragraph or so */
-  gchar* owner;        /* Name of creating application */
   GConfValue* default_value; /* Default value of the key */
 };
 
@@ -45,6 +46,7 @@ void          gconf_schema_destroy(GConfSchema* sc);
 GConfSchema*  gconf_schema_copy(GConfSchema* sc);
 
 void          gconf_schema_set_type(GConfSchema* sc, GConfValueType type);
+void          gconf_schema_set_locale(GConfSchema* sc, const gchar* locale);
 void          gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc);
 void          gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc);
 void          gconf_schema_set_owner(GConfSchema* sc, const gchar* owner);
@@ -52,6 +54,7 @@ void          gconf_schema_set_default_value(GConfSchema* sc, GConfValue* val);
 void          gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val);
 
 #define       gconf_schema_type(x) (x->type)
+#define       gconf_schema_locale(x)     ((const gchar*)(x)->locale)
 #define       gconf_schema_short_desc(x) ((const gchar*)(x)->short_desc)
 #define       gconf_schema_long_desc(x)  ((const gchar*)(x)->long_desc)
 #define       gconf_schema_owner(x)      ((const gchar*)(x)->owner)

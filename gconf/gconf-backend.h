@@ -75,6 +75,7 @@ struct _GConfBackendVTable {
      if schema_name is NULL, it isn't filled */
   GConfValue*         (* query_value)     (GConfSource* source, 
                                            const gchar* key,
+                                           const gchar* locale,
                                            gchar** schema_name,
                                            GConfError** err);
   

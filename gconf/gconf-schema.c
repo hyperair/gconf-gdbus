@@ -71,6 +71,18 @@ gconf_schema_set_type(GConfSchema* sc, GConfValueType type)
   sc->type = type;
 }
 
+void
+gconf_schema_set_locale(GConfSchema* sc, const gchar* locale)
+{
+  if (sc->locale)
+    g_free(sc->locale);
+
+  if (locale)
+    sc->locale = g_strdup(locale);
+  else 
+    sc->locale = NULL;
+}
+
 void          
 gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
 {

@@ -211,9 +211,17 @@ struct poptOption options[] = {
   }
 };
 
-static void do_recursive_list(GConfEngine* conf, const gchar** args);
-static void do_all_pairs(GConfEngine* conf, const gchar** args);
+static int do_recursive_list(GConfEngine* conf, const gchar** args);
+static int do_all_pairs(GConfEngine* conf, const gchar** args);
 static void list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth);
+static gboolean do_dir_exists(GConfEngine* conf, const gchar* dir);
+static void do_spawn_daemon(GConfEngine* conf);
+static int do_get(GConfEngine* conf, const gchar** args);
+static int do_set(GConfEngine* conf, const gchar** args);
+static int do_set_schema(GConfEngine* conf, const gchar** args);
+static int do_all_entries(GConfEngine* conf, const gchar** args);
+static int do_unset(GConfEngine* conf, const gchar** args);
+static int do_all_subdirs(GConfEngine* conf, const gchar** args);
 
 /* FIXME um, break this function up... */
 int 
@@ -352,30 +360,15 @@ main (int argc, char** argv)
 
   if (dir_exists != NULL) 
     {
-      gboolean exists = gconf_dir_exists(conf, dir_exists, &err);
-
-      if (err != NULL)
-        {
-          fprintf(stderr, "%s\n", err->str);
-          gconf_error_destroy(err);
-          err = NULL;
-        }
-
-      if (exists)
-        return 0;
+      if (do_dir_exists(conf, dir_exists))
+        return 0; /* TRUE */
       else
-        return 2;
+        return 2; /* FALSE */
     }
 
   if (spawn_gconfd)
     {
-      if (!gconf_spawn_daemon(&err))
-        {
-          fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
-                  err->str);
-          gconf_error_destroy(err);
-          err = NULL;
-        }
+      do_spawn_daemon(conf);
       /* don't exit, it's OK to have this along with other options
          (however, it's probably pointless) */
     }
@@ -383,367 +376,54 @@ main (int argc, char** argv)
   if (get_mode)
     {
       const gchar** args = poptGetArgs(ctx);
-
-      if (args == NULL)
-        {
-          fprintf(stderr, _("Must specify a key or keys to get\n"));
-          return 1;
-        }
-      
-      while (*args)
-        {
-          GConfValue* value;
-          gchar* s;
-
-          err = NULL;
-
-          value = gconf_get(conf, *args, &err);
-         
-          if (value != NULL)
-            {
-              if (value->type != GCONF_VALUE_SCHEMA)
-                {
-                  s = gconf_value_to_string(value);
-
-                  printf("%s\n", s);
-
-                  g_free(s);
-                }
-              else
-                {
-                  GConfSchema* sc = gconf_value_schema(value);
-                  GConfValueType stype = gconf_schema_type(sc);
-                  const gchar* long_desc = gconf_schema_long_desc(sc);
-                  const gchar* short_desc = gconf_schema_short_desc(sc);
-                  const gchar* owner = gconf_schema_owner(sc);
-
-                  printf(_("Type: %s\n"), gconf_value_type_to_string(stype));
-                  printf(_("Owner: %s\n"), owner ? owner : _("Unset"));
-                  printf(_("Short Desc: %s\n"), short_desc ? short_desc : _("Unset"));
-                  printf(_("Long Desc: %s\n"), long_desc ? long_desc : _("Unset"));
-                }
-
-              gconf_value_destroy(value);
-            }
-          else
-            {
-              if (err == NULL)
-                {
-                  fprintf(stderr, _("No value set for `%s'\n"), *args);
-                }
-              else
-                {
-                  fprintf(stderr, _("Failed to get value for `%s': %s\n"),
-                          *args, err->str);
-                  gconf_error_destroy(err);
-                  err = NULL;
-                }
-            }
- 
-          ++args;
-        }
+      if (do_get(conf, args)  == 1)
+        return 1;
     }
 
   if (set_mode)
     {
       const gchar** args = poptGetArgs(ctx);
-
-      if (args == NULL)
-        {
-          fprintf(stderr, _("Must specify alternating keys/values as arguments\n"));
-          return 1;
-        }
-
-      while (*args)
-        {
-          const gchar* key;
-          const gchar* value;
-          GConfValueType type = GCONF_VALUE_INVALID;
-          GConfValue* gval;
-
-          key = *args;
-          ++args;
-          value = *args;
-
-          if (value == NULL)
-            {
-              fprintf(stderr, _("No value to set for key: `%s'\n"), key);
-              return 1;
-            }
-
-          switch (*value_type)
-            {
-            case 'i':
-            case 'I':
-              type = GCONF_VALUE_INT;
-              break;
-            case 'f':
-            case 'F':
-              type = GCONF_VALUE_FLOAT;
-              break;
-            case 'b':
-            case 'B':
-              type = GCONF_VALUE_BOOL;
-              break;
-            case 's':
-            case 'S':
-              type = GCONF_VALUE_STRING;
-              break;
-            default:
-              fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
-              return 1;
-              break;
-            }
-          
-          err = NULL;
-
-          gval = gconf_value_new_from_string(type, value, &err);
-
-          if (gval == NULL)
-            {
-              fprintf(stderr, _("Error: %s\n"),
-                      err->str);
-              gconf_error_destroy(err);
-              err = NULL;
-              return 1;
-            }
-
-          err = NULL;
-          
-          gconf_set(conf, key, gval, &err);
-
-          if (err != NULL)
-            {
-              fprintf(stderr, _("Error setting value: %s"),
-                      err->str);
-              gconf_error_destroy(err);
-              err = NULL;
-              return 1;
-            }
-
-          gconf_value_destroy(gval);
-
-          ++args;
-        }
-
-      err = NULL;
-
-      gconf_suggest_sync(conf, &err);
-
-      if (err != NULL)
-        {
-          fprintf(stderr, _("Error syncing: %s"),
-                  err->str);
-          return 1;
-        }
+      if (do_set(conf, args) == 1)
+        return 1;
     }
 
   if (set_schema_mode)
     {
       const gchar** args = poptGetArgs(ctx);
-      GConfSchema* sc;
-      GConfValue* val;
-      const gchar* key;
-      
-      if ((args == NULL) || (args[1] != NULL))
-        {
-          fprintf(stderr, _("Must specify key (schema name) as the only argument\n"));
-          return 1;
-        }
-      
-      key = *args;
-
-      val = gconf_value_new(GCONF_VALUE_SCHEMA);
-
-      sc = gconf_schema_new();
-
-      gconf_value_set_schema_nocopy(val, sc);
-
-      if (short_desc)
-        gconf_schema_set_short_desc(sc, short_desc);
-
-      if (long_desc)
-        gconf_schema_set_long_desc(sc, long_desc);
-
-      if (owner)
-        gconf_schema_set_owner(sc, owner);
-
-      if (value_type)
-        {
-          GConfValueType type = GCONF_VALUE_INVALID;
-
-          switch (*value_type)
-            {
-            case 'i':
-            case 'I':
-              type = GCONF_VALUE_INT;
-              break;
-            case 'f':
-            case 'F':
-              type = GCONF_VALUE_FLOAT;
-              break;
-            case 'b':
-            case 'B':
-              type = GCONF_VALUE_BOOL;
-              break;
-            case 's':
-            case 'S':
-              switch (value_type[1])
-                {
-                case 't':
-                case 'T':
-                  type = GCONF_VALUE_STRING;
-                  break;
-                case 'c':
-                case 'C':
-                  type = GCONF_VALUE_SCHEMA;
-                  break;
-                default:
-                  fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
-                }
-              break;
-            default:
-              fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
-              break;
-            }
-
-          if (type != GCONF_VALUE_INVALID)
-            gconf_schema_set_type(sc, type);
-        }
-
-      err = NULL;
-      
-      gconf_set(conf, key, val, &err);
-      
-      if (err != NULL)
-        {
-          fprintf(stderr, _("Error setting value: %s"),
-                  err->str);
-          gconf_error_destroy(err);
-          err = NULL;
-          return 1;
-        }
-      
-      gconf_value_destroy(val);
-
-      err = NULL;
-      gconf_suggest_sync(conf, &err);
-      
-      if (err != NULL)
-        {
-          fprintf(stderr, _("Error syncing: %s"),
-                  err->str);
-          gconf_error_destroy(err);
-          err = NULL;
-          return 1;
-        }
+      if (do_set_schema(conf, args) == 1)
+        return 1;
     }
 
   if (all_entries_mode)
     {
       const gchar** args = poptGetArgs(ctx);
 
-      if (args == NULL)
-        {
-          fprintf(stderr, _("Must specify one or more dirs to get key/value pairs from.\n"));
-          return 1;
-        }
-
-      do_all_pairs(conf, args);
+      if (do_all_entries(conf, args) == 1)
+        return 1;
     }
 
   if (unset_mode)
     {
       const gchar** args = poptGetArgs(ctx);
 
-      if (args == NULL)
-        {
-          fprintf(stderr, _("Must specify one or more keys to unset.\n"));
-          return 1;
-        }
-
-      while (*args)
-        {
-          err = NULL;
-          gconf_unset(conf, *args, &err);
-
-          if (err != NULL)
-            {
-              fprintf(stderr, _("Error unsetting `%s': %s\n"),
-                      *args, err->str);
-              gconf_error_destroy(err);
-              err = NULL;
-            }
-
-          ++args;
-        }
-
-      err = NULL;
-      gconf_suggest_sync(conf, NULL); /* ignore errors */
+      if (do_unset(conf, args) == 1)
+        return 1;
     }
 
   if (all_subdirs_mode)
     {
       const gchar** args = poptGetArgs(ctx);
 
-      if (args == NULL)
-        {
-          fprintf(stderr, _("Must specify one or more dirs to get subdirs from.\n"));
-          return 1;
-        }
-      
-      while (*args)
-        {
-          GSList* subdirs;
-          GSList* tmp;
-
-          err = NULL;
-
-          subdirs = gconf_all_dirs(conf, *args, &err);
-          
-          if (subdirs != NULL)
-            {
-              tmp = subdirs;
-
-              while (tmp != NULL)
-                {
-                  gchar* s = tmp->data;
-
-                  printf(" %s\n", s);
-
-                  g_free(s);
-
-                  tmp = g_slist_next(tmp);
-                }
-
-              g_slist_free(subdirs);
-            }
-          else
-            {
-              if (err != NULL)
-                {
-                  fprintf(stderr, _("Error listing dirs: %s\n"),
-                          err->str);
-                  gconf_error_destroy(err);
-                  err = NULL;
-                }
-            }
- 
-          ++args;
-        }
+      if (do_all_subdirs(conf, args) == 1)
+        return 1;
     }
 
   if (recursive_list)
     {
       const gchar** args = poptGetArgs(ctx);
-
-      if (args == NULL)
-        {
-          fprintf(stderr, _("Must specify one or more dirs to recursively list.\n"));
-          return 1;
-        }
-
-      do_recursive_list(conf, args);
+      
+      if (do_recursive_list(conf, args) == 1)
+        return 1;
     }
 
   poptFreeContext(ctx);
@@ -798,9 +478,15 @@ recurse_subdir_list(GConfEngine* conf, GSList* subdirs, const gchar* parent, gui
   g_free(whitespace);
 }
 
-static void
+static int
 do_recursive_list(GConfEngine* conf, const gchar** args)
 {
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify one or more dirs to recursively list.\n"));
+      return 1;
+    }
+
   while (*args)
     {
       GSList* subdirs;
@@ -813,6 +499,8 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
  
       ++args;
     }
+
+  return 0;
 }
 
 static void 
@@ -861,7 +549,7 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
   g_free(whitespace);
 }
 
-static void 
+static int
 do_all_pairs(GConfEngine* conf, const gchar** args)
 {      
   while (*args)
@@ -869,5 +557,404 @@ do_all_pairs(GConfEngine* conf, const gchar** args)
       list_pairs_in_dir(conf, *args, 0);
       ++args;
     }
+  return 0;
 }
 
+static gboolean
+do_dir_exists(GConfEngine* conf, const gchar* dir)
+{
+  GConfError* err = NULL;
+  gboolean exists = FALSE;
+  
+  exists = gconf_dir_exists(conf, dir_exists, &err);
+  
+  if (err != NULL)
+    {
+      fprintf(stderr, "%s\n", err->str);
+      gconf_error_destroy(err);
+      err = NULL;
+    }
+  
+  return exists;
+}
+
+static void
+do_spawn_daemon(GConfEngine* conf)
+{
+  GConfError* err = NULL;
+
+  if (!gconf_spawn_daemon(&err))
+    {
+      fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
+              err->str);
+      gconf_error_destroy(err);
+      err = NULL;
+    }
+}
+
+static int
+do_get(GConfEngine* conf, const gchar** args)
+{
+  GConfError* err = NULL;
+
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify a key or keys to get\n"));
+      return 1;
+    }
+      
+  while (*args)
+    {
+      GConfValue* value;
+      gchar* s;
+
+      err = NULL;
+
+      value = gconf_get(conf, *args, &err);
+         
+      if (value != NULL)
+        {
+          if (value->type != GCONF_VALUE_SCHEMA)
+            {
+              s = gconf_value_to_string(value);
+
+              printf("%s\n", s);
+
+              g_free(s);
+            }
+          else
+            {
+              GConfSchema* sc = gconf_value_schema(value);
+              GConfValueType stype = gconf_schema_type(sc);
+              const gchar* long_desc = gconf_schema_long_desc(sc);
+              const gchar* short_desc = gconf_schema_short_desc(sc);
+              const gchar* owner = gconf_schema_owner(sc);
+
+              printf(_("Type: %s\n"), gconf_value_type_to_string(stype));
+              printf(_("Owner: %s\n"), owner ? owner : _("Unset"));
+              printf(_("Short Desc: %s\n"), short_desc ? short_desc : _("Unset"));
+              printf(_("Long Desc: %s\n"), long_desc ? long_desc : _("Unset"));
+            }
+
+          gconf_value_destroy(value);
+        }
+      else
+        {
+          if (err == NULL)
+            {
+              fprintf(stderr, _("No value set for `%s'\n"), *args);
+            }
+          else
+            {
+              fprintf(stderr, _("Failed to get value for `%s': %s\n"),
+                      *args, err->str);
+              gconf_error_destroy(err);
+              err = NULL;
+            }
+        }
+ 
+      ++args;
+    }
+  return 0;
+}
+
+static int
+do_set(GConfEngine* conf, const gchar** args)
+{
+  GConfError* err = NULL;
+  
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify alternating keys/values as arguments\n"));
+      return 1;
+    }
+
+  while (*args)
+    {
+      const gchar* key;
+      const gchar* value;
+      GConfValueType type = GCONF_VALUE_INVALID;
+      GConfValue* gval;
+
+      key = *args;
+      ++args;
+      value = *args;
+
+      if (value == NULL)
+        {
+          fprintf(stderr, _("No value to set for key: `%s'\n"), key);
+          return 1;
+        }
+
+      switch (*value_type)
+        {
+        case 'i':
+        case 'I':
+          type = GCONF_VALUE_INT;
+          break;
+        case 'f':
+        case 'F':
+          type = GCONF_VALUE_FLOAT;
+          break;
+        case 'b':
+        case 'B':
+          type = GCONF_VALUE_BOOL;
+          break;
+        case 's':
+        case 'S':
+          type = GCONF_VALUE_STRING;
+          break;
+        default:
+          fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+          return 1;
+          break;
+        }
+          
+      err = NULL;
+
+      gval = gconf_value_new_from_string(type, value, &err);
+
+      if (gval == NULL)
+        {
+          fprintf(stderr, _("Error: %s\n"),
+                  err->str);
+          gconf_error_destroy(err);
+          err = NULL;
+          return 1;
+        }
+
+      err = NULL;
+          
+      gconf_set(conf, key, gval, &err);
+
+      if (err != NULL)
+        {
+          fprintf(stderr, _("Error setting value: %s"),
+                  err->str);
+          gconf_error_destroy(err);
+          err = NULL;
+          return 1;
+        }
+
+      gconf_value_destroy(gval);
+
+      ++args;
+    }
+
+  err = NULL;
+
+  gconf_suggest_sync(conf, &err);
+
+  if (err != NULL)
+    {
+      fprintf(stderr, _("Error syncing: %s"),
+              err->str);
+      return 1;
+    }
+
+  return 0;
+}
+
+static int
+do_set_schema(GConfEngine* conf, const gchar** args)
+{
+  GConfSchema* sc;
+  GConfValue* val;
+  const gchar* key;
+  GConfError* err = NULL;
+  
+  if ((args == NULL) || (args[1] != NULL))
+    {
+      fprintf(stderr, _("Must specify key (schema name) as the only argument\n"));
+      return 1;
+    }
+      
+  key = *args;
+
+  val = gconf_value_new(GCONF_VALUE_SCHEMA);
+
+  sc = gconf_schema_new();
+
+  gconf_value_set_schema_nocopy(val, sc);
+
+  if (short_desc)
+    gconf_schema_set_short_desc(sc, short_desc);
+
+  if (long_desc)
+    gconf_schema_set_long_desc(sc, long_desc);
+
+  if (owner)
+    gconf_schema_set_owner(sc, owner);
+
+  if (value_type)
+    {
+      GConfValueType type = GCONF_VALUE_INVALID;
+
+      switch (*value_type)
+        {
+        case 'i':
+        case 'I':
+          type = GCONF_VALUE_INT;
+          break;
+        case 'f':
+        case 'F':
+          type = GCONF_VALUE_FLOAT;
+          break;
+        case 'b':
+        case 'B':
+          type = GCONF_VALUE_BOOL;
+          break;
+        case 's':
+        case 'S':
+          switch (value_type[1])
+            {
+            case 't':
+            case 'T':
+              type = GCONF_VALUE_STRING;
+              break;
+            case 'c':
+            case 'C':
+              type = GCONF_VALUE_SCHEMA;
+              break;
+            default:
+              fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+            }
+          break;
+        default:
+          fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+          break;
+        }
+
+      if (type != GCONF_VALUE_INVALID)
+        gconf_schema_set_type(sc, type);
+    }
+
+  err = NULL;
+      
+  gconf_set(conf, key, val, &err);
+      
+  if (err != NULL)
+    {
+      fprintf(stderr, _("Error setting value: %s"),
+              err->str);
+      gconf_error_destroy(err);
+      err = NULL;
+      return 1;
+    }
+      
+  gconf_value_destroy(val);
+
+  err = NULL;
+  gconf_suggest_sync(conf, &err);
+      
+  if (err != NULL)
+    {
+      fprintf(stderr, _("Error syncing: %s"),
+              err->str);
+      gconf_error_destroy(err);
+      err = NULL;
+      return 1;
+    }
+
+  return 0;
+}
+
+static int
+do_all_entries(GConfEngine* conf, const gchar** args)
+{
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify one or more dirs to get key/value pairs from.\n"));
+      return 1;
+    }
+  
+  return do_all_pairs(conf, args);
+}
+
+static int
+do_unset(GConfEngine* conf, const gchar** args)
+{
+  GConfError* err = NULL;
+  
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify one or more keys to unset.\n"));
+      return 1;
+    }
+
+  while (*args)
+    {
+      err = NULL;
+      gconf_unset(conf, *args, &err);
+
+      if (err != NULL)
+        {
+          fprintf(stderr, _("Error unsetting `%s': %s\n"),
+                  *args, err->str);
+          gconf_error_destroy(err);
+          err = NULL;
+        }
+
+      ++args;
+    }
+
+  err = NULL;
+  gconf_suggest_sync(conf, NULL); /* ignore errors */
+
+  return 0;
+}
+
+
+static int
+do_all_subdirs(GConfEngine* conf, const gchar** args)
+{
+  GConfError* err = NULL;
+  
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify one or more dirs to get subdirs from.\n"));
+      return 1;
+    }
+      
+  while (*args)
+    {
+      GSList* subdirs;
+      GSList* tmp;
+
+      err = NULL;
+
+      subdirs = gconf_all_dirs(conf, *args, &err);
+          
+      if (subdirs != NULL)
+        {
+          tmp = subdirs;
+
+          while (tmp != NULL)
+            {
+              gchar* s = tmp->data;
+
+              printf(" %s\n", s);
+
+              g_free(s);
+
+              tmp = g_slist_next(tmp);
+            }
+
+          g_slist_free(subdirs);
+        }
+      else
+        {
+          if (err != NULL)
+            {
+              fprintf(stderr, _("Error listing dirs: %s\n"),
+                      err->str);
+              gconf_error_destroy(err);
+              err = NULL;
+            }
+        }
+ 
+      ++args;
+    }
+
+  return 0;
+}

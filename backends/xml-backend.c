@@ -186,6 +186,7 @@ static void        dir_set_value   (Dir* d,
                                     GConfError** err);
 static GConfValue* dir_get_value   (Dir* d,
                                     const gchar* relative_key,
+                                    const gchar* locale,
                                     gchar** schema_name,
                                     GConfError** err);
 static GConfMetaInfo* dir_get_metainfo(Dir* d,
@@ -283,6 +284,7 @@ static gboolean     writeable        (GConfSource* source,
 
 static GConfValue*   query_value     (GConfSource* source,
                                       const gchar* key,
+                                      const gchar* locale,
                                       gchar** schema_name,
                                       GConfError** err);
 
@@ -425,7 +427,10 @@ resolve_address (const gchar* address, GConfError** err)
 }
 
 static GConfValue* 
-query_value (GConfSource* source, const gchar* key, gchar** schema_name,
+query_value (GConfSource* source,
+             const gchar* key,
+             const gchar* locale,
+             gchar** schema_name,
              GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
@@ -447,7 +452,7 @@ query_value (GConfSource* source, const gchar* key, gchar** schema_name,
   
       relative_key = gconf_key_key(key);
 
-      return dir_get_value(dir, relative_key, schema_name, err);
+      return dir_get_value(dir, relative_key, locale, schema_name, err);
     }
   else
     return NULL;
@@ -1107,10 +1112,11 @@ static void   entry_destroy (Entry* e);
 static void   entry_sync    (Entry* e);
  /* syncs Entry from node */
 static void   entry_fill    (Entry* e, const gchar* name);
+static GConfValue* entry_value (Entry* e, const gchar* locale);
 
 /* xml manipulation */
 
-static GConfValue* xentry_extract_value(xmlNodePtr node, GConfError** err);
+static GConfValue* xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err);
 static void        xentry_set_value(xmlNodePtr node, GConfValue* value);
 
 /* private dir func decls */
@@ -1461,7 +1467,10 @@ dir_set_value   (Dir* d, const gchar* relative_key,
 }
 
 static GConfValue*
-dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name,
+dir_get_value   (Dir* d,
+                 const gchar* relative_key,
+                 const gchar* locale,
+                 gchar** schema_name,
                  GConfError** err)
 {
   Entry* e;
@@ -1487,12 +1496,19 @@ dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name,
     }
   else
     {
+      GConfValue* val;
+      
       if (schema_name &&
           e->value->type == GCONF_VALUE_IGNORE_SUBSEQUENT &&
           e->schema_name)
         *schema_name = g_strdup(e->schema_name);
-      
-      return gconf_value_copy(e->value);
+
+      val = entry_value(e, locale);
+
+      if (val != NULL)
+        return gconf_value_copy(val);      
+      else
+        return NULL;
     }
 }
 
@@ -2151,7 +2167,8 @@ entry_fill    (Entry* e, const gchar* name)
   if (e->value != NULL)
     gconf_value_destroy(e->value);
   
-  e->value = xentry_extract_value(e->node, &error);
+  e->value = xentry_extract_value(e->node, NULL, /* FIXME current locale as a guess */
+                                  &error);
 
   if (e->value)
     {
@@ -2164,6 +2181,47 @@ entry_fill    (Entry* e, const gchar* name)
                 e->name, error->str);
       gconf_error_destroy(error);
     }
+}
+
+static GConfValue*
+entry_value (Entry* e, const gchar* locale)
+{
+  g_return_val_if_fail(e != NULL, NULL);
+  
+  if (e->value == NULL)
+    return NULL;
+
+  /* only schemas have locales */
+  if (locale == NULL ||
+      e->value->type != GCONF_VALUE_SCHEMA)
+    return e->value;
+
+  g_assert(e->value->type == GCONF_VALUE_SCHEMA);
+  g_assert(locale != NULL);
+  
+  if (strcmp(gconf_schema_locale(gconf_value_schema(e->value)), locale) == 0)
+    return e->value;
+  else
+    {
+      GConfValue* newval;
+      GConfError* error = NULL;
+      
+      newval = xentry_extract_value(e->node, locale, &error);
+      if (newval != NULL)
+        {
+          gconf_value_destroy(e->value);
+          e->value = newval;
+          g_return_val_if_fail(error == NULL, e->value);
+        }
+      else if (error != NULL)
+        {
+          gconf_log(GCL_WARNING, _("Ignoring XML node `%s': %s"),
+                    e->name, error->str);
+          gconf_error_destroy(error);
+        }
+    }
+
+  return e->value;
 }
 
 /*
@@ -2218,7 +2276,7 @@ schema_node_extract_value(xmlNodePtr node)
               if (default_value == NULL &&
                   strcmp(iter->name, "default") == 0)
                 {
-                  default_value = xentry_extract_value(iter, &error);
+                  default_value = xentry_extract_value(iter, NULL, &error);
 
                   if (error != NULL)
                     {
@@ -2288,7 +2346,7 @@ schema_node_extract_value(xmlNodePtr node)
    <default> node
 */
 static GConfValue*
-xentry_extract_value(xmlNodePtr node, GConfError** err)
+xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err)
 {
   GConfValue* value = NULL;
   gchar* type_str;
@@ -2392,7 +2450,7 @@ xentry_extract_value(xmlNodePtr node, GConfError** err)
                 if (strcmp(iter->name, "li") == 0)
                   {
                     
-                    v = xentry_extract_value(iter, err);
+                    v = xentry_extract_value(iter, locale, err);
                     if (v == NULL)
                       {
                         if (err && *err)
@@ -2466,7 +2524,7 @@ xentry_extract_value(xmlNodePtr node, GConfError** err)
               {
                 if (car == NULL && strcmp(iter->name, "car") == 0)
                   {
-                    car = xentry_extract_value(iter, err);
+                    car = xentry_extract_value(iter, locale, err);
                     if (car == NULL)
                       {
                         if (err && *err)
@@ -2489,7 +2547,7 @@ xentry_extract_value(xmlNodePtr node, GConfError** err)
                   }
                 else if (cdr == NULL && strcmp(iter->name, "cdr") == 0)
                   {
-                    cdr = xentry_extract_value(iter, err);
+                    cdr = xentry_extract_value(iter, locale, err);
                     if (cdr == NULL)
                       {
                         if (err && *err)

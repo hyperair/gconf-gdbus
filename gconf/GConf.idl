@@ -9,6 +9,7 @@ enum ConfigValueType { InvalidVal, IntVal, StringVal, FloatVal, BoolVal, SchemaV
 
 struct ConfigSchema {
   ConfigValueType value_type;
+  string locale;
   string short_desc;
   string long_desc;
   string owner;
@@ -98,6 +99,9 @@ interface ConfigServer {
   ConfigValue lookup(in Context ctx, in string key)
     raises (ConfigException);
 
+  // separate from lookup for efficiency
+  ConfigValue lookup_with_locale(in Context ctx, in string key, in string locale);
+  
   void set(in Context ctx, in string key, in ConfigValue value)
     raises (ConfigException);
 

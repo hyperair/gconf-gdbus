@@ -111,6 +111,7 @@ gconf_source_destroy (GConfSource* source)
 static GConfValue*
 gconf_source_query_value      (GConfSource* source,
                                const gchar* key,
+                               const gchar* locale,
                                gchar** schema_name,
                                GConfError** err)
 {
@@ -123,7 +124,7 @@ gconf_source_query_value      (GConfSource* source,
   if ( SOURCE_READABLE(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->query_value)(source, key, schema_name, err);
+      return (*source->backend->vtable->query_value)(source, key, locale, schema_name, err);
     }
   else
     return NULL;
@@ -339,6 +340,7 @@ gconf_sources_destroy(GConfSources* sources)
 GConfValue*   
 gconf_sources_query_value (GConfSources* sources, 
                            const gchar* key,
+                           const gchar* locale,
                            GConfError** err)
 {
   GList* tmp;
@@ -362,7 +364,7 @@ gconf_sources_query_value (GConfSources* sources,
       source = tmp->data;
       
       /* we only want the first schema name we find */
-      val = gconf_source_query_value(source, key,
+      val = gconf_source_query_value(source, key, locale,
                                      schema_name ? NULL : &schema_name, &error);
 
       if (error != NULL)
@@ -407,7 +409,7 @@ gconf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
 
-      val = gconf_sources_query_value(sources, schema_name, &error);
+      val = gconf_sources_query_value(sources, schema_name, locale, &error);
 
       if (error != NULL)
         {
@@ -493,7 +495,7 @@ gconf_sources_set_value   (GConfSources* sources,
           */
           GConfValue* val;
 
-          val = gconf_source_query_value(tmp->data, key, NULL, NULL);
+          val = gconf_source_query_value(tmp->data, key, NULL, NULL, NULL);
           
           if (val != NULL)
             {
