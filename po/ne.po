@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-03 15:04+0100\n"
+"POT-Creation-Date: 2004-08-16 15:30+0100\n"
 "PO-Revision-Date: 2004-06-30 02:20+0545\n"
 "Last-Translator: KU <info@mpp.org.np>\n"
 "Language-Team: Nepali <info@mpp.org.np> \n"
@@ -175,9 +175,9 @@ msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "<%s>मा \"%s\"अमान्य प्रकार "
 
 #: backends/markup-tree.c:2342
-#, c-format
-msgid "Invalid car_type \"%s\" on <%s>"
-msgstr "<%s>मा \"%s\"अमान्य वर्ण_प्रकार"
+#, fuzzy, c-format
+msgid "Invalid first-element type \"%s\" on <%s>"
+msgstr "<%s>मा \"%s\"अमान्य सूची_प्रकार"
 
 #: backends/markup-tree.c:2356
 #, c-format
@@ -925,11 +925,11 @@ msgstr ""
 msgid "none"
 msgstr "केही छैन"
 
-#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:86
+#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:88
 msgid "Help options"
 msgstr "सहयोगी विकल्प"
 
-#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:525
+#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:527
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1049,13 +1049,15 @@ msgid "Failed to load source \"%s\": %s"
 msgstr "\"%s\": %s स्रोत राख्न असफल "
 
 #: gconf/gconf-sources.c:408
-#, c-format
-msgid "Resolved address \"%s\" to a writable config source at position %d"
+#, fuzzy, c-format
+msgid ""
+"Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr " स्थानमा लेख्नयोग्य समायोजनको ढाँचालाइ \"%s\"ले समाधान गर्‍यो %d"
 
 #: gconf/gconf-sources.c:414
-#, c-format
-msgid "Resolved address \"%s\" to a read-only config source at position %d"
+#, fuzzy, c-format
+msgid ""
+"Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr " स्थानमा पढनेमात्र स्रोतको ढाँचालाइ \"%s\"ले फेरि समाधान गर्यो %d"
 
 #: gconf/gconf-sources.c:421
@@ -1360,8 +1362,10 @@ msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "%s निर्देशिकामा समस्या छ , जिकन्फले यो प्रयोग गर्न सक्दैन"
 
 #: gconf/gconfd.c:729
-#, c-format
-msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
+#, fuzzy, c-format
+msgid ""
+"Failed to write byte to pipe file descriptor %d so client program may hang: %"
+"s"
 msgstr "fd %d पाइपको अंक लेख्न सकिएन त्यसैलै %sकार्य स्थगन हुनसक्छ"
 
 #: gconf/gconfd.c:739
@@ -1499,15 +1503,15 @@ msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 
-#: gconf/gconftool.c:95
+#: gconf/gconftool.c:97
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "मूल्य र समकालीकताका लागि चाबी जडान गर. --प्रकार प्रयोग गर"
 
-#: gconf/gconftool.c:104
+#: gconf/gconftool.c:106
 msgid "Print the value of a key to standard output."
 msgstr "स्तरीय निकासमा एउटा साँचोको मूल्य छाप"
 
-#: gconf/gconftool.c:113
+#: gconf/gconftool.c:115
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1515,65 +1519,68 @@ msgstr ""
 "रुपरेखा र समकालीकता चाबी जडान गर. --छोटो-वर्णन, --लामो-वर्णन, --मालिक, र --प्रकार "
 "प्रयोग गर"
 
-#: gconf/gconftool.c:123
+#: gconf/gconftool.c:125
 msgid "Unset the keys on the command line"
 msgstr "आदेश रेखामा साँचोहरु नमिलाउ"
 
-#: gconf/gconftool.c:132
+#: gconf/gconftool.c:134
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr "आदेश रेखामा वा मुनि साँचो/निर्देशिका नामहरु सूत्रात्मक तवरले नमिलाऊ"
 
-#: gconf/gconftool.c:141
+#: gconf/gconftool.c:143
 msgid "Print all key/value pairs in a directory."
 msgstr "निर्देशिकामा सबै साँचो/मूल्यका जोडाहरु छाप"
 
-#: gconf/gconftool.c:150
+#: gconf/gconftool.c:152
 msgid "Print all subdirectories in a directory."
 msgstr "निर्देशिकामा सबै उपनिर्देशिकाहरु छाप"
 
-#: gconf/gconftool.c:159
+#: gconf/gconftool.c:161
+#, fuzzy
 msgid ""
-"Dump to standard out an XML description of all entries under a dir, "
+"Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr "एक्सएमएलको वर्णनका लागि सबै प्रविष्टहरु निर्देशिकाको मुनि राखसूत्रात्मक."
 
-#: gconf/gconftool.c:168
+#: gconf/gconftool.c:170
+#, fuzzy
 msgid ""
 "Load from the specified file an XML description of values and set them "
-"relative to a dir."
+"relative to a directory."
 msgstr ""
 "मूल्यहरुको एक्सएमएल वर्णनका लागि निश्चित मिसिलबाट भर र त्यसलाई निर्देशिकासँग तुलनात्मक "
 "रुपले जडान गर"
 
-#: gconf/gconftool.c:177
+#: gconf/gconftool.c:179
 msgid "Unload a set of values described in an XML file."
 msgstr ""
 
-#: gconf/gconftool.c:186
-msgid "Print all subdirectories and entries under a dir, recursively."
+#: gconf/gconftool.c:188
+#, fuzzy
+msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "सबै प्रविष्टि र उपनिर्देशिकाहरु सूत्रात्मक रुपले निर्देशिकाको मुनि छाप"
 
-#: gconf/gconftool.c:195
+#: gconf/gconftool.c:197
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr " यदि निर्देशिका चालु छभने ० फर्काउ, छैन भने २"
 
-#: gconf/gconftool.c:204
+#: gconf/gconftool.c:206
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "जिकन्फ्ड बन्द गर। राम्रो कारणबिना यो बिकल्प प्रयोग नगर"
 
-#: gconf/gconftool.c:213
+#: gconf/gconftool.c:215
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "यदि जिकन्फ्ड चलिरहेकोछ भने ० फर्काउ,यदि छैन भने २"
 
-#: gconf/gconftool.c:222
+#: gconf/gconftool.c:224
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
 msgstr "समायोजन सेवाप्दायक जीकन्फ) सुरुगर.(सामान्यतया आवस्कता अनुसार यो आफैँ चालु हुन्छ "
 
-#: gconf/gconftool.c:231
+#: gconf/gconftool.c:233
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1581,23 +1588,23 @@ msgstr ""
 "जडान हुनलागेको वा रुपरेखाले वर्णन गरेको मूल्यको प्रकार निश्चित गर.यसको उचित छोटकरी रुप "
 "ओके हो  "
 
-#: gconf/gconftool.c:232
+#: gconf/gconftool.c:234
 msgid "int|bool|float|string|list|pair"
 msgstr "तत्व|बुल|फ्लोट|सूत्र|सूची|जोडा"
 
-#: gconf/gconftool.c:240
+#: gconf/gconftool.c:242
 msgid "Print the data type of a key to standard output."
 msgstr "स्तरीय निकाशमा एउटा साँचोको तथ्याङ्क छाप"
 
-#: gconf/gconftool.c:249
+#: gconf/gconftool.c:251
 msgid "Get the number of elements in a list key."
 msgstr "साँचोको सूचीमा तत्वहरुको सङ्ख्या लेउ"
 
-#: gconf/gconftool.c:258
+#: gconf/gconftool.c:260
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "चाबीको सूचीबाट संख्यात्मक क्रमको एउटा निश्चित तत्व लेऊ"
 
-#: gconf/gconftool.c:267
+#: gconf/gconftool.c:269
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1605,11 +1612,11 @@ msgstr ""
 "जडान हुनलागेको वा रुपरेखाले वर्णन गरेको मूल्यको प्रकार निश्चित गर.यसको उचित छोटकरी रुप "
 "ओके हो  "
 
-#: gconf/gconftool.c:268 gconf/gconftool.c:277 gconf/gconftool.c:286
+#: gconf/gconftool.c:270 gconf/gconftool.c:279 gconf/gconftool.c:288
 msgid "int|bool|float|string"
 msgstr "तत्व|बुल|फ्लोट|सूत्र|सूची|"
 
-#: gconf/gconftool.c:276
+#: gconf/gconftool.c:278
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1617,7 +1624,7 @@ msgstr ""
 "जडान हुनलागेको वा रुपरेखाले वर्णन गरेको मूल्यको प्रकार निश्चित गर.यसको उचित छोटकरी रुप "
 "ओके हो  "
 
-#: gconf/gconftool.c:285
+#: gconf/gconftool.c:287
 #, fuzzy
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
@@ -1626,652 +1633,652 @@ msgstr ""
 "जडान हुनलागेको वा रुपरेखाले वर्णन गरेको मूल्यको प्रकार निश्चित गर.यसको उचित छोटकरी रुप "
 "ओके हो  "
 
-#: gconf/gconftool.c:294
+#: gconf/gconftool.c:296
 msgid "Specify a short half-line description to go in a schema."
 msgstr "रुपरेखामा जान एउटा छोटो आधाहरफको वर्णन तयगर"
 
-#: gconf/gconftool.c:295 gconf/gconftool.c:304
+#: gconf/gconftool.c:297 gconf/gconftool.c:306
 msgid "DESCRIPTION"
 msgstr "वर्णन"
 
-#: gconf/gconftool.c:303
+#: gconf/gconftool.c:305
 msgid "Specify a several-line description to go in a schema."
 msgstr "रुपरेखामा जान एउटा धेरैहरफको वर्णन तयगर"
 
-#: gconf/gconftool.c:312
+#: gconf/gconftool.c:314
 msgid "Specify the owner of a schema"
 msgstr "रुपरेखाको मालिक निश्चितगर"
 
-#: gconf/gconftool.c:313
+#: gconf/gconftool.c:315
 msgid "OWNER"
 msgstr "मालिक"
 
-#: gconf/gconftool.c:321
+#: gconf/gconftool.c:323
 msgid "Specify a schema file to be installed"
 msgstr "जडान हुनका लागि एउटा रुपरेखा तयगर"
 
-#: gconf/gconftool.c:322
+#: gconf/gconftool.c:324
 msgid "FILENAME"
 msgstr "लेखपत्रको नाम"
 
-#: gconf/gconftool.c:330
+#: gconf/gconftool.c:332
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "पूर्वनिर्धारित मार्गभन्दा फरक मार्ग प्रयोग गर्न एउटा समायोजन स्रोतको तयगर "
 
-#: gconf/gconftool.c:331
+#: gconf/gconftool.c:333
 msgid "SOURCE"
 msgstr "स्रोत"
 
-#: gconf/gconftool.c:339
+#: gconf/gconftool.c:341
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr "जीकन्फ चालु छन. सेवादायकलाई छोडेर समायोजन तथ्याङ्कलाई सिधै बाटो देऊ. "
 
-#: gconf/gconftool.c:348
+#: gconf/gconftool.c:350
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
 
-#: gconf/gconftool.c:357
+#: gconf/gconftool.c:359
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
 
-#: gconf/gconftool.c:366
+#: gconf/gconftool.c:368
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
 
-#: gconf/gconftool.c:375
+#: gconf/gconftool.c:377
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
 
-#: gconf/gconftool.c:384
+#: gconf/gconftool.c:386
 msgid "Get the short doc string for a key"
 msgstr "एउटा साँचोको लागि सानो डकसूत्र लेउ"
 
-#: gconf/gconftool.c:393
+#: gconf/gconftool.c:395
 msgid "Get the long doc string for a key"
 msgstr "एउटा साँचोको लागि ठूलो डकसूत्र लेउ"
 
-#: gconf/gconftool.c:402
+#: gconf/gconftool.c:404
 msgid "Get the name of the schema applied to this key"
 msgstr "रुपरेखाको नाम पाउनलाइ यो साँचो लेऊ"
 
-#: gconf/gconftool.c:411
+#: gconf/gconftool.c:413
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
 
-#: gconf/gconftool.c:420
+#: gconf/gconftool.c:422
 msgid "Remove any schema name applied to the given keys"
 msgstr "दिइएका साँचाहरु लागु गर्न कुनै रुपरेखाको नाम हटाउ"
 
-#: gconf/gconftool.c:429
+#: gconf/gconftool.c:431
 msgid "Ignore schema defaults when reading values."
 msgstr "जब मुल्यहरु पढिरहेको हुन्छ पुर्वनिर्धारित रुपरेखालाइ बेवास्ता गर"
 
-#: gconf/gconftool.c:438
+#: gconf/gconftool.c:440
 msgid "Get the name of the default source"
 msgstr "पुर्व निर्धारित स्रोतको नाम लेउ"
 
-#: gconf/gconftool.c:447
+#: gconf/gconftool.c:449
 msgid "Print version"
 msgstr "छाप्ने पाठ"
 
-#: gconf/gconftool.c:543
+#: gconf/gconftool.c:545
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "समानान्तर रुपमा जडान/फुकाल पाउन सकिँदैन \n"
 
-#: gconf/gconftool.c:553
+#: gconf/gconftool.c:555
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "समानान्तर रुपमा प्राप्ती /फुकाल जडान गर्न सकिँदैन \n"
 
-#: gconf/gconftool.c:560
+#: gconf/gconftool.c:562
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "समानान्तर रुपमा जडान/फुकालको प्रकार पाउन सकिँदैन\n"
 
-#: gconf/gconftool.c:571
+#: gconf/gconftool.c:573
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr ""
 
-#: gconf/gconftool.c:582
+#: gconf/gconftool.c:584
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr ""
 
-#: gconf/gconftool.c:595
+#: gconf/gconftool.c:597
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
 msgstr ""
 
-#: gconf/gconftool.c:608
+#: gconf/gconftool.c:610
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 msgstr ""
 
-#: gconf/gconftool.c:614
+#: gconf/gconftool.c:616
 msgid "Value type is only relevant when setting a value\n"
 msgstr "मूल्य प्रकारको उपयुक्तता त्यतिबेर थाहा हुन्छ जब मूल्य जडान गरिन्छ\n"
 
-#: gconf/gconftool.c:620
+#: gconf/gconftool.c:622
 msgid "Must specify a type when setting a value\n"
 msgstr "मूल्य जडानगर्दा यसको प्रकार छुट्याउनै पर्छ \n"
 
-#: gconf/gconftool.c:628
+#: gconf/gconftool.c:630
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
 msgstr ""
 
-#: gconf/gconftool.c:640 gconf/gconftool.c:653 gconf/gconftool.c:666
-#: gconf/gconftool.c:680 gconf/gconftool.c:693 gconf/gconftool.c:706
-#: gconf/gconftool.c:720
+#: gconf/gconftool.c:642 gconf/gconftool.c:655 gconf/gconftool.c:668
+#: gconf/gconftool.c:682 gconf/gconftool.c:695 gconf/gconftool.c:708
+#: gconf/gconftool.c:722
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr ""
 
-#: gconf/gconftool.c:729
+#: gconf/gconftool.c:731
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 
-#: gconf/gconftool.c:735
+#: gconf/gconftool.c:737
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:764
+#: gconf/gconftool.c:766
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 
-#: gconf/gconftool.c:771
+#: gconf/gconftool.c:773
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 
-#: gconf/gconftool.c:784
+#: gconf/gconftool.c:786
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr ""
 
-#: gconf/gconftool.c:819
+#: gconf/gconftool.c:821
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "समायोजन स्रोतको सुविधा प्राप्त भएन: %s\n"
 
-#: gconf/gconftool.c:1116
+#: gconf/gconftool.c:1124
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1159
+#: gconf/gconftool.c:1167
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1211
+#: gconf/gconftool.c:1219
 msgid "Must specify one or more directories to dump.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1253 gconf/gconftool.c:1519
+#: gconf/gconftool.c:1261 gconf/gconftool.c:1527
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "`%s': %s मा सूची प्रविष्टिगर्दा गल्ती \n"
 
-#: gconf/gconftool.c:1272
+#: gconf/gconftool.c:1280
 msgid "(no value set)"
 msgstr "(मूल्य जडान छैन)"
 
-#: gconf/gconftool.c:1578
+#: gconf/gconftool.c:1586
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1607
+#: gconf/gconftool.c:1615
 msgid "Must specify a key or keys to get\n"
-msgstr ""
-
-#: gconf/gconftool.c:1642
-#, c-format
-msgid "Type: %s\n"
-msgstr " %s प्रकार:\n"
-
-#: gconf/gconftool.c:1643
-#, c-format
-msgid "List Type: %s\n"
-msgstr "%s सूची प्रकार:\n"
-
-#: gconf/gconftool.c:1644
-#, c-format
-msgid "Car Type: %s\n"
-msgstr "अक्षर प्रकार: %s\n"
-
-#: gconf/gconftool.c:1645
-#, c-format
-msgid "Cdr Type: %s\n"
 msgstr ""
 
 #: gconf/gconftool.c:1650
 #, c-format
+msgid "Type: %s\n"
+msgstr " %s प्रकार:\n"
+
+#: gconf/gconftool.c:1651
+#, c-format
+msgid "List Type: %s\n"
+msgstr "%s सूची प्रकार:\n"
+
+#: gconf/gconftool.c:1652
+#, c-format
+msgid "Car Type: %s\n"
+msgstr "अक्षर प्रकार: %s\n"
+
+#: gconf/gconftool.c:1653
+#, c-format
+msgid "Cdr Type: %s\n"
+msgstr ""
+
+#: gconf/gconftool.c:1658
+#, c-format
 msgid "Default Value: %s\n"
 msgstr "पूर्वनिर्धारित मूल्य: %s\n"
 
-#: gconf/gconftool.c:1650 gconf/gconftool.c:1652 gconf/gconftool.c:1653
-#: gconf/gconftool.c:1654
+#: gconf/gconftool.c:1658 gconf/gconftool.c:1660 gconf/gconftool.c:1661
+#: gconf/gconftool.c:1662
 msgid "Unset"
 msgstr "फुकाल"
 
-#: gconf/gconftool.c:1652
+#: gconf/gconftool.c:1660
 #, c-format
 msgid "Owner: %s\n"
 msgstr "मालिक: %s\n"
 
-#: gconf/gconftool.c:1653
+#: gconf/gconftool.c:1661
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "छोटो वर्णन: %s\n"
 
-#: gconf/gconftool.c:1654
+#: gconf/gconftool.c:1662
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "लामो वर्णन: %s\n"
 
-#: gconf/gconftool.c:1663 gconf/gconftool.c:1887 gconf/gconftool.c:1921
-#: gconf/gconftool.c:1966 gconf/gconftool.c:2111
+#: gconf/gconftool.c:1671 gconf/gconftool.c:1895 gconf/gconftool.c:1929
+#: gconf/gconftool.c:1974 gconf/gconftool.c:2119
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "`%s' को मूल्य जडान गरेको छैन \n"
 
-#: gconf/gconftool.c:1667 gconf/gconftool.c:1891 gconf/gconftool.c:1925
-#: gconf/gconftool.c:1970 gconf/gconftool.c:2115
+#: gconf/gconftool.c:1675 gconf/gconftool.c:1899 gconf/gconftool.c:1933
+#: gconf/gconftool.c:1978 gconf/gconftool.c:2123
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1710 gconf/gconftool.c:1722
+#: gconf/gconftool.c:1718 gconf/gconftool.c:1730
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr " `%s' को प्रकार बुझिएन \n"
 
-#: gconf/gconftool.c:1734
+#: gconf/gconftool.c:1742
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr ""
 
-#: gconf/gconftool.c:1754
+#: gconf/gconftool.c:1762
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "`%s' चाबीका लागि मूल्य जडान गरिएको छैन \n"
 
-#: gconf/gconftool.c:1782
+#: gconf/gconftool.c:1790
 msgid "Cannot set schema as value\n"
 msgstr ""
 
-#: gconf/gconftool.c:1792
+#: gconf/gconftool.c:1800
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr ""
 
-#: gconf/gconftool.c:1806
+#: gconf/gconftool.c:1814
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr ""
 
-#: gconf/gconftool.c:1821
+#: gconf/gconftool.c:1829
 #, c-format
 msgid "Error: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1834 gconf/gconftool.c:2866
+#: gconf/gconftool.c:1842 gconf/gconftool.c:2874
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1852
+#: gconf/gconftool.c:1860
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1867
+#: gconf/gconftool.c:1875
 msgid "Must specify a key or keys to get type\n"
 msgstr ""
 
-#: gconf/gconftool.c:1911
+#: gconf/gconftool.c:1919
 msgid "Must specify a key to lookup size of.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1936 gconf/gconftool.c:1981
+#: gconf/gconftool.c:1944 gconf/gconftool.c:1989
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1956
+#: gconf/gconftool.c:1964
 msgid "Must specify a key from which to get list element.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1987
+#: gconf/gconftool.c:1995
 msgid "Must specify list index.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1994
+#: gconf/gconftool.c:2002
 msgid "List index must be non-negative.\n"
 msgstr ""
 
-#: gconf/gconftool.c:2003
+#: gconf/gconftool.c:2011
 msgid "List index is out of bounds.\n"
 msgstr ""
 
-#: gconf/gconftool.c:2029
+#: gconf/gconftool.c:2037
 msgid "Must specify a key or keys on the command line\n"
 msgstr ""
 
-#: gconf/gconftool.c:2049
+#: gconf/gconftool.c:2057
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:2082
+#: gconf/gconftool.c:2090
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "'%s' मा रुपरेखाभित्र लेखोटसूत्र बचत छैन\n"
 
-#: gconf/gconftool.c:2087
+#: gconf/gconftool.c:2095
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "'%s': %s मा रुपरेखा पाउने क्रममा गल्ती\n"
 
-#: gconf/gconftool.c:2094
+#: gconf/gconftool.c:2102
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "'%s' मा रुपरेखा बचत छैन\n"
 
-#: gconf/gconftool.c:2097
+#: gconf/gconftool.c:2105
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "'%s' मा रुपरेखाको मूल्य छैन\n"
 
-#: gconf/gconftool.c:2153
+#: gconf/gconftool.c:2161
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 
-#: gconf/gconftool.c:2160
+#: gconf/gconftool.c:2168
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "'%s': %s चाबीको नामसँग '%s' रुपरेखाको नाम जोड्न समस्या\n"
 
-#: gconf/gconftool.c:2178
+#: gconf/gconftool.c:2186
 msgid "Must specify keys to unapply schema from\n"
 msgstr " बाट रुपरेखालाई मान्यता नदिन चाबी चिन्नु पर्छ\n"
 
-#: gconf/gconftool.c:2188
+#: gconf/gconftool.c:2196
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "'%s': %s बाट रुपरेखा नाम हटाउन समस्या\n"
 
-#: gconf/gconftool.c:2213
+#: gconf/gconftool.c:2221
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr ""
 
-#: gconf/gconftool.c:2255
+#: gconf/gconftool.c:2263
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "सूत्र, ईन्ट, तरङ्ग वा बुल योजकसूची मान्यप्रकारको  हुनै पर्छ: \n"
 
-#: gconf/gconftool.c:2275
+#: gconf/gconftool.c:2283
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "सूत्र, ईन्ट, तरङ्ग वा बुल जोडा अक्षर मान्यप्रकारको  हुनै पर्छ: \n"
 
-#: gconf/gconftool.c:2295
+#: gconf/gconftool.c:2303
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "सूत्र, ईन्ट, तरङ्ग वा बुल जोडी सिडिआर मान्यप्रकारको  हुनै पर्छ:\n"
 
-#: gconf/gconftool.c:2310
+#: gconf/gconftool.c:2318
 #, c-format
 msgid "Error setting value: %s"
 msgstr "%s को स्थापित मुल्यमा समस्या"
 
-#: gconf/gconftool.c:2324
+#: gconf/gconftool.c:2332
 #, c-format
 msgid "Error syncing: %s"
 msgstr "%s  समकालीनकरणमा समस्या"
 
-#: gconf/gconftool.c:2339
+#: gconf/gconftool.c:2347
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr " बाट चाबी /मुल्य जोडा पाउनलाई एक वा धेरै निर्देशिकाहरु चिन्नु पर्छ.\n"
 
-#: gconf/gconftool.c:2353
+#: gconf/gconftool.c:2361
 msgid "Must specify one or more keys to unset.\n"
 msgstr " बिस्थापित हुनालाई एक वा धेरै साँचोहरु चिन्नु पर्छ\n"
 
-#: gconf/gconftool.c:2364
+#: gconf/gconftool.c:2372
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "`%s': %s बिस्थापित गर्न समस्या\n"
 
-#: gconf/gconftool.c:2384
+#: gconf/gconftool.c:2392
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr ""
 
-#: gconf/gconftool.c:2398
+#: gconf/gconftool.c:2406
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:2418
+#: gconf/gconftool.c:2426
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "बाट उपनिर्देशिका पाउनको लागि एक वा धेरै निर्देशिकाहरु चिन्नु पर्छ\n"
 
-#: gconf/gconftool.c:2452
+#: gconf/gconftool.c:2460
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "%s निर्देशिका सूचीमा समस्या\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2596
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr ""
 
-#: gconf/gconftool.c:2615
+#: gconf/gconftool.c:2623
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 
-#: gconf/gconftool.c:2648
+#: gconf/gconftool.c:2656
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "चेतावनी <मुल्य>को मुनि एउटा अपरिपक्व नोड हुनै पर्छ\n"
 
-#: gconf/gconftool.c:2654
+#: gconf/gconftool.c:2662
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "चेतावनी: जोडकबिन्दु <%s> बुझिएन\n"
 
-#: gconf/gconftool.c:2672
+#: gconf/gconftool.c:2680
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "चेतावनी: `%s' को ईन्ट मूल्य पदमिलानमा असफल\n"
 
-#: gconf/gconftool.c:2693
+#: gconf/gconftool.c:2701
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "चेतावनी: `%s' को तरंगित मूल्य पदमिलानमा असफल \n"
 
-#: gconf/gconftool.c:2715
+#: gconf/gconftool.c:2723
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "चेतावनी: `%s' को सूत्र मूल्य पदमिलानमा असफल\n"
 
-#: gconf/gconftool.c:2736
+#: gconf/gconftool.c:2744
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "चेतावनी: बुलेन मूल्य `%s' मा पदमिलान असफल भयो\n"
 
-#: gconf/gconftool.c:2845 gconf/gconftool.c:3387
+#: gconf/gconftool.c:2853 gconf/gconftool.c:3395
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr " '%s' को रुपरेखा `%s': %s चाबीसँग जोड्न असफल\n"
 
-#: gconf/gconftool.c:2960
+#: gconf/gconftool.c:2968
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "चेतावनी: (%s) रुपरेखाकोलागि अमान्य अथवा हराइरहेको प्रकार\n"
 
-#: gconf/gconftool.c:2969
+#: gconf/gconftool.c:2977
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "चेतावनी: (%s) रूपरेखाका लागि सूची_किसिम अमान्य छ अथवा हरायो\n"
 
-#: gconf/gconftool.c:2980 gconf/gconftool.c:3010 gconf/gconftool.c:3039
+#: gconf/gconftool.c:2988 gconf/gconftool.c:3018 gconf/gconftool.c:3047
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "(%s) रुपरेखाको लागि`%s' पूर्वनिर्धारित मूल्यका लागि पदमिलानमा असफल\n"
 
-#: gconf/gconftool.c:2998
+#: gconf/gconftool.c:3006
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "चेतावनि:(%s) रूपरेखाका लागि कार_किसिम वा सिडिआर_किसिम अमान्य अथवा हरायो\n"
 
-#: gconf/gconftool.c:3023
+#: gconf/gconftool.c:3031
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "चेतावनि: तपाइ एउटा रुपरेखाको लागि पुर्वनिर्धारित मुल्य राख्न सक्नुहुन्न\n"
 
-#: gconf/gconftool.c:3052
+#: gconf/gconftool.c:3060
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr ""
 
-#: gconf/gconftool.c:3100 gconf/gconftool.c:3121 gconf/gconftool.c:3142
-#: gconf/gconftool.c:3163
+#: gconf/gconftool.c:3108 gconf/gconftool.c:3129 gconf/gconftool.c:3150
+#: gconf/gconftool.c:3171
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "चेतावनी: `%s' किसिमका नाम पदमिलान गर्न असफल\n"
 
-#: gconf/gconftool.c:3117
+#: gconf/gconftool.c:3125
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:3138
+#: gconf/gconftool.c:3146
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:3159
+#: gconf/gconftool.c:3167
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:3199
+#: gconf/gconftool.c:3207
 msgid "WARNING: empty <applyto> node"
 msgstr "चेतावनि:  <लागु गर्नु> नोड खालि छ"
 
-#: gconf/gconftool.c:3202 gconf/gconftool.c:3460
+#: gconf/gconftool.c:3210 gconf/gconftool.c:3468
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr ""
 
-#: gconf/gconftool.c:3213
+#: gconf/gconftool.c:3221
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr ""
 
-#: gconf/gconftool.c:3219
+#: gconf/gconftool.c:3227
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr ""
 
-#: gconf/gconftool.c:3225
+#: gconf/gconftool.c:3233
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr ""
 
-#: gconf/gconftool.c:3254
+#: gconf/gconftool.c:3262
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "चेतावनी:  <स्थानीय> नोडसँग प्रारुप `नाम=\"स्थानीय\"' को परित्याग \n"
 
-#: gconf/gconftool.c:3260
+#: gconf/gconftool.c:3268
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr "चेतावनी:  स्थानीय `%s'  का लागि विविध <स्थानीय> नोडहरु,  पहिला सबै त्याग\n"
 
-#: gconf/gconftool.c:3358
+#: gconf/gconftool.c:3366
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "चेतावनी: एउटा <स्थानीय>नोडमा <%s> अमान्य नोड\n"
 
-#: gconf/gconftool.c:3395
+#: gconf/gconftool.c:3403
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr " `%s' चाबीमा`%s'रुपरेखा जोडिएको छ\n"
 
-#: gconf/gconftool.c:3469
+#: gconf/gconftool.c:3477
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr " एउटा<रुपरेखा>मा प्रविष्टि गर्न जे भएपनि तपाईसँग एउटा<स्थानीय>हुनैपर्छ\n"
 
-#: gconf/gconftool.c:3504
+#: gconf/gconftool.c:3512
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "चेतावनी:स्थानीय-कक्ष`%s': %s का लागि  रुपरेखा`%s'स्थापित गर्न असफल \n"
 
-#: gconf/gconftool.c:3512
+#: gconf/gconftool.c:3520
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:3522
+#: gconf/gconftool.c:3530
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
 msgstr "चेतावनी:स्थानीय-कक्ष`%s': %s का लागि  रुपरेखा`%s'बिस्थापित गर्न असफल \n"
 
-#: gconf/gconftool.c:3530
+#: gconf/gconftool.c:3538
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "स्थानीय-कक्ष`%s' बाट रुपरेखा`%s'बिस्थापित गरियो \n"
 
-#: gconf/gconftool.c:3568
+#: gconf/gconftool.c:3576
 msgid "WARNING: no key specified for schema\n"
 msgstr "चेतावनी: रुपरेखाका लागि कुनै चाबी तय गरिएन \n"
 
-#: gconf/gconftool.c:3609
+#: gconf/gconftool.c:3617
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "चेतावनी:<%s> तलको जोडकविन्दु <%s> बुझिएन\n"
 
-#: gconf/gconftool.c:3640
+#: gconf/gconftool.c:3648
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "`%s': %s खोल्न असफल \n"
 
-#: gconf/gconftool.c:3647
+#: gconf/gconftool.c:3655
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "`%s' मिसिल खाली छ ?\n"
 
-#: gconf/gconftool.c:3659
+#: gconf/gconftool.c:3667
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 
-#: gconf/gconftool.c:3672
+#: gconf/gconftool.c:3680
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "`%s' मिसिलसँग माथिल्लो तहको<%s> जोडकबिन्दु  छैन \n"
 
-#: gconf/gconftool.c:3686
+#: gconf/gconftool.c:3694
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "चेतावनी: तल <%s> को जोडकविन्दु <%s> बुझिएन\n"
 
-#: gconf/gconftool.c:3697 gconf/gconftool.c:3732
+#: gconf/gconftool.c:3705 gconf/gconftool.c:3740
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "%s डाटा ढाँचामा सिङ्किङ समस्या"
 
-#: gconf/gconftool.c:3716
+#: gconf/gconftool.c:3724
 msgid "Must specify some schema files to install\n"
 msgstr "जडान गर्न केही संकल्पित मिसिल चिन्नुपर्छ \n"
 
-#: gconf/gconftool.c:3753
+#: gconf/gconftool.c:3761
 #, c-format
 msgid ""
 "\n"
@@ -2280,16 +2287,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:3773
+#: gconf/gconftool.c:3781
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "तोडिएका %s: %s चाबीहरु बिस्थापित गर्न असफल \n"
 
-#: gconf/gconftool.c:3899
+#: gconf/gconftool.c:3907
 msgid "Must specify some keys to break\n"
 msgstr "रोक्नका लागि केही चाबीहरु चिन्नुपर्छ \n"
 
-#: gconf/gconftool.c:3905
+#: gconf/gconftool.c:3913
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2298,11 +2305,11 @@ msgstr ""
 " %s चाबीका लागि खराब मूल्य मिलान गर्नबाट अनुरोधपत्र रोक्ने कोसिसगर्नुस् \n"
 "  \n"
 
-#: gconf/gconftool.c:3923
+#: gconf/gconftool.c:3931
 msgid "Must specify some directories to break\n"
 msgstr " रोक्नका लागि केही निर्देशिकाहरु चिन्नुपर्छ\n"
 
-#: gconf/gconftool.c:3942
+#: gconf/gconftool.c:3950
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2312,6 +2319,9 @@ msgstr ""
 " %s निर्देशिकामा भएको चाबीका लागि खराब मूल्य मिलान गर्नबाट अनुरोधपत्र रोक्ने "
 "कोसिसगर्नुस् \n"
 "  \n"
+
+#~ msgid "Invalid car_type \"%s\" on <%s>"
+#~ msgstr "<%s>मा \"%s\"अमान्य वर्ण_प्रकार"
 
 #~ msgid "Must specify some schema files to uninstall\n"
 #~ msgstr "हटाऊनलाइ केही संकल्पित मिसिल चिन्नुपर्छ \n"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD.mk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-03 15:04+0100\n"
+"POT-Creation-Date: 2004-08-16 15:30+0100\n"
 "PO-Revision-Date: 2003-06-15 21:59+0000\n"
 "Last-Translator: Vladislav Bidikov <bidikovi@mail.com.mk>\n"
 "Language-Team: Macedonian <lug@lists.linux.net.mk>\n"
@@ -182,7 +182,7 @@ msgstr ""
 
 #: backends/markup-tree.c:2342
 #, c-format
-msgid "Invalid car_type \"%s\" on <%s>"
+msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr ""
 
 #: backends/markup-tree.c:2356
@@ -945,11 +945,11 @@ msgstr ""
 msgid "none"
 msgstr "ништо"
 
-#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:86
+#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:88
 msgid "Help options"
 msgstr "Опции за помош"
 
-#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:525
+#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:527
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1085,13 +1085,15 @@ msgid "Failed to load source \"%s\": %s"
 msgstr "Не успеав да го вчитам кодот \"%s\": %s"
 
 #: gconf/gconf-sources.c:408
-#, c-format
-msgid "Resolved address \"%s\" to a writable config source at position %d"
+#, fuzzy, c-format
+msgid ""
+"Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr "Разрешена адреса \"%s\" до пишлив конфиг код на позиција %d"
 
 #: gconf/gconf-sources.c:414
-#, c-format
-msgid "Resolved address \"%s\" to a read-only config source at position %d"
+#, fuzzy, c-format
+msgid ""
+"Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr "Разрешена адреса \"%s\" до само-читај конфиг код на позиција %d"
 
 #: gconf/gconf-sources.c:421
@@ -1414,8 +1416,10 @@ msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Директориумот %s има проблем, gconfd не може да го употребува"
 
 #: gconf/gconfd.c:729
-#, c-format
-msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
+#, fuzzy, c-format
+msgid ""
+"Failed to write byte to pipe file descriptor %d so client program may hang: %"
+"s"
 msgstr ""
 "Не успеав да напишам бајт на цевка fd %d така клиент програмот може да "
 "падне: %s"
@@ -1567,15 +1571,15 @@ msgid ""
 msgstr ""
 "Некој клиент самиот се одстранил од GConf серверот кога не бил додаден."
 
-#: gconf/gconftool.c:95
+#: gconf/gconftool.c:97
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "Намести клуч за вредност и синхронизација. Употреби со --type."
 
-#: gconf/gconftool.c:104
+#: gconf/gconftool.c:106
 msgid "Print the value of a key to standard output."
 msgstr "Печати ја вредноста на клучот до стандарден излез."
 
-#: gconf/gconftool.c:113
+#: gconf/gconftool.c:115
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1583,11 +1587,11 @@ msgstr ""
 "Намести схема и синхронизација. Употребувај со --short-desc, --long-desc, --"
 "owner и --type."
 
-#: gconf/gconftool.c:123
+#: gconf/gconftool.c:125
 msgid "Unset the keys on the command line"
 msgstr "Одподеси ги клучевите на командната линија"
 
-#: gconf/gconftool.c:132
+#: gconf/gconftool.c:134
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1595,51 +1599,54 @@ msgstr ""
 "Рекурзивно размести ги сите клучеви на или под главните/директориумски имиња "
 "на командната линија"
 
-#: gconf/gconftool.c:141
+#: gconf/gconftool.c:143
 msgid "Print all key/value pairs in a directory."
 msgstr "Печати ги сите клуч/вредност парови во директориумот."
 
-#: gconf/gconftool.c:150
+#: gconf/gconftool.c:152
 msgid "Print all subdirectories in a directory."
 msgstr "Печати ги сите поддиректориуми во директориумот."
 
-#: gconf/gconftool.c:159
+#: gconf/gconftool.c:161
+#, fuzzy
 msgid ""
-"Dump to standard out an XML description of all entries under a dir, "
+"Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr ""
 "Отфрли до стандарден излез XML опис од сите влезови под директориум, "
 "рекурзивно."
 
-#: gconf/gconftool.c:168
+#: gconf/gconftool.c:170
+#, fuzzy
 msgid ""
 "Load from the specified file an XML description of values and set them "
-"relative to a dir."
+"relative to a directory."
 msgstr ""
 "Вчитај од определената датотека XML опис на вредности и намести ги во однос "
 "на директориумот."
 
-#: gconf/gconftool.c:177
+#: gconf/gconftool.c:179
 msgid "Unload a set of values described in an XML file."
 msgstr ""
 
-#: gconf/gconftool.c:186
-msgid "Print all subdirectories and entries under a dir, recursively."
+#: gconf/gconftool.c:188
+#, fuzzy
+msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "Печати ги сите поддиректориуми и влезови под директориуми, рекурзивно."
 
-#: gconf/gconftool.c:195
+#: gconf/gconftool.c:197
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "Врати 0 ако директориумот постои, 2 ако не постои."
 
-#: gconf/gconftool.c:204
+#: gconf/gconftool.c:206
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "Исклучи го gconfd. НЕ ЈА УПОТРЕБУВАЈ ОВАА ОПЦИЈА БЕЗ ДОБРА ПРИЧИНА."
 
-#: gconf/gconftool.c:213
+#: gconf/gconftool.c:215
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "Врати 0 ако gconfd работи, 2 ако не."
 
-#: gconf/gconftool.c:222
+#: gconf/gconftool.c:224
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
@@ -1647,7 +1654,7 @@ msgstr ""
 "Лансирај го config серверот (gconfd). (Обично се случува автоматски кога е "
 "потребно.)"
 
-#: gconf/gconftool.c:231
+#: gconf/gconftool.c:233
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1655,23 +1662,23 @@ msgstr ""
 "Определи го типот на вредноста која се дава, или типот на вредност кој "
 "схемата го опишува. Уникатни кратенки ОК."
 
-#: gconf/gconftool.c:232
+#: gconf/gconftool.c:234
 msgid "int|bool|float|string|list|pair"
 msgstr "цел бр.|bool|лебди|стринг|листа|пар"
 
-#: gconf/gconftool.c:240
+#: gconf/gconftool.c:242
 msgid "Print the data type of a key to standard output."
 msgstr "Печати го податочниот тип од клучот во стандарден излез."
 
-#: gconf/gconftool.c:249
+#: gconf/gconftool.c:251
 msgid "Get the number of elements in a list key."
 msgstr "Земи го бројот на елементи во клуч листа."
 
-#: gconf/gconftool.c:258
+#: gconf/gconftool.c:260
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "Земи специфичен елемент од клуч листа, броево индексирани"
 
-#: gconf/gconftool.c:267
+#: gconf/gconftool.c:269
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1679,11 +1686,11 @@ msgstr ""
 "Определи го типот на вредност на листата кој се дава или типот на вредност "
 "кој схемата го опишува. Уникатни кратенки ОК."
 
-#: gconf/gconftool.c:268 gconf/gconftool.c:277 gconf/gconftool.c:286
+#: gconf/gconftool.c:270 gconf/gconftool.c:279 gconf/gconftool.c:288
 msgid "int|bool|float|string"
 msgstr "int|bool|лебди|стринг"
 
-#: gconf/gconftool.c:276
+#: gconf/gconftool.c:278
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1691,7 +1698,7 @@ msgstr ""
 "Определи го типот на вредност на car пар кој се дава или типот на вредност "
 "кој схемата го опишува. Уникатни кратенки ОК."
 
-#: gconf/gconftool.c:285
+#: gconf/gconftool.c:287
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1699,44 +1706,44 @@ msgstr ""
 "Определи го типот на вредност за cdr пар која се дава или типот на вредност "
 "кој схемата го опишува.Уникатни кратенки OK."
 
-#: gconf/gconftool.c:294
+#: gconf/gconftool.c:296
 msgid "Specify a short half-line description to go in a schema."
 msgstr "Определи краток пола-линијски опис за во схема."
 
-#: gconf/gconftool.c:295 gconf/gconftool.c:304
+#: gconf/gconftool.c:297 gconf/gconftool.c:306
 msgid "DESCRIPTION"
 msgstr "ОПИС"
 
-#: gconf/gconftool.c:303
+#: gconf/gconftool.c:305
 msgid "Specify a several-line description to go in a schema."
 msgstr "Определи неколку-линиски опис за во схема."
 
-#: gconf/gconftool.c:312
+#: gconf/gconftool.c:314
 msgid "Specify the owner of a schema"
 msgstr "Определи го сопственикот на схемата"
 
-#: gconf/gconftool.c:313
+#: gconf/gconftool.c:315
 msgid "OWNER"
 msgstr "СОПСТВЕНИК"
 
-#: gconf/gconftool.c:321
+#: gconf/gconftool.c:323
 msgid "Specify a schema file to be installed"
 msgstr "Определи схема датотека за инсталација"
 
-#: gconf/gconftool.c:322
+#: gconf/gconftool.c:324
 msgid "FILENAME"
 msgstr "ИМЕ НА ДАТОТЕКА"
 
-#: gconf/gconftool.c:330
+#: gconf/gconftool.c:332
 msgid "Specify a configuration source to use rather than the default path"
 msgstr ""
 "Определи конфигурациски извор за употреба наместо преддеинираната патека"
 
-#: gconf/gconftool.c:331
+#: gconf/gconftool.c:333
 msgid "SOURCE"
 msgstr "ИЗВОР"
 
-#: gconf/gconftool.c:339
+#: gconf/gconftool.c:341
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
@@ -1744,7 +1751,7 @@ msgstr ""
 "Пристапи на конфиг базата на податоци директно, одминувајќи го серверот. "
 "Потребно е gconfd да не работи."
 
-#: gconf/gconftool.c:348
+#: gconf/gconftool.c:350
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1755,7 +1762,7 @@ msgstr ""
 "не-преддефиниран конфиг код или наместен на празен стринг за да се употреби "
 "преддефинираното."
 
-#: gconf/gconftool.c:357
+#: gconf/gconftool.c:359
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1766,7 +1773,7 @@ msgstr ""
 "не-преддефиниран конфиг код или наместен на празен стринг за да се употреби "
 "преддефинираното."
 
-#: gconf/gconftool.c:366
+#: gconf/gconftool.c:368
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1774,7 +1781,7 @@ msgstr ""
 "Тортура-тестирај апликација со доделување и одземање куп вредности од "
 "различен тип на клучеви на командната линија."
 
-#: gconf/gconftool.c:375
+#: gconf/gconftool.c:377
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1782,61 +1789,61 @@ msgstr ""
 "Тортура-тестирај апликација со доделување и одземање куп клучеви во "
 "директориумите на командната линија."
 
-#: gconf/gconftool.c:384
+#: gconf/gconftool.c:386
 msgid "Get the short doc string for a key"
 msgstr "Земи го краткиот doc стринг за клуч"
 
-#: gconf/gconftool.c:393
+#: gconf/gconftool.c:395
 msgid "Get the long doc string for a key"
 msgstr "Земи го долгиот doc стринг за клуч"
 
-#: gconf/gconftool.c:402
+#: gconf/gconftool.c:404
 msgid "Get the name of the schema applied to this key"
 msgstr "Земи го името на схемата применета на овој клуч"
 
-#: gconf/gconftool.c:411
+#: gconf/gconftool.c:413
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
 "Определи го името на схемата следено од клучот за да се примени името на "
 "схемата на"
 
-#: gconf/gconftool.c:420
+#: gconf/gconftool.c:422
 msgid "Remove any schema name applied to the given keys"
 msgstr "Одстрани било кое име на схема применето на дадените клучеви"
 
-#: gconf/gconftool.c:429
+#: gconf/gconftool.c:431
 msgid "Ignore schema defaults when reading values."
 msgstr ""
 
-#: gconf/gconftool.c:438
+#: gconf/gconftool.c:440
 msgid "Get the name of the default source"
 msgstr "Земи го името на преддефинираниот извор"
 
-#: gconf/gconftool.c:447
+#: gconf/gconftool.c:449
 msgid "Print version"
 msgstr "Печатлива верзија"
 
-#: gconf/gconftool.c:543
+#: gconf/gconftool.c:545
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Не можам да земам и наместам/одподесам симултано\n"
 
-#: gconf/gconftool.c:553
+#: gconf/gconftool.c:555
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Не можам да наместам и земам/одподесам симултано\n"
 
-#: gconf/gconftool.c:560
+#: gconf/gconftool.c:562
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Не можам да земам тип и наместам/одподесам симултано\n"
 
-#: gconf/gconftool.c:571
+#: gconf/gconftool.c:573
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Не можам да користам --all-entries со --get или --set\n"
 
-#: gconf/gconftool.c:582
+#: gconf/gconftool.c:584
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Не можам да користам --all-dirs со --get или --set\n"
 
-#: gconf/gconftool.c:595
+#: gconf/gconftool.c:597
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1844,7 +1851,7 @@ msgstr ""
 "--рекурзивна-листа не би требало да се користи со  --get, --set, --unset, --"
 "all-entries, или --all-dirs\n"
 
-#: gconf/gconftool.c:608
+#: gconf/gconftool.c:610
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1852,424 +1859,424 @@ msgstr ""
 "--set_schema не треба да се употребува со --get, --set, --unset, --all-"
 "entries, --all-dirs\n"
 
-#: gconf/gconftool.c:614
+#: gconf/gconftool.c:616
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Типот на вредност е релевантен само кога се доделува вредност\n"
 
-#: gconf/gconftool.c:620
+#: gconf/gconftool.c:622
 msgid "Must specify a type when setting a value\n"
 msgstr "Мора да се определи тип кога се доделува вредност\n"
 
-#: gconf/gconftool.c:628
+#: gconf/gconftool.c:630
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
 msgstr ""
 
-#: gconf/gconftool.c:640 gconf/gconftool.c:653 gconf/gconftool.c:666
-#: gconf/gconftool.c:680 gconf/gconftool.c:693 gconf/gconftool.c:706
-#: gconf/gconftool.c:720
+#: gconf/gconftool.c:642 gconf/gconftool.c:655 gconf/gconftool.c:668
+#: gconf/gconftool.c:682 gconf/gconftool.c:695 gconf/gconftool.c:708
+#: gconf/gconftool.c:722
 #, fuzzy, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "Пинг можноста мора да биде употребена од себе.\n"
 
-#: gconf/gconftool.c:729
+#: gconf/gconftool.c:731
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "Мора да се определи конфиг извор со --config-source кога се употребува --"
 "direct\n"
 
-#: gconf/gconftool.c:735
+#: gconf/gconftool.c:737
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Не успеа да го иницијализира GConf: %s\n"
 
-#: gconf/gconftool.c:764
+#: gconf/gconftool.c:766
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL е наместен, не се инсталираат шеми\n"
 
-#: gconf/gconftool.c:771
+#: gconf/gconftool.c:773
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL е наместен, не деинсталирам схеми\n"
 
-#: gconf/gconftool.c:784
+#: gconf/gconftool.c:786
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "Мора да се сетира GCONF_CONFIG_SOURCE околинска нредба\n"
 
-#: gconf/gconftool.c:819
+#: gconf/gconftool.c:821
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Грешка при пристап на конфигурационите изворни датотеки: %s\n"
 
-#: gconf/gconftool.c:1116
+#: gconf/gconftool.c:1124
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Грешка при исклучување: %s\n"
 
-#: gconf/gconftool.c:1159
+#: gconf/gconftool.c:1167
 #, fuzzy
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr ""
 "Мора да определите еден или повеќе директориуми за рекурзивно да листате.\n"
 
-#: gconf/gconftool.c:1211
+#: gconf/gconftool.c:1219
 #, fuzzy
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Мора да определите еден или повеќе директориуми за да отфрлите.\n"
 
-#: gconf/gconftool.c:1253 gconf/gconftool.c:1519
+#: gconf/gconftool.c:1261 gconf/gconftool.c:1527
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "Неупех листајќи ги влезовите во `%s': %s\n"
 
-#: gconf/gconftool.c:1272
+#: gconf/gconftool.c:1280
 msgid "(no value set)"
 msgstr "(не е доделена вредност)"
 
-#: gconf/gconftool.c:1578
+#: gconf/gconftool.c:1586
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Неуспех да се накоти конфиг серверот (gconfd): %s\n"
 
-#: gconf/gconftool.c:1607
+#: gconf/gconftool.c:1615
 msgid "Must specify a key or keys to get\n"
 msgstr "Мора да се определи клуч или клучеви за да се земе\n"
 
-#: gconf/gconftool.c:1642
+#: gconf/gconftool.c:1650
 #, c-format
 msgid "Type: %s\n"
 msgstr "Тип: %s\n"
 
-#: gconf/gconftool.c:1643
+#: gconf/gconftool.c:1651
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Тип на листа: %s\n"
 
-#: gconf/gconftool.c:1644
+#: gconf/gconftool.c:1652
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car тип: %s\n"
 
-#: gconf/gconftool.c:1645
+#: gconf/gconftool.c:1653
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr тип: %s\n"
 
-#: gconf/gconftool.c:1650
+#: gconf/gconftool.c:1658
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Преддефинирана вредност: %s\n"
 
-#: gconf/gconftool.c:1650 gconf/gconftool.c:1652 gconf/gconftool.c:1653
-#: gconf/gconftool.c:1654
+#: gconf/gconftool.c:1658 gconf/gconftool.c:1660 gconf/gconftool.c:1661
+#: gconf/gconftool.c:1662
 msgid "Unset"
 msgstr "Одподеси"
 
-#: gconf/gconftool.c:1652
+#: gconf/gconftool.c:1660
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Сопственик: %s\n"
 
-#: gconf/gconftool.c:1653
+#: gconf/gconftool.c:1661
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Краток опис: %s\n"
 
-#: gconf/gconftool.c:1654
+#: gconf/gconftool.c:1662
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Долг опис: %s\n"
 
-#: gconf/gconftool.c:1663 gconf/gconftool.c:1887 gconf/gconftool.c:1921
-#: gconf/gconftool.c:1966 gconf/gconftool.c:2111
+#: gconf/gconftool.c:1671 gconf/gconftool.c:1895 gconf/gconftool.c:1929
+#: gconf/gconftool.c:1974 gconf/gconftool.c:2119
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Не е доделена вредност за `%s'\n"
 
-#: gconf/gconftool.c:1667 gconf/gconftool.c:1891 gconf/gconftool.c:1925
-#: gconf/gconftool.c:1970 gconf/gconftool.c:2115
+#: gconf/gconftool.c:1675 gconf/gconftool.c:1899 gconf/gconftool.c:1933
+#: gconf/gconftool.c:1978 gconf/gconftool.c:2123
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Не успеав да земам вредност за `%s': %s\n"
 
-#: gconf/gconftool.c:1710 gconf/gconftool.c:1722
+#: gconf/gconftool.c:1718 gconf/gconftool.c:1730
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "Не го разбирам типот `%s'\n"
 
-#: gconf/gconftool.c:1734
+#: gconf/gconftool.c:1742
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Мора да се определат алтернативни клучеви/вредности како аргуметни\n"
 
-#: gconf/gconftool.c:1754
+#: gconf/gconftool.c:1762
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "Нема вредност да се додели за клучот: `%s'\n"
 
-#: gconf/gconftool.c:1782
+#: gconf/gconftool.c:1790
 msgid "Cannot set schema as value\n"
 msgstr "Не можам да неместам схема како вредност\n"
 
-#: gconf/gconftool.c:1792
+#: gconf/gconftool.c:1800
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Кога се мести листа мора да се определи примитивен тип на листа\n"
 
-#: gconf/gconftool.c:1806
+#: gconf/gconftool.c:1814
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Кога се мести пар мора да се определи примитивен car-тип и cdr-тип\n"
 
-#: gconf/gconftool.c:1821
+#: gconf/gconftool.c:1829
 #, c-format
 msgid "Error: %s\n"
 msgstr "Грешка: %s\n"
 
-#: gconf/gconftool.c:1834 gconf/gconftool.c:2866
+#: gconf/gconftool.c:1842 gconf/gconftool.c:2874
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Грешка доделувајќи вредност: %s\n"
 
-#: gconf/gconftool.c:1852
+#: gconf/gconftool.c:1860
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Грешка синхронизирајќи: %s\n"
 
-#: gconf/gconftool.c:1867
+#: gconf/gconftool.c:1875
 msgid "Must specify a key or keys to get type\n"
 msgstr "Мора да се определи клуч или клучеви за да се земе тип\n"
 
-#: gconf/gconftool.c:1911
+#: gconf/gconftool.c:1919
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Мора да се определи клуч за да се побара големина на.\n"
 
-#: gconf/gconftool.c:1936 gconf/gconftool.c:1981
+#: gconf/gconftool.c:1944 gconf/gconftool.c:1989
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "Клучот %s не е листа.\n"
 
-#: gconf/gconftool.c:1956
+#: gconf/gconftool.c:1964
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Мора да се определи клуч од каде ќе се земе елемент од листа.\n"
 
-#: gconf/gconftool.c:1987
+#: gconf/gconftool.c:1995
 msgid "Must specify list index.\n"
 msgstr "Мора да се назначи индекс на листата.\n"
 
-#: gconf/gconftool.c:1994
+#: gconf/gconftool.c:2002
 msgid "List index must be non-negative.\n"
 msgstr "Индексот на листата треба да виде не-негативен.\n"
 
-#: gconf/gconftool.c:2003
+#: gconf/gconftool.c:2011
 msgid "List index is out of bounds.\n"
 msgstr "Индексот на листата е надвор од границите.\n"
 
-#: gconf/gconftool.c:2029
+#: gconf/gconftool.c:2037
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Мора да се назначи клуч или клучеви на командната линија\n"
 
-#: gconf/gconftool.c:2049
+#: gconf/gconftool.c:2057
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "Не е позната схема за `%s'\n"
 
-#: gconf/gconftool.c:2082
+#: gconf/gconftool.c:2090
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "Нема складиран doc стринг во схема на '%s'\n"
 
-#: gconf/gconftool.c:2087
+#: gconf/gconftool.c:2095
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "Грешка земајќи ја схемата на '%s': %s\n"
 
-#: gconf/gconftool.c:2094
+#: gconf/gconftool.c:2102
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "Нема складирана схема на '%s'\n"
 
-#: gconf/gconftool.c:2097
+#: gconf/gconftool.c:2105
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "Вредноста на at '%s' не е схема\n"
 
-#: gconf/gconftool.c:2153
+#: gconf/gconftool.c:2161
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Мора да се назначи име на схема следено од клучното име за да му се примени\n"
 
-#: gconf/gconftool.c:2160
+#: gconf/gconftool.c:2168
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Грешка асоцирајќи име на схема '%s' со главното име '%s': %s\n"
 
-#: gconf/gconftool.c:2178
+#: gconf/gconftool.c:2186
 #, fuzzy
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Мора да се определи клуч за да се побара големина на.\n"
 
-#: gconf/gconftool.c:2188
+#: gconf/gconftool.c:2196
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "Грешка отстранувајќи име на схема од '%s': %s\n"
 
-#: gconf/gconftool.c:2213
+#: gconf/gconftool.c:2221
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Мора да се назначи клуч (име на схема) како единствен аргумент\n"
 
-#: gconf/gconftool.c:2255
+#: gconf/gconftool.c:2263
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Типот на листата мора да биде примитивен тип: стринг, цел број, лебди или "
 "bool\n"
 
-#: gconf/gconftool.c:2275
+#: gconf/gconftool.c:2283
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Пар car типот мора да биде примитивен тип: стринг, цел број, лебди или bool\n"
 
-#: gconf/gconftool.c:2295
+#: gconf/gconftool.c:2303
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Пар cdr типот мора да биде примитивен тип: стринг, цел број, лебди или bool\n"
 
-#: gconf/gconftool.c:2310
+#: gconf/gconftool.c:2318
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Грешка доделувајќи вредност: %s"
 
-#: gconf/gconftool.c:2324
+#: gconf/gconftool.c:2332
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Грешка синхронизирајќи: %s"
 
-#: gconf/gconftool.c:2339
+#: gconf/gconftool.c:2347
 #, fuzzy
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Мора да се назначи еден или повеќе директориуми за од каде да се земат клуч/"
 "вредност парови.\n"
 
-#: gconf/gconftool.c:2353
+#: gconf/gconftool.c:2361
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Мора да се назначат еден или повеќе клучеви за да се одподеси.\n"
 
-#: gconf/gconftool.c:2364
+#: gconf/gconftool.c:2372
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "Грешка одподесувајќи `%s': %s\n"
 
-#: gconf/gconftool.c:2384
+#: gconf/gconftool.c:2392
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr ""
 "Мора да се назначи еден или повеќе клучеви за рекурзивно да се одподеси.\n"
 
-#: gconf/gconftool.c:2398
+#: gconf/gconftool.c:2406
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Неуспех за време на рекурзивно одподесување на \"%s\": %s\n"
 
-#: gconf/gconftool.c:2418
+#: gconf/gconftool.c:2426
 #, fuzzy
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Мора да се назначат еден или повеќе директориуми од каде да се земат "
 "поддиректориумите.\n"
 
-#: gconf/gconftool.c:2452
+#: gconf/gconftool.c:2460
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Грешка листајќи дир.: %s\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2596
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: мора да се назначат и <car> и <cdr> во <pair>\n"
 
-#: gconf/gconftool.c:2615
+#: gconf/gconftool.c:2623
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: клучот назначен (%s) за схема под <value> - занемарувам\n"
 
-#: gconf/gconftool.c:2648
+#: gconf/gconftool.c:2656
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: мора да има child јазол под <value>\n"
 
-#: gconf/gconftool.c:2654
+#: gconf/gconftool.c:2662
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: јазол <%s> не е разбран\n"
 
-#: gconf/gconftool.c:2672
+#: gconf/gconftool.c:2680
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: Не успеав да ја разложам вредноста на целиот број `%s'\n"
 
-#: gconf/gconftool.c:2693
+#: gconf/gconftool.c:2701
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: Не успеав да ја разложам лебдечката вредност `%s'\n"
 
-#: gconf/gconftool.c:2715
+#: gconf/gconftool.c:2723
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: Не успеав да ја разложам вредноста на стрингот `%s'\n"
 
-#: gconf/gconftool.c:2736
+#: gconf/gconftool.c:2744
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: Не успеав да ја разложам boolean вредноста `%s'\n"
 
-#: gconf/gconftool.c:2845 gconf/gconftool.c:3387
+#: gconf/gconftool.c:2853 gconf/gconftool.c:3395
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: не успеав да асоцирам ја асоцирам схемата `%s' со клуч `%s': "
 "%s\n"
 
-#: gconf/gconftool.c:2960
+#: gconf/gconftool.c:2968
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: невалиден или изгубен тип за схема (%s)\n"
 
-#: gconf/gconftool.c:2969
+#: gconf/gconftool.c:2977
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: невалиден или изгубен list_type за схемата (%s)\n"
 
-#: gconf/gconftool.c:2980 gconf/gconftool.c:3010 gconf/gconftool.c:3039
+#: gconf/gconftool.c:2988 gconf/gconftool.c:3018 gconf/gconftool.c:3047
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: Не успеав да разложам преддефинирана вредност `%s' за схема "
 "(%s)\n"
 
-#: gconf/gconftool.c:2998
+#: gconf/gconftool.c:3006
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: невалиден или изгубен car_type или cdr_type заr схема (%s)\n"
 
-#: gconf/gconftool.c:3023
+#: gconf/gconftool.c:3031
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: Не може да се постави преддефиниран вредност за схема\n"
 
-#: gconf/gconftool.c:3052
+#: gconf/gconftool.c:3060
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: gconftool внатрешна грешка, непознат GConfValue тип\n"
 
-#: gconf/gconftool.c:3100 gconf/gconftool.c:3121 gconf/gconftool.c:3142
-#: gconf/gconftool.c:3163
+#: gconf/gconftool.c:3108 gconf/gconftool.c:3129 gconf/gconftool.c:3150
+#: gconf/gconftool.c:3171
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: не успеав да разложам име на тип `%s'\n"
 
-#: gconf/gconftool.c:3117
+#: gconf/gconftool.c:3125
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
@@ -2277,48 +2284,48 @@ msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: list_type може да биде само цел број, лебди, стринг или bool "
 "и not `%s'\n"
 
-#: gconf/gconftool.c:3138
+#: gconf/gconftool.c:3146
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: car_type може да биде само цел број, лебди, стринг или bool "
 "и not `%s'\n"
 
-#: gconf/gconftool.c:3159
+#: gconf/gconftool.c:3167
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: cdr_type може да биде само цел број, лебди, стринг или bool "
 "и not `%s'\n"
 
-#: gconf/gconftool.c:3199
+#: gconf/gconftool.c:3207
 msgid "WARNING: empty <applyto> node"
 msgstr "ПРЕДУПРЕДУВАЊЕ: празен <applyto> јазол"
 
-#: gconf/gconftool.c:3202 gconf/gconftool.c:3460
+#: gconf/gconftool.c:3210 gconf/gconftool.c:3468
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: јазол <%s> не е разбран подолу <schema>\n"
 
-#: gconf/gconftool.c:3213
+#: gconf/gconftool.c:3221
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: нема <list_type> назначен за схема од тип на листа\n"
 
-#: gconf/gconftool.c:3219
+#: gconf/gconftool.c:3227
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: нема <car_type> назначен за схема од тип на пар\n"
 
-#: gconf/gconftool.c:3225
+#: gconf/gconftool.c:3233
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: нема <cdr_type> назначен за схема од тип на пар\n"
 
-#: gconf/gconftool.c:3254
+#: gconf/gconftool.c:3262
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: <locale> јазолот нема `name=\"locale\"' атрибут, "
 "занемарувам\n"
 
-#: gconf/gconftool.c:3260
+#: gconf/gconftool.c:3268
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -2326,85 +2333,85 @@ msgstr ""
 "ПРЕДУПРЕДУВАЊЕ: повеќе <locale> јазли за локале `%s', занемарувам сите после "
 "првиот\n"
 
-#: gconf/gconftool.c:3358
+#: gconf/gconftool.c:3366
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: Невалиден јазол <%s> во <locale> јазол\n"
 
-#: gconf/gconftool.c:3395
+#: gconf/gconftool.c:3403
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Закачена схема `%s' на клуч `%s'\n"
 
-#: gconf/gconftool.c:3469
+#: gconf/gconftool.c:3477
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Мора да има барем еден <locale> влез во <schema>\n"
 
-#: gconf/gconftool.c:3504
+#: gconf/gconftool.c:3512
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: не успеав да инсталирам схема `%s' локале `%s': %s\n"
 
-#: gconf/gconftool.c:3512
+#: gconf/gconftool.c:3520
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Инсталирана схема `%s' за локале `%s'\n"
 
-#: gconf/gconftool.c:3522
+#: gconf/gconftool.c:3530
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: не успеав да унинсталирам схема `%s' локале `%s': %s\n"
 
-#: gconf/gconftool.c:3530
+#: gconf/gconftool.c:3538
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "Унинсталирана схема `%s' од локале `%s'\n"
 
-#: gconf/gconftool.c:3568
+#: gconf/gconftool.c:3576
 msgid "WARNING: no key specified for schema\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: немаше назначено клуч за схема\n"
 
-#: gconf/gconftool.c:3609
+#: gconf/gconftool.c:3617
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: јазол <%s> не е разбран долу <%s>\n"
 
-#: gconf/gconftool.c:3640
+#: gconf/gconftool.c:3648
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Не успеав да отворам `%s': %s\n"
 
-#: gconf/gconftool.c:3647
+#: gconf/gconftool.c:3655
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Документот `%s' е празен?\n"
 
-#: gconf/gconftool.c:3659
+#: gconf/gconftool.c:3667
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "Документот `%s' има погрешен тип на root јазол (<%s>, треба да биде <%s>)\n"
 
-#: gconf/gconftool.c:3672
+#: gconf/gconftool.c:3680
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "Документот `%s' нема јазол од највиоко ниво <%s>\n"
 
-#: gconf/gconftool.c:3686
+#: gconf/gconftool.c:3694
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "ПРЕДУПРЕДУВАЊЕ: јазолот <%s> долу <%s> не е разбран\n"
 
-#: gconf/gconftool.c:3697 gconf/gconftool.c:3732
+#: gconf/gconftool.c:3705 gconf/gconftool.c:3740
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Грешка при синхронизација на конфигурационите податоци: %s"
 
-#: gconf/gconftool.c:3716
+#: gconf/gconftool.c:3724
 msgid "Must specify some schema files to install\n"
 msgstr "Мора да назначите некои схема датотеки за да инсталирате\n"
 
-#: gconf/gconftool.c:3753
+#: gconf/gconftool.c:3761
 #, c-format
 msgid ""
 "\n"
@@ -2413,16 +2420,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:3773
+#: gconf/gconftool.c:3781
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Не успеав да одподесам breakage клуч %s: %s\n"
 
-#: gconf/gconftool.c:3899
+#: gconf/gconftool.c:3907
 msgid "Must specify some keys to break\n"
 msgstr "Мора да назначите нокои клучеви за кршење\n"
 
-#: gconf/gconftool.c:3905
+#: gconf/gconftool.c:3913
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2432,11 +2439,11 @@ msgstr ""
 "клуч:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:3923
+#: gconf/gconftool.c:3931
 msgid "Must specify some directories to break\n"
 msgstr "Мора да назначите некои директориуми за кршење\n"
 
-#: gconf/gconftool.c:3942
+#: gconf/gconftool.c:3950
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
