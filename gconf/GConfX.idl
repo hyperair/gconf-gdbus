@@ -62,20 +62,24 @@ union ConfigValue switch (ConfigValueType) {
    BasicValueList pair_value;
 };
 
+interface ConfigDatabase;
+
 interface ConfigListener {
-  oneway void notify (in unsigned long server_context, // ConfigServer::Context
+  oneway void notify (in ConfigDatabase database,
                       in unsigned long cnxn,
-                      in string key, in ConfigValue value,
+                      in string key,
+                      in ConfigValue value,
                       in boolean is_default);
 
   oneway void ping ();
 
-  /// This should conceivably not be oneway
+  /// This should conceivably not be oneway.
+  /// I'm worried about the server blocking waiting for
+  /// busy clients.
 
-  oneway void update_listener (in unsigned long old_server_context,
+  oneway void update_listener (in ConfigDatabase database,
                                in unsigned long old_cnxn,
-                               in string key,
-                               in unsigned long new_server_context,
+                               in string where,
                                in unsigned long new_cnxn);
 };
 
@@ -94,66 +98,57 @@ exception ConfigException {
   string message;
 };
 
-interface ConfigServer {
+interface ConfigDatabase {
   typedef sequence<string> KeyList;
   typedef sequence<ConfigValue> ValueList;
   typedef sequence<boolean> IsDefaultList;
-  typedef unsigned long Context;
-  
-  const Context invalid_context = 0;
-  // user's preferred config database
-  const Context default_context = 1;
 
-  // Use a specific address instead of the default database;
-  // invalid_context returned on failure.
-  Context get_context(in string address);
-  
   // "where" is the portion of the namespace to listen to
   // Returns a connection ID for removal
-  unsigned long add_listener(in Context ctx, in string where, in ConfigListener who);  
+  unsigned long add_listener(in string where,
+                             in ConfigListener who);  
 
-  void remove_listener(in Context ctx, in unsigned long cnxn);
+  void remove_listener(in unsigned long cnxn);
   
-  ConfigValue lookup(in Context ctx, in string key)
+  ConfigValue lookup(in string key)
     raises (ConfigException);
 
   // separate from lookup for efficiency
-  ConfigValue lookup_with_locale(in Context ctx, in string key,
-                                 in string locale, in boolean use_schema_default,
+  ConfigValue lookup_with_locale(in string key,
+                                 in string locale,
+                                 in boolean use_schema_default,
                                  out boolean value_is_default)
     raises (ConfigException);
 
   // syntactic sugar, semi-hack: should maybe use a get_metainfo()
   // function (which we should have anyway)
-  ConfigValue lookup_default_value(in Context ctx, in string key,
+  ConfigValue lookup_default_value(in string key,
                                    in string locale)
     raises (ConfigException);
   
-  void set(in Context ctx, in string key, in ConfigValue value)
+  void set(in string key, in ConfigValue value)
     raises (ConfigException);
   
-  void unset(in Context ctx, in string key)
+  void unset(in string key)
     raises (ConfigException);
 
-  void unset_with_locale(in Context ctx, in string key, in string locale)
+  void unset_with_locale(in string key, in string locale)
     raises (ConfigException);
   
-  boolean dir_exists(in Context ctx, in string dir)
+  boolean dir_exists(in string dir)
     raises (ConfigException);
 
-  void remove_dir(in Context ctx, in string dir)
+  void remove_dir(in string dir)
     raises (ConfigException);
 
-  void all_entries(in Context ctx,
-                   in string dir,
+  void all_entries(in string dir,
                    in string locale,
                    out KeyList keys,
                    out ValueList values,
                    out IsDefaultList is_defaults)
     raises (ConfigException);
 
-  void all_dirs(in Context ctx,
-                in string dir,
+  void all_dirs(in string dir,
                 out KeyList subdirs)
     raises (ConfigException);
 
@@ -161,20 +156,30 @@ interface ConfigServer {
   //  to a schema. 
   // if first arg is a dir, second arg should be a key pointing 
   //  to a dir full of schemas.
-  void set_schema(in Context ctx,
-                  in string key,
+  void set_schema(in string key,
                   in string schema_key)
     raises (ConfigException);
 
-  void sync(in Context ctx)
+  void sync()
     raises (ConfigException);
+
+  // Internal use
+  void clear_cache();
+  
+  void synchronous_sync()
+    raises (ConfigException);
+};
+
+interface ConfigServer {
+
+  ConfigDatabase get_default_database ();
+
+  // Use a specific address instead of the default database;
+  // invalid_context returned on failure.
+  ConfigDatabase get_database (in string address);
 
   // Internal use
   long ping();
 
   void shutdown();
-
-  void clear_cache(in Context ctx);
-
-  void synchronous_sync(in Context ctx);
 };

@@ -1,4 +1,3 @@
-
 /* GConf
  * Copyright (C) 1999, 2000 Red Hat Inc.
  * Developed by Havoc Pennington, some code in here borrowed from 
@@ -35,6 +34,8 @@
 #include "gconf-schema.h"
 #include "gconf-glib-private.h"
 #include "gconf.h"
+#include "gconfd.h"
+#include "gconf-database.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -95,201 +96,42 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  * Declarations
  */
 
-/* return TRUE if the exception was set, clear err if needed */
-static gboolean gconf_set_exception(GConfError** err, CORBA_Environment* ev);
-
 static void gconf_main(void);
 static void gconf_main_quit(void);
 
-static GConfLocaleList* locale_cache_lookup(const gchar* locale);
-static void             locale_cache_expire(void);
-static void             locale_cache_drop  (void);
-
 static void logfile_save (void);
 static void logfile_read (void);
-static void logfile_queue_save (void);
 
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
 */
 static void fast_cleanup(void);
 
-typedef struct _GConfContext GConfContext;
-
-struct _GConfContext {
-  ConfigServer_Context context;
-  GConfListeners* listeners;
-  GConfSources* sources;
-  gchar* saved_address; /* if sources and listeners are NULL, then this is a
-                           "dormant" context removed from the cache
-                           and has to be re-instated.
-                        */
-  GTime last_access;
-  guint sync_idle;
-  guint sync_timeout;
-};
-
-static GConfContext* context_new(GConfSources* sources);
-static void          context_destroy(GConfContext* ctx);
-static CORBA_unsigned_long context_add_listener(GConfContext* ctx,
-                                                ConfigListener who,
-                                                const gchar* where);
-static void          context_remove_listener(GConfContext* ctx,
-                                             CORBA_unsigned_long cnxn);
-
-static GConfValue*   context_query_value(GConfContext* ctx,
-                                         const gchar* key,
-                                         const gchar** locales,
-                                         gboolean use_schema_default,
-                                         gboolean* value_is_default,
-                                         GConfError** err);
-
-static GConfValue*   context_query_default_value(GConfContext* ctx,
-                                                 const gchar* key,
-                                                 const gchar** locales,
-                                                 GConfError** err);
-
-static void          context_set(GConfContext* ctx, const gchar* key,
-                                 GConfValue* value, const ConfigValue* cvalue,
-                                 GConfError** err);
-static void          context_unset(GConfContext* ctx, const gchar* key,
-                                   const gchar* locale,
-                                   GConfError** err);
-static gboolean      context_dir_exists(GConfContext* ctx, const gchar* dir,
-                                        GConfError** err);
-static void          context_remove_dir(GConfContext* ctx, const gchar* dir,
-                                        GConfError** err);
-static GSList*       context_all_entries(GConfContext* ctx, const gchar* dir,
-                                         const gchar** locales,
-                                         GConfError** err);
-static GSList*       context_all_dirs(GConfContext* ctx, const gchar* dir,
-                                      GConfError** err);
-static void          context_set_schema(GConfContext* ctx, const gchar* key,
-                                        const gchar* schema_key,
-                                        GConfError** err);
-static void          context_sync(GConfContext* ctx,
-                                  GConfError** err);
-static gboolean      context_synchronous_sync(GConfContext* ctx,
-                                              GConfError** err);
-static void          context_clear_cache(GConfContext* ctx,
-                                         GConfError** err);
-static void          context_hibernate(GConfContext* ctx);
-static void          context_awaken(GConfContext* ctx, GConfError** err);
-
-static void                 init_contexts(void);
-static void                 shutdown_contexts(void);
-static void                 set_default_context(GConfContext* ctx);
-static ConfigServer_Context register_context(GConfContext* ctx);
-static void                 unregister_context(ConfigServer_Context ctx);
-static GConfContext*        lookup_context(ConfigServer_Context ctx, GConfError** err);
-static ConfigServer_Context lookup_context_id_from_address(const gchar* address);
-static void                 sleep_old_contexts(void);
+static void                 init_databases (void);
+static void                 shutdown_databases (void);
+static void                 set_default_database (GConfDatabase* db);
+static void                 register_database (GConfDatabase* db);
+static void                 unregister_database (GConfDatabase* db);
+static GConfDatabase*       lookup_database (const gchar *address);
+static GConfDatabase*       obtain_database (const gchar *address,
+                                             GConfError **err);
+static void                 drop_old_databases (void);
 
 /* 
  * CORBA goo
  */
 
 static ConfigServer server = CORBA_OBJECT_NIL;
+static PortableServer_POA the_poa;
 
-static ConfigServer_Context
-gconfd_get_context(PortableServer_Servant servant, const CORBA_char* address,
-                   CORBA_Environment* ev);
+static ConfigDatabase
+gconfd_get_default_database(PortableServer_Servant servant,
+                            CORBA_Environment* ev);
 
-static CORBA_unsigned_long 
-gconfd_add_listener(PortableServer_Servant servant, ConfigServer_Context ctx,
-                    const CORBA_char* where, 
-                    ConfigListener who, CORBA_Environment *ev);
-static void 
-gconfd_remove_listener(PortableServer_Servant servant,
-                       ConfigServer_Context ctx,
-                       CORBA_unsigned_long cnxn,
-                       CORBA_Environment *ev);
-static ConfigValue* 
-gconfd_lookup(PortableServer_Servant servant, ConfigServer_Context ctx,
-              const CORBA_char* key, 
-              CORBA_Environment *ev);
-
-static ConfigValue* 
-gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
-                          const CORBA_char* key,
-                          const CORBA_char* locale,
-                          CORBA_boolean use_schema_default,
-                          CORBA_boolean * is_default,
-                          CORBA_Environment *ev);
-
-static ConfigValue* 
-gconfd_lookup_default_value(PortableServer_Servant servant,
-                            ConfigServer_Context ctx,
-                            const CORBA_char* key,
-                            const CORBA_char* locale,
-                            CORBA_Environment *ev);
-
-static void
-gconfd_set(PortableServer_Servant servant, ConfigServer_Context ctx,
-           const CORBA_char* key, 
-           const ConfigValue* value, CORBA_Environment *ev);
-
-static void 
-gconfd_unset(PortableServer_Servant servant,
-             ConfigServer_Context ctx,
-             const CORBA_char* key, 
-             CORBA_Environment *ev);
-
-static void 
-gconfd_unset_with_locale(PortableServer_Servant servant,
-                         ConfigServer_Context ctx,
-                         const CORBA_char* key,
-                         const CORBA_char* locale,
-                         CORBA_Environment *ev);
-
-static CORBA_boolean
-gconfd_dir_exists(PortableServer_Servant servant,
-                  ConfigServer_Context ctx,
-                  const CORBA_char* dir,
-                  CORBA_Environment *ev);
-
-static void 
-gconfd_remove_dir(PortableServer_Servant servant,
-                  ConfigServer_Context ctx,
-                  const CORBA_char* dir, 
-                  CORBA_Environment *ev);
-
-static void 
-gconfd_all_entries (PortableServer_Servant servant,
-                    ConfigServer_Context ctx,
-                    const CORBA_char* dir,
-                    const CORBA_char* locale,
-                    ConfigServer_KeyList ** keys, 
-                    ConfigServer_ValueList ** values,
-                    ConfigServer_IsDefaultList ** is_defaults,
-                    CORBA_Environment * ev);
-
-static void 
-gconfd_all_dirs (PortableServer_Servant servant,
-                 ConfigServer_Context ctx,
-                 const CORBA_char* dir, 
-                 ConfigServer_KeyList ** keys, CORBA_Environment * ev);
-
-static void 
-gconfd_set_schema (PortableServer_Servant servant,
-                   ConfigServer_Context ctx,
-                   const CORBA_char* key,
-                   const CORBA_char* schema_key, CORBA_Environment * ev);
-
-static void 
-gconfd_sync(PortableServer_Servant servant,
-            ConfigServer_Context ctx,
-            CORBA_Environment *ev);
-
-static void 
-gconfd_clear_cache(PortableServer_Servant servant,
-                   ConfigServer_Context ctx,
-                   CORBA_Environment *ev);
-
-static void 
-gconfd_synchronous_sync(PortableServer_Servant servant,
-                        ConfigServer_Context ctx,
-                        CORBA_Environment *ev);
+static ConfigDatabase
+gconfd_get_database(PortableServer_Servant servant,
+                    const CORBA_char* address,
+                    CORBA_Environment* ev);
 
 static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
@@ -305,482 +147,45 @@ static PortableServer_ServantBase__epv base_epv = {
 
 static POA_ConfigServer__epv server_epv = { 
   NULL,
-  gconfd_get_context,
-  gconfd_add_listener, 
-  gconfd_remove_listener, 
-  gconfd_lookup,
-  gconfd_lookup_with_locale,
-  gconfd_lookup_default_value,
-  gconfd_set,
-  gconfd_unset,
-  gconfd_unset_with_locale,
-  gconfd_dir_exists,
-  gconfd_remove_dir,
-  gconfd_all_entries,
-  gconfd_all_dirs,
-  gconfd_set_schema,
-  gconfd_sync,
+  gconfd_get_default_database,
+  gconfd_get_database,
   gconfd_ping,
-  gconfd_shutdown,
-  gconfd_clear_cache,
-  gconfd_synchronous_sync
+  gconfd_shutdown
 };
 
 static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
 static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
-static ConfigServer_Context
-gconfd_get_context(PortableServer_Servant servant, const CORBA_char* address,
-                   CORBA_Environment* ev)
+static ConfigDatabase
+gconfd_get_default_database(PortableServer_Servant servant,
+                            CORBA_Environment* ev)
 {
-  ConfigServer_Context ctx;
-  GConfSources* sources;
-  const gchar* addresses[] = { address, NULL };
-  GConfError* error = NULL;
-  
-  ctx = lookup_context_id_from_address(address);
+  GConfDatabase *db;
 
-  if (ctx != ConfigServer_invalid_context)
-    return ctx;
+  db = lookup_database (NULL);
 
-  sources = gconf_sources_new_from_addresses(addresses, &error);
-
-  if (gconf_set_exception(&error, ev))
-    {
-      g_return_val_if_fail(sources == NULL, ConfigServer_invalid_context);
-      return ConfigServer_invalid_context;
-    }
-  
-  if (sources == NULL)
-    return ConfigServer_invalid_context;
-
-  ctx = register_context(context_new(sources));
-  
-  return ctx;
-}
-
-static CORBA_unsigned_long
-gconfd_add_listener(PortableServer_Servant servant,
-                    ConfigServer_Context ctx,
-                    const CORBA_char* where, 
-                    const ConfigListener who, CORBA_Environment *ev)
-{
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-  
-  if (gcc != NULL)
-    {
-      g_return_val_if_fail(error == NULL, 0);
-      return context_add_listener(gcc, who, where);
-    }
+  if (db)
+    return db->objref;
   else
-    {
-      gconf_set_exception(&error, ev);
-      return 0;
-    }
+    return CORBA_OBJECT_NIL;
 }
 
-static void 
-gconfd_remove_listener(PortableServer_Servant servant,
-                       ConfigServer_Context ctx,
-                       CORBA_unsigned_long cnxn, CORBA_Environment *ev)
+static ConfigDatabase
+gconfd_get_database(PortableServer_Servant servant,
+                    const CORBA_char* address,
+                    CORBA_Environment* ev)
 {
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);  
-  
-  if (gcc != NULL)
-    {
-      g_return_if_fail(error == NULL);
-      context_remove_listener(gcc, cnxn);
-    }
+  GConfDatabase *db;
+  GConfError* error = NULL;  
+
+  db = obtain_database (address, &error);
+
+  if (db != NULL)
+    return db->objref;
+  else if (gconf_set_exception(&error, ev))
+    return CORBA_OBJECT_NIL;
   else
-    {
-      gconf_set_exception(&error, ev);
-    }
-}
-
-static ConfigValue*
-gconfd_lookup(PortableServer_Servant servant,
-              ConfigServer_Context ctx,
-              const CORBA_char* key, 
-              CORBA_Environment *ev)
-{
-  /* const CORBA_char* normally can't be NULL but we cheat here */
-  return gconfd_lookup_with_locale(servant, ctx, key, NULL, TRUE, NULL, ev);
-}
-
-static ConfigValue* 
-gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
-                          const CORBA_char* key,
-                          const CORBA_char* locale,
-                          CORBA_boolean use_schema_default,
-                          CORBA_boolean * value_is_default,
-                          CORBA_Environment *ev)
-{
-  GConfValue* val;
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  GConfLocaleList* locale_list;
-  gboolean is_default = FALSE;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return invalid_corba_value();
-
-  locale_list = locale_cache_lookup(locale);
-  
-  val = context_query_value(gcc, key, locale_list->list,
-                            use_schema_default, &is_default, &error);
-
-  *value_is_default = is_default;
-  
-  gconf_locale_list_unref(locale_list);
-  
-  if (val != NULL)
-    {
-      ConfigValue* cval = corba_value_from_gconf_value(val);
-
-      gconf_value_destroy(val);
-
-      g_return_val_if_fail(error == NULL, cval);
-      
-      return cval;
-    }
-  else
-    {
-      gconf_set_exception(&error, ev);
-
-      return invalid_corba_value();
-    }
-}
-
-static ConfigValue* 
-gconfd_lookup_default_value(PortableServer_Servant servant,
-                            ConfigServer_Context ctx,
-                            const CORBA_char* key,
-                            const CORBA_char* locale,
-                            CORBA_Environment *ev)
-{
-  GConfValue* val;
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  GConfLocaleList* locale_list;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return invalid_corba_value();
-
-  locale_list = locale_cache_lookup(locale);
-  
-  val = context_query_default_value(gcc, key, locale_list->list,
-                                    &error);
-
-  gconf_locale_list_unref(locale_list);
-  
-  if (val != NULL)
-    {
-      ConfigValue* cval = corba_value_from_gconf_value(val);
-
-      gconf_value_destroy(val);
-
-      g_return_val_if_fail(error == NULL, cval);
-      
-      return cval;
-    }
-  else
-    {
-      gconf_set_exception(&error, ev);
-
-      return invalid_corba_value();
-    }
-}
-
-static void
-gconfd_set(PortableServer_Servant servant,
-           ConfigServer_Context ctx,
-           const CORBA_char* key, 
-           const ConfigValue* value, CORBA_Environment *ev)
-{
-  gchar* str;
-  GConfValue* val;
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  if (value->_d == InvalidVal)
-    {
-      gconf_log(GCL_ERR, _("Received invalid value in set request"));
-      return;
-    }
-
-  val = gconf_value_from_corba_value(value);
-
-  if (val == NULL)
-    {
-      gconf_log(GCL_ERR, _("Couldn't make sense of CORBA value received in set request for key `%s'"), key);
-      return;
-    }
-      
-  str = gconf_value_to_string(val);
-
-  gconf_log(GCL_DEBUG, "Received request to set key `%s' to `%s'", key, str);
-
-  g_free(str);
-
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  context_set(gcc, key, val, value, &error);
-
-  gconf_set_exception(&error, ev);
-
-  gconf_value_destroy(val);
-}
-
-static void 
-gconfd_unset_with_locale(PortableServer_Servant servant,
-                         ConfigServer_Context ctx,
-                         const CORBA_char* key,
-                         const CORBA_char* locale,
-                         CORBA_Environment *ev)
-{
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  context_unset(gcc, key, locale, &error);
-
-  gconf_set_exception(&error, ev);
-}
-
-static void 
-gconfd_unset(PortableServer_Servant servant,
-             ConfigServer_Context ctx,
-             const CORBA_char* key, 
-             CORBA_Environment *ev)
-{
-  /* This is a cheat, since const CORBA_char* isn't normally NULL */
-  gconfd_unset_with_locale(servant, ctx, key, NULL, ev);
-}
-
-static CORBA_boolean
-gconfd_dir_exists(PortableServer_Servant servant,
-                  ConfigServer_Context ctx,
-                  const CORBA_char* dir,
-                  CORBA_Environment *ev)
-{
-  GConfContext *gcc;
-  CORBA_boolean retval;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return CORBA_FALSE;
-  
-  retval = context_dir_exists(gcc, dir, &error) ? CORBA_TRUE : CORBA_FALSE;
-
-  gconf_set_exception(&error, ev);
-
-  return retval;
-}
-
-
-static void 
-gconfd_remove_dir(PortableServer_Servant servant,
-                  ConfigServer_Context ctx,
-                  const CORBA_char* dir, 
-                  CORBA_Environment *ev)
-{  
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-
-  g_assert(gcc != NULL);
-  
-  context_remove_dir(gcc, dir, &error);
-
-  gconf_set_exception(&error, ev);
-}
-
-static void 
-gconfd_all_entries (PortableServer_Servant servant,
-                    ConfigServer_Context ctx,
-                    const CORBA_char* dir,
-                    const CORBA_char* locale,
-                    ConfigServer_KeyList ** keys, 
-                    ConfigServer_ValueList ** values,
-                    ConfigServer_IsDefaultList ** is_defaults,
-                    CORBA_Environment * ev)
-{
-  GSList* pairs;
-  guint n;
-  GSList* tmp;
-  guint i;
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  GConfLocaleList* locale_list;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-
-  locale_list = locale_cache_lookup(locale);
-  
-  if (gcc != NULL)
-    pairs = context_all_entries(gcc, dir, locale_list->list, &error);
-  else
-    pairs = NULL;
-
-  gconf_locale_list_unref(locale_list);
-  
-  n = g_slist_length(pairs);
-
-  *keys= ConfigServer_KeyList__alloc();
-  (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
-  (*keys)->_length = n;
-  (*keys)->_maximum = n;
-
-  *values= ConfigServer_ValueList__alloc();
-  (*values)->_buffer = CORBA_sequence_ConfigValue_allocbuf(n);
-  (*values)->_length = n;
-  (*values)->_maximum = n;
-
-  *is_defaults = ConfigServer_IsDefaultList__alloc();
-  (*is_defaults)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
-  (*is_defaults)->_length = n;
-  (*is_defaults)->_maximum = n;
-  
-  tmp = pairs;
-  i = 0;
-
-  while (tmp != NULL)
-    {
-      GConfEntry* p = tmp->data;
-
-      g_assert(p != NULL);
-      g_assert(p->key != NULL);
-
-      (*keys)->_buffer[i] = CORBA_string_dup(p->key);
-      fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
-      (*is_defaults)->_buffer[i] = gconf_entry_is_default(p);
-      
-      gconf_entry_destroy(p);
-
-      ++i;
-      tmp = g_slist_next(tmp);
-    }
-  
-  g_assert(i == n);
-
-  g_slist_free(pairs);
-
-  gconf_set_exception(&error, ev);
-}
-
-static void 
-gconfd_all_dirs (PortableServer_Servant servant,
-                 ConfigServer_Context ctx,
-                 const CORBA_char* dir, 
-                 ConfigServer_KeyList ** keys, CORBA_Environment * ev)
-{
-  GSList* subdirs;
-  guint n;
-  GSList* tmp;
-  guint i;
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  if (gcc != NULL)
-    subdirs = context_all_dirs(gcc, dir, &error);
-  else
-    subdirs = NULL;
-  
-  n = g_slist_length(subdirs);
-
-  *keys= ConfigServer_KeyList__alloc();
-  (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
-  (*keys)->_length = n;
-  (*keys)->_maximum = n;
-
-  tmp = subdirs;
-  i = 0;
-
-  while (tmp != NULL)
-    {
-      gchar* subdir = tmp->data;
-
-      (*keys)->_buffer[i] = CORBA_string_dup(subdir);
-
-      g_free(subdir);
-
-      ++i;
-      tmp = g_slist_next(tmp);
-    }
-  
-  g_assert(i == n);
-
-  g_slist_free(subdirs);
-
-  gconf_set_exception(&error, ev);
-}
-
-static void 
-gconfd_set_schema (PortableServer_Servant servant,
-                   ConfigServer_Context ctx,
-                   const CORBA_char* key,
-                   const CORBA_char* schema_key, CORBA_Environment * ev)
-{
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  context_set_schema(gcc, key, schema_key, &error);
-
-  gconf_set_exception(&error, ev);
-}
-
-static void 
-gconfd_sync(PortableServer_Servant servant,
-            ConfigServer_Context ctx,
-            CORBA_Environment *ev)
-{
-  GConfContext* gcc;
-  GConfError* error = NULL;
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  context_sync(gcc, &error);
-
-  gconf_set_exception(&error, ev);
+    return CORBA_OBJECT_NIL;
 }
 
 static CORBA_long
@@ -795,46 +200,6 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
   gconf_log(GCL_INFO, _("Shutdown request received"));
 
   gconf_main_quit();
-}
-
-static void 
-gconfd_clear_cache(PortableServer_Servant servant,
-                   ConfigServer_Context ctx,
-                   CORBA_Environment *ev)
-{
-  GConfContext* gcc;
-  GConfError* error = NULL;
-
-  gconf_log(GCL_INFO, _("Received request to drop all cached data"));
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  context_clear_cache(gcc, &error);
-
-  gconf_set_exception(&error, ev);
-}
-
-static void 
-gconfd_synchronous_sync(PortableServer_Servant servant,
-                        ConfigServer_Context ctx,
-                        CORBA_Environment *ev)
-{
-  GConfContext* gcc;
-  GConfError* error = NULL;
-
-  gconf_log(GCL_INFO, _("Received request to sync synchronously"));
-  
-  gcc = lookup_context(ctx, &error);
-
-  if (gconf_set_exception(&error, ev))
-    return;
-  
-  context_synchronous_sync(gcc, &error);
-
-  gconf_set_exception(&error, ev);
 }
 
 /*
@@ -895,12 +260,13 @@ gconf_server_load_sources(void)
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(empty_addr, NULL);
 
-      /* Install the sources as the default context */
-      set_default_context(context_new(sources));
+      /* Install the sources as the default database */
+      set_default_database (gconf_database_new(sources));
     }
   else
     {
-      sources = gconf_sources_new_from_addresses((const gchar**)addresses, &error);
+      sources = gconf_sources_new_from_addresses((const gchar**)addresses,
+                                                 &error);
 
       if (error != NULL)
         {
@@ -936,8 +302,8 @@ gconf_server_load_sources(void)
         gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, may not be able to save some configuration changes"));
 
         
-      /* Install the sources as the default context */
-      set_default_context(context_new(sources));
+      /* Install the sources as the default database */
+      set_default_database (gconf_database_new(sources));
     }
 }
 
@@ -967,9 +333,9 @@ signal_handler (int signo)
   case SIGPIPE:
   case SIGTERM:
     /* Slow cleanup cases */
-    fast_cleanup();
+    fast_cleanup ();
     /* remove lockfiles, etc. */
-    shutdown_contexts();
+    shutdown_databases ();
     gconf_log(GCL_ERR, _("Received signal %d, shutting down."), signo);
     exit (1);
     break;
@@ -984,13 +350,18 @@ signal_handler (int signo)
   }
 }
 
+PortableServer_POA
+gconf_get_poa ()
+{
+  return the_poa;
+}
+
 int 
 main(int argc, char** argv)
 {
   struct sigaction act;
   sigset_t empty_mask;
   /*   PortableServer_ObjectId objid = {0, sizeof("ConfigServer"), "ConfigServer"}; */
-  PortableServer_POA poa;
   PortableServer_ObjectId* objid;
   CORBA_Environment ev;
   CORBA_ORB orb;
@@ -1047,18 +418,18 @@ main(int argc, char** argv)
       exit(1);
     }
 
-  init_contexts();
+  init_databases ();
 
   orb = oaf_orb_get();
 
   POA_ConfigServer__init(&poa_server_servant, &ev);
   
-  poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
-  PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
+  the_poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
+  PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(the_poa, &ev), &ev);
 
-  objid = PortableServer_POA_activate_object(poa, &poa_server_servant, &ev);
+  objid = PortableServer_POA_activate_object(the_poa, &poa_server_servant, &ev);
   
-  server = PortableServer_POA_servant_to_reference(poa,
+  server = PortableServer_POA_servant_to_reference(the_poa,
                                                    &poa_server_servant,
                                                    &ev);
   if (CORBA_Object_is_nil(server, &ev)) 
@@ -1072,7 +443,8 @@ main(int argc, char** argv)
   gconf_set_daemon_ior(ior);
   CORBA_free(ior);
   
-  /* Needs to be done right before registration */
+  /* Needs to be done right before registration,
+     after setting up the POA etc. */
   gconf_server_load_sources();
   
   result = oaf_active_server_register(IID, server);
@@ -1095,7 +467,7 @@ main(int argc, char** argv)
           break;
         }
       fast_cleanup();
-      shutdown_contexts();
+      shutdown_databases();
       return 1;
     }
 
@@ -1108,9 +480,9 @@ main(int argc, char** argv)
   
   fast_cleanup();
 
-  shutdown_contexts();
+  shutdown_databases();
 
-  locale_cache_drop();
+  gconfd_locale_cache_drop();
   
   gconf_log(GCL_INFO, _("Exiting"));
   
@@ -1131,11 +503,10 @@ one_hour_timeout(gpointer data)
 {
   gconf_log(GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
   
-  /* shrink unused context objects */
-  sleep_old_contexts();
+  drop_old_databases ();
 
   /* expire old locale cache entries */
-  locale_cache_expire();
+  gconfd_locale_cache_expire();
   
   return TRUE;
 }
@@ -1181,872 +552,172 @@ gconf_main_quit(void)
 }
 
 /*
- * Listeners
+ * Database storage
  */
 
-typedef struct _Listener Listener;
-
-struct _Listener {
-  ConfigListener obj;
-};
-
-static Listener* listener_new(ConfigListener obj);
-static void      listener_destroy(Listener* l);
-
-/*
- * Contexts
- */
+static GList* db_list = NULL;
+static GHashTable* dbs_by_address = NULL;
+static GConfDatabase *default_db = NULL;
 
 static void
-context_really_sync(GConfContext* ctx)
+init_databases (void)
 {
+  g_assert(db_list == NULL);
+  g_assert(dbs_by_address == NULL);
+  
+  dbs_by_address = g_hash_table_new(g_str_hash, g_str_equal);
+
+  /* Default database isn't in the address hash since it has
+     multiple addresses in a stack
+  */
+}
+
+static void
+set_default_database (GConfDatabase* db)
+{
+  g_assert(db_list != NULL);
+  g_assert(dbs_by_address != NULL);
+
+  default_db = db;
+  
+  /* Default database isn't in the address hash since it has
+     multiple addresses in a stack
+  */
+}
+
+static void
+register_database (GConfDatabase *db)
+{
+  safe_g_hash_table_insert(dbs_by_address,
+                           ((GConfSource*)db->sources->sources->data)->address,
+                           db);
+  
+  db_list = g_list_prepend (db_list, db);
+}
+
+static void
+unregister_database (GConfDatabase *db)
+{
+  g_hash_table_remove(dbs_by_address,
+                      ((GConfSource*)(db->sources->sources->data))->address);
+
+  db_list = g_list_remove (db_list, db);
+
+  gconf_database_destroy (db);
+}
+
+static GConfDatabase*
+lookup_database (const gchar *address)
+{
+  if (address == NULL)
+    return default_db;
+  else
+    return g_hash_table_lookup (dbs_by_address, address);
+}
+
+static GConfDatabase*
+obtain_database (const gchar *address,
+                 GConfError **err)
+{
+  
+  GConfSources* sources;
+  const gchar* addresses[] = { address, NULL };
   GConfError* error = NULL;
+  GConfDatabase *db;
+
+  db = lookup_database (address);
+
+  if (db)
+    return db;
   
-  if (!context_synchronous_sync(ctx, &error))
-    {
-      g_return_if_fail(error != NULL);
-
-      gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
-                error->str);
-      gconf_error_destroy(error);
-    }
-  else
-    {
-      gconf_log(GCL_DEBUG, "Sync completed without errors");
-    }
-}
-
-static GConfContext*
-context_new(GConfSources* sources)
-{
-  GConfContext* ctx;
-
-  ctx = g_new0(GConfContext, 1);
-
-  ctx->context = ConfigServer_invalid_context;
-  
-  ctx->listeners = gconf_listeners_new();
-
-  ctx->sources = sources;
-
-  ctx->last_access = time(NULL);
-
-  ctx->sync_idle = 0;
-  ctx->sync_timeout = 0;
-  
-  return ctx;
-}
-
-static void
-context_destroy(GConfContext* ctx)
-{
-  if (ctx->listeners != NULL)
-    {
-      gboolean need_sync = FALSE;
-      
-      g_assert(ctx->sources != NULL);
-      g_assert(ctx->saved_address == NULL);
-
-      if (ctx->sync_idle != 0)
-        {
-          g_source_remove(ctx->sync_idle);
-          ctx->sync_idle = 0;
-          need_sync = TRUE;
-        }
-
-      if (ctx->sync_timeout != 0)
-        {
-          g_source_remove(ctx->sync_timeout);
-          ctx->sync_timeout = 0;
-          need_sync = TRUE;
-        }
-
-      if (need_sync)
-        context_really_sync(ctx);
-      
-      gconf_listeners_destroy(ctx->listeners);
-      gconf_sources_destroy(ctx->sources);
-    }
-  else
-    {
-      g_assert(ctx->saved_address != NULL);
-      g_assert(ctx->sync_idle == 0);
-      g_assert(ctx->sync_timeout == 0);
-      
-      g_free(ctx->saved_address);
-    }
-      
-  g_free(ctx);
-}
-
-static void
-context_hibernate(GConfContext* ctx)
-{
-  g_return_if_fail(ctx->listeners != NULL);
-  g_return_if_fail(gconf_listeners_count(ctx->listeners) == 0);
-  g_return_if_fail(ctx->sync_idle == 0);
-  g_return_if_fail(ctx->sync_timeout == 0);
-      
-  gconf_listeners_destroy(ctx->listeners);
-  ctx->listeners = NULL;
-
-  ctx->saved_address = g_strdup(((GConfSource*)ctx->sources->sources->data)->address);
-  
-  gconf_sources_destroy(ctx->sources);
-  ctx->sources = NULL;  
-}
-
-static void
-context_awaken(GConfContext* ctx, GConfError** err)
-{
-  const gchar* addresses[2];
-  
-  g_return_if_fail(ctx->listeners == NULL);
-  g_return_if_fail(ctx->sources == NULL);
-  g_return_if_fail(ctx->saved_address != NULL);
-
-  addresses[0] = ctx->saved_address;
-  addresses[1] = NULL;
-
-  ctx->sources = gconf_sources_new_from_addresses(addresses, err);
-  
-  ctx->listeners = gconf_listeners_new();
-
-  g_free(ctx->saved_address);
-
-  ctx->saved_address = NULL;
-}
-
-
-static gint
-context_sync_idle(GConfContext* ctx)
-{
-  ctx->sync_idle = 0;
-
-  /* could have been added before reaching the
-     idle */
-  if (ctx->sync_timeout != 0)
-    {
-      g_source_remove(ctx->sync_timeout);
-      ctx->sync_timeout = 0;
-    }
-  
-  context_really_sync(ctx);
-  
-  /* Remove the idle function by returning FALSE */
-  return FALSE; 
-}
-
-static gint
-context_sync_timeout(GConfContext* ctx)
-{
-  ctx->sync_timeout = 0;
-  
-  /* Install the sync idle */
-  if (ctx->sync_idle == 0)
-    ctx->sync_idle = g_idle_add((GSourceFunc)context_sync_idle, ctx);
-
-  gconf_log(GCL_DEBUG, "Sync queued one minute after changes occurred");
-  
-  /* Remove the timeout function by returning FALSE */
-  return FALSE;
-}
-
-static void
-context_sync_nowish(GConfContext* ctx)
-{
-  /* Go ahead and sync as soon as the event loop quiets down */
-
-  /* remove the scheduled sync */
-  if (ctx->sync_timeout != 0)
-    {
-      g_source_remove(ctx->sync_timeout);
-      ctx->sync_timeout = 0;
-    }
-
-  /* Schedule immediate post-quietdown sync */
-  if (ctx->sync_idle == 0)
-    ctx->sync_idle = g_idle_add((GSourceFunc)context_sync_idle, ctx);
-}
-
-static void
-context_schedule_sync(GConfContext* ctx)
-{
-  /* Plan to sync within a minute or so */
-  if (ctx->sync_idle != 0)
-    return;
-  else if (ctx->sync_timeout != 0)
-    return;
-  else
-    {
-      /* 1 minute timeout */
-      ctx->sync_timeout = g_timeout_add(60000, (GSourceFunc)context_sync_timeout, ctx);
-    }
-}
-
-static gboolean
-context_synchronous_sync(GConfContext* ctx,
-                         GConfError** err)
-{
-  /* remove the scheduled syncs */
-  if (ctx->sync_timeout != 0)
-    {
-      g_source_remove(ctx->sync_timeout);
-      ctx->sync_timeout = 0;
-    }
-
-  if (ctx->sync_idle != 0)
-    {
-      g_source_remove(ctx->sync_idle);
-      ctx->sync_idle = 0;
-    }
-  
-  return gconf_sources_sync_all(ctx->sources, err);
-}
-
-static CORBA_unsigned_long
-context_add_listener(GConfContext* ctx,
-                     ConfigListener who,
-                     const gchar* where)
-{
-  Listener* l;
-  guint cnxn;
-  
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  l = listener_new(who);
-
-  cnxn = gconf_listeners_add(ctx->listeners, where, l,
-                             (GFreeFunc)listener_destroy);
-
-  gconf_log(GCL_DEBUG, "Added listener %u", cnxn);
-
-  logfile_queue_save ();
-  
-  return cnxn;  
-}
-
-static void
-context_remove_listener(GConfContext* ctx,
-                        CORBA_unsigned_long cnxn)
-{
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  gconf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
-  /* calls destroy notify */
-  gconf_listeners_remove(ctx->listeners, cnxn);
-
-  logfile_queue_save ();
-}
-
-typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
-
-struct _ListenerNotifyClosure {
-  ConfigServer_Context context;
-  const ConfigValue* value;
-  gboolean is_default;
-  GSList* dead;
-  CORBA_Environment ev;
-};
-
-static void
-notify_listeners_cb(GConfListeners* listeners,
-                    const gchar* all_above_key,
-                    guint cnxn_id,
-                    gpointer listener_data,
-                    gpointer user_data)
-{
-  Listener* l = listener_data;
-  ListenerNotifyClosure* closure = user_data;
-
-  g_return_if_fail(closure->context != ConfigServer_invalid_context);
-  
-  ConfigListener_notify(l->obj, closure->context, cnxn_id, 
-                        (gchar*)all_above_key, closure->value,
-                        closure->is_default,
-                        &closure->ev);
-  
-  if(closure->ev._major != CORBA_NO_EXCEPTION) 
-    {
-      gconf_log(GCL_WARNING, "Failed to notify listener %u, removing: %s", 
-                cnxn_id, CORBA_exception_id(&closure->ev));
-      CORBA_exception_free(&closure->ev);
-      
-      /* Dead listeners need to be forgotten */
-      closure->dead = g_slist_prepend(closure->dead, GUINT_TO_POINTER(cnxn_id));
-    }
-  else
-    {
-      gconf_log(GCL_DEBUG, "Notified listener %u of change to key `%s'",
-                cnxn_id, all_above_key);
-    }
-}
-
-static void
-context_notify_listeners(GConfContext* ctx,
-                         const gchar* key, const ConfigValue* value,
-                         gboolean is_default)
-{
-  ListenerNotifyClosure closure;
-  GSList* tmp;
-
-  g_return_if_fail(ctx != NULL);
-  g_return_if_fail(ctx->context != ConfigServer_invalid_context);
-  
-  closure.value = value;
-  closure.is_default = is_default;
-  closure.dead = NULL;
-  closure.context = ctx->context;
-  
-  CORBA_exception_init(&closure.ev);
-  
-  gconf_listeners_notify(ctx->listeners, key, notify_listeners_cb, &closure);
-
-  tmp = closure.dead;
-
-  while (tmp != NULL)
-    {
-      guint dead = GPOINTER_TO_UINT(tmp->data);
-
-      gconf_listeners_remove(ctx->listeners, dead);
-
-      tmp = g_slist_next(tmp);
-    }
-}
-
-
-static GConfValue*
-context_query_value(GConfContext* ctx,
-                    const gchar* key,
-                    const gchar** locales,
-                    gboolean use_schema_default,
-                    gboolean* value_is_default,
-                    GConfError** err)
-{
-  GConfValue* val;
-
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  val = gconf_sources_query_value(ctx->sources, key, locales,
-                                  use_schema_default,
-                                  value_is_default, err);
-
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Error getting value for `%s': %s"),
-                key, (*err)->str);
-    }
-  
-  return val;
-}
-
-static GConfValue*
-context_query_default_value(GConfContext* ctx,
-                            const gchar* key,
-                            const gchar** locales,
-                            GConfError** err)
-{
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-
-  return gconf_sources_query_default_value(ctx->sources, key, locales, err);
-}
-
-
-static void
-context_set(GConfContext* ctx,
-            const gchar* key,
-            GConfValue* val,
-            const ConfigValue* value,
-            GConfError** err)
-{
-  g_assert(ctx->listeners != NULL);
-  g_return_if_fail(err == NULL || *err == NULL);
-  
-  ctx->last_access = time(NULL);
-
-  gconf_sources_set_value(ctx->sources, key, val, err);
-
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Error setting value for `%s': %s"),
-                 key, (*err)->str);
-    }
-  else
-    {
-      context_schedule_sync(ctx);
-      context_notify_listeners(ctx, key, value,
-                               FALSE); /* Can't possibly be the default, since we just set it */
-    }
-}
-
-static void
-context_unset(GConfContext* ctx,
-              const gchar* key,
-              const gchar* locale,
-              GConfError** err)
-{
-  ConfigValue* val;
-  GConfError* error = NULL;
-  
-  g_return_if_fail(err == NULL || *err == NULL);
-  
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  gconf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
-
-  gconf_sources_unset_value(ctx->sources, key, locale, &error);
+  sources = gconf_sources_new_from_addresses(addresses, &error);
 
   if (error != NULL)
     {
-      gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
-                 key, error->str);
-
       if (err)
         *err = error;
       else
-        gconf_error_destroy(error);
+        gconf_error_destroy (error);
 
-      error = NULL;
+      return NULL;
     }
-  else
-    {
-      GConfValue* def_value;
-      const gchar* locale_list[] = { locale, NULL };
-
-      def_value = context_query_default_value(ctx,
-                                              key,
-                                              locale_list,
-                                              err);
-
-      if (err && *err)
-        gconf_log(GCL_ERR, _("Error getting default value for `%s': %s"),
-                  key, (*err)->str);
-
-      if (def_value != NULL)
-        {
-          val = corba_value_from_gconf_value(def_value);
-          gconf_value_destroy(def_value);
-        }
-      else
-        {
-          val = invalid_corba_value();
-        }
-          
-      context_schedule_sync(ctx);
-      context_notify_listeners(ctx, key, val, TRUE);
-      
-      CORBA_free(val);
-    }
-}
-
-static gboolean
-context_dir_exists(GConfContext* ctx,
-                   const gchar* dir,
-                   GConfError** err)
-{
-  gboolean ret;
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  gconf_log(GCL_DEBUG, "Received dir_exists request for `%s'", dir);
-  
-  ret = gconf_sources_dir_exists(ctx->sources, dir, err);
-  
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Error checking existence of `%s': %s"),
-                 dir, (*err)->str);
-      ret = FALSE;
-    }
+  if (sources == NULL)
+    return NULL;
 
-  return ret;
+  db = gconf_database_new (sources);
+
+  register_database (db);
+
+  return db;
 }
 
 static void
-context_remove_dir(GConfContext* ctx,
-                   const gchar* dir,
-                   GConfError** err)
+drop_old_databases(void)
 {
-  g_return_if_fail(err == NULL || *err == NULL);
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  gconf_log(GCL_DEBUG, "Received request to remove dir `%s'", dir);
-  
-  gconf_sources_remove_dir(ctx->sources, dir, err);
-
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Error removing dir `%s': %s"),
-                 dir, (*err)->str);
-    }
-  else
-    {
-      context_schedule_sync(ctx);
-    }
-}
-
-static GSList*
-context_all_entries(GConfContext* ctx, const gchar* dir,
-                    const gchar** locales,
-                    GConfError** err)
-{
-  GSList* entries;
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-  
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  entries = gconf_sources_all_entries(ctx->sources, dir, locales, err);
-
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Failed to get all entries in `%s': %s"),
-                 dir, (*err)->str);
-    }
-
-  return entries;
-}
-
-static GSList*
-context_all_dirs(GConfContext* ctx, const gchar* dir, GConfError** err)
-{
-  GSList* subdirs;
-
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-  
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-    
-  gconf_log(GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
-
-  subdirs = gconf_sources_all_dirs(ctx->sources, dir, err);
-
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Error listing dirs in `%s': %s"),
-                 dir, (*err)->str);
-    }
-  return subdirs;
-}
-
-static void
-context_set_schema(GConfContext* ctx, const gchar* key,
-                   const gchar* schema_key,
-                   GConfError** err)
-{
-  g_return_if_fail(err == NULL || *err == NULL);
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  gconf_sources_set_schema(ctx->sources, key, schema_key, err);
-
-  if (err && *err != NULL)
-    {
-      gconf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
-                key, (*err)->str);
-    }
-  else
-    {
-      context_schedule_sync(ctx);
-    }
-}
-
-static void
-context_sync(GConfContext* ctx, GConfError** err)
-{
-  g_assert(ctx->listeners != NULL);
-  
-  ctx->last_access = time(NULL);
-  
-  gconf_log(GCL_DEBUG, "Received suggestion to sync all config data");
-
-  context_sync_nowish(ctx);
-}
-
-static void
-context_clear_cache(GConfContext* ctx,
-                    GConfError** err)
-{
-  g_assert(ctx->listeners != NULL);
-
-  ctx->last_access = time(NULL);
-
-  gconf_sources_clear_cache(ctx->sources);
-}
-
-/*
- * Context storage
- */
-
-static GPtrArray* context_list = NULL;
-static GHashTable* contexts_by_address = NULL;
-
-static void
-init_contexts(void)
-{
-  g_assert(context_list == NULL);
-  g_assert(contexts_by_address == NULL);
-  
-  contexts_by_address = g_hash_table_new(g_str_hash, g_str_equal);
-
-  context_list = g_ptr_array_new();
-
-  g_ptr_array_add(context_list, NULL); /* Invalid context at index 0 */
-  g_ptr_array_add(context_list, NULL); /* default at 1 */
-
-  /* Default context isn't in the address hash since it has
-     multiple addresses in a stack
-  */
-}
-
-static void
-set_default_context(GConfContext* ctx)
-{
-  g_assert(context_list != NULL);
-  g_assert(contexts_by_address != NULL);
-
-  g_assert(context_list->pdata[ConfigServer_default_context] == NULL);
-
-  g_return_if_fail(ctx != NULL);
-  g_return_if_fail(ctx->context == ConfigServer_invalid_context);
-  
-  context_list->pdata[ConfigServer_default_context] = ctx;
-
-  ctx->context = ConfigServer_default_context;
-  
-  /* Default context isn't in the address hash since it has
-     multiple addresses in a stack
-  */
-}
-
-static void
-sleep_old_contexts(void)
-{
-  guint i;
+  GList *tmp_list;
+  GList *dead = NULL;
   GTime now;
   
-  g_assert(context_list != NULL);
+  g_assert(db_list != NULL);
   
   now = time(NULL);
   
-  i = 2; /* don't include the default context or invalid context */
-  while (i < context_list->len)
+  tmp_list = db_list;
+  while (tmp_list)
     {
-      GConfContext* c = context_list->pdata[i];
+      GConfDatabase* db = tmp_list->data;
 
-      if (c->listeners &&                             /* not already hibernating */
-          gconf_listeners_count(c->listeners) == 0 && /* Can hibernate */
-          (now - c->last_access) > (60*45))   /* 45 minutes without access */
+      if (db->listeners &&                             /* not already hibernating */
+          gconf_listeners_count(db->listeners) == 0 && /* Can hibernate */
+          (now - db->last_access) > (60*45))   /* 45 minutes without access */
         {
-          context_hibernate(c);
+          dead = g_list_prepend (dead, db);
         }
       
-      ++i;
+      tmp_list = g_list_next (tmp_list);
     }
+
+  tmp_list = dead;
+  while (tmp_list)
+    {
+      GConfDatabase* db = tmp_list->data;
+
+      unregister_database (db);
+            
+      tmp_list = g_list_next (tmp_list);
+    }
+
+  g_list_free (dead);
 }
 
 static void
-shutdown_contexts(void)
+shutdown_databases (void)
 {
-  guint i;
+  GList *tmp_list;
   
-  if (context_list == NULL)
+  if (db_list == NULL)
     return; /* Can happen if we get a signal before creating it */
-  
-  g_assert(contexts_by_address != NULL);
-  
-  i = context_list->len - 1;
 
-  while (i > 0)
+  tmp_list = db_list;
+
+  while (tmp_list)
     {
-      if (context_list->pdata[i] != NULL)
-        {
-          context_destroy(context_list->pdata[i]);
+      GConfDatabase *db = tmp_list->data;
 
-          context_list->pdata[i] = NULL;
-        }
+      gconf_database_destroy (db);
       
-      --i;
-    }
-  
-  g_ptr_array_free(context_list, TRUE);
-  context_list = NULL;
-
-  g_hash_table_destroy(contexts_by_address);
-
-  contexts_by_address = NULL;  
-}
-
-static ConfigServer_Context
-register_context(GConfContext* ctx)
-{
-  ConfigServer_Context next_id;
-  
-  g_assert(context_list != NULL);
-  g_assert(contexts_by_address != NULL);
-  g_return_val_if_fail(ctx->sources != NULL, ConfigServer_invalid_context);
-  g_return_val_if_fail(ctx->sources->sources != NULL, ConfigServer_invalid_context);
-  
-  next_id = context_list->len;
-
-  g_ptr_array_add(context_list, ctx);
-  
-  safe_g_hash_table_insert(contexts_by_address,
-                           ((GConfSource*)ctx->sources->sources->data)->address,
-                           GUINT_TO_POINTER(next_id));
-
-  ctx->context = next_id;
-  
-  return next_id;
-}
-
-static void
-unregister_context(ConfigServer_Context ctx)
-{
-  GConfContext* context;
-  
-  g_assert(context_list != NULL);
-  g_assert(contexts_by_address != NULL);
-
-  if (ctx == ConfigServer_invalid_context)
-    {
-      gconf_log(GCL_ERR, _("Attempt to unregister invalid context ID"));
-
-      return;
-    }
-  
-  if (ctx >= context_list->len)
-    {
-      gconf_log(GCL_ERR, _("Bad context ID %lu, request ignored"), (gulong)ctx);
-      return;
+      tmp_list = g_list_next (tmp_list);
     }
 
-  context = context_list->pdata[ctx];
+  g_list_free (db_list);
+  db_list = NULL;
 
-  if (context == NULL)
-    {
-      gconf_log(GCL_ERR, _("Already-unregistered context ID %lu, request ignored"),
-             (gulong)ctx);
+  g_hash_table_destroy(dbs_by_address);
 
-      return;
-    }
-  
-  context_list->pdata[ctx] = NULL;
+  dbs_by_address = NULL;
 
-  g_hash_table_remove(contexts_by_address,
-                      ((GConfSource*)(context->sources->sources->data))->address);
-  
-  context_destroy(context);
-}
-
-static GConfContext*
-lookup_context(ConfigServer_Context ctx, GConfError** err)
-{
-  GConfContext* gcc;
-  
-  g_assert(context_list != NULL);
-  g_assert(contexts_by_address != NULL);
-
-  if (ctx >= context_list->len || ctx == ConfigServer_invalid_context)
-    {
-      gconf_set_error(err, GCONF_ERROR_FAILED,
-                      _("Attempt to use invalid context ID %lu"),
-                      (gulong)ctx);
-      return NULL;
-    }
-  
-  gcc = context_list->pdata[ctx];
-
-  if (gcc == NULL)
-    {
-      gconf_set_error(err, GCONF_ERROR_FAILED,
-                      _("Attempt to use already-unregistered context ID %lu"),
-                      (gulong)ctx);
-      return NULL;
-    }
-
-  if (gcc->listeners == NULL)
-    {
-      context_awaken(gcc, err);       /* Wake up hibernating contexts */
-      if (gcc->listeners == NULL)
-        {
-          /* Failed, error should now be set. */
-          g_return_val_if_fail(err == NULL || *err != NULL, NULL);
-          return NULL;
-        }
-    }
-  
-  return gcc;
-}
-
-static ConfigServer_Context
-lookup_context_id_from_address(const gchar* address)
-{
-  gpointer result;
-  
-  g_assert(context_list != NULL);
-  g_assert(contexts_by_address != NULL);
-
-  result = g_hash_table_lookup(contexts_by_address,
-                               address);
-
-  if (result != NULL)
-    {
-      return GPOINTER_TO_UINT(result);
-    }
-  else
-    {
-      return ConfigServer_invalid_context;
-    }
-}
-
-/*
- * The listener object
- */
-
-static Listener* 
-listener_new(ConfigListener obj)
-{
-  Listener* l;
-  CORBA_Environment ev;
-
-  CORBA_exception_init(&ev);
-
-  l = g_new0(Listener, 1);
-
-  l->obj = CORBA_Object_duplicate(obj, &ev);
-
-  return l;
-}
-
-static void      
-listener_destroy(Listener* l)
-
-{  
-  CORBA_Environment ev;
-
-  CORBA_exception_init(&ev);
-  CORBA_Object_release(l->obj, &ev);
-  g_free(l);
+  gconf_database_destroy (default_db);
 }
 
 /*
@@ -2067,7 +738,7 @@ fast_cleanup(void)
 #endif
   /* OK we aren't going to unregister, because it can cause weird oafd
      spawning. The problem is that we have a race condition because
-     we're going to destroy everything in shutdown_contexts and if we
+     we're going to destroy everything in shutdown_databases and if we
      get incoming connections we'll just segfault and crash
      spectacularly. Should probably add a we_are_shut_down flag or
      something. FIXME */
@@ -2076,8 +747,9 @@ fast_cleanup(void)
 
 /* Exceptions */
 
-static gboolean
-gconf_set_exception(GConfError** error, CORBA_Environment* ev)
+gboolean
+gconf_set_exception(GConfError** error,
+                    CORBA_Environment* ev)
 {
   GConfErrNo en;
 
@@ -2149,147 +821,41 @@ gconf_set_exception(GConfError** error, CORBA_Environment* ev)
 }
 
 /*
- * Locale hash
- */
-
-static GConfLocaleCache* locale_cache = NULL;
-
-static GConfLocaleList*
-locale_cache_lookup(const gchar* locale)
-{
-  GConfLocaleList* locale_list;
-  
-  if (locale_cache == NULL)
-    locale_cache = gconf_locale_cache_new();
-
-  locale_list = gconf_locale_cache_get_list(locale_cache, locale);
-
-  g_assert(locale_list != NULL);
-  g_assert(locale_list->list != NULL);
-  
-  return locale_list;
-}
-
-static void
-locale_cache_expire(void)
-{
-  if (locale_cache != NULL)
-    gconf_locale_cache_expire(locale_cache, 60 * 30); /* 60 sec * 30 min */
-}
-
-static void
-locale_cache_drop(void)
-{
-  if (locale_cache != NULL)
-    {
-      gconf_locale_cache_destroy(locale_cache);
-      locale_cache = NULL;
-    }
-}
-
-/*
  * Logging
  */
 
 static void
-listener_save_foreach (const gchar* location,
-                       guint cnxn_id,
-                       gpointer listener_data,
-                       gpointer user_data)
-{
-  Listener* l = listener_data;
-  CORBA_ORB orb;
-  CORBA_Environment ev;
-  GMarkupNodeElement *node;
-  GMarkupNodeElement *parent;
-  gchar *ior;
-  gchar *s;
-  
-  parent = user_data;
-  
-  node = g_markup_node_new_element ("listener");
-  
-  orb = oaf_orb_get ();
-
-  CORBA_exception_init (&ev);
-  
-  ior = CORBA_ORB_object_to_string(orb, l->obj, &ev);
-
-  g_markup_node_set_attribute (node, "ior", ior);
-  
-  CORBA_free(ior);
-
-  g_markup_node_set_attribute (node, "location", location);
-
-  s = g_strdup_printf ("%u", cnxn_id);
-  g_markup_node_set_attribute (node, "connection", s);
-  g_free (s);
-  
-  parent->children = g_list_prepend (parent->children, node);
-}
-
-static GMarkupNode*
-context_to_node (GConfContext *c, gint id)
-{
-  GMarkupNodeElement *node;
-  gchar *id_str;
-  
-  node = g_markup_node_new_element ("context");
-
-  if (id != ConfigServer_default_context)
-    {
-      gchar *address;
-
-      if (c->saved_address)
-        address = c->saved_address;
-      else
-        address = ((GConfSource*)c->sources->sources->data)->address;
-
-      g_markup_node_set_attribute (node, "address", address);
-    }
-  
-  id_str = g_strdup_printf ("%d", id);
-  g_markup_node_set_attribute (node, "id", id_str);
-  g_free (id_str);
-
-  gconf_listeners_foreach (c->listeners,
-                           listener_save_foreach, node);
-
-  return (GMarkupNode*) node;
-}
-
-static void
 logfile_save (void)
 {
-  guint i;
   GMarkupNodeElement *root_node;
   gchar *str;
   int fd = -1;
   gchar *logfile;
   gchar *logdir;
-  
-  g_return_if_fail (context_list != NULL);
+  GList *tmp_list;
 
   root_node = g_markup_node_new_element ("gconfd_logfile");
   
-  i = context_list->len - 1;
+  tmp_list = db_list;
 
-  while (i > 0)
+  while (tmp_list)
     {
-      if (context_list->pdata[i] != NULL)
-        {
-          GConfContext* c = context_list->pdata[i];          
-          GMarkupNode* node;
-
-          node = context_to_node (c, i);
-
-          root_node->children = g_list_prepend (root_node->children,
-                                                node);
-        }
+      GConfDatabase *db = tmp_list->data;
+      GMarkupNode* node;
       
-      --i;
+      node = gconf_database_to_node (db, FALSE);
+      
+      root_node->children = g_list_prepend (root_node->children,
+                                            node);
+
+      tmp_list = g_list_next (tmp_list);
     }
 
+  /* Default database */
+  root_node->children = g_list_prepend (root_node->children,
+                                        gconf_database_to_node (default_db,
+                                                                TRUE));
+  
   str = g_markup_node_to_string ((GMarkupNode*)root_node, 0);
 
   logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
@@ -2326,8 +892,7 @@ logfile_save (void)
 }
 
 static void
-restore_listener (ConfigServer_Context old_context_id,
-                  GConfContext* gcc,
+restore_listener (GConfDatabase* db,
                   GMarkupNodeElement *node)
 {
   gchar *ior;
@@ -2386,13 +951,12 @@ restore_listener (ConfigServer_Context old_context_id,
       goto finished;
     }
   
-  new_cnxn = context_add_listener(gcc, cl, location);
+  new_cnxn = gconf_database_add_listener(db, cl, location);
 
   ConfigListener_update_listener (cl,
-                                  old_context_id,
+                                  db->objref,
                                   atoi (cnxn),
                                   location,
-                                  gcc->context,
                                   new_cnxn,
                                   &ev);
 
@@ -2417,50 +981,28 @@ restore_listener (ConfigServer_Context old_context_id,
 }
 
 static void
-restore_context (GMarkupNodeElement *node)
+restore_database (GMarkupNodeElement *node)
 {
-  gchar *attr;
-  gint id;
+  gchar *address;
   GList *tmp_list;
-  GConfContext *gcc;
-  GConfError *err;
+  GConfDatabase *db;
   
-  if (strcmp (node->name, "context") != 0)
+  if (!(strcmp (node->name, "database") == 0 ||
+        strcmp (node->name, "default_database") == 0))
     {
       gconf_log (GCL_WARNING, _("Didn't understand element '%s' in saved state file"), node->name);
 
       return;
     }
+
+  address = g_markup_node_get_attribute (node, "address");
+  if (address == NULL)
+    db = default_db;
+  else
+    db = obtain_database (address, NULL);
   
-  attr = g_markup_node_get_attribute (node, "id");
-
-  if (attr == NULL)
-    {
-      gconf_log (GCL_WARNING, _("Context node in saved state file has no 'id' attribute"));
-
-      return;
-    }
-  
-  id = atoi (attr);
-
-  g_free (attr);
-  
-  if (id != ConfigServer_default_context)
-    {
-      /* FIXME */
-      
-      gconf_log (GCL_WARNING, "Don't support restoring non-default contexts yet");
-      return;
-    }
-
-  err = NULL;
-  gcc = lookup_context (id, &err);
-  if (gcc == NULL)
-    {
-      gconf_log (GCL_DEBUG, "Didn't find a context with id %u while loading saved state file (%s). Should not happen...", id, err->str);
-      gconf_error_destroy (err);
-      return;
-    }
+  if (db == NULL)
+    return;
   
   tmp_list = node->children;
   while (tmp_list != NULL)
@@ -2469,11 +1011,11 @@ restore_context (GMarkupNodeElement *node)
 
       if (n->type != G_MARKUP_NODE_ELEMENT)
         {
-          gconf_log (GCL_WARNING, _("Strange non-element node in default state file"));
+          gconf_log (GCL_WARNING, _("Strange non-element node in saved state file"));
         }
       else
         {
-          restore_listener (id, gcc, (GMarkupNodeElement*)n);
+          restore_listener (db, (GMarkupNodeElement*)n);
         }
 
       tmp_list = g_list_next (tmp_list);
@@ -2548,7 +1090,7 @@ logfile_read (void)
         }
       else
         {
-          restore_context ((GMarkupNodeElement*)node);
+          restore_database ((GMarkupNodeElement*)node);
         }
       
       tmp_list = g_list_next (tmp_list);
@@ -2571,8 +1113,8 @@ logfile_save_timeout (gpointer user_data)
   return FALSE;
 }
 
-static void
-logfile_queue_save (void)
+void
+gconf_logfile_queue_save (void)
 {
   if (logfile_save_timeout_id == 0)
     {

@@ -41,7 +41,10 @@ gconfinclude_HEADERS =     \
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
 gconfd_1_SOURCES = \
+	gconf-database.h	\
+	gconf-database.c	\
 	gconf-sources.h		\
+	gconfd.h		\
 	gconfd.c
 
 gconfd_1_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
