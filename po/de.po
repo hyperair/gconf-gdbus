@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 2.3.3\n"
+"Project-Id-Version: GConf 2.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-07-22 13:04+0200\n"
+"POT-Creation-Date: 2003-12-29 12:39+0100\n"
+"PO-Revision-Date: 2003-12-29 12:39+0100\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,41 @@ msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "Im Wurzelverzeichnis %s konnte nicht unter der Adresse »%s« gelesen oder "
 "geschrieben werden"
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Das Verzeichnis »%s« konnte nicht gefunden werden\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Der GConf-Baum konnte nicht nach »%s« gespeichert werden: %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Aufruf: %s <Verzeichnis>\n"
+
+# CHECK
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Aufruf: %s <Verzeichnis>\n"
+"  Vereint eine Markup-Backend-Dateisystemhierarchie der Form:\n"
+"    Verzeichnis/%%gconf.xml\n"
+"                Unterverzeichnis1/%%gconf.xml\n"
+"                Unterverzeichnis2/%%gconf.xml\n"
+"  zu:\n"
+"    Verzeichnis/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -67,13 +102,12 @@ msgid "Error syncing the XML backend directory cache: %s"
 msgstr "Fehler beim Synchronisieren des XML-Backend-Verzeichnis-Caches: %s"
 
 #: backends/xml-backend.c:684
-#, fuzzy
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
 msgstr ""
-"Das Entfernen der dir-Operation wird nicht mehr unterstützt, entfernen Sie "
-"einfach alle Schlüssel in dem Verzeichnis"
+"Die Verzeichnis entfernen-Operation wird nicht mehr unterstützt, entfernen "
+"Sie einfach alle Schlüssel in dem Verzeichnis"
 
 #: backends/xml-backend.c:770
 #, c-format
@@ -92,7 +126,7 @@ msgid "Initializing XML backend module"
 msgstr "Das XML-Backend-Modul wird initialisiert"
 
 #: backends/xml-backend.c:877
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Die Sperre für das XML-Verzeichnis »%s« konnte nicht gelöst werden: %s"
 
@@ -434,7 +468,7 @@ msgid "Error checking existence of `%s': %s"
 msgstr "Fehler beim Prüfen der Existenz von »%s«: %s"
 
 #: gconf/gconf-database.c:1520
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing directory \"%s\": %s"
 msgstr "Fehler beim Entfernen des Verzeichnisses »%s«: %s"
 
@@ -556,7 +590,7 @@ msgstr "Das UTF-8 in der Kurzbeschreibung des Schemas ist ungültig"
 
 #: gconf/gconf-internals.c:607
 msgid "Invalid UTF-8 in long description for schema"
-msgstr "Das UTF-8 in der langen Beschreibung des Schemas ist ungültig"
+msgstr "Das UTF-8 in der ausführlichen Beschreibung des Schemas ist ungültig"
 
 #: gconf/gconf-internals.c:615
 msgid "Invalid UTF-8 in owner for schema"
@@ -1184,13 +1218,13 @@ msgstr ""
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit %s"
 msgstr ""
 "Keine Konfigurationsquellen im Quellpfad, daher wird die Konfiguration nicht "
-"gespeichert; bearbeiten Sie sie"
+"gespeichert; bearbeiten Sie %s"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1247,9 +1281,9 @@ msgid "Owner of %s is not the current user"
 msgstr "Der Besitzer von %s ist nicht der momentan aktive Benutzer"
 
 #: gconf/gconfd.c:504
-#, fuzzy, c-format
+#, c-format
 msgid "Bad permissions %lo on directory %s"
-msgstr "Fehlerhafte Berechtigungen %o für Verzeichnis %s"
+msgstr "Fehlerhafte Zugriffsrechte %lo für Verzeichnis %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
@@ -1652,7 +1686,8 @@ msgstr "Die kurze Dokumentationszeichenkette für einen Schlüssel anfordern"
 
 #: gconf/gconftool.c:382
 msgid "Get the long doc string for a key"
-msgstr "Die lange Dokumentationszeichenkette für einen Schlüssel anfordern"
+msgstr ""
+"Die ausführliche Dokumentationszeichenkette für einen Schlüssel anfordern"
 
 #: gconf/gconftool.c:391
 msgid "Get the name of the schema applied to this key"
@@ -1785,13 +1820,11 @@ msgid "Shutdown error: %s\n"
 msgstr "Fehler beim Herunterfahren: %s\n"
 
 #: gconf/gconftool.c:1120
-#, fuzzy
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr ""
 "Sie müssen ein oder mehrere rekursiv aufzulistende Verzeichnisse angeben.\n"
 
 #: gconf/gconftool.c:1172
-#, fuzzy
 msgid "Must specify one or more directories to dump.\n"
 msgstr ""
 "Sie müssen einen oder mehrere in Rohform auszugebende Schlüssel angeben.\n"
@@ -1857,7 +1890,7 @@ msgstr "Kurzbeschr.: %s\n"
 #: gconf/gconftool.c:1598
 #, c-format
 msgid "Long Desc: %s\n"
-msgstr "Lange Beschr.: %s\n"
+msgstr "Ausführliche Beschr.: %s\n"
 
 #: gconf/gconftool.c:1607 gconf/gconftool.c:1831 gconf/gconftool.c:1865
 #: gconf/gconftool.c:1910 gconf/gconftool.c:2055
@@ -2034,7 +2067,6 @@ msgid "Error syncing: %s"
 msgstr "Fehler beim Synchronisieren: %s"
 
 #: gconf/gconftool.c:2283
-#, fuzzy
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Sie müssen ein oder mehrere Verzeichnisse angeben, in denen die Schlüssel-/"
@@ -2061,11 +2093,10 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Fehler beim rekursiven Zurücksetzen von »%s«: %s\n"
 
 #: gconf/gconftool.c:2362
-#, fuzzy
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
-"Sie müssen ein oder mehrere Verzeichnisse angeben, dessen Unterverzeichnisse "
-"aufgelistet werden sollen.\n"
+"Sie müssen ein oder mehrere Verzeichnisse angeben, dessen bzw. deren "
+"Unterverzeichnisse aufgelistet werden sollen.\n"
 
 #: gconf/gconftool.c:2396
 #, c-format
@@ -2358,40 +2389,3 @@ msgstr ""
 "Schlüssel im Verzeichnis zu beschädigen:\n"
 "  %s\n"
 
-#~ msgid ""
-#~ "%u items remain in the cache after cleaning already-synced items older "
-#~ "than %u seconds"
-#~ msgstr ""
-#~ "%u Elemente verbleiben im Cache, nachdem alle bereits synchronisierten "
-#~ "Elemente entfernt wurden, die älter als %u Sekunden waren"
-
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#~ msgid "/path"
-#~ msgstr "/Pfad"
-
-#~ msgid "--dir-exists option must be used by itself.\n"
-#~ msgstr ""
-#~ "Die Option --dir-exists darf nicht in Verbindung mit anderen Optionen "
-#~ "verwendet werden.\n"
-
-#~ msgid "--install-schema-file must be used by itself.\n"
-#~ msgstr ""
-#~ "Die Option --install-schema-file darf nicht in Verbindung mit anderen "
-#~ "Optionen verwendet werden.\n"
-
-#~ msgid "--makefile-install-rule must be used by itself.\n"
-#~ msgstr ""
-#~ "Die Option --makefile-install-rule darf nicht in Verbindung mit anderen "
-#~ "Optionen verwendet werden.\n"
-
-#~ msgid "--break-key must be used by itself.\n"
-#~ msgstr ""
-#~ "Die Option --break-key darf nicht in Verbindung mit anderen Optionen "
-#~ "verwendet werden.\n"
-
-#~ msgid "--break-directory must be used by itself.\n"
-#~ msgstr ""
-#~ "Die Option --break-directory darf nicht in Verbindung mit anderen "
-#~ "Optionen verwendet werden.\n"
