@@ -670,6 +670,15 @@ void
 gconf_entry_destroy(GConfEntry* pair)
 {
   g_free(pair->key);
-  gconf_value_destroy(pair->value);
+  if (pair->value)
+    gconf_value_destroy(pair->value);
   g_free(pair);
+}
+
+GConfValue*
+gconf_entry_steal_value (GConfEntry* entry)
+{
+  GConfValue* val = entry->value;
+  entry->value = NULL;
+  return val;
 }

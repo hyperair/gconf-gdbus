@@ -69,6 +69,8 @@ gboolean     gconf_dir_exists     (GConfEngine* conf, const gchar* dir, GConfErr
 */
 gboolean     gconf_valid_key      (const gchar* key, gchar** why_invalid);
 
+/* return TRUE if the path "below" would be somewhere below the directory "above" */
+gboolean     gconf_key_is_below   (const gchar* above, const gchar* below);
 
 /* 
  * Higher-level stuff 
@@ -104,7 +106,7 @@ GConfSchema* gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError*
    many combinations of types possible
 */
 
-/* setters return TRUE on success; note that you still have to sync */
+/* setters return TRUE on success; note that you still should suggest a sync */
 
 gboolean     gconf_set_float   (GConfEngine* conf, const gchar* key,
                                 gdouble val, GConfError** err);

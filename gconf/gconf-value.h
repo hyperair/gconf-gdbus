@@ -159,8 +159,10 @@ struct _GConfEntry {
 };
 
 /* Pair takes memory ownership of both key and value */
-GConfEntry* gconf_entry_new    (gchar* key, GConfValue* val);
-void        gconf_entry_destroy(GConfEntry* pair);
+GConfEntry* gconf_entry_new         (gchar* key, GConfValue* val);
+void        gconf_entry_destroy     (GConfEntry* pair);
+/* Transfer ownership of value to the caller. */
+GConfValue* gconf_entry_steal_value (GConfEntry* entry);
 
 #endif
 

@@ -1096,6 +1096,12 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
     return TRUE;
 }
 
+gboolean
+gconf_key_is_below   (const gchar* above, const gchar* below)
+{
+  return strncmp(below, above, strlen(above)) == 0;
+}
+
 /*
  * Table of connections 
  */ 

@@ -53,6 +53,28 @@ extern "C" {
  * underneath it.
  */
 
+typedef enum {
+  GCONF_CLIENT_PRELOAD_NONE,     /* don't preload anything */
+  GCONF_CLIENT_PRELOAD_ONELEVEL, /* load entries directly under the directory. */
+  GCONF_CLIENT_PRELOAD_RECURSIVE /* recurse the directory tree; possibly quite expensive! */
+} GConfClientPreloadType;
+
+typedef enum {
+  GCONF_CLIENT_HANDLE_NONE,
+  GCONF_CLIENT_HANDLE_UNRETURNED,
+  GCONF_CLIENT_HANDLE_ALL
+} GConfClientErrorHandlingMode;
+
+typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
+
+/*
+ * Return the parent window error dialogs should be associated with, or NULL for
+ * none.
+ */
+
+typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
+
+
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
 #define GCONF_CLIENT(obj)                  (CONF_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
 #define GCONF_CLIENT_CLASS(klass)          (CONF_CHECK_CLASS_CAST ((klass), GCONF_TYPE_CLIENT, GConfClientClass))
@@ -70,7 +92,11 @@ struct _GConfClient
   /*< private >*/
 
   GConfEngine* engine;
-
+  GConfClientErrorHandlingMode error_mode;
+  GConfClientParentWindowFunc parent_func;
+  gpointer parent_user_data;
+  GSList* dir_list;
+  GHashTable* cache_hash;
 };
 
 struct _GConfClientClass
@@ -113,22 +139,33 @@ GtkType           gconf_client_get_type        (void);
 /* use the default engine */
 GConfClient*      gconf_client_new             (void);
 
-/* specify an engine */
+/* specify an engine; you pass a reference count to the engine,
+   i.e. the client now owns your reference. */
 GConfClient*      gconf_client_new_with_engine (GConfEngine* engine);
 
-/* Pre-load the contents of this directory, much faster if you plan
-   to access most of the directory contents.
+/* Add a directory to monitor and emit the value_changed signal and
+   key notifications for.  Optionally pre-load the contents of this
+   directory, much faster if you plan to access most of the directory
+   contents. You can't add overlapping directories.
 */
-void              gconf_client_preload_dir     (const gchar* dir);
 
+void              gconf_client_add_dir     (GConfClient* client,
+                                            const gchar* dir,
+                                            GConfClientPreloadType preload,
+                                            GConfError** err);
+
+
+/* This removes any notifications associated with the dir */
+void              gconf_client_remove_dir  (GConfClient* client,
+                                            const gchar* dir);
 
 /*
  *  The notification facility allows you to attach a callback to a single
  *  key or directory, which is more convenient most of the time than
- *  the value_changed signal
+ *  the value_changed signal. The key you're monitoring must be inside one
+ *  of the GConfClient's directories.
  */
 
-typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
 /* Returns ID of the notification */
 /* returns 0 on error, 0 is an invalid ID */
@@ -146,17 +183,11 @@ void         gconf_client_notify_remove  (GConfClient* client,
  * set the error handling to GCONF_CLIENT_HANDLE_NONE
  */
 
-typedef enum {
-  GCONF_CLIENT_HANDLE_NONE,
-  GCONF_CLIENT_HANDLE_UNRETURNED,
-  GCONF_CLIENT_HANDLE_ALL
-} GConfClientErrorHandlingMode;
-
-/*
- * Return the parent window error dialogs should be associated with, or NULL for
- * none.
+/* 
+ * Error handling happens in the default signal handler, so you can
+ * selectively override the default handling by connecting to the error
+ * signal and calling gtk_signal_emit_stop()
  */
-typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
 
 void              gconf_client_set_error_handling(GConfClient* client,
                                                   GConfClientErrorHandlingMode mode,
@@ -226,7 +257,7 @@ GConfSchema* gconf_client_get_schema  (GConfClient* client,
    many combinations of types possible
 */
 
-/* setters return TRUE on success; note that you still have to sync */
+/* setters return TRUE on success; note that you still should suggest a sync */
 
 gboolean     gconf_client_set_float   (GConfClient* client, const gchar* key,
                                        gdouble val, GConfError** err);
@@ -243,6 +274,18 @@ gboolean     gconf_client_set_bool    (GConfClient* client, const gchar* key,
 gboolean     gconf_client_set_schema  (GConfClient* client, const gchar* key,
                                        GConfSchema* val, GConfError** err);
 
+/*
+ * Functions to emit signals
+ */
+
+/* these are useful to manually invoke the default error handlers */
+void         gconf_client_error                  (GConfClient* client, GConfError* error);
+void         gconf_client_unreturned_error       (GConfClient* client, GConfError* error);
+
+/* useful to force an update */
+void         gconf_client_value_changed          (GConfClient* client,
+                                                  const gchar* key,
+                                                  GConfValue* value);
 
 #ifdef __cplusplus
 }
