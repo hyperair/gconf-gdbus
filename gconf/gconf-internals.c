@@ -22,9 +22,12 @@
 #include "gconf-backend.h"
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
 
 
 /*
@@ -396,12 +399,12 @@ g_conf_file_test(const gchar* filename, int test)
 gchar*   
 g_conf_server_info_file(void)
 {
-  const gchar* home_dir;
+  gchar* info_dir;
   gchar* entire_file;
   gchar buf[256];
   gchar* host_name;
 
-  home_dir = g_get_home_dir();
+  info_dir = g_conf_server_info_dir();
 
   if (gethostname(buf, 256) < 0)
     {
@@ -413,7 +416,90 @@ g_conf_server_info_file(void)
       host_name = buf;
     }
   
-  entire_file = g_strconcat(home_dir, "/.gconfd.info", host_name ? "." : NULL, host_name, NULL);
+  entire_file = g_strconcat(info_dir, "/.gconfd.info", host_name ? "." : NULL, host_name, NULL);
+
+  g_free(info_dir);
 
   return entire_file;
 }
+
+gchar*   
+g_conf_server_info_dir(void)
+{
+  const gchar* home_dir;
+
+  home_dir = g_get_home_dir();
+
+  return g_strconcat(home_dir, "/.gconfd", NULL);
+}
+
+
+gboolean
+g_conf_server_write_info_file(const gchar* ior)
+{
+  gchar* fn;
+  int fd;
+
+  fn = g_conf_server_info_file();
+
+  if (!g_conf_file_exists(fn))
+    {
+      gchar* dir = g_conf_server_info_dir();
+
+      if (!g_conf_file_test(dir, G_CONF_FILE_ISDIR))
+        {
+          if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
+            {
+              g_free(dir);
+              return FALSE;
+            }
+          else
+            {
+              g_free(dir);
+            }
+        }
+    }
+
+  fd = open(fn, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+
+  g_free(fn);
+
+  if (fd < 0)
+    return FALSE;
+  else 
+    {
+      gint len = strlen(ior);
+      gint written = 0;
+      gboolean done = FALSE;
+
+      while (!done)
+        {
+          written = write(fd, ior, len);
+         
+          if (written == len)
+            done = TRUE;
+          else if (written < 0)
+            {
+              if (errno != EINTR)
+                return FALSE;
+              else
+                continue;
+            }
+          else
+            {
+              g_assert(written < len);
+              ior += written;
+              len -= written;
+              g_assert(len == strlen(ior));
+            }
+        }
+    }
+
+  if (close(fd) < 0)
+    return FALSE;
+
+  return TRUE;
+}
+
+
+

@@ -62,6 +62,8 @@ gboolean g_conf_file_test   (const gchar* filename, int test);
 gboolean g_conf_file_exists (const gchar* filename);
 
 gchar*   g_conf_server_info_file(void);
+gchar*   g_conf_server_info_dir(void);
+gboolean g_conf_server_write_info_file(const gchar* ior);
 
 #endif
 

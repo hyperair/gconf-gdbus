@@ -6,6 +6,8 @@ CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
 BUILT_SOURCES = $(CORBA_SOURCES)
 
+## This is broken I know, I'm going to break the server/client up and have a library later
+
 gconfd_SOURCES = \
 	gconf-internals.c	\
 	gconf-internals.h	\

@@ -73,6 +73,7 @@ ConfigServer   server = CORBA_OBJECT_NIL;
 
 static void 
 notify(PortableServer_Servant servant, 
+       CORBA_long cnxn,
        const CORBA_char* key, 
        const CORBA_any* value,
        CORBA_Environment *ev);
@@ -89,6 +90,7 @@ POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 
 static void 
 notify(PortableServer_Servant servant, 
+       CORBA_long cnxn,
        const CORBA_char* key, 
        const CORBA_any* value,
        CORBA_Environment *ev)
@@ -105,8 +107,8 @@ g_conf_get_config_server(void)
   else
     {
       /* Have to obtain the server, bleh */
+      /* For now, this involves reading the server info file. */
       
-
     }
 }
 

@@ -1,15 +1,15 @@
 
 
 interface ConfigListener {
-  oneway void notify (in string key, in any value);
+  oneway void notify (in long cnxn, in string key, in any value);
 };
 
 interface ConfigServer {
   // "where" is the portion of the namespace to listen to
-  void add_listener(in string where, in ConfigListener who);  
+  // Returns a connection ID for removal
+  long add_listener(in string where, in ConfigListener who);  
 
-  // "where" must be a previously-added "where"
-  void remove_listener(in string where, in ConfigListener who);
+  void remove_listener(in long cnxn);
   
   any lookup(in string key);
 
