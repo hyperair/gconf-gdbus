@@ -77,7 +77,7 @@ struct _GConfValue {
   } d;
 };
 
-#define gconf_value_string(x)    ((x)->d.string_data)
+#define gconf_value_string(x)    ((const gchar*)((x)->d.string_data))
 #define gconf_value_int(x)       ((x)->d.int_data)
 #define gconf_value_float(x)     ((x)->d.float_data)
 #define gconf_value_list_type(x) ((x)->d.list_data.type)

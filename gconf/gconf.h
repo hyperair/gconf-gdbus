@@ -113,13 +113,29 @@ gboolean     gconf_get_bool  (GConfEngine* conf, const gchar* key,
 /* free the retval */
 /* Note that this returns the schema stored at key, NOT
    the schema associated with the key. */
-/* This automatically uses get_with_locale() with the current locale,
-   the other convenience wrappers do not */
 GConfSchema* gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err);
 
-/* No convenience functions for lists or pairs, since there are too
-   many combinations of types possible
+/*
+   This automatically converts the list to the given list type;
+   a list of int or bool stores values in the list->data field
+   using GPOINTER_TO_INT(), a list of strings stores the gchar*
+   in list->data, a list of float contains pointers to allocated
+   gdouble (gotta love C!).
 */
+GSList*      gconf_get_list    (GConfEngine* conf, const gchar* key,
+                                GConfValueType list_type, GConfError** err);
+/*
+  The car_retloc and cdr_retloc args should be the address of the appropriate
+  type:
+  bool    gboolean*
+  int     gint*
+  string  gchar**
+  float   gdouble*
+ */
+gboolean     gconf_get_pair    (GConfEngine* conf, const gchar* key,
+                                GConfValueType car_type, GConfValueType cdr_type,
+                                gpointer car_retloc, gpointer cdr_retloc,
+                                GConfError** err);
 
 /* setters return TRUE on success; note that you still should suggest a sync */
 
@@ -138,6 +154,17 @@ gboolean     gconf_set_bool    (GConfEngine* conf, const gchar* key,
 gboolean     gconf_set_schema  (GConfEngine* conf, const gchar* key,
                                 GConfSchema* val, GConfError** err);
 
+/* List should be the same as the one gconf_get_list() would return */
+gboolean     gconf_set_list    (GConfEngine* conf, const gchar* key,
+                                GConfValueType list_type,
+                                GSList* list,
+                                GConfError** err);
+
+gboolean     gconf_set_pair    (GConfEngine* conf, const gchar* key,
+                                GConfValueType car_type, GConfValueType cdr_type,
+                                gconstpointer address_of_car,
+                                gconstpointer address_of_cdr,
+                                GConfError** err);
 
 #ifdef __cplusplus
 }

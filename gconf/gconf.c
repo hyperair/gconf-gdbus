@@ -428,6 +428,10 @@ gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
   CORBA_Environment ev;
   ConfigServer cs;
   gint tries = 0;
+
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   
   if (!gconf_key_check(key, err))
     return NULL;
@@ -485,10 +489,14 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
   CORBA_Environment ev;
   ConfigServer cs;
   gint tries = 0;
-  
+
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(value != NULL, FALSE);
   g_return_val_if_fail(value->type != GCONF_VALUE_INVALID, FALSE);
   g_return_val_if_fail( (value->type != GCONF_VALUE_STRING) ||
                         (gconf_value_string(value) != NULL) , FALSE );
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -540,6 +548,10 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
   CORBA_Environment ev;
   ConfigServer cs;
   gint tries = 0;
+
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -588,6 +600,11 @@ gconf_associate_schema  (GConfEngine* conf, const gchar* key,
   CORBA_Environment ev;
   ConfigServer cs;
   gint tries = 0;
+
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(schema_key != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -643,6 +660,10 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
   ConfigServer cs;
   guint i;
   gint tries = 0;
+
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(dir != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   
   if (!gconf_key_check(dir, err))
     return NULL;
@@ -717,6 +738,10 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
   ConfigServer cs;
   guint i;
   gint tries = 0;
+
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(dir != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   
   if (!gconf_key_check(dir, err))
     return NULL;
@@ -778,6 +803,9 @@ gconf_suggest_sync(GConfEngine* conf, GConfError** err)
   ConfigServer cs;
   gint tries = 0;
 
+  g_return_if_fail(conf != NULL);
+  g_return_if_fail(err == NULL || *err == NULL);
+  
   CORBA_exception_init(&ev);
 
  RETRY:
@@ -816,8 +844,10 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
   ConfigServer cs;
   CORBA_boolean server_ret;
   gint tries = 0;
-  
+
+  g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(dir != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   if (!gconf_key_check(dir, err))
     return FALSE;
@@ -1666,6 +1696,9 @@ gconf_get_float (GConfEngine* conf, const gchar* key,
 {
   GConfValue* val;
 
+  g_return_val_if_fail(conf != NULL, 0.0);
+  g_return_val_if_fail(key != NULL, 0.0);
+  
   val = gconf_get(conf, key, err);
 
   if (val == NULL)
@@ -1697,6 +1730,9 @@ gconf_get_int   (GConfEngine* conf, const gchar* key,
 {
   GConfValue* val;
 
+  g_return_val_if_fail(conf != NULL, 0);
+  g_return_val_if_fail(key != NULL, 0);
+  
   val = gconf_get(conf, key, err);
 
   if (val == NULL)
@@ -1728,6 +1764,9 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
 {
   GConfValue* val;
 
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  
   val = gconf_get(conf, key, err);
 
   if (val == NULL)
@@ -1745,8 +1784,7 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
           return deflt ? g_strdup(deflt) : NULL;
         }
 
-      retval = gconf_value_string(val);
-
+      retval = val->d.string_data;
       /* This is a cheat; don't copy */
       val->d.string_data = NULL; /* don't delete the string */
 
@@ -1762,6 +1800,9 @@ gconf_get_bool  (GConfEngine* conf, const gchar* key,
 {
   GConfValue* val;
 
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  
   val = gconf_get(conf, key, err);
 
   if (val == NULL)
@@ -1792,6 +1833,9 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err)
 {
   GConfValue* val;
 
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  
   val = gconf_get_with_locale(conf, key, gconf_current_locale(), err);
 
   if (val == NULL)
@@ -1820,6 +1864,238 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err)
     }
 }
 
+GSList*
+gconf_get_list    (GConfEngine* conf, const gchar* key,
+                   GConfValueType list_type, GConfError** err)
+{
+  GConfValue* val;
+
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_INVALID, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_LIST, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);  
+  
+  val = gconf_get_with_locale(conf, key, gconf_current_locale(), err);
+
+  if (val == NULL)
+    return NULL;
+  else
+    {
+      GSList* retval;
+
+      if (val->type != GCONF_VALUE_LIST)
+        {
+          if (err)
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                                   _("Expected list, got %s"),
+                                   gconf_value_type_to_string(val->type));
+          gconf_value_destroy(val);
+          return NULL;
+        }
+
+      if (gconf_value_list_type(val) != list_type)
+        {
+          if (err)
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                                   _("Expected list of %s, got list of %s"),
+                                   gconf_value_type_to_string(list_type),
+                                   gconf_value_type_to_string(val->type));
+          gconf_value_destroy(val);
+          return NULL;
+        }
+
+      g_assert(gconf_value_list_type(val) == list_type);
+      
+      retval = gconf_value_list(val);
+
+      /* Cheating the API to avoid a list copy; set this to NULL to
+         avoid destroying the list */
+      val->d.list_data.list = NULL;
+      
+      gconf_value_destroy(val);
+      val = NULL;
+      
+      {
+        /* map (typeChange, retval) */
+        GSList* tmp;
+
+        tmp = retval;
+
+        while (tmp != NULL)
+          {
+            GConfValue* elem = tmp->data;
+
+            g_assert(elem != NULL);
+            g_assert(elem->type == list_type);
+            
+            switch (list_type)
+              {
+              case GCONF_VALUE_INT:
+              case GCONF_VALUE_BOOL:
+                tmp->data = GINT_TO_POINTER(gconf_value_int(elem));
+                break;
+                
+              case GCONF_VALUE_FLOAT:
+                {
+                  gdouble* d = g_new(gdouble, 1);
+                  *d = gconf_value_float(elem);
+                  tmp->data = d;
+                }
+                break;
+
+              case GCONF_VALUE_STRING:
+                {
+                  /* Cheat again, and steal the string from the value */
+                  tmp->data = elem->d.string_data;
+                  elem->d.string_data = NULL;
+                }
+                break;
+
+              default:
+                g_assert_not_reached();
+                break;
+              }
+
+            /* Clean up the value */
+            gconf_value_destroy(elem);
+            
+            tmp = g_slist_next(tmp);
+          }
+      } /* list conversion block */
+      
+      return retval;
+    } /* else if val != NULL */
+}
+
+static void
+primitive_value(gpointer retloc, GConfValue* val)
+{
+  switch (val->type)
+    {
+    case GCONF_VALUE_INT:
+      *((gint*)retloc) = gconf_value_int(val);
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      *((gdouble*)retloc) = gconf_value_float(val);
+      break;
+
+    case GCONF_VALUE_STRING:
+      {
+        *((gchar**)retloc) = val->d.string_data;
+        /* cheat and steal the string to avoid a copy */
+        val->d.string_data = NULL;
+      }
+      break;
+
+    case GCONF_VALUE_BOOL:
+      *((gboolean*)retloc) = gconf_value_bool(val);
+      break;
+
+    default:
+      g_assert_not_reached();
+      break;
+    }
+}
+
+gboolean
+gconf_get_pair    (GConfEngine* conf, const gchar* key,
+                   GConfValueType car_type, GConfValueType cdr_type,
+                   gpointer car_retloc, gpointer cdr_retloc,
+                   GConfError** err)
+{
+  GConfValue* val;
+  GConfError* error = NULL;
+  
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(car_retloc != NULL, FALSE);
+  g_return_val_if_fail(cdr_retloc != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);  
+  
+  val = gconf_get_with_locale(conf, key, gconf_current_locale(), &error);
+
+  if (error != NULL)
+    {
+      g_assert(val == NULL);
+      
+      if (err)
+        *err = error;
+      else
+        gconf_error_destroy(error);
+
+      return FALSE;
+    }
+  
+  if (val == NULL)
+    {
+      return TRUE;
+    }
+  else
+    {
+      GConfValue* car;
+      GConfValue* cdr;
+      
+      if (val->type != GCONF_VALUE_PAIR)
+        {
+          if (err)
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                                   _("Expected pair, got %s"),
+                                   gconf_value_type_to_string(val->type));
+          gconf_value_destroy(val);
+          return FALSE;
+        }
+
+      car = gconf_value_car(val);
+      cdr = gconf_value_cdr(val);
+      
+      if (car == NULL ||
+          cdr == NULL)
+        {
+          if (err)
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH, 
+                                   _("Expected (%s,%s) pair, got a pair with one or both values missing"),
+                                   gconf_value_type_to_string(car_type),
+                                   gconf_value_type_to_string(cdr_type));
+
+          gconf_value_destroy(val);
+          return FALSE;
+        }
+
+      g_assert(car != NULL);
+      g_assert(cdr != NULL);
+      
+      if (car->type != car_type ||
+          cdr->type != cdr_type)
+        {
+          if (err)
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                                   _("Expected pair of type (%s,%s) got type (%s,%s)"),
+                                   gconf_value_type_to_string(car_type),
+                                   gconf_value_type_to_string(cdr_type),
+                                   gconf_value_type_to_string(car->type),
+                                   gconf_value_type_to_string(cdr->type));
+          gconf_value_destroy(val);
+          return FALSE;
+        }
+
+      primitive_value(car_retloc, car);
+      primitive_value(cdr_retloc, cdr);
+
+      gconf_value_destroy(val);
+      
+      return TRUE;
+    } /* else if val != NULL */
+}
+
 /*
  * Setters
  */
@@ -1838,6 +2114,8 @@ error_checked_set(GConfEngine* conf, const gchar* key,
     {
       if (err)
         *err = my_err;
+      else
+        gconf_error_destroy(my_err);
       return FALSE;
     }
   else
@@ -1846,10 +2124,14 @@ error_checked_set(GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_set_float   (GConfEngine* conf, const gchar* key,
-                    gdouble val, GConfError** err)
+                   gdouble val, GConfError** err)
 {
   GConfValue* gval;
 
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
   gval = gconf_value_new(GCONF_VALUE_FLOAT);
 
   gconf_value_set_float(gval, val);
@@ -1859,10 +2141,14 @@ gconf_set_float   (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_set_int     (GConfEngine* conf, const gchar* key,
-                    gint val, GConfError** err)
+                   gint val, GConfError** err)
 {
   GConfValue* gval;
 
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
   gval = gconf_value_new(GCONF_VALUE_INT);
 
   gconf_value_set_int(gval, val);
@@ -1877,6 +2163,9 @@ gconf_set_string  (GConfEngine* conf, const gchar* key,
   GConfValue* gval;
 
   g_return_val_if_fail(val != NULL, FALSE);
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   gval = gconf_value_new(GCONF_VALUE_STRING);
 
@@ -1887,13 +2176,17 @@ gconf_set_string  (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_set_bool    (GConfEngine* conf, const gchar* key,
-                    gboolean val, GConfError** err)
+                   gboolean val, GConfError** err)
 {
   GConfValue* gval;
 
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
   gval = gconf_value_new(GCONF_VALUE_BOOL);
 
-  gconf_value_set_bool(gval, val);
+  gconf_value_set_bool(gval, !!val); /* canonicalize the bool */
 
   return error_checked_set(conf, key, gval, err);
 }
@@ -1904,11 +2197,151 @@ gconf_set_schema  (GConfEngine* conf, const gchar* key,
 {
   GConfValue* gval;
 
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(val != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
   gval = gconf_value_new(GCONF_VALUE_SCHEMA);
 
   gconf_value_set_schema(gval, val);
 
   return error_checked_set(conf, key, gval, err);
+}
+
+gboolean
+gconf_set_list    (GConfEngine* conf, const gchar* key,
+                   GConfValueType list_type,
+                   GSList* list,
+                   GConfError** err)
+{
+  GSList* value_list;
+  GSList* tmp;
+  
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(list_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(list_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
+  value_list = NULL;
+  
+  tmp = list;
+
+  while (tmp != NULL)
+    {
+      GConfValue* val;
+
+      val = gconf_value_new(list_type);
+
+      switch (list_type)
+        {
+        case GCONF_VALUE_INT:
+          gconf_value_set_int(val, GPOINTER_TO_INT(tmp->data));
+          break;
+
+        case GCONF_VALUE_BOOL:
+          gconf_value_set_bool(val, GPOINTER_TO_INT(tmp->data));
+          break;
+
+        case GCONF_VALUE_FLOAT:
+          gconf_value_set_float(val, *((gdouble*)tmp->data));
+          break;
+
+        case GCONF_VALUE_STRING:
+          gconf_value_set_string(val, tmp->data);
+          break;
+
+        default:
+          g_assert_not_reached();
+          break;
+        }
+
+      g_slist_prepend(value_list, val);
+
+      tmp = g_slist_next(tmp);
+    }
+
+  /* Get it in the right order. */
+  value_list = g_slist_reverse(value_list);
+
+  {
+    GConfValue* value_with_list;
+    
+    value_with_list = gconf_value_new(GCONF_VALUE_LIST);
+    gconf_value_set_list_type(value_with_list, list_type);
+    gconf_value_set_list_nocopy(value_with_list, value_list);
+
+    /* destroys the value_with_list */
+    return error_checked_set(conf, key, value_with_list, err);
+  }
+}
+
+static GConfValue*
+from_primitive(GConfValueType type, gconstpointer address)
+{
+  GConfValue* val;
+
+  val = gconf_value_new(type);
+
+  switch (type)
+    {
+    case GCONF_VALUE_INT:
+      gconf_value_set_int(val, *((const gint*)address));
+      break;
+
+    case GCONF_VALUE_BOOL:
+      gconf_value_set_bool(val, *((const gboolean*)address));
+      break;
+
+    case GCONF_VALUE_STRING:
+      gconf_value_set_string(val, *((const gchar**)address));
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      gconf_value_set_float(val, *((const gdouble*)address));
+      break;
+
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  return val;
+}
+
+gboolean
+gconf_set_pair    (GConfEngine* conf, const gchar* key,
+                   GConfValueType car_type, GConfValueType cdr_type,
+                   gconstpointer address_of_car,
+                   gconstpointer address_of_cdr,
+                   GConfError** err)
+{
+  GConfValue* pair;
+  GConfValue* car;
+  GConfValue* cdr;
+  
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(key != NULL, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(address_of_car != NULL, FALSE);
+  g_return_val_if_fail(address_of_cdr != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
+  car = from_primitive(car_type, address_of_car);
+  cdr = from_primitive(cdr_type, address_of_cdr);
+
+  pair = gconf_value_new(GCONF_VALUE_PAIR);
+  gconf_value_set_car_nocopy(pair, car);
+  gconf_value_set_cdr_nocopy(pair, cdr);
+
+  return error_checked_set(conf, key, pair, err);
 }
 
 /* CORBA Util */

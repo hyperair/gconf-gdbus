@@ -1,3 +1,38 @@
+1999-11-13  Havoc Pennington  <hp@pobox.com>
+
+	* tests/testgconf.c (check_list_storage): Use the new list 
+	convenience wrappers, to be sure they are tested. (the test
+	reveals that right now they don't work ;-)
+
+	* gconf/gconf.c (error_checked_set): destroy the error if it isn't
+	passed out to the user, to avoid a mem leak
+	(gconf_set_float): checks
+	(gconf_set_int): checks
+	(gconf_set_string): checks
+	(gconf_set_bool): checks
+	(gconf_set_bool): canonicalize the boolean value with !!
+	(gconf_set_schema): checks
+
+	* gconf/gconf-value.h (gconf_value_string): add const cast to this 
+	macro
+
+	* gconf/gconf.c (gconf_get_schema): add checks
+	(gconf_get_bool): checks
+	(gconf_get_string): checks
+	(gconf_get_int): checks
+	(gconf_get_float): checks
+	(gconf_get_with_locale): checks
+	(gconf_set): more checks
+	(gconf_unset): checks
+	(gconf_associate_schema): checks
+	(gconf_all_dirs): checks
+	(gconf_dir_exists): checks
+	(gconf_get_list): New function, gets a list of native types 
+	and avoids GConfValue.
+	(gconf_get_pair): New function, gets a pair of native types
+	(gconf_set_list): New function, sets a list of native types
+	(gconf_set_pair): New function, sets a pair of native types
+	
 1999-11-12  Havoc Pennington  <hp@pobox.com>
 
 	* doc/gconf/gconf.sgml: Set up the gtk-doc system. Added all the
