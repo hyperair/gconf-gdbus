@@ -7,29 +7,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-08 02:10-0400\n"
-"PO-Revision-Date: 2004-04-08 02:12-0400\n"
+"POT-Creation-Date: 2004-04-20 12:56-0400\n"
+"PO-Revision-Date: 2004-04-20 13:12-0400\n"
 "Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
 "Language-Team: English/Canada <adamw@FreeBSD.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit"
-
-#: backends/dir-utils.c:108
-#, c-format
-msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "Couldn't find the %s root directory in the address `%s'"
-
-#: backends/dir-utils.c:124 backends/xml-backend.c:336
-#, c-format
-msgid "Could not make directory `%s': %s"
-msgstr "Could not make directory `%s': %s"
-
-#: backends/dir-utils.c:212
-#, c-format
-msgid "Can't read from or write to the %s root directory in the address `%s'"
-msgstr "Can't read from or write to the %s root directory in the address `%s'"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: backends/gconf-merge-tree.c:78
 #, c-format
@@ -65,33 +50,33 @@ msgstr ""
 "  to:\n"
 "    dir/%%gconf-tree.xml\n"
 
-#: backends/xml-backend.c:240
-msgid "Unloading XML backend module."
-msgstr "Unloading XML backend module."
+#: backends/markup-backend.c:163
+msgid "Unloading text markup backend module."
+msgstr "Unloading text markup backend module."
 
-#: backends/xml-backend.c:289
+#: backends/markup-backend.c:226 backends/xml-backend.c:289
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Couldn't find the XML root directory in the address `%s'"
 
-#: backends/xml-backend.c:447
+#: backends/markup-backend.c:282 backends/xml-backend.c:344
+#, c-format
+msgid "Could not make directory `%s': %s"
+msgstr "Could not make directory `%s': %s"
+
+#: backends/markup-backend.c:383 backends/xml-backend.c:443
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 
-#: backends/xml-backend.c:457
+#: backends/markup-backend.c:394 backends/xml-backend.c:453
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Directory/file permissions for XML source at root %s are: %o/%o"
 
-#: backends/xml-backend.c:623
-#, c-format
-msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Error syncing the XML backend directory cache: %s"
-
-#: backends/xml-backend.c:688
+#: backends/markup-backend.c:733 backends/xml-backend.c:684
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -99,24 +84,199 @@ msgstr ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
 
-#: backends/xml-backend.c:774
+#: backends/markup-backend.c:819 backends/xml-backend.c:770
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr "Could not open lock directory for %s to remove locks: %s\n"
 
-#: backends/xml-backend.c:792
+#: backends/markup-backend.c:837 backends/xml-backend.c:788
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Could not remove file %s: %s\n"
 
-#: backends/xml-backend.c:813
-msgid "Initializing XML backend module"
-msgstr "Initializing XML backend module"
+#: backends/markup-backend.c:858
+msgid "Initializing Markup backend module"
+msgstr "Initializing Markup backend module"
 
-#: backends/xml-backend.c:881
+#: backends/markup-backend.c:930 backends/xml-backend.c:877
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Failed to give up lock on XML directory \"%s\": %s"
+
+#: backends/markup-tree.c:348
+msgid "Failed to write some configuration data to disk\n"
+msgstr "Failed to write some configuration data to disk\n"
+
+#: backends/markup-tree.c:752 backends/xml-dir.c:1255
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "Could not make directory \"%s\": %s"
+
+#: backends/markup-tree.c:795 backends/markup-tree.c:802
+#, c-format
+msgid "Could not remove \"%s\": %s\n"
+msgstr "Could not remove \"%s\": %s\n"
+
+#: backends/markup-tree.c:955
+#, c-format
+msgid "Failed to write \"%s\": %s\n"
+msgstr "Failed to write \"%s\": %s\n"
+
+#: backends/markup-tree.c:1633
+#, c-format
+msgid "Line %d character %d: %s"
+msgstr "Line %d character %d: %s"
+
+#: backends/markup-tree.c:1846
+#, c-format
+msgid "Attribute \"%s\" repeated twice on the same <%s> element"
+msgstr "Attribute \"%s\" repeated twice on the same <%s> element"
+
+#: backends/markup-tree.c:1863 backends/markup-tree.c:1887
+#, c-format
+msgid "Attribute \"%s\" is invalid on <%s> element in this context"
+msgstr "Attribute \"%s\" is invalid on <%s> element in this context"
+
+#: backends/markup-tree.c:1912 gconf/gconf-value.c:110
+#, c-format
+msgid "Didn't understand `%s' (expected integer)"
+msgstr "Didn't understand `%s' (expected integer)"
+
+#: backends/markup-tree.c:1919 gconf/gconf-value.c:120
+#, c-format
+msgid "Integer `%s' is too large or small"
+msgstr "Integer `%s' is too large or small"
+
+#: backends/markup-tree.c:1951 gconf/gconf-value.c:185
+#, c-format
+msgid "Didn't understand `%s' (expected true or false)"
+msgstr "Didn't understand `%s' (expected true or false)"
+
+#: backends/markup-tree.c:1975 gconf/gconf-value.c:141
+#, c-format
+msgid "Didn't understand `%s' (expected real number)"
+msgstr "Didn't understand `%s' (expected real number)"
+
+#: backends/markup-tree.c:2045 backends/markup-tree.c:2074
+#: backends/markup-tree.c:2114 backends/markup-tree.c:2138
+#: backends/markup-tree.c:2146 backends/markup-tree.c:2201
+#: backends/markup-tree.c:2266 backends/markup-tree.c:2374
+#: backends/markup-tree.c:2453 backends/markup-tree.c:2565
+#, c-format
+msgid "No \"%s\" attribute on element <%s>"
+msgstr "No \"%s\" attribute on element <%s>"
+
+#: backends/markup-tree.c:2054
+#, c-format
+msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
+msgstr "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
+
+#: backends/markup-tree.c:2088
+#, c-format
+msgid "Invalid ltype \"%s\" on <%s>"
+msgstr "Invalid ltype \"%s\" on <%s>"
+
+#: backends/markup-tree.c:2168
+#, c-format
+msgid "Invalid car_type \"%s\" on <%s>"
+msgstr "Invalid car_type \"%s\" on <%s>"
+
+#: backends/markup-tree.c:2182
+#, c-format
+msgid "Invalid cdr_type \"%s\" on <%s>"
+msgstr "Invalid cdr_type \"%s\" on <%s>"
+
+#: backends/markup-tree.c:2218
+#, c-format
+msgid "Invalid list_type \"%s\" on <%s>"
+msgstr "Invalid list_type \"%s\" on <%s>"
+
+#: backends/markup-tree.c:2499
+msgid "Two <default> elements below a <local_schema>"
+msgstr "Two <default> elements below a <local_schema>"
+
+#: backends/markup-tree.c:2514
+msgid "Two <longdesc> elements below a <local_schema>"
+msgstr "Two <longdesc> elements below a <local_schema>"
+
+#: backends/markup-tree.c:2521
+#, c-format
+msgid "Element <%s> is not allowed below <%s>"
+msgstr "Element <%s> is not allowed below <%s>"
+
+#: backends/markup-tree.c:2545 backends/markup-tree.c:2637
+#: backends/markup-tree.c:2691 backends/markup-tree.c:2739
+#, c-format
+msgid "<%s> provided but current element does not have type %s"
+msgstr "<%s> provided but current element does not have type %s"
+
+#: backends/markup-tree.c:2615
+msgid "Two <car> elements given for same pair"
+msgstr "Two <car> elements given for same pair"
+
+#: backends/markup-tree.c:2629
+msgid "Two <cdr> elements given for same pair"
+msgstr "Two <cdr> elements given for same pair"
+
+#: backends/markup-tree.c:2683
+#, c-format
+msgid "<li> has wrong type %s"
+msgstr "<li> has wrong type %s"
+
+#: backends/markup-tree.c:2712
+#, c-format
+msgid "<%s> provided but parent <entry> does not have a value"
+msgstr "<%s> provided but parent <entry> does not have a value"
+
+#: backends/markup-tree.c:2752 backends/markup-tree.c:2774
+#: backends/markup-tree.c:2796 backends/markup-tree.c:2813
+#, c-format
+msgid "Element <%s> is not allowed inside current element"
+msgstr "Element <%s> is not allowed inside current element"
+
+#: backends/markup-tree.c:2845
+#, c-format
+msgid "Outermost element in menu file must be <gconf> not <%s>"
+msgstr "Outermost element in menu file must be <gconf> not <%s>"
+
+#: backends/markup-tree.c:2865 backends/markup-tree.c:2887
+#: backends/markup-tree.c:2892
+#, c-format
+msgid "Element <%s> is not allowed inside a <%s> element"
+msgstr "Element <%s> is not allowed inside a <%s> element"
+
+#: backends/markup-tree.c:2972
+#, c-format
+msgid "No text is allowed inside element <%s>"
+msgstr "No text is allowed inside element <%s>"
+
+#: backends/markup-tree.c:3648 backends/markup-tree.c:3662
+#, c-format
+msgid "Failed to open \"%s\": %s\n"
+msgstr "Failed to open \"%s\": %s\n"
+
+#: backends/markup-tree.c:3736
+#, c-format
+msgid "Error writing file \"%s\": %s"
+msgstr "Error writing file \"%s\": %s"
+
+#: backends/markup-tree.c:3743
+#, c-format
+msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
+msgstr "Failed to move temporary file \"%s\" to final location \"%s\": %s"
+
+#: backends/xml-backend.c:240
+msgid "Unloading XML backend module."
+msgstr "Unloading XML backend module."
+
+#: backends/xml-backend.c:619
+#, c-format
+msgid "Error syncing the XML backend directory cache: %s"
+msgstr "Error syncing the XML backend directory cache: %s"
+
+#: backends/xml-backend.c:809
+msgid "Initializing XML backend module"
+msgstr "Initializing XML backend module"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -201,11 +361,6 @@ msgstr "Entry with no name in XML file `%s', ignoring"
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-
-#: backends/xml-dir.c:1255
-#, c-format
-msgid "Could not make directory \"%s\": %s"
-msgstr "Could not make directory \"%s\": %s"
 
 #: backends/xml-dir.c:1271
 #, c-format
@@ -739,28 +894,28 @@ msgstr "Failed to remove lock directory `%s': %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Failed to unlink lock file %s: %s\n"
 
-#: gconf/gconf-internals.c:2932 gconf/gconfd.c:681
+#: gconf/gconf-internals.c:2939 gconf/gconfd.c:529
 #, c-format
-msgid "Failed to create %s: %s"
-msgstr "Failed to create %s: %s"
+msgid "Failed to stat %s: %s"
+msgstr "Failed to stat %s: %s"
 
-#: gconf/gconf-internals.c:2954
+#: gconf/gconf-internals.c:2961
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Server ping error: %s"
 
-#: gconf/gconf-internals.c:2975
+#: gconf/gconf-internals.c:2985
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 
-#: gconf/gconf-internals.c:2999
+#: gconf/gconf-internals.c:3009
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Failed to launch configuration server: %s\n"
 
-#: gconf/gconf-internals.c:3024
+#: gconf/gconf-internals.c:3034
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -773,7 +928,7 @@ msgstr ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 
-#: gconf/gconf-internals.c:3025
+#: gconf/gconf-internals.c:3035
 msgid "none"
 msgstr "none"
 
@@ -1005,26 +1160,6 @@ msgstr "Error getting metainfo: %s"
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 
-#: gconf/gconf-value.c:110
-#, c-format
-msgid "Didn't understand `%s' (expected integer)"
-msgstr "Didn't understand `%s' (expected integer)"
-
-#: gconf/gconf-value.c:120
-#, c-format
-msgid "Integer `%s' is too large or small"
-msgstr "Integer `%s' is too large or small"
-
-#: gconf/gconf-value.c:141
-#, c-format
-msgid "Didn't understand `%s' (expected real number)"
-msgstr "Didn't understand `%s' (expected real number)"
-
-#: gconf/gconf-value.c:185
-#, c-format
-msgid "Didn't understand `%s' (expected true or false)"
-msgstr "Didn't understand `%s' (expected true or false)"
-
 #: gconf/gconf-value.c:261
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
@@ -1224,11 +1359,6 @@ msgstr "Received signal %d, shutting down cleanly"
 msgid "Failed to open %s: %s"
 msgstr "Failed to open %s: %s"
 
-#: gconf/gconfd.c:529
-#, c-format
-msgid "Failed to stat %s: %s"
-msgstr "Failed to stat %s: %s"
-
 #: gconf/gconfd.c:538
 #, c-format
 msgid "Owner of %s is not the current user"
@@ -1249,6 +1379,11 @@ msgstr "starting (version %s), pid %u user '%s'"
 #: gconf/gconfd.c:668
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Failed to get object reference for ConfigServer"
+
+#: gconf/gconfd.c:681
+#, c-format
+msgid "Failed to create %s: %s"
+msgstr "Failed to create %s: %s"
 
 #: gconf/gconfd.c:688
 #, c-format
@@ -1304,56 +1439,56 @@ msgid ""
 msgstr ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 
-#: gconf/gconfd.c:1440
+#: gconf/gconfd.c:1433
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Could not open saved state file '%s' for writing: %s"
 
-#: gconf/gconfd.c:1454
+#: gconf/gconfd.c:1447
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Could not write saved state file '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1463
+#: gconf/gconfd.c:1456
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Failed to close new saved state file '%s': %s"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1470
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Could not move aside old saved state file '%s': %s"
 
-#: gconf/gconfd.c:1487
+#: gconf/gconfd.c:1480
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Failed to move new save state file into place: %s"
 
-#: gconf/gconfd.c:1496
+#: gconf/gconfd.c:1489
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 
-#: gconf/gconfd.c:1975
+#: gconf/gconfd.c:1968
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 
-#: gconf/gconfd.c:2021
+#: gconf/gconfd.c:2014
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Error reading saved state file: %s"
 
-#: gconf/gconfd.c:2075
+#: gconf/gconfd.c:2068
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Unable to open saved state file '%s': %s"
 
-#: gconf/gconfd.c:2194
+#: gconf/gconfd.c:2187
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1362,7 +1497,7 @@ msgstr ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 
-#: gconf/gconfd.c:2199
+#: gconf/gconfd.c:2192
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1371,27 +1506,27 @@ msgstr ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 
-#: gconf/gconfd.c:2222 gconf/gconfd.c:2396
+#: gconf/gconfd.c:2215 gconf/gconfd.c:2389
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Failed to get IOR for client: %s"
 
-#: gconf/gconfd.c:2237
+#: gconf/gconfd.c:2230
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Failed to open saved state file: %s"
 
-#: gconf/gconfd.c:2250
+#: gconf/gconfd.c:2243
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Failed to write client add to saved state file: %s"
 
-#: gconf/gconfd.c:2258
+#: gconf/gconfd.c:2251
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Failed to flush client add to saved state file: %s"
 
-#: gconf/gconfd.c:2357
+#: gconf/gconfd.c:2350
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
