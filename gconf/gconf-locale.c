@@ -116,7 +116,8 @@ void
 gconf_locale_cache_expire (GConfLocaleCache* cache,
                            guint max_age_exclusive_in_seconds)
 {
-  ExpireData ed = { 0, max_age_exclusive_in_seconds };
+  ExpireData ed = { 0, 0 };
+  ed.max_age = max_age_exclusive_in_seconds;
 
   ed.now = time(NULL);
   
