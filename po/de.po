@@ -8,7 +8,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.1.x\n"
-"POT-Creation-Date: 2002-02-04 17:34-0500\n"
+"POT-Creation-Date: 2002-01-28 21:35-0500\n"
 "PO-Revision-Date: 2002-01-06 20:14GMT\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -313,50 +313,54 @@ msgstr "Backend konnte nicht heruntergefahren werden"
 msgid "GConf Error: %s\n"
 msgstr "GConf-Fehler: %s\n"
 
-#: gconf/gconf-client.c:898
+#: gconf/gconf-client.c:899
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf-Warnung: Fehler beim Auflisten von Paaren in `%s': %s"
 
-#: gconf/gconf-client.c:1163
+#: gconf/gconf-client.c:1165
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "`%s' erwartet, aber `%s' für den Schlüssel %s erhalten"
 
-#: gconf/gconf-database.c:234
+#: gconf/gconf-database.c:233
 msgid "Received invalid value in set request"
 msgstr "Ungültigen Wert in Einstellungsanfrage erhalten"
 
-#: gconf/gconf-database.c:242
+#: gconf/gconf-database.c:241
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
 "Sinn des CORBA-Wertes in Einstellungsanfrage für Schlüssel `%s' konnte nicht "
 "ausgemacht werden"
 
-#: gconf/gconf-database.c:523
+#: gconf/gconf-database.c:522
 msgid "Received request to drop all cached data"
 msgstr "Anfrage zum Löschen aller Daten im Cache erhalten"
 
-#: gconf/gconf-database.c:540
+#: gconf/gconf-database.c:539
 msgid "Received request to sync synchronously"
 msgstr "Anfrage zum synchronen Synchronisieren erhalten"
 
-#: gconf/gconf-database.c:824
+#: gconf/gconf-database.c:823
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr ""
 "Schwerer Fehler: Objektreferenz für ConfigDatabase konnte nicht erhalten "
 "werden"
 
-#: gconf/gconf-database.c:986
+#: gconf/gconf-database.c:985
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Eine oder mehrere Quellen konnten nicht synchronisiert werden: %s"
 
-#: gconf/gconf-database.c:1078
+#. This error is not fatal; we basically ignore it.
+#. * Because it's likely the right thing for the client
+#. * app to simply continue.
+#.
+#: gconf/gconf-database.c:1076
 #, fuzzy, c-format
 msgid ""
-"Failed to log addition of listener %s (%s);will not be able to restore this "
+"Failed to log addition of listener %s (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
@@ -365,12 +369,12 @@ msgstr ""
 "werden können, was zu einer unzuverlässigen Benachrichtigung über "
 "Konfigurationsänderungen führen wird."
 
-#: gconf/gconf-database.c:1109
+#: gconf/gconf-database.c:1103
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Zuhörer-Kennung %lu existiert nicht"
 
-#: gconf/gconf-database.c:1123
+#: gconf/gconf-database.c:1117
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -380,57 +384,57 @@ msgstr ""
 "(wahrscheinlich harmlos, könnte zu einer neu erscheinenden Benachrichtung "
 "führen): %s"
 
-#: gconf/gconf-database.c:1241 gconf/gconf-sources.c:1540
+#: gconf/gconf-database.c:1235 gconf/gconf-sources.c:1540
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Fehler beim Erhalten des Wertes für `%s': %s"
 
-#: gconf/gconf-database.c:1288
+#: gconf/gconf-database.c:1282
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Fehler beim Einstellen des Wertes für `%s': %s"
 
-#: gconf/gconf-database.c:1331
+#: gconf/gconf-database.c:1325
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Fehler beim Löschen von `%s': %s"
 
-#: gconf/gconf-database.c:1360
+#: gconf/gconf-database.c:1354
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Fehler beim Erhalten des voreingestellten Wertes für `%s': %s"
 
-#: gconf/gconf-database.c:1411
+#: gconf/gconf-database.c:1405
 #, fuzzy, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Fehler beim Löschen von `%s': %s"
 
-#: gconf/gconf-database.c:1443
+#: gconf/gconf-database.c:1437
 #, fuzzy, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "Fehler beim Erhalten des Wertes für `%s': %s"
 
-#: gconf/gconf-database.c:1491
+#: gconf/gconf-database.c:1485
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Fehler beim Prüfen der Existenz von `%s': %s"
 
-#: gconf/gconf-database.c:1515
+#: gconf/gconf-database.c:1509
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Fehler beim Entfernen des Verzeichnisses `%s': %s"
 
-#: gconf/gconf-database.c:1542
+#: gconf/gconf-database.c:1536
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Fehler beim Erhalten aller Einträge in `%s': %s"
 
-#: gconf/gconf-database.c:1568
+#: gconf/gconf-database.c:1562
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Fehler beim Auflisten der Verzeichnisse in `%s': %s"
 
-#: gconf/gconf-database.c:1589
+#: gconf/gconf-database.c:1583
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Fehler beim Einstellen des Schemas für `%s': %s"
@@ -687,23 +691,23 @@ msgstr "Datei `%s' konnte nicht bereinigt werden: %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Sperrverzeichnis `%s' konnte nicht gelöscht werden: %s"
 
-#: gconf/gconf-internals.c:2846 gconf/gconfd.c:583
+#: gconf/gconf-internals.c:2842 gconf/gconfd.c:583
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Erzeugen von %s fehlgeschlagen: %s"
 
-#: gconf/gconf-internals.c:2879
+#: gconf/gconf-internals.c:2875
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Erzeugen der Pipe zur Kommunikation mit dem gconf-Dämon fehlgeschlagen:  %s\n"
 
-#: gconf/gconf-internals.c:2903
+#: gconf/gconf-internals.c:2899
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Konfigurationsserver konnte nicht gestartet werden: %s\n"
 
-#: gconf/gconf-internals.c:2927
+#: gconf/gconf-internals.c:2923
 #, fuzzy
 msgid ""
 "Failed to contact configuration server; some possible causes are:\n"
@@ -879,90 +883,90 @@ msgstr "%s nicht verstanden (falsch Anzahl von Elementen)"
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr "%s nicht verstanden (nicht Escape-Sequenz ')' im Paar gefunden)"
 
-#: gconf/gconf.c:55
+#: gconf/gconf.c:54
 #, c-format
 msgid "Key \"%s\" is NULL"
 msgstr ""
 
-#: gconf/gconf.c:62
+#: gconf/gconf.c:61
 #, fuzzy, c-format
 msgid "\"%s\": %s"
 msgstr "`%s': %s"
 
-#: gconf/gconf.c:343
+#: gconf/gconf.c:333
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Server konnte Adresse `%s' nicht auflösen"
 
-#: gconf/gconf.c:634
+#: gconf/gconf.c:624
 msgid "Can't add notifications to a local configuration source"
 msgstr ""
 "Benachrichtigungen konnten nicht zu einer lokalen Konfigurationsquelle "
 "hinzugefügt werden"
 
-#: gconf/gconf.c:2081
+#: gconf/gconf.c:2072
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr ""
 "Hinzufügen des Clients zur Serverliste ist fehlgeschlagen. CORBA-Fehler: %s"
 
-#: gconf/gconf.c:2436
+#: gconf/gconf.c:2393
 msgid "Must begin with a slash (/)"
 msgstr "Muss mit einem Schrägstrich beginnen (/)"
 
-#: gconf/gconf.c:2458
+#: gconf/gconf.c:2415
 msgid "Can't have two slashes (/) in a row"
 msgstr "Zwei Schrägstriche (/) hintereinander in einer sind nicht erlaubt"
 
-#: gconf/gconf.c:2460
+#: gconf/gconf.c:2417
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Punkt (.) direkt hinter einem Schrägstrich (/) ist nicht erlaubt"
 
-#: gconf/gconf.c:2479
+#: gconf/gconf.c:2436
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "`%c' ist ein kein ASCII-Zeichen, daher in Schlüsselnamen nicht erlaubt"
 
-#: gconf/gconf.c:2489
+#: gconf/gconf.c:2446
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' ist ein unerlaubtes Zeichen in Schlüssel-/Verzeichnisnamen"
 
-#: gconf/gconf.c:2503
+#: gconf/gconf.c:2460
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Schlüssel/Verzeichnis darf nicht mit einem Schrägstrich (/) enden"
 
-#: gconf/gconf.c:2872
+#: gconf/gconf.c:2829
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Fehler beim Herunterfahren des Konfigurationsservers: %s"
 
-#: gconf/gconf.c:2933
+#: gconf/gconf.c:2890
 #, c-format
 msgid "Expected float, got %s"
 msgstr "float erwartet, aber %s erhalten"
 
-#: gconf/gconf.c:2968
+#: gconf/gconf.c:2925
 #, c-format
 msgid "Expected int, got %s"
 msgstr "int erwartet, aber %s erhalten"
 
-#: gconf/gconf.c:3003
+#: gconf/gconf.c:2960
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Zeichenkette erwartet, aber %s erhalten"
 
-#: gconf/gconf.c:3040
+#: gconf/gconf.c:2997
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "bool erwartet, aber %s erhalten"
 
-#: gconf/gconf.c:3073
+#: gconf/gconf.c:3030
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Schema erwartet, aber %s erhalten"
 
-#: gconf/gconf.c:3434
+#: gconf/gconf.c:3391
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-Fehler: %s"
