@@ -696,7 +696,9 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
       free(locale_str);
     }
   else
-    gconf_log(GCL_WARNING, _("found <local_schema> with no locale setting"));
+    {
+      gconf_log(GCL_DEBUG, "found <local_schema> with no locale setting");
+    }
   
   if (node->childs != NULL)
     {
@@ -890,7 +892,12 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
       g_free(localized_nodes);
     }
 
-  /* If no locale matched, try picking the first node */
+  /* If no locale matched, try picking the the null localization,
+   * and then try picking the first node
+   */
+  if (best == NULL)
+    best = find_schema_subnode_by_locale (node, NULL);
+
   if (best == NULL)
     best = node->childs;
   

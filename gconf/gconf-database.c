@@ -244,8 +244,11 @@ impl_ConfigDatabase_set(PortableServer_Servant servant,
       
   str = gconf_value_to_string(val);
 
+#if 0
+  /* reduce traffice to the logfile */
   gconf_log(GCL_DEBUG, "Received request to set key `%s' to `%s'", key, str);
-
+#endif
+  
   g_free(str);
 
   
@@ -1024,6 +1027,11 @@ gconf_database_set   (GConfDatabase      *db,
   
   db->last_access = time(NULL);
 
+#if 0
+  /* this really churns the logfile, so we avoid it */
+  gconf_log(GCL_DEBUG, "Received request to set key `%s'", key);
+#endif
+  
   gconf_sources_set_value(db->sources, key, value, &error);
 
   if (error)

@@ -1,3 +1,20 @@
+2001-01-21  Havoc Pennington  <hp@pobox.com>
+
+        * configure.in: change version to 1.1
+	
+        Sync from stable
+	
+	* backends/xml-entry.c (schema_subnode_extract_data): don't warn
+	about <local_schema> with no locale field, because that's normal 
+	for the default case
+	(schema_node_extract_value): use <local_schema> with no locale
+	if it exists and we don't find anything better
+
+	* tests/testschemas.c (check_schema_use): fix indentation and mem
+	leaks
+
+	* gconf/gconftool.c (do_get): print default value from schema
+
 2000-12-19  Rebecca Schulman  <rebecka@eazel.com>
 
 	* gconf/gconfd.c: (gconf_server_load_sources):

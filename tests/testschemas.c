@@ -434,87 +434,103 @@ check_schema_storage(GConfEngine* conf)
 void 
 check_schema_use(GConfEngine * conf)
 {
-	GError     *err = NULL;
-	const gchar   **keyp = NULL;
-	GConfSchema    *schema = gconf_schema_new();
-	GConfValue     *value = gconf_value_new(GCONF_VALUE_STRING);
-	char           *schema_key = "/schemas/desktop/test-schema";
-	char           *s;
-	char           *schema_value = "string value from schema";
-	char           *non_schema_value = "a string value *not* from schema";
+  GError     *err = NULL;
+  const gchar   **keyp = NULL;
+  GConfSchema    *schema = gconf_schema_new();
+  GConfValue     *value = gconf_value_new(GCONF_VALUE_STRING);
+  char           *schema_key = "/schemas/desktop/test-schema";
+  char           *s;
+  char           *schema_value = "string value from schema";
+  char           *non_schema_value = "a string value *not* from schema";
 
-	gconf_schema_set_type(schema, GCONF_VALUE_STRING);
-	gconf_schema_set_locale(schema, "C");
-	gconf_schema_set_short_desc(schema, "short desc");
-	gconf_schema_set_long_desc(schema, "long desc");
-	gconf_schema_set_owner(schema, "testschemas");
-	gconf_value_set_string(value, schema_value);
-	gconf_schema_set_default_value(schema, value);
+  gconf_schema_set_type(schema, GCONF_VALUE_STRING);
+  gconf_schema_set_locale(schema, "C");
+  gconf_schema_set_short_desc(schema, "short desc");
+  gconf_schema_set_long_desc(schema, "long desc");
+  gconf_schema_set_owner(schema, "testschemas");
+  gconf_value_set_string(value, schema_value);
+  gconf_schema_set_default_value(schema, value);
 
-	if (gconf_engine_set_schema(conf, schema_key, schema, &err))
-	{
-		if (err)
-			fprintf(stderr, "gconf_engine_associate_schema -> %s\n", err->message);
-		err = NULL;
-	}
-	keyp = keys;
-	while (*keyp)
-	{
-		if (gconf_engine_associate_schema(conf, *keyp, schema_key, &err))
-		{
-			if (err)
-				fprintf(stderr, "gconf_engine_associate_schema -> %s\n", err->message);
-			err = NULL;
+  if (gconf_engine_set_schema(conf, schema_key, schema, &err))
+    {
+      if (err)
+        {
+          fprintf(stderr, "gconf_engine_set_schema -> %s\n", err->message);
+          g_error_free (err);
+        }
+      
+      err = NULL;
+    }
+  keyp = keys;
+  while (*keyp)
+    {
+      if (gconf_engine_associate_schema(conf, *keyp, schema_key, &err))
+        {
+          if (err)
+            {
+              fprintf(stderr, "gconf_engine_associate_schema -> %s\n", err->message);
+              g_error_free (err);
+            }
+          
+          err = NULL;
 
-		}
-		++keyp;
-	}
-	keyp = keys;
-	while (*keyp)
-	{
-		gconf_engine_unset(conf, *keyp, &err);
-		s = gconf_engine_get_string(conf, *keyp, &err);
-		if (s)
-		{
-			if (strcmp(s, schema_value) != 0)
-			{
-				fprintf(stderr, "ERROR: Failed to get schema value (got '%s', not '%s')\n", s, schema_value);
-			} else
-			{
-				printf(".");
-			}
-		} else
-		{
-			fprintf(stderr, "ERROR: Failed to get a value when expecting schema value\n");
-		}
-		gconf_engine_associate_schema(conf, *keyp, "/", &err);
-		s = gconf_engine_get_string(conf, *keyp, &err);
-		if (s != NULL)
-		{
-			fprintf(stderr, "Failed to disassociate schema, found '%s'\n", s);
-		}
-		gconf_engine_set_string(conf, *keyp, non_schema_value, &err);
-		s = gconf_engine_get_string(conf, *keyp, &err);
-		if (s)
-		{
-			if (strcmp(s, non_schema_value) != 0)
-			{
-				fprintf(stderr, "ERROR: Failed to get non-schema value (got '%s', not '%s')\n", s, non_schema_value);
-			} else
-			{
-				printf(".");
-			}
-		} else
-		{
-			fprintf(stderr, "ERROR: Failed to get a value when expecting non-schema value\n");
-		}
+        }
+      ++keyp;
+    }
 
-		fflush(stdout);
-		++keyp;
-	}
+  /* FIXME we need to actually exit with error if these checks fail */
+  
+  keyp = keys;
+  while (*keyp)
+    {
+      gconf_engine_unset(conf, *keyp, &err);
+      s = gconf_engine_get_string(conf, *keyp, &err);
+      if (s)
+        {
+          if (strcmp(s, schema_value) != 0)
+            {
+              fprintf(stderr, "ERROR: Failed to get schema value (got '%s', not '%s')\n", s, schema_value);
+            }
+          else
+            {
+              printf(".");
+            }
+        }
+      else
+        {
+          fprintf(stderr, "ERROR: Failed to get a value when expecting schema value\n");
+        }
+
+      /* associate_schema should accept NULL to unset schemas */
+      gconf_engine_associate_schema(conf, *keyp, "/bogus-nonschema", &err);
+      s = gconf_engine_get_string(conf, *keyp, &err);
+      if (s != NULL)
+        {
+          fprintf(stderr, "Failed to disassociate schema, found '%s'\n", s);
+        }
+
+      gconf_engine_set_string(conf, *keyp, non_schema_value, &err);
+      s = gconf_engine_get_string(conf, *keyp, &err);
+      if (s)
+        {
+          if (strcmp(s, non_schema_value) != 0)
+            {
+              fprintf(stderr, "ERROR: Failed to get non-schema value (got '%s', not '%s')\n", s, non_schema_value);
+            }
+          else
+            {
+              printf(".");
+            }
+        }
+      else
+        {
+          fprintf(stderr, "ERROR: Failed to get a value when expecting non-schema value\n");
+        }
+      
+      fflush(stdout);
+      ++keyp;
+    }
 }
-
-
 
 int 
 main (int argc, char** argv)

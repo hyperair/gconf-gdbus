@@ -1061,7 +1061,7 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
 
 gboolean
 gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
-                         const gchar* schema_key, GError** err)
+                                const gchar* schema_key, GError** err)
 {
   CORBA_Environment ev;
   ConfigDatabase db;
