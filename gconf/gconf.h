@@ -148,22 +148,22 @@ guint        g_conf_notify_add(GConf* conf,
                                GConfNotifyFunc func,
                                gpointer user_data);
 
-void         g_conf_notify_remove(GConf* conf,
-                                  guint cnxn);
+void         g_conf_notify_remove  (GConf* conf,
+                                    guint cnxn);
 
 
 /* Low-level interfaces */
-GConfValue*  g_conf_get(GConf* conf, const gchar* key);
+GConfValue*  g_conf_get            (GConf* conf, const gchar* key);
 
-void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
+void         g_conf_set            (GConf* conf, const gchar* key, GConfValue* value);
 
-void         g_conf_unset(GConf* conf, const gchar* key);
+void         g_conf_unset          (GConf* conf, const gchar* key);
 
-GSList*      g_conf_all_entries(GConf* conf, const gchar* dir);
+GSList*      g_conf_all_entries    (GConf* conf, const gchar* dir);
 
-GSList*      g_conf_all_dirs(GConf* conf, const gchar* dir);
+GSList*      g_conf_all_dirs       (GConf* conf, const gchar* dir);
 
-void         g_conf_sync(GConf* conf);
+void         g_conf_sync           (GConf* conf);
 
 gboolean     g_conf_valid_key      (const gchar* key);
 
