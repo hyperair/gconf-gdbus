@@ -1,3 +1,10 @@
+1999-11-28  Havoc Pennington  <hp@pobox.com>
+
+	* gconf.m4: add the "" around the $4, seems to work - the problem
+	here seems to have something to do with aclocal or autoconf
+	doing the wrong thing, rather than a shell issue. I don't
+	understand it yet.
+
 1999-11-23  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-backend.c (query_value): Don't return errors here; 

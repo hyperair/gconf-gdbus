@@ -12,7 +12,7 @@ AC_ARG_WITH(gconf-exec-prefix,[  --with-gconf-exec-prefix=PFX Exec prefix where 
 AC_ARG_ENABLE(gconftest, [  --disable-gconftest       Do not try to compile and run a test GCONF program],
 		    , enable_gconftest=yes)
 
-  for module in $4; do
+  for module in "$4"; do
       gconf_config_args="$gconf_config_args $module"
   done
 
