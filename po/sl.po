@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2001-11-02 01:07+0100\n"
+"POT-Creation-Date: 2001-11-26 14:44-0500\n"
 "PO-Revision-Date: 2001-02-12 20:02+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -117,6 +117,7 @@ msgid "Failed to set mode on `%s': %s"
 msgstr "Nisem uspel nastaviti naèina `%s': %s"
 
 #: backends/xml-dir.c:367
+#, c-format
 msgid "Failed to write XML data to `%s': %s"
 msgstr "Nisem uspel zapisati podatkov XML v `%s': %s"
 
@@ -157,6 +158,7 @@ msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Vnos brez imena v datoteki XML  `%s', prezrto"
 
 #: backends/xml-dir.c:1002
+#, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "Vrhnje vozli¹èe v datoteki XML `%s' je <%s>, namesto <entry>, prezrto"
 
@@ -481,15 +483,15 @@ msgstr "Nisem uspel preoblikovati predmeta v IOR"
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "Neveljaven UTF-8 v localeu za shemo"
 
-#: gconf/gconf-internals.c:627
+#: gconf/gconf-internals.c:599
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "Neveljaven UTF-8 v kratkem opisu za shemo"
 
-#: gconf/gconf-internals.c:635
+#: gconf/gconf-internals.c:607
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "Neveljaven UTF-8 v dolgem opisu za shemo"
 
-#: gconf/gconf-internals.c:643
+#: gconf/gconf-internals.c:615
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "Neveljaven UTF-8 v lastniku za shemo"
 
@@ -554,6 +556,7 @@ msgid "Encoded value is not valid UTF-8"
 msgstr "Vrednost ni veljavna UTF-8"
 
 #: gconf/gconf-internals.c:2314
+#, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Nisem mogel zakleniti zaèasne datoteke '%s': %s"
 
@@ -563,6 +566,7 @@ msgid "Could not create file '%s', probably because it already exists"
 msgstr "Nisem mogel ustvariti datoteke '%s', ker verjetno ¾e obstaja"
 
 #: gconf/gconf-internals.c:2387
+#, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Nisem uspel ustvariti ali odpreti '%s'"
 
@@ -579,13 +583,17 @@ msgstr "Datoteka IOR '%s' ni bila uspe¹no odprta, gconfd ni bil najden: %s"
 #: gconf/gconf-internals.c:2455
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr "gconftool ali drug proces, ki ni gconfd, ima kljuèavnico nad datoteko '%s'"
+msgstr ""
+"gconftool ali drug proces, ki ni gconfd, ima kljuèavnico nad datoteko '%s'"
 
 #: gconf/gconf-internals.c:2472
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "nisem uspel dostopati do ORB-a za razvozlanje obstojeèe reference predmeta gconfd"
+msgstr ""
+"nisem uspel dostopati do ORB-a za razvozlanje obstojeèe reference predmeta "
+"gconfd"
 
 #: gconf/gconf-internals.c:2482
+#, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Nisem uspel pretvoriti IOR '%s' v referenco predmeta"
 
@@ -605,18 +613,22 @@ msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Nismo imeli kljuèavnice na datoteki `%s', a bi jo morali imeti"
 
 #: gconf/gconf-internals.c:2631
+#, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Nisem uspel pvezati '%s' na '%s': %s"
 
 #: gconf/gconf-internals.c:2643
+#, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Nisem uspel odstraniti kljuèavniène datoteke `%s': %s"
 
 #: gconf/gconf-internals.c:2662
+#, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Nisem uspel poèistiti datoteke %s': %s"
 
 #: gconf/gconf-internals.c:2676
+#, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Nisem uspel odstraniti kljuèavniènega imenika `%s': %s"
 
@@ -628,9 +640,11 @@ msgstr "Nisem uspel ustvariti %s: %s"
 #: gconf/gconf-internals.c:2874
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "Nisem uspel ustvariti pipe za komunikacijo z odcepljenim daemonom gconf: %s\n"
+msgstr ""
+"Nisem uspel ustvariti pipe za komunikacijo z odcepljenim daemonom gconf: %s\n"
 
 #: gconf/gconf-internals.c:2898
+#, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Nisem uspel pognati stre¾nika nastavitev: %s\n"
 
@@ -642,9 +656,9 @@ msgid ""
 "need to enable TCP networking for ORBit)\n"
 msgstr ""
 "Nisem se uspel povezati s stre¾nikom nastavitev (mo¾en vzrok je, da "
-"nastavitveni stre¾nik ¾e teèe (gconfd), a od tu ni dostopen - "
-"èe ste prijavljeni iz dveh raèunalnikov hkrati, morate vkljuèiti "
-"mre¾o TCP za ORBit)\n"
+"nastavitveni stre¾nik ¾e teèe (gconfd), a od tu ni dostopen - èe ste "
+"prijavljeni iz dveh raèunalnikov hkrati, morate vkljuèiti mre¾o TCP za "
+"ORBit)\n"
 
 #: gconf/gconf-sources.c:320
 #, c-format
@@ -670,6 +684,7 @@ msgstr ""
 "nastavitvene poti. "
 
 #: gconf/gconf-sources.c:608
+#, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writable databases. There are two common causes of this problem: 1) your "
@@ -684,14 +699,14 @@ msgid ""
 msgstr ""
 "Nisem mogel shraniti vrednosti pri kljuèu '%s', saj stre¾nik nastavitev nima "
 "nobene pisljive zbirke podatkov. Ta problem ima dva pogosta vzroka: 1) va¹a "
-"pot nastavitev ne vsebuje nobene zbirke podatkov ali ni ta bila najdena ali 2) "
-"OAF je pomotoma ustvaril dva procesa gconfd. Èe imate dva procesa gconfd "
+"pot nastavitev ne vsebuje nobene zbirke podatkov ali ni ta bila najdena ali "
+"2) OAF je pomotoma ustvaril dva procesa gconfd. Èe imate dva procesa gconfd "
 "(ali ste imeli dva, ko se je pognal drugi), potem se odjavite, ubijete oafd "
-"in gconfd in se znova prijavite. Tako lahko "
-"problem izgine. Morda je problem v poskusu uporabe gconf-a iz dveh "
-"raèunalnikov hkrati, medtem ko ORBit zaradi privzetih nastavitev ne dovoli "
-"oddaljenih povezav CORBA. Kot vedno, preverite user.* sistemski dnevnik za podrobnosti "
-"o problemu na katerega je naletel gconfd."
+"in gconfd in se znova prijavite. Tako lahko problem izgine. Morda je problem "
+"v poskusu uporabe gconf-a iz dveh raèunalnikov hkrati, medtem ko ORBit "
+"zaradi privzetih nastavitev ne dovoli oddaljenih povezav CORBA. Kot vedno, "
+"preverite user.* sistemski dnevnik za podrobnosti o problemu na katerega je "
+"naletel gconfd."
 
 #: gconf/gconf-sources.c:1164
 #, c-format
@@ -801,6 +816,7 @@ msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Ne more imeti pike (.) takoj za po¹evnico (/)"
 
 #: gconf/gconf.c:2238
+#, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "znak '%c' je neveljaven ASCII znak, zato ni dovoljen v imenih kljuèev"
 
@@ -936,13 +952,17 @@ msgstr "Nisem uspel dobiti sklica predmeta za ConfigServer"
 #: gconf/gconfd.c:601
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
-msgstr "Nisem uspel vpisati bajta v pipo fd %d, morda se je odjemalski program obesil: %s"
+msgstr ""
+"Nisem uspel vpisati bajta v pipo fd %d, morda se je odjemalski program "
+"obesil: %s"
 
 #: gconf/gconfd.c:611
+#, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Nisem uspel dobiti kljuèavnice za daemona: %s"
 
 #: gconf/gconfd.c:649
+#, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Nisem uspel sprostiti kljuèavniène datoteke: %s"
 
@@ -1101,7 +1121,8 @@ msgstr "Odnastavi kljuèe v ukazni vrstici"
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
-msgstr "Rekurzivno odnastavi vse kljuèe v kljuèih/imenikih navedenih v ukazni vrstici"
+msgstr ""
+"Rekurzivno odnastavi vse kljuèe v kljuèih/imenikih navedenih v ukazni vrstici"
 
 #: gconf/gconftool.c:125
 msgid "Print all key/value pairs in a directory."
@@ -1567,14 +1588,17 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Napaka ob odnastavljanju `%s': %s\n"
 
 #: gconf/gconftool.c:1600
+#, c-format
 msgid "Error listing subdirs of '%s': %s\n"
 msgstr "Napaka ob izpisu seznama podimenikov '%s': %s\n"
 
 #: gconf/gconftool.c:1611
+#, c-format
 msgid "Failure listing entries in '%s': %s\n"
 msgstr "Napaka ob izpisu vnosov v '%s': %s\n"
 
 #: gconf/gconftool.c:1630 gconf/gconftool.c:1647
+#, c-format
 msgid "Error unsetting '%s': %s\n"
 msgstr "Napaka ob odnastavljanju '%s': %s\n"
 
@@ -1787,17 +1811,17 @@ msgstr ""
 "imeniku:\n"
 "  %s\n"
 
-#: gconf/gconf-client.c:298 gconf/gconf-client.c:315
+#: gconf/gconf-client.c:295 gconf/gconf-client.c:312
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "Napaka gconf %s\n"
 
-#: gconf/gconf-client.c:798
+#: gconf/gconf-client.c:795
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Opozorilo GConf: napaka ob izpisovanju praov v `%s': %s"
 
-#: gconf/gconf-client.c:1000
+#: gconf/gconf-client.c:997
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Za kljuè %s prièakoval `%s' dobil `%s'"
