@@ -1,3 +1,60 @@
+1999-12-14  Havoc Pennington  <hp@redhat.com>
+
+	* doc/gconf/tmpl/gconf-client.sgml: fix a typo, add additional
+	explanation to the introduction.
+
+	* doc/gconf/tmpl/gconf.sgml: Document the string-to-enum functions.
+	Update some other docs too.
+
+	* doc/gconf/gconf-sections.txt: add new functions
+
+	* gconf/gconf.c (gconf_string_to_enum): new function
+	(gconf_enum_to_string): new function
+
+	* gconf/gconf-engine.h: Put gconf_engine_new_local() here instead
+	of gconf-internals.h
+
+	* gconf/gconf-internals.h: added a new GCONF_ENABLE_INTERNALS
+	define, to allow us to have internal stuff in headers other than
+	gconf-internals.h
+
+	* gconf/gconf.c (gconf_unset): local version
+	(gconf_associate_schema): local version
+	(gconf_all_entries): local version
+	(gconf_all_dirs): local version
+	(gconf_suggest_sync): local version
+	(gconf_dir_exists): local version
+
+	* gconf/gconf-internals.h (gconf_engine_new_local): Declare this
+	function here, though it's defined in gconf.c
+
+	* gconf/gconf.c (gconf_set): local version
+
+	* gconf/gconfd.c (context_query_default_value): use
+	gconf_sources_query_default_value()
+
+	* gconf/gconf-sources.c (gconf_sources_query_default_value): New
+	function
+
+	* gconf/gconf-sources.h: egtk-format-protos the function
+	prototypes.
+
+	* gconf/Makefile.am (libgconf_la_SOURCES): move gconf-locale.[hc]
+	into the library, bah
+
+	* gconf/gconf.c (gconf_get_full): Add local (no gconfd) version
+
+	* gconf/gconf-locale.c (gconf_split_locale): locale splitter
+	function.
+
+	* gconf/gconf-sources.c (gconf_sources_new_from_source): new function
+
+	* examples/basic-gconf-app.c (create_prefs_dialog): Move keys from
+	/apps/gnome to plain /apps
+
+	* doc/gconf/gconf.sgml: Add an initial stab at namespace
+	splitting.
+
 1999-12-09  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf.c (gconf_init): Safety check to ensure we don't

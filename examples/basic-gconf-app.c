@@ -70,7 +70,7 @@ main(int argc, char** argv)
 
   client = gconf_client_new();
 
-  gconf_client_add_dir(client, "/apps/gnome/basic-gconf-app", GCONF_CLIENT_PRELOAD_NONE, NULL);
+  gconf_client_add_dir(client, "/apps/basic-gconf-app", GCONF_CLIENT_PRELOAD_NONE, NULL);
 
   /* The main() function takes over the floating object; the code that
      "owns" the object should do this, as with any Gtk object.
@@ -239,16 +239,16 @@ create_main_window(GConfClient* client)
 
   gtk_container_add(GTK_CONTAINER(w), vbox);
   
-  config = create_configurable_widget(client, "/apps/gnome/basic-gconf-app/foo");
+  config = create_configurable_widget(client, "/apps/basic-gconf-app/foo");
   gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
 
-  config = create_configurable_widget(client, "/apps/gnome/basic-gconf-app/bar");
+  config = create_configurable_widget(client, "/apps/basic-gconf-app/bar");
   gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
   
-  config = create_configurable_widget(client, "/apps/gnome/basic-gconf-app/baz");
+  config = create_configurable_widget(client, "/apps/basic-gconf-app/baz");
   gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
 
-  config = create_configurable_widget(client, "/apps/gnome/basic-gconf-app/blah");
+  config = create_configurable_widget(client, "/apps/basic-gconf-app/blah");
   gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
 
   gtk_signal_connect(GTK_OBJECT(w), "delete_event",
@@ -335,10 +335,10 @@ prefs_dialog_apply(GtkWidget* dialog)
     {
       revert_cs = gconf_client_create_change_set_from_current(client,
                                                               NULL,
-                                                              "/apps/gnome/basic-gconf-app/foo",
-                                                              "/apps/gnome/basic-gconf-app/bar",
-                                                              "/apps/gnome/basic-gconf-app/baz",
-                                                              "/apps/gnome/basic-gconf-app/blah",
+                                                              "/apps/basic-gconf-app/foo",
+                                                              "/apps/basic-gconf-app/bar",
+                                                              "/apps/basic-gconf-app/baz",
+                                                              "/apps/basic-gconf-app/blah",
                                                               NULL);
 
       gtk_object_set_data(GTK_OBJECT(dialog), "revert_changeset", revert_cs);
@@ -437,10 +437,10 @@ prefs_dialog_revert(GtkWidget* dialog)
 
   /* Set the prefs dialog contents back to the
      new values */
-  update_entry(dialog, revert_cs, "/apps/gnome/basic-gconf-app/foo");
-  update_entry(dialog, revert_cs, "/apps/gnome/basic-gconf-app/bar");
-  update_entry(dialog, revert_cs, "/apps/gnome/basic-gconf-app/baz");
-  update_entry(dialog, revert_cs, "/apps/gnome/basic-gconf-app/blah");
+  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/foo");
+  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/bar");
+  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/baz");
+  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/blah");
   
   /* Update sensitivity of the dialog buttons */
   prefs_dialog_update_sensitivity(dialog);
@@ -651,19 +651,19 @@ create_prefs_dialog(GtkWidget* parent, GConfClient* client)
   
   gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
 
-  entry = create_config_entry(dialog, client, "/apps/gnome/basic-gconf-app/foo");
+  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/foo");
   gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
                      FALSE, FALSE, 0);
 
-  entry = create_config_entry(dialog, client, "/apps/gnome/basic-gconf-app/bar");
+  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/bar");
   gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
                      FALSE, FALSE, 0);
 
-  entry = create_config_entry(dialog, client, "/apps/gnome/basic-gconf-app/baz");
+  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/baz");
   gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
                      FALSE, FALSE, 0);
 
-  entry = create_config_entry(dialog, client, "/apps/gnome/basic-gconf-app/blah");
+  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/blah");
   gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
                      FALSE, FALSE, 0);
   

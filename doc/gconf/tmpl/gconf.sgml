@@ -69,16 +69,19 @@ Asks whether the library has been initialized.
 <para>
 A callback function invoked when a key's value changes. The @cnxn_id parameter
 will be the connection ID returned from gconf_notify_add(). @key will be the
-full path of the changed key, @value will be the new value (or
-<symbol>NULL</symbol> if the key was unset), and @user_data is the data passed
-to gconf_notify_add().
+full path of the changed key, @value will be the new value if the key is set.
+If the key is unset, @value will be the default value if one exists, or
+<symbol>NULL</symbol> otherwise. @is_default indicates whether a value is a
+default setting or a user setting. If @value is <symbol>NULL</symbol>,
+@is_default will be <symbol>TRUE</symbol>. @user_data is the data passed to
+gconf_notify_add().
 </para>
 
 @conf: the #GConfEngine passed to gconf_notify_add().
 @cnxn_id: the ID returned from gconf_notify_add().
 @key: the full path of the changed key.
 @value: the new value, or <symbol>NULL</symbol> if the key was unset.
-@is_default: 
+@is_default: if <symbol>TRUE</symbol>, the key is unset but this is the default value for it.
 @user_data: the user data passed to gconf_notify_add().
 
 
@@ -115,18 +118,18 @@ Removes a notification request.
 
 <!-- ##### FUNCTION gconf_get ##### -->
 <para>
-Returns the #GConfValue stored at @key, or <symbol>NULL</symbol> if no
-value is set. You must call gconf_value_destroy() to free the returned
-value. If you know the expected type of the value, you probably want
-to use the type-specific convenience wrappers (gconf_get_int(), etc.)
-because they will do the type-checking for you and return the
-appropriate type.
+Returns the #GConfValue stored at @key, or <symbol>NULL</symbol> if no value is
+set. You must call gconf_value_destroy() to free the returned value. If you know
+the expected type of the value, you probably want to use the type-specific
+convenience wrappers (gconf_get_int(), etc.)  because they will do the
+type-checking for you and return the appropriate type. Automatically returns the
+default value for a key, if the key is unset and a default exists.
 </para>
 
 @conf: a #GConfEngine to get the value from.
 @key: the key to get.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
+@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset and no default exists.
 
 
 <!-- ##### FUNCTION gconf_get_with_locale ##### -->
@@ -149,18 +152,20 @@ identical to gconf_get() in all respects.
 
 <!-- ##### FUNCTION gconf_get_without_default ##### -->
 <para>
-
+Identical to gconf_get(), except that it will return <symbol>NULL</symbol> in
+place of the default value if the key is unset. Note that gconf_get() can also
+return <symbol>NULL</symbol> if no default exists or an error occurs.
 </para>
 
-@conf: 
-@key: 
-@err: 
-@Returns: 
+@conf: a #GConfEngine to get the value from.
+@key: the key to get.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
 <!-- ##### FUNCTION gconf_get_full ##### -->
 <para>
-
+This function is basically for internal use.
 </para>
 
 @conf: 
@@ -174,13 +179,19 @@ identical to gconf_get() in all respects.
 
 <!-- ##### FUNCTION gconf_get_default_from_schema ##### -->
 <para>
-
+Returns the default value stored in the key's schema, if the key has a schema
+associated and the schema exists and the schema contains a default value.  Note
+that gconf_get(), gconf_get_string(), and so on already return the default value
+if no other value is found, so normally you do not need this function. This
+function is just for convenience; you could also get the #GConfMetaInfo for the
+key, read the schema name from there, then look up the schema by name and
+extract the default value.
 </para>
 
-@conf: 
-@key: 
-@err: 
-@Returns: 
+@conf: a #GConfEngine to get the value from.
+@key: the key to get the default value for.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
 <!-- ##### FUNCTION gconf_set ##### -->
@@ -650,5 +661,56 @@ else
 @address_of_cdr: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
+
+
+<!-- ##### STRUCT GConfEnumStringPair ##### -->
+<para>
+
+</para>
+
+@enum_value: 
+@str: 
+
+<!-- ##### FUNCTION gconf_string_to_enum ##### -->
+<para>
+It's best to store enumeration values as strings rather than integers. This is
+robust against changes in the enumeration, and also human-readable.
+This function makes it more convenient to store enums as strings.
+</para>
+
+<para>
+The first argument is a lookup table, typically declared statically as follows:
+<programlisting>
+static GConfEnumStringPair foo_enum_lookup_table[] = {
+  { FOO_BLAH, "Blah" },
+  { FOO_BAR,  "Bar"  },
+  { 0, NULL }
+};
+</programlisting>
+Note that the last element of the table is <literal>{ 0, NULL }</literal>.
+Typically the strings you use should be semi-human-readable, for GTK+ and GNOME
+stripping off the library prefix and converting to StudlyCaps is the recommended
+convention.
+</para>
+
+<para>
+The function returns <symbol>TRUE</symbol> if a match for the string is found,
+and if a match is found the enum value is placed in @enum_value_retloc.
+</para>
+
+@lookup_table: a lookup table mapping enum values to strings.
+@str: the string to convert to an enum value.
+@enum_value_retloc: the address of an enum variable.
+@Returns: <symbol>TRUE</symbol> if a match was found.
+
+
+<!-- ##### FUNCTION gconf_enum_to_string ##### -->
+<para>
+See gconf_string_to_enum() for background information on this function.
+</para>
+
+@lookup_table: a lookup table mapping enum values to strings.
+@enum_value: the enumeration value to convert to a string.
+@Returns: a pointer to the proper string in the lookup table, or <symbol>NULL</symbol> if no match was found.
 
 

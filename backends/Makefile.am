@@ -1,4 +1,4 @@
-INCLUDES= -I$(top_srcdir) -I$(top_builddir) $(GLIB_CFLAGS) $(OAF_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS)
+INCLUDES= -I$(top_srcdir) -I$(top_builddir) $(GLIB_CFLAGS) $(OAF_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) -DGCONF_ENABLE_INTERNALS=1 -DG_LOG_DOMAIN=\"GConf-Backends\"
 
 backenddir = $(libdir)/gconf
 

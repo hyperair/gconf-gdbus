@@ -306,6 +306,11 @@ GConfEngine* conf
 <RETURNS>void  </RETURNS>
 GConfEngine* conf
 </FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_new_local</NAME>
+<RETURNS>GConfEngine *</RETURNS>
+const gchar* address, GConfError** err
+</FUNCTION>
 <ENUM>
 <NAME>GConfErrNo</NAME>
 typedef enum {
@@ -556,62 +561,72 @@ struct GConfSources {
 <FUNCTION>
 <NAME>gconf_sources_new_from_addresses</NAME>
 <RETURNS>GConfSources *</RETURNS>
-gchar** addresses,GConfError** err
+gchar        **addresses,GConfError   **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_sources_new_from_source</NAME>
+<RETURNS>GConfSources *</RETURNS>
+GConfSource   *source
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_destroy</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources* sources
+GConfSources  *sources
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_query_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources* sources,const gchar* key,const gchar** locales,gboolean use_schema_default,gboolean* value_is_default,GConfError** err
+GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources* sources,const gchar* key,GConfValue* value,GConfError** err
+GConfSources  *sources,const gchar   *key,GConfValue    *value,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_unset_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources* sources,const gchar* key,const gchar* locale,GConfError** err
+GConfSources  *sources,const gchar   *key,const gchar   *locale,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfSources* sources,const gchar* dir,const gchar** locales,GConfError** err
+GConfSources  *sources,const gchar   *dir,const gchar  **locales,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfSources* sources,const gchar* dir,GConfError** err
+GConfSources  *sources,const gchar   *dir,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfSources* sources,const gchar* dir,GConfError** err
+GConfSources  *sources,const gchar   *dir,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_remove_dir</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources* sources,const gchar* dir,GConfError** err
+GConfSources  *sources,const gchar   *dir,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_schema</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources* sources,const gchar* key,const gchar* schema_key,GConfError** err
+GConfSources  *sources,const gchar   *key,const gchar   *schema_key,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_sync_all</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfSources* sources,GConfError** err
+GConfSources  *sources,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_query_metainfo</NAME>
 <RETURNS>GConfMetaInfo *</RETURNS>
 GConfSources* sources,const gchar* key,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_sources_query_default_value</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfSources* sources,const gchar* key,const gchar** locales,GConfError** err
 </FUNCTION>
 <ENUM>
 <NAME>GConfValueType</NAME>
@@ -1046,6 +1061,26 @@ gpointer app, gpointer mod_info
 gpointer app, gpointer mod_info
 </FUNCTION>
 <STRUCT>
+<NAME>GConfEnumStringPair</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GConfEnumStringPair</NAME>
+struct GConfEnumStringPair {
+  gint enum_value;
+  const gchar* str;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gconf_string_to_enum</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEnumStringPair lookup_table[],const gchar* str,gint* enum_value_retloc
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_enum_to_string</NAME>
+<RETURNS>const gchar *</RETURNS>
+GConfEnumStringPair lookup_table[],gint enum_value
+</FUNCTION>
+<STRUCT>
 <NAME>GConfLocaleCache</NAME>
 </STRUCT>
 <FUNCTION>
@@ -1086,6 +1121,11 @@ GConfLocaleList* list
 <NAME>gconf_locale_cache_get_list</NAME>
 <RETURNS>GConfLocaleList *</RETURNS>
 GConfLocaleCache* cache,const gchar* locale
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_split_locale</NAME>
+<RETURNS>gchar **</RETURNS>
+const gchar* locale
 </FUNCTION>
 <MACRO>
 <NAME>ORBIT_IDL_SERIAL</NAME>

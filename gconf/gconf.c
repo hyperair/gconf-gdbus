@@ -22,6 +22,7 @@
 #include "gconf.h"
 #include "gconf-internals.h"
 #include "gconf-sources.h"
+#include "gconf-locale.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,7 +90,7 @@ struct _GConfEnginePrivate {
   CnxnTable* ctable;
   /* If non-NULL, this is a local engine;
      local engines don't do notification! */
-  GConfSource* local_source;
+  GConfSources* local_sources;
 };
 
 static void register_engine(GConfEnginePrivate* priv);
@@ -158,13 +159,13 @@ gconf_engine_blank (gboolean remote)
     {
       priv->context = ConfigServer_default_context;
       priv->ctable = ctable_new();
-      priv->local_source = NULL;
+      priv->local_sources = NULL;
     }
   else
     {
       priv->context = ConfigServer_invalid_context;
       priv->ctable = NULL;
-      priv->local_source = NULL;
+      priv->local_sources = NULL;
     }
     
   return priv;
@@ -198,8 +199,8 @@ gconf_engine_new_local      (const gchar* address,
     return NULL;
   
   priv = gconf_engine_blank(FALSE);
-  
-  priv->local_source = source;
+
+  priv->local_sources = gconf_sources_new_from_source(source);
 
   return (GConfEngine*)priv;
 }
@@ -297,8 +298,8 @@ gconf_engine_unref        (GConfEngine* conf)
     {
       if (gconf_engine_is_local(conf))
         {
-          if (priv->local_source != NULL)
-            gconf_source_destroy(priv->local_source);
+          if (priv->local_sources != NULL)
+            gconf_sources_destroy(priv->local_sources);
         }
       else
         {
@@ -318,8 +319,8 @@ gconf_engine_unref        (GConfEngine* conf)
           CORBA_exception_init(&ev);
 
           /* FIXME CnxnTable only has entries for this GConfEngine now,
-       * it used to be global and shared among GConfEngine objects.
-       */
+           * it used to be global and shared among GConfEngine objects.
+           */
           removed = ctable_remove_by_conf(priv->ctable, conf);
   
           tmp = removed;
@@ -353,8 +354,8 @@ gconf_engine_unref        (GConfEngine* conf)
 
           g_slist_free(removed);
 
-      /* do this after removing the notifications,
-         to avoid funky race conditions */
+          /* do this after removing the notifications,
+             to avoid funky race conditions */
           unregister_engine(priv);
       
           ctable_destroy(priv->ctable);
@@ -504,6 +505,27 @@ gconf_get_full(GConfEngine* conf,
   
   if (!gconf_key_check(key, err))
     return NULL;
+
+  if (gconf_engine_is_local(conf))
+    {
+      gchar** locale_list;
+
+      locale_list = gconf_split_locale(locale);
+      
+      val = gconf_sources_query_value(priv->local_sources,
+                                      key,
+                                      (const gchar**)locale_list,
+                                      use_schema_default,
+                                      value_is_default,
+                                      err);
+
+      if (locale_list != NULL)
+        g_strfreev(locale_list);
+      
+      return val;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
   
   CORBA_exception_init(&ev);
 
@@ -590,6 +612,25 @@ gconf_get_default_from_schema (GConfEngine* conf,
   
   if (!gconf_key_check(key, err))
     return NULL;
+
+  if (gconf_engine_is_local(conf))
+    {
+      gchar** locale_list;
+
+      locale_list = gconf_split_locale(gconf_current_locale());
+      
+      val = gconf_sources_query_default_value(priv->local_sources,
+                                              key,
+                                              (const gchar**)locale_list,
+                                              err);
+
+      if (locale_list != NULL)
+        g_strfreev(locale_list);
+      
+      return val;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
   
   CORBA_exception_init(&ev);
 
@@ -654,6 +695,28 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
   if (!gconf_key_check(key, err))
     return FALSE;
 
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      
+      gconf_sources_set_value(priv->local_sources, key, value, &error);
+
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+          return FALSE;
+        }
+      
+      return TRUE;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
+  
   CORBA_exception_init(&ev);
 
  RETRY:
@@ -709,6 +772,28 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
   if (!gconf_key_check(key, err))
     return FALSE;
 
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      
+      gconf_sources_unset_value(priv->local_sources, key, NULL, &error);
+
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+          return FALSE;
+        }
+      
+      return TRUE;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
+  
   CORBA_exception_init(&ev);
 
  RETRY:
@@ -765,6 +850,28 @@ gconf_associate_schema  (GConfEngine* conf, const gchar* key,
   if (!gconf_key_check(schema_key, err))
     return FALSE;
 
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      
+      gconf_sources_set_schema(priv->local_sources, key, schema_key, &error);
+
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+          return FALSE;
+        }
+      
+      return TRUE;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
+  
   CORBA_exception_init(&ev);
 
  RETRY:
@@ -821,6 +928,42 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
   if (!gconf_key_check(dir, err))
     return NULL;
 
+
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      gchar** locale_list;
+      GSList* retval;
+      
+      locale_list = gconf_split_locale(gconf_current_locale());
+      
+      retval = gconf_sources_all_entries(priv->local_sources,
+                                         dir,
+                                         (const gchar**)locale_list,
+                                         &error);
+
+      if (locale_list)
+        g_strfreev(locale_list);
+      
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+
+          g_assert(retval == NULL);
+          
+          return NULL;
+        }
+      
+      return retval;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
+  
   CORBA_exception_init(&ev);
   
  RETRY:
@@ -898,6 +1041,34 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
   
   if (!gconf_key_check(dir, err))
     return NULL;
+
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      GSList* retval;
+      
+      retval = gconf_sources_all_dirs(priv->local_sources,
+                                      dir,
+                                      &error);
+      
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+
+          g_assert(retval == NULL);
+          
+          return NULL;
+        }
+      
+      return retval;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
   
   CORBA_exception_init(&ev);
   
@@ -948,6 +1119,7 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
   return subdirs;
 }
 
+/* annoyingly, this is REQUIRED for local sources */
 void 
 gconf_suggest_sync(GConfEngine* conf, GConfError** err)
 {
@@ -958,6 +1130,29 @@ gconf_suggest_sync(GConfEngine* conf, GConfError** err)
 
   g_return_if_fail(conf != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
+
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      
+      gconf_sources_sync_all(priv->local_sources,
+                             &error);
+      
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+          return;
+        }
+      
+      return;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
   
   CORBA_exception_init(&ev);
 
@@ -1004,7 +1199,16 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
   
   if (!gconf_key_check(dir, err))
     return FALSE;
+  
+  if (gconf_engine_is_local(conf))
+    {
+      return gconf_sources_dir_exists(priv->local_sources,
+                                      dir,
+                                      err);
+    }
 
+  g_assert(!gconf_engine_is_local(conf));
+  
   CORBA_exception_init(&ev);
   
  RETRY:
@@ -2328,3 +2532,46 @@ reinstall_listeners_for_all_engines(ConfigServer cs,
 
   return TRUE;
 }
+
+/*
+ * Enumeration conversions
+ */
+
+gboolean
+gconf_string_to_enum (GConfEnumStringPair lookup_table[],
+                      const gchar* str,
+                      gint* enum_value_retloc)
+{
+  int i = 0;
+  
+  while (lookup_table[i].str != NULL)
+    {
+      if (g_strcasecmp(lookup_table[i].str, str) == 0)
+        {
+          *enum_value_retloc = lookup_table[i].enum_value;
+          return TRUE;
+        }
+
+      ++i;
+    }
+
+  return FALSE;
+}
+
+const gchar*
+gconf_enum_to_string (GConfEnumStringPair lookup_table[],
+                      gint enum_value)
+{
+  int i = 0;
+  
+  while (lookup_table[i].str != NULL)
+    {
+      if (lookup_table[i].enum_value == enum_value)
+        return lookup_table[i].str;
+
+      ++i;
+    }
+
+  return NULL;
+}
+

@@ -1399,69 +1399,12 @@ context_query_default_value(GConfContext* ctx,
                             const gchar** locales,
                             GConfError** err)
 {
-  GConfValue* val;
-  GConfMetaInfo* mi;
-  
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
-  
-  mi = gconf_sources_query_metainfo(ctx->sources, key,
-                                    err);
-  if (mi == NULL)
-    {
-      if (err && *err != NULL)
-        {
-          gconf_log(GCL_ERR, _("Error getting default value for `%s': %s"),
-                    key, (*err)->str);
-        }
-      return NULL;
-    }
 
-  if (gconf_meta_info_schema(mi) == NULL)
-    return NULL;
-
-  val = gconf_sources_query_value(ctx->sources,
-                                  gconf_meta_info_schema(mi), locales,
-                                  TRUE, NULL, err);
-  
-  if (val != NULL)
-    {
-      GConfSchema* schema;
-
-      if (val->type != GCONF_VALUE_SCHEMA)
-        {
-          gconf_log(GCL_WARNING, _("Key `%s' listed as schema for key `%s' actually stores type `%s'"), gconf_meta_info_schema(mi), key, gconf_value_type_to_string(val->type));
-          gconf_meta_info_destroy(mi);
-          return NULL;
-        }
-
-      gconf_meta_info_destroy(mi);
-
-      schema = gconf_value_schema(val);
-      val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
-      
-      gconf_value_destroy(val); /* schema not destroyed due to our cheat */
-      
-      if (schema != NULL)
-        {
-          GConfValue* retval;
-          /* Cheat, steal value from schema */
-          retval = schema->default_value;
-          schema->default_value = NULL;
-
-          gconf_schema_destroy(schema);
-          
-          return retval;
-        }
-      return NULL;
-    }
-  else
-    {
-      gconf_meta_info_destroy(mi);
-      return NULL;
-    }
+  return gconf_sources_query_default_value(ctx->sources, key, locales, err);
 }
 
 

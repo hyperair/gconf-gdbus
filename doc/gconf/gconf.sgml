@@ -896,7 +896,101 @@ print_value(GConfValue* value)
       <title>Namespace division</title>
 
       <para>
-    </para>
+        When choosing GConf keys, you should follow these conventions.
+      </para>
+
+      <para>
+        <itemizedlist mark="bullet">
+
+          <listitem>
+            <para>
+              Schemas should go under the <literal>/schemas</literal>
+              toplevel directory. Under <literal>/schemas</literal>,
+              the normal GConf namespace should be mirrored. So, if you have a
+              key <literal>/foo/bar/baz</literal>, the schema for that key should
+              be at <literal>/schemas/foo/bar/baz</literal>. If you apply the same
+              schema to multiple keys, then obviously the schema name will have
+              to differ from the key names; but you should mirror as much of the
+              key names as possible. For example, <literal>/foo/bar/baz</literal>
+              and <literal>/foo/bar/boo</literal> might have the schema
+              <literal>/schemas/foo/bar/baz_and_boo</literal>.
+            </para>
+          </listitem>
+
+
+          <listitem>
+            <para>
+              The GNOME libraries may store preferences for GNOME apps
+              under the
+              <literal>/apps/gnome-settings/<replaceable>appname</replaceable></literal>
+              directory.
+              <literal><replaceable>appname</replaceable></literal> will be
+              replaced with the name of your app, as passed in to
+              <function>gnome_init()</function> (perhaps canonicalized to be a
+              legal GConf key). You should not put your own
+              settings in this directory, because you may get notifications when
+              gnome-libs keys change and gnome-libs may get notifications when
+              your keys change. This would be confusing.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              Preferences for applications should go under an
+              <literal>/apps/<replaceable>appname</replaceable></literal>
+              directory. Try to make
+              <literal><replaceable>appname</replaceable></literal> match the
+              one passed to <function>gnome_init()</function>, also used in the
+              <literal>/apps/gnome-settings/<replaceable>appname</replaceable></literal>
+              directory.  Vendors are encouraged to include their vendor name in
+              <replaceable>appname</replaceable>, to avoid namespace clashes.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              Preferences for the desktop environment should go under
+              <literal>/desktop</literal>. None should be immediately
+              under <literal>/desktop</literal>, however. GNOME-specific
+              preferences should be under <literal>/desktop/gnome</literal>.
+              Settings standardized among multiple desktops should go under
+              <literal>/desktop/standard</literal>. Other specific desktops should
+              select a directory to use (<literal>/desktop/kde</literal>,
+              <literal>/desktop/xfce</literal>, etc.)
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              System-level preferences (such as the host name, though
+              I'm sure that specific example will never be in GConf) should go
+              under <literal>/system</literal>. None should be
+              immediately under <literal>/system</literal>, however; select a
+              descriptive subdirectory.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              In general, keys under <literal>/system</literal> and
+              <literal>/desktop</literal> are for use by multiple applications,
+              and keys under
+              <literal>/apps/<replaceable>appname</replaceable></literal> are
+              for use by a single application.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              If you have a "weird" key that doesn't fit into any of the above
+              categories, please mail me (<email>hp@redhat.com</email>) and ask
+              for a new directory to be invented. Alternatively, place your key
+              under the <literal>/extra</literal> toplevel directory.
+            </para>
+          </listitem>
+
+        </itemizedlist>
+      </para>
 
     </sect1>
 

@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir) $(GLIB_CFLAGS) $(OAF_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) $(GTK_CFLAGS)\
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"  -DGCONF_ENABLE_INTERNALS=1 -DG_LOG_DOMAIN=\"GConfClient\"
 
 lib_LTLIBRARIES = libgconf-gtk.la
 

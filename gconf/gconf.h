@@ -195,6 +195,22 @@ extern const char gconf_version[];
 extern struct poptOption gconf_options[];
 #endif
 
+/* Utility function converts enumerations to and from strings */
+typedef struct _GConfEnumStringPair GConfEnumStringPair;
+
+struct _GConfEnumStringPair {
+  gint enum_value;
+  const gchar* str;
+};
+
+gboolean       gconf_string_to_enum (GConfEnumStringPair lookup_table[],
+                                     const gchar* str,
+                                     gint* enum_value_retloc);   
+
+const gchar*   gconf_enum_to_string (GConfEnumStringPair lookup_table[],
+                                     gint enum_value);
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

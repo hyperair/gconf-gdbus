@@ -42,6 +42,10 @@ GConfEngine* gconf_engine_new_from_address(const gchar* address, GConfError** er
 void         gconf_engine_unref           (GConfEngine* conf);
 void         gconf_engine_ref             (GConfEngine* conf);
 
+#ifdef GCONF_ENABLE_INTERNALS
+GConfEngine* gconf_engine_new_local      (const gchar* address, GConfError** err);
+#endif
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -65,56 +65,53 @@ struct _GConfSources {
 /* Even on error, this gives you an empty source list, i.e.  never
    returns NULL but may set the error if some addresses weren't
    resolved and may contain no sources.  */
-GConfSources* gconf_sources_new_from_addresses    (gchar** addresses,
-                                                   GConfError** err);
+GConfSources* gconf_sources_new_from_addresses (gchar        **addresses,
+                                                GConfError   **err);
+GConfSources* gconf_sources_new_from_source    (GConfSource   *source);
+void          gconf_sources_destroy            (GConfSources  *sources);
+GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
+                                                const gchar   *key,
+                                                const gchar  **locales,
+                                                gboolean       use_schema_default,
+                                                gboolean      *value_is_default,
+                                                GConfError   **err);
+void          gconf_sources_set_value          (GConfSources  *sources,
+                                                const gchar   *key,
+                                                GConfValue    *value,
+                                                GConfError   **err);
+void          gconf_sources_unset_value        (GConfSources  *sources,
+                                                const gchar   *key,
+                                                const gchar   *locale,
+                                                GConfError   **err);
+GSList*       gconf_sources_all_entries        (GConfSources  *sources,
+                                                const gchar   *dir,
+                                                const gchar  **locales,
+                                                GConfError   **err);
+GSList*       gconf_sources_all_dirs           (GConfSources  *sources,
+                                                const gchar   *dir,
+                                                GConfError   **err);
+gboolean      gconf_sources_dir_exists         (GConfSources  *sources,
+                                                const gchar   *dir,
+                                                GConfError   **err);
+void          gconf_sources_remove_dir         (GConfSources  *sources,
+                                                const gchar   *dir,
+                                                GConfError   **err);
+void          gconf_sources_set_schema         (GConfSources  *sources,
+                                                const gchar   *key,
+                                                const gchar   *schema_key,
+                                                GConfError   **err);
+gboolean      gconf_sources_sync_all           (GConfSources  *sources,
+                                                GConfError   **err);
 
-void          gconf_sources_destroy     (GConfSources* sources);
 
-GConfValue*   gconf_sources_query_value (GConfSources* sources, 
-                                         const gchar* key,
-                                         const gchar** locales,
-                                         gboolean use_schema_default,
-                                         gboolean* value_is_default,
-                                         GConfError** err);
+GConfMetaInfo*gconf_sources_query_metainfo     (GConfSources* sources,
+                                                const gchar* key,
+                                                GConfError** err);
 
-void          gconf_sources_set_value   (GConfSources* sources,
-                                         const gchar* key,
-                                         GConfValue* value,
-                                         GConfError** err);
-
-void          gconf_sources_unset_value (GConfSources* sources,
-                                         const gchar* key,
-                                         const gchar* locale,
-                                         GConfError** err);
-
-GSList*       gconf_sources_all_entries (GConfSources* sources,
-                                         const gchar* dir,
-                                         const gchar** locales,
-                                         GConfError** err);
-
-GSList*       gconf_sources_all_dirs    (GConfSources* sources,
-                                         const gchar* dir,
-                                         GConfError** err);
-
-gboolean      gconf_sources_dir_exists  (GConfSources* sources,
-                                         const gchar* dir,
-                                         GConfError** err);
-
-void          gconf_sources_remove_dir  (GConfSources* sources,
-                                         const gchar* dir,
-                                         GConfError** err);
-
-void          gconf_sources_set_schema  (GConfSources* sources,
-                                         const gchar* key,
-                                         const gchar* schema_key,
-                                         GConfError** err);
-
-gboolean      gconf_sources_sync_all    (GConfSources* sources,
-                                         GConfError** err);
-
-GConfMetaInfo*gconf_sources_query_metainfo (GConfSources* sources,
-                                            const gchar* key,
-                                            GConfError** err);
+GConfValue*   gconf_sources_query_default_value(GConfSources* sources,
+                                                const gchar* key,
+                                                const gchar** locales,
+                                                GConfError** err);
 
 #endif
 

@@ -60,6 +60,8 @@ void              gconf_locale_list_unref          (GConfLocaleList* list);
 GConfLocaleList*  gconf_locale_cache_get_list      (GConfLocaleCache* cache,
                                                     const gchar* locale);
 
+/* Use this if you don't care about the locale cache */
+gchar**           gconf_split_locale               (const gchar* locale);
 
 #ifdef __cplusplus
 }

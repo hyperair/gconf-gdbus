@@ -1,4 +1,3 @@
-
 /* GConf
  * Copyright (C) 1999 Red Hat Inc.
  *
@@ -20,6 +19,12 @@
 
 #ifndef GCONF_GCONF_INTERNALS_H
 #define GCONF_GCONF_INTERNALS_H
+
+#ifndef GCONF_ENABLE_INTERNALS
+#warning "you are trying to use GConf internal functions outside of GConf. This is a Bad Idea"
+#endif
+
+#ifdef GCONF_ENABLE_INTERNALS
 
 #include <glib.h>
 #include "gconf-error.h"
@@ -144,6 +149,8 @@ void       gconf_set_daemon_mode(gboolean setting);
 /* Returns TRUE if there was an error, frees exception, sets err */
 gboolean gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err);
 
-#endif
+#endif /* GCONF_ENABLE_INTERNALS */
+
+#endif /* GCONF_GCONF_INTERNALS_H */
 
 

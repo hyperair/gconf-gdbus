@@ -45,6 +45,7 @@ gconf_client_value_changed
 gconf_client_create_reverse_change_set
 gconf_client_create_change_set_from_currentv
 gconf_client_create_change_set_from_current
+gconf_client_commit_change_set
 <SUBSECTION Standard>
 GCONF_TYPE_CLIENT
 GCONF_IS_CLIENT
@@ -73,6 +74,7 @@ gconf_engine_new
 gconf_engine_new_from_address
 gconf_engine_unref
 gconf_engine_ref
+gconf_engine_new_local
 </SECTION>
 
 <SECTION>
@@ -119,6 +121,18 @@ gconf_key_check
 gconf_value_new_from_string
 gconf_value_new_list_from_string
 gconf_value_new_pair_from_string
+gconf_quote_string
+gconf_unquote_string
+gconf_unquote_string_inplace
+gconf_value_decode
+gconf_value_encode
+gconf_quote_percents
+gconf_value_list_from_primitive_list
+gconf_value_pair_from_primitive_pair
+gconf_value_list_to_primitive_list_destructive
+gconf_value_pair_to_primitive_pair_destructive
+gconf_set_daemon_mode
+gconf_handle_oaf_exception
 </SECTION>
 
 <SECTION>
@@ -162,6 +176,7 @@ gconf_resolve_address
 gconf_source_destroy
 GConfSources
 gconf_sources_new_from_addresses
+gconf_sources_new_from_source
 gconf_sources_destroy
 gconf_sources_query_value
 gconf_sources_set_value
@@ -173,12 +188,15 @@ gconf_sources_remove_dir
 gconf_sources_set_schema
 gconf_sources_sync_all
 gconf_sources_query_metainfo
+gconf_sources_query_default_value
 </SECTION>
 
 <SECTION>
 <FILE>gconf-value</FILE>
 GConfValueType
 GConfValue
+GCONF_VALUE_TYPE_VALID
+GCONF_INTERNAL_VALUE_TYPE_VALID
 gconf_value_new
 gconf_value_copy
 gconf_value_destroy
@@ -259,6 +277,9 @@ gconf_set_bool
 gconf_set_schema
 gconf_set_list
 gconf_set_pair
+GConfEnumStringPair
+gconf_string_to_enum
+gconf_enum_to_string
 </SECTION>
 
 <SECTION>
@@ -271,6 +292,7 @@ GConfLocaleList
 gconf_locale_list_ref
 gconf_locale_list_unref
 gconf_locale_cache_get_list
+gconf_split_locale
 </SECTION>
 
 <SECTION>
@@ -282,6 +304,7 @@ gconf_change_set_new
 gconf_change_set_ref
 gconf_change_set_unref
 gconf_change_set_clear
+gconf_change_set_size
 gconf_change_set_remove
 gconf_change_set_foreach
 gconf_change_set_set
@@ -294,6 +317,7 @@ gconf_change_set_set_bool
 gconf_change_set_set_schema
 gconf_change_set_set_list
 gconf_change_set_set_pair
+gconf_change_set_check_value
 gconf_create_change_set_from_currentv
 gconf_create_change_set_from_current
 gconf_create_reverse_change_set

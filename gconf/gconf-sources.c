@@ -341,6 +341,18 @@ gconf_sources_new_from_addresses(gchar** addresses, GConfError** err)
   return sources;
 }
 
+GConfSources*
+gconf_sources_new_from_source       (GConfSource* source)
+{
+  GConfSources* sources;
+  
+  sources = g_new0(GConfSources, 1);
+
+  sources->sources = g_list_append(NULL, source);
+
+  return sources;
+}
+
 void
 gconf_sources_destroy(GConfSources* sources)
 {
@@ -1031,4 +1043,100 @@ gconf_sources_query_metainfo (GConfSources* sources,
     }
 
   return mi;
+}
+
+GConfValue*
+gconf_sources_query_default_value(GConfSources* sources,
+                                  const gchar* key,
+                                  const gchar** locales,
+                                  GConfError** err)
+{
+  GConfError* error = NULL;
+  GConfValue* val;
+  GConfMetaInfo* mi;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  mi = gconf_sources_query_metainfo(sources, key,
+                                    &error);
+  if (mi == NULL)
+    {
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_log(GCL_ERR, _("Error getting metainfo: %s"), error->str);
+              gconf_error_destroy(error);
+            }
+        }
+      return NULL;
+    }
+
+  if (gconf_meta_info_schema(mi) == NULL)
+    {
+      gconf_meta_info_destroy(mi);
+      return NULL;
+    }
+      
+  val = gconf_sources_query_value(sources,
+                                  gconf_meta_info_schema(mi), locales,
+                                  TRUE, NULL, &error);
+  
+  if (val != NULL)
+    {
+      GConfSchema* schema;
+
+      if (val->type != GCONF_VALUE_SCHEMA)
+        {
+          gconf_log(GCL_WARNING,
+                    _("Key `%s' listed as schema for key `%s' actually stores type `%s'"),
+                    gconf_meta_info_schema(mi),
+                    key,
+                    gconf_value_type_to_string(val->type));
+
+          gconf_meta_info_destroy(mi);
+          return NULL;
+        }
+
+      gconf_meta_info_destroy(mi);
+
+      schema = gconf_value_schema(val);
+      val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
+      
+      gconf_value_destroy(val); /* schema not destroyed due to our cheat */
+      
+      if (schema != NULL)
+        {
+          GConfValue* retval;
+          /* Cheat, steal value from schema */
+          retval = schema->default_value;
+          schema->default_value = NULL;
+
+          gconf_schema_destroy(schema);
+          
+          return retval;
+        }
+      return NULL;
+    }
+  else
+    {
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_log(GCL_ERR, _("Error getting value for `%s': %s"),
+                        gconf_meta_info_schema(mi),
+                        error->str);
+              gconf_error_destroy(error);
+            }
+        }
+      
+      gconf_meta_info_destroy(mi);
+      
+      return NULL;
+    }
 }

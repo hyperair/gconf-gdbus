@@ -1,6 +1,6 @@
 INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) $(OAF_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" \
-	-DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\" -DVERSION=\""$(VERSION)"\" -DIID=\""OAFIID:gconfd:19991118"\"
+	-DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\" -DVERSION=\""$(VERSION)"\" -DIID=\""OAFIID:gconfd:19991118"\" -DGCONF_ENABLE_INTERNALS=1
 
 EFENCE=
 
@@ -27,8 +27,6 @@ gconfinclude_HEADERS =     \
 
 gconfd_SOURCES = \
 	gconf-sources.h		\
-	gconf-locale.h  	\
-	gconf-locale.c  	\
 	gconfd.c
 
 gconfd_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf.la
@@ -53,6 +51,8 @@ libgconf_la_SOURCES = \
 	gconf-changeset.c	\
 	gconf-error.c		\
 	gconf-listeners.c	\
+	gconf-locale.h  	\
+	gconf-locale.c  	\
 	gconf-schema.c		\
 	gconf-sources.c		\
 	gconf-value.c		\

@@ -317,15 +317,23 @@ static GConfLocaleList*
 gconf_locale_list_new (const gchar* locale)
 {
   GConfLocaleListPrivate* priv;
-  GSList* list = NULL;
-  gint c_locale_defined = FALSE;
-  gchar *category_memory, *orig_category_memory;
   
   priv = g_new(GConfLocaleListPrivate, 1);
   
   priv->refcount = 1;
-  priv->list = NULL;
+  priv->list = gconf_split_locale(locale);
+  
+  return (GConfLocaleList*) priv;
+}
 
+gchar**
+gconf_split_locale               (const gchar* locale)
+{
+  gchar** vector = NULL;
+  GSList* list = NULL;
+  gint c_locale_defined = FALSE;
+  gchar *category_memory, *orig_category_memory;
+  
   if (locale == NULL)
     locale = "C";
 
@@ -371,14 +379,14 @@ gconf_locale_list_new (const gchar* locale)
 
     g_assert(n > 0);
     
-    priv->list = g_new0(gchar*, n + 1);
+    vector = g_new0(gchar*, n + 1);
 
     i = 0;
     tmp = list;
 
     while (tmp != NULL)
       {
-        priv->list[i] = tmp->data;
+        vector[i] = tmp->data;
 
         ++i;
         tmp = g_slist_next(tmp);
@@ -386,7 +394,6 @@ gconf_locale_list_new (const gchar* locale)
     
     g_slist_free(list);
   }
-  
-  return (GConfLocaleList*) priv;
-}
 
+  return vector;
+}
