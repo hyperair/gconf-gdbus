@@ -20,6 +20,7 @@
 #include "xml-cache.h"
 #include <gconf/gconf-internals.h>
 
+#include <string.h>
 #include <time.h>
 
 /* This makes hash table safer when debugging */
@@ -44,11 +45,13 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 }
 #endif
 
-static gboolean cache_is_nonexistent  (Cache       *cache,
-                                       const gchar *key);
-static void     cache_set_nonexistent (Cache       *cache,
-                                       const gchar *key,
-                                       gboolean     setting);
+static gboolean cache_is_nonexistent    (Cache       *cache,
+                                         const gchar *key);
+static void     cache_set_nonexistent   (Cache       *cache,
+                                         const gchar *key,
+                                         gboolean     setting);
+static void     cache_unset_nonexistent (Cache       *cache,
+                                         const gchar *key);
 static void     cache_insert          (Cache       *cache,
                                        Dir         *d);
 
@@ -403,8 +406,7 @@ cache_lookup     (Cache        *cache,
         {
           cache_insert (cache, dir);
           cache_add_to_parent (cache, dir);
-          cache_set_nonexistent (cache, dir_get_name (dir),
-                                 FALSE);
+          cache_unset_nonexistent (cache, dir_get_name (dir));
         }
     }
 
@@ -445,6 +447,26 @@ cache_set_nonexistent   (Cache* cache,
           g_free(origkey);
         }
     }
+}
+
+static void
+cache_unset_nonexistent (Cache       *cache,
+                         const gchar *key)
+{
+  char *parent_key;
+
+  g_return_if_fail (key != NULL);
+
+  cache_set_nonexistent (cache, key, FALSE);
+
+  if (strcmp (key, "/") == 0)
+    return;
+
+  parent_key = gconf_key_directory (key);
+
+  cache_unset_nonexistent (cache, parent_key);
+
+  g_free (parent_key);
 }
 
 static void
