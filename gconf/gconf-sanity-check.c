@@ -19,6 +19,7 @@
 
 #include "gconf.h"
 #include "gconf-internals.h"
+#include "gconf-sources.h"
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -146,6 +147,7 @@ check_file_locking (void)
                                  "configuration. If you have an NFS-mounted home directory, "
                                  "either the client or the server may be set up incorrectly. "
                                  "See the rpc.statd and rpc.lockd documentation. "
+                                 "A common cause of this error is that the \"nfslock\" service has been disabled."
                                  "The error was \"%s\" (errno = %d)."),
                                testfile, strerror (errno), errno); 
       goto out;
@@ -166,12 +168,81 @@ static gboolean
 check_gconf (void)
 {
   GConfEngine *conf;
+  GSList* addresses;
+  GSList* tmp;
+  gboolean have_writable = FALSE;
+  gchar* conffile;
+  GConfSources* sources = NULL;
+  GError* error;
+  gboolean retval;
+
+  retval = FALSE;
+  conffile = NULL;
   
-  /* FIXME the main thing is to try to guess at stale locks caused
-   * by kernel crashes, and detect hosed config files.
+  /* If gconfd is already running, it's expected that we won't be able
+   * to get locks etc., and everything is already fine.
+   * Plus we can skip the slow sanity checks like resolve_address.
    */
+  if (gconf_ping_daemon ())
+    {
+      retval = TRUE;
+      goto out;
+    }
   
-  return TRUE;
+  conffile = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+
+  error = NULL;
+  addresses = gconf_load_source_path (conffile, &error);
+
+  if (addresses == NULL)
+    {
+      show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
+                                 "No configuration sources in the configuration file \"%s\"; this means that preferences and other settings can't be saved. %s%s"),
+                               conffile,
+                               error ? _("Error reading the file: ") : "",
+                               error ? error->message : "");
+
+      if (error)
+        g_error_free (error);
+
+      goto out;
+    }
+
+  tmp = addresses;
+  while (tmp != NULL)
+    {
+      GConfSource *source;
+      const char *address;
+
+      address = tmp->data;
+      
+      error = NULL;      
+      source = gconf_resolve_address (address, &error);
+
+      if (error)
+        {
+          show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
+                                     "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"),
+                                   address, conffile, error->message);
+          g_error_free (error);
+          goto out;
+        }
+
+      gconf_source_free (source);
+      
+      g_free (tmp->data);
+      
+      tmp = tmp->next;
+    }
+
+  g_slist_free (addresses);
+  
+  retval = TRUE;
+  
+ out:
+  g_free (conffile);
+
+  return retval;
 }
 
 static void
