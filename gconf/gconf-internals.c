@@ -2230,9 +2230,9 @@ gconf_get_lock(const gchar* lock_directory,
             }
           else
             {
-              gchar buf[256] = { '\0' };
+              gchar buf[2048] = { '\0' };
               gchar* str = NULL;
-              fgets(buf, 255, fp);
+              fgets(buf, 2047, fp);
               fclose(fp);
 
               /* The lockfile format is <pid>:<ior> for gconfd

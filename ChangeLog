@@ -1,5 +1,10 @@
 2000-01-24  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconf-internals.c (gconf_get_lock): Use a long enough
+	buffer to read in the IOR
+
+2000-01-24  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconftool.c (do_load_schema_file): Apply patch from Mirko,
 	properly locates the root node instead of assuming it is the only 
 	node at the toplevel (handles comments, etc).
