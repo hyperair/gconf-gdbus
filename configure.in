@@ -80,7 +80,7 @@ AC_SUBST(ORBIT_LIBS)
 AC_SUBST(ORBIT_CFLAGS)
 
 AC_PATH_PROG(GUILE_CONFIG,guile-config,no)
-if (test x$ORBIT_CONFIG = xno); then
+if (test x$GUILE_CONFIG = xno); then
   AC_MSG_WARN(didn't find guile-config, won't build Guile wrappers)
 else
   GUILE_LIBS=`$GUILE_CONFIG link`
