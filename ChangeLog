@@ -1,3 +1,10 @@
+1999-09-02  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c (main): If the orb init fails, syslog the 
+	GConf error.
+
+	* gconf/gconf-orbit.c: Add tons of error checks/reports
+
 1999-09-01  Tim P. Gerla  <timg@means.net>
 
 	* configure.in: Added test for popt.
@@ -20,7 +27,6 @@
 	(g_conf_nuke_dir): Remove this obsolete function
 	(context_set): don't notify listeners of a change if an error
 	occurred
-	
 
 1999-09-01  Havoc Pennington  <hp@pobox.com>
 

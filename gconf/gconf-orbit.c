@@ -37,6 +37,20 @@
 #include <time.h>
 #include "gconf-internals.h"
 
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
 static CORBA_ORB g_conf_orbit_orb = CORBA_OBJECT_NIL;
 static CORBA_Principal g_conf_request_cookie;
 
@@ -100,7 +114,7 @@ g_conf_ORBit_request_validate(CORBA_unsigned_long request_id,
 /*
  * I bet these will require porting sooner or later
  */
-static void
+static gboolean
 get_exclusive_lock (int fd)
 {
 	/* flock (fd, LOCK_EX); */
@@ -109,7 +123,17 @@ get_exclusive_lock (int fd)
 	lbuf.l_type = F_WRLCK;
 	lbuf.l_whence = SEEK_SET;
 	lbuf.l_start = lbuf.l_len = 0L; /* Lock the whole file.  */
-	fcntl (fd, F_SETLKW, &lbuf);
+	if (fcntl (fd, F_SETLKW, &lbuf) < 0)
+          {
+            if (errno == EINTR)
+              if (fcntl(fd, F_SETLKW, &lbuf) == 0) /* try again */
+                return TRUE;
+            
+            g_conf_set_error(G_CONF_FAILED, _("Could not get lock to set up authentication cookie: %s"), strerror(errno));
+            return FALSE;
+          }
+        else
+          return TRUE;
 }
 
 static void
@@ -145,10 +169,23 @@ g_conf_get_cookie_reliably (const char *setme)
     fd = open (name, O_CREAT|O_WRONLY, S_IRUSR | S_IWUSR);
 
     if (fd < 0)
-      goto out;
-
-    get_exclusive_lock(fd);
-    write(fd, setme, strlen(setme));
+      {
+        g_conf_set_error(G_CONF_FAILED, _("Could not open cookie file `%s': %s"),
+                         name, strerror(errno));
+        goto out;
+      }
+        
+    if (!get_exclusive_lock(fd))
+      goto out; /* error is set */
+    
+    if (write(fd, setme, strlen(setme)) < 0)
+      {
+        g_conf_set_error(G_CONF_FAILED, _("Could not write cookie to file `%s': %s"),
+                         name, strerror(errno));
+        release_lock(fd);
+        goto out;
+      }
+    
     release_lock(fd);
     random_string = g_strdup(setme);
 
@@ -177,12 +214,21 @@ g_conf_get_cookie_reliably (const char *setme)
     } else if(fd < 0) {
       int i;
       fd = open(name, O_RDONLY);
+      if (fd < 0)
+        {
+          g_conf_set_error(G_CONF_FAILED, _("Failed to open cookie file `%s': %s"),
+                           name, strerror(errno));
+          goto out;
+        }
       i = read(fd, buf, sizeof(buf)-1);
       if(i < 0)
-	goto out;
+        {
+          g_conf_set_error(G_CONF_FAILED, _("Failed to read cookie file `%s': %s"),
+                           name, strerror(errno));
+          goto out;
+        }
       buf[i] = '\0';
-    } else /* error */
-      goto out;
+    }
 
     random_string = g_strdup(buf);
   }
@@ -200,7 +246,9 @@ g_conf_cookie_setup(const char *setme)
 {
   g_conf_request_cookie._buffer = g_conf_get_cookie_reliably (setme);
 		
-  g_assert(g_conf_request_cookie._buffer && *g_conf_request_cookie._buffer);
+  if (g_conf_request_cookie._buffer == NULL ||
+      *g_conf_request_cookie._buffer == '\0')
+    return NULL;
 		
   g_conf_request_cookie._length = strlen(g_conf_request_cookie._buffer) + 1;
 
@@ -225,14 +273,17 @@ g_conf_init_orb(int* argc, char** argv)
 	
   if (ev._major != CORBA_NO_EXCEPTION)
     {
-      g_warning("Failure initializing ORB: %s",
-                CORBA_exception_id(&ev));
+      g_conf_set_error(G_CONF_FAILED, _("Failure initializing ORB: %s"),
+                       CORBA_exception_id(&ev));
       CORBA_exception_free(&ev);
       return CORBA_OBJECT_NIL;
     }
 
-  g_conf_cookie_setup(NULL);
-
+  if (g_conf_cookie_setup(NULL) == NULL)
+    {
+      return CORBA_OBJECT_NIL;
+    }
+      
   return retval;
 }
 

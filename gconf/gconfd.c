@@ -847,7 +847,7 @@ main(int argc, char** argv)
 
   if (!g_conf_init_orb(&argc, argv)) /* must do before our own arg parsing */
     {
-      syslog(LOG_ERR, "Failed to init ORB");
+      syslog(LOG_ERR, "Failed to init ORB: %s", g_conf_error());
       exit(1);
     }
 
