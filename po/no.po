@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.6\n"
-"POT-Creation-Date: 2000-08-19 16:51-0400\n"
-"PO-Revision-Date: 2000-08-08 10:07+02:00\n"
+"POT-Creation-Date: 2000-08-30 20:37+0200\n"
+"PO-Revision-Date: 2000-08-30 20:40+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -264,6 +264,78 @@ msgstr "Kunne ikke finne backend modul for `%s'"
 msgid "Failed to shut down backend"
 msgstr "Kunne ikke stenge ned motoren"
 
+#: gconf/gconf-database.c:207
+msgid "Received invalid value in set request"
+msgstr "Mottok ugyldig verdi i sett-forespørsel"
+
+#: gconf/gconf-database.c:215
+#, c-format
+msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
+msgstr ""
+"Kunne ikke forstå CORBA-verdien mottatt i sett-forespørsel etter nøkkel `%s'"
+
+#: gconf/gconf-database.c:430
+msgid "Received request to drop all cached data"
+msgstr "Mottok forespørsel om å slippe alle mellomlagrede data"
+
+#: gconf/gconf-database.c:444
+msgid "Received request to sync synchronously"
+msgstr "Mottok forespørsel om å utføre synkron synkronisering"
+
+#: gconf/gconf-database.c:510
+msgid "Fatal error: failed to get object reference for ConfigDatabase"
+msgstr "Fatal feil: kunne ikke hente objektreferanse for ConfigDatabase"
+
+#: gconf/gconf-database.c:626
+#, c-format
+msgid "Failed to sync one or more sources: %s"
+msgstr "Kunne ikke synkronisere en eller flere kilder: %s"
+
+#: gconf/gconf-database.c:803 gconf/gconf-sources.c:1205
+#, c-format
+msgid "Error getting value for `%s': %s"
+msgstr "Feil under henting av verdi for `%s': %s"
+
+#: gconf/gconf-database.c:840
+#, c-format
+msgid "Error setting value for `%s': %s"
+msgstr "Feil under setting av verdi for `%s': %s"
+
+#: gconf/gconf-database.c:875
+#, c-format
+msgid "Error unsetting `%s': %s"
+msgstr "Feil under nullstilling av `%s': %s"
+
+#: gconf/gconf-database.c:896
+#, c-format
+msgid "Error getting default value for `%s': %s"
+msgstr "Feil under henting av standardverdi for `%s': %s"
+
+#: gconf/gconf-database.c:934
+#, c-format
+msgid "Error checking existence of `%s': %s"
+msgstr "Feil ved sjekking av eksisterende `%s': %s"
+
+#: gconf/gconf-database.c:958
+#, c-format
+msgid "Error removing dir `%s': %s"
+msgstr "Feil under fjerning av katalog `%s': %s"
+
+#: gconf/gconf-database.c:984
+#, c-format
+msgid "Failed to get all entries in `%s': %s"
+msgstr "Fikk ikke alle oppføringene i `%s': %s"
+
+#: gconf/gconf-database.c:1010
+#, c-format
+msgid "Error listing dirs in `%s': %s"
+msgstr "Feil under listing av kataloger i `%s': %s"
+
+#: gconf/gconf-database.c:1031
+#, c-format
+msgid "Error setting schema for `%s': %s"
+msgstr "Feil under setting av schema for `%s': %s"
+
 #: gconf/gconf-error.c:39
 msgid "Success"
 msgstr "Suksess"
@@ -323,6 +395,191 @@ msgstr "Operasjon ikke tillatt uten konfigurasjonstjener"
 #: gconf/gconf-error.c:53
 msgid "Failed to get a lock"
 msgstr "Fikk ingen lås"
+
+#: gconf/gconf-glib.c:631
+#, c-format
+msgid ""
+"Error on line %d char %d: %s\n"
+"(Some surrounding text was '%s')\n"
+msgstr ""
+"Feil på linje %d tegn %d: %s\n"
+"(Tekst i nærheten var '%s')\n"
+
+#: gconf/gconf-glib.c:751
+msgid ""
+"Text ended in the middle of an entity, or entity name too long to be valid "
+"('&' should begin an entity such as '&quot;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:803
+#, c-format
+msgid ""
+"Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
+msgstr ""
+
+#: gconf/gconf-glib.c:843
+msgid ""
+"Markup text ended in the middle of a character reference, just after '&#'"
+msgstr ""
+
+#: gconf/gconf-glib.c:869
+#, c-format
+msgid ""
+"Character reference contained non-digit '%s' ('&#' should begin a reference "
+"to a unicode character, such as '&#2342;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:893
+msgid ""
+"Text ended in the middle of an character reference ('&#' should begin a "
+"character reference such as '&#2342;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:918
+#, c-format
+msgid ""
+"Couldn't parse character reference '%s' ('&#' must begin a character "
+"reference such as '&#2343;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:940
+#, c-format
+msgid ""
+"Character code %#lx is not allowed in XML documents or is not a valid "
+"Unicode character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1015
+msgid ""
+"Documented ended just after an '&', '&' should begin an entity or character "
+"reference."
+msgstr ""
+
+#: gconf/gconf-glib.c:1029
+msgid ""
+"'<' or '>' character not allowed here; only allowed around tags, for example "
+"<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
+"&lt; and &gt;"
+msgstr ""
+
+#: gconf/gconf-glib.c:1084
+#, c-format
+msgid "Character '%s' is not valid at the start of an attribute name"
+msgstr ""
+
+#: gconf/gconf-glib.c:1111
+msgid "Document ended just after attribute name"
+msgstr ""
+
+#: gconf/gconf-glib.c:1122
+msgid "Attribute name must be immediately followed by an '=' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1137
+msgid ""
+"'=' character after attribute must be immediately followed by an '\"' "
+"character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1163
+#, c-format
+msgid ""
+"Character '%c' found inside an attribute value; perhaps your attribute value "
+"is missing the closing quotation mark '\"'"
+msgstr ""
+
+#: gconf/gconf-glib.c:1183
+msgid ""
+"Ran out of text before a quote mark ('\"') was seen at the end of an "
+"attribute value"
+msgstr ""
+
+#: gconf/gconf-glib.c:1196
+msgid ""
+"Text ends immediately after an attribute value, before the element was closed"
+msgstr ""
+
+#: gconf/gconf-glib.c:1510
+msgid "Missing '<' at start of element"
+msgstr ""
+
+#: gconf/gconf-glib.c:1521
+msgid "Document ended just after '<' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1549
+msgid "No closing '>' found for a <? or <!"
+msgstr ""
+
+#: gconf/gconf-glib.c:1578
+#, c-format
+msgid "Character '%s' is not valid at the start of an element name"
+msgstr ""
+
+#: gconf/gconf-glib.c:1602 gconf/gconf-glib.c:1615
+msgid "Document ended just after element name, no '>' seen"
+msgstr ""
+
+#: gconf/gconf-glib.c:1640
+#, c-format
+msgid "Elements should be closed with '>' or '/>', not with '%s'"
+msgstr ""
+
+#: gconf/gconf-glib.c:1657
+msgid ""
+"Element ended just after '/', no '>' seen; empty elements should end with "
+"'/>'"
+msgstr ""
+
+#: gconf/gconf-glib.c:1696
+msgid "Close tag not found at end of element"
+msgstr ""
+
+#: gconf/gconf-glib.c:1711
+msgid "Close tag ends just after '<' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1725
+msgid "Close tag should begin with '</', '/' character is missing"
+msgstr ""
+
+#: gconf/gconf-glib.c:1739
+msgid "Close tag ends just after '/' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1774
+msgid "Document ended just after element name in close tag, no '>' seen"
+msgstr ""
+
+#: gconf/gconf-glib.c:1790
+msgid "Document ended just after close tag name, no '>' seen"
+msgstr ""
+
+#: gconf/gconf-glib.c:1809
+#, c-format
+msgid "Close tag '%s' does not match opening tag '%s'"
+msgstr ""
+
+#: gconf/gconf-glib.c:2147
+#, c-format
+msgid ""
+"Invalid UTF-8 character at byte %d in marked-up text. Some text before the "
+"bad character was '%s'"
+msgstr ""
+
+#: gconf/gconf-glib.c:2204
+msgid "The marked-up text contained nothing but whitespace."
+msgstr ""
+
+#: gconf/gconf-glib.c:10668
+#, c-format
+msgid "Failed to open file '%s': %s"
+msgstr "Kunne ikke åpne fil '%s': %s"
+
+#: gconf/gconf-glib.c:10685
+#, c-format
+msgid "Error reading file '%s': %s"
+msgstr "Feil under lesing av fil '%s': %s"
 
 #: gconf/gconf-internals.c:100
 #, c-format
@@ -391,7 +648,7 @@ msgstr "Streng i sitattegn begynner ikke med et sitattegn"
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Streng i anførselstegn slutter ikke med et sitattegn"
 
-#: gconf/gconf-internals.c:2144 gconf/gconf.c:2643
+#: gconf/gconf-internals.c:2144 gconf/gconf.c:2624
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA feil: %s"
@@ -529,11 +786,6 @@ msgstr "Feil under henting av metainfo: %s"
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr "Nøkkel `%s' listet som schema for nøkkel `%s' lagrer type `%s'"
 
-#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
-#, c-format
-msgid "Error getting value for `%s': %s"
-msgstr "Feil under henting av verdi for `%s': %s"
-
 #: gconf/gconf-value.c:96
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
@@ -599,7 +851,7 @@ msgstr "Forsto ikke `%s' (ekstra \"unescaped\" ')' funnet inne i par)"
 msgid "`%s': %s"
 msgstr "`%s': %s"
 
-#: gconf/gconf.c:271
+#: gconf/gconf.c:269
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Tjener kunne ikke finne adressen `%s'"
@@ -623,91 +875,73 @@ msgstr ""
 "fra oaf_activate_from_id() og satte ikke et unntak som forklarte problemet. "
 "Vennligst fyll ut en feilrapport for OAF."
 
-#: gconf/gconf.c:1677
+#: gconf/gconf.c:1753
 msgid "Failed to init GConf, exiting\n"
 msgstr "Kunne ikke initialisere GConf, avslutter\n"
 
-#: gconf/gconf.c:1714
+#: gconf/gconf.c:1790
 msgid "Must begin with a slash (/)"
 msgstr "Må begynne med en skråstrek (/)"
 
-#: gconf/gconf.c:1736
+#: gconf/gconf.c:1812
 msgid "Can't have two slashes (/) in a row"
 msgstr "Kan ikke ha to skråstreker (/) på rad"
 
-#: gconf/gconf.c:1738
+#: gconf/gconf.c:1814
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kan ikke ha punktum (.) rett etter en skråstrek (/)"
 
-#: gconf/gconf.c:1759
+#: gconf/gconf.c:1835
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' er et ugyldig tegn i nøkkel/katalog navn"
 
-#: gconf/gconf.c:1773
+#: gconf/gconf.c:1849
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Nøkkel/katalog kan ikke slutte med en skråstrek (/)"
 
-#: gconf/gconf.c:2115
+#: gconf/gconf.c:2096
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Feil under nedstenging av konfigurasjonstjeneren: %s"
 
-#: gconf/gconf.c:2176
+#: gconf/gconf.c:2157
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Forventet flyttall, mottok %s"
 
-#: gconf/gconf.c:2211
+#: gconf/gconf.c:2192
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Forventet heltall, mottok %s"
 
-#: gconf/gconf.c:2246
+#: gconf/gconf.c:2227
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Forventet streng, mottok %s"
 
-#: gconf/gconf.c:2283
+#: gconf/gconf.c:2264
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Forventet boolsk verdi, mottok %s"
 
-#: gconf/gconf.c:2316
+#: gconf/gconf.c:2297
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Forventet schema, mottok %s"
 
-#: gconf/gconfd.c:511
-msgid "Received invalid value in set request"
-msgstr "Mottok ugyldig verdi i sett-forespørsel"
-
-#: gconf/gconfd.c:519
-#, c-format
-msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
-msgstr ""
-"Kunne ikke forstå CORBA-verdien mottatt i sett-forespørsel etter nøkkel `%s'"
-
-#: gconf/gconfd.c:789
+#: gconf/gconfd.c:200
 msgid "Shutdown request received"
 msgstr "Anmodning om nedstenging mottatt"
 
-#: gconf/gconfd.c:802
-msgid "Received request to drop all cached data"
-msgstr "Mottok forespørsel om å slippe alle mellomlagrede data"
-
-#: gconf/gconfd.c:822
-msgid "Received request to sync synchronously"
-msgstr "Mottok forespørsel om å utføre synkron synkronisering"
-
-#: gconf/gconfd.c:861
+#: gconf/gconfd.c:232
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
 "gconfd kompilert med debugging; forsøker å laste gconf.sh fra kildekatalogen"
 
-#: gconf/gconfd.c:879
+#: gconf/gconfd.c:250
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -715,7 +949,7 @@ msgstr ""
 "Ingen konfigurasjonsfiler funnet, forsøker å bruke standard "
 "konfigurasjonskilde `%s'"
 
-#: gconf/gconfd.c:888
+#: gconf/gconfd.c:259
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -723,12 +957,12 @@ msgstr ""
 "Ingen konfigurasjonskilder i kildestien, konfigurasjonen vil ikke bli "
 "lagret; edit"
 
-#: gconf/gconfd.c:901
+#: gconf/gconfd.c:273
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Feil under lasting av noen konfigurasjonskilder: %s"
 
-#: gconf/gconfd.c:913
+#: gconf/gconfd.c:285
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -736,7 +970,7 @@ msgstr ""
 "Kunne ikke slå opp noen adresser for konfigurasjonskilde, kan ikke laste "
 "eller lagre konfigurasjonsdata"
 
-#: gconf/gconfd.c:930
+#: gconf/gconfd.c:302
 msgid ""
 "No writeable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -744,24 +978,28 @@ msgstr ""
 "Ingen skrivbar konfigurasjonskilde funnet, kan ikke lagre deler av "
 "konfigurasjonsendringene"
 
-#: gconf/gconfd.c:955 gconf/gconfd.c:967
+#: gconf/gconfd.c:327 gconf/gconfd.c:339
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Mottok signal %d, stenger ned."
 
-#: gconf/gconfd.c:972
+#: gconf/gconfd.c:344
 #, c-format
 msgid "Received signal %d, ignoring"
 msgstr "Mottok signal %d, ignorerer"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:1013
+#: gconf/gconfd.c:390
 #, c-format
-msgid "starting, pid %u user `%s'"
-msgstr "starter, pid %u bruker `%s'"
+msgid "starting (version %s), pid %u user '%s'"
+msgstr "starter (versjon %s), pid %u bruker '%s'"
 
-#: gconf/gconfd.c:1036
+#: gconf/gconfd.c:394
+msgid "GConf was built with debugging features enabled"
+msgstr "GConf er bygget med feilsøkingsfunksjoner aktivert"
+
+#: gconf/gconfd.c:417
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to OAF "
 "maintainers"
@@ -769,11 +1007,11 @@ msgstr ""
 "Kunne ikke initialisere Object Activation Framework: vennligst send en "
 "feilrapport til OAF utviklerene"
 
-#: gconf/gconfd.c:1056
+#: gconf/gconfd.c:437
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Kunne ikke hente objektreferanse for ConfigServer"
 
-#: gconf/gconfd.c:1075
+#: gconf/gconfd.c:457
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
@@ -781,91 +1019,81 @@ msgstr ""
 "OAF vet ikke om vår IID; indikerer feil i installasjon; kan ikke\n"
 "registrere; avslutter\n"
 
-#: gconf/gconfd.c:1079
+#: gconf/gconfd.c:461
 msgid "Another gconfd already registered with OAF; exiting\n"
 msgstr "En annen gconfd er allerede registrert hos OAF; avslutter\n"
 
-#: gconf/gconfd.c:1084
+#: gconf/gconfd.c:466
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Ukjent feil ved registrering av gconfd hos OAF; avslutter\n"
 
-#: gconf/gconfd.c:1100
+#: gconf/gconfd.c:487
 msgid "Exiting"
 msgstr "Avslutter"
 
-#: gconf/gconfd.c:1194
-#, c-format
-msgid "Failed to sync one or more sources: %s"
-msgstr "Kunne ikke synkronisere en eller flere kilder: %s"
-
-#: gconf/gconfd.c:1561
-#, c-format
-msgid "Error setting value for `%s': %s"
-msgstr "Feil under setting av verdi for `%s': %s"
-
-#: gconf/gconfd.c:1593
-#, c-format
-msgid "Error unsetting `%s': %s"
-msgstr "Feil under nullstilling av `%s': %s"
-
-#: gconf/gconfd.c:1614
-#, c-format
-msgid "Error getting default value for `%s': %s"
-msgstr "Feil under henting av standardverdi for `%s': %s"
-
-#: gconf/gconfd.c:1652
-#, c-format
-msgid "Error checking existence of `%s': %s"
-msgstr "Feil ved sjekking av eksisterende `%s': %s"
-
-#: gconf/gconfd.c:1676
-#, c-format
-msgid "Error removing dir `%s': %s"
-msgstr "Feil under fjerning av katalog `%s': %s"
-
-#: gconf/gconfd.c:1701
-#, c-format
-msgid "Failed to get all entries in `%s': %s"
-msgstr "Fikk ikke alle oppføringene i `%s': %s"
-
-#: gconf/gconfd.c:1725
-#, c-format
-msgid "Error listing dirs in `%s': %s"
-msgstr "Feil under listing av kataloger i `%s': %s"
-
-#: gconf/gconfd.c:1745
-#, c-format
-msgid "Error setting schema for `%s': %s"
-msgstr "Feil under setting av schema for `%s': %s"
-
-#: gconf/gconfd.c:1913
-msgid "Attempt to unregister invalid context ID"
-msgstr "Forsøk på å avregistrere ugyldig kontekst ID"
-
-#: gconf/gconfd.c:1920
-#, c-format
-msgid "Bad context ID %lu, request ignored"
-msgstr "Ugyldig kontekst-ID %lu, forespørsel ignorert"
-
-#: gconf/gconfd.c:1928
-#, c-format
-msgid "Already-unregistered context ID %lu, request ignored"
-msgstr "Allerede avregistrert kontekst-ID %lu, forespørsel ignorert"
-
-#: gconf/gconfd.c:1953
-#, c-format
-msgid "Attempt to use invalid context ID %lu"
-msgstr "Forsøk på å bruke ugyldig kontekst-ID %lu"
-
-#: gconf/gconfd.c:1963
-#, c-format
-msgid "Attempt to use already-unregistered context ID %lu"
-msgstr "Forsøk på å bruke allerede avregistrert kontekst-ID %lu"
-
-#: gconf/gconfd.c:2123
+#: gconf/gconfd.c:814
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerer unntak: %s"
+
+#: gconf/gconfd.c:872
+#, c-format
+msgid "Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"
+msgstr ""
+"Kunne ikke opprette ~/.gconfd/saved_state for å lagre gconfd's tilstand: %s"
+
+#: gconf/gconfd.c:879
+#, c-format
+msgid "Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"
+msgstr ""
+"Kunne ikke skrive til ~/.gconfd/saved_state for å lagre gconfd's tilstand: %s"
+
+#: gconf/gconfd.c:907 gconf/gconfd.c:993
+#, c-format
+msgid "Didn't understand element '%s' in saved state file"
+msgstr "Forsto ikke elementet '%s' i lagret tilstandsfil"
+
+#: gconf/gconfd.c:918
+msgid "No location attribute on listener element in saved state file"
+msgstr ""
+"Ingen lokasjonsattributt i lytter-elementet i den lagrede tilstandsfilen"
+
+#: gconf/gconfd.c:925
+msgid "No IOR attribute on listener element in saved state file"
+msgstr "Ingen IOR-attributt i lytter-elementet i lagret tilstandsfil"
+
+#: gconf/gconfd.c:932
+msgid "No connection ID attribute on listener element in saved state file"
+msgstr "Ingen forbindelses-ID-attributt i lytter-element i lagret tilstandsfil"
+
+#: gconf/gconfd.c:1014
+msgid "Strange non-element node in saved state file"
+msgstr "Underlig ikke-element node i lagret tilstandsfil"
+
+#: gconf/gconfd.c:1043
+#, c-format
+msgid "Unable to open saved state file '%s': %s"
+msgstr "Kunne ikke åpne lagret tilstandsfil '%s': %s"
+
+#: gconf/gconfd.c:1056
+#, c-format
+msgid "Failed to restore saved state from file '%s': %s"
+msgstr "Kunne ikke gjenopprette lagret tilstandsfil fra fil '%s': %s"
+
+#: gconf/gconfd.c:1065
+msgid "Root node of saved state file should be an element"
+msgstr "Root-node av lagret tilstandsfil skulle vært et element"
+
+#: gconf/gconfd.c:1075
+#, c-format
+msgid "Root node of saved state file should be 'gconfd_logfile', not '%s'"
+msgstr ""
+"Root-node i lagret tilstandsfil skulle vært 'gconfd_logfile', ikke '%s'"
+
+#: gconf/gconfd.c:1088
+msgid "Funny non-element node under <gconfd_logfile> in saved state file"
+msgstr ""
+"Underlig ikke-element node under <gconfd_logfile> i lagret tilstandsfil"
 
 #: gconf/gconftool.c:76
 msgid "Help options"
