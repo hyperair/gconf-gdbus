@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2001-01-24 17:03+0100\n"
+"POT-Creation-Date: 2001-02-09 14:31+0100\n"
 "PO-Revision-Date: 2000-12-14 13:19+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -28,17 +28,17 @@ msgstr "Öppnade BerkeleyDB-källa vid rot %s"
 msgid "Initializing BDB backend module"
 msgstr "Initierar BDB-backendmodulen"
 
-#: backends/dir-utils.c:88
+#: backends/dir-utils.c:108
 #, c-format
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "Kunde inte hitta %s-rotkatalogen i adressen \"%s\""
 
-#: backends/dir-utils.c:104 backends/xml-backend.c:301 backends/xml-dir.c:1035
+#: backends/dir-utils.c:124 backends/xml-backend.c:301 backends/xml-dir.c:1051
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Kunde inte skapa katalogen \"%s\": %s"
 
-#: backends/dir-utils.c:192
+#: backends/dir-utils.c:212
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "Kan inte läsa eller skriva till %s-rotkatalogen i adressen \"%s\""
@@ -103,58 +103,63 @@ msgstr "Kunde inte ta status på \"%s\": %s"
 msgid "XML filename `%s' is a directory"
 msgstr "XML-filnamnet \"%s\" är en katalog"
 
-#: backends/xml-dir.c:293 backends/xml-dir.c:300
+#: backends/xml-dir.c:298 backends/xml-dir.c:305
 #, c-format
 msgid "Failed to delete `%s': %s"
 msgstr "Misslyckades med att ta bort \"%s\": %s"
 
-#: backends/xml-dir.c:341
+#: backends/xml-dir.c:346
 #, c-format
 msgid "Failed to write file `%s': %s"
 msgstr "Misslyckades med att skriva filen \"%s\": %s"
 
-#: backends/xml-dir.c:357 backends/xml-dir.c:367
+#: backends/xml-dir.c:359
+#, c-format
+msgid "Failed to set mode on `%s': %s"
+msgstr "Misslyckades med att sätta läge på \"%s\": %s"
+
+#: backends/xml-dir.c:373 backends/xml-dir.c:383
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "Misslyckades med att byta namn på \"%s\" till \"%s\": %s"
 
-#: backends/xml-dir.c:373
+#: backends/xml-dir.c:389
 #, c-format
 msgid "Failed to restore `%s' from `%s': %s"
 msgstr "Misslyckades med att återskapa \"%s\" från \"%s\": %s"
 
-#: backends/xml-dir.c:385
+#: backends/xml-dir.c:401
 #, c-format
 msgid "Failed to delete old file `%s': %s"
 msgstr "Misslyckades med att ta bort den gamla filen \"%s\": %s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:790
+#: backends/xml-dir.c:806
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Misslyckades med att ta status på \"%s\": %s"
 
-#: backends/xml-dir.c:934
+#: backends/xml-dir.c:950
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "Dubbla \"%s\"-poster i \"%s\", ignorerar"
 
-#: backends/xml-dir.c:956
+#: backends/xml-dir.c:972
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Post utan namn i XML-filen \"%s\", ignorerar"
 
-#: backends/xml-dir.c:963
+#: backends/xml-dir.c:979
 #, c-format
 msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
 msgstr "Översta noden i XML-filen \"%s\" är inte ett <entry>, ignorerar"
 
-#: backends/xml-dir.c:1051
+#: backends/xml-dir.c:1067
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "Misslyckades med att skapa filen \"%s\": %s"
 
-#: backends/xml-dir.c:1059 gconf/gconf-internals.c:2442
+#: backends/xml-dir.c:1075 gconf/gconf-internals.c:2442
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Misslyckades med att stänga filen \"%s\": %s"
