@@ -25,9 +25,10 @@
 #include <gmodule.h>
 #include <gconf/gconf-sources.h>
 
-/* This vtable is more complicated than strictly necessary, hoping that
-   backends can be smart and optimize some calls
-*/
+/*
+ * This vtable is more complicated than strictly necessary, hoping
+ * that backends can be smart and optimize some calls
+ */
 
 typedef struct _GConfBackendVTable GConfBackendVTable;
 

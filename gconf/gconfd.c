@@ -113,6 +113,7 @@ struct _GConfContext {
                            and has to be re-instated.
                         */
   GTime last_access;
+  guint sync_idle;
 };
 
 static GConfContext* context_new(GConfSources* sources);
@@ -1074,6 +1075,8 @@ context_new(GConfSources* sources)
   ctx->sources = sources;
 
   ctx->last_access = time(NULL);
+
+  ctx->sync_idle = 0;
   
   return ctx;
 }
@@ -1086,12 +1089,19 @@ context_destroy(GConfContext* ctx)
       g_assert(ctx->sources != NULL);
       g_assert(ctx->saved_address == NULL);
 
+      if (ctx->sync_idle != 0)
+        {
+          g_source_remove(ctx->sync_idle);
+          ctx->sync_idle = 0;
+        }
+      
       gconf_listeners_destroy(ctx->listeners);
       gconf_sources_destroy(ctx->sources);
     }
   else
     {
       g_assert(ctx->saved_address != NULL);
+      g_assert(ctx->sync_idle == 0);
       
       g_free(ctx->saved_address);
     }
@@ -1104,7 +1114,8 @@ context_hibernate(GConfContext* ctx)
 {
   g_return_if_fail(ctx->listeners != NULL);
   g_return_if_fail(gconf_listeners_count(ctx->listeners) == 0);
-  
+  g_return_if_fail(ctx->sync_idle == 0);
+      
   gconf_listeners_destroy(ctx->listeners);
   ctx->listeners = NULL;
 
@@ -1418,6 +1429,21 @@ context_set_schema(GConfContext* ctx, const gchar* key,
     }
 }
 
+static gint
+context_sync_idle(GConfContext* ctx)
+{
+  if (!gconf_sources_sync_all(ctx->sources))
+    {
+      gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
+                gconf_error());
+    }
+
+  ctx->sync_idle = 0;
+  
+  /* Remove the idle function by returning FALSE */
+  return FALSE; 
+}
+
 static void
 context_sync(GConfContext* ctx)
 {
@@ -1425,14 +1451,10 @@ context_sync(GConfContext* ctx)
   
   ctx->last_access = time(NULL);
   
-  gconf_log(GCL_DEBUG, "Received request to sync all config data");
-  
-  if (!gconf_sources_sync_all(ctx->sources))
-    {
-      gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
-             gconf_error());
-      return;
-    }
+  gconf_log(GCL_DEBUG, "Received suggestion to sync all config data");
+
+  if (ctx->sync_idle != 0)
+    ctx->sync_idle = g_idle_add((GSourceFunc)context_sync_idle, ctx);
 }
 
 /*

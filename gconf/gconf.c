@@ -1,4 +1,3 @@
-
 /* GConf
  * Copyright (C) 1999 Red Hat Inc.
  *
@@ -215,10 +214,7 @@ gconf_engine_unref        (GConfEngine* conf)
                                                      have the
                                                      connections to
                                                      remove */
-
-      if (cs == CORBA_OBJECT_NIL)
-        g_warning("Config server is down while destroying GConf %p", conf);
-
+      
       CORBA_exception_init(&ev);
 
       removed = ctable_remove_by_conf(ctable, conf);
@@ -355,7 +351,8 @@ gconf_get(GConfEngine* conf, const gchar* key, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), NULL);
+      g_return_val_if_fail(err == NULL || *err != NULL, NULL);
+
       return NULL;
     }
 
@@ -396,7 +393,8 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), FALSE);
+      g_return_val_if_fail(err == NULL || *err != NULL, FALSE);
+
       return FALSE;
     }
 
@@ -435,7 +433,8 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), FALSE);
+      g_return_val_if_fail(err == NULL || *err != NULL, FALSE);
+
       return FALSE;
     }
 
@@ -474,7 +473,8 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), NULL);
+      g_return_val_if_fail(err == NULL || *err != NULL, NULL);
+
       return NULL;
     }
 
@@ -536,7 +536,8 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), NULL);
+      g_return_val_if_fail(((err == NULL) || (*err && ((*err)->num == GCONF_NO_SERVER))), NULL);
+
       return NULL;
     }
 
@@ -573,7 +574,7 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
 }
 
 void 
-gconf_sync(GConfEngine* conf, GConfError** err)
+gconf_suggest_sync(GConfEngine* conf, GConfError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
@@ -583,7 +584,8 @@ gconf_sync(GConfEngine* conf, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)));
+      g_return_if_fail(err == NULL || *err != NULL);
+
       return;
     }
 
@@ -614,7 +616,8 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
   
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), FALSE);
+      g_return_val_if_fail(err == NULL || *err != NULL, FALSE);
+
       return FALSE;
     }
   
@@ -685,8 +688,11 @@ try_to_contact_server(GConfError** err)
   ior = gconf_read_server_ior(err);
 
   if (ior == NULL)
-    return CORBA_OBJECT_NIL;
-  
+    {
+      g_return_val_if_fail(err == NULL || (*err != NULL), CORBA_OBJECT_NIL);
+      return CORBA_OBJECT_NIL;
+    }
+      
   if (ior != NULL)
     {
       CORBA_Environment ev;
@@ -730,9 +736,23 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
   
   server = try_to_contact_server(err);
 
-  if (!start_if_not_found)
-    return server;
+  if (start_if_not_found)
 
+    {
+      /*
+       * We aren't interested in this error;
+       * only in the success or failure of the
+       * attempt to spawn the server ourselves.
+       */
+      if (err && *err)
+        {
+          gconf_error_destroy(*err);
+          *err = NULL;
+        }
+    }
+  else
+    return server; /* return what we have, NIL or not */
+  
   if (server == CORBA_OBJECT_NIL)
     {
       pid_t pid;
@@ -1207,7 +1227,8 @@ gconf_shutdown_daemon(GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)));
+      g_return_if_fail(err == NULL || *err != NULL);
+
       return;
     }
 

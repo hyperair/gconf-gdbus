@@ -1,5 +1,42 @@
 1999-10-17  Havoc Pennington  <hp@pobox.com>
 
+	* tests/runtests.sh: Make this script work
+
+	* gconf/gconftool.c: Don't use -s for --spawn, since it's used for
+	--set.
+
+	* gconf/gconf.c (gconf_get_config_server): Clear the error
+	from the initial ping if we're asked to start the server.
+	(gconf_engine_unref): No error spew if server is down when 
+	the engine is destroyed.
+
+	Throughout: Make sure error is set but don't require a 
+	specific error type
+
+	* gconf/gconf-internals.c (gconf_read_server_ior): Set error 
+	if the server info file doesn't exist
+
+	* gconf/gconf.c (try_to_contact_server): Add a check for setting 
+	the error properly
+
+	* gconf/gconftool.c (main): Switch to gconf_suggest_sync()
+	instead of gconf_sync()
+
+	* gconf/gconfd.c: Add a GConfContext::sync_idle field, to 
+	store the source ID of an idle function that performs a sync.
+	(context_destroy): Remove the sync idle 
+	(context_hibernate): Check that sync idle is 0
+	(context_sync): Add the sync idle if it doesn't exist
+
+	* gconf/gconf.c (gconf_suggest_sync): gconf_sync() renamed to
+	gconf_suggest_sync(), because a sync is for all clients;
+	suggest_sync() means "I just finished a large block of operations,
+	so I'm suggesting that it would be efficient and data-preserving
+	to schedule a sync in the near future." gconf_sync() didn't 
+	make much sense because it was global, not per-client.
+	
+1999-10-17  Havoc Pennington  <hp@pobox.com>
+
 	* For all files, s/G_CONF/GCONF
 
 1999-10-12  Havoc Pennington  <hp@pobox.com>

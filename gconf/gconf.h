@@ -60,7 +60,7 @@ GSList*      gconf_all_entries    (GConfEngine* conf, const gchar* dir, GConfErr
 
 GSList*      gconf_all_dirs       (GConfEngine* conf, const gchar* dir, GConfError** err);
 
-void         gconf_sync           (GConfEngine* conf, GConfError** err);
+void         gconf_suggest_sync           (GConfEngine* conf, GConfError** err);
 
 gboolean     gconf_dir_exists     (GConfEngine* conf, const gchar* dir, GConfError** err);
 

@@ -157,7 +157,7 @@ struct poptOption options[] = {
   },
   { 
     "spawn",
-    's',
+    '\0',
     POPT_ARG_NONE,
     &spawn_gconfd,
     0,
@@ -216,7 +216,6 @@ static void do_all_pairs(GConfEngine* conf, const gchar** args);
 static void list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth);
 
 /* FIXME um, break this function up... */
-/* FIXME do a single sync on exit */
 int 
 main (int argc, char** argv)
 {
@@ -529,7 +528,7 @@ main (int argc, char** argv)
 
       err = NULL;
 
-      gconf_sync(conf, &err);
+      gconf_suggest_sync(conf, &err);
 
       if (err != NULL)
         {
@@ -628,7 +627,7 @@ main (int argc, char** argv)
       gconf_value_destroy(val);
 
       err = NULL;
-      gconf_sync(conf, &err);
+      gconf_suggest_sync(conf, &err);
       
       if (err != NULL)
         {
@@ -680,7 +679,7 @@ main (int argc, char** argv)
         }
 
       err = NULL;
-      gconf_sync(conf, NULL); /* ignore errors */
+      gconf_suggest_sync(conf, NULL); /* ignore errors */
     }
 
   if (all_subdirs_mode)

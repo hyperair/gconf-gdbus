@@ -162,6 +162,8 @@ gconf_read_server_ior(GConfError** err)
   */
   if (!gconf_file_exists(info_file))
     {
+      if (err)
+        *err = gconf_error_new(GCONF_FAILED, _("Server information file `%s' is missing"), info_file);
       g_free(info_file);
       return NULL;
     }
@@ -173,7 +175,7 @@ gconf_read_server_ior(GConfError** err)
   if (fd < 0)
     {
       if (err)
-        *err = gconf_error_new(GCONF_FAILED, _("info file open failed: %s"), strerror(errno));
+        *err = gconf_error_new(GCONF_FAILED, _("Info file open failed: %s"), strerror(errno));
       return NULL;
     }
   else
