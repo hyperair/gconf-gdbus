@@ -1,16 +1,17 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Christian Meyer <linux@chrisime.de>, 2000.
+# Kai Lahmann <kl@linuxfaqs.de>, 2000
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gConf 0.5\n"
-"POT-Creation-Date: 2000-08-19 16:51-0400\n"
-"PO-Revision-Date: 2000-03-30 16:29+02:00\n"
-"Last-Translator: Matthias Warkus <mawa@iname.com>\n"
-"Language-Team: German <de@li.org>\n"
+"POT-Creation-Date: 2000-09-08 19:22+0200\n"
+"PO-Revision-Date: 2000-09-08 19:21+0200\n"
+"Last-Translator: Christian Meyer <linux@chrisime.de>\n"
+"Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: backends/xml-backend.c:247
@@ -240,34 +241,107 @@ msgid "Missing both car and cdr values from pair in XML file"
 msgstr "car und cdr vom XML-Wertepaar fehlen"
 
 #. -- end debug only
-#: gconf/gconf-backend.c:180
+#: gconf/gconf-backend.c:182
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Keine Datei `%s'\n"
 
-#: gconf/gconf-backend.c:208
+#: gconf/gconf-backend.c:210
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Ungültige Adresse `%s'"
 
-#: gconf/gconf-backend.c:233
+#: gconf/gconf-backend.c:235
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr ""
 "GConf funktioniert nicht ohne Unterstützung für dynamische Module (gmodule)"
 
-#: gconf/gconf-backend.c:243
+#: gconf/gconf-backend.c:245
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Fehler beim Öffnen von Modul `%s': %s\n"
 
-#: gconf/gconf-backend.c:275
+#: gconf/gconf-backend.c:277
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Konnte Backend-Modul für `%s' nicht finden"
 
-#: gconf/gconf-backend.c:312
+#: gconf/gconf-backend.c:314
 msgid "Failed to shut down backend"
 msgstr "Konnte Backend nicht herunterfahren"
+
+#: gconf/gconf-database.c:209
+msgid "Received invalid value in set request"
+msgstr "Habe ungültigen Wert in Einstellungsanfrage erhalten"
+
+#: gconf/gconf-database.c:217
+#, c-format
+msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
+msgstr ""
+"Konnte Sinn des CORBA-Wertes in Einstellungsanfrage für Schlüssel `%s' nicht "
+"ausmachen"
+
+#: gconf/gconf-database.c:432
+msgid "Received request to drop all cached data"
+msgstr "Habe Anfrage zum Fallenlassen aller Daten im Cache erhalten"
+
+#: gconf/gconf-database.c:446
+msgid "Received request to sync synchronously"
+msgstr "Habe Anfrage zum synchronen Synchronisieren erhalten"
+
+#: gconf/gconf-database.c:511
+msgid "Fatal error: failed to get object reference for ConfigDatabase"
+msgstr "Schwere Fehler: Konnte Objektreferenz für ConfigServer nicht erhalten"
+
+#: gconf/gconf-database.c:629
+#, c-format
+msgid "Failed to sync one or more sources: %s"
+msgstr "Konnte ein oder mehrere Quellen nicht synchronisieren: %s"
+
+#: gconf/gconf-database.c:806 gconf/gconf-sources.c:1205
+#, c-format
+msgid "Error getting value for `%s': %s"
+msgstr "Fehler beim Erhalten des Wertes für `%s': %s"
+
+#: gconf/gconf-database.c:843
+#, c-format
+msgid "Error setting value for `%s': %s"
+msgstr "Fehler beim Einstellen des Wertes für `%s': %s"
+
+#: gconf/gconf-database.c:878
+#, c-format
+msgid "Error unsetting `%s': %s"
+msgstr "Fehler beim Löschen von `%s': %s"
+
+#: gconf/gconf-database.c:899
+#, c-format
+msgid "Error getting default value for `%s': %s"
+msgstr "Fehler beim Erhalten des voreingestellten Wertes für `%s': %s"
+
+#: gconf/gconf-database.c:937
+#, c-format
+msgid "Error checking existence of `%s': %s"
+msgstr "Fehler beim Prüfen der Existenz von `%s': %s"
+
+#: gconf/gconf-database.c:961
+#, c-format
+msgid "Error removing dir `%s': %s"
+msgstr "Fehler beim Entfernen von Verzeichnis `%s': %s"
+
+#: gconf/gconf-database.c:987
+#, c-format
+msgid "Failed to get all entries in `%s': %s"
+msgstr "Fehler beim Erhalten aller Einträge in `%s': %s"
+
+#: gconf/gconf-database.c:1013
+#, c-format
+msgid "Error listing dirs in `%s': %s"
+msgstr "Fehler beim Auflisten der Verzeichnisse in `%s': %s"
+
+#: gconf/gconf-database.c:1034
+#, c-format
+msgid "Error setting schema for `%s': %s"
+msgstr "Fehler beim Einstellen des Schemas für `%s': %s"
 
 #: gconf/gconf-error.c:39
 msgid "Success"
@@ -328,6 +402,224 @@ msgstr "Operation ohne Konfigurationsserver nicht erlaubt"
 #: gconf/gconf-error.c:53
 msgid "Failed to get a lock"
 msgstr "Konnte nicht sichern"
+
+#: gconf/gconf-glib.c:631
+#, c-format
+msgid ""
+"Error on line %d char %d: %s\n"
+"(Some surrounding text was '%s')\n"
+msgstr ""
+"Fehler in Zeile %d Zeichen %d: %s\n"
+"(Der umgebende Text war '%s')\n"
+
+#: gconf/gconf-glib.c:751
+#, fuzzy
+msgid ""
+"Text ended in the middle of an entity, or entity name too long to be valid "
+"('&' should begin an entity such as '&quot;')"
+msgstr ""
+"Text endete mitten in einem Objekts, oder Objektname ist zu lang, um gültig "
+"zu sein ('&' sollte am Anfang eines Objekt mit '&quot;' stehen)"
+
+#: gconf/gconf-glib.c:803
+#, fuzzy, c-format
+msgid ""
+"Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
+msgstr ""
+"Unbekanntes Objekt '%s' ('&' muss am Anfang eines Objekt mit &amp; &quot; "
+"&lt; &gt; &apos; starten)"
+
+#: gconf/gconf-glib.c:843
+msgid ""
+"Markup text ended in the middle of a character reference, just after '&#'"
+msgstr "Markierter Text endete mitten in einer Zeichenreferenz, bei '&#'"
+
+#: gconf/gconf-glib.c:869
+#, c-format
+msgid ""
+"Character reference contained non-digit '%s' ('&#' should begin a reference "
+"to a unicode character, such as '&#2342;')"
+msgstr ""
+"Zeichenreferenz enhielt `non-digit' '%s' ('&#' sollte am Anfang einer "
+"Referenz mit einem Unicode Zeichen stehen, z.B. '&#2342;')"
+
+#: gconf/gconf-glib.c:893
+msgid ""
+"Text ended in the middle of an character reference ('&#' should begin a "
+"character reference such as '&#2342;')"
+msgstr ""
+"Text endete in der Mitte einer Zeichenreferenz ('&#' sollte am Anfang einer "
+"Zeichenreferenz stehen, z.B. '&#2342;')"
+
+#: gconf/gconf-glib.c:918
+#, c-format
+msgid ""
+"Couldn't parse character reference '%s' ('&#' must begin a character "
+"reference such as '&#2343;')"
+msgstr ""
+"Konnte Zeichenreferenz '%s' nicht parsen ('&#' muss am Anfang einer "
+"Zeichenreferenz stehen, z.B. '&#2342;')"
+
+#: gconf/gconf-glib.c:940
+#, c-format
+msgid ""
+"Character code %#lx is not allowed in XML documents or is not a valid "
+"Unicode character"
+msgstr ""
+"Zeichen Code %#lx ist in XML-Dokumenten nicht erlaubt oder ist kein gültiges "
+"Unicode Zeichen"
+
+#: gconf/gconf-glib.c:1015
+#, fuzzy
+msgid ""
+"Documented ended just after an '&', '&' should begin an entity or character "
+"reference."
+msgstr ""
+"Dokument endete genau nach einem '&', '&' sollte mit einem Objekt oder einer "
+"Zeichenreferenz beginnen"
+
+#: gconf/gconf-glib.c:1029
+msgid ""
+"'<' or '>' character not allowed here; only allowed around tags, for example "
+"<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
+"&lt; and &gt;"
+msgstr ""
+"'<' oder '>' Zeichen sind hier nicht erlaubt, sie sind nur bei Tags erlaubt, "
+"z.B. <bold> oder <paragraph>. Um sie sonst zu verwenden, bitte &lt; and &gt; "
+"benutzen"
+
+#: gconf/gconf-glib.c:1084
+#, c-format
+msgid "Character '%s' is not valid at the start of an attribute name"
+msgstr "Zeichen '%s' ist am Anfang eines Attributnamens ungültig"
+
+#: gconf/gconf-glib.c:1111
+msgid "Document ended just after attribute name"
+msgstr "Dokument hörte genau nach einem Attributnamen auf"
+
+#: gconf/gconf-glib.c:1122
+msgid "Attribute name must be immediately followed by an '=' character"
+msgstr "Nach einem Attributnamen muss sofort ein '=' Zeichen folgen"
+
+#: gconf/gconf-glib.c:1137
+msgid ""
+"'=' character after attribute must be immediately followed by an '\"' "
+"character"
+msgstr "'=' Zeichen muss unmittelbar nach einem'\"' Zeichen stehen"
+
+#: gconf/gconf-glib.c:1163
+#, c-format
+msgid ""
+"Character '%c' found inside an attribute value; perhaps your attribute value "
+"is missing the closing quotation mark '\"'"
+msgstr ""
+"Zeichen '%c' wurde in einem Attributwert gefunden; vielleicht fehlt bei "
+"Ihrem Attributwert das schließende Anführungszeichen '\"'"
+
+#: gconf/gconf-glib.c:1183
+msgid ""
+"Ran out of text before a quote mark ('\"') was seen at the end of an "
+"attribute value"
+msgstr ""
+"Text ging über ein Anführungszeichen ('\"') hinaus. Es wurde kein "
+"Anführungszeichen gefunden"
+
+#: gconf/gconf-glib.c:1196
+msgid ""
+"Text ends immediately after an attribute value, before the element was closed"
+msgstr ""
+"Text endete unmittelbar nach einem Attributwert, bevor überhaupt das Element "
+"geschlossen wurde"
+
+#: gconf/gconf-glib.c:1510
+msgid "Missing '<' at start of element"
+msgstr "'<' fehlt am Anfang des Elements"
+
+#: gconf/gconf-glib.c:1521
+msgid "Document ended just after '<' character"
+msgstr "Dokument endete genau nach einem '<' Zeichen"
+
+#: gconf/gconf-glib.c:1549
+msgid "No closing '>' found for a <? or <!"
+msgstr "Kein schließendes '>' gefunden für <? oder <!"
+
+#: gconf/gconf-glib.c:1578
+#, c-format
+msgid "Character '%s' is not valid at the start of an element name"
+msgstr "Zeichen '%s' ist am Anfang eines Elementnamens nicht erlaubt"
+
+#: gconf/gconf-glib.c:1602 gconf/gconf-glib.c:1615
+msgid "Document ended just after element name, no '>' seen"
+msgstr "Dokument endete genau nach einem Elementnamen, kein '>' gefunden"
+
+#: gconf/gconf-glib.c:1640
+#, c-format
+msgid "Elements should be closed with '>' or '/>', not with '%s'"
+msgstr "Elemente sollten mit '>' oder '/>' geschlossen werden, nicht mit '%s'"
+
+#: gconf/gconf-glib.c:1657
+msgid ""
+"Element ended just after '/', no '>' seen; empty elements should end with "
+"'/>'"
+msgstr ""
+"Element endete ganau nach '/', '>' wurde nicht gefunden; leere Elemente "
+"sollten mit einem '/>' geschlossen werden"
+
+#: gconf/gconf-glib.c:1696
+msgid "Close tag not found at end of element"
+msgstr "Tag zum Schließen am Ende des Elements nicht gefunden"
+
+#: gconf/gconf-glib.c:1711
+msgid "Close tag ends just after '<' character"
+msgstr "Tag zum Schließen endet genau nach '<' Zeichen"
+
+#: gconf/gconf-glib.c:1725
+msgid "Close tag should begin with '</', '/' character is missing"
+msgstr ""
+"Tag zum Schließen sollte mit einem '</' Zeichen beginnen, '/' Zeichen fehlt"
+
+#: gconf/gconf-glib.c:1739
+msgid "Close tag ends just after '/' character"
+msgstr "Tag zum Schließen endet genau nach einem '/' Zeichen"
+
+#: gconf/gconf-glib.c:1774
+msgid "Document ended just after element name in close tag, no '>' seen"
+msgstr ""
+"Dokument endete genau nach Elementnamen im Tag für Schließen, '>' wurde "
+"nicht gefunden"
+
+#: gconf/gconf-glib.c:1790
+msgid "Document ended just after close tag name, no '>' seen"
+msgstr ""
+"Dokument endete genau nach Tag Name für Schließen, '>' wurde nicht gefunden"
+
+#: gconf/gconf-glib.c:1809
+#, c-format
+msgid "Close tag '%s' does not match opening tag '%s'"
+msgstr "Tag für Schließen '%s' passt nicht zum Tag für Öffnen '%s'"
+
+#: gconf/gconf-glib.c:2147
+#, c-format
+msgid ""
+"Invalid UTF-8 character at byte %d in marked-up text. Some text before the "
+"bad character was '%s'"
+msgstr ""
+"Ungültiges UTF-8 Zeichen bei Byte %d im markierten Text. Der Text vor dem "
+"falschen Zeichen war '%s'"
+
+#: gconf/gconf-glib.c:2204
+msgid "The marked-up text contained nothing but whitespace."
+msgstr "Dieser markierte Text enthielt nicht mehr als nur Leerzeichen."
+
+#: gconf/gconf-glib.c:10668
+#, c-format
+msgid "Failed to open file '%s': %s"
+msgstr "Konnte Datei `%s' nicht öffnen: %s"
+
+#: gconf/gconf-glib.c:10685
+#, c-format
+msgid "Error reading file '%s': %s"
+msgstr "Fehler beim Lesen der Datei '%s': %s"
 
 #: gconf/gconf-internals.c:100
 #, c-format
@@ -397,7 +689,7 @@ msgstr "Zeichenkette in Anführungszeichen beginnt nicht mit Anführungszeichen"
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Zeichenkette in Anführungszeichen endet nicht mit Anführungszeichen"
 
-#: gconf/gconf-internals.c:2144 gconf/gconf.c:2643
+#: gconf/gconf-internals.c:2144 gconf/gconf.c:2780
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-Fehler: %s"
@@ -538,11 +830,6 @@ msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
 "Schlüssel '%s', gelistet als Schema für Schlüssel '%s' hat aktuell Typ '%s'"
 
-#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
-#, c-format
-msgid "Error getting value for `%s': %s"
-msgstr "Fehler beim Erhalten des Wertes für `%s': %s"
-
 #: gconf/gconf-value.c:96
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
@@ -609,23 +896,23 @@ msgstr "Verstehe %s nicht (zusätzliches Uncodiertes ')' im Paar gefunden)"
 msgid "`%s': %s"
 msgstr "`%s': %s"
 
-#: gconf/gconf.c:271
+#: gconf/gconf.c:300
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Server konnte Adresse `%s' nicht auflösen"
 
-#: gconf/gconf.c:408
+#: gconf/gconf.c:561
 msgid "Can't add notifications to a local configuration source"
 msgstr ""
 "Kann keine Benachrichtigungen zu einer lokalen Konfigurationsquelle "
 "hinzufügen"
 
-#: gconf/gconf.c:1466
+#: gconf/gconf.c:1626
 #, c-format
 msgid "Pinging the server failed, CORBA error: %s"
 msgstr "Pingen des Servers fehlgeschlagen, CORBA-Fehler: %s"
 
-#: gconf/gconf.c:1482
+#: gconf/gconf.c:1642
 msgid ""
 "Error contacting configuration server: OAF returned nil from "
 "oaf_activate_from_id() and did not set an exception explaining the problem. "
@@ -636,85 +923,66 @@ msgstr ""
 "das Problem erklären würde. Bitte schicken Sie einen Fehlerbericht zu OAF "
 "ein."
 
-#: gconf/gconf.c:1677
+#: gconf/gconf.c:1909
 msgid "Failed to init GConf, exiting\n"
 msgstr "Konnte GConf nicht initialisieren, breche ab\n"
 
-#: gconf/gconf.c:1714
+#: gconf/gconf.c:1946
 msgid "Must begin with a slash (/)"
 msgstr "Muss mit einem Schrägstrich beginnen (/)"
 
-#: gconf/gconf.c:1736
+#: gconf/gconf.c:1968
 msgid "Can't have two slashes (/) in a row"
 msgstr "Kann keine zwei Schrägstriche (/) hintereinander haben"
 
-#: gconf/gconf.c:1738
+#: gconf/gconf.c:1970
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kann keinen Punkt (.) direkt hinter einem Schrägstrich (/) haben"
 
-#: gconf/gconf.c:1759
+#: gconf/gconf.c:1991
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' ist ein unerlaubtes Zeichen in Schlüssel-/Verzeichnisnamen"
 
-#: gconf/gconf.c:1773
+#: gconf/gconf.c:2005
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Schlüssel/Verzeichnis darf nicht mit einem Schrägstrich (/) enden"
 
-#: gconf/gconf.c:2115
+#: gconf/gconf.c:2252
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Fehler beim Herunterfahren des Konfigurationsservers: %s"
 
-#: gconf/gconf.c:2176
+#: gconf/gconf.c:2313
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Habe float erwartet, erhielt %s"
 
-#: gconf/gconf.c:2211
+#: gconf/gconf.c:2348
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Habe int erwartet, erhielt %s"
 
-#: gconf/gconf.c:2246
+#: gconf/gconf.c:2383
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Habe Zeichenkette erwartet, erhielt %s"
 
-#: gconf/gconf.c:2283
+#: gconf/gconf.c:2420
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Habe bool erwartet, erhielt %s"
 
-#: gconf/gconf.c:2316
+#: gconf/gconf.c:2453
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Habe Schema erwartet, erhielt %s"
 
-#: gconf/gconfd.c:511
-msgid "Received invalid value in set request"
-msgstr "Habe ungültigen Wert in Einstellungsanfrage erhalten"
-
-#: gconf/gconfd.c:519
-#, c-format
-msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
-msgstr ""
-"Konnte Sinn des CORBA-Wertes in Einstellungsanfrage für Schlüssel `%s' nicht "
-"ausmachen"
-
-#: gconf/gconfd.c:789
+#: gconf/gconfd.c:200
 msgid "Shutdown request received"
 msgstr "Beendigungsanfrage empfangen"
 
-#: gconf/gconfd.c:802
-msgid "Received request to drop all cached data"
-msgstr "Habe Anfrage zum Fallenlassen aller Daten im Cache erhalten"
-
-#: gconf/gconfd.c:822
-msgid "Received request to sync synchronously"
-msgstr "Habe Anfrage zum synchronen Synchronisieren erhalten"
-
-#: gconf/gconfd.c:861
+#: gconf/gconfd.c:232
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -722,7 +990,7 @@ msgstr ""
 "gconfd mit Fehlerdiagnose compiliert; versuche, gconf.path aus dem "
 "Quellverzeichnis zu laden"
 
-#: gconf/gconfd.c:879
+#: gconf/gconfd.c:250
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -730,7 +998,7 @@ msgstr ""
 "Keine Konfigurationsdateien gefunden, versuche, die voreingestellte "
 "Konfigurationsquelle `%s' zu benutzen"
 
-#: gconf/gconfd.c:888
+#: gconf/gconfd.c:259
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -738,12 +1006,12 @@ msgstr ""
 "Keine Konfigurationsquellen im Quellpfad, Konfiguration wird nicht "
 "gespeichert werden; "
 
-#: gconf/gconfd.c:901
+#: gconf/gconfd.c:273
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fehler beim Laden von Konfigurationsquellen: %s"
 
-#: gconf/gconfd.c:913
+#: gconf/gconfd.c:285
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -751,7 +1019,7 @@ msgstr ""
 "Keine Konfigurations-Quelladressen erfolgreich aufgelöst, kann "
 "Konfigurationsdaten nicht laden oder speichern"
 
-#: gconf/gconfd.c:930
+#: gconf/gconfd.c:302
 msgid ""
 "No writeable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -759,24 +1027,28 @@ msgstr ""
 "Keine schreibbaren Konfigurationsquellen konnten erfolgreich aufgelöst "
 "werden; werde manche Konfigurationsänderungen nicht speichern können"
 
-#: gconf/gconfd.c:955 gconf/gconfd.c:967
+#: gconf/gconfd.c:327 gconf/gconfd.c:339
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Habe Signal %d erhalten, fahre herunter"
 
-#: gconf/gconfd.c:972
+#: gconf/gconfd.c:344
 #, c-format
 msgid "Received signal %d, ignoring"
 msgstr "Habe Signal %d erhalten, ignoriere es"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:1013
+#: gconf/gconfd.c:390
 #, c-format
-msgid "starting, pid %u user `%s'"
-msgstr "starte, PID %u, Benutzer `%s'"
+msgid "starting (version %s), pid %u user '%s'"
+msgstr "starte (version %s), PID %u, Benutzer `%s'"
 
-#: gconf/gconfd.c:1036
+#: gconf/gconfd.c:394
+msgid "GConf was built with debugging features enabled"
+msgstr "GConf wurde mit Debugging Funktionen kompiliert"
+
+#: gconf/gconfd.c:417
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to OAF "
 "maintainers"
@@ -784,11 +1056,11 @@ msgstr ""
 "Konnte Object Activation Framework nicht initialisieren; bitte schicken Sie "
 "einen Fehlerbericht an die Paketpfleger von OAf"
 
-#: gconf/gconfd.c:1056
+#: gconf/gconfd.c:437
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Konnte Objektreferenz für ConfigServer nicht erhalten"
 
-#: gconf/gconfd.c:1075
+#: gconf/gconfd.c:457
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
@@ -796,91 +1068,85 @@ msgstr ""
 "OAF kennt unsere IID nicht; dies weist auf eine beschädigte Installation "
 "hin; kann nicht registrieren; breche ab\n"
 
-#: gconf/gconfd.c:1079
+#: gconf/gconfd.c:461
 msgid "Another gconfd already registered with OAF; exiting\n"
 msgstr "Ein anderer gconfd ist bereits im OAF registriert; breche ab\n"
 
-#: gconf/gconfd.c:1084
+#: gconf/gconfd.c:466
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Unbekannter Fehler beim Registrieren von gconfd im OAF; breche ab\n"
 
-#: gconf/gconfd.c:1100
+#: gconf/gconfd.c:487
 msgid "Exiting"
 msgstr "Breche ab"
 
-#: gconf/gconfd.c:1194
-#, c-format
-msgid "Failed to sync one or more sources: %s"
-msgstr "Konnte ein oder mehrere Quellen nicht synchronisieren: %s"
-
-#: gconf/gconfd.c:1561
-#, c-format
-msgid "Error setting value for `%s': %s"
-msgstr "Fehler beim Einstellen des Wertes für `%s': %s"
-
-#: gconf/gconfd.c:1593
-#, c-format
-msgid "Error unsetting `%s': %s"
-msgstr "Fehler beim Löschen von `%s': %s"
-
-#: gconf/gconfd.c:1614
-#, c-format
-msgid "Error getting default value for `%s': %s"
-msgstr "Fehler beim Erhalten des voreingestellten Wertes für `%s': %s"
-
-#: gconf/gconfd.c:1652
-#, c-format
-msgid "Error checking existence of `%s': %s"
-msgstr "Fehler beim Prüfen der Existenz von `%s': %s"
-
-#: gconf/gconfd.c:1676
-#, c-format
-msgid "Error removing dir `%s': %s"
-msgstr "Fehler beim Entfernen von Verzeichnis `%s': %s"
-
-#: gconf/gconfd.c:1701
-#, c-format
-msgid "Failed to get all entries in `%s': %s"
-msgstr "Fehler beim Erhalten aller Einträge in `%s': %s"
-
-#: gconf/gconfd.c:1725
-#, c-format
-msgid "Error listing dirs in `%s': %s"
-msgstr "Fehler beim Auflisten der Verzeichnisse in `%s': %s"
-
-#: gconf/gconfd.c:1745
-#, c-format
-msgid "Error setting schema for `%s': %s"
-msgstr "Fehler beim Einstellen des Schemas für `%s': %s"
-
-#: gconf/gconfd.c:1913
-msgid "Attempt to unregister invalid context ID"
-msgstr "Versuch, ungültige Kontext-ID zu deregistrieren"
-
-#: gconf/gconfd.c:1920
-#, c-format
-msgid "Bad context ID %lu, request ignored"
-msgstr "Ungültige Kontext-ID %lu, Anfrage ignoriert"
-
-#: gconf/gconfd.c:1928
-#, c-format
-msgid "Already-unregistered context ID %lu, request ignored"
-msgstr "Bereits deregistrierte Kontext-ID %lu, Anfrage ignoriert"
-
-#: gconf/gconfd.c:1953
-#, c-format
-msgid "Attempt to use invalid context ID %lu"
-msgstr "Versuch, ungültige Kontext-ID %lu zu benutzen"
-
-#: gconf/gconfd.c:1963
-#, c-format
-msgid "Attempt to use already-unregistered context ID %lu"
-msgstr "Versuch, bereits deregistrierte Kontext-ID %lu zu benutzen"
-
-#: gconf/gconfd.c:2123
+#: gconf/gconfd.c:811
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Gebe Ausnahmezustand zurück: %s"
+
+#: gconf/gconfd.c:869
+#, c-format
+msgid "Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"
+msgstr ""
+"~/.gconfd/saved_state konnte nicht erstellt werden, um den gconfd-Status %s "
+"aufzuzeichnen"
+
+#: gconf/gconfd.c:876
+#, c-format
+msgid "Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"
+msgstr ""
+"~/.gconfd/saved_state konnte nicht geschrieben werden, um den gconfd-Status "
+"%s aufzuzeichnen"
+
+#: gconf/gconfd.c:905 gconf/gconfd.c:997
+#, c-format
+msgid "Didn't understand element '%s' in saved state file"
+msgstr "verstehe Element '%s' in gespeichertem Status nicht"
+
+#: gconf/gconfd.c:916
+msgid "No location attribute on listener element in saved state file"
+msgstr ""
+
+#: gconf/gconfd.c:923
+msgid "No IOR attribute on listener element in saved state file"
+msgstr ""
+
+#: gconf/gconfd.c:930
+msgid "No connection ID attribute on listener element in saved state file"
+msgstr ""
+
+#: gconf/gconfd.c:1018
+msgid "Strange non-element node in saved state file"
+msgstr "Seltsames nich-Element `Node' in gespeicherter Status Datei"
+
+#: gconf/gconfd.c:1047
+#, c-format
+msgid "Unable to open saved state file '%s': %s"
+msgstr "Öffnen der gespeicherten Status Datei '%s' nicht möglich: %s"
+
+#: gconf/gconfd.c:1060
+#, c-format
+msgid "Failed to restore saved state from file '%s': %s"
+msgstr ""
+"Wiederherstellen des gespeicherten Status aus Datei '%s' gescheitert: %s"
+
+#: gconf/gconfd.c:1069
+msgid "Root node of saved state file should be an element"
+msgstr "`Root node' der gespeicherten Status Datei sollte ein Element sein"
+
+#: gconf/gconfd.c:1079
+#, c-format
+msgid "Root node of saved state file should be 'gconfd_logfile', not '%s'"
+msgstr ""
+"`Root node' der gespeicherten Status Datei sollte 'gconfd_logfile' sein, "
+"nicht '%s'"
+
+#: gconf/gconfd.c:1092
+msgid "Funny non-element node under <gconfd_logfile> in saved state file"
+msgstr ""
+"Seltsames nicht-Element `Node' unter <gconfd_logfile> in gespeicherter "
+"Status Datei"
 
 #: gconf/gconftool.c:76
 msgid "Help options"
