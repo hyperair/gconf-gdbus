@@ -20,6 +20,10 @@ dnl not incremented for bugfix or unstable releases.
 MAJOR_VERSION=1
 AC_SUBST(MAJOR_VERSION)
 
+GETTEXT_PACKAGE=gconf$MAJOR_VERSION
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+
 dnl libtool versioning for guile wrapper
 
 SCMGCONF_CURRENT=0
@@ -171,6 +175,11 @@ fi # docs_only
 ALL_LINGUAS="ca cs da de el fi fr ga ja ko no pt_BR ru sv tr uk"
 
 AM_GNU_GETTEXT
+
+# AM_GNU_GETTEXT above substs $DATADIRNAME
+# this is the directory where the *.{mo,gmo} files are installed
+gtklocaledir='${prefix}/${DATADIRNAME}/locale'
+AC_SUBST(gconflocaledir)
 
 CFLAGS="$CFLAGS -Wall"
 

@@ -13,7 +13,7 @@ endif
 
 noinst_PROGRAMS=$(GTK_EXAMPLES)
 
-GTK_EXAMPLES_LINK= $(EFENCE) $(ORBIT_LIBS) $(GTK_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la $(top_builddir)/wrappers/gtk/libgconf-gtk-$(MAJOR_VERSION).la $(EFENCE)
+GTK_EXAMPLES_LINK= $(EFENCE) $(INTLLIBS) $(ORBIT_LIBS) $(GTK_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la $(top_builddir)/wrappers/gtk/libgconf-gtk-$(MAJOR_VERSION).la $(EFENCE)
 
 basic_gconf_app_SOURCES = basic-gconf-app.c
 

@@ -54,22 +54,6 @@
 #include <time.h>
 #include <liboaf/liboaf.h>
 
-
-/* Quick hack so I can mark strings */
-/* Please don't mark LOG_DEBUG syslog messages */
-
-#ifdef _ 
-#warning "_ already defined"
-#else
-#define _(x) x
-#endif
-
-#ifdef N_ 
-#warning "N_ already defined"
-#else
-#define N_(x) x
-#endif
-
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG
 #define safe_g_hash_table_insert g_hash_table_insert

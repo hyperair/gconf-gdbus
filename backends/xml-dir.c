@@ -37,20 +37,6 @@
 #include <gconf/gconf-internals.h>
 #include "xml-entry.h"
 
-/* Quick hack so I can mark strings */
-
-#ifdef _ 
-#warning "_ already defined"
-#else
-#define _(x) x
-#endif
-
-#ifdef N_ 
-#warning "N_ already defined"
-#else
-#define N_(x) x
-#endif
-
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG
 #define safe_g_hash_table_insert g_hash_table_insert

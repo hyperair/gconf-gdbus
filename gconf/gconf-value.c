@@ -26,20 +26,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Quick hack so I can mark strings */
-
-#ifdef _ 
-#warning "_ already defined"
-#else
-#define _(x) x
-#endif
-
-#ifdef N_ 
-#warning "N_ already defined"
-#else
-#define N_(x) x
-#endif
-
 static void
 set_string(gchar** dest, const gchar* src)
 {

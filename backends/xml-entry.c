@@ -22,20 +22,6 @@
 #include <stdlib.h>
 #include <gnome-xml/entities.h>
 
-/* Quick hack so I can mark strings */
-
-#ifdef _ 
-#warning "_ already defined"
-#else
-#define _(x) x
-#endif
-
-#ifdef N_ 
-#warning "N_ already defined"
-#else
-#define N_(x) x
-#endif
-
 static void
 entry_sync_if_needed(Entry* e, GConfValue* val);
 static GConfValue*

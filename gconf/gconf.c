@@ -34,21 +34,6 @@
 #include <unistd.h>
 #include <liboaf/liboaf.h>
 
-
-/* Quick hack so I can mark strings */
-
-#ifdef _ 
-#warning "_ already defined"
-#else
-#define _(x) x
-#endif
-
-#ifdef N_ 
-#warning "N_ already defined"
-#else
-#define N_(x) x
-#endif
-
 /* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err);
 /* just returns TRUE if there's an exception indicating the server is

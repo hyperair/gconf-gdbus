@@ -212,7 +212,7 @@ fi
 
 includes="-I@includedir@/gconf/@MAJOR_VERSION@"
 af_cflags="$af_cflags $includes $cflags `@OAF_CONFIG@ --cflags`"
-af_libs="-L@libdir@ $af_libs -lgconf-@MAJOR_VERSION@ `@OAF_CONFIG@ --libs`"
+af_libs="-L@libdir@ @INTLLIBS@ $af_libs -lgconf-@MAJOR_VERSION@ `@OAF_CONFIG@ --libs`"
 
 if test "X$af_lib_gconf_gtk" = "Xyes"; then
     af_libs="$af_libs -lgconf-gtk-@MAJOR_VERSION@ $af_libs @GTK_LIBS@"

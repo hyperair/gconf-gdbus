@@ -189,6 +189,27 @@ void     gconf_set_error  (GError** err,
 GError*  gconf_compose_errors (GError* err1, GError* err2);
 
 
+#ifdef ENABLE_NLS
+#    include <libintl.h>
+#    include <config.h>
+#    undef _
+#    define _(String) dgettext (GETTEXT_PACKAGE, String)
+#    ifdef gettext_noop
+#        define N_(String) gettext_noop (String)
+#    else
+#        define N_(String) (String)
+#    endif
+#else
+/* Stubs that do something close enough.  */
+#    define textdomain(String) (String)
+#    define gettext(String) (String)
+#    define dgettext(Domain,Message) (Message)
+#    define dcgettext(Domain,Message,Type) (Message)
+#    define bindtextdomain(Domain,Directory) (Domain)
+#    define _(String) (String)
+#    define N_(String) (String)
+#endif
+
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */

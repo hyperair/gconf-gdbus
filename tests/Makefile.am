@@ -8,7 +8,7 @@ INCLUDES = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/gconf \
 
 noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence testdirlist testaddress
 
-TESTLIBS= $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la  $(EFENCE)
+TESTLIBS= $(INTLLIBS) $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la  $(EFENCE)
 
 testunique_SOURCES=testunique.c
 

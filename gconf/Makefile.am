@@ -7,6 +7,7 @@ INCLUDES=\
 	$(ORBIT_CFLAGS) \
 	$(XML_CFLAGS) \
 	$(OAF_CFLAGS) \
+	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"  \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" \
 	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\" \
 	-DGCONF_BUILDDIR=\""$(top_builddir)"\" 			\
@@ -46,7 +47,7 @@ gconfd_1_SOURCES = \
 	gconfd.h		\
 	gconfd.c
 
-gconfd_1_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
+gconfd_1_LDADD = $(EFENCE) $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
@@ -56,7 +57,7 @@ gconfd_1_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
 gconftool_1_SOURCES = \
 	gconftool.c
 
-gconftool_1_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf-$(MAJOR_VERSION).la
+gconftool_1_LDADD = $(EFENCE) $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf-$(MAJOR_VERSION).la
 
 $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
@@ -81,7 +82,7 @@ libgconf_1_la_SOURCES = \
 
 libgconf_1_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
 
-libgconf_1_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
+libgconf_1_la_LIBADD = $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS)
 
 EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in
 

@@ -6,17 +6,12 @@ installation administration; it's mostly just going to be a
 process-transparent way to store settings, limited to single
 workstation config files.
 
-* Fix spelling of "writable" throughout, or at least
-  in public API (s/writeable/writable/g)
-
 * Maintain documentation
 
 * API so clients can find out if they can write to a given key
   (gconf_key_is_writable() or the like)
 
 * Implement the default error handlers in GConfClient
-
-* Change _() to actually call gettext or dgettext
 
 * Change GConfEntry::key to be the full key, not a subdir
   name
@@ -27,14 +22,6 @@ workstation config files.
   GConfValue, GConfMetaInfo, GConfEntry) - hrm, maybe not 
   though, since they don't follow GTK _get_ conventions
   and are just struct access macros.
-
-* Check for more _destroy() that should be _free()
-
-* Fill out the GConfEntry API, it doesn't look complete.
-
-* Privatize the GConfError stuff except error domain and codes
-
-* Remove goofy "dummy" thing in GConfEngine
 
 * Implement batch gets
 

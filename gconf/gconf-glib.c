@@ -204,9 +204,7 @@ g_clear_error (GError **err)
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-
-/* FIXME */
-#define _(x) x
+#include "gconf-internals.h"
 
 typedef struct _GMarkupAttribute GMarkupAttribute;
 typedef struct _GMarkupNodePassthrough GMarkupNodePassthrough;

@@ -1,3 +1,11 @@
+2000-09-11  Havoc Pennington  <hp@redhat.com>
+
+	* Actually use gettext. Involves checking in configure.in, linking
+	to it in Makefile.am, making _() do the right thing.
+
+	I have gettext in libc instead of -lintl though, so I'm not going
+	to see Makefile bugs - maybe someone can check on it.
+
 2000-09-10  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-value.c (gconf_entry_new): New function
