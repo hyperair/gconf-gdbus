@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf VERSION\n"
-"POT-Creation-Date: 2000-01-28 22:59-0500\n"
-"PO-Revision-Date: 2000-01-28 23:04-05:00\n"
+"POT-Creation-Date: 2000-02-16 10:38+0100\n"
+"PO-Revision-Date: 2000-02-16 10:47+01:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "Kunne ikke lese fra eller skrive til XML-rotkatalogen i adressen `%s'"
 #: backends/xml-backend.c:410
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
-msgstr ""
+msgstr "Katalog/fil rettigheter for XML kildekode ved rot %s er: %o/%o"
 
 #: backends/xml-backend.c:694
 msgid "Initializing XML backend module"
@@ -47,31 +47,31 @@ msgid "Failed to give up lock on XML dir `%s': %s"
 msgstr "Kunne ikke gi opp lås på XML-katalog `%s': %s"
 
 #. -- end debug only
-#: gconf/gconf-backend.c:133
+#: gconf/gconf-backend.c:180
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Ingen slik fil `%s'\n"
 
-#: gconf/gconf-backend.c:161
+#: gconf/gconf-backend.c:208
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Ugyldig adresse `%s'"
 
-#: gconf/gconf-backend.c:186
+#: gconf/gconf-backend.c:233
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "GConf virker ikke uten støtte for dynmiske moduler (gmodule)"
 
-#: gconf/gconf-backend.c:196
+#: gconf/gconf-backend.c:243
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Feil under åpning av modul `%s': %s\n"
 
-#: gconf/gconf-backend.c:228
+#: gconf/gconf-backend.c:275
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Kunne ikke finne backend modul for `%s'"
 
-#: gconf/gconf-backend.c:265
+#: gconf/gconf-backend.c:312
 msgid "Failed to shut down backend"
 msgstr "Kunne ikke stenge ned motoren"
 
@@ -347,11 +347,11 @@ msgstr "Anmodning om nedstenging mottatt"
 
 #: gconf/gconfd.c:802
 msgid "Received request to drop all cached data"
-msgstr ""
+msgstr "Mottok forespørsel om å slippe alle mellomlagrede data"
 
 #: gconf/gconfd.c:822
 msgid "Received request to sync synchronously"
-msgstr ""
+msgstr "Mottok forespørsel om å utføre synkron synkronisering"
 
 #: gconf/gconfd.c:861
 msgid ""
@@ -520,7 +520,7 @@ msgstr "Forsøk på å bruke ugyldig kontekst-ID %lu"
 msgid "Attempt to use already-unregistered context ID %lu"
 msgstr "Forsøk på å bruke allerede avregistrert kontekst-ID %lu"
 
-#: gconf/gconfd.c:2115
+#: gconf/gconfd.c:2121
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerer unntak: %s"
@@ -645,19 +645,19 @@ msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
-msgstr ""
+msgstr "Installerer schemafiler fra kommandolinjen inn i databasen på riktig måte. GCONF_CONFIG_SOURCE miljøvariabelen må være satt til noe annet enn standardverdien for konfigurasjonskilde eller være tom for at standardverdien skal brukes."
 
 #: gconf/gconftool.c:254
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
-msgstr ""
+msgstr "Utfør en torturtest av en applikasjon ved å sette og tømme en rekke verdier av forskjellige typer for nøkler fra kommandolinjen."
 
 #: gconf/gconftool.c:263
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
-msgstr ""
+msgstr "Utfør en torturtest av en applikasjon ved å sette og tømme en rekke nøkler inne i katalogene fra kommandolinjen."
 
 #: gconf/gconftool.c:310
 #, c-format
@@ -747,7 +747,7 @@ msgstr "Kunne ikke initialisere GConf: %s\n"
 
 #: gconf/gconftool.c:472
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
-msgstr ""
+msgstr "GCONF_CONFIG_SOURCE miljøvariabelen må være satt\n"
 
 #. Eventually you should be able to run gconfd as long as
 #. you're installing to a different database from the one
@@ -759,6 +759,9 @@ msgid ""
 "applications are running\n"
 "(though things theoretically work if apps are running).\n"
 msgstr ""
+"gconfd bør ikke kjøre under installasjon av nye schema filer.\n"
+"Bruk gconftool --shutdown for å stenge ned daemonen, tryggest når ikke noen applikasjoner kjører\n"
+"(selv om ting virker i teorien selv når applikasjoner kjører).\n"
 
 #: gconf/gconftool.c:510
 #, c-format
@@ -964,7 +967,7 @@ msgstr "Lagt ved schema `%s' til nøkkel `%s'\n"
 
 #: gconf/gconftool.c:1588
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr ""
+msgstr "Du må ha minst en <locale> oppføring i et <schema>\n"
 
 #: gconf/gconftool.c:1617
 #, c-format
@@ -1014,7 +1017,9 @@ msgstr "Spesifiser schema filer som skal installeres\n"
 msgid ""
 "\n"
 "%s\n"
-msgstr "\n%s\n"
+msgstr ""
+"\n"
+"%s\n"
 
 #: gconf/gconftool.c:1769
 #, c-format
@@ -1031,6 +1036,8 @@ msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
+"Prøver å knekke din applikasjon ved å sette ugyldige verdier for nøkkel:\n"
+"  %s\n"
 
 #: gconf/gconftool.c:1919
 msgid "Must specify some directories to break\n"
@@ -1043,6 +1050,8 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
+"Prøver å knekke din applikasjon ved å sette ugyldige verdier for nøkler i katalogen:\n"
+"  %s\n"
 
 #: gconf-editor/app.c:53
 msgid "Key"
