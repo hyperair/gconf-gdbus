@@ -4,15 +4,15 @@
 # Ronald Hummelink <ronald@hummelink.xs4all.nl>, 2002
 # Tino Meinen <a.t.meinen@chello.nl>, 2002-2004.
 # Daniel van Eeden <daniel_e@dds.nl>, 2003, 2004
-# Reinout van Schouwen <reinout@cs.vu.nl>, 2004 (spelfouten eruit)
+# Reinout van Schouwen <reinout@cs.vu.nl>, 2004, 2005 (spelfouten eruit)
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-07 17:19+0000\n"
-"PO-Revision-Date: 2004-08-25 06:52+0200\n"
-"Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
+"POT-Creation-Date: 2005-02-27 14:38+0100\n"
+"PO-Revision-Date: 2005-02-27 15:10+0200\n"
+"Last-Translator: Reinout van Schouwen <reinout@cs.vu.nl>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +45,7 @@ msgid ""
 "    dir/%%gconf-tree.xml\n"
 msgstr ""
 "Gebruik: %s <map>\n"
-"  Samenvoegen van opmaak bestandssysteem hiërarchie, bijvoorbeeld:\n"
+"  Samenvoegen van opmaak bestandssysteem-hiërarchie, bijvoorbeeld:\n"
 "    map/%%gconf.xml\n"
 "      submap1/%%gconf.xml\n"
 "      submap2/%%gconf.xml\n"
@@ -818,7 +818,7 @@ msgstr ""
 #: gconf/gconf-internals.c:1547
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
-msgstr "Verwachte paar van type (%s,%s) kreeg type (%s,%s)"
+msgstr "Verwacht paar van type (%s,%s) kreeg type (%s,%s)"
 
 #: gconf/gconf-internals.c:1663
 msgid "Quoted string doesn't begin with a quotation mark"
@@ -898,7 +898,7 @@ msgstr ""
 #: gconf/gconf-internals.c:2661
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
-msgstr "Fout bij het linken van `%s' naar `%s': %s"
+msgstr "Fout bij het verwijzen van `%s' naar `%s': %s"
 
 #: gconf/gconf-internals.c:2673
 #, c-format
@@ -1175,7 +1175,7 @@ msgstr ""
 "machine is gecrashed en heeft de server niet juist laten weten op reboot dat "
 "de bestandsblokkeringen opgeheven moesten worden. Als u 2 gconfd processen "
 "heeft (of 2 had op het moment dat de tweede werd gestart), kan uitloggen en "
-"alle kopieÃ«n van gconfd killen helpen. Als u verouderde blokkeringen heeft, "
+"alle kopieën van gconfd killen helpen. Als u verouderde blokkeringen heeft, "
 "verwijder dan ~/.gconf*/*lock. Misschien is het probleem dat u GConf vanaf 2 "
 "machines tegelijk probeert te gebruiken en ORBit nog zijn "
 "standaardconfiguratie heeft dat CORBA verbindingen tegenhoudt - zet "
@@ -1385,14 +1385,15 @@ msgstr ""
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr ""
-"Signaal %d ontvangen, kern word gedumpt. Rapporteer a.u.b. een GConf bug."
+"Signaal %d ontvangen, core wordt gedumpt. Rapporteer alstublieft een GConf "
+"bug."
 
 #: gconf/gconfd.c:438
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
-"Signaal %d ontvangen, abnormale afsluiting. Rapporteer a.u.b. een GConf bug."
+"Signaal %d ontvangen, abnormale afsluiting. Rapporteer alstublieft een GConf bug."
 
 #: gconf/gconfd.c:454
 #, c-format
@@ -1428,7 +1429,7 @@ msgstr "Fout bij het verkrijgen van objectreferentie voor ConfigServer"
 #: gconf/gconfd.c:693
 #, c-format
 msgid "Failed to create %s: %s"
-msgstr "Aanmaken bestand `%s' mislukt: %s"
+msgstr "Aanmaken %s mislukt: %s"
 
 #: gconf/gconfd.c:700
 #, c-format
@@ -1442,7 +1443,7 @@ msgid ""
 "s"
 msgstr ""
 "Niet gelukt om byte te schrijven naar 'pipe file descriptor' %d dus de "
-"cliënt kanmogelijk gaan hangen: %s"
+"client kan mogelijk vastlopen: %s"
 
 #: gconf/gconfd.c:742
 #, c-format
@@ -1475,7 +1476,7 @@ msgstr "Fout bij het vergaren van nieuwe waarde voor `%s': %s"
 #: gconf/gconfd.c:1265
 #, c-format
 msgid "Returning exception: %s"
-msgstr "Uitzondering: %s"
+msgstr "Uitzondering teruggeven: %s"
 
 #: gconf/gconfd.c:1365
 #, c-format
@@ -1580,7 +1581,7 @@ msgstr "Fout bij openen opgeslagen statusbestand: %s"
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
-"Fout bij het schrijven van cliënt add naar het opgeslagen statusbestand: %s"
+"Fout bij het schrijven van client add naar het opgeslagen statusbestand: %s"
 
 #: gconf/gconfd.c:2280
 #, c-format
@@ -1662,7 +1663,7 @@ msgstr "'0' teruggeven als de map bestaat, 2 als het niet bestaat."
 
 #: gconf/gconftool.c:206
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
-msgstr "Gconfd stoppen. GEBRUIK DEZE OPTIE NIET ZONDER EEN GOEDE REDEN!."
+msgstr "Gconfd stoppen. GEBRUIK DEZE OPTIE NIET ZONDER EEN GOEDE REDEN."
 
 #: gconf/gconftool.c:215
 msgid "Return 0 if gconfd is running, 2 if not."
@@ -1812,25 +1813,25 @@ msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
-"Martelings-test voor een applicatie d.m.v. het instellen en uitzetten van "
+"Martelings-test voor een toepassing d.m.v. het instellen en uitzetten van "
 "een groep sleutels binnen de directories op de opdrachtregel."
 
 #: gconf/gconftool.c:386
 msgid "Get the short doc string for a key"
-msgstr "Kan de korte doc string niet vinden voor een sleutel"
+msgstr "De korte doc-tekenreeks voor een sleutel ophalen"
 
 #: gconf/gconftool.c:395
 msgid "Get the long doc string for a key"
-msgstr "Kan de lange doc string niet vinden voor een sleutel"
+msgstr "De lange doc-tekenreeks voor een sleutel ophalen"
 
 #: gconf/gconftool.c:404
 msgid "Get the name of the schema applied to this key"
-msgstr "Haal de naam op van het schema toegepast op deze sleutel"
+msgstr "De naam ophalen van het schema toegepast op deze sleutel"
 
 #: gconf/gconftool.c:413
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
-"Specificeer de schema naam gevolgt door de sleutel om de schema naam op toe "
+"Specificeer de schemanaam gevolgd door de sleutel om de schema naam op toe "
 "te passen"
 
 #: gconf/gconftool.c:422
@@ -2086,7 +2087,7 @@ msgstr "Moet een of meer sleutels specificeren om grootte te 'vergaren'\n"
 #: gconf/gconftool.c:1944 gconf/gconftool.c:1989
 #, c-format
 msgid "Key %s is not a list.\n"
-msgstr "Waarde %s is niet een lijst.\n"
+msgstr "Waarde %s is geen lijst.\n"
 
 #: gconf/gconftool.c:1964
 msgid "Must specify a key from which to get list element.\n"
@@ -2103,7 +2104,7 @@ msgstr "Lijst-index mag niet negatief zijn.\n"
 
 #: gconf/gconftool.c:2011
 msgid "List index is out of bounds.\n"
-msgstr "Lijst index is buiten bereik.\n"
+msgstr "Lijstindex is buiten bereik.\n"
 
 #: gconf/gconftool.c:2037
 msgid "Must specify a key or keys on the command line\n"
@@ -2467,10 +2468,9 @@ msgstr ""
 "sleutel:\n"
 "  %s\n"
 
-# Hmm, dit moet beter kunnen
 #: gconf/gconftool.c:3931
 msgid "Must specify some directories to break\n"
-msgstr "Moet enkele te breken mappen specificeren\n"
+msgstr "U dient enkele mappen aan te geven om kapot te maken\n"
 
 #: gconf/gconftool.c:3950
 #, c-format
@@ -2479,7 +2479,7 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Probeer uw applicatie te breken door. het instellen van foutieve waarden "
+"Proberen uw toepassing kapot te maken door het instellen van onjuiste waarden "
 "voor sleutels in map:\n"
 "  %s\n"
 
