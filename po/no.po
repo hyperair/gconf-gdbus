@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.6\n"
-"POT-Creation-Date: 2002-01-26 13:52+0100\n"
-"PO-Revision-Date: 2002-01-26 14:04+0100\n"
+"POT-Creation-Date: 2002-01-28 23:34+0100\n"
+"PO-Revision-Date: 2002-01-28 23:37+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -69,7 +69,9 @@ msgstr "Feil under synkronisering av katalogbuffer for XML-motor: %s"
 msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
-msgstr "Operasjonen fjern katalog er ikke støttet lengre, bare fjern alle verdiene i katalogen"
+msgstr ""
+"Operasjonen fjern katalog er ikke støttet lengre, bare fjern alle verdiene i "
+"katalogen"
 
 #: backends/xml-backend.c:718
 msgid "Initializing XML backend module"
@@ -349,7 +351,10 @@ msgid ""
 "Failed to log addition of listener %s (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
-msgstr "Klarte ikke å logge ny lytter %s (%s); vil ikke kunne gjenoprette denne lytteren ved gjenstart av gconfd, noe som vil resultere i upålitelige notifikasjon av konfigurasjonsendringer."
+msgstr ""
+"Klarte ikke å logge ny lytter %s (%s); vil ikke kunne gjenoprette denne "
+"lytteren ved gjenstart av gconfd, noe som vil resultere i upålitelige "
+"notifikasjon av konfigurasjonsendringer."
 
 #: gconf/gconf-database.c:1103
 #, c-format
@@ -608,7 +613,10 @@ msgstr "Kunne ikke opprette eller åpne '%s'"
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
-msgstr "Feil under låsing av «%s»: sannsynligvis holder en annen prosess låsen, ellers så har operativsystemet problemer med konfigurasjon av NFS-fillåsing (%s)"
+msgstr ""
+"Feil under låsing av «%s»: sannsynligvis holder en annen prosess låsen, "
+"ellers så har operativsystemet problemer med konfigurasjon av NFS-fillåsing "
+"(%s)"
 
 #: gconf/gconf-internals.c:2425
 #, c-format
@@ -692,9 +700,16 @@ msgid ""
 "crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no "
 "gconfd processes are running on any machine using your home dir"
 msgstr ""
-"Kunne ikke kontakte konfigurasjonstjeneren; noen sannsynlige årsaker for dette er:\n"
-"a) du har en eksisterende konfigurasjonstjener (gconfd) som kjører, men den kan ikke nås herfra - hvis du er logget inn fra to maskiner samtidig vil du kanskje måtte aktivere TCP nettverksstøtte for ORBit ved å legge til linjen «ORBIIOPIPv4=1» i /etc/orbitrc\n"
-"b) du har gamle låsfiler i din NFS-monterte hjemmekatalog pga en systemkrasj. Prøv å fjerne ~/.gconf/*.lock og ~/.gconfd/lock hvis du er sikker på at ingen gconfd-prosesser kjører på maskiner som bruker din hjemmekatalog"
+"Kunne ikke kontakte konfigurasjonstjeneren; noen sannsynlige årsaker for "
+"dette er:\n"
+"a) du har en eksisterende konfigurasjonstjener (gconfd) som kjører, men den "
+"kan ikke nås herfra - hvis du er logget inn fra to maskiner samtidig vil du "
+"kanskje måtte aktivere TCP nettverksstøtte for ORBit ved å legge til linjen "
+"«ORBIIOPIPv4=1» i /etc/orbitrc\n"
+"b) du har gamle låsfiler i din NFS-monterte hjemmekatalog pga en "
+"systemkrasj. Prøv å fjerne ~/.gconf/*.lock og ~/.gconfd/lock hvis du er "
+"sikker på at ingen gconfd-prosesser kjører på maskiner som bruker din "
+"hjemmekatalog"
 
 #: gconf/gconf-schema.c:194 gconf/gconf-schema.c:202 gconf/gconf-schema.c:210
 #: gconf/gconf-schema.c:218
@@ -752,7 +767,7 @@ msgstr ""
 "konfigurasjonssti"
 
 #: gconf/gconf-sources.c:695
-#, c-format, fuzzy
+#, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writable databases. There are some common causes of this problem: 1) your "
@@ -770,7 +785,7 @@ msgid ""
 "details on problems gconfd encountered. There can only be one gconfd per "
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
-msgstr "Kan ikke lagre verdi i nøkkel «%s», siden konfigurasjonstjeneren ikke har noen skrivbare databaser. Det er flere vanlige årsaker for dette problemet: 1) din konfigurasjonsstifil %s/path inneholder ingen databaser eller ble ikke funnet eller 2) på en eller annen måte har vi opprettet to gconfd prosesser 3) operativsystemet ditt er feilkonfigurert slik at låsing av filer over NFS ikke virker i din hjemmekatalog eller 4) NFS-klienten krasjet og ga ikke beskjed til tjeneren om at fillåsene skulle slippes ved omstart. Hvis du har to gconfd prosesser (eller hadde to i det den andre ble startet), vil det hjelpe å logge ut og drepe alle instanser av gconfd for så å logge inn igjen. Kanskje problemet er at du har forsøkt å bruke GConf fra to maskiner på samme tid, og ORBit fremdeles har sin standardkonfigurasjon som forhindrer eksterne CORBA-forbindelser? Som alltid, sjekk user.* syslog for detaljer om problemer gconfd kan ha møtt. Du kan kun ha en gconfd per hjemmekatalog, og denne må ha en låsfil i ~/.gconf"
+msgstr "Kan ikke lagre verdi i nøkkel «%s», siden konfigurasjonstjeneren ikke har noen skrivbare databaser. Det er flere vanlige årsaker for dette problemet: 1) din konfigurasjonsstifil %s/path inneholder ingen databaser eller ble ikke funnet 2) på en eller annen måte har vi opprettet to gconfd prosesser 3) operativsystemet ditt er feilkonfigurert slik at låsing av filer over NFS ikke virker i din hjemmekatalog eller 4) NFS-klienten krasjet og ga ikke beskjed til tjeneren om at fillåsene skulle slippes ved omstart. Hvis du har to gconfd prosesser (eller hadde to i det den andre ble startet), vil det hjelpe å logge ut og drepe alle instanser av gconfd for så å logge inn igjen. Hvis du har gamle låsfiler, fjern ~/.gconf*/*lock. Kanskje problemet er at du har forsøkt å bruke GConf fra to maskiner på samme tid, og ORBit fremdeles har sin standardkonfigurasjon som forhindrer eksterne CORBA-forbindelser - legg inn «ORBIIOPIPv4=1» i /etc/orbitrc. Som alltid, sjekk user.* syslog for detaljer om problemer gconfd kan ha møtt. Du kan kun ha en gconfd per hjemmekatalog, og denne må ha en låsfil i ~/.gconfd i tillegg til individuelle lagringslokasjoner slik som ~/.gconf"
 
 #: gconf/gconf-sources.c:1414
 #, c-format
@@ -1454,7 +1469,8 @@ msgstr "Kunne ikke initialisere GConf: %s\n"
 
 #: gconf/gconftool.c:591
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
-msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL er satt, installerer ikke schema\n"
+msgstr ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL er satt, installerer ikke schema\n"
 
 #: gconf/gconftool.c:604
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
