@@ -1,5 +1,6 @@
-INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) \
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\"
+INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) $(OAF_CFLAGS) \
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" \
+	-DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\" -DVERSION=\""$(VERSION)"\"
 
 EFENCE=
 
@@ -32,7 +33,7 @@ gconfd_SOURCES = \
 	gconfd.c	\
 	gconf-sources.c
 
-gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf.la
+gconfd_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf.la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
@@ -42,7 +43,7 @@ gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf.la
 gconftool_SOURCES = \
 	gconftool.c
 
-gconftool_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf.la
+gconftool_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf.la
 
 $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
@@ -60,10 +61,9 @@ libgconf_la_SOURCES = \
 	gconf.c			\
 	$(CORBA_SOURCES)
 
-libgconf_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
-libgconf_la_LIBADD = $(GLIB_LIBS) $(ORBIT_LIBS)
+libgconf_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) $(OAF_LIBS)
 
-EXTRA_DIST=GConf.idl
+EXTRA_DIST=GConf.idl gconfd.oafinfo
 
-
-
+oafinfodir=$(datadir)/oaf
+oafinfo_DATA=gconfd.oafinfo

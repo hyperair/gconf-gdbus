@@ -54,6 +54,7 @@ else
 fi
 
 AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib not found),gmodule)
+AM_PATH_OAF(0.1.0,,AC_MSG_ERROR([OAF not found]))
 
 AC_PATH_PROG(GNOME_CONFIG,gnome-config,no)
 if test x$GNOME_CONFIG != xno; then

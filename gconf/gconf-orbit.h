@@ -23,20 +23,6 @@
 #include <glib.h>
 #include <orb/orbit.h>
 #include "gconf-error.h"
-
-/* Sets up orb to work with a glib main loop, just as libgnorba does. */
-CORBA_ORB
-gconf_init_orb(int* argc, char** argv, GConfError** err);
-
-/* Assumes orb is already set up (for example, via libgnorba)
-   and just tells GConf where to find it 
-*/
-void 
-gconf_set_orb(CORBA_ORB orb);
-
-CORBA_ORB
-gconf_get_orb(void);
+#include <liboaf/liboaf.h>
 
 #endif
-
-

@@ -44,14 +44,7 @@ real_main(void* closure, int argc, char* argv[])
 {
   GConfError* err = NULL;
   
-  if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
-    {
-      fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
-      gconf_error_destroy(err);
-      exit(1);
-    }
-  
-  if (!gconf_init(&err))
+  if (!gconf_init(argc, argv, &err))
     {
       fprintf(stderr, _("Failed to init gconf: %s\n"), err->str);
       gconf_error_destroy(err);

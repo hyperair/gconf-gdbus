@@ -17,6 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <popt.h>
 #include "GConf.h"
 #include "gconf.h"
 #include "gconf-internals.h"
@@ -932,48 +933,32 @@ static ConfigServer   server = CORBA_OBJECT_NIL;
 static ConfigServer
 try_to_contact_server(GConfError** err)
 {
-  /* This writing-IOR-to-file crap is a temporary hack. */
-  gchar* ior;
+  CORBA_Environment ev;
 
-  g_return_val_if_fail(server == CORBA_OBJECT_NIL, server);
-  
-  ior = gconf_read_server_ior(err);
+  CORBA_exception_init(&ev);
 
-  if (ior == NULL)
+  server = oaf_activate_from_id("OAFAID:[OAFIID:gconf:19991118]", 0, NULL, &ev);
+
+  /* So try to ping server */
+  if (!CORBA_Object_is_nil(server, &ev))
     {
-      g_return_val_if_fail(err == NULL || (*err != NULL), CORBA_OBJECT_NIL);
-      return CORBA_OBJECT_NIL;
-    }
+      ConfigServer_ping(server, &ev);
       
-  if (ior != NULL)
-    {
-      CORBA_Environment ev;
-
-      CORBA_exception_init(&ev);
-
-      /* May well fail, could be a stale IOR */
-      server = CORBA_ORB_string_to_object(gconf_get_orb(), ior, &ev);
-
-      /* So try to ping server */
-      if (server != CORBA_OBJECT_NIL)
-        {
-          ConfigServer_ping(server, &ev);
-
-          if (ev._major != CORBA_NO_EXCEPTION)
-            {
-              server = CORBA_OBJECT_NIL;
-              if (err)
-                *err = gconf_error_new(GCONF_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
-                                        CORBA_exception_id(&ev));
-              CORBA_exception_free(&ev);
-            }
-        }
-      else
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_NO_SERVER, _("Failed to convert server IOR to an object reference"));
-        }
+      if (ev._major != CORBA_NO_EXCEPTION)
+	{
+	  server = CORBA_OBJECT_NIL;
+	  if (err)
+	    *err = gconf_error_new(GCONF_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
+				   CORBA_exception_id(&ev));
+	}
     }
+  else
+    {
+      if (err)
+	*err = gconf_error_new(GCONF_NO_SERVER, _("Failed to activate server"));
+    }
+
+  CORBA_exception_free(&ev);
       
   return server;
 }
@@ -988,123 +973,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
   
   server = try_to_contact_server(err);
 
-  if (start_if_not_found)
-
-    {
-      /*
-       * We aren't interested in this error;
-       * only in the success or failure of the
-       * attempt to spawn the server ourselves.
-       */
-      if (err && *err)
-        {
-          gconf_error_destroy(*err);
-          *err = NULL;
-        }
-    }
-  else
-    return server; /* return what we have, NIL or not */
-  
-  if (server == CORBA_OBJECT_NIL)
-    {
-      pid_t pid;
-      int fds[2];
-      int status;
-
-      if (pipe(fds) < 0)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_NO_SERVER, _("Failed to create pipe to server: %s"),
-                                    strerror(errno));
-          return CORBA_OBJECT_NIL;
-        }
-
-      pid = fork();
-          
-      if (pid < 0)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_NO_SERVER, _("gconfd fork failed: %s"), 
-                                    strerror(errno));
-          return CORBA_OBJECT_NIL;
-        }
-          
-      if (pid == 0)
-        {
-          gchar buf[20];
-
-          close(fds[0]);
-
-          g_snprintf(buf, 20, "%d", fds[1]);
-          
-          /* Child. Exec... */
-          if (execlp("gconfd", "gconfd", buf, NULL) < 0)
-            {
-              /* in the child, don't want to set error */
-              g_warning(_("Failed to exec gconfd: %s"), strerror(errno));
-       
-              close(fds[1]);
-              
-              _exit(1);
-            }
-        }
-          
-      /* Parent - waitpid(), gconfd instantly forks anyway */
-      if (waitpid(pid, &status, 0) != pid)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_NO_SERVER, 
-                                    _("waitpid() failed waiting for child in %s: %s"),
-                                    __FUNCTION__, strerror(errno));
-          close(fds[1]);
-          return CORBA_OBJECT_NIL;
-        }
-
-      if (WIFEXITED(status))
-        {
-          if (WEXITSTATUS(status) != 0)
-            {
-              if (err)
-                *err = gconf_error_new(GCONF_NO_SERVER, 
-                                        _("spawned server returned error code, giving up on contacting it."));
-              close(fds[1]);
-              return CORBA_OBJECT_NIL;
-            }
-        }
-      else
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_NO_SERVER, _("spawned gconfd child didn't exit normally, can't contact server."));
-          close(fds[1]);
-          return CORBA_OBJECT_NIL;
-        }
-
-      close(fds[1]);
-      
-      /* Wait for the child to send us a byte */
-      {
-        char c = '\0';
-
-        if (read(fds[0], &c, 1) < 0)
-          {
-            /* Not a fatal error */
-            g_warning("Error reading from pipe to gconfd: %s", strerror(errno));
-            c = 'g'; /* suppress next error message */
-          }
-
-        if (c != 'g') /* g is the magic letter */
-          {
-            /* not fatal either */
-            g_warning("gconfd sent us the wrong byte!");
-          }
-
-        close(fds[0]);
-      }
-
-      server = try_to_contact_server(err);
-    }
-
-  return server;
+  return server; /* return what we have, NIL or not */
 }
 
 static void
@@ -1194,28 +1063,14 @@ gconf_get_config_listener(void)
 
 static gboolean have_initted = FALSE;
 
-gboolean     
-gconf_init           (GConfError** err)
+void
+gconf_preinit(gpointer app, gpointer mod_info)
 {
-  static CORBA_ORB orb = CORBA_OBJECT_NIL;
+}
 
-  if (have_initted)
-    {
-      g_warning("Attempt to init GConf a second time");
-      return FALSE;
-    }
-
-  orb = gconf_get_orb();
-
-  if (orb == CORBA_OBJECT_NIL)
-    {
-      /* warn instead of error, since it indicates an application bug 
-         (app should have checked errors after initting the orb) 
-      */
-      g_warning("Failed to get orb (perhaps orb wasn't set/initted?)");
-      return FALSE;
-    }
-
+void
+gconf_postinit(gpointer app, gpointer mod_info)
+{
   if (listener == CORBA_OBJECT_NIL)
     {
       CORBA_Environment ev;
@@ -1226,44 +1081,24 @@ gconf_init           (GConfError** err)
       POA_ConfigListener__init(&poa_listener_servant, &ev);
       
       if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_FAILED, _("Failed to init the listener servant: %s"),
-                                    CORBA_exception_id(&ev));
-          return FALSE;
-        }
+	return;
 
-      poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(gconf_get_orb(), "RootPOA", &ev);
+      poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(oaf_orb_get(), "RootPOA", &ev);
 
       if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_FAILED, _("Failed to resolve the root POA: %s"),
-                                    CORBA_exception_id(&ev));
-          return FALSE;
-        }
+	return;
 
 
       PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
 
       if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_FAILED, _("Failed to activate the POA Manager: %s"),
-                                    CORBA_exception_id(&ev));
-          return FALSE;
-        }
+	return;
 
       PortableServer_POA_activate_object_with_id(poa,
                                                  &objid, &poa_listener_servant, &ev);
 
       if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_FAILED, _("Failed to activate the listener servant: %s"),
-                                    CORBA_exception_id(&ev));
-          return FALSE;
-        }
+	return;
 
       
       listener = PortableServer_POA_servant_to_reference(poa,
@@ -1271,15 +1106,38 @@ gconf_init           (GConfError** err)
                                                          &ev);
 
       if (listener == CORBA_OBJECT_NIL || ev._major != CORBA_NO_EXCEPTION)
-        {
-          if (err)
-            *err = gconf_error_new(GCONF_FAILED, _("Failed get object reference for the listener servant: %s"),
-                                    CORBA_exception_id(&ev));
-          return FALSE;
-        }
+	return;
     }
 
+
   have_initted = TRUE;
+}
+
+const char gconf_version[] = VERSION;
+
+struct poptOption gconf_options[] = {
+  {NULL}
+};
+
+gboolean     
+gconf_init           (int argc, char **argv, GConfError** err)
+{
+  CORBA_ORB orb = CORBA_OBJECT_NIL;
+
+  if (have_initted)
+    {
+      g_warning("Attempt to init GConf a second time");
+      return FALSE;
+    }
+
+  gconf_preinit(NULL, NULL);
+
+  orb = oaf_init(argc, argv);
+
+  gconf_postinit(NULL, NULL);
+
+  if(!have_initted)
+    return FALSE;
   
   return TRUE;
 }
@@ -1573,7 +1431,6 @@ ctable_reinstall_everything(CnxnTable* ct, ConfigServer_Context context,
                             ConfigServer cs, GConfError** err)
 {
   ConfigListener cl;
-  CORBA_Environment ev;
   GConfCnxn* cnxn;
   struct ReinstallData rd;
 

@@ -42,28 +42,9 @@ main(int argc, char** argv)
 
   CORBA_exception_init(&ev);
 
-#if 0
-  orb = gnome_CORBA_init(PACKAGE, VERSION, &argc, argv, 
-                         0, &ev);
-  if (orb == CORBA_OBJECT_NIL)
-    {
-      g_warning("Failed to init orb");
-      return 1;
-    }
-  gconf_set_orb(orb);
-#else
   gnome_init(PACKAGE, VERSION, argc, argv);
-  orb = gconf_init_orb(&argc, argv, &error);
-  if (orb == CORBA_OBJECT_NIL)
-    {
-      g_assert(error != NULL);
-      g_warning("Failed to init orb:\n  %s", error->str);
-      return 1;
-    }
-  g_assert(error == NULL);
-#endif
 
-  if (!gconf_init(&error))
+  if (!gconf_init(argc, argv, &error))
     {
       g_assert(error != NULL);
       g_warning("GConf init failed:\n  %s", error->str);

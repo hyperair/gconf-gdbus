@@ -31,7 +31,6 @@ extern "C" {
 #include "gconf-engine.h"
 #include "gconf-error.h"
   
-gboolean     gconf_init            (GConfError** err);
 gboolean     gconf_is_initialized  (void);
 
 typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
@@ -166,6 +165,24 @@ gboolean     gconf_set_pair    (GConfEngine* conf, const gchar* key,
                                 gconstpointer address_of_car,
                                 gconstpointer address_of_cdr,
                                 GConfError** err);
+
+
+gboolean     gconf_init        (int argc, char **argv, GConfError** err);
+
+/* For use by the Gnome module system */
+void gconf_preinit(gpointer app, gpointer mod_info);
+void gconf_postinit(gpointer app, gpointer mod_info);
+
+extern const char gconf_version[];
+
+#ifdef HAVE_POPT_H
+#include <popt.h>
+#endif
+
+#ifdef POPT_AUTOHELP
+/* If people are using popt, then make the table available to them */
+extern struct poptOption gconf_options[];
+#endif
 
 #ifdef __cplusplus
 }

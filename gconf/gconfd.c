@@ -954,43 +954,13 @@ main(int argc, char** argv)
   PortableServer_POA poa;
   
   CORBA_Environment ev;
-  char *ior;
   CORBA_ORB orb;
   gchar* logname;
   const gchar* username;
   guint len;
   GConfError* err = NULL;
-  gchar* nodaemon_var;
-  gboolean nodaemon = FALSE;
+  gboolean nodaemon = TRUE;
   
-  int launcher_fd = -1; /* FD passed from the client that spawned us */
-
-  nodaemon_var = g_getenv("GCONFD_NO_DAEMON");
-
-  if (nodaemon_var && strcmp(nodaemon_var, "1") == 0)
-    nodaemon = TRUE;
-
-  if (!nodaemon)
-    {
-      /* Following all Stevens' rules for daemons, unless the
-         GCONFD_NO_DAEMON env variable is set to 1 */
-      
-      switch (fork())
-        {
-        case -1:
-          fprintf(stderr, _("Failed to fork gconfd"));
-          exit(1);
-          break;
-        case 0:
-          break;
-        default:
-          exit(0);
-          break;
-        }
-
-      setsid();
-    }
-
   chdir ("/");
 
   umask(0);
@@ -1027,49 +997,15 @@ main(int argc, char** argv)
 
   CORBA_exception_init(&ev);
 
-  if (!gconf_init_orb(&argc, argv, &err)) /* must do before our own arg parsing */
+  if (!oaf_init(argc, argv))
     {
       gconf_log(GCL_ERR, _("Failed to init ORB: %s"), err->str);
       exit(1);
     }
 
-  if (argc > 2)
-    {
-      gconf_log(GCL_ERR, _("Invalid command line arguments"));
-      exit(1);
-    }
-  else if (argc == 2)
-    {
-      /* Verify that it's a positive integer */
-      gchar* s = argv[1];
-      while (*s)
-        {
-          if (!isdigit(*s))
-            {
-              gconf_log(GCL_ERR, _("Command line arg should be a file descriptor, not `%s'"),
-                     argv[1]);
-              exit(1);
-            }
-          ++s;
-        }
-
-      launcher_fd = atoi(argv[1]);
-
-      gconf_log(GCL_DEBUG, _("Will notify launcher client on fd %d"), launcher_fd);
-
-      if (nodaemon)
-        gconf_log(GCL_WARNING, _("GCONFD_NO_DAEMON environment variable is set to 1, but we are being launched as if from a GConf client"));
-    }
-
   init_contexts();
 
-  orb = gconf_get_orb();
-
-  if (orb == CORBA_OBJECT_NIL)
-    {
-      gconf_log(GCL_ERR, _("Failed to get ORB reference"));
-      exit(1);
-    }
+  orb = oaf_orb_get();
 
   POA_ConfigServer__init(&poa_server_servant, &ev);
   
@@ -1081,38 +1017,13 @@ main(int argc, char** argv)
   server = PortableServer_POA_servant_to_reference(poa,
                                                    &poa_server_servant,
                                                    &ev);
-  if (server == CORBA_OBJECT_NIL) 
+  if (CORBA_Object_is_nil(server, &ev)) 
     {
       gconf_log(GCL_ERR, _("Failed to get object reference for ConfigServer"));
       return 1;
     }
 
-  ior = CORBA_ORB_object_to_string(orb, server, &ev);
-
-  /* Write IOR to a file (temporary hack, name server will be used eventually */
-  if (!gconf_server_write_info_file(ior))
-    {
-      gconf_log(GCL_ERR,
-                _("Failed to write info file - maybe another gconfd is running. Exiting."));
-      return 1;
-    }
-
-  CORBA_free(ior);
-
-  /* If we got a fd on the command line, write the magic byte 'g' 
-     to it to notify our spawning client that we're ready.
-  */
-
-  if (launcher_fd >= 0)
-    {
-      if (write(launcher_fd, "g", 1) != 1)
-        gconf_log(GCL_ERR, _("Failed to notify spawning parent of server liveness: %s"),
-                  strerror(errno));
-
-      if (close(launcher_fd) < 0)
-        gconf_log(GCL_ERR, _("Failed to close pipe to spawning parent: %s"), 
-                  strerror(errno));
-    }
+  oaf_active_server_register("OAFIID:gconfd:19991118" /* matches OAFIID in gconfd.oafinfo */, server);
 
   gconf_main();
 
