@@ -1,3 +1,17 @@
+2001-05-09  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/Makefile.am: remove testgconfclient from build, should 
+	now be made nongraphical and stuck in tests/
+
+	* Makefile.am (SUBDIRS): remove "wrappers" from subdirs
+
+	* configure.in: remove Guile cruft, fix up pkg-config usage
+
+	* acinclude.m4: Use the pkg-config macros, remove gnome-common
+	dependency. Requires CVS pkg-config, need a pkg-config release.
+        (Since OAF doesn't build against ORBit1 anyway, I figured why not
+	check this in too...)
+	
 2001-04-28  Murray Cumming  <murrayc@usa.net>
 
 	* gconf/gconf-client.c, gconf/gconf-client.h,

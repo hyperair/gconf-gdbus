@@ -1,6 +1,5 @@
 INCLUDES=-I$(top_srcdir) -I$(top_srcdir)/gconf -I$(top_builddir)/gconf \
-	-I$(top_srcdir)/wrappers/gtk -I$(top_builddir)/wrappers/gtk \
-	$(GLIB_CFLAGS) $(OAF_CFLAGS) $(GMODULE_CFLAGS) $(GTK_CFLAGS) \
+	$(DEPENDENT_WITH_GTK_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\"
 
 EFENCE=
@@ -13,7 +12,7 @@ endif
 
 noinst_PROGRAMS=$(GTK_EXAMPLES)
 
-GTK_EXAMPLES_LINK= $(EFENCE) $(INTLLIBS) $(OAF_LIBS) $(GTK_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la $(EFENCE)
+GTK_EXAMPLES_LINK= $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_GTK_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la $(EFENCE)
 
 basic_gconf_app_SOURCES = basic-gconf-app.c
 

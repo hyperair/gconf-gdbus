@@ -3,10 +3,7 @@ NULL=
 INCLUDES=\
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
-	$(GLIB_CFLAGS) \
-	$(XML_CFLAGS) \
-	$(OAF_CFLAGS) \
-	$(GTK_CFLAGS) \
+	$(DEPENDENT_CFLAGS) \
 	-DG_LOG_DOMAIN=\"GConf\"                   \
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"  \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" \
@@ -24,14 +21,6 @@ EFENCE=
 lib_LTLIBRARIES = libgconf-2.la
 
 bin_PROGRAMS = gconfd-2 gconftool-2
-
-if GTK
-GTK_PROGS = testgconfclient
-else
-GTK_PROGS =
-endif
-
-noinst_PROGRAMS = $(GTK_PROGS)
 
 CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
@@ -67,7 +56,7 @@ gconfd_2_SOURCES = \
 	gconfd.h		\
 	gconfd.c
 
-gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
+gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) libgconf-$(MAJOR_VERSION).la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
@@ -77,7 +66,7 @@ gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR
 gconftool_2_SOURCES = \
 	gconftool.c
 
-gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf-$(MAJOR_VERSION).la
+gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
 
 $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
@@ -101,7 +90,7 @@ libgconf_2_la_SOURCES = \
 
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
 
-libgconf_2_la_LIBADD = $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS)
+libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
 EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in gconfmarshal.list
 
@@ -127,8 +116,3 @@ gconfmarshal.h gconfmarshal.c: @REBUILD@ stamp-gconfmarshal.h
 	&& cp xgen-gmc gconfmarshal.c \
 	&& rm -f xgen-gmc xgen-gmc~
 
-testgconfclient_SOURCES = \
-	testgconfclient.c
-
-testgconfclient_LDADD = \
-	libgconf-2.la $(GTK_LIBS)

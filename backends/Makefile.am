@@ -1,5 +1,5 @@
 INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
-	$(GLIB_CFLAGS) $(OAF_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) \
+	$(DEPENDENT_WITH_XML_CFLAGS) \
 	-DGCONF_ENABLE_INTERNALS=1 -DG_LOG_DOMAIN=\"GConf-Backends\"
 
 EXTRA_DIST=README.bdb
@@ -24,10 +24,10 @@ libgconfbackend_xml_la_SOURCES = \
 	xml-backend.c
 
 libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
-libgconfbackend_xml_la_LIBADD  = $(GLIB_LIBS) $(XML_LIBS)
+libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS)
 
 libgconfbackend_bdb_la_SOURCES = bdb.c bdb.h bdb-backend.c val-encode.c val-encode.h dir-utils.c dir-utils.h
 
 
 libgconfbackend_bdb_la_LDFLAGS = -avoid-version -module
-libgconfbackend_bdb_la_LIBADD = $(GLIB_LIBS) $(BDB_LIBS)
+libgconfbackend_bdb_la_LIBADD = $(DEPENDENT_LIBS) $(BDB_LIBS)

@@ -137,22 +137,22 @@ if test "x$docs_only" = "xyes"; then
         AC_FYI("Only building documentation")
 else
 
-GNOME_PKGCONFIG_CHECK_MODULES(GLIB, gmodule-2.0:1.3.1 gobject-2.0:1.3.1)
-GNOME_PKGCONFIG_CHECK_OPTIONAL_MODULES(GTK, gtk+-2.0:1.3.1)
-GNOME_PKGCONFIG_CHECK_MODULES(OAF, oaf-2.0)
-GNOME_PKGCONFIG_CHECK_MODULES(XML, libxml-2.0:2.2.8)
-AC_PATH_PROG(OAF_CONFIG, oaf-config)
-AC_SUBST(OAF_CONFIG)
-AC_SUBST(GLIB_LIBS)
-AC_SUBST(GLIB_CFLAGS)
-AC_SUBST(OAF_LIBS)
-AC_SUBST(OAF_CFLAGS)
-AC_SUBST(GTK_LIBS)
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(XML_LIBS)
-AC_SUBST(XML_CFLAGS)
+PKGCONFIG_MODULES='gmodule-2.0 >= 1.3.5 gobject-2.0 >= 1.3.5 oaf-2.0'
+PKGCONFIG_MODULES_WITH_XML=$PKGCONFIG_MODULES" libxml-2.0"
+PKGCONFIG_MODULES_WITH_GTK="gtk+-2.0 "$PKGCONFIG_MODULES
+
+PKG_CHECK_MODULES(DEPENDENT, $PKGCONFIG_MODULES)
+PKG_CHECK_MODULES(DEPENDENT_WITH_XML, $PKGCONFIG_MODULES_WITH_XML)
+PKG_CHECK_MODULES(DEPENDENT_WITH_GTK, $PKGCONFIG_MODULES_WITH_GTK, HAVE_GTK=yes, HAVE_GTK=no)
 
 AM_CONDITIONAL(GTK, test x$HAVE_GTK != xno)
+
+AC_SUBST(DEPENDENT_LIBS)
+AC_SUBST(DEPENDENT_CFLAGS)
+AC_SUBST(DEPENDENT_WITH_XML_LIBS)
+AC_SUBST(DEPENDENT_WITH_XML_CFLAGS)
+AC_SUBST(DEPENDENT_WITH_GTK_LIBS)
+AC_SUBST(DEPENDENT_WITH_GTK_CFLAGS)
 
 BDB_LIBS=
 BDB_CFLAGS=
@@ -173,21 +173,6 @@ AC_CHECK_LIB(popt, poptGetArg, POPT_LIBS=-lpopt,
 *** Couldn't find popt. Please download and install from
 *** ftp://ftp.redhat.com/pub/redhat/code/popt and try again.]]))])
 AC_SUBST(POPT_LIBS)
-
-AC_PATH_PROG(GUILE_CONFIG,guile-config,no)
-if (test x$GUILE_CONFIG = xno); then
-  AC_MSG_WARN(didn't find guile-config, won't build Guile wrappers)
-else
-  GUILE_LIBS=`$GUILE_CONFIG link`
-  GUILE_CFLAGS=`$GUILE_CONFIG compile`
-fi
-if (test -z "$GUILE_LIBS"); then
-  AC_MSG_WARN(guile-config reports no libraries, won't build Guile wrappers)
-fi
-
-AM_CONDITIONAL(GUILE, test -n "$GUILE_LIBS")
-AC_SUBST(GUILE_LIBS)
-AC_SUBST(GUILE_CFLAGS)
 
 AC_CHECK_HEADER(pthread.h, have_pthreads=yes)
 AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
@@ -253,7 +238,6 @@ gconf/Makefile
 gconf/default.path
 gconf/gconfd.oafinfo
 backends/Makefile
-wrappers/Makefile
 po/Makefile.in
 doc/Makefile
 doc/gconf/Makefile

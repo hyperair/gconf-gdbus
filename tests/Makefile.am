@@ -3,12 +3,12 @@ EFENCE=
 
 INCLUDES = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/gconf \
 	-I$(top_builddir)/gconf \
-	-I$(includedir) $(GLIB_CFLAGS) $(OAF_CFLAGS) \
+	-I$(includedir) $(DEPENDENT_CFLAGS) \
 	 -DG_LOG_DOMAIN=\"GConf-Tests\" -DGCONF_ENABLE_INTERNALS=1
 
 noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence testdirlist testaddress
 
-TESTLIBS= $(INTLLIBS) $(GLIB_LIBS) $(OAF_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la  $(EFENCE)
+TESTLIBS= $(INTLLIBS) $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la  $(EFENCE)
 
 testunique_SOURCES=testunique.c
 
