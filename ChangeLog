@@ -1,5 +1,26 @@
 2004-03-24  Mark McLoughlin  <mark@skynet.ie>
 	
+	* gconf/gconf-backend.h: add a vtable_size member to
+	the vtable.
+
+	* gconf/gconf-backend.c:
+	(gconf_backend_verify_vtable): impl. copying handling
+	mismatches in vtable sizes and also refuse to use the
+	backend if any of the functions we require are NULL.
+	(gconf_get_backend): fixup error handling a bit.
+	
+	* gconf/gconf-sources.c: update to take into account
+	that the we have a copy of the vtable now rather than
+	just a pointer to it.
+	
+	* doc/gconf/tmpl/gconf-backend.sgml: upd.
+
+	* backends/markup-backend.c,
+	  backends/xml-backend.c: add sizeof (GConfBackendVTable) to
+	the vtable.
+	
+2004-03-24  Mark McLoughlin  <mark@skynet.ie>
+	
 	* gconf/gconf-database.c: (impl_ConfigDatabase_set): don't
 	convert the value into a string and then do nothing with it.
 	

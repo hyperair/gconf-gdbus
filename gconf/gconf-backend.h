@@ -168,6 +168,3 @@ GConfSource*  gconf_backend_resolve_address (GConfBackend* backend,
 void          gconf_blow_away_locks       (const gchar* address);
 
 #endif
-
-
-

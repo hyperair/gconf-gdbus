@@ -178,6 +178,62 @@ gconf_backend_file(const gchar* address)
 
 static GHashTable* loaded_backends = NULL;
 
+static gboolean
+gconf_backend_verify_vtable (GConfBackendVTable  *vtable,
+			     GConfBackendVTable  *vtable_copy,
+			     const char          *backend_name,			    
+			     GError             **err)
+{
+  int i;
+  struct
+  {
+    char  *name;
+    gsize  offset;
+  } required_vtable_functions[] = {
+    { "shutdown",        G_STRUCT_OFFSET(GConfBackendVTable, shutdown)        },
+    { "resolve_address", G_STRUCT_OFFSET(GConfBackendVTable, resolve_address) },
+    { "query_value",     G_STRUCT_OFFSET(GConfBackendVTable, query_value)     },
+    { "query_metainfo",  G_STRUCT_OFFSET(GConfBackendVTable, query_metainfo)  },
+    { "set_value",       G_STRUCT_OFFSET(GConfBackendVTable, set_value)       },
+    { "all_entries",     G_STRUCT_OFFSET(GConfBackendVTable, all_entries)     },
+    { "all_subdirs",     G_STRUCT_OFFSET(GConfBackendVTable, all_subdirs)     },
+    { "unset_value",     G_STRUCT_OFFSET(GConfBackendVTable, unset_value)     },
+    { "dir_exists",      G_STRUCT_OFFSET(GConfBackendVTable, dir_exists)      },
+    { "remove_dir",      G_STRUCT_OFFSET(GConfBackendVTable, remove_dir)      },
+    { "set_schema",      G_STRUCT_OFFSET(GConfBackendVTable, set_schema)      },
+    { "sync_all",        G_STRUCT_OFFSET(GConfBackendVTable, sync_all)        },
+    { "destroy_source",  G_STRUCT_OFFSET(GConfBackendVTable, destroy_source)  },
+    { "blow_away_locks", G_STRUCT_OFFSET(GConfBackendVTable, blow_away_locks) }
+  };
+
+  if (!vtable)
+    {
+      gconf_set_error(err,
+		      GCONF_ERROR_FAILED, _("Backend `%s' failed return a vtable\n"),
+		      backend_name);
+      return FALSE;
+    }
+
+  /* Create a copy in case vtable size doesn't match */
+  memcpy(vtable_copy, vtable, MIN(vtable->vtable_size, sizeof(GConfBackendVTable)));
+
+  vtable_copy->vtable_size = sizeof(GConfBackendVTable);
+
+  for (i = 0; i < G_N_ELEMENTS(required_vtable_functions); i++)
+    {
+      if (G_STRUCT_MEMBER_P(vtable_copy, required_vtable_functions[i].offset) == NULL)
+	{
+	  gconf_set_error(err,
+			  GCONF_ERROR_FAILED, _("Backend `%s' missing required vtable member `%s'\n"),
+			  backend_name,
+			  required_vtable_functions[i].name);
+	  return FALSE;
+	}
+    }
+
+  return FALSE;
+}
+
 GConfBackend* 
 gconf_get_backend(const gchar* address, GError** err)
 {
@@ -225,10 +281,9 @@ gconf_get_backend(const gchar* address, GError** err)
           
           if (module == NULL)
             {
-              const gchar* error = g_module_error();
               gconf_set_error(err,
                               GCONF_ERROR_FAILED, _("Error opening module `%s': %s\n"),
-                              name, error);
+                              name, g_module_error());
               g_free(name);
               return NULL;
             }
@@ -237,6 +292,10 @@ gconf_get_backend(const gchar* address, GError** err)
                                "gconf_backend_get_vtable", 
                                (gpointer*)&get_vtable))
             {
+              gconf_set_error(err,
+                              GCONF_ERROR_FAILED, _("Error initializing module `%s': %s\n"),
+                              name, g_module_error());
+              g_module_close(module);
               g_free(name);
               return NULL;
             }
@@ -245,7 +304,13 @@ gconf_get_backend(const gchar* address, GError** err)
 
           backend->module = module;
 
-          backend->vtable = (*get_vtable)();
+	  if (!gconf_backend_verify_vtable((*get_vtable)(), &backend->vtable, name, err))
+	    {
+	      g_module_close(module);
+	      g_free(name);
+	      g_free(backend);
+	      return NULL;
+	    }
               
           backend->name = name;
 
@@ -287,7 +352,7 @@ gconf_backend_unref(GConfBackend* backend)
     {
       GError* error = NULL;
       
-      (*backend->vtable->shutdown)(&error);
+      (*backend->vtable.shutdown)(&error);
 
       if (error != NULL)
         {
@@ -319,7 +384,7 @@ gconf_backend_resolve_address (GConfBackend* backend,
   gchar** iter;
   GConfSource* retval;
 
-  retval = (*backend->vtable->resolve_address)(address, err);
+  retval = (*backend->vtable.resolve_address)(address, err);
 
   if (retval == NULL)
     return NULL;
@@ -362,6 +427,6 @@ gconf_blow_away_locks (const gchar* address)
 
   if (backend != NULL)
     {
-      (*backend->vtable->blow_away_locks) (address);
+      (*backend->vtable.blow_away_locks) (address);
     }
 }

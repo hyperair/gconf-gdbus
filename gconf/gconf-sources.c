@@ -78,7 +78,7 @@ gconf_source_free (GConfSource* source)
 
   backend = source->backend;
   
-  (*source->backend->vtable->destroy_source)(source);
+  (*source->backend->vtable.destroy_source)(source);
   
   /* Remove ref held by the source. */
   gconf_backend_unref(backend);
@@ -86,8 +86,8 @@ gconf_source_free (GConfSource* source)
 
 #define SOURCE_READABLE(source, key, err)                  \
      ( ((source)->flags & GCONF_SOURCE_ALL_READABLE) ||    \
-       ((source)->backend->vtable->readable != NULL &&     \
-        (*(source)->backend->vtable->readable)((source), (key), (err))) )
+       ((source)->backend->vtable.readable != NULL &&     \
+        (*(source)->backend->vtable.readable)((source), (key), (err))) )
 
 static gboolean
 source_is_writable(GConfSource* source, const gchar* key, GError** err)
@@ -96,8 +96,8 @@ source_is_writable(GConfSource* source, const gchar* key, GError** err)
     return FALSE;
   else if ((source->flags & GCONF_SOURCE_ALL_WRITEABLE) != 0)
     return TRUE;
-  else if ((source->backend->vtable->writable != NULL) &&
-           (*source->backend->vtable->writable)(source, key, err))
+  else if ((source->backend->vtable.writable != NULL) &&
+           (*source->backend->vtable.writable)(source, key, err))
     return TRUE;
   else
     return FALSE;
@@ -119,7 +119,7 @@ gconf_source_query_value      (GConfSource* source,
   if ( SOURCE_READABLE(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->query_value)(source, key, locales, schema_name, err);
+      return (*source->backend->vtable.query_value)(source, key, locales, schema_name, err);
     }
   else
     return NULL;
@@ -139,7 +139,7 @@ gconf_source_query_metainfo      (GConfSource* source,
   if ( SOURCE_READABLE(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->query_metainfo)(source, key, err);
+      return (*source->backend->vtable.query_metainfo)(source, key, err);
     }
   else
     return NULL;
@@ -163,7 +163,7 @@ gconf_source_set_value        (GConfSource* source,
   if ( source_is_writable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
-      (*source->backend->vtable->set_value)(source, key, value, err);
+      (*source->backend->vtable.set_value)(source, key, value, err);
       return TRUE;
     }
   else
@@ -184,7 +184,7 @@ gconf_source_unset_value      (GConfSource* source,
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
 
-      (*source->backend->vtable->unset_value)(source, key, locale, err);
+      (*source->backend->vtable.unset_value)(source, key, locale, err);
       return TRUE;
     }
   else
@@ -204,7 +204,7 @@ gconf_source_all_entries         (GConfSource* source,
   if ( SOURCE_READABLE(source, dir, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->all_entries)(source, dir, locales, err);
+      return (*source->backend->vtable.all_entries)(source, dir, locales, err);
     }
   else
     return NULL;
@@ -222,7 +222,7 @@ gconf_source_all_dirs          (GConfSource* source,
   if ( SOURCE_READABLE(source, dir, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->all_subdirs)(source, dir, err);
+      return (*source->backend->vtable.all_subdirs)(source, dir, err);
     }
   else
     return NULL;
@@ -240,7 +240,7 @@ gconf_source_dir_exists        (GConfSource* source,
   if ( SOURCE_READABLE(source, dir, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
-      return (*source->backend->vtable->dir_exists)(source, dir, err);
+      return (*source->backend->vtable.dir_exists)(source, dir, err);
     }
   else
     return FALSE;
@@ -258,7 +258,7 @@ gconf_source_remove_dir        (GConfSource* source,
   if ( source_is_writable(source, dir, err) )
     {
       g_return_if_fail(err == NULL || *err == NULL);
-      (*source->backend->vtable->remove_dir)(source, dir, err);
+      (*source->backend->vtable.remove_dir)(source, dir, err);
     }
 }
 
@@ -275,7 +275,7 @@ gconf_source_set_schema        (GConfSource* source,
   if ( source_is_writable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
-      (*source->backend->vtable->set_schema)(source, key, schema_key, err);
+      (*source->backend->vtable.set_schema)(source, key, schema_key, err);
       return TRUE;
     }
   else
@@ -285,7 +285,7 @@ gconf_source_set_schema        (GConfSource* source,
 static gboolean
 gconf_source_sync_all         (GConfSource* source, GError** err)
 {
-  return (*source->backend->vtable->sync_all)(source, err);
+  return (*source->backend->vtable.sync_all)(source, err);
 }
 
 /*
@@ -413,8 +413,8 @@ gconf_sources_clear_cache        (GConfSources  *sources)
     {
       GConfSource* source = tmp->data;
 
-      if (source->backend->vtable->clear_cache)
-        (*source->backend->vtable->clear_cache)(source);
+      if (source->backend->vtable.clear_cache)
+        (*source->backend->vtable.clear_cache)(source);
       
       tmp = g_list_next(tmp);
     }

@@ -132,6 +132,7 @@ static void           blow_away_locks (const char        *address);
 
 
 static GConfBackendVTable markup_vtable = {
+  sizeof (GConfBackendVTable),
   x_shutdown,
   resolve_address,
   lock,

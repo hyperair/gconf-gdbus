@@ -209,6 +209,7 @@ static void          clear_cache     (GConfSource* source);
 static void          blow_away_locks (const char *address);
 
 static GConfBackendVTable xml_vtable = {
+  sizeof (GConfBackendVTable),
   x_shutdown,
   resolve_address,
   lock,
