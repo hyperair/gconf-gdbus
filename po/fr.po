@@ -1,15 +1,15 @@
-# GConf fr.po
+# French translation of GConf.
 # Copyright (C) 2000-2002 Free Software Foundation, Inc.
 # Vincent Renardias <vincent@ldsol.com>, 2000.
-# maintainer: Christophe Merlet (RedFox) <christophe@merlet.net>, 2000-2002.
+# maintainer: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>, 2000-2002.
 # Sun G11n <gnome_int_l10n@ireland.sun.com>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 1.2.0\n"
-"POT-Creation-Date: 2002-08-04 14:20-0400\n"
-"PO-Revision-Date: 2002-07-28 01:39+0200\n"
-"Last-Translator: Christophe Merlet (RedFox) <christophe@merlet.net>\n"
+"Project-Id-Version: GConf 2.1.0\n"
+"POT-Creation-Date: 2002-12-15 18:05+0100\n"
+"PO-Revision-Date: 2002-12-15 17:56+0100\n"
+"Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +33,7 @@ msgstr "Initialisation du module BDB"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "Répertoire racine %s introuvable à l'adresse « %s »"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Impossible de créer le répertoire « %s » : %s"
@@ -50,14 +50,15 @@ msgstr "Déchargement du module XML."
 
 #: backends/xml-backend.c:289
 #, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Répertoire racine XML introuvable à l'adresse « %s »"
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "Ne peut trouver le répertoire racine à l'adresse « %s »"
 
 #: backends/xml-backend.c:414
 #, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
-"Impossible de lire ou écrire vers le répertoire racine XML à l'adresse « %s »"
+"Ne peut lire lire ou écrire au répertoire racine XML à l'adresse « %s »"
 
 #: backends/xml-backend.c:424
 #, c-format
@@ -85,12 +86,12 @@ msgstr "Initialisation du module XML"
 
 #: backends/xml-backend.c:790
 #, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr "Échec du déverrouillage du répertoire XML « %s » : %s"
+msgid "Failed to give up lock on XML dir \"%s\": %s"
+msgstr "Échec au déverrouillage du répertoire XML « %s » : %s"
 
 #: backends/xml-cache.c:257
 msgid "Failed to sync XML cache contents to disk"
-msgstr "Échec ade synchronisation du contenu du cache XML sur le disque"
+msgstr "Échec à la synchronisation du contenu du cache XML sur le disque"
 
 #: backends/xml-cache.c:287
 #, c-format
@@ -187,6 +188,11 @@ msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
 "Un noeud racine dans le fichier XML « %s » est <%s> au lieu de <entry>, "
 "ignore"
+
+#: backends/xml-dir.c:1212
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "Ne peut créer le répertoire « %s » : %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -604,7 +610,7 @@ msgstr ""
 #: gconf/gconf-internals.c:1514
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
-msgstr "Attend une paire de type (%s,%s), obtient type (%s,%s)"
+msgstr "Attend une paire de type (%s,%s), obtient le type (%s,%s)"
 
 #: gconf/gconf-internals.c:1630
 msgid "Quoted string doesn't begin with a quotation mark"
@@ -828,6 +834,21 @@ msgstr ""
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "Le schéma contient de l'UTF-8 non valide"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+"Le schéma spécifie une liste de type mais ne spécifie pas le type de la "
+"liste d'éléments"
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
+"Le schéma spécifie une liste de paire mais ne spécifie pas le type des "
+"éléments car/cdr"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -1937,7 +1958,7 @@ msgstr ""
 msgid "WARNING: empty <applyto> node"
 msgstr "AVERTISSEMENT : noeud <applyto> vide"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris sous <schema>\n"
@@ -1946,13 +1967,28 @@ msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris sous <schema>\n"
 msgid "WARNING: no key specified for schema\n"
 msgstr "AVERTISSEMENT : aucune clé spécifiée pour le schéma\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr ""
+"AVERTISSEMENT : aucun <list_type> spécifié pour le schéma de liste de type\n"
+
+#: gconf/gconftool.c:2024
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr ""
+"AVERTISSEMENT : aucun <car_type> spécifiée pour le schéma de paire de type\n"
+
+#: gconf/gconftool.c:2030
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr ""
+"AVERTISSEMENT : aucun <cdr_type> spécifiée pour le schéma de paire de type\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "AVERTISSEMENT : le noeud <locale> n'a aucun attribut « name=\"locale\" », "
 "ignore\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -1960,55 +1996,55 @@ msgstr ""
 "AVERTISSEMENT : plusieurs noeuds <locale> pour la langue « %s », ignore tous "
 "sauf le premier\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "AVERTISSEMENT : noeud <%s> non valide dans un noeud <locale>\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr ""
 "AVERTISSEMENT : impossible d'installer le schéma « %s » pour la langue « %"
 "s » : %s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Schéma « %s » installé pour la langue « %s »\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr ""
 "AVERTISSEMENT : impossible d'associer le schéma « %s » avec la clé « %s » : %"
 "s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Schéma « %s » attaché à la clé « %s »\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Vous devez avoir au moins une entrée <locale> dans un <schema>\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris sous <schemalist>\n"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Impossible d'ouvrir « %s » : %s\n"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Le document « %s » est vide ?\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -2017,27 +2053,27 @@ msgstr ""
 "Le document « %s » a le mauvais type de noeud racine (<%s>, devrait être "
 "<gconfschemafile>)\n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "Le document « %s » n'a pas de noeud racine <gconfschemafile>\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr ""
 "AVERTISSEMENT : le noeud <%s> sous <gconfschemafile> n'est pas compris\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Erreur de synchronisation des données de configuration : %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "Vous devez spécifier quelques fichiers de schéma à installer\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -2046,16 +2082,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Échec de l'annulation de la clé de rupture %s : %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "Vous devez spécifier quelques clés à rompre\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2065,11 +2101,11 @@ msgstr ""
 "pour les clés :\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "Vous devez spécifier quelques répertoires à rompre\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2079,6 +2115,9 @@ msgstr ""
 "Tentative de blocage de votre application en définissant des valeurs "
 "incorrectes pour les clés dans le répertoire :\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "Répertoire racine XML introuvable à l'adresse « %s »"
 
 #~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 #~ msgstr ""
