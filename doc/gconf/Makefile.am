@@ -35,7 +35,7 @@ maintainer-clean-local: clean
 	rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt 
 
 install-data-local:
-	$(top_srcdir)/$(MKINSTALLDIRS) $(TARGET_DIR) ## seems broken, but mkinstalldirs='./mkinstalldirs' ?
+	$(mkinstalldirs) $(TARGET_DIR) ## seems ok
 	-$(INSTALL_DATA) $(srcdir)/html/*.html $(TARGET_DIR)
 	-$(INSTALL_DATA) $(srcdir)/html/index.sgml $(TARGET_DIR)
 	-gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(HTML_DIR)
@@ -46,7 +46,7 @@ EXTRA_DIST = \
 	gconf-decl.txt
 
 dist-hook:
-	mkdir $(distdir)/tmpl
+	$(mkinstalldirs) $(distdir)/tmpl
 	cp -p tmpl/*.sgml $(distdir)/tmpl
 
 .PHONY : html sgml templates scan
