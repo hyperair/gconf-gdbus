@@ -144,7 +144,7 @@ BDB_CFLAGS=
 
 if test "x$enable_bdbbackend" = "xyes"; then
    AC_CHECK_LIB(db-3, db_env_create, BDB_LIBS=-ldb-3)
-   AC_CHECK_HEADERS(db3/db.h)
+   AC_CHECK_HEADERS(db3/db.h,  , AC_MSG_ERROR([db3 library found but db3/db.h not found]))
 fi
 
 if test "x$BDB_LIBS" = x; then

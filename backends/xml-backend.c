@@ -429,7 +429,7 @@ query_value (GConfSource* source,
      problem, since some errors may be added that need reporting. */
   if (error != NULL)
     {
-      gconf_log(GCL_WARNING, error->message);
+      gconf_log(GCL_WARNING, "%s", error->message);
       g_error_free(error);
       error = NULL;
     }
@@ -449,7 +449,7 @@ query_value (GConfSource* source,
       /* perhaps we should be reporting this error... */
       if (error != NULL)
         {
-          gconf_log(GCL_WARNING, error->message);
+          gconf_log(GCL_WARNING, "%s", error->message);
           g_error_free(error);
           error = NULL;
         }

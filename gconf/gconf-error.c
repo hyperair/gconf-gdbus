@@ -141,3 +141,4 @@ gconf_compose_errors (GError* err1, GError* err2)
       return n;
     }
 }
+

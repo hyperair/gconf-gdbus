@@ -150,7 +150,7 @@ cache_sync_foreach(const gchar* key,
     {
       sd->failed = TRUE;
       g_return_if_fail(error != NULL);
-      gconf_log(GCL_ERR, error->message);
+      gconf_log(GCL_ERR, "%s", error->message);
       g_error_free(error);
       g_return_if_fail(dir_sync_pending(dir));
     }

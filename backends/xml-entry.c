@@ -198,7 +198,7 @@ entry_unset_value     (Entry        *e,
 
           if (error != NULL)
             {
-              gconf_log(GCL_WARNING, _("%s"), error->message);
+              gconf_log(GCL_WARNING, "%s", error->message);
               g_error_free(error);
               error = NULL;
             }

@@ -981,9 +981,9 @@ gconf_double_to_string(gdouble val)
   setlocale (LC_NUMERIC, "C");
   
   if (fabs (val) < 1e9 && fabs (val) > 1e-5)
-    snprintf (str, 100 + DBL_DIG, "%.*g", DBL_DIG, val);
+    g_snprintf (str, 100 + DBL_DIG, "%.*g", DBL_DIG, val);
   else
-    snprintf (str, 100 + DBL_DIG, "%f", val);
+    g_snprintf (str, 100 + DBL_DIG, "%f", val);
 
   setlocale (LC_NUMERIC, old_locale);
   g_free (old_locale);

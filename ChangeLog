@@ -1,3 +1,27 @@
+2001-10-12  Havoc Pennington  <hp@redhat.com>
+
+        Merging from stable.
+	
+	* backends/xml-entry.c (entry_unset_value): don't translate "%s"
+
+	* backends/xml-cache.c (cache_sync_foreach): printf string screwup
+
+	* backends/xml-backend.c (query_value): fix printf string derived
+	from untrusted data
+	(query_value): ditto
+
+	* configure.in: ensure we find the right bdb headers, if we find
+	the library, error if not. Reported by Samuel Stringham
+
+	* gconf/gconf-internals.c (gconf_double_to_string): use g_snprintf
+	not plain snprintf for Solaris 2.5.1 friendliness
+
+	* doc/gconf/tmpl/gconf-value.sgml: fix docs to mention that pairs
+	contain only primitive types; pointed out by Gregory Merchan
+
+	* configure.in (BDB_CFLAGS): patch from Nils Philippsen to detect
+	DB 3.1 if available.
+
 2001-10-11  Havoc Pennington  <hp@redhat.com>
 
 	* tests/testgconf.c (check_utils): add test for the key

@@ -23,6 +23,7 @@ name with a value, for example if the value "10" is stored at the key
 A #GConfMetaInfo object holds metainformation about a key, such as 
 its last modification time and the name of the schema associated with
 it. You should rarely if ever need to use #GConfMetaInfo.
+(In fact you can't get the metainfo for a key using the current API.)
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -45,7 +46,8 @@ Used to indicate the type of a #GConfValue.
 a primitive type (i.e. they may not be lists or pairs), and all elements
 of a list must have the same type.
 @GCONF_VALUE_PAIR: Pair of #GConfValue; the first field (car) and the second
-field (cdr) may have different types.
+field (cdr) may have different types. The two elements of a pair must be primitive
+types, not lists or pairs.
 
 <!-- ##### STRUCT GConfValue ##### -->
 <para>
