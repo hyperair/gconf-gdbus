@@ -1409,21 +1409,14 @@ logfile_save (void)
   /* Clients */
   log_clients_to_string (saveme);
   
-  /* Default database */
-  gconf_database_log_listeners_to_string (default_db,
-                                          TRUE,
-                                          saveme);
-
-  /* Other databases */
-  
+  /* Databases */
   tmp_list = db_list;
-
   while (tmp_list)
     {
       GConfDatabase *db = tmp_list->data;
 
       gconf_database_log_listeners_to_string (db,
-                                              FALSE,
+                                              db == default_db ? TRUE : FALSE,
                                               saveme);
       
       tmp_list = g_list_next (tmp_list);

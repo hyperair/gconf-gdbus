@@ -1,3 +1,13 @@
+2004-04-19  Mark McLoughlin  <mark@skynet.ie>
+
+	Tracked down by Gustavo GirÃ¡ldez  <gustavo.giraldez@gmx.net>
+	in bug #139170
+
+	* gconf/gconfd.c: (logfile_save): don't save default_db explicitly
+	since its now stored in the same list as the other dbs - but do
+	make sure that it gets saved as "def" rather than using its full
+	address list.
+
 2004-04-16  Colin Walters  <walters@redhat.com>
 
 	* gconf/gconf-internals.c (gconf_activate_server): Move temporary
