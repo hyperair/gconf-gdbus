@@ -2363,11 +2363,11 @@ gconf_handle_segv (int signum)
       
       /* Child process */
       execl (GCONF_BINDIR "/gnome_segv2", GCONF_BINDIR "/gnome_segv2",
-             GCONFD, buf,
+             GCONF_SERVERDIR"/"GCONFD, buf,
              VERSION, NULL);
       
       execlp ("gnome_segv2", "gnome_segv2",
-              GCONFD, buf,
+              GCONF_SERVERDIR"/"GCONFD, buf,
               GCONFD, NULL);
       
       _exit (99);

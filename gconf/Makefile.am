@@ -12,6 +12,7 @@ INCLUDES=								\
 	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\"	\
 	-DGCONF_ETCDIR=\""$(sysconfdir)/gconf"\"			\
 	-DGCONF_BINDIR=\""$(bindir)"\"					\
+	-DGCONF_SERVERDIR=\""$(libexecdir)"\"           \
 	-DGCONF_BUILDDIR=\""$(top_builddir)"\"				\
 	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\"		\
 	-DVERSION=\""$(VERSION)"\"					\
@@ -29,7 +30,8 @@ endif
 
 lib_LTLIBRARIES = libgconf-2.la
 
-bin_PROGRAMS = gconfd-2 gconftool-2 $(SANITY_CHECK)
+bin_PROGRAMS = gconftool-2 
+libexec_PROGRAMS = gconfd-2 $(SANITY_CHECK)
 
 CORBA_SOURCECODE = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 

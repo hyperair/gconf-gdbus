@@ -2860,7 +2860,7 @@ gconf_activate_server (gboolean  start_if_not_found,
           goto out;
         }
 
-      argv[0] = g_strconcat (GCONF_BINDIR, "/" GCONFD, NULL);
+      argv[0] = g_strconcat (GCONF_SERVERDIR, "/" GCONFD, NULL);
       argv[1] = g_strdup_printf ("%d", p[1]);
       argv[2] = NULL;
   
