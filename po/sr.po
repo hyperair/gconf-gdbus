@@ -8,8 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 2.2\n"
-"POT-Creation-Date: 2003-09-10 15:15-0400\n"
-"PO-Revision-Date: 2003-07-14 06:51+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-23 20:41+0200\n"
+"PO-Revision-Date: 2003-10-23 20:54+0200\n"
 "Last-Translator: Данило Шеган <danilo@prevod.org>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
 "MIME-Version: 1.0\n"
@@ -56,14 +57,11 @@ msgstr "Овлашћења за директоријум/датотеку изв
 msgid "Error syncing the XML backend directory cache: %s"
 msgstr "Грешка при усклађивању и освежавању кеша категорије за XML део: %s"
 
-# bug: dir -> directory
 #: backends/xml-backend.c:684
 msgid ""
-"Remove dir operation is no longer supported, just remove all the values in "
-"the directory"
-msgstr ""
-"Уклањање категорије више није подржано, само уклоните све вредности из ове "
-"категорије."
+"Remove directory operation is no longer supported, just remove all the "
+"values in the directory"
+msgstr "Уклањање категорија више није подржано, само уклоните све вредности из ње"
 
 #: backends/xml-backend.c:770
 #, c-format
@@ -81,11 +79,10 @@ msgstr "Не може да уклони датотеку „%s“: %s\n"
 msgid "Initializing XML backend module"
 msgstr "Учитава део нижег нивоа за рад са XML-ом"
 
-# bug: dir -> directory
 #: backends/xml-backend.c:877
 #, c-format
-msgid "Failed to give up lock on XML dir \"%s\": %s"
-msgstr "Не може да препусти XML категорију „%s“ другима на употребу: %s"
+msgid "Failed to give up lock on XML directory \"%s\": %s"
+msgstr "Не могу да одбацим катанац за XML категорију „%s“: %s"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -99,16 +96,6 @@ msgid ""
 msgstr ""
 "Не може да уклони категорију „%s“ из кеша XML дела, пошто није успешно "
 "снимљен на диск"
-
-# bug: plural forms (both occurrences of %u)
-#: backends/xml-cache.c:343
-#, c-format
-msgid ""
-"%u items remain in the cache after cleaning already-synced items older than %"
-"u seconds"
-msgstr ""
-"Преостало је %u ставки у кешу након чишћења већ снимљених ставки које су "
-"старије од %u секунди."
 
 #: backends/xml-dir.c:171
 #, c-format
@@ -165,11 +152,6 @@ msgstr "Није успео да обрише стару датотеку „%s�
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Не може да добије податке о „%s“: %s"
-
-#: backends/xml-dir.c:1002
-#, c-format
-msgid "%s"
-msgstr "%s"
 
 #: backends/xml-dir.c:1152
 #, c-format
@@ -319,17 +301,17 @@ msgstr "Не може да пронађе део нижег нивоа за „%
 msgid "Failed to shut down backend"
 msgstr "Није успео да угаси део нижег нивоа"
 
-#: gconf/gconf-client.c:343 gconf/gconf-client.c:361
+#: gconf/gconf-client.c:344 gconf/gconf-client.c:362
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "ГКонф грешка: %s\n"
 
-#: gconf/gconf-client.c:895
+#: gconf/gconf-client.c:896
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "ГКонф упозорење: грешка при проласку кроз парове у „%s“: %s"
 
-#: gconf/gconf-client.c:1180
+#: gconf/gconf-client.c:1181
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Очекивао је „%s“, добио је „%s“ за кључ „%s“"
@@ -425,8 +407,8 @@ msgstr "Грешка при провери да ли постоји „%s“: %s
 
 #: gconf/gconf-database.c:1520
 #, c-format
-msgid "Error removing dir `%s': %s"
-msgstr "Грешка при уклањању директоријума „%s“: %s"
+msgid "Error removing directory \"%s\": %s"
+msgstr "Грешка при уклањању категорије „%s“: %s"
 
 #: gconf/gconf-database.c:1547
 #, c-format
@@ -436,7 +418,7 @@ msgstr "Није успео да добави све уносе из „%s“: %
 #: gconf/gconf-database.c:1573
 #, c-format
 msgid "Error listing dirs in `%s': %s"
-msgstr "Грешка при читању директоријума у „%s“: %s"
+msgstr "Грешка при читању категорије у „%s“: %s"
 
 #: gconf/gconf-database.c:1594
 #, c-format
@@ -481,7 +463,7 @@ msgstr "Неслагање типова"
 
 #: gconf/gconf-error.c:34
 msgid "Key operation on directory"
-msgstr "Операција за кључеве на категорији"
+msgstr "Операција за кључеве у категорији"
 
 #: gconf/gconf-error.c:35
 msgid "Directory operation on key"
@@ -694,7 +676,7 @@ msgstr "Није успео да уклони директоријум за за
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Није успео да уклони датотеку за закључавање „%s“: %s\n"
 
-#: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
+#: gconf/gconf-internals.c:2856 gconf/gconfd.c:639
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Не може да образује %s: %s"
@@ -1043,68 +1025,68 @@ msgstr "Не може да разлучи адресу „%s“"
 msgid "Can't add notifications to a local configuration source"
 msgstr "Не може да дода обавештавања у локални извор подешавања"
 
-#: gconf/gconf.c:2078
+#: gconf/gconf.c:2097
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Није успео да дода клијента у списак на серверу, CORBA грешка: %s"
 
-#: gconf/gconf.c:2433
+#: gconf/gconf.c:2452
 msgid "Must begin with a slash (/)"
 msgstr "Мора почети косом цртом (/)"
 
-#: gconf/gconf.c:2455
+#: gconf/gconf.c:2474
 msgid "Can't have two slashes (/) in a row"
 msgstr "Не може да садржи две косе црте (/) заредом"
 
-#: gconf/gconf.c:2457
+#: gconf/gconf.c:2476
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Не може да садржи тачку (.) одмах после косе црте (/)"
 
-#: gconf/gconf.c:2476
+#: gconf/gconf.c:2495
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "„%c“ није ASCII знак, и зато није дозвољен у имену кључа"
 
-#: gconf/gconf.c:2486
+#: gconf/gconf.c:2505
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "„%c“ је недозвољен знак у имену кључа/категорије"
 
-#: gconf/gconf.c:2500
+#: gconf/gconf.c:2519
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Кључ/категорија се не могу завршавати косом цртом (/)"
 
-#: gconf/gconf.c:2869
+#: gconf/gconf.c:2888
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Грешка при гашењу сервера са подешавањима: %s"
 
-#: gconf/gconf.c:2930
+#: gconf/gconf.c:2949
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Очекивао је децимални број, добио је %s"
 
-#: gconf/gconf.c:2965
+#: gconf/gconf.c:2984
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Очекивао је цео број, добио је %s"
 
-#: gconf/gconf.c:3000
+#: gconf/gconf.c:3019
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Очекивао је текст, добио је %s"
 
-#: gconf/gconf.c:3034
+#: gconf/gconf.c:3053
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Очекивао је истинитосну вредност, добио је %s"
 
-#: gconf/gconf.c:3067
+#: gconf/gconf.c:3086
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Очекивао је схему, добио је %s"
 
-#: gconf/gconf.c:3424
+#: gconf/gconf.c:3443
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA грешка: %s"
@@ -1133,15 +1115,11 @@ msgstr ""
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
+#, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
-"edit "
-msgstr ""
-"Нема извора подешавања у путањи извора, подешавања неће бити сачувана; уреди "
-
-#: gconf/gconfd.c:304
-msgid "/path"
-msgstr "/путања"
+"edit %s"
+msgstr "Нема извора подешавања у путањи извора, подешавања неће бити сачувана; уредите %s"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1183,73 +1161,73 @@ msgstr ""
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Примио је сигнал %d, гаси уобичајено"
 
-#: gconf/gconfd.c:481
+#: gconf/gconfd.c:480
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "Не може да отвори „%s“: %s"
 
-#: gconf/gconfd.c:488
+#: gconf/gconfd.c:487
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Не може да добије податке о „%s“: %s"
 
-#: gconf/gconfd.c:497
+#: gconf/gconfd.c:496
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "Власник %s није текући корисник"
 
-#: gconf/gconfd.c:505
+#: gconf/gconfd.c:504
 #, c-format
-msgid "Bad permissions %o on dir %s"
-msgstr "Лоша овлашћења %o за директоријум %s"
+msgid "Bad permissions %lo on directory %s"
+msgstr "Лоша овлашћења %lo за директоријум %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:587
+#: gconf/gconfd.c:586
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "покреће (издање %s), PID %u корисник „%s“"
 
-#: gconf/gconfd.c:627
+#: gconf/gconfd.c:626
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Није успео да добије референцу на објекат за ConfigServer"
 
-#: gconf/gconfd.c:647
+#: gconf/gconfd.c:646
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Директоријум %s има проблема, gconfd не може да га користи"
 
 # bug: fd -> file descriptor
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:675
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Није успео да упише бајт у цев са ознаком %d, па програм може да закочи: %s"
 
-#: gconf/gconfd.c:686
+#: gconf/gconfd.c:685
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Не може да обезбеди закључавање за сервис, завршава: %s"
 
-#: gconf/gconfd.c:724
+#: gconf/gconfd.c:723
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Грешка при прекидању закључавања: %s"
 
-#: gconf/gconfd.c:732
+#: gconf/gconfd.c:731
 msgid "Exiting"
 msgstr "Завршава"
 
-#: gconf/gconfd.c:758
+#: gconf/gconfd.c:757
 msgid "GConf server is not in use, shutting down."
 msgstr "ГКонф сервер се не користи, гаси га."
 
-#: gconf/gconfd.c:1124
+#: gconf/gconfd.c:1123
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Вратио је грешку: %s"
 
-#: gconf/gconfd.c:1224
+#: gconf/gconfd.c:1223
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1259,7 +1237,7 @@ msgstr ""
 "гашења gconfd-а (%s)"
 
 # боље уснимљени од хр:спремљени/снимљени/запамћени??
-#: gconf/gconfd.c:1259
+#: gconf/gconfd.c:1258
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1267,34 +1245,34 @@ msgstr ""
 "Није успео да затвори дневник gconfd-а; подаци можда неће бити успешно "
 "сачувани (%s)"
 
-#: gconf/gconfd.c:1328
+#: gconf/gconfd.c:1327
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Није успео да отвори датотеку „%s“ са сачуваним стањем ради уписа: %s"
 
-#: gconf/gconfd.c:1342
+#: gconf/gconfd.c:1341
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Није успео упише датотеку „%s“ са сачуваним стањем (ознака: %d): %s"
 
-#: gconf/gconfd.c:1351
+#: gconf/gconfd.c:1350
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Није успео да затвори нову датотеку „%s“ са сачуваним стањем: %s"
 
-#: gconf/gconfd.c:1365
+#: gconf/gconfd.c:1364
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Није могао да склони стару датотеку „%s“ са сачуваним стањем: %s"
 
-#: gconf/gconfd.c:1375
+#: gconf/gconfd.c:1374
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr ""
 "Није могао да премести нову датотеку са сачуваним стањем на предвиђено "
 "место: %s"
 
-#: gconf/gconfd.c:1384
+#: gconf/gconfd.c:1383
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1302,7 +1280,7 @@ msgstr ""
 "Није успео да поврати изворну датотеку са сачуваним стањем која је била "
 "премештена на „%s“: %s"
 
-#: gconf/gconfd.c:1855
+#: gconf/gconfd.c:1854
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1310,17 +1288,17 @@ msgstr ""
 "Није успео да врати слушаоца на адреси „%s“, пошто није успео да разлучи "
 "базу података"
 
-#: gconf/gconfd.c:1901
+#: gconf/gconfd.c:1900
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Грешка при читању датотеке са сачуваним стањем: %s"
 
-#: gconf/gconfd.c:1955
+#: gconf/gconfd.c:1954
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Не може да отвори датотеку „%s“ са сачуваним стањем: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2073
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1329,7 +1307,7 @@ msgstr ""
 "Није успео да упише додавање слушаоца у gconfd дневник; неће моћи да "
 "аутоматски дода слушаоца уколико се gconfd угаси (%s)"
 
-#: gconf/gconfd.c:2079
+#: gconf/gconfd.c:2078
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1338,30 +1316,30 @@ msgstr ""
 "Није успео да упише уклањање слушаоца у gconfd дневник; можда ће погрешно "
 "додати слушаоца уколико се gconfd угаси (%s)"
 
-#: gconf/gconfd.c:2102 gconf/gconfd.c:2276
+#: gconf/gconfd.c:2101 gconf/gconfd.c:2275
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Није успео да сазна IOR за клијента: %s"
 
-#: gconf/gconfd.c:2117
+#: gconf/gconfd.c:2116
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Није успео да отвори датотеку са сачуваним стањем: %s"
 
-#: gconf/gconfd.c:2130
+#: gconf/gconfd.c:2129
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Није успео да упише додавање клијента у датотеку са сачуваним стањем: %s"
 
-#: gconf/gconfd.c:2138
+#: gconf/gconfd.c:2137
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Није успео да примора упис додавања клијента у датотеку са сачуваним стањем: "
 "%s"
 
-#: gconf/gconfd.c:2237
+#: gconf/gconfd.c:2236
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "Неки клијент је уклонио себе са ГКонф сервера иако није био ни додат."
@@ -1700,11 +1678,11 @@ msgid "Shutdown error: %s\n"
 msgstr "Грешка при гашењу: %s\n"
 
 #: gconf/gconftool.c:1120
-msgid "Must specify one or more dirs to recursively list.\n"
+msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Морате навести једну или више категорија за рекурзиван испис.\n"
 
 #: gconf/gconftool.c:1170
-msgid "Must specify one or more dirs to dump.\n"
+msgid "Must specify one or more directories to dump.\n"
 msgstr "Обавезно је навести једну или више категорија за исписивање.\n"
 
 #: gconf/gconftool.c:1211 gconf/gconftool.c:1469
@@ -1933,10 +1911,8 @@ msgid "Error syncing: %s"
 msgstr "Грешка при усклађивању: %s"
 
 #: gconf/gconftool.c:2273
-msgid "Must specify one or more dirs to get key/value pairs from.\n"
-msgstr ""
-"Обавезно је навести једну или више категорија из којих учитате парове "
-"кључева и вредности.\n"
+msgid "Must specify one or more directories to get key/value pairs from.\n"
+msgstr "Обавезно је навести једну или више категорија за учитавање парова кључева и вредности.\n"
 
 #: gconf/gconftool.c:2287
 msgid "Must specify one or more keys to unset.\n"
@@ -1960,9 +1936,8 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Грешка при рекурзивном уклањању вредности за „%s“: %s\n"
 
 #: gconf/gconftool.c:2352
-msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr ""
-"Обавезно је навести једну или више категорија из којих учитати категорије.\n"
+msgid "Must specify one or more directories to get subdirs from.\n"
+msgstr "Обавезно је навести једну или више категорија из којих учитати подкатегорије.\n"
 
 #: gconf/gconftool.c:2386
 #, c-format
@@ -2228,3 +2203,17 @@ msgstr ""
 "Покушава  да поквари ваш програм постављањем неисправних вредности кључева у "
 "категорији:\n"
 "  %s\n"
+
+# bug: plural forms (both occurrences of %u)
+#~ msgid ""
+#~ "%u items remain in the cache after cleaning already-synced items older "
+#~ "than %u seconds"
+#~ msgstr ""
+#~ "Преостало је %u ставки у кешу након чишћења већ снимљених ставки које су "
+#~ "старије од %u секунди."
+
+#~ msgid "%s"
+#~ msgstr "%s"
+
+#~ msgid "/path"
+#~ msgstr "/путања"
