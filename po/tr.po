@@ -8,14 +8,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-28 21:38+0000\n"
+"POT-Creation-Date: 2004-02-24 16:00+0000\n"
 "PO-Revision-Date: 2003-02-07 08:25+0000\n"
 "Last-Translator: erkaN <erkaN@linux-sevenler.de>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: backends/dir-utils.c:108
 #, c-format
@@ -31,6 +31,33 @@ msgstr "`%s' dizini oluşturulamadı: %s"
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "%s dizini (%s adresindeki) okunamaz/yazılamaz"
+
+#: backends/gconf-merge-tree.c:78
+#, fuzzy, c-format
+msgid "Cannot find directory %s\n"
+msgstr "`%s' dizini oluşturulamadı: %s"
+
+#: backends/gconf-merge-tree.c:94
+#, fuzzy, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "`%s' içindeki dizinler listelenirken hata: %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -2253,9 +2280,6 @@ msgstr ""
 
 #~ msgid "Unsynced directory deletions when shutting down XML backend"
 #~ msgstr "XML modülü kapatılırken bazı dizinler silinmeden kaldı"
-
-#~ msgid "Error listing subdirs of '%s': %s\n"
-#~ msgstr "`%s' içindeki dizinler listelenirken hata: %s\n"
 
 #~ msgid "Error unsetting '%s': %s\n"
 #~ msgstr "`%s' kaldırılırken hata: %s\n"

@@ -12,14 +12,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD.mk\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
+"POT-Creation-Date: 2004-02-24 16:00+0000\n"
 "PO-Revision-Date: 2003-06-15 21:59+0000\n"
 "Last-Translator: Vladislav Bidikov <bidikovi@mail.com.mk>\n"
 "Language-Team: Macedonian <lug@lists.linux.net.mk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.0.1\n"
 
 #: backends/dir-utils.c:108
@@ -37,6 +37,33 @@ msgstr "Не можев да го направам директориумот `%
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "Не можам да читам од или пишувам во %s root директориумот во адресата `%s'"
+
+#: backends/gconf-merge-tree.c:78
+#, fuzzy, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Не можев да го направам директориумот `%s': %s"
+
+#: backends/gconf-merge-tree.c:94
+#, fuzzy, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Грешка земајќи ја схемата на '%s': %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."

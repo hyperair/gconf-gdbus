@@ -9,14 +9,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
+"POT-Creation-Date: 2004-02-24 16:00+0000\n"
 "PO-Revision-Date: 2004-02-08 8:45+0200\n"
 "Last-Translator: Maxim Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: backends/dir-utils.c:108
 #, c-format
@@ -34,6 +34,33 @@ msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "Неможливо виконати зчитування чи запис в кореневому каталозі %s за адресою "
 "\"%s\""
+
+#: backends/gconf-merge-tree.c:78
+#, fuzzy, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Не вдалось створити каталог \"%s\": %s"
+
+#: backends/gconf-merge-tree.c:94
+#, fuzzy, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Помилка отримання схеми на \"%s\": %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -700,7 +727,8 @@ msgstr "Помилка перевірки доступності сервера:
 #: gconf/gconf-internals.c:2899
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "Помилка при створенні каналу зв'язку з породженим процесом gconfd: %s\n"
+msgstr ""
+"Помилка при створенні каналу зв'язку з породженим процесом gconfd: %s\n"
 
 #: gconf/gconf-internals.c:2923
 #, c-format
@@ -1257,8 +1285,8 @@ msgstr ""
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
-"Помилка при закриванні файла журналу gconfd; дані може бути неправильно збережено "
-"(%s)"
+"Помилка при закриванні файла журналу gconfd; дані може бути неправильно "
+"збережено (%s)"
 
 #: gconf/gconfd.c:1327
 #, c-format
@@ -1480,8 +1508,8 @@ msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Вказує тип значення пари, що встановлюється, або тип значення, що "
-"описується схемою. Унікальні абревіатури повністю підходять."
+"Вказує тип значення пари, що встановлюється, або тип значення, що описується "
+"схемою. Унікальні абревіатури повністю підходять."
 
 #: gconf/gconftool.c:283
 msgid "Specify a short half-line description to go in a schema."
@@ -1524,8 +1552,8 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
-"Безпосередній доступ до бази даних конфігурації, обминаючи сервер, вимагає зупинки "
-"gconfd."
+"Безпосередній доступ до бази даних конфігурації, обминаючи сервер, вимагає "
+"зупинки gconfd."
 
 #: gconf/gconftool.c:337
 msgid ""
@@ -1543,9 +1571,10 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
-"Коректно вилучає з бази даних файли схеми, вказані в командному рядку. Змінна "
-"середовища GCONF_CONFIG_SOURCE має бути встановлена в значення нетипового "
-"шляху до джерела чи лишитися порожньою для використання типового значення."
+"Коректно вилучає з бази даних файли схеми, вказані в командному рядку. "
+"Змінна середовища GCONF_CONFIG_SOURCE має бути встановлена в значення "
+"нетипового шляху до джерела чи лишитися порожньою для використання типового "
+"значення."
 
 #: gconf/gconftool.c:355
 msgid ""
@@ -1606,8 +1635,8 @@ msgstr "Не можна отримувати та встановлювати/з�
 #: gconf/gconftool.c:552
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr ""
-"Не можна використовувати параметр --all-entries разом з параметрами --get "
-"чи --set\n"
+"Не можна використовувати параметр --all-entries разом з параметрами --get чи "
+"--set\n"
 
 #: gconf/gconftool.c:563
 msgid "Can't use --all-dirs with --get or --set\n"
@@ -2202,6 +2231,6 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Спроба ушкодити вашу програму встановленням неправильних значень для ключів у "
-"каталозі:\n"
+"Спроба ушкодити вашу програму встановленням неправильних значень для ключів "
+"у каталозі:\n"
 "  %s\n"

@@ -7,14 +7,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
+"POT-Creation-Date: 2004-02-24 16:00+0000\n"
 "PO-Revision-Date: 2003-08-09 03:06+0800\n"
 "Last-Translator: Sun G11n <gnome_int_l10n@ireland.sun.com>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.0\n"
 
 #: backends/dir-utils.c:108
@@ -31,6 +31,33 @@ msgstr "无法创建目录“%s”：%s"
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "无法在地址“%s”处读或写 %s 根目录"
+
+#: backends/gconf-merge-tree.c:78
+#, fuzzy, c-format
+msgid "Cannot find directory %s\n"
+msgstr "无法创建目录“%s”：%s"
+
+#: backends/gconf-merge-tree.c:94
+#, fuzzy, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "在“%s”获取 schema 时发生错误：%s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
