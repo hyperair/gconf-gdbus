@@ -32,22 +32,6 @@
  *  etc.
  */
 
-struct _GConfSchema {
-  GConfValueType type; /* Type of the described entry */
-  GConfValueType list_type; /* List type of the described entry */
-  GConfValueType car_type; /* Pair car type of the described entry */
-  GConfValueType cdr_type; /* Pair cdr type of the described entry */
-  gchar* locale;       /* Schema locale */
-  gchar* owner;        /* Name of creating application */
-  gchar* short_desc;   /* 40 char or less description, no newlines */
-  gchar* long_desc;    /* could be a paragraph or so */
-  GConfValue* default_value; /* Default value of the key */
-  gpointer pad1;
-  gpointer pad2;
-  gpointer pad3;
-  int pad4;
-};
-
 GConfSchema* gconf_schema_new  (void);
 void         gconf_schema_free (GConfSchema *sc);
 GConfSchema* gconf_schema_copy (const GConfSchema *sc);

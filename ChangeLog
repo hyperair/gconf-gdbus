@@ -1,10 +1,46 @@
+2002-04-26  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-changeset.c: make the internal functions static
+
+	* gconf/gconf-internals.c (byte_type): make static
+	(get_hostname): remove
+
+	* gconf/gconfd.c (add_client): set the maximum connection buffer
+	to a reasonable-size value in order to handle locked-up clients.
+	
+	* backends/xml-entry.c (node_set_schema_value): opacity fixes
+
+	* gconf/gconftool.c (list_pairs_in_dir): opacity fixes
+
+	* gconf/gconf.c: opacity fixes
+	(gconf_engine_get_for_address): remove the g_warning about using
+	this function; the change notification is a bit broken but maybe
+	it's still useful.
+
+	* gconf/gconf-sources.c: opacity fixes
+
+	* gconf/gconf-database.c: namespace fixes
+
+	* gconf/gconf-internals.h: namespace some things
+
+	* gconf/gconf-internals.c: opacity fixes
+	(fill_corba_schema_from_gconf_schema):
+	make static
+	(corba_schema_from_gconf_schema): make static	
+
+	* gconf/gconf-schema.c: do groundwork to make GConfSchema opaque,
+	and fix some lack of spaces before parens
+
+	* gconf/gconf-value.c: do groundwork to make GConfEntry mostly
+	opaque (implement with GConfRealEntry)
+
 2002-04-19  Abel Cheung  <maddog@linux.org.hk>
 
 	* configure.in: Added "zh_TW" to ALL_LINGUAS.
 
 2002-04-10  jacob berkman  <jacob@ximian.com>
 
-	* backends/xml-dir.c (my_xml_parse_file): g_File_get_contents()
+	* backends/xml-dir.c (my_xml_parse_file): g_file_get_contents()
 	takes gsize, not int
 
 2002-03-29  Havoc Pennington  <hp@pobox.com>

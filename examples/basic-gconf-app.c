@@ -174,14 +174,14 @@ configurable_widget_config_notify (GConfClient *client,
    * gconftool --break-key
    */
   
-  if (entry->value == NULL)
+  if (gconf_entry_get_value (entry) == NULL)
     {
       gtk_label_set_text (GTK_LABEL (label), "");
     }
-  else if (entry->value->type == GCONF_VALUE_STRING)
+  else if (gconf_entry_get_value (entry)->type == GCONF_VALUE_STRING)
     {
       gtk_label_set_text (GTK_LABEL (label),
-                          gconf_value_get_string (entry->value));
+                          gconf_value_get_string (gconf_entry_get_value (entry)));
     }
   else
     {

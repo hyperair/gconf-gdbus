@@ -114,7 +114,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
   gboolean is_writable = TRUE;
 
   if (gconfd_check_in_shutdown (ev))
-    return invalid_corba_value ();
+    return gconf_invalid_corba_value ();
   
   locale_list = locale_cache_lookup(locale);
   
@@ -132,7 +132,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
   
   if (val != NULL)
     {
-      ConfigValue* cval = corba_value_from_gconf_value(val);
+      ConfigValue* cval = gconf_corba_value_from_gconf_value(val);
 
       gconf_value_free(val);
 
@@ -144,7 +144,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
     {
       gconf_set_exception(&error, ev);
 
-      return invalid_corba_value();
+      return gconf_invalid_corba_value ();
     }
 }
 
@@ -154,7 +154,7 @@ impl_ConfigDatabase_lookup(PortableServer_Servant servant,
                            CORBA_Environment * ev)
 {
   if (gconfd_check_in_shutdown (ev))
-    return invalid_corba_value ();
+    return gconf_invalid_corba_value ();
   
   return impl_ConfigDatabase_lookup_with_locale (servant, key,
                                                  NULL, TRUE, NULL,
@@ -173,7 +173,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
   GConfLocaleList* locale_list;  
 
   if (gconfd_check_in_shutdown (ev))
-    return invalid_corba_value ();
+    return gconf_invalid_corba_value ();
   
   locale_list = locale_cache_lookup(locale);
   
@@ -186,7 +186,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
   
   if (val != NULL)
     {
-      ConfigValue* cval = corba_value_from_gconf_value(val);
+      ConfigValue* cval = gconf_corba_value_from_gconf_value(val);
 
       gconf_value_free(val);
 
@@ -198,7 +198,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
     {
       gconf_set_exception(&error, ev);
 
-      return invalid_corba_value();
+      return gconf_invalid_corba_value ();
     }
 }
 
@@ -406,7 +406,8 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
       g_assert(p->key != NULL);
 
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
-      fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
+      gconf_fill_corba_value_from_gconf_value (gconf_entry_get_value (p),
+                                               &((*values)->_buffer[i]));
       (*is_defaults)->_buffer[i] = gconf_entry_get_is_default(p);
       (*is_writables)->_buffer[i] = gconf_entry_get_is_writable(p);
       
@@ -566,7 +567,7 @@ impl_ConfigDatabase2_lookup_with_schema_name(PortableServer_Servant servant,
   ConfigValue* cval;
   
   if (gconfd_check_in_shutdown (ev))
-    return invalid_corba_value ();
+    return gconf_invalid_corba_value ();
   
   locale_list = locale_cache_lookup(locale);
 
@@ -592,13 +593,13 @@ impl_ConfigDatabase2_lookup_with_schema_name(PortableServer_Servant servant,
   
   if (val != NULL)
     {
-      cval = corba_value_from_gconf_value(val);
+      cval = gconf_corba_value_from_gconf_value(val);
       gconf_value_free(val);
       g_return_val_if_fail(error == NULL, cval);
     }
   else
     {
-      cval = invalid_corba_value();
+      cval = gconf_invalid_corba_value ();
     }
 
   gconf_log (GCL_DEBUG, "In lookup_with_schema_name returning schema name '%s' error '%s'",
@@ -688,8 +689,9 @@ impl_ConfigDatabase2_all_entries_with_schema_name(PortableServer_Servant servant
       g_assert(p != NULL);
       g_assert(p->key != NULL);
 
-      (*keys)->_buffer[i] = CORBA_string_dup(p->key);
-      fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
+      (*keys)->_buffer[i] = CORBA_string_dup (p->key);
+      gconf_fill_corba_value_from_gconf_value (gconf_entry_get_value (p),
+                                               &((*values)->_buffer[i]));
       (*schema_names)->_buffer[i] = CORBA_string_dup (gconf_entry_get_schema_name (p));
       if ((*schema_names)->_buffer[i] == NULL)
         (*schema_names)->_buffer[i] = CORBA_string_dup ("");
@@ -1362,12 +1364,12 @@ gconf_database_unset (GConfDatabase      *db,
 
       if (def_value != NULL)
         {
-          val = corba_value_from_gconf_value(def_value);
+          val = gconf_corba_value_from_gconf_value(def_value);
           gconf_value_free(def_value);
         }
       else
         {
-          val = invalid_corba_value();
+          val = gconf_invalid_corba_value ();
         }
           
       gconf_database_schedule_sync(db);
@@ -1447,12 +1449,12 @@ gconf_database_recursive_unset (GConfDatabase      *db,
       
       if (new_value != NULL)
         {
-          val = corba_value_from_gconf_value (new_value);
+          val = gconf_corba_value_from_gconf_value (new_value);
           gconf_value_free (new_value);
         }
       else
         {
-          val = invalid_corba_value();
+          val = gconf_invalid_corba_value ();
         }
           
       gconf_database_schedule_sync (db);

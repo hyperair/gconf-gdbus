@@ -2120,12 +2120,21 @@ add_client (const ConfigListener client)
     {
       CORBA_Environment ev;
       ConfigListener copy;
+      ORBitConnection *connection;
       
       CORBA_exception_init (&ev);
       copy = CORBA_Object_duplicate (client, &ev);
       g_hash_table_insert (client_table, copy, copy);
       CORBA_exception_free (&ev);
 
+      /* Set maximum buffer size, which makes the connection nonblocking
+       * if the kernel buffers are full and keeps gconfd from
+       * locking up. Set the max to a pretty high number to avoid
+       * dropping clients that are just stuck for a while.
+       */
+      connection = ORBit_small_get_connection (copy);
+      ORBit_connection_set_max_buffer (connection, 1024 * 128);
+      
       log_client_add (client);
 
       gconf_log (GCL_DEBUG, "Added a new client");

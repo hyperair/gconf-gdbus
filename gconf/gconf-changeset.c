@@ -34,10 +34,10 @@ struct _Change {
   GConfValue* value;
 };
 
-Change* change_new    (const gchar* key);
-void    change_set    (Change* c, GConfValue* value);
-void    change_unset  (Change* c);
-void    change_destroy(Change* c);
+static Change* change_new    (const gchar* key);
+static void    change_set    (Change* c, GConfValue* value);
+static void    change_unset  (Change* c);
+static void    change_destroy(Change* c);
 
 struct _GConfChangeSet {
   guint refcount;

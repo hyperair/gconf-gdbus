@@ -1,5 +1,5 @@
 /* GConf
- * Copyright (C) 1999, 2000 Red Hat Inc.
+ * Copyright (C) 1999, 2000, 2002 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -1418,6 +1418,24 @@ gconf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
  * GConfEntry
  */
 
+typedef struct {
+  char *key;
+  GConfValue *value;
+  char *schema_name;
+  int pad1;
+  gpointer pad2;
+  gpointer pad3;
+  GTime pad4;
+  int refcount;
+  guint is_default : 1;
+  guint is_writable : 1;
+  guint pad5 : 1;
+  guint pad6 : 1;
+  guint pad7 : 1;
+} GConfRealEntry;
+
+#define REAL_ENTRY(x) ((GConfRealEntry*)(x))
+
 GConfEntry*
 gconf_entry_new (const char *key,
                  const GConfValue  *val)
@@ -1430,43 +1448,48 @@ gconf_entry_new (const char *key,
 GConfEntry* 
 gconf_entry_new_nocopy (char* key, GConfValue* val)
 {
-  GConfEntry* pair;
+  GConfRealEntry* real;
 
-  pair = g_new (GConfEntry, 1);
+  real = g_new (GConfRealEntry, 1);
 
-  pair->key   = key;
-  pair->value = val;
-  pair->schema_name = NULL;
-  pair->is_default = FALSE;
-  pair->is_writable = TRUE;
-  pair->refcount = 1;
+  real->key   = key;
+  real->value = val;
+  real->schema_name = NULL;
+  real->is_default = FALSE;
+  real->is_writable = TRUE;
+  real->refcount = 1;
   
-  return pair;
+  return (GConfEntry*) real;
 }
 
 void
 gconf_entry_ref (GConfEntry *entry)
 {
   g_return_if_fail (entry != NULL);
-  entry->refcount += 1;
+  
+  REAL_ENTRY (entry)->refcount += 1;
 }
 
 void
 gconf_entry_unref (GConfEntry *entry)
 {
+  GConfRealEntry *real;
+  
   g_return_if_fail (entry != NULL);
-  g_return_if_fail (entry->refcount > 0);
+  g_return_if_fail (REAL_ENTRY (entry)->refcount > 0);
 
-  entry->refcount -= 1;
+  real = REAL_ENTRY (entry);
+  
+  real->refcount -= 1;
 
-  if (entry->refcount == 0)
+  if (real->refcount == 0)
     {
-      g_free (entry->key);
-      if (entry->value)
-        gconf_value_free (entry->value);
-      if (entry->schema_name)
-        g_free (entry->schema_name);
-      g_free (entry);
+      g_free (real->key);
+      if (real->value)
+        gconf_value_free (real->value);
+      if (real->schema_name)
+        g_free (real->schema_name);
+      g_free (real);
     }
 }
 
@@ -1480,12 +1503,15 @@ GConfEntry*
 gconf_entry_copy (const GConfEntry *src)
 {
   GConfEntry *entry;
-
-  entry = gconf_entry_new (src->key, src->value);
-
-  entry->schema_name = g_strdup (src->schema_name);
-  entry->is_default = src->is_default;
-  entry->is_writable = src->is_writable;
+  GConfRealEntry *real;
+  
+  entry = gconf_entry_new (REAL_ENTRY (src)->key,
+                           REAL_ENTRY (src)->value);
+  real = REAL_ENTRY (entry);
+  
+  real->schema_name = g_strdup (REAL_ENTRY (src)->schema_name);
+  real->is_default = REAL_ENTRY (src)->is_default;
+  real->is_writable = REAL_ENTRY (src)->is_writable;
 
   return entry;
 }
@@ -1494,29 +1520,35 @@ gboolean
 gconf_entry_equal (const GConfEntry *a,
                    const GConfEntry *b)
 {
+  GConfRealEntry *real_a;
+  GConfRealEntry *real_b;
+  
   g_return_val_if_fail (a != NULL, FALSE);
   g_return_val_if_fail (b != NULL, FALSE);
 
+  real_a = REAL_ENTRY (a);
+  real_b = REAL_ENTRY (b);
+  
   /* do the cheap checks first, why not */
-  if (a->value && !b->value)
+  if (real_a->value && !real_b->value)
     return FALSE;
-  else if (!a->value && b->value)
+  else if (!real_a->value && real_b->value)
     return FALSE;
-  else if (a->is_default != b->is_default)
+  else if (real_a->is_default != real_b->is_default)
     return FALSE;
-  else if (a->is_writable != b->is_writable)
+  else if (real_a->is_writable != real_b->is_writable)
     return FALSE;
-  else if (strcmp (a->key, b->key) != 0)
+  else if (strcmp (real_a->key, real_b->key) != 0)
     return FALSE;
-  else if (a->schema_name && !b->schema_name)
+  else if (real_a->schema_name && !real_b->schema_name)
     return FALSE;
-  else if (!a->schema_name && b->schema_name)
+  else if (!real_a->schema_name && real_b->schema_name)
     return FALSE;
-  else if (a->schema_name && b->schema_name &&
-           strcmp (a->schema_name, b->schema_name) != 0)
+  else if (real_a->schema_name && real_b->schema_name &&
+           strcmp (real_a->schema_name, real_b->schema_name) != 0)
     return FALSE;
-  else if (a->value && b->value &&
-           gconf_value_compare (a->value, b->value) != 0)
+  else if (real_a->value && real_b->value &&
+           gconf_value_compare (real_a->value, real_b->value) != 0)
     return FALSE;
   else
     return TRUE;
@@ -1525,8 +1557,8 @@ gconf_entry_equal (const GConfEntry *a,
 GConfValue*
 gconf_entry_steal_value (GConfEntry* entry)
 {
-  GConfValue* val = entry->value;
-  entry->value = NULL;
+  GConfValue* val = REAL_ENTRY (entry)->value;
+  REAL_ENTRY (entry)->value = NULL;
   return val;
 }
 
@@ -1535,7 +1567,7 @@ gconf_entry_get_key (const GConfEntry *entry)
 {
   g_return_val_if_fail (entry != NULL, NULL);
 
-  return entry->key;
+  return REAL_ENTRY (entry)->key;
 }
 
 GConfValue*
@@ -1543,7 +1575,7 @@ gconf_entry_get_value (const GConfEntry *entry)
 {
   g_return_val_if_fail (entry != NULL, NULL);
 
-  return entry->value;
+  return REAL_ENTRY (entry)->value;
 }
 
 const char*
@@ -1551,7 +1583,7 @@ gconf_entry_get_schema_name (const GConfEntry *entry)
 {
   g_return_val_if_fail (entry != NULL, NULL);
 
-  return entry->schema_name;
+  return REAL_ENTRY (entry)->schema_name;
 }
 
 gboolean
@@ -1559,7 +1591,7 @@ gconf_entry_get_is_default  (const GConfEntry *entry)
 {
   g_return_val_if_fail (entry != NULL, FALSE);
 
-  return entry->is_default;
+  return REAL_ENTRY (entry)->is_default;
 }
 
 gboolean
@@ -1567,7 +1599,7 @@ gconf_entry_get_is_writable (const GConfEntry *entry)
 {
   g_return_val_if_fail (entry != NULL, FALSE);
 
-  return entry->is_writable;
+  return REAL_ENTRY (entry)->is_writable;
 }
 
 
@@ -1583,34 +1615,34 @@ void
 gconf_entry_set_value_nocopy(GConfEntry* entry,
                              GConfValue* val)
 {
-  if (entry->value)
-    gconf_value_free(entry->value);
+  if (REAL_ENTRY (entry)->value)
+    gconf_value_free (REAL_ENTRY (entry)->value);
 
-  entry->value = val;
+  REAL_ENTRY (entry)->value = val;
 }
 
 void
 gconf_entry_set_schema_name(GConfEntry* entry,
                             const gchar* name)
 {
-  if (entry->schema_name)
-    g_free(entry->schema_name);
+  if (REAL_ENTRY (entry)->schema_name)
+    g_free (REAL_ENTRY (entry)->schema_name);
 
-  entry->schema_name = name ? g_strdup(name) : NULL;
+  REAL_ENTRY (entry)->schema_name = name ? g_strdup(name) : NULL;
 }
 
 void
 gconf_entry_set_is_default (GConfEntry* entry,
                             gboolean is_default)
 {
-  entry->is_default = is_default;
+  REAL_ENTRY (entry)->is_default = is_default;
 }
 
 void
 gconf_entry_set_is_writable (GConfEntry  *entry,
                              gboolean     is_writable)
 {
-  entry->is_writable = is_writable;
+  REAL_ENTRY (entry)->is_writable = is_writable;
 }
 
 

@@ -1,5 +1,5 @@
 /* GConf
- * Copyright (C) 1999, 2000 Red Hat Inc.
+ * Copyright (C) 1999, 2000, 2002 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,170 +20,201 @@
 #include "gconf-schema.h"
 #include "gconf-internals.h"
 
-GConfSchema*  
-gconf_schema_new(void)
-{
-  GConfSchema* sc;
+/* FIXME clean this up, obviously RealSchema isn't needed. */
+struct _GConfSchema {
+  int dummy;
+};
 
-  sc = g_new0(GConfSchema, 1);
+typedef struct {
+  GConfValueType type; /* Type of the described entry */
+  GConfValueType list_type; /* List type of the described entry */
+  GConfValueType car_type; /* Pair car type of the described entry */
+  GConfValueType cdr_type; /* Pair cdr type of the described entry */
+  gchar* locale;       /* Schema locale */
+  gchar* owner;        /* Name of creating application */
+  gchar* short_desc;   /* 40 char or less description, no newlines */
+  gchar* long_desc;    /* could be a paragraph or so */
+  GConfValue* default_value; /* Default value of the key */
+  gpointer pad1;
+  gpointer pad2;
+  gpointer pad3;
+  int pad4;
+} GConfRealSchema;
 
-  sc->type = GCONF_VALUE_INVALID;
-  sc->list_type = GCONF_VALUE_INVALID;
-  sc->car_type = GCONF_VALUE_INVALID;
-  sc->cdr_type = GCONF_VALUE_INVALID;
-
-  return sc;
-}
-
-void          
-gconf_schema_free(GConfSchema* sc)
-{
-  if (sc->locale)
-    g_free(sc->locale);
-
-  if (sc->short_desc)
-    g_free(sc->short_desc);
-
-  if (sc->long_desc)
-    g_free(sc->long_desc);
-
-  if (sc->owner)
-    g_free(sc->owner);
-
-  if (sc->default_value)
-    gconf_value_free(sc->default_value);
-  
-  g_free(sc);
-}
+#define REAL_SCHEMA(schema) ((GConfRealSchema*)(schema))
 
 GConfSchema*  
-gconf_schema_copy(const GConfSchema* sc)
+gconf_schema_new (void)
 {
-  GConfSchema* dest;
+  GConfRealSchema *real;
 
-  dest = gconf_schema_new();
+  real = g_new0 (GConfRealSchema, 1);
 
-  dest->type = sc->type;
-  dest->list_type = sc->list_type;
-  dest->car_type = sc->car_type;
-  dest->cdr_type = sc->cdr_type;
+  real->type = GCONF_VALUE_INVALID;
+  real->list_type = GCONF_VALUE_INVALID;
+  real->car_type = GCONF_VALUE_INVALID;
+  real->cdr_type = GCONF_VALUE_INVALID;
 
-  dest->locale = sc->locale ? g_strdup(sc->locale) : NULL;
+  return (GConfSchema*) real;
+}
+
+void          
+gconf_schema_free (GConfSchema* sc)
+{
+  GConfRealSchema *real = REAL_SCHEMA (sc);
   
-  dest->short_desc = sc->short_desc ? g_strdup(sc->short_desc) : NULL;
+  if (real->locale)
+    g_free (real->locale);
 
-  dest->long_desc = sc->long_desc ? g_strdup(sc->long_desc) : NULL;
+  if (real->short_desc)
+    g_free (real->short_desc);
 
-  dest->owner = sc->owner ? g_strdup(sc->owner) : NULL;
+  if (real->long_desc)
+    g_free (real->long_desc);
 
-  dest->default_value = sc->default_value ? gconf_value_copy(sc->default_value) : NULL;
+  if (real->owner)
+    g_free (real->owner);
+
+  if (real->default_value)
+    gconf_value_free (real->default_value);
   
-  return dest;
+  g_free (sc);
+}
+
+GConfSchema*  
+gconf_schema_copy (const GConfSchema* sc)
+{
+  GConfRealSchema *dest;
+  const GConfRealSchema *real;
+
+  real = REAL_SCHEMA (sc);
+  dest = (GConfRealSchema*) gconf_schema_new ();
+
+  dest->type = real->type;
+  dest->list_type = real->list_type;
+  dest->car_type = real->car_type;
+  dest->cdr_type = real->cdr_type;
+
+  dest->locale = real->locale ? g_strdup (real->locale) : NULL;
+  
+  dest->short_desc = real->short_desc ? g_strdup (real->short_desc) : NULL;
+
+  dest->long_desc = real->long_desc ? g_strdup (real->long_desc) : NULL;
+
+  dest->owner = real->owner ? g_strdup (real->owner) : NULL;
+
+  dest->default_value = real->default_value ? gconf_value_copy (real->default_value) : NULL;
+  
+  return (GConfSchema*) dest;
 }
 
 void          
-gconf_schema_set_type(GConfSchema* sc, GConfValueType type)
+gconf_schema_set_type (GConfSchema* sc, GConfValueType type)
 {
-  sc->type = type;
+  REAL_SCHEMA (sc)->type = type;
 }
 
 void          
-gconf_schema_set_list_type(GConfSchema* sc, GConfValueType type)
+gconf_schema_set_list_type (GConfSchema* sc, GConfValueType type)
 {
-  sc->list_type = type;
+  REAL_SCHEMA (sc)->list_type = type;
 }
 
 void          
-gconf_schema_set_car_type(GConfSchema* sc, GConfValueType type)
+gconf_schema_set_car_type (GConfSchema* sc, GConfValueType type)
 {
-  sc->car_type = type;
+  REAL_SCHEMA (sc)->car_type = type;
 }
 
 void          
-gconf_schema_set_cdr_type(GConfSchema* sc, GConfValueType type)
+gconf_schema_set_cdr_type (GConfSchema* sc, GConfValueType type)
 {
-  sc->cdr_type = type;
+  REAL_SCHEMA (sc)->cdr_type = type;
 }
 
 void
-gconf_schema_set_locale(GConfSchema* sc, const gchar* locale)
+gconf_schema_set_locale (GConfSchema* sc, const gchar* locale)
 {
   g_return_if_fail (locale == NULL || g_utf8_validate (locale, -1, NULL));
   
-  if (sc->locale)
-    g_free(sc->locale);
+  if (REAL_SCHEMA (sc)->locale)
+    g_free (REAL_SCHEMA (sc)->locale);
 
   if (locale)
-    sc->locale = g_strdup(locale);
+    REAL_SCHEMA (sc)->locale = g_strdup (locale);
   else 
-    sc->locale = NULL;
+    REAL_SCHEMA (sc)->locale = NULL;
 }
 
 void          
-gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
+gconf_schema_set_short_desc (GConfSchema* sc, const gchar* desc)
 {
   g_return_if_fail (desc == NULL || g_utf8_validate (desc, -1, NULL));
   
-  if (sc->short_desc)
-    g_free(sc->short_desc);
+  if (REAL_SCHEMA (sc)->short_desc)
+    g_free (REAL_SCHEMA (sc)->short_desc);
 
   if (desc)
-    sc->short_desc = g_strdup(desc);
+    REAL_SCHEMA (sc)->short_desc = g_strdup (desc);
   else 
-    sc->short_desc = NULL;
+    REAL_SCHEMA (sc)->short_desc = NULL;
 }
 
 void          
-gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc)
+gconf_schema_set_long_desc (GConfSchema* sc, const gchar* desc)
 {
   g_return_if_fail (desc == NULL || g_utf8_validate (desc, -1, NULL));
   
-  if (sc->long_desc)
-    g_free(sc->long_desc);
+  if (REAL_SCHEMA (sc)->long_desc)
+    g_free (REAL_SCHEMA (sc)->long_desc);
 
   if (desc)
-    sc->long_desc = g_strdup(desc);
+    REAL_SCHEMA (sc)->long_desc = g_strdup (desc);
   else 
-    sc->long_desc = NULL;
+    REAL_SCHEMA (sc)->long_desc = NULL;
 }
 
 void          
-gconf_schema_set_owner(GConfSchema* sc, const gchar* owner)
+gconf_schema_set_owner (GConfSchema* sc, const gchar* owner)
 {
   g_return_if_fail (owner == NULL || g_utf8_validate (owner, -1, NULL));
   
-  if (sc->owner)
-    g_free(sc->owner);
+  if (REAL_SCHEMA (sc)->owner)
+    g_free (REAL_SCHEMA (sc)->owner);
 
   if (owner)
-    sc->owner = g_strdup(owner);
+    REAL_SCHEMA (sc)->owner = g_strdup (owner);
   else
-    sc->owner = NULL;
+    REAL_SCHEMA (sc)->owner = NULL;
 }
 
 void
-gconf_schema_set_default_value(GConfSchema* sc, const GConfValue* val)
+gconf_schema_set_default_value (GConfSchema* sc, const GConfValue* val)
 {
-  if (sc->default_value != NULL)
-    gconf_value_free(sc->default_value);
+  if (REAL_SCHEMA (sc)->default_value != NULL)
+    gconf_value_free (REAL_SCHEMA (sc)->default_value);
 
-  sc->default_value = gconf_value_copy(val);
+  REAL_SCHEMA (sc)->default_value = gconf_value_copy (val);
 }
 
 void
-gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val)
+gconf_schema_set_default_value_nocopy (GConfSchema* sc, GConfValue* val)
 {
-  if (sc->default_value != NULL)
-    gconf_value_free(sc->default_value);
+  if (REAL_SCHEMA (sc)->default_value != NULL)
+    gconf_value_free (REAL_SCHEMA (sc)->default_value);
 
-  sc->default_value = val;
+  REAL_SCHEMA (sc)->default_value = val;
 }
 
 gboolean
 gconf_schema_validate (const GConfSchema *sc,
                        GError           **err)
 {
-  if (sc->locale && !g_utf8_validate (sc->locale, -1, NULL))
+  GConfRealSchema *real;
+
+  real = REAL_SCHEMA (sc);
+  
+  if (real->locale && !g_utf8_validate (real->locale, -1, NULL))
     {
       g_set_error (err, GCONF_ERROR,
                    GCONF_ERROR_FAILED,
@@ -191,7 +222,7 @@ gconf_schema_validate (const GConfSchema *sc,
       return FALSE;
     }
 
-  if (sc->short_desc && !g_utf8_validate (sc->short_desc, -1, NULL))
+  if (real->short_desc && !g_utf8_validate (real->short_desc, -1, NULL))
     {
       g_set_error (err, GCONF_ERROR,
                    GCONF_ERROR_FAILED,
@@ -199,7 +230,7 @@ gconf_schema_validate (const GConfSchema *sc,
       return FALSE;
     }
 
-  if (sc->long_desc && !g_utf8_validate (sc->long_desc, -1, NULL))
+  if (real->long_desc && !g_utf8_validate (real->long_desc, -1, NULL))
     {
       g_set_error (err, GCONF_ERROR,
                    GCONF_ERROR_FAILED,
@@ -207,7 +238,7 @@ gconf_schema_validate (const GConfSchema *sc,
       return FALSE;
     }
 
-  if (sc->owner && !g_utf8_validate (sc->owner, -1, NULL))
+  if (real->owner && !g_utf8_validate (real->owner, -1, NULL))
     {
       g_set_error (err, GCONF_ERROR,
                    GCONF_ERROR_FAILED,
@@ -223,7 +254,7 @@ gconf_schema_get_type (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
 
-  return schema->type;
+  return REAL_SCHEMA (schema)->type;
 }
 
 GConfValueType
@@ -231,7 +262,7 @@ gconf_schema_get_list_type (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
 
-  return schema->list_type;
+  return REAL_SCHEMA (schema)->list_type;
 }
 
 GConfValueType
@@ -239,7 +270,7 @@ gconf_schema_get_car_type (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
 
-  return schema->car_type;
+  return REAL_SCHEMA (schema)->car_type;
 }
 
 GConfValueType
@@ -247,7 +278,7 @@ gconf_schema_get_cdr_type (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
 
-  return schema->cdr_type;
+  return REAL_SCHEMA (schema)->cdr_type;
 }
 
 const char*
@@ -255,7 +286,7 @@ gconf_schema_get_locale (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, NULL);
 
-  return schema->locale;
+  return REAL_SCHEMA (schema)->locale;
 }
 
 const char*
@@ -263,7 +294,7 @@ gconf_schema_get_short_desc (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, NULL);
 
-  return schema->short_desc;
+  return REAL_SCHEMA (schema)->short_desc;
 }
 
 const char*
@@ -271,7 +302,7 @@ gconf_schema_get_long_desc (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, NULL);
 
-  return schema->long_desc;
+  return REAL_SCHEMA (schema)->long_desc;
 }
 
 const char*
@@ -279,7 +310,7 @@ gconf_schema_get_owner (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, NULL);
 
-  return schema->owner;
+  return REAL_SCHEMA (schema)->owner;
 }
 
 GConfValue*
@@ -287,5 +318,18 @@ gconf_schema_get_default_value (const GConfSchema *schema)
 {
   g_return_val_if_fail (schema != NULL, NULL);
 
-  return schema->default_value;
+  return REAL_SCHEMA (schema)->default_value;
+}
+
+GConfValue*
+gconf_schema_steal_default_value (GConfSchema *schema)
+{
+  GConfValue *val;
+  
+  g_return_val_if_fail (schema != NULL, NULL);
+
+  val = REAL_SCHEMA (schema)->default_value;
+  REAL_SCHEMA (schema)->default_value = NULL;
+
+  return val;
 }

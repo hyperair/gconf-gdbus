@@ -2335,7 +2335,7 @@ notify_one_entry (GConfClient *client,
    */
   gconf_client_value_changed (client,
                               entry->key,
-                              entry->value);
+                              gconf_entry_get_value (entry));
 
   /* Now notify our listeners, if any */
   if (client->listeners != NULL)

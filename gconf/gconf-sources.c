@@ -592,10 +592,11 @@ gconf_sources_query_value (GConfSources* sources,
         }
       else if (val != NULL)
         {
-          GConfValue* retval = gconf_value_get_schema(val)->default_value;
-          /* cheat, "unparent" the value to avoid a copy */
-          gconf_value_get_schema(val)->default_value = NULL;
-          gconf_value_free(val);
+          GConfValue* retval;
+
+          retval = gconf_schema_steal_default_value (gconf_value_get_schema (val));          
+
+          gconf_value_free (val);
 
           if (schema_namep)
             *schema_namep = schema_name;
@@ -1054,12 +1055,12 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
           if (val != NULL &&
               val->type == GCONF_VALUE_SCHEMA)
             {
-              GConfValue* defval = gconf_value_get_schema(val)->default_value;
-              /* cheat, "unparent" the value to avoid a copy */
-              gconf_value_get_schema(val)->default_value = NULL;
+              GConfValue* defval;
 
-              gconf_entry_set_value_nocopy(entry, defval);
-              gconf_entry_set_is_default(entry, TRUE);
+              defval = gconf_schema_steal_default_value (gconf_value_get_schema(val));
+
+              gconf_entry_set_value_nocopy (entry, defval);
+              gconf_entry_set_is_default (entry, TRUE);
             }
 
           if (val)
@@ -1187,11 +1188,12 @@ gconf_sources_all_entries   (GConfSources* sources,
                    * gconfd side
                    */
                   full = gconf_concat_dir_and_key (dir, previous->key);
-                  
-                  previous->is_writable = key_is_writable (sources,
-                                                           src,
-                                                           full,
-                                                           NULL);
+
+                  gconf_entry_set_is_writable (previous,
+                                               key_is_writable (sources,
+                                                                src,
+                                                                full,
+                                                                NULL));
 
                   g_free (full);
                 }
@@ -1208,11 +1210,12 @@ gconf_sources_all_entries   (GConfSources* sources,
                * gconfd side
                */
               full = gconf_concat_dir_and_key (dir, pair->key);
-              
-              pair->is_writable = key_is_writable (sources,
-                                                   src,
-                                                   full,
-                                                   NULL);
+
+              gconf_entry_set_is_writable (pair,
+                                           key_is_writable (sources,
+                                                            src,
+                                                            full,
+                                                            NULL));
               
               g_free (full);
             }
@@ -1517,11 +1520,10 @@ gconf_sources_query_default_value(GConfSources* sources,
       if (schema != NULL)
         {
           GConfValue* retval;
-          /* Cheat, steal value from schema */
-          retval = schema->default_value;
-          schema->default_value = NULL;
 
-          gconf_schema_free(schema);
+          retval = gconf_schema_steal_default_value (schema);
+
+          gconf_schema_free (schema);
           
           return retval;
         }

@@ -294,8 +294,8 @@ gconf_value_from_corba_value(const ConfigValue* value)
 }
 
 void          
-fill_corba_value_from_gconf_value(const GConfValue* value, 
-                                   ConfigValue* cv)
+gconf_fill_corba_value_from_gconf_value(const GConfValue *value, 
+                                        ConfigValue      *cv)
 {
   if (value == NULL)
     {
@@ -323,8 +323,8 @@ fill_corba_value_from_gconf_value(const GConfValue* value,
       break;
     case GCONF_VALUE_SCHEMA:
       cv->_d = SchemaVal;
-      fill_corba_schema_from_gconf_schema(gconf_value_get_schema(value),
-                                           &cv->_u.schema_value);
+      gconf_fill_corba_schema_from_gconf_schema (gconf_value_get_schema(value),
+                                                 &cv->_u.schema_value);
       break;
     case GCONF_VALUE_LIST:
       {
@@ -375,8 +375,8 @@ fill_corba_value_from_gconf_value(const GConfValue* value,
         while (list != NULL)
           {
             /* That dubious ConfigBasicValue->ConfigValue cast again */
-            fill_corba_value_from_gconf_value((GConfValue*)list->data,
-                                               (ConfigValue*)&cv->_u.list_value.seq._buffer[i]);
+            gconf_fill_corba_value_from_gconf_value((GConfValue*)list->data,
+                                                    (ConfigValue*)&cv->_u.list_value.seq._buffer[i]);
 
             list = g_slist_next(list);
             ++i;
@@ -394,10 +394,10 @@ fill_corba_value_from_gconf_value(const GConfValue* value,
         CORBA_sequence_set_release(&cv->_u.pair_value, TRUE);
         
         /* dubious cast */
-        fill_corba_value_from_gconf_value(gconf_value_get_car(value),
-                                           (ConfigValue*)&cv->_u.pair_value._buffer[0]);
-        fill_corba_value_from_gconf_value(gconf_value_get_cdr(value),
-                                           (ConfigValue*)&cv->_u.pair_value._buffer[1]);
+        gconf_fill_corba_value_from_gconf_value (gconf_value_get_car(value),
+                                                 (ConfigValue*)&cv->_u.pair_value._buffer[0]);
+        gconf_fill_corba_value_from_gconf_value(gconf_value_get_cdr(value),
+                                                (ConfigValue*)&cv->_u.pair_value._buffer[1]);
       }
       break;
       
@@ -412,19 +412,19 @@ fill_corba_value_from_gconf_value(const GConfValue* value,
 }
 
 ConfigValue*  
-corba_value_from_gconf_value(const GConfValue* value)
+gconf_corba_value_from_gconf_value (const GConfValue* value)
 {
   ConfigValue* cv;
 
   cv = ConfigValue__alloc();
 
-  fill_corba_value_from_gconf_value(value, cv);
+  gconf_fill_corba_value_from_gconf_value(value, cv);
 
   return cv;
 }
 
 ConfigValue*  
-invalid_corba_value()
+gconf_invalid_corba_value ()
 {
   ConfigValue* cv;
 
@@ -518,48 +518,48 @@ gconf_type_from_corba_type(ConfigValueType type)
 }
 
 void          
-fill_corba_schema_from_gconf_schema(const GConfSchema* sc, 
-                                     ConfigSchema* cs)
+gconf_fill_corba_schema_from_gconf_schema(const GConfSchema *sc, 
+                                          ConfigSchema      *cs)
 {
-  cs->value_type = corba_type_from_gconf_type(sc->type);
-  cs->value_list_type = corba_type_from_gconf_type(sc->list_type);
-  cs->value_car_type = corba_type_from_gconf_type(sc->car_type);
-  cs->value_cdr_type = corba_type_from_gconf_type(sc->cdr_type);
+  cs->value_type = corba_type_from_gconf_type (gconf_schema_get_type (sc));
+  cs->value_list_type = corba_type_from_gconf_type (gconf_schema_get_list_type (sc));
+  cs->value_car_type = corba_type_from_gconf_type (gconf_schema_get_car_type (sc));
+  cs->value_cdr_type = corba_type_from_gconf_type (gconf_schema_get_cdr_type (sc));
 
-  cs->locale = CORBA_string_dup(sc->locale ? sc->locale : "");
-  cs->short_desc = CORBA_string_dup(sc->short_desc ? sc->short_desc : "");
-  cs->long_desc = CORBA_string_dup(sc->long_desc ? sc->long_desc : "");
-  cs->owner = CORBA_string_dup(sc->owner ? sc->owner : "");
+  cs->locale = CORBA_string_dup (gconf_schema_get_locale (sc) ? gconf_schema_get_locale (sc) : "");
+  cs->short_desc = CORBA_string_dup (gconf_schema_get_short_desc (sc) ? gconf_schema_get_short_desc (sc) : "");
+  cs->long_desc = CORBA_string_dup (gconf_schema_get_long_desc (sc) ? gconf_schema_get_long_desc (sc) : "");
+  cs->owner = CORBA_string_dup (gconf_schema_get_owner (sc) ? gconf_schema_get_owner (sc) : "");
 
   {
     gchar* encoded;
     GConfValue* default_val;
 
-    default_val = gconf_schema_get_default_value(sc);
+    default_val = gconf_schema_get_default_value (sc);
 
     if (default_val)
       {
-        encoded = gconf_value_encode(default_val);
+        encoded = gconf_value_encode (default_val);
 
-        g_assert(encoded != NULL);
+        g_assert (encoded != NULL);
 
-        cs->encoded_default_value = CORBA_string_dup(encoded);
+        cs->encoded_default_value = CORBA_string_dup (encoded);
 
-        g_free(encoded);
+        g_free (encoded);
       }
     else
-      cs->encoded_default_value = CORBA_string_dup("");
+      cs->encoded_default_value = CORBA_string_dup ("");
   }
 }
 
 ConfigSchema* 
-corba_schema_from_gconf_schema(const GConfSchema* sc)
+gconf_corba_schema_from_gconf_schema (const GConfSchema* sc)
 {
   ConfigSchema* cs;
 
-  cs = ConfigSchema__alloc();
+  cs = ConfigSchema__alloc ();
 
-  fill_corba_schema_from_gconf_schema(sc, cs);
+  gconf_fill_corba_schema_from_gconf_schema (sc, cs);
 
   return cs;
 }
@@ -1768,7 +1768,7 @@ static gchar type_byte(GConfValueType type)
     }
 }
 
-GConfValueType
+static GConfValueType
 byte_type(gchar byte)
 {
   switch (byte)
@@ -2698,39 +2698,6 @@ gconf_get_current_lock_holder  (const gchar *lock_directory,
   server = read_current_server_and_set_warning (iorfile, failure_log);
   g_free (iorfile);
   return server;
-}
-
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-const char *
-get_hostname (void)
-{
-	static char *hostname = NULL;
-	char hn_tmp[65];
-	gulong ha_tmp;
-	struct hostent *hent;
-
-	if (!hostname) {
-		gethostname (hn_tmp, sizeof (hn_tmp) - 1);
-
-		hent = gethostbyname (hn_tmp);
-		if (hent) {
-			memcpy (&ha_tmp, hent->h_addr, 4);
-			hent = gethostbyaddr ((char *)&ha_tmp, 4, AF_INET);
-			if (hent)
-				hostname = g_strdup (hent->h_name);
-			else
-				hostname =
-					g_strdup (inet_ntoa
-						  (*
-						   ((struct in_addr *)
-						    &ha_tmp)));
-		} else
-			hostname = g_strdup (hn_tmp);
-	}
-
-	return hostname;
 }
 
 static CORBA_ORB gconf_orb = CORBA_OBJECT_NIL;      

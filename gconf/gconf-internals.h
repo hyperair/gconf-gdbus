@@ -53,20 +53,19 @@ enum {
 gboolean gconf_file_test   (const gchar* filename, int test);
 gboolean gconf_file_exists (const gchar* filename);
 
-GConfValue*  gconf_value_from_corba_value      (const ConfigValue *value);
-ConfigValue* corba_value_from_gconf_value      (const GConfValue  *value);
-void         fill_corba_value_from_gconf_value (const GConfValue  *value,
-                                                ConfigValue       *dest);
-ConfigValue* invalid_corba_value               (void);
+GConfValue*  gconf_value_from_corba_value            (const ConfigValue *value);
+ConfigValue* gconf_corba_value_from_gconf_value      (const GConfValue  *value);
+void         gconf_fill_corba_value_from_gconf_value (const GConfValue  *value,
+                                                      ConfigValue       *dest);
+ConfigValue* gconf_invalid_corba_value               (void);
 
+void          gconf_fill_corba_schema_from_gconf_schema (const GConfSchema  *sc,
+                                                         ConfigSchema       *dest);
+ConfigSchema* gconf_corba_schema_from_gconf_schema      (const GConfSchema  *sc);
+GConfSchema*  gconf_schema_from_corba_schema            (const ConfigSchema *cs);
 
 gchar* gconf_object_to_string (CORBA_Object obj,
                                GError **err);
-
-void          fill_corba_schema_from_gconf_schema (const GConfSchema  *sc,
-                                                   ConfigSchema       *dest);
-ConfigSchema* corba_schema_from_gconf_schema      (const GConfSchema  *sc);
-GConfSchema*  gconf_schema_from_corba_schema      (const ConfigSchema *cs);
 
 const gchar*   gconf_value_type_to_string   (GConfValueType  type);
 GConfValueType gconf_value_type_from_string (const gchar    *str);
@@ -240,6 +239,9 @@ void        gconf_entry_ref   (GConfEntry *entry);
 void        gconf_entry_unref (GConfEntry *entry);
 int         gconf_value_compare (const GConfValue *value_a,
                                  const GConfValue *value_b);
+
+GConfValue* gconf_schema_steal_default_value (GConfSchema *schema);
+
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */

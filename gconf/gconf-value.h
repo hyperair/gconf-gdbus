@@ -55,22 +55,6 @@ typedef struct _GConfValue GConfValue;
 
 struct _GConfValue {
   GConfValueType type;
-  /* this is all PRIVATE dangit */      
-  union {
-    gchar* string_data;
-    gint int_data;
-    gboolean bool_data;
-    gdouble float_data;
-    GConfSchema* schema_data;
-    struct {
-      GConfValueType type;
-      GSList* list;
-    } list_data;
-    struct {
-      GConfValue* car;
-      GConfValue* cdr;
-    } pair_data;
-  } d;
 };
 
 const char*    gconf_value_get_string    (const GConfValue *value);
@@ -164,17 +148,6 @@ typedef struct _GConfEntry GConfEntry;
 struct _GConfEntry {
   char *key;
   GConfValue *value;
-  char *schema_name;
-  int pad1;
-  gpointer pad2;
-  gpointer pad3;
-  GTime pad4;
-  int refcount;
-  guint is_default : 1;
-  guint is_writable : 1;
-  guint pad5 : 1;
-  guint pad6 : 1;
-  guint pad7 : 1;
 };
 
 const char* gconf_entry_get_key         (const GConfEntry *entry);

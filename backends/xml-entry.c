@@ -445,24 +445,24 @@ node_set_schema_value(xmlNodePtr node,
   const gchar* type;
   xmlNodePtr found = NULL;
 
-  sc = gconf_value_get_schema(value);
+  sc = gconf_value_get_schema (value);
 
   /* Set the types */
-  if (sc->list_type != GCONF_VALUE_INVALID)
+  if (gconf_schema_get_list_type (sc) != GCONF_VALUE_INVALID)
     {
-      type = gconf_value_type_to_string(sc->list_type);
+      type = gconf_value_type_to_string(gconf_schema_get_list_type (sc));
       g_assert(type != NULL);
       my_xmlSetProp(node, "list_type", type);
     }
-  if (sc->car_type != GCONF_VALUE_INVALID)
+  if (gconf_schema_get_car_type (sc) != GCONF_VALUE_INVALID)
     {
-      type = gconf_value_type_to_string(sc->car_type);
+      type = gconf_value_type_to_string(gconf_schema_get_car_type (sc));
       g_assert(type != NULL);
       my_xmlSetProp(node, "car_type", type);
     }
-  if (sc->cdr_type != GCONF_VALUE_INVALID)
+  if (gconf_schema_get_cdr_type (sc) != GCONF_VALUE_INVALID)
     {
-      type = gconf_value_type_to_string(sc->cdr_type);
+      type = gconf_value_type_to_string(gconf_schema_get_cdr_type (sc));
       g_assert(type != NULL);
       my_xmlSetProp(node, "cdr_type", type);
     }
@@ -471,8 +471,8 @@ node_set_schema_value(xmlNodePtr node,
   my_xmlSetProp(node, "value", NULL);
 
   /* set the cross-locale attributes */
-  my_xmlSetProp(node, "stype", gconf_value_type_to_string(sc->type));
-  my_xmlSetProp(node, "owner", sc->owner);
+  my_xmlSetProp(node, "stype", gconf_value_type_to_string(gconf_schema_get_type (sc)));
+  my_xmlSetProp(node, "owner", gconf_schema_get_owner (sc));
 
   locale = gconf_schema_get_locale(sc);
 
@@ -487,23 +487,23 @@ node_set_schema_value(xmlNodePtr node,
     found = xmlNewChild(node, NULL, "local_schema", NULL);
   
   /* OK if these are set to NULL, since that unsets the property */
-  my_xmlSetProp(found, "locale", sc->locale);
-  my_xmlSetProp(found, "short_desc", sc->short_desc);
+  my_xmlSetProp(found, "locale", gconf_schema_get_locale (sc));
+  my_xmlSetProp(found, "short_desc", gconf_schema_get_short_desc (sc));
 
   free_childs(found);
   
-  if (sc->default_value != NULL)
+  if (gconf_schema_get_default_value (sc) != NULL)
     {
       xmlNodePtr default_value_node;
       default_value_node = xmlNewChild(found, NULL, "default", NULL);
-      node_set_value(default_value_node, sc->default_value);
+      node_set_value(default_value_node, gconf_schema_get_default_value (sc));
     }
   
-  if (sc->long_desc)
+  if (gconf_schema_get_long_desc (sc))
     {
       xmlNodePtr ld_node;
       
-      ld_node = xmlNewChild(found, NULL, "longdesc", sc->long_desc);
+      ld_node = xmlNewChild(found, NULL, "longdesc", gconf_schema_get_long_desc (sc));
     }
 }
 

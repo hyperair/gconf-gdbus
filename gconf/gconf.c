@@ -467,8 +467,6 @@ GConfEngine*
 gconf_engine_get_for_address (const gchar* address, GError** err)
 {
   GConfEngine* conf;
-  
-  g_warning("Non-default configuration sources currently do not support change-notification, and are not yet recommended for use in applications.");
 
   conf = lookup_engine (address);
 
@@ -951,10 +949,11 @@ gconf_engine_get_entry(GConfEngine* conf,
 
   entry = gconf_entry_new_nocopy (g_strdup (key),
                                   val);
-  
-  entry->is_default = is_default;
-  entry->is_writable = is_writable;
-  entry->schema_name = schema_name; /* transfer memory ownership */
+
+  gconf_entry_set_is_default (entry, is_default);
+  gconf_entry_set_is_writable (entry, is_writable);
+  gconf_entry_set_schema_name (entry, schema_name);
+  g_free (schema_name);
 
   return entry;
 }
@@ -1126,7 +1125,7 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
       return FALSE;
     }
 
-  cv = corba_value_from_gconf_value(value);
+  cv = gconf_corba_value_from_gconf_value (value);
 
   ConfigDatabase_set(db,
                      (gchar*)key, cv,
@@ -1545,15 +1544,13 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
         gconf_entry_new_nocopy(gconf_concat_dir_and_key (dir, keys->_buffer[i]),
                                gconf_value_from_corba_value(&(values->_buffer[i])));
 
-      /* note, there's an accesor function for setting this that we are
-         cheating and not using */
-      pair->is_default = is_defaults->_buffer[i];
-      pair->is_writable = is_writables->_buffer[i];
+      gconf_entry_set_is_default (pair, is_defaults->_buffer[i]);
+      gconf_entry_set_is_writable (pair, is_writables->_buffer[i]);
       if (schema_names)
         {
           /* empty string means no schema name */
           if (*(schema_names->_buffer[i]) != '\0')
-            pair->schema_name = g_strdup (schema_names->_buffer[i]);
+            gconf_entry_set_schema_name (pair, schema_names->_buffer[i]);
         }
       
       pairs = g_slist_prepend(pairs, pair);
@@ -2244,8 +2241,8 @@ notify(PortableServer_Servant servant,
 
   entry = gconf_entry_new_nocopy (g_strdup (key),
                                   gvalue);
-  entry->is_default = is_default;
-  entry->is_writable = is_writable;
+  gconf_entry_set_is_default (entry, is_default);
+  gconf_entry_set_is_writable (entry, is_writable);
   
   gconf_cnxn_notify(cnxn, entry);
 
