@@ -1,5 +1,5 @@
 
-SUBDIRS = gconf backends wrappers po intl doc
+SUBDIRS = gconf backends wrappers po intl doc examples
 
 bin_SCRIPTS = gconf-config
 

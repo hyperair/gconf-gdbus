@@ -1061,7 +1061,8 @@ notify(PortableServer_Servant servant,
   
   if (cnxn == NULL)
     {
-      g_warning("Client received notify for unknown connection ID %u", (guint)server_id);
+      g_warning("Client received notify for unknown connection ID %u",
+                (guint)server_id);
       return;
     }
 

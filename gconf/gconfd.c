@@ -1234,6 +1234,8 @@ notify_listeners_cb(GConfListeners* listeners,
 {
   Listener* l = listener_data;
   ListenerNotifyClosure* closure = user_data;
+
+  g_return_if_fail(closure->context != ConfigServer_invalid_context);
   
   ConfigListener_notify(l->obj, closure->context, cnxn_id, 
                         (gchar*)all_above_key, closure->value,
@@ -1241,7 +1243,7 @@ notify_listeners_cb(GConfListeners* listeners,
   
   if(closure->ev._major != CORBA_NO_EXCEPTION) 
     {
-      gconf_log(GCL_WARNING, "Failed to notify listener %u: %s", 
+      gconf_log(GCL_WARNING, "Failed to notify listener %u, removing: %s", 
                 cnxn_id, CORBA_exception_id(&closure->ev));
       CORBA_exception_free(&closure->ev);
       
@@ -1261,6 +1263,9 @@ context_notify_listeners(GConfContext* ctx,
 {
   ListenerNotifyClosure closure;
   GSList* tmp;
+
+  g_return_if_fail(ctx != NULL);
+  g_return_if_fail(ctx->context != ConfigServer_invalid_context);
   
   closure.value = value;
   closure.dead = NULL;
@@ -1531,8 +1536,13 @@ set_default_context(GConfContext* ctx)
 
   g_assert(context_list->pdata[ConfigServer_default_context] == NULL);
 
+  g_return_if_fail(ctx != NULL);
+  g_return_if_fail(ctx->context == ConfigServer_invalid_context);
+  
   context_list->pdata[ConfigServer_default_context] = ctx;
 
+  ctx->context = ConfigServer_default_context;
+  
   /* Default context isn't in the address hash since it has
      multiple addresses in a stack
   */

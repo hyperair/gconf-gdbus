@@ -61,6 +61,8 @@ void            gconf_change_set_unref    (GConfChangeSet* cs);
 
 void            gconf_change_set_clear    (GConfChangeSet* cs);
 
+guint           gconf_change_set_size     (GConfChangeSet* cs);
+
 void            gconf_change_set_remove   (GConfChangeSet* cs,
                                            const gchar* key);
 

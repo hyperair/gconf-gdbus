@@ -1,5 +1,35 @@
 1999-11-23  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-backend.c (query_value): Don't return errors here; 
+	this is somewhat wrong, we actually need to discriminate between
+	errors and report the "abnormal" ones, but for now I think all of
+	them are ignorable.
+
+	* gconf/gconf-internals.c (gconf_log): If the log string contains
+	a % escape it with another percent so we don't get printf()
+	effects (was causing a segfault) - however it's still broken if
+	unintentional percents exist in the initial format string. Will
+	fix later by adding a "printf()-formatting" arg I think
+
+	* wrappers/gtk/gconf-client.c (gconf_client_commit_change_set):
+	put some casts in to chill warnings
+
+	* gconf/gconf-changeset.c (gconf_change_set_size): new function
+
+	* wrappers/gtk/gconf-client.c (gconf_client_destroy): Destroy the
+	directory list.
+
+	* Makefile.am (SUBDIRS): add "examples" directory
+
+	* examples/Makefile.am, examples/basic-gconf-app.c: Examples;
+	write nice example program.
+	
+	* gconf/gconfd.c (notify_listeners_cb): error message improvement
+	(set_default_context): Set the "context" field of the default
+	context, I don't get how that was working before.	
+
+1999-11-23  Havoc Pennington  <hp@pobox.com>
+
 	* wrappers/gtk/testgconfclient.c: remove GNOME dependency
 
 	* configure.in: don't build gconf-editor makefile.

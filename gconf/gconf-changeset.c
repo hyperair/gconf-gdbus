@@ -126,6 +126,14 @@ gconf_change_set_clear    (GConfChangeSet* cs)
   g_hash_table_foreach_remove (cs->hash, destroy_foreach, NULL);
 }
 
+guint
+gconf_change_set_size     (GConfChangeSet* cs)
+{
+  g_return_val_if_fail(cs != NULL, 0);
+  
+  return g_hash_table_size(cs->hash);
+}
+
 void
 gconf_change_set_remove   (GConfChangeSet* cs,
                            const gchar* key)

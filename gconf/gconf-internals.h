@@ -115,6 +115,8 @@ void       gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** e
 GConfValue* gconf_value_decode (const gchar* encoded);
 gchar*      gconf_value_encode (GConfValue* val);
 
+gchar* gconf_quote_percents(const gchar* src);
+
 /*
  * List/pair conversion stuff
  */

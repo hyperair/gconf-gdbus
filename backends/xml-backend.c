@@ -496,23 +496,45 @@ query_value (GConfSource* source,
   XMLSource* xs = (XMLSource*)source;
   gchar* parent;
   Dir* dir;
+  GConfError* error = NULL;
 
   parent = gconf_key_directory(key);
   
   g_assert(parent != NULL);
   
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent, err);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent, &error);
 
+  /* We DO NOT want to return an error unless it represents a general
+     problem with the backend; since we don't want to report stuff
+     like "this key doesn't exist yet" - however this is a maintenance
+     problem, since some errors may be added that need reporting. */
+  if (error != NULL)
+    {
+      gconf_log(GCL_WARNING, error->str);
+      gconf_error_destroy(error);
+      error = NULL;
+    }
+  
   g_free(parent);
   parent = NULL;
   
   if (dir != NULL)
     {
       const gchar* relative_key;
-  
+      GConfValue* retval;
+      
       relative_key = gconf_key_key(key);
 
-      return dir_get_value(dir, relative_key, locales, schema_name, err);
+      retval = dir_get_value(dir, relative_key, locales, schema_name, err);
+
+      if (error != NULL)
+        {
+          gconf_log(GCL_WARNING, error->str);
+          gconf_error_destroy(error);
+          error = NULL;
+        }
+      
+      return retval;
     }
   else
     return NULL;

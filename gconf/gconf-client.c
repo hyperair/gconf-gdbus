@@ -110,6 +110,9 @@ static gboolean gconf_client_lookup         (GConfClient* client,
                                              const gchar* key,
                                              GConfValue** valp);
 
+static void gconf_client_real_remove_dir    (GConfClient* client,
+                                             Dir* d);
+
 static guint client_signals[LAST_SIGNAL] = { 0 };
 static GtkObjectClass* parent_class = NULL;
 
@@ -195,6 +198,11 @@ gconf_client_destroy               (GtkObject* object)
 {
   GConfClient* client = GCONF_CLIENT(object);
 
+  while (client->dir_list)
+    {
+      gconf_client_real_remove_dir(client, client->dir_list->data);
+    }
+  
   if (client->listeners != NULL)
     {
       gconf_listeners_destroy(client->listeners);
@@ -211,6 +219,7 @@ gconf_client_destroy               (GtkObject* object)
     {
       gconf_client_clear_cache(client);
       g_hash_table_destroy(client->cache_hash);
+      client->cache_hash = NULL;
     }
   
   if (parent_class->destroy)
@@ -410,6 +419,21 @@ gconf_client_add_dir     (GConfClient* client,
   handle_error(client, error, err);
 }
 
+static void
+gconf_client_real_remove_dir    (GConfClient* client,
+                                 Dir* d)
+{
+  /* not totally efficient */
+  client->dir_list = g_slist_remove(client->dir_list, d);
+  
+  /* remove notify for this dir */
+  
+  gconf_notify_remove(client->engine, d->notify_id);
+  d->notify_id = 0;
+  
+  dir_destroy(d);
+}
+
 void
 gconf_client_remove_dir  (GConfClient* client,
                           const gchar* dirname)
@@ -435,15 +459,7 @@ gconf_client_remove_dir  (GConfClient* client,
 
   if (found != NULL)
     {
-      /* not totally efficient */
-      client->dir_list = g_slist_remove(client->dir_list, found);
-        
-      /* remove notify for this dir */
-      
-      gconf_notify_remove(client->engine, found->notify_id);
-      found->notify_id = 0;
-      
-      dir_destroy(found);
+      gconf_client_real_remove_dir(client, found);
     }
 #ifndef G_DISABLE_CHECKS
   else
@@ -1390,7 +1406,7 @@ gconf_client_commit_change_set   (GConfClient* client,
   /* Because the commit could have lots of side
      effects, this makes it safer */
   gconf_change_set_ref(cs);
-  gtk_object_ref(client);
+  gtk_object_ref(GTK_OBJECT(client));
   
   gconf_change_set_foreach(cs, commit_foreach, &cd);
 
@@ -1409,7 +1425,7 @@ gconf_client_commit_change_set   (GConfClient* client,
   g_slist_free(cd.remove_list);
   
   gconf_change_set_unref(cs);
-  gtk_object_unref(client);
+  gtk_object_unref(GTK_OBJECT(client));
 
   if (cd.error != NULL)
     {
