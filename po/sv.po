@@ -193,8 +193,8 @@ msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
 "reference, IOR `%s'"
 msgstr ""
-"Tar bort gammalt lås `%s' på grund av att IOR inte kunde konverteras till objekt-"
-"referencen, IOR `%s'"
+"Tar bort gammalt lås \"%s\" på grund av att IOR inte kunde konverteras till objekt-"
+"referencen, IOR \"%s\""
 
 #: gconf/gconf-internals.c:2307
 #, c-format
@@ -242,7 +242,7 @@ msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
 "took our lock"
 msgstr ""
-"Skapade inte låsfilen `%s' (skapare pid %u, vårt pid %u; antar att någon "
+"Skapade inte låsfilen \"%s\" (skapare pid %u, vårt pid %u; antar att någon "
 "tog vårt lås"
 
 #: gconf/gconf-internals.c:2491
@@ -413,7 +413,7 @@ msgstr "Mottog signal %d, ignorerar"
 #: gconf/gconfd.c:1013
 #, c-format
 msgid "starting, pid %u user `%s'"
-msgstr "startar, pid %u användare `%s'"
+msgstr "startar, pid %u användare \"%s\""
 
 #: gconf/gconfd.c:1036
 msgid ""
@@ -455,47 +455,47 @@ msgstr "Misslyckades att synkronisera med en eller flera källor: %s"
 #: gconf/gconfd.c:1523
 #, c-format
 msgid "Error getting value for `%s': %s"
-msgstr "Fel vid mottagning av värde för `%s': %s"
+msgstr "Fel vid mottagning av värde för \"%s\": %s"
 
 #: gconf/gconfd.c:1561
 #, c-format
 msgid "Error setting value for `%s': %s"
-msgstr "Fel vids sättning av värde för `%s': %s"
+msgstr "Fel vids sättning av värde för \"%s\": %s"
 
 #: gconf/gconfd.c:1593
 #, c-format
 msgid "Error unsetting `%s': %s"
-msgstr "Fel vid nollställning av `%s': %s"
+msgstr "Fel vid nollställning av \"%s\": %s"
 
 #: gconf/gconfd.c:1614
 #, c-format
 msgid "Error getting default value for `%s': %s"
-msgstr "Fel vid mottagning av standard värde för `%s': %s"
+msgstr "Fel vid mottagning av standard värde för \"%s\": %s"
 
 #: gconf/gconfd.c:1652
 #, c-format
 msgid "Error checking existence of `%s': %s"
-msgstr "Fel vid kontrollering av `%s': %s existens"
+msgstr "Fel vid kontrollering av \"%s\": %s existens"
 
 #: gconf/gconfd.c:1676
 #, c-format
 msgid "Error removing dir `%s': %s"
-msgstr "Fel vid borttagning av katalog `%s': %s"
+msgstr "Fel vid borttagning av katalog \"%s\": %s"
 
 #: gconf/gconfd.c:1701
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
-msgstr "Misslyckades att få alla poster i `%s': %s"
+msgstr "Misslyckades att få alla poster i \"%s\": %s"
 
 #: gconf/gconfd.c:1725
 #, c-format
 msgid "Error listing dirs in `%s': %s"
-msgstr "Fel vid listning av kataloger i `%s': %s"
+msgstr "Fel vid listning av kataloger i \"%s\": %s"
 
 #: gconf/gconfd.c:1745
 #, c-format
 msgid "Error setting schema for `%s': %s"
-msgstr "Fel vid sättning av schema för `%s': %s"
+msgstr "Fel vid sättning av schema för \"%s\": %s"
 
 #: gconf/gconfd.c:1911
 msgid "Attempt to unregister invalid context ID"
@@ -639,6 +639,8 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
+"Använder konfigurations-databasen direkt, går förbi servern. Kräver att gconfd "
+"inte är igång."
 
 #: gconf/gconftool.c:245
 msgid ""
@@ -655,12 +657,16 @@ msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
+"Tortyr-testar en applikation genom att sätta och nollställa en massa värden av "
+"olika typer för nycklar på kommando-raden."
 
 #: gconf/gconftool.c:263
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
+"Tortyr-testar en applikation genom att sätta och nollställa en massa nycklar inom "
+"katalogerna på kommando-raden."
 
 #: gconf/gconftool.c:310
 #, c-format
@@ -669,7 +675,7 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Fel vid alternativ %s: %s.\n"
-"Kör '%s --help' för att sen en full lista av tillgängliga "
+"Kör \"%s --help\" för att sen en full lista av tillgängliga "
 "kommandoradsalternativ.\n"
 
 #: gconf/gconftool.c:322
@@ -783,7 +789,7 @@ msgstr "Måste ange en eller flera kataloger att rekursivt lista.\n"
 #: gconf/gconftool.c:749
 #, c-format
 msgid "Failure listing pairs in `%s': %s"
-msgstr "Misslyckades att lista par i `%s': %s"
+msgstr "Misslyckades att lista par i \"%s\": %s"
 
 #: gconf/gconftool.c:767
 msgid "(no value set)"
@@ -825,12 +831,12 @@ msgstr "Lång beskrivning: %s\n"
 #: gconf/gconftool.c:877
 #, c-format
 msgid "No value set for `%s'\n"
-msgstr "Inget värde satt för `%s'\n"
+msgstr "Inget värde satt för \"%s\"\n"
 
 #: gconf/gconftool.c:881
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
-msgstr "Misslyckades att få värdet för `%s': %s\n"
+msgstr "Misslyckades att få värdet för \"%s\": %s\n"
 
 #: gconf/gconftool.c:900
 msgid "Must specify alternating keys/values as arguments\n"
@@ -839,12 +845,12 @@ msgstr "Du måste ange alternativa nycklar/värden som argument\n"
 #: gconf/gconftool.c:917
 #, c-format
 msgid "No value to set for key: `%s'\n"
-msgstr "Inget värde satt för nyckel: `%s'\n"
+msgstr "Inget värde satt för nyckel: \"%s\"\n"
 
 #: gconf/gconftool.c:940 gconf/gconftool.c:1052 gconf/gconftool.c:1056
 #, c-format
 msgid "Don't understand type `%s'\n"
-msgstr "Förstår inte typen `%s'\n"
+msgstr "Förstår inte typen \"%s\"\n"
 
 #: gconf/gconftool.c:951
 #, c-format
@@ -876,7 +882,7 @@ msgstr "Måste specifiera en eller flera nycklar att nollställa.\n"
 #: gconf/gconftool.c:1124
 #, c-format
 msgid "Error unsetting `%s': %s\n"
-msgstr "Fel vid nollställning av `%s': %s\n"
+msgstr "Fel vid nollställning av \"%s\": %s\n"
 
 #: gconf/gconftool.c:1147
 msgid "Must specify one or more dirs to get subdirs from.\n"
@@ -903,7 +909,7 @@ msgstr ""
 #: gconf/gconftool.c:1243
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "VARNING: Misslyckades att tolka standardväde `%s' för schema (%s)\n"
+msgstr "VARNING: Misslyckades att tolka standardväde \"%s\" för schema (%s)\n"
 
 #: gconf/gconftool.c:1256
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
@@ -912,7 +918,7 @@ msgstr "VARNING: internt fel i gconftool, okänd GConfValueType\n"
 #: gconf/gconftool.c:1304
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
-msgstr "VARNING: misslyckades att tolka typnamnet `%s'\n"
+msgstr "VARNING: misslyckades att tolka typnamnet \"%s\"\n"
 
 #: gconf/gconftool.c:1327
 msgid "WARNING: empty <applyto> node"
@@ -937,7 +943,7 @@ msgstr ""
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
-"VARNING: multipla <locale> noder för platsen `%s', ignorerar allt föregående "
+"VARNING: multipla <locale> noder för platsen \"%s\", ignorerar allt föregående "
 "först\n"
 
 #: gconf/gconftool.c:1451
@@ -948,12 +954,12 @@ msgstr "VARNING: Ogiltig nod <%s> i en <locale> nod\n"
 #: gconf/gconftool.c:1480
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr "VARNING: misslyckades att installera schemat `%s' plats `%s': %s\n"
+msgstr "VARNING: misslyckades att installera schemat \"%s\" plats \"%s\": %s\n"
 
 #: gconf/gconftool.c:1488
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr "Installerade schemat `%s' för platsen `%s'\n"
+msgstr "Installerade schemat \"%s\" för platsen \"%s\"\n"
 
 #: gconf/gconftool.c:1510
 #, c-format
@@ -964,7 +970,7 @@ msgstr ""
 #: gconf/gconftool.c:1518
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
-msgstr "Kopplade ihop schemat `%s' med nyckeln `%s'\n"
+msgstr "Kopplade ihop schemat \"%s\" med nyckeln \"%s\"\n"
 
 #: gconf/gconftool.c:1588
 msgid "You must have at least one <locale> entry in a <schema>\n"
@@ -978,12 +984,12 @@ msgstr "VARNING: nod <%s> nedan kan inte förstås <schemalist>\n"
 #: gconf/gconftool.c:1639
 #, c-format
 msgid "Failed to open `%s': %s\n"
-msgstr "Misslyckades med att öppna `%s': %s\n"
+msgstr "Misslyckades med att öppna \"%s\": %s\n"
 
 #: gconf/gconftool.c:1646
 #, c-format
 msgid "Document `%s' is empty?\n"
-msgstr "Dokument `%s' tomt?\n"
+msgstr "Dokument \"%s\" tomt?\n"
 
 #: gconf/gconftool.c:1658
 #, c-format
@@ -991,12 +997,11 @@ msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
 msgstr ""
-"Dokumentet `%s' har fel typ av rotnod (<%s>, borde vara <gconfschemafile>)\n"
+"Dokumentet \"%s\" har fel typ av rotnod (<%s>, borde vara <gconfschemafile>)\n"
 
 #: gconf/gconftool.c:1671
-#, fuzzy, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
-msgstr "Dokumentet`%s' har ingen top level <gconfschemafil> nod\n"
+msgstr "Dokumentet \"%s\" har ingen toppnivå <gconfschemafil> nod\n"
 
 #: gconf/gconftool.c:1685
 #, c-format
@@ -1035,6 +1040,8 @@ msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
+"Försöker att knäcka din applikation genom att sätta dåliga värden för nyckeln:\n"
+"  %s\n"
 
 #: gconf/gconftool.c:1919
 msgid "Must specify some directories to break\n"
@@ -1047,6 +1054,9 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
+"Försöker att knäcka din applikation genom att sätta dåliga värden för nyckeln i "
+"katalogen:\n"
+"  %s\n"
 
 #: gconf-editor/app.c:53
 msgid "Key"
