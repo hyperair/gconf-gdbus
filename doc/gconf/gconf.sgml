@@ -203,9 +203,15 @@
         </para>
         
         <para>
-          The source configuration file can contain "include" statements; once variables like 
-          HOME are working, this feature can be used to include a .gconf.path file in the 
-          user's home directory.  
+          The source configuration file can contain "include" statements and
+          some magic variables; you can use this to include a .gconf.path file
+          from the user's home directory. Variables are placed in
+          <symbol>$()</symbol>.  Two variables are built-in to GConf:
+          <symbol>$(HOME)</symbol> is user's home directory, and
+          <symbol>$(USER)</symbol> is the username. You can also access any
+          environment variable by prepending <symbol>ENV_</symbol> to the
+          variable name. For example, <symbol>$(ENV_FOO)</symbol> will be
+          replaced by the <symbol>FOO</symbol> environment variable.
         </para>
 
         <para>
@@ -214,8 +220,10 @@
           <programlisting>
             # GConf configuration path file with an include statement
             xml:/etc/gconf.xml.mandatory
-            include "HOME/.gconf.path"
+            include "$(HOME)/.gconf.path"
             xml:/etc/gconf.xml.defaults
+            # imaginary, no LDAP backend exists right now
+            ldap:/foo/bar/whatever/ldap/address
           </programlisting>
         </para>
 
