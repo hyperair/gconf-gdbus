@@ -1,3 +1,9 @@
+2000-12-19  Rebecca Schulman  <rebecka@eazel.com>
+
+	* gconf/gconfd.c: (gconf_server_load_sources):
+	Added a return value to a g_slist_append that would
+	cause a segfault in some cases.
+
 Fri Dec 01 00:54:33 2000  George Lebl <jirka@5z.com>
 
 	* gconf/gconf-locale.c (gconf_split_locale):  When inserting "C"
