@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 1.2.1\n"
-"POT-Creation-Date: 2002-08-20 04:56+0200\n"
-"PO-Revision-Date: 2002-08-22 10:13GMT\n"
+"POT-Creation-Date: 2002-11-25 22:39+0100\n"
+"PO-Revision-Date: 2002-11-25 22:39GMT\n"
 "Last-Translator: Michal Bukovjan <bukm@centrum.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.5\n"
+"X-Generator: KBabel 0.9.6\n"
 
 #: backends/bdb-backend.c:215
 msgid "Unloading BerkeleyDB (BDB) backend module."
@@ -33,7 +33,7 @@ msgstr "Inicializuji modul pro provoz nad BDB"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "Nelze nalézt kořenový adresář %s na adrese '%s'"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Nelze vytvořit adresář `%s': %s"
@@ -49,13 +49,14 @@ msgstr "Uvolňuji modul pro provoz nad XML."
 
 #: backends/xml-backend.c:289
 #, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Nelze nalézt kořenový adresář XML na adrese '%s'"
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "Nelze nalézt kořenový adresář na adrese \"%s\""
 
 #: backends/xml-backend.c:414
 #, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
-msgstr "Nelze číst nebo zapisovat do kořenového adresáře XML na adrese '%s'"
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
+msgstr "Nelze číst nebo zapisovat do kořenového adresáře XML na adrese \"%s\""
 
 #: backends/xml-backend.c:424
 #, c-format
@@ -72,8 +73,8 @@ msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
 msgstr ""
-"Operace odstranění adresáře již není podporovaná, jednoduše odstraňte všechny "
-"hodnoty z adresáře"
+"Operace odstranění adresáře již není podporovaná, jednoduše odstraňte "
+"všechny hodnoty z adresáře"
 
 #: backends/xml-backend.c:722
 msgid "Initializing XML backend module"
@@ -81,8 +82,8 @@ msgstr "Inicializuji modul pro provoz nad XML"
 
 #: backends/xml-backend.c:790
 #, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr "Selhalo uvolnění zámku na adresář XML `%s': %s"
+msgid "Failed to give up lock on XML dir \"%s\": %s"
+msgstr "Selhalo uvolnění zámku na adresář XML \"%s\": %s"
 
 #: backends/xml-cache.c:257
 msgid "Failed to sync XML cache contents to disk"
@@ -182,6 +183,11 @@ msgstr "Položka bez názvu v XML souboru `%s', ignoruji"
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "Kořenový uzel v XML souboru `%s' je <%s> místo <entry>, ignoruji"
 
+#: backends/xml-dir.c:1212
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "Nelze vytvořit adresář \"%s\": %s"
+
 #: backends/xml-dir.c:1228
 #, c-format
 msgid "Failed to create file `%s': %s"
@@ -253,7 +259,8 @@ msgstr "Ignoruji neplatný car z páru XML: %s"
 
 #: backends/xml-entry.c:1155 backends/xml-entry.c:1178
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
-msgstr "zpracování souboru XML: seznamy a páry možná nejsou umístěné uvnitř páru"
+msgstr ""
+"zpracování souboru XML: seznamy a páry možná nejsou umístěné uvnitř páru"
 
 #: backends/xml-entry.c:1168
 #, c-format
@@ -294,7 +301,9 @@ msgstr "Chybná adresa `%s'"
 
 #: gconf/gconf-backend.c:220
 msgid "GConf won't work without dynamic module support (gmodule)"
-msgstr "Program GConf nebude správně fungovat bez podpory dynamických modulů (gmodule)"
+msgstr ""
+"Program GConf nebude správně fungovat bez podpory dynamických modulů "
+"(gmodule)"
 
 #: gconf/gconf-backend.c:230
 #, c-format
@@ -358,9 +367,9 @@ msgid ""
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Nepodařilo se zaznamenat přidání listenera %s (%s); nebude možné obnovit tento "
-"listener při restartu programu gconfd, což bude mít za následek nespolehlivá "
-"upozornění při změně nastavení."
+"Nepodařilo se zaznamenat přidání listenera %s (%s); nebude možné obnovit "
+"tento listener při restartu programu gconfd, což bude mít za následek "
+"nespolehlivá upozornění při změně nastavení."
 
 #: gconf/gconf-database.c:1111
 #, c-format
@@ -577,7 +586,8 @@ msgstr "Očekáván pár, obdrženo %s"
 #: gconf/gconf-internals.c:1498
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
-msgstr "Očekáván pár (%s, %s), obdržen pár s jednou nebo oběma hodnotami chybějícími"
+msgstr ""
+"Očekáván pár (%s, %s), obdržen pár s jednou nebo oběma hodnotami chybějícími"
 
 #: gconf/gconf-internals.c:1514
 #, c-format
@@ -623,12 +633,14 @@ msgstr ""
 #: gconf/gconf-internals.c:2400
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
-msgstr "Soubor IOR '%s' nebyl úspěšně otevřen, nebyl nalezen program gconfd: %s"
+msgstr ""
+"Soubor IOR '%s' nebyl úspěšně otevřen, nebyl nalezen program gconfd: %s"
 
 #: gconf/gconf-internals.c:2430
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr "Soubor '%s' má již uzamčen program gconftool nebo proces jiný než gconfd"
+msgstr ""
+"Soubor '%s' má již uzamčen program gconftool nebo proces jiný než gconfd"
 
 #: gconf/gconf-internals.c:2447
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -687,7 +699,8 @@ msgstr "Chyba při pingu na server: %s"
 #: gconf/gconf-internals.c:2859
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "Selhalo vytvoření roury pro komunikaci se vytvořeným démonem gconfd: %s\n"
+msgstr ""
+"Selhalo vytvoření roury pro komunikaci se vytvořeným démonem gconfd: %s\n"
 
 #: gconf/gconf-internals.c:2883
 #, c-format
@@ -702,9 +715,9 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
-"Chyba při pokusu o kontakt se serverem s nastavením; příčinou může být, že musíte "
-"povolit TCP/IP síť pro ORBit, nebo máte staré zámky NFS po pádu systému. Více "
-"informací lze nalézt na http://www.gnome.org/projects/gconf/. "
+"Chyba při pokusu o kontakt se serverem s nastavením; příčinou může být, že "
+"musíte povolit TCP/IP síť pro ORBit, nebo máte staré zámky NFS po pádu "
+"systému. Více informací lze nalézt na http://www.gnome.org/projects/gconf/. "
 "(Detaily - %s)"
 
 #: gconf/gconf-internals.c:2909
@@ -722,7 +735,8 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Chyba u volby %s: %s.\n"
-"Spusťte '%s --help' a zobrazí se kompletní seznam příkazů, které jsou k dispozici.\n"
+"Spusťte '%s --help' a zobrazí se kompletní seznam příkazů, které jsou k "
+"dispozici.\n"
 
 #: gconf/gconf-sanity-check.c:131
 #, c-format
@@ -733,9 +747,9 @@ msgid ""
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
 "Prosím kontaktujte správce systému, aby vyřešil následující problém:\n"
-"Nelze otevřít nebo vytvořit soubor \"%s\"; to naznačuje, že může být problém s vaším "
-"nastavením, jelikož mnoho programů bude potřebovat vytvořit soubor ve vašem "
-"domovském adresáři. Chyba byla \"%s\" (errno = %d)."
+"Nelze otevřít nebo vytvořit soubor \"%s\"; to naznačuje, že může být problém "
+"s vaším nastavením, jelikož mnoho programů bude potřebovat vytvořit soubor "
+"ve vašem domovském adresáři. Chyba byla \"%s\" (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
@@ -751,9 +765,9 @@ msgstr ""
 "Prosím kontaktujte správce systému, aby vyřešil následující problém:\n"
 "Nelze zamknout soubor \"%s\"; to naznačuje, že může být problém s nastavením "
 "vašeho operačního systému. Pokud máte domovský adresář připojen přes NFS, "
-"pak buď klient nebo server může být nastaven špatně. Podívejte se do dokumentace "
-"k rpc.statd a rpc.lockd. Obvyklá příčina této chyby spočívá ve vypnuté službě "
-"\"nfslock\". Chyba byla \"%s\" (errno = %d)."
+"pak buď klient nebo server může být nastaven špatně. Podívejte se do "
+"dokumentace k rpc.statd a rpc.lockd. Obvyklá příčina této chyby spočívá ve "
+"vypnuté službě \"nfslock\". Chyba byla \"%s\" (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:160
 #, c-format
@@ -768,8 +782,8 @@ msgid ""
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
 "Prosím kontaktujte správce systému, aby vyřešil následující problém:\n"
-"V souboru s nastavením \"%s\" nejsou uvedeny žádné zdroje s nastavením; to znamená, "
-"že vaše nastavení a různé volby nemohou být uloženy. %s%s"
+"V souboru s nastavením \"%s\" nejsou uvedeny žádné zdroje s nastavením; to "
+"znamená, že vaše nastavení a různé volby nemohou být uloženy. %s%s"
 
 #: gconf/gconf-sanity-check.c:198
 msgid "Error reading the file: "
@@ -789,6 +803,17 @@ msgstr ""
 msgid "Schema contains invalid UTF-8"
 msgstr "Schéma obsahuje neplatné UTF-8"
 
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr "Schéma udává typ seznam, ale neudává typ prvků seznamu"
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr "Schémá udává typ pár, ale neudává typ elementů car/cdr"
+
 #: gconf/gconf-sources.c:319
 #, c-format
 msgid "Failed to load source \"%s\": %s"
@@ -797,25 +822,30 @@ msgstr "Nelze načíst zdroj \"%s\": %s"
 #: gconf/gconf-sources.c:346
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
-msgstr "Zjištěná adresa \"%s\" je přepisovatelný zdroj s nastavením na pozici %d"
+msgstr ""
+"Zjištěná adresa \"%s\" je přepisovatelný zdroj s nastavením na pozici %d"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
-msgstr "Zjištěná adresa \"%s\" je zdroj s nastavením pouze pro čtení na pozici %d"
+msgstr ""
+"Zjištěná adresa \"%s\" je zdroj s nastavením pouze pro čtení na pozici %d"
 
 #: gconf/gconf-sources.c:359
 #, c-format
-msgid "Resolved address \"%s\" to a partially writable config source at position %d"
-msgstr "Zjištěná adresa \"%s\" je částečně přepisovatelný zdroj s nastavením na pozici %d"
+msgid ""
+"Resolved address \"%s\" to a partially writable config source at position %d"
+msgstr ""
+"Zjištěná adresa \"%s\" je částečně přepisovatelný zdroj s nastavením na "
+"pozici %d"
 
 #: gconf/gconf-sources.c:368
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
 msgstr ""
-"Žádná ze zjištěných adres není určena pro zápis; nebude možné "
-"ukládání nastavení"
+"Žádná ze zjištěných adres není určena pro zápis; nebude možné ukládání "
+"nastavení"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -832,8 +862,8 @@ msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr ""
-"Hodnota pro `%s' nastavená ve zdroji pouze pro čtení na začátku vaší cesty "
-"s nastavením"
+"Hodnota pro `%s' nastavená ve zdroji pouze pro čtení na začátku vaší cesty s "
+"nastavením"
 
 #: gconf/gconf-sources.c:692
 #, c-format
@@ -855,23 +885,25 @@ msgid ""
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
 msgstr ""
-"Nelze uložit hodnotu klíče '%s', protože server pro nastavení nemá k dispozici "
-"žádnou zapisovatelnou databázi. Tento problém může být způsoben z několika "
-"příčin: 1) váš soubor s cestou s nastavením %s/path neobsahuje žádnou databázi "
-"nebo nebyl nalezen, 2) díky chybě byly nějakým způsobem vytvořeny dva procesy "
-"gconfd, 3) váš operační systém je špatně nastaven, takže zamykání souborů NFS "
-"nefunguje ve vašem domovském adresáři, nebo 4) vaše klientská stanice NFS "
-"havarovala a neuvědomila při restartu server, že by měl odstranit zámky na souborech. "
-"Pokud u vás běží dva procesy gconfd (nebo běžely v době, kdy byl spouštěn další), "
-"může pomoci odhlášení se, zabití všech běžících procesů gconfd, a nové přihlášení. "
-"Pokud máte staré zámky na souborech, odstraňte soubory ~/.gconf*/*lock. Možná "
-"spočívá problém v tom, že jste se pokusili použít program GConf ze dvou počítačů "
-"současně, a program ORBit má stále výchozí nastavení, které zakazuje vzdálené "
-"připojení CORBA - přidejte do souboru /etc/orbitrc záznam \"ORBIIOPIPv4=1\". "
-"Jako obvykle prověřte systémové záznamy v souborech user.* a hledejte podrobnosti "
-"týkající se problémů s programem gconfd. Na jeden domovský adresář může existovat "
-"pouze jeden proces gconfd, a ten musí vlastnit soubor se zámkem ~/.gconfd a také "
-"soubory se zámky v jednotlivých lokacích jako například ~/.gconf."
+"Nelze uložit hodnotu klíče '%s', protože server pro nastavení nemá k "
+"dispozici žádnou zapisovatelnou databázi. Tento problém může být způsoben z "
+"několika příčin: 1) váš soubor s cestou s nastavením %s/path neobsahuje "
+"žádnou databázi nebo nebyl nalezen, 2) díky chybě byly nějakým způsobem "
+"vytvořeny dva procesy gconfd, 3) váš operační systém je špatně nastaven, "
+"takže zamykání souborů NFS nefunguje ve vašem domovském adresáři, nebo 4) "
+"vaše klientská stanice NFS havarovala a neuvědomila při restartu server, že "
+"by měl odstranit zámky na souborech. Pokud u vás běží dva procesy gconfd "
+"(nebo běžely v době, kdy byl spouštěn další), může pomoci odhlášení se, "
+"zabití všech běžících procesů gconfd, a nové přihlášení. Pokud máte staré "
+"zámky na souborech, odstraňte soubory ~/.gconf*/*lock. Možná spočívá problém "
+"v tom, že jste se pokusili použít program GConf ze dvou počítačů současně, a "
+"program ORBit má stále výchozí nastavení, které zakazuje vzdálené připojení "
+"CORBA - přidejte do souboru /etc/orbitrc záznam \"ORBIIOPIPv4=1\". Jako "
+"obvykle prověřte systémové záznamy v souborech user.* a hledejte podrobnosti "
+"týkající se problémů s programem gconfd. Na jeden domovský adresář může "
+"existovat pouze jeden proces gconfd, a ten musí vlastnit soubor se zámkem ~/."
+"gconfd a také soubory se zámky v jednotlivých lokacích jako například ~/."
+"gconf."
 
 #: gconf/gconf-sources.c:1414
 #, c-format
@@ -886,7 +918,8 @@ msgstr "Chyba při získávání metainformací: %s"
 #: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-msgstr "Klíč `%s' uvedený jako schéma pro klíč `%s' ve skutečnosti obsahuje typ `%s'"
+msgstr ""
+"Klíč `%s' uvedený jako schéma pro klíč `%s' ve skutečnosti obsahuje typ `%s'"
 
 #: gconf/gconf-value.c:110
 #, c-format
@@ -1042,12 +1075,13 @@ msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
-"program gconfd byl sestaven s podporou ladění; pokouším se načíst soubor gconf.path "
-"ze zdrojového adresáře"
+"program gconfd byl sestaven s podporou ladění; pokouším se načíst soubor "
+"gconf.path ze zdrojového adresáře"
 
 #: gconf/gconfd.c:296
 #, c-format
-msgid "No configuration files found, trying to use the default config source `%s'"
+msgid ""
+"No configuration files found, trying to use the default config source `%s'"
 msgstr ""
 "Nebyly nalezeny žádné soubory s nastavením, pokusím se použít výchozí zdroj "
 "s nastavením `%s'"
@@ -1060,8 +1094,8 @@ msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
 msgstr ""
-"Na cestě se zdroji nebyly nalezeny žádné zdroje s nastavením, nastavení nebude "
-"uloženo; upravte "
+"Na cestě se zdroji nebyly nalezeny žádné zdroje s nastavením, nastavení "
+"nebude uloženo; upravte "
 
 #: gconf/gconfd.c:304
 msgid "/path"
@@ -1085,20 +1119,23 @@ msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
-"Nebyly úspěšně nalezeny žádné zapisovatelné zdroje s nastavením, některé změny "
-"v nastavení nebude možné uložit"
+"Nebyly úspěšně nalezeny žádné zapisovatelné zdroje s nastavením, některé "
+"změny v nastavení nebude možné uložit"
 
 #: gconf/gconfd.c:372
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr "Obdržen signál %d, zapisuji soubor core. Nahlaste prosím chybu v programu GConf."
+msgstr ""
+"Obdržen signál %d, zapisuji soubor core. Nahlaste prosím chybu v programu "
+"GConf."
 
 #: gconf/gconfd.c:390
 #, c-format
-msgid "Received signal %d, shutting down abnormally. Please file a GConf bug report."
+msgid ""
+"Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
-"Obdržen signál %d, provádím mimořádné ukončení. Nahlaste prosím chybu "
-"v programu GConf."
+"Obdržen signál %d, provádím mimořádné ukončení. Nahlaste prosím chybu v "
+"programu GConf."
 
 #: gconf/gconfd.c:407
 #, c-format
@@ -1119,7 +1156,9 @@ msgstr "Selhalo získání odkazu na objekt pro ConfigServer"
 #: gconf/gconfd.c:621
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
-msgstr "Selhal zápis byte do roury s fd %d, klientský program může přestat reagovat: %s"
+msgstr ""
+"Selhal zápis byte do roury s fd %d, klientský program může přestat reagovat: "
+"%s"
 
 #: gconf/gconfd.c:631
 #, c-format
@@ -1155,8 +1194,11 @@ msgstr ""
 
 #: gconf/gconfd.c:1204
 #, c-format
-msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr "Selhalo uzavření souboru se záznamy gconfd; data nemusí být řádně uložena (%s)"
+msgid ""
+"Failed to close gconfd logfile; data may not have been properly saved (%s)"
+msgstr ""
+"Selhalo uzavření souboru se záznamy gconfd; data nemusí být řádně uložena (%"
+"s)"
 
 #: gconf/gconfd.c:1273
 #, c-format
@@ -1185,13 +1227,19 @@ msgstr "Nelze přesunout na místo nový soubor s uloženým stavem: %s"
 
 #: gconf/gconfd.c:1329
 #, c-format
-msgid "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "Nelze obnovit původní soubor s uloženým stavem, který byl přesunut do '%s': %s"
+msgid ""
+"Failed to restore original saved state file that had been moved to '%s': %s"
+msgstr ""
+"Nelze obnovit původní soubor s uloženým stavem, který byl přesunut do '%s': %"
+"s"
 
 #: gconf/gconfd.c:1800
 #, c-format
-msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr "Nepodařilo se obnovit listener na adrese '%s', není možné zjistit adresu databáze"
+msgid ""
+"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgstr ""
+"Nepodařilo se obnovit listener na adrese '%s', není možné zjistit adresu "
+"databáze"
 
 #: gconf/gconfd.c:1846
 #, c-format
@@ -1209,8 +1257,8 @@ msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
-"Selhalo zaznamenání přidání listenera do záznamového souboru gconfd; nebude možné "
-"listenera znovu přidat, pokud bude program gconfd ukončen (%s)"
+"Selhalo zaznamenání přidání listenera do záznamového souboru gconfd; nebude "
+"možné listenera znovu přidat, pokud bude program gconfd ukončen (%s)"
 
 #: gconf/gconfd.c:2023
 #, c-format
@@ -1218,8 +1266,8 @@ msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
-"Selhalo zaznamenání odstranění listenera do záznamového souboru gconfd; listener "
-"může být znovu chybně přidán, pokud bude program gconfd ukončen (%s)"
+"Selhalo zaznamenání odstranění listenera do záznamového souboru gconfd; "
+"listener může být znovu chybně přidán, pokud bude program gconfd ukončen (%s)"
 
 #: gconf/gconfd.c:2046 gconf/gconfd.c:2220
 #, c-format
@@ -1242,7 +1290,8 @@ msgid "Failed to flush client add to saved state file: %s"
 msgstr "Nelze zapsat (flush) přidání klienta do souboru s uloženým stavem: %s"
 
 #: gconf/gconfd.c:2181
-msgid "Some client removed itself from the GConf server when it hadn't been added."
+msgid ""
+"Some client removed itself from the GConf server when it hadn't been added."
 msgstr "Nějaký klient se odstranil ze serveru GConf, ale nebyl předtím přidán."
 
 #: gconf/gconftool.c:82
@@ -1258,8 +1307,8 @@ msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
-"Nastavit schéma a provést synchronizaci. Použít s --short-desc, --long-desc, --owner, "
-"a --type."
+"Nastavit schéma a provést synchronizaci. Použít s --short-desc, --long-desc, "
+"--owner, a --type."
 
 #: gconf/gconftool.c:110
 msgid "Unset the keys on the command line"
@@ -1269,7 +1318,9 @@ msgstr "Vymazat klíče z příkazového řádku"
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
-msgstr "Rekurzivně vymazat všechny klíče na nebo pod klíčem/adresářem z příkazové řádky"
+msgstr ""
+"Rekurzivně vymazat všechny klíče na nebo pod klíčem/adresářem z příkazové "
+"řádky"
 
 #: gconf/gconftool.c:128
 msgid "Print all key/value pairs in a directory."
@@ -1300,8 +1351,8 @@ msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
 msgstr ""
-"Spustit server pro nastavení (gconfd). (Normálně se tak děje automaticky, pokud je "
-"to potřeba)."
+"Spustit server pro nastavení (gconfd). (Normálně se tak děje automaticky, "
+"pokud je to potřeba)."
 
 #: gconf/gconftool.c:191
 msgid ""
@@ -1384,8 +1435,8 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
-"Přistupovat do databáze s nastavením přímo, bez účasti serveru. Vyžaduje, aby "
-"neběžel program gconfd."
+"Přistupovat do databáze s nastavením přímo, bez účasti serveru. Vyžaduje, "
+"aby neběžel program gconfd."
 
 #: gconf/gconftool.c:281
 msgid ""
@@ -1394,8 +1445,8 @@ msgid ""
 "config source or set to the empty string to use the default."
 msgstr ""
 "Řádně instaluje soubory se schématy z příkazového řádku do databáze. "
-"Proměnná prostředí GCONF_CONFIG_SOURCE by měla být nastavena buď na "
-"zdroj s nastavením jiný než výchozí, nebo na prázdný řetězec pokud se má použít "
+"Proměnná prostředí GCONF_CONFIG_SOURCE by měla být nastavena buď na zdroj s "
+"nastavením jiný než výchozí, nebo na prázdný řetězec pokud se má použít "
 "zdroj výchozí."
 
 #: gconf/gconftool.c:290
@@ -1403,8 +1454,8 @@ msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
-"Tvrdě testovat aplikaci nastavením a odstraněním řady hodnot pro různé typy klíčů "
-"z příkazové řádky."
+"Tvrdě testovat aplikaci nastavením a odstraněním řady hodnot pro různé typy "
+"klíčů z příkazové řádky."
 
 #: gconf/gconftool.c:299
 msgid ""
@@ -1428,7 +1479,8 @@ msgstr "Získat název schématu použitého pro tento klíč"
 
 #: gconf/gconftool.c:335
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr "Zadejte název schématu a následně klíč, na který se má tento název použít"
+msgstr ""
+"Zadejte název schématu a následně klíč, na který se má tento název použít"
 
 #: gconf/gconftool.c:344
 msgid "Remove any schema name applied to the given keys"
@@ -1471,8 +1523,8 @@ msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 msgstr ""
-"Volba --set_schema by neměla být použita s --get, --set, --unset, --all-entries, --"
-"all-dirs\n"
+"Volba --set_schema by neměla být použita s --get, --set, --unset, --all-"
+"entries, --all-dirs\n"
 
 #: gconf/gconftool.c:490
 msgid "Value type is only relevant when setting a value\n"
@@ -1507,12 +1559,17 @@ msgid "--break-directory must be used by itself.\n"
 msgstr "Volbu --break-directory lze použít pouze samostatně.\n"
 
 #: gconf/gconftool.c:567
-msgid "You must specify a config source with --config-source when using --direct\n"
-msgstr "Při použití volby --direct musíte zadat zdroj pro nastavení volbou --config-source\n"
+msgid ""
+"You must specify a config source with --config-source when using --direct\n"
+msgstr ""
+"Při použití volby --direct musíte zadat zdroj pro nastavení volbou --config-"
+"source\n"
 
 #: gconf/gconftool.c:573
 msgid "You should use --direct when using a non-default configuration source\n"
-msgstr "Pokud používáte zdroj pro nastavení jiný než výchozí, měli byste použít volbu --direct\n"
+msgstr ""
+"Pokud používáte zdroj pro nastavení jiný než výchozí, měli byste použít "
+"volbu --direct\n"
 
 #: gconf/gconftool.c:579
 #, c-format
@@ -1541,7 +1598,8 @@ msgstr "Chyba při ukončení: %s\n"
 
 #: gconf/gconftool.c:915
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr "Musíte zadat jeden nebo více adresářů, které chcete rekurzivně vypsat.\n"
+msgstr ""
+"Musíte zadat jeden nebo více adresářů, které chcete rekurzivně vypsat.\n"
 
 #: gconf/gconftool.c:949
 #, c-format
@@ -1639,8 +1697,10 @@ msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Při nastavování seznamu musíte zadat primitivní typ seznamu\n"
 
 #: gconf/gconftool.c:1235
-msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "Při nastavování páru musíte zadat primitivní typ car a primitivní typ cdr\n"
+msgid ""
+"When setting a pair you must specify a primitive car-type and cdr-type\n"
+msgstr ""
+"Při nastavování páru musíte zadat primitivní typ car a primitivní typ cdr\n"
 
 #: gconf/gconftool.c:1250
 #, c-format
@@ -1688,7 +1748,8 @@ msgstr "Hodnota na '%s' není schéma\n"
 
 #: gconf/gconftool.c:1428 gconf/gconftool.c:1453
 msgid "Must specify a schema name followed by the key name to apply it to\n"
-msgstr "Musíte zadat název schématu a následně název klíče, na který se použije\n"
+msgstr ""
+"Musíte zadat název schématu a následně název klíče, na který se použije\n"
 
 #: gconf/gconftool.c:1435
 #, c-format
@@ -1729,8 +1790,8 @@ msgstr "Chyba při synchronizaci: %s"
 #: gconf/gconftool.c:1614
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr ""
-"Musíte zadat jeden nebo více adresářů, že kterých chcete získat páry klíčů "
-"a jejich hodnot.\n"
+"Musíte zadat jeden nebo více adresářů, že kterých chcete získat páry klíčů a "
+"jejich hodnot.\n"
 
 #: gconf/gconftool.c:1628
 msgid "Must specify one or more keys to unset.\n"
@@ -1743,7 +1804,8 @@ msgstr "Chyba při odstraňování `%s': %s\n"
 
 #: gconf/gconftool.c:1659
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Musíte zadat jeden nebo více klíčů, které chcete rekurzivně odstranit.\n"
+msgstr ""
+"Musíte zadat jeden nebo více klíčů, které chcete rekurzivně odstranit.\n"
 
 #: gconf/gconftool.c:1673
 #, c-format
@@ -1752,7 +1814,9 @@ msgstr "Chyba při rekurzivním odstraňování \"%s\": %s\n"
 
 #: gconf/gconftool.c:1691
 msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr "Musíte zadat jeden nebo více adresářů, ze kterých chcete získat podadresáře.\n"
+msgstr ""
+"Musíte zadat jeden nebo více adresářů, ze kterých chcete získat "
+"podadresáře.\n"
 
 #: gconf/gconftool.c:1725
 #, c-format
@@ -1772,12 +1836,15 @@ msgstr "VAROVÁNÍ: neplatný nebo chybějící list_type pro schéma (%s)\n"
 #: gconf/gconftool.c:1787 gconf/gconftool.c:1817 gconf/gconftool.c:1846
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "VAROVÁNÍ: Nepodařilo se zpracovat výchozí hodnotu `%s' pro schéma (%s)\n"
+msgstr ""
+"VAROVÁNÍ: Nepodařilo se zpracovat výchozí hodnotu `%s' pro schéma (%s)\n"
 
 #: gconf/gconftool.c:1805
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr "VAROVÁNÍ: neplatný nebo chybějící typ car_type nebo cdr_type pro schéma (%s)\n"
+msgstr ""
+"VAROVÁNÍ: neplatný nebo chybějící typ car_type nebo cdr_type pro schéma (%"
+"s)\n"
 
 #: gconf/gconftool.c:1830
 msgid "WARNING: You cannot set a default value for a schema\n"
@@ -1785,7 +1852,8 @@ msgstr "VAROVÁNÍ: Nelze nastavit výchozí hodnotu pro schéma\n"
 
 #: gconf/gconftool.c:1859
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
-msgstr "VAROVÁNÍ: Interní chyba programu gconftool, neznámý typ GConfValueType\n"
+msgstr ""
+"VAROVÁNÍ: Interní chyba programu gconftool, neznámý typ GConfValueType\n"
 
 #: gconf/gconftool.c:1906 gconf/gconftool.c:1927 gconf/gconftool.c:1948
 #: gconf/gconftool.c:1969
@@ -1795,24 +1863,31 @@ msgstr "VAROVÁNÍ: Nepodařilo se zpracovat název typu `%s'\n"
 
 #: gconf/gconftool.c:1923
 #, c-format
-msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr "VAROVÁNÍ: Typ list_type může být pouze int, float, string nebo bool a ne `%s'\n"
+msgid ""
+"WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+msgstr ""
+"VAROVÁNÍ: Typ list_type může být pouze int, float, string nebo bool a ne `%"
+"s'\n"
 
 #: gconf/gconftool.c:1944
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "VAROVÁNÍ: Typ car_type může být pouze int, float, string nebo bool a ne `%s'\n"
+msgstr ""
+"VAROVÁNÍ: Typ car_type může být pouze int, float, string nebo bool a ne `%"
+"s'\n"
 
 #: gconf/gconftool.c:1965
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "VAROVÁNÍ: Typ cdr_type může být pouze int, float, string nebo bool a ne `%s'\n"
+msgstr ""
+"VAROVÁNÍ: Typ cdr_type může být pouze int, float, string nebo bool a ne `%"
+"s'\n"
 
 #: gconf/gconftool.c:1993
 msgid "WARNING: empty <applyto> node"
 msgstr "VAROVÁNÍ: Prázdný uzel <applyto>"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "VAROVÁNÍ: Uzel <%s> není pod <schema> srozumitelný\n"
@@ -1821,60 +1896,76 @@ msgstr "VAROVÁNÍ: Uzel <%s> není pod <schema> srozumitelný\n"
 msgid "WARNING: no key specified for schema\n"
 msgstr "VAROVÁNÍ: Pro schéma není uveden žádný klíč\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "VAROVÁNÍ: Pro schéma typu seznam není uvedeno <list_type>\n"
+
+#: gconf/gconftool.c:2024
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "VAROVÁNÍ: Pro schéma typu pár není uvedeno <car_type>\n"
+
+#: gconf/gconftool.c:2030
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "VAROVÁNÍ: Pro schéma typu pár není uvedeno <cdr_type>\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr "VAROVÁNÍ: Uzel <locale> nemá žádný atribut `name=\"locale\"', ignoruji\n"
+msgstr ""
+"VAROVÁNÍ: Uzel <locale> nemá žádný atribut `name=\"locale\"', ignoruji\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
-msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr "VAROVÁNÍ: Více uzlů <locale> pro lokalizaci `%s', ignoruji všechny kromě prvního\n"
+msgid ""
+"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
+msgstr ""
+"VAROVÁNÍ: Více uzlů <locale> pro lokalizaci `%s', ignoruji všechny kromě "
+"prvního\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "VAROVÁNÍ: Neplatný uzel <%s> v uzlu <locale>\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "VAROVÁNÍ: Selhala instalace schématu `%s' lokalizace `%s': %s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Instalováno schéma `%s' pro lokalizaci `%s'\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "VAROVÁNÍ: Selhala asociace schématu `%s' s klíčem `%s': %s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Připojeno schéma `%s' ke klíči `%s'\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Ve <schema> se musí nacházet alespoň jedna položka <locale>\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "VAROVÁNÍ: Uzel <%s> není pod <schemalist> srozumitelný\n"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Nelze otevřít `%s': %s\n"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Dokument `%s' je prázdný?\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -1883,26 +1974,26 @@ msgstr ""
 "Dokument `%s' má chybný typ kořenového uzlu (<%s>, mělo by být "
 "<gconfschemafile>)\n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "Dokument `%s' nemá kořenový uzel <gconfschemafile>\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "VAROVÁNÍ: Uzel <%s> pod <gconfschemafile> není srozumitelný\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Chyba při synchronizaci dat s nastavením: %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "Musíte zadat nějaké soubory se schématy, které se mají instalovat\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -1911,16 +2002,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Nepodařilo se zrušit hodnotu klíče %s pro poškození: %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "Musíte zadat nějaké klíče, které se mají poškodit\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -1929,18 +2020,20 @@ msgstr ""
 "Pokouším se o narušení vaší aplikace nastavením chybných hodnot pro klíč:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "Musíte zadat nějaké adresáře, které chcete poškodit\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Pokouším se o narušení vaší aplikace nastavením chybných hodnot pro klíče "
-"v adresáři:\n"
+"Pokouším se o narušení vaší aplikace nastavením chybných hodnot pro klíče v "
+"adresáři:\n"
 "  %s\n"
 
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "Nelze nalézt kořenový adresář XML na adrese '%s'"
