@@ -46,7 +46,7 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
-aclocal $ACLOCAL_FLAGS
+aclocal -I macros $ACLOCAL_FLAGS
 
 # optionally feature autoheader
 (autoheader --version)  < /dev/null > /dev/null 2>&1 && autoheader
