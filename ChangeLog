@@ -1,5 +1,11 @@
 1999-11-16  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-schema.c (gconf_schema_copy): copy locale, and
+	handle NULL fields. Sheesh this was broken.
+	(gconf_schema_destroy): destroy default value and locale
+
+1999-11-16  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-value.c (gconf_value_to_string): print more info
 	about schemas
 

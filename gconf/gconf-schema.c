@@ -35,6 +35,9 @@ gconf_schema_new(void)
 void          
 gconf_schema_destroy(GConfSchema* sc)
 {
+  if (sc->locale)
+    g_free(sc->locale);
+
   if (sc->short_desc)
     g_free(sc->short_desc);
 
@@ -44,6 +47,9 @@ gconf_schema_destroy(GConfSchema* sc)
   if (sc->owner)
     g_free(sc->owner);
 
+  if (sc->default_value)
+    gconf_value_destroy(sc->default_value);
+  
   g_free(sc);
 }
 
@@ -56,12 +62,16 @@ gconf_schema_copy(GConfSchema* sc)
 
   dest->type = sc->type;
 
-  dest->short_desc = g_strdup(sc->short_desc);
+  dest->locale = sc->locale ? g_strdup(sc->locale) : NULL;
+  
+  dest->short_desc = sc->short_desc ? g_strdup(sc->short_desc) : NULL;
 
-  dest->long_desc = g_strdup(sc->long_desc);
+  dest->long_desc = sc->long_desc ? g_strdup(sc->long_desc) : NULL;
 
-  dest->owner = g_strdup(sc->owner);  
+  dest->owner = sc->owner ? g_strdup(sc->owner) : NULL;
 
+  dest->default_value = sc->default_value ? gconf_value_copy(sc->default_value) : NULL;
+  
   return dest;
 }
 
@@ -136,3 +146,5 @@ gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val)
 
   sc->default_value = val;
 }
+
+

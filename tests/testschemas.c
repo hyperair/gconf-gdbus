@@ -305,8 +305,11 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
               }
             else
               {
+                /* mem leak */
                 check (set_default == NULL && got_default == NULL,
-                       "set and got default value aren't both NULL");
+                       "set and got default value aren't both NULL (`%s' and `%s')",
+                       set_default ? gconf_value_to_string(set_default) : "NULL",
+                       got_default ? gconf_value_to_string(got_default) : "NULL");
               }
           }
           
