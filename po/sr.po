@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf 2.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-10-23 20:54+0200\n"
+"POT-Creation-Date: 2003-12-30 12:23+0100\n"
+"PO-Revision-Date: 2003-12-30 12:38+0100\n"
 "Last-Translator: Данило Шеган <danilo@prevod.org>\n"
 "Language-Team: Serbian (sr) <serbiangnome-lista@nongnu.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,40 @@ msgstr "Не може да направи категорију „%s“: %s"
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "Не може да чита из или да пише у %s корену категорију на адреси „%s“"
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Не могу да нађем директоријум %s\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Грешка при чувању ГКонф стабла у „%s“: %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Употреба: %s <дир>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Употреба: %s <дир>\n"
+"  Спаја позадинске хијарархије система датотека као што је:\n"
+"    дир/%%gconf.xml\n"
+"        поддир1/%%gconf.xml\n"
+"        поддир2/%%gconf.xml\n"
+"  у:\n"
+"    дир/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
