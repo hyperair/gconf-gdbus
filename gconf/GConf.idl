@@ -1,9 +1,22 @@
 
-interface Listener {
-  oneway void notify (in string value);
 
+interface ConfigListener {
+  oneway void notify (in string key, in any value);
 };
 
-interface Notifier {
-  void add_listener(in string where, in Listener who);
+interface ConfigServer {
+  // "where" is the portion of the namespace to listen to
+  void add_listener(in string where, in ConfigListener who);  
+
+  // "where" must be a previously-added "where"
+  void remove_listener(in string where, in ConfigListener who);
+  
+  any lookup(in string key);
+
+  void set(in string key, in any value);
+
+  void sync();
 };
+
+
+

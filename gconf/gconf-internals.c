@@ -26,6 +26,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+/*
+ * Values
+ */
+
 GConfValue* 
 g_conf_value_new(GConfValueType type)
 {
@@ -388,3 +393,27 @@ g_conf_file_test(const gchar* filename, int test)
   return TRUE;
 }
 
+gchar*   
+g_conf_server_info_file(void)
+{
+  const gchar* home_dir;
+  gchar* entire_file;
+  gchar buf[256];
+  gchar* host_name;
+
+  home_dir = g_get_home_dir();
+
+  if (gethostname(buf, 256) < 0)
+    {
+      g_warning("GConf failed to get host name; may cause trouble if you're using the same home dir on > 1 machines");
+      host_name = NULL;
+    }
+  else
+    {
+      host_name = buf;
+    }
+  
+  entire_file = g_strconcat(home_dir, "/.gconfd.info", host_name ? "." : NULL, host_name, NULL);
+
+  return entire_file;
+}

@@ -2,7 +2,7 @@
 /* GConf
  * Copyright (C) 1999 Red Hat Inc.
  * Developed by Havoc Pennington, some code in here borrowed from 
- * gnome-name-server (Elliot Lee)
+ * gnome-name-server and libgnorba (Elliot Lee)
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -31,6 +31,9 @@
 #include <config.h>
 
 #include "gconf-internals.h"
+#include <orb/orbit.h>
+
+#include "GConf.h"
 
 #include <sys/types.h>
 #include <stdio.h>
@@ -46,13 +49,13 @@
 /* Quick hack so I can mark strings */
 
 #ifdef _ 
-#warning "_ already defined in util.h"
+#warning "_ already defined"
 #else
 #define _(x) x
 #endif
 
 #ifdef N_ 
-#warning "N_ already defined in util.h"
+#warning "N_ already defined"
 #else
 #define N_(x) x
 #endif
@@ -62,6 +65,112 @@
  */
 
 static void g_conf_main(void);
+
+/*
+ * ORB event loop integration
+ */
+
+
+static gboolean
+orb_handle_connection(GIOChannel *source, GIOCondition cond,
+		      GIOPConnection *cnx)
+{
+  /* The best way to know about an fd exception is if select()/poll()
+   * tells you about it, so we just relay that information on to ORBit
+   * if possible
+   */
+	
+  if(cond & (G_IO_HUP|G_IO_NVAL|G_IO_ERR))
+    giop_main_handle_connection_exception(cnx);
+  else
+    giop_main_handle_connection(cnx);
+
+  return TRUE;
+}
+
+static void
+orb_add_connection(GIOPConnection *cnx)
+{
+  int tag;
+  GIOChannel *channel;
+
+  channel = g_io_channel_unix_new(GIOP_CONNECTION_GET_FD(cnx));
+  tag = g_io_add_watch_full   (channel, G_PRIORITY_DEFAULT,
+			       G_IO_IN|G_IO_ERR|G_IO_HUP|G_IO_NVAL, 
+			       (GIOFunc)orb_handle_connection,
+			       cnx, NULL);
+  g_io_channel_unref (channel);
+
+  cnx->user_data = GUINT_TO_POINTER (tag);
+}
+
+static void
+orb_remove_connection(GIOPConnection *cnx)
+{
+  g_source_remove(GPOINTER_TO_UINT (cnx->user_data));
+  cnx->user_data = GINT_TO_POINTER (-1);
+}
+
+
+/* 
+ * CORBA goo
+ */
+
+ConfigServer server = CORBA_OBJECT_NIL;
+
+void add_listener(PortableServer_Servant servant, const CORBA_char * where, 
+                  const ConfigListener who, CORBA_Environment *ev);
+void remove_listener(PortableServer_Servant servant, const CORBA_char * where, 
+                     const ConfigListener who, CORBA_Environment *ev);
+CORBA_any* lookup(PortableServer_Servant servant, const CORBA_char * key, 
+                  CORBA_Environment *ev);
+CORBA_any* set(PortableServer_Servant servant, const CORBA_char * key, 
+               const CORBA_any* value, CORBA_Environment *ev);
+
+PortableServer_ServantBase__epv base_epv = {
+  NULL,
+  NULL,
+  NULL
+};
+
+POA_ConfigServer__epv server_epv = { NULL, add_listener, remove_listener, lookup, set };
+POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
+POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
+
+
+void 
+add_listener(PortableServer_Servant servant, const CORBA_char * where, 
+             const ConfigListener who, CORBA_Environment *ev)
+{
+
+
+}
+
+void 
+remove_listener(PortableServer_Servant servant, const CORBA_char * where, 
+                const ConfigListener who, CORBA_Environment *ev)
+{
+
+
+}
+
+CORBA_any* 
+lookup(PortableServer_Servant servant, const CORBA_char * key, 
+       CORBA_Environment *ev)
+{
+
+
+}
+
+CORBA_any* 
+set(PortableServer_Servant servant, const CORBA_char * key, 
+    const CORBA_any* value, CORBA_Environment *ev)
+{
+
+
+}
+
+#if 0
 
 void
 test_query(GConfSource* source, const gchar* key)
@@ -98,7 +207,7 @@ test_set(GConfSource* source, const gchar* key, int val)
 
   syslog(LOG_INFO, "Set value of `%s' to %d\n", key, val);
 }
-
+#endif
 
 static void
 signal_handler (int signo)
@@ -119,6 +228,12 @@ main(int argc, char** argv)
 {
   struct sigaction act;
   sigset_t empty_mask;
+  PortableServer_ObjectId objid = {0, sizeof("ConfigServer"), "ConfigServer"};
+  PortableServer_POA poa;
+  
+  CORBA_Environment ev;
+  char *ior;
+  CORBA_ORB orb;
 
   GConfSource* source;
   GConfSource* source2;
@@ -161,6 +276,7 @@ main(int argc, char** argv)
   act.sa_handler = SIG_IGN;
   sigaction (SIGINT, &act, 0);
 
+#if 0
   source = g_conf_resolve_address("xml:/home/hp/.gconf");
 
   if (source != NULL)
@@ -198,6 +314,34 @@ main(int argc, char** argv)
     g_conf_source_destroy(source);
   if (source2)
     g_conf_source_destroy(source2);
+#endif
+
+  IIOPAddConnectionHandler = orb_add_connection;
+  IIOPRemoveConnectionHandler = orb_remove_connection;
+
+  CORBA_exception_init(&ev);
+  orb = CORBA_ORB_init(&argc, argv, "orbit-local-orb", &ev);
+  
+  POA_ConfigServer__init(&poa_server_servant, &ev);
+  
+  poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
+  PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
+  PortableServer_POA_activate_object_with_id(poa,
+                                             &objid, &poa_server_servant, &ev);
+  
+  server = PortableServer_POA_servant_to_reference(poa,
+                                                   &poa_server_servant,
+                                                   &ev);
+  if (server == NULL) {
+    printf("Cannot get objref\n");
+    return 1;
+  }
+
+  ior = CORBA_ORB_object_to_string(orb, server, &ev);
+
+  CORBA_free(ior);
+
+  CORBA_ORB_run(orb, &ev);
 
   g_conf_main();
 

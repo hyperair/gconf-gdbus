@@ -29,13 +29,13 @@
 /* Quick hack so I can mark strings */
 
 #ifdef _ 
-#warning "_ already defined in util.h"
+#warning "_ already defined"
 #else
 #define _(x) x
 #endif
 
 #ifdef N_ 
-#warning "N_ already defined in util.h"
+#warning "N_ already defined"
 #else
 #define N_(x) x
 #endif

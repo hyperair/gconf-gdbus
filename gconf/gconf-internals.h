@@ -22,49 +22,7 @@
 #define GCONF_GCONFINTERNALS_H
 
 #include <glib.h>
-
-typedef enum {
-  G_CONF_VALUE_INVALID,
-  G_CONF_VALUE_STRING,
-  G_CONF_VALUE_INT,
-  G_CONF_VALUE_FLOAT,
-  G_CONF_VALUE_LIST_OF_STRING,
-  G_CONF_VALUE_LIST_OF_INT,
-  G_CONF_VALUE_LIST_OF_FLOAT
-} GConfValueType;
-
-/* 
- * A GConfValue is used to pass configuration values around; it's 
- * pretty low-level, higher-level interface in gconf.h.
- */
-
-typedef struct _GConfValue GConfValue;
-
-struct _GConfValue {
-  GConfValueType type;
-  union {
-    gchar* string_data;
-    gint int_data;
-    gdouble float_data;
-    GSList* list_data;
-  } d;
-};
-
-#define g_conf_value_string(x) ((x)->d.string_data)
-#define g_conf_value_int(x)    ((x)->d.int_data)
-#define g_conf_value_float(x)  ((x)->d.float_data)
-#define g_conf_value_list(x)   ((x)->d.list_data)
-
-GConfValue* g_conf_value_new(GConfValueType type);
-GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
-GConfValue* g_conf_value_copy(GConfValue* src);
-void        g_conf_value_destroy(GConfValue* value);
-
-void        g_conf_value_set_int(GConfValue* value, gint the_int);
-void        g_conf_value_set_string(GConfValue* value, const gchar* the_str);
-void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
-
-gchar*      g_conf_value_to_string(GConfValue* value);
+#include "gconf.h"
 
 /* Sources are not interchangeable; different backend engines will return 
  * GConfSource with different private elements.
@@ -87,10 +45,6 @@ void          g_conf_source_set_value        (GConfSource* source,
 gboolean      g_conf_source_sync_all         (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
 
-const gchar* g_conf_error          (void);
-gboolean     g_conf_error_pending  (void);
-void         g_conf_set_error      (const gchar* str);
-
 gboolean     g_conf_valid_key      (const gchar* key);
 
 gchar*       g_conf_key_directory  (const gchar* key);
@@ -106,6 +60,8 @@ enum {
 
 gboolean g_conf_file_test   (const gchar* filename, int test);
 gboolean g_conf_file_exists (const gchar* filename);
+
+gchar*   g_conf_server_info_file(void);
 
 #endif
 

@@ -23,15 +23,88 @@
 
 #include <glib.h>
 
+typedef enum {
+  G_CONF_VALUE_INVALID,
+  G_CONF_VALUE_STRING,
+  G_CONF_VALUE_INT,
+  G_CONF_VALUE_FLOAT,
+  G_CONF_VALUE_LIST_OF_STRING,
+  G_CONF_VALUE_LIST_OF_INT,
+  G_CONF_VALUE_LIST_OF_FLOAT
+} GConfValueType;
+
+/* 
+ * A GConfValue is used to pass configuration values around
+ */
+
+typedef struct _GConfValue GConfValue;
+
+struct _GConfValue {
+  GConfValueType type;
+  union {
+    gchar* string_data;
+    gint int_data;
+    gdouble float_data;
+    GSList* list_data;
+  } d;
+};
+
+#define g_conf_value_string(x) ((x)->d.string_data)
+#define g_conf_value_int(x)    ((x)->d.int_data)
+#define g_conf_value_float(x)  ((x)->d.float_data)
+#define g_conf_value_list(x)   ((x)->d.list_data)
+
+GConfValue* g_conf_value_new(GConfValueType type);
+GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
+GConfValue* g_conf_value_copy(GConfValue* src);
+void        g_conf_value_destroy(GConfValue* value);
+
+void        g_conf_value_set_int(GConfValue* value, gint the_int);
+void        g_conf_value_set_string(GConfValue* value, const gchar* the_str);
+void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
+
+gchar*      g_conf_value_to_string(GConfValue* value);
+
+
 /* A configuration engine (stack of config sources); normally there's
  * just one of these on the system.  
  */
-struct _GConf GConf;
+typedef struct _GConf GConf;
 
 struct _GConf {
   gpointer dummy;
 };
 
+typedef void (*GConfNotifyFunc)(GConf* conf, GConfValue* value, gpointer user_data);
+
+GConf*       g_conf_global_conf    (void);
+
+const gchar* g_conf_error          (void);
+gboolean     g_conf_error_pending  (void);
+void         g_conf_set_error      (const gchar* str);
+
+
+/* You can only have one notify per namespace_section per app; 
+   it's just not efficient to have more.
+   In Gnome we'll probably have a more signal-like convenience wrapper to permit
+   multiple notify callbacks 
+*/
+void         g_conf_notify_add(GConf* conf,
+                               const gchar* namespace_section, /* dir or key to listen to */
+                               GConfNotifyFunc func,
+                               gpointer user_data);
+
+void         g_conf_notify_remove(GConf* conf,
+                                  const gchar* namespace_section);
+
+
+/* We'll have higher-level versions that return a double or string instead of a GConfValue */
+GConfValue*  g_conf_lookup(GConf* conf, const gchar* key);
+
+/* ditto, higher-level version planned. */
+void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
 
 #endif
+
+
