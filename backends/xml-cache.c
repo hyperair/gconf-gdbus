@@ -389,6 +389,8 @@ cache_lookup     (Cache        *cache,
         {
           cache_insert (cache, dir);
           cache_add_to_parent (cache, dir);
+          cache_set_nonexistent (cache, dir_get_name (dir),
+                                 FALSE);
         }
     }
 
@@ -424,9 +426,9 @@ cache_set_nonexistent   (Cache* cache,
                                        key,
                                        &origkey, &origval))
         {
-          g_free(origkey);
           g_hash_table_remove(cache->nonexistent_cache,
                               key);
+          g_free(origkey);
         }
     }
 }

@@ -1,3 +1,14 @@
+2002-06-02  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-cache.c (cache_lookup): don't leave a dir marked
+	nonexistent after creating it
+	(cache_set_nonexistent): remove hash entry _before_ freeing 
+	the current key. Should fix assorted "gconf loses my settings"
+	kind of bugs.
+
+	* backends/xml-dir.c (dir_sync): don't try to delete the root dir,
+	should fix some warnings.
+
 2002-05-27  Hasbullah Bin Pit <sebol@ikhlas.com>
 
 	* configure.in: Added Malay (ms)to ALL_LINGUAS.

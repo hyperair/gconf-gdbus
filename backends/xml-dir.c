@@ -374,11 +374,14 @@ dir_sync (Dir      *d,
           return FALSE;
         }
 
-      if (rmdir (d->fs_dirname) != 0)
+      if (strcmp (d->key, "/") != 0) /* don't delete root dir */
         {
-          gconf_set_error (err, GCONF_ERROR_FAILED, _("Failed to delete \"%s\": %s"),
-                           d->fs_dirname, strerror (errno));
-          return FALSE;
+          if (rmdir (d->fs_dirname) != 0)
+            {
+              gconf_set_error (err, GCONF_ERROR_FAILED, _("Failed to delete \"%s\": %s"),
+                               d->fs_dirname, strerror (errno));
+              return FALSE;
+            }
         }
 
       if (deleted)
@@ -562,7 +565,7 @@ dir_get_value   (Dir* d,
                  GError** err)
 {
   Entry* e;
-
+  
   if (d->doc == NULL)
     dir_load_doc(d, err);
 
