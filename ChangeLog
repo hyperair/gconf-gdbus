@@ -1,5 +1,11 @@
 2002-01-04  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-client.c (gconf_client_preload): allow preloading 
+	directories that are below directories being monitored, not just
+	the exact directory being monitored.
+
+2002-01-04  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-database.c: support storing names of clients
 	and new ConfigDatabase3
 	(client_alive_predicate): fix backward predicate; we were removing

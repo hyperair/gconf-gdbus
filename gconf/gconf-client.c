@@ -869,6 +869,35 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
     }
 }
 
+typedef struct
+{
+  gboolean found_parent;
+  const char *key;
+} CheckUnderneathData;
+
+static void
+foreach_check_underneath (gpointer key, gpointer value, gpointer user_data)
+{
+  CheckUnderneathData *cud = user_data;
+  
+  if (gconf_key_is_below (key, cud->key))
+    cud->found_parent = TRUE;
+}
+
+static gboolean
+dir_being_monitored (GConfClient *client,
+                     const char  *dirname)
+{
+  CheckUnderneathData cud;
+
+  cud.found_parent = FALSE;
+  cud.key = dirname;
+  
+  g_hash_table_foreach(client->dir_hash, foreach_check_underneath, &cud);
+
+  return cud.found_parent;
+}
+
 void
 gconf_client_preload    (GConfClient* client,
                          const gchar* dirname,
@@ -881,9 +910,10 @@ gconf_client_preload    (GConfClient* client,
   g_return_if_fail(dirname != NULL);
 
 #ifdef GCONF_ENABLE_DEBUG
-  if (g_hash_table_lookup(client->dir_hash, dirname) == NULL)
+  if (!dir_being_monitored (client, dirname))
     {
-      g_warning("Can only preload directories you've added with gconf_client_add_dir()");
+      g_warning("Can only preload directories you've added with gconf_client_add_dir() (tried to preload %s)",
+                dirname);
       return;
     }
 #endif
