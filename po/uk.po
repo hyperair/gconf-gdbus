@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "POT-Creation-Date: 2002-06-05 09:15+0300\n"
-"PO-Revision-Date: 2002-06-05 12:40+0200\n"
+"PO-Revision-Date: 2002-06-06 08:58+0200\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -106,9 +106,9 @@ msgstr "Назва файлу XML \"%s\" - каталог"
 
 #: backends/xml-dir.c:372
 #: backends/xml-dir.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to delete \"%s\": %s"
-msgstr "Не вдалося стерти \"%s\": %s"
+msgstr "Не вдалось стерти \"%s\": %s"
 
 #: backends/xml-dir.c:427
 #, c-format
@@ -1088,7 +1088,7 @@ msgstr "Не вдалося відновити ориґінальний файл
 #: gconf/gconfd.c:1798
 #, c-format
 msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr ""
+msgstr "Неможливо відновити прослуховувача на адресі \"%s\", не вдалося розв'язати базу даних"
 
 #: gconf/gconfd.c:1844
 #, c-format
@@ -1103,12 +1103,12 @@ msgstr "Не вдалося відкрити файл збереженого с�
 #: gconf/gconfd.c:2014
 #, c-format
 msgid "Failed to log addition of listener to gconfd logfile; won't be able to re-add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
+msgstr "Збій на запису в журнал gconfd додавання прослуховувача: буде неможливо додати прослуховувача знову, якщо gcofd завершить роботу (%s)"
 
 #: gconf/gconfd.c:2019
 #, c-format
 msgid "Failed to log removal of listener to gconfd logfile; might erroneously re-add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
+msgstr "Збій на запису в журнал gconfd видалення прослуховувача: прослуховувача може бути помилково додано ще раз, якщо gcofd завершить роботу (%s)"
 
 #: gconf/gconfd.c:2042
 #: gconf/gconfd.c:2216
@@ -1133,23 +1133,24 @@ msgstr "Не вдалося скинути клієнта у файл збере
 
 #: gconf/gconfd.c:2177
 msgid "Some client removed itself from the GConf server when it hadn't been added."
-msgstr ""
+msgstr "Якийсь клієнт видалив себе з сервера GConf, не будучи до нього доданим"
 
 #. dialog display isn't working out
 #: gconf/gconfd.c:2318
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr ""
+msgstr "Виникли множинні помилки сеґментації; неможливо відобразити діалог помилки\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2327
 #, c-format
 msgid "Segmentation fault!\n"
 "Cannot display crash dialog: %s\n"
-msgstr ""
+msgstr "Помилка сеґментації!\n"
+"Неможливо відобразити діалог помилки: %s\n"
 
 #: gconf/gconftool.c:82
 msgid "Set a key to a value and sync. Use with --type."
-msgstr ""
+msgstr "Встановити значення для ключа і синхронізувати. Використовується з --type."
 
 #: gconf/gconftool.c:91
 msgid "Print the value of a key to standard output."
@@ -1157,7 +1158,7 @@ msgstr "Надрукувати значення ключа у стандартн
 
 #: gconf/gconftool.c:100
 msgid "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --type."
-msgstr ""
+msgstr "Встановити схему і синхронізувати. Використовується з --short-desc, --long-desc, --owner і --type."
 
 #: gconf/gconftool.c:110
 msgid "Unset the keys on the command line"
@@ -1198,7 +1199,7 @@ msgstr "Запустити конфігураційний сервер (gconfd).
 
 #: gconf/gconftool.c:191
 msgid "Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr ""
+msgstr "Вказати тип значення, що встановлюється, чи тип значення описується схемою. Унікальні абревіатери повністю задовільнять."
 
 #: gconf/gconftool.c:192
 msgid "int|bool|float|string|list|pair"
@@ -1206,7 +1207,7 @@ msgstr "int|bool|float|string|list|pair"
 
 #: gconf/gconftool.c:200
 msgid "Specify the type of the list value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr ""
+msgstr "Вказати тип значення списку, що встановлюється, чи тип значення описується схемою. Унікальні абревіатери повністю задовільнять."
 
 #: gconf/gconftool.c:201
 #: gconf/gconftool.c:210
@@ -1216,15 +1217,15 @@ msgstr "int|bool|float|string"
 
 #: gconf/gconftool.c:209
 msgid "Specify the type of the car pair value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr ""
+msgstr "Вказати тип значення ключа пари, що встановлюється, чи тип значення описується схемою. Унікальні абревіатери повністю задовільнять."
 
 #: gconf/gconftool.c:218
 msgid "Specify the type of the cdr pair value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr ""
+msgstr "Вказати тип значення пари, що встановлюється, чи тип значення описується схемою. Унікальні абревіатери повністю задовільнять."
 
 #: gconf/gconftool.c:227
 msgid "Specify a short half-line description to go in a schema."
-msgstr ""
+msgstr "Вказати короткий (піврядка) опис схеми."
 
 #: gconf/gconftool.c:228
 #: gconf/gconftool.c:237
@@ -1261,47 +1262,47 @@ msgstr "ДЖЕРЕЛО"
 
 #: gconf/gconftool.c:272
 msgid "Access the config database directly, bypassing server. Requires that gconfd is not running."
-msgstr ""
+msgstr "Доступ до бази даних конфіґурації напряму, обминаючи сервер, вимагає, зупинки gconfd."
 
 #: gconf/gconftool.c:281
 msgid "Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."
-msgstr ""
+msgstr "Коректно встановлює файли схеми, вказані в командному рядку, в базу даних. Змінна середовища GCONF_CONFIG_SOURCE має бути встановлена в значення шляху до джерела чи лишитися порожньою для використання типового значення."
 
 #: gconf/gconftool.c:290
 msgid "Torture-test an application by setting and unsetting a bunch of values of different types for keys on the command line."
-msgstr ""
+msgstr "Ретельно перевірити додаток встановленням і видаленням великої кількості різних типів значень для ключів з командного рядка"
 
 #: gconf/gconftool.c:299
 msgid "Torture-test an application by setting and unsetting a bunch of keys inside the directories on the command line."
-msgstr ""
+msgstr "Ретельно перевірити додаток встановленням і видаленням великої кількості ключів всередині каталогів з командного рядка"
 
 #: gconf/gconftool.c:308
 msgid "Get the short doc string for a key"
-msgstr ""
+msgstr "Отримати короткий опис ключа"
 
 #: gconf/gconftool.c:317
 msgid "Get the long doc string for a key"
-msgstr ""
+msgstr "Отримати розгорнутий опис ключа"
 
 #: gconf/gconftool.c:326
 msgid "Get the name of the schema applied to this key"
-msgstr ""
+msgstr "Отриманти назву схеми, яку було застосовано до цього ключа"
 
 #: gconf/gconftool.c:335
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr ""
+msgstr "Вказати назву схеми і ключ, до якого буде застосовано схему"
 
 #: gconf/gconftool.c:344
 msgid "Remove any schema name applied to the given keys"
-msgstr ""
+msgstr "Видалити будь-яку назву схеми, яку застосовано до цього ключа"
 
 #: gconf/gconftool.c:353
 msgid "Get the name of the default source"
-msgstr ""
+msgstr "Отримати назву типового джерела"
 
 #: gconf/gconftool.c:362
 msgid "Print version"
-msgstr ""
+msgstr "Показати версію"
 
 #: gconf/gconftool.c:441
 msgid "Can't get and set/unset simultaneously\n"
@@ -1364,11 +1365,11 @@ msgstr "--break-directory має використовуватись сам.\n"
 
 #: gconf/gconftool.c:567
 msgid "You must specify a config source with --config-source when using --direct\n"
-msgstr ""
+msgstr "Необхідно вказати джерело конфіґурації за допомогою параметра --config-source, коли використовується параметр --direct\n"
 
 #: gconf/gconftool.c:573
 msgid "You should use --direct when using a non-default configuration source\n"
-msgstr ""
+msgstr "Бажано використовувати параметр --direct, коли використовується нетипове джерело конфіґурації\n"
 
 #: gconf/gconftool.c:579
 #, c-format
@@ -1377,7 +1378,7 @@ msgstr "Не вдалося ініціалізувати GConf: %s\n"
 
 #: gconf/gconftool.c:608
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
-msgstr ""
+msgstr "Змінну середовища GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL встановлено, схеми не встановлюються\n"
 
 #: gconf/gconftool.c:621
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1395,7 +1396,7 @@ msgstr "Помилка вимкнення: %s\n"
 
 #: gconf/gconftool.c:915
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr ""
+msgstr "Неохідно вказати принаймні один каталог для рекурсивного списку.\n"
 
 #: gconf/gconftool.c:949
 #, fuzzy, c-format
@@ -1529,7 +1530,7 @@ msgstr "Немає файлу \"%s\"\n"
 #: gconf/gconftool.c:1357
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
-msgstr ""
+msgstr "В схемі відсутній опис на \"%s\"\n"
 
 #: gconf/gconftool.c:1362
 #, fuzzy, c-format
@@ -1544,7 +1545,7 @@ msgstr "Немає файлу \"%s\"\n"
 #: gconf/gconftool.c:1372
 #, c-format
 msgid "Value at '%s' is not a schema\n"
-msgstr ""
+msgstr "Значення на \"%s\" не є схемою\n"
 
 #: gconf/gconftool.c:1428
 #: gconf/gconftool.c:1453
