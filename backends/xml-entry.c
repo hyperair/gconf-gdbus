@@ -25,7 +25,7 @@
 #include <libxml/xmlmemory.h>
 
 static void
-entry_sync_if_needed(Entry* e, GConfValue* val);
+entry_sync_if_needed(Entry* e);
 static GConfValue*
 node_extract_value(xmlNodePtr node, const gchar** locales, GError** err);
 static xmlNodePtr
@@ -134,7 +134,7 @@ entry_get_value(Entry* e, const gchar** locales, GError** err)
       GConfValue* newval;
       GError* error = NULL;
 
-      entry_sync_if_needed(e, NULL);
+      entry_sync_if_needed(e);
       
       newval = node_extract_value(e->node, locales, &error);
       if (newval != NULL)
@@ -160,11 +160,11 @@ entry_get_value(Entry* e, const gchar** locales, GError** err)
 }
 
 void
-entry_set_value(Entry* e, GConfValue* value)
+entry_set_value(Entry* e, const GConfValue* value)
 {
   g_return_if_fail(e != NULL);
 
-  entry_sync_if_needed(e, value);
+  entry_sync_if_needed(e);
   
   if (e->cached_value)
     gconf_value_free(e->cached_value);
@@ -291,7 +291,7 @@ entry_set_mod_user (Entry *e,
  */
 
 static void
-entry_sync_if_needed(Entry* e, GConfValue* val)
+entry_sync_if_needed(Entry* e)
 {
   if (!e->dirty)
     return;
@@ -353,7 +353,7 @@ entry_fill_from_node(Entry* e)
   else
     e->mod_user = NULL;
 
-  entry_sync_if_needed(e, NULL);
+  entry_sync_if_needed(e);
   
   if (e->cached_value != NULL)
     gconf_value_free(e->cached_value);

@@ -83,7 +83,7 @@ GConfValue* gconf_engine_get_default_from_schema (GConfEngine  *conf,
                                                   GError  **err);
 gboolean    gconf_engine_set                     (GConfEngine  *conf,
                                                   const gchar  *key,
-                                                  GConfValue   *value,
+                                                  const GConfValue *value,
                                                   GError  **err);
 gboolean    gconf_engine_unset                   (GConfEngine  *conf,
                                                   const gchar  *key,

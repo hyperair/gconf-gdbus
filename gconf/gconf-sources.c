@@ -150,7 +150,7 @@ gconf_source_query_metainfo      (GConfSource* source,
 static gboolean
 gconf_source_set_value        (GConfSource* source,
                                const gchar* key,
-                               GConfValue* value,
+                               const GConfValue* value,
                                GError** err)
 {
   g_return_val_if_fail(source != NULL, FALSE);
@@ -535,7 +535,7 @@ gconf_sources_query_value (GConfSources* sources,
 void
 gconf_sources_set_value   (GConfSources* sources,
                            const gchar* key,
-                           GConfValue* value,
+                           const GConfValue* value,
                            GError** err)
 {
   GList* tmp;

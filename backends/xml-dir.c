@@ -418,7 +418,7 @@ dir_sync        (Dir* d, GError** err)
 
 void
 dir_set_value   (Dir* d, const gchar* relative_key,
-                 GConfValue* value, GError** err)
+                 const GConfValue* value, GError** err)
 {
   Entry* e;
   

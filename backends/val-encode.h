@@ -30,7 +30,7 @@
  * encodes a GConfValue as a string, bdb_restore_value() decodes a
  * serialized string back to a value
  */
-extern char *bdb_serialize_value (GConfValue * val, size_t * lenp);
+extern char *bdb_serialize_value (const GConfValue * val, size_t * lenp);
 
 extern GConfValue *bdb_restore_value (const char *srz);
 

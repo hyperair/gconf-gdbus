@@ -287,7 +287,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
 }
 
 void          
-fill_corba_value_from_gconf_value(GConfValue* value, 
+fill_corba_value_from_gconf_value(const GConfValue* value, 
                                    ConfigValue* cv)
 {
   if (value == NULL)
@@ -405,7 +405,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
 }
 
 ConfigValue*  
-corba_value_from_gconf_value(GConfValue* value)
+corba_value_from_gconf_value(const GConfValue* value)
 {
   ConfigValue* cv;
 
@@ -511,7 +511,7 @@ gconf_type_from_corba_type(ConfigValueType type)
 }
 
 void          
-fill_corba_schema_from_gconf_schema(GConfSchema* sc, 
+fill_corba_schema_from_gconf_schema(const GConfSchema* sc, 
                                      ConfigSchema* cs)
 {
   cs->value_type = corba_type_from_gconf_type(sc->type);
@@ -546,7 +546,7 @@ fill_corba_schema_from_gconf_schema(GConfSchema* sc,
 }
 
 ConfigSchema* 
-corba_schema_from_gconf_schema(GConfSchema* sc)
+corba_schema_from_gconf_schema(const GConfSchema* sc)
 {
   ConfigSchema* cs;
 

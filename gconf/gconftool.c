@@ -48,7 +48,7 @@ static char* short_desc = NULL;
 static char* long_desc = NULL;
 static char* owner = NULL;
 static char* schema_file = NULL;
-static char* config_source = NULL;
+static const char* config_source = NULL;
 static int use_local_source = FALSE;
 static int makefile_install_mode = FALSE;
 static int break_key_mode = FALSE;
@@ -319,7 +319,7 @@ main (int argc, char** argv)
   LIBXML_TEST_VERSION;
   xmlKeepBlanksDefault(1);
   
-  ctx = poptGetContext("gconftool", argc, argv, options, 0);
+  ctx = poptGetContext("gconftool", argc, (const char **) argv, options, 0);
 
   poptReadDefaultConfig(ctx, TRUE);
 

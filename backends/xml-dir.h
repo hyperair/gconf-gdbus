@@ -45,7 +45,7 @@ const gchar*   dir_get_name        (Dir          *d);
 /* key should have no slashes in it */
 void           dir_set_value       (Dir          *d,
                                     const gchar  *relative_key,
-                                    GConfValue   *value,
+                                    const GConfValue *value,
                                     GError  **err);
 GConfValue*    dir_get_value       (Dir          *d,
                                     const gchar  *relative_key,

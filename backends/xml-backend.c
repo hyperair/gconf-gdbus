@@ -169,7 +169,7 @@ static GConfMetaInfo*query_metainfo  (GConfSource* source,
 
 static void          set_value       (GConfSource* source,
                                       const gchar* key,
-                                      GConfValue* value,
+                                      const GConfValue* value,
                                       GError** err);
 
 static GSList*       all_entries    (GConfSource* source,
@@ -485,7 +485,7 @@ query_metainfo  (GConfSource* source, const gchar* key,
 }
 
 static void          
-set_value (GConfSource* source, const gchar* key, GConfValue* value,
+set_value (GConfSource* source, const gchar* key, const GConfValue* value,
            GError** err)
 {
   XMLSource* xs = (XMLSource*)source;

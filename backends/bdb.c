@@ -900,7 +900,7 @@ bdb_query_value (BDB_Store * bdb,
 
 void
 bdb_put_value (BDB_Store * bdb, const char *key,
-	       GConfValue * val, GError ** err)
+	       const GConfValue * val, GError ** err)
 {
   size_t len;
   char *buf = bdb_serialize_value (val, &len);

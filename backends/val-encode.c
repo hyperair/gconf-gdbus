@@ -209,10 +209,10 @@ bdb_size_value (const GConfValue * val)
  * serialized string back to a value
  */
 char *
-bdb_serialize_value (GConfValue * val, size_t * lenp)
+bdb_serialize_value (const GConfValue * val, size_t * lenp)
 {
   char *buf = tbuf;
-  char *t;
+  const char *t;
   size_t len = 0;
   g_assert (val != 0);
   switch (val->type)

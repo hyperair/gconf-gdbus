@@ -1,3 +1,40 @@
+2001-07-13  Darin Adler  <darin@bentspoon.com>
+
+	Fix a bunch of warnings.
+
+	* backends/bdb-backend.c: (vtable_bdb_set_value): Add const.
+	* backends/bdb.c: (bdb_put_value): Add const.
+	* backends/bdb.h: Add const.
+	* backends/val-encode.c: (bdb_serialize_value): Add const.
+	* backends/val-encode.h: Add const.
+	* backends/xml-backend.c: (set_value): Add const.
+	* backends/xml-dir.c: (dir_set_value): Add const.
+	* backends/xml-dir.h: Add const.
+	* backends/xml-entry.h: Add const.
+	* gconf/gconf-backend.c: (gconf_get_backend): Add const.
+	* gconf/gconf-backend.h: Add const.
+	* gconf/gconf-internals.c: (fill_corba_value_from_gconf_value),
+	(corba_value_from_gconf_value),
+	(fill_corba_schema_from_gconf_schema),
+	(corba_schema_from_gconf_schema): Add const.
+	* gconf/gconf-internals.h: Add const.
+	* gconf/gconf-sources.c: (gconf_source_set_value),
+	(gconf_sources_set_value): Add const.
+	* gconf/gconf-sources.h: Add const.
+	* gconf/gconf.c: (gconf_engine_set): Add const.
+	* gconf/gconf.h: Add const.
+
+	* gconf/gconf-value.h:
+	* gconf/gconf-value.c: (gconf_value_set_list): Remove const,
+	because const GSList * doesn't do anything useful.
+
+	* backends/xml-entry.c: (entry_get_value), (entry_set_value),
+	(entry_sync_if_needed), (entry_fill_from_node): Got rid of
+	unused GValue * parameter to entry_sync_if_needed. Also, add
+	const in one place.
+
+	* gconf/gconftool.c: (main): Add cast.
+
 2001-07-07  Peter Williams  <peter@beta.newton.cx>
 
 	* backends/bdb*: s,uint32_t,guint32,g

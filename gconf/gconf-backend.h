@@ -85,7 +85,7 @@ struct _GConfBackendVTable {
   
   void                (* set_value)       (GConfSource* source, 
                                            const gchar* key, 
-                                           GConfValue* value,
+                                           const GConfValue* value,
                                            GError** err);
 
   /* Returns list of GConfEntry with key set to a relative

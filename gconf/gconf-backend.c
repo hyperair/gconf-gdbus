@@ -225,7 +225,7 @@ gconf_get_backend(const gchar* address, GError** err)
           
           if (module == NULL)
             {
-              gchar* error = g_module_error();
+              const gchar* error = g_module_error();
               gconf_set_error(err,
                               GCONF_ERROR_FAILED, _("Error opening module `%s': %s\n"),
                               name, error);

@@ -42,7 +42,7 @@ GConfValue*    entry_get_value       (Entry        *entry,
                                       const gchar **locales,
                                       GError  **err);
 void           entry_set_value       (Entry        *entry,
-                                      GConfValue   *value);
+                                      const GConfValue *value);
 gboolean       entry_unset_value     (Entry        *entry,
                                       const gchar  *locale);
 GConfMetaInfo* entry_get_metainfo    (Entry        *entry);

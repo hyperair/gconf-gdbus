@@ -84,7 +84,7 @@ static GConfMetaInfo *vtable_bdb_query_metainfo (GConfSource * source,
 
 static void vtable_bdb_set_value (GConfSource * source,
 				  const gchar * key,
-				  GConfValue * value, GError ** err);
+				  const GConfValue * value, GError ** err);
 
 static GSList *vtable_bdb_all_entries (GConfSource * source,
 				       const gchar * dir,
@@ -359,7 +359,7 @@ vtable_bdb_query_metainfo (GConfSource * source,
  */
 static void
 vtable_bdb_set_value (GConfSource * source, const gchar * key,
-		      GConfValue * value, GError ** err)
+		      const GConfValue * value, GError ** err)
 {
   BDBSource *xs = (BDBSource *) source;
 

@@ -894,7 +894,7 @@ gconf_value_set_list_nocopy(GConfValue* value,
 
 void
 gconf_value_set_list       (GConfValue* value,
-                             const GSList* list)
+                            GSList* list)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_LIST);

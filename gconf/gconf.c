@@ -911,7 +911,7 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
 
 gboolean
 gconf_engine_set (GConfEngine* conf, const gchar* key,
-                  GConfValue* value, GError** err)
+                  const GConfValue* value, GError** err)
 {
   ConfigValue* cv;
   CORBA_Environment ev;

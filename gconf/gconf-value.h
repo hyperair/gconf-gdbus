@@ -118,7 +118,7 @@ void        gconf_value_set_list_type        (GConfValue* value,
 void        gconf_value_set_list_nocopy      (GConfValue* value,
                                               GSList* list);
 void        gconf_value_set_list             (GConfValue* value,
-                                              const GSList* list);
+                                              GSList* list);
 
 gchar*      gconf_value_to_string            (const GConfValue* value);
 

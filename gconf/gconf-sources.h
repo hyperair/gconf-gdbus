@@ -80,7 +80,7 @@ GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
                                                 GError   **err);
 void          gconf_sources_set_value          (GConfSources  *sources,
                                                 const gchar   *key,
-                                                GConfValue    *value,
+                                                const GConfValue *value,
                                                 GError   **err);
 void          gconf_sources_unset_value        (GConfSources  *sources,
                                                 const gchar   *key,

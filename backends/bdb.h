@@ -171,7 +171,7 @@ extern GSList *bdb_all_dirs (BDB_Store * bdb, const char *dirname,
 			     GError ** err);
 extern GSList *bdb_all_entries (BDB_Store * bdb, const char *dirpath,
 				GSList * inlist, GError ** err);
-extern void bdb_put_value (BDB_Store * bdb, const char *key, GConfValue * val,
+extern void bdb_put_value (BDB_Store * bdb, const char *key, const GConfValue * val,
 			   GError ** err);
 extern GSList *bdb_all_subdirs (BDB_Store * bdb, const char *dirname,
 				GError ** err);

@@ -46,8 +46,8 @@ gboolean gconf_file_test   (const gchar* filename, int test);
 gboolean gconf_file_exists (const gchar* filename);
 
 GConfValue*  gconf_value_from_corba_value      (const ConfigValue *value);
-ConfigValue* corba_value_from_gconf_value      (GConfValue        *value);
-void         fill_corba_value_from_gconf_value (GConfValue        *value,
+ConfigValue* corba_value_from_gconf_value      (const GConfValue  *value);
+void         fill_corba_value_from_gconf_value (const GConfValue  *value,
                                                 ConfigValue       *dest);
 ConfigValue* invalid_corba_value               (void);
 
@@ -55,9 +55,9 @@ ConfigValue* invalid_corba_value               (void);
 gchar* gconf_object_to_string (CORBA_Object obj,
                                GError **err);
 
-void          fill_corba_schema_from_gconf_schema (GConfSchema        *sc,
+void          fill_corba_schema_from_gconf_schema (const GConfSchema  *sc,
                                                    ConfigSchema       *dest);
-ConfigSchema* corba_schema_from_gconf_schema      (GConfSchema        *sc);
+ConfigSchema* corba_schema_from_gconf_schema      (const GConfSchema  *sc);
 GConfSchema*  gconf_schema_from_corba_schema      (const ConfigSchema *cs);
 
 const gchar*   gconf_value_type_to_string   (GConfValueType  type);
