@@ -271,7 +271,7 @@ gconf_backend_verify_vtable (GConfBackendVTable  *vtable,
 	}
     }
 
-  return FALSE;
+  return TRUE;
 }
 
 GConfBackend* 
