@@ -1,0 +1,70 @@
+<gconfschemafile>
+<!-- 
+Note: all double hyphens have a space in the middle because double hyphen isn't 
+allowed in comments. So, remove the space before use.
+
+To install this file type: 
+      gconftool - -install-schema-file basic-gconf-app.schemas 
+You probably want your "make install" to do this for real applications.
+Also, you probably want a configure option so people can retarget where the 
+schema file gets installed. The option should be called - -gconf-config-source=blah
+To change the gconftool target use the - -config-source=blah option to gconftool.
+-->
+
+    <schemalist>
+      <schema>
+      <key>/schemas/apps/gnome/basic-gconf-app/fooandbar</key>
+      <applyto>/apps/gnome/basic-gconf-app/foo</applyto>
+        <applyto>/apps/gnome/basic-gconf-app/bar</applyto>
+      <owner>basic-gconf-app</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>Blah blah blurgh</default>
+        <short>short description in C locale</short>
+        <long>long description of foo and bar in C locale</long>
+      </locale>
+      <locale name="no">
+        <default>some thing in norwegian</default>
+        <short>short description in Norway</short>
+        <long>Long description in Norway. long long long. this is a long sentence.</long>
+      </locale>
+    </schema>
+      <schema>
+      <key>/schemas/apps/gnome/basic-gconf-app/baz</key>
+      <applyto>/apps/gnome/basic-gconf-app/baz</applyto>
+      <owner>basic-gconf-app</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>Zzzzzzzzzz</default>
+        <short>short description in C locale</short>
+        <long>long description of baz in C locale</long>
+      </locale>
+      <locale name="no">
+        <default>some thing in norwegian</default>
+        <short>short description in Norway</short>
+        <long>Long description in Norway. long long long. this is a long sentence.</long>
+      </locale>
+    </schema>
+      <schema>
+      <key>/schemas/apps/gnome/basic-gconf-app/blah</key>
+      <applyto>/apps/gnome/basic-gconf-app/blah</applyto>
+      <owner>basic-gconf-app</owner>
+      <type>string</type>
+      <locale name="C">
+        <default>bllllllaaaaaaaaaaaaaaaaarrrrrrggggggghhhhh</default>
+        <short>short description in C locale</short>
+        <long>long description of blah in C locale</long>
+      </locale>
+      <locale name="no">
+        <default>some thing in norwegian</default>
+        <short>short description in Norway</short>
+        <long>Long description in Norway. long long long. this is a long sentence.</long>
+      </locale>
+    </schema>
+  </schemalist>
+  
+</gconfschemafile>
+
+
+
+
