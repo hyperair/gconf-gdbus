@@ -880,9 +880,43 @@ xs_create_new_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
       g_assert(*relative_dir != '\0'); /* would happen if the dir was '/' which it shouldn't be. */
 
       xdirs_add_child_dir(parent_entry->dirs, relative_dir);
+
+      /* Mark parent to be saved */
+      parent_entry->dirty = TRUE;
     }
 
   return;
+}
+
+static gboolean
+create_fs_dir(const gchar* dir)
+{
+  gchar* parent;
+
+  if (g_conf_file_test(dir, G_CONF_FILE_ISDIR))
+    return TRUE;
+
+  parent = parent_dir(dir);
+
+  if (parent != NULL)
+    {
+      if (!create_fs_dir(parent))
+        {
+          g_free(parent);
+          return FALSE;
+        }
+
+      g_free(parent);
+    }
+  
+  if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
+    {
+      g_warning("Could not make directory `%s': %s",
+                (gchar*)dir, strerror(errno));
+      return FALSE;
+    }
+  else
+    return TRUE;
 }
 
 struct SyncData {
@@ -899,12 +933,18 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
   gboolean old_existed;
   gchar* relative_dir;
 
+  /*  printf("Dir `%s' being synced; %sdirty\n", dir, entry->dirty ? "" : "not "); */
+
   if (!entry->dirty)
     return;
 
-  /* FIXME make any missing directories */
-
   relative_dir = g_conf_concat_key_and_dir(data->source->root_dir, dir);
+
+  if (!create_fs_dir(relative_dir))
+    {
+      /* Ugh, not doing well. */
+      return;
+    }
 
   tmp_filename = g_strconcat(relative_dir, "/.gconf.xml.tmp", NULL);
   filename = g_strconcat(relative_dir, "/.gconf.xml", NULL);

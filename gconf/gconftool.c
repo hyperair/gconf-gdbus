@@ -42,6 +42,7 @@ int set_mode = FALSE;
 int get_mode = FALSE;
 int all_pairs_mode = FALSE;
 int all_subdirs_mode = FALSE;
+int recursive_list = FALSE;
 char* value_type = NULL;
 int shutdown_gconfd = FALSE;
 int ping_gconfd = FALSE;
@@ -93,6 +94,16 @@ struct poptOption options[] = {
     N_("Print all subdirectories in a directory."),
     NULL
   },
+  {
+    "recursive-list",
+    'R',
+    POPT_ARG_NONE,
+    &recursive_list,
+    0,
+    N_("Print all subdirectories and entries under a dir, recursively."),
+    NULL
+  },
+  
   { 
     "shutdown",
     '\0',
@@ -140,6 +151,11 @@ struct poptOption options[] = {
   }
 };
 
+static void do_recursive_list(GConf* conf, gchar** args);
+static void do_all_pairs(GConf* conf, gchar** args);
+static void list_pairs_in_dir(GConf* conf, gchar* dir, guint depth);
+
+/* FIXME um, break this function up... */
 int 
 main (int argc, char** argv)
 {
@@ -179,7 +195,16 @@ main (int argc, char** argv)
   if ((all_subdirs_mode && get_mode) ||
       (all_subdirs_mode && set_mode))
     {
-      fprintf(stderr, _("Can't use --all-subdirs with --get or --set\n"));
+      fprintf(stderr, _("Can't use --all-dirs with --get or --set\n"));
+      return 1;
+    }
+
+  if ((recursive_list && get_mode) ||
+      (recursive_list && set_mode) ||
+      (recursive_list && all_pairs_mode) ||
+      (recursive_list && all_subdirs_mode))
+    {
+      fprintf(stderr, _("--recursive-list should not be used with --get, --set, --all-pairs, or --all-dirs\n"));
       return 1;
     }
 
@@ -356,45 +381,8 @@ main (int argc, char** argv)
           fprintf(stderr, _("Must specify one or more dirs to get key/value pairs from.\n"));
           return 1;
         }
-      
-      while (*args)
-        {
-          GSList* pairs;
-          GSList* tmp;
 
-          pairs = g_conf_all_pairs(conf, *args);
-          
-          if (pairs != NULL)
-            {
-              printf(_("# Key-value pairs in `%s':\n"), *args);
-
-              tmp = pairs;
-
-              while (tmp != NULL)
-                {
-                  GConfPair* pair = tmp->data;
-                  gchar* s;
-
-                  s = g_conf_value_to_string(pair->value);
-
-                  printf(" %s = %s\n", pair->key, s);
-
-                  g_free(s);
-                  
-                  g_conf_pair_destroy(pair);
-
-                  tmp = g_slist_next(tmp);
-                }
-
-              g_slist_free(pairs);
-            }
-          else
-            {
-              fprintf(stderr, _("Directory `%s' contains no key-value pairs.\n"), *args);
-            }
- 
-          ++args;
-        }
+      do_all_pairs(conf, args);
     }
 
 
@@ -417,8 +405,6 @@ main (int argc, char** argv)
           
           if (subdirs != NULL)
             {
-              printf(_("# Subdirectories in `%s':\n"), *args);
-
               tmp = subdirs;
 
               while (tmp != NULL)
@@ -434,13 +420,22 @@ main (int argc, char** argv)
 
               g_slist_free(subdirs);
             }
-          else
-            {
-              fprintf(stderr, _("Directory `%s' has no subdirectories.\n"), *args);
-            }
  
           ++args;
         }
+    }
+
+  if (recursive_list)
+    {
+      gchar** args = poptGetArgs(ctx);
+
+      if (args == NULL)
+        {
+          fprintf(stderr, _("Must specify one or more dirs to recursively list.\n"));
+          return 1;
+        }
+
+      do_recursive_list(conf, args);
     }
 
   poptFreeContext(ctx);
@@ -451,5 +446,96 @@ main (int argc, char** argv)
     g_conf_shutdown_daemon();
 
   return 0;
+}
+
+static void 
+recurse_subdir_list(GConf* conf, GSList* subdirs, guint depth)
+{
+  GSList* tmp;
+  gchar* whitespace;
+
+  whitespace = g_strnfill(depth, ' ');
+
+  tmp = subdirs;
+  
+  while (tmp != NULL)
+    {
+      gchar* s = tmp->data;
+
+      printf("%s%s:\n", whitespace, s);
+      
+      list_pairs_in_dir(conf, s, depth);
+
+      recurse_subdir_list(conf, g_conf_all_dirs(conf, s), depth+1);
+
+      g_free(s);
+      
+      tmp = g_slist_next(tmp);
+    }
+  
+  g_slist_free(subdirs);
+  g_free(whitespace);
+}
+
+static void
+do_recursive_list(GConf* conf, gchar** args)
+{
+  while (*args)
+    {
+      GSList* subdirs;
+
+      subdirs = g_conf_all_dirs(conf, *args);
+          
+      recurse_subdir_list(conf, subdirs, 0);
+ 
+      ++args;
+    }
+}
+
+static void 
+list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
+{
+  GSList* pairs;
+  GSList* tmp;
+  gchar* whitespace;
+
+  whitespace = g_strnfill(depth, ' ');
+
+  pairs = g_conf_all_pairs(conf, dir);
+          
+  if (pairs != NULL)
+    {
+      tmp = pairs;
+
+      while (tmp != NULL)
+        {
+          GConfPair* pair = tmp->data;
+          gchar* s;
+
+          s = g_conf_value_to_string(pair->value);
+
+          printf(" %s%s = %s\n", whitespace, pair->key, s);
+
+          g_free(s);
+                  
+          g_conf_pair_destroy(pair);
+
+          tmp = g_slist_next(tmp);
+        }
+
+      g_slist_free(pairs);
+    }
+
+  g_free(whitespace);
+}
+
+static void 
+do_all_pairs(GConf* conf, gchar** args)
+{      
+  while (*args)
+    {
+      list_pairs_in_dir(conf, *args, 0);
+      ++args;
+    }
 }
 
