@@ -1258,9 +1258,9 @@ gconf_client_get_full        (GConfClient* client,
   else
     g_assert (error == NULL);
 
-  return gconf_entry_get_value (entry) ?
+  return entry ? (gconf_entry_get_value (entry) ?
     gconf_value_copy (gconf_entry_get_value (entry)) :
-    NULL;
+    NULL) : NULL;
 }
 
 GConfEntry*
