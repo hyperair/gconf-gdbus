@@ -40,8 +40,8 @@ struct _GConfSource {
 };
 
 typedef enum {
-  G_CONF_SOURCE_WRITEABLE = 1 << 0,
-  G_CONF_SOURCE_ALL_FLAGS = ((1 << 0))
+  GCONF_SOURCE_WRITEABLE = 1 << 0,
+  GCONF_SOURCE_ALL_FLAGS = ((1 << 0))
 } GConfSourceFlags;
 
 GConfSource*  gconf_resolve_address         (const gchar* address);

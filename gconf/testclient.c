@@ -59,7 +59,7 @@ main (int argc, char** argv)
       return 1;
     }
 
-  val = gconf_value_new(G_CONF_VALUE_INT);
+  val = gconf_value_new(GCONF_VALUE_INT);
 
   gconf_value_set_int(val, 100);
  

@@ -36,7 +36,7 @@ struct _GConfBackendVTable {
 
   GConfSource*        (* resolve_address) (const gchar* address);
 
-  /* schema_name filled if NULL or G_CONF_VALUE_IGNORE_SUBSEQUENT returned.
+  /* schema_name filled if NULL or GCONF_VALUE_IGNORE_SUBSEQUENT returned.
      if schema_name is NULL, it isn't filled */
   GConfValue*         (* query_value)     (GConfSource* source, 
                                            const gchar* key,

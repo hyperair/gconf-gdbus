@@ -594,8 +594,8 @@ compare_listvals(GConfValue* first, GConfValue* second)
   GSList* l1;
   GSList* l2;
   
-  check(first->type == G_CONF_VALUE_LIST, "first list value isn't a list value");
-  check(second->type == G_CONF_VALUE_LIST, "second list value isn't a list value");
+  check(first->type == GCONF_VALUE_LIST, "first list value isn't a list value");
+  check(second->type == GCONF_VALUE_LIST, "second list value isn't a list value");
   check(gconf_value_list_type(first) == gconf_value_list_type(second),
         "two lists don't have the same type");
 
@@ -619,22 +619,22 @@ compare_listvals(GConfValue* first, GConfValue* second)
       
       switch (val1->type)
         {
-        case G_CONF_VALUE_INT:
+        case GCONF_VALUE_INT:
           check(gconf_value_int(val1) == gconf_value_int(val2),
                 "integer values %d and %d are not equal", gconf_value_int(val1),
                 gconf_value_int(val2));
           break;
-        case G_CONF_VALUE_BOOL:
+        case GCONF_VALUE_BOOL:
           check(gconf_value_bool(val1) == gconf_value_bool(val2),
                 "boolean values %d and %d are not equal", gconf_value_bool(val1),
                 gconf_value_bool(val2));
           break;
-        case G_CONF_VALUE_FLOAT:
+        case GCONF_VALUE_FLOAT:
           check(fabs(gconf_value_float(val1) - gconf_value_float(val2)) < 1e-5,
                 "float values %g and %g are not equal (epsilon %g)", gconf_value_float(val1),
                 gconf_value_float(val2), gconf_value_float(val1) - gconf_value_float(val2));
           break;
-        case G_CONF_VALUE_STRING:
+        case GCONF_VALUE_STRING:
           check(strcmp(gconf_value_string(val1), gconf_value_string(val2)) == 0, 
                 "string values `%s' and `%s' are not equal", gconf_value_string(val1),
                 gconf_value_string(val2));
@@ -673,7 +673,7 @@ list_of_intvals(void)
     {
       GConfValue* val;
 
-      val = gconf_value_new(G_CONF_VALUE_INT);
+      val = gconf_value_new(GCONF_VALUE_INT);
 
       gconf_value_set_int(val, ints[i]);
       
@@ -693,7 +693,7 @@ list_of_stringvals(void)
     {
       GConfValue* val;
 
-      val = gconf_value_new(G_CONF_VALUE_STRING);
+      val = gconf_value_new(GCONF_VALUE_STRING);
 
       gconf_value_set_string(val, *stringp);
       
@@ -713,7 +713,7 @@ list_of_boolvals(void)
     {
       GConfValue* val;
 
-      val = gconf_value_new(G_CONF_VALUE_BOOL);
+      val = gconf_value_new(GCONF_VALUE_BOOL);
 
       gconf_value_set_bool(val, bools[i]);
       
@@ -733,7 +733,7 @@ list_of_floatvals(void)
     {
       GConfValue* val;
 
-      val = gconf_value_new(G_CONF_VALUE_FLOAT);
+      val = gconf_value_new(GCONF_VALUE_FLOAT);
 
       gconf_value_set_float(val, floats[i]);
       
@@ -751,10 +751,10 @@ check_list_storage(GConfEngine* conf)
   GConfError* err = NULL;
   const gchar** keyp = NULL;
   guint i;
-  GConfValueType list_types[] = { G_CONF_VALUE_INT, G_CONF_VALUE_INT,
-                                  G_CONF_VALUE_STRING, G_CONF_VALUE_STRING,
-                                  G_CONF_VALUE_FLOAT, G_CONF_VALUE_FLOAT,
-                                  G_CONF_VALUE_BOOL, G_CONF_VALUE_BOOL };
+  GConfValueType list_types[] = { GCONF_VALUE_INT, G_CONF_VALUE_INT,
+                                  GCONF_VALUE_STRING, G_CONF_VALUE_STRING,
+                                  GCONF_VALUE_FLOAT, G_CONF_VALUE_FLOAT,
+                                  GCONF_VALUE_BOOL, G_CONF_VALUE_BOOL };
   GSList* lists[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
   const guint n_lists = sizeof(lists)/sizeof(lists[0]);
 
@@ -789,7 +789,7 @@ check_list_storage(GConfEngine* conf)
           GConfValue* gotten = NULL;
           GConfValue* thislist = NULL;
 
-          thislist = gconf_value_new(G_CONF_VALUE_LIST);
+          thislist = gconf_value_new(GCONF_VALUE_LIST);
 
           gconf_value_set_list_type(thislist, list_types[i]);
 

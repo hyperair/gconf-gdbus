@@ -58,7 +58,7 @@ gconf_key_check(const gchar* key, GConfError** err)
   if (!gconf_valid_key(key, &why))
     {
       if (err)
-        *err = gconf_error_new(G_CONF_BAD_KEY, _("`%s': %s"),
+        *err = gconf_error_new(GCONF_BAD_KEY, _("`%s': %s"),
                                 key, why);
       g_free(why);
       return FALSE;
@@ -162,7 +162,7 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
   if (ctx == ConfigServer_invalid_context)
     {
       if (err)
-        *err = gconf_error_new(G_CONF_BAD_ADDRESS,
+        *err = gconf_error_new(GCONF_BAD_ADDRESS,
                                 _("Server couldn't resolve the address `%s'"),
                                 address);
 
@@ -355,7 +355,7 @@ gconf_get(GConfEngine* conf, const gchar* key, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), NULL);
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), NULL);
       return NULL;
     }
 
@@ -387,7 +387,7 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
   CORBA_Environment ev;
   ConfigServer cs;
 
-  g_return_val_if_fail(value->type != G_CONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(value->type != GCONF_VALUE_INVALID, FALSE);
 
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -396,7 +396,7 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), FALSE);
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), FALSE);
       return FALSE;
     }
 
@@ -435,7 +435,7 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), FALSE);
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), FALSE);
       return FALSE;
     }
 
@@ -474,7 +474,7 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), NULL);
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), NULL);
       return NULL;
     }
 
@@ -536,7 +536,7 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), NULL);
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), NULL);
       return NULL;
     }
 
@@ -583,7 +583,7 @@ gconf_sync(GConfEngine* conf, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)));
+      g_return_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)));
       return;
     }
 
@@ -614,7 +614,7 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
   
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), FALSE);
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)), FALSE);
       return FALSE;
     }
   
@@ -673,7 +673,7 @@ gconf_cnxn_notify(GConfCnxn* cnxn,
 
 static ConfigServer   server = CORBA_OBJECT_NIL;
 
-/* errors in here should be G_CONF_NO_SERVER */
+/* errors in here should be GCONF_NO_SERVER */
 static ConfigServer
 try_to_contact_server(GConfError** err)
 {
@@ -705,7 +705,7 @@ try_to_contact_server(GConfError** err)
             {
               server = CORBA_OBJECT_NIL;
               if (err)
-                *err = gconf_error_new(G_CONF_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
+                *err = gconf_error_new(GCONF_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
                                         CORBA_exception_id(&ev));
               CORBA_exception_free(&ev);
             }
@@ -713,14 +713,14 @@ try_to_contact_server(GConfError** err)
       else
         {
           if (err)
-            *err = gconf_error_new(G_CONF_NO_SERVER, _("Failed to convert server IOR to an object reference"));
+            *err = gconf_error_new(GCONF_NO_SERVER, _("Failed to convert server IOR to an object reference"));
         }
     }
       
   return server;
 }
 
-/* All errors set in here should be G_CONF_NO_SERVER; should
+/* All errors set in here should be GCONF_NO_SERVER; should
    only set errors if start_if_not_found is TRUE */
 static ConfigServer
 gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
@@ -742,7 +742,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
       if (pipe(fds) < 0)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_NO_SERVER, _("Failed to create pipe to server: %s"),
+            *err = gconf_error_new(GCONF_NO_SERVER, _("Failed to create pipe to server: %s"),
                                     strerror(errno));
           return CORBA_OBJECT_NIL;
         }
@@ -752,7 +752,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
       if (pid < 0)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_NO_SERVER, _("gconfd fork failed: %s"), 
+            *err = gconf_error_new(GCONF_NO_SERVER, _("gconfd fork failed: %s"), 
                                     strerror(errno));
           return CORBA_OBJECT_NIL;
         }
@@ -781,7 +781,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
       if (waitpid(pid, &status, 0) != pid)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_NO_SERVER, 
+            *err = gconf_error_new(GCONF_NO_SERVER, 
                                     _("waitpid() failed waiting for child in %s: %s"),
                                     __FUNCTION__, strerror(errno));
           close(fds[1]);
@@ -793,7 +793,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
           if (WEXITSTATUS(status) != 0)
             {
               if (err)
-                *err = gconf_error_new(G_CONF_NO_SERVER, 
+                *err = gconf_error_new(GCONF_NO_SERVER, 
                                         _("spawned server returned error code, giving up on contacting it."));
               close(fds[1]);
               return CORBA_OBJECT_NIL;
@@ -802,7 +802,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
       else
         {
           if (err)
-            *err = gconf_error_new(G_CONF_NO_SERVER, _("spawned gconfd child didn't exit normally, can't contact server."));
+            *err = gconf_error_new(GCONF_NO_SERVER, _("spawned gconfd child didn't exit normally, can't contact server."));
           close(fds[1]);
           return CORBA_OBJECT_NIL;
         }
@@ -926,7 +926,7 @@ gconf_init           (GConfError** err)
       if (ev._major != CORBA_NO_EXCEPTION)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_FAILED, _("Failed to init the listener servant: %s"),
+            *err = gconf_error_new(GCONF_FAILED, _("Failed to init the listener servant: %s"),
                                     CORBA_exception_id(&ev));
           return FALSE;
         }
@@ -936,7 +936,7 @@ gconf_init           (GConfError** err)
       if (ev._major != CORBA_NO_EXCEPTION)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_FAILED, _("Failed to resolve the root POA: %s"),
+            *err = gconf_error_new(GCONF_FAILED, _("Failed to resolve the root POA: %s"),
                                     CORBA_exception_id(&ev));
           return FALSE;
         }
@@ -947,7 +947,7 @@ gconf_init           (GConfError** err)
       if (ev._major != CORBA_NO_EXCEPTION)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_FAILED, _("Failed to activate the POA Manager: %s"),
+            *err = gconf_error_new(GCONF_FAILED, _("Failed to activate the POA Manager: %s"),
                                     CORBA_exception_id(&ev));
           return FALSE;
         }
@@ -958,7 +958,7 @@ gconf_init           (GConfError** err)
       if (ev._major != CORBA_NO_EXCEPTION)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_FAILED, _("Failed to activate the listener servant: %s"),
+            *err = gconf_error_new(GCONF_FAILED, _("Failed to activate the listener servant: %s"),
                                     CORBA_exception_id(&ev));
           return FALSE;
         }
@@ -971,7 +971,7 @@ gconf_init           (GConfError** err)
       if (listener == CORBA_OBJECT_NIL || ev._major != CORBA_NO_EXCEPTION)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_FAILED, _("Failed get object reference for the listener servant: %s"),
+            *err = gconf_error_new(GCONF_FAILED, _("Failed get object reference for the listener servant: %s"),
                                     CORBA_exception_id(&ev));
           return FALSE;
         }
@@ -1207,7 +1207,7 @@ gconf_shutdown_daemon(GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)));
+      g_return_if_fail(((err == NULL) || ((*err)->num == GCONF_NO_SERVER)));
       return;
     }
 
@@ -1218,7 +1218,7 @@ gconf_shutdown_daemon(GConfError** err)
   if (ev._major != CORBA_NO_EXCEPTION)
     {
       if (err)
-        *err = gconf_error_new(G_CONF_FAILED, _("Failure shutting down config server: %s"),
+        *err = gconf_error_new(GCONF_FAILED, _("Failure shutting down config server: %s"),
                                 CORBA_exception_id(&ev));
       /* FIXME we could do better here... maybe respawn the server if needed... */
       CORBA_exception_free(&ev);
@@ -1272,10 +1272,10 @@ gconf_get_float (GConfEngine* conf, const gchar* key,
     {
       gdouble retval;
       
-      if (val->type != G_CONF_VALUE_FLOAT)
+      if (val->type != GCONF_VALUE_FLOAT)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_TYPE_MISMATCH, _("Expected float, got %s"),
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected float, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt;
@@ -1303,10 +1303,10 @@ gconf_get_int   (GConfEngine* conf, const gchar* key,
     {
       gint retval;
 
-      if (val->type != G_CONF_VALUE_INT)
+      if (val->type != GCONF_VALUE_INT)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_TYPE_MISMATCH, _("Expected int, got %s"),
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected int, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt;
@@ -1334,10 +1334,10 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
     {
       gchar* retval;
 
-      if (val->type != G_CONF_VALUE_STRING)
+      if (val->type != GCONF_VALUE_STRING)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_TYPE_MISMATCH, _("Expected string, got %s"),
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected string, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt ? g_strdup(deflt) : NULL;
@@ -1368,10 +1368,10 @@ gconf_get_bool  (GConfEngine* conf, const gchar* key,
     {
       gboolean retval;
 
-      if (val->type != G_CONF_VALUE_BOOL)
+      if (val->type != GCONF_VALUE_BOOL)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_TYPE_MISMATCH, _("Expected bool, got %s"),
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected bool, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt;
@@ -1398,10 +1398,10 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err)
     {
       GConfSchema* retval;
 
-      if (val->type != G_CONF_VALUE_SCHEMA)
+      if (val->type != GCONF_VALUE_SCHEMA)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_TYPE_MISMATCH, _("Expected schema, got %s"),
+            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected schema, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return NULL;
@@ -1448,7 +1448,7 @@ gconf_set_float   (GConfEngine* conf, const gchar* key,
 {
   GConfValue* gval;
 
-  gval = gconf_value_new(G_CONF_VALUE_FLOAT);
+  gval = gconf_value_new(GCONF_VALUE_FLOAT);
 
   gconf_value_set_float(gval, val);
 
@@ -1461,7 +1461,7 @@ gconf_set_int     (GConfEngine* conf, const gchar* key,
 {
   GConfValue* gval;
 
-  gval = gconf_value_new(G_CONF_VALUE_INT);
+  gval = gconf_value_new(GCONF_VALUE_INT);
 
   gconf_value_set_int(gval, val);
 
@@ -1474,7 +1474,7 @@ gconf_set_string  (GConfEngine* conf, const gchar* key,
 {
   GConfValue* gval;
 
-  gval = gconf_value_new(G_CONF_VALUE_STRING);
+  gval = gconf_value_new(GCONF_VALUE_STRING);
 
   gconf_value_set_string(gval, val);
 
@@ -1487,7 +1487,7 @@ gconf_set_bool    (GConfEngine* conf, const gchar* key,
 {
   GConfValue* gval;
 
-  gval = gconf_value_new(G_CONF_VALUE_BOOL);
+  gval = gconf_value_new(GCONF_VALUE_BOOL);
 
   gconf_value_set_bool(gval, val);
 
@@ -1500,7 +1500,7 @@ gconf_set_schema  (GConfEngine* conf, const gchar* key,
 {
   GConfValue* gval;
 
-  gval = gconf_value_new(G_CONF_VALUE_SCHEMA);
+  gval = gconf_value_new(GCONF_VALUE_SCHEMA);
 
   gconf_value_set_schema(gval, val);
 
@@ -1517,38 +1517,38 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
   switch (corba_err)
     {
     case ConfigFailed:
-      return G_CONF_FAILED;
+      return GCONF_FAILED;
       break;
     case ConfigNoPermission:
-      return G_CONF_NO_PERMISSION;
+      return GCONF_NO_PERMISSION;
       break;
     case ConfigBadAddress:
-      return G_CONF_BAD_ADDRESS;
+      return GCONF_BAD_ADDRESS;
       break;
     case ConfigBadKey:
-      return G_CONF_BAD_KEY;
+      return GCONF_BAD_KEY;
       break;
     case ConfigParseError:
-      return G_CONF_PARSE_ERROR;
+      return GCONF_PARSE_ERROR;
       break;
     case ConfigCorrupt:
-      return G_CONF_CORRUPT;
+      return GCONF_CORRUPT;
       break;
     case ConfigTypeMismatch:
-      return G_CONF_TYPE_MISMATCH;
+      return GCONF_TYPE_MISMATCH;
       break;
     case ConfigIsDir:
-      return G_CONF_IS_DIR;
+      return GCONF_IS_DIR;
       break;
     case ConfigIsKey:
-      return G_CONF_IS_KEY;
+      return GCONF_IS_KEY;
       break;
     case ConfigOverridden:
-      return G_CONF_OVERRIDDEN;
+      return GCONF_OVERRIDDEN;
       break;
     default:
       g_assert_not_reached();
-      return G_CONF_SUCCESS; /* warnings */
+      return GCONF_SUCCESS; /* warnings */
       break;
     }
 }
@@ -1564,7 +1564,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err)
       break;
     case CORBA_SYSTEM_EXCEPTION:
       if (err)
-        *err = gconf_error_new(G_CONF_NO_SERVER, _("CORBA error: %s"),
+        *err = gconf_error_new(GCONF_NO_SERVER, _("CORBA error: %s"),
                                 CORBA_exception_id(ev));
       CORBA_exception_free(ev);
       return TRUE;

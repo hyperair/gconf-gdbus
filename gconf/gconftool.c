@@ -402,7 +402,7 @@ main (int argc, char** argv)
          
           if (value != NULL)
             {
-              if (value->type != G_CONF_VALUE_SCHEMA)
+              if (value->type != GCONF_VALUE_SCHEMA)
                 {
                   s = gconf_value_to_string(value);
 
@@ -459,7 +459,7 @@ main (int argc, char** argv)
         {
           const gchar* key;
           const gchar* value;
-          GConfValueType type = G_CONF_VALUE_INVALID;
+          GConfValueType type = GCONF_VALUE_INVALID;
           GConfValue* gval;
 
           key = *args;
@@ -476,19 +476,19 @@ main (int argc, char** argv)
             {
             case 'i':
             case 'I':
-              type = G_CONF_VALUE_INT;
+              type = GCONF_VALUE_INT;
               break;
             case 'f':
             case 'F':
-              type = G_CONF_VALUE_FLOAT;
+              type = GCONF_VALUE_FLOAT;
               break;
             case 'b':
             case 'B':
-              type = G_CONF_VALUE_BOOL;
+              type = GCONF_VALUE_BOOL;
               break;
             case 's':
             case 'S':
-              type = G_CONF_VALUE_STRING;
+              type = GCONF_VALUE_STRING;
               break;
             default:
               fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
@@ -554,7 +554,7 @@ main (int argc, char** argv)
       
       key = *args;
 
-      val = gconf_value_new(G_CONF_VALUE_SCHEMA);
+      val = gconf_value_new(GCONF_VALUE_SCHEMA);
 
       sc = gconf_schema_new();
 
@@ -571,21 +571,21 @@ main (int argc, char** argv)
 
       if (value_type)
         {
-          GConfValueType type = G_CONF_VALUE_INVALID;
+          GConfValueType type = GCONF_VALUE_INVALID;
 
           switch (*value_type)
             {
             case 'i':
             case 'I':
-              type = G_CONF_VALUE_INT;
+              type = GCONF_VALUE_INT;
               break;
             case 'f':
             case 'F':
-              type = G_CONF_VALUE_FLOAT;
+              type = GCONF_VALUE_FLOAT;
               break;
             case 'b':
             case 'B':
-              type = G_CONF_VALUE_BOOL;
+              type = GCONF_VALUE_BOOL;
               break;
             case 's':
             case 'S':
@@ -593,11 +593,11 @@ main (int argc, char** argv)
                 {
                 case 't':
                 case 'T':
-                  type = G_CONF_VALUE_STRING;
+                  type = GCONF_VALUE_STRING;
                   break;
                 case 'c':
                 case 'C':
-                  type = G_CONF_VALUE_SCHEMA;
+                  type = GCONF_VALUE_SCHEMA;
                   break;
                 default:
                   fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
@@ -608,7 +608,7 @@ main (int argc, char** argv)
               break;
             }
 
-          if (type != G_CONF_VALUE_INVALID)
+          if (type != GCONF_VALUE_INVALID)
             gconf_schema_set_type(sc, type);
         }
 

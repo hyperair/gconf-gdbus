@@ -29,21 +29,21 @@ extern "C" {
 /* Error Numbers */
 
 typedef enum {
-  G_CONF_SUCCESS = 0,
-  G_CONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
+  GCONF_SUCCESS = 0,
+  GCONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
                                so there's no point having a more specific errno */
 
-  G_CONF_NO_SERVER = 2,     /* Server can't be launched/contacted */
-  G_CONF_NO_PERMISSION = 3, /* don't have permission for that */
-  G_CONF_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
-  G_CONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
+  GCONF_NO_SERVER = 2,     /* Server can't be launched/contacted */
+  GCONF_NO_PERMISSION = 3, /* don't have permission for that */
+  GCONF_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
+  GCONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
                                characters, or malformed slash arrangement) */
-  G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
-  G_CONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
-  G_CONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
-  G_CONF_IS_DIR = 9,        /* Requested key operation on a dir */
-  G_CONF_IS_KEY = 10,       /* Requested dir operation on a key */
-  G_CONF_OVERRIDDEN = 11    /* Read-only source at front of path has set the value */
+  GCONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
+  GCONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
+  GCONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
+  GCONF_IS_DIR = 9,        /* Requested key operation on a dir */
+  GCONF_IS_KEY = 10,       /* Requested dir operation on a key */
+  GCONF_OVERRIDDEN = 11    /* Read-only source at front of path has set the value */
 } GConfErrNo;
 
 /* Error Object */

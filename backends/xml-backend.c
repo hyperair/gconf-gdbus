@@ -308,7 +308,7 @@ resolve_address (const gchar* address)
 
   if (root_dir == NULL)
     {
-      gconf_set_error(G_CONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address"));
+      gconf_set_error(GCONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address"));
       return NULL;
     }
 
@@ -329,7 +329,7 @@ resolve_address (const gchar* address)
   /* FIXME just a hack for now, eventually
      it'll be based on something 
   */
-  source->flags |= G_CONF_SOURCE_WRITEABLE;
+  source->flags |= GCONF_SOURCE_WRITEABLE;
   
   return source;
 }
@@ -393,7 +393,7 @@ set_value (GConfSource* source, const gchar* key, GConfValue* value)
   gchar* parent;
   
   g_return_if_fail(value != NULL);
-  g_return_if_fail(source->flags & G_CONF_SOURCE_WRITEABLE);
+  g_return_if_fail(source->flags & GCONF_SOURCE_WRITEABLE);
   
   parent = gconf_key_directory(key);
   
@@ -1006,14 +1006,14 @@ dir_load        (XMLSource* source, const gchar* key)
     
     if (stat(xml_filename, &s) != 0)
       {
-        gconf_set_error(G_CONF_FAILED,
+        gconf_set_error(GCONF_FAILED,
                          _("Could not stat `%s': %s"),
                          xml_filename, strerror(errno));
         error = TRUE;
       }
     else if (S_ISDIR(s.st_mode))
       {
-        gconf_set_error(G_CONF_FAILED,
+        gconf_set_error(GCONF_FAILED,
                          _("XML filename `%s' is a directory"),
                          xml_filename);
         error = TRUE;
@@ -1035,7 +1035,7 @@ dir_load        (XMLSource* source, const gchar* key)
 static gboolean
 create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir)
 {
-  if (gconf_file_test(dir, G_CONF_FILE_ISDIR))
+  if (gconf_file_test(dir, GCONF_FILE_ISDIR))
     return TRUE;
 
   /* Don't create anything above the root directory */
@@ -1068,7 +1068,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
     {
       if (errno != EEXIST)
         {
-          gconf_set_error(G_CONF_FAILED,
+          gconf_set_error(GCONF_FAILED,
                            _("Could not make directory `%s': %s"),
                            (gchar*)dir, strerror(errno));
           return FALSE;
@@ -1083,7 +1083,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
       
       if (fd < 0)
         {
-          gconf_set_error(G_CONF_FAILED, _("Failed to create file `%s': %s"),
+          gconf_set_error(GCONF_FAILED, _("Failed to create file `%s': %s"),
                            xml_filename, strerror(errno));
           
           return FALSE;
@@ -1091,7 +1091,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
       
       if (close(fd) < 0)
         {
-          gconf_set_error(G_CONF_FAILED, _("Failed to close file `%s': %s"),
+          gconf_set_error(GCONF_FAILED, _("Failed to close file `%s': %s"),
                            xml_filename, strerror(errno));
           
           return FALSE;
@@ -1176,14 +1176,14 @@ dir_sync        (Dir* d)
     {
       if (unlink(d->xml_filename) != 0)
         {
-          gconf_set_error(G_CONF_FAILED, _("Failed to delete `%s': %s"),
+          gconf_set_error(GCONF_FAILED, _("Failed to delete `%s': %s"),
                            d->xml_filename, strerror(errno));
           return FALSE;
         }
 
       if (rmdir(d->fs_dirname) != 0)
         {
-          gconf_set_error(G_CONF_FAILED, _("Failed to delete `%s': %s"),
+          gconf_set_error(GCONF_FAILED, _("Failed to delete `%s': %s"),
                            d->fs_dirname, strerror(errno));
           return FALSE;
         }
@@ -1219,7 +1219,7 @@ dir_sync        (Dir* d)
             {
               /* I think libxml may mangle errno, but we might as well 
                  try. */
-              gconf_set_error(G_CONF_FAILED, _("Failed to write file `%s': %s"), 
+              gconf_set_error(GCONF_FAILED, _("Failed to write file `%s': %s"), 
                                tmp_filename, strerror(errno));
               
               retval = FALSE;
@@ -1234,7 +1234,7 @@ dir_sync        (Dir* d)
         {
           if (rename(d->xml_filename, old_filename) < 0)
             {
-              gconf_set_error(G_CONF_FAILED, 
+              gconf_set_error(GCONF_FAILED, 
                                _("Failed to rename `%s' to `%s': %s"),
                                d->xml_filename, old_filename, strerror(errno));
 
@@ -1245,13 +1245,13 @@ dir_sync        (Dir* d)
 
       if (rename(tmp_filename, d->xml_filename) < 0)
         {
-          gconf_set_error(G_CONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
+          gconf_set_error(GCONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
                            tmp_filename, d->xml_filename, strerror(errno));
 
           /* Put the original file back, so this isn't a total disaster. */
           if (rename(old_filename, d->xml_filename) < 0)
             {
-              gconf_set_error(G_CONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
+              gconf_set_error(GCONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
                                d->xml_filename, old_filename, strerror(errno));
             }
 
@@ -1331,7 +1331,7 @@ dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name)
   else
     {
       if (schema_name &&
-          e->value->type == G_CONF_VALUE_IGNORE_SUBSEQUENT &&
+          e->value->type == GCONF_VALUE_IGNORE_SUBSEQUENT &&
           e->schema_name)
         *schema_name = g_strdup(e->schema_name);
       
@@ -1460,7 +1460,7 @@ dir_all_subdirs (Dir* d)
 
   if (dp == NULL)
     {
-      gconf_set_error(G_CONF_FAILED, _("Failed to open directory `%s': %s"),
+      gconf_set_error(GCONF_FAILED, _("Failed to open directory `%s': %s"),
                        d->fs_dirname, strerror(errno));
       return NULL;
     }
@@ -1597,7 +1597,7 @@ dir_load_doc(Dir* d)
         case ENAMETOOLONG:
         default:
           /* These are all fatal errors */
-          gconf_set_error(G_CONF_FAILED, _("Failed to stat `%s': %s"),
+          gconf_set_error(GCONF_FAILED, _("Failed to stat `%s': %s"),
                            d->xml_filename, strerror(errno));
           return;
           break;
@@ -2052,7 +2052,7 @@ schema_node_extract_value(xmlNodePtr node)
         }
     }
   
-  value = gconf_value_new(G_CONF_VALUE_SCHEMA);
+  value = gconf_value_new(GCONF_VALUE_SCHEMA);
       
   gconf_value_set_schema_nocopy(value, sc);
 
@@ -2069,7 +2069,7 @@ xentry_extract_value(xmlNodePtr node)
 {
   GConfValue* value = NULL;
   gchar* type_str;
-  GConfValueType type = G_CONF_VALUE_INVALID;
+  GConfValueType type = GCONF_VALUE_INVALID;
 
   type_str = xmlGetProp(node, "type");
 
@@ -2082,16 +2082,16 @@ xentry_extract_value(xmlNodePtr node)
   
   switch (type)
     {
-    case G_CONF_VALUE_INVALID:
+    case GCONF_VALUE_INVALID:
       {
         gconf_log(GCL_WARNING, _("A node has unknown \"type\" attribute `%s', ignoring"), type_str);
         return NULL;
       }
       break;
-    case G_CONF_VALUE_INT:
-    case G_CONF_VALUE_STRING:
-    case G_CONF_VALUE_BOOL:
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_INT:
+    case GCONF_VALUE_STRING:
+    case GCONF_VALUE_BOOL:
+    case GCONF_VALUE_FLOAT:
       {
         gchar* value_str;
         GConfError* err = NULL;
@@ -2114,21 +2114,21 @@ xentry_extract_value(xmlNodePtr node)
         return value;
       }
       break;
-    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+    case GCONF_VALUE_IGNORE_SUBSEQUENT:
       {
         value = gconf_value_new(type);
         return value;
       }
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       return schema_node_extract_value(node);
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       {
         xmlNodePtr iter;
         GSList* bad_nodes = NULL;
         GSList* values = NULL;
-        GConfValueType list_type = G_CONF_VALUE_INVALID;
+        GConfValueType list_type = GCONF_VALUE_INVALID;
 
         {
           gchar* s;
@@ -2142,9 +2142,9 @@ xentry_extract_value(xmlNodePtr node)
 
         switch (list_type)
           {
-          case G_CONF_VALUE_INVALID:
-          case G_CONF_VALUE_LIST:
-          case G_CONF_VALUE_PAIR:
+          case GCONF_VALUE_INVALID:
+          case GCONF_VALUE_LIST:
+          case GCONF_VALUE_PAIR:
             return NULL;
           default:
             break;
@@ -2201,7 +2201,7 @@ xentry_extract_value(xmlNodePtr node)
         /* put them in order, set the value */
         values = g_slist_reverse(values);
 
-        value = gconf_value_new(G_CONF_VALUE_LIST);
+        value = gconf_value_new(GCONF_VALUE_LIST);
 
         gconf_value_set_list_type(value, list_type);
         gconf_value_set_list_nocopy(value, values);
@@ -2209,7 +2209,7 @@ xentry_extract_value(xmlNodePtr node)
         return value;
       }
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       {
         GConfValue* car = NULL;
         GConfValue* cdr = NULL;
@@ -2227,8 +2227,8 @@ xentry_extract_value(xmlNodePtr node)
                     car = xentry_extract_value(iter);
                     if (car == NULL)
                       bad_nodes = g_slist_prepend(bad_nodes, iter);
-                    else if (car->type == G_CONF_VALUE_LIST ||
-                             car->type == G_CONF_VALUE_PAIR)
+                    else if (car->type == GCONF_VALUE_LIST ||
+                             car->type == GCONF_VALUE_PAIR)
                       {
                         gconf_value_destroy(car);
                         car = NULL;
@@ -2240,8 +2240,8 @@ xentry_extract_value(xmlNodePtr node)
                     cdr = xentry_extract_value(iter);
                     if (cdr == NULL)
                       bad_nodes = g_slist_prepend(bad_nodes, iter);
-                    else if (cdr->type == G_CONF_VALUE_LIST ||
-                             cdr->type == G_CONF_VALUE_PAIR)
+                    else if (cdr->type == GCONF_VALUE_LIST ||
+                             cdr->type == GCONF_VALUE_PAIR)
                       {
                         gconf_value_destroy(cdr);
                         cdr = NULL;
@@ -2276,7 +2276,7 @@ xentry_extract_value(xmlNodePtr node)
           }
 
         /* Return the pair */
-        value = gconf_value_new(G_CONF_VALUE_PAIR);
+        value = gconf_value_new(GCONF_VALUE_PAIR);
         gconf_value_set_car_nocopy(value, car);
         gconf_value_set_cdr_nocopy(value, cdr);
 
@@ -2306,20 +2306,20 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
 
   switch (value->type)
     {
-    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+    case GCONF_VALUE_IGNORE_SUBSEQUENT:
       break;
 
-    case G_CONF_VALUE_INT:
-    case G_CONF_VALUE_FLOAT:
-    case G_CONF_VALUE_BOOL:
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_INT:
+    case GCONF_VALUE_FLOAT:
+    case GCONF_VALUE_BOOL:
+    case GCONF_VALUE_STRING:
       value_str = gconf_value_to_string(value);
   
       xmlSetProp(node, "value", value_str);
 
       g_free(value_str);
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       {
         GConfSchema* sc = gconf_value_schema(value);
         
@@ -2349,7 +2349,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
           }
       }
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       {
         GSList* list;
 
@@ -2377,7 +2377,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
           }
       }
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       {
         xmlNodePtr car, cdr;
 

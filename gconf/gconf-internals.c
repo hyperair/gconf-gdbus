@@ -112,11 +112,11 @@ gconf_file_test(const gchar* filename, int test)
   struct stat s;
   if(stat (filename, &s) != 0)
     return FALSE;
-  if(!(test & G_CONF_FILE_ISFILE) && S_ISREG(s.st_mode))
+  if(!(test & GCONF_FILE_ISFILE) && S_ISREG(s.st_mode))
     return FALSE;
-  if(!(test & G_CONF_FILE_ISLINK) && S_ISLNK(s.st_mode))
+  if(!(test & GCONF_FILE_ISLINK) && S_ISLNK(s.st_mode))
     return FALSE;
-  if(!(test & G_CONF_FILE_ISDIR) && S_ISDIR(s.st_mode))
+  if(!(test & GCONF_FILE_ISDIR) && S_ISDIR(s.st_mode))
     return FALSE;
   return TRUE;
 }
@@ -173,7 +173,7 @@ gconf_read_server_ior(GConfError** err)
   if (fd < 0)
     {
       if (err)
-        *err = gconf_error_new(G_CONF_FAILED, _("info file open failed: %s"), strerror(errno));
+        *err = gconf_error_new(GCONF_FAILED, _("info file open failed: %s"), strerror(errno));
       return NULL;
     }
   else
@@ -188,7 +188,7 @@ gconf_read_server_ior(GConfError** err)
       if (bytes_read < 0)
         {
           if (err)
-            *err = gconf_error_new(G_CONF_FAILED, _("IOR read failed: %s"), strerror(errno));
+            *err = gconf_error_new(GCONF_FAILED, _("IOR read failed: %s"), strerror(errno));
           return NULL;
         }
       else
@@ -203,7 +203,7 @@ GConfValue*
 gconf_value_from_corba_value(const ConfigValue* value)
 {
   GConfValue* gval;
-  GConfValueType type = G_CONF_VALUE_INVALID;
+  GConfValueType type = GCONF_VALUE_INVALID;
   
   switch (value->_d)
     {
@@ -211,25 +211,25 @@ gconf_value_from_corba_value(const ConfigValue* value)
       return NULL;
       break;
     case IntVal:
-      type = G_CONF_VALUE_INT;
+      type = GCONF_VALUE_INT;
       break;
     case StringVal:
-      type = G_CONF_VALUE_STRING;
+      type = GCONF_VALUE_STRING;
       break;
     case FloatVal:
-      type = G_CONF_VALUE_FLOAT;
+      type = GCONF_VALUE_FLOAT;
       break;
     case BoolVal:
-      type = G_CONF_VALUE_BOOL;
+      type = GCONF_VALUE_BOOL;
       break;
     case SchemaVal:
-      type = G_CONF_VALUE_SCHEMA;
+      type = GCONF_VALUE_SCHEMA;
       break;
     case ListVal:
-      type = G_CONF_VALUE_LIST;
+      type = GCONF_VALUE_LIST;
       break;
     case PairVal:
-      type = G_CONF_VALUE_PAIR;
+      type = GCONF_VALUE_PAIR;
       break;
     default:
       gconf_log(GCL_DEBUG, "Invalid type in %s", __FUNCTION__);
@@ -240,23 +240,23 @@ gconf_value_from_corba_value(const ConfigValue* value)
 
   switch (gval->type)
     {
-    case G_CONF_VALUE_INT:
+    case GCONF_VALUE_INT:
       gconf_value_set_int(gval, value->_u.int_value);
       break;
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_STRING:
       gconf_value_set_string(gval, value->_u.string_value);
       break;
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_FLOAT:
       gconf_value_set_float(gval, value->_u.float_value);
       break;
-    case G_CONF_VALUE_BOOL:
+    case GCONF_VALUE_BOOL:
       gconf_value_set_bool(gval, value->_u.bool_value);
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       gconf_value_set_schema_nocopy(gval, 
                                      gconf_schema_from_corba_schema(&(value->_u.schema_value)));
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       {
         GSList* list = NULL;
         guint i = 0;
@@ -264,16 +264,16 @@ gconf_value_from_corba_value(const ConfigValue* value)
         switch (value->_u.list_value.list_type)
           {
           case BIntVal:
-            gconf_value_set_list_type(gval, G_CONF_VALUE_INT);
+            gconf_value_set_list_type(gval, GCONF_VALUE_INT);
             break;
           case BBoolVal:
-            gconf_value_set_list_type(gval, G_CONF_VALUE_BOOL);
+            gconf_value_set_list_type(gval, GCONF_VALUE_BOOL);
             break;
           case BFloatVal:
-            gconf_value_set_list_type(gval, G_CONF_VALUE_FLOAT);
+            gconf_value_set_list_type(gval, GCONF_VALUE_FLOAT);
             break;
           case BStringVal:
-            gconf_value_set_list_type(gval, G_CONF_VALUE_STRING);
+            gconf_value_set_list_type(gval, GCONF_VALUE_STRING);
             break;
           case BInvalidVal:
             break;
@@ -307,7 +307,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
         gconf_value_set_list_nocopy(gval, list);
       }
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       {
         g_return_val_if_fail(value->_u.pair_value._length == 2, gval);
         
@@ -338,28 +338,28 @@ fill_corba_value_from_gconf_value(GConfValue* value,
 
   switch (value->type)
     {
-    case G_CONF_VALUE_INT:
+    case GCONF_VALUE_INT:
       cv->_d = IntVal;
       cv->_u.int_value = gconf_value_int(value);
       break;
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_STRING:
       cv->_d = StringVal;
       cv->_u.string_value = CORBA_string_dup(gconf_value_string(value));
       break;
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_FLOAT:
       cv->_d = FloatVal;
       cv->_u.float_value = gconf_value_float(value);
       break;
-    case G_CONF_VALUE_BOOL:
+    case GCONF_VALUE_BOOL:
       cv->_d = BoolVal;
       cv->_u.bool_value = gconf_value_bool(value);
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       cv->_d = SchemaVal;
       fill_corba_schema_from_gconf_schema(gconf_value_schema(value),
                                            &cv->_u.schema_value);
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       {
         guint n, i;
         GSList* list;
@@ -378,23 +378,23 @@ fill_corba_value_from_gconf_value(GConfValue* value,
         
         switch (gconf_value_list_type(value))
           {
-          case G_CONF_VALUE_INT:
+          case GCONF_VALUE_INT:
             cv->_u.list_value.list_type = BIntVal;
             break;
 
-          case G_CONF_VALUE_BOOL:
+          case GCONF_VALUE_BOOL:
             cv->_u.list_value.list_type = BBoolVal;
             break;
             
-          case G_CONF_VALUE_STRING:
+          case GCONF_VALUE_STRING:
             cv->_u.list_value.list_type = BStringVal;
             break;
 
-          case G_CONF_VALUE_FLOAT:
+          case GCONF_VALUE_FLOAT:
             cv->_u.list_value.list_type = BFloatVal;
             break;
 
-          case G_CONF_VALUE_SCHEMA:
+          case GCONF_VALUE_SCHEMA:
             cv->_u.list_value.list_type = BSchemaVal;
             break;
             
@@ -416,7 +416,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
           }
       }
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       {
         cv->_d = PairVal;
 
@@ -434,7 +434,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
       }
       break;
       
-    case G_CONF_VALUE_INVALID:
+    case GCONF_VALUE_INVALID:
       cv->_d = InvalidVal;
       break;
     default:
@@ -474,28 +474,28 @@ fill_corba_schema_from_gconf_schema(GConfSchema* sc,
 {
   switch (sc->type)
     {
-    case G_CONF_VALUE_INT:
+    case GCONF_VALUE_INT:
       cs->value_type = IntVal;
       break;
-    case G_CONF_VALUE_BOOL:
+    case GCONF_VALUE_BOOL:
       cs->value_type = BoolVal;
       break;
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_FLOAT:
       cs->value_type = FloatVal;
       break;
-    case G_CONF_VALUE_INVALID:
+    case GCONF_VALUE_INVALID:
       cs->value_type = InvalidVal;
       break;
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_STRING:
       cs->value_type = StringVal;
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       cs->value_type = SchemaVal;
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       cs->value_type = ListVal;
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       cs->value_type = PairVal;
       break;
     default:
@@ -524,32 +524,32 @@ GConfSchema*
 gconf_schema_from_corba_schema(const ConfigSchema* cs)
 {
   GConfSchema* sc;
-  GConfValueType type = G_CONF_VALUE_INVALID;
+  GConfValueType type = GCONF_VALUE_INVALID;
 
   switch (cs->value_type)
     {
     case InvalidVal:
       break;
     case StringVal:
-      type = G_CONF_VALUE_STRING;
+      type = GCONF_VALUE_STRING;
       break;
     case IntVal:
-      type = G_CONF_VALUE_INT;
+      type = GCONF_VALUE_INT;
       break;
     case FloatVal:
-      type = G_CONF_VALUE_FLOAT;
+      type = GCONF_VALUE_FLOAT;
       break;
     case SchemaVal:
-      type = G_CONF_VALUE_SCHEMA;
+      type = GCONF_VALUE_SCHEMA;
       break;
     case BoolVal:
-      type = G_CONF_VALUE_BOOL;
+      type = GCONF_VALUE_BOOL;
       break;
     case ListVal:
-      type = G_CONF_VALUE_LIST;
+      type = GCONF_VALUE_LIST;
       break;
     case PairVal:
-      type = G_CONF_VALUE_PAIR;
+      type = GCONF_VALUE_PAIR;
       break;
     default:
       g_assert_not_reached();
@@ -572,28 +572,28 @@ gconf_value_type_to_string(GConfValueType type)
 {
   switch (type)
     {
-    case G_CONF_VALUE_INT:
+    case GCONF_VALUE_INT:
       return "int";
       break;
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_STRING:
       return "string";
       break;
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_FLOAT:
       return "float";
       break;
-    case G_CONF_VALUE_BOOL:
+    case GCONF_VALUE_BOOL:
       return "bool";
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       return "schema";
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       return "list";
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       return "pair";
       break;
-    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+    case GCONF_VALUE_IGNORE_SUBSEQUENT:
       return "ignore_subseq";
       break;
     default:
@@ -607,23 +607,23 @@ GConfValueType
 gconf_value_type_from_string(const gchar* type_str)
 {
   if (strcmp(type_str, "int") == 0)
-    return G_CONF_VALUE_INT;
+    return GCONF_VALUE_INT;
   else if (strcmp(type_str, "float") == 0)
-    return G_CONF_VALUE_FLOAT;
+    return GCONF_VALUE_FLOAT;
   else if (strcmp(type_str, "string") == 0)
-    return G_CONF_VALUE_STRING;
+    return GCONF_VALUE_STRING;
   else if (strcmp(type_str, "bool") == 0)
-    return G_CONF_VALUE_BOOL;
+    return GCONF_VALUE_BOOL;
   else if (strcmp(type_str, "schema") == 0)
-    return G_CONF_VALUE_SCHEMA;
+    return GCONF_VALUE_SCHEMA;
   else if (strcmp(type_str, "list") == 0)
-    return G_CONF_VALUE_LIST;
+    return GCONF_VALUE_LIST;
   else if (strcmp(type_str, "pair") == 0)
-    return G_CONF_VALUE_PAIR;
+    return GCONF_VALUE_PAIR;
   else if (strcmp(type_str, "ignore_subseq") == 0)
-    return G_CONF_VALUE_IGNORE_SUBSEQUENT;
+    return GCONF_VALUE_IGNORE_SUBSEQUENT;
   else
-    return G_CONF_VALUE_INVALID;
+    return GCONF_VALUE_INVALID;
 }
 
 /*
@@ -776,7 +776,7 @@ gconf_load_source_path(const gchar* filename, GConfError** err)
   if (f == NULL)
     {
       if (err)
-        *err = gconf_error_new(G_CONF_FAILED,
+        *err = gconf_error_new(GCONF_FAILED,
                                 _("Couldn't open path file `%s': %s\n"), 
                                 filename, 
                                 strerror(errno));
@@ -843,7 +843,7 @@ gconf_load_source_path(const gchar* filename, GConfError** err)
     {
       /* This should basically never happen */
       if (err)
-        *err = gconf_error_new(G_CONF_FAILED,
+        *err = gconf_error_new(GCONF_FAILED,
                                 _("Read error on file `%s': %s\n"), 
                                 filename,
                                 strerror(errno));

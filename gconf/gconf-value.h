@@ -29,27 +29,27 @@
  */
 
 typedef enum {
-  G_CONF_VALUE_INVALID,
-  G_CONF_VALUE_STRING,
-  G_CONF_VALUE_INT,
-  G_CONF_VALUE_FLOAT,
-  G_CONF_VALUE_BOOL,
-  G_CONF_VALUE_SCHEMA,
+  GCONF_VALUE_INVALID,
+  GCONF_VALUE_STRING,
+  GCONF_VALUE_INT,
+  GCONF_VALUE_FLOAT,
+  GCONF_VALUE_BOOL,
+  GCONF_VALUE_SCHEMA,
 
   /* unfortunately these aren't really types; we want list_of_string,
      list_of_int, etc.  but it's just too complicated to implement.
      instead we'll complain in various places if you do something
      moronic like mix types in a list or treat pair<string,int> and
      pair<float,bool> as the same type. */
-  G_CONF_VALUE_LIST,
-  G_CONF_VALUE_PAIR,
+  GCONF_VALUE_LIST,
+  GCONF_VALUE_PAIR,
 
   /* This is special magic used internally only */
   /* It indicates that the search for a value should end with this
      source, not progressing further to later sources in the path.
      If there's a default value in the schema, that will be used.
   */
-  G_CONF_VALUE_IGNORE_SUBSEQUENT
+  GCONF_VALUE_IGNORE_SUBSEQUENT
   
 } GConfValueType;
 

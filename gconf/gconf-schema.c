@@ -27,7 +27,7 @@ gconf_schema_new(void)
 
   sc = g_new0(GConfSchema, 1);
 
-  sc->type = G_CONF_VALUE_INVALID;
+  sc->type = GCONF_VALUE_INVALID;
 
   return sc;
 }

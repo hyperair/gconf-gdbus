@@ -31,10 +31,10 @@ const gchar* gconf_key_key        (const gchar* key);
 
 /* These file tests are in libgnome, I cut-and-pasted them */
 enum {
-  G_CONF_FILE_EXISTS=(1<<0)|(1<<1)|(1<<2), /*any type of file*/
-  G_CONF_FILE_ISFILE=1<<0,
-  G_CONF_FILE_ISLINK=1<<1,
-  G_CONF_FILE_ISDIR=1<<2
+  GCONF_FILE_EXISTS=(1<<0)|(1<<1)|(1<<2), /*any type of file*/
+  GCONF_FILE_ISFILE=1<<0,
+  GCONF_FILE_ISLINK=1<<1,
+  GCONF_FILE_ISDIR=1<<2
 };
 
 gboolean gconf_file_test   (const gchar* filename, int test);

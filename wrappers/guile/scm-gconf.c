@@ -109,28 +109,28 @@ gconf_value_to_scm(GConfValue* val)
   
   switch (val->type)
     {
-    case G_CONF_VALUE_INVALID:
+    case GCONF_VALUE_INVALID:
       /* EOL */
       break;
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_STRING:
       retval = gh_str02scm(gconf_value_string(val));
       break;
-    case G_CONF_VALUE_INT:
+    case GCONF_VALUE_INT:
       retval = gh_int2scm(gconf_value_int(val));
       break;
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_FLOAT:
       retval = gh_double2scm(gconf_value_float(val));
       break;
-    case G_CONF_VALUE_BOOL:
+    case GCONF_VALUE_BOOL:
       retval = gh_bool2scm(gconf_value_bool(val));
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       /* FIXME this is more complicated, we need a smob or something */
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       /* FIXME This is complicated too... */
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       retval = gh_cons(gconf_value_to_scm(gconf_value_car(val)),
                        gconf_value_to_scm(gconf_value_cdr(val)));
       break;

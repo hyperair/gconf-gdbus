@@ -48,7 +48,7 @@ changed_cb(GtkWidget* entry, gpointer data)
 
   txt = gtk_entry_get_text(GTK_ENTRY(entry));
   
-  value = gconf_value_new(G_CONF_VALUE_STRING);
+  value = gconf_value_new(GCONF_VALUE_STRING);
 
   gconf_value_set_string(value, txt);
 

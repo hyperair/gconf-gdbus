@@ -336,14 +336,14 @@
       <para>
         The available values for <symbol>GConfErrNo</symbol> are:
         <variablelist>
-          <varlistentry><term>G_CONF_SUCCESS</term>
+          <varlistentry><term>GCONF_SUCCESS</term>
             <listitem>
               <para>
                 Indicates that there was no error.
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_FAILED</term>
+          <varlistentry><term>GCONF_FAILED</term>
             <listitem>
               <para>
                 Indicates that the operation fatally failed for 
@@ -353,7 +353,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_NO_SERVER</term>
+          <varlistentry><term>GCONF_NO_SERVER</term>
             <listitem>
               <para>
                 The <command>gconfd</command> configuration server
@@ -365,7 +365,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_NO_PERMISSION</term>
+          <varlistentry><term>GCONF_NO_PERMISSION</term>
             <listitem>
               <para>
                 User was denied permission to access some resource
@@ -375,21 +375,21 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_BAD_ADDRESS</term>
+          <varlistentry><term>GCONF_BAD_ADDRESS</term>
             <listitem>
               <para>
                 A configuration source address was invalid.
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_BAD_KEY</term>
+          <varlistentry><term>GCONF_BAD_KEY</term>
             <listitem>
               <para>
                 A configuration key was invalid.
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_PARSE_ERROR</term>
+          <varlistentry><term>GCONF_PARSE_ERROR</term>
             <listitem>
               <para>
                 Something had to be parsed, and it couldn't
@@ -399,7 +399,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_CORRUPT</term>
+          <varlistentry><term>GCONF_CORRUPT</term>
             <listitem>
               <para>
                 Typically means that the text files or binary database
@@ -409,7 +409,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_TYPE_MISMATCH</term>
+          <varlistentry><term>GCONF_TYPE_MISMATCH</term>
             <listitem>
               <para>
                 Some routines in the GConf libraries impose type
@@ -420,7 +420,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_IS_DIR</term>
+          <varlistentry><term>GCONF_IS_DIR</term>
             <listitem>
               <para>
                 This error is returned if you try to perform a key 
@@ -430,7 +430,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_IS_KEY</term>
+          <varlistentry><term>GCONF_IS_KEY</term>
             <listitem>
               <para>
                 This error is returned if you try to perform a
@@ -439,7 +439,7 @@
               </para>
             </listitem>
           </varlistentry>
-          <varlistentry><term>G_CONF_OVERRIDDEN</term>
+          <varlistentry><term>GCONF_OVERRIDDEN</term>
             <listitem>
               <para>
                 This means that you tried to set a value, and a
@@ -620,26 +620,26 @@ print_value(GConfValue* value)
 {    
   switch (value->type)
     {
-    case G_CONF_VALUE_STRING:
+    case GCONF_VALUE_STRING:
       printf("%s\n", gconf_value_string(value));
       break;
-    case G_CONF_VALUE_INT:
+    case GCONF_VALUE_INT:
       printf("%d\n", gconf_value_int(value));
       break;
-    case G_CONF_VALUE_FLOAT:
+    case GCONF_VALUE_FLOAT:
       printf("%g\n", gconf_value_float(value));
       break;
-    case G_CONF_VALUE_BOOL:
+    case GCONF_VALUE_BOOL:
       printf("%s", gconf_value_bool(value) ? "true" : "false");
       break;
-    case G_CONF_VALUE_SCHEMA:
+    case GCONF_VALUE_SCHEMA:
       {
         GConfSchema* schema = gconf_value_schema(value);
 
         /* printing a schema would be complicated, you get the idea */
       }
       break;
-    case G_CONF_VALUE_LIST:
+    case GCONF_VALUE_LIST:
       {
         GSList* iter = gconf_value_list(value);
 
@@ -653,17 +653,17 @@ print_value(GConfValue* value)
           }
       }
       break;
-    case G_CONF_VALUE_PAIR:
+    case GCONF_VALUE_PAIR:
       print_value(gconf_value_car(value));
       print_value(gconf_value_cdr(value));
       break;
-    case G_CONF_VALUE_INVALID:
+    case GCONF_VALUE_INVALID:
       /* This is used internally by GConf, you can also
          use it yourself to indicate errors and such. It
          won't be returned from GConf functions though. */
       printf("invalid value");
       break;
-    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+    case GCONF_VALUE_IGNORE_SUBSEQUENT:
       /* This is totally internal and you should ignore it,
          GConf won't give you a value like this. */
       g_assert_not_reached();

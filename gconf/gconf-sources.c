@@ -131,7 +131,7 @@ gconf_source_set_value        (GConfSource* source,
 
   if (key[1] == '\0')
     {
-      gconf_set_error(G_CONF_IS_DIR, _("The '/' name can only be a directory, not a key"));
+      gconf_set_error(GCONF_IS_DIR, _("The '/' name can only be a directory, not a key"));
       return;
     }
 
@@ -266,7 +266,7 @@ gconf_sources_new(gchar** addresses)
           tmp = g_slist_next(tmp);
         }
       
-      gconf_set_error(G_CONF_BAD_ADDRESS, 
+      gconf_set_error(GCONF_BAD_ADDRESS, 
                        _("The following config source addresses were not resolved:\n%s"),
                        all);
       g_free(all);
@@ -316,18 +316,18 @@ gconf_sources_query_value (GConfSources* sources,
         {
           switch (gconf_errno())
             {
-            case G_CONF_BAD_KEY:
+            case GCONF_BAD_KEY:
               /* this isn't getting any better, so bail */
               return NULL;
               break;
-            case G_CONF_SUCCESS:
+            case GCONF_SUCCESS:
               break;
             default:
               /* weird error, try some other sources */
               break;
             }
         }
-      else if (val->type == G_CONF_VALUE_IGNORE_SUBSEQUENT)
+      else if (val->type == GCONF_VALUE_IGNORE_SUBSEQUENT)
         {
           /* Bail now, instead of looking for the standard values */
           gconf_value_destroy(val);
@@ -352,16 +352,16 @@ gconf_sources_query_value (GConfSources* sources,
       
       val = gconf_sources_query_value(sources, schema_name);
 
-      if (gconf_errno() != G_CONF_SUCCESS)
+      if (gconf_errno() != GCONF_SUCCESS)
         {
           g_free(schema_name);
           return NULL;
         }
       
       if (val != NULL &&
-          val->type != G_CONF_VALUE_SCHEMA)
+          val->type != GCONF_VALUE_SCHEMA)
         {
-          gconf_set_error(G_CONF_FAILED, _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
+          gconf_set_error(GCONF_FAILED, _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
                 
           g_free(schema_name);
 
@@ -405,7 +405,7 @@ gconf_sources_set_value   (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
 
-      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+      if (src->flags & GCONF_SOURCE_WRITEABLE)
         {
           /* may set error, we just leave its setting */
           gconf_source_set_value(src, key, value);
@@ -424,7 +424,7 @@ gconf_sources_set_value   (GConfSources* sources,
           if (val != NULL)
             {
               gconf_value_destroy(val);
-              gconf_set_error(G_CONF_OVERRIDDEN,
+              gconf_set_error(GCONF_OVERRIDDEN,
                                _("Value for `%s' set in a read-only source at the front of your configuration path."), key);
               return;
             }
@@ -447,7 +447,7 @@ gconf_sources_unset_value   (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
 
-      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+      if (src->flags & GCONF_SOURCE_WRITEABLE)
         {
           gconf_source_unset_value(src, key);    /* we might pile up errors here */
         }
@@ -493,7 +493,7 @@ gconf_sources_remove_dir (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
 
-      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+      if (src->flags & GCONF_SOURCE_WRITEABLE)
         gconf_source_remove_dir(src, dir);    /* might pile up errors */
       
       tmp = g_list_next(tmp);
@@ -513,7 +513,7 @@ gconf_sources_set_schema        (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
 
-      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+      if (src->flags & GCONF_SOURCE_WRITEABLE)
         {
           /* may set error, we just leave its setting */
           gconf_source_set_schema(src, key, schema_key);

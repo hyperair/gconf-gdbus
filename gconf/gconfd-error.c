@@ -49,7 +49,7 @@
  */
 
 static gchar* last_details = NULL;
-static GConfErrNo last_errno = G_CONF_SUCCESS;
+static GConfErrNo last_errno = GCONF_SUCCESS;
 
 void         
 gconf_clear_error(void)
@@ -59,7 +59,7 @@ gconf_clear_error(void)
       g_free(last_details);
       last_details = NULL;
     }
-  last_errno = G_CONF_SUCCESS;
+  last_errno = GCONF_SUCCESS;
 }
 
 void

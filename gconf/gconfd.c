@@ -629,7 +629,7 @@ gconf_server_load_sources(void)
 
   while (tmp != NULL)
     {
-      if (((GConfSource*)tmp->data)->flags & G_CONF_SOURCE_WRITEABLE)
+      if (((GConfSource*)tmp->data)->flags & GCONF_SOURCE_WRITEABLE)
         {
           have_writeable = TRUE;
           break;
@@ -674,7 +674,7 @@ gconf_server_write_info_file(const gchar* ior)
     {
       gchar* dir = gconf_server_info_dir();
 
-      if (!gconf_file_test(dir, G_CONF_FILE_ISDIR))
+      if (!gconf_file_test(dir, GCONF_FILE_ISDIR))
         {
           if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
             {
@@ -1130,7 +1130,7 @@ context_awaken(GConfContext* ctx)
 
   if (ctx->sources == NULL)
     {
-      gconf_set_error(G_CONF_BAD_ADDRESS,
+      gconf_set_error(GCONF_BAD_ADDRESS,
                        _("Couldn't re-resolve hibernating configuration source `%s'"), ctx->saved_address);
       return;
     }
@@ -1267,7 +1267,7 @@ context_set(GConfContext* ctx,
   gconf_clear_error();
   gconf_sources_set_value(ctx->sources, key, val);
 
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Error setting value for `%s': %s"),
                  key, gconf_error());
@@ -1292,7 +1292,7 @@ context_unset(GConfContext* ctx,
 
   gconf_sources_unset_value(ctx->sources, key);
 
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
                  key, gconf_error());
@@ -1323,7 +1323,7 @@ context_dir_exists(GConfContext* ctx,
   
   ret = gconf_sources_dir_exists(ctx->sources, dir);
   
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Error checking existence of `%s': %s"),
                  dir, gconf_error());
@@ -1347,7 +1347,7 @@ context_remove_dir(GConfContext* ctx,
   
   gconf_sources_remove_dir(ctx->sources, dir);
 
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Error removing dir `%s': %s"),
                  dir, gconf_error());
@@ -1367,7 +1367,7 @@ context_all_entries(GConfContext* ctx, const gchar* dir)
   
   entries = gconf_sources_all_entries(ctx->sources, dir);
 
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Failed to get all entries in `%s': %s"),
                  dir, gconf_error());
@@ -1391,7 +1391,7 @@ context_all_dirs(GConfContext* ctx, const gchar* dir)
 
   subdirs = gconf_sources_all_dirs(ctx->sources, dir);
 
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Error listing dirs in `%s': %s"),
                  dir, gconf_error());
@@ -1411,7 +1411,7 @@ context_set_schema(GConfContext* ctx, const gchar* key,
 
   gconf_sources_set_schema(ctx->sources, key, schema_key);
 
-  if (gconf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != GCONF_SUCCESS)
     {
       gconf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
              key, gconf_error());
@@ -1710,7 +1710,7 @@ gconf_set_exception(CORBA_Environment* ev)
 {
   GConfErrNo en = gconf_errno();
 
-  if (en == G_CONF_SUCCESS)
+  if (en == GCONF_SUCCESS)
     return FALSE;
   else
     {
@@ -1721,35 +1721,35 @@ gconf_set_exception(CORBA_Environment* ev)
       
       switch (en)
         {
-        case G_CONF_FAILED:
+        case GCONF_FAILED:
           ce->err_no = ConfigFailed;
           break;
-        case G_CONF_NO_PERMISSION:
+        case GCONF_NO_PERMISSION:
           ce->err_no = ConfigNoPermission;
           break;
-        case G_CONF_BAD_ADDRESS:
+        case GCONF_BAD_ADDRESS:
           ce->err_no = ConfigBadAddress;
           break;
-        case G_CONF_BAD_KEY:
+        case GCONF_BAD_KEY:
           ce->err_no = ConfigBadKey;
           break;
-        case G_CONF_PARSE_ERROR:
+        case GCONF_PARSE_ERROR:
           ce->err_no = ConfigParseError;
           break;
-        case G_CONF_CORRUPT:
+        case GCONF_CORRUPT:
           ce->err_no = ConfigCorrupt;
           break;
-        case G_CONF_TYPE_MISMATCH:
+        case GCONF_TYPE_MISMATCH:
           ce->err_no = ConfigTypeMismatch;
           break;
-        case G_CONF_IS_DIR:
+        case GCONF_IS_DIR:
           ce->err_no = ConfigIsDir;
           break;
-        case G_CONF_IS_KEY:
+        case GCONF_IS_KEY:
           ce->err_no = ConfigIsKey;
           break;
-        case G_CONF_NO_SERVER:
-        case G_CONF_SUCCESS:
+        case GCONF_NO_SERVER:
+        case GCONF_SUCCESS:
         default:
           g_assert_not_reached();
         }
