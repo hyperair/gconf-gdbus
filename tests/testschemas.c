@@ -17,6 +17,32 @@
  * Boston, MA 02111-1307, USA.
  */
 
+
+
+
+
+
+
+
+
+
+
+/*
+ *
+ *
+ * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples/*
+ *
+ *
+ *
+ */
+
+
+
+
+
+
+
+
 #include <gconf/gconf.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -92,30 +118,40 @@ check_unset(GConfEngine* conf)
 
   while (*keyp)
     {
-      gconf_engine_unset(conf, *keyp, &err);
+      g_assert (err == NULL);
+      
+      gconf_engine_unset (conf, *keyp, &err);
 
       if (err != NULL)
         {
-          fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->message);
-          g_error_free(err);
+          fprintf (stderr, "unset of `%s' failed: %s\n", *keyp, err->message);
+          g_error_free (err);
           err = NULL;
+          exit (1);
         }
       else
         {
           GConfValue* val;
           gchar* valstr;
           
-          val = gconf_engine_get (conf, *keyp, &err);
+          val = gconf_engine_get_without_default (conf, *keyp, &err);
 
-
-          if (val)
-            valstr = gconf_value_to_string(val);
-          else
-            valstr = g_strdup("(none)");
+          if (err != NULL)
+            {
+              fprintf (stderr, "gconf_engine_get_without_default on key %s failed: %s\n", *keyp, err->message);
+              g_error_free (err);
+              err = NULL;
+              exit (1);
+            }
           
-          check(val == NULL, "unsetting a previously-set value `%s' the value `%s' existed", *keyp, valstr);
+          if (val)
+            valstr = gconf_value_to_string (val);
+          else
+            valstr = g_strdup ("(none)");
+          
+          check (val == NULL, "unsetting a previously-set value `%s' the value `%s' existed", *keyp, valstr);
 
-          g_free(valstr);
+          g_free (valstr);
         }
       
       ++keyp;
@@ -244,85 +280,92 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
 {
   GError* err = NULL;
   
-  if (!gconf_engine_set_schema(conf, *keyp, schema, &err))
+  if (!gconf_engine_set_schema (conf, *keyp, schema, &err))
     {
-      fprintf(stderr, "Failed to set key `%s' to schema: %s\n",
+      fprintf (stderr, "Failed to set key `%s' to schema: %s\n",
               *keyp, err->message);
-      g_error_free(err);
+      g_error_free (err);
       err = NULL;
     }
   else
     {
       GConfSchema* gotten;
+      GConfValue *val;
       
-      gotten = gconf_engine_get_schema(conf, *keyp, &err);
+      val = gconf_engine_get_with_locale (conf, *keyp, gconf_schema_get_locale (schema), &err);
 
       if (err != NULL)
         {
-          check(gotten == NULL, "NULL not returned though there was an error");
+          check (gotten == NULL, "NULL not returned though there was an error");
 
-          fprintf(stderr, "Failed to get key `%s': %s\n",
-                  *keyp, err->message);
+          fprintf (stderr, "Failed to get key `%s': %s\n",
+                   *keyp, err->message);
           g_error_free(err);
           err = NULL;
         }
       else
         {
-          check (gconf_schema_get_type(schema) == gconf_schema_get_type(gotten),
-                 "schema set/get pair: type `%s' set, `%s' got",
-                 gconf_value_type_to_string(gconf_schema_get_type(schema)),
-                 gconf_value_type_to_string(gconf_schema_get_type(gotten)));
+          check (val != NULL, "Did not get a schema back after setting it");
 
+          check (val->type == GCONF_VALUE_SCHEMA, "Got type %s back instead of schema",
+                 gconf_value_type_to_string (val->type));
+
+          gotten = gconf_value_get_schema (val);
+          
+          check (gconf_schema_get_type (schema) == gconf_schema_get_type (gotten),
+                 "schema set/get pair: type `%s' set, `%s' got",
+                 gconf_value_type_to_string (gconf_schema_get_type (schema)),
+                 gconf_value_type_to_string (gconf_schema_get_type (gotten)));
 
           /* If we set the schema for the current locale be sure we get it back */
-          if (null_safe_strcmp(gconf_current_locale(), gconf_schema_get_locale(schema)) == 0)
+          if (null_safe_strcmp (gconf_current_locale (), gconf_schema_get_locale (schema)) == 0)
             {
               check (null_safe_strcmp(gconf_current_locale(), gconf_schema_get_locale(gotten)) == 0,
                      "schema set/get pair: locale `%s' set, `%s' got",
                      gconf_current_locale(),
-                     NULL_SAFE(gconf_schema_get_locale(gotten)));
+                     NULL_SAFE (gconf_schema_get_locale (gotten)));
             }
               
-          check (null_safe_strcmp(gconf_schema_get_short_desc(schema), gconf_schema_get_short_desc(gotten)) == 0,
+          check (null_safe_strcmp (gconf_schema_get_short_desc (schema), gconf_schema_get_short_desc (gotten)) == 0,
                  "schema set/get pair: short_desc `%s' set, `%s' got",
-                 NULL_SAFE(gconf_schema_get_short_desc(schema)),
-                 NULL_SAFE(gconf_schema_get_short_desc(gotten)));
+                 NULL_SAFE (gconf_schema_get_short_desc (schema)),
+                 NULL_SAFE (gconf_schema_get_short_desc (gotten)));
 
-          check (null_safe_strcmp(gconf_schema_get_long_desc(schema), gconf_schema_get_long_desc(gotten)) == 0,
+          check (null_safe_strcmp (gconf_schema_get_long_desc (schema), gconf_schema_get_long_desc (gotten)) == 0,
                  "schema set/get pair: long_desc `%s' set, `%s' got",
-                 NULL_SAFE(gconf_schema_get_long_desc(schema)),
-                 NULL_SAFE(gconf_schema_get_long_desc(gotten)));
+                 NULL_SAFE (gconf_schema_get_long_desc (schema)),
+                 NULL_SAFE (gconf_schema_get_long_desc (gotten)));
 
-          check (null_safe_strcmp(gconf_schema_get_owner(schema), gconf_schema_get_owner(gotten)) == 0,
+          check (null_safe_strcmp (gconf_schema_get_owner(schema), gconf_schema_get_owner(gotten)) == 0,
                  "schema set/get pair: owner `%s' set, `%s' got",
-                 NULL_SAFE(gconf_schema_get_owner(schema)),
-                 NULL_SAFE(gconf_schema_get_owner(gotten)));
+                 NULL_SAFE (gconf_schema_get_owner (schema)),
+                 NULL_SAFE (gconf_schema_get_owner (gotten)));
 
           {
             GConfValue* set_default;
             GConfValue* got_default;
 
-            set_default = gconf_schema_get_default_value(schema);
-            got_default = gconf_schema_get_default_value(gotten);
+            set_default = gconf_schema_get_default_value (schema);
+            got_default = gconf_schema_get_default_value (gotten);
 
             if (set_default && got_default)
               {
-                check(set_default->type == GCONF_VALUE_INT,
+                check (set_default->type == GCONF_VALUE_INT,
                       "set default type is INT");
                 
-                check(set_default->type == got_default->type,
-                      "schema set/get pair: default value type `%s' set, `%s' got",
-                      gconf_value_type_to_string(set_default->type),
-                      gconf_value_type_to_string(got_default->type));
+                check (set_default->type == got_default->type,
+                       "schema set/get pair: default value type `%s' set, `%s' got",
+                       gconf_value_type_to_string(set_default->type),
+                       gconf_value_type_to_string(got_default->type));
                 
-                check(set_default->type == got_default->type,
-                      "schema set/get pair: default value type `%s' set, `%s' got",
-                      gconf_value_type_to_string(set_default->type),
-                      gconf_value_type_to_string(got_default->type));
+                check (set_default->type == got_default->type,
+                       "schema set/get pair: default value type `%s' set, `%s' got",
+                       gconf_value_type_to_string(set_default->type),
+                       gconf_value_type_to_string(got_default->type));
                 
-                check(gconf_value_get_int(set_default) == gconf_value_get_int(got_default),
-                      "schema set/get pair: default value (int) `%d' set, `%d' got",
-                      gconf_value_get_int(set_default), gconf_value_get_int(got_default));
+                check (gconf_value_get_int(set_default) == gconf_value_get_int(got_default),
+                       "schema set/get pair: default value (int) `%d' set, `%d' got",
+                       gconf_value_get_int(set_default), gconf_value_get_int(got_default));
               }
             else
               {
@@ -334,13 +377,13 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
               }
           }
           
-          gconf_schema_free(gotten);
+          gconf_value_free (val);
         }
     }
 }
       
 void
-check_schema_storage(GConfEngine* conf)
+check_schema_storage (GConfEngine* conf)
 {
   const gchar** keyp = NULL;
   guint i; 
@@ -365,31 +408,31 @@ check_schema_storage(GConfEngine* conf)
           if (*localep == NULL)
             localep = locales;
           
-          schema = gconf_schema_new();
+          schema = gconf_schema_new ();
 
-          gconf_schema_set_type(schema, GCONF_VALUE_INT);
-          gconf_schema_set_locale(schema, *localep);
-          short_desc = g_strdup_printf("Schema for key `%s' storing value %d",
-                                       *keyp, ints[i]);
-          gconf_schema_set_short_desc(schema, short_desc);
+          gconf_schema_set_type (schema, GCONF_VALUE_INT);
+          gconf_schema_set_locale (schema, *localep);
+          short_desc = g_strdup_printf ("Schema for key `%s' storing value %d",
+                                        *keyp, ints[i]);
+          gconf_schema_set_short_desc (schema, short_desc);
 
-          long_desc = g_strdup_printf("Long description for schema with short description `%s' is really really long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long "
+          long_desc = g_strdup_printf ("Long description for schema with short description `%s' is really really long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long "
                                       "UTF-8: German (Deutsch Süd) Grüß Gott Greek (Ελληνικά) Γειά σας Hebrew(שלום) Hebrew punctuation(\xd6\xbfש\xd6\xbb\xd6\xbc\xd6\xbb\xd6\xbfל\xd6\xbcו\xd6\xbc\xd6\xbb\xd6\xbb\xd6\xbfם\xd6\xbc\xd6\xbb\xd6\xbf) Japanese (日本語) Thai (สวัสดีครับ) Thai wrong spelling (คำต่อไปนื่สะกดผิด พัั้ัั่งโกะ)\n", short_desc);
           
-          gconf_schema_set_long_desc(schema, long_desc);
+          gconf_schema_set_long_desc (schema, long_desc);
 
-          gconf_schema_set_owner(schema, "testschemas");
+          gconf_schema_set_owner (schema, "testschemas");
 
-          default_value = gconf_value_new(GCONF_VALUE_INT);
-          gconf_value_set_int(default_value, default_value_int);
+          default_value = gconf_value_new (GCONF_VALUE_INT);
+          gconf_value_set_int (default_value, default_value_int);
           
-          gconf_schema_set_default_value_nocopy(schema, default_value);
+          gconf_schema_set_default_value_nocopy (schema, default_value);
 
-          check(gconf_value_get_int(gconf_schema_get_default_value(schema)) == default_value_int,
-                "Properly stored default int value in the schema");
+          check (gconf_value_get_int (gconf_schema_get_default_value (schema)) == default_value_int,
+                 "Properly stored default int value in the schema");
+
+          check_one_schema (conf, keyp, schema);
           
-          check_one_schema(conf, keyp, schema);
-
           gconf_schema_free(schema);
           g_free(long_desc);
           g_free(short_desc);
@@ -432,6 +475,105 @@ check_schema_storage(GConfEngine* conf)
   check_unset(conf);
 }
 
+
+enum
+{
+  SCHEMA_INFO_SHORT_DOCS,
+  SCHEMA_INFO_LONG_DOCS,
+  SCHEMA_INFO_SCHEMA_NAME
+};
+
+static char*
+get_schema_info (GConfEngine *conf, const gchar *key, int info)
+{
+  GError* err = NULL;
+  GConfEntry* entry;
+  char *retval;
+
+  retval = NULL;
+  
+  err = NULL;
+  entry = gconf_engine_get_entry (conf, key, NULL, TRUE, &err);
+
+  if (entry != NULL)
+    {
+      const char *s;
+          
+      s = gconf_entry_get_schema_name (entry);
+
+      if (s == NULL)
+        {
+          retval = NULL;
+        }
+      else if (info == SCHEMA_INFO_SCHEMA_NAME)
+        {
+          retval = g_strdup (s);
+        }
+      else
+        {
+          GConfValue *val;
+
+          err = NULL;
+              
+          val = gconf_engine_get (conf, s, &err);
+
+          if (val != NULL && val->type == GCONF_VALUE_SCHEMA)
+            {
+              GConfSchema *schema;
+
+              schema = gconf_value_get_schema (val);
+
+              if (schema)
+                {
+                  if (info == SCHEMA_INFO_SHORT_DOCS)
+                    retval = g_strdup (gconf_schema_get_short_desc (schema));
+                  else if (info == SCHEMA_INFO_LONG_DOCS)
+                    retval = g_strdup (gconf_schema_get_long_desc (schema));
+                }
+            }
+          else if (err != NULL)
+            {
+              fprintf (stderr, "Error getting schema at '%s': %s\n",
+                       s, err->message);
+              g_error_free (err);
+              exit (1);
+            }
+          else
+            {
+              if (val == NULL)
+                fprintf (stderr, "No schema stored at '%s'\n",
+                         s);
+              else
+                fprintf (stderr, "Value at '%s' is not a schema\n",
+                         s);
+
+              exit (1);
+            }
+
+          if (val)
+            gconf_value_free (val);
+        }
+          
+      gconf_entry_free (entry);
+    }
+  else
+    {
+      if (err == NULL)
+        {
+          fprintf(stderr, "No value set for `%s'\n", key);
+        }
+      else
+        {
+          fprintf(stderr, "Failed to get value for `%s': %s\n",
+                  key, err->message);
+          g_error_free(err);
+          err = NULL;
+        }
+    }
+
+  return retval;
+}
+
 void 
 check_schema_use(GConfEngine * conf)
 {
@@ -443,7 +585,7 @@ check_schema_use(GConfEngine * conf)
   char           *s;
   char           *schema_value = "string value from schema";
   char           *non_schema_value = "a string value *not* from schema";
-
+  
   gconf_schema_set_type(schema, GCONF_VALUE_STRING);
   gconf_schema_set_locale(schema, "C");
   gconf_schema_set_short_desc(schema, "short desc");
@@ -452,30 +594,40 @@ check_schema_use(GConfEngine * conf)
   gconf_value_set_string(value, schema_value);
   gconf_schema_set_default_value(schema, value);
 
-  if (gconf_engine_set_schema(conf, schema_key, schema, &err))
+  if (!gconf_engine_set_schema(conf, schema_key, schema, &err))
     {
-      if (err)
-        {
-          fprintf(stderr, "gconf_engine_set_schema -> %s\n", err->message);
-          g_error_free (err);
-        }
-      
+      fprintf(stderr, "gconf_engine_set_schema -> %s\n", err->message);
+      g_error_free (err);      
       err = NULL;
+      exit (1);
     }
   keyp = keys;
   while (*keyp)
     {
-      if (gconf_engine_associate_schema(conf, *keyp, schema_key, &err))
+      if (!gconf_engine_associate_schema(conf, *keyp, schema_key, &err))
         {
-          if (err)
-            {
-              fprintf(stderr, "gconf_engine_associate_schema -> %s\n", err->message);
-              g_error_free (err);
-            }
-          
+          fprintf(stderr, "gconf_engine_associate_schema -> %s\n", err->message);
+          g_error_free (err);          
           err = NULL;
-
+          exit (1);
         }
+
+      /* Make sure we can get schema name */
+      s = get_schema_info (conf, *keyp, SCHEMA_INFO_SCHEMA_NAME);
+      if (s == NULL)
+        {
+          fprintf (stderr, "ERROR: Failed to get initial schema name\n");
+          exit (1);
+        }
+      else if (strcmp (s, schema_key) != 0)
+        {
+          fprintf (stderr, "ERROR: got wrong schema name '%s'\n", schema_key);
+          exit (1);
+        }
+
+      g_free (s);
+
+      
       ++keyp;
     }
 
@@ -484,49 +636,141 @@ check_schema_use(GConfEngine * conf)
   keyp = keys;
   while (*keyp)
     {
-      gconf_engine_unset(conf, *keyp, &err);
+      g_assert (err == NULL);
+      gconf_engine_unset (conf, *keyp, &err);
+
+      if (err)
+        {
+          fprintf(stderr, "gconf_engine_unset -> %s\n", err->message);
+          g_error_free (err);
+          err = NULL;
+          exit (1);
+        }
+      
       s = gconf_engine_get_string(conf, *keyp, &err);
+
+      if (err)
+        {
+          fprintf(stderr, "gconf_engine_get_string -> %s\n", err->message);
+          g_error_free (err);
+          err = NULL;
+          exit (1);
+        }
+      
       if (s)
         {
           if (strcmp(s, schema_value) != 0)
             {
               fprintf(stderr, "ERROR: Failed to get schema value (got '%s', not '%s')\n", s, schema_value);
+              exit (1);
             }
           else
             {
               printf(".");
             }
+
+          g_free (s);
         }
       else
         {
           fprintf(stderr, "ERROR: Failed to get a value when expecting schema value\n");
+          exit (1);
         }
 
       /* associate_schema should accept NULL to unset schemas */
-      gconf_engine_associate_schema(conf, *keyp, "/bogus-nonschema", &err);
+      if (!gconf_engine_associate_schema (conf, *keyp, "/bogus-nonschema", &err))
+        {
+          fprintf(stderr, "gconf_engine_associate_schema -> %s\n", err->message);
+          g_error_free (err);          
+          err = NULL;
+          exit (1);
+        }
+
+      /* Make sure we can get schema name */
+      s = get_schema_info (conf, *keyp, SCHEMA_INFO_SCHEMA_NAME);
+      if (s == NULL)
+        {
+          fprintf (stderr, "ERROR: Failed to get bogus schema name\n");
+          exit (1);
+        }
+      else if (strcmp (s, "/bogus-nonschema") != 0)
+        {
+          fprintf (stderr, "ERROR: got wrong schema name '%s'\n", schema_key);
+          exit (1);
+        }
+
+      g_free (s);
+      
       s = gconf_engine_get_string(conf, *keyp, &err);
+
+      if (err)
+        {
+          fprintf(stderr, "gconf_engine_get_string -> %s\n", err->message);
+          g_error_free (err);
+          err = NULL;
+          exit (1);
+        }
+      
       if (s != NULL)
         {
           fprintf(stderr, "Failed to disassociate schema, found '%s'\n", s);
+          g_free (s);
+          exit (1);
         }
-
+      
       gconf_engine_set_string(conf, *keyp, non_schema_value, &err);
+      if (err != NULL)
+        {
+          fprintf(stderr, "gconf_engine_set_string -> %s\n", err->message);
+          g_error_free (err);          
+          err = NULL;
+          exit (1);
+        }
+      
       s = gconf_engine_get_string(conf, *keyp, &err);
+      
       if (s)
         {
           if (strcmp(s, non_schema_value) != 0)
             {
               fprintf(stderr, "ERROR: Failed to get non-schema value (got '%s', not '%s')\n", s, non_schema_value);
+              exit (1);
             }
           else
             {
               printf(".");
             }
+
+          g_free (s);
         }
       else
         {
           fprintf(stderr, "ERROR: Failed to get a value when expecting non-schema value\n");
+
+          if (err != NULL)
+            {
+              fprintf(stderr, "gconf_engine_get_string -> %s\n", err->message);
+              g_error_free (err);          
+              err = NULL;
+            }
+
+          exit (1);
         }
+
+      /* Make sure we can still get schema name when we have a value set */
+      s = get_schema_info (conf, *keyp, SCHEMA_INFO_SCHEMA_NAME);
+      if (s == NULL)
+        {
+          fprintf (stderr, "ERROR: Failed to get schema name when a value was set in the database\n");
+          exit (1);
+        }
+      else if (strcmp (s, "/bogus-nonschema") != 0)
+        {
+          fprintf (stderr, "ERROR: got wrong schema name '%s'\n", schema_key);
+          exit (1);
+        }
+
+      g_free (s);
       
       fflush(stdout);
       ++keyp;

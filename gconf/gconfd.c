@@ -428,7 +428,7 @@ log_handler (const gchar   *log_domain,
 {
   GConfLogPriority pri = GCL_WARNING;
   
-  switch (log_level)
+  switch (log_level & G_LOG_LEVEL_MASK)
     {
     case G_LOG_LEVEL_ERROR:
     case G_LOG_LEVEL_CRITICAL:
@@ -514,6 +514,12 @@ main(int argc, char** argv)
   openlog (logname, LOG_NDELAY, LOG_USER);
 
   g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
+                     log_handler, NULL);
+
+  g_log_set_handler ("GLib", G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
+                     log_handler, NULL);
+
+  g_log_set_handler ("GLib-GObject", G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
                      log_handler, NULL);
   
   /* openlog() does not copy logname - what total brokenness.
@@ -655,8 +661,9 @@ main(int argc, char** argv)
   daemon_lock = NULL;
   
   gconf_log (GCL_INFO, _("Exiting"));
-  
-  g_free (logname);
+
+  /* Can't do this due to stupid atexit() handler that calls g_log stuff */
+  /*   g_free (logname); */
   
   return exit_code;
 }

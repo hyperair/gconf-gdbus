@@ -433,10 +433,11 @@ gconf_engine_get_default (void)
 
       default_engine = conf;
       
-      /* Ignore errors, we never return a NULL
-       * default database
+      /* Ignore errors, we never return a NULL default database, and
+       * since we aren't starting if it isn't found, we'll probably
+       * get errors half the time anyway.
        */
-      gconf_engine_connect (conf, TRUE, NULL);
+      gconf_engine_connect (conf, FALSE, NULL);
     }
   else
     conf->refcount += 1;
@@ -1108,15 +1109,15 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
+gconf_engine_unset (GConfEngine* conf, const gchar* key, GError** err)
 {
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
 
-  g_return_val_if_fail(conf != NULL, FALSE);
-  g_return_val_if_fail(key != NULL, FALSE);
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (conf != NULL, FALSE);
+  g_return_val_if_fail (key != NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
   CHECK_OWNER_USE (conf);
   
@@ -1158,11 +1159,11 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
       return FALSE;
     }
 
-  ConfigDatabase_unset(db,
-                     (gchar*)key,
-                     &ev);
+  ConfigDatabase_unset (db,
+                        (gchar*)key,
+                        &ev);
 
-  if (gconf_server_broken(&ev))
+  if (gconf_server_broken (&ev))
     {
       if (tries < MAX_RETRIES)
         {
@@ -1173,10 +1174,10 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
         }
     }
   
-  if (gconf_handle_corba_exception(&ev, err))
+  if (gconf_handle_corba_exception (&ev, err))
     return FALSE;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
   
   return TRUE;
 }
@@ -2668,28 +2669,35 @@ ctable_reinstall (CnxnTable* ct,
  */
 
 void          
-gconf_shutdown_daemon(GError** err)
+gconf_shutdown_daemon (GError** err)
 {
   CORBA_Environment ev;
   ConfigServer cs;
 
-  cs = gconf_get_config_server(FALSE, err); /* Don't want to spawn it if it's already down */
+  cs = gconf_get_config_server (FALSE, err); /* Don't want to spawn it if it's already down */
 
-  if (cs == CORBA_OBJECT_NIL)
+  if (err && *err && (*err)->code == GCONF_ERROR_NO_SERVER)
     {
-
+      /* No server is hardly an error here */
+      g_error_free (*err);
+      *err = NULL;
+    }
+  
+  if (cs == CORBA_OBJECT_NIL)
+    {      
+      
       return;
     }
 
-  CORBA_exception_init(&ev);
+  CORBA_exception_init (&ev);
 
-  ConfigServer_shutdown(cs, &ev);
+  ConfigServer_shutdown (cs, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
       if (err)
-        *err = gconf_error_new(GCONF_ERROR_FAILED, _("Failure shutting down config server: %s"),
-                               CORBA_exception_id(&ev));
+        *err = gconf_error_new (GCONF_ERROR_FAILED, _("Failure shutting down config server: %s"),
+                                CORBA_exception_id (&ev));
 
       CORBA_exception_free(&ev);
     }
@@ -3245,26 +3253,26 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GError** err)
   switch (ev->_major)
     {
     case CORBA_NO_EXCEPTION:
-      CORBA_exception_free(ev);
+      CORBA_exception_free (ev);
       return FALSE;
       break;
     case CORBA_SYSTEM_EXCEPTION:
       if (err)
-        *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("CORBA error: %s"),
-                               CORBA_exception_id(ev));
-      CORBA_exception_free(ev);
+        *err = gconf_error_new (GCONF_ERROR_NO_SERVER, _("CORBA error: %s"),
+                                CORBA_exception_id (ev));
+      CORBA_exception_free (ev);
       return TRUE;
       break;
     case CORBA_USER_EXCEPTION:
-      {
+      {        
         ConfigException* ce;
 
-        ce = CORBA_exception_value(ev);
+        ce = CORBA_exception_value (ev);
 
         if (err)
-          *err = gconf_error_new(corba_errno_to_gconf_errno(ce->err_no),
-                                 ce->message);
-        CORBA_exception_free(ev);
+          *err = gconf_error_new (corba_errno_to_gconf_errno (ce->err_no),
+                                  ce->message);
+        CORBA_exception_free (ev);
         return TRUE;
       }
       break;

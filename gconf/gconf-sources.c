@@ -432,12 +432,13 @@ gconf_sources_query_value (GConfSources* sources,
                            GError** err)
 {
   GList* tmp;
-  gchar* schema_name = NULL;
-  GError* error = NULL;
+  gchar* schema_name;
+  GError* error;
+  GConfValue* val;
   
-  g_return_val_if_fail(sources != NULL, NULL);
-  g_return_val_if_fail(key != NULL, NULL);
-  g_return_val_if_fail((err == NULL) || (*err == NULL), NULL);
+  g_return_val_if_fail (sources != NULL, NULL);
+  g_return_val_if_fail (key != NULL, NULL);
+  g_return_val_if_fail ((err == NULL) || (*err == NULL), NULL);
 
   /* A value is writable if it is unset and a writable source exists,
    * or if it's set and the setting is within or after a writable source.
@@ -456,84 +457,117 @@ gconf_sources_query_value (GConfSources* sources,
 
   if (schema_namep)
     *schema_namep = NULL;
+
+  val = NULL;
+  schema_name = NULL;
+  error = NULL;
   
   tmp = sources->sources;
 
   while (tmp != NULL)
     {
-      GConfValue* val;
-      GConfSource* source;
+      GConfSource* source;      
       gchar** schema_name_retloc;
 
-      /* we only want the first schema name we find */
-      if (use_schema_default)
-        schema_name_retloc = schema_name ? NULL : &schema_name;
-      else
+      schema_name_retloc = &schema_name;
+      if (schema_name != NULL ||                          /* already have the schema name */
+          (schema_namep == NULL && !use_schema_default))  /* don't need to get the schema name */
         schema_name_retloc = NULL;
       
       source = tmp->data;
 
-      if (value_is_writable &&
-          source_is_writable (source, key, NULL)) /* ignore errors */
-        *value_is_writable = TRUE;
-      
-      val = gconf_source_query_value(source, key, locales,
-                                     schema_name_retloc, &error);
-      
+      if (val == NULL)
+        {
+          /* A key is writable if the source containing its value or
+           * an earlier source is writable
+           */          
+          if (value_is_writable &&
+              source_is_writable (source, key, NULL)) /* ignore errors */
+            *value_is_writable = TRUE;
+          
+          val = gconf_source_query_value (source, key, locales,
+                                          schema_name_retloc, &error);
+
+        }
+      else if (schema_name_retloc != NULL)
+        {
+          GConfMetaInfo *mi;
+          
+          mi = gconf_source_query_metainfo (source, key, &error);
+          
+          if (mi)
+            {
+              *schema_name_retloc = mi->schema;
+              mi->schema = NULL;
+              gconf_meta_info_free (mi);
+            }
+        }
+          
       if (error != NULL)
         {
-          /* Right thing to do? Don't know. */
-          g_assert(val == NULL);
-
           if (err)
             *err = error;
           else
-            g_error_free(error);
+            g_error_free (error);
 
           error = NULL;
 
+          if (val)
+            gconf_value_free (val);
+
+          if (schema_name)
+            g_free (schema_name);
+          
           return NULL;
         }
-      
-      if (val == NULL)
+
+      /* schema_name_retloc == NULL means we aren't still looking for schema name,
+       * tmp->next == NULL means we aren't going to get a schema name
+       */
+      if (val != NULL && (schema_name_retloc == NULL || schema_name != NULL || tmp->next == NULL))
         {
-          ; /* keep going, try more sources */
+          if (schema_namep)
+            *schema_namep = schema_name;
+          else
+            g_free (schema_name);
+          
+          return val;
         }
       else
         {
-          g_free (schema_name);
-          schema_name = NULL;
-          return val;
+          ; /* Keep looking for either val or schema name */
         }
-
-      tmp = g_list_next(tmp);
+      
+      tmp = g_list_next (tmp);
     }
 
-  g_return_val_if_fail(error == NULL, NULL);
+  g_return_val_if_fail (error == NULL, NULL);
+  g_return_val_if_fail (val == NULL, NULL);
   
   /* If we got here, there was no value; we try to look up the
-     schema for this key if we have one, and use the default
-     value.
-  */
+   * schema for this key if we have one, and use the default
+   * value.
+   */
   
   if (schema_name != NULL)
     {
-      GConfValue* val;
-
-      /* Note that if the value isn't found, then it's always the default
-         value - even if there is no default value, NULL is the default.
-         This makes things more sane (I think) because is_default
-         basically means "was set by user" - however we also want to say
-         that if use_schema_default is FALSE then value_is_default will be FALSE
-         so we put this inside the schema_name != NULL conditional
+      /* Note that if the value isn't found, then it's always the
+       * default value - even if there is no default value, NULL is
+       * the default.  This makes things more sane (I think) because
+       * is_default basically means "was set by user" - however we
+       * also want to say that if use_schema_default is FALSE then
+       * value_is_default will be FALSE so we put this inside the
+       * schema_name != NULL conditional
       */
       if (value_is_default)
         *value_is_default = TRUE;
-      
-      /* We do look for a schema describing the schema, just for funnies */
-      val = gconf_sources_query_value(sources, schema_name, locales,
-                                      TRUE, NULL, NULL, NULL, &error);
 
+      if (use_schema_default)
+        {
+          val = gconf_sources_query_value (sources, schema_name, locales,
+                                           FALSE, NULL, NULL, NULL, &error);
+        }
+      
       if (error != NULL)
         {
           if (err)
@@ -547,8 +581,8 @@ gconf_sources_query_value (GConfSources* sources,
       else if (val != NULL &&
                val->type != GCONF_VALUE_SCHEMA)
         {
-          gconf_set_error(err, GCONF_ERROR_FAILED,
-                          _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
+          gconf_set_error (err, GCONF_ERROR_FAILED,
+                           _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
 
           if (schema_namep)
             *schema_namep = schema_name;

@@ -17,6 +17,32 @@
  * Boston, MA 02111-1307, USA.
  */
 
+
+
+
+
+
+
+
+
+
+/*
+ *
+ *
+ * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples/*
+ *
+ *
+ *
+ */
+
+
+
+
+
+
+
+
+
 #include <gconf/gconf.h>
 #include <stdio.h>
 #include <unistd.h>
