@@ -523,7 +523,10 @@ gconf_engine_unref        (GConfEngine* conf)
           
           ctable_destroy (conf->ctable);
         }
-      
+
+      if (conf == default_engine)
+        default_engine = NULL;
+
       g_free(conf);
     }
 }
