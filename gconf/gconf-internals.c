@@ -441,6 +441,34 @@ invalid_corba_value()
   return cv;
 }
 
+gchar*
+gconf_object_to_string (CORBA_Object obj,
+                        GError **err)
+{
+  CORBA_Environment ev;
+  gchar *ior;
+  gchar *retval;
+  
+  CORBA_exception_init (&ev);
+
+  ior = CORBA_ORB_object_to_string (oaf_orb_get (), obj, &ev);
+
+  if (ior == NULL)
+    {
+      gconf_set_error (err,
+                       GCONF_ERROR_FAILED,
+                       _("Failed to convert object to IOR"));
+
+      return NULL;
+    }
+
+  retval = g_strdup (ior);
+
+  CORBA_free (ior);
+
+  return retval;
+}
+
 static ConfigValueType
 corba_type_from_gconf_type(GConfValueType type)
 {

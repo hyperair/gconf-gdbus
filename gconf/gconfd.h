@@ -28,13 +28,19 @@ extern "C" {
 
 #include "gconf-error.h"
 #include "GConf.h"
+#include "gconf-database.h"
 
 PortableServer_POA gconf_get_poa ();
 
 /* return TRUE if the exception was set, clear err if needed */
-gboolean gconf_set_exception(GError** err, CORBA_Environment* ev);
+gboolean gconf_set_exception (GError** err, CORBA_Environment* ev);
 
-void gconf_logfile_queue_save (void);
+gboolean gconfd_logfile_change_listener (GConfDatabase *db,
+                                         gboolean add,
+                                         guint connection_id,
+                                         ConfigListener listener,
+                                         const gchar *where,
+                                         GError **err);
 
 #ifdef __cplusplus
 }

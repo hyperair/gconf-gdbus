@@ -49,6 +49,8 @@ struct _GConfDatabase
   GTime last_access;
   guint sync_idle;
   guint sync_timeout;
+
+  gchar *persistent_name;
 };
 
 GConfDatabase* gconf_database_new     (GConfSources  *sources);
@@ -59,6 +61,11 @@ CORBA_unsigned_long gconf_database_add_listener     (GConfDatabase       *db,
                                                      const gchar         *where);
 void                gconf_database_remove_listener  (GConfDatabase       *db,
                                                      CORBA_unsigned_long  cnxn);
+
+CORBA_unsigned_long gconf_database_readd_listener   (GConfDatabase       *db,
+                                                     ConfigListener       who,
+                                                     const gchar         *where);
+
 void                gconf_database_notify_listeners (GConfDatabase       *db,
                                                      const gchar         *key,
                                                      const ConfigValue   *value,
@@ -120,7 +127,11 @@ void     gconf_database_clear_cache      (GConfDatabase  *db,
 void gconfd_locale_cache_expire (void);
 void gconfd_locale_cache_drop  (void);
 
-GMarkupNode* gconf_database_to_node (GConfDatabase *db, gboolean is_default);
+const gchar* gconf_database_get_persistent_name (GConfDatabase *db);
+
+void gconf_database_log_listeners_to_string (GConfDatabase *db,
+                                             gboolean is_default,
+                                             GString *str);
 
 #ifdef __cplusplus
 }

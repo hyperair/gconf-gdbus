@@ -74,6 +74,11 @@ void                gconf_listeners_foreach (GConfListeners* listeners,
                                              GConfListenersForeach callback,
                                              gpointer user_data);
 
+gboolean            gconf_listeners_get_data (GConfListeners* listeners,
+                                              guint           cnxn_id,
+                                              gpointer       *listener_data_p,
+                                              const gchar   **location_p);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

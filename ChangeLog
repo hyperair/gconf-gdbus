@@ -1,3 +1,26 @@
+2000-09-09  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-database.c (gconf_database_add_listener)
+	(gconf_database_remove_listener): immediately log the addition
+	or removal to the saved state file, which is now in a streaming
+	format
+	(gconf_database_get_persistent_name): abstraction for getting
+	the address of the database, of "def" if it's the default one
+	(gconf_database_log_listeners_to_string): replaces conversion 
+	from database to markup node; no longer using GMarkup here
+
+	* gconf/gconf-listeners.c (gconf_listeners_get_data):
+	new function to get listener data for a connection ID
+
+	* gconf/gconfd.c (one_hour_timeout): save the logfile 
+	in the timeout, to compress it since we have just been appending
+	over the last hour
+	(logfile_read, logfile_save): rewrite to use new format, not the
+	GMarkup format
+
+	* gconf/gconf-internals.c (gconf_object_to_string): Add 
+	this function
+
 2000-09-04  Havoc Pennington  <hp@pobox.com>
 
 	* doc/gconf/Makefile.am (LDFLAGS): libs have been renamed

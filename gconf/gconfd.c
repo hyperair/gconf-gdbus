@@ -476,6 +476,9 @@ main(int argc, char** argv)
   
   gconf_main();
 
+  /* Save current state in logfile (may compress the logfile a good
+   * bit)
+   */
   logfile_save ();
   
   fast_cleanup();
@@ -501,12 +504,15 @@ static guint timeout_id = 0;
 static gboolean
 one_hour_timeout(gpointer data)
 {
-  gconf_log(GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
+  gconf_log (GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
   
   drop_old_databases ();
 
   /* expire old locale cache entries */
-  gconfd_locale_cache_expire();
+  gconfd_locale_cache_expire ();
+
+  /* Compress the running state file */
+  logfile_save ();
   
   return TRUE;
 }
@@ -821,121 +827,423 @@ gconf_set_exception(GError** error,
  * Logging
  */
 
+/*
+   The log file records the current listeners we have registered,
+   so we can restore them if we exit and restart.
+
+   Basically:
+
+   1) On startup, we parse any logfile and try to restore the
+      listeners contained therein. As we restore each listener (give
+      clients a new listener ID) we append a removal of the previous
+      daemon's listener and the addition of our own listener to the
+      logfile; this means that if we crash and have to restore a
+      client's listener a second time, we'll have the client's current
+      listener ID. If all goes well we then atomically rewrite the
+      parsed logfile with the resulting current state, to keep the logfile
+      compact.
+
+   2) While running, we keep a FILE* open and whenever we add/remove
+      a listener we write a line to the logfile recording it,
+      to keep the logfile always up-to-date.
+
+   3) On normal exit, and also periodically (every hour or so, say) we
+      atomically write over the running log with our complete current
+      state, to keep the running log from growing without bound.
+*/
+
+static void
+get_log_names (gchar **logdir, gchar **logfile)
+{
+  *logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
+  *logfile = gconf_concat_key_and_dir (*logdir, "saved_state");
+}
+
+static FILE* append_handle = NULL;
+
+static gboolean
+open_append_handle (GError **err)
+{
+  if (append_handle == NULL)
+    {
+      gchar *logdir;
+      gchar *logfile;
+
+      get_log_names (&logdir, &logfile);
+      
+      mkdir (logdir, 0700); /* ignore failure, we'll catch failures
+                             * that matter on open()
+                             */
+      
+      append_handle = fopen (logfile, "a");
+
+      if (append_handle == NULL)
+        {
+          gconf_set_error (err,
+                           GCONF_ERROR_FAILED,
+                           _("Failed to open gconfd logfile; won't be able to restore listeners after gconfd shutdown (%s)"),
+                           strerror (errno));
+          
+          g_free (logdir);
+          g_free (logfile);
+
+          return FALSE;
+        }
+      
+      g_free (logdir);
+      g_free (logfile);
+    }
+
+  return TRUE;
+}
+
+static void
+close_append_handle (void)
+{
+  if (append_handle)
+    {
+      if (fclose (append_handle) < 0)
+        gconf_log (GCL_WARNING,
+                   _("Failed to close gconfd logfile; data may not have been properly saved (%s)"),
+                   strerror (errno));
+    }
+}
+
+/* Atomically save our current state, if possible; otherwise
+ * leave the running log in place.
+ */
 static void
 logfile_save (void)
 {
-  GMarkupNodeElement *root_node;
-  gchar *str;
-  int fd = -1;
-  gchar *logfile;
-  gchar *logdir;
   GList *tmp_list;
+  gchar *logdir = NULL;
+  gchar *logfile = NULL;
+  gchar *tmpfile = NULL;
+  gchar *tmpfile2 = NULL;
+  GString *saveme = NULL;
+  int fd = -1;
+  
+  /* Close the running log */
+  close_append_handle ();
+  
+  get_log_names (&logdir, &logfile);
 
-  root_node = g_markup_node_new_element ("gconfd_logfile");
+  mkdir (logdir, 0700); /* ignore failure, we'll catch failures
+                         * that matter on open()
+                         */
+
+  saveme = g_string_new ("");
+
+  /* Default database */
+  gconf_database_log_listeners_to_string (default_db,
+                                          TRUE,
+                                          saveme);
+
+  /* Other databases */
   
   tmp_list = db_list;
 
   while (tmp_list)
     {
       GConfDatabase *db = tmp_list->data;
-      GMarkupNode* node;
-      
-      node = gconf_database_to_node (db, FALSE);
-      
-      root_node->children = g_list_prepend (root_node->children,
-                                            node);
 
+      gconf_database_log_listeners_to_string (db,
+                                              FALSE,
+                                              saveme);
+      
       tmp_list = g_list_next (tmp_list);
     }
-
-  /* Default database */
-  root_node->children = g_list_prepend (root_node->children,
-                                        gconf_database_to_node (default_db,
-                                                                TRUE));
   
-  str = g_markup_node_to_string ((GMarkupNode*)root_node, 0);
-
-  logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
-  logfile = gconf_concat_key_and_dir (logdir, "saved_state");
-
-  mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-                         * that matter on open() below
-                         */
+  /* Now try saving the string to a temporary file */
+  tmpfile = g_strconcat (logfile, ".tmp", NULL);
   
-  fd = open (logfile, O_WRONLY | O_CREAT | O_TRUNC, 0700);
+  fd = open (tmpfile, O_WRONLY | O_CREAT | O_TRUNC, 0700);
 
   if (fd < 0)
     {
-      gconf_log (GCL_ERR, _("Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"), strerror (errno));
+      gconf_log (GCL_WARNING,
+                 _("Could not open saved state file '%s' for writing: %s"),
+                 tmpfile, strerror (errno));
       
-      goto finished;
+      goto out;
     }
 
-  if (write (fd, str, strlen (str)) < 0)
+ again:
+  
+  if (write (fd, saveme->str, saveme->len) < 0)
     {
-      gconf_log (GCL_ERR, _("Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"), strerror (errno));
+      if (errno == EINTR)
+        goto again;
       
-      goto finished;
+      gconf_log (GCL_WARNING,
+                 _("Could not write saved state file '%s' fd: %d: %s"),
+                 tmpfile, fd, strerror (errno));
+
+      goto out;
     }
-  
- finished:
 
-  g_free (logfile);
+  if (close (fd) < 0)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to close new saved state file '%s': %s"),
+                 tmpfile, strerror (errno));
+      goto out;
+    }
+
+  fd = -1;
+  
+  /* Move the main saved state file aside, if it exists */
+  if (gconf_file_exists (logfile))
+    {
+      tmpfile2 = g_strconcat (logfile, ".orig", NULL);
+      if (rename (logfile, tmpfile2) < 0)
+        {
+          gconf_log (GCL_WARNING,
+                     _("Could not move aside old saved state file '%s': %s"),
+                     logfile, strerror (errno));
+          goto out;
+        }
+    }
+
+  /* Move the new saved state file into place */
+  if (rename (tmpfile, logfile) < 0)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to move new save state file into place: %s"),
+                 strerror (errno));
+
+      /* Try to restore old file */
+      if (tmpfile2)
+        {
+          if (rename (tmpfile2, logfile) < 0)
+            {
+              gconf_log (GCL_WARNING,
+                         _("Failed to restore original saved state file that had been moved to '%s': %s"),
+                         tmpfile2, strerror (errno));
+
+            }
+        }
+      
+      goto out;
+    }
+
+  /* Get rid of original saved state file if everything succeeded */
+  if (tmpfile2)
+    unlink (tmpfile2);
+  
+ out:
+  if (saveme)
+    g_string_free (saveme, TRUE);
   g_free (logdir);
-  
-  g_free (str);
+  g_free (logfile);
+  g_free (tmpfile);
+  g_free (tmpfile2);
 
-  g_markup_node_free ((GMarkupNode*)root_node);
+  if (fd >= 0)
+    close (fd);
+}
+
+typedef struct _ListenerLogEntry ListenerLogEntry;
+
+struct _ListenerLogEntry
+{
+  guint connection_id;
+  gchar *ior;
+  gchar *address;
+  gchar *location;
+};
+
+guint
+logentry_hash (gconstpointer v)
+{
+  const ListenerLogEntry *lle = v;
+
+  return
+    (lle->connection_id         & 0xff000000) |
+    (g_str_hash (lle->ior)      & 0x00ff0000) |
+    (g_str_hash (lle->address)  & 0x0000ff00) |
+    (g_str_hash (lle->location) & 0x000000ff);
+}
+
+gboolean
+logentry_equal (gconstpointer ap, gconstpointer bp)
+{
+  const ListenerLogEntry *a = ap;
+  const ListenerLogEntry *b = bp;
+
+  return
+    a->connection_id == b->connection_id &&
+    strcmp (a->location, b->location) == 0 &&
+    strcmp (a->ior, b->ior) == 0 &&
+    strcmp (a->address, b->address) == 0;
 }
 
 static void
-restore_listener (GConfDatabase* db,
-                  GMarkupNodeElement *node)
+parse_entry (GHashTable *entries,
+             gchar *text)
 {
+  gboolean add;
+  gchar *p;
   gchar *ior;
-  gchar *location;
-  gchar *cnxn;
-  ConfigListener cl;
-  CORBA_Environment ev;
-  guint new_cnxn;
   gchar *address;
+  gchar *location;
+  gchar *end;
+  guint connection_id;
+  GError *err;
+  ListenerLogEntry *lle;
+  ListenerLogEntry *old;
   
-  if (strcmp (node->name, "listener") != 0)
+  if (strncmp (text, "ADD", 3) == 0)
     {
-      gconf_log (GCL_WARNING, _("Didn't understand element '%s' in saved state file"), node->name);
+      add = TRUE;
+      p = text + 3;
+    }
+  else if (strncmp (text, "REMOVE", 6) == 0)
+    {
+      add = FALSE;
+      p = text + 6;
+    }
+  else
+    {
+      gconf_log (GCL_WARNING,
+                 _("Didn't understand line in saved state file: '%s'"), 
+                 text);
 
       return;
     }
-
-  location = g_markup_node_get_attribute (node, "location");
-  ior = g_markup_node_get_attribute (node, "ior");
-  cnxn = g_markup_node_get_attribute (node, "connection");
   
-  if (location == NULL)
-    {
-      gconf_log (GCL_WARNING, _("No location attribute on listener element in saved state file"));
+  while (*p && isspace (*p))
+    ++p;
 
-      goto finished;
+  errno = 0;
+  end = NULL;
+  connection_id = strtoul (p, &end, 10);
+  if (errno != 0)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to parse connection ID in saved state file"));                 
+      return;
     }
 
-  if (ior == NULL)
-    {
-      gconf_log (GCL_WARNING, _("No IOR attribute on listener element in saved state file"));
+  p = end;
 
-      goto finished;
+  while (*p && isspace (*p))
+    ++p;
+
+  err = NULL;
+  end = NULL;
+  gconf_unquote_string_inplace (p, &end, &err);
+  if (err != NULL)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to unquote config source address from saved state file: %s"),
+                 err->message);
+
+      g_error_free (err);
+      
+      return;
+    }
+
+  address = p;
+  p = end;
+
+  while (*p && isspace (*p))
+    ++p;
+  
+  err = NULL;
+  end = NULL;
+  gconf_unquote_string_inplace (p, &end, &err);
+  if (err != NULL)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to unquote listener location from saved state file: %s"),
+                 err->message);
+
+      g_error_free (err);
+      
+      return;
+    }
+
+  location = p;
+  p = end;
+
+  while (*p && isspace (*p))
+    ++p;
+  
+  err = NULL;
+  end = NULL;
+  gconf_unquote_string_inplace (p, &end, &err);
+  if (err != NULL)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to unquote IOR from saved state file: %s"),
+                 err->message);
+      
+      g_error_free (err);
+      
+      return;
     }
   
-  if (cnxn == NULL)
+  ior = p;
+  p = end;    
+
+  lle = g_new (ListenerLogEntry, 1);
+  lle->connection_id = connection_id;
+  lle->address = address;
+  lle->ior = ior;
+  lle->location = location;
+  
+  old = g_hash_table_lookup (entries, lle);
+
+  if (old)
     {
-      gconf_log (GCL_WARNING, _("No connection ID attribute on listener element in saved state file"));
-
-      goto finished;
+      if (add)
+        {
+          gconf_log (GCL_WARNING,
+                     _("Saved state file records the same listener added twice; ignoring the second instance"));
+          goto quit;
+        }
+      else
+        {
+          /* This entry was added, then removed. */
+          g_hash_table_remove (entries, lle);
+          goto quit;
+        }
     }
+  else
+    {
+      if (add)
+        {
+          g_hash_table_insert (entries, lle, lle);
+          
+          return;
+        }
+      else
+        {
+          gconf_log (GCL_WARNING,
+                     _("Saved state file had a removal of a listener that wasn't added; ignoring the removal."));
+          goto quit;
+        }
+    }
+  
+ quit:
+  g_free (lle);
+}                
 
+
+static void
+restore_listener (GConfDatabase* db,
+                  ListenerLogEntry *lle)
+{
+  ConfigListener cl;
+  CORBA_Environment ev;
+  guint new_cnxn;
+  GError *err;
+  
   CORBA_exception_init (&ev);
   
   cl = CORBA_ORB_string_to_object (oaf_orb_get (),
-                                   ior,
+                                   lle->ior,
                                    &ev);
 
   CORBA_exception_free (&ev);
@@ -944,101 +1252,122 @@ restore_listener (GConfDatabase* db,
     {
       CORBA_exception_free (&ev);
 
-      gconf_log (GCL_DEBUG, "Client in saved state file no longer exists, not updating its listener connections");
+      gconf_log (GCL_DEBUG,
+                 "Client in saved state file no longer exists, not updating its listener connections");
       
-      goto finished;
+      return;
     }
-  
-  new_cnxn = gconf_database_add_listener(db, cl, location);
 
-  if (db == default_db)
-    address = "def"; /* cheesy hack */
-  else
-    address = ((GConfSource*)db->sources->sources->data)->address;
+  /* "Cancel" the addition of the listener in the saved state file,
+   * so that if we reload the saved state file a second time
+   * for some reason, we don't try to add this listener that time.
+   */
+
+  err = NULL;  
+  if (!gconfd_logfile_change_listener (db,
+                                       FALSE, /* remove */
+                                       lle->connection_id,
+                                       cl,
+                                       lle->location,
+                                       &err))
+    {
+      gconf_log (GCL_DEBUG,
+                 "Failed to cancel previous daemon's listener in saved state file: %s",
+                 err->message);
+      g_error_free (err);
+    }  
+
+  new_cnxn = gconf_database_readd_listener (db, cl, lle->location);
   
   ConfigListener_update_listener (cl,
                                   db->objref,
-                                  address,
-                                  gconf_string_to_gulong (cnxn),
-                                  location,
+                                  lle->address,
+                                  lle->connection_id,
+                                  lle->location,
                                   new_cnxn,
                                   &ev);
-
+  
   if (ev._major != CORBA_NO_EXCEPTION)
     {
       gconf_log (GCL_DEBUG, "Failed to update client in saved state file, probably the client no longer exists");
 
-      /* listener will get removed next time we try to notify */
-      
+      /* listener will get removed next time we try to notify -
+       * we already appended a cancel of the listener to the
+       * saved state file.
+       */
       goto finished;
     }
 
-  CORBA_Object_release (cl, &ev);
+  /* Successfully notified client of new connection ID, so put that
+   * connection ID in the saved state file.
+   */
+  err = NULL;  
+  if (!gconfd_logfile_change_listener (db,
+                                       TRUE, /* add */
+                                       new_cnxn,
+                                       cl,
+                                       lle->location,
+                                       &err))
+    {
+      gconf_log (GCL_DEBUG,
+                 "Failed to re-add this daemon's listener ID in saved state file: %s",
+                 err->message);
+      g_error_free (err);
+    }
 
-  CORBA_exception_free (&ev);
+  /* We updated the listener, and logged that to the saved state
+   * file. Yay!
+   */
   
  finished:
   
-  g_free (ior);
-  g_free (cnxn);
-  g_free (location);
+  CORBA_Object_release (cl, &ev);
+
+  CORBA_exception_free (&ev);
 }
 
 static void
-restore_database (GMarkupNodeElement *node)
+logentry_restore_and_destroy_foreach (gpointer key,
+                                      gpointer value,
+                                      gpointer data)
 {
-  gchar *address;
-  GList *tmp_list;
+  ListenerLogEntry *lle = key;
   GConfDatabase *db;
   
-  if (!(strcmp (node->name, "database") == 0 ||
-        strcmp (node->name, "default_database") == 0))
+  if (strcmp (lle->address, "def") == 0)
+    db = default_db;
+  else
+    db = obtain_database (lle->address, NULL);
+  
+  if (db == NULL)
     {
-      gconf_log (GCL_WARNING, _("Didn't understand element '%s' in saved state file"), node->name);
-
+      gconf_log (GCL_WARNING,
+                 _("Unable to restore a listener on address '%s', couldn't resolve the database"),
+                 lle->address);
       return;
     }
 
-  address = g_markup_node_get_attribute (node, "address");
-  if (address == NULL)
-    db = default_db;
-  else
-    db = obtain_database (address, NULL);
-  
-  if (db == NULL)
-    return;
-  
-  tmp_list = node->children;
-  while (tmp_list != NULL)
-    {
-      GMarkupNode *n = tmp_list->data;
+  restore_listener (db, lle);
 
-      if (n->type != G_MARKUP_NODE_ELEMENT)
-        {
-          gconf_log (GCL_WARNING, _("Strange non-element node in saved state file"));
-        }
-      else
-        {
-          restore_listener (db, (GMarkupNodeElement*)n);
-        }
-
-      tmp_list = g_list_next (tmp_list);
-    }
+  /* We don't need it anymore */
+  g_free (lle);
 }
 
 static void
 logfile_read (void)
 {
-  GMarkupNode *root_node;
-  GMarkupNodeElement *root_element;
-  gchar *str;
   gchar *logfile;
   gchar *logdir;
   GError *error;
-  GList *tmp_list;
+  gchar *str;
+  gchar **lines;
+  gchar **iter;
+  GHashTable *entries;
+
+  /* Just for good form */
+  close_append_handle ();
   
-  logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
-  logfile = gconf_concat_key_and_dir (logdir, "saved_state");
+  get_log_names (&logdir, &logfile);
 
   error = NULL;
   str = g_file_get_contents (logfile, &error);
@@ -1047,58 +1376,39 @@ logfile_read (void)
       gconf_log (GCL_ERR, _("Unable to open saved state file '%s': %s"),
                  logfile, error->message);
 
-
       g_error_free (error);
 
       goto finished;
     }
 
-  error = NULL;
-  root_node = g_markup_node_from_string (str, -1, 0, &error);
-  if (error != NULL)
-    {
-      gconf_log (GCL_ERR, _("Failed to restore saved state from file '%s': %s"),
-                 logfile, error->message);
-      g_error_free (error);
+  lines = g_strsplit (str, "\n", -1);
 
-      goto finished;
+  g_free (str);
+
+  entries = g_hash_table_new (logentry_hash, logentry_equal);
+  
+  iter = lines;
+  while (*iter)
+    {
+      parse_entry (entries, *iter);
+
+      ++iter;
     }
 
-  if (root_node->type != G_MARKUP_NODE_ELEMENT)
-    {
-      gconf_log (GCL_ERR, _("Root node of saved state file should be an element"));
-      
-      goto finished;
-    }
+  /* Entries that still remain in the hash table were added but not
+   * removed, so add them in this daemon instantiation and update
+   * their listeners with the new connection ID etc.
+   */
+  g_hash_table_foreach (entries, 
+                        logentry_restore_and_destroy_foreach,
+                        NULL);
 
-  root_element = (GMarkupNodeElement*) root_node;
-
-  if (strcmp (root_element->name, "gconfd_logfile") != 0)
-    {
-      gconf_log (GCL_ERR,
-                 _("Root node of saved state file should be 'gconfd_logfile', not '%s'"),
-                 root_element->name);
-
-      goto finished;
-    }
-
-  tmp_list = root_element->children;
-  while (tmp_list != NULL)
-    {
-      GMarkupNode *node = tmp_list->data;      
-
-      if (node->type != G_MARKUP_NODE_ELEMENT)
-        {
-          gconf_log (GCL_WARNING, _("Funny non-element node under <gconfd_logfile> in saved state file"));
-
-        }
-      else
-        {
-          restore_database ((GMarkupNodeElement*)node);
-        }
-      
-      tmp_list = g_list_next (tmp_list);
-    }
+  g_hash_table_destroy (entries);
+  /* Note that we need the strings to remain valid until we are totally
+   * finished, because we store pointers to them in the log entry
+   * hash.
+   */
+  g_strfreev (lines);
   
  finished:
   
@@ -1106,24 +1416,74 @@ logfile_read (void)
   g_free (logdir);
 }
 
-static guint logfile_save_timeout_id = 0;
-
-static gint
-logfile_save_timeout (gpointer user_data)
+gboolean
+gconfd_logfile_change_listener (GConfDatabase *db,
+                                gboolean add,
+                                guint connection_id,
+                                ConfigListener listener,
+                                const gchar *where,
+                                GError **err)
 {
-  logfile_save ();
-  logfile_save_timeout_id = 0;
+  gchar *ior;
+  gchar *quoted_db_name;
+  gchar *quoted_where;
+  gchar *quoted_ior;
+  
+  if (!open_append_handle (err))
+    return FALSE;
+  
+  ior = gconf_object_to_string (listener, err);
+  
+  if (ior == NULL)
+    return FALSE;
+
+  quoted_ior = gconf_quote_string (ior);
+  g_free (ior);
+  
+  if (db == default_db)
+    quoted_db_name = gconf_quote_string ("def");
+  else
+    {
+      const gchar *db_name;
+      
+      db_name = gconf_database_get_persistent_name (db);
+      
+      quoted_db_name = gconf_quote_string (db_name);
+    }
+
+  quoted_where = gconf_quote_string (where);
+                                           
+  if (fprintf (append_handle, "%s %u %s %s %s\n",
+               add ? "ADD" : "REMOVE", connection_id,
+               quoted_db_name, quoted_where, quoted_ior) < 0)
+    goto error;
+
+  if (fflush (append_handle) < 0)
+    goto error;
+
+  g_free (quoted_db_name);
+  g_free (quoted_ior);
+  g_free (quoted_where);
+  
+  return TRUE;
+
+ error:
+
+  if (add)
+    gconf_set_error (err,
+                     GCONF_ERROR_FAILED,
+                     _("Failed to log addition of listener to gconfd logfile; won't be able to re-add the listener if gconfd exits or shuts down (%s)"),
+                     strerror (errno));
+  else
+    gconf_set_error (err,
+                     GCONF_ERROR_FAILED,
+                     _("Failed to log removal of listener to gconfd logfile; might erroneously re-add the listener if gconfd exits or shuts down (%s)"),
+                     strerror (errno));
+
+  g_free (quoted_db_name);
+  g_free (quoted_ior);
+  g_free (quoted_where);
 
   return FALSE;
 }
 
-void
-gconf_logfile_queue_save (void)
-{
-  if (logfile_save_timeout_id == 0)
-    {
-      logfile_save_timeout_id =
-        g_timeout_add (1000 /* 1000 * 60 * 5*/, /* 1 sec * sec/min * 5 min */
-                       logfile_save_timeout, NULL);
-    }
-}

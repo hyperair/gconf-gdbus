@@ -51,6 +51,9 @@ void          fill_corba_value_from_gconf_value(GConfValue* value,
                                                  ConfigValue* dest);
 ConfigValue*  invalid_corba_value();
 
+gchar* gconf_object_to_string (CORBA_Object obj,
+                               GError **err);
+
 void          fill_corba_schema_from_gconf_schema(GConfSchema* sc, 
                                                    ConfigSchema* dest);
 ConfigSchema* corba_schema_from_gconf_schema(GConfSchema* sc);

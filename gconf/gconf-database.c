@@ -523,6 +523,8 @@ gconf_database_new (GConfSources  *sources)
 
   db->sync_idle = 0;
   db->sync_timeout = 0;
+
+  db->persistent_name = NULL;
   
   return db;
 }
@@ -579,8 +581,10 @@ gconf_database_destroy (GConfDatabase *db)
       gconf_listeners_destroy(db->listeners);
       gconf_sources_destroy(db->sources);
     }
-      
-  g_free(db);
+
+  g_free (db->persistent_name);
+  
+  g_free (db);
 }
 
 static gint
@@ -669,25 +673,48 @@ gconf_database_schedule_sync(GConfDatabase* db)
 }
 
 CORBA_unsigned_long
-gconf_database_add_listener    (GConfDatabase       *db,
-                                ConfigListener       who,
-                                const gchar         *where)
+gconf_database_readd_listener   (GConfDatabase       *db,
+                                 ConfigListener       who,
+                                 const gchar         *where)
 {
   Listener* l;
   guint cnxn;
   
   g_assert(db->listeners != NULL);
-  
+
   db->last_access = time(NULL);
   
   l = listener_new(who);
 
-  cnxn = gconf_listeners_add(db->listeners, where, l,
-                             (GFreeFunc)listener_destroy);
-  
-  gconf_log(GCL_DEBUG, "Added listener %u", cnxn);
+  cnxn = gconf_listeners_add (db->listeners, where, l,
+                              (GFreeFunc)listener_destroy);
 
-  gconf_logfile_queue_save ();
+  gconf_log (GCL_DEBUG, "Added listener %u", cnxn);
+  
+  return cnxn;
+}
+
+CORBA_unsigned_long
+gconf_database_add_listener    (GConfDatabase       *db,
+                                ConfigListener       who,
+                                const gchar         *where)
+{
+  GError *err;
+  CORBA_unsigned_long cnxn;
+
+  cnxn = gconf_database_readd_listener (db, who, where);
+  
+  err = NULL;
+  if (!gconfd_logfile_change_listener (db, TRUE, cnxn,
+                                       who, where, &err))
+    {
+      /* This error is not fatal; we basically ignore it.
+       * Because it's likely the right thing for the client
+       * app to simply continue.
+       */
+      gconf_log (GCL_WARNING, _("Failed to log addition of listener (%s); will not be able to restore this listener on gconfd restart, resulting in unreliable notification of configuration changes."), err->message);
+      g_error_free (err);
+    }
   
   return cnxn;
 }
@@ -696,15 +723,36 @@ void
 gconf_database_remove_listener (GConfDatabase       *db,
                                 CORBA_unsigned_long  cnxn)
 {
+  Listener *l = NULL;
+  GError *err;
+  const gchar *location = NULL;
+  
   g_assert(db->listeners != NULL);
   
   db->last_access = time(NULL);
+
   gconf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
 
+  if (!gconf_listeners_get_data (db->listeners, cnxn,
+                                 (gpointer*)&l,
+                                 &location))
+    {
+      gconf_log (GCL_WARNING, _("Listener ID %lu doesn't exist"),
+                 (gulong) cnxn);
+      return;
+    }
+  
+  err = NULL;
+  if (!gconfd_logfile_change_listener (db, FALSE, cnxn,
+                                       l->obj, location, &err))
+    {
+      gconf_log (GCL_WARNING, _("Failed to log removal of listener to logfile (most likely harmless, may result in a notification weirdly reappearing): %s"),
+                 err->message);
+      g_error_free (err);
+    }
+  
   /* calls destroy notify */
   gconf_listeners_remove(db->listeners, cnxn);
-
-  gconf_logfile_queue_save ();
 }
 
 typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
@@ -1086,6 +1134,20 @@ gconf_database_clear_cache (GConfDatabase  *db,
   gconf_sources_clear_cache(db->sources);
 }
 
+const gchar*
+gconf_database_get_persistent_name (GConfDatabase *db)
+{
+  if (db->persistent_name == NULL)
+    db->persistent_name = g_strdup (((GConfSource*)db->sources->sources->data)->address);
+
+  return db->persistent_name;
+}
+
+struct ForeachData
+{
+  GString *str;
+  gchar *db_name;
+};
 
 static void
 listener_save_foreach (const gchar* location,
@@ -1093,17 +1155,23 @@ listener_save_foreach (const gchar* location,
                        gpointer listener_data,
                        gpointer user_data)
 {
+  struct ForeachData *fd = user_data;
   Listener* l = listener_data;
   CORBA_ORB orb;
   CORBA_Environment ev;
-  GMarkupNodeElement *node;
-  GMarkupNodeElement *parent;
   gchar *ior;
   gchar *s;
   
-  parent = user_data;
-  
-  node = g_markup_node_new_element ("listener");
+  s = g_strdup_printf ("ADD %u %s ", cnxn_id, fd->db_name);
+
+  g_string_append (fd->str, s);
+
+  g_free (s);
+
+  s = gconf_quote_string (location);
+  g_string_append (fd->str, s);
+  g_free (s);
+  g_string_append_c (fd->str, ' ');
   
   orb = oaf_orb_get ();
 
@@ -1111,44 +1179,39 @@ listener_save_foreach (const gchar* location,
   
   ior = CORBA_ORB_object_to_string(orb, l->obj, &ev);
 
-  g_markup_node_set_attribute (node, "ior", ior);
+  s = gconf_quote_string (ior);
+
+  g_string_append (fd->str, s);
+
+  g_free (s);
   
   CORBA_free(ior);
 
-  g_markup_node_set_attribute (node, "location", location);
-
-  s = g_strdup_printf ("%u", cnxn_id);
-  g_markup_node_set_attribute (node, "connection", s);
-  g_free (s);
-  
-  parent->children = g_list_prepend (parent->children, node);
+  g_string_append_c (fd->str, '\n');
 }
 
-GMarkupNode*
-gconf_database_to_node (GConfDatabase *db, gboolean is_default)
+void
+gconf_database_log_listeners_to_string (GConfDatabase *db,
+                                        gboolean is_default,
+                                        GString *str)
 {
-  GMarkupNodeElement *node;
-  gchar *id_str;
+  struct ForeachData fd;
 
+  fd.str = str;
+  
   if (is_default)
-    {
-      node = g_markup_node_new_element ("default_database");
-    }
+    fd.db_name = gconf_quote_string ("def");
   else
     {
-      gchar *address;
-      
-      node = g_markup_node_new_element ("database");
-      
-      address = ((GConfSource*)db->sources->sources->data)->address;
-      
-      g_markup_node_set_attribute (node, "address", address);
-    }  
-
+      fd.db_name =
+        gconf_quote_string (gconf_database_get_persistent_name (db));
+    }
+        
   gconf_listeners_foreach (db->listeners,
-                           listener_save_foreach, node);
+                           listener_save_foreach,
+                           &fd);
 
-  return (GMarkupNode*) node;
+  g_free (fd.db_name);
 }
 
 /*

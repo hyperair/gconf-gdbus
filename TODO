@@ -75,3 +75,9 @@
   "replay" this by first stripping all obvious pairs out of the file.
   Periodically "compress" the file by stripping pairs.
 
+* Make it so that once the first notification of a change in a GConfChangeSet
+  is delivered, the other values will be retrieved by gconf_get() and 
+  gconf_client_get(), which means a way to invalidate GConfClient
+  cached stuff, and doing the setting of all values in the changeset
+  before the notifications.
+

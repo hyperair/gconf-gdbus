@@ -94,6 +94,10 @@ static guint   ltable_next_cnxn(LTable* ltable);
 static void    ltable_foreach  (LTable* ltable,
                                 GConfListenersForeach callback,
                                 gpointer user_data);
+static gboolean ltable_get_data (LTable *ltable,
+                                 guint cnxn_id,
+                                 gpointer *listener_data_p,
+                                 const gchar  **location_p);
 
 #ifdef DEBUG_LISTENERS
 static void    ltable_spew(LTable* ltable);
@@ -191,6 +195,16 @@ gconf_listeners_foreach (GConfListeners* listeners,
   ltable_foreach (lt, callback, user_data);
 }
 
+gboolean
+gconf_listeners_get_data (GConfListeners* listeners,
+                          guint cnxn_id,
+                          gpointer *listener_data_p,
+                          const gchar **location_p)
+{
+  LTable* lt = (LTable*)listeners;
+
+  return ltable_get_data (lt, cnxn_id, listener_data_p, location_p);
+}
 
 /*
  * LTable impl
@@ -647,6 +661,55 @@ ltable_foreach  (LTable* ltable,
                    -1,
                    node_traverse_func,
                    &td);
+}
+
+static gboolean
+ltable_get_data (LTable *lt,
+                 guint cnxn_id,
+                 gpointer *listener_data_p,
+                 const gchar   **location_p)
+{
+  LTableEntry* lte;
+  GList* tmp;
+  GNode* node;
+  guint index = CNXN_ID_INDEX(cnxn_id);
+  
+  g_return_val_if_fail(index < lt->listeners->len, FALSE);
+  if (index >= lt->listeners->len) /* robust even with checks off */
+    return FALSE;
+  
+  /* Lookup in the flat table */
+  node = g_ptr_array_index(lt->listeners, index);
+  
+  g_return_val_if_fail(node != NULL, FALSE);
+  if (node == NULL) /* a client is broken probably */
+    return FALSE;
+
+  g_assert(lt->tree != NULL);
+  
+  lte = node->data;
+  
+  tmp = lte->listeners;
+
+  g_return_val_if_fail(tmp != NULL, FALSE);
+
+  while (tmp != NULL)
+    {
+      Listener* l = tmp->data;
+
+      if (l->cnxn == cnxn_id)
+        {
+          if (listener_data_p)
+            *listener_data_p = l->listener_data;
+          if (location_p)
+            *location_p = lte->full_name;
+          return TRUE;
+        }
+
+      tmp = g_list_next(tmp);
+    }
+
+  return FALSE;
 }
 
 static LTableEntry* 
