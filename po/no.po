@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf VERSION\n"
-"POT-Creation-Date: 2000-02-16 10:38+0100\n"
+"POT-Creation-Date: 2000-02-22 16:00-0500\n"
 "PO-Revision-Date: 2000-02-16 10:47+01:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@online.no>\n"
 "Language-Team: Norwegian <no@li.org>\n"
@@ -142,7 +142,7 @@ msgstr "Streng i sitattegn begynner ikke med et sitattegn"
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Streng i anførselstegn slutter ikke med et sitattegn"
 
-#: gconf/gconf-internals.c:2105 gconf/gconf.c:2607
+#: gconf/gconf-internals.c:2105 gconf/gconf.c:2608
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA feil: %s"
@@ -270,7 +270,7 @@ msgstr "Kan ikke legge til meldinger til en lokal konfigurasjonskilde"
 msgid "Pinging the server failed, CORBA error: %s"
 msgstr "Pinging av tjeneren feilet, CORBA-feil: %s"
 
-#: gconf/gconf.c:1463
+#: gconf/gconf.c:1465
 msgid ""
 "Error contacting configuration server: OAF returned nil from "
 "oaf_activate_from_id() and did not set an exception explaining the problem. "
@@ -280,53 +280,53 @@ msgstr ""
 "fra oaf_activate_from_id() og satte ikke et unntak som forklarte problemet. "
 "Vennligst fyll ut en feilrapport for OAF."
 
-#: gconf/gconf.c:1689
+#: gconf/gconf.c:1690
 msgid "Must begin with a slash (/)"
 msgstr "Må begynne med en skråstrek (/)"
 
-#: gconf/gconf.c:1711
+#: gconf/gconf.c:1712
 msgid "Can't have two slashes (/) in a row"
 msgstr "Kan ikke ha to skråstreker (/) på rad"
 
-#: gconf/gconf.c:1713
+#: gconf/gconf.c:1714
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kan ikke ha punktum (.) rett etter en skråstrek (/)"
 
-#: gconf/gconf.c:1734
+#: gconf/gconf.c:1735
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' er et ugyldig tegn i nøkkel/katalog navn"
 
-#: gconf/gconf.c:1748
+#: gconf/gconf.c:1749
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Nøkkel/katalog kan ikke slutte med en skråstrek (/)"
 
-#: gconf/gconf.c:2079
+#: gconf/gconf.c:2080
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Feil under nedstenging av konfigurasjonstjeneren: %s"
 
-#: gconf/gconf.c:2140
+#: gconf/gconf.c:2141
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Forventet flyttall, mottok %s"
 
-#: gconf/gconf.c:2175
+#: gconf/gconf.c:2176
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Forventet heltall, mottok %s"
 
-#: gconf/gconf.c:2210
+#: gconf/gconf.c:2211
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Forventet streng, mottok %s"
 
-#: gconf/gconf.c:2247
+#: gconf/gconf.c:2248
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Forventet boolsk verdi, mottok %s"
 
-#: gconf/gconf.c:2280
+#: gconf/gconf.c:2281
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Forventet schema, mottok %s"
@@ -645,19 +645,27 @@ msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
-msgstr "Installerer schemafiler fra kommandolinjen inn i databasen på riktig måte. GCONF_CONFIG_SOURCE miljøvariabelen må være satt til noe annet enn standardverdien for konfigurasjonskilde eller være tom for at standardverdien skal brukes."
+msgstr ""
+"Installerer schemafiler fra kommandolinjen inn i databasen på riktig måte. "
+"GCONF_CONFIG_SOURCE miljøvariabelen må være satt til noe annet enn "
+"standardverdien for konfigurasjonskilde eller være tom for at "
+"standardverdien skal brukes."
 
 #: gconf/gconftool.c:254
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
-msgstr "Utfør en torturtest av en applikasjon ved å sette og tømme en rekke verdier av forskjellige typer for nøkler fra kommandolinjen."
+msgstr ""
+"Utfør en torturtest av en applikasjon ved å sette og tømme en rekke verdier "
+"av forskjellige typer for nøkler fra kommandolinjen."
 
 #: gconf/gconftool.c:263
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
-msgstr "Utfør en torturtest av en applikasjon ved å sette og tømme en rekke nøkler inne i katalogene fra kommandolinjen."
+msgstr ""
+"Utfør en torturtest av en applikasjon ved å sette og tømme en rekke nøkler "
+"inne i katalogene fra kommandolinjen."
 
 #: gconf/gconftool.c:310
 #, c-format
@@ -760,7 +768,8 @@ msgid ""
 "(though things theoretically work if apps are running).\n"
 msgstr ""
 "gconfd bør ikke kjøre under installasjon av nye schema filer.\n"
-"Bruk gconftool --shutdown for å stenge ned daemonen, tryggest når ikke noen applikasjoner kjører\n"
+"Bruk gconftool --shutdown for å stenge ned daemonen, tryggest når ikke noen "
+"applikasjoner kjører\n"
 "(selv om ting virker i teorien selv når applikasjoner kjører).\n"
 
 #: gconf/gconftool.c:510
@@ -1050,7 +1059,8 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Prøver å knekke din applikasjon ved å sette ugyldige verdier for nøkler i katalogen:\n"
+"Prøver å knekke din applikasjon ved å sette ugyldige verdier for nøkler i "
+"katalogen:\n"
 "  %s\n"
 
 #: gconf-editor/app.c:53

@@ -47,7 +47,7 @@ EXTRA_DIST = \
 
 dist-hook:
 	$(mkinstalldirs) $(distdir)/tmpl
-	cp -p tmpl/*.sgml $(distdir)/tmpl
+	cp -p $(srcdir)/tmpl/*.sgml $(distdir)/tmpl
 
 .PHONY : html sgml templates scan
 
