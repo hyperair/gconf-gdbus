@@ -98,7 +98,8 @@
               ask to be notified when the value of a key changes. 
               This allows settings to be applied to groups of
               applications, without restarting them and without 
-              ugly hacks.
+              ugly hacks. It also allows a clean model-view
+              architecture for applications.              
             </para>
           </listitem>
           <listitem>
@@ -133,8 +134,9 @@
         specification, originally developed for the Debian project. See <ulink
         url="http://www.debian.org/~wakkerma/config6"
         type="http">http://www.debian.org/~wakkerma/config6</ulink> for his
-        specification. Other sources of ideas include the Windows registry and 
-        the ACAP specification.
+        specification. Other sources of ideas include the Windows registry, 
+        the ACAP specification, and Emacs customize mode (try typing
+        <literal>M-x customize-browse</literal> in Emacs).
       </para>
 
     </sect1>
@@ -315,7 +317,7 @@
       </sect2>
 
       <!-- Schemas -->
-      <sect2>
+      <sect2 id="concepts-schemas">
         <title>Schemas</title>
 
         <para>
@@ -997,12 +999,299 @@ print_value(GConfValue* value)
   </chapter>
 
   <!-- gconftool -->
-  <chapter>
+  <chapter id="gconftool">
     <title><application>gconftool</application> Utility Program</title>
 
     <para>
       <application>gconftool</application> is used to control GConf
       from the command line. 
+    </para>
+
+  </chapter>
+
+  <!-- Schema Files -->
+  <chapter>
+    <title>Schema Files</title>
+
+    <para>
+      This chapter covers the mechanics of writing and installing the
+      GConf schema files. Schema files describe your configuration
+      data and provide default values for it. See <xref
+      linkend="concepts-schemas"> for an explanation of schemas.  The
+      schema file is not understood by the GConf client library;
+      rather, <application>gconftool</application> (see <xref
+      linkend="gconftool">) knows how to parse it, and then uses the GConf
+      client library to install the information in the GConf database.
+    </para>
+
+    <sect1>
+      <title>Schema File Format</title>
+      <para>
+        Here is a sample schema file for a hypothetical application, 
+        <application>basic-gconf-app</application>, one of the
+        examples that comes with the GConf distribution.
+        <example>
+          <title>Sample schema file</title>
+          <programlisting>
+&lt;gconfschemafile&gt;
+    &lt;schemalist&gt;
+      &lt;schema&gt;
+      &lt;key&gt;/schemas/apps/basic-gconf-app/fooandbar&lt;/key&gt;
+      &lt;applyto&gt;/apps/basic-gconf-app/foo&lt;/applyto&gt;
+        &lt;applyto&gt;/apps/basic-gconf-app/bar&lt;/applyto&gt;
+      &lt;owner&gt;basic-gconf-app&lt;/owner&gt;
+      &lt;type&gt;string&lt;/type&gt;
+      &lt;locale name="C"&gt;
+        &lt;default&gt;Blah blah blurgh&lt;/default&gt;
+        &lt;short&gt;short description in C locale&lt;/short&gt;
+        &lt;long&gt;long description of foo and bar in C locale&lt;/long&gt;
+      &lt;/locale&gt;
+      &lt;locale name="no"&gt;
+        &lt;default&gt;some thing in norwegian&lt;/default&gt;
+        &lt;short&gt;short description in Norway&lt;/short&gt;
+        &lt;long&gt;Long description in Norway. long long long. this is a long sentence.&lt;/long&gt;
+      &lt;/locale&gt;
+    &lt;/schema&gt;
+      &lt;schema&gt;
+      &lt;key&gt;/schemas/apps/basic-gconf-app/baz&lt;/key&gt;
+      &lt;applyto&gt;/apps/basic-gconf-app/baz&lt;/applyto&gt;
+      &lt;owner&gt;basic-gconf-app&lt;/owner&gt;
+      &lt;type&gt;string&lt;/type&gt;
+      &lt;locale name="C"&gt;
+        &lt;default&gt;Zzzzzzzzzz&lt;/default&gt;
+        &lt;short&gt;short description in C locale&lt;/short&gt;
+        &lt;long&gt;long description of baz in C locale&lt;/long&gt;
+      &lt;/locale&gt;
+      &lt;locale name="no"&gt;
+        &lt;default&gt;some thing in norwegian&lt;/default&gt;
+        &lt;short&gt;short description in Norway&lt;/short&gt;
+        &lt;long&gt;Long description in Norway. long long long. this is a long sentence.&lt;/long&gt;
+      &lt;/locale&gt;
+    &lt;/schema&gt;
+      &lt;schema&gt;
+      &lt;key&gt;/schemas/apps/basic-gconf-app/blah&lt;/key&gt;
+      &lt;applyto&gt;/apps/basic-gconf-app/blah&lt;/applyto&gt;
+      &lt;owner&gt;basic-gconf-app&lt;/owner&gt;
+      &lt;type&gt;string&lt;/type&gt;
+      &lt;locale name="C"&gt;
+        &lt;default&gt;bllllllaaaaaaaaaaaaaaaaarrrrrrggggggghhhhh&lt;/default&gt;
+        &lt;short&gt;short description in C locale&lt;/short&gt;
+        &lt;long&gt;long description of blah in C locale&lt;/long&gt;
+      &lt;/locale&gt;
+      &lt;locale name="no"&gt;
+        &lt;default&gt;some thing in norwegian&lt;/default&gt;
+        &lt;short&gt;short description in Norway&lt;/short&gt;
+        &lt;long&gt;Long description in Norway. long long long. this is a long sentence.&lt;/long&gt;
+      &lt;/locale&gt;
+    &lt;/schema&gt;
+  &lt;/schemalist&gt;  
+&lt;/gconfschemafile&gt;
+          </programlisting>
+        </example>
+      </para>
+      
+      <para>
+        The file format is straightforward. The root node must be
+        called <literal>&lt;gconfschemafile&gt;</literal>. This
+        element contains one or more <literal>&lt;schemalist&gt;</literal>
+        elements; I can't think of a reason to use multiple
+        <literal>&lt;schemalist&gt;</literal> elements, but you can if 
+        you want, and <application>gconftool</application> will load
+        each one. The <literal>&lt;schemalist&gt;</literal> in turn 
+        contains one or more <literal>&lt;schema&gt;</literal>
+        elements. Each of these describes a single schema.        
+      </para>
+
+      <warning>
+        <para>
+          <application>gconftool</application> is not very tolerant
+          about whitespace right now; in particular it won't strip
+          whitespace from around key names, type names, etc. This is
+          broken and will be fixed, just watch out for now.
+        </para>
+      </warning>
+
+      <para>
+        Here are the fields of the <literal>&lt;schema&gt;</literal>
+        element:
+
+<informaltable pgwide=1 frame="none">
+<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<tbody>
+
+<row>
+<entry>&lt;key&gt;</entry>
+<entry>The key <emphasis>where the schema will be stored</emphasis>;
+                  see <xref linkend="conventions"> for naming
+                  conventions. There may be only one key per schema.
+</entry>
+
+</row>
+
+<row>
+<entry>&lt;applyto&gt;</entry>
+
+<entry>A key <emphasis>the schema will be applied to</emphasis>; that
+                  is, this schema <emphasis>describes</emphasis> this
+                  key.  See <xref linkend="conventions"> for naming
+                  conventions. There may be multiple &lt;applyto&gt;
+                  elements.</entry>
+
+</row>
+
+<row>
+<entry>&lt;owner&gt;</entry>
+
+<entry>Name of the application that uses this schema; may be the
+                  command line name, or a human-readable name. However
+                  you should use the same value for &lt;owner&gt; for
+                  all schemas your app installs. The primary purpose
+                  of this field is to enable sysadmins to locate the
+                  keys belonging to a given application.                  
+                </entry>
+
+</row>
+
+<row>
+<entry>&lt;type&gt;</entry>
+
+<entry>The type of values described by this schema. i.e. keys 
+the schema is applied to should store values of this type.
+Allowed values are: <literal>string</literal>, <literal>int</literal>,
+<literal>bool</literal>, <literal>float</literal>,
+                  <literal>list</literal>, <literal>pair</literal>
+                </entry>
+
+</row>
+
+<row>
+<entry>&lt;default&gt;</entry>
+
+<entry>The <literal>&lt;default&gt;</literal> element may 
+appear below <literal>&lt;schema&gt;</literal> (a default for all
+                  locales, often suitable for numeric values), 
+<emphasis>OR</emphasis> below a <literal>&lt;locale&gt;</literal>
+element, if the default should be localized. It simply contains the
+                  default value for the keys the schema is applied to.
+                  
+                </entry>
+
+</row>
+
+
+<row>
+<entry>&lt;locale&gt;</entry>
+
+                <entry>
+                  The <literal>&lt;locale&gt;</literal> element 
+                  contains locale-specific data, including the
+                  human-readable short and long descriptions, 
+                  and optionally the default value
+                  (<literal>&lt;default&gt;</literal> may also be
+                  placed directly underneath the
+                  <literal>&lt;schema&gt;</literal> element).
+                  There should be one
+                  <literal>&lt;locale&gt;</literal> element for each
+                  locale, with a <literal>name</literal> attribute 
+                  specifying the locale name.
+                </entry>
+
+</row>
+
+
+</tbody></tgroup></informaltable>        
+
+        A <literal>&lt;locale&gt;</literal> element can contain 
+a locale-specific <literal>&lt;default&gt;</literal>, and may also 
+contain short and long descriptions as follows:
+<informaltable pgwide=1 frame="none">
+<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<tbody>
+
+<row>
+<entry>&lt;short&gt;</entry>
+<entry>A short description of the purpose of this key, around 
+40 characters long (about half a line).
+</entry>
+
+</row>
+
+<row>
+<entry>&lt;long&gt;</entry>
+<entry>A long description of the configuration key, around a paragraph
+                  or two. Should describe the possible values of the 
+key and their effect on the application.
+</entry>
+
+</row>
+
+</tbody></tgroup></informaltable> 
+
+      </para>
+
+    </sect1>
+
+    <sect1>
+      <title>Installing Schemas</title>
+
+      <para>
+        There are several things that need to happen at "<literal>make
+        install</literal>" time. 
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>
+              The schemas should be installed into a GConf
+              configuration source; either the default source, or a
+              source specified by the user with a
+              <filename>configure</filename> option called
+              <literal>--gconf-config-source</literal>. 
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The schema files should be installed to
+              <filename>$(sysconfdir)/gconf/schemas/</filename>,
+              making it easy for sysadmins to browse them or 
+              bulk-reinstall them into a new configuration source.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+
+      <para>
+        FIXME give snippets of configure.in and Makefile.am
+      </para>
+
+    </sect1>
+
+    <sect1> 
+      <title>Schema File DTD</title>
+      
+      <para>
+        There is no DTD right now, but I'd appreciate having one based 
+        on the above description. If someone makes one I'll put it
+        here.
+      </para>
+
+      <para>
+        <programlisting>
+          DTD DTD DTD DTD I am a DTD
+        </programlisting>
+    </sect1>
+
+  </chapter>
+
+  <!-- Checklist/Summary -->
+  <chapter>
+    <title>Checklist/Summary</title>
+
+    <para>
+      This chapter summarizes the things to consider and actions to 
+      take when adding GConf support to an application.
+    </para>
+
+    <para>
+      
     </para>
 
   </chapter>
