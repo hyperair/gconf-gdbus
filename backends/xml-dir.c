@@ -1,0 +1,800 @@
+/* GConf
+ * Copyright (C) 1999 Red Hat Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "xml-dir.h"
+#include "xml-entry.h"
+
+typedef struct _Dir Dir;
+
+struct _Dir {
+  gchar* key;
+  gchar* fs_dirname;
+  gchar* xml_filename;
+  guint root_dir_len;
+  GTime last_access; /* so we know when to un-cache */
+  xmlDocPtr doc;
+  GHashTable* entry_cache; /* store key-value entries */
+  GHashTable* subdir_cache; /* store subdirectories */
+  guint dirty : 1;
+  guint deleted : 1;
+};
+
+static void
+dir_load_doc(Dir* d, GConfError** err);
+
+static Entry* dir_make_new_entry(Dir* d, const gchar* relative_key);
+
+static gboolean dir_forget_entry_if_useless(Dir* d, Entry* e);
+
+Dir*
+dir_new(const gchar  *keyname,
+        const gchar  *xml_root_dir)
+{
+  Dir* d;
+  
+  d = g_new0(Dir, 1);
+  
+  d->key = g_strdup(keyname);
+
+  d->fs_dirname = g_concat_key_and_dir(xml_root_dir, keyname);
+  d->xml_filename =  g_strconcat(d->fs_dirname, "/%gconf.xml", NULL);
+  d->root_dir_len = strlen(xml_root_dir);
+  
+  d->last_access = time(NULL);
+  d->doc = NULL;
+
+  d->entry_cache = g_hash_table_new(g_str_hash, g_str_equal);
+  
+  d->dirty = FALSE;
+  d->deleted = FALSE;
+
+  return d;
+}
+
+static void
+entry_destroy_foreach(const gchar* name, Entry* e, gpointer data)
+{
+  entry_destroy(e);
+}
+
+void
+dir_destroy(Dir* d)
+{
+  g_free(d->key);
+  g_free(d->fs_dirname);
+  g_free(d->xml_filename);
+  
+  if (d->doc != NULL)
+    xmlFreeDoc(d->doc);
+  
+  g_hash_table_foreach(d->entry_cache, (GHFunc)entry_destroy_foreach,
+                       NULL);
+  
+  g_hash_table_destroy(d->entry_cache);
+  
+  g_free(d);
+}
+
+static gboolean
+create_fs_dir(const gchar* dir, const gchar* xml_filename,
+              guint root_dir_len, GConfError** err);
+
+gboolean
+dir_ensure_exists (Dir* d,
+                   GConfError** err)
+{
+  if (!create_fs_dir(d->fs_dirname, d->xml_filename, err))
+    {
+
+      /* check that error is set */
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      
+      return FALSE;
+    }
+  else
+    return TRUE;
+}
+
+static void
+entry_sync_foreach(const gchar* name, Entry* e, gpointer data)
+{
+  entry_sync(e);
+}
+
+gboolean
+dir_sync        (Dir* d, GConfError** err)
+{
+  gboolean retval = TRUE;
+  
+  /* note that if we are deleted but already
+     synced, this returns now, making the
+     dircache's recursive delete tactic reasonably
+     efficient
+  */
+  if (!d->dirty)
+    return TRUE; 
+
+  /* We should have a doc if dirty is TRUE */
+  g_assert(d->doc != NULL);
+
+  d->last_access = time(NULL);
+  
+  if (d->deleted)
+    {
+      if (unlink(d->xml_filename) != 0)
+        {
+          gconf_set_error(err, GCONF_FAILED, _("Failed to delete `%s': %s"),
+                          d->xml_filename, strerror(errno));
+          return FALSE;
+        }
+
+      if (rmdir(d->fs_dirname) != 0)
+        {
+          gconf_set_error(err, GCONF_FAILED, _("Failed to delete `%s': %s"),
+                          d->fs_dirname, strerror(errno));
+          return FALSE;
+        }
+    }
+  else
+    {
+      gboolean old_existed = FALSE;
+      gchar* tmp_filename;
+      gchar* old_filename;
+      
+      /* First make sure entry values are synced to their
+         XML nodes */
+      g_hash_table_foreach(d->entry_cache, (GHFunc)entry_sync_foreach, NULL);
+      
+      tmp_filename = g_strconcat(d->fs_dirname, "/%gconf.xml.tmp", NULL);
+      old_filename = g_strconcat(d->fs_dirname, "/%gconf.xml.old", NULL);
+
+      if (xmlSaveFile(tmp_filename, d->doc) < 0)
+        {
+          gboolean recovered = FALSE;
+          
+          /* Try to solve the problem by creating the FS dir */
+          if (!gconf_file_exists(d->fs_dirname))
+            {
+              if (create_fs_dir(d->fs_dirname, NULL, d->source->root_dir, err))
+                {
+                  if (xmlSaveFile(tmp_filename, d->doc) >= 0)
+                    recovered = TRUE;
+                }
+            }
+
+          if (!recovered)
+            {
+              /* I think libxml may mangle errno, but we might as well 
+                 try. Don't set error if it's already set by some
+                 earlier failure. */
+              if (err && *err == NULL)
+                gconf_set_error(err, GCONF_FAILED, _("Failed to write file `%s': %s"), 
+                                tmp_filename, strerror(errno));
+              
+              retval = FALSE;
+              
+              goto failed_end_of_sync;
+            }
+        }
+
+      old_existed = gconf_file_exists(d->xml_filename);
+
+      if (old_existed)
+        {
+          if (rename(d->xml_filename, old_filename) < 0)
+            {
+              gconf_set_error(err, GCONF_FAILED, 
+                              _("Failed to rename `%s' to `%s': %s"),
+                              d->xml_filename, old_filename, strerror(errno));
+
+              retval = FALSE;
+              goto failed_end_of_sync;
+            }
+        }
+
+      if (rename(tmp_filename, d->xml_filename) < 0)
+        {
+          gconf_set_error(err, GCONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
+                          tmp_filename, d->xml_filename, strerror(errno));
+
+          /* Put the original file back, so this isn't a total disaster. */
+          if (rename(old_filename, d->xml_filename) < 0)
+            {
+              gconf_set_error(err, GCONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
+                              d->xml_filename, old_filename, strerror(errno));
+            }
+
+          retval = FALSE;
+          goto failed_end_of_sync;
+        }
+
+      if (old_existed)
+        {
+          if (unlink(old_filename) < 0)
+            {
+              gconf_log(GCL_WARNING, _("Failed to delete old file `%s': %s"),
+                         old_filename, strerror(errno));
+              /* Not a failure, just leaves cruft around. */
+            }
+        }
+
+    failed_end_of_sync:
+      
+      g_free(old_filename);
+      g_free(tmp_filename);
+    }
+
+  if (retval)
+    d->dirty = FALSE;
+
+  return retval;
+}
+
+void
+dir_set_value   (Dir* d, const gchar* relative_key,
+                 GConfValue* value, GConfError** err)
+{
+  Entry* e;
+  
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      return;
+    }
+  
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+  
+  if (e == NULL)
+    e = dir_make_new_entry(d, relative_key);
+
+  entry_set(e, value);
+
+  d->last_access = time(NULL);
+  entry_set_mod_time(e, d->last_access);
+
+  entry_set_mod_user(e, g_get_user_name());
+  
+  d->dirty = TRUE;
+}
+
+GConfValue*
+dir_get_value   (Dir* d,
+                 const gchar* relative_key,
+                 const gchar** locales,
+                 gchar** schema_name,
+                 GConfError** err)
+{
+  Entry* e;
+
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+
+  d->last_access = time(NULL);
+
+  if (e == NULL)
+    {
+      /* No entry; return */
+      return NULL;
+    }
+  else
+    {
+      GConfValue* val;
+
+      g_assert(e != NULL);
+
+      val = entry_get_value(e, locales);
+
+      /* Fill schema name if value is NULL because we might be
+         interested in the default value of the key in that case. */
+      if (schema_name &&
+          val == NULL &&
+          entry_get_schema_name(e))
+        *schema_name = g_strdup(entry_get_schema_name(e));
+      
+      /* return copy of the value */
+      if (val != NULL)
+        return gconf_value_copy(val);
+      else
+        return NULL;
+    }
+}
+
+GConfMetaInfo*
+dir_get_metainfo(Dir* d, const gchar* relative_key, GConfError** err)
+{
+  GConfMetaInfo* gcmi;
+  Entry* e;
+  
+  d->last_access = time(NULL);
+  
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+
+  if (e == NULL)
+    return NULL;
+  else
+    return entry_get_metainfo(e);
+}
+
+void
+dir_unset_value (Dir* d, const gchar* relative_key,
+                 const gchar* locale, GConfError** err)
+{
+  Entry* e;
+  
+  d->last_access = time(NULL);
+  
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      return;
+    }
+  
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+  
+  if (e == NULL)     /* nothing to change */
+    return;
+
+  if (entry_unset(e, locale))
+    {
+      /* If entry_unset() returns TRUE then
+         the entry was changed (not already unset) */
+      
+      d->dirty = TRUE;
+      
+      if (dir_forget_entry_if_useless(d, e))
+        {
+          /* entry is destroyed */
+          return;
+        }
+      else
+        {
+          entry_set_mod_time(e, d->last_access);
+          entry_set_mod_user(e, g_get_user_name());
+        }
+    }
+}
+
+typedef struct _ListifyData ListifyData;
+
+struct _ListifyData {
+  GSList* list;
+  const gchar* name;
+  const gchar** locales;
+};
+
+static void
+listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
+{
+  GConfValue* val;
+  GConfEntry* entry;
+  
+  val = entry_get_value(e, ld->locales);
+
+  entry = gconf_entry_new_nocopy(g_strdup(key),
+                                 val ? gconf_value_copy(val) : NULL);
+  
+  if (val == NULL &&
+      e->schema_name)
+    {
+      gconf_entry_set_schema_name(entry, e->schema_name);
+    }
+  
+  ld->list = g_slist_prepend(ld->list, entry);
+}
+
+GSList*
+dir_all_entries (Dir* d, const gchar** locales, GConfError** err)
+{
+  ListifyData ld;
+  
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
+  ld.list = NULL;
+  ld.name = d->key;
+  ld.locales = locales;
+
+  g_hash_table_foreach(d->entry_cache, (GHFunc)listify_foreach,
+                       &ld);
+  
+  return ld.list;
+}
+
+GSList*
+dir_all_subdirs (Dir* d, GConfError** err)
+{
+  DIR* dp;
+  struct dirent* dent;
+  struct stat statbuf;
+  GSList* retval = NULL;
+  gchar* fullpath;
+  gchar* fullpath_end;
+  guint len;
+  guint subdir_len;
+  
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+  
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
+  dp = opendir(d->fs_dirname);
+
+  if (dp == NULL)
+    {
+      gconf_set_error(err, GCONF_FAILED, _("Failed to open directory `%s': %s"),
+                      d->fs_dirname, strerror(errno));
+      return NULL;
+    }
+
+  len = strlen(d->fs_dirname);
+  subdir_len = PATH_MAX - len;
+  
+  fullpath = g_malloc0(subdir_len + len + 20); /* ensure null termination */
+  strcpy(fullpath, d->fs_dirname);
+  
+  fullpath_end = fullpath + len;
+  *fullpath_end = '/';
+  ++fullpath_end;
+  *fullpath_end = '\0';
+
+  while ((dent = readdir(dp)) != NULL)
+    {
+      /* ignore ., .., and all dot-files */
+      if (dent->d_name[0] == '.')
+        continue;
+
+      len = strlen(dent->d_name);
+
+      if (len < subdir_len)
+        {
+          strcpy(fullpath_end, dent->d_name);
+          strncpy(fullpath_end+len, "/%gconf.xml", subdir_len - len);
+        }
+      else
+        continue; /* Shouldn't ever happen since PATH_MAX is available */
+      
+      if (stat(fullpath, &statbuf) < 0)
+        {
+          /* This is some kind of cruft, not an XML directory */
+          continue;
+        }
+      
+      retval = g_slist_prepend(retval, g_strdup(dent->d_name));
+    }
+
+  /* if this fails, we really can't do a thing about it
+     and it's not a meaningful error */
+  closedir(dp);
+  
+  return retval;
+}
+
+void
+dir_set_schema  (Dir* d,
+                 const gchar* relative_key,
+                 const gchar* schema_key,
+                 GConfError** err)
+{
+  Entry* e;
+
+  if (d->doc == NULL)
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      return;
+    }
+  
+  d->dirty = TRUE;
+  d->last_access = time(NULL);
+  
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+
+  if (e == NULL)
+    e = dir_make_new_entry(d, relative_key);
+
+  entry_set_mod_time(e, d->last_access);
+
+  entry_set_schema_name(e, schema_key);
+
+  if (schema_key == NULL)
+    dir_forget_entry_if_useless(d, e);
+}
+
+void
+dir_mark_deleted(Dir* d)
+{
+  if (d->deleted)
+    return;
+  
+  d->deleted = TRUE;
+  d->dirty = TRUE;
+  
+  /* go ahead and free the XML document */
+
+  if (d->doc)
+    xmlFreeDoc(d->doc);
+  d->doc = NULL;
+}
+
+gboolean
+dir_is_deleted     (Dir* d)
+{
+  return d->deleted;
+}
+
+GTime
+dir_last_access (Dir* d)
+{
+  return d->last_access;
+}
+
+/* private Dir functions */
+
+static void
+dir_fill_cache_from_doc(Dir* d);     
+
+static void
+dir_load_doc(Dir* d, GConfError** err)
+{
+  gboolean xml_already_exists = TRUE;
+  gboolean need_backup = FALSE;
+  struct stat statbuf;
+  
+  g_return_if_fail(d->doc == NULL);
+
+  if (stat(d->xml_filename, &statbuf) < 0)
+    {
+      switch (errno)
+        {
+        case ENOENT:
+          xml_already_exists = FALSE;
+          break;
+        case ENOTDIR:
+        case ELOOP:
+        case EFAULT:
+        case EACCES:
+        case ENOMEM:
+        case ENAMETOOLONG:
+        default:
+          /* These are all fatal errors */
+          gconf_set_error(err, GCONF_FAILED, _("Failed to stat `%s': %s"),
+                          d->xml_filename, strerror(errno));
+          return;
+          break;
+        }
+    }
+
+  if (statbuf.st_size == 0)
+    {
+      xml_already_exists = FALSE;
+    }
+
+  if (xml_already_exists)
+    d->doc = xmlParseFile(d->xml_filename);
+
+  /* We recover from these errors instead of passing them up */
+
+  /* This has the potential to just blow away an entire corrupted
+     config file; but I think that is better than the alternatives
+     (disabling config for a directory because the document is mangled)
+  */  
+
+  /* Also we create empty %gconf.xml files when we create a new dir,
+     and those return a parse error */
+  
+  if (d->doc == NULL)
+    {
+      if (xml_already_exists)
+        need_backup = TRUE; /* we want to save whatever broken stuff was in the file */
+          
+      /* Create a new doc */
+      
+      d->doc = xmlNewDoc("1.0");
+    }
+  
+  if (d->doc->root == NULL)
+    {
+      /* fill it in */
+      d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+    }
+  else if (strcmp(d->doc->root->name, "gconf") != 0)
+    {
+      xmlFreeDoc(d->doc);
+      d->doc = xmlNewDoc("1.0");
+      d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+      need_backup = TRUE; /* save broken stuff */
+    }
+  else
+    {
+      /* We had an initial doc with a valid root */
+      /* Fill child_cache from entries */
+      dir_fill_cache_from_doc(d);
+    }
+
+  if (need_backup)
+    {
+      /* Back up the file we failed to parse, if it exists,
+         we aren't going to be able to do anything if this call
+         fails
+      */
+      
+      gchar* backup = g_strconcat(d->xml_filename, ".bak", NULL);
+      int fd;
+      
+      rename(d->xml_filename, backup);
+      
+      /* Recreate %gconf.xml to maintain our integrity and be sure
+         all_subdirs works */
+      /* If we failed to rename, we just give up and truncate the file */
+      fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+      if (fd >= 0)
+        close(fd);
+      
+      g_free(backup);
+    }
+  
+  g_assert(d->doc != NULL);
+  g_assert(d->doc->root != NULL);
+}
+
+static Entry*
+dir_make_new_entry(Dir* d, const gchar* relative_key)
+{
+  Entry* e;
+
+  g_return_val_if_fail(d->doc != NULL, NULL);
+  g_return_val_if_fail(d->doc->root != NULL, NULL);
+  
+  e = entry_new(relative_key);
+
+  entry_set_node(e, xmlNewChild(d->doc->root, NULL, "entry", NULL));
+  
+  safe_g_hash_table_insert(d->entry_cache, entry_get_name(e), e);
+
+  return e;
+}
+
+static gboolean
+dir_forget_entry_if_useless(Dir* d, Entry* e)
+{
+  GConfValue* val;
+
+  if (entry_get_schema_name(e) != NULL)
+    return FALSE;
+  
+  val = entry_get_value(e, NULL);
+  
+  if (val != NULL)
+    return FALSE; /* not useless */
+
+  g_hash_table_remove(d->entry_cache, entry_get_name(e));
+
+  entry_destroy(e);
+
+  return TRUE;
+}
+
+/*
+ * Misc
+ */
+
+static gboolean
+create_fs_dir(const gchar* dir, const gchar* xml_filename,
+              guint root_dir_len, GConfError** err)
+{
+  if (gconf_file_test(dir, GCONF_FILE_ISDIR))
+    return TRUE;
+
+  /* Don't create anything above the root directory */
+  if (strlen(dir) > root_dir_len)
+    {
+      gchar* parent;
+      
+      parent = parent_dir(dir);
+      
+      if (parent != NULL)
+        {
+          gchar* parent_xml = NULL;
+          gboolean success = FALSE;
+          
+          if (xml_filename)
+            parent_xml = g_strconcat(parent, "/%gconf.xml", NULL);
+          
+          success = create_fs_dir(parent, parent_xml, root_dir_len, err);
+
+          g_free(parent);
+          if (parent_xml)
+            g_free(parent_xml);
+
+          if (!success)
+            return FALSE;
+        }
+    }
+  
+  if (mkdir(dir, 0700) < 0)
+    {
+      if (errno != EEXIST)
+        {
+          gconf_set_error(err, GCONF_FAILED,
+                          _("Could not make directory `%s': %s"),
+                          (gchar*)dir, strerror(errno));
+          return FALSE;
+        }
+    }
+
+  if (xml_filename != NULL)
+    {
+      int fd;
+      /* don't truncate the file, it may well already exist */
+      fd = open(xml_filename, O_CREAT | O_WRONLY, 0600);
+      
+      if (fd < 0)
+        {
+          gconf_set_error(err, GCONF_FAILED, _("Failed to create file `%s': %s"),
+                          xml_filename, strerror(errno));
+          
+          return FALSE;
+        }
+      
+      if (close(fd) < 0)
+        {
+          gconf_set_error(err, GCONF_FAILED, _("Failed to close file `%s': %s"),
+                          xml_filename, strerror(errno));
+          
+          return FALSE;
+        }
+    }
+  
+  return TRUE;
+}
