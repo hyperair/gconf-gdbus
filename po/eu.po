@@ -5,30 +5,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
-"POT-Creation-Date: 2004-04-05 21:21+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-31 14:10+0100\n"
 "PO-Revision-Date: 2004-03-08 12:19GMT\n"
 "Last-Translator: Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>\n"
 "Language-Team: basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.3\n"
-
-#: backends/dir-utils.c:108
-#, c-format
-msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "Ezin izan du %s erro-direktorioa aurkitu `%s' helbidean "
-
-#: backends/dir-utils.c:124 backends/xml-backend.c:336
-#, c-format
-msgid "Could not make directory `%s': %s"
-msgstr "Ezin izan du `%s' direktorioa egin: %s"
-
-#: backends/dir-utils.c:212
-#, c-format
-msgid "Can't read from or write to the %s root directory in the address `%s'"
-msgstr "Ezin da `%s' helbideko %s erro-direktorioan idatzi edo irakurri"
 
 #: backends/gconf-merge-tree.c:78
 #, fuzzy, c-format
@@ -57,34 +42,35 @@ msgid ""
 "    dir/%%gconf-tree.xml\n"
 msgstr ""
 
-#: backends/xml-backend.c:240
-msgid "Unloading XML backend module."
+#: backends/markup-backend.c:163
+#, fuzzy
+msgid "Unloading text markup backend module."
 msgstr "XML euskarri-modulua deskargatzen."
 
-#: backends/xml-backend.c:289
+#: backends/markup-backend.c:226 backends/xml-backend.c:289
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Ezin izan du `%s' helbideko XML erro-direktorioa aurkitu"
 
-#: backends/xml-backend.c:447
+#: backends/markup-backend.c:282 backends/xml-backend.c:344
+#, c-format
+msgid "Could not make directory `%s': %s"
+msgstr "Ezin izan du `%s' direktorioa egin: %s"
+
+#: backends/markup-backend.c:383 backends/xml-backend.c:443
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "Ezin da \"%s\" helbideko XML erro-direktorioan idatzi edo irakurri"
 
-#: backends/xml-backend.c:457
+#: backends/markup-backend.c:394 backends/xml-backend.c:453
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr ""
 "%s erroko XML iturburuaren direktorioko/fitxategiko baimenak hauek dira:  %o/"
 "%o"
 
-#: backends/xml-backend.c:623
-#, c-format
-msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Errorea XML euskarri-direktorioaren cachea sinkronizatzean: %s"
-
-#: backends/xml-backend.c:688
+#: backends/markup-backend.c:733 backends/xml-backend.c:684
 #, fuzzy
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
@@ -92,24 +78,201 @@ msgid ""
 msgstr ""
 "dir kentzeko eragiketa ez da onartzen, kendu direktorioko balio guztiak"
 
-#: backends/xml-backend.c:774
+#: backends/markup-backend.c:819 backends/xml-backend.c:770
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr "Ezin izan da %s direktorioaren blokeoa ireki blokeoak kentzeko: %s\n"
 
-#: backends/xml-backend.c:792
+#: backends/markup-backend.c:837 backends/xml-backend.c:788
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Ezin izan da %s fitxategia kendu: %s\n"
 
-#: backends/xml-backend.c:813
-msgid "Initializing XML backend module"
+#: backends/markup-backend.c:858
+#, fuzzy
+msgid "Initializing Markup backend module"
 msgstr "XML euskarri-modulua hasieratzen"
 
-#: backends/xml-backend.c:881
+#: backends/markup-backend.c:930 backends/xml-backend.c:877
 #, fuzzy, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Ezin izan zaio XML \"%s\" direktorioaren blokeoari jaregin:  %s"
+
+#: backends/markup-tree.c:348
+#, fuzzy
+msgid "Failed to write some configuration data to disk\n"
+msgstr "Ezin izan dira konfigurazio-iturburu hauek atzitu:  %s\n"
+
+#: backends/markup-tree.c:752 backends/xml-dir.c:1255
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "Ezin izan du \"%s\" direktorioa egin:  %s"
+
+#: backends/markup-tree.c:795 backends/markup-tree.c:802
+#, fuzzy, c-format
+msgid "Could not remove \"%s\": %s\n"
+msgstr "Ezin izan da %s fitxategia kendu: %s\n"
+
+#: backends/markup-tree.c:955
+#, fuzzy, c-format
+msgid "Failed to write \"%s\": %s\n"
+msgstr "Ezin izan da \"%s\" ezabatu: %s"
+
+#: backends/markup-tree.c:1633
+#, fuzzy, c-format
+msgid "Line %d character %d: %s"
+msgstr "Ezin izan da %s sortu:  %s"
+
+#: backends/markup-tree.c:1846
+#, c-format
+msgid "Attribute \"%s\" repeated twice on the same <%s> element"
+msgstr ""
+
+#: backends/markup-tree.c:1863 backends/markup-tree.c:1887
+#, c-format
+msgid "Attribute \"%s\" is invalid on <%s> element in this context"
+msgstr ""
+
+#: backends/markup-tree.c:1912 gconf/gconf-value.c:110
+#, c-format
+msgid "Didn't understand `%s' (expected integer)"
+msgstr "Ez dut `%s' ulertu (osokoa espero nuen)"
+
+#: backends/markup-tree.c:1919 gconf/gconf-value.c:120
+#, c-format
+msgid "Integer `%s' is too large or small"
+msgstr "`%s' osoko zenbakia handiegia edo txikiegia da"
+
+#: backends/markup-tree.c:1951 gconf/gconf-value.c:185
+#, c-format
+msgid "Didn't understand `%s' (expected true or false)"
+msgstr "Ez dut `%s' ulertu (egiazkoa edo faltsua espero nuen)"
+
+#: backends/markup-tree.c:1975 gconf/gconf-value.c:141
+#, c-format
+msgid "Didn't understand `%s' (expected real number)"
+msgstr "Ez dut `%s' ulertu (zenbaki erreala espero nuen)"
+
+#: backends/markup-tree.c:2045 backends/markup-tree.c:2074
+#: backends/markup-tree.c:2114 backends/markup-tree.c:2138
+#: backends/markup-tree.c:2146 backends/markup-tree.c:2201
+#: backends/markup-tree.c:2266 backends/markup-tree.c:2374
+#: backends/markup-tree.c:2453 backends/markup-tree.c:2565
+#, fuzzy, c-format
+msgid "No \"%s\" attribute on element <%s>"
+msgstr "<%s> nodoak ez du \"mota\" atributurik"
+
+#: backends/markup-tree.c:2054
+#, c-format
+msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2088
+#, c-format
+msgid "Invalid ltype \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2168
+#, c-format
+msgid "Invalid car_type \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2182
+#, c-format
+msgid "Invalid cdr_type \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2218
+#, c-format
+msgid "Invalid list_type \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2499
+msgid "Two <default> elements below a <local_schema>"
+msgstr ""
+
+#: backends/markup-tree.c:2514
+msgid "Two <longdesc> elements below a <local_schema>"
+msgstr ""
+
+#: backends/markup-tree.c:2521
+#, c-format
+msgid "Element <%s> is not allowed below <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2545 backends/markup-tree.c:2637
+#: backends/markup-tree.c:2691 backends/markup-tree.c:2739
+#, c-format
+msgid "<%s> provided but current element does not have type %s"
+msgstr ""
+
+#: backends/markup-tree.c:2615
+msgid "Two <car> elements given for same pair"
+msgstr ""
+
+#: backends/markup-tree.c:2629
+msgid "Two <cdr> elements given for same pair"
+msgstr ""
+
+#: backends/markup-tree.c:2683
+#, c-format
+msgid "<li> has wrong type %s"
+msgstr ""
+
+#: backends/markup-tree.c:2712
+#, c-format
+msgid "<%s> provided but parent <entry> does not have a value"
+msgstr ""
+
+#: backends/markup-tree.c:2752 backends/markup-tree.c:2774
+#: backends/markup-tree.c:2796 backends/markup-tree.c:2813
+#, c-format
+msgid "Element <%s> is not allowed inside current element"
+msgstr ""
+
+#: backends/markup-tree.c:2845
+#, c-format
+msgid "Outermost element in menu file must be <gconf> not <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2865 backends/markup-tree.c:2887
+#: backends/markup-tree.c:2892
+#, c-format
+msgid "Element <%s> is not allowed inside a <%s> element"
+msgstr ""
+
+#: backends/markup-tree.c:2972
+#, c-format
+msgid "No text is allowed inside element <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:3648 backends/markup-tree.c:3662
+#, fuzzy, c-format
+msgid "Failed to open \"%s\": %s\n"
+msgstr "Huts egin du %s irekitzean:  %s"
+
+#: backends/markup-tree.c:3736
+#, fuzzy, c-format
+msgid "Error writing file \"%s\": %s"
+msgstr "Errorea \"%s\" ezabatzean:  %s"
+
+#: backends/markup-tree.c:3743
+#, fuzzy, c-format
+msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
+msgstr "Huts egin du gordetako egoera-fitxategi berria hona mugitzean:  %s"
+
+#: backends/xml-backend.c:240
+msgid "Unloading XML backend module."
+msgstr "XML euskarri-modulua deskargatzen."
+
+#: backends/xml-backend.c:619
+#, c-format
+msgid "Error syncing the XML backend directory cache: %s"
+msgstr "Errorea XML euskarri-direktorioaren cachea sinkronizatzean: %s"
+
+#: backends/xml-backend.c:809
+msgid "Initializing XML backend module"
+msgstr "XML euskarri-modulua hasieratzen"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -195,11 +358,6 @@ msgstr "Izenik gabeko sarrera `%s' XML fitxategian; jaramonik ez"
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
 "Goi-mailako nodoa `%s' XML fitxategian <%s> da eta ez <sarrera>; jaramonik ez"
-
-#: backends/xml-dir.c:1255
-#, c-format
-msgid "Could not make directory \"%s\": %s"
-msgstr "Ezin izan du \"%s\" direktorioa egin:  %s"
 
 #: backends/xml-dir.c:1271
 #, c-format
@@ -430,7 +588,7 @@ msgstr ""
 "Huts egin du entzungailua egunkari-fitxategira aldatu dela erregistratzean "
 "(ez du kalterik eragingo, baina jakinarazpen okerrak egon daitezke):  %s"
 
-#: gconf/gconf-database.c:1299 gconf/gconf-sources.c:1659
+#: gconf/gconf-database.c:1299 gconf/gconf-sources.c:1681
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Errorea `%s'(r)en balioa lortzean:  %s"
@@ -741,29 +899,29 @@ msgstr "Ezin izan da `%s' blokeo-fitxategia kendu:  %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Ezin izan da %s blokeo-fitxategia kendu:  %s\n"
 
-#: gconf/gconf-internals.c:2932 gconf/gconfd.c:681
+#: gconf/gconf-internals.c:2938 gconf/gconfd.c:529
 #, c-format
-msgid "Failed to create %s: %s"
-msgstr "Ezin izan da %s sortu:  %s"
+msgid "Failed to stat %s: %s"
+msgstr "Huts egin du %s(e)tik datuak lortzean:  %s"
 
-#: gconf/gconf-internals.c:2954
+#: gconf/gconf-internals.c:2960
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Zerbitzariaren ping errorea:  %s"
 
-#: gconf/gconf-internals.c:2975
+#: gconf/gconf-internals.c:2984
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Ezin izan da kanalizaziorik sortu abiarazitako gconf daemon-arekin "
 "komunikatzeko:  %s\n"
 
-#: gconf/gconf-internals.c:2999
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Ezin izan da konfigurazio-zerbitzaria abiarazi:  %s\n"
 
-#: gconf/gconf-internals.c:3024
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -776,7 +934,7 @@ msgstr ""
 "huts egitearen ondorioz. Kontsultatu http://www.gnome.org/projects/gconf/ "
 "helbidea informazioa eskuratzeko. (Xehetasunak- %s)"
 
-#: gconf/gconf-internals.c:3025
+#: gconf/gconf-internals.c:3034
 msgid "none"
 msgstr "bat ere ez"
 
@@ -916,26 +1074,26 @@ msgstr ""
 "Eskemak mota-bikotea zehazten du, baina ez du car/cdr elementuen mota "
 "zehazten"
 
-#: gconf/gconf-sources.c:359
+#: gconf/gconf-sources.c:368
 #, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "Huts egin du \"%s\" iturburua kargatzean:  %s"
 
-#: gconf/gconf-sources.c:386
+#: gconf/gconf-sources.c:408
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
 msgstr ""
 "\"%s\" helbidea idazteko aukera ematen duen konfigurazio-iturburuan ebatzi "
 "da, %d kokalekuan "
 
-#: gconf/gconf-sources.c:392
+#: gconf/gconf-sources.c:414
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
 msgstr ""
 "\"%s\" helbidea irakurtzeko soilik den konfigurazio-iturburuan ebatzi da, %d "
 "kokalekuan"
 
-#: gconf/gconf-sources.c:399
+#: gconf/gconf-sources.c:421
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
@@ -943,7 +1101,7 @@ msgstr ""
 "\"%s\" helbidea partzialki idazteko aukera ematen duen konfigurazio-"
 "iturburuanebatzi da, %d kokalekuan"
 
-#: gconf/gconf-sources.c:408
+#: gconf/gconf-sources.c:430
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
@@ -951,17 +1109,17 @@ msgstr ""
 "Ebatzitako helbideek ez dute idazteko aukerarik ematen; konfigurazio-"
 "ezarpenak ezin dira gorde"
 
-#: gconf/gconf-sources.c:625
+#: gconf/gconf-sources.c:647
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
 "`%2$s'(r)entzat zehaztutako `%1$s' eskemak eskemakoa ez den balio bat dauka"
 
-#: gconf/gconf-sources.c:687
+#: gconf/gconf-sources.c:709
 msgid "The '/' name can only be a directory, not a key"
 msgstr "'/' izena direktorioa besterik ezin da izan, ez gakoa"
 
-#: gconf/gconf-sources.c:729
+#: gconf/gconf-sources.c:751
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -970,7 +1128,7 @@ msgstr ""
 "%s'(r)en balioa, zure konfigurazioaren bide-izenaren aurrealdean irakurtzeko "
 "bakarrik den iturburu batean ezarri da"
 
-#: gconf/gconf-sources.c:741
+#: gconf/gconf-sources.c:763
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
@@ -1010,42 +1168,22 @@ msgstr ""
 "du ~/.gconfd-en, bai eta blokeo-fitxategiak biltegien kokapen "
 "indibidualetan; adibidez, ~/.gconf-en"
 
-#: gconf/gconf-sources.c:1532
+#: gconf/gconf-sources.c:1554
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Errorea metainfo bilatzean: %s"
 
-#: gconf/gconf-sources.c:1601
+#: gconf/gconf-sources.c:1623
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Errorea metainfo lortzean: %s"
 
-#: gconf/gconf-sources.c:1625
+#: gconf/gconf-sources.c:1647
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
 "`%s' gakoak, `%s' gakoarentzat eskema gisa zerrendatuta dagoenak, `%s' "
 "motakoak gordetzen ditu"
-
-#: gconf/gconf-value.c:110
-#, c-format
-msgid "Didn't understand `%s' (expected integer)"
-msgstr "Ez dut `%s' ulertu (osokoa espero nuen)"
-
-#: gconf/gconf-value.c:120
-#, c-format
-msgid "Integer `%s' is too large or small"
-msgstr "`%s' osoko zenbakia handiegia edo txikiegia da"
-
-#: gconf/gconf-value.c:141
-#, c-format
-msgid "Didn't understand `%s' (expected real number)"
-msgstr "Ez dut `%s' ulertu (zenbaki erreala espero nuen)"
-
-#: gconf/gconf-value.c:185
-#, c-format
-msgid "Didn't understand `%s' (expected true or false)"
-msgstr "Ez dut `%s' ulertu (egiazkoa edo faltsua espero nuen)"
 
 #: gconf/gconf-value.c:261
 #, c-format
@@ -1248,11 +1386,6 @@ msgstr "%d seinalea jaso dut, ondo ari da ixten"
 msgid "Failed to open %s: %s"
 msgstr "Huts egin du %s irekitzean:  %s"
 
-#: gconf/gconfd.c:529
-#, c-format
-msgid "Failed to stat %s: %s"
-msgstr "Huts egin du %s(e)tik datuak lortzean:  %s"
-
 #: gconf/gconfd.c:538
 #, c-format
 msgid "Owner of %s is not the current user"
@@ -1273,6 +1406,11 @@ msgstr "hasieratzen (%s bertsioa), %u erabiltzailearen pid-a: '%s"
 #: gconf/gconfd.c:668
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Huts egin du ConfigServer-ren objektu-erreferentzia lortzean"
+
+#: gconf/gconfd.c:681
+#, c-format
+msgid "Failed to create %s: %s"
+msgstr "Ezin izan da %s sortu:  %s"
 
 #: gconf/gconfd.c:688
 #, c-format
@@ -1331,32 +1469,32 @@ msgstr ""
 "Ezin izan da gconfd egunkari-fitxategia itxi; datuak ez ziren ondo gordeko (%"
 "s)"
 
-#: gconf/gconfd.c:1440
+#: gconf/gconfd.c:1433
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Ezin izan da gordetako '%s' egoera-fitxategia idazteko ireki:  %s"
 
-#: gconf/gconfd.c:1454
+#: gconf/gconfd.c:1447
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Ezin izan da gordetako '%s' fd egoera-fitxategian idatzi:  %d: %s"
 
-#: gconf/gconfd.c:1463
+#: gconf/gconfd.c:1456
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Huts egin du gordetako `%s' egoera-fitxategi berria ixtean:  %s"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1470
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Ezin izan da gordetako '%s' egoera-fitxategi zaharra lekuz aldatu:  %s"
 
-#: gconf/gconfd.c:1487
+#: gconf/gconfd.c:1480
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Huts egin du gordetako egoera-fitxategi berria hona mugitzean:  %s"
 
-#: gconf/gconfd.c:1496
+#: gconf/gconfd.c:1489
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1364,7 +1502,7 @@ msgstr ""
 "Ezin izan da '%s'(e)ra eramandako jatorrizko egoera-fitxategia "
 "berreskuratu:  %s"
 
-#: gconf/gconfd.c:1975
+#: gconf/gconfd.c:1968
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1372,17 +1510,17 @@ msgstr ""
 "Ezin da '%s' helbideko entzungailu bat leheneratu, ezin izan da datu-basea "
 "ebatzi"
 
-#: gconf/gconfd.c:2021
+#: gconf/gconfd.c:2014
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Errorea gordetako egoera-fitxategia irakurtzean:  %s"
 
-#: gconf/gconfd.c:2075
+#: gconf/gconfd.c:2068
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Ezin izan da gordetako '%s' egoera-fitxategia ireki:  %s"
 
-#: gconf/gconfd.c:2194
+#: gconf/gconfd.c:2187
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1392,7 +1530,7 @@ msgstr ""
 "erregistratu; ezingo du entzungailua berriro gehitu gconfd existitzen "
 "badaedo ixten bada (%s)"
 
-#: gconf/gconfd.c:2199
+#: gconf/gconfd.c:2192
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1402,29 +1540,29 @@ msgstr ""
 "erregistratu; entzungailua gaizki gehituko da gconfd existitzen bada edo "
 "ixten bada (%s)"
 
-#: gconf/gconfd.c:2222 gconf/gconfd.c:2396
+#: gconf/gconfd.c:2215 gconf/gconfd.c:2389
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Huts egin du bezeroaren IOR lortzean:  %s"
 
-#: gconf/gconfd.c:2237
+#: gconf/gconfd.c:2230
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Huts egin du gordetako egoera-fitxategia irekitzean:  %s"
 
-#: gconf/gconfd.c:2250
+#: gconf/gconfd.c:2243
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Huts egin du gehitutako bezeroa gordetako egoera-fitxategian idaztean:  %s"
 
-#: gconf/gconfd.c:2258
+#: gconf/gconfd.c:2251
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Huts egin du gehitutako bezeroa gordetako egoera-fitxategian iraultzean:  %s"
 
-#: gconf/gconfd.c:2357
+#: gconf/gconfd.c:2350
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -2329,6 +2467,13 @@ msgstr ""
 "Zure aplikazioa apurtzen saiatzen ari da, ondoko direktorioan gakoen balio "
 "okerrak ezarriz:\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the %s root directory in the address `%s'"
+#~ msgstr "Ezin izan du %s erro-direktorioa aurkitu `%s' helbidean "
+
+#~ msgid ""
+#~ "Can't read from or write to the %s root directory in the address `%s'"
+#~ msgstr "Ezin da `%s' helbideko %s erro-direktorioan idatzi edo irakurri"
 
 #~ msgid ""
 #~ "%u items remain in the cache after cleaning already-synced items older "

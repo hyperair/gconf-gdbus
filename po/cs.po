@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-20 14:47+0200\n"
+"POT-Creation-Date: 2004-05-31 14:10+0100\n"
 "PO-Revision-Date: 2004-04-20 20:33+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -591,7 +591,7 @@ msgstr ""
 "Nemohu se zaznamenat odstranění listeneru do souboru záznam (pravděpodobně "
 "neškodné, ale některá oznámení se mohou podivně opakovat): %s"
 
-#: gconf/gconf-database.c:1299 gconf/gconf-sources.c:1659
+#: gconf/gconf-database.c:1299 gconf/gconf-sources.c:1681
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Chyba při získávání hodnoty pro `%s': %s"
@@ -895,27 +895,27 @@ msgstr "Nemohu odstranit adresář zámků `%s': %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Nemohu odstranit soubor zámku %s: %s\n"
 
-#: gconf/gconf-internals.c:2939 gconf/gconfd.c:529
+#: gconf/gconf-internals.c:2938 gconf/gconfd.c:529
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Nemohu stat %s: %s"
 
-#: gconf/gconf-internals.c:2961
+#: gconf/gconf-internals.c:2960
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Chyba při pingu serveru: %s"
 
-#: gconf/gconf-internals.c:2985
+#: gconf/gconf-internals.c:2984
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "Nemohu vytvořit rour pro komunikaci s vytvořeným démonem gconfd: %s\n"
 
-#: gconf/gconf-internals.c:3009
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Nemohu spustit server nastavení: %s\n"
 
-#: gconf/gconf-internals.c:3034
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -927,7 +927,7 @@ msgstr ""
 "TCP/IP síť pro ORBit nebo máte staré zámky NFS po pádu systému. Více "
 "informací viz na http://www.gnome.org/projects/gconf/. (Detaily - %s)"
 
-#: gconf/gconf-internals.c:3035
+#: gconf/gconf-internals.c:3034
 msgid "none"
 msgstr "žádné"
 
@@ -1056,22 +1056,22 @@ msgid ""
 "elements"
 msgstr "Schéma udává typ pár, ale neudává typ elementů car/cdr"
 
-#: gconf/gconf-sources.c:359
+#: gconf/gconf-sources.c:368
 #, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "Nemohu načíst zdroj \"%s\": %s"
 
-#: gconf/gconf-sources.c:386
+#: gconf/gconf-sources.c:408
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
 msgstr "Zjištěná adresa \"%s\" je přepisovatelný zdroj nastavení na pozici %d"
 
-#: gconf/gconf-sources.c:392
+#: gconf/gconf-sources.c:414
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
 msgstr "Zjištěná adresa \"%s\" je zdroj nastavení pouze pro čtení na pozici %d"
 
-#: gconf/gconf-sources.c:399
+#: gconf/gconf-sources.c:421
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
@@ -1079,7 +1079,7 @@ msgstr ""
 "Zjištěná adresa \"%s\" je částečně přepisovatelný zdroj nastavení na pozici %"
 "d"
 
-#: gconf/gconf-sources.c:408
+#: gconf/gconf-sources.c:430
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
@@ -1087,16 +1087,16 @@ msgstr ""
 "Žádná ze zjištěných adres není určena pro zápis; nebude možné ukládat "
 "nastavení"
 
-#: gconf/gconf-sources.c:625
+#: gconf/gconf-sources.c:647
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr "Schéma `%s' uvedené pro `%s' má uloženu hodnotu, která není schéma"
 
-#: gconf/gconf-sources.c:687
+#: gconf/gconf-sources.c:709
 msgid "The '/' name can only be a directory, not a key"
 msgstr "Název '/' může být pouze adresář, ne klíč"
 
-#: gconf/gconf-sources.c:729
+#: gconf/gconf-sources.c:751
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -1105,7 +1105,7 @@ msgstr ""
 "Hodnota pro `%s' nastavena ve zdroji pouze pro čtení na začátku vaší cesty s "
 "nastavením"
 
-#: gconf/gconf-sources.c:741
+#: gconf/gconf-sources.c:763
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
@@ -1143,17 +1143,17 @@ msgstr ""
 "vlastnit soubor zámku v ~/.gconfd a také soubory zámků v jednotlivých "
 "umístěních nastavení, například ~/.gconf"
 
-#: gconf/gconf-sources.c:1532
+#: gconf/gconf-sources.c:1554
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Chyba při hledání metainformací: %s"
 
-#: gconf/gconf-sources.c:1601
+#: gconf/gconf-sources.c:1623
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Chyba při získávání metainformací: %s"
 
-#: gconf/gconf-sources.c:1625
+#: gconf/gconf-sources.c:1647
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""

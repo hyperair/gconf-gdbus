@@ -6,29 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2004-02-24 16:00+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-05-31 14:10+0100\n"
 "PO-Revision-Date: 2002-12-21 02:04+0200\n"
 "Last-Translator: Artis Trops <hornet@navigators.lv>\n"
 "Language-Team: Latvian <ll10nt@os.lv>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
-
-#: backends/dir-utils.c:108
-#, c-format
-msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "Nevarēju atrast %s saknes direktoriju adresē `%s'"
-
-#: backends/dir-utils.c:124 backends/xml-backend.c:332
-#, c-format
-msgid "Could not make directory `%s': %s"
-msgstr "Nevarēju izveidot direktoriju `%s' : %s"
-
-#: backends/dir-utils.c:212
-#, c-format
-msgid "Can't read from or write to the %s root directory in the address `%s'"
-msgstr "Nevaru nolasīt vai ierakstīt %s saknes direktorijā adresē `%s'"
 
 #: backends/gconf-merge-tree.c:78
 #, fuzzy, c-format
@@ -57,32 +42,33 @@ msgid ""
 "    dir/%%gconf-tree.xml\n"
 msgstr ""
 
-#: backends/xml-backend.c:236
-msgid "Unloading XML backend module."
+#: backends/markup-backend.c:163
+#, fuzzy
+msgid "Unloading text markup backend module."
 msgstr "Izlādējam XML atbalstošo moduli."
 
-#: backends/xml-backend.c:285
+#: backends/markup-backend.c:226 backends/xml-backend.c:289
 #, fuzzy, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Nevarēju atrast %s saknes direktoriju adresē `%s'"
 
-#: backends/xml-backend.c:443
+#: backends/markup-backend.c:282 backends/xml-backend.c:344
+#, c-format
+msgid "Could not make directory `%s': %s"
+msgstr "Nevarēju izveidot direktoriju `%s' : %s"
+
+#: backends/markup-backend.c:383 backends/xml-backend.c:443
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "Nevaru nolasīt vai ierakstīt XML saknes direktorijā adresē \"%s\""
 
-#: backends/xml-backend.c:453
+#: backends/markup-backend.c:394 backends/xml-backend.c:453
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Direktorijas/faila atļaujas XML avotam saknē %s ir: %o/%o"
 
-#: backends/xml-backend.c:619
-#, c-format
-msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Kļūda sinhronizējot XML atbalstošo direktorijas keišu: %s"
-
-#: backends/xml-backend.c:684
+#: backends/markup-backend.c:733 backends/xml-backend.c:684
 #, fuzzy
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
@@ -91,24 +77,201 @@ msgstr ""
 "Direktorijas Dzēšanas operācija nav vairāk atbalstīta, vienkārši izdzēsiet "
 "visas vērtības šajā direktorijā"
 
-#: backends/xml-backend.c:770
+#: backends/markup-backend.c:819 backends/xml-backend.c:770
 #, fuzzy, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr "Nevarēju izveidot direktoriju `%s' : %s"
 
-#: backends/xml-backend.c:788
+#: backends/markup-backend.c:837 backends/xml-backend.c:788
 #, fuzzy, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Nevaru izņemt failu %s: %s\n"
 
-#: backends/xml-backend.c:809
-msgid "Initializing XML backend module"
+#: backends/markup-backend.c:858
+#, fuzzy
+msgid "Initializing Markup backend module"
 msgstr "Inicializēju XML atbalstošo moduli"
 
-#: backends/xml-backend.c:877
+#: backends/markup-backend.c:930 backends/xml-backend.c:877
 #, fuzzy, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Neizdevās atmest XML dir slēgšanu \"%s\": %s"
+
+#: backends/markup-tree.c:348
+#, fuzzy
+msgid "Failed to write some configuration data to disk\n"
+msgstr "Nevarēju piekļūt konfigurācijas avotam(iem): %s\n"
+
+#: backends/markup-tree.c:752 backends/xml-dir.c:1255
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "Nevarēju izveidot direktoriju \"%s\": %s"
+
+#: backends/markup-tree.c:795 backends/markup-tree.c:802
+#, fuzzy, c-format
+msgid "Could not remove \"%s\": %s\n"
+msgstr "Nevaru izņemt failu %s: %s\n"
+
+#: backends/markup-tree.c:955
+#, fuzzy, c-format
+msgid "Failed to write \"%s\": %s\n"
+msgstr "Neizdevās izdzēst \"%s\": %s"
+
+#: backends/markup-tree.c:1633
+#, fuzzy, c-format
+msgid "Line %d character %d: %s"
+msgstr "Neizdevās izveidot %s: %s"
+
+#: backends/markup-tree.c:1846
+#, c-format
+msgid "Attribute \"%s\" repeated twice on the same <%s> element"
+msgstr ""
+
+#: backends/markup-tree.c:1863 backends/markup-tree.c:1887
+#, c-format
+msgid "Attribute \"%s\" is invalid on <%s> element in this context"
+msgstr ""
+
+#: backends/markup-tree.c:1912 gconf/gconf-value.c:110
+#, c-format
+msgid "Didn't understand `%s' (expected integer)"
+msgstr "Nesapratu `%s' (gaidīju veselu skaitli (integer))"
+
+#: backends/markup-tree.c:1919 gconf/gconf-value.c:120
+#, c-format
+msgid "Integer `%s' is too large or small"
+msgstr "Vesels skaitlis `%s' ir par lielu vai mazu"
+
+#: backends/markup-tree.c:1951 gconf/gconf-value.c:185
+#, c-format
+msgid "Didn't understand `%s' (expected true or false)"
+msgstr "Nesapratu `%s' (gaidīju patiesi vai nepatiesi)"
+
+#: backends/markup-tree.c:1975 gconf/gconf-value.c:141
+#, c-format
+msgid "Didn't understand `%s' (expected real number)"
+msgstr "Nesapratu `%s' (gaidīju reālu skaitli)"
+
+#: backends/markup-tree.c:2045 backends/markup-tree.c:2074
+#: backends/markup-tree.c:2114 backends/markup-tree.c:2138
+#: backends/markup-tree.c:2146 backends/markup-tree.c:2201
+#: backends/markup-tree.c:2266 backends/markup-tree.c:2374
+#: backends/markup-tree.c:2453 backends/markup-tree.c:2565
+#, fuzzy, c-format
+msgid "No \"%s\" attribute on element <%s>"
+msgstr "Nav \"type\" atribūta <%s> nodei"
+
+#: backends/markup-tree.c:2054
+#, c-format
+msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2088
+#, c-format
+msgid "Invalid ltype \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2168
+#, c-format
+msgid "Invalid car_type \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2182
+#, c-format
+msgid "Invalid cdr_type \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2218
+#, c-format
+msgid "Invalid list_type \"%s\" on <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2499
+msgid "Two <default> elements below a <local_schema>"
+msgstr ""
+
+#: backends/markup-tree.c:2514
+msgid "Two <longdesc> elements below a <local_schema>"
+msgstr ""
+
+#: backends/markup-tree.c:2521
+#, c-format
+msgid "Element <%s> is not allowed below <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2545 backends/markup-tree.c:2637
+#: backends/markup-tree.c:2691 backends/markup-tree.c:2739
+#, c-format
+msgid "<%s> provided but current element does not have type %s"
+msgstr ""
+
+#: backends/markup-tree.c:2615
+msgid "Two <car> elements given for same pair"
+msgstr ""
+
+#: backends/markup-tree.c:2629
+msgid "Two <cdr> elements given for same pair"
+msgstr ""
+
+#: backends/markup-tree.c:2683
+#, c-format
+msgid "<li> has wrong type %s"
+msgstr ""
+
+#: backends/markup-tree.c:2712
+#, c-format
+msgid "<%s> provided but parent <entry> does not have a value"
+msgstr ""
+
+#: backends/markup-tree.c:2752 backends/markup-tree.c:2774
+#: backends/markup-tree.c:2796 backends/markup-tree.c:2813
+#, c-format
+msgid "Element <%s> is not allowed inside current element"
+msgstr ""
+
+#: backends/markup-tree.c:2845
+#, c-format
+msgid "Outermost element in menu file must be <gconf> not <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:2865 backends/markup-tree.c:2887
+#: backends/markup-tree.c:2892
+#, c-format
+msgid "Element <%s> is not allowed inside a <%s> element"
+msgstr ""
+
+#: backends/markup-tree.c:2972
+#, c-format
+msgid "No text is allowed inside element <%s>"
+msgstr ""
+
+#: backends/markup-tree.c:3648 backends/markup-tree.c:3662
+#, fuzzy, c-format
+msgid "Failed to open \"%s\": %s\n"
+msgstr "Nevarēju atvērt `%s': %s\n"
+
+#: backends/markup-tree.c:3736
+#, fuzzy, c-format
+msgid "Error writing file \"%s\": %s"
+msgstr "Kļūda atstādot \"%s\": %s"
+
+#: backends/markup-tree.c:3743
+#, fuzzy, c-format
+msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
+msgstr "Neizdevās novietot vietā jauno saglabātā stāvokļa failu: %s"
+
+#: backends/xml-backend.c:240
+msgid "Unloading XML backend module."
+msgstr "Izlādējam XML atbalstošo moduli."
+
+#: backends/xml-backend.c:619
+#, c-format
+msgid "Error syncing the XML backend directory cache: %s"
+msgstr "Kļūda sinhronizējot XML atbalstošo direktorijas keišu: %s"
+
+#: backends/xml-backend.c:809
+msgid "Initializing XML backend module"
+msgstr "Inicializēju XML atbalstošo moduli"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -193,11 +356,6 @@ msgstr "Ieraksts bez nosaukuma XML failā `%s', ignorēju"
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "Virslīmeņa node XML failā `%s' ir <%s> nekā <entry>, ignorēju"
-
-#: backends/xml-dir.c:1255
-#, c-format
-msgid "Could not make directory \"%s\": %s"
-msgstr "Nevarēju izveidot direktoriju \"%s\": %s"
 
 #: backends/xml-dir.c:1271
 #, c-format
@@ -299,32 +457,57 @@ msgstr "Trūkstošs car no vērtību pāra XML faila"
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "Trūkstoši abas car un cdr vērtības no pāra XML failā"
 
+#: gconf/gconf-backend.c:57
+#, fuzzy, c-format
+msgid "`%c' is an invalid character in a configuration storage address"
+msgstr "`%c' ir neatļauta rakstuzīme atslēgu/direktoriju nosaukumos"
+
 #. -- end debug only
-#: gconf/gconf-backend.c:167
+#: gconf/gconf-backend.c:207
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Nav tāda faila `%s'\n"
 
-#: gconf/gconf-backend.c:195
+#: gconf/gconf-backend.c:252
+#, c-format
+msgid "Backend `%s' failed return a vtable\n"
+msgstr ""
+
+#: gconf/gconf-backend.c:267
+#, c-format
+msgid "Backend `%s' missing required vtable member `%s'\n"
+msgstr ""
+
+#: gconf/gconf-backend.c:293
+#, fuzzy, c-format
+msgid "Bad address `%s': %s"
+msgstr "Slikta adrese `%s'"
+
+#: gconf/gconf-backend.c:303
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Slikta adrese `%s'"
 
-#: gconf/gconf-backend.c:220
+#: gconf/gconf-backend.c:328
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "Gconf nestrādās bez dinamisko moduļu atbalsta (gmodule)"
 
-#: gconf/gconf-backend.c:230
+#: gconf/gconf-backend.c:337
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Kļūda atverot moduli `%s': %s\n"
 
-#: gconf/gconf-backend.c:262
+#: gconf/gconf-backend.c:348
+#, fuzzy, c-format
+msgid "Error initializing module `%s': %s\n"
+msgstr "Kļūda atverot moduli `%s': %s\n"
+
+#: gconf/gconf-backend.c:379
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Nevarēju atrast balstošo moduli `%s'"
 
-#: gconf/gconf-backend.c:299
+#: gconf/gconf-backend.c:416
 msgid "Failed to shut down backend"
 msgstr "Neizdevās izslēgt balstu"
 
@@ -343,35 +526,42 @@ msgstr "Gconf brīdinājums: kļūda, veidojot pāru sarakstu `%s': %s"
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Gadīju `%s', dabuju `%s' atslēgai %s"
 
-#: gconf/gconf-database.c:234
+#: gconf/gconf-database.c:211
 msgid "Received invalid value in set request"
 msgstr "Saņemta nederīga vērtība iestatīšanas pieprasījumā"
 
-#: gconf/gconf-database.c:242
+#: gconf/gconf-database.c:219
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
 "Nebija jēgas CORBA vērtībai, kas saņemta iestatīšanas pieprasījumā atslēgai `"
 "%s'"
 
-#: gconf/gconf-database.c:524
+#: gconf/gconf-database.c:502
 msgid "Received request to drop all cached data"
 msgstr "Saņemts pieprasījums nomest visus keišotos datus"
 
-#: gconf/gconf-database.c:541
+#: gconf/gconf-database.c:519
 msgid "Received request to sync synchronously"
 msgstr "Saņemts pieprasījums sinhornizēties sinhronizēti"
 
-#: gconf/gconf-database.c:826
+#: gconf/gconf-database.c:807
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr "Fatāla kļūda: neizdevās dabūt objekta atsauci ConfigDatabase"
 
-#: gconf/gconf-database.c:988
+#: gconf/gconf-database.c:973
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Neizdevās sinhron. vienu vai vairākus avotus: %s"
 
-#: gconf/gconf-database.c:1080
+#: gconf/gconf-database.c:1046
+#, c-format
+msgid ""
+"Error obtaining new value for `%s' after change notification from backend `%"
+"s': %s"
+msgstr ""
+
+#: gconf/gconf-database.c:1119
 #, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
@@ -382,12 +572,12 @@ msgstr ""
 "klausītāju pie gconfd restarta, kas novedīs pie neuzticamas notifikācijas "
 "par konfigurācijas izmaiņām."
 
-#: gconf/gconf-database.c:1114
+#: gconf/gconf-database.c:1153
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Klausītāja ID %lu neeksistē"
 
-#: gconf/gconf-database.c:1128
+#: gconf/gconf-database.c:1167
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -396,57 +586,57 @@ msgstr ""
 "Neizdevās iegrāmatot klausītāja noņemšanu žurnālfailā (visdrīzāk nekaitīgi, "
 "var novest pie notifikācijas savādas no jauna parādīšanās): %s"
 
-#: gconf/gconf-database.c:1246 gconf/gconf-sources.c:1541
+#: gconf/gconf-database.c:1299 gconf/gconf-sources.c:1681
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Kļūda saņemot vērtību `%s': %s"
 
-#: gconf/gconf-database.c:1293
+#: gconf/gconf-database.c:1349
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Kļūda uzstādot vērtību `%s': %s"
 
-#: gconf/gconf-database.c:1336
+#: gconf/gconf-database.c:1397
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Kļūda atstādot `%s': %s"
 
-#: gconf/gconf-database.c:1365
+#: gconf/gconf-database.c:1426
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Kļūda saņemot noklusēto vērtību `%s': %s"
 
-#: gconf/gconf-database.c:1416
+#: gconf/gconf-database.c:1484
 #, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Kļūda atstādot \"%s\": %s"
 
-#: gconf/gconf-database.c:1448
+#: gconf/gconf-database.c:1515
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "Kļūda saņemot jaunu vērtību \"%s\": %s"
 
-#: gconf/gconf-database.c:1496
+#: gconf/gconf-database.c:1570
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Kļūda pārbaudot `%s' eksistenci: %s"
 
-#: gconf/gconf-database.c:1520
+#: gconf/gconf-database.c:1594
 #, fuzzy, c-format
 msgid "Error removing directory \"%s\": %s"
 msgstr "Kļūda izņemot dir `%s': %s"
 
-#: gconf/gconf-database.c:1547
+#: gconf/gconf-database.c:1621
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Neizdevās saņemt visus ierakstus `%s': %s"
 
-#: gconf/gconf-database.c:1573
+#: gconf/gconf-database.c:1647
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Kļūda sastādot dir sarakstu `%s': %s"
 
-#: gconf/gconf-database.c:1594
+#: gconf/gconf-database.c:1668
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Kļūda uzstādot shēmu `%s': %s"
@@ -573,66 +763,66 @@ msgstr "Pievienoju avotu `%s'\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Lasīšanas kļūda failā `%s': %s\n"
 
-#: gconf/gconf-internals.c:1203 gconf/gconf-internals.c:1269
+#: gconf/gconf-internals.c:1279 gconf/gconf-internals.c:1345
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1681
 msgid "Text contains invalid UTF-8"
 msgstr "Teksts satur nederīgu UTF-8"
 
-#: gconf/gconf-internals.c:1354
+#: gconf/gconf-internals.c:1430
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Gaidīju sarakstu, dabūju %s"
 
-#: gconf/gconf-internals.c:1364
+#: gconf/gconf-internals.c:1440
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Gaidīju sarakstu no %s, dabūju sarakstu nof %s"
 
-#: gconf/gconf-internals.c:1492
+#: gconf/gconf-internals.c:1568
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Gaidīju pāri, dabūju %s"
 
-#: gconf/gconf-internals.c:1506
+#: gconf/gconf-internals.c:1582
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Gaidīju (%s,%s) pāri, dabūju pāri ar vienu vai abām iztrūkstošām vērtībām"
 
-#: gconf/gconf-internals.c:1522
+#: gconf/gconf-internals.c:1598
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Gaidīju pāri ar tipu (%s,%s), dabūju tipu (%s,%s)"
 
-#: gconf/gconf-internals.c:1638
+#: gconf/gconf-internals.c:1714
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Citētā virkne nesākas ar jautājuma zīmi"
 
-#: gconf/gconf-internals.c:1700
+#: gconf/gconf-internals.c:1776
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Citētā virkne nebeidzas ar jautājuma zīmi"
 
-#: gconf/gconf-internals.c:1836
+#: gconf/gconf-internals.c:1912
 msgid "Encoded value is not valid UTF-8"
 msgstr "Kodētā vērtība nav derīgs UTF-8"
 
-#: gconf/gconf-internals.c:2295
+#: gconf/gconf-internals.c:2371
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Nevarēju slēgt pagaidu failu '%s': %s"
 
-#: gconf/gconf-internals.c:2322
+#: gconf/gconf-internals.c:2398
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "Nevarēju izveidot failu '%s', iespejams tādēļ, ka tas jau eksistē"
 
-#: gconf/gconf-internals.c:2368
+#: gconf/gconf-internals.c:2444
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Neizdevās izveidot vai atvērt '%s'"
 
-#: gconf/gconf-internals.c:2378
+#: gconf/gconf-internals.c:2454
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -641,87 +831,87 @@ msgstr ""
 "Neizdevās slēgt '%s': iespējams, slēdzene jau ir citam procesam vai jūsu "
 "operāciju sistēmai ir neparizi nokonfigurēta NFS failu slēgšana (%s)"
 
-#: gconf/gconf-internals.c:2408
+#: gconf/gconf-internals.c:2484
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "IOR fails '%s' nav atvērts veiksmīgi, neviens gconfd nav atrasts: %s"
 
-#: gconf/gconf-internals.c:2438
+#: gconf/gconf-internals.c:2514
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool vai citam ne-gconfd procesam ir slēdzenes fails '%s'"
 
-#: gconf/gconf-internals.c:2455
+#: gconf/gconf-internals.c:2531
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "nevarēju sakontaktēt ORB, lai atšķetinātu esošo gconfd objekta atsauci"
 
-#: gconf/gconf-internals.c:2465
+#: gconf/gconf-internals.c:2541
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Neizdevās konvertēt IOR '%s' uz objekta atsauci"
 
-#: gconf/gconf-internals.c:2515
+#: gconf/gconf-internals.c:2591
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "nevarēju izveidot direktoriju `%s': %s"
 
-#: gconf/gconf-internals.c:2574
+#: gconf/gconf-internals.c:2650
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Nevaru ierakstīt failā `%s': %s"
 
-#: gconf/gconf-internals.c:2615
+#: gconf/gconf-internals.c:2691
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Mums nebija slēdzene failam `%s', bet mums vajadzēja būt"
 
-#: gconf/gconf-internals.c:2636
+#: gconf/gconf-internals.c:2712
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Neizdevās saistīt '%s' ar '%s': %s"
 
-#: gconf/gconf-internals.c:2648
+#: gconf/gconf-internals.c:2724
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Neizdevās izņemt slēdzenes failu `%s': %s"
 
-#: gconf/gconf-internals.c:2667
+#: gconf/gconf-internals.c:2743
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Neizdevās satīrīt failu '%s': %s"
 
-#: gconf/gconf-internals.c:2681
+#: gconf/gconf-internals.c:2757
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Neizdevās izņemt slēdzenes direktoriju `%s': %s"
 
-#: gconf/gconf-internals.c:2723
+#: gconf/gconf-internals.c:2799
 #, fuzzy, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Neizdevās izņemt slēdzenes failu `%s': %s"
 
-#: gconf/gconf-internals.c:2856 gconf/gconfd.c:639
-#, c-format
-msgid "Failed to create %s: %s"
-msgstr "Neizdevās izveidot %s: %s"
+#: gconf/gconf-internals.c:2938 gconf/gconfd.c:529
+#, fuzzy, c-format
+msgid "Failed to stat %s: %s"
+msgstr "Neizdevās stat `%s': %s"
 
-#: gconf/gconf-internals.c:2878
+#: gconf/gconf-internals.c:2960
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Servera ping kļūda: %s"
 
-#: gconf/gconf-internals.c:2899
+#: gconf/gconf-internals.c:2984
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Neizdevās izveidot kanālu komunikācijai ar pavairoto gconf dēmonu: %s\n"
 
-#: gconf/gconf-internals.c:2923
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Neizdevās palaist konfigurācias serveri: %s\n"
 
-#: gconf/gconf-internals.c:2948
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -734,15 +924,15 @@ msgstr ""
 "novecojušās NFS slēdzenes sistēmas avārijas dēļ. Apskati http://www.gnome."
 "org/projects/gconf/ papildus informācijai. (Detaļas - %s)"
 
-#: gconf/gconf-internals.c:2949
+#: gconf/gconf-internals.c:3034
 msgid "none"
 msgstr "nekas"
 
-#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:84
+#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:85
 msgid "Help options"
 msgstr "Palīdzības opcijas"
 
-#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:506
+#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:516
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -858,28 +1048,28 @@ msgid ""
 "elements"
 msgstr "Shēma norāda tipa pāri, bet nenorāda tipu car/cdr elementiem"
 
-#: gconf/gconf-sources.c:319
+#: gconf/gconf-sources.c:368
 #, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "Neizdevās ielādēt avotu \"%s\": %s"
 
-#: gconf/gconf-sources.c:346
+#: gconf/gconf-sources.c:408
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
 msgstr "Atšķetinātā adrese \"%s\" rakstāmajā konfiga avotā pozīcijā %d"
 
-#: gconf/gconf-sources.c:352
+#: gconf/gconf-sources.c:414
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
 msgstr "Atšķetinātā adrese \"%s\" tikai-lasāmajā konfiga avotā pozīcijā %d"
 
-#: gconf/gconf-sources.c:359
+#: gconf/gconf-sources.c:421
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr "Atšķetinātā adrese \"%s\" daļēji rakstāmajā konfiga avotā pozīcijā %d"
 
-#: gconf/gconf-sources.c:368
+#: gconf/gconf-sources.c:430
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
@@ -887,16 +1077,16 @@ msgstr ""
 "Neviena no atšķetinātajām adresēm nav rakstāma; konfigurācijas uzstādījumu "
 "saglabāšana nebūs iespējama"
 
-#: gconf/gconf-sources.c:584
+#: gconf/gconf-sources.c:647
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr "Shēma `%s', kas notiekta priekš `%s' glabā ne-shēmas vērtību"
 
-#: gconf/gconf-sources.c:642
+#: gconf/gconf-sources.c:709
 msgid "The '/' name can only be a directory, not a key"
 msgstr "Nosaukums '/' var būt tikai direktorija, ne atslēga"
 
-#: gconf/gconf-sources.c:680
+#: gconf/gconf-sources.c:751
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -905,7 +1095,7 @@ msgstr ""
 "Vērtība priekš `%s' kopas tikai-lasāmajā avotā jūsu kofigurācijas ceļa "
 "priekšā"
 
-#: gconf/gconf-sources.c:692
+#: gconf/gconf-sources.c:763
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
@@ -943,41 +1133,21 @@ msgstr ""
 "un tam jāpieder slēdzenes fails iekš ~/.gconfd un arī slēdzenes faili "
 "atsevišķās novietnes lokacijās, kā ~/.gconf"
 
-#: gconf/gconf-sources.c:1414
+#: gconf/gconf-sources.c:1554
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Kļūda meklējot metainfo: %s"
 
-#: gconf/gconf-sources.c:1483
+#: gconf/gconf-sources.c:1623
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Kļūda saņemot metainfo: %s"
 
-#: gconf/gconf-sources.c:1507
+#: gconf/gconf-sources.c:1647
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
 "Atslēga `%s', kas ir parādīta kā shēma atslēgai `%s' īstenībā glabā tipu `%s'"
-
-#: gconf/gconf-value.c:110
-#, c-format
-msgid "Didn't understand `%s' (expected integer)"
-msgstr "Nesapratu `%s' (gaidīju veselu skaitli (integer))"
-
-#: gconf/gconf-value.c:120
-#, c-format
-msgid "Integer `%s' is too large or small"
-msgstr "Vesels skaitlis `%s' ir par lielu vai mazu"
-
-#: gconf/gconf-value.c:141
-#, c-format
-msgid "Didn't understand `%s' (expected real number)"
-msgstr "Nesapratu `%s' (gaidīju reālu skaitli)"
-
-#: gconf/gconf-value.c:185
-#, c-format
-msgid "Didn't understand `%s' (expected true or false)"
-msgstr "Nesapratu `%s' (gaidīju patiesi vai nepatiesi)"
 
 #: gconf/gconf-value.c:261
 #, c-format
@@ -1029,86 +1199,86 @@ msgstr "Atslēga \"%s\" ir NULL"
 msgid "\"%s\": %s"
 msgstr "\"%s\": %s"
 
-#: gconf/gconf.c:345
+#: gconf/gconf.c:381
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Serveris nevarēja atrast adresi `%s'"
 
-#: gconf/gconf.c:634
+#: gconf/gconf.c:759
 msgid "Can't add notifications to a local configuration source"
 msgstr "Nevaru pievienot paziņojumus vietējam konfigurācijas avotam"
 
-#: gconf/gconf.c:2097
+#: gconf/gconf.c:2222
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Klienta pievienošana servera sarakstam neizdevusies, CORBA kļūda: %s"
 
-#: gconf/gconf.c:2452
+#: gconf/gconf.c:2585
 msgid "Must begin with a slash (/)"
 msgstr "Jāsākas ar slīpsvītru (/)"
 
-#: gconf/gconf.c:2474
+#: gconf/gconf.c:2607
 msgid "Can't have two slashes (/) in a row"
 msgstr "Nevar būt divas slīpsvītras pēc kārtas"
 
-#: gconf/gconf.c:2476
+#: gconf/gconf.c:2609
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Nevar būt punkts (.) uzreiz pēc slīpsvītras (/)"
 
-#: gconf/gconf.c:2495
+#: gconf/gconf.c:2628
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "'%c' nav ASCII rakstuzīme, tāpēc tā nav atļauta atslēgu nosaukumos"
 
-#: gconf/gconf.c:2505
+#: gconf/gconf.c:2638
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' ir neatļauta rakstuzīme atslēgu/direktoriju nosaukumos"
 
-#: gconf/gconf.c:2519
+#: gconf/gconf.c:2652
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Atslēga/Direktorija varētu nebeigties ar slīpsvītru (/)"
 
-#: gconf/gconf.c:2888
+#: gconf/gconf.c:3021
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Neizdevās izslēgt konfigurācijas serveri: %s"
 
-#: gconf/gconf.c:2949
+#: gconf/gconf.c:3082
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Gaidīts float, dabūts %s"
 
-#: gconf/gconf.c:2984
+#: gconf/gconf.c:3117
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Gaidīts int, dabūts %s"
 
-#: gconf/gconf.c:3019
+#: gconf/gconf.c:3152
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Gaidīts string, dabūts %s"
 
-#: gconf/gconf.c:3053
+#: gconf/gconf.c:3186
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Gaidīts bool, saņemts %s"
 
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3219
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Gaidīta shēma, dabūts %s"
 
-#: gconf/gconf.c:3443
+#: gconf/gconf.c:3576
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA kļūda: %s"
 
-#: gconf/gconfd.c:250
+#: gconf/gconfd.c:292
 msgid "Shutdown request received"
 msgstr "Izslēgšanas pieprasījums saņemts"
 
-#: gconf/gconfd.c:282
+#: gconf/gconfd.c:324
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1116,7 +1286,7 @@ msgstr ""
 "gconfd kompilēts ar atkļūdošanu; mēģinu ielādēt gconf.path no avota "
 "direktorijas"
 
-#: gconf/gconfd.c:296
+#: gconf/gconfd.c:338
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1127,7 +1297,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:304
+#: gconf/gconfd.c:346
 #, fuzzy, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
@@ -1136,12 +1306,12 @@ msgstr ""
 "Nav konfigurācijas avotu norādītājā avota ceļā, konfigurācija netiks "
 "saglabāta; rediģēt"
 
-#: gconf/gconfd.c:317
+#: gconf/gconfd.c:359
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Kļūda ielādējot dažus konfigurācijas avotus: %s"
 
-#: gconf/gconfd.c:329
+#: gconf/gconfd.c:371
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1149,7 +1319,7 @@ msgstr ""
 "Neviena konfiga avota adrese nav veiksmīgi atšķetināta, nevaru ielādēt vai "
 "noglabāt konfiga datus"
 
-#: gconf/gconfd.c:346
+#: gconf/gconfd.c:388
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1157,12 +1327,12 @@ msgstr ""
 "Neviens rakstāms konfiga avots nav veiksmīgi atšķetināts, var nespēt "
 "saglabāt dažas konfigurācijas izmaiņas"
 
-#: gconf/gconfd.c:372
+#: gconf/gconfd.c:414
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr "Saņemts signāls %d, kodola izmete. Lūdzu ziņojiet par GConf 'blusu'."
 
-#: gconf/gconfd.c:390
+#: gconf/gconfd.c:432
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
@@ -1170,78 +1340,83 @@ msgstr ""
 "Saņemts signāls %d, nestandarta izslēgšanās. Lūdzu aizpildiet GConf 'blusu' "
 "ziņojumu."
 
-#: gconf/gconfd.c:407
+#: gconf/gconfd.c:449
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Saņemts signāls %d, normāla izslēgšanās"
 
-#: gconf/gconfd.c:480
+#: gconf/gconfd.c:522
 #, fuzzy, c-format
 msgid "Failed to open %s: %s"
 msgstr "Nevarēju atvērt `%s': %s\n"
 
-#: gconf/gconfd.c:487
-#, fuzzy, c-format
-msgid "Failed to stat %s: %s"
-msgstr "Neizdevās stat `%s': %s"
-
-#: gconf/gconfd.c:496
+#: gconf/gconfd.c:538
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr ""
 
-#: gconf/gconfd.c:504
+#: gconf/gconfd.c:546
 #, fuzzy, c-format
 msgid "Bad permissions %lo on directory %s"
 msgstr "Atslēgas operācija direktorijai"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:586
+#: gconf/gconfd.c:628
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "startēju (versija %s), pid %u lietotājs '%s'"
 
-#: gconf/gconfd.c:626
+#: gconf/gconfd.c:668
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Neizdevās dabūt objekta atsauci priekš ConfigServer"
 
-#: gconf/gconfd.c:646
+#: gconf/gconfd.c:681
+#, c-format
+msgid "Failed to create %s: %s"
+msgstr "Neizdevās izveidot %s: %s"
+
+#: gconf/gconfd.c:688
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr ""
 
-#: gconf/gconfd.c:675
+#: gconf/gconfd.c:717
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Neizdevās ierakstīt baitu kanālā fd %d, tāpēc klienta programma var "
 "uzkārties: %s"
 
-#: gconf/gconfd.c:685
+#: gconf/gconfd.c:727
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Neizdevās dabūt slēdzeni dēmonam, izeju: %s"
 
-#: gconf/gconfd.c:723
+#: gconf/gconfd.c:765
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Kļūda atlaižot slēdzējfailu: %s"
 
-#: gconf/gconfd.c:731
+#: gconf/gconfd.c:773
 msgid "Exiting"
 msgstr "Izeju"
 
-#: gconf/gconfd.c:757
+#: gconf/gconfd.c:799
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf serveris nav lietošanā, izslēdzu."
 
-#: gconf/gconfd.c:1123
+#: gconf/gconfd.c:1116
+#, fuzzy, c-format
+msgid "Error obtaining new value for `%s': %s"
+msgstr "Kļūda saņemot jaunu vērtību \"%s\": %s"
+
+#: gconf/gconfd.c:1236
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Atgriežu izņēmumu: %s"
 
-#: gconf/gconfd.c:1223
+#: gconf/gconfd.c:1336
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1250,39 +1425,39 @@ msgstr ""
 "Neizdevās atvērt gconfd žurnālfailu, nevarēšu atjaunot klausītājus pēc "
 "gconfd izslēgšanas (%s)"
 
-#: gconf/gconfd.c:1258
+#: gconf/gconfd.c:1371
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Neizdevās aizvērt gconfd žurnālfailu; dati var nebūt pienācīgi saglabāti (%s)"
 
-#: gconf/gconfd.c:1327
+#: gconf/gconfd.c:1433
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Nevarēju atvērt saglabāto stāvokļa failu '%s' rakstīšanai: %s"
 
-#: gconf/gconfd.c:1341
+#: gconf/gconfd.c:1447
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Nevarēju ierakstīt saglabātajā stāvokļa failā '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1350
+#: gconf/gconfd.c:1456
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Neizdevās aizvērt jauno saglabātā stāvokļa failu '%s': %s"
 
-#: gconf/gconfd.c:1364
+#: gconf/gconfd.c:1470
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Nevarēju nolikt malā veco saglabātā stāvokļa failu '%s': %s"
 
-#: gconf/gconfd.c:1374
+#: gconf/gconfd.c:1480
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Neizdevās novietot vietā jauno saglabātā stāvokļa failu: %s"
 
-#: gconf/gconfd.c:1383
+#: gconf/gconfd.c:1489
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1290,23 +1465,23 @@ msgstr ""
 "Neizdevās atjaunot oriģinālo saglabātā stāvokļa failu, kas tika pārvietots "
 "uz '%s': %s"
 
-#: gconf/gconfd.c:1854
+#: gconf/gconfd.c:1968
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "Nespēju atjaunot klausītāju adresē '%s', nevarēju atšķetināt datu bāzi"
 
-#: gconf/gconfd.c:1900
+#: gconf/gconfd.c:2014
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Kļūda lasot saglabātā stāvokļa failu: %s"
 
-#: gconf/gconfd.c:1954
+#: gconf/gconfd.c:2068
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Nevaru atvērt saglabātā stāvokļa failu '%s': %s"
 
-#: gconf/gconfd.c:2073
+#: gconf/gconfd.c:2187
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1315,7 +1490,7 @@ msgstr ""
 "Neizdevās iegrāmatot klausītāja pievienošanu gconfd žurnālfailā; nevarēšu no "
 "jauna pievienot klausītāju, ja gconfd izies vai beidzēsies (%s)"
 
-#: gconf/gconfd.c:2078
+#: gconf/gconfd.c:2192
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1324,40 +1499,40 @@ msgstr ""
 "Neizdevās iegrāmatot klausītāja noņemšanu gconfd žurnālfailā; var kļūdaini "
 "no jauna pievienot klausītāju, ja gconfd izies vai beidzēsies (%s)"
 
-#: gconf/gconfd.c:2101 gconf/gconfd.c:2275
+#: gconf/gconfd.c:2215 gconf/gconfd.c:2389
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Neizdevās dabūt IOR klientam: %s"
 
-#: gconf/gconfd.c:2116
+#: gconf/gconfd.c:2230
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Neizdevās atvērt saglabātā stāvokļa failu: %s"
 
-#: gconf/gconfd.c:2129
+#: gconf/gconfd.c:2243
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Neizdevās ierakstīt klienta pievienošanu saglabātā stāvokļa failā: %s"
 
-#: gconf/gconfd.c:2137
+#: gconf/gconfd.c:2251
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Neizdevās iztramdīt klienta pievienošanu saglabātā stāvokļa failā: %s"
 
-#: gconf/gconfd.c:2236
+#: gconf/gconfd.c:2350
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "Kāds klients izņēma sevi no GConf servera, kad tas nebija pievienots."
 
-#: gconf/gconftool.c:93
+#: gconf/gconftool.c:94
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "Iestatiet atslēgu vērtībai un sinhronizācijai. Lietojiet ar --type."
 
-#: gconf/gconftool.c:102
+#: gconf/gconftool.c:103
 msgid "Print the value of a key to standard output."
 msgstr "Drukāt atslēgas vērtību uz standarta izvadi."
 
-#: gconf/gconftool.c:111
+#: gconf/gconftool.c:112
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1365,11 +1540,11 @@ msgstr ""
 "Iestatiet shēmu un sinhronizāciju. Lietojiet ar --short-desc, --long-desc, --"
 "owner un --type."
 
-#: gconf/gconftool.c:121
+#: gconf/gconftool.c:122
 msgid "Unset the keys on the command line"
 msgstr "Atstatīt atslēgas komandrindā"
 
-#: gconf/gconftool.c:130
+#: gconf/gconftool.c:131
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1377,44 +1552,44 @@ msgstr ""
 "Rekursīvi atstatīt visas atslēgas atslēgu/direktoriju nosaukumos vai zem "
 "tiem komandrindā"
 
-#: gconf/gconftool.c:139
+#: gconf/gconftool.c:140
 msgid "Print all key/value pairs in a directory."
 msgstr "Parādīt visas atslēgas/vērtību pārus direktorijā."
 
-#: gconf/gconftool.c:148
+#: gconf/gconftool.c:149
 msgid "Print all subdirectories in a directory."
 msgstr "Parādīt visas apakšdirektorijas direktorijā."
 
-#: gconf/gconftool.c:157
+#: gconf/gconftool.c:158
 #, fuzzy
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
 msgstr "Parādīt visas apakšdirektorijas un ierakstus zem dir, rekursīvi."
 
-#: gconf/gconftool.c:166
+#: gconf/gconftool.c:167
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
 msgstr ""
 
-#: gconf/gconftool.c:175
+#: gconf/gconftool.c:176
 msgid "Print all subdirectories and entries under a dir, recursively."
 msgstr "Parādīt visas apakšdirektorijas un ierakstus zem dir, rekursīvi."
 
-#: gconf/gconftool.c:184
+#: gconf/gconftool.c:185
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "Atgriezt 0, ja direktorija eksistē, 2, ja neeksistē."
 
-#: gconf/gconftool.c:193
+#: gconf/gconftool.c:194
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "Beidzēt gconfd. NELIETOJIET ŠO OPCIJU BEZ LABA IEMESLA."
 
-#: gconf/gconftool.c:202
+#: gconf/gconftool.c:203
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "Atgriezt 0, ja gconfd ir palaists, 2, ja nav."
 
-#: gconf/gconftool.c:211
+#: gconf/gconftool.c:212
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
@@ -1422,7 +1597,7 @@ msgstr ""
 "Palaist konfigurācijas serveri (gconfd). (Normāli tas notiek automātiski, "
 "kad nepieciešams.)"
 
-#: gconf/gconftool.c:220
+#: gconf/gconftool.c:221
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1430,25 +1605,25 @@ msgstr ""
 "Nosakiet iestatāmās vērtības tipu vai tās vērtības tipu, ko apraksta shēma. "
 "Unikālie saīsinājumi pieņemami."
 
-#: gconf/gconftool.c:221
+#: gconf/gconftool.c:222
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: gconf/gconftool.c:229
+#: gconf/gconftool.c:230
 #, fuzzy
 msgid "Print the data type of a key to standard output."
 msgstr "Drukāt atslēgas vērtību uz standarta izvadi."
 
-#: gconf/gconftool.c:238
+#: gconf/gconftool.c:239
 #, fuzzy
 msgid "Get the number of elements in a list key."
 msgstr "Dabūt shēmas nosaukumu, kas pielietota šai atslēgai"
 
-#: gconf/gconftool.c:247
+#: gconf/gconftool.c:248
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr ""
 
-#: gconf/gconftool.c:256
+#: gconf/gconftool.c:257
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1456,11 +1631,11 @@ msgstr ""
 "Nosakiet iestatāmā saraksta tipu vai tās vērtības tipu, ko apraksta shēma. "
 "Unikālie saīsinājumi pieņemami"
 
-#: gconf/gconftool.c:257 gconf/gconftool.c:266 gconf/gconftool.c:275
+#: gconf/gconftool.c:258 gconf/gconftool.c:267 gconf/gconftool.c:276
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: gconf/gconftool.c:265
+#: gconf/gconftool.c:266
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1468,7 +1643,7 @@ msgstr ""
 "Nosakiet iestatāmās car pāra vērtības tipu vai tās vērtības tipu, ko "
 "apraksta shēma. Unikālie saīsinājumi pieņemami"
 
-#: gconf/gconftool.c:274
+#: gconf/gconftool.c:275
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1476,44 +1651,44 @@ msgstr ""
 "Nosakiet iestatāmās cdr pāra vērtības tipu vai tās vērtības tipu, ko "
 "apraksta shēma. Unikālie saīsinājumi pieņemami"
 
-#: gconf/gconftool.c:283
+#: gconf/gconftool.c:284
 msgid "Specify a short half-line description to go in a schema."
 msgstr "Nosakiet īsu pusrindas aprakstu, lai ieietu shēmā."
 
-#: gconf/gconftool.c:284 gconf/gconftool.c:293
+#: gconf/gconftool.c:285 gconf/gconftool.c:294
 msgid "DESCRIPTION"
 msgstr "APRAKSTS"
 
-#: gconf/gconftool.c:292
+#: gconf/gconftool.c:293
 msgid "Specify a several-line description to go in a schema."
 msgstr "Nosakiet pāris rindu aprakstu, lai ieitu shēmā."
 
-#: gconf/gconftool.c:301
+#: gconf/gconftool.c:302
 msgid "Specify the owner of a schema"
 msgstr "Norādiet shēmas īpašnieku"
 
-#: gconf/gconftool.c:302
+#: gconf/gconftool.c:303
 msgid "OWNER"
 msgstr "ĪPAŠNIEKS"
 
-#: gconf/gconftool.c:310
+#: gconf/gconftool.c:311
 msgid "Specify a schema file to be installed"
 msgstr "Nosakiet instalējamo shēmas failu"
 
-#: gconf/gconftool.c:311
+#: gconf/gconftool.c:312
 msgid "FILENAME"
 msgstr "FAILANOS"
 
-#: gconf/gconftool.c:319
+#: gconf/gconftool.c:320
 msgid "Specify a configuration source to use rather than the default path"
 msgstr ""
 "Nosakiet lietojamo konfigurācijas avotu tā vietā, lai lietotu noklusēto ceļu"
 
-#: gconf/gconftool.c:320
+#: gconf/gconftool.c:321
 msgid "SOURCE"
 msgstr "AVOTS"
 
-#: gconf/gconftool.c:328
+#: gconf/gconftool.c:329
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
@@ -1521,7 +1696,7 @@ msgstr ""
 "Piekļūt konfigurācijas bāzei tieši, apejot serveri. Nepieciešams, lai gconfd "
 "nebūtu palaists."
 
-#: gconf/gconftool.c:337
+#: gconf/gconftool.c:338
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1531,7 +1706,7 @@ msgstr ""
 "GCONF_CONFIG_SOURCE vides mainīgajam būtu jābūt iestatītam uz ne-noklusēto "
 "konfigurācijas avotu vai iestatītam uz tukšu virkni, lai lietotu noklusēto."
 
-#: gconf/gconftool.c:346
+#: gconf/gconftool.c:347
 #, fuzzy
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
@@ -1542,7 +1717,7 @@ msgstr ""
 "GCONF_CONFIG_SOURCE vides mainīgajam būtu jābūt iestatītam uz ne-noklusēto "
 "konfigurācijas avotu vai iestatītam uz tukšu virkni, lai lietotu noklusēto."
 
-#: gconf/gconftool.c:355
+#: gconf/gconftool.c:356
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1550,7 +1725,7 @@ msgstr ""
 "Tirdot notestēt aplikāciju, iestatot un atstatot dažādu atslēgu tipu vērtību "
 "lērumu komandrindā."
 
-#: gconf/gconftool.c:364
+#: gconf/gconftool.c:365
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1558,58 +1733,62 @@ msgstr ""
 "Tirdot notestēt aplikāciju, iestatot un atstatot dažādu atslēgu tipu vērtību "
 "lērumu komandrindā esošajās direktorijās."
 
-#: gconf/gconftool.c:373
+#: gconf/gconftool.c:374
 msgid "Get the short doc string for a key"
 msgstr "Dabūt īsu doc virkni atslēgai"
 
-#: gconf/gconftool.c:382
+#: gconf/gconftool.c:383
 msgid "Get the long doc string for a key"
 msgstr "Dabūt garu doc virkni atslēgai"
 
-#: gconf/gconftool.c:391
+#: gconf/gconftool.c:392
 msgid "Get the name of the schema applied to this key"
 msgstr "Dabūt shēmas nosaukumu, kas pielietota šai atslēgai"
 
-#: gconf/gconftool.c:400
+#: gconf/gconftool.c:401
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
 "Nosakiet shēmas nosaukumu, kas seko atslēgai, kuru pielietot shēmas "
 "nosaukumam"
 
-#: gconf/gconftool.c:409
+#: gconf/gconftool.c:410
 msgid "Remove any schema name applied to the given keys"
 msgstr "Izņemt jebkuru shēmas nosaukumu, kas pielietots dotajām atslēgām"
 
-#: gconf/gconftool.c:418
+#: gconf/gconftool.c:419
+msgid "Ignore schema defaults when reading values."
+msgstr ""
+
+#: gconf/gconftool.c:428
 msgid "Get the name of the default source"
 msgstr "Dabūt noklusētā avota nosaukumu"
 
-#: gconf/gconftool.c:427
+#: gconf/gconftool.c:437
 msgid "Print version"
 msgstr "Parādīt versiju"
 
-#: gconf/gconftool.c:524
+#: gconf/gconftool.c:534
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Nevar dabūt un iestatīt/atstatīt vienlaicīgi\n"
 
-#: gconf/gconftool.c:534
+#: gconf/gconftool.c:544
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Nevar iestatīt un dabūt/atstatīt vienlaicīgi\n"
 
-#: gconf/gconftool.c:541
+#: gconf/gconftool.c:551
 #, fuzzy
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Nevar dabūt un iestatīt/atstatīt vienlaicīgi\n"
 
-#: gconf/gconftool.c:552
+#: gconf/gconftool.c:562
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Nevar lietot --all-entries ar --get vai --set\n"
 
-#: gconf/gconftool.c:563
+#: gconf/gconftool.c:573
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Nevar lietot --all-dirs ar --get vai --set\n"
 
-#: gconf/gconftool.c:576
+#: gconf/gconftool.c:586
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1617,7 +1796,7 @@ msgstr ""
 "--recursive-list nevajadzētu lietot ar --get, --set, --unset, --all-entries "
 "vai --all-dirs\n"
 
-#: gconf/gconftool.c:589
+#: gconf/gconftool.c:599
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1625,415 +1804,415 @@ msgstr ""
 "--set_schema nevajadzētu lietot ar --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 
-#: gconf/gconftool.c:595
+#: gconf/gconftool.c:605
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Vērtības tips ir svarīgs tikai iestatot vērtību\n"
 
-#: gconf/gconftool.c:601
+#: gconf/gconftool.c:611
 msgid "Must specify a type when setting a value\n"
 msgstr "Jānosaka tips, kad iestata vērtību\n"
 
-#: gconf/gconftool.c:613 gconf/gconftool.c:626 gconf/gconftool.c:639
-#: gconf/gconftool.c:653 gconf/gconftool.c:666 gconf/gconftool.c:679
-#: gconf/gconftool.c:693
+#: gconf/gconftool.c:619
+msgid ""
+"--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
+"--recursive-list, --get-list-size or --get-list-element\n"
+msgstr ""
+
+#: gconf/gconftool.c:631 gconf/gconftool.c:644 gconf/gconftool.c:657
+#: gconf/gconftool.c:671 gconf/gconftool.c:684 gconf/gconftool.c:697
+#: gconf/gconftool.c:711
 #, fuzzy, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "Ping opcija jālieto viena pati.\n"
 
-#: gconf/gconftool.c:702
+#: gconf/gconftool.c:720
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "Jums jānosaka konfigurācijas avots ar --config-source, kad lietojat --"
 "direct\n"
 
-#: gconf/gconftool.c:708
-msgid "You should use --direct when using a non-default configuration source\n"
-msgstr ""
-"Jums vajadzētu lietot --direct, kad lietojat ne-noklusēto konfigurācijas "
-"avotu\n"
-
-#: gconf/gconftool.c:714
+#: gconf/gconftool.c:726
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Neizdevās inicializēt GConf: %s\n"
 
-#: gconf/gconftool.c:743
+#: gconf/gconftool.c:755
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL ir uzstādīts, neuzstādām shēmas\n"
 
-#: gconf/gconftool.c:750
+#: gconf/gconftool.c:762
 #, fuzzy
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL ir uzstādīts, neuzstādām shēmas\n"
 
-#: gconf/gconftool.c:763
+#: gconf/gconftool.c:775
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "Jauzstāda GCONF_CONFIG_SOURCE vides mainīgais\n"
 
-#: gconf/gconftool.c:792
+#: gconf/gconftool.c:810
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Nevarēju piekļūt konfigurācijas avotam(iem): %s\n"
 
-#: gconf/gconftool.c:1077
+#: gconf/gconftool.c:1095
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Izslēgšanas kļūda: %s\n"
 
-#: gconf/gconftool.c:1120
+#: gconf/gconftool.c:1138
 #, fuzzy
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Jānosaka viens vai vairāki direktoriji rekursīvajam sarakstam.\n"
 
-#: gconf/gconftool.c:1172
+#: gconf/gconftool.c:1190
 #, fuzzy
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Jānosaka viena vai vairākas atslēgas, ko atstatīt.\n"
 
-#: gconf/gconftool.c:1214 gconf/gconftool.c:1479
+#: gconf/gconftool.c:1232 gconf/gconftool.c:1498
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "Kļūda izdrukājot ierakstus iekš `%s': %s\n"
 
-#: gconf/gconftool.c:1232
+#: gconf/gconftool.c:1251
 msgid "(no value set)"
 msgstr "(nav uzstādīta vērtība)"
 
-#: gconf/gconftool.c:1537
+#: gconf/gconftool.c:1557
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Neizdevās pavairot konfigurācijas server (gconfd): %s\n"
 
-#: gconf/gconftool.c:1551
+#: gconf/gconftool.c:1586
 msgid "Must specify a key or keys to get\n"
 msgstr "Jānosaka atslēga vai atslēgas, ko dabūt\n"
 
-#: gconf/gconftool.c:1586
+#: gconf/gconftool.c:1621
 #, c-format
 msgid "Type: %s\n"
 msgstr "Tips: %s\n"
 
-#: gconf/gconftool.c:1587
+#: gconf/gconftool.c:1622
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Saraksta Tips: %s\n"
 
-#: gconf/gconftool.c:1588
+#: gconf/gconftool.c:1623
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car tips: %s\n"
 
-#: gconf/gconftool.c:1589
+#: gconf/gconftool.c:1624
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr tips: %s\n"
 
-#: gconf/gconftool.c:1594
+#: gconf/gconftool.c:1629
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Noklusēta vērtība: %s\n"
 
-#: gconf/gconftool.c:1594 gconf/gconftool.c:1596 gconf/gconftool.c:1597
-#: gconf/gconftool.c:1598
+#: gconf/gconftool.c:1629 gconf/gconftool.c:1631 gconf/gconftool.c:1632
+#: gconf/gconftool.c:1633
 msgid "Unset"
 msgstr "Atstatīt"
 
-#: gconf/gconftool.c:1596
+#: gconf/gconftool.c:1631
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Īpašnieks: %s\n"
 
-#: gconf/gconftool.c:1597
+#: gconf/gconftool.c:1632
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Īss Apraksts: %s\n"
 
-#: gconf/gconftool.c:1598
+#: gconf/gconftool.c:1633
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Garš Apraksts: %s\n"
 
-#: gconf/gconftool.c:1607 gconf/gconftool.c:1831 gconf/gconftool.c:1865
-#: gconf/gconftool.c:1910 gconf/gconftool.c:2055
+#: gconf/gconftool.c:1642 gconf/gconftool.c:1866 gconf/gconftool.c:1900
+#: gconf/gconftool.c:1945 gconf/gconftool.c:2090
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Nav iestatītas vērtības priekš `%s'\n"
 
-#: gconf/gconftool.c:1611 gconf/gconftool.c:1835 gconf/gconftool.c:1869
-#: gconf/gconftool.c:1914 gconf/gconftool.c:2059
+#: gconf/gconftool.c:1646 gconf/gconftool.c:1870 gconf/gconftool.c:1904
+#: gconf/gconftool.c:1949 gconf/gconftool.c:2094
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Neizdevās dabūt vērtību priekš `%s': %s\n"
 
-#: gconf/gconftool.c:1654 gconf/gconftool.c:1666
+#: gconf/gconftool.c:1689 gconf/gconftool.c:1701
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "Nesapratu tipu `%s'\n"
 
-#: gconf/gconftool.c:1678
+#: gconf/gconftool.c:1713
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Jānosaka mainigas atslēgas/vērtības kā argumenti\n"
 
-#: gconf/gconftool.c:1698
+#: gconf/gconftool.c:1733
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "Nav vērtības, ko iestatīt atslēgai: `%s'\n"
 
-#: gconf/gconftool.c:1726
+#: gconf/gconftool.c:1761
 msgid "Cannot set schema as value\n"
 msgstr "Nevar uzstādīt shēmu kā vērtību\n"
 
-#: gconf/gconftool.c:1736
+#: gconf/gconftool.c:1771
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Kad uzstādat sarakstu, jums jānosaka primitīvais saraksta tips\n"
 
-#: gconf/gconftool.c:1750
+#: gconf/gconftool.c:1785
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Kad uzstādat pāri, jums jānosaka primitīvais car-tips un cdr-tips\n"
 
-#: gconf/gconftool.c:1765
+#: gconf/gconftool.c:1800
 #, c-format
 msgid "Error: %s\n"
 msgstr "Kļūda: %s\n"
 
-#: gconf/gconftool.c:1778 gconf/gconftool.c:2806
+#: gconf/gconftool.c:1813 gconf/gconftool.c:2843
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Kļūda iestatot vērtību: %s\n"
 
-#: gconf/gconftool.c:1796
+#: gconf/gconftool.c:1831
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Kļūda sinhronizējot: %s\n"
 
-#: gconf/gconftool.c:1811
+#: gconf/gconftool.c:1846
 #, fuzzy
 msgid "Must specify a key or keys to get type\n"
 msgstr "Jānosaka atslēga vai atslēgas, ko dabūt\n"
 
-#: gconf/gconftool.c:1855
+#: gconf/gconftool.c:1890
 #, fuzzy
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Jānosaka atslēga vai atslēgas, ko dabūt\n"
 
-#: gconf/gconftool.c:1880 gconf/gconftool.c:1925
+#: gconf/gconftool.c:1915 gconf/gconftool.c:1960
 #, fuzzy, c-format
 msgid "Key %s is not a list.\n"
 msgstr "Vērtība iekš '%s' nav shēma\n"
 
-#: gconf/gconftool.c:1900
+#: gconf/gconftool.c:1935
 #, fuzzy
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Jānosaka atslēga vai atslēgas, ko dabūt\n"
 
-#: gconf/gconftool.c:1931
+#: gconf/gconftool.c:1966
 #, fuzzy
 msgid "Must specify list index.\n"
 msgstr "Jānosaka pāris atslēgas, ko salauzt\n"
 
-#: gconf/gconftool.c:1938
+#: gconf/gconftool.c:1973
 msgid "List index must be non-negative.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1947
+#: gconf/gconftool.c:1982
 msgid "List index is out of bounds.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1973
+#: gconf/gconftool.c:2008
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Jānosaka atslēga vai atslēgas komandrindā\n"
 
-#: gconf/gconftool.c:1993
+#: gconf/gconftool.c:2028
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "Neviena shēma nav zināma priekš `%s'\n"
 
-#: gconf/gconftool.c:2026
+#: gconf/gconftool.c:2061
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "Neviena doc virkne nav noglabāta shēmā iekš '%s'\n"
 
-#: gconf/gconftool.c:2031
+#: gconf/gconftool.c:2066
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "Kļūda dabūnot shēmu no '%s': %s\n"
 
-#: gconf/gconftool.c:2038
+#: gconf/gconftool.c:2073
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "Neviena shēma novietota iekš '%s'\n"
 
-#: gconf/gconftool.c:2041
+#: gconf/gconftool.c:2076
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "Vērtība iekš '%s' nav shēma\n"
 
-#: gconf/gconftool.c:2097
+#: gconf/gconftool.c:2132
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Jānosaka shēmas nosaukums, kam seko atslēgas nosaukums, kuru tai pielietot\n"
 
-#: gconf/gconftool.c:2104
+#: gconf/gconftool.c:2139
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Kļūda saistot shēmas nosaukumu '%s' ar atslēgas nosaukumu '%s': %s\n"
 
-#: gconf/gconftool.c:2122
+#: gconf/gconftool.c:2157
 #, fuzzy
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Jānosaka atslēga vai atslēgas, ko dabūt\n"
 
-#: gconf/gconftool.c:2132
+#: gconf/gconftool.c:2167
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "Kļūda dzēšot shēmas nosaukumu no '%s': %s\n"
 
-#: gconf/gconftool.c:2157
+#: gconf/gconftool.c:2192
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Jānosaka atslēga (shēmas nosaukums) kā vienīgais arguments\n"
 
-#: gconf/gconftool.c:2199
+#: gconf/gconftool.c:2234
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "Saraksta tipam jābūt primitīvajam tipam: string, int, float vai bool\n"
 
-#: gconf/gconftool.c:2219
+#: gconf/gconftool.c:2254
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Pāra car tipam jābūt primitīvajam tipam: string, int, float vai bool\n"
 
-#: gconf/gconftool.c:2239
+#: gconf/gconftool.c:2274
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Pāra cdr tipam jābūt primitīvajam tipam: string, int, float vai bool\n"
 
-#: gconf/gconftool.c:2254
+#: gconf/gconftool.c:2289
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Kļūda uzstādot vērtību: %s"
 
-#: gconf/gconftool.c:2268
+#: gconf/gconftool.c:2303
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Kļūda sinhronizējot: %s"
 
-#: gconf/gconftool.c:2283
+#: gconf/gconftool.c:2318
 #, fuzzy
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Jānosaka viena vai vairākas direktorijas, no kurienes dabūt atslēgu/vērtību "
 "pārus.\n"
 
-#: gconf/gconftool.c:2297
+#: gconf/gconftool.c:2332
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Jānosaka viena vai vairākas atslēgas, ko atstatīt.\n"
 
-#: gconf/gconftool.c:2308
+#: gconf/gconftool.c:2343
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "Kļūda atstatot `%s': %s\n"
 
-#: gconf/gconftool.c:2328
+#: gconf/gconftool.c:2363
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Jānosaka viena vai vairākas atslēgas, ko rekursīvi atstatīt.\n"
 
-#: gconf/gconftool.c:2342
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Kļūda rekursīvi atstatot \"%s\": %s\n"
 
-#: gconf/gconftool.c:2362
+#: gconf/gconftool.c:2397
 #, fuzzy
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Jānosaka viena vai vairākas direktorijas, no kuras dabūt apakšdirektorijas.\n"
 
-#: gconf/gconftool.c:2396
+#: gconf/gconftool.c:2431
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Kļūda izdrukājot direktorijas: %s\n"
 
-#: gconf/gconftool.c:2532
+#: gconf/gconftool.c:2567
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr ""
 
-#: gconf/gconftool.c:2559
+#: gconf/gconftool.c:2594
 #, fuzzy, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr "BRĪDINĀJUMS: shēmai nav definēta atslēga\n"
 
-#: gconf/gconftool.c:2592
+#: gconf/gconftool.c:2627
 msgid "WARNING: must have a child node under <value>\n"
 msgstr ""
 
-#: gconf/gconftool.c:2598
+#: gconf/gconftool.c:2633
 #, fuzzy, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "BRĪDINĀJUMS: node <%s> nav saprasta zem <schema>\n"
 
-#: gconf/gconftool.c:2616
+#: gconf/gconftool.c:2651
 #, fuzzy, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "BRĪDINĀJUMS: neizdevās parsēt tipa nosaukumu `%s'\n"
 
-#: gconf/gconftool.c:2637
+#: gconf/gconftool.c:2672
 #, fuzzy, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "BRĪDINĀJUMS: neizdevās parsēt tipa nosaukumu `%s'\n"
 
-#: gconf/gconftool.c:2659
+#: gconf/gconftool.c:2694
 #, fuzzy, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "BRĪDINĀJUMS: neizdevās parsēt tipa nosaukumu `%s'\n"
 
-#: gconf/gconftool.c:2680
+#: gconf/gconftool.c:2715
 #, fuzzy, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "BRĪDINĀJUMS: neizdevās parsēt tipa nosaukumu `%s'\n"
 
-#: gconf/gconftool.c:2796 gconf/gconftool.c:3332
+#: gconf/gconftool.c:2824 gconf/gconftool.c:3368
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "BRĪDINĀJUMS: neizdevās asociēt shēmu `%s' ar atslēgu `%s': %s\n"
 
-#: gconf/gconftool.c:2901
+#: gconf/gconftool.c:2937
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "BRĪDINĀJUMS: nederīgs vai iztrūkstošs shēmas tips (%s)\n"
 
-#: gconf/gconftool.c:2910
+#: gconf/gconftool.c:2946
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "BRĪDINĀJUMS: nederīgs vai iztrūkstošs shēmas list_type (%s)\n"
 
-#: gconf/gconftool.c:2921 gconf/gconftool.c:2951 gconf/gconftool.c:2980
+#: gconf/gconftool.c:2957 gconf/gconftool.c:2987 gconf/gconftool.c:3016
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "BRĪDINĀJUMS: Neizdevās parsēt noklusēto vērtību `%s' shēmai (%s)\n"
 
-#: gconf/gconftool.c:2939
+#: gconf/gconftool.c:2975
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "BRĪDINĀJUMS: nederīgs vai iztrūkstošs car_type vai cdr_type shēmai (%s)\n"
 
-#: gconf/gconftool.c:2964
+#: gconf/gconftool.c:3000
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "BRĪDINĀJUMS: Jūs nevarat uzstādīt noklusēto vērtību shēmai\n"
 
-#: gconf/gconftool.c:2993
+#: gconf/gconftool.c:3029
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "BRĪDINĀJUMS: gconftool iekšējā kļūda, nezināms GConfValueType\n"
 
-#: gconf/gconftool.c:3041 gconf/gconftool.c:3062 gconf/gconftool.c:3083
-#: gconf/gconftool.c:3104
+#: gconf/gconftool.c:3077 gconf/gconftool.c:3098 gconf/gconftool.c:3119
+#: gconf/gconftool.c:3140
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "BRĪDINĀJUMS: neizdevās parsēt tipa nosaukumu `%s'\n"
 
-#: gconf/gconftool.c:3058
+#: gconf/gconftool.c:3094
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
@@ -2041,47 +2220,47 @@ msgstr ""
 "BRĪDINĀJUMS: list_type var būt tikai int, float, string vai bool un nevis `%"
 "s'\n"
 
-#: gconf/gconftool.c:3079
+#: gconf/gconftool.c:3115
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "BRĪDINĀJUMS: car_type var būt tikai int, float, string vai bool un nevis `%"
 "s'\n"
 
-#: gconf/gconftool.c:3100
+#: gconf/gconftool.c:3136
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "BRĪDINĀJUMS: cdr_type var būt tikai int, float, string vai bool un nevis `%"
 "s'\n"
 
-#: gconf/gconftool.c:3140
+#: gconf/gconftool.c:3176
 msgid "WARNING: empty <applyto> node"
 msgstr "BRĪDINĀJUMS: tukša <applyto> node"
 
-#: gconf/gconftool.c:3143 gconf/gconftool.c:3405
+#: gconf/gconftool.c:3179 gconf/gconftool.c:3441
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "BRĪDINĀJUMS: node <%s> nav saprasta zem <schema>\n"
 
-#: gconf/gconftool.c:3154
+#: gconf/gconftool.c:3190
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "BRĪDINĀJUMS: tipa saraksta shēmai nav norādīts <list_type>\n"
 
-#: gconf/gconftool.c:3160
+#: gconf/gconftool.c:3196
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "BRĪDINĀJUMS: tipa pāra shēmai nav norādīts <car_type>\n"
 
-#: gconf/gconftool.c:3166
+#: gconf/gconftool.c:3202
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "BRĪDINĀJUMS: pāra saraksta shēmai nav norādīts <cdr_type>\n"
 
-#: gconf/gconftool.c:3195
+#: gconf/gconftool.c:3231
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "BRĪDINĀJUMS: <locale> mezglam nav `name=\"locale\"' atribūta, ignorēju\n"
 
-#: gconf/gconftool.c:3201
+#: gconf/gconftool.c:3237
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -2089,91 +2268,91 @@ msgstr ""
 "BRĪDINĀJUMS: vairāki <locale> mezgli lokālei `%s', ignorēju vispirms visu "
 "pagātni\n"
 
-#: gconf/gconftool.c:3299
+#: gconf/gconftool.c:3335
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "BRĪDINĀJUMS: Nepareiza node <%s> <lokale> nodē\n"
 
-#: gconf/gconftool.c:3340
+#: gconf/gconftool.c:3376
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Pievienoju shēmu `%s' atslēgai `%s'\n"
 
-#: gconf/gconftool.c:3414
+#: gconf/gconftool.c:3450
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Jums jābūt vismaz vienam <locale> ierakstam iekš <schema>\n"
 
-#: gconf/gconftool.c:3446
+#: gconf/gconftool.c:3482
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "BRĪDINĀJUMS: neizdevās uzstādīt shēmu `%s' lokālei `%s': %s\n"
 
-#: gconf/gconftool.c:3454
+#: gconf/gconftool.c:3490
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Instalēta shēma `%s' lokālei `%s'\n"
 
-#: gconf/gconftool.c:3478
+#: gconf/gconftool.c:3514
 #, fuzzy, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
 msgstr "BRĪDINĀJUMS: neizdevās uzstādīt shēmu `%s' lokālei `%s': %s\n"
 
-#: gconf/gconftool.c:3486
+#: gconf/gconftool.c:3522
 #, fuzzy, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "Instalēta shēma `%s' lokālei `%s'\n"
 
-#: gconf/gconftool.c:3524
+#: gconf/gconftool.c:3560
 msgid "WARNING: no key specified for schema\n"
 msgstr "BRĪDINĀJUMS: shēmai nav definēta atslēga\n"
 
-#: gconf/gconftool.c:3565
+#: gconf/gconftool.c:3601
 #, fuzzy, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "BRĪDINĀJUMS: node <%s> nav saprasta zem <schema>\n"
 
-#: gconf/gconftool.c:3596
+#: gconf/gconftool.c:3632
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Nevarēju atvērt `%s': %s\n"
 
-#: gconf/gconftool.c:3603
+#: gconf/gconftool.c:3639
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Dokuments `%s' ir tukšs?\n"
 
-#: gconf/gconftool.c:3615
+#: gconf/gconftool.c:3651
 #, fuzzy, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "Dokumentam `%s' ir nepareizs saknes mezgla tips (<%s>, jābūt "
 "<gconfschemafile>)\n"
 
-#: gconf/gconftool.c:3628
+#: gconf/gconftool.c:3664
 #, fuzzy, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "Dokumentam `%s' nav augšlīmeņa <gconfschemafile> mezgla\n"
 
-#: gconf/gconftool.c:3642
+#: gconf/gconftool.c:3678
 #, fuzzy, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "BRĪDINĀJUMS: mezgls <%s> zem <gconfschemafile> nesaprasts\n"
 
-#: gconf/gconftool.c:3653 gconf/gconftool.c:3688 gconf/gconftool.c:3720
+#: gconf/gconftool.c:3689 gconf/gconftool.c:3724 gconf/gconftool.c:3756
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Kļūda sinhronizējot konfigurācijas datus: %s"
 
-#: gconf/gconftool.c:3672
+#: gconf/gconftool.c:3708
 msgid "Must specify some schema files to install\n"
 msgstr "Jums jānorāda pāris shēmu faili uzstādīšanai\n"
 
-#: gconf/gconftool.c:3704
+#: gconf/gconftool.c:3740
 #, fuzzy
 msgid "Must specify some schema files to uninstall\n"
 msgstr "Jums jānorāda pāris shēmu faili uzstādīšanai\n"
 
-#: gconf/gconftool.c:3741
+#: gconf/gconftool.c:3777
 #, c-format
 msgid ""
 "\n"
@@ -2182,16 +2361,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:3761
+#: gconf/gconftool.c:3797
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Neizdevās atstatīt laušanas atslēgu %s: %s\n"
 
-#: gconf/gconftool.c:3887
+#: gconf/gconftool.c:3923
 msgid "Must specify some keys to break\n"
 msgstr "Jānosaka pāris atslēgas, ko salauzt\n"
 
-#: gconf/gconftool.c:3893
+#: gconf/gconftool.c:3929
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2200,11 +2379,11 @@ msgstr ""
 "Mēģinu salauzt jūsu aplikāciju, iestatot sliktas vērtības atslēgai:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:3911
+#: gconf/gconftool.c:3947
 msgid "Must specify some directories to break\n"
 msgstr "Janorāda pāris direktorijas, kuras 'salauzt'\n"
 
-#: gconf/gconftool.c:3930
+#: gconf/gconftool.c:3966
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2214,6 +2393,19 @@ msgstr ""
 "Mēģinu pārtraukt jūsu aplikāciju, uzstādot sliktas atslēgu vērtības "
 "direktorijā:\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the %s root directory in the address `%s'"
+#~ msgstr "Nevarēju atrast %s saknes direktoriju adresē `%s'"
+
+#~ msgid ""
+#~ "Can't read from or write to the %s root directory in the address `%s'"
+#~ msgstr "Nevaru nolasīt vai ierakstīt %s saknes direktorijā adresē `%s'"
+
+#~ msgid ""
+#~ "You should use --direct when using a non-default configuration source\n"
+#~ msgstr ""
+#~ "Jums vajadzētu lietot --direct, kad lietojat ne-noklusēto konfigurācijas "
+#~ "avotu\n"
 
 #~ msgid ""
 #~ "%u items remain in the cache after cleaning already-synced items older "
