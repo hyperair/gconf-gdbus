@@ -708,6 +708,9 @@ main(int argc, char** argv)
       daemon_lock = gconf_get_lock (lock_dir, &err);
     }
 
+  g_free (gconfd_dir);
+  g_free (lock_dir);
+
   if (daemon_lock != NULL)
     {
       /* This loads backends and so on. It needs to be done before

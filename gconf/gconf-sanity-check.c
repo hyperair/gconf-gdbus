@@ -77,6 +77,7 @@ main (int argc, char** argv)
                   poptBadOption(ctx, 0),
                   poptStrerror(nextopt),
                   argv[0]);
+      poptFreeContext (ctx);
       return 1;
     }
 
