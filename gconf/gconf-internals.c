@@ -1424,9 +1424,43 @@ g_conf_sources_query_value (GConfSources* sources,
       tmp = g_list_next(tmp);
     }
 
-  /* FIXME look up default value in schema */
+  /* If we got here, there was no value; we try to look up the
+     schema for this key if we have one, and use the default
+     value.
+  */
 
-  g_free(schema_name);
+  if (schema_name != NULL)
+    {
+      GConfValue* val =
+        g_conf_sources_query_value(sources, schema_name, NULL);
+      
+      if (val != NULL &&
+          val->type != G_CONF_VALUE_SCHEMA)
+        {
+          g_conf_set_error(G_CONF_FAILED, _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
+                
+          g_free(schema_name);
+
+          return NULL;
+        }
+      else if (val != NULL)
+        {
+          GConfValue* retval = g_conf_value_schema(val)->default_value;
+          /* cheat, "unparent" the value to avoid a copy */
+          g_conf_value_schema(val)->default_value = NULL;
+          g_conf_value_destroy(val);
+
+          g_free(schema_name);      
+          
+          return retval;
+        }
+      else
+        {
+          g_free(schema_name);
+          
+          return NULL;
+        }
+    }
   
   return NULL;
 }

@@ -175,7 +175,8 @@ static void        dir_destroy     (Dir* d);
 static gboolean    dir_sync        (Dir* d);
  /* key should have no slashes in it */
 static void        dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value);
-static GConfValue* dir_get_value   (Dir* d, const gchar* relative_key);
+static GConfValue* dir_get_value   (Dir* d, const gchar* relative_key,
+                                    gchar** schema_name);
 static GConfMetaInfo* dir_get_metainfo(Dir* d, const gchar* relative_key);
 static void        dir_unset_value (Dir* d, const gchar* relative_key);
 static GSList*     dir_all_entries (Dir* d);
@@ -351,7 +352,7 @@ query_value (GConfSource* source, const gchar* key, gchar** schema_name)
   
       relative_key = g_conf_key_key(key);
 
-      return dir_get_value(dir, relative_key);
+      return dir_get_value(dir, relative_key, schema_name);
     }
   else
     return NULL;
@@ -1278,7 +1279,7 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
 }
 
 static GConfValue*
-dir_get_value   (Dir* d, const gchar* relative_key)
+dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name)
 {
   Entry* e;
 
@@ -1290,9 +1291,20 @@ dir_get_value   (Dir* d, const gchar* relative_key)
   d->last_access = time(NULL);
   
   if (e == NULL || e->value == NULL)
-    return NULL;
+    {
+      if (schema_name && e->schema_name)
+        *schema_name = g_strdup(e->schema_name);
+      return NULL;
+    }
   else
-    return g_conf_value_copy(e->value);
+    {
+      if (schema_name &&
+          e->value->type == G_CONF_VALUE_IGNORE_SUBSEQUENT &&
+          e->schema_name)
+        *schema_name = g_strdup(e->schema_name);
+      
+      return g_conf_value_copy(e->value);
+    }
 }
 
 static GConfMetaInfo*
@@ -1891,9 +1903,109 @@ entry_fill    (Entry* e)
  * XML manipulation
  */
 
+static GConfValue*
+schema_node_extract_value(xmlNodePtr node)
+{
+  GConfValue* value = NULL;
+  gchar* sd_str;
+  gchar* owner_str;
+  gchar* stype_str;
+  GConfSchema* sc;
+
+  sd_str = xmlGetProp(node, "short_desc");
+  owner_str = xmlGetProp(node, "owner");
+  stype_str = xmlGetProp(node, "stype");
+
+  sc = g_conf_schema_new();
+
+  if (sd_str)
+    {
+      g_conf_schema_set_short_desc(sc, sd_str);
+      free(sd_str);
+    }
+  if (owner_str)
+    {
+      g_conf_schema_set_owner(sc, owner_str);
+      free(owner_str);
+    }
+  if (stype_str)
+    {
+      GConfValueType stype;
+      stype = g_conf_value_type_from_string(stype_str);
+      g_conf_schema_set_type(sc, stype);
+      free(stype_str);
+    }
+
+  if (node->childs != NULL)
+    {
+      GConfValue* default_value = NULL;
+      gchar* ld_str = NULL;
+      GSList* bad_nodes = NULL;
+      xmlNodePtr iter = node->childs;
+
+      while (iter != NULL)
+        {
+          if (iter->type == XML_ELEMENT_NODE)
+            {
+              if (default_value == NULL &&
+                  strcmp(iter->name, "default") == 0)
+                {
+                  default_value = xentry_extract_value(iter);
+                }
+              else if (ld_str == NULL &&
+                       strcmp(iter->name, "longdesc") == 0)
+                {
+                  ld_str = xmlNodeGetContent(iter);
+                }
+              else
+                {
+                  bad_nodes = g_slist_prepend(bad_nodes, iter);
+                }
+            }
+          else
+            bad_nodes = g_slist_prepend(bad_nodes, iter); /* what is this node? */
+
+          iter = iter->next;
+        }
+      
+
+      /* Remove the bad nodes from the parse tree */
+      if (bad_nodes != NULL)
+        {
+          GSList* tmp = bad_nodes;
+          
+          while (tmp != NULL)
+            {
+              xmlUnlinkNode(tmp->data);
+              xmlFreeNode(tmp->data);
+              
+              tmp = g_slist_next(tmp);
+            }
+          
+          g_slist_free(bad_nodes);
+        }
+
+      if (default_value != NULL)
+        g_conf_schema_set_default_value_nocopy(sc, default_value);
+
+      if (ld_str)
+        {
+          g_conf_schema_set_long_desc(sc, ld_str);
+          free(ld_str);
+        }
+    }
+  
+  value = g_conf_value_new(G_CONF_VALUE_SCHEMA);
+      
+  g_conf_value_set_schema_nocopy(value, sc);
+
+  return value;
+}
+
 /* this actually works on any node,
    not just <entry>, such as the <car>
-   and <cdr> nodes and the <li> nodes 
+   and <cdr> nodes and the <li> nodes and the
+   <default> node
 */
 static GConfValue*
 xentry_extract_value(xmlNodePtr node)
@@ -1945,52 +2057,7 @@ xentry_extract_value(xmlNodePtr node)
       }
       break;
     case G_CONF_VALUE_SCHEMA:
-      {
-        gchar* sd_str;
-        gchar* ld_str;
-        gchar* owner_str;
-        gchar* stype_str;
-        GConfSchema* sc;
-        GConfValue* value;
-
-        free(type_str);
-
-        sd_str = xmlGetProp(node, "short_desc");
-        owner_str = xmlGetProp(node, "owner");
-        stype_str = xmlGetProp(node, "stype");
-        ld_str = xmlNodeGetContent(node);
-
-        sc = g_conf_schema_new();
-
-        if (sd_str)
-          {
-            g_conf_schema_set_short_desc(sc, sd_str);
-            free(sd_str);
-          }
-        if (ld_str)
-          {
-            g_conf_schema_set_long_desc(sc, ld_str);
-            free(ld_str);
-          }
-        if (owner_str)
-          {
-            g_conf_schema_set_owner(sc, owner_str);
-            free(owner_str);
-          }
-        if (stype_str)
-          {
-            GConfValueType stype;
-            stype = g_conf_value_type_from_string(stype_str);
-            g_conf_schema_set_type(sc, stype);
-            free(stype_str);
-          }
-
-        value = g_conf_value_new(G_CONF_VALUE_SCHEMA);
-      
-        g_conf_value_set_schema_nocopy(value, sc);
-
-        return value;
-      }
+      return schema_node_extract_value(node);
       break;
     case G_CONF_VALUE_LIST:
       {
@@ -2197,7 +2264,25 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
         /* OK if these are set to NULL, since that unsets the property */
         xmlSetProp(node, "short_desc", sc->short_desc);
         xmlSetProp(node, "owner", sc->owner);
-        xmlNodeSetContent(node, sc->long_desc);
+
+        if (node->childs)
+          xmlFreeNodeList(node->childs);
+        node->childs = NULL;
+        node->last = NULL;
+
+        if (sc->default_value != NULL)
+          {
+            xmlNodePtr default_value_node;
+            default_value_node = xmlNewChild(node, NULL, "default", NULL);
+            xentry_set_value(default_value_node, sc->default_value);
+          }
+
+        if (sc->long_desc)
+          {
+            xmlNodePtr ld_node;
+
+            ld_node = xmlNewChild(node, NULL, "longdesc", sc->long_desc);
+          }
       }
       break;
     case G_CONF_VALUE_LIST:
