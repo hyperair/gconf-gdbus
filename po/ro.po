@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-02 12:18+0100\n"
+"POT-Creation-Date: 2005-02-07 17:19+0000\n"
 "PO-Revision-Date: 2005-03-02 22:19+0200\n"
 "Last-Translator: Mişu Moldovan <dumol@go.ro>\n"
 "Language-Team: Română <gnomero-list@lists.sourceforge.net>\n"
@@ -86,8 +86,9 @@ msgstr ""
 #: backends/markup-backend.c:820 backends/xml-backend.c:770
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
-msgstr "Nu am reuşit să deschid directorul „lock” al %s pentru a şterge "
-"fişierele „lock”: %s\n"
+msgstr ""
+"Nu am reuşit să deschid directorul „lock” al %s pentru a şterge fişierele "
+"„lock”: %s\n"
 
 #: backends/markup-backend.c:838 backends/xml-backend.c:788
 #, c-format
@@ -435,8 +436,9 @@ msgstr "Ignor un „car” incorect din perechea XML: %s"
 
 #: backends/xml-entry.c:1155 backends/xml-entry.c:1178
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
-msgstr "prelucrez fişierul XML: listele şi perechile pot să nu fie plasate în"
-" interiorul unei perechi"
+msgstr ""
+"prelucrez fişierul XML: listele şi perechile pot să nu fie plasate în "
+"interiorul unei perechi"
 
 #: backends/xml-entry.c:1168
 #, c-format
@@ -858,8 +860,9 @@ msgstr "gconftool sau un alt proces non-gconfd are fişierul „lock” „%s”
 
 #: gconf/gconf-internals.c:2480
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "nu am reuşit să contactez ORB pentru a rezolva referinţa existentă "
-"pentru obiectul gconfd"
+msgstr ""
+"nu am reuşit să contactez ORB pentru a rezolva referinţa existentă pentru "
+"obiectul gconfd"
 
 #: gconf/gconf-internals.c:2490
 #, c-format
@@ -919,8 +922,9 @@ msgstr "Eroare la ping către server: %s"
 #: gconf/gconf-internals.c:2934
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "Nu am reuşit să creez un „pipe” pentru comunicarea cu daemonul gconf "
-"creat: %s\n"
+msgstr ""
+"Nu am reuşit să creez un „pipe” pentru comunicarea cu daemonul gconf creat: %"
+"s\n"
 
 #: gconf/gconf-internals.c:2958
 #, c-format
@@ -936,7 +940,7 @@ msgid ""
 "(Details - %s)"
 msgstr ""
 "Nu am reuşit să contactez serverul configurărilor. Probabil e nevoie să "
-"activaţi facilităţile TCP/IP pentru ORBit. Sau poate aveţi fişiere de tip" 
+"activaţi facilităţile TCP/IP pentru ORBit. Sau poate aveţi fişiere de tip"
 "„locks” NFS rămase în urma unei blocări a sistemului. Pentru mai multe "
 "detalii vizitaţi http://www.gnome.org/projects/gconf/ (Detalii: %s)"
 
@@ -967,7 +971,10 @@ msgid ""
 msgstr ""
 "Vă rugăm să contactaţi administratorul de sistem pentru a rezolva următoarea "
 "problemă:\n"
-"Nu s-a reuşit deschiderea sau crearea fişierului „%s”, ceea ce indică o eroare în configurarea directorului „home”, pentru că multe programe au nevoie să creeze fişiere în directorul utilizatorului. Eroarea a fost „%s” (errno = %d)."
+"Nu s-a reuşit deschiderea sau crearea fişierului „%s”, ceea ce indică o "
+"eroare în configurarea directorului „home”, pentru că multe programe au "
+"nevoie să creeze fişiere în directorul utilizatorului. Eroarea a fost „%"
+"s” (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:181
 #, c-format
@@ -982,7 +989,11 @@ msgid ""
 msgstr ""
 "Vă rugăm să contactaţi administratorul de sistem pentru a rezolva următoarea "
 "problemă:\n"
-"Nu s-a reuşit crearea unui fişier „lock” pentru fişierul „%s”, ceea ce indică o eroare în configurarea sistemului de operare. Dacă aveţi un director „home” montat prin NFS, clientul sau serverul NFS sunt probabil setate greşit. O cauză des întâlnită a acestei erori constă în dezactivarea serviciului „nfslock”. Eroarea a fost „%s” (errno = %d)."
+"Nu s-a reuşit crearea unui fişier „lock” pentru fişierul „%s”, ceea ce "
+"indică o eroare în configurarea sistemului de operare. Dacă aveţi un "
+"director „home” montat prin NFS, clientul sau serverul NFS sunt probabil "
+"setate greşit. O cauză des întâlnită a acestei erori constă în dezactivarea "
+"serviciului „nfslock”. Eroarea a fost „%s” (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:198
 #, c-format
@@ -1155,11 +1166,11 @@ msgstr ""
 "instanţele gconfd şi o nouă autentificare ar putea să ajute. Dacă nu aveţi "
 "fişiere lock invalide, ştergeţi ~/.gconf*/*lock. Poate problema constă în "
 "faptul că încercaţi să utilizaţi GConf de pe două maşini diferite şi ORBit "
-"încă are setările implicite ce nu permit conexiuni CORBA la distanţă (scrieţi"
-" „ORBIIOPIPv4=1” în /etc/orbitrc. De asemenea, verificaţi fişierele syslog "
-"user.* pentru depanarea problemelor gconfd. Nu poate exista decât un singur "
-"gconfd pentru un director „home” şi el trebuie să deţină un fişier lock în "
-"~/.gconfd şi alte fişiere lock în locaţii precum ~/.gconf"
+"încă are setările implicite ce nu permit conexiuni CORBA la distanţă "
+"(scrieţi „ORBIIOPIPv4=1” în /etc/orbitrc. De asemenea, verificaţi fişierele "
+"syslog user.* pentru depanarea problemelor gconfd. Nu poate exista decât un "
+"singur gconfd pentru un director „home” şi el trebuie să deţină un fişier "
+"lock în ~/.gconfd şi alte fişiere lock în locaţii precum ~/.gconf"
 
 #: gconf/gconf-sources.c:1567
 #, c-format
@@ -1565,8 +1576,7 @@ msgstr ""
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
-"Un client a încercat să se şteargă din serverul GConf, deşi nu a fost "
-"adăugat"
+"Un client a încercat să se şteargă din serverul GConf, deşi nu a fost adăugat"
 
 #: gconf/gconftool.c:97
 msgid "Set a key to a value and sync. Use with --type."
@@ -1915,8 +1925,9 @@ msgstr "Eroare la închidere: %s\n"
 
 #: gconf/gconftool.c:1167
 msgid "Must specify one or more directories to recursively list.\n"
-msgstr "Trebuie să specificaţi unul sau mai multe directoare pentru "
-"listare recursivă.\n"
+msgstr ""
+"Trebuie să specificaţi unul sau mai multe directoare pentru listare "
+"recursivă.\n"
 
 #: gconf/gconftool.c:1219
 msgid "Must specify one or more directories to dump.\n"
@@ -2103,8 +2114,9 @@ msgstr "Valoarea pentru „%s” nu este o schemă\n"
 
 #: gconf/gconftool.c:2161
 msgid "Must specify a schema name followed by the key name to apply it to\n"
-msgstr "Trebuie să specificaţi un nume de schemă urmat de numele unei chei "
-"căreia să-i fie aplicată\n"
+msgstr ""
+"Trebuie să specificaţi un nume de schemă urmat de numele unei chei căreia să-"
+"i fie aplicată\n"
 
 #: gconf/gconftool.c:2168
 #, c-format
@@ -2130,13 +2142,15 @@ msgstr "Tipul listei trebuie să fie o primitivă: string, int, float sau bool\n
 
 #: gconf/gconftool.c:2283
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
-msgstr "Tipul perechii „cat” trebuie să fie o primitivă: string, int, float "
-"sau bool\n"
+msgstr ""
+"Tipul perechii „cat” trebuie să fie o primitivă: string, int, float sau "
+"bool\n"
 
 #: gconf/gconftool.c:2303
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
-msgstr "Tipul perechii „cdr” trebuie să fie o primitivă: string, int, float "
-"sau bool\n"
+msgstr ""
+"Tipul perechii „cdr” trebuie să fie o primitivă: string, int, float sau "
+"bool\n"
 
 #: gconf/gconftool.c:2318
 #, c-format
@@ -2150,8 +2164,9 @@ msgstr "Eroare la sincronizare: %s"
 
 #: gconf/gconftool.c:2347
 msgid "Must specify one or more directories to get key/value pairs from.\n"
-msgstr "Trebuie să specificaţi unul sau mai multe directoare de unde să se "
-"obţină perechile chei/valori.\n"
+msgstr ""
+"Trebuie să specificaţi unul sau mai multe directoare de unde să se obţină "
+"perechile chei/valori.\n"
 
 #: gconf/gconftool.c:2361
 msgid "Must specify one or more keys to unset.\n"
@@ -2239,8 +2254,9 @@ msgstr "ATENŢIE: „list_type” invalid sau lipsă pentru schema (%s)\n"
 #: gconf/gconftool.c:2988 gconf/gconftool.c:3018 gconf/gconftool.c:3047
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "ATENŢIE: Nu am reuşit să prelucrez valoarea implicită „%s” pentru "
-"schema (%s)\n"
+msgstr ""
+"ATENŢIE: Nu am reuşit să prelucrez valoarea implicită „%s” pentru schema (%"
+"s)\n"
 
 #: gconf/gconftool.c:3006
 #, c-format
