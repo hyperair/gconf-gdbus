@@ -40,6 +40,10 @@ BUILT_SOURCES = \
 	gconfmarshal.h		\
 	gconfmarshal.c
 
+CLEANFILES = \
+	$(BUILT_SOURCES)	\
+	stamp-gconfmarshal.h
+
 gconfincludedir = $(includedir)/gconf/$(MAJOR_VERSION)/gconf
 gconfinclude_HEADERS = \
 	gconf.h			\
