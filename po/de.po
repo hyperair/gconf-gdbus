@@ -8,14 +8,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.1.x\n"
-"POT-Creation-Date: 2002-03-11 23:57+0100\n"
+"POT-Creation-Date: 2002-03-16 17:40+0100\n"
 "PO-Revision-Date: 2002-03-11 23:57+0100\n"
 "Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.5\n"
 
 #: backends/bdb-backend.c:215
 msgid "Unloading BerkeleyDB (BDB) backend module."
@@ -722,16 +721,16 @@ msgstr ""
 "von hier erreichbar ist - wenn Sie von zwei Maschinen gleichzeitig "
 "angemeldet sind, müssen Sie ggf. TCP-networking für ORBit aktivieren, indem "
 "Sie die Zeile \"ORBIIOPIPv4=1\" in /etc/orbitrc schreiben\n"
-"b) SIe haben nicht aufgehobene Sperren (verursacht durch einen Absturz) in "
+"b) Sie haben nicht aufgehobene Sperren (verursacht durch einen Absturz) in "
 "Ihrem Heimverzeichnis, das per NFS eingehängt wurde. Versuchen Sie ~/.gconf/"
 "*.lock und ~/.gconfd/lock zu löschen, wenn Sie sicher sind, dass keine gconf-"
 "Prozesse auf einem Rechner laufen, die das Heimverzeichnis verwenden"
 
-#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:72
+#: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:72
 msgid "Help options"
 msgstr "Hilfeoptionen"
 
-#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:411
+#: gconf/gconf-sanity-check.c:75 gconf/gconftool.c:411
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -741,7 +740,7 @@ msgstr ""
 "`%s --help' ausführen, um eine vollständige Liste verfügbarer Prompt-"
 "Optionen anzuzeigen.\n"
 
-#: gconf/gconf-sanity-check.c:131
+#: gconf/gconf-sanity-check.c:132
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -749,35 +748,65 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
-"Bitte setzen SIe sich mit Ihrem Systemadministrator in Verbindung, um das "
+"Bitte setzen Sie sich mit Ihrem Systemadministrator in Verbindung, um das "
 "folgende Problem zu lösen:\n"
 "Datei »%s« konnte nicht geöffnet oder erstellt werden. Dies deutet darauf "
 "hin, dass ein Problem in Ihrer Konfiguration vorliegen könnte, da viele "
 "Programme Dateien in Ihrem Heimverzeichnis anlegen müssen. Der Fehler war »%"
 "s« (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:143
+#: gconf/gconf-sanity-check.c:144
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not lock the file \"%s\"; this indicates that there may be a problem "
 "with your operating system configuration. If you have an NFS-mounted home "
 "directory, either the client or the server may be set up incorrectly. See "
-"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+"the rpc.statd and rpc.lockd documentation. A common cause of this error is "
+"that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
+"%d)."
 msgstr ""
-"Bitte setzen SIe sich mit Ihrem Systemadministrator in Verbindung, um das "
+"Bitte setzen Sie sich mit Ihrem Systemadministrator in Verbindung, um das "
 "folgende Problem zu lösen:\n"
 "Die Datei »%s« konnte nicht gesperrt werden. Dies deutet darauf hin, dass es "
 "ein Problem mit der Konfiguration Ihres Betriebssystems geben könnte. Wenn "
 "Ihr Heimverzeichnis per NFS eingehängt ist, kann es sein, dass entweder der "
 "Client oder der Server nicht richtig konfiguriert ist. Schauen Sie in der "
-"rpc.statd- und der rpc.lockd-Dokumentation nach. Der Fehler war »%s« (errno "
+"rpc.statd- und der rpc.lockd-Dokumentation nach. Ein Grund für diesen Fehler "
+"ist, dass der »nfslock«-Dienst deaktiviert wurde. Der Fehler war »%s« (errno "
 "= %d),"
 
-#: gconf/gconf-sanity-check.c:159
+#: gconf/gconf-sanity-check.c:161
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "In Datei %s konnte nicht entfernt werden: %s\n"
+
+#: gconf/gconf-sanity-check.c:199
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"No configuration sources in the configuration file \"%s\"; this means that "
+"preferences and other settings can't be saved. %s%s"
+msgstr ""
+"Bitte setzen Sie sich mit Ihrem Systemadministrator in Verbindung, um das "
+"folgende Problem zu lösen:\n"
+"Keine Konfigurationsquelle in der Konfigurationsdatei »%s«. Dies bedeutet, "
+"dass Vorlieben und andere Einstellungen nicht gespeichert werden können. %s%s"
+
+#: gconf/gconf-sanity-check.c:202
+msgid "Error reading the file: "
+msgstr "Fehler beim Lesen der Datei: "
+
+#: gconf/gconf-sanity-check.c:224
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
+msgstr ""
+"Bitte setzen Sie sich mit Ihrem Systemadministrator in Verbindung, um das "
+"folgende Problem zu lösen:\n"
+"Die Adresse »%s« in der Konfigurationsdatei »%s« konnte nicht aufgelöst "
+"werden; %s"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
