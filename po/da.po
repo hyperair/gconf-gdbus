@@ -1,12 +1,12 @@
 # Danish translation of GConf.
 # Copyright (C) 1999 Free Software Foundation, Inc.
-# Kenneth Christiansen <kenneth@ripen.dk>, 1999.
+# Kenneth Christiansen <kenneth@ripen.dk>, 1999-2000.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-03-09 14:58-0500\n"
-"PO-Revision-Date: 2000-03-02 23:35+01:00\n"
+"POT-Creation-Date: 2000-04-10 18:47+0200\n"
+"PO-Revision-Date: 2000-04-10 18:14+02:00\n"
 "Last-Translator: Birger Langkjer <birger.langkjer@image.dk>\n"
 "Language-Team: Danish <sslug-locale@sslug.dk>\n"
 "MIME-Version: 1.0\n"
@@ -15,22 +15,22 @@ msgstr ""
 
 #: backends/xml-backend.c:247
 msgid "Unloading XML backend module."
-msgstr "Aflæs XML-backend modulet."
+msgstr "Aflæs XML-backend-modulet."
 
 #: backends/xml-backend.c:300
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Kunne ikke finde XML-rodmappe på adressen '%s'"
+msgstr "Kunne ikke finde XML-rodkatalog på adressen '%s'"
 
 #: backends/xml-backend.c:315
 #, c-format
 msgid "Could not make directory `%s': %s"
-msgstr "Kunne ikke oprette mappen `%s': %s"
+msgstr "Kunne ikke oprette kataloget `%s': %s"
 
 #: backends/xml-backend.c:400
 #, c-format
 msgid "Can't read from or write to the XML root directory in the address `%s'"
-msgstr "Kunne ikke læse fra eller skrive til XML-rodmappe på adressen '%s'"
+msgstr "Kunne ikke læse fra eller skrive til XML-rodkatalog på adressen '%s'"
 
 #: backends/xml-backend.c:410
 #, c-format
@@ -39,12 +39,12 @@ msgstr "Mappe/filrettigheder for XML-kilde ved roden %s er %o/%o"
 
 #: backends/xml-backend.c:694
 msgid "Initializing XML backend module"
-msgstr "Opstarter XML-backend modul"
+msgstr "Opstarter XML-backend-modul"
 
 #: backends/xml-backend.c:759
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr "Kunne ikke opgive lås på XML-mappe `%s': %s"
+msgstr "Kunne ikke opgive lås på XML-katalog '%s': %s"
 
 #. -- end debug only
 #: gconf/gconf-backend.c:180
@@ -69,7 +69,7 @@ msgstr "Fejl ved åbning af modul `%s': %s\n"
 #: gconf/gconf-backend.c:275
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
-msgstr "Kunne ikke finde backend modul for `%s'"
+msgstr "Kunne ikke finde backend-modul for `%s'"
 
 #: gconf/gconf-backend.c:312
 msgid "Failed to shut down backend"
@@ -144,7 +144,7 @@ msgstr "Tekst i anførselstegn ender ikke på anførselstegn"
 #: gconf/gconf-internals.c:2107 gconf/gconf.c:2615
 #, c-format
 msgid "CORBA error: %s"
-msgstr "CORBA fejl: %s"
+msgstr "CORBA-fejl: %s"
 
 #: gconf/gconf-internals.c:2122
 #, c-format
@@ -153,20 +153,20 @@ msgstr "%s"
 
 #: gconf/gconf-internals.c:2127
 msgid "attempt to remove not-listed OAF object directory"
-msgstr ""
+msgstr "forsøg på at fjerne ikke-listet OAF-objektmappe"
 
 #: gconf/gconf-internals.c:2132
 msgid "attempt to add already-listed OAF directory"
-msgstr ""
+msgstr "forsøg på at tilføje allerede-listet OAF-mappe"
 
 #: gconf/gconf-internals.c:2139
 #, c-format
 msgid "OAF parse error: %s"
-msgstr "OAF fortolkningsfejl: %s"
+msgstr "OAF-fortolkningsfejl: %s"
 
 #: gconf/gconf-internals.c:2144
 msgid "Unknown OAF error"
-msgstr "Ukendt OAF fejl"
+msgstr "Ukendt OAF-fejl"
 
 #: gconf/gconf-internals.c:2227
 #, c-format
@@ -202,12 +202,12 @@ msgstr ""
 #: gconf/gconf-internals.c:2321
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
-msgstr "GConf konfigurationsdæmon (gconfd) har lås '%s'"
+msgstr "GConf-konfigurationsdæmon (gconfd) har lås '%s'"
 
 #: gconf/gconf-internals.c:2335
 #, c-format
 msgid "couldn't create directory `%s': %s"
-msgstr "kunne ikke oprette mappen '%s': %s"
+msgstr "kunne ikke oprette kataloget '%s': %s"
 
 #: gconf/gconf-internals.c:2370
 #, c-format
@@ -246,7 +246,7 @@ msgstr ""
 #: gconf/gconf-internals.c:2493
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
-msgstr "Kunne ikke frigive låsemappe '%s': %s"
+msgstr "Kunne ikke frigive låsekatalog '%s': %s"
 
 #: gconf/gconf.c:69
 #, c-format
@@ -265,7 +265,7 @@ msgstr "Kan ikke tilføje notifikationer til en lokal konfigurationskilde"
 #: gconf/gconf.c:1449
 #, c-format
 msgid "Pinging the server failed, CORBA error: %s"
-msgstr "Pinging af serveren fejlede, CORBA fejl: %s"
+msgstr "Pingning af tjeneren fejlede, CORBA-fejl: %s"
 
 #: gconf/gconf.c:1465
 msgid ""
@@ -275,9 +275,8 @@ msgid ""
 msgstr ""
 
 #: gconf/gconf.c:1660
-#, fuzzy
 msgid "Failed to init GConf, exiting\n"
-msgstr "Kunne ikke starte GConf: %s\n"
+msgstr "Kunne ikke starte GConf, afslutter\n"
 
 #: gconf/gconf.c:1697
 msgid "Must begin with a slash (/)"
@@ -294,16 +293,16 @@ msgstr "Kan ikke have et punktum (.) lige efter en skråstreg (/)"
 #: gconf/gconf.c:1742
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
-msgstr "'%c' er et ugyldigt tegn i nøgle-/mappenavne"
+msgstr "'%c' er et ugyldigt tegn i nøgle-/katalognavne"
 
 #: gconf/gconf.c:1756
 msgid "Key/directory may not end with a slash (/)"
-msgstr "Nøgle/mappe må ikke ende med en skråstreg (/)"
+msgstr "Nøgle/katalog må ikke ende med en skråstreg (/)"
 
 #: gconf/gconf.c:2087
 #, c-format
 msgid "Failure shutting down config server: %s"
-msgstr "Fejl ved nedlukning af konfigserver: %s"
+msgstr "Fejl ved nedlukning af konfigtjener: %s"
 
 #: gconf/gconf.c:2148
 #, c-format
@@ -425,7 +424,7 @@ msgstr "En anden gconfd er allerede registreret hos OAF; afslutter\n"
 
 #: gconf/gconfd.c:1084
 msgid "Unknown error registering gconfd with OAF; exiting\n"
-msgstr ""
+msgstr "Ukendt fejl ved registrering af gconfd hos OAF, afslutter\n"
 
 #: gconf/gconfd.c:1100
 msgid "Exiting"
@@ -434,17 +433,17 @@ msgstr "Afslutter"
 #: gconf/gconfd.c:1194
 #, c-format
 msgid "Failed to sync one or more sources: %s"
-msgstr ""
+msgstr "Fejlede ved synkronisering af en eller flere kilder: %s"
 
 #: gconf/gconfd.c:1523
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting value for `%s': %s"
-msgstr "Fejl under fjernelse af mappe '%s': %s"
+msgstr "Fejl ved forespørgsel på værdi af '%s': %s"
 
 #: gconf/gconfd.c:1561
 #, c-format
 msgid "Error setting value for `%s': %s"
-msgstr ""
+msgstr "Fejl ved opsætning af værdi for '%s': %s"
 
 #: gconf/gconfd.c:1593
 #, c-format
@@ -464,7 +463,7 @@ msgstr "Fejl ved tjekning af eksisterende `%s': %s"
 #: gconf/gconfd.c:1676
 #, c-format
 msgid "Error removing dir `%s': %s"
-msgstr "Fejl under fjernelse af mappe '%s': %s"
+msgstr "Fejl under fjernelse af katalog '%s': %s"
 
 #: gconf/gconfd.c:1701
 #, c-format
@@ -538,11 +537,12 @@ msgstr ""
 
 #: gconf/gconftool.c:128
 msgid "Print all subdirectories in a directory."
-msgstr "Udskriv alle undermapper i en mappe."
+msgstr "Udskriv alle underkataloger i et katalog."
 
 #: gconf/gconftool.c:137
 msgid "Print all subdirectories and entries under a dir, recursively."
-msgstr "Udskriv alle undermapper og indgange under en mappe, rekursivt."
+msgstr ""
+"Udskriv alle underunderkataloger og indgange under et katalog, rekursivt."
 
 #: gconf/gconftool.c:146
 msgid "Return 0 if the directory exists, 2 if it does not."
@@ -709,14 +709,14 @@ msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 
-#: gconf-editor/gconf-editor.c:69 gconf/gconftool.c:447
+#: gconf/gconftool.c:447
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Kunne ikke starte GConf: %s\n"
 
 #: gconf/gconftool.c:472
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
-msgstr ""
+msgstr "Skal sætte GCONF_CONFIG_SOURCE miljøvariablen\n"
 
 #. Eventually you should be able to run gconfd as long as
 #. you're installing to a different database from the one
@@ -741,7 +741,7 @@ msgstr "Nedlukningsfejl: %s\n"
 
 #: gconf/gconftool.c:715
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr "Du skal angive en eller flere mapper som skal vises rekursivt.\n"
+msgstr "Du skal angive en eller flere kataloger som skal vises rekursivt.\n"
 
 #: gconf/gconftool.c:749
 #, c-format
@@ -848,7 +848,7 @@ msgstr ""
 #: gconf/gconftool.c:1181
 #, c-format
 msgid "Error listing dirs: %s\n"
-msgstr "Fejl ved visning af mapper: %s\n"
+msgstr "Fejl ved visning af kataloger: %s\n"
 
 #: gconf/gconftool.c:1220
 #, c-format
@@ -889,9 +889,9 @@ msgid "WARNING: no key specified for schema\n"
 msgstr ""
 
 #: gconf/gconftool.c:1373
-#, fuzzy
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr "En node har ukendt \"type\" attribut `%s', ignorerer"
+msgstr ""
+"ADVARSEL: <lokale> node har ingen 'navn=\"lokale\"' attribut, ignorerer\n"
 
 #: gconf/gconftool.c:1379
 #, c-format
@@ -905,9 +905,9 @@ msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr ""
 
 #: gconf/gconftool.c:1480
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr "Kunne ikke omdøbe `%s' til `%s': %s"
+msgstr "ADVARSEL: Kunne ikke installere skema '%s' lokale '%s': %s\n"
 
 #: gconf/gconftool.c:1488
 #, c-format
@@ -966,9 +966,8 @@ msgid "Error syncing config data: %s"
 msgstr "Fejl ved synkronisering af konfigdata: %s"
 
 #: gconf/gconftool.c:1712
-#, fuzzy
 msgid "Must specify some schema files to install\n"
-msgstr "En type skal angives hvis en værdi skal sættes\n"
+msgstr "Skal angive nogen skema-filer til installering\n"
 
 #: gconf/gconftool.c:1749
 #, c-format
@@ -980,14 +979,13 @@ msgstr ""
 "%s\n"
 
 #: gconf/gconftool.c:1769
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unset breakage key %s: %s\n"
-msgstr "Kunne ikke oprette filen `%s': %s"
+msgstr "Kunne ikke fjerne afbrydelsesnøgle %s: %s\n"
 
 #: gconf/gconftool.c:1895
-#, fuzzy
 msgid "Must specify some keys to break\n"
-msgstr "Skal angive en eller flere mapper som skal vises rekursivt.\n"
+msgstr "Skal angive en eller flere nøgler for afbrydelse.\n"
 
 #: gconf/gconftool.c:1901
 #, c-format
@@ -997,9 +995,8 @@ msgid ""
 msgstr ""
 
 #: gconf/gconftool.c:1919
-#, fuzzy
 msgid "Must specify some directories to break\n"
-msgstr "Du skal angive nogle mapper som skal knækkes\n"
+msgstr "Skal angive nogle kataloger som skal knækkes\n"
 
 #: gconf/gconftool.c:1938
 #, c-format
@@ -1008,124 +1005,3 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-
-#: gconf-editor/app.c:53
-msgid "Key"
-msgstr "Nøgle"
-
-#: gconf-editor/app.c:54
-msgid "Value"
-msgstr "Værdi"
-
-#: gconf-editor/app.c:57
-msgid "Configuration Editor"
-msgstr "Konfigurationseditor"
-
-#: gconf-editor/app.c:117
-msgid "Could not parse geometry string"
-msgstr "Kunne ikke tolke geometristreng"
-
-#: gconf-editor/gconf-editor.c:41
-msgid "Specify the geometry of the main window"
-msgstr "Angiv geometri for hovedvinduet"
-
-#: gconf-editor/gconf-editor.c:42
-msgid "GEOMETRY"
-msgstr "GEOMETRY"
-
-#~ msgid "Could not stat `%s': %s"
-#~ msgstr "Kunne ikke køre stat på '%s': %s"
-
-#~ msgid "XML filename `%s' is a directory"
-#~ msgstr "XML-filnavnet `%s' er en mappe"
-
-#~ msgid "Failed to restore `%s' from `%s': %s"
-#~ msgstr "Kunne ikke genoprette `%s' fra `%s': %s"
-
-#~ msgid "Failed to delete old file `%s': %s"
-#~ msgstr "Kunne ikke slette gammel fil `%s': %s"
-
-#~ msgid "Failed to stat `%s': %s"
-#~ msgstr "Kunne ikke køre stat på `%s': %s"
-
-#~ msgid "Duplicate entry `%s' in `%s', deleting"
-#~ msgstr "Dobbelt \"entry\" '%s' i '%s', sletter"
-
-#~ msgid "Entry with no name in XML file `%s', deleting"
-#~ msgstr "\"Entry\" uden navn i XML-filen `%s', sletter"
-
-#~ msgid "Toplevel node in XML file `%s' is not an <entry>, deleting"
-#~ msgstr "Node på topniveau i XML-fil `%s' er ikke en <entry>, sletter"
-
-#~ msgid "info file open failed: %s"
-#~ msgstr "åbning af info-fil fejlede: %s"
-
-#~ msgid "IOR read failed: %s"
-#~ msgstr "Læsning af IOR fejlede: %s"
-
-#~ msgid "Failed to open info file: %s"
-#~ msgstr "Kunne ikke åbne infofil: %s"
-
-#~ msgid "Lock on info file is held by another process."
-#~ msgstr "Lås på infofil holdes af en anden proces."
-
-#~ msgid "Couldn't get lock on the info file: %s"
-#~ msgstr "Kunne ikke oprette lås på infofil: %s"
-
-#~ msgid "Couldn't truncate info file: %s"
-#~ msgstr "Kunne ikke kappe endelse af infofil: %s"
-
-#~ msgid "Failed to write info file: %s"
-#~ msgstr "Kunne ikke skrive infofil: %s"
-
-#~ msgid "fcntl() F_GETFD failed for info file: %s"
-#~ msgstr "fcntl() F_GETFD fejlede for info fil: %s"
-
-#~ msgid "fcntl() F_SETFD failed for info file: %s"
-#~ msgstr "fcntl() F_SETFD fejlede for info fil: %s"
-
-#~ msgid "Failed to init ORB: %s"
-#~ msgstr "Kunne ikke opstarte ORB: %s"
-
-#~ msgid "Invalid command line arguments"
-#~ msgstr "Ugyldigt kommandolinieargument"
-
-#~ msgid "Didn't understand `%s' (expected integer)"
-#~ msgstr "Forstod ikke `%s' (forventede heltal)"
-
-#~ msgid "Integer `%s' is too large or small"
-#~ msgstr "Heltallet `%s' er for stort eller for lille"
-
-#~ msgid "Didn't understand `%s' (expected real number)"
-#~ msgstr "Forstod ikke `%s' (forventede flydendetal)"
-
-#~ msgid "Didn't understand `%s' (expected true or false)"
-#~ msgstr "Forstod ikke `%s' (forventede sandt eller falsk)"
-
-#~ msgid "The '/' name can only be a directory, not a key"
-#~ msgstr "Navnet '/' kan kun være en mappe, ikke en nøgle"
-
-#~ msgid ""
-#~ "The following config source addresses were not resolved:\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Følgende kildeadresser for konfiguration kunne ikke slås op:\n"
-#~ "%s"
-
-#~ msgid "Schema `%s' specified for `%s' stores a non-schema value"
-#~ msgstr "Skema `%s' angivet for `%s' gemmer en ikke-skema værdi"
-
-#~ msgid "Success"
-#~ msgstr "Succes"
-
-#~ msgid "Failed"
-#~ msgstr "Fejlede"
-
-#~ msgid "Permission denied"
-#~ msgstr "Ikke tilladt"
-
-#~ msgid "Parse error"
-#~ msgstr "Fortolkningsfejl"
-
-#~ msgid "No error"
-#~ msgstr "Ingen fejl"
