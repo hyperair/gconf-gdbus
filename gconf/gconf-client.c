@@ -183,31 +183,31 @@ gconf_client_class_init (GConfClientClass *class)
   parent_class = g_type_class_peek_parent (class);
 
   client_signals[VALUE_CHANGED] =
-    g_signal_newc ("value_changed",
-                   G_TYPE_FROM_CLASS (object_class),
-                   G_SIGNAL_RUN_LAST,
-                   G_STRUCT_OFFSET (GConfClientClass, value_changed),
-                   NULL, NULL,
-                   gconf_marshal_VOID__STRING_POINTER,
-                   G_TYPE_NONE, 2, G_TYPE_STRING, G_TYPE_POINTER);
+    g_signal_new ("value_changed",
+                  G_TYPE_FROM_CLASS (object_class),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (GConfClientClass, value_changed),
+                  NULL, NULL,
+                  gconf_marshal_VOID__STRING_POINTER,
+                  G_TYPE_NONE, 2, G_TYPE_STRING, G_TYPE_POINTER);
 
   client_signals[UNRETURNED_ERROR] =
-    g_signal_newc ("unreturned_error",
-                   G_TYPE_FROM_CLASS (object_class),
-                   G_SIGNAL_RUN_LAST,
-                   G_STRUCT_OFFSET (GConfClientClass, unreturned_error),
-                   NULL, NULL,
-                   gconf_marshal_VOID__POINTER,
-                   G_TYPE_NONE, 1, G_TYPE_POINTER);
+    g_signal_new ("unreturned_error",
+                  G_TYPE_FROM_CLASS (object_class),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (GConfClientClass, unreturned_error),
+                  NULL, NULL,
+                  gconf_marshal_VOID__POINTER,
+                  G_TYPE_NONE, 1, G_TYPE_POINTER);
 
   client_signals[ERROR] =
-    g_signal_newc ("error",
-                   G_TYPE_FROM_CLASS (object_class),
-                   G_SIGNAL_RUN_LAST,
-                   G_STRUCT_OFFSET (GConfClientClass, error),
-                   NULL, NULL,
-                   gconf_marshal_VOID__POINTER,
-                   G_TYPE_NONE, 1, G_TYPE_POINTER);
+    g_signal_new ("error",
+                  G_TYPE_FROM_CLASS (object_class),
+                  G_SIGNAL_RUN_LAST,
+                  G_STRUCT_OFFSET (GConfClientClass, error),
+                  NULL, NULL,
+                  gconf_marshal_VOID__POINTER,
+                  G_TYPE_NONE, 1, G_TYPE_POINTER);
   
   class->value_changed    = NULL;
   class->unreturned_error = gconf_client_real_unreturned_error;
