@@ -37,7 +37,7 @@ gboolean     g_conf_is_initialized  (void);
 typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
   
 /* Returns ID of the notification */
-/* returns 0 on error */
+/* returns 0 on error, 0 is an invalid ID */
 guint        g_conf_notify_add(GConfEngine* conf,
                                const gchar* namespace_section, /* dir or key to listen to */
                                GConfNotifyFunc func,

@@ -1,3 +1,17 @@
+1999-09-30  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-sources.c (g_conf_key_check_hack): Clear error 
+	before we check the key
+
+	* backends/xml-backend.c (dir_unset_value): Actually set the
+	entry's value to NULL
+	(entry_destroy): check whether Entry::value is NULL. Not sure 
+	why I didn't check; I think NULL is allowed, but if not 
+	we will have problems I guess.
+
+	* tests/testgconf.c: Easiest to just write the test suite in
+	C. Tests set/get and unset for strings so far.
+
 1999-09-29  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.sgml: Update docs

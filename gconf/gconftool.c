@@ -531,7 +531,7 @@ main (int argc, char** argv)
 
       g_conf_sync(conf, &err);
 
-      if (err != NULL);
+      if (err != NULL)
         {
           fprintf(stderr, _("Error syncing: %s"),
                   err->str);

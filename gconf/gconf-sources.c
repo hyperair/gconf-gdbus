@@ -55,6 +55,8 @@ g_conf_key_check_hack(const gchar* key)
   GConfError* err;
   gboolean retval;
 
+  g_conf_clear_error();
+  
   retval = g_conf_key_check(key, &err);
 
   if (retval)
@@ -437,7 +439,12 @@ g_conf_sources_unset_value   (GConfSources* sources,
       GConfSource* src = tmp->data;
 
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
-        g_conf_source_unset_value(src, key);    /* we might pile up errors here */
+        {
+          g_conf_source_unset_value(src, key);    /* we might pile up errors here */
+        }
+
+      /* FIXME we should probably set IGNORE_SUBSEQUENT in our first
+         writeable source, or otherwise handle sysadmin override */
       
       tmp = g_list_next(tmp);
     }

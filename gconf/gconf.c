@@ -54,6 +54,7 @@ gboolean
 g_conf_key_check(const gchar* key, GConfError** err)
 {
   gchar* why = NULL;
+
   if (!g_conf_valid_key(key, &why))
     {
       if (err)

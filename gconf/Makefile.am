@@ -1,6 +1,8 @@
 INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\"
 
+EFENCE=
+
 lib_LTLIBRARIES = libgconf-client.la
 
 bin_PROGRAMS = gconfd gconftool
@@ -28,7 +30,7 @@ gconfd_SOURCES = \
 	gconfd-error.c  \
 	gconf-sources.c
 
-gconfd_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
+gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
@@ -38,7 +40,7 @@ gconfd_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 gconftool_SOURCES = \
 	gconftool.c
 
-gconftool_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) libgconf-client.la
+gconftool_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) libgconf-client.la
 
 $(CORBA_SOURCES): GConf.idl
 	orbit-idl GConf.idl

@@ -456,6 +456,8 @@ unset_value     (GConfSource* source,
   Dir* dir;
   gchar* parent;
 
+  g_conf_log(GCL_DEBUG, "XML backend: unset value `%s'", key);
+  
   parent = g_conf_key_directory(key);
   
   dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent);
@@ -1370,8 +1372,8 @@ dir_get_metainfo(Dir* d, const gchar* relative_key)
 static void
 dir_unset_value (Dir* d, const gchar* relative_key)
 {
-  Entry* e; 
-
+  Entry* e;
+  
   d->last_access = time(NULL);
   
   if (d->doc == NULL)
@@ -1384,6 +1386,10 @@ dir_unset_value (Dir* d, const gchar* relative_key)
     return;
 
   d->dirty = TRUE;
+
+  g_assert(e->value != NULL);
+  g_conf_value_destroy(e->value);
+  e->value = NULL;
   
   if (dir_forget_entry_if_useless(d, e))
     {
@@ -1841,7 +1847,8 @@ void
 entry_destroy (Entry* e)
 {
   g_free(e->name);
-  g_conf_value_destroy(e->value);
+  if (e->value)
+    g_conf_value_destroy(e->value);
   g_free(e);
 }
 
