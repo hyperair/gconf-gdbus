@@ -2711,7 +2711,7 @@ get_hostname (void)
 {
 	static char *hostname = NULL;
 	char hn_tmp[65];
-	ulong_t ha_tmp;
+	gulong ha_tmp;
 	struct hostent *hent;
 
 	if (!hostname) {
