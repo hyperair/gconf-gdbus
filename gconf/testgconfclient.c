@@ -153,14 +153,98 @@ quit_callback(GtkWidget* button, gpointer data)
 
   gtk_main_quit();
 }
+
+static void
+addsub_callback(GtkWidget* button, gpointer data)
+{
+  GtkWidget* win = data;
+  GConfClient* client = gtk_object_get_data(GTK_OBJECT(win), "client");
+  GtkWidget* label = gtk_object_get_data(GTK_OBJECT(win), "label");
+  int subdir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "subdir"));
+  int maindir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "maindir"));
+  char *s;
+
+  subdir++;
+
+  gtk_object_set_data(GTK_OBJECT(win), "subdir", GINT_TO_POINTER(subdir));
+
+  gconf_client_add_dir(client, "/apps/gnome/testgconfclient/subdir", GCONF_CLIENT_PRELOAD_NONE, NULL);
+
+  s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
+  gtk_label_set(GTK_LABEL(label), s);
+  g_free(s);
+}
+
+static void
+removesub_callback(GtkWidget* button, gpointer data)
+{
+  GtkWidget* win = data;
+  GConfClient* client = gtk_object_get_data(GTK_OBJECT(win), "client");
+  GtkWidget* label = gtk_object_get_data(GTK_OBJECT(win), "label");
+  int subdir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "subdir"));
+  int maindir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "maindir"));
+  char *s;
+
+  subdir--;
+
+  gtk_object_set_data(GTK_OBJECT(win), "subdir", GINT_TO_POINTER(subdir));
+
+  gconf_client_remove_dir(client, "/apps/gnome/testgconfclient/subdir", NULL);
+
+  s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
+  gtk_label_set(GTK_LABEL(label), s);
+  g_free(s);
+}
+
+static void
+addmain_callback(GtkWidget* button, gpointer data)
+{
+  GtkWidget* win = data;
+  GConfClient* client = gtk_object_get_data(GTK_OBJECT(win), "client");
+  GtkWidget* label = gtk_object_get_data(GTK_OBJECT(win), "label");
+  int subdir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "subdir"));
+  int maindir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "maindir"));
+  char *s;
+
+  maindir++;
+
+  gtk_object_set_data(GTK_OBJECT(win), "maindir", GINT_TO_POINTER(maindir));
+
+  gconf_client_add_dir(client, "/apps/gnome/testgconfclient", GCONF_CLIENT_PRELOAD_NONE, NULL);
+
+  s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
+  gtk_label_set(GTK_LABEL(label), s);
+  g_free(s);
+}
   
+static void
+removemain_callback(GtkWidget* button, gpointer data)
+{
+  GtkWidget* win = data;
+  GConfClient* client = gtk_object_get_data(GTK_OBJECT(win), "client");
+  GtkWidget* label = gtk_object_get_data(GTK_OBJECT(win), "label");
+  int subdir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "subdir"));
+  int maindir = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(win), "maindir"));
+  char *s;
+
+  maindir--;
+
+  gtk_object_set_data(GTK_OBJECT(win), "maindir", GINT_TO_POINTER(maindir));
+
+  gconf_client_remove_dir(client, "/apps/gnome/testgconfclient", NULL);
+
+  s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
+  gtk_label_set(GTK_LABEL(label), s);
+  g_free(s);
+}
 
 static void
 create_controls(GConfClient* client)
 {
   GtkWidget* win;
+  GtkWidget* label;
   GtkWidget* vbox;
-  GtkWidget* quit_button;
+  GtkWidget* button;
   GtkWidget* entry;
   
   /* Reference held by the window */
@@ -178,13 +262,37 @@ create_controls(GConfClient* client)
 
   gtk_container_add(GTK_CONTAINER(win), vbox);
 
-  quit_button = gtk_button_new_with_label("Quit");
+  label = gtk_label_new("Maindir added 1 times\nSubdir added 0 times");
+  gtk_box_pack_end(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+  gtk_object_set_data(GTK_OBJECT(win), "label", label);
+  gtk_object_set_data(GTK_OBJECT(win), "subdir", GINT_TO_POINTER(0));
+  gtk_object_set_data(GTK_OBJECT(win), "maindir", GINT_TO_POINTER(1));
 
-  gtk_signal_connect(GTK_OBJECT(quit_button), "clicked",
+  button = gtk_button_new_with_label("Quit");
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
                      GTK_SIGNAL_FUNC(quit_callback), win);
+  gtk_box_pack_end(GTK_BOX(vbox), button, FALSE, FALSE, 0);
   
-  gtk_box_pack_end(GTK_BOX(vbox), quit_button, FALSE, FALSE, 0);
-  
+  button = gtk_button_new_with_label("Remove subdir");
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                     GTK_SIGNAL_FUNC(removesub_callback), win);
+  gtk_box_pack_end(GTK_BOX(vbox), button, FALSE, FALSE, 0);
+
+  button = gtk_button_new_with_label("Add subdir");
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                     GTK_SIGNAL_FUNC(addsub_callback), win);
+  gtk_box_pack_end(GTK_BOX(vbox), button, FALSE, FALSE, 0);
+
+  button = gtk_button_new_with_label("Remove maindir");
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                     GTK_SIGNAL_FUNC(removemain_callback), win);
+  gtk_box_pack_end(GTK_BOX(vbox), button, FALSE, FALSE, 0);
+
+  button = gtk_button_new_with_label("Add maindir");
+  gtk_signal_connect(GTK_OBJECT(button), "clicked",
+                     GTK_SIGNAL_FUNC(addmain_callback), win);
+  gtk_box_pack_end(GTK_BOX(vbox), button, FALSE, FALSE, 0);
+
   entry = entry_attached_to(client, "/apps/gnome/testgconfclient/blah");
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
 
@@ -192,6 +300,12 @@ create_controls(GConfClient* client)
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
 
   entry = entry_attached_to(client, "/apps/gnome/testgconfclient/bar");
+  gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
+
+  entry = entry_attached_to(client, "/apps/gnome/testgconfclient/subdir/testsub1");
+  gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
+
+  entry = entry_attached_to(client, "/apps/gnome/testgconfclient/subdir/testsub2");
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
   
   gtk_widget_show_all(win);

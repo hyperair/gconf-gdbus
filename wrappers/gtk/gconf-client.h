@@ -163,7 +163,8 @@ void              gconf_client_add_dir     (GConfClient* client,
 
 /* This removes any notifications associated with the dir */
 void              gconf_client_remove_dir  (GConfClient* client,
-                                            const gchar* dir);
+                                            const gchar* dir,
+                                            GConfError** err);
 
 /*
  *  The notification facility allows you to attach a callback to a single

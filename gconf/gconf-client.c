@@ -136,7 +136,8 @@ static gboolean gconf_client_lookup         (GConfClient* client,
                                              GConfValue** valp);
 
 static void gconf_client_real_remove_dir    (GConfClient* client,
-                                             Dir* d);
+                                             Dir* d,
+					     GConfError** err);
 
 static guint client_signals[LAST_SIGNAL] = { 0 };
 static GtkObjectClass* parent_class = NULL;
@@ -228,7 +229,8 @@ destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
   
   /* remove notify for this dir */
   
-  gconf_notify_remove(client->engine, d->notify_id);
+  if(d->notify_id != 0)
+	  gconf_notify_remove(client->engine, d->notify_id);
   d->notify_id = 0;
 
   dir_destroy(value);
@@ -478,25 +480,62 @@ gconf_client_get_for_engine (GConfEngine* engine)
   return client;
 }
 
+typedef struct {
+  GConfClient *client;
+  Dir *lower_dir;
+  const char *dirname;
+} OverlapData;
 
+static void
+foreach_setup_overlap(gpointer key, gpointer value, gpointer user_data)
+{
+  GConfClient *client;
+  Dir *dir = value;
+  OverlapData * od = user_data;
+
+  client = od->client;
+
+  /* if we have found the first (well there is only one anyway) directory
+   * that includes us that has a notify handler */
 #ifdef GCONF_ENABLE_DEBUG
-static void
-foreach_check_overlap(gpointer key, gpointer value, gpointer user_data)
-{
-  /* Disallow overlap */
-  g_return_if_fail(!gconf_key_is_below(key, user_data));
-  g_return_if_fail(!gconf_key_is_below(user_data, key));
+  if (dir->notify_id != 0 &&
+      gconf_key_is_below(dir->name, od->dirname))
+    {
+      g_assert(od->lower_dir == NULL);
+      od->lower_dir = dir;
+    }
+#else
+  if (od->lower_dir == NULL &&
+      dir->notify_id != 0 &&
+      gconf_key_is_below(dir->name, od->dirname))
+      od->lower_dir = dir;
+#endif
+  /* if we have found a directory that we include and it has
+   * a notify_id, remove the notify handler now
+   * FIXME: this is a race, from now on we can miss notifies, it is
+   * not an incredible amount of time so this is not a showstopper */
+  else if (dir->notify_id != 0 ||
+	   gconf_key_is_below(od->dirname, dir->name))
+    {
+      if(dir->notify_id != 0)
+	    gconf_notify_remove(client->engine, dir->notify_id);
+      dir->notify_id = 0;
+    }
 }
 
-static void
-check_overlap(GConfClient* client, const gchar* dirname)
+static Dir *
+setup_overlaps(GConfClient* client, const gchar* dirname)
 {
-  g_hash_table_foreach(client->dir_hash, foreach_check_overlap,
-                       (gchar*)dirname);
+  OverlapData od;
+
+  od.client = client;
+  od.lower_dir = NULL;
+  od.dirname = dirname;
+
+  g_hash_table_foreach(client->dir_hash, foreach_setup_overlap, &od);
+
+  return od.lower_dir;
 }
-#else
-#define check_overlap(x,y)
-#endif
 
 void
 gconf_client_add_dir     (GConfClient* client,
@@ -514,23 +553,35 @@ gconf_client_add_dir     (GConfClient* client,
 
   if (d == NULL)
     {
-      check_overlap(client, dirname);
+      Dir *overlap_dir;
 
-      notify_id = gconf_notify_add(client->engine,
-                                   dirname,
-                                   notify_from_server_callback,
-                                   client,
-                                   &error);
-      
-      /* We got a notify ID or we got an error, not both */
-      g_return_if_fail( (notify_id != 0 && error == NULL) ||
-                        (notify_id == 0 && error != NULL) );
-      
-      
-      if (handle_error(client, error, err))
-        return;
+      overlap_dir = setup_overlaps(client, dirname);
 
-      g_assert(error == NULL);
+      /* only if there is no directory that includes us
+       * already add a notify */
+      if (overlap_dir == NULL)
+        {
+
+          notify_id = gconf_notify_add(client->engine,
+                                       dirname,
+                                       notify_from_server_callback,
+                                       client,
+                                       &error);
+      
+          /* We got a notify ID or we got an error, not both */
+          g_return_if_fail( (notify_id != 0 && error == NULL) ||
+                            (notify_id == 0 && error != NULL) );
+      
+      
+          if (handle_error(client, error, err))
+            return;
+
+          g_assert(error == NULL);
+	}
+      else
+	{
+	  notify_id = 0;
+	}
       
       d = dir_new(dirname, notify_id);
 
@@ -546,10 +597,55 @@ gconf_client_add_dir     (GConfClient* client,
   d->add_count += 1;
 }
 
+typedef struct {
+  GConfClient *client;
+  GConfError *error;
+} AddNotifiesData;
+
+static void
+foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
+{
+  AddNotifiesData *ad = user_data;
+  GConfClient *client;
+  Dir *dir = value;
+
+  client = ad->client;
+
+  if (ad->error != NULL)
+    return;
+
+  if (dir->notify_id == 0)
+    {
+      Dir *overlap_dir;
+      overlap_dir = setup_overlaps(client, dir->name);
+
+      /* only if there is no directory that includes us
+       * already add a notify */
+      if (overlap_dir == NULL)
+        {
+          dir->notify_id = gconf_notify_add(client->engine,
+					    dir->name,
+					    notify_from_server_callback,
+					    client,
+					    &ad->error);
+
+          /* We got a notify ID or we got an error, not both */
+          g_return_if_fail( (dir->notify_id != 0 && ad->error == NULL) ||
+		            (dir->notify_id == 0 && ad->error != NULL) );
+
+	  /* if error is returned, then we'll just ignore
+	   * things until the end */
+	}
+    }
+}
+
 static void
 gconf_client_real_remove_dir    (GConfClient* client,
-                                 Dir* d)
+                                 Dir* d,
+				 GConfError** err)
 {
+  AddNotifiesData ad;
+
   g_return_if_fail(d != NULL);
   g_return_if_fail(d->add_count == 0);
   
@@ -557,15 +653,24 @@ gconf_client_real_remove_dir    (GConfClient* client,
   
   /* remove notify for this dir */
   
-  gconf_notify_remove(client->engine, d->notify_id);
+  if(d->notify_id != 0)
+	  gconf_notify_remove(client->engine, d->notify_id);
   d->notify_id = 0;
   
   dir_destroy(d);
+
+  ad.client = client;
+  ad.error = NULL;
+
+  g_hash_table_foreach(client->dir_hash, foreach_add_notifies, &ad);
+
+  handle_error(client, ad.error, err);
 }
 
 void
 gconf_client_remove_dir  (GConfClient* client,
-                          const gchar* dirname)
+                          const gchar* dirname,
+			  GConfError** err)
 {
   Dir* found = NULL;
 
@@ -579,7 +684,7 @@ gconf_client_remove_dir  (GConfClient* client,
       found->add_count -= 1;
 
       if (found->add_count == 0) 
-        gconf_client_real_remove_dir(client, found);
+        gconf_client_real_remove_dir(client, found, err);
     }
 #ifndef G_DISABLE_CHECKS
   else
@@ -1130,7 +1235,8 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type(key, val, GCONF_VALUE_STRING, &error))
-        retval = gconf_value_string(val);
+	/* we cheat here (look below) so we have to cast this */
+        retval = (gchar *)gconf_value_string(val);
       else
         handle_error(client, error, err);
 

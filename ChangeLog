@@ -1,3 +1,19 @@
+Mon Jul 24 16:39:01 2000  George Lebl <jirka@5z.com>
+
+	* wrappers/gtk/gconf-client.[ch]: Allow adding overlapping
+	  subdirectories.  What happens is that the real gconf notify
+	  is not added for subdirectories.  When directories are added
+	  or removed the hash is traversed and fixed up.  This is
+	  done in a simple and incredibly inefficent manner and needs
+	  to be fixed.  Also this change adds an "err" argument to
+	  the _remove_dir call as errors can now happen.  Also
+	  fix a minor warning by casting.
+
+	* wrappers/gtk/testgconfclient.c: Add some testing of overlapping
+	  directories.  Add buttons to add/remove the main directory and
+	  the subdirectory.  This way you can see if things get proper
+	  notifications.
+
 2000-07-24  Yukihiro Nakai <nakai@gnome.gr.jp>
 
 	* configure.in: Add Japanese (ja)
