@@ -817,17 +817,16 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
                       if (strcmp(locales[i], locale_name) == 0)
                         {
                           localized_nodes[i] = iter;
-                          free(locale_name);
                           break;
                         }
                       ++i;
                     }
+
+                  free(locale_name);
                   
                   /* Quit as soon as we have the best possible locale */
                   if (localized_nodes[0] != NULL)
                     break;
-                  
-                  free(locale_name);
                 }
             }
           
