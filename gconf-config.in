@@ -217,7 +217,8 @@ af_cflags="$af_cflags $includes $cflags"
 af_libs="-L@libdir@ -lgconf $af_libs"
 
 if test "X$af_lib_gconf_gtk" = "Xyes"; then
-    af_libs="$af_libs -lgconf-gtk"
+    af_libs="$af_libs -lgconf-gtk @GTK_LIBS@"
+	af_cflags="$af_cflags @GTK_CFLAGS@"
 fi
 
 print_result
