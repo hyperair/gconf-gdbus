@@ -217,3 +217,75 @@ gconf_schema_validate (const GConfSchema *sc,
 
   return TRUE;
 }
+
+GConfValueType
+gconf_schema_get_type (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
+
+  return schema->type;
+}
+
+GConfValueType
+gconf_schema_get_list_type (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
+
+  return schema->list_type;
+}
+
+GConfValueType
+gconf_schema_get_car_type (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
+
+  return schema->car_type;
+}
+
+GConfValueType
+gconf_schema_get_cdr_type (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, GCONF_VALUE_INVALID);
+
+  return schema->cdr_type;
+}
+
+const char*
+gconf_schema_get_locale (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, NULL);
+
+  return schema->locale;
+}
+
+const char*
+gconf_schema_get_short_desc (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, NULL);
+
+  return schema->short_desc;
+}
+
+const char*
+gconf_schema_get_long_desc (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, NULL);
+
+  return schema->long_desc;
+}
+
+const char*
+gconf_schema_get_owner (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, NULL);
+
+  return schema->owner;
+}
+
+GConfValue*
+gconf_schema_get_default_value (const GConfSchema *schema)
+{
+  g_return_val_if_fail (schema != NULL, NULL);
+
+  return schema->default_value;
+}
