@@ -38,7 +38,7 @@
 
 enum eDirectoryId
 {
-  INVALID_DIR_ID = (uint32_t) - 1
+  INVALID_DIR_ID = (guint32) - 1
 };
 
 /* #define GCONF_ENABLE_BDB_DEBUG 1 */
@@ -54,8 +54,8 @@ static DB_ENV *bdb_db_env;
 
 extern GConfValue *bdb_get_value (BDB_Store * bdb, const char *key);
 extern GConfValue *bdb_restore_value (const char *srz);
-static uint32_t
-add_dir_to_parent (BDB_Store * bdb, uint32_t parent_id, const char *dir);
+static guint32
+add_dir_to_parent (BDB_Store * bdb, guint32 parent_id, const char *dir);
 static char *get_schema_key (BDB_Store * bdb, const char *key);
 
 static void
@@ -298,7 +298,7 @@ init_dbt_string (DBT * keyp, const char *key)
 }
 
 void
-init_dbt_int (DBT * keyp, const uint32_t * key)
+init_dbt_int (DBT * keyp, const guint32 * key)
 {
   keyp->data = (void *) key;
   keyp->size = sizeof (*key);
@@ -331,12 +331,12 @@ temp_key_int (int akey)
 
 /* } */
 
-static uint32_t
+static guint32
 get_dir_id (BDB_Store * bdb, const char *dir)
 {
   int ret;
   DBT dirid;
-  uint32_t n;
+  guint32 n;
 
   if (strcmp (dir, "/") == 0)
     {
@@ -405,11 +405,11 @@ free_dir (char *dir)
 
 /* { Functions to create directories and maintain the dir hierarchy */
 
-static uint32_t
+static guint32
 get_or_create_dir (BDB_Store * bdb, const char *dir)
 {
-  uint32_t parent_id;
-  uint32_t dir_id;
+  guint32 parent_id;
+  guint32 dir_id;
   char *parent;
 
   dir_id = get_dir_id (bdb, dir);
@@ -425,11 +425,11 @@ get_or_create_dir (BDB_Store * bdb, const char *dir)
   return add_dir_to_parent (bdb, parent_id, dir);
 }
 
-static uint32_t
+static guint32
 get_lock_id ()
 {
   static int inited = 0;
-  static uint32_t id = 0;
+  static guint32 id = 0;
 
   if (!inited)
     {
@@ -439,10 +439,10 @@ get_lock_id ()
   return id;
 }
 
-static uint32_t
-add_dir_to_parent (BDB_Store * bdb, uint32_t parent_id, const char *dirp)
+static guint32
+add_dir_to_parent (BDB_Store * bdb, guint32 parent_id, const char *dirp)
 {
-  uint32_t dir_id;
+  guint32 dir_id;
   int idir;
   DBT dir;
   DBT kdir_id;
@@ -490,7 +490,7 @@ add_dir_to_parent (BDB_Store * bdb, uint32_t parent_id, const char *dirp)
   else
     {
       /* Increment the directory count and put back to database */
-      dir_id = *(uint32_t *) kdir_id.data;
+      dir_id = *(guint32 *) kdir_id.data;
       dir_id = ntohl (dir_id);
       /* dir_id is currently in host format */
       dir_id = htonl (dir_id + 1);	/* return dir_id to net
@@ -559,7 +559,7 @@ put_key (BDB_Store * bdb, const char *keypath, const char *value, size_t len)
 {
   DBT val;
   char *dir = parent_of (keypath);
-  uint32_t id = get_or_create_dir (bdb, dir);
+  guint32 id = get_or_create_dir (bdb, dir);
   int ret;
   DBT *tkeyp;
   DBT *skeyp;
@@ -918,7 +918,7 @@ bdb_unset_value (BDB_Store * bdb, const char *keypath,
 		 const char *locale, GError ** err)
 {
   int mode;
-  uint32_t flags = 0;
+  guint32 flags = 0;
   int ret;
   DBT key;
   DBT value;
@@ -931,7 +931,7 @@ bdb_unset_value (BDB_Store * bdb, const char *keypath,
   init_dbt_string (&key, keypath);
   if ((ret = bdb->dbvalp->get (bdb->dbvalp, NULL, &key, &value, flags)) == 0)
     {
-      uint32_t dirid;
+      guint32 dirid;
       char *dirpath;
       const char *keyname = gconf_key_key (keypath);
       /* delete the value */
@@ -979,8 +979,8 @@ bdb_remove_entries (BDB_Store * bdb, const char *dirpath, GError ** err)
   DBT key;
   DBT value;
   int mode;
-  uint32_t dirid = get_dir_id (bdb, dirpath);
-  uint32_t flags = 0;
+  guint32 dirid = get_dir_id (bdb, dirpath);
+  guint32 flags = 0;
 
   CLEAR_STRUCT (key);
   CLEAR_STRUCT (value);
