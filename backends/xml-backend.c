@@ -1568,7 +1568,6 @@ dir_last_access (Dir* d)
   return d->last_access;
 }
 
-
 /* private Dir functions */
 
 static void
@@ -1906,7 +1905,12 @@ entry_fill    (Entry* e)
   
   if (tmp != NULL)
     {
-      e->schema_name = g_strdup(tmp);
+      /* Filter any crap schemas that appear, some speed cost */
+      if (g_conf_valid_key(tmp, NULL))
+        e->schema_name = g_strdup(tmp);
+      else
+        e->schema_name = NULL;
+
       free(tmp);
     }
       

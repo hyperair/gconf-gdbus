@@ -346,8 +346,17 @@ g_conf_sources_query_value (GConfSources* sources,
 
   if (schema_name != NULL)
     {
-      GConfValue* val =
-        g_conf_sources_query_value(sources, schema_name);
+      GConfValue* val;
+
+      g_conf_clear_error();
+      
+      val = g_conf_sources_query_value(sources, schema_name);
+
+      if (g_conf_errno() != G_CONF_SUCCESS)
+        {
+          g_free(schema_name);
+          return NULL;
+        }
       
       if (val != NULL &&
           val->type != G_CONF_VALUE_SCHEMA)

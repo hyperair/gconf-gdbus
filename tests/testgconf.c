@@ -273,6 +273,8 @@ main (int argc, char** argv)
   check_string_storage(conf);
   
   g_conf_engine_unref(conf);
+
+  printf("\n\n");
   
   return 0;
 }

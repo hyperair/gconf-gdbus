@@ -1,3 +1,11 @@
+1999-10-01  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-sources.c (g_conf_sources_query_value): Check for 
+	errors when we query the default value from the schema.
+
+	* backends/xml-backend.c (entry_fill): If the schema key for a key is 
+	invalid, don't load it.
+
 1999-09-30  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-sources.c (g_conf_key_check_hack): Clear error 
