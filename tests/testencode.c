@@ -145,7 +145,7 @@ check_quoting(void)
 
       check (error == NULL,
              "error parsing quoted string: %s",
-             error ? error->message : NULL);
+             error ? error->message : "<NULL>");
       
       check (strcmp(*testp, unquoted) == 0,
              "Original: `%s'\nUnquoted: `%s'\nNot equal?",

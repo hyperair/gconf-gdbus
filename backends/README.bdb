@@ -1,0 +1,56 @@
+A GConf backend is an adaptor to permit GConf to store configuration
+information in some form of 'database'. The XML backend uses files
+and a file-system directory structure to store key-value pairs,
+schemas, and to represent the key hierarchy. The Berkeley DB
+backend uses Sleepycat's distribution of the Berkeley DB
+database toolkit to provide a relatively high performance GConf 
+store.
+
+If you decide not to build the Berkeley DB backend, simply remove
+the reference to libgconfbackend-bdb.la in the definition of
+backend_LTLIBRARIES in backends/Makefile.
+
+See comments in bdb.h for an description of the databases and
+their use.
+
+Notes for this initial release:
+
+- there are bound to be bugs, but the backend passes the GConf
+  test suite (extended to include some schema-usage tests)
+- some concurrency control has been built-in, but this has not
+  been adequately tested
+- by design there is no cache so that concurrent writers may
+  be supported, but despite this performance is good and the
+  testpersistence test (which synchronises each change individually
+  to the GConfd database) is noticably faster than with the XML backend.
+- Previous versions of Berkeley DB have altered the database structure in
+  ways that are not backward compatible. If this occurs with future versions
+  of Berkeley DB (after version 3.1.17), the major version number of the
+  backend shared library will be incremented.
+  
+
+Known bugs:
+
+- The backend uses a relatively new feature of Berkeley DB, the support
+  for duplicate keys in a single database table. Currently Berkeley DB
+  produces warning messages 'Duplicate data items are not supported with
+  sorted data'. Sleepycat have said that this message is only to warn
+  developers while the duplicate-support feature is new and will be removed
+  in a future release.
+
+- There is also an error that occasionally "corrupts" the key-hierarchy
+  database which prevents the directory hierarchy from being traversed.
+  Currently it is not clear if this is an error in the backend or in
+  the database toolkit. This error can be seen in the testdirlist test
+  program which initially works but after running all tests a few
+  times, testdirlist produces an error message "*** FAILED: Did not get
+  'testing' in listing of / after setting keys such as /testing/foo/bar/woo".
+  This bug is under investigation, as it prevents serious use of
+  the Berkeley DB backend, although applications which do not use the
+  gconf_all_dirs() API should not encounter this problem.
+
+You can obtain the source distribution for Berkeley DB from Sleepycat
+Software at http://www.sleepycat.com/download.html.  The current
+version is 3.1.17.
+
+Colm Smyth (colm.smyth@sun.com)

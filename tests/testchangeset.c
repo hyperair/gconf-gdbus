@@ -64,6 +64,7 @@ keys[] = {
 
 static const gchar*
 some_strings[] = {
+  "",
   "dkadfhg;ifb;klndfl;kghpaodigjhrekjt45u62%&@#&@#kl6$%76k@$%&L jk245L:Yj45&@$&KL #$^UY $5",
   "sdkjfkljg",
   "a",
@@ -72,56 +73,56 @@ some_strings[] = {
   "sjdflkjg;kljklj",
   "hello this is a string with spaces and \t\t\t\ttabs",
   "hello this\nstring\nhas\nnewlines\n   \t\t\t\t\t\ttabs and spaces  \n",
-  "<?xml version=\"1.0\"?>
-<gmr:Workbook xmlns:gmr=\"http://www.gnome.org/gnumeric/\">
-  <gmr:Style HAlign=\"1\" VAlign=\"1\" Fit=\"0\" Orient=\"1\" Shade=\"0\" Format=\"#,##0_);[red](#,##0)\">
-    <gmr:Font Unit=\"14\" NAME=\"FontDef1\">-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*</gmr:Font>
-  </gmr:Style>
-  <gmr:Geometry Width=\"610\" Height=\"418\"/>
-  <gmr:Sheets>
-    <gmr:Sheet>
-      <gmr:Name>Sheet 0</gmr:Name>
-      <gmr:MaxCol>6</gmr:MaxCol>
-      <gmr:MaxRow>14</gmr:MaxRow>
-      <gmr:Zoom>1.000000</gmr:Zoom>
-      <gmr:Cols>
-        <gmr:ColInfo No=\"0\" Unit=\"97\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:ColInfo No=\"1\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:ColInfo No=\"2\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:ColInfo No=\"3\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:ColInfo No=\"6\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-      </gmr:Cols>
-      <gmr:Rows>
-        <gmr:RowInfo No=\"0\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"1\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"2\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"3\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"4\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"5\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"6\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"7\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"8\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"9\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"10\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"11\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"12\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"13\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-        <gmr:RowInfo No=\"14\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>
-      </gmr:Rows>
-      <gmr:Objects>
-        <gmr:Ellipse Pattern=\"0\" Width=\"1\" Color=\"black\">
-          <gmr:Points>(258.000000 320.000000)(356.000000 356.000000)</gmr:Points>
-        </gmr:Ellipse>
-        <gmr:Arrow Width=\"1\" Color=\"black\">
-          <gmr:Points>(500.000000 131.000000)(332.000000 320.000000)</gmr:Points>
-        </gmr:Arrow>
-      </gmr:Objects>
-      <gmr:Cells>
-        <gmr:Cell Col=\"3\" Row=\"1\">
-          <gmr:Style HAlign=\"1\" VAlign=\"1\" Fit=\"0\" Orient=\"1\" Shade=\"0\" Format=\"#,##0_);[red](#,##0)\">
-            <gmr:Font Unit=\"14\" NAME=\"FontDef2\">-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*</gmr:Font>
-          </gmr:Style>
-          <gmr:Content>500</gmr:Content>",
+  "<?xml version=\"1.0\"?>"
+	"<gmr:Workbook xmlns:gmr=\"http://www.gnome.org/gnumeric/\">"
+	  "<gmr:Style HAlign=\"1\" VAlign=\"1\" Fit=\"0\" Orient=\"1\" Shade=\"0\" Format=\"#,##0_);[red](#,##0)\">"
+	    "<gmr:Font Unit=\"14\" NAME=\"FontDef1\">-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*</gmr:Font>"
+	  "</gmr:Style>"
+	  "<gmr:Geometry Width=\"610\" Height=\"418\"/>"
+	  "<gmr:Sheets>"
+	    "<gmr:Sheet>"
+	      "<gmr:Name>Sheet 0</gmr:Name>"
+	      "<gmr:MaxCol>6</gmr:MaxCol>"
+	      "<gmr:MaxRow>14</gmr:MaxRow>"
+	      "<gmr:Zoom>1.000000</gmr:Zoom>"
+	      "<gmr:Cols>"
+		"<gmr:ColInfo No=\"0\" Unit=\"97\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:ColInfo No=\"1\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:ColInfo No=\"2\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:ColInfo No=\"3\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:ColInfo No=\"6\" Unit=\"80\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+	      "</gmr:Cols>"
+	      "<gmr:Rows>"
+		"<gmr:RowInfo No=\"0\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"1\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"2\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"3\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"4\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"5\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"6\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"7\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"8\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"9\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"10\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"11\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"12\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"13\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+		"<gmr:RowInfo No=\"14\" Unit=\"20\" MarginA=\"1\" MarginB=\"1\" HardSize=\"0\"/>"
+	      "</gmr:Rows>"
+	      "<gmr:Objects>"
+		"<gmr:Ellipse Pattern=\"0\" Width=\"1\" Color=\"black\">"
+		  "<gmr:Points>(258.000000 320.000000)(356.000000 356.000000)</gmr:Points>"
+		"</gmr:Ellipse>"
+		"<gmr:Arrow Width=\"1\" Color=\"black\">"
+		  "<gmr:Points>(500.000000 131.000000)(332.000000 320.000000)</gmr:Points>"
+		"</gmr:Arrow>"
+	      "</gmr:Objects>"
+	      "<gmr:Cells>"
+		"<gmr:Cell Col=\"3\" Row=\"1\">"
+		  "<gmr:Style HAlign=\"1\" VAlign=\"1\" Fit=\"0\" Orient=\"1\" Shade=\"0\" Format=\"#,##0_);[red](#,##0)\">"
+		    "<gmr:Font Unit=\"14\" NAME=\"FontDef2\">-adobe-helvetica-medium-r-normal--*-120-*-*-*-*-*-*</gmr:Font>"
+		  "</gmr:Style>"
+          "<gmr:Content>500</gmr:Content>",
 
   NULL
 };

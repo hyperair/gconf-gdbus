@@ -997,9 +997,10 @@ gconf_database_unset (GConfDatabase      *db,
   else
     {
       GConfValue* def_value;
-      const gchar* locale_list[] = { locale, NULL };
+      const gchar* locale_list[] = { NULL, NULL };
       gboolean is_writable = TRUE;
       
+      locale_list[0] = locale;
       def_value = gconf_database_query_default_value(db,
                                                      key,
                                                      locale_list,

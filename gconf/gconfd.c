@@ -666,10 +666,11 @@ obtain_database (const gchar *address,
 {
   
   GConfSources* sources;
-  const gchar* addresses[] = { address, NULL };
+  const gchar* addresses[] = { NULL, NULL };
   GError* error = NULL;
   GConfDatabase *db;
 
+  addresses[0] = address;
   db = lookup_database (address);
 
   if (db)

@@ -371,11 +371,11 @@ check_notification(GConfListeners* listeners)
 
   while (*keyp)
     {
-      struct notify_data nd = { *keyp, NULL };
       GSList* tmp = NULL;
       const gchar** sub_keyp;
+      struct notify_data nd = { NULL, NULL };
 
-      nd.notified = NULL;
+      nd.notify_key = *keyp;
       
       gconf_listeners_notify(listeners, *keyp,
                              notify_callback,

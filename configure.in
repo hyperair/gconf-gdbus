@@ -155,6 +155,16 @@ fi
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
+BDB_LIBS=-ldb-3
+BDB_CFLAGS=
+AM_CONDITIONAL(BDB, test -n "$BDB_LIBS")
+AC_CHECK_LIB(db-3, db_env_create, BDB_LIBS=-ldb-3,
+	[AC_CHECK_HEADER(db.h, , AC_MSG_ERROR([[
+*** Couldn't find db-3. Please download and install from
+*** http://www.sleepycat.com/download.html and try again.]]))])
+AC_SUBST(BDB_LIBS)
+AC_SUBST(BDB_CFLAGS)
+
 AC_CHECK_LIB(popt, poptGetArg, POPT_LIBS=-lpopt,
 	[AC_CHECK_HEADER(popt.h, , AC_MSG_ERROR([[
 *** Couldn't find popt. Please download and install from

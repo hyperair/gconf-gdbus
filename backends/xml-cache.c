@@ -165,8 +165,9 @@ gboolean
 cache_sync       (Cache        *cache,
                   GError  **err)
 {
-  SyncData sd = { FALSE, cache };
+  SyncData sd = { FALSE, NULL };
   GSList* delete_list;
+  sd.dc = cache;
 
   /* First delete pending directories */
   delete_list = cache->deleted;
@@ -238,8 +239,10 @@ void
 cache_clean      (Cache        *cache,
                   GTime         older_than)
 {
-  CleanData cd = { 0, cache, older_than };
+  CleanData cd = { 0, 0, 0 };
   guint size;
+  cd.cache = cache;
+  cd.length = older_than;
   
   cd.now = time(NULL); /* ha ha, it's an online store! */
   

@@ -853,8 +853,11 @@ gconf_sources_all_entries   (GConfSources* sources,
   gboolean first_pass = TRUE; /* as an optimization, don't bother
                                  doing hash lookups on first source
                               */
-  struct DefaultsLookupData dld = { sources, locales };
+  struct DefaultsLookupData dld = { NULL, NULL };
   
+  dld.sources = sources;
+  dld.locales = locales;
+
   /* Empty GConfSources, skip it */
   if (sources->sources == NULL)
     return NULL;
