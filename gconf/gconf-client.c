@@ -634,8 +634,8 @@ gconf_client_real_remove_dir    (GConfClient* client,
   
   /* remove notify for this dir */
   
-  if(d->notify_id != 0)
-	  gconf_engine_notify_remove(client->engine, d->notify_id);
+  if (d->notify_id != 0)
+    gconf_engine_notify_remove(client->engine, d->notify_id);
   d->notify_id = 0;
   
   dir_destroy(d);
