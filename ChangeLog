@@ -1,5 +1,15 @@
 2004-06-12  Mark McLoughlin  <mark@skynet.ie>
 
+	Patch from Mariano Suárez-Alvarez <msuarezalvarez@arnet.com.ar>
+	in bug #122958 to change the encoding logic so as to produce
+	shorter encoded keys when encoding non-ascii characters. Does
+	not require changes to the decoder.
+
+	* gconf/gconf.c: (gconf_escape_key): use a shorter encoding
+	for non-ascii characters.
+
+2004-06-12  Mark McLoughlin  <mark@skynet.ie>
+
 	64-bit fix from Joe Marcus Clarke <marcus@freebsd.org>
 
 	* backends/markup-tree.c: (parse_tree): the length

@@ -2689,7 +2689,7 @@ gconf_escape_key (const char *arbitrary_text,
   if (len < 0)
     len = strlen (arbitrary_text);
 
-  retval = g_string_new (NULL);
+  retval = g_string_sized_new (len);
 
   p = arbitrary_text;
   end = arbitrary_text + len;
@@ -2699,7 +2699,7 @@ gconf_escape_key (const char *arbitrary_text,
           strchr (invalid_chars, *p))
         {
           g_string_append_c (retval, '@');
-          g_string_append_printf (retval, "%u", (unsigned int) *p);
+          g_string_append_printf (retval, "%u", (guchar) *p);
           g_string_append_c (retval, '@');
         }
       else
