@@ -35,7 +35,7 @@
 #endif
 
 
-static const gchar* err_msgs[14] = {
+static const gchar* err_msgs[] = {
   N_("Success"),
   N_("Failed"),
   N_("Configuration server couldn't be contacted"),
@@ -49,7 +49,8 @@ static const gchar* err_msgs[14] = {
   N_("Directory operation on key"),
   N_("Can't overwrite existing read-only value"),
   N_("Object Activation Framework error"),
-  N_("Operation not allowed without configuration server")
+  N_("Operation not allowed without configuration server"),
+  N_("Failed to get a lock")
 };
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);

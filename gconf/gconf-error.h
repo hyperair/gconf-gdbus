@@ -46,7 +46,8 @@ typedef enum {
   GCONF_IS_KEY = 10,       /* Requested dir operation on a key */
   GCONF_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
   GCONF_OAF_ERROR = 12,    /* liboaf error */
-  GCONF_LOCAL_ENGINE = 13  /* Tried to use remote operations on a local engine */
+  GCONF_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
+  GCONF_LOCK_FAILED = 14   /* Failed to get a lockfile */
 } GConfErrNo;
 
 /* Error Object */

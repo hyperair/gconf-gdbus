@@ -22,6 +22,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <gconf/gconf-internals.h>
+#include <locale.h>
 
 static void
 check(gboolean condition, const gchar* fmt, ...)
@@ -66,8 +67,8 @@ static const gchar*
 locales[] = {
   "C",
   "es",
-  "es:en:C",
-  "en:es",
+  "en",
+  "no",
   NULL
 };
 
@@ -264,14 +265,17 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
                  "schema set/get pair: type `%s' set, `%s' got",
                  gconf_value_type_to_string(gconf_schema_type(schema)),
                  gconf_value_type_to_string(gconf_schema_type(gotten)));
-#if 0
-          /* This is wrong, the locale doesn't have to be the same */
-          check (null_safe_strcmp(gconf_schema_locale(schema), gconf_schema_locale(gotten)) == 0,
-                 "schema set/get pair: locale `%s' set, `%s' got",
-                 gconf_schema_locale(schema),
-                 gconf_schema_locale(gotten));
-#endif
-          
+
+
+          /* If we set the schema for the current locale be sure we get it back */
+          if (null_safe_strcmp(gconf_current_locale(), gconf_schema_locale(schema)) == 0)
+            {
+              check (null_safe_strcmp(gconf_current_locale(), gconf_schema_locale(gotten)) == 0,
+                     "schema set/get pair: locale `%s' set, `%s' got",
+                     gconf_current_locale(),
+                     gconf_schema_locale(gotten));
+            }
+              
           check (null_safe_strcmp(gconf_schema_short_desc(schema), gconf_schema_short_desc(gotten)) == 0,
                  "schema set/get pair: short_desc `%s' set, `%s' got",
                  gconf_schema_short_desc(schema),

@@ -2399,6 +2399,9 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
     case ConfigOverridden:
       return GCONF_OVERRIDDEN;
       break;
+    case ConfigLockFailed:
+      return GCONF_LOCK_FAILED;
+      break;
     default:
       g_assert_not_reached();
       return GCONF_SUCCESS; /* warnings */

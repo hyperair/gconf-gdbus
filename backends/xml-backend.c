@@ -136,9 +136,10 @@ struct _XMLSource {
   Cache* cache;
   gchar* root_dir;
   guint timeout_id;
+  GConfLock* lock;
 };
 
-static XMLSource* xs_new       (const gchar* root_dir);
+static XMLSource* xs_new       (const gchar* root_dir, GConfLock* lock);
 static void       xs_destroy   (XMLSource* source);
 
 /*
@@ -280,6 +281,7 @@ resolve_address (const gchar* address, GConfError** err)
   GConfSource* source;
   guint len;
   gint flags = 0;
+  GConfLock* lock = NULL;
   
   root_dir = gconf_address_resource(address);
 
@@ -328,6 +330,29 @@ resolve_address (const gchar* address, GConfError** err)
     
     if (writeable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
+
+    /* We only do locking if it's writeable,
+       which is sort of broken but close enough
+    */
+    if (writeable)
+      {
+        gchar* lockdir;
+
+        lockdir = gconf_concat_key_and_dir(root_dir, "%gconf-xml-backend.lock");
+        
+        lock = gconf_get_lock(lockdir, 1000, err);
+
+        if (lock != NULL)
+          gconf_log(GCL_DEBUG, "Acquired lock directory `%s'", lockdir);
+        
+        g_free(lockdir);
+        
+        if (lock == NULL)
+          {
+            g_free(root_dir);
+            return NULL;
+          }
+      }
   }
 
   {
@@ -353,11 +378,11 @@ resolve_address (const gchar* address, GConfError** err)
       gconf_set_error(err, GCONF_BAD_ADDRESS, _("Can't read from or write to the XML root directory in the address `%s'"), address);
       g_free(root_dir);
       return NULL;
-    }
-
+    }  
+  
   /* Create the new source */
 
-  xsource = xs_new(root_dir);
+  xsource = xs_new(root_dir, lock);
   
   source = (GConfSource*)xsource;
 
@@ -661,7 +686,7 @@ cleanup_timeout(gpointer data)
 }
 
 static XMLSource*
-xs_new       (const gchar* root_dir)
+xs_new       (const gchar* root_dir, GConfLock* lock)
 {
   XMLSource* xs;
 
@@ -676,6 +701,8 @@ xs_new       (const gchar* root_dir)
   xs->timeout_id = g_timeout_add(1000*60*5, /* 1 sec * 60 s/min * 5 min */
                                  cleanup_timeout,
                                  xs);
+
+  xs->lock = lock;
   
   return xs;
 }
@@ -683,8 +710,20 @@ xs_new       (const gchar* root_dir)
 static void
 xs_destroy   (XMLSource* xs)
 {
+  GConfError* error = NULL;
+  
   g_return_if_fail(xs != NULL);
 
+  /* do this first in case we're in a "fast cleanup just before exit"
+     situation */
+  if (xs->lock != NULL && !gconf_release_lock(xs->lock, &error))
+    {
+      gconf_log(GCL_ERR, _("Failed to give up lock on XML dir `%s': %s"),
+                xs->root_dir, error->str);
+      gconf_error_destroy(error);
+      error = NULL;
+    }
+  
   if (!g_source_remove(xs->timeout_id))
     {
       /* should not happen, don't translate */

@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <config.h>
 #include "gconf-internals.h"
 #include "gconf-backend.h"
 #include "gconf-schema.h"
@@ -32,6 +33,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <locale.h>
+#include <time.h>
 
 
 /* Quick hack so I can mark strings */
@@ -54,6 +56,12 @@ void
 gconf_set_daemon_mode(gboolean setting)
 {
   gconf_daemon_mode = setting;
+}
+
+gboolean
+gconf_in_daemon_mode(void)
+{
+  return gconf_daemon_mode;
 }
 
 gchar*
@@ -1034,8 +1042,27 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
       syslog(syslog_pri, "%s", msg);
     }
   else
-    {      
-      printf("%s\n", msg);
+    {
+      switch (pri)
+        {
+        case GCL_EMERG:
+        case GCL_ALERT:
+        case GCL_CRIT:
+        case GCL_ERR:
+        case GCL_WARNING:
+          fprintf(stderr, "%s\n", msg);
+          break;
+      
+        case GCL_NOTICE:
+        case GCL_INFO:
+        case GCL_DEBUG:
+          printf("%s\n", msg);
+          break;
+
+        default:
+          g_assert_not_reached();
+          break;
+        }
     }
   
   g_free(msg);
@@ -2068,4 +2095,173 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err)
       return TRUE;
       break;
     }
+}
+
+/* Sleep */
+
+#ifdef HAVE_NANOSLEEP
+
+void
+gconf_nanosleep(gulong useconds)
+{
+  struct timespec ts={tv_sec: (long int)(useconds/1000000),
+                      tv_nsec: (long int)(useconds%1000000)*1000ul};
+  
+  nanosleep(&ts,NULL);
+}
+
+#elif HAVE_USLEEP
+
+void
+gconf_nanosleep(gulong useconds)
+{
+  usleep(useconds);
+}
+
+#else
+#error "need nanosleep or usleep right now (fix with simple select() hack)"
+#endif
+
+/*
+ * Locks using directories, to work on NFS (at least potentially)
+ */
+
+struct _GConfLock {
+  gchar* lock_directory;
+};
+
+static void
+gconf_lock_destroy(GConfLock* lock)
+{
+  g_free(lock->lock_directory);
+  g_free(lock);
+}
+
+GConfLock*
+gconf_get_lock(const gchar* lock_directory,
+               guint max_wait_usecs,
+               GConfError** err)
+{
+  GConfLock* lock;
+  gulong per_try_wait;
+  gulong total_wait;
+  gboolean got_it = FALSE;
+  gboolean time_expired = FALSE;
+  gboolean error_occurred = FALSE;
+  
+  g_return_val_if_fail(lock_directory != NULL, NULL);
+  
+  lock = g_new(GConfLock, 1);
+
+  lock->lock_directory = g_strdup(lock_directory);
+
+  /* In daemon mode, we always pretend to have the lock; catastrophic
+     failure would just confuse users, and OAF is supposed to ensure
+     there's only one gconfd. The main purpose of the lock is to avoid
+     gconftool writing while a gconfd is running */
+
+  if (gconf_in_daemon_mode())
+    {
+      mkdir(lock->lock_directory, 0); /* ignore errors */
+      return lock;
+    }
+  
+  /* try around 20 times, spread over the interval, retrying at least
+     once per second and with at least one usec delay */
+  per_try_wait = max_wait_usecs/20;
+  if (per_try_wait == 0)
+    per_try_wait = 1;
+  if (per_try_wait > 1000)
+    per_try_wait = 1000;
+
+  total_wait = 0;
+  
+  while (!got_it)
+    {
+      if (mkdir(lock->lock_directory, 0) < 0)
+        {
+          if (errno == EEXIST)
+            {
+              total_wait += per_try_wait;
+              if (total_wait > max_wait_usecs)
+                {
+                  /* give up */
+                  time_expired = TRUE;
+                  break;
+                }
+              else
+                {
+                  gconf_nanosleep(per_try_wait);
+                  continue;
+                }
+            }
+          else
+            {
+              /* give up */
+              error_occurred = TRUE;
+              break;
+            }
+        }
+      else
+        {
+          got_it = TRUE;
+        }
+    }
+
+  if (got_it)
+    {
+      g_assert(!error_occurred);
+      g_assert(!time_expired);
+
+      return lock;  
+    }
+  else if (time_expired)
+    {
+      g_assert(!error_occurred);
+      g_assert(!got_it);
+      
+      gconf_set_error(err,
+                      GCONF_LOCK_FAILED,
+                      _("timeout expired, lock `%s' still not available (try manually deleting it, first be sure `gconfd' is not running)"),
+                      lock->lock_directory);
+      
+      gconf_lock_destroy(lock);
+      return NULL;
+    }
+  else if (error_occurred)
+    {
+      g_assert(!time_expired);
+      g_assert(!got_it);
+      
+      gconf_set_error(err,
+                      GCONF_LOCK_FAILED,
+                      _("couldn't create directory `%s': %s"),
+                      lock->lock_directory, strerror(errno));
+      
+      gconf_lock_destroy(lock);
+      return NULL;
+    }
+  else
+    {
+      g_assert_not_reached();
+      return NULL;
+    }
+}
+
+gboolean
+gconf_release_lock(GConfLock* lock,
+                   GConfError** err)
+{
+  if (rmdir(lock->lock_directory) < 0)
+    {
+      gconf_set_error(err,
+                      GCONF_FAILED,
+                      _("Failed to release lock directory `%s': %s"),
+                      lock->lock_directory,
+                      strerror(errno));
+      gconf_lock_destroy(lock);
+      return FALSE;
+    }
+  gconf_lock_destroy(lock);
+  return TRUE;
 }

@@ -1,3 +1,24 @@
+1999-12-31  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-internals.c (gconf_log): in non-daemon mode, use
+	fprintf() when it's an error and printf() when not
+	(gconf_in_daemon_mode): new function
+
+	* gconf/gconfd.c (signal_handler): special-case some more signals;
+	do more thorough cleanup when we can.
+	(main): fix which signals we add an action for
+
+	* gconf/gconf-internals.h: Remove server_info* functions
+
+	* gconf/gconf-error.h: add GCONF_LOCK_FAILED
+
+	* gconf/gconf.c (corba_errno_to_gconf_errno): lock failed error
+
+	* gconf/gconf-internals.c (gconf_nanosleep): Add utility function
+	to portably sleep a little while (we should really stick one of
+	these in glib)
+	(gconf_release_lock, gconf_get_lock): Lock directory functions
+
 2000-01-02  Timur Bakeyev <mc@bat.ru>
 
 	* doc/gconf/Makefile.am: Replace unportable install -d with $MKINSTALLDIRS.

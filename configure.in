@@ -114,7 +114,11 @@ AC_SUBST(GUILE_CFLAGS)
 AC_CHECK_HEADER(pthread.h, have_pthreads=yes)
 AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
 
+AC_CHECK_FUNCS(nanosleep)
+AC_CHECK_FUNCS(usleep)
+
 ALL_LINGUAS="da no pt_BR uk"
+
 AM_GNU_GETTEXT
 
 CFLAGS="$CFLAGS -Wall"

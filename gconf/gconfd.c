@@ -886,22 +886,40 @@ signal_handler (int signo)
   static gint in_fatal = 0;
 
   /* avoid loops */
-  if (in_fatal > 1)
+  if (in_fatal > 0)
     return;
   
   ++in_fatal;
   
-  gconf_log(GCL_ERR, _("Received signal %d\nshutting down."), signo);
-  
-  fast_cleanup();
-
   switch(signo) {
+    /* Fast cleanup only */
   case SIGSEGV:
+  case SIGBUS:
+  case SIGILL:
+    fast_cleanup();
+    gconf_log(GCL_ERR, _("Received signal %d, shutting down."), signo);
     abort();
+    break;
+
+    /* maybe it's more feasible to clean up more mess */
+  case SIGFPE:
+  case SIGPIPE:
+  case SIGTERM:
+    /* Slow cleanup cases */
+    fast_cleanup();
+    /* remove lockfiles, etc. */
+    shutdown_contexts();
+    gconf_log(GCL_ERR, _("Received signal %d, shutting down."), signo);
+    exit (1);
+    break;
+    
+  case SIGHUP:
+    gconf_log(GCL_INFO, _("Received signal %d, ignoring"), signo);
+    --in_fatal;
     break;
     
   default:
-    exit (1);
+    break;
   }
 }
 
@@ -944,7 +962,9 @@ main(int argc, char** argv)
   act.sa_mask    = empty_mask;
   act.sa_flags   = 0;
   sigaction (SIGTERM,  &act, 0);
-  sigaction (SIGINT,  &act, 0);
+  sigaction (SIGILL,  &act, 0);
+  sigaction (SIGBUS,  &act, 0);
+  sigaction (SIGFPE,  &act, 0);
   sigaction (SIGHUP,  &act, 0);
   sigaction (SIGSEGV, &act, 0);
   sigaction (SIGABRT, &act, 0);
@@ -1903,11 +1923,11 @@ listener_destroy(Listener* l)
 static void 
 fast_cleanup(void)
 {
-  /* The goal of this function is to remove the 
-     stale server registration. 
-  */
+  /* first and foremost, remove the stale server registration */
   if (server != CORBA_OBJECT_NIL)
     oaf_active_server_unregister("", server);
+
+  
 }
 
 

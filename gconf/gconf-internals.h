@@ -45,10 +45,6 @@ enum {
 gboolean gconf_file_test   (const gchar* filename, int test);
 gboolean gconf_file_exists (const gchar* filename);
 
-gchar*   gconf_server_info_file(void);
-gchar*   gconf_server_info_dir(void);
-gchar*   gconf_read_server_ior(GConfError** err);
-
 GConfValue* gconf_value_from_corba_value(const ConfigValue* value);
 ConfigValue*  corba_value_from_gconf_value(GConfValue* value);
 void          fill_corba_value_from_gconf_value(GConfValue* value, 
@@ -145,9 +141,21 @@ gboolean   gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                                           gpointer cdr_retloc,
                                                           GConfError** err);
 void       gconf_set_daemon_mode(gboolean setting);
+gboolean   gconf_in_daemon_mode(void);
 
 /* Returns TRUE if there was an error, frees exception, sets err */
 gboolean gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err);
+
+void gconf_nanosleep(gulong useconds);
+
+typedef struct _GConfLock GConfLock;
+
+GConfLock* gconf_get_lock(const gchar* lock_directory,
+                          guint max_wait_usecs,
+                          GConfError** err);
+
+gboolean       gconf_release_lock(GConfLock* lock,
+                                  GConfError** err);
 
 #endif /* GCONF_ENABLE_INTERNALS */
 
