@@ -97,8 +97,8 @@ static void listener_destroy(Listener* l);
  * GConfClient proper
  */
 
-#define PUSH_USE_ENGINE(client) gconf_engine_push_owner_usage ((client)->engine, client)
-#define POP_USE_ENGINE(client) gconf_engine_pop_owner_usage ((client)->engine, client)
+#define PUSH_USE_ENGINE(client) do { if ((client)->engine) gconf_engine_push_owner_usage ((client)->engine, client); } while (0)
+#define POP_USE_ENGINE(client) do { if ((client)->engine) gconf_engine_pop_owner_usage ((client)->engine, client); } while (0)
 
 enum {
   VALUE_CHANGED,
@@ -248,6 +248,30 @@ destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
   dir_destroy(value);
 
   return TRUE;
+}
+
+static void
+set_engine (GConfClient *client,
+            GConfEngine *engine)
+{
+  if (engine == client->engine)
+    return;
+  
+  if (engine)
+    {
+      gconf_engine_ref (engine);
+
+      gconf_engine_set_owner (engine, client);
+    }
+  
+  if (client->engine)
+    {
+      gconf_engine_set_owner (client->engine, NULL);
+      
+      gconf_engine_unref (client->engine);
+    }
+  
+  client->engine = engine;  
 }
 
 static void
@@ -418,29 +442,6 @@ notify_from_server_callback(GConfEngine* conf, guint cnxn_id,
  * Public API
  */
 
-static void
-set_engine (GConfClient *client,
-            GConfEngine *engine)
-{
-  if (engine == client->engine)
-    return;
-  
-  if (engine)
-    {
-      gconf_engine_ref (engine);
-
-      gconf_engine_set_owner (engine, client);
-    }
-  
-  if (client->engine)
-    {
-      gconf_engine_set_owner (client->engine, NULL);
-      
-      gconf_engine_unref (client->engine);
-    }
-  
-  client->engine = engine;  
-}
 
 GConfClient*
 gconf_client_get_default (void)

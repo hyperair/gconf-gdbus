@@ -26,6 +26,12 @@
 
 #ifdef GCONF_ENABLE_INTERNALS
 
+#include <config.h>
+#include <libintl.h>
+
+#define _(String) dgettext (GETTEXT_PACKAGE, String)
+#define N_(String) (String)
+
 #include <glib.h>
 #include "gconf-error.h"
 #include "gconf-value.h"
@@ -210,25 +216,6 @@ void gconf_engine_push_owner_usage (GConfEngine *engine,
 void gconf_engine_pop_owner_usage  (GConfEngine *engine,
                                     gpointer     client);
 
-
-
-#ifdef ENABLE_NLS
-#    include <libintl.h>
-#    include <config.h>
-#    undef _
-#    define _(String) dgettext (GETTEXT_PACKAGE, String)
-#    ifdef gettext_noop
-#        define N_(String) gettext_noop (String)
-#    else
-#        define N_(String) (String)
-#    endif
-#else
-/* Stubs that do something close enough.  */
-#    define textdomain(String) (String)
-#    define bindtextdomain(Domain,Directory) (Domain)
-#    define _(String) (String)
-#    define N_(String) (String)
-#endif
 
 static inline gboolean
 gconf_CORBA_Object_equal (gconstpointer a, gconstpointer b)
