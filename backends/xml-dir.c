@@ -975,9 +975,11 @@ dir_fill_cache_from_doc(Dir* d)
         }
       else
         {
-          gconf_log(GCL_WARNING,
-                     _("Toplevel node in XML file `%s' is not an <entry>, ignoring"),
-                     d->xml_filename);
+          if (node->type == XML_ELEMENT_NODE)
+            gconf_log(GCL_WARNING,
+                      _("A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"),
+                      d->xml_filename,
+                      node->name ? (char*) node->name : "unknown");
         }
       
       node = node->next;
