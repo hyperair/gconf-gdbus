@@ -12,7 +12,7 @@ AC_ARG_WITH(gconf-exec-prefix,[  --with-gconf-exec-prefix=PFX Exec prefix where 
 AC_ARG_ENABLE(gconftest, [  --disable-gconftest       Do not try to compile and run a test GCONF program],
 		    , enable_gconftest=yes)
 
-  gconf_config_args="$gconf_config_args $4"
+  gconf_config_args="$gconf_config_args"
 
   if test x$gconf_config_exec_prefix != x ; then
      gconf_config_args="$gconf_config_args --exec-prefix=$gconf_config_exec_prefix"
@@ -34,8 +34,8 @@ AC_ARG_ENABLE(gconftest, [  --disable-gconftest       Do not try to compile and 
   if test "$GCONF_CONFIG" = "no" ; then
     no_gconf=yes
   else
-    GCONF_CFLAGS="`$GCONF_CONFIG $gconf_config_args --cflags`"
-    GCONF_LIBS="`$GCONF_CONFIG $gconf_config_args --libs`"
+    GCONF_CFLAGS="`$GCONF_CONFIG  $gconf_config_args --cflags $4`"
+    GCONF_LIBS="`$GCONF_CONFIG  $gconf_config_args --libs $4`"
     gconf_config_major_version=`$GCONF_CONFIG $gconf_config_args --version | \
 	   sed -e 's,^[[^0-9.]]*,,g' -e 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
     gconf_config_minor_version=`$GCONF_CONFIG $gconf_config_args --version | \

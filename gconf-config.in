@@ -24,6 +24,7 @@ Options:
   --version     output gconf version information
 Libraries:
          gconf
+         gconf-gtk
 EOF
         exit $1
 }
@@ -110,6 +111,9 @@ while test $# -gt 0; do
   case $1 in
     gconf)
       af_lib_gconf=yes
+      ;;
+    gconf-gtk)
+      af_lib_gconf_gtk=yes
       ;;
     *)
       usage 1 1>&2
@@ -211,6 +215,10 @@ if test "@includedir@" != /usr/include ; then
 fi
 af_cflags="$af_cflags $includes $cflags"
 af_libs="-L@libdir@ -lgconf $af_libs"
+
+if test "X$af_lib_gconf_gtk" = "Xyes"; then
+    af_libs="$af_libs -lgconf-gtk"
+fi
 
 print_result
 
