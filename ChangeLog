@@ -1,3 +1,15 @@
+2002-02-05  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf-sanity-check.c (main): add gconf-sanity-check-2 app,
+	which either exits sucessfully and does nothing, or pops up a
+	dialog explaining a gconf problem and exits with a failure code.
+	Could be placed in gnome-session, or at least we can tell users 
+	to run it as a diagnostic tool.
+
+	Only catches very simple problems so far.
+
+	* configure.in: define XML_AND_GTK_CFLAGS
+
 2002-02-05  Michael Meeks  <michael@ximian.com>
 
 	* gconf/gconf.h: move (gconf_debug_shutdown) out of

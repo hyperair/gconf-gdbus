@@ -5,7 +5,7 @@ GCONFD_BINARY_NAME=gconfd-2
 INCLUDES=								\
 	-I$(top_srcdir)							\
 	-I$(top_builddir)						\
-	$(DEPENDENT_WITH_XML_CFLAGS)					\
+	$(DEPENDENT_WITH_XML_AND_GTK_CFLAGS) 				\
 	-DG_LOG_DOMAIN=\"GConf\"					\
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"			\
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\"			\
@@ -21,9 +21,15 @@ INCLUDES=								\
 
 EFENCE=
 
+if GTK
+SANITY_CHECK=gconf-sanity-check-2
+else
+SANITY_CHECK=
+endif
+
 lib_LTLIBRARIES = libgconf-2.la
 
-bin_PROGRAMS = gconfd-2 gconftool-2
+bin_PROGRAMS = gconfd-2 gconftool-2 $(SANITY_CHECK)
 
 CORBA_SOURCECODE = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
@@ -80,6 +86,11 @@ gconftool_2_SOURCES = \
 	gconftool.c
 
 gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
+
+gconf_sanity_check_2_SOURCES = \
+	gconf-sanity-check.c
+
+gconf_sanity_check_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
 
 $(CORBA_SOURCECODE): $(srcdir)/GConf.idl $(ORBIT_IDL)
 	$(ORBIT_IDL) $(srcdir)/GConf.idl
