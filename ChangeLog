@@ -1,5 +1,15 @@
 1999-09-03  Havoc Pennington  <hp@pobox.com>
 
+	* configure.in: set POPT_LIBS instead of adding -lpopt to generic
+	LDFLAGS; this was causing libtool to fail to generate the .so 
+	file for the XML backend module.
+
+	* gconf/Makefile.am: use POPT_LIBS
+
+	* gconf/gconf-backend.c: change some g_warning to g_conf_log
+
+1999-09-03  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconfd.c: Every hour or so, hibernate all contexts that
 	haven't been accessed in 45 minutes. Make some assorted changes
 	to support that.

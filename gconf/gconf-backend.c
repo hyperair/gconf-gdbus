@@ -130,7 +130,7 @@ g_conf_backend_file(const gchar* address)
 
       /* -- end debug only */
 
-      g_warning("No such file `%s'\n", retval);
+      g_conf_log(GCL_ERR, _("No such file `%s'\n"), retval);
 
       g_free(file);
       g_free(retval);
@@ -158,7 +158,7 @@ g_conf_get_backend(const gchar* address)
       
   if (name == NULL)
     {
-      g_warning("Bad address `%s'", address);
+      g_conf_log(GCL_ERR, _("Bad address `%s'"), address);
       return NULL;
     }
 
@@ -222,7 +222,7 @@ g_conf_get_backend(const gchar* address)
         }
       else
         {
-          g_warning("Couldn't locate backend module for `%s'", address);
+          g_conf_log(GCL_ERR, _("Couldn't locate backend module for `%s'"), address);
           return NULL;
         }
     }

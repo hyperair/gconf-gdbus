@@ -30,10 +30,11 @@ XML_CFLAGS=`$XML_CONFIG --cflags`
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
-AC_CHECK_LIB(popt, poptGetArg, ,
+AC_CHECK_LIB(popt, poptGetArg, POPT_LIBS=-lpopt,
 	[AC_CHECK_HEADER(popt.h, , AC_MSG_ERROR([[
 *** Couldn't find popt. Please download and install from
 *** ftp://ftp.redhat.com/pub/redhat/code/popt and try again.]]))])
+AC_SUBST(POPT_LIBS)
 
 AC_PATH_PROG(ORBIT_CONFIG,orbit-config,no)
 if test x$ORBIT_CONFIG = xno; then

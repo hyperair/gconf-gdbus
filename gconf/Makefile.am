@@ -32,7 +32,7 @@ gconfd_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 gconftool_SOURCES = \
 	gconftool.c
 
-gconftool_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) -lpopt libgconf-client.la
+gconftool_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) libgconf-client.la
 
 $(CORBA_SOURCES): GConf.idl
 	orbit-idl GConf.idl
