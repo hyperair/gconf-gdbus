@@ -1,5 +1,6 @@
 
 SUBDIRS = gconf backends wrappers po intl doc examples standard-schemas
+DIST_SUBDIRS=tests
 
 bin_SCRIPTS = gconf-config
 
