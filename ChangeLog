@@ -1,3 +1,33 @@
+2001-12-11  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf.c (gconf_engine_get_default): change to not start
+	gconfd immediately, so we can avoid starting it if 
+	we're just going to shut it down, and just generally do 
+	things lazily.
+	(gconf_shutdown_daemon): ignore NO_SERVER error code
+
+	* backends/xml-dir.c (dir_get_value): always get schema name, not
+	just if value is unset
+
+	* gconf/gconfd.c (main): don't free logname since there are atexit
+	handlers for now
+
+	* gconf/gconf-sources.c (gconf_sources_query_value): don't look
+	for a default value for the schema. Useless and adds a bit of
+	inefficiency.
+
+	* gconf/gconfd.c (main): set log handler for GLib
+	(log_handler): mask extra flags out of log level
+
+	* gconf/gconf-sources.c (gconf_sources_query_value): Fix this so
+	Gergo's bug doesn't happen; hope no other semantic gets broken.
+
+	* tests/testschemas.c: do some unbreaking, and put in a test that
+	exposes Gergo's bug (failure to read schema name if a key is set)
+
+	* tests/*: put in a big comment saying don't use these as example
+	code since they are ugly-ass and broken.
+
 Sun Dec  9 18:22:50 2001  Jonathan Blandford  <jrb@redhat.com>
 
 	* gconf.m4.in: Just when I think I understand the depths of the

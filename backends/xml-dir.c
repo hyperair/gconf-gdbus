@@ -509,12 +509,9 @@ dir_get_value   (Dir* d,
 
       val = entry_get_value (e, locales, err);
 
-      /* Fill schema name if value is NULL because we might be
-         interested in the default value of the key in that case. */
-      if (schema_name &&
-          val == NULL &&
-          entry_get_schema_name(e))
-        *schema_name = g_strdup(entry_get_schema_name(e));
+      /* Get schema name if requested */
+      if (schema_name && entry_get_schema_name (e))
+        *schema_name = g_strdup (entry_get_schema_name (e));
       
       /* return copy of the value */
       if (val != NULL)
