@@ -369,7 +369,7 @@ gconf_server_load_sources(void)
           error = NULL;
         }
       
-      g_slist_free(addresses);
+      gconf_address_list_free(addresses);
 
       g_assert(sources != NULL);
 

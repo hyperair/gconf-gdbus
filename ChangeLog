@@ -1,3 +1,14 @@
+2004-09-28  Mark McLoughlin  <mark@skynet.ie>
+
+	Leak identified by Kjartan in bug #153891.
+
+	* gconf/gconfd.c: (gconf_server_load_sources):
+	Plug leak.
+	
+	* gconf/gconf-internals.c:
+	(gconf_load_source_path): remove some crufty code,
+	don't unneccessarily copy strings.
+
 2004-09-14  Mark McLoughlin  <mark@skynet.ie>
 
 	* configure.in: post-release bump to 2.8.1.
