@@ -221,6 +221,9 @@ msgstr "Нев╕рний вузол XML: %s"
 msgid "List contains a badly-typed node (%s, should be %s)"
 msgstr "Список м╕стить погано введений вузол (%s зам╕сть %s)"
 
+# car - перший елемент списку
+# cdr - список без першого елемента
+
 #: backends/xml-entry.c:1124
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
@@ -310,7 +313,7 @@ msgstr ""
 #: gconf/gconf-database.c:761
 #, c-format
 msgid "Failed to sync one or more sources: %s"
-msgstr "Не вдалось синхрон╕зувати один чи б╕льше джерел: %s"
+msgstr "Не вдалося синхрон╕зувати одне чи б╕льше джерел: %s"
 
 #. This error is not fatal; we basically ignore it.
 #. * Because it's likely the right thing for the client
@@ -395,7 +398,7 @@ msgstr "Не встановлено з'╓днання з конф╕╜урац╕йним сервером"
 
 #: gconf/gconf-error.c:28
 msgid "Permission denied"
-msgstr "В правах в╕дмовлено"
+msgstr "В╕дмовлено в правах"
 
 #: gconf/gconf-error.c:29
 msgid "Couldn't resolve address for configuration source"
@@ -419,11 +422,11 @@ msgstr "Несп╕впад╕ння тип╕в"
 
 #: gconf/gconf-error.c:34
 msgid "Key operation on directory"
-msgstr "Операц╕я ключа на каталог"
+msgstr "Операц╕я ключа на каталоз╕"
 
 #: gconf/gconf-error.c:35
 msgid "Directory operation on key"
-msgstr "Операц╕я каталогу на ключ"
+msgstr "Операц╕я каталогу на ключ╕"
 
 #: gconf/gconf-error.c:36
 msgid "Can't overwrite existing read-only value"
@@ -625,11 +628,11 @@ msgstr "Помилка завантаження джерела \"%s\": %s"
 #: gconf/gconf-sources.c:506
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
-msgstr ""
+msgstr "Схема \"%s\" вказана для \"%s\" збер╕га╓ значення, що не ╓ схемою"
 
 #: gconf/gconf-sources.c:555
 msgid "The '/' name can only be a directory, not a key"
-msgstr ""
+msgstr "Назва \"/\" може бути лише каталогом, а не ключем"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -639,54 +642,54 @@ msgid ""
 msgstr ""
 
 #: gconf/gconf-sources.c:596
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to store a value at key '%s'"
-msgstr "Не вдалося створити файл \"%s\": %s"
+msgstr "Не вдалося зберегти значення за ключем \"%s\""
 
 #: gconf/gconf-sources.c:1151
 #, c-format
 msgid "Error finding metainfo: %s"
-msgstr ""
+msgstr "Помилка пошуку мента╕нформац╕╖: %s"
 
 #: gconf/gconf-sources.c:1220
 #, c-format
 msgid "Error getting metainfo: %s"
-msgstr ""
+msgstr "Помилка отримання мета╕нформац╕╖: %s"
 
 #: gconf/gconf-sources.c:1244
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-msgstr ""
+msgstr "Ключ \"%s\" вказаний як схема для ключа \"%s\" насправд╕ збер╕га╓ тип \"%s\""
 
 #: gconf/gconf-value.c:82
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (оч╕кувалось ц╕ле число)"
 
 #: gconf/gconf-value.c:92
 #, c-format
 msgid "Integer `%s' is too large or small"
-msgstr ""
+msgstr "Ц╕ле \"%s\" надто велике чи мале"
 
 #: gconf/gconf-value.c:113
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (оч╕кувалось д╕йсне число)"
 
 #: gconf/gconf-value.c:146
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (оч╕кувалось лог╕чне значення)"
 
 #: gconf/gconf-value.c:214
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (список ма╓ починатись з \"[\")"
 
 #: gconf/gconf-value.c:227
 #, c-format
 msgid "Didn't understand `%s' (list must end with a ']')"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (список ма╓ зак╕нчуватись на \"]\")"
 
 #: gconf/gconf-value.c:278
 #, c-format
@@ -701,17 +704,17 @@ msgstr ""
 #: gconf/gconf-value.c:348
 #, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (пара ма╓ починатись з \"(\")"
 
 #: gconf/gconf-value.c:361
 #, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (пара ма╓ зак╕нчуватись на \")\")"
 
 #: gconf/gconf-value.c:391 gconf/gconf-value.c:477
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
-msgstr ""
+msgstr "Не зрозум╕ло \"%s\" (нев╕рна к╕льк╕сть елемент╕в)"
 
 #: gconf/gconf-value.c:431
 #, c-format
