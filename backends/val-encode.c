@@ -19,11 +19,16 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include <gconf/gconf.h>
 
 /* required for gconf_value_new_from_string() */
 #include <gconf/gconf-internals.h>
+
+/* required for _gconf_slist_free_all */
+#include "dir-utils.h"
 
 /* GConf Value type character identifiers */
 static const char bdb_string = 's';
