@@ -1780,7 +1780,18 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
 gboolean
 gconf_key_is_below   (const gchar* above, const gchar* below)
 {
-  return strncmp(below, above, strlen(above)) == 0;
+  int len = strlen(above);
+  if (strncmp(below, above, len) == 0)
+    {
+      /* only if this is a complete key component,
+       * so that /foo is not above /foofoo/bar */
+      if (below[len] == '\0' || below[len] == '/')
+        return TRUE;
+      else
+	return FALSE;
+    }
+  else
+    return FALSE;
 }
 
 gchar*

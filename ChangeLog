@@ -1,3 +1,9 @@
+Wed Jul 26 12:40:45 2000  George Lebl <jirka@5z.com>
+
+	* gconf/gconf.c (gconf_key_is_below):  Make sure that the segment
+	  above is a complete directory and not just partial directory.
+	  so that /foo is not taken as above /foobar/blah
+
 Tue Jul 25 23:48:24 2000  George Lebl <jirka@5z.com>
 
 	* wrappers/gtk/gconf-client.c:  || doesn't mean && :).  It would
