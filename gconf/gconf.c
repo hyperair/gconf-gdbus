@@ -692,6 +692,8 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
   g_return_val_if_fail(value->type != GCONF_VALUE_INVALID, FALSE);
   g_return_val_if_fail( (value->type != GCONF_VALUE_STRING) ||
                         (gconf_value_string(value) != NULL) , FALSE );
+  g_return_val_if_fail( (value->type != GCONF_VALUE_LIST) ||
+                        (gconf_value_list_type(value) != GCONF_VALUE_INVALID), FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   if (!gconf_key_check(key, err))
