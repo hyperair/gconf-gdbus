@@ -44,29 +44,41 @@ struct _GConfSchema {
   GConfValue* default_value; /* Default value of the key */
 };
 
-GConfSchema*  gconf_schema_new(void);
-void          gconf_schema_free(GConfSchema* sc);
-GConfSchema*  gconf_schema_copy(GConfSchema* sc);
+GConfSchema* gconf_schema_new  (void);
+void         gconf_schema_free (GConfSchema *sc);
+GConfSchema* gconf_schema_copy (GConfSchema *sc);
 
-void          gconf_schema_set_type(GConfSchema* sc, GConfValueType type);
-void          gconf_schema_set_list_type(GConfSchema* sc, GConfValueType type);
-void          gconf_schema_set_car_type(GConfSchema* sc, GConfValueType type);
-void          gconf_schema_set_cdr_type(GConfSchema* sc, GConfValueType type);
-void          gconf_schema_set_locale(GConfSchema* sc, const gchar* locale);
-void          gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc);
-void          gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc);
-void          gconf_schema_set_owner(GConfSchema* sc, const gchar* owner);
-void          gconf_schema_set_default_value(GConfSchema* sc, GConfValue* val);
-void          gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val);
+void gconf_schema_set_type                 (GConfSchema    *sc,
+                                            GConfValueType  type);
+void gconf_schema_set_list_type            (GConfSchema    *sc,
+                                            GConfValueType  type);
+void gconf_schema_set_car_type             (GConfSchema    *sc,
+                                            GConfValueType  type);
+void gconf_schema_set_cdr_type             (GConfSchema    *sc,
+                                            GConfValueType  type);
+void gconf_schema_set_locale               (GConfSchema    *sc,
+                                            const gchar    *locale);
+void gconf_schema_set_short_desc           (GConfSchema    *sc,
+                                            const gchar    *desc);
+void gconf_schema_set_long_desc            (GConfSchema    *sc,
+                                            const gchar    *desc);
+void gconf_schema_set_owner                (GConfSchema    *sc,
+                                            const gchar    *owner);
+void gconf_schema_set_default_value        (GConfSchema    *sc,
+                                            GConfValue     *val);
+void gconf_schema_set_default_value_nocopy (GConfSchema    *sc,
+                                            GConfValue     *val);
 
-#define       gconf_schema_type(x) (x->type)
-#define       gconf_schema_list_type(x) (x->list_type)
-#define       gconf_schema_car_type(x) (x->car_type)
-#define       gconf_schema_cdr_type(x) (x->cdr_type)
-#define       gconf_schema_locale(x)     ((const gchar*)(x)->locale)
-#define       gconf_schema_short_desc(x) ((const gchar*)(x)->short_desc)
-#define       gconf_schema_long_desc(x)  ((const gchar*)(x)->long_desc)
-#define       gconf_schema_owner(x)      ((const gchar*)(x)->owner)
+
+
+#define       gconf_schema_type(x)          (x->type)
+#define       gconf_schema_list_type(x)     (x->list_type)
+#define       gconf_schema_car_type(x)      (x->car_type)
+#define       gconf_schema_cdr_type(x)      (x->cdr_type)
+#define       gconf_schema_locale(x)        ((const gchar*)(x)->locale)
+#define       gconf_schema_short_desc(x)    ((const gchar*)(x)->short_desc)
+#define       gconf_schema_long_desc(x)     ((const gchar*)(x)->long_desc)
+#define       gconf_schema_owner(x)         ((const gchar*)(x)->owner)
 #define       gconf_schema_default_value(x) ((x)->default_value)
 
 #endif

@@ -2360,7 +2360,7 @@ gconf_engine_get_int   (GConfEngine* conf, const gchar* key,
 }
 
 gchar*       
-gconf_get_string(GConfEngine* conf, const gchar* key,
+gconf_engine_get_string(GConfEngine* conf, const gchar* key,
                  GError** err)
 {
   GConfValue* val;

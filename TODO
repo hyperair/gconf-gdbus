@@ -18,6 +18,22 @@ workstation config files.
 
 * Change _() to actually call gettext or dgettext
 
+* Change GConfEntry::key to be the full key, not a subdir
+  name
+
+* Add gconf_engine_key_is_writable()
+
+* Make sure accessors are named _get_foo() (e.g. GConfSchema,
+  GConfValue, GConfMetaInfo, GConfEntry)
+
+* Check for more _destroy() that should be _free()
+
+* Fill out the GConfEntry API, it doesn't look complete.
+
+* Privatize the GConfError stuff except error domain and codes
+
+* Remove goofy "dummy" thing in GConfEngine
+
 Maybe 1.4
 ===
 
@@ -91,3 +107,7 @@ Future
   comes from the backend. Hmm.
 
 * Use a real DTD and a nicer structure for the XML backend format
+
+* Implement server-side search
+
+* Implement batch gets

@@ -32,7 +32,12 @@ extern "C" {
 
 gboolean     gconf_is_initialized  (void);
 
-typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data);
+typedef void (*GConfNotifyFunc) (GConfEngine* conf,
+                                 guint cnxn_id,
+                                 const gchar* key,
+                                 GConfValue* value,
+                                 gboolean is_default,
+                                 gpointer user_data);
   
 /* Returns ID of the notification */
 /* returns 0 on error, 0 is an invalid ID */
@@ -89,9 +94,10 @@ gboolean    gconf_engine_unset                   (GConfEngine  *conf,
 
 
 /*
- * schema_key should have a schema (if key stores a value) or a dir full of schemas
- * (if key stores a directory name)
+ * schema_key should have a schema (if key stores a value) or a dir
+ * full of schemas (if key stores a directory name)
  */
+
 gboolean gconf_engine_associate_schema (GConfEngine  *conf,
                                         const gchar  *key,
                                         const gchar  *schema_key,
@@ -146,9 +152,9 @@ gint         gconf_engine_get_int    (GConfEngine     *conf,
 
 
 /* free the retval, retval can be NULL for "unset" */
-gchar*       gconf_get_string (GConfEngine     *conf,
-                               const gchar     *key,
-                               GError     **err);
+gchar*       gconf_engine_get_string (GConfEngine     *conf,
+                                      const gchar     *key,
+                                      GError     **err);
 gboolean     gconf_engine_get_bool   (GConfEngine     *conf,
                                       const gchar     *key,
                                       GError     **err);
@@ -232,8 +238,28 @@ gboolean gconf_engine_set_pair   (GConfEngine     *conf,
                                   GError     **err);
 
 
+/* Utility function converts enumerations to and from strings */
+typedef struct _GConfEnumStringPair GConfEnumStringPair;
+
+struct _GConfEnumStringPair {
+  gint enum_value;
+  const gchar* str;
+};
+
+gboolean     gconf_string_to_enum (GConfEnumStringPair  lookup_table[],
+                                   const gchar         *str,
+                                   gint                *enum_value_retloc);
+const gchar* gconf_enum_to_string (GConfEnumStringPair  lookup_table[],
+                                   gint                 enum_value);
 
 gboolean     gconf_init        (int argc, char **argv, GError** err);
+
+/* No, you can't use this stuff. Bad application developer. Bad. */
+#ifdef GCONF_ENABLE_INTERNALS
+
+/* This stuff is only useful in GNOME 2.0, so isn't in this GConf
+ * release.
+ */
 
 /* For use by the Gnome module system */
 void gconf_preinit(gpointer app, gpointer mod_info);
@@ -250,22 +276,6 @@ extern const char gconf_version[];
 extern struct poptOption gconf_options[];
 #endif
 
-/* Utility function converts enumerations to and from strings */
-typedef struct _GConfEnumStringPair GConfEnumStringPair;
-
-struct _GConfEnumStringPair {
-  gint enum_value;
-  const gchar* str;
-};
-
-gboolean     gconf_string_to_enum (GConfEnumStringPair  lookup_table[],
-                                   const gchar         *str,
-                                   gint                *enum_value_retloc);
-const gchar* gconf_enum_to_string (GConfEnumStringPair  lookup_table[],
-                                   gint                 enum_value);
-
-/* No, you can't use this function. Bad application developer. Bad. */
-#ifdef GCONF_ENABLE_INTERNALS
 void gconf_clear_cache(GConfEngine* conf, GError** err);
 void gconf_synchronous_sync(GConfEngine* conf, GError** err);
 #endif

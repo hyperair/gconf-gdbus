@@ -1,3 +1,12 @@
+2000-09-10  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-value.h: remove GCONF_INTERNAL_VALUE_TYPE_VALID
+
+	* gconf/gconf.h: #ifdef the GNOME module system and popt stuff for
+	GNOME 1.4. This stuff is tied to GNOME 2.0 and still unstable in
+	that respect; should not be used before GNOME 2.0
+	(gconf_get_string): forgot to rename this earlier
+	
 2000-09-09  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconfd.c (half_hour_timeout): Convert one_hour_timeout to

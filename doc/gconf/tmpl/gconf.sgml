@@ -181,7 +181,7 @@ This function is basically for internal use.
 <para>
 Returns the default value stored in the key's schema, if the key has a schema
 associated and the schema exists and the schema contains a default value.  Note
-that gconf_engine_get (), gconf_get_string(), and so on already return the default value
+that gconf_engine_get (), gconf_engine_get_string(), and so on already return the default value
 if no other value is found, so normally you do not need this function. This
 function is just for convenience; you could also get the #GConfMetaInfo for the
 key, read the schema name from there, then look up the schema by name and
@@ -362,7 +362,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @Returns: the value of @key, or 0 if no value is obtained.
 
 
-<!-- ##### FUNCTION gconf_get_string ##### -->
+<!-- ##### FUNCTION gconf_engine_get_string ##### -->
 <para>
 Requests the string (%GCONF_VALUE_STRING) stored at
 @key. Automatically performs type-checking, so if a non-string is

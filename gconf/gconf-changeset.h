@@ -43,8 +43,10 @@ typedef void (* GConfChangeSetForeachFunc) (GConfChangeSet* cs,
 
 gboolean        gconf_engine_commit_change_set   (GConfEngine* conf,
                                                   GConfChangeSet* cs,
-                                                  /* remove all successfully committed
-                                                     changes from the set */
+                                                  /* remove all
+                                                     successfully
+                                                     committed changes
+                                                     from the set */
                                                   gboolean remove_committed,
                                                   GError** err);
 

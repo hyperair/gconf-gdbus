@@ -47,8 +47,6 @@ typedef enum {
 } GConfValueType;
 
 #define GCONF_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_PAIR))
-/* allows the internal ignore-subsequent value type (which no longer exists) */
-#define GCONF_INTERNAL_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_PAIR))
 
 /* Forward declaration */
 typedef struct _GConfSchema GConfSchema;
@@ -119,8 +117,9 @@ void        gconf_value_set_list             (GConfValue* value,
 
 gchar*      gconf_value_to_string            (GConfValue* value);
 
-/* Meta-information about a key. Not the same as a schema; a schema
- * is normative, this is descriptive.
+/* Meta-information about a key. Not the same as a schema; this is
+ * information stored on the key, the schema is a specification
+ * that may apply to this key.
  */
 
 typedef struct _GConfMetaInfo GConfMetaInfo;
@@ -158,8 +157,8 @@ struct _GConfEntry {
   gboolean is_default;
 };
 
-#define     gconf_entry_key(x)      ((const gchar*)(x)->key)
-#define     gconf_entry_value(x)    ((x)->value)
+#define     gconf_entry_key(x)         ((const gchar*)(x)->key)
+#define     gconf_entry_value(x)       ((x)->value)
 #define     gconf_entry_schema_name(x) ((x)->schema_name)
 #define     gconf_entry_is_default(x)  ((x)->is_default)
 

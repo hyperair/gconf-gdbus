@@ -218,7 +218,7 @@ check_string_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_string(conf, *keyp, &err);
+              gotten = gconf_engine_get_string(conf, *keyp, &err);
               
               if (err != NULL)
                 {
@@ -264,7 +264,7 @@ check_string_storage(GConfEngine* conf)
 
           sync_and_clear(conf);
           
-          gotten = gconf_get_string(conf, *keyp, &err);
+          gotten = gconf_engine_get_string(conf, *keyp, &err);
 
           if (err != NULL)
             {
