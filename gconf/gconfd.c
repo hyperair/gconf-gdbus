@@ -1954,8 +1954,9 @@ logfile_read (void)
   
   if (f == NULL)
     {
-      gconf_log (GCL_ERR, _("Unable to open saved state file '%s': %s"),
-                 logfile, g_strerror (errno));
+      if (errno != ENOENT)
+          gconf_log (GCL_ERR, _("Unable to open saved state file '%s': %s"),
+                     logfile, g_strerror (errno));
 
       goto finished;
     }
