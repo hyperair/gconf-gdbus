@@ -836,7 +836,7 @@ msgstr "`%s' üçün sırf-oxunan qaynaqda sənin konfiqurasiya yolundan əvvəl
 # not finished. needs editing..
 # Metin
 #: gconf/gconf-sources.c:692
-#, c-format
+#, fuzzy, c-format
 msgid "Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file %s/path doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. If you have stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections - put \"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconfd and also lockfiles in individual storage locations such as ~/.gconf"
 msgstr "Quraşdırma vericisində heç yazıla bilən databeyz olmadığına görə dəyəri '%s' açarında qeyd edə bilmədim."
 
@@ -1071,7 +1071,7 @@ msgid "Owner of %s is not the current user"
 msgstr "%s yiyəsi hazırkı istifadəçi deyil"
 
 #: gconf/gconfd.c:505
-#, c-format
+#, fuzzy, c-format
 msgid "Bad permissions %o on dir %s"
 msgstr "%s cərgəsi üstündə xətalı %o səlahiyyəti"
 
