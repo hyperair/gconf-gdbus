@@ -86,10 +86,11 @@
  * this can be done at all portably. Could possibly have some measure
  * of parse tree size.
  *
- * The libxml parse trees are pretty huge, so in theory we could "compress"
- * them by extracting all the information we want, then nuking the parse
- * tree. However, that would add more CPU overhead. Anyway, as a first cut
- * I'm not going to do this, we might do it later.
+ * The libxml parse trees are pretty huge, so in theory we could
+ * "compress" them by extracting all the information we want into a
+ * specialized data structure, then nuking the parse tree. However,
+ * that would add more CPU overhead at load and save time. Anyway, as
+ * a first cut I'm not going to do this, we might do it later.
  *
  * Atomic Saving
  *
@@ -97,11 +98,14 @@
  * new file version, renaming the original file, moving the temporary
  * file into place, then deleting the original file, checking for
  * errors and mod times along the way.
- *     
+ *      
  */
 
 /* FIXME right now we don't cache failures to find a key or directory.
- *  We should probably do that. 
+ *  We should probably do that. i.e. if a key/directory doesn't exist, 
+ *  we'll do a full search for it every time we request it.
+ * We need a concept of "nonexistent" cache entries anyway, so we can 
+ * sync deleted directories to disk.
  */
 
 typedef struct _XMLSource XMLSource;
@@ -127,6 +131,7 @@ typedef struct _TreeCacheEntry TreeCacheEntry;
 
 struct _TreeCacheEntry {
   xmlDocPtr tree;
+  xmlNodePtr dirs;     /* Node holding list of child dirs; can be NULL */
   GSList* cached_keys; /* list of KeyCacheEntry for keys belonging to this tree */
   GTime last_access;
   guint dirty : 1;     /* Do we need to save? */
@@ -281,6 +286,12 @@ xdoc_add_entry(xmlDocPtr doc, const gchar* key, GConfValue* value);
 static xmlNodePtr
 xdoc_find_entry(xmlDocPtr doc, const gchar* key);
 
+static xmlNodePtr
+xdoc_find_dirs(xmlDocPtr doc);
+
+static xmlNodePtr
+xdirs_add_child_dir(xmlNodePtr node, const gchar* relative_child_dir);
+
 static void
 xentry_set_value(xmlNodePtr node, GConfValue* value);
 
@@ -303,6 +314,9 @@ tree_cache_entry_new(xmlDocPtr tree);
 
 static void
 tree_cache_entry_destroy(TreeCacheEntry* entry);
+
+static void
+tree_cache_entry_make_dirs(TreeCacheEntry* entry);
 
 /*
  * XML source implementation
@@ -621,63 +635,61 @@ xs_create_new_dir(XMLSource* source, const gchar* dir)
 {
   xmlDocPtr doc = NULL;
   TreeCacheEntry* entry = NULL;
+  TreeCacheEntry* parent_entry = NULL;
+  gchar* absolute;
+  gboolean failed = FALSE;
+  gchar* parent;
 
-  if (g_conf_file_test(dir, G_CONF_FILE_ISDIR))
+  absolute = g_strconcat(source->root_dir, dir, NULL);
+
+  parent = parent_dir(dir);
+
+  if (parent != NULL)
     {
-      g_warning("Filesystem directory `%s' already exists?", dir);
+      parent_entry = xs_lookup_dir(source, parent);
+
+      if (parent_entry == NULL)
+        {
+          /* Recursively create parents */
+          parent_entry = xs_create_new_dir(source, parent);
+              
+          if (parent_entry == NULL)
+            {
+              failed = TRUE;
+            }
+        }
+
+      g_free(parent);
+    }
+
+  if (failed)
+    {
+      g_free(absolute);
+      return NULL;
+    }
+
+  /* Debug check, just a slowdown, remove someday */
+  if (g_conf_file_test(absolute, G_CONF_FILE_ISDIR))
+    {
+      g_warning("Filesystem directory `%s' already exists?", absolute);
     }
   else
     {
-      GSList* absent_dirs = NULL;
-      GSList* tmp;
-      gboolean failed = FALSE;
-      gchar* parent;
-
-      parent = g_strdup(dir);
-      while (parent)
+      if (mkdir(absolute, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
         {
-          absent_dirs = g_slist_prepend(absent_dirs, parent);
-         
-          parent = parent_dir(parent);
-         
-          /* Bail out as soon as a parent exists */
-          if (g_conf_file_test(dir, G_CONF_FILE_ISDIR))
-            {
-              g_free(parent);
-              parent = NULL;
-              break;
-            }
+          g_warning("Could not make directory `%s': %s",
+                    (gchar*)absolute, strerror(errno));
+          failed = TRUE;
         }
-
-      tmp = absent_dirs;
-
-      while (tmp != NULL)
-        { 
-          if (mkdir(tmp->data, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
-            {
-              g_warning("Could not make directory `%s': %s",
-                        (gchar*)tmp->data, strerror(errno));
-              failed = TRUE;
-              break;
-            }
-          
-          tmp = g_slist_next(tmp);
-        }
-
-      tmp = absent_dirs;
-      while (tmp != NULL)
-        {
-          g_free(tmp->data);
-          tmp = g_slist_next(tmp);
-        }
-      
-      g_slist_free(absent_dirs);
-
-      if (failed)
-        return NULL;
     }
 
-  /* Create the parse tree, .gconf.xml file */
+  g_free(absolute);
+
+  if (failed)
+    return NULL;
+
+  /* Create the parse tree, mark dirty so we eventually save the
+     .gconf.xml file */
 
   doc = xmlNewDoc("1.0");
 
@@ -689,6 +701,27 @@ xs_create_new_dir(XMLSource* source, const gchar* dir)
 
   g_hash_table_insert(source->trees, g_strdup(dir), entry);
   
+  /* Add ourselves to the parent's directory list, unless this is the
+     root directory (in which case parent_entry should be NULL) */
+
+  if (parent_entry != NULL)
+    {
+      gchar* relative_dir;
+
+      if (parent_entry->dirs == NULL)
+        tree_cache_entry_make_dirs(parent_entry);
+
+      g_assert(parent_entry->dirs != NULL);
+
+      relative_dir = strrchr(dir, '/');
+
+      g_assert(relative_dir != NULL);
+      ++relative_dir;
+      g_assert(*relative_dir != '\0'); /* would happen if the dir was '/' which it shouldn't be. */
+
+      xdirs_add_child_dir(parent_entry->dirs, relative_dir);
+    }
+
   return entry;
 }
 
@@ -866,6 +899,55 @@ xdoc_find_entry(xmlDocPtr doc, const gchar* full_key)
   return NULL;
 }
 
+static xmlNodePtr
+xdoc_find_dirs(xmlDocPtr doc)
+{
+  xmlNodePtr node;
+
+  if (doc == NULL ||
+      doc->root == NULL ||
+      doc->root->childs == NULL)
+    {
+      /* Empty document - just return. */
+      printf("Empty document\n");
+      return NULL;
+    }
+
+  if (strcmp(doc->root->name, "gconf") != 0)
+    {
+      g_warning("Document root isn't a <gconf> tag");
+      return NULL;
+    }
+
+  
+  node = doc->root->childs;
+
+  while (node != NULL)
+    {
+      if (node->type == XML_ELEMENT_NODE && 
+          (strcmp(node->name, "dirs") == 0))
+        {
+          return node;
+        }
+
+      node = node->next;
+    }
+
+  return NULL;
+}
+
+static xmlNodePtr
+xdirs_add_child_dir(xmlNodePtr dirnode, const gchar* relative_child_dir)
+{
+  xmlNodePtr node;
+
+  node = xmlNewChild(dirnode, NULL, "dir", NULL);
+  
+  xmlSetProp(node, "name", relative_child_dir);
+
+  return node;
+}
+
 static void
 xentry_set_value(xmlNodePtr node, GConfValue* value)
 {
@@ -987,6 +1069,7 @@ tree_cache_entry_new(xmlDocPtr tree)
   entry = g_new(TreeCacheEntry, 1);
 
   entry->tree = tree;
+  entry->dirs = xdoc_find_dirs(tree);
   entry->cached_keys = NULL;
   entry->last_access = time(NULL);
   entry->dirty = FALSE;
@@ -1002,4 +1085,12 @@ tree_cache_entry_destroy(TreeCacheEntry* entry)
   xmlFreeDoc(entry->tree);
   
   g_free(entry);
+}
+
+static void
+tree_cache_entry_make_dirs(TreeCacheEntry* entry)
+{
+  g_return_if_fail(entry->dirs == NULL);
+
+  entry->dirs = xmlNewChild(entry->tree->root, NULL, "dirs", NULL);
 }
