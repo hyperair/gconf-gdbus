@@ -3,7 +3,7 @@ INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) \
 
 EFENCE=
 
-lib_LTLIBRARIES = libgconf-client.la
+lib_LTLIBRARIES = libgconf.la
 
 bin_PROGRAMS = gconfd gconftool
 
@@ -29,7 +29,7 @@ gconfd_SOURCES = \
 	gconfd.c	\
 	gconf-sources.c
 
-gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
+gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf.la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
@@ -39,12 +39,12 @@ gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 gconftool_SOURCES = \
 	gconftool.c
 
-gconftool_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) libgconf-client.la
+gconftool_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) libgconf.la
 
 $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
 
-libgconf_client_la_SOURCES = \
+libgconf_la_SOURCES = \
 	gconf-orbit.c		\
 	gconf-internals.c	\
 	gconf-internals.h	\
@@ -56,14 +56,8 @@ libgconf_client_la_SOURCES = \
 	gconf.c			\
 	$(CORBA_SOURCES)
 
-libgconf_client_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
-libgconf_client_la_LIBADD = $(GLIB_LIBS) $(ORBIT_LIBS)
+libgconf_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
+libgconf_la_LIBADD = $(GLIB_LIBS) $(ORBIT_LIBS)
 
 EXTRA_DIST=GConf.idl
-
-## This is totally broken, I just don't feel like doing the configure.in work to 
-## detect Gnome, etc. Depends on the non-GUI testclient to suck in its dependencies.
-gnome-testclient: gnome-testclient.c gconf-testclient
-	 cc -I.. `gnome-config --libs gnomeui gnorba` `gnome-config --cflags gnomeui gnorba` -Wall -ggdb -O2 gnome-testclient.c libgconf-client.a -o gnome-testclient
-
 

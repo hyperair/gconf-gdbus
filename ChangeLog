@@ -1,3 +1,14 @@
+1999-10-27  Havoc Pennington  <hp@pobox.com>
+
+	* gconf-editor/Makefile.am (gconf_editor_LDADD): 
+	link to libgconf.la
+
+	* gconf/Makefile.am: Renamed the shared lib to libgconf instead of
+	libgconf-client.
+	
+	* wrappers/gtk/Makefile.am: Renamed gconf-gtk.[hc] to
+	gconf-client.[hc] via CVS surgery, then updated Makefile.
+
 1999-10-21  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.c (gconf_key_is_below): New function, tells you if a

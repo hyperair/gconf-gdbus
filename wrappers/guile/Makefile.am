@@ -39,4 +39,4 @@ bin_PROGRAMS=gconf-guile
 
 gconf_guile_SOURCES=gconf-guile.c
 
-gconf_guile_LDADD = $(GUILE_LIBS) $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf-client.la libgconf-scm.la
+gconf_guile_LDADD = $(GUILE_LIBS) $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la libgconf-scm.la

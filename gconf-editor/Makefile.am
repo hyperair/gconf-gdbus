@@ -12,4 +12,4 @@ gconf_editor_SOURCES = 	\
 	menus.h		\
 	menus.c
 
-gconf_editor_LDADD = $(GNOME_LIBS) $(INTLLIBS) $(ORBIT_LIBS) $(top_builddir)/gconf/libgconf-client.la
+gconf_editor_LDADD = $(GNOME_LIBS) $(INTLLIBS) $(ORBIT_LIBS) $(top_builddir)/gconf/libgconf.la
