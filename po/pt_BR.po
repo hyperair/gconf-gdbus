@@ -1,13 +1,13 @@
 # GNOME Conf translation for Brazilian Portuguese.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 1999-2000 Free Software Foundation, Inc.
 # Alexandre Hautequest <hquest@fesppr.br>, 1999.
 # Gustavo Maciel Dias Vieira <gdvieira@zaz.com.br>, 2000.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gconf 0.6\n"
+"Project-Id-Version: gconf 0.10\n"
 "POT-Creation-Date: 2000-10-30 11:15-0200\n"
-"PO-Revision-Date: 2000-08-05 09:55-03:00\n"
+"PO-Revision-Date: 2000-10-22 16:06-02:00\n"
 "Last-Translator: Gustavo Maciel Dias Vieira <gdvieira@zaz.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
@@ -289,9 +289,8 @@ msgid "Received request to sync synchronously"
 msgstr "Recebida requisição para sincronizar sincronamente"
 
 #: gconf/gconf-database.c:602
-#, fuzzy
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
-msgstr "Falha ao obter referência de objeto para ConfigServer"
+msgstr "Erro fatal: falha ao obter referência de objeto para ConfigDatabase"
 
 #: gconf/gconf-database.c:761
 #, c-format
@@ -309,11 +308,14 @@ msgid ""
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
+"Falha ao registrar inclusão de listener (%s); não será possível restaurar "
+"este listener ao reiniciar o gconfd, resultando em uma notificação não "
+"confiável de modificações de configuração."
 
 #: gconf/gconf-database.c:868
 #, c-format
 msgid "Listener ID %lu doesn't exist"
-msgstr ""
+msgstr "ID de listener %lu não existe"
 
 #: gconf/gconf-database.c:877
 #, c-format
@@ -321,6 +323,9 @@ msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
 msgstr ""
+"Falha ao registrar remoção de listener no arquivo de registro (provavelmente "
+"inofensivo, pode resultar em uma notificação reaparecendo de forma "
+"estranha): %s"
 
 #: gconf/gconf-database.c:989 gconf/gconf-sources.c:1281
 #, c-format
@@ -429,7 +434,7 @@ msgstr "Falha ao obter um bloqueio"
 
 #: gconf/gconf-error.c:40
 msgid "No database available to save your configuration"
-msgstr ""
+msgstr "Sem banco de dados disponível para salvar sua configuração"
 
 #: gconf/gconf-glib.c:657
 #, c-format
@@ -437,23 +442,31 @@ msgid ""
 "Error on line %d char %d: %s\n"
 "(Some surrounding text was '%s')\n"
 msgstr ""
+"Erro na linha %d caracter %d: %s\n"
+"(Um pouco do texto ao redor era '%s')\n"
 
 #: gconf/gconf-glib.c:777
 msgid ""
 "Text ended in the middle of an entity, or entity name too long to be valid "
 "('&' should begin an entity such as '&quot;')"
 msgstr ""
+"O texto terminou no meio de uma entidade ou o nome da entidade é muito "
+"grande para ser válido ('&' deve começar uma entidade como '&quot;')"
 
 #: gconf/gconf-glib.c:829
 #, c-format
 msgid ""
 "Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
 msgstr ""
+"Entidade desconhecida '%s' ('&' deve começar entidades &amp; &quot; &lt; "
+"&gt; &apos;)"
 
 #: gconf/gconf-glib.c:869
 msgid ""
 "Markup text ended in the middle of a character reference, just after '&#'"
 msgstr ""
+"Texto de marcação terminou no meio de uma referência a caracter, logo após "
+"'&#'"
 
 #: gconf/gconf-glib.c:895
 #, c-format
@@ -461,12 +474,16 @@ msgid ""
 "Character reference contained non-digit '%s' ('&#' should begin a reference "
 "to a unicode character, such as '&#2342;')"
 msgstr ""
+"Referência a caracter continha um não dígito '%s' ('&#' deve começar uma "
+"referência a um caracter unicode, como '&#2342;')"
 
 #: gconf/gconf-glib.c:919
 msgid ""
 "Text ended in the middle of an character reference ('&#' should begin a "
 "character reference such as '&#2342;')"
 msgstr ""
+"Texto terminou no meio de uma referência a caracter ('&#' deve começar uma "
+"referência a caracter como '&#2342;')"
 
 #: gconf/gconf-glib.c:944
 #, c-format
@@ -474,6 +491,8 @@ msgid ""
 "Couldn't parse character reference '%s' ('&#' must begin a character "
 "reference such as '&#2343;')"
 msgstr ""
+"Não foi possível analisar referência a caracter '%s' ('&#' deve começar uma "
+"referência a caracter como '&#2342;')"
 
 #: gconf/gconf-glib.c:966
 #, c-format
@@ -481,12 +500,16 @@ msgid ""
 "Character code %#lx is not allowed in XML documents or is not a valid "
 "Unicode character"
 msgstr ""
+"Código de caracter %#lx não é permitido em documentos XML ou não é um "
+"caracter Unicode válido"
 
 #: gconf/gconf-glib.c:1041
 msgid ""
 "Document ended just after an '&', '&' should begin an entity or character "
 "reference."
 msgstr ""
+"Documento terminou logo após um '&', '&' deve começar uma entidade ou "
+"referência a caracter."
 
 #: gconf/gconf-glib.c:1055
 msgid ""
@@ -494,25 +517,29 @@ msgid ""
 "<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
 "&lt; and &gt;"
 msgstr ""
+"Caracteres '<' ou '>' não são permitidos aqui; são permitidos apenas ao "
+"redor de tags, por exemplo <bold> ou <paragraph>. Em outros lugares, "
+"codifique estes caracteres como as entidades &lt; e &gt;"
 
 #: gconf/gconf-glib.c:1110
 #, c-format
 msgid "Character '%s' is not valid at the start of an attribute name"
-msgstr ""
+msgstr "Caracter '%s' não é válido no começo de um nome de atributo"
 
 #: gconf/gconf-glib.c:1137
 msgid "Document ended just after attribute name"
-msgstr ""
+msgstr "Documento terminou logo após um nome de atributo"
 
 #: gconf/gconf-glib.c:1148
 msgid "Attribute name must be immediately followed by an '=' character"
-msgstr ""
+msgstr "Nome de atributo deve ser seguido imediatamente por um caracter '='"
 
 #: gconf/gconf-glib.c:1163
 msgid ""
 "'=' character after attribute must be immediately followed by an '\"' "
 "character"
 msgstr ""
+"Caracter '=' após um atributo deve ser seguido imediatamente por um '\"' "
 
 #: gconf/gconf-glib.c:1189
 #, c-format
@@ -520,78 +547,88 @@ msgid ""
 "Character '%c' found inside an attribute value; perhaps your attribute value "
 "is missing the closing quotation mark '\"'"
 msgstr ""
+"Caracter '%c' encontrado dentro de um valor de atributo; talvez esteja "
+"faltando fechar as aspas '\"' no seu valor de atributo"
 
 #: gconf/gconf-glib.c:1209
 msgid ""
 "Ran out of text before a quote mark ('\"') was seen at the end of an "
 "attribute value"
 msgstr ""
+"O texto acabou antes de serem fechadas as aspas ('\"') no fim de um valor de "
+"atributo"
 
 #: gconf/gconf-glib.c:1222
 msgid ""
 "Text ends immediately after an attribute value, before the element was closed"
 msgstr ""
+"Texto acaba imediatamente após um valor de atributo, antes que o elemento "
+"tenha sido fechado"
 
 #: gconf/gconf-glib.c:1536
 msgid "Missing '<' at start of element"
-msgstr ""
+msgstr "'<' faltando no começo de um elemento"
 
 #: gconf/gconf-glib.c:1547
 msgid "Document ended just after '<' character"
-msgstr ""
+msgstr "Documento terminou logo após o caracter '<'"
 
 #: gconf/gconf-glib.c:1575
 msgid "No closing '>' found for a <? or <!"
-msgstr ""
+msgstr "Não foi encontrado '>' terminal para um <? ou <!"
 
 #: gconf/gconf-glib.c:1604
 #, c-format
 msgid "Character '%s' is not valid at the start of an element name"
-msgstr ""
+msgstr "Caracter '%s' não é válido no começo de um nome de elemento"
 
 #: gconf/gconf-glib.c:1628 gconf/gconf-glib.c:1641
 msgid "Document ended just after element name, no '>' seen"
-msgstr ""
+msgstr "Documento terminou logo após um nome de elemento, não foi visto um '>'"
 
 #: gconf/gconf-glib.c:1666
 #, c-format
 msgid "Elements should be closed with '>' or '/>', not with '%s'"
-msgstr ""
+msgstr "Elementos devem ser terminados com '>' ou '/>', não com '%s'"
 
 #: gconf/gconf-glib.c:1683
 msgid ""
 "Element ended just after '/', no '>' seen; empty elements should end with "
 "'/>'"
 msgstr ""
+"Elemento terminou logo após '/', não foi visto '>'; elementos vazios devem "
+"terminar com '/>'"
 
 #: gconf/gconf-glib.c:1722
 msgid "Close tag not found at end of element"
-msgstr ""
+msgstr "Não foi encontrado tag terminal no fim do elemento"
 
 #: gconf/gconf-glib.c:1737
 msgid "Close tag ends just after '<' character"
-msgstr ""
+msgstr "Tag terminal termina logo após um caracter '<'"
 
 #: gconf/gconf-glib.c:1751
 msgid "Close tag should begin with '</', '/' character is missing"
-msgstr ""
+msgstr "Tag terminal deve começar com '</', o caracter '/' está faltando"
 
 #: gconf/gconf-glib.c:1765
 msgid "Close tag ends just after '/' character"
-msgstr ""
+msgstr "Tag terminal termina logo após um caracter '/'"
 
 #: gconf/gconf-glib.c:1800
 msgid "Document ended just after element name in close tag, no '>' seen"
 msgstr ""
+"Doumento terminou logo após um nome de elemento no tag terminal, não foi "
+"visto '>'"
 
 #: gconf/gconf-glib.c:1816
 msgid "Document ended just after close tag name, no '>' seen"
-msgstr ""
+msgstr "Doumento terminou logo após nome do tag terminal, não foi visto '>'"
 
 #: gconf/gconf-glib.c:1835
 #, c-format
 msgid "Close tag '%s' does not match opening tag '%s'"
-msgstr ""
+msgstr "Tag terminal '%s' não corresponde a tag inicial '%s'"
 
 #: gconf/gconf-glib.c:2173
 #, c-format
@@ -599,20 +636,22 @@ msgid ""
 "Invalid UTF-8 character at byte %d in marked-up text. Some text before the "
 "bad character was '%s'"
 msgstr ""
+"Caracter UTF-8 inválido no byte %d no texto marcado. Um pouco do texto ao "
+"redor era '%s'"
 
 #: gconf/gconf-glib.c:2230
 msgid "The marked-up text contained nothing but whitespace."
-msgstr ""
+msgstr "O texto marcado continha apenas espaço em branco."
 
 #: gconf/gconf-glib.c:10694
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open file '%s': %s"
-msgstr "Falha ao fechar arquivo `%s': %s"
+msgstr "Falha ao abrir arquivo '%s': %s"
 
 #: gconf/gconf-glib.c:10711
-#, fuzzy, c-format
+#, c-format
 msgid "Error reading file '%s': %s"
-msgstr "Erro ao remover diretório `%s': %s"
+msgstr "Erro ao ler arquivo '%s': %s"
 
 #: gconf/gconf-internals.c:85
 #, c-format
@@ -633,9 +672,8 @@ msgid "Received list from gconfd with a bad list type"
 msgstr "Lista recebida de gconfd com um tipo de lista inválido"
 
 #: gconf/gconf-internals.c:445
-#, fuzzy
 msgid "Failed to convert object to IOR"
-msgstr "Falha ao sincronizar uma ou mais fontes: %s"
+msgstr "Falha ao converter objeto para IOR"
 
 #: gconf/gconf-internals.c:811
 #, c-format
@@ -692,9 +730,9 @@ msgid "CORBA error: %s"
 msgstr "Erro CORBA: %s"
 
 #: gconf/gconf-internals.c:2173
-#, fuzzy, c-format
+#, c-format
 msgid "OAF problem description: '%s'"
-msgstr "Erro de análise OAF: %s"
+msgstr "Descrição de problema OAF: '%s'"
 
 #: gconf/gconf-internals.c:2179
 msgid "attempt to remove not-listed OAF object directory"
@@ -815,9 +853,9 @@ msgstr ""
 "de configuração."
 
 #: gconf/gconf-sources.c:596
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to store a value at key '%s'"
-msgstr "Falha ao criar arquivo `%s': %s"
+msgstr "Não é possível armazenar um valor na chave '%s'"
 
 #: gconf/gconf-sources.c:1151
 #, c-format
@@ -911,9 +949,9 @@ msgstr ""
 "Não é possível incluir notificações para uma fonde de configurações local"
 
 #: gconf/gconf.c:1724
-#, fuzzy, c-format
+#, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
-msgstr "Falha ao enviar ping ao servidor, erro CORBA: %s"
+msgstr "Falha ao incluir cliente na lista do servidor, erro CORBA: %s"
 
 #: gconf/gconf.c:1740
 msgid ""
@@ -1022,41 +1060,42 @@ msgstr ""
 "possível ler ou armazenar dados de configuração"
 
 #: gconf/gconfd.c:349
-#, fuzzy
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
-"Nenhum endereço fonte de configuração com permissão de escrita foi resolvido "
-"com sucesso, pode não ser possível armazenar algumas modificações de "
-"configuração"
+"Nenhuma fonte de configuração com permissão de escrita foi resolvido com "
+"sucesso, pode não ser possível salvar algumas modificações de configuração"
 
 #: gconf/gconfd.c:375
-#, fuzzy, c-format
+#, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr "Recebido sinal %d, desligando."
+msgstr ""
+"Recebido sinal %d, gerando um core. Por favor, reporte um erro do GConf."
 
 #: gconf/gconfd.c:391
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
-msgstr "Recebido sinal %d, desligando."
+msgstr ""
+"Recebido sinal %d, desligando anormalmente. Por favor, reporte um erro do "
+"GConf."
 
 #: gconf/gconfd.c:408
-#, fuzzy, c-format
+#, c-format
 msgid "Received signal %d, shutting down cleanly"
-msgstr "Recebido sinal %d, desligando."
+msgstr "Recebido sinal %d, desligando corretamente"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
 #: gconf/gconfd.c:457
-#, fuzzy, c-format
+#, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr "iniciando, pid %u usuário `%s'"
+msgstr "iniciando (versão %s), pid %u usuário '%s'"
 
 #: gconf/gconfd.c:461
 msgid "GConf was built with debugging features enabled"
-msgstr ""
+msgstr "GConf foi compilado com recursos de depuração ativados"
 
 #: gconf/gconfd.c:484
 msgid ""
@@ -1091,9 +1130,8 @@ msgid "Exiting"
 msgstr "Terminando"
 
 #: gconf/gconfd.c:595
-#, fuzzy
 msgid "GConf server is not in use, shutting down."
-msgstr "Recebido sinal %d, desligando."
+msgstr "Servidor GConf não está sendo usado, desligando."
 
 #: gconf/gconfd.c:930
 #, c-format
@@ -1106,59 +1144,66 @@ msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr ""
+"Falha ao abrir arquivo de registro do gconfd; não será possível restaurar "
+"listeners após uma parada do gconfd (%s)"
 
 #: gconf/gconfd.c:1041
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
+"Falha ao fechar arquivo de registro do gconfd; dados podem não ter sido "
+"salvos corretamente (%s)"
 
 #: gconf/gconfd.c:1104
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
-msgstr "Não foi possível abrir arquivo de caminhos `%s': %s\n"
+msgstr "Não foi possível abrir arquivo de estado '%s' para escrita: %s"
 
 #: gconf/gconfd.c:1118
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
-msgstr "Não é possível escrever no arquivo `%s': %s"
+msgstr "Não foi possível escrever arquivo de estado '%s' fd: %d: %s"
 
 #: gconf/gconfd.c:1127
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to close new saved state file '%s': %s"
-msgstr "Falha ao fechar arquivo `%s': %s"
+msgstr "Falha ao fechar novo arquivo de estado '%s': %s"
 
 #: gconf/gconfd.c:1141
-#, fuzzy, c-format
+#, c-format
 msgid "Could not move aside old saved state file '%s': %s"
-msgstr "Não foi possível abrir arquivo de caminhos `%s': %s\n"
+msgstr "Não foi possível mover arquivo de estado antigo '%s': %s"
 
 #: gconf/gconfd.c:1151
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to move new save state file into place: %s"
-msgstr "Falha ao criar arquivo `%s': %s"
+msgstr "Falha ao mover novo arquivo de estado: %s"
 
 #: gconf/gconfd.c:1160
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
+"Falha ao restaurar arquivo de estado original que foi movido para '%s': %s"
 
 #: gconf/gconfd.c:1633
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
+"Não é possível restaurar um listener no endereço '%s', não foi possível "
+"resolver o banco de dados"
 
 #: gconf/gconfd.c:1679
-#, fuzzy, c-format
+#, c-format
 msgid "Error reading saved state file: %s"
-msgstr "Erro ao remover diretório `%s': %s"
+msgstr "Erro ao lerr arquivo de estado: %s"
 
 #: gconf/gconfd.c:1732
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to open saved state file '%s': %s"
-msgstr "Falha ao criar arquivo `%s': %s"
+msgstr "Não é possível abrir arquivo de estado '%s': %s"
 
 #: gconf/gconfd.c:1849
 #, c-format
@@ -1166,6 +1211,8 @@ msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to "
 "re-add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
+"Falha ao registrar inclusão de listener ao arquivo de registro do gconfd; "
+"não será possível re-incluir o listener se o gconfd for desligado (%s)"
 
 #: gconf/gconfd.c:1854
 #, c-format
@@ -1173,31 +1220,34 @@ msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously "
 "re-add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
+"Falha ao registrar remoção de listener do arquivo de registro do gconfd; "
+"pode ocorrer uma re-inclusão errada do listener se o gconfd for desligado "
+"(%s)"
 
 #: gconf/gconfd.c:1877 gconf/gconfd.c:2038
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to get IOR for client: %s"
-msgstr "Falha ao ler valor para `%s': %s\n"
+msgstr "Falha ao ler IOR para cliente: %s"
 
 #: gconf/gconfd.c:1892
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open saved state file: %s"
-msgstr "Falha ao criar arquivo `%s': %s"
+msgstr "Falha ao abrir arquivo de estado: %s"
 
 #: gconf/gconfd.c:1905
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write client add to saved state file: %s"
-msgstr "Falha ao criar arquivo `%s': %s"
+msgstr "Falha ao escrever inclusão de cliente no arquivo de estado: %s"
 
 #: gconf/gconfd.c:1913
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to flush client add to saved state file: %s"
-msgstr "Falha ao criar arquivo `%s': %s"
+msgstr "Falha ao descarregar inclusão de cliente no arquivo de estado: %s"
 
 #: gconf/gconfd.c:1999
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
-msgstr ""
+msgstr "Algum cliente se excluiu do servidor GConf sem ter sido incluído."
 
 #: gconf/gconftool.c:62
 msgid "Help options"
@@ -1475,7 +1525,7 @@ msgstr ""
 #: gconf/gconftool.c:525
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
-msgstr "Falhao ao acessar a(s) fonte(s) de configuração: %s\n"
+msgstr "Falha ao acessar a(s) fonte(s) de configuração: %s\n"
 
 #: gconf/gconftool.c:685
 #, c-format
@@ -1499,7 +1549,7 @@ msgstr "(sem valor atribuído)"
 #: gconf/gconftool.c:837
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
-msgstr "Falhao ao criar o servidor de configuração (gconfd): %s\n"
+msgstr "Falha ao criar o servidor de configuração (gconfd): %s\n"
 
 #: gconf/gconftool.c:851
 msgid "Must specify a key or keys to get\n"
@@ -1835,9 +1885,9 @@ msgstr ""
 "  %s\n"
 
 #: wrappers/gtk/gconf-client.c:287 wrappers/gtk/gconf-client.c:304
-#, fuzzy, c-format
+#, c-format
 msgid "GConf Error: %s\n"
-msgstr "Erro: %s\n"
+msgstr "Erro do GConf: %s\n"
 
 #: wrappers/gtk/gconf-client.c:795
 #, c-format
@@ -1851,10 +1901,11 @@ msgstr "Esperado `%s' recebi `%s' para chave %s"
 
 #, fuzzy
 msgid "Didn't understand line in saved state file: '%s'"
-msgstr "Não foi possível entender `%s' (lista deve começar com um '[')"
+msgstr "Falha ao abrir arquivo de estado: %s"
 
+#, fuzzy
 msgid "Received signal %d, ignoring"
-msgstr "Recebido sinal %d, ignorando"
+msgstr "Recebido sinal %d, desligando corretamente"
 
 msgid "Attempt to unregister invalid context ID"
 msgstr "Tentativa de desregistrar uma ID de contexto inválida"
