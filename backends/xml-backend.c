@@ -1902,7 +1902,7 @@ entry_fill    (Entry* e, const gchar* name)
     {
       g_free(e->name);
       e->name = NULL;
-    }
+    } 
   
   if (name == NULL)
     {
