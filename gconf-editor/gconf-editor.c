@@ -17,16 +17,113 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/* Quick hack so I can mark strings */
+#include <config.h>
+#include <gnome.h>
+#include "app.h"
+#include <gconf-orbit.h>
+#include <gconf.h>
 
-#ifdef _ 
-#warning "_ already defined"
-#else
-#define _(x) x
-#endif
+static gint session_die(GnomeClient* client, gpointer client_data);
 
-#ifdef N_ 
-#warning "N_ already defined"
-#else
-#define N_(x) x
-#endif
+static gint save_session(GnomeClient *client, gint phase, 
+                         GnomeSaveStyle save_style,
+                         gint is_shutdown, GnomeInteractStyle interact_style,
+                         gint is_fast, gpointer client_data);
+
+static char* geometry = NULL;
+
+struct poptOption options[] = {
+  { 
+    "geometry",
+    '\0',
+    POPT_ARG_STRING,
+    &geometry,
+    0,
+    N_("Specify the geometry of the main window"),
+    N_("GEOMETRY")
+  },
+  {
+    NULL,
+    '\0',
+    0,
+    NULL,
+    0,
+    NULL,
+    NULL
+  }
+};
+
+int 
+main(int argc, char** argv)
+{
+  GtkWidget* app;  
+  poptContext pctx;
+  char** args;
+  GnomeClient* client;
+
+  bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
+  textdomain(PACKAGE);
+
+  if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
+    {
+      fprintf(stderr, _("Failed to init orb\n"));
+      return 1;
+    }
+
+  if (!g_conf_init())
+    {
+      fprintf(stderr, _("Failed to init GConf\n"));
+      return 1;
+    }
+
+  gnome_init_with_popt_table(PACKAGE, VERSION, argc, argv, 
+                             options, 0, &pctx);  
+
+  poptFreeContext(pctx);
+
+  client = gnome_master_client ();
+
+  gtk_signal_connect (GTK_OBJECT (client), "save_yourself",
+                      GTK_SIGNAL_FUNC (save_session), argv[0]);
+
+  gtk_signal_connect (GTK_OBJECT (client), "die",
+                      GTK_SIGNAL_FUNC (session_die), NULL);
+  
+
+  app = gce_app_new(geometry);
+
+  gtk_widget_show(app);
+
+  gtk_main();
+
+  g_assert(gtk_main_level() == 0);
+
+  return 0;
+}
+
+static gint
+save_session (GnomeClient *client, gint phase, GnomeSaveStyle save_style,
+              gint is_shutdown, GnomeInteractStyle interact_style,
+              gint is_fast, gpointer client_data)
+{
+  gchar** argv;
+  guint argc;
+
+  /* allocate 0-filled, so it will be NULL-terminated */
+  argv = g_malloc0(sizeof(gchar*)*4);
+  argc = 1;
+
+  argv[0] = client_data;
+  
+  gnome_client_set_clone_command (client, argc, argv);
+  gnome_client_set_restart_command (client, argc, argv);
+
+  return TRUE;
+}
+
+static gint 
+session_die(GnomeClient* client, gpointer client_data)
+{
+  gtk_main_quit ();
+  return TRUE;
+}
