@@ -1,3 +1,15 @@
+2001-08-07  Marco Pesenti Gritti  <mpeseng@tin.it>
+
+        * gconf/gconf.m4.in: New file. GCONF_SCHEMA_CONFIG_SOURCE macro
+	* configure.in: add gconf.m4 to AC_OUTPUT
+        * Makefile.am: add gconf.m4 to EXTRA_DIST and install-data-local
+	Setup a default gconf source on make install.
+        * galeon.spec.in: Distribute also the path file and
+        the directories for the default source.
+        * gconf/Makefile.am: install the default path as "path" instead
+        of "path.example". Add GCONF_ETCDIR define.
+        * gconf/gconftool.c: Add --get-default-source option.
+
 2001-08-03  Martin Baulig  <baulig@suse.de>
 
 	* gconf/gconfd.oafinfo.in: Renamed -> gconfd.server.in.

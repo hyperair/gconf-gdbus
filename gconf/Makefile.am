@@ -8,6 +8,7 @@ INCLUDES=\
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"  \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" \
 	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\" \
+	-DGCONF_ETCDIR=\""$(sysconfdir)/gconf"\" \
 	-DGCONF_BUILDDIR=\""$(top_builddir)"\" 			\
 	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\" \
 	-DVERSION=\""$(VERSION)"\" \
@@ -99,7 +100,7 @@ install-exec-local:
 
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)
-	$(INSTALL_DATA) default.path $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)/path.example
+	$(INSTALL_DATA) default.path $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)/path
 	-mkdir -p $(DESTDIR)$(datadir)/oaf
 	$(INSTALL_DATA) gconfd.server $(DESTDIR)$(datadir)/bonobo-activation/gconfd-$(MAJOR_VERSION).server
 

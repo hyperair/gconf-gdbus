@@ -57,6 +57,7 @@ static int short_docs_mode = FALSE;
 static int long_docs_mode = FALSE;
 static int schema_name_mode = FALSE;
 static int associate_schema_mode = FALSE;
+static int default_source_mode = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -322,6 +323,15 @@ struct poptOption options[] = {
     NULL
   },
   {
+    "get-default-source",
+    '\0',
+    POPT_ARG_NONE,
+    &default_source_mode,
+    0,
+    N_("Get the name of the default source"),
+    NULL
+  },
+  {
     NULL,
     '\0',
     0,
@@ -351,6 +361,7 @@ static int do_short_docs (GConfEngine *conf, const gchar **args);
 static int do_long_docs (GConfEngine *conf, const gchar **args);
 static int do_get_schema_name (GConfEngine *conf, const gchar **args);
 static int do_associate_schema (GConfEngine *conf, const gchar **args);
+static int do_get_default_source (GConfEngine *conf, const gchar **args);
 
 int 
 main (int argc, char** argv)
@@ -716,6 +727,16 @@ main (int argc, char** argv)
     {
       const gchar** args = poptGetArgs(ctx);
       if (do_associate_schema(conf, args)  == 1)
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
+    }
+
+  if (default_source_mode)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      if (do_get_default_source(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
           return 1;
@@ -2497,6 +2518,39 @@ do_break_directory(GConfEngine* conf, const gchar** args)
       
       ++args;
     }
+
+  return 0;
+}
+
+static int
+do_get_default_source(GConfEngine* conf, const gchar** args)
+{
+  gchar *source;
+  gchar buf[512];
+  FILE *f;
+
+  /* Try with $sysconfdir/gconf/schema-install-source */
+  f = fopen(GCONF_ETCDIR"/schema-install-source", "r");
+
+  if (f != NULL)
+    {
+      source = fgets(buf, 512, f);
+      fclose(f);  
+      if (source)
+	{
+	  g_strchomp(source);
+	  if (*source != '\0')
+	    {
+	      printf("%s\n", source);
+	      return 0;
+	    }
+	}
+    }
+
+  /* Use default database */
+  source = g_strconcat("xml::", GCONF_ETCDIR, "/gconf.xml.defaults", NULL);
+  printf("%s\n", source);
+  g_free(source);
 
   return 0;
 }
