@@ -2985,8 +2985,10 @@ gconf_activate_server (gboolean  start_if_not_found,
 
   g_string_free (failure_log, TRUE);
   
-  close (p[0]);
-  close (p[1]);
+  if (p[0] != -1)
+    close (p[0]);
+  if (p[1] != -1)
+    close (p[1]);
   
   return server;
 }
