@@ -1,3 +1,20 @@
+2004-08-19  Mark McLoughlin  <mark@skynet.ie>
+
+	Revert the patch to make use of the merge-subtree feature at
+	specific points in the tree. Not clear that it solves the
+	problems we thought it solved. Patch archived in bug #138498
+
+	* backends/markup-tree.[ch]:
+	(markup_tree_get): remove try_merge flag.
+	(markup_dir_sync): don't try and save as a merged subtree.
+	
+	* backends/markup-backend.c: (resolve_address), (ms_new):
+	Remove the "nomerge" backend flag.
+	
+	* backends/gconf-merge-tree.c:
+	(recursively_load_subtree): add back.
+	(merge_tree): upd. for markup_tree_get() change.
+
 2004-08-16  Christian Rose  <menthos@menthos.com>
 
 	* configure.in: Added "bs" to ALL_LINGUAS.

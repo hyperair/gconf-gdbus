@@ -90,34 +90,14 @@ struct _MarkupTree
   MarkupDir *root;
 
   guint refcount;
-
-  guint try_merge : 1;
 };
 
 static GHashTable *trees_by_root_dir = NULL;
 
-/* List of dirs whose subdirs should be saved as a
- * subtree-in-a-file. The order is important.
- */
-static const char *save_as_subtree_dirs[] =
-{
-  "/apps/evolution",
-  "/apps/panel/profiles",
-  "/apps",
-  "/desktop/gnome",
-  "/system",
-  "/schemas/apps",
-  "/schemas/desktop/gnome",
-  "/schemas/system",
-  "/schemas",
-  "/"
-};
-
 MarkupTree*
 markup_tree_get (const char *root_dir,
                  guint       dir_mode,
-                 guint       file_mode,
-                 gboolean    try_merge)
+                 guint       file_mode)
 {
   MarkupTree *tree = NULL;
 
@@ -137,7 +117,6 @@ markup_tree_get (const char *root_dir,
   tree->dirname = g_strdup (root_dir);
   tree->dir_mode = dir_mode;
   tree->file_mode = file_mode;
-  tree->try_merge = try_merge != FALSE;
 
   tree->root = markup_dir_new (tree, NULL, "/");  
 
@@ -974,81 +953,6 @@ delete_useless_entries_recurse (MarkupDir *dir)
   return retval;
 }
 
-static void
-recursively_load_subtree (MarkupDir *dir)
-{
-  GSList *tmp;
-
-  load_entries (dir);
-  load_subdirs (dir);
-
-  tmp = dir->subdirs;
-  while (tmp != NULL)
-    {
-      MarkupDir *subdir = tmp->data;
-
-      recursively_load_subtree (subdir);
-      subdir->not_in_filesystem = TRUE;
-
-      tmp = tmp->next;
-    }
-}
-
-static gboolean
-should_save_as_subtree (MarkupDir *dir)
-{
-  gboolean  save_as_subtree = FALSE;
-  char     *dir_path;
-  char     *parent_path;
-  int       pathlen;
-  int       i;
-
-  if (!dir->tree->try_merge)
-    return FALSE;
-
-  /* never merge root */
-  if (!dir->parent)
-    return FALSE;
-
-  dir_path = markup_dir_build_dir_path (dir, FALSE);
-  pathlen  = strlen (dir_path);
-
-  parent_path = markup_dir_build_dir_path (dir->parent, FALSE);
-
-  i = 0;
-  while (i < G_N_ELEMENTS (save_as_subtree_dirs))
-    {
-      const char *match = save_as_subtree_dirs [i];
-
-      /* 2 rules:
-       *  1) If @match is an ancestor of this dir, don't
-       *     consider merging this dir
-       *  2) If @match is this dir's parent, then merge
-       *     this dir
-       *
-       * (1) is so that we don't e.g., with "/apps" and
-       * "/apps/panel/profiles", merge /apps/panel when
-       * we really want to merge /apps/panel/profiles/default
-       */
-
-      if (strncmp (match, dir_path, pathlen) == 0)
-        break;
-
-      if (strcmp (match, parent_path) == 0)
-        {
-          save_as_subtree = TRUE;
-          break;
-        }
-
-      ++i;
-    }
-
-  g_free (dir_path);
-  g_free (parent_path);
-
-  return save_as_subtree;
-}
-
 static gboolean
 markup_dir_sync (MarkupDir *dir)
 {
@@ -1068,12 +972,6 @@ markup_dir_sync (MarkupDir *dir)
   /* We must have been synced already */
   if (dir->not_in_filesystem)
     return TRUE;
-
-  if (!dir->save_as_subtree && should_save_as_subtree (dir))
-    {
-      dir->save_as_subtree = TRUE;
-      recursively_load_subtree (dir);
-    }
 
   /* Sanitize the entries */
   clean_old_local_schemas_recurse (dir, dir->save_as_subtree);

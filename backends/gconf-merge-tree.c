@@ -39,6 +39,26 @@ _gconf_mode_t_to_mode (mode_t orig)
   return mode;
 }
 
+static void
+recursively_load_subtree (MarkupDir *dir)
+{
+  GSList *tmp;
+
+  load_entries (dir);
+  load_subdirs (dir);
+
+  tmp = dir->subdirs;
+  while (tmp != NULL)
+    {
+      MarkupDir *subdir = tmp->data;
+
+      recursively_load_subtree (subdir);
+      subdir->not_in_filesystem = TRUE;
+
+      tmp = tmp->next;
+    }
+}
+
 static gboolean
 merge_tree (const char *root_dir)
 {
@@ -61,7 +81,7 @@ merge_tree (const char *root_dir)
 
     }
 
-  tree = markup_tree_get (root_dir, dir_mode, file_mode, FALSE);
+  tree = markup_tree_get (root_dir, dir_mode, file_mode);
 
   recursively_load_subtree (tree->root);
 
