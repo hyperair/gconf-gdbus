@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 2.3.1\n"
-"POT-Creation-Date: 2003-05-03 13:12-0400\n"
-"PO-Revision-Date: 2003-04-27 14:45+0200\n"
+"Project-Id-Version: GConf 2.3.2\n"
+"POT-Creation-Date: 2003-05-04 17:43+0200\n"
+"PO-Revision-Date: 2003-05-04 17:24+0200\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -69,12 +69,14 @@ msgstr ""
 "toutes les valeurs dans le répertoire"
 
 #: backends/xml-backend.c:770
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
-msgstr "Impossible de créer le répertoire « %s » : %s"
+msgstr ""
+"Impossible d'ouvrir le répertoire de verrous de %s afin de supprimer les "
+"verrous : %s\n"
 
 #: backends/xml-backend.c:788
-#, fuzzy, c-format
+#, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Impossible de supprimer le fichier %s : %s\n"
 
@@ -709,9 +711,9 @@ msgid "Failed to remove lock directory `%s': %s"
 msgstr "La suppression du verrou du répertoire « %s » a échoué : %s"
 
 #: gconf/gconf-internals.c:2723
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unlink lock file %s: %s\n"
-msgstr "La suppression du verrou du fichier « %s » a échoué : %s"
+msgstr "La suppression du verrou du fichier « %s » a échoué : %s\n"
 
 #: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
 #, c-format
@@ -846,19 +848,31 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
+"Les fichiers qui contiennent vos réglages de préférences sont actuellement "
+"en cours d'utilisation.\n"
+"\n"
+"Vous êtes sûrement connecté dans une session depuis un autre ordinateur, et "
+"l'autre session est en train d'utiliser vos fichiers de réglages de "
+"préférences.\n"
+"\n"
+"Vous pouvez continuer à utiliser la session actuelle, mais cela peut "
+"provoquer des problèmes temporaires avec les réglages des préférences de "
+"l'autre session.\n"
+"\n"
+"Voulez-vous continuer ?"
 
 #: gconf/gconf-sanity-check.c:341
 msgid "_Log Out"
-msgstr ""
+msgstr "_Déconnecter"
 
 #: gconf/gconf-sanity-check.c:343
 msgid "_Continue"
-msgstr ""
+msgstr "_Continuer"
 
 #: gconf/gconf-sanity-check.c:356
 #, c-format
 msgid "%s Continue (y/n)?"
-msgstr ""
+msgstr "Continuer %s (y/n) ?"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
@@ -1257,7 +1271,7 @@ msgstr "L'obtention de la référence de l'objet pour ConfigServer a échoué"
 #: gconf/gconfd.c:647
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
-msgstr ""
+msgstr "Le répertoire %s a des problèmes, gconfd ne peut l'utiliser"
 
 #: gconf/gconfd.c:676
 #, c-format
@@ -1446,18 +1460,20 @@ msgid "Print all subdirectories in a directory."
 msgstr "Affiche tous les sous-répertoires d'un répertoire."
 
 #: gconf/gconftool.c:156
-#, fuzzy
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
 msgstr ""
-"Affiche tous les sous-répertoires et entrées d'un répertoire, recursivement."
+"Affiche sur la sortie standard une description XML de toutes les entrées "
+"d'un répertoire, recursivement."
 
 #: gconf/gconftool.c:165
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
 msgstr ""
+"Charge depuis un fichier spécifié une description XML des valeurs et les "
+"définies relativement à un répertoire."
 
 #: gconf/gconftool.c:174
 msgid "Print all subdirectories and entries under a dir, recursively."
@@ -1497,18 +1513,17 @@ msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
 #: gconf/gconftool.c:228
-#, fuzzy
 msgid "Print the data type of a key to standard output."
-msgstr "Affiche la valeur d'une clé sur la sortie standard."
+msgstr "Affiche le type de données d'une clé sur la sortie standard."
 
 #: gconf/gconftool.c:237
-#, fuzzy
 msgid "Get the number of elements in a list key."
-msgstr "Obtient le nom du schéma appliqué à cette clé"
+msgstr "Obtient le nombre d'éléments d'une liste de clés."
 
 #: gconf/gconftool.c:246
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr ""
+"Obtient un élément spécifique d'une liste de clés, numériquement indexé."
 
 #: gconf/gconftool.c:255
 msgid ""
@@ -1649,9 +1664,8 @@ msgid "Can't set and get/unset simultaneously\n"
 msgstr "Impossible de définir ou d'obtenir/annuler simultanément\n"
 
 #: gconf/gconftool.c:521
-#, fuzzy
 msgid "Can't get type and set/unset simultaneously\n"
-msgstr "Impossible d'obtenir ou définir/annuler simultanément\n"
+msgstr "Impossible d'obtenir le type et de définir/annuler simultanément\n"
 
 #: gconf/gconftool.c:532
 msgid "Can't use --all-entries with --get or --set\n"
@@ -1754,9 +1768,8 @@ msgstr ""
 "Vous devez spécifier un ou plusieurs répertoires à lister récursivement.\n"
 
 #: gconf/gconftool.c:1107
-#, fuzzy
 msgid "Must specify one or more dirs to dump.\n"
-msgstr "Vous devez spécifier une ou plusieurs clés à annuler.\n"
+msgstr "Vous devez spécifier une ou plusieurs répertoire à afficher.\n"
 
 #: gconf/gconftool.c:1148 gconf/gconftool.c:1406
 #, c-format
@@ -1880,37 +1893,34 @@ msgid "Error syncing: %s\n"
 msgstr "Erreur de synchronisation : %s\n"
 
 #: gconf/gconftool.c:1738
-#, fuzzy
 msgid "Must specify a key or keys to get type\n"
-msgstr "Vous devez spécifier une ou plusieurs clés à obtenir\n"
+msgstr "Vous devez spécifier une ou plusieurs clés pour en obtenir le type\n"
 
 #: gconf/gconftool.c:1782
-#, fuzzy
 msgid "Must specify a key to lookup size of.\n"
-msgstr "Vous devez spécifier une ou plusieurs clés à obtenir\n"
+msgstr "Vous devez spécifier une clé pour en obtenir la taille.\n"
 
 #: gconf/gconftool.c:1807 gconf/gconftool.c:1852
-#, fuzzy, c-format
+#, c-format
 msgid "Key %s is not a list.\n"
-msgstr "La valeur à « %s » n'est pas un schéma\n"
+msgstr "La clé « %s » n'est pas une liste.\n"
 
 #: gconf/gconftool.c:1827
-#, fuzzy
 msgid "Must specify a key from which to get list element.\n"
-msgstr "Vous devez spécifier une ou plusieurs clés à obtenir\n"
+msgstr ""
+"Vous devez spécifier une clé de laquelle obtenir un élément de la liste.\n"
 
 #: gconf/gconftool.c:1858
-#, fuzzy
 msgid "Must specify list index.\n"
-msgstr "Vous devez spécifier quelques clés à rompre\n"
+msgstr "Vous devez spécifier un index de liste.\n"
 
 #: gconf/gconftool.c:1865
 msgid "List index must be non-negative.\n"
-msgstr ""
+msgstr "L'index de la liste ne doit pas être négatif.\n"
 
 #: gconf/gconftool.c:1874
 msgid "List index is out of bounds.\n"
-msgstr ""
+msgstr "L'index de la liste est hors des limites.\n"
 
 #: gconf/gconftool.c:1900
 msgid "Must specify a key or keys on the command line\n"
@@ -2025,40 +2035,43 @@ msgstr "Erreur lors du listage des répertoires : %s\n"
 #: gconf/gconftool.c:2457
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr ""
+"AVERTISSEMENT : vous devez spécifier à la fois un <car> et un <cdr> dans un "
+"<pair>\n"
 
 #: gconf/gconftool.c:2484
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
-msgstr "AVERTISSEMENT : aucune clé spécifiée pour le schéma\n"
+msgstr ""
+"AVERTISSEMENT : clé spécifiée (%s) pour le schéma sous une <value> - ignore\n"
 
 #: gconf/gconftool.c:2517
 msgid "WARNING: must have a child node under <value>\n"
-msgstr ""
+msgstr "AVERTISSEMENT : il doit y avoir un noeud enfant sous une <value>\n"
 
 #: gconf/gconftool.c:2523
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: node <%s> not understood\n"
-msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris sous <schema>\n"
+msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris\n"
 
 #: gconf/gconftool.c:2541
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
-msgstr "AVERTISSEMENT : l'analyse du nom du type « %s » a échoué\n"
+msgstr "AVERTISSEMENT : l'analyse de la valeur entière « %s » a échoué\n"
 
 #: gconf/gconftool.c:2562
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
-msgstr "AVERTISSEMENT : l'analyse du nom du type « %s » a échoué\n"
+msgstr "AVERTISSEMENT : l'analyse de la valeur flottante « %s » a échoué\n"
 
 #: gconf/gconftool.c:2584
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
-msgstr "AVERTISSEMENT : l'analyse du nom du type « %s » a échoué\n"
+msgstr "AVERTISSEMENT : l'analyse de la valeur chaîne « %s » a échoué\n"
 
 #: gconf/gconftool.c:2605
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
-msgstr "AVERTISSEMENT : l'analyse du nom du type « %s » a échoué\n"
+msgstr "AVERTISSEMENT : l'analyse de la valeur booléenne « %s » a échoué\n"
 
 #: gconf/gconftool.c:2721 gconf/gconftool.c:3253
 #, c-format
@@ -2198,9 +2211,9 @@ msgid "WARNING: no key specified for schema\n"
 msgstr "AVERTISSEMENT : aucune clé spécifiée pour le schéma\n"
 
 #: gconf/gconftool.c:3451
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
-msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris sous <schema>\n"
+msgstr "AVERTISSEMENT : le noeud <%s> n'est pas compris sous <%s>\n"
 
 #: gconf/gconftool.c:3482
 #, c-format
@@ -2213,22 +2226,21 @@ msgid "Document `%s' is empty?\n"
 msgstr "Le document « %s » est vide ?\n"
 
 #: gconf/gconftool.c:3501
-#, fuzzy, c-format
+#, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
-"Le document « %s » a le mauvais type de noeud racine (<%s>, devrait être "
-"<gconfschemafile>)\n"
+"Le document « %s » a le mauvais type de noeud racine (<%s>, devrait être <%"
+"s>)\n"
 
 #: gconf/gconftool.c:3514
-#, fuzzy, c-format
+#, c-format
 msgid "Document `%s' has no top level <%s> node\n"
-msgstr "Le document « %s » n'a pas de noeud racine <gconfschemafile>\n"
+msgstr "Le document « %s » n'a pas de noeud racine <%s>\n"
 
 #: gconf/gconftool.c:3528
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
-msgstr ""
-"AVERTISSEMENT : le noeud <%s> sous <gconfschemafile> n'est pas compris\n"
+msgstr "AVERTISSEMENT : le noeud <%s> sous <%s> n'est pas compris\n"
 
 #: gconf/gconftool.c:3539 gconf/gconftool.c:3574
 #, c-format
