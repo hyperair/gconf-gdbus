@@ -59,6 +59,7 @@ static char* owner = NULL;
 static char* schema_file = NULL;
 static char* config_source = NULL;
 static int use_local_source = FALSE;
+static int makefile_install_mode = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -234,6 +235,15 @@ struct poptOption options[] = {
     NULL
   },
   {
+    "makefile-install-rule",
+    '\0',
+    POPT_ARG_NONE,
+    &makefile_install_mode,
+    0,
+    N_("Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source if any."),
+    NULL
+  },
+  {
     NULL,
     '\0',
     0,
@@ -244,6 +254,7 @@ struct poptOption options[] = {
   }
 };
 
+static int do_makefile_install(GConfEngine* conf, const gchar** args);
 static int do_recursive_list(GConfEngine* conf, const gchar** args);
 static int do_all_pairs(GConfEngine* conf, const gchar** args);
 static void list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth);
@@ -347,7 +358,7 @@ main (int argc, char** argv)
 
   if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
-                      spawn_gconfd || dir_exists || schema_file))
+                      spawn_gconfd || dir_exists || schema_file || makefile_install_mode))
     {
       fprintf(stderr, _("Ping option must be used by itself.\n"));
       return 1;
@@ -355,7 +366,7 @@ main (int argc, char** argv)
 
   if (dir_exists && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                      all_subdirs_mode || all_entries_mode || recursive_list || 
-                     spawn_gconfd || schema_file))
+                     spawn_gconfd || schema_file || makefile_install_mode))
     {
       fprintf(stderr, _("--dir-exists option must be used by itself.\n"));
       return 1;
@@ -363,12 +374,21 @@ main (int argc, char** argv)
 
   if (schema_file && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
-                      spawn_gconfd || dir_exists))
+                      spawn_gconfd || dir_exists || makefile_install_mode))
     {
       fprintf(stderr, _("--install-schema-file must be used by itself.\n"));
       return 1;
     }
 
+
+  if (makefile_install_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
+                                all_subdirs_mode || all_entries_mode || recursive_list || 
+                                spawn_gconfd || dir_exists || schema_file))
+    {
+      fprintf(stderr, _("--makefile-install-mode must be used by itself.\n"));
+      return 1;
+    }
+  
   if (use_local_source && config_source == NULL)
     {
       fprintf(stderr, _("You must specify a config source with --config-source when using --direct\n"));
@@ -383,6 +403,50 @@ main (int argc, char** argv)
       return 1;
     }
 
+  /* Do this first, since we want to do only this if the user selected
+     it. */
+  if (ping_gconfd)
+    {
+      if (gconf_ping_daemon())
+        return 0;
+      else 
+        return 2;
+    }
+  
+  if (makefile_install_mode)
+    {
+      g_assert (config_source == NULL);
+
+      /* Try the environment variable */
+      config_source = g_getenv("GCONF_CONFIG_SOURCE");
+
+      if (config_source == NULL)
+        {
+          fprintf(stderr, _("Must set the GCONF_CONFIG_SOURCE environment variable\n"));
+          return 1;
+        }
+
+      if (*config_source == '\0')
+        {
+          /* Properly set, but set to nothing (use default source) */
+          g_free(config_source);
+          config_source = NULL;
+        }
+      
+      if (gconf_ping_daemon())
+        {
+          /* Eventually you should be able to run gconfd as long as
+             you're installing to a different database from the one
+             it's using, but I don't trust the locking right now. */
+          fprintf(stderr, _("Shouldn't run gconfd while installing new schema files.\nUse gconftool --shutdown to shut down the daemon.\n"));
+          return 1;
+        }
+
+      /* Race condition! gconfd could start up. But we do have locking
+         as a second line of defense. */
+      use_local_source = TRUE;
+    }
+  
   if (config_source == NULL)
     conf = gconf_engine_new();
   else
@@ -408,19 +472,15 @@ main (int argc, char** argv)
   
   g_assert(conf != NULL);
   
-  /* Do this first, since we want to do only this if the user selected
-     it. */
-  if (ping_gconfd)
-    {
-      if (gconf_ping_daemon())
-        return 0;
-      else 
-        return 2;
-    }
-  
   if (dir_exists != NULL) 
     {
-      if (do_dir_exists(conf, dir_exists))
+      gboolean success;
+
+      success = do_dir_exists(conf, dir_exists);
+
+      gconf_engine_unref(conf);
+      
+      if (success)
         return 0; /* TRUE */
       else
         return 2; /* FALSE */
@@ -428,7 +488,13 @@ main (int argc, char** argv)
 
   if (schema_file != NULL)
     {
-      return do_load_schema_file(conf, schema_file);
+      gint retval;
+
+      retval = do_load_schema_file(conf, schema_file);
+
+      gconf_engine_unref(conf);
+
+      return retval;
     }
   
   if (spawn_gconfd)
@@ -438,25 +504,44 @@ main (int argc, char** argv)
          (however, it's probably pointless) */
     }
 
+  if (makefile_install_mode)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      gint retval = do_makefile_install(conf, args);
+
+      gconf_engine_unref(conf);
+
+      return retval;
+    }
+  
   if (get_mode)
     {
       const gchar** args = poptGetArgs(ctx);
       if (do_get(conf, args)  == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   if (set_mode)
     {
       const gchar** args = poptGetArgs(ctx);
       if (do_set(conf, args) == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   if (set_schema_mode)
     {
       const gchar** args = poptGetArgs(ctx);
       if (do_set_schema(conf, args) == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   if (all_entries_mode)
@@ -464,7 +549,10 @@ main (int argc, char** argv)
       const gchar** args = poptGetArgs(ctx);
 
       if (do_all_entries(conf, args) == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   if (unset_mode)
@@ -472,7 +560,10 @@ main (int argc, char** argv)
       const gchar** args = poptGetArgs(ctx);
 
       if (do_unset(conf, args) == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   if (all_subdirs_mode)
@@ -480,7 +571,10 @@ main (int argc, char** argv)
       const gchar** args = poptGetArgs(ctx);
 
       if (do_all_subdirs(conf, args) == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   if (recursive_list)
@@ -488,7 +582,10 @@ main (int argc, char** argv)
       const gchar** args = poptGetArgs(ctx);
       
       if (do_recursive_list(conf, args) == 1)
-        return 1;
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
     }
 
   poptFreeContext(ctx);
@@ -1456,7 +1553,8 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
 {
   xmlDocPtr doc;
   xmlNodePtr iter;
-
+  GConfError * err = NULL;
+  
   errno = 0;
   doc = xmlParseFile(file);
 
@@ -1499,5 +1597,47 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
       iter = iter->next;
     }
 
+  gconf_suggest_sync(conf, &err);
+
+  if (err != NULL)
+    {
+      fprintf(stderr, _("Error syncing config data: %s"),
+              err->str);
+      gconf_error_destroy(err);
+      return 1;
+    }
+  
+  return 0;
+}
+
+static int
+do_makefile_install(GConfEngine* conf, const gchar** args)
+{
+  GConfError* err = NULL;
+  
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify some schema files to install\n"));
+      return 1;
+    }
+
+  while (*args)
+    {
+      if (do_load_schema_file(conf, *args) != 0)
+        return 1;
+
+      ++args;
+    }
+
+  gconf_suggest_sync(conf, &err);
+
+  if (err != NULL)
+    {
+      fprintf(stderr, _("Error syncing config data: %s"),
+              err->str);
+      gconf_error_destroy(err);
+      return 1;
+    }
+  
   return 0;
 }

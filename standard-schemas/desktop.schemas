@@ -1,0 +1,55 @@
+<gconfschemafile>
+  <schemalist>
+    <schema>
+    <key>/schemas/desktop/standard/recent-document-entry</key>
+    <type>list</type>
+    <locale name="C">
+       <short>An entry in the /desktop/standard/recent-documents directory</short>
+
+       <long>
+       This schema should be applied to the keys in the
+       /desktop/standard/recent-documents directory. Each entry is a list of
+       strings; each string represents an attribute of the recently used
+       document. The strings begin with the name of the attribute, a colon, and
+       then the value of the attribute.  The available attributes are: command,
+       menu-text, menu-pixmap, menu-hint, filename, mime-type, app. A sample
+       string in the list is "filename:myspreadsheet.gnumeric" or "menu-text:My
+       Spreadsheet". The "filename" attribute can be a simple filename or a URL. 
+       The "command" is a command to run if the recently-used menu item is selected; 
+       the "filename" is most likely only used if an application decides not to run the 
+       command for whatever reason. The "app" attribute is an identifier for the 
+          application, typically the application executable name.
+      </long>
+
+      </locale>
+    </schema>
+
+    <schema>
+    <key>/schemas/desktop/standard/save-location-entry</key>
+    <type>pair</type>
+    <locale name="C">
+       <short>An entry in the /desktop/standard/save-locations directory</short>
+
+       <long>
+          The /desktop/standard/save-locations directory contains entries
+          describing manually-user-defined locations for saving files.  These
+          locations could be merged with, or complement, a list of most recently
+          used save locations. Each entry in the
+          /desktop/standard/save-locations directory should be a pair of two
+          strings; the first string (car) should be a human-readable location
+          name such as "My Documents", the second string (cdr) should be 
+          a filesystem directory name such as "/home/jerry/mydocs". The second 
+          string can also be a URL but not all applications will necessarily 
+          be able to access nonlocal directories.
+      </long>
+
+     </locale>
+     </schema>
+
+  </schemalist>
+  
+</gconfschemafile>
+
+
+
+

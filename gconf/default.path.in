@@ -7,7 +7,7 @@
 
 # Look first in systemwide mandatory settings directory
 # (commented out until xml backend knows how to be read-only for users)
-# xml:/etc/gconf/gconf.xml.mandatory
+xml:@EXPANDED_SYSCONFDIR@/gconf/gconf.xml.mandatory
 
 # Now see where users want us to look - basically the user can stick arbitrary 
 # sources in a ~/.gconf.path file and they're inserted here
@@ -19,6 +19,7 @@ xml:$(HOME)/.gconf
 
 # Finally, look at the systemwide defaults
 # (commented out for now)
-# xml:/etc/gconf/gconf.xml.defaults
+xml:@EXPANDED_SYSCONFDIR@/gconf/gconf.xml.defaults
+
 
 

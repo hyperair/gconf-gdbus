@@ -1,3 +1,24 @@
+2000-01-20  Havoc Pennington  <hp@redhat.com>
+
+        * gconf/default.path: remove, replace with gconf/default.path.in
+	which is set up properly to go in $sysconfdir
+	
+	* gconf/gconftool.c (main): Always unref the engine when we're
+	done, to ensure we cleanly give up locks on local sources.
+
+	* configure.in (GCONF_CONFIG_SOURCE): --enable-gconf-source option
+
+	* gconf/gconftool.c (main): add an --makefile-install-rule option,
+	which does the right thing in makefile install rules.	
+
+        * Makefile.am: add standard-schemas subdir
+	
+	* configure.in (absolute_top_srcdir): create standard-schemas Makefile
+
+	* standard-schemas/desktop.schemas: Schemas that any desktop can use
+
+	* standard-schemas/Makefile.am: install schemas
+
 2000-01-19  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconfd.c (gconf_set_exception): warn if the error is set
