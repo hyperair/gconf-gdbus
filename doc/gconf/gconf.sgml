@@ -1257,9 +1257,31 @@ key and their effect on the application.
       </para>
 
       <para>
-        FIXME give snippets of configure.in and Makefile.am
+	The <symbol>AM_GCONF_SOURCE_2</symbol> 
+	macro will get the default location to install
+	the schema. It will also add a 
+	<literal>--enable-gconf-source</literal>
+	option and it will look in 
+	<filename>$(sysconfdir)/gconf/schema-install-source</filename> 
+	for a path.
+	The <symbol>GCONF_SCHEMA_CONFIG_SOURCE</symbol> variable 
+	will be defined.
       </para>
-
+      <para>
+	To get schemas installed properly add the macro to 
+	<filename>configure.in</filename>
+	<programlisting>
+	  AM_GCONF_SOURCE
+	</programlisting>  
+      </para>
+      <para>
+	And put something like this in <filename>Makefile.am</filename>
+	<programlisting>
+	  install-schemas:
+	      GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
+	      gconftool --makefile-install-rule my.schemas
+	</programlisting>
+      </para>
     </sect1>
 
     <sect1> 
