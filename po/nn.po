@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-25 01:51+0100\n"
-"PO-Revision-Date: 2003-12-25 23:13+0100\n"
+"POT-Creation-Date: 2003-12-27 17:16+0100\n"
+"PO-Revision-Date: 2003-12-28 12:55+0100\n"
 "Last-Translator: Åsmund Skjæveland <aasmunds@fys.uio.no>\n"
 "Language-Team: Norwegian Nynorsk <i18n-nn@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -235,12 +235,12 @@ msgstr "Feil på XML-node: %s"
 #: backends/xml-entry.c:1094
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
-msgstr ""
+msgstr "Lista inneheld ein node med feil type (%s, skulle vore %s)"
 
 #: backends/xml-entry.c:1146
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
-msgstr ""
+msgstr "Overser ugyldig fyrste verdi i XML-par: %s"
 
 #: backends/xml-entry.c:1155 backends/xml-entry.c:1178
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
@@ -249,7 +249,7 @@ msgstr "tolkar XML-fil: lister og par kan ikkje setjast inni eit par"
 #: backends/xml-entry.c:1168
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
-msgstr ""
+msgstr "Overser ugyldig andre verdi i XML-par: %s"
 
 #: backends/xml-entry.c:1187
 #, c-format
@@ -258,19 +258,19 @@ msgstr "Forstod ikkje XML-noden <%s> inni ein XML-parnode"
 
 #: backends/xml-entry.c:1205
 msgid "Didn't find car and cdr for XML pair node"
-msgstr ""
+msgstr "Fann ikkje fyrste og andre verdi i XML-parnode"
 
 #: backends/xml-entry.c:1211
 msgid "Missing cdr from pair of values in XML file"
-msgstr ""
+msgstr "Manglande andre verdi i par av verdiar i XML-fil"
 
 #: backends/xml-entry.c:1218
 msgid "Missing car from pair of values in XML file"
-msgstr ""
+msgstr "Manglande fyrste verdi i par av verdiar i XML-fil"
 
 #: backends/xml-entry.c:1223
 msgid "Missing both car and cdr values from pair in XML file"
-msgstr ""
+msgstr "Manglande fyrste og andre verdi i par av verdiar i XML-fil"
 
 #. -- end debug only
 #: gconf/gconf-backend.c:167
@@ -832,7 +832,7 @@ msgstr "Skjemaet spesifiserer type liste, men ikkje typen av listeelementa"
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
-msgstr ""
+msgstr "Skjemaet oppgjev type par, men seier ikkje kva slags type verdiane i paret er"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -898,25 +898,22 @@ msgid ""
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
 msgstr ""
-"Kan ikkje lagra verdi i nøkkelen «%s». Oppsettstenaren har ingen "
-"skrivbare databasar. Det er nokre vanlege årsaker til dette problemet: "
-"1) oppsettstien din, %s/path, inneheld ikkje nokon databasar eller vart "
-"ikkje funnen "
-"2) har oppretta to gconfd-prosessar ved ein feil "
-"3) operativsystemet ditt er stilt inn feil, slik at NFS-fillåsing ikkje fungerer "
-"i heimekatalogen din "
-"4) NFS-klientmaskinen krasja, og sa ikkje ifrå til tenaren då han starta på "
-"nytt at fillåsane skulle opnast. "
-"Dersom du har to gconfd-prosessar (eller hadde to då den andre vart starta) "
-"kan det hjelpa å logga ut, drepa alle gconfd-prosessane og logga inn igjen. "
-"Dersom du har gamle låsar, må du fjerna «~/.gconf*/*lock». Kanskje problemet "
-"er at du prøvde å bruka GConf frå to maskinar samtidig, men at ORBit framleis "
-"har standardoppsettet som ikkje tillet CORBA-tilkoplingar utanfrå. I så "
-"fall må du ha «ORBIIOPIPv4=1» i /etc/orbitrc. Som alltid bør du sjå i "
-"«user.*»-systemloggen etter detaljar om problema gconfd har støtt på. "
-"Det kan berre vera ein gconfd for kvar heimekatalog, og han må ha "
-"ei låsfil i ~/.gconfd i tillegg til låsfiler i andre lagringsplassar slik som "
-"~/.gconf"
+"Kan ikkje lagra verdi i nøkkelen «%s». Oppsettstenaren har ingen skrivbare "
+"databasar. Det er nokre vanlege årsaker til dette problemet: 1) oppsettstien "
+"din, %s/path, inneheld ikkje nokon databasar eller vart ikkje funnen 2) har "
+"oppretta to gconfd-prosessar ved ein feil 3) operativsystemet ditt er stilt "
+"inn feil, slik at NFS-fillåsing ikkje fungerer i heimekatalogen din 4) NFS-"
+"klientmaskinen krasja, og sa ikkje ifrå til tenaren då han starta på nytt at "
+"fillåsane skulle opnast. Dersom du har to gconfd-prosessar (eller hadde to "
+"då den andre vart starta) kan det hjelpa å logga ut, drepa alle gconfd-"
+"prosessane og logga inn igjen. Dersom du har gamle låsar, må du fjerna «~/."
+"gconf*/*lock». Kanskje problemet er at du prøvde å bruka GConf frå to "
+"maskinar samtidig, men at ORBit framleis har standardoppsettet som ikkje "
+"tillet CORBA-tilkoplingar utanfrå. I så fall må du ha «ORBIIOPIPv4=1» i /etc/"
+"orbitrc. Som alltid bør du sjå i «user.*»-systemloggen etter detaljar om "
+"problema gconfd har støtt på. Det kan berre vera ein gconfd for kvar "
+"heimekatalog, og han må ha ei låsfil i ~/.gconfd i tillegg til låsfiler i "
+"andre lagringsplassar slik som ~/.gconf"
 
 #: gconf/gconf-sources.c:1414
 #, c-format
@@ -976,12 +973,12 @@ msgstr "Forstod ikkje «%s» (etterslepande teikn)"
 #: gconf/gconf-value.c:403
 #, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
-msgstr "Forstod ikkje «%s» (par må starta med ein  «(»)"
+msgstr "Forstod ikkje «%s» (par må starta med ein «(»)"
 
 #: gconf/gconf-value.c:416
 #, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
-msgstr "Forstod ikkje «%s» (par må slutta med ein  «)»)"
+msgstr "Forstod ikkje «%s» (par må slutta med ein «)»)"
 
 #: gconf/gconf-value.c:446 gconf/gconf-value.c:532
 #, c-format
@@ -1337,8 +1334,8 @@ msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
-"Sett eit skjema og synkroniser. Bruk med --short-desc, --long-desc, "
-"--owner og --type."
+"Sett eit skjema og synkroniser. Bruk med --short-desc, --long-desc, --owner "
+"og --type."
 
 #: gconf/gconftool.c:121
 msgid "Unset the keys on the command line"
@@ -1349,8 +1346,8 @@ msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr ""
-"Nullstill rekursivt alle nøklane i eller under den namngjevne nøkkelen "
-"eller katalogen på kommandolinja"
+"Nullstill rekursivt alle nøklane i eller under den namngjevne nøkkelen eller "
+"katalogen på kommandolinja"
 
 #: gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
@@ -1370,7 +1367,9 @@ msgstr "Skriv ei XML-skildring av alle oppføringane under ein katalog, rekursiv
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
-msgstr "Last ei XML-skildring frå den oppgjevne fila og sett dei relativt til ein katalog."
+msgstr ""
+"Last ei XML-skildring frå den oppgjevne fila og sett dei relativt til ein "
+"katalog."
 
 #: gconf/gconftool.c:175
 msgid "Print all subdirectories and entries under a dir, recursively."
@@ -1401,8 +1400,8 @@ msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
-"Oppgje kva slags verdi som vert stilt, eller kva slags verdi eit skjema skildrar. "
-"Unike forkortingar kan brukast."
+"Oppgje kva slags verdi som vert stilt, eller kva slags verdi eit skjema "
+"skildrar. Unike forkortingar kan brukast."
 
 #: gconf/gconftool.c:221
 msgid "int|bool|float|string|list|pair"
@@ -1425,8 +1424,8 @@ msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Oppgje kva slags listeverdi som vert stilt, eller kva slags verdi eit "
-"skjema skildrar. Unike forkortingar kan brukast."
+"Oppgje kva slags listeverdi som vert stilt, eller kva slags verdi eit skjema "
+"skildrar. Unike forkortingar kan brukast."
 
 #: gconf/gconftool.c:257 gconf/gconftool.c:266 gconf/gconftool.c:275
 msgid "int|bool|float|string"
@@ -1437,12 +1436,16 @@ msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
+"Oppgje typen til den fyrste verdien i paret, eller typen til verdien eit "
+"skjema skildrar. Unike forkortingar kan brukast."
 
 #: gconf/gconftool.c:274
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
+"Oppgje typen til den andre verdien i paret, eller typen til verdien skjemaet "
+"skildrar. Unike forkortingar kan brukast."
 
 #: gconf/gconftool.c:283
 msgid "Specify a short half-line description to go in a schema."
@@ -1485,20 +1488,19 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
-"Gå utanom tenaren og aksesser oppsettdatabasen direkte. Krev at "
-"gconfd ikkje køyrer."
+"Gå utanom tenaren og aksesser oppsettdatabasen direkte. Krev at gconfd ikkje "
+"køyrer."
 
-#: gconf/gconftool.c:337
 # TRN: Wie klønete.
+#: gconf/gconftool.c:337
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
-"Installerer skjemafiler på kommandolinja i databasen. "
-"For å bruka ei ikkje-standard oppsettkjelde må miljøvariabelen "
-"GCONF_CONFIG_SOURCE må vera stilt til å peika på henne."
-"Dersom han er tom, vert standardkjelda brukt."
+"Installerer skjemafiler på kommandolinja i databasen. For å bruka ei ikkje-"
+"standard oppsettkjelde må miljøvariabelen GCONF_CONFIG_SOURCE må vera stilt "
+"til å peika på henne.Dersom han er tom, vert standardkjelda brukt."
 
 #: gconf/gconftool.c:346
 msgid ""
@@ -1506,10 +1508,9 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
-"Fjerner skjemafiler på kommandolinja i databasen. "
-"For å bruka ei ikkje-standard oppsettkjelde må miljøvariabelen "
-"GCONF_CONFIG_SOURCE må vera stilt til å peika på henne."
-"Dersom han er tom, vert standardkjelda brukt."
+"Fjerner skjemafiler på kommandolinja i databasen. For å bruka ei ikkje-"
+"standard oppsettkjelde må miljøvariabelen GCONF_CONFIG_SOURCE må vera stilt "
+"til å peika på henne.Dersom han er tom, vert standardkjelda brukt."
 
 #: gconf/gconftool.c:355
 msgid ""
@@ -1524,8 +1525,8 @@ msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
-"Torturtest eit program ved å stilla inn og fjerna mange nøklar "
-"inni katalogar som vert oppgjevne på kommandolinja."
+"Torturtest eit program ved å stilla inn og fjerna mange nøklar inni "
+"katalogar som vert oppgjevne på kommandolinja."
 
 #: gconf/gconftool.c:373
 msgid "Get the short doc string for a key"
@@ -1621,15 +1622,11 @@ msgstr "Klarte ikkje å starta GConf: %s\n"
 
 #: gconf/gconftool.c:743
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
-msgstr ""
-"GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL er stilt. "
-"Installerer ikkje skjema\n"
+msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL er stilt. Installerer ikkje skjema\n"
 
 #: gconf/gconftool.c:750
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
-msgstr ""
-"GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL er stilt. "
-"Fjernar ikkje skjema.\n"
+msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL er stilt. Fjernar ikkje skjema.\n"
 
 #: gconf/gconftool.c:763
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1639,7 +1636,7 @@ msgstr "Miljøvariabelen GCONF_CONFIG_SOURCE må vera stilt\n"
 #: gconf/gconftool.c:792
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
-msgstr "Klarte ikkje å  bruka oppsettkjeldene: %s\n"
+msgstr "Klarte ikkje å bruka oppsettkjeldene: %s\n"
 
 #: gconf/gconftool.c:1077
 #, c-format
@@ -1685,12 +1682,12 @@ msgstr "Listetype: %s\n"
 #: gconf/gconftool.c:1588
 #, c-format
 msgid "Car Type: %s\n"
-msgstr ""
+msgstr "Typen til fyrste verdi: %s\n"
 
 #: gconf/gconftool.c:1589
 #, c-format
 msgid "Cdr Type: %s\n"
-msgstr ""
+msgstr "Typen til andre verdi: %s\n"
 
 #: gconf/gconftool.c:1594
 #, c-format
@@ -1753,7 +1750,7 @@ msgstr "Når du stiller ei liste må du oppgje ein primitiv listetype\n"
 
 #: gconf/gconftool.c:1750
 msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr ""
+msgstr "Når du stiller eit par, må du oppgje primitive typar til begge verdiane i paret\n"
 
 #: gconf/gconftool.c:1765
 #, c-format
@@ -1857,10 +1854,14 @@ msgstr "Listetypen må vera ein primitiv type: streng, heiltal, flyttal eller bo
 #: gconf/gconftool.c:2219
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
+"Fyrste verdi i paret må vera ein primitiv type: Streng, heiltal, flyttal "
+"eller boolsk verdi\n"
 
 #: gconf/gconftool.c:2239
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
+"Andre verdi i paret må vera ein primitiv type: Streng, heiltal, flyttal "
+"eller boolsk verdi\n"
 
 #: gconf/gconftool.c:2254
 #, c-format
@@ -1905,7 +1906,7 @@ msgstr "Feil ved ulisting av katalogar: %s\n"
 
 #: gconf/gconftool.c:2532
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
-msgstr ""
+msgstr "ÅTVARING: Må oppgje både <car> og <cdr> i eit <pair>\n"
 
 #: gconf/gconftool.c:2559
 #, c-format
@@ -1964,7 +1965,7 @@ msgstr "ÅTVARING: Klarte ikkje å tolka standardverdien «%s» for skjemaet (%s
 #: gconf/gconftool.c:2939
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr ""
+msgstr "ÅTVARING: Ugyldig eller manglande «car_type» eller «cdr_type» i skjema (%s)\n"
 
 #: gconf/gconftool.c:2964
 msgid "WARNING: You cannot set a default value for a schema\n"
@@ -1984,16 +1985,22 @@ msgstr "ÅTVARING: Klarte ikkje å tolka typenamnet «%s»\n"
 #, c-format
 msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"ÅTVARING: «list_type» kan berre vera heiltal, flyttal, streng eller boolsk verdi. "
+"Ikkje «%s».\n"
 
 #: gconf/gconftool.c:3079
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"ÅTVARING: «car_type» kan berre vera heiltal, flyttal, streng eller boolsk verdi. "
+"Ikkje «%s».\n"
 
 #: gconf/gconftool.c:3100
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"ÅTVARING: «cdr_type» kan berre vera heiltal, flyttal, streng eller boolsk verdi. "
+"Ikkje «%s».\n"
 
 #: gconf/gconftool.c:3140
 msgid "WARNING: empty <applyto> node"
@@ -2025,7 +2032,9 @@ msgstr ""
 #: gconf/gconftool.c:3201
 #, c-format
 msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr "ÅTVARING: Fleire <locale>-nodar for lokalet «%s». Overser alle utanom fyrste\n"
+msgstr ""
+"ÅTVARING: Fleire <locale>-nodar for lokalet «%s». Overser alle utanom "
+"fyrste\n"
 
 #: gconf/gconftool.c:3299
 #, c-format
