@@ -1,13 +1,13 @@
 # Irish (gaeilge) translation for GConf.pot
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000,2004 Free Software Foundation, Inc.
 # Alastair McKinstry <mckinstry@computer.org>, 2000.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf.pot\n"
+"Project-Id-Version: GConf.pot HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2000-03-13 18:23+0000\n"
+"POT-Creation-Date: 2004-01-13 03:59+0100\n"
+"PO-Revision-Date: 2004-01-13 18:23+0000\n"
 "Last-Translator:  Alastair McKinstry <mckinstry@computer.org>\n"
 "Language-Team: Irish <ga@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,33 @@ msgstr ""
 #: backends/dir-utils.c:212
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
 msgstr ""
 
 #: backends/xml-backend.c:236
@@ -295,9 +322,9 @@ msgid "Failed to shut down backend"
 msgstr ""
 
 #: gconf/gconf-client.c:344 gconf/gconf-client.c:362
-#, fuzzy, c-format
+#, c-format
 msgid "GConf Error: %s\n"
-msgstr "Earráid: %s\n"
+msgstr "Earráid GConf: %s\n"
 
 #: gconf/gconf-client.c:896
 #, c-format
@@ -376,14 +403,14 @@ msgid "Error getting default value for `%s': %s"
 msgstr ""
 
 #: gconf/gconf-database.c:1416
-#, fuzzy, c-format
+#, c-format
 msgid "Error unsetting \"%s\": %s"
-msgstr "Earráid: %s\n"
+msgstr ""
 
 #: gconf/gconf-database.c:1448
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "Earráid: %s\n"
+msgstr ""
 
 #: gconf/gconf-database.c:1496
 #, c-format
@@ -391,9 +418,9 @@ msgid "Error checking existence of `%s': %s"
 msgstr ""
 
 #: gconf/gconf-database.c:1520
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing directory \"%s\": %s"
-msgstr "Earráid: %s\n"
+msgstr ""
 
 #: gconf/gconf-database.c:1547
 #, c-format
@@ -687,11 +714,11 @@ msgstr ""
 
 #: gconf/gconf-internals.c:2949
 msgid "none"
-msgstr ""
+msgstr "tada"
 
 #: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:84
 msgid "Help options"
-msgstr "Roghnachais Cabhair"
+msgstr "Roghnachais Cúidiú"
 
 #: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:506
 #, c-format
@@ -735,9 +762,8 @@ msgid ""
 msgstr ""
 
 #: gconf/gconf-sanity-check.c:236
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "Earráid: %s\n"
+msgstr "Earráid ag leámh comhad: "
 
 #: gconf/gconf-sanity-check.c:259
 #, c-format
@@ -761,7 +787,7 @@ msgstr ""
 
 #: gconf/gconf-sanity-check.c:341
 msgid "_Log Out"
-msgstr ""
+msgstr "_Éirigh As"
 
 #: gconf/gconf-sanity-check.c:343
 msgid "_Continue"
@@ -1118,13 +1144,13 @@ msgid "Failed to get lock for daemon, exiting: %s"
 msgstr ""
 
 #: gconf/gconfd.c:723
-#, fuzzy, c-format
+#, c-format
 msgid "Error releasing lockfile: %s"
-msgstr "Earráid: %s\n"
+msgstr ""
 
 #: gconf/gconfd.c:731
 msgid "Exiting"
-msgstr "Ag eirigh as"
+msgstr "Ag éirigh as"
 
 #: gconf/gconfd.c:757
 msgid "GConf server is not in use, shutting down."
@@ -1378,7 +1404,7 @@ msgstr ""
 
 #: gconf/gconftool.c:320
 msgid "SOURCE"
-msgstr ""
+msgstr "FOINSE"
 
 #: gconf/gconftool.c:328
 msgid ""
@@ -1556,19 +1582,19 @@ msgid "Type: %s\n"
 msgstr "Saghas: %s\n"
 
 #: gconf/gconftool.c:1587
-#, fuzzy, c-format
+#, c-format
 msgid "List Type: %s\n"
-msgstr "Saghas: %s\n"
+msgstr "Saghas Líosta: %s\n"
 
 #: gconf/gconftool.c:1588
-#, fuzzy, c-format
+#, c-format
 msgid "Car Type: %s\n"
-msgstr "Saghas: %s\n"
+msgstr "Saghas 'Car': %s\n"
 
 #: gconf/gconftool.c:1589
-#, fuzzy, c-format
+#, c-format
 msgid "Cdr Type: %s\n"
-msgstr "Saghas: %s\n"
+msgstr "Saghas 'Cdr': %s\n"
 
 #: gconf/gconftool.c:1594
 #, c-format
@@ -1645,9 +1671,9 @@ msgid "Error setting value: %s\n"
 msgstr ""
 
 #: gconf/gconftool.c:1796
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing: %s\n"
-msgstr "Earráid: %s\n"
+msgstr ""
 
 #: gconf/gconftool.c:1811
 msgid "Must specify a key or keys to get type\n"
@@ -1721,9 +1747,9 @@ msgid "Must specify keys to unapply schema from\n"
 msgstr ""
 
 #: gconf/gconftool.c:2132
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "Earráid: %s\n"
+msgstr ""
 
 #: gconf/gconftool.c:2157
 msgid "Must specify key (schema name) as the only argument\n"
@@ -2024,8 +2050,5 @@ msgid ""
 "  %s\n"
 msgstr ""
 
-#, fuzzy
-#~ msgid "%s"
-#~ msgstr ""
-#~ "\n"
-#~ "%s\n"
+msgid "%s"
+msgstr ""
