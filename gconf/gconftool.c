@@ -44,13 +44,22 @@ char* value_type = NULL;
 int shutdown_gconfd = FALSE;
 
 struct poptOption options[] = {
+  { 
+    NULL, 
+    '\0', 
+    POPT_ARG_INCLUDE_TABLE, 
+    poptHelpOptions,
+    0, 
+    _("Help options"), 
+    NULL 
+  },
   {
     "set",
     's',
     POPT_ARG_NONE,
     &set_mode,
     0,
-    N_("Set a key to a value and sync."),
+    N_("Set a key to a value and sync. Use with --type."),
     NULL
   },
   { 
@@ -77,7 +86,7 @@ struct poptOption options[] = {
     POPT_ARG_STRING,
     &value_type,
     0,
-    N_("Specify the type of the value being set."),
+    N_("Specify the type of the value being set. Unique abbreviations OK."),
     N_("[int|bool|float|string]")
   },  
   {
