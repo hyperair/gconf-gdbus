@@ -199,6 +199,12 @@ cache_sync       (Cache        *cache,
   g_hash_table_foreach(cache->cache, (GHFunc)cache_sync_foreach,
                        &sd);
 
+  if (sd.failed && err && *err == NULL)
+    {
+      gconf_set_error (err, GCONF_ERROR_FAILED,
+		       _ ("Failed to sync XML cache contents to disk"));
+    }
+  
   return !sd.failed;  
 }
 

@@ -1,6 +1,15 @@
 2002-01-03  Havoc Pennington  <hp@pobox.com>
 
-	* gconf.m4: Add quotes to
+	* gconf/gconftool.c (main): honor
+	GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL to do nothing for
+	--makefile-install-mode
+ 
+	* backends/xml-cache.c (cache_sync): fill in the error if we
+	return a failure code.
+
+2002-01-03  Havoc Pennington  <hp@pobox.com>
+
+	* gconf.m4.in: Add quotes to
 	GCONF_SCHEMA_FILE_DIR='$(sysconfdir)/gconf/schemas' so that "make
 	install sysconfdir=/foo" will work. May break some conceivable 
 	usage of this variable.

@@ -569,6 +569,13 @@ main (int argc, char** argv)
       else
         return 0;
     }
+
+  if (makefile_install_mode &&
+      g_getenv ("GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL"))
+    {
+      g_print (_("GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"));
+      makefile_install_mode = FALSE;
+    }
   
   if (makefile_install_mode)
     {
