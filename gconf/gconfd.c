@@ -1023,6 +1023,12 @@ drop_old_databases(void)
     {
       GConfDatabase* db = tmp_list->data;
 
+      if (db == default_db)
+	{
+	  tmp_list = g_list_next (tmp_list);
+	  continue;
+	}
+
       /* Drop any listeners whose clients are gone. */
       gconf_database_drop_dead_listeners (db);
       

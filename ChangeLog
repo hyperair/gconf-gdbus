@@ -1,5 +1,14 @@
 2004-08-30  Mark McLoughlin  <mark@skynet.ie>
 
+	Lots of debugging info from Mickey Stein <yekkim@pacbell.net>
+	narrowed this one down in bug #150779.
+
+	* gconf/gconfd.c: (drop_old_databases): don't drop the default
+	database here, we do that later. Hangover from the fact that
+	the default database didn't use to be on db_list.
+
+2004-08-30  Mark McLoughlin  <mark@skynet.ie>
+
 	Patch from Josselin Mouette <joss@debian.org> in bug #148028
 
 	* gconf/gconfd.c: (periodic_cleanup_timeout): save and reload
