@@ -1516,7 +1516,41 @@ dir_fill_cache_from_doc(Dir* d);
 static void
 dir_load_doc(Dir* d)
 {
-  d->doc = xmlParseFile(d->xml_filename);
+  gboolean xml_already_exists = TRUE;
+  gboolean need_backup = FALSE;
+  struct stat statbuf;
+  
+  g_return_if_fail(d->doc == NULL);
+
+  if (stat(d->xml_filename, &statbuf) < 0)
+    {
+      switch (errno)
+        {
+        case ENOENT:
+          xml_already_exists = FALSE;
+          break;
+        case ENOTDIR:
+        case ELOOP:
+        case EFAULT:
+        case EACCES:
+        case ENOMEM:
+        case ENAMETOOLONG:
+        default:
+          /* These are all fatal errors */
+          g_conf_set_error(G_CONF_FAILED, _("Failed to stat `%s': %s"),
+                           d->xml_filename, strerror(errno));
+          return;
+          break;
+        }
+    }
+
+  if (statbuf.st_size == 0)
+    {
+      xml_already_exists = FALSE;
+    }
+
+  if (xml_already_exists)
+    d->doc = xmlParseFile(d->xml_filename);
 
   /* We recover from these errors instead of passing them up */
 
@@ -1530,25 +1564,9 @@ dir_load_doc(Dir* d)
   
   if (d->doc == NULL)
     {
-      /* Back up the file we failed to parse, if it exists,
-         we aren't going to be able to do anything if this call
-         fails
-      */
-
-      gchar* backup = g_strconcat(d->xml_filename, ".bak", NULL);
-      int fd;
-      
-      rename(d->xml_filename, backup);
-
-      /* Recreate .gconf.xml to maintain our integrity and be sure
-         all_subdirs works */
-      /* If we failed to rename, we just give up and truncate the file */
-      fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-      if (fd >= 0)
-        close(fd);
+      if (xml_already_exists)
+        need_backup = TRUE; /* we want to save whatever broken stuff was in the file */
           
-      g_free(backup);
-
       /* Create a new doc */
       
       d->doc = xmlNewDoc("1.0");
@@ -1561,19 +1579,40 @@ dir_load_doc(Dir* d)
     }
   else if (strcmp(d->doc->root->name, "gconf") != 0)
     {
-      fprintf(stderr, "Document root was `%s', recreating\n", d->doc->root->name);
       xmlFreeDoc(d->doc);
       d->doc = xmlNewDoc("1.0");
       d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+      need_backup = TRUE; /* save broken stuff */
     }
   else
     {
-      fprintf(stderr, "filling cache from document\n");
       /* We had an initial doc with a valid root */
       /* Fill child_cache from entries */
       dir_fill_cache_from_doc(d);
     }
 
+  if (need_backup)
+    {
+      /* Back up the file we failed to parse, if it exists,
+         we aren't going to be able to do anything if this call
+         fails
+      */
+      
+      gchar* backup = g_strconcat(d->xml_filename, ".bak", NULL);
+      int fd;
+      
+      rename(d->xml_filename, backup);
+      
+      /* Recreate .gconf.xml to maintain our integrity and be sure
+         all_subdirs works */
+      /* If we failed to rename, we just give up and truncate the file */
+      fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+      if (fd >= 0)
+        close(fd);
+      
+      g_free(backup);
+    }
+  
   g_assert(d->doc != NULL);
   g_assert(d->doc->root != NULL);
 }
