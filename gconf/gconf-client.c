@@ -20,9 +20,13 @@
 
 #include <stdio.h>
 #include "gconf-client.h"
-#include <gtk/gtksignal.h>
-#include <gtk/gtktypeutils.h>
+#include <gobject/gobject.h>
+#include <gobject/gsignal.h>
+#include <gobject/gvaluetypes.h>
 #include <gconf/gconf-internals.h>
+
+#include "gconfmarshal.h"
+#include "gconfmarshal.c"
 
 /*
  * Error handler override
@@ -110,7 +114,7 @@ static void gconf_client_class_init (GConfClientClass *klass);
 static void gconf_client_init       (GConfClient      *client);
 static void gconf_client_real_unreturned_error (GConfClient* client, GError* error);
 static void gconf_client_real_error            (GConfClient* client, GError* error);
-static void gconf_client_finalize              (GtkObject* object); 
+static void gconf_client_finalize              (GObject* object); 
 
 static void gconf_client_cache                 (GConfClient* client,
                                                 const gchar* key,
@@ -137,29 +141,33 @@ static GConfValue* get (GConfClient  *client,
                         GError      **error);
 
 
+static gpointer parent_class = NULL;
 static guint client_signals[LAST_SIGNAL] = { 0 };
-static GtkObjectClass* parent_class = NULL;
 
-GtkType
+GType
 gconf_client_get_type (void)
 {
-  static GtkType client_type = 0;
+  static GType client_type = 0;
 
   if (!client_type)
     {
-      static const GtkTypeInfo client_info =
+      static const GTypeInfo client_info =
       {
-        "GConfClient",
-        sizeof (GConfClient),
         sizeof (GConfClientClass),
-        (GtkClassInitFunc) gconf_client_class_init,
-        (GtkObjectInitFunc) gconf_client_init,
-        /* reserved_1 */ NULL,
-        /* reserved_2 */ NULL,
-        (GtkClassInitFunc) NULL,
+        (GBaseInitFunc) NULL,
+        (GBaseFinalizeFunc) NULL,
+        (GClassInitFunc) gconf_client_class_init,
+        NULL,           /* class_finalize */
+        NULL,           /* class_data */
+        sizeof (GConfClient),
+        0,              /* n_preallocs */
+        (GInstanceInitFunc) gconf_client_init
       };
 
-      client_type = gtk_type_unique (GTK_TYPE_OBJECT, &client_info);
+      client_type = g_type_register_static (G_TYPE_OBJECT,
+                                            "GConfClient",
+                                            &client_info,
+                                            0);
     }
 
   return client_type;
@@ -168,42 +176,43 @@ gconf_client_get_type (void)
 static void
 gconf_client_class_init (GConfClientClass *class)
 {
-  GtkObjectClass *object_class;
+  GObjectClass *object_class;
 
-  object_class = (GtkObjectClass*) class;
+  object_class = (GObjectClass*) class;
 
-  parent_class = gtk_type_class (gtk_object_get_type ());
-  
+  parent_class = g_type_class_peek_parent (class);
+
   client_signals[VALUE_CHANGED] =
-    gtk_signal_new ("value_changed",
-                    GTK_RUN_LAST,
-                    object_class->type,
-                    GTK_SIGNAL_OFFSET (GConfClientClass, value_changed),
-                    gtk_marshal_NONE__POINTER_POINTER,
-                    GTK_TYPE_NONE, 2, GTK_TYPE_POINTER, GTK_TYPE_POINTER);
-  
+    g_signal_newc ("value_changed",
+                   G_TYPE_FROM_CLASS (object_class),
+                   G_SIGNAL_RUN_LAST,
+                   G_STRUCT_OFFSET (GConfClientClass, value_changed),
+                   NULL, NULL,
+                   gconf_marshal_VOID__STRING_POINTER,
+                   G_TYPE_NONE, 2, G_TYPE_STRING, G_TYPE_POINTER);
+
   client_signals[UNRETURNED_ERROR] =
-    gtk_signal_new ("unreturned_error",
-                    GTK_RUN_LAST,
-                    object_class->type,
-                    GTK_SIGNAL_OFFSET (GConfClientClass, unreturned_error),
-                    gtk_marshal_NONE__POINTER,
-                    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+    g_signal_newc ("unreturned_error",
+                   G_TYPE_FROM_CLASS (object_class),
+                   G_SIGNAL_RUN_LAST,
+                   G_STRUCT_OFFSET (GConfClientClass, unreturned_error),
+                   NULL, NULL,
+                   gconf_marshal_VOID__POINTER,
+                   G_TYPE_NONE, 1, G_TYPE_POINTER);
 
   client_signals[ERROR] =
-    gtk_signal_new ("error",
-                    GTK_RUN_LAST,
-                    object_class->type,
-                    GTK_SIGNAL_OFFSET (GConfClientClass, error),
-                    gtk_marshal_NONE__POINTER,
-                    GTK_TYPE_NONE, 1, GTK_TYPE_POINTER);
+    g_signal_newc ("error",
+                   G_TYPE_FROM_CLASS (object_class),
+                   G_SIGNAL_RUN_LAST,
+                   G_STRUCT_OFFSET (GConfClientClass, error),
+                   NULL, NULL,
+                   gconf_marshal_VOID__POINTER,
+                   G_TYPE_NONE, 1, G_TYPE_POINTER);
   
-  gtk_object_class_add_signals (object_class, client_signals, LAST_SIGNAL);
-
   class->value_changed    = NULL;
   class->unreturned_error = gconf_client_real_unreturned_error;
   class->error            = gconf_client_real_error;
-  
+
   object_class->finalize  = gconf_client_finalize;
 }
 
@@ -236,15 +245,15 @@ destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
-gconf_client_finalize (GtkObject* object)
+gconf_client_finalize (GObject* object)
 {
   GConfClient* client = GCONF_CLIENT(object);
-
+  
   g_hash_table_foreach_remove(client->dir_hash,
                               destroy_dir_foreach_remove, client);
   
   gconf_client_clear_cache(client);
-  
+
   if (client->listeners != NULL)
     {
       gconf_listeners_free(client->listeners);
@@ -265,8 +274,8 @@ gconf_client_finalize (GtkObject* object)
       client->engine = NULL;
     }
 
-  if (parent_class->finalize)
-    (*parent_class->finalize)(object);
+  if (G_OBJECT_CLASS (parent_class)->finalize)
+    (* G_OBJECT_CLASS (parent_class)->finalize) (object);
 }
 
 /*
@@ -415,17 +424,13 @@ gconf_client_get_default (void)
   if (client)
     {
       g_assert (client->engine == engine);
-      gtk_object_ref (GTK_OBJECT (client));
+      g_object_ref (G_OBJECT (client));
       gconf_engine_unref (engine);
       return client;
     }
   else
     {
-      client = gtk_type_new (gconf_client_get_type ());
-
-      /* Emulate GObject */
-      gtk_object_ref (GTK_OBJECT (client));
-      gtk_object_sink (GTK_OBJECT (client));
+      client = g_object_new (gconf_client_get_type (), NULL);
 
       client->engine = engine;
       register_client (client);
@@ -445,17 +450,13 @@ gconf_client_get_for_engine (GConfEngine* engine)
   if (client)
     {
       g_assert (client->engine == engine);
-      gtk_object_ref (GTK_OBJECT (client));
+      g_object_ref (G_OBJECT (client));
       return client;
     }
   else
     {
-      client = gtk_type_new (gconf_client_get_type ());
+      client = g_object_new (gconf_client_get_type (), NULL);
 
-      /* Emulate GObject */
-      gtk_object_ref (GTK_OBJECT (client));
-      gtk_object_sink (GTK_OBJECT (client));
-      
       client->engine = engine;
 
       gconf_engine_ref(client->engine);
@@ -1654,7 +1655,8 @@ gconf_client_error                  (GConfClient* client, GError* error)
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
   
-  gtk_signal_emit(GTK_OBJECT(client), client_signals[ERROR], error);
+  g_signal_emit(G_OBJECT(client), client_signals[ERROR], 0,
+                error);
 }
 
 void
@@ -1663,7 +1665,8 @@ gconf_client_unreturned_error       (GConfClient* client, GError* error)
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
 
-  gtk_signal_emit(GTK_OBJECT(client), client_signals[UNRETURNED_ERROR], error);
+  g_signal_emit(G_OBJECT(client), client_signals[UNRETURNED_ERROR], 0,
+                error);
 }
 
 void
@@ -1675,8 +1678,8 @@ gconf_client_value_changed          (GConfClient* client,
   g_return_if_fail(GCONF_IS_CLIENT(client));
   g_return_if_fail(key != NULL);
   
-  gtk_signal_emit(GTK_OBJECT(client), client_signals[VALUE_CHANGED],
-                  key, value);
+  g_signal_emit(G_OBJECT(client), client_signals[VALUE_CHANGED], 0,
+                key, value);
 }
 
 /*
@@ -1909,7 +1912,7 @@ gconf_client_commit_change_set   (GConfClient* client,
   /* Because the commit could have lots of side
      effects, this makes it safer */
   gconf_change_set_ref(cs);
-  gtk_object_ref(GTK_OBJECT(client));
+  g_object_ref(G_OBJECT(client));
   
   gconf_change_set_foreach(cs, commit_foreach, &cd);
 
@@ -1928,7 +1931,7 @@ gconf_client_commit_change_set   (GConfClient* client,
   g_slist_free(cd.remove_list);
   
   gconf_change_set_unref(cs);
-  gtk_object_unref(GTK_OBJECT(client));
+  g_object_unref(G_OBJECT(client));
 
   if (cd.error != NULL)
     {
@@ -2004,7 +2007,7 @@ gconf_client_reverse_change_set  (GConfClient* client,
   /* we're emitting signals and such, avoid
      nasty side effects with these.
   */
-  gtk_object_ref(GTK_OBJECT(rd.client));
+  g_object_ref(G_OBJECT(rd.client));
   gconf_change_set_ref(cs);
   
   gconf_change_set_foreach(cs, revert_foreach, &rd);
@@ -2017,7 +2020,7 @@ gconf_client_reverse_change_set  (GConfClient* client,
         g_error_free(rd.error);
     }
 
-  gtk_object_unref(GTK_OBJECT(rd.client));
+  g_object_unref(G_OBJECT(rd.client));
   gconf_change_set_unref(cs);
   
   return rd.revert_set;

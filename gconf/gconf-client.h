@@ -21,8 +21,7 @@
 #ifndef GCONF_GCONF_CLIENT_H
 #define GCONF_GCONF_CLIENT_H
 
-#include <gtk/gtkobject.h>
-#include <gtk/gtkwidget.h>
+#include <gobject/gobject.h>
 #include <gconf/gconf.h>
 #include <gconf/gconf-listeners.h>
 #include <gconf/gconf-changeset.h>
@@ -83,14 +82,14 @@ typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client,
                                              GError* error);
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
-#define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
-#define GCONF_CLIENT_CLASS(klass)          (CONF_CHECK_CLASS_CAST ((klass), GCONF_TYPE_CLIENT, GConfClientClass))
-#define GCONF_IS_CLIENT(obj)               (GTK_CHECK_TYPE ((obj), GCONF_TYPE_CLIENT))
-#define GCONF_IS_CLIENT_CLASS(klass)       (CONF_CHECK_CLASS_TYPE ((klass), GCONF_TYPE_CLIENT))
+#define GCONF_CLIENT(obj)                  (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
+#define GCONF_CLIENT_CLASS(klass)          (G_TYPE_CHECK_CLASS_CAST ((klass), GCONF_TYPE_CLIENT, GConfClientClass))
+#define GCONF_IS_CLIENT(obj)               (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCONF_TYPE_CLIENT))
+#define GCONF_IS_CLIENT_CLASS(klass)       (G_TYPE_CHECK_CLASS_TYPE ((klass), GCONF_TYPE_CLIENT))
 
 struct _GConfClient
 {
-  GtkObject object;
+  GObject object;
 
   /*< private >*/
 
@@ -103,7 +102,7 @@ struct _GConfClient
 
 struct _GConfClientClass
 {
-  GtkObjectClass parent_class;
+  GObjectClass parent_class;
 
   /* emitted whenever a value changes. Often, you should use a notify
      function instead; the problem with this signal is that you
@@ -136,7 +135,7 @@ struct _GConfClientClass
 };
 
 
-GtkType           gconf_client_get_type        (void);
+GType             gconf_client_get_type        (void);
 
 /* use the default engine */
 GConfClient*      gconf_client_get_default             (void);

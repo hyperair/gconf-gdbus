@@ -1,5 +1,30 @@
 2001-03-18  Martin Baulig  <baulig@suse.de>
 
+	* gconf/gthreadpool.[ch]: Removed.
+	* gconf/gconf-glib-private.h: Removed.
+	* gconf/gconf-glib-public.h: Removed.
+
+	* gconf/gconf-client.[ch]: Moved here from wrappers/gtk/
+	and migrated to use GObject.
+
+	* gconf/testgconfclient.c: Moved here from wrappers/gtk/.
+
+	* gconf/gconf-internals.h
+	(gconf_CORBA_Object_hash, gconf_CORBA_Object_equal):
+	New static inline functions.
+
+	* gconf/gconfmarshal.list: New file.
+
+	* gconf/gconftool.c: Use libxml 2.
+
+	* backends/xml-backend.c, backends/xml-cache.h,
+	backends/xml-dir.c, backends/xml-dir.h,
+	backends/xml-entry.c, backends/xml-entry.h: Use libxml 2.
+
+	* wrappers/gtk/*: Moved to gconf/.
+
+2001-03-18  Martin Baulig  <baulig@suse.de>
+
 	We're now on the GNOME 2.0 platform.
 
 	* configure.in: Set MAJOR_VERSION to 2, use pkg-config to

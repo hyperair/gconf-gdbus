@@ -20,7 +20,7 @@
 #include "xml-dir.h"
 #include "xml-entry.h"
 
-#include <gnome-xml/parser.h>
+#include <libxml/parser.h>
 
 #include <stdio.h>
 #include <time.h>
@@ -838,16 +838,16 @@ dir_load_doc(Dir* d, GError** err)
       d->doc = xmlNewDoc("1.0");
     }
   
-  if (d->doc->root == NULL)
+  if (d->doc->xmlRootNode == NULL)
     {
       /* fill it in */
-      d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+      d->doc->xmlRootNode = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
     }
-  else if (strcmp(d->doc->root->name, "gconf") != 0)
+  else if (strcmp(d->doc->xmlRootNode->name, "gconf") != 0)
     {
       xmlFreeDoc(d->doc);
       d->doc = xmlNewDoc("1.0");
-      d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+      d->doc->xmlRootNode = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
       need_backup = TRUE; /* save broken stuff */
     }
   else
@@ -880,7 +880,7 @@ dir_load_doc(Dir* d, GError** err)
     }
   
   g_assert(d->doc != NULL);
-  g_assert(d->doc->root != NULL);
+  g_assert(d->doc->xmlRootNode != NULL);
 }
 
 static Entry*
@@ -889,11 +889,11 @@ dir_make_new_entry(Dir* d, const gchar* relative_key)
   Entry* e;
 
   g_return_val_if_fail(d->doc != NULL, NULL);
-  g_return_val_if_fail(d->doc->root != NULL, NULL);
+  g_return_val_if_fail(d->doc->xmlRootNode != NULL, NULL);
   
   e = entry_new(relative_key);
 
-  entry_set_node(e, xmlNewChild(d->doc->root, NULL, "entry", NULL));
+  entry_set_node(e, xmlNewChild(d->doc->xmlRootNode, NULL, "entry", NULL));
   
   safe_g_hash_table_insert(d->entry_cache, (gchar*)entry_get_name(e), e);
   
@@ -926,14 +926,14 @@ dir_fill_cache_from_doc(Dir* d)
   xmlNodePtr node;
   
   if (d->doc == NULL ||
-      d->doc->root == NULL ||
-      d->doc->root->childs == NULL)
+      d->doc->xmlRootNode == NULL ||
+      d->doc->xmlRootNode->xmlChildrenNode == NULL)
     {
       /* Empty document - just return. */
       return;
     }
 
-  node = d->doc->root->childs;
+  node = d->doc->xmlRootNode->xmlChildrenNode;
 
   while (node != NULL)
     {

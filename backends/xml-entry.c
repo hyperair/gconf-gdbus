@@ -20,8 +20,8 @@
 #include "xml-entry.h"
 #include <gconf/gconf-internals.h>
 #include <stdlib.h>
-#include <gnome-xml/entities.h>
-#include <gnome-xml/xmlmemory.h>
+#include <libxml/entities.h>
+#include <libxml/xmlmemory.h>
 
 static void
 entry_sync_if_needed(Entry* e, GConfValue* val);
@@ -384,9 +384,9 @@ free_childs(xmlNodePtr node)
 {
   g_return_if_fail(node != NULL);
   
-  if (node->childs)
-    xmlFreeNodeList(node->childs);
-  node->childs = NULL;
+  if (node->xmlChildrenNode)
+    xmlFreeNodeList(node->xmlChildrenNode);
+  node->xmlChildrenNode = NULL;
   node->last = NULL;
 }
 
@@ -605,7 +605,7 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
   xmlNodePtr iter;
   xmlNodePtr found = NULL;
     
-  iter = node->childs;
+  iter = node->xmlChildrenNode;
       
   while (iter != NULL)
     {
@@ -701,12 +701,12 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
       gconf_log(GCL_DEBUG, "found <local_schema> with no locale setting");
     }
   
-  if (node->childs != NULL)
+  if (node->xmlChildrenNode != NULL)
     {
       GConfValue* default_value = NULL;
       gchar* ld_str = NULL;
       GSList* bad_nodes = NULL;
-      xmlNodePtr iter = node->childs;
+      xmlNodePtr iter = node->xmlChildrenNode;
 
       while (iter != NULL)
         {
@@ -844,7 +844,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
       localized_nodes = g_new0(xmlNodePtr, i+2);
       
       /* Find the node for each possible locale */
-      iter = node->childs;
+      iter = node->xmlChildrenNode;
       
       while (iter != NULL)
         {
@@ -900,7 +900,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
     best = find_schema_subnode_by_locale (node, NULL);
 
   if (best == NULL)
-    best = node->childs;
+    best = node->xmlChildrenNode;
   
   /* Extract info from the best locale node */
   if (best != NULL)
@@ -984,7 +984,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
       {
         xmlNodePtr iter;
         
-        iter = node->childs;
+        iter = node->xmlChildrenNode;
 
         while (iter != NULL)
           {
@@ -1053,7 +1053,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
             break;
           }
         
-        iter = node->childs;
+        iter = node->xmlChildrenNode;
 
         while (iter != NULL)
           {
@@ -1115,7 +1115,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
         GConfValue* cdr = NULL;
         xmlNodePtr iter;
         
-        iter = node->childs;
+        iter = node->xmlChildrenNode;
 
         while (iter != NULL)
           {

@@ -31,7 +31,6 @@ extern "C" {
 #include "gconf-listeners.h"
 #include "gconf-sources.h"
 #include "gconf-internals.h"
-#include "gconf-glib-private.h"
 
 typedef struct _GConfDatabase GConfDatabase;
 

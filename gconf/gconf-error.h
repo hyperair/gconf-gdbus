@@ -22,8 +22,6 @@
 
 #include <glib.h>
 
-#include <gconf/gconf-glib-public.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */

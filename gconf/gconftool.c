@@ -22,9 +22,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <popt.h>
-#include <gnome-xml/tree.h>
-#include <gnome-xml/parser.h>
-#include <gnome-xml/xmlmemory.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <libxml/xmlmemory.h>
 #include <stdlib.h>
 #include <errno.h>
 
@@ -314,6 +314,9 @@ main (int argc, char** argv)
   poptContext ctx;
   gint nextopt;
   GError* err = NULL;
+
+  LIBXML_TEST_VERSION;
+  xmlKeepBlanksDefault(1);
   
   ctx = poptGetContext("gconftool", argc, argv, options, 0);
 
@@ -1466,7 +1469,7 @@ extract_global_info(xmlNodePtr node,
   xmlNodePtr iter;
   char* default_value = NULL;
       
-  iter = node->childs;
+  iter = node->xmlChildrenNode;
 
   while (iter != NULL)
     {
@@ -1671,7 +1674,7 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
 
 
   /* Locale-specific info */
-  iter = node->childs;
+  iter = node->xmlChildrenNode;
   
   while (iter != NULL)
     {
@@ -1825,7 +1828,7 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
       return 1;
     }
   
-  iter = node->childs;
+  iter = node->xmlChildrenNode;
 
   while (iter != NULL)
     {
@@ -1887,7 +1890,7 @@ process_schema_list(GConfEngine* conf, xmlNodePtr node)
 {
   xmlNodePtr iter;
 
-  iter = node->childs;
+  iter = node->xmlChildrenNode;
 
   while (iter != NULL)
     {
@@ -1921,14 +1924,14 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
       return 1;
     }
 
-  if (doc->root == NULL)
+  if (doc->xmlRootNode == NULL)
     {
       fprintf(stderr, _("Document `%s' is empty?\n"),
               file);
       return 1;
     }
 
-  iter = doc->root;
+  iter = doc->xmlRootNode;
   while (iter != NULL) 
     {
       if (iter->type == XML_ELEMENT_NODE)
@@ -1953,7 +1956,7 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
       return 1;
     }
 
-  iter = iter->childs;
+  iter = iter->xmlChildrenNode;
 
   while (iter != NULL)
     {

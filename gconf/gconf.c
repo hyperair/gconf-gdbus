@@ -217,8 +217,8 @@ gconf_engine_set_database (GConfEngine *conf,
   conf->database = db;
 
   if (engines_by_db == NULL)
-    engines_by_db = g_hash_table_new ((GHashFunc) g_CORBA_Object_hash,
-                                      (GCompareFunc) g_CORBA_Object_equal);
+    engines_by_db = g_hash_table_new ((GHashFunc) gconf_CORBA_Object_hash,
+                                      (GCompareFunc) gconf_CORBA_Object_equal);
   
   g_hash_table_insert (engines_by_db, conf->database, conf);  
 }

@@ -85,7 +85,7 @@ main(int argc, char** argv)
   /* This ensures we cleanly detach from the GConf server (assuming
    * we hold the last reference)
    */
-  gtk_object_unref(GTK_OBJECT(client));
+  g_object_unref(G_OBJECT(client));
   
   return 0;
 }
@@ -176,7 +176,7 @@ create_configurable_widget(GConfClient* client, const gchar* config_key)
   gtk_object_set_data(GTK_OBJECT(label), "client", client);
 
   gtk_signal_connect(GTK_OBJECT(label), "destroy",
-                     configurable_widget_destroy_callback,
+                     GTK_SIGNAL_FUNC(configurable_widget_destroy_callback),
                      NULL);
   
   return frame;
@@ -502,11 +502,11 @@ create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* c
   gtk_object_set_data(GTK_OBJECT(entry), "key", g_strdup(config_key));
 
   gtk_signal_connect(GTK_OBJECT(entry), "destroy",
-                     config_entry_destroy_callback,
+                     GTK_SIGNAL_FUNC(config_entry_destroy_callback),
                      NULL);
 
   gtk_signal_connect(GTK_OBJECT(entry), "changed",
-                     config_entry_changed_callback,
+                     GTK_SIGNAL_FUNC(config_entry_changed_callback),
                      prefs_dialog);
 
   /* A dubious hack; set the entry as object data using its
@@ -571,7 +571,7 @@ prefs_dialog_destroy_callback(GtkWidget* dialog, gpointer data)
   if (revert_cs)
     gconf_change_set_unref(revert_cs);
 
-  gtk_object_unref(GTK_OBJECT(client));
+  g_object_unref(G_OBJECT(client));
 }
 
 static GtkWidget*
@@ -588,7 +588,7 @@ create_prefs_dialog(GtkWidget* parent, GConfClient* client)
   GtkWidget* vbox_inner;
   GtkWidget* entry;
   
-  dialog = gtk_window_new(GTK_WINDOW_DIALOG);
+  dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
   apply = gtk_button_new_with_label("Apply");
   revert = gtk_button_new_with_label("Revert");
@@ -623,7 +623,7 @@ create_prefs_dialog(GtkWidget* parent, GConfClient* client)
   gtk_object_set_data(GTK_OBJECT(dialog), "client", client);
 
   /* Grab a reference */
-  gtk_object_ref(GTK_OBJECT(client));
+  g_object_ref(G_OBJECT(client));
   
   gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
                      GTK_SIGNAL_FUNC(prefs_dialog_destroy_callback),

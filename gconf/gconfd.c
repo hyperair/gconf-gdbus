@@ -32,11 +32,10 @@
 #include "gconf-listeners.h"
 #include "gconf-locale.h"
 #include "gconf-schema.h"
-#include "gconf-glib-private.h"
 #include "gconf.h"
 #include "gconfd.h"
 #include "gconf-database.h"
-#include <orb/orbit.h>
+#include <orbit/orbit.h>
 
 #include "GConf.h"
 
@@ -2042,8 +2041,8 @@ add_client (const ConfigListener client)
   gconfd_need_log_cleanup ();
   
   if (client_table == NULL)
-    client_table = g_hash_table_new ((GHashFunc) g_CORBA_Object_hash,
-                                     (GCompareFunc) g_CORBA_Object_equal);
+    client_table = g_hash_table_new ((GHashFunc) gconf_CORBA_Object_hash,
+                                     (GCompareFunc) gconf_CORBA_Object_equal);
 
   if (g_hash_table_lookup (client_table, client))
     {

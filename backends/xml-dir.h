@@ -21,7 +21,7 @@
 #define GCONF_XML_DIR_H
 
 #include <gconf/gconf.h>
-#include <gnome-xml/tree.h>
+#include <libxml/tree.h>
 
 /* Dir stores the information about a given directory */
 

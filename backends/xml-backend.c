@@ -26,8 +26,8 @@
 #include "xml-cache.h"
 
 
-#include <gnome-xml/tree.h>
-#include <gnome-xml/parser.h>
+#include <libxml/tree.h>
+#include <libxml/parser.h>
 
 #include <stdio.h>
 #include <time.h>
@@ -678,6 +678,9 @@ G_MODULE_EXPORT const gchar*
 g_module_check_init (GModule *module)
 {
   gconf_log(GCL_INFO, _("Initializing XML backend module"));
+
+  LIBXML_TEST_VERSION;
+  xmlKeepBlanksDefault(1);
 
   return NULL;
 }

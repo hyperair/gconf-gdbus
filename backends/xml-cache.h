@@ -21,7 +21,7 @@
 #define GCONF_XML_CACHE_H
 
 #include <gconf/gconf.h>
-#include <gnome-xml/tree.h>
+#include <libxml/tree.h>
 #include "xml-dir.h"
 
 typedef struct _Cache Cache;

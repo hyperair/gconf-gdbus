@@ -206,6 +206,35 @@ GError*  gconf_compose_errors (GError* err1, GError* err2);
 #    define N_(String) (String)
 #endif
 
+static inline gboolean
+gconf_CORBA_Object_equal (gconstpointer a, gconstpointer b)
+{
+  CORBA_Environment ev;
+  CORBA_Object _obj_a = (gpointer)a;
+  CORBA_Object _obj_b = (gpointer)b;
+  gboolean retval;
+
+  CORBA_exception_init (&ev);
+  retval = CORBA_Object_is_equivalent(_obj_a, _obj_b, &ev);
+  CORBA_exception_free (&ev);
+
+  return retval;
+}
+
+static inline guint
+gconf_CORBA_Object_hash(gconstpointer key)
+{
+  CORBA_Environment ev;
+  CORBA_Object _obj = (gpointer)key;
+  CORBA_unsigned_long retval;
+
+  CORBA_exception_init (&ev);
+  retval = CORBA_Object_hash(_obj, G_MAXUINT, &ev);
+  CORBA_exception_free (&ev);
+
+  return retval;
+}
+
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */

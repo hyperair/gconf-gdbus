@@ -22,7 +22,7 @@
 #include "gconf-internals.h"
 #include "gconf-backend.h"
 #include "gconf-schema.h"
-#include <orb/orbit.h>
+#include <orbit/orbit.h>
 #include <liboaf/liboaf.h>
 #include <string.h>
 #include <sys/stat.h>
