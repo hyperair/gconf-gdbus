@@ -1050,6 +1050,11 @@ g_conf_init           (const gchar* appname)
   return TRUE;
 }
 
+gboolean
+g_conf_is_initialized (void)
+{
+        return (have_initted);
+}
 
 /* 
  * Ampersand and <> are not allowed due to the XML backend; shell

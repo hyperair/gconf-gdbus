@@ -108,6 +108,7 @@ struct _GConf {
 typedef void (*GConfNotifyFunc)(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
 gboolean     g_conf_init            (const gchar* appname);
+gboolean     g_conf_is_initialized  (void);
 
 GConf*       g_conf_new             (void); /* Default source stack */
 /* returns NULL on error; requests single specified source */
