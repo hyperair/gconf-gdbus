@@ -857,13 +857,14 @@ obtain_database (const gchar *address,
   GError* error = NULL;
   GConfDatabase *db;
 
-  g_slist_append(addresses, g_strdup(address));
   db = lookup_database (address);
 
   if (db)
     return db;
-  
+
+  addresses = g_slist_append(addresses, g_strdup(address));
   sources = gconf_sources_new_from_addresses(addresses, &error);
+  g_slist_free (addresses);
 
   if (error != NULL)
     {
