@@ -100,7 +100,7 @@ struct _GConfClient
   GConfClientErrorHandlingMode error_mode;
   GConfClientParentWindowFunc parent_func;
   gpointer parent_user_data;
-  GSList* dir_list;
+  GHashTable* dir_hash;
   GHashTable* cache_hash;
   GConfListeners* listeners;
 };

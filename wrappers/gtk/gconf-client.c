@@ -65,7 +65,8 @@ typedef struct _Dir Dir;
 struct _Dir {
   gchar* name;
   guint notify_id;
-
+  /* number of times this dir has been added */
+  guint add_count;
 };
 
 static Dir* dir_new(const gchar* name, guint notify_id);
@@ -106,6 +107,7 @@ static void gconf_client_init       (GConfClient      *client);
 static void gconf_client_real_unreturned_error (GConfClient* client, GConfError* error);
 static void gconf_client_real_error            (GConfClient* client, GConfError* error);
 static void gconf_client_destroy               (GtkObject* object); 
+static void gconf_client_finalize              (GtkObject* object); 
 
 static void gconf_client_cache                 (GConfClient* client,
                                                 const gchar* key,
@@ -189,6 +191,7 @@ gconf_client_class_init (GConfClientClass *class)
   class->error            = gconf_client_real_error;
 
   object_class->destroy   = gconf_client_destroy;
+  object_class->finalize  = gconf_client_finalize;
 }
 
 static void
@@ -196,9 +199,26 @@ gconf_client_init (GConfClient *client)
 {
   client->engine = NULL;
   client->error_mode = GCONF_CLIENT_HANDLE_NONE;
+  client->dir_hash = g_hash_table_new(g_str_hash, g_str_equal);
   client->cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
   /* We create the listeners only if they're actually used */
   client->listeners = NULL;
+}
+
+static gboolean
+destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
+{
+  GConfClient *client = user_data;
+  Dir* d = value;
+  
+  /* remove notify for this dir */
+  
+  gconf_notify_remove(client->engine, d->notify_id);
+  d->notify_id = 0;
+
+  dir_destroy(value);
+
+  return TRUE;
 }
 
 static void
@@ -206,16 +226,31 @@ gconf_client_destroy               (GtkObject* object)
 {
   GConfClient* client = GCONF_CLIENT(object);
 
-  while (client->dir_list)
-    {
-      gconf_client_real_remove_dir(client, client->dir_list->data);
-    }
+  g_hash_table_foreach_remove(client->dir_hash,
+                              destroy_dir_foreach_remove, client);
+  
+  gconf_client_clear_cache(client);
+  
+  if (parent_class->destroy)
+    (*parent_class->destroy)(object);
+}
+
+static void
+gconf_client_finalize (GtkObject* object)
+{
+  GConfClient* client = GCONF_CLIENT(object);
   
   if (client->listeners != NULL)
     {
       gconf_listeners_destroy(client->listeners);
       client->listeners = NULL;
     }
+
+  g_hash_table_destroy(client->dir_hash);
+  client->dir_hash = NULL;
+  
+  g_hash_table_destroy(client->cache_hash);
+  client->cache_hash = NULL;
   
   if (client->engine != NULL)
     {
@@ -223,15 +258,8 @@ gconf_client_destroy               (GtkObject* object)
       client->engine = NULL;
     }
 
-  if (client->cache_hash != NULL)
-    {
-      gconf_client_clear_cache(client);
-      g_hash_table_destroy(client->cache_hash);
-      client->cache_hash = NULL;
-    }
-  
-  if (parent_class->destroy)
-    (*parent_class->destroy)(object);
+  if (parent_class->finalize)
+    (*parent_class->finalize)(object);
 }
 
 /*
@@ -378,6 +406,26 @@ gconf_client_new_with_engine (GConfEngine* engine)
   return client;
 }
 
+
+#ifdef GCONF_ENABLE_DEBUG
+static void
+foreach_check_overlap(gpointer key, gpointer value, gpointer user_data)
+{
+  /* Disallow overlap */
+  g_return_if_fail(!gconf_key_is_below(key, user_data));
+  g_return_if_fail(!gconf_key_is_below(user_data, key));
+}
+
+static void
+check_overlap(GConfClient* client, const gchar* dirname)
+{
+  g_hash_table_foreach(client->dir_hash, foreach_check_overlap,
+                       (gchar*)dirname);
+}
+#else
+#define check_overlap(x,x)
+#endif
+
 void
 gconf_client_add_dir     (GConfClient* client,
                           const gchar* dirname,
@@ -387,56 +435,53 @@ gconf_client_add_dir     (GConfClient* client,
   Dir* d;
   guint notify_id = 0;
   GConfError* error = NULL;
-  
-#ifndef G_DISABLE_CHECKS
-  {
-    GSList* tmp;
-    
-    tmp = client->dir_list;
 
-    while (tmp != NULL)
-      {
-        Dir* old = tmp->data;
-        
-        /* Disallow overlap */
-        g_return_if_fail(!gconf_key_is_below(old->name, dirname));
-        g_return_if_fail(!gconf_key_is_below(dirname, old->name));
-        
-        tmp = g_slist_next(tmp);
-      }
-  }
-#endif
-
-  notify_id = gconf_notify_add(client->engine,
-                               dirname,
-                               notify_from_server_callback,
-                               client,
-                               &error);
-
-  /* We got a notify ID or we got an error, not both */
-  g_return_if_fail( (notify_id != 0 && error == NULL) ||
-                    (notify_id == 0 && error != NULL) );
+  g_return_if_fail(gconf_valid_key(dirname, NULL));
   
-  if (handle_error(client, error, err))
-    return;
-  
-  d = dir_new(dirname, notify_id);
-  
-  client->dir_list = g_slist_prepend(client->dir_list, d);
+  d = g_hash_table_lookup(client->dir_hash, dirname);
 
-  g_assert(error == NULL);
-  
-  gconf_client_preload(client, dirname, preload, &error);
+  if (d == NULL)
+    {
+      check_overlap(client, dirname);
 
-  handle_error(client, error, err);
+      notify_id = gconf_notify_add(client->engine,
+                                   dirname,
+                                   notify_from_server_callback,
+                                   client,
+                                   &error);
+      
+      /* We got a notify ID or we got an error, not both */
+      g_return_if_fail( (notify_id != 0 && error == NULL) ||
+                        (notify_id == 0 && error != NULL) );
+      
+      
+      if (handle_error(client, error, err))
+        return;
+
+      g_assert(error == NULL);
+      
+      d = dir_new(dirname, notify_id);
+
+      g_hash_table_insert(client->dir_hash, d->name, d);
+
+      gconf_client_preload(client, dirname, preload, &error);
+
+      handle_error(client, error, err);
+    }
+
+  g_assert(d != NULL);
+
+  d->add_count += 1;
 }
 
 static void
 gconf_client_real_remove_dir    (GConfClient* client,
                                  Dir* d)
 {
-  /* not totally efficient */
-  client->dir_list = g_slist_remove(client->dir_list, d);
+  g_return_if_fail(d != NULL);
+  g_return_if_fail(d->add_count == 0);
+  
+  g_hash_table_remove(client->dir_hash, d->name);
   
   /* remove notify for this dir */
   
@@ -451,27 +496,18 @@ gconf_client_remove_dir  (GConfClient* client,
                           const gchar* dirname)
 {
   Dir* found = NULL;
-  GSList* tmp;
 
-  /* remove dir from list */
-  tmp = client->dir_list;
-
-  while (tmp != NULL)
-    {
-      Dir* d = tmp->data;
-
-      if (strcmp(d->name, dirname) == 0)
-        {
-          found = d;
-          break;
-        }
-
-      tmp = g_slist_next(tmp);
-    }
-
+  found = g_hash_table_lookup(client->dir_hash,
+                              dirname);
+  
   if (found != NULL)
     {
-      gconf_client_real_remove_dir(client, found);
+      g_return_if_fail(found->add_count > 0);
+
+      found->add_count -= 1;
+
+      if (found->add_count == 0) 
+        gconf_client_real_remove_dir(client, found);
     }
 #ifndef G_DISABLE_CHECKS
   else
@@ -640,36 +676,14 @@ gconf_client_preload    (GConfClient* client,
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
   g_return_if_fail(dirname != NULL);
-  
-#ifndef G_DISABLE_CHECKS
-  {
-    GSList* tmp;
-    gboolean found = FALSE;
-    
-    tmp = client->dir_list;
 
-    while (tmp != NULL)
-      {
-        Dir* d = tmp->data;
-        
-        /* Must be preloading something actually in the directory list */
-        if (strcmp(d->name, dirname) == 0)
-          {
-            found = TRUE;
-            break;
-          }
-        
-        tmp = g_slist_next(tmp);
-      }
-
-    if (!found)
-      {
-        g_warning("Can only preload directories you've added with gconf_client_add_dir()");
-        return;
-      }
-  }
+#ifdef GCONF_ENABLE_DEBUG
+  if (g_hash_table_lookup(client->dir_hash, dirname) == NULL)
+    {
+      g_warning("Can only preload directories you've added with gconf_client_add_dir()");
+      return;
+    }
 #endif
-
   
   switch (type)
     {
@@ -847,24 +861,28 @@ get(GConfClient* client, const gchar* key,
     {
       /* Cache this value, if it's in our directory list. FIXME could
          speed this up. */
-      GSList* tmp;
+      gchar* parent = g_strdup(key);
+      gchar* end;
 
-      tmp = client->dir_list;
-      while (tmp != NULL)
+      end = strrchr(parent, '/');
+
+      while (end && parent != end)
         {
-          Dir* d = tmp->data;
-
-          if (gconf_key_is_below(d->name, key))
+          *end = '\0';
+          
+          if (g_hash_table_lookup(client->dir_hash, parent) != NULL)
             {
               /* note that we cache a _copy_ */
               gconf_client_cache(client, key, is_default,
                                  val ? gconf_value_copy(val) : NULL);
               break;
             }
-          else
-            tmp = g_slist_next(tmp);
+          
+          end = strrchr(parent, '/');
         }
 
+      g_free(parent);
+      
       return val;
     }
 }
@@ -1526,7 +1544,8 @@ dir_new(const gchar* name, guint notify_id)
 
   d->name = g_strdup(name);
   d->notify_id = notify_id;
-
+  d->add_count = 0;
+  
   return d;
 }
 

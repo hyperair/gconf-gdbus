@@ -143,11 +143,13 @@ dir_new(const gchar  *keyname,
 }
 
 Dir*
-dir_load        (const gchar* xml_root_dir, const gchar* key, GConfError** err)
+dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
 {
   Dir* d;
   gchar* fs_dirname;
   gchar* xml_filename;
+
+  g_return_val_if_fail(gconf_valid_key(key, NULL), NULL);
   
   fs_dirname = gconf_concat_key_and_dir(xml_root_dir, key);
   xml_filename = g_strconcat(fs_dirname, "/%gconf.xml", NULL);

@@ -1,6 +1,23 @@
+2000-01-13  Havoc Pennington  <hp@redhat.com>
+
+	* backends/xml-dir.c (dir_load): arguments to this were backward
+
+	* wrappers/gtk/gconf-client.c: keep a count of the number of times
+	a directory has been added/removed from the dir list, so we only 
+	remove it from the list after that number of removals.
+	Perhaps somewhat unintuitive, but we'll document it, and it's 
+	really necessary if multiple code sections are going to share the 
+	same GConfClient.
+	(gconf_client_destroy): move a bunch of stuff to finalize
+	so we remain "safe" before last unref
+
+2000-01-12  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconfd.c (main): don't use custom object ID
+
 2000-01-12  Jonathan Blandford  <jrb@redhat.com>
 
-	* wrappers/gtk/gconf-client.c: added this.
+	* wrappers/gtk/gconf-client.c: #include <stdio.h>
 
 2000-01-11  Havoc Pennington  <hp@pobox.com>
 
