@@ -2226,7 +2226,7 @@ gconf_set_list    (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   value_list = NULL;
-  
+
   tmp = list;
 
   while (tmp != NULL)
@@ -2258,7 +2258,7 @@ gconf_set_list    (GConfEngine* conf, const gchar* key,
           break;
         }
 
-      g_slist_prepend(value_list, val);
+      value_list = g_slist_prepend(value_list, val);
 
       tmp = g_slist_next(tmp);
     }
