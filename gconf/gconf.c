@@ -1459,9 +1459,10 @@ try_to_contact_server(gboolean start_if_not_found, GConfError** err)
           /* Make the errno more specific */
           if (err && *err)
             (*err)->num = GCONF_ERROR_NO_SERVER;
-          else if (err && !*err)
-            *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
         }
+
+      if (err && *err == NULL)
+        *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
     }
 
 #ifdef GCONF_ENABLE_DEBUG      
