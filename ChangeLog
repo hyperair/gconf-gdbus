@@ -1,3 +1,26 @@
+2003-03-13  Mark McLoughlin  <mark@skynet.ie>
+
+	Implement --load and --dump options for gconftool. e.g.:
+	gconftool-2 --dump /apps/metacity > metacity.dump
+	gconftool-2 --config-source blah --load metacity.dump
+	or
+	gconftool-2 -load metacity.dump /apps/other_metacity
+
+	* gconf/gconftool.c:
+	(recurse_subdir_dump), (do_dump_values),
+	(print_schema_in_xml), (print_pair_in_xml),
+	(print_list_in_xml), (print_value_in_xml), (get_key_relative),
+	(dump_entries_in_dir): impl dumping to XML.
+	(get_list_value_from_xml), (get_car_cdr_value),
+	(get_pair_value_from_xml), (get_schema_values_from_xml),
+	(get_values_from_xml), (get_first_value_from_xml), (set_values):
+	impl loading entries from XML.
+	(hash_listify_foreach), (process_entry), (fill_default_from_string),
+	(extract_global_info), (process_locale_info), (get_schema_from_xml),
+	(hash_install_foreach), (process_schema), (process_list),
+	(do_load_file), (do_makefile_install): munge the entries loading
+	code with schemas loading code.
+
 2003-03-05  Havoc Pennington  <hp@pobox.com>
 
 	* backends/Makefile.am: remove BDB backend
