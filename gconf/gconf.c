@@ -2039,7 +2039,7 @@ gconf_postinit(gpointer app, gpointer mod_info)
   if (listener == CORBA_OBJECT_NIL)
     {
       CORBA_Environment ev;
-      PortableServer_ObjectId objid = {0, sizeof("ConfigListener"), "ConfigListener"};
+      PortableServer_ObjectId* objid;
       PortableServer_POA poa;
 
       CORBA_exception_init(&ev);
@@ -2055,8 +2055,7 @@ gconf_postinit(gpointer app, gpointer mod_info)
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      PortableServer_POA_activate_object_with_id(poa,
-                                                 &objid, &poa_listener_servant, &ev);
+      objid = PortableServer_POA_activate_object(poa, &poa_listener_servant, &ev);
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
       
