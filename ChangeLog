@@ -1,3 +1,13 @@
+2000-01-08  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconftool.c (main): had local and non-local cases backward
+	so you got the opposite of what you requested
+
+	* gconf/gconf-internals.c (gconf_release_lock): include strerror()
+	in "can't open lock file" message
+	(gconf_get_lock): actually write the PID to the lock file,
+	and use ConfigServer_ping() instead of CORBA_Object_is_nonexistent()
+
 2000-01-07  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf-internals.c (gconf_get_lock): totally rewrite the

@@ -2257,9 +2257,9 @@ gconf_get_lock(const gchar* lock_directory,
                   
                   server = CORBA_ORB_string_to_object(orb, str, &ev);
 
-                  if (CORBA_Object_is_nil(server, &ev) || CORBA_Object_non_existent(server, &ev))
+                  if (CORBA_Object_is_nil(server, &ev))
                     {
-                      gconf_log(GCL_WARNING, _("Removing stale lock `%s', IOR `%s'"),
+                      gconf_log(GCL_WARNING, _("Removing stale lock `%s' because IOR couldn't be converted to object reference, IOR `%s'"),
                                 lock->lock_directory, str);
                       stale = TRUE;
                       got_it = TRUE;
@@ -2267,13 +2267,27 @@ gconf_get_lock(const gchar* lock_directory,
                     }
                   else
                     {
-                      error_occurred = TRUE;
-                      gconf_set_error(err,
-                                      GCONF_LOCK_FAILED,
-                                      _("GConf configuration daemon (gconfd) has lock `%s'"),
-                                      lock->lock_directory);
-                      goto out;
-                    }                  
+                      ConfigServer_ping(server, &ev);
+      
+                      if (ev._major != CORBA_NO_EXCEPTION)
+                        {
+                          gconf_log(GCL_WARNING, _("Removing stale lock `%s' because of error pinging server: %s"),
+                                    lock->lock_directory, CORBA_exception_id(&ev));
+                          CORBA_exception_free(&ev);
+                          stale = TRUE;
+                          got_it = TRUE;
+                          goto out;
+                        }
+                      else
+                        {
+                          error_occurred = TRUE;
+                          gconf_set_error(err,
+                                          GCONF_LOCK_FAILED,
+                                          _("GConf configuration daemon (gconfd) has lock `%s'"),
+                                          lock->lock_directory);
+                          goto out;
+                        }
+                    }              
                 }
             }
         }
@@ -2328,16 +2342,24 @@ gconf_get_lock(const gchar* lock_directory,
       {
         const gchar* ior;
         int retval;
+        gchar* s;
         
-        ior = gconf_get_daemon_ior();
+        s = g_strdup_printf("%u:", (guint)getpid());
+        
+        retval = write(fd, s, strlen(s));
 
-        if (ior == NULL)
+        if (retval >= 0)
           {
-            retval = write(fd, "none", 4);
-          }
-        else
-          {
-            retval = write(fd, ior, strlen(ior));
+            ior = gconf_get_daemon_ior();
+            
+            if (ior == NULL)
+              {
+                retval = write(fd, "none", 4);
+              }
+            else
+              {
+                retval = write(fd, ior, strlen(ior));
+              }
           }
 
         if (retval < 0)
@@ -2387,8 +2409,8 @@ gconf_release_lock(GConfLock* lock,
     {
       gconf_set_error(err,
                       GCONF_FAILED,
-                      _("Can't open lock file `%s'; assuming it isn't ours"),
-                      iorfile);
+                      _("Can't open lock file `%s'; assuming it isn't ours: %s"),
+                      iorfile, strerror(errno));
       g_free(iorfile);
       return FALSE;
     }

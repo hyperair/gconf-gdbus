@@ -947,9 +947,9 @@ main(int argc, char** argv)
   
   /* Logs */
   username = g_get_user_name();
-  len = strlen(username) + strlen("gconfd") + 5;
+  len = strlen(username) + strlen("gconfd") + 15;
   logname = g_malloc(len);
-  g_snprintf(logname, len, "gconfd (%s)", username);
+  g_snprintf(logname, len, "gconfd (%s-%u)", username, (guint)getpid());
 
   openlog (logname, LOG_NDELAY, LOG_USER);
   /* openlog() does not copy logname - what total brokenness.

@@ -388,9 +388,9 @@ main (int argc, char** argv)
   else
     {
       if (use_local_source)
-        conf = gconf_engine_new_from_address(config_source, &err);
-      else
         conf = gconf_engine_new_local(config_source, &err);
+      else
+        conf = gconf_engine_new_from_address(config_source, &err);
     }
   
   if (conf == NULL)
