@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-08-18 05:29-0500\n"
+"POT-Creation-Date: 2003-01-12 13:13-0500\n"
 "PO-Revision-Date: 2002-08-07 17:48+0307\n"
 "Last-Translator: Ammer Alsabbagh <whollyboss@yahoo.com>\n"
 "Language-Team: Arabic <arabic@arabeyes.org>\n"
@@ -32,7 +32,7 @@ msgstr "ابتداء الوحدة البرمجية الأساسية BDB"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "لم يتمكن من ايجاد ال%s الدليل الجذري في العنوان `%s'"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "لم يتم التمكن من انشاء دليل `%s': %s"
@@ -47,13 +47,14 @@ msgid "Unloading XML backend module."
 msgstr "إلغاء تحميل الوحدة البرمجية الأساسية XML."
 
 #: backends/xml-backend.c:289
-#, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "لم يتم التمكن من ايجاد الدليل الجذري ل XML في العنوان `%s'"
+#, fuzzy, c-format
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "لم يتمكن من ايجاد ال%s الدليل الجذري في العنوان `%s'"
 
 #: backends/xml-backend.c:414
-#, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
+#, fuzzy, c-format
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
 "لم يمكن القراءة من أو الكتابة على الدليل الجذري الخاص بـ XML في العنوان`%s'"
 
@@ -79,8 +80,8 @@ msgid "Initializing XML backend module"
 msgstr "ابتداء الوحدة البرمجية الأساسية XML"
 
 #: backends/xml-backend.c:790
-#, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
+#, fuzzy, c-format
+msgid "Failed to give up lock on XML dir \"%s\": %s"
 msgstr "فشلت عملية إرجاع قفل على دليل XML `%s': %s"
 
 #: backends/xml-cache.c:257
@@ -180,6 +181,11 @@ msgstr "عنصر من غير اسم في ملف الـ XML`%s', تجاهل"
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
 "يوجد عقدة ذو مستوى أعلى في ملف الـ XML `%s' هي <%s> عوضاً عن <entry>, تجاهل"
+
+#: backends/xml-dir.c:1212
+#, fuzzy, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "لم يتم التمكن من انشاء دليل `%s': %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -790,6 +796,17 @@ msgstr "بوصة"
 #, fuzzy
 msgid "Schema contains invalid UTF-8"
 msgstr "السمة يحتوي"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
 
 #: gconf/gconf-sources.c:319
 #, fuzzy, c-format
@@ -1832,7 +1849,7 @@ msgstr "أو و"
 msgid "WARNING: empty <applyto> node"
 msgstr "فارغ<applyto>"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, fuzzy, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "أسفل<schema>"
@@ -1842,125 +1859,143 @@ msgstr "أسفل<schema>"
 msgid "WARNING: no key specified for schema\n"
 msgstr "لا"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+#, fuzzy
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "لا"
+
+#: gconf/gconftool.c:2024
+#, fuzzy
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "لا"
+
+#: gconf/gconftool.c:2030
+#, fuzzy
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "لا"
+
+#: gconf/gconftool.c:2058
 #, fuzzy
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "<locale> اسم"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, fuzzy, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "غير صحيح بوصة<locale>"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, fuzzy, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "الى"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, fuzzy, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "مثبتة"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, fuzzy, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "الى"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, fuzzy, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "الى"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 #, fuzzy
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "<locale> بوصة<schema>"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, fuzzy, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "أسفل<schemalist>"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, fuzzy, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "فشل الى"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, fuzzy, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "فارغ"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, fuzzy, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
 msgstr "ال<gconfschemafile>"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, fuzzy, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "لا<gconfschemafile>"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, fuzzy, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "أسفل<gconfschemafile>"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, fuzzy, c-format
 msgid "Error syncing config data: %s"
 msgstr "خطأ"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 #, fuzzy
 msgid "Must specify some schema files to install\n"
 msgstr "الى"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, fuzzy, c-format
 msgid ""
 "\n"
 "%s\n"
 msgstr "ل"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, fuzzy, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "فشل الى"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 #, fuzzy
 msgid "Must specify some keys to break\n"
 msgstr "الى"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, fuzzy, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr "الى عن طريق\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 #, fuzzy
 msgid "Must specify some directories to break\n"
 msgstr "الى"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, fuzzy, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
 "directory:\n"
 "  %s\n"
 msgstr "الى عن طريق\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "لم يتم التمكن من ايجاد الدليل الجذري ل XML في العنوان `%s'"
 
 #, fuzzy
 #~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"

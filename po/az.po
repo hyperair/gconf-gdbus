@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.1\n"
-"POT-Creation-Date: 2002-08-04 14:20-0400\n"
+"POT-Creation-Date: 2003-01-12 13:13-0500\n"
 "PO-Revision-Date: 2001-12-19 19:24GMT+0200\n"
 "Last-Translator: Vasif İsmayıloğlu MD <azerb_linux@hotmail.com>\n"
 "Language-Team: Azerbaijani Turkic <linuxaz@azerimail.net>\n"
@@ -32,7 +32,7 @@ msgstr "BDB \"backend\" modulu başladılır"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "`%s' ünvanda %s ana qovluğunu tapa bilmədim ."
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "`%s' qovluğunu yarada bilmədim : %s"
@@ -47,13 +47,14 @@ msgid "Unloading XML backend module."
 msgstr "XML modulunu çıxarıram ."
 
 #: backends/xml-backend.c:289
-#, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "`%s' ünvanda XML ana qovluğunu tapa bilmədim ."
+#, fuzzy, c-format
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "`%s' ünvanda %s ana qovluğunu tapa bilmədim ."
 
 #: backends/xml-backend.c:414
-#, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
+#, fuzzy, c-format
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "`%s' ünvanda XML ana qovluğunda oxuya bilmədim və yaza bilmədim ."
 
 #: backends/xml-backend.c:424
@@ -77,8 +78,8 @@ msgid "Initializing XML backend module"
 msgstr "XML modulunu əlavə edirəm"
 
 #: backends/xml-backend.c:790
-#, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
+#, fuzzy, c-format
+msgid "Failed to give up lock on XML dir \"%s\": %s"
 msgstr "`%s' XML qovluğunda qıfıllama edə bilmədim : %s"
 
 #: backends/xml-cache.c:257
@@ -182,6 +183,11 @@ msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
 "XML faylı `%s' içindəki təpə nüqtəsi<entry> yerinə <%s> olaraq tapılmışdır, "
 "keçirəm"
+
+#: backends/xml-dir.c:1212
+#, fuzzy, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "`%s' qovluğunu yarada bilmədim : %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -777,6 +783,17 @@ msgstr ""
 #, fuzzy
 msgid "Schema contains invalid UTF-8"
 msgstr "Mətn hökmsüz UTF-8 daxil edir"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
 
 #: gconf/gconf-sources.c:319
 #, fuzzy, c-format
@@ -1836,7 +1853,7 @@ msgstr ""
 msgid "WARNING: empty <applyto> node"
 msgstr "XƏBƏRDARLIQ : boşdur <applyto> nöqtəsi"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "XƏBƏRDARLIQ : <schema>'nın altındakı <%s> nöqtəsini başa düşmədim\n"
@@ -1845,13 +1862,28 @@ msgstr "XƏBƏRDARLIQ : <schema>'nın altındakı <%s> nöqtəsini başa düşm�
 msgid "WARNING: no key specified for schema\n"
 msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+#, fuzzy
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
+
+#: gconf/gconftool.c:2024
+#, fuzzy
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
+
+#: gconf/gconftool.c:2030
+#, fuzzy
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "XƏBƏRDARLIQ : <locale> nöqtəsinin `name=\"locale\"' xüsusiyyəti yoxdur, "
 "keçirəm\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -1859,55 +1891,55 @@ msgstr ""
 "XƏBƏRDARLIQ : `%s' lokalizasiyası üçün çoxlu <locale> nöqtələri var, köhnə "
 "ilkləri keçirəm\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "XƏBƏRDARLIQ : <locale> nöqtəsində keçərsiz <%s> nöqtəsi\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr ""
 "XƏBƏRDARLIQ : `%s' şəkil faylının `%s' lokalizasiyasının yüklənməsində xəta "
 "var : %s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "`%s' şeklinde `%s' lokalizasiyası yükləndi\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr ""
 "XƏBƏRDARLIQ : `%s' şəkil faylını `%s' açarı ilə birləşdirə bilmədim : %s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "`%s' şekilni `%s' anahtarına ekledim\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr ""
 "Bir <schema>'da ən azından bir <locale> nöqtəsi olmaq məcburiyyətindədir\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "XƏBƏRDARLIQ : <schemalist>'in altındakı <%s> nöqtəsi başa düşülmədi\n"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "`%s''yi aça bilmədim : %s\n"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "`%s' sənədi yoxsa boşdur mu ?\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -1915,27 +1947,27 @@ msgid ""
 msgstr ""
 "`%s' sənədin ana nöqtəsi (<%s>'in, <gconfschemafile> olmalıdır ) səhvdir \n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "`%s' sənədinin <gconfschemafile> ana nöqtəsi yoxdur \n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr ""
 "XƏBƏRDARLIQ : <gconfschemafile> altındakı <%s> nöqtəsi başa düşülmədi\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Quraşdurma mə'lumatlarını sinxronlaşdırılırkən xəta oldu : %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "Yüklənəcək şəkil fayllarını bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -1944,16 +1976,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Qırma açarı %s'yi silə bilmədim : %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "Qırılacaq bə'zi açarları bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -1962,11 +1994,11 @@ msgstr ""
 "Proqramı bə'zi xətalı qiymətləri oturdaraq qırmağa cəhd edirəm : \n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "Qırılacaq bə'zi qovluqları bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -1976,6 +2008,9 @@ msgstr ""
 "Proqramı bə'zi xətalı qiymətləri bu qovuqda oturdaraq qırmağa : cəhd "
 "edirəm :\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "`%s' ünvanda XML ana qovluğunu tapa bilmədim ."
 
 #, fuzzy
 #~ msgid ""

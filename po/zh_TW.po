@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.2.0\n"
-"POT-Creation-Date: 2002-08-04 14:20-0400\n"
+"POT-Creation-Date: 2003-01-12 13:13-0500\n"
 "PO-Revision-Date: 2002-06-11 15:49+1000\n"
 "Last-Translator: Ben Wu <hpwu@redhat.com>\n"
 "Language-Team: traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -31,7 +31,7 @@ msgstr "初始化 BDB 後端模組"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "無法在 `%s' 位址找到 %s 的根目錄"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "無法建立目錄 `%s'： %s"
@@ -46,13 +46,14 @@ msgid "Unloading XML backend module."
 msgstr "卸載 XML 後端模組。"
 
 #: backends/xml-backend.c:289
-#, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "無法找到在 `%s' 位址的 XML 根目錄"
+#, fuzzy, c-format
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "無法在 `%s' 位址找到 %s 的根目錄"
 
 #: backends/xml-backend.c:414
-#, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
+#, fuzzy, c-format
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "無法讀取或寫入到 `%s' 位址的 XML 根目錄"
 
 #: backends/xml-backend.c:424
@@ -76,8 +77,8 @@ msgid "Initializing XML backend module"
 msgstr "初始化 XML 後端模組"
 
 #: backends/xml-backend.c:790
-#, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
+#, fuzzy, c-format
+msgid "Failed to give up lock on XML dir \"%s\": %s"
 msgstr "無法放棄在 XML 目錄 `%s' 的鎖定： %s"
 
 #: backends/xml-cache.c:257
@@ -173,6 +174,11 @@ msgstr "紀錄中沒有 XML 檔案名稱 `%s'， 忽視"
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "在 XML 檔案 `%s' 的頂端節點是 <%s> 而不是 <entry>， 忽視"
+
+#: backends/xml-dir.c:1212
+#, fuzzy, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "無法建立目錄 `%s'： %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -775,6 +781,17 @@ msgstr ""
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "概要包含無效的 UTF-8"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -1769,7 +1786,7 @@ msgstr "警告： cdr 類型只能是 int, float, string 或 bool 而不是 `%s'
 msgid "WARNING: empty <applyto> node"
 msgstr "警告： 空白的 <applyto> 節點"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "警告： 節點 <%s> 不了解以下的 <schema>\n"
@@ -1778,61 +1795,76 @@ msgstr "警告： 節點 <%s> 不了解以下的 <schema>\n"
 msgid "WARNING: no key specified for schema\n"
 msgstr "警告： 沒有指定金鑰給概要\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+#, fuzzy
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "警告： 沒有指定金鑰給概要\n"
+
+#: gconf/gconftool.c:2024
+#, fuzzy
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "警告： 沒有指定金鑰給概要\n"
+
+#: gconf/gconftool.c:2030
+#, fuzzy
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "警告： 沒有指定金鑰給概要\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "警告： <locale> 節點沒有 `name=\"locale\"' 屬性，忽略中\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr "警告： 多重的 <locale> 節點給地域 `%s'，先忽略所有之前的\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "警告： 在 <locale> 節點中有無效的節點 <%s>\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "警告： 無法安裝概要 `%s' 地域 `%s'： %s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "安裝概要 `%s' 給地域 `%s'\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "警告： 無法使概要 `%s' 與金鑰 `%s' 產生關聯： %s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "連接概要 `%s' 至金鑰 `%s'\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "您必須至少有一個 <locale> 紀錄在 <schema> 中\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "警告： 節點 <%s> 不了解以下的 <schemalist>\n"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "無法開啟 `%s'： %s\n"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "文件 `%s' 是空白的嗎？\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -1840,26 +1872,26 @@ msgid ""
 msgstr ""
 "文件 `%s' 含有錯誤類型的 root 節點 （<%s>，應該是 <gconfschemafile>）\n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "文件 `%s' 沒有最高層級的 <gconfschemafile> 節點\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "警告： 不了解在 <gconfschemafile> 以下的節點 <%s>\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "同步化 config 資料發生錯誤： %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "必須指定一些要安裝的概要檔\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -1868,16 +1900,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "無法反設定損壞的金鑰 %s： %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "必須指定一些要毀損的金鑰\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -1886,11 +1918,11 @@ msgstr ""
 "嘗試要毀損您的應用系統，藉由設定不當數值給金鑰：\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "必須指定一些要毀損的目錄\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -1899,6 +1931,9 @@ msgid ""
 msgstr ""
 "嘗試要毀損您的應用系統，藉由設定不當數值給目錄中的 金鑰：\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "無法找到在 `%s' 位址的 XML 根目錄"
 
 #~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 #~ msgstr "發生多重分割錯誤； 導致無法顯示錯誤對話窗\n"

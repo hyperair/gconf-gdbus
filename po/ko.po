@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.2.1\n"
-"POT-Creation-Date: 2002-08-06 17:23+0900\n"
+"POT-Creation-Date: 2003-01-12 13:13-0500\n"
 "PO-Revision-Date: 2002-08-06 08:26+0900\n"
 "Last-Translator: Nam SungHyun <namsh@kldp.org>\n"
 "Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
@@ -32,7 +32,7 @@ msgstr "BDB 백엔드 모듈을 초기화중입니다"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "주소 `%2$s'에서 %1$s 루트 디렉토리를 찾을 수 없습니다"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "`%s'디렉토리를 만들수가 없습니다: %s"
@@ -48,13 +48,14 @@ msgid "Unloading XML backend module."
 msgstr "XML 백엔드 모듈을 해제합니다."
 
 #: backends/xml-backend.c:289
-#, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "주소 `%2s'의 XML 루트 디렉토리를 찾을 수 없습니다"
+#, fuzzy, c-format
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "주소 `%2$s'에서 %1$s 루트 디렉토리를 찾을 수 없습니다"
 
 #: backends/xml-backend.c:414
-#, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
+#, fuzzy, c-format
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "주소 `%s'의 XML 루트 디렉토리에서 읽거나 이 디렉토리로 쓸 수 없습니다"
 
 #: backends/xml-backend.c:424
@@ -80,8 +81,8 @@ msgid "Initializing XML backend module"
 msgstr "XML 백엔드 모듈을 초기화합니다"
 
 #: backends/xml-backend.c:790
-#, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
+#, fuzzy, c-format
+msgid "Failed to give up lock on XML dir \"%s\": %s"
 msgstr "XML 디렉토리 `%s'에 잠금을 포기하는 데 실패했습니다: %s"
 
 #: backends/xml-cache.c:257
@@ -181,6 +182,11 @@ msgstr "`%s' XML 파일에 이름이 없는 엔트리가 있어서 무시합니�
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "XML 파일 `%s'의 맨 위 노드가 <entry>가 아니라 <%s>입니다.  무시합니다"
+
+#: backends/xml-dir.c:1212
+#, fuzzy, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "`%s'디렉토리를 만들수가 없습니다: %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -796,6 +802,17 @@ msgstr ""
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "스키마에 잘못된 UTF-8이 들어 있습니다"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -1848,7 +1865,7 @@ msgstr ""
 msgid "WARNING: empty <applyto> node"
 msgstr "경고: <applyto>노드가 비여있습니다"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "경고: <schema>아래에서 <%s>노드는 부적절합니다\n"
@@ -1857,11 +1874,26 @@ msgstr "경고: <schema>아래에서 <%s>노드는 부적절합니다\n"
 msgid "WARNING: no key specified for schema\n"
 msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+#, fuzzy
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
+
+#: gconf/gconftool.c:2024
+#, fuzzy
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
+
+#: gconf/gconftool.c:2030
+#, fuzzy
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "경고: <locale> 노드에 `name=\"locale\"' 속성이 없습니다.  무시합니다\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -1869,51 +1901,51 @@ msgstr ""
 "경고: 로케일 `%s'에 대하여 <locale> 노드가 여러 개 있습니다, 맨 처음을 제외하"
 "고 무시합니다\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "경고: <locale>노드속에 적합하지않는 <%s>노드가 있습니다\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "경고: 스키마 `%s' 로케일 `%s' 설치 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "`%s' 스키마를 `%s' 로케일을 위해 설치했습니다\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "경고: 스키마 `%s'에 키 `%s'을(를) 할당하는 데 오류가 생겼습니다: %s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "스키마 `%s'에 키 `%s'을(를) 할당합니다\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "한 <schema>안에는 오직 한개의 <locale>엔트리만을 가지고 있어야합니다\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "경고: <schemalist>아래서 <%s>노드는 적합하지않습니다\n"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "`%s'을(를) 여는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "`%s' 문서가 비어있지 않나요?\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -1922,26 +1954,26 @@ msgstr ""
 "`%s'문서는 부적절한 최상위 노드(<%s>)를 가지고 있습니다(반드시"
 "<gconfschemafile>이어야 합니다\n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "문서 `%s'에 최상위 단계 <gconfschemafile> 노드가 없습니다\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "경고: <gconfschemafile>아래에 있는 노드 <%s>는 적합하지 않습니다\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "설정 데이타를 동기화하는 데 에러가 발생했습니다: %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "설치할 스키마 파일들을 설정하셔야 합니다\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -1950,16 +1982,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "중단 키 %s을(를) 설정 해제하는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "중단할 키를 지정해야 합니다\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -1968,11 +2000,11 @@ msgstr ""
 "키에 잘못된 값을 설정하여 응용 프로그램을 중단하도록 시도합니다:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "중단할 디렉토리를 지정해야 합니다\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -1981,3 +2013,6 @@ msgid ""
 msgstr ""
 "디렉토리의 키에 잘못된 값을 설정하여 응용 프로그램을 중단하도록 시도합니다:\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "주소 `%2s'의 XML 루트 디렉토리를 찾을 수 없습니다"
