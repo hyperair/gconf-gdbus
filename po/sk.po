@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 1.1\n"
-"POT-Creation-Date: 2002-02-28 11:13+0100\n"
-"PO-Revision-Date: 28.02.2002 11:14\n"
+"POT-Creation-Date: 2002-03-07 14:13+0100\n"
+"PO-Revision-Date: 2002-03-07 14:22+0100\n"
 "Last-Translator: Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.5\n"
+"X-Generator: KBabel 0.9.6\n"
 
 #: backends/bdb-backend.c:215
 msgid "Unloading BerkeleyDB (BDB) backend module."
@@ -351,9 +351,9 @@ msgid ""
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Nepodarilo sa zaznamenať pridanie listenera %s (%s). "
-"Tohto listenera nebude možné obnoviť pri reštarte gconfd. Výsledkom bude "
-"nespoľahlivé upozorňovanie na zmeny konfigurácie."
+"Nepodarilo sa zaznamenať pridanie listenera %s (%s). Tohto listenera nebude "
+"možné obnoviť pri reštarte gconfd. Výsledkom bude nespoľahlivé upozorňovanie "
+"na zmeny konfigurácie."
 
 #: gconf/gconf-database.c:1109
 #, c-format
@@ -701,6 +701,52 @@ msgstr ""
 "Skúste odstrániť ~/.gconf/*.lock a ~/.gconfd/lock ak viete, že na žiadnom "
 "počítači, ktorý používa váš domovský priečinok, nebežia žiadne procesy "
 "gconfd."
+
+#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:71
+msgid "Help options"
+msgstr "Možnosti pomocníka"
+
+#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:408
+#, c-format
+msgid ""
+"Error on option %s: %s.\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"Chyba vo voľbe %s: %s.\n"
+"Spusťte '%s --help' pre úplný zoznam možností príkazového riadku.\n"
+
+#: gconf/gconf-sanity-check.c:131
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Prosím, kontaktujte administrátora systému pre vyriešenie nasledujúceho problému:\n"
+"Nepodarilo sa otvoriť alebo vytvoriť súbor \"%s\", čo ukazuje na problém "
+"s konfiguráciou, pretože veľa programov potrebuje vytvárať súbory vo vašom "
+"domovskom priečinku. Chyba bola \"%s\" (errno = %d)."
+
+#: gconf/gconf-sanity-check.c:143
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See "
+"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Prosím, kontaktujte administrátora systému pre vyriešenie nasledujúceho problému:\n"
+"Nepodarilo sa otvoriť alebo vytvoriť súbor \"%s\", čo ukazuje na problém "
+"s konfiguráciou. Ak máte domovský "
+"priečinok pripojený pomocou NFS, asi je nesprávne nakonfigurovaný "
+"klient alebo server. Prečítajte si dokumentáciu k rpc.statd a rpc.lockd.Chyba bola \"%s\" (errno = %d)."
+
+#: gconf/gconf-sanity-check.c:159
+#, c-format
+msgid "Can't remove file %s: %s\n"
+msgstr "Nie je možné odstrániť súbor %s: %s\n"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
@@ -1187,10 +1233,6 @@ msgstr ""
 "Chyba segmentácie\"\n"
 "Nie je možné zobraziť dialóg pre pád programu\n"
 
-#: gconf/gconftool.c:71
-msgid "Help options"
-msgstr "Možnosti pomocníka"
-
 #: gconf/gconftool.c:80
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "Nastaviť kľúč na hodnotu a synchronizovať. Použiť s --type."
@@ -1382,15 +1424,6 @@ msgstr "Odstrániť všetky mená schém použitých pre dané kľúče"
 #: gconf/gconftool.c:351
 msgid "Get the name of the default source"
 msgstr "Získať meno štandardného zdroja"
-
-#: gconf/gconftool.c:408
-#, c-format
-msgid ""
-"Error on option %s: %s.\n"
-"Run '%s --help' to see a full list of available command line options.\n"
-msgstr ""
-"Chyba vo voľbe %s: %s.\n"
-"Spusťte '%s --help' pre úplný zoznam možností príkazového riadku.\n"
 
 #: gconf/gconftool.c:420
 msgid "Can't get and set/unset simultaneously\n"
