@@ -1,3 +1,9 @@
+2003-09-26  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (gconf_engine_all_dirs): fix crash calling this
+	with --direct (local source), the list contains strings not 
+	GConfEntry
+
 Wed Sep 10 15:23:17 2003  Jonathan Blandford  <jrb@redhat.com>
 
 	* configure.in: Rerelease 2.4.0.1 to fix glib-gettext problem.

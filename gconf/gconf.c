@@ -1570,6 +1570,25 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   return pairs;
 }
 
+
+static void
+qualify_keys (GSList *keys, const char *dir)
+{
+  GSList *tmp = keys;
+  while (tmp != NULL)
+    {
+      char *key = tmp->data;
+      gchar *full;
+
+      full = gconf_concat_dir_and_key (dir, key);
+
+      g_free (tmp->data);
+      tmp->data = full;
+
+      tmp = g_slist_next (tmp);
+    }
+}
+
 GSList*      
 gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
 {
@@ -1612,7 +1631,7 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
           return NULL;
         }
 
-      qualify_entries (retval, dir);
+      qualify_keys (retval, dir);
       
       return retval;
     }
