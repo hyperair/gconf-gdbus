@@ -1,3 +1,15 @@
+1999-11-12  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconftool.c (main): Add the ability to specify a
+	configuration source other than the default configuration source
+	stack.
+	Add the ability to install a schema file.
+
+	* gconf/Makefile.am (INCLUDES): add XML_CFLAGS
+	(gconftool_LDADD): add XML_LIBS
+
+	* backends/Makefile.am (INCLUDES): add XML_CFLAGS
+
 1999-11-11  Havoc Pennington  <hp@pobox.com>
 
 	* tests/testchangeset.c: test for the changeset stuff

@@ -23,6 +23,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <popt.h>
+#include <gnome-xml/tree.h>
+#include <gnome-xml/parser.h>
+#include <stdlib.h>
+#include <errno.h>
 
 /* Quick hack so I can mark strings */
 
@@ -53,6 +57,8 @@ static int spawn_gconfd = FALSE;
 static char* short_desc = NULL;
 static char* long_desc = NULL;
 static char* owner = NULL;
+static char* schema_file = NULL;
+static char* config_source = NULL;
 
 struct poptOption options[] = {
   { 
@@ -201,6 +207,24 @@ struct poptOption options[] = {
     N_("OWNER")
   },
   {
+    "install-schema-file",
+    '\0',
+    POPT_ARG_STRING,
+    &schema_file,
+    0,
+    N_("Specify a schema file to be installed"),
+    N_("FILENAME")
+  },
+  {
+    "config-source",
+    '\0',
+    POPT_ARG_STRING,
+    &config_source,
+    0,
+    N_("Specify a configuration source to use rather than the default path"),
+    N_("SOURCE")
+  },
+  {
     NULL,
     '\0',
     0,
@@ -222,6 +246,7 @@ static int do_set_schema(GConfEngine* conf, const gchar** args);
 static int do_all_entries(GConfEngine* conf, const gchar** args);
 static int do_unset(GConfEngine* conf, const gchar** args);
 static int do_all_subdirs(GConfEngine* conf, const gchar** args);
+static int do_load_schema_file(GConfEngine* conf, const gchar* file);
 
 /* FIXME um, break this function up... */
 int 
@@ -314,7 +339,7 @@ main (int argc, char** argv)
 
   if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
-                      spawn_gconfd || dir_exists))
+                      spawn_gconfd || dir_exists || schema_file))
     {
       fprintf(stderr, _("Ping option must be used by itself.\n"));
       return 1;
@@ -322,12 +347,20 @@ main (int argc, char** argv)
 
   if (dir_exists && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                      all_subdirs_mode || all_entries_mode || recursive_list || 
-                     spawn_gconfd))
+                     spawn_gconfd || schema_file))
     {
-      fprintf(stderr, _("dir-exists option must be used by itself.\n"));
+      fprintf(stderr, _("--dir-exists option must be used by itself.\n"));
       return 1;
     }
 
+  if (schema_file && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
+                      all_subdirs_mode || all_entries_mode || recursive_list || 
+                      spawn_gconfd || dir_exists))
+    {
+      fprintf(stderr, _("--install-schema-file must be used by itself.\n"));
+      return 1;
+    }
+  
   if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
       fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
@@ -344,8 +377,24 @@ main (int argc, char** argv)
       return 1;
     }
 
-  conf = gconf_engine_new();
+  if (config_source == NULL)
+    conf = gconf_engine_new();
+  else
+    conf = gconf_engine_new_from_address(config_source, &err);
 
+  if (conf == NULL)
+    {
+      g_assert(err != NULL);
+      fprintf(stderr, _("Failed to access configuration source(s): %s\n"), err->str);
+      gconf_error_destroy(err);
+      err = NULL;
+      return 1;
+    }
+  else
+    {
+      g_assert(err == NULL);
+    }
+  
   g_assert(conf != NULL);
 
   /* Do this first, since we only want to do this if the user selected
@@ -366,6 +415,11 @@ main (int argc, char** argv)
         return 2; /* FALSE */
     }
 
+  if (schema_file != NULL)
+    {
+      return do_load_schema_file(conf, schema_file);
+    }
+  
   if (spawn_gconfd)
     {
       do_spawn_daemon(conf);
@@ -954,6 +1008,464 @@ do_all_subdirs(GConfEngine* conf, const gchar** args)
         }
  
       ++args;
+    }
+
+  return 0;
+}
+
+/*
+ * Schema stuff
+ */
+
+typedef struct _SchemaInfo SchemaInfo;
+
+struct _SchemaInfo {
+  gchar* key;
+  gchar* owner;
+  GConfValueType type;
+  GConfValue* global_default;
+  GHashTable* hash;
+  GConfEngine* conf;
+};
+
+static int
+fill_default_from_string(SchemaInfo* info, const gchar* default_value,
+                         GConfValue** retloc)
+{
+  g_return_val_if_fail(info->key != NULL, 1);
+  g_return_val_if_fail(default_value != NULL, 1);
+
+  switch (info->type)
+    {
+    case GCONF_VALUE_INVALID:
+      fprintf(stderr, _("WARNING: invalid or missing type for schema (%s)\n"),
+              info->key);
+      break;
+
+    case GCONF_VALUE_LIST:
+    case GCONF_VALUE_PAIR:
+    case GCONF_VALUE_SCHEMA:
+      fprintf(stderr, _("WARNING: For now gconftool only knows how to install default values for simple types (int, string, bool, float)\n"));
+      break;
+
+    case GCONF_VALUE_STRING:
+    case GCONF_VALUE_INT:
+    case GCONF_VALUE_BOOL:
+    case GCONF_VALUE_FLOAT:
+      {
+        GConfError* error = NULL;
+        *retloc = gconf_value_new_from_string(info->type,
+                                              default_value,
+                                              &error);
+        if (*retloc == NULL)
+          {
+            g_assert(error != NULL);
+
+            fprintf(stderr, _("WARNING: Failed to parse default value `%s' for schema (%s)\n"), default_value, info->key);
+
+            gconf_error_destroy(error);
+            error = NULL;
+          }
+        else
+          {
+            g_assert(error == NULL);
+          }
+      }
+      break;
+      
+    default:
+      fprintf(stderr, _("WARNING: gconftool internal error, unknown GConfValueType\n"));
+      break;
+    }
+
+  return 0;
+}
+
+static int
+extract_global_info(xmlNodePtr node,
+                    SchemaInfo* info)
+{
+  xmlNodePtr iter;
+  char* default_value = NULL;
+      
+  iter = node->childs;
+
+  while (iter != NULL)
+    {
+      char* tmp;
+      
+      if (strcmp(iter->name, "key") == 0)
+        {
+          tmp = xmlNodeGetContent(iter);
+          if (tmp)
+            {
+              info->key = g_strdup(tmp);
+              free(tmp);
+            }
+        }
+      else if (strcmp(iter->name, "owner") == 0)
+        {
+          tmp = xmlNodeGetContent(iter);
+          if (tmp)
+            {
+              info->owner = g_strdup(tmp);
+              free(tmp);
+            }
+        }
+      else if (strcmp(iter->name, "type") == 0)
+        {
+          tmp = xmlNodeGetContent(iter);
+          if (tmp)
+            {
+              info->type = gconf_value_type_from_string(tmp);
+              free(tmp);
+              if (info->type == GCONF_VALUE_INVALID)
+                fprintf(stderr, _("WARNING: failed to parse type name `%s'\n"),
+                        tmp);
+            }
+        }
+      else if (strcmp(iter->name, "default") == 0)
+        {
+          default_value = xmlNodeGetContent(iter);
+        }
+      else if (strcmp(iter->name, "locale") == 0)
+        {
+          ; /* ignore, this is parsed later after we have the global info */
+        }
+      else
+        fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
+                iter->name);
+
+
+      iter = iter->next;
+    }
+
+  if (info->key == NULL)
+    {
+      fprintf(stderr, _("WARNING: no key specified for schema\n"));
+      if (default_value != NULL)
+        free(default_value);
+      return 1;
+    }
+
+  g_assert(info->key != NULL);
+  
+  /* Have to do this last, because the type may come after the default
+     value
+  */
+  if (default_value != NULL)
+    {
+      fill_default_from_string(info, default_value, &info->global_default);
+      
+      free(default_value);
+      default_value = NULL;
+    }
+
+  return 0;
+}
+
+static int
+process_locale_info(xmlNodePtr node, SchemaInfo* info)
+{
+  char* name;
+  GConfSchema* schema;
+  xmlNodePtr iter;
+  
+  name = xmlGetProp(node, "name");
+
+  if (name == NULL)
+    {
+      fprintf(stderr, _("WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"));
+      return 1;
+    }
+
+  if (g_hash_table_lookup(info->hash, name) != NULL)
+    {
+      fprintf(stderr, _("WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"),
+              name);
+      free(name);
+      return 1;
+    }
+  
+  schema = gconf_schema_new();
+
+  gconf_schema_set_locale(schema, name);
+
+  free(name);
+
+  /* Fill in the global info */
+  if (info->global_default != NULL)
+    gconf_schema_set_default_value(schema, info->global_default);
+
+  if (info->type != GCONF_VALUE_INVALID)
+    gconf_schema_set_type(schema, info->type);
+
+  if (info->owner != NULL)
+    gconf_schema_set_owner(schema, info->owner);
+
+  iter = node->childs;
+  
+  while (iter != NULL)
+    {
+      if (strcmp(iter->name, "default") == 0)
+        {
+          GConfValue* val = NULL;
+          char* tmp;
+
+          tmp = xmlNodeGetContent(iter);
+
+          if (tmp != NULL)
+            {
+              fill_default_from_string(info, tmp, &val);
+              if (val != NULL)
+                gconf_schema_set_default_value_nocopy(schema, val);
+
+              free(tmp);
+            }
+        }
+      else if (strcmp(iter->name, "short") == 0)
+        {
+          char* tmp;
+
+          tmp = xmlNodeGetContent(iter);
+
+          if (tmp != NULL)
+            {
+              gconf_schema_set_short_desc(schema, tmp);
+              free(tmp);
+            }
+        }
+      else if (strcmp(iter->name, "long") == 0)
+        {
+          char* tmp;
+
+          tmp = xmlNodeGetContent(iter);
+
+          if (tmp != NULL)
+            {
+              gconf_schema_set_long_desc(schema, tmp);
+              free(tmp);
+            }
+        }
+      else
+        {
+          fprintf(stderr, _("WARNING: Invalid node <%s> in a <locale> node\n"),
+                  iter->name);
+        }
+
+      iter = iter->next;
+    }
+
+  g_hash_table_insert(info->hash,
+                      (gchar*)gconf_schema_locale(schema), /* cheat to save copying this string */
+                      schema);
+
+  return 0;
+}
+
+static void
+hash_foreach(gpointer key, gpointer value, gpointer user_data)
+{
+  SchemaInfo* info;
+  GConfSchema* schema;
+  GConfError* error = NULL;
+  
+  info = user_data;
+  schema = value;
+  
+  if (!gconf_set_schema(info->conf, info->key, schema, &error))
+    {
+      g_assert(error != NULL);
+
+      fprintf(stderr, _("WARNING: failed to install schema `%s' locale `%s': %s\n"),
+              info->key, gconf_schema_locale(schema), error->str);
+      gconf_error_destroy(error);
+      error = NULL;
+    }
+  else
+    g_assert(error == NULL);
+
+  gconf_schema_destroy(schema);
+}
+
+static int
+process_schema(GConfEngine* conf, xmlNodePtr node)
+{
+  xmlNodePtr iter;
+  SchemaInfo info;
+
+  info.key = NULL;
+  info.type = GCONF_VALUE_INVALID;
+  info.owner = NULL;
+  info.global_default = NULL;
+  info.hash = g_hash_table_new(g_str_hash, g_str_equal);
+  info.conf = conf;
+  
+  extract_global_info(node, &info);
+
+  if (info.key == NULL || info.type == GCONF_VALUE_INVALID)
+    {
+      g_free(info.owner);
+
+      if (info.global_default)
+        gconf_value_destroy(info.global_default);
+
+      return 1;
+    }
+  
+  iter = node->childs;
+
+  while (iter != NULL)
+    {
+      if (strcmp(iter->name, "key") == 0)
+        ; /* nothing */
+      else if (strcmp(iter->name, "owner") == 0)
+       ;  /* nothing */
+      else if (strcmp(iter->name, "type") == 0)
+        ;  /* nothing */
+      else if (strcmp(iter->name, "default") == 0)
+        ;  /* nothing */
+      else if (strcmp(iter->name, "locale") == 0)
+        {
+          process_locale_info(iter, &info);
+        }
+      else
+        fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
+                iter->name);
+
+      iter = iter->next;
+    }
+
+  /* Now install each schema in the hash into the GConfEngine */
+  g_hash_table_foreach(info.hash, hash_foreach, &info);
+
+  g_hash_table_destroy(info.hash);
+
+  g_free(info.key);
+  g_free(info.owner);
+  if (info.global_default)
+    gconf_value_destroy(info.global_default);
+  
+  return 0;
+}
+
+static int
+process_schema_list(GConfEngine* conf, xmlNodePtr node)
+{
+  xmlNodePtr iter;
+
+  iter = node->childs;
+
+  while (iter != NULL)
+    {
+      if (strcmp(iter->name, "schema") == 0)
+        process_schema(conf, iter);
+      else
+        fprintf(stderr, _("WARNING: node <%s> not understood below <schemalist>\n"),
+                iter->name);
+
+      iter = iter->next;
+    }
+
+  return 0;
+}
+
+static int
+process_key_list(GConfEngine* conf, xmlNodePtr node)
+{
+  xmlNodePtr iter;
+  GConfError* error = NULL;
+  
+  iter = node->childs;
+
+  while (iter != NULL)
+    {
+      if (strcmp(iter->name, "key") == 0)
+        {
+          char* name = NULL;
+          char* schema = NULL;
+
+          name = xmlGetProp(iter, "name");
+          schema = xmlGetProp(iter, "schema");
+
+          if (name && schema)
+            {
+              if (!gconf_associate_schema(conf, name, schema,  &error))
+                {
+                  g_assert(error != NULL);
+
+                  fprintf(stderr, _("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
+                          schema, name, error->str);
+                  gconf_error_destroy(error);
+                  error = NULL;
+                }
+              else
+                g_assert(error == NULL);
+            }
+          else
+            fprintf(stderr, _("WARNING: <key> node must have `name' and `schema' attributes\n"));
+          
+          if (name)
+            free(name);
+          
+          if (schema)
+            free(schema);
+        }
+      else
+        fprintf(stderr, _("WARNING: node <%s> not understood below <keylist>\n"),
+                iter->name);
+
+      iter = iter->next;
+    }
+
+  return 0;
+}
+
+static int
+do_load_schema_file(GConfEngine* conf, const gchar* file)
+{
+  xmlDocPtr doc;
+  xmlNodePtr iter;
+
+  errno = 0;
+  doc = xmlParseFile(file);
+
+  if (doc == NULL)
+    {
+      if (errno != 0)
+        fprintf(stderr, _("Failed to open `%s': %s\n"),
+                file, strerror(errno));
+      return 1;
+    }
+
+  if (doc->root == NULL)
+    {
+      fprintf(stderr, _("Document `%s' is empty?\n"),
+              file);
+      return 1;
+    }
+  
+  if (strcmp(doc->root->name, "gconfschemafile") != 0)
+    {
+      fprintf(stderr, _("Document `%s' has the wrong type of root node (<%s>, should be <gconfschemafile>)\n"),
+              file, doc->root->name);
+      return 1;
+    }
+  
+
+  iter = doc->root->childs;
+
+  while (iter != NULL)
+    {
+      if (strcmp(iter->name, "schemalist") == 0)
+        process_schema_list(conf, iter);
+      else if (strcmp(iter->name, "keylist") == 0)
+        process_key_list(conf, iter);
+      else
+        fprintf(stderr, _("WARNING: node <%s> below <gconfschemafile> not understood\n"),
+                iter->name);
+
+      iter = iter->next;
     }
 
   return 0;
