@@ -1378,7 +1378,7 @@ gconf_database_unset (GConfDatabase      *db,
 {
   ConfigValue* val;
   GError* error = NULL;
-  GConfSources *modified_sources;
+  GConfSources *modified_sources = NULL;
   
   g_return_if_fail(err == NULL || *err == NULL);
   
