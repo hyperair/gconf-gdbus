@@ -1,49 +1,47 @@
 # GConf Dutch translation
 # Copyright (C) 2000 Free Software Foundation, Inc.
 # Almer S. Tigelaar <almer1@dds.nl>, 2000
-#
+# Ronald Hummelink <ronald@hummelink.xs4all.nl> <>, 2002.
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf cvs\n"
-"POT-Creation-Date: 2002-03-06 17:23-0500\n"
-"PO-Revision-Date: 2002-03-07 14:46+0100\n"
-"Last-Translator:  <>\n"
+"POT-Creation-Date: 2002-03-07 19:23-0500\n"
+"PO-Revision-Date: 2002-03-08 19:55+0100\n"
+"Last-Translator: Ronald Hummelink <ronald@hummelink.xs4all.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: backends/bdb-backend.c:215
-#, fuzzy
 msgid "Unloading BerkeleyDB (BDB) backend module."
-msgstr "Bezig met ontladen XML backend module."
+msgstr "Bezig met ontladen van BerkeleyDB (BDB) backend module."
 
 #: backends/bdb-backend.c:238
 #, c-format
 msgid "Opened BerkeleyDB source at root %s"
-msgstr ""
+msgstr "BerkeleyDB bron geopend op %s"
 
 #: backends/bdb-backend.c:578
-#, fuzzy
 msgid "Initializing BDB backend module"
-msgstr "Bezig met initializeren XML backend module"
+msgstr "Bezig met initializeren DBD backend module"
 
 #: backends/dir-utils.c:108
-#, fuzzy, c-format
+#, c-format
 msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "Kon de XML root directory niet vinden in het adres `%s'"
+msgstr "Kon de %s root directory niet vinden in het adres `%s'"
 
-#: backends/dir-utils.c:124
-#: backends/xml-backend.c:304
-#: backends/xml-dir.c:1176
+#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1176
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Kon directory `%s' niet maken: %s"
 
 #: backends/dir-utils.c:212
-#, fuzzy, c-format
+#, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
-msgstr "Kan niet lezen uit of schrijven naar de XML root directory in het adres `%s'"
+msgstr ""
+"Kan niet lezen uit of schrijven naar de %s root directory in het adres `%s'"
 
 #: backends/xml-backend.c:233
 msgid "Unloading XML backend module."
@@ -57,7 +55,8 @@ msgstr "Kon de XML root directory niet vinden in het adres `%s'"
 #: backends/xml-backend.c:414
 #, c-format
 msgid "Can't read from or write to the XML root directory in the address `%s'"
-msgstr "Kan niet lezen uit of schrijven naar de XML root directory in het adres `%s'"
+msgstr ""
+"Kan niet lezen uit of schrijven naar de XML root directory in het adres `%s'"
 
 #: backends/xml-backend.c:424
 #, c-format
@@ -65,13 +64,17 @@ msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Directory/bestand permissies voor XML bron bij root %s zijn: %o/%o"
 
 #: backends/xml-backend.c:584
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Fout bij synchronizeren configuratie gegevens: %s"
+msgstr "Fout bij synchronizeren van XML backend cache: %s"
 
 #: backends/xml-backend.c:651
-msgid "Remove dir operation is no longer supported, just remove all the values in the directory"
+msgid ""
+"Remove dir operation is no longer supported, just remove all the values in "
+"the directory"
 msgstr ""
+"Folder verwijderen is niet langer ondersteund, verwijder gewoon alle waardes "
+"in de folder"
 
 #: backends/xml-backend.c:718
 msgid "Initializing XML backend module"
@@ -84,18 +87,26 @@ msgstr "Fout bij het loslaten van de vergrendeling op XML dir `%s': %s"
 
 #: backends/xml-cache.c:248
 msgid "Failed to sync XML cache contents to disk"
-msgstr ""
+msgstr "Niet gelukt om XML cache gegevens te synchroniseren op schijf."
 
 #: backends/xml-cache.c:278
 #, c-format
-msgid "Unable to remove directory `%s' from the XML backend cache, because it has not been successfully synced to disk"
-msgstr "Kon directory `%s' niet verwijderen van de XML backend cache, omdat het synchroniseren\n"
+msgid ""
+"Unable to remove directory `%s' from the XML backend cache, because it has "
+"not been successfully synced to disk"
+msgstr ""
+"Kon directory `%s' niet verwijderen van de XML backend cache, omdat het "
+"synchroniseren\n"
 "naar de schijf niet successvol is verlopen"
 
 #: backends/xml-cache.c:305
 #, c-format
-msgid "%u items remain in the cache after cleaning already-synced items older than %u seconds"
-msgstr "%u items achtergebleven in de cache na het schoonmaken van de al gesynchronizeerde items ouder dan %u seconden"
+msgid ""
+"%u items remain in the cache after cleaning already-synced items older than "
+"%u seconds"
+msgstr ""
+"%u items achtergebleven in de cache na het schoonmaken van de al "
+"gesynchronizeerde items ouder dan %u seconden"
 
 #: backends/xml-dir.c:168
 #, c-format
@@ -107,9 +118,8 @@ msgstr "Kon niet status voor `%s' niet verkrijgen: %s"
 msgid "XML filename `%s' is a directory"
 msgstr "XML bestandsnaam `%s' is een directory"
 
-#: backends/xml-dir.c:369
-#: backends/xml-dir.c:376
-#, fuzzy, c-format
+#: backends/xml-dir.c:369 backends/xml-dir.c:376
+#, c-format
 msgid "Failed to delete \"%s\": %s"
 msgstr "Fout bij verwijderen `%s': %s"
 
@@ -119,23 +129,21 @@ msgid "Failed to write file `%s': %s"
 msgstr "Fout bij het schrijven naar bestand `%s': %s"
 
 #: backends/xml-dir.c:434
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set mode on `%s': %s"
-msgstr "Fout bij openen `%s': %s\n"
+msgstr "Fout bij  set mode operatie op `%s': %s"
 
 #: backends/xml-dir.c:444
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write XML data to `%s': %s"
-msgstr "Fout bij het schrijven naar bestand `%s': %s"
+msgstr "Fout bij het schrijven van XML gegevens naar  `%s': %s"
 
-#: backends/xml-dir.c:454
-#: backends/xml-dir.c:1200
+#: backends/xml-dir.c:454 backends/xml-dir.c:1200
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Fout bij sluiten bestand `%s': %s"
 
-#: backends/xml-dir.c:470
-#: backends/xml-dir.c:480
+#: backends/xml-dir.c:470 backends/xml-dir.c:480
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "Fout bij het wijzigen van de naam van `%s' naar `%s': %s"
@@ -167,9 +175,11 @@ msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "\"Entry\" zonder naam in XML bestand `%s', word genegeerd"
 
 #: backends/xml-dir.c:1103
-#, fuzzy, c-format
+#, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr "Hoogste node in XML bestand `%s' is niet van type \"<entry>\", word genegeerd"
+msgstr ""
+"Hoogste node in XML bestand `%s' is <%s> in plaats van <entry>, word "
+"genegeerd"
 
 #: backends/xml-dir.c:1192
 #, c-format
@@ -188,7 +198,7 @@ msgid "Ignoring schema name `%s', invalid: %s"
 msgstr "Schema naam `%s' word genegeerd, ongeldig: %s"
 
 #: backends/xml-entry.c:376
-#, fuzzy, c-format
+#, c-format
 msgid "Ignoring XML node `%s': %s"
 msgstr "XML node met naam `%s' word genegeerd: %s"
 
@@ -211,8 +221,7 @@ msgstr "Een node heeft een onbekend \"type\" attribuut `%s', word genegeerd"
 msgid "No \"value\" attribute for node"
 msgstr "Geen \"value\" attribuut voor node"
 
-#: backends/xml-entry.c:1018
-#: backends/xml-entry.c:1094
+#: backends/xml-entry.c:1018 backends/xml-entry.c:1094
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
 msgstr "XML node <%s> niet begrepen binnen een XML lijst node"
@@ -236,10 +245,11 @@ msgstr "Lijst bevat een slecht-getypeerde node (%s, zou %s moeten zijn)"
 msgid "Ignoring bad car from XML pair: %s"
 msgstr "slechte 'car' van XML paar word genegeerd: %s"
 
-#: backends/xml-entry.c:1144
-#: backends/xml-entry.c:1167
+#: backends/xml-entry.c:1144 backends/xml-entry.c:1167
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
-msgstr "ontleden van XML bestand: lijsten en paren mogen niet binnen een paar worden geplaatst"
+msgstr ""
+"ontleden van XML bestand: lijsten en paren mogen niet binnen een paar worden "
+"geplaatst"
 
 #: backends/xml-entry.c:1157
 #, c-format
@@ -296,8 +306,7 @@ msgstr "Kon backend module voor `%s' niet vinden"
 msgid "Failed to shut down backend"
 msgstr "Fout bij stoppen van backend"
 
-#: gconf/gconf-client.c:342
-#: gconf/gconf-client.c:360
+#: gconf/gconf-client.c:342 gconf/gconf-client.c:360
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf Fout: %s\n"
@@ -318,8 +327,11 @@ msgstr "Ongeldige waarde ontvangen in instel verzoek"
 
 #: gconf/gconf-database.c:242
 #, c-format
-msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
-msgstr "Kon geen wijs maken uit de CORBA waarde die ontvangen werd in een instel verzoek voor sleutel `%s'"
+msgid ""
+"Couldn't make sense of CORBA value received in set request for key `%s'"
+msgstr ""
+"Kon geen wijs maken uit de CORBA waarde die ontvangen werd in een instel "
+"verzoek voor sleutel `%s'"
 
 #: gconf/gconf-database.c:523
 msgid "Received request to drop all cached data"
@@ -331,7 +343,8 @@ msgstr "Verzoek ontvangen om synchroon te synchronizeren"
 
 #: gconf/gconf-database.c:824
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
-msgstr "Fatale fout: fout bij het vergaren van object referentie naar ConfigDatabase"
+msgstr ""
+"Fatale fout: fout bij het vergaren van object referentie naar ConfigDatabase"
 
 #: gconf/gconf-database.c:986
 #, c-format
@@ -339,9 +352,15 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "Fout bij synchronizeren van een of meer bronnen: %s"
 
 #: gconf/gconf-database.c:1078
-#, fuzzy, c-format
-msgid "Failed to log addition of listener %s (%s);will not be able to restore this listener on gconfd restart, resulting in unreliable notification of configuration changes."
-msgstr "Fout bij log aanvulling van luisteraar (%s); deze luisteraar zal niet worden hersteld als gconfd word herstart, dit resulteert in onbetrouwbare notificatie van configuratie wijzingen."
+#, c-format
+msgid ""
+"Failed to log addition of listener %s (%s);will not be able to restore this "
+"listener on gconfd restart, resulting in unreliable notification of "
+"configuration changes."
+msgstr ""
+"Fout bij log aanvulling van luisteraar %s (%s); deze luisteraar zal niet "
+"worden hersteld als gconfd word herstart, dit resulteert in onbetrouwbare "
+"notificatie van configuratie wijzingen."
 
 #: gconf/gconf-database.c:1109
 #, c-format
@@ -350,11 +369,15 @@ msgstr "Luisteraar ID %lu bestaat niet"
 
 #: gconf/gconf-database.c:1123
 #, c-format
-msgid "Failed to log removal of listener to logfile (most likely harmless, may result in a notification weirdly reappearing): %s"
-msgstr "Fout bij het loggen van het verwijderen van luisteraar naar logbestand (waarschijnlijk niet gevaarlijk, kan resulteren in een notificatie die opnieuw weer verschijnt): %s"
+msgid ""
+"Failed to log removal of listener to logfile (most likely harmless, may "
+"result in a notification weirdly reappearing): %s"
+msgstr ""
+"Fout bij het loggen van het verwijderen van luisteraar naar logbestand "
+"(waarschijnlijk niet gevaarlijk, kan resulteren in een notificatie die "
+"opnieuw weer verschijnt): %s"
 
-#: gconf/gconf-database.c:1241
-#: gconf/gconf-sources.c:1540
+#: gconf/gconf-database.c:1241 gconf/gconf-sources.c:1540
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Fout bij het vergaren van waarde voor `%s': %s"
@@ -375,14 +398,14 @@ msgid "Error getting default value for `%s': %s"
 msgstr "Fout bij het vergaren van de standaardwaarde voor `%s': %s"
 
 #: gconf/gconf-database.c:1411
-#, fuzzy, c-format
+#, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Fout bij het ontzetten `%s': %s"
 
 #: gconf/gconf-database.c:1443
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "Fout bij het vergaren van waarde voor `%s': %s"
+msgstr "Fout bij het vergaren van nieuwe waarde voor `%s': %s"
 
 #: gconf/gconf-database.c:1491
 #, c-format
@@ -474,14 +497,14 @@ msgid "No database available to save your configuration"
 msgstr "Geen databank beschikbaar om configuratie naar op te slaan"
 
 #: gconf/gconf-internals.c:86
-#, fuzzy, c-format
+#, c-format
 msgid "No '/' in key \"%s\""
 msgstr "Geen '/' in '%s' sleutel"
 
 #: gconf/gconf-internals.c:199
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
-msgstr ""
+msgstr "Ongeldige UTF-8 in string waarde '%s'"
 
 #: gconf/gconf-internals.c:258
 msgid "Couldn't interpret CORBA value for list element"
@@ -502,19 +525,19 @@ msgstr "Converteren van object naar IOR mislukt"
 
 #: gconf/gconf-internals.c:591
 msgid "Invalid UTF-8 in locale for schema"
-msgstr ""
+msgstr "Ongeldige UTF-8 in locale voor schema"
 
 #: gconf/gconf-internals.c:599
 msgid "Invalid UTF-8 in short description for schema"
-msgstr ""
+msgstr "Ongeldige UTF-8 in korte beschrijving  van schema"
 
 #: gconf/gconf-internals.c:607
 msgid "Invalid UTF-8 in long description for schema"
-msgstr ""
+msgstr "Ongeldige UTF-8 in lange beschrijving  van schema."
 
 #: gconf/gconf-internals.c:615
 msgid "Invalid UTF-8 in owner for schema"
-msgstr ""
+msgstr "Ongeldige UTF-8 in eigenaar van schema"
 
 #: gconf/gconf-internals.c:838
 #, c-format
@@ -531,11 +554,8 @@ msgstr "Bezig met bron `%s'\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Leesfout op bestand `%s': %s\n"
 
-#: gconf/gconf-internals.c:1211
-#: gconf/gconf-internals.c:1277
-#: gconf/gconf-value.c:125
-#: gconf/gconf-value.c:224
-#: gconf/gconf-value.c:366
+#: gconf/gconf-internals.c:1211 gconf/gconf-internals.c:1277
+#: gconf/gconf-value.c:125 gconf/gconf-value.c:224 gconf/gconf-value.c:366
 #: gconf/gconf-value.c:1363
 msgid "Text contains invalid UTF-8"
 msgstr "Tekst bevat ongeldige UTF-8"
@@ -558,7 +578,8 @@ msgstr "Verwachtte paar, kreeg %s"
 #: gconf/gconf-internals.c:1525
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
-msgstr "Verwachte (%s,%s) paar, kreeg een paar waarbij een of beide waarden ontbraken"
+msgstr ""
+"Verwachte (%s,%s) paar, kreeg een paar waarbij een of beide waarden ontbraken"
 
 #: gconf/gconf-internals.c:1541
 #, c-format
@@ -575,12 +596,12 @@ msgstr "Gequoteerde tekenreeks eindigt niet met een quotatie teken"
 
 #: gconf/gconf-internals.c:1855
 msgid "Encoded value is not valid UTF-8"
-msgstr ""
+msgstr "Geëncodeerde waarde in ongeldige UTF-8"
 
 #: gconf/gconf-internals.c:2314
-#, fuzzy, c-format
+#, c-format
 msgid "Could not lock temporary file '%s': %s"
-msgstr "Kon pad bestand `%s' niet openen: %s\n"
+msgstr "Kon tijdelijk bestand `%s' niet blokeren: %s"
 
 #: gconf/gconf-internals.c:2341
 #, c-format
@@ -588,34 +609,41 @@ msgid "Could not create file '%s', probably because it already exists"
 msgstr "Kan bestand '%s' niet maken, waarschijnlijk bestaat deze al"
 
 #: gconf/gconf-internals.c:2387
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create or open '%s'"
-msgstr "Fout bij maken bestand `%s': %s"
+msgstr "Fout bij maken of openen van bestand `%s'"
 
 #: gconf/gconf-internals.c:2397
 #, c-format
-msgid "Failed to lock '%s': probably another process has the lock, or your operating system has NFS file locking misconfigured (%s)"
+msgid ""
+"Failed to lock '%s': probably another process has the lock, or your operating "
+"system has NFS file locking misconfigured (%s)"
 msgstr ""
+"Niet gelukt om '%s' te blokeren. Waarschijnlijk heeft een ander proces de "
+"blokering, of heeft je operating systeem NFS bestands blokering niet goed "
+"geconfigureerd (%s)"
 
 #: gconf/gconf-internals.c:2425
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
-msgstr ""
+msgstr "IOR bestand '%s' niet sucesvol geopend, gconfd niet gevonden: %s"
 
 #: gconf/gconf-internals.c:2455
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
+"Gconftool of een ander niet-gconfd proces heeft het blokkerings bestand '%s'"
 
 #: gconf/gconf-internals.c:2472
-#, fuzzy
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "Kon geen contact opnemen met ORB om de bestaande gconfd te 'pingen'"
+msgstr ""
+"Kon geen contact opnemen met ORB om de bestaande gconfd object referentie te "
+"vinden"
 
 #: gconf/gconf-internals.c:2482
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr "Converteren van object naar IOR mislukt"
+msgstr "Converteren van IOR '%s' naar een object referentie mislukt"
 
 #: gconf/gconf-internals.c:2510
 #, c-format
@@ -631,30 +659,30 @@ msgstr "Kon niet schrijven naar bestand `%s': %s"
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr ""
+"We hadden geen blokkering op bestand '%s', maar we zouden het moeten hebben"
 
 #: gconf/gconf-internals.c:2631
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to link '%s' to '%s': %s"
-msgstr "Fout bij het wijzigen van de naam van `%s' naar `%s': %s"
+msgstr "Fout bij het linken van `%s' naar `%s': %s"
 
 #: gconf/gconf-internals.c:2643
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove lock file `%s': %s"
-msgstr "Fout bij maken bestand `%s': %s"
+msgstr "Fout bij verwijderen blokkerings bestand `%s': %s"
 
 #: gconf/gconf-internals.c:2662
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to clean up file '%s': %s"
-msgstr "Fout bij openen bestand '%s': %s"
+msgstr "Fout bij opschonen van bestand '%s': %s"
 
 #: gconf/gconf-internals.c:2676
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Fout bij het vrijgegeven van vergrendelings directory `%s': %s"
 
-#: gconf/gconf-internals.c:2846
-#: gconf/gconfd.c:587
-#, fuzzy, c-format
+#: gconf/gconf-internals.c:2846 gconf/gconfd.c:587
+#, c-format
 msgid "Failed to create %s: %s"
 msgstr "Fout bij maken bestand `%s': %s"
 
@@ -662,28 +690,91 @@ msgstr "Fout bij maken bestand `%s': %s"
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
+"Niet gelukt om pipe te maken om te communiceren met gestartte gconf daemon: "
+"%s\n"
 
 #: gconf/gconf-internals.c:2903
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Fout bij benaderen configuratie bron(nen): %s\n"
 
 #: gconf/gconf-internals.c:2927
 msgid ""
 "Failed to contact configuration server; some possible causes are:\n"
-"a) you have an existing configuration server (gconfd) running, but it isn't reachable from here - if you're logged in from two machines at once, you may need to enable TCP networking for ORBit by putting the line \"ORBIIOPIPv4=1\" in /etc/orbitrc\n"
-"b) you have stale locks in your NFS-mounted home directory due to a system crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no gconfd processes are running on any machine using your home dir"
+"a) you have an existing configuration server (gconfd) running, but it isn't "
+"reachable from here - if you're logged in from two machines at once, you may "
+"need to enable TCP networking for ORBit by putting the line \"ORBIIOPIPv4=1\" "
+"in /etc/orbitrc\n"
+"b) you have stale locks in your NFS-mounted home directory due to a system "
+"crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no "
+"gconfd processes are running on any machine using your home dir"
 msgstr ""
+"Niet gelukt om kontakt te krijgen met configuratie server; mogelijke redenen "
+"zijn:\n"
+"a) Je hebt al een configuratie server (gconfd) draaien, maar is niet "
+"berijkbaar vanaf hier - als je vanaf 2 machines tegelijk ingelogged bent, "
+"mischien moet de TCP netwerken voor ORBit aanzetten doro de lijn "
+"\"ORBIIOPIPv4=1\" in /etc/orbitrc te plaatsen\n"
+"b) Je hebt verouderde blokkeringen in je NFS gemounte thuismap door een "
+"systeem crash, probeer ~/.gconf/*.lock en ~/.gconfd/lock te verwijderen als "
+"je zeker bent dat er geen gconfd processes draaien op een machine die jouw "
+"thuismap gebruikt"
 
-#: gconf/gconf-schema.c:190
-#: gconf/gconf-schema.c:198
-#: gconf/gconf-schema.c:206
+#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:71
+msgid "Help options"
+msgstr "Help opties"
+
+#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:408
+#, c-format
+msgid ""
+"Error on option %s: %s.\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"Fout bij optie %s: %s.\n"
+"Start '%s --help' om een volledige lijst van beschikbare opdrachtregel opties "
+"te zien.\n"
+
+#: gconf/gconf-sanity-check.c:131
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Vraag je systeem administrateur om het volgende probleem op te "
+"lossen:\nKon niet maken of openen het bestand \"%s\"; dit betekend dat er een "
+"probleem kan zijn met de configuratie, omdat veel programmas bestanden moeten "
+"kunnen maken in je thuismap. De fout was \"%s\" (foutnummer = %d)."
+
+#: gconf/gconf-sanity-check.c:143
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See the "
+"rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Vraag je systeem administrateur om het volgende probleem op te "
+"lossen:\nKon bestand \"%s\" niet blokeren; dit betekend dat er een probleem "
+"kan zijn met de configuratie van het operating systeem. Als je een NFS "
+"gemounte thuismap hebt, zowel de client als de server kan hierbij verkeerd "
+"ingesteld zijn. Bekijk de rpc.statd en rpc.lockd documentatie. De fout was "
+"\"%s\" (foutnummer = %d)."
+
+#: gconf/gconf-sanity-check.c:159
+#, c-format
+msgid "Can't remove file %s: %s\n"
+msgstr "Kon bestand %s niet verwijderen: %s\n"
+
+#: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
 msgid "Schema contains invalid UTF-8"
 msgstr "Schema bevat ongeldige UTF-8"
 
 #: gconf/gconf-sources.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "Fout bij het laden bron `%s': %s"
 
@@ -691,20 +782,29 @@ msgstr "Fout bij het laden bron `%s': %s"
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
 msgstr ""
+"Adres gevonden \"%s\" naar een schrijfbare configuratie bron op positie %d"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
 msgstr ""
+"Adres gevonden \"%s\" naar een alleen-lezen configuratie bron op positie %d"
 
 #: gconf/gconf-sources.c:359
 #, c-format
-msgid "Resolved address \"%s\" to a partially writable config source at position %d"
+msgid ""
+"Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
+"Adres gevonden \"%s\" naar een gedeeltelijk schrijfbare configuratie bron op "
+"positie %d"
 
 #: gconf/gconf-sources.c:368
-msgid "None of the resolved addresses are writable; saving configuration settings will not be possible"
+msgid ""
+"None of the resolved addresses are writable; saving configuration settings "
+"will not be possible"
 msgstr ""
+"Geen van de gevonden adressen zijn schrijfbaar; het bewaren van configuratie "
+"instellingen zal niet mogelijk zijn"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -716,14 +816,51 @@ msgid "The '/' name can only be a directory, not a key"
 msgstr "De '/' naam kan alleen een directory zijn, geen sleutel"
 
 #: gconf/gconf-sources.c:679
-#, fuzzy, c-format
-msgid "Value for `%s' set in a read-only source at the front of your configuration path"
-msgstr "Waarde voor `%s' ingesteld op een alleen-lezen bron aan de voorkant van je configuratie pad."
+#, c-format
+msgid ""
+"Value for `%s' set in a read-only source at the front of your configuration "
+"path"
+msgstr ""
+"Waarde voor `%s' ingesteld op een alleen-lezen bron aan de voorkant van je "
+"configuratie pad."
 
 #: gconf/gconf-sources.c:691
 #, c-format
-msgid "Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file %s/path doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. If you have stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections - put \"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconfd and also lockfiles in individual storage locations such as ~/.gconf"
+msgid ""
+"Unable to store a value at key '%s', as the configuration server has no "
+"writable databases. There are some common causes of this problem: 1) your "
+"configuration path file %s/path doesn't contain any databases or wasn't found "
+"2) somehow we mistakenly created two gconfd processes 3) your operating "
+"system is misconfigured so NFS file locking doesn't work in your home "
+"directory or 4) your NFS client machine crashed and didn't properly notify "
+"the server on reboot that file locks should be dropped. If you have two "
+"gconfd processes (or had two at the time the second was launched), logging "
+"out, killing all copies of gconfd, and logging back in may help. If you have "
+"stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that you "
+"attempted to use GConf from two machines at once, and ORBit still has its "
+"default configuration that prevents remote CORBA connections - put "
+"\"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for "
+"details on problems gconfd encountered. There can only be one gconfd per home "
+"directory, and it must own a lockfile in ~/.gconfd and also lockfiles in "
+"individual storage locations such as ~/.gconf"
 msgstr ""
+"Niet mogelijk om de waarde van sleutel '%s\" op te slaan, omdat de "
+"configuratie server geen schrijfbare databases heeft. Er zijn een aantal "
+"gemeenschappelijke redenen voor dit probleem: 1) Het configuratie bestand "
+"path %s/path bevat geen databases of werd niet gevonden. 2) Er zijn per "
+"ongelijk 2 gconfd processen gestart. 3) Je operating systeem is verkeerd "
+"geconfigureerd waardoor NFS bestands blokering niet werkt op je thuismap. 4) "
+"JE NFS machine is gecrashed en heeft de server niet juist laten weten op "
+"reboot dat de bestands blokkeringen opgeheven moesten worden. Als je 2 gconfd "
+"processen hebt (of 2 had op het moment dat de tweede werd gestart), kan "
+"uitloggen en alle kopieen van gconfd killen helpen. Als je verouderde "
+"blokkeringen hebt, verwijder ~/.gconf*/*lock. Mischien is het probleem dat je "
+"GConf vanaf 2 machines tegelijk probeerd te gebruiken en ORBit nog zijn "
+"standaard configuratie heeft dat CORBA verbindingen tegenhoudt - zet "
+"\"ORBIIOPIPv4=1\" in /etc/orbitrc. Zoals gewoonlijk, bekijk de user.* syslogs "
+"voor details over problemen die gconfd tegenkwam. Er kan maar een gconfd zijn "
+"per thuismap en het moet zijn eigen blokeringsbestand in ~/.gconfd plaatsen "
+"en ook blokeringsbestanden voor individuele opslag locaties zoals ~/.gconf"
 
 #: gconf/gconf-sources.c:1410
 #, c-format
@@ -738,7 +875,9 @@ msgstr "Fout bij het vergaren van metainfo: %s"
 #: gconf/gconf-sources.c:1503
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-msgstr "Sleutel `%s' in lijst opgenomen als schema voor sleutel `%s' slaat in werkelijkheid type `%s' op"
+msgstr ""
+"Sleutel `%s' in lijst opgenomen als schema voor sleutel `%s' slaat in "
+"werkelijkheid type `%s' op"
 
 #: gconf/gconf-value.c:81
 #, c-format
@@ -775,8 +914,7 @@ msgstr "`%s' niet begrepen (lijst moet eindigen met een ']')"
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
 msgstr "'%s' niet begrepen (extra ']' gevonden in de lijst)"
 
-#: gconf/gconf-value.c:327
-#: gconf/gconf-value.c:488
+#: gconf/gconf-value.c:327 gconf/gconf-value.c:488
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
 msgstr "'%s' niet begrepen (extra karakters aan het eind)"
@@ -791,8 +929,7 @@ msgstr "`%s' niet begrepen (paar moet beginnen met een '(')"
 msgid "Didn't understand `%s' (pair must end with a ')')"
 msgstr "`%s' niet begrepen (paar moet eindigen met een ')')"
 
-#: gconf/gconf-value.c:417
-#: gconf/gconf-value.c:503
+#: gconf/gconf-value.c:417 gconf/gconf-value.c:503
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
 msgstr "`%s' niet begrepen (verkeerd aantal elementen)"
@@ -805,10 +942,10 @@ msgstr "`%s' niet begrepen (extra ')' gevonden binnen paar)"
 #: gconf/gconf.c:55
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "Sleutel \"%s\" is NULL"
 
 #: gconf/gconf.c:62
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\": %s"
 msgstr "`%s': %s"
 
@@ -822,9 +959,10 @@ msgid "Can't add notifications to a local configuration source"
 msgstr "Kan notificaties niet toevoegen aan lokale configuratie bron"
 
 #: gconf/gconf.c:2079
-#, fuzzy, c-format
+#, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
-msgstr "Toevoegen van client aan de lijst van de server mislukt, CORBA fout: %s"
+msgstr ""
+"Toevoegen van client aan de lijst van de server mislukt, CORBA fout: %s"
 
 #: gconf/gconf.c:2434
 msgid "Must begin with a slash (/)"
@@ -839,7 +977,7 @@ msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kan geen punt (.) na een schuine streep (/) hebben"
 
 #: gconf/gconf.c:2477
-#, fuzzy, c-format
+#, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "`%c' is een ongeldig karakter in sleutel/directory namen"
 
@@ -892,25 +1030,36 @@ msgid "Shutdown request received"
 msgstr "Afsluitings verzoek ontvangen"
 
 #: gconf/gconfd.c:280
-msgid "gconfd compiled with debugging; trying to load gconf.path from the source directory"
-msgstr "gconfd gecompileerd met debug informatie; bezig met proberen laden van gconf.path uit de broncode directory"
+msgid ""
+"gconfd compiled with debugging; trying to load gconf.path from the source "
+"directory"
+msgstr ""
+"gconfd gecompileerd met debug informatie; bezig met proberen laden van "
+"gconf.path uit de broncode directory"
 
 #: gconf/gconfd.c:294
 #, c-format
-msgid "No configuration files found, trying to use the default config source `%s'"
-msgstr "Geen configuratie bestanden gevonden, terugval op standaard configuratie bron `%s'"
+msgid ""
+"No configuration files found, trying to use the default config source `%s'"
+msgstr ""
+"Geen configuratie bestanden gevonden, terugval op standaard configuratie bron "
+"`%s'"
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:302
-msgid "No configuration sources in the source path, configuration won't be saved; edit "
-msgstr "Geen configuratie bronnen gevonden in bron pad, configuratie zal niet worden opgeslagen;\n"
+msgid ""
+"No configuration sources in the source path, configuration won't be saved; "
+"edit "
+msgstr ""
+"Geen configuratie bronnen gevonden in bron pad, configuratie zal niet worden "
+"opgeslagen;\n"
 "bewerken "
 
 #: gconf/gconfd.c:302
 msgid "/path"
-msgstr ""
+msgstr "/path"
 
 #: gconf/gconfd.c:315
 #, c-format
@@ -918,24 +1067,34 @@ msgid "Error loading some config sources: %s"
 msgstr "Fout bij het laden van enkele configuratie bronnen: %s"
 
 #: gconf/gconfd.c:327
-msgid "No config source addresses successfully resolved, can't load or store config data"
-msgstr "Geen configuratie bron adressen konden worden gevonden, kan configuratie data niet\n"
+msgid ""
+"No config source addresses successfully resolved, can't load or store config "
+"data"
+msgstr ""
+"Geen configuratie bron adressen konden worden gevonden, kan configuratie data "
+"niet\n"
 "laden en opslaan"
 
 #: gconf/gconfd.c:344
-msgid "No writable config sources successfully resolved, may not be able to save some configuration changes"
-msgstr "Geen schrijfbare configuratie bronnen konden worden gevonden, misschien niet\n"
+msgid ""
+"No writable config sources successfully resolved, may not be able to save "
+"some configuration changes"
+msgstr ""
+"Geen schrijfbare configuratie bronnen konden worden gevonden, misschien niet\n"
 "in staat om sommige wijzingen op te slaan"
 
 #: gconf/gconfd.c:370
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr "Signaal %d ontvangen, kern word gedumpt. Rapporteer a.u.b. een GConf bug."
+msgstr ""
+"Signaal %d ontvangen, kern word gedumpt. Rapporteer a.u.b. een GConf bug."
 
 #: gconf/gconfd.c:388
 #, c-format
-msgid "Received signal %d, shutting down abnormally. Please file a GConf bug report."
-msgstr "Signaal %d ontvangen, abnormale afsluiting. Rapporteer a.u.b. een GConf bug."
+msgid ""
+"Received signal %d, shutting down abnormally. Please file a GConf bug report."
+msgstr ""
+"Signaal %d ontvangen, abnormale afsluiting. Rapporteer a.u.b. een GConf bug."
 
 #: gconf/gconfd.c:405
 #, c-format
@@ -957,16 +1116,18 @@ msgstr "Fout bij het verkrijgen van object referentie voor ConfigServer"
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
+"Niet gelukt om byte te schrijven naar pipe fd %d dus de client kan hangen: %s"
 
 #: gconf/gconfd.c:622
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
-msgstr "Fout bij vergaren van IOR voor client: %s"
+msgstr ""
+"Niet mogelijk vergrendeling te krijgen voor daemon, beig af te sluiten: %s"
 
 #: gconf/gconfd.c:660
-#, fuzzy, c-format
+#, c-format
 msgid "Error releasing lockfile: %s"
-msgstr "Fout bij lezen bestand '%s': %s"
+msgstr "Fout bij vrijgeven vergrendelings bestand: %s"
 
 #: gconf/gconfd.c:668
 msgid "Exiting"
@@ -983,13 +1144,20 @@ msgstr "Uitzondering: %s"
 
 #: gconf/gconfd.c:1163
 #, c-format
-msgid "Failed to open gconfd logfile; won't be able to restore listeners after gconfd shutdown (%s)"
-msgstr "Fout bij het openen van gconfd log bestand; kan luisteraars naar gconfd afsluiting niet herstarten (%s)"
+msgid ""
+"Failed to open gconfd logfile; won't be able to restore listeners after "
+"gconfd shutdown (%s)"
+msgstr ""
+"Fout bij het openen van gconfd log bestand; kan luisteraars naar gconfd "
+"afsluiting niet herstarten (%s)"
 
 #: gconf/gconfd.c:1198
 #, c-format
-msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr "Fout bij sluiten van gconfd log bestand; gegevens zijn misschien niet goed opgeslagen (%s)"
+msgid ""
+"Failed to close gconfd logfile; data may not have been properly saved (%s)"
+msgstr ""
+"Fout bij sluiten van gconfd log bestand; gegevens zijn misschien niet goed "
+"opgeslagen (%s)"
 
 #: gconf/gconfd.c:1267
 #, c-format
@@ -999,7 +1167,9 @@ msgstr "Kon opslag status bestand '%s' niet openen voor schrijven: %s"
 #: gconf/gconfd.c:1281
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
-msgstr "Kon de opslag status bestand '%s' niet wegschrijven bestands-descriptor: %d: %s"
+msgstr ""
+"Kon de opslag status bestand '%s' niet wegschrijven bestands-descriptor: %d: "
+"%s"
 
 #: gconf/gconfd.c:1290
 #, c-format
@@ -1018,13 +1188,19 @@ msgstr "Fout bij verplaatsen van nieuw opslag status bestand: %s"
 
 #: gconf/gconfd.c:1323
 #, c-format
-msgid "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "Fout bij het herstellen van origineel opslag status bestand dat was verplaatst naar '%s': %s"
+msgid ""
+"Failed to restore original saved state file that had been moved to '%s': %s"
+msgstr ""
+"Fout bij het herstellen van origineel opslag status bestand dat was "
+"verplaatst naar '%s': %s"
 
 #: gconf/gconfd.c:1794
 #, c-format
-msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr "Fout bij het herstellen van luisteraar op adres '%s', kon de databank niet vinden"
+msgid ""
+"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgstr ""
+"Fout bij het herstellen van luisteraar op adres '%s', kon de databank niet "
+"vinden"
 
 #: gconf/gconfd.c:1840
 #, c-format
@@ -1038,53 +1214,65 @@ msgstr "Fout bij openen opslag status bestand '%s': %s"
 
 #: gconf/gconfd.c:2010
 #, c-format
-msgid "Failed to log addition of listener to gconfd logfile; won't be able to re-add the listener if gconfd exits or shuts down (%s)"
-msgstr "Fout bij het loggen van toevoeging van luisteraars aan het gconfd log bestand; kan luisteraar niet opnieuw toevoegen als gconfd stopt (%s)"
+msgid ""
+"Failed to log addition of listener to gconfd logfile; won't be able to re-add "
+"the listener if gconfd exits or shuts down (%s)"
+msgstr ""
+"Fout bij het loggen van toevoeging van luisteraars aan het gconfd log "
+"bestand; kan luisteraar niet opnieuw toevoegen als gconfd stopt (%s)"
 
 #: gconf/gconfd.c:2015
 #, c-format
-msgid "Failed to log removal of listener to gconfd logfile; might erroneously re-add the listener if gconfd exits or shuts down (%s)"
-msgstr "Fout bij het loggen van het verwijderen van de luisteraar naar gconfd log bestand; misschien word de luisteraar foutief opnieuw toegevoegd als gconfd stopt (%s)"
+msgid ""
+"Failed to log removal of listener to gconfd logfile; might erroneously re-add "
+"the listener if gconfd exits or shuts down (%s)"
+msgstr ""
+"Fout bij het loggen van het verwijderen van de luisteraar naar gconfd log "
+"bestand; misschien word de luisteraar foutief opnieuw toegevoegd als gconfd "
+"stopt (%s)"
 
-#: gconf/gconfd.c:2038
-#: gconf/gconfd.c:2203
+#: gconf/gconfd.c:2038 gconf/gconfd.c:2203
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Fout bij vergaren van IOR voor client: %s"
 
 #: gconf/gconfd.c:2053
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open saved state file: %s"
-msgstr "Fout bij openen opslag status bestand '%s': %s"
+msgstr "Fout bij openen opslag status bestand: %s"
 
 #: gconf/gconfd.c:2066
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write client add to saved state file: %s"
-msgstr "Fout bij spoelen van toevoeging van client aan het opslag status bestand: %s"
+msgstr ""
+"Fout bij het schrijven van client add naar het opslag status bestand: %s"
 
 #: gconf/gconfd.c:2074
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
-msgstr "Fout bij spoelen van toevoeging van client aan het opslag status bestand: %s"
+msgstr ""
+"Fout bij spoelen van toevoeging van client aan het opslag status bestand: %s"
 
 #: gconf/gconfd.c:2164
-msgid "Some client removed itself from the GConf server when it hadn't been added."
-msgstr "Enkele clienten verwijderden zichzelf van de GConf server terwijl ze niet waren toegevoegd."
+msgid ""
+"Some client removed itself from the GConf server when it hadn't been added."
+msgstr ""
+"Enkele clienten verwijderden zichzelf van de GConf server terwijl ze niet "
+"waren toegevoegd."
 
 #. dialog display isn't working out
 #: gconf/gconfd.c:2303
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr ""
+msgstr "Meerdere segmentatie fouten gebeurden; kan fout dialoog niet tonen\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2312
-msgid "Segmentation fault!\n"
+msgid ""
+"Segmentation fault!\n"
 "Cannot display crash dialog\n"
 msgstr ""
-
-#: gconf/gconftool.c:71
-msgid "Help options"
-msgstr "Help opties"
+"Segmentatie fout!\n"
+"Kan crash dialoog niet weergeven\n"
 
 #: gconf/gconftool.c:80
 msgid "Set a key to a value and sync. Use with --type."
@@ -1095,17 +1283,24 @@ msgid "Print the value of a key to standard output."
 msgstr "Druk de waarde van een sleutel af op de standaard uitvoer."
 
 #: gconf/gconftool.c:98
-msgid "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --type."
-msgstr "Stel een schema in en synchronizeer. Gebruik met --short-desc, --long-desc, --owner, en --type."
+msgid ""
+"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
+"--type."
+msgstr ""
+"Stel een schema in en synchronizeer. Gebruik met --short-desc, --long-desc, "
+"--owner, en --type."
 
 #: gconf/gconftool.c:108
 msgid "Unset the keys on the command line"
 msgstr "De sleutels op de opdrachtregel uitzetten"
 
 #: gconf/gconftool.c:117
-#, fuzzy
-msgid "Recursively unset all keys at or below the key/directory names on the command line"
-msgstr "Moet een sleutel of meerdere sleutels specificeren om te 'vergaren'\n"
+msgid ""
+"Recursively unset all keys at or below the key/directory names on the command "
+"line"
+msgstr ""
+"Maak ecursief alle sleutels op of beneden  de sleutel/folder namen op de "
+"commandoregel"
 
 #: gconf/gconftool.c:126
 msgid "Print all key/value pairs in a directory."
@@ -1132,47 +1327,67 @@ msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "Geef 0 terug als gconfd draait, 2 als dit niet het geval is."
 
 #: gconf/gconftool.c:180
-msgid "Launch the config server (gconfd). (Normally happens automatically when needed.)"
-msgstr "Lanceer de configuratie server (gconfd). (Gebeurt normaalgesproken automatisch als het nodig is)"
+msgid ""
+"Launch the config server (gconfd). (Normally happens automatically when "
+"needed.)"
+msgstr ""
+"Lanceer de configuratie server (gconfd). (Gebeurt normaalgesproken "
+"automatisch als het nodig is)"
 
 #: gconf/gconftool.c:189
-msgid "Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Specificeer het type van de waarde die word ingesteld, of het type van de waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
+msgid ""
+"Specify the type of the value being set, or the type of the value a schema "
+"describes. Unique abbreviations OK."
+msgstr ""
+"Specificeer het type van de waarde die word ingesteld, of het type van de "
+"waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
 
 #: gconf/gconftool.c:190
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
 #: gconf/gconftool.c:198
-msgid "Specify the type of the list value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Specificeer het type van de in te stellen lijst waarde, of het type van een waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
+msgid ""
+"Specify the type of the list value being set, or the type of the value a "
+"schema describes. Unique abbreviations OK."
+msgstr ""
+"Specificeer het type van de in te stellen lijst waarde, of het type van een "
+"waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
 
-#: gconf/gconftool.c:199
-#: gconf/gconftool.c:208
-#: gconf/gconftool.c:217
+#: gconf/gconftool.c:199 gconf/gconftool.c:208 gconf/gconftool.c:217
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
 #: gconf/gconftool.c:207
-msgid "Specify the type of the car pair value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Specificeer het type van het car waardepaar dat wordt ingesteld, of het type van een waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
+msgid ""
+"Specify the type of the car pair value being set, or the type of the value a "
+"schema describes. Unique abbreviations OK."
+msgstr ""
+"Specificeer het type van het car waardepaar dat wordt ingesteld, of het type "
+"van een waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
 
 #: gconf/gconftool.c:216
-msgid "Specify the type of the cdr pair value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Specificeer het type cdr waardepaar dat wordt ingesteld, of het type van een waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
+msgid ""
+"Specify the type of the cdr pair value being set, or the type of the value a "
+"schema describes. Unique abbreviations OK."
+msgstr ""
+"Specificeer het type cdr waardepaar dat wordt ingesteld, of het type van een "
+"waarde die een schema omschrijft. Unieke afkortingen zijn toegestaan."
 
 #: gconf/gconftool.c:225
 msgid "Specify a short half-line description to go in a schema."
-msgstr "Specificeer een korte halve-regel omschrijving die in het schema moet komen."
+msgstr ""
+"Specificeer een korte halve-regel omschrijving die in het schema moet komen."
 
-#: gconf/gconftool.c:226
-#: gconf/gconftool.c:235
+#: gconf/gconftool.c:226 gconf/gconftool.c:235
 msgid "DESCRIPTION"
 msgstr "OMSCHRIJVING"
 
 #: gconf/gconftool.c:234
 msgid "Specify a several-line description to go in a schema."
-msgstr "Specificeer een uit meerdere regels bestaande omschrijving die in het schema moet komen."
+msgstr ""
+"Specificeer een uit meerdere regels bestaande omschrijving die in het schema "
+"moet komen."
 
 #: gconf/gconftool.c:243
 msgid "Specify the owner of a schema"
@@ -1192,58 +1407,75 @@ msgstr "BESTANDSNAAM"
 
 #: gconf/gconftool.c:261
 msgid "Specify a configuration source to use rather than the default path"
-msgstr "Specificeer een te gebruiken configuratie bron in plaats van het standaard pad"
+msgstr ""
+"Specificeer een te gebruiken configuratie bron in plaats van het standaard "
+"pad"
 
 #: gconf/gconftool.c:262
 msgid "SOURCE"
 msgstr "BRON"
 
 #: gconf/gconftool.c:270
-msgid "Access the config database directly, bypassing server. Requires that gconfd is not running."
-msgstr "Benader de configuratie databank direct, de server omzeilend. Gconfd mag niet draaien."
+msgid ""
+"Access the config database directly, bypassing server. Requires that gconfd "
+"is not running."
+msgstr ""
+"Benader de configuratie databank direct, de server omzeilend. Gconfd mag niet "
+"draaien."
 
 #: gconf/gconftool.c:279
-msgid "Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."
-msgstr "Installeert schema bestanden op de opdrachtregel in de databank. De GCONF_CONFIG_SOURCE omgevingsvariabele moet ingesteld staan op een niet-standaard configuratie bron of naar een lege tekenreeks om de standaardwaarde te gebruiken."
+msgid ""
+"Properly installs schema files on the command line into the database. "
+"GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
+"config source or set to the empty string to use the default."
+msgstr ""
+"Installeert schema bestanden op de opdrachtregel in de databank. De "
+"GCONF_CONFIG_SOURCE omgevingsvariabele moet ingesteld staan op een "
+"niet-standaard configuratie bron of naar een lege tekenreeks om de "
+"standaardwaarde te gebruiken."
 
 #: gconf/gconftool.c:288
-msgid "Torture-test an application by setting and unsetting a bunch of values of different types for keys on the command line."
-msgstr "Martelings-test voor applicaties d.m.v. het instellen en uitzetten van een groep waarden van verschillende typen voor sleutels op de opdrachtregel."
+msgid ""
+"Torture-test an application by setting and unsetting a bunch of values of "
+"different types for keys on the command line."
+msgstr ""
+"Martelings-test voor applicaties d.m.v. het instellen en uitzetten van een "
+"groep waarden van verschillende typen voor sleutels op de opdrachtregel."
 
 #: gconf/gconftool.c:297
-msgid "Torture-test an application by setting and unsetting a bunch of keys inside the directories on the command line."
-msgstr "Martelings-test voor een applicatie d.m.v. het instellen en uitzetten van een groep sleutels binnen de directories op de opdrachtregel."
+msgid ""
+"Torture-test an application by setting and unsetting a bunch of keys inside "
+"the directories on the command line."
+msgstr ""
+"Martelings-test voor een applicatie d.m.v. het instellen en uitzetten van een "
+"groep sleutels binnen de directories op de opdrachtregel."
 
 #: gconf/gconftool.c:306
 msgid "Get the short doc string for a key"
-msgstr ""
+msgstr "Kan de korte doc string niet vinden voor een sleutel"
 
 #: gconf/gconftool.c:315
 msgid "Get the long doc string for a key"
-msgstr ""
+msgstr "Kan de lange doc string niet vinden voor een sleutel"
 
 #: gconf/gconftool.c:324
 msgid "Get the name of the schema applied to this key"
-msgstr ""
+msgstr "Haal de naam op van het schema toegepast op deze sleutel"
 
 #: gconf/gconftool.c:333
-msgid "Specify the schema name followed by the key to apply the schema name to"
+msgid ""
+"Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
+"Specificeer de schema naam gevolgt door de sleutel om de schema naam op toe "
+"te passen"
 
 #: gconf/gconftool.c:342
 msgid "Remove any schema name applied to the given keys"
-msgstr ""
+msgstr "Verwijder elke schema naam toegepast op de gegeven sleutels"
 
 #: gconf/gconftool.c:351
 msgid "Get the name of the default source"
-msgstr ""
-
-#: gconf/gconftool.c:408
-#, c-format
-msgid "Error on option %s: %s.\n"
-"Run '%s --help' to see a full list of available command line options.\n"
-msgstr "Fout bij optie %s: %s.\n"
-"Start '%s --help' om een volledige lijst van beschikbare opdrachtregel opties te zien.\n"
+msgstr "Vind de naam van de standaard bron"
 
 #: gconf/gconftool.c:420
 msgid "Can't get and set/unset simultaneously\n"
@@ -1254,7 +1486,6 @@ msgid "Can't set and get/unset simultaneously\n"
 msgstr "Kan niet instellen en tegelijkertijd vergaren/uitzetten\n"
 
 #: gconf/gconftool.c:435
-#, fuzzy
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Kan --all-dirs niet met --get of --set gebruiken\n"
 
@@ -1263,14 +1494,20 @@ msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Kan --all-dirs niet met --get of --set gebruiken\n"
 
 #: gconf/gconftool.c:453
-#, fuzzy
-msgid "--recursive-list should not be used with --get, --set, --unset, --all-entries, or --all-dirs\n"
-msgstr "--recursive-list moet niet gebruikt worden met --get, --set, --unset, --all-pairs of --all-dirs\n"
+msgid ""
+"--recursive-list should not be used with --get, --set, --unset, "
+"--all-entries, or --all-dirs\n"
+msgstr ""
+"--recursive-list moet niet gebruikt worden met --get, --set, --unset, "
+"--all-pairs of --all-dirs\n"
 
 #: gconf/gconftool.c:463
-#, fuzzy
-msgid "--set_schema should not be used with --get, --set, --unset, --all-entries, --all-dirs\n"
-msgstr "--set_schema moet niet gebruikt worden met --get, --set, --unset, --all-pairs of --all-dirs\n"
+msgid ""
+"--set_schema should not be used with --get, --set, --unset, --all-entries, "
+"--all-dirs\n"
+msgstr ""
+"--set_schema moet niet gebruikt worden met --get, --set, --unset, --all-pairs "
+"of --all-dirs\n"
 
 #: gconf/gconftool.c:469
 msgid "Value type is only relevant when setting a value\n"
@@ -1305,12 +1542,17 @@ msgid "--break-directory must be used by itself.\n"
 msgstr "--break-directory moet gebruikt worden door zichzelf.\n"
 
 #: gconf/gconftool.c:546
-msgid "You must specify a config source with --config-source when using --direct\n"
-msgstr "Je moet een configuratie bron specificeren met --config-source als je --direct gebruikt\n"
+msgid ""
+"You must specify a config source with --config-source when using --direct\n"
+msgstr ""
+"Je moet een configuratie bron specificeren met --config-source als je "
+"--direct gebruikt\n"
 
 #: gconf/gconftool.c:552
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr ""
+"Je moet --direct gebruiken als je een niet standaard configuratie bron "
+"gebruikt\n"
 
 #: gconf/gconftool.c:558
 #, c-format
@@ -1320,6 +1562,8 @@ msgstr "Fout bij initializeren GConf: %s\n"
 #: gconf/gconftool.c:587
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is gezet, schemas worden niet "
+"geinstalleerd\n"
 
 #: gconf/gconftool.c:600
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1337,12 +1581,13 @@ msgstr "Afsluit fout: %s\n"
 
 #: gconf/gconftool.c:894
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr "Moet een of meerdere directories specificeren om recursief weer te geven.\n"
+msgstr ""
+"Moet een of meerdere directories specificeren om recursief weer te geven.\n"
 
 #: gconf/gconftool.c:928
-#, fuzzy, c-format
+#, c-format
 msgid "Failure listing entries in `%s': %s\n"
-msgstr "Fout bij het weergeven van paren in `%s': %s"
+msgstr "Fout bij het weergeven van paren in `%s': %s\n"
 
 #: gconf/gconftool.c:946
 msgid "(no value set)"
@@ -1382,9 +1627,7 @@ msgstr "Cdr Type: %s\n"
 msgid "Default Value: %s\n"
 msgstr "Standaard waarde: %s\n"
 
-#: gconf/gconftool.c:1058
-#: gconf/gconftool.c:1060
-#: gconf/gconftool.c:1061
+#: gconf/gconftool.c:1058 gconf/gconftool.c:1060 gconf/gconftool.c:1061
 #: gconf/gconftool.c:1062
 msgid "Unset"
 msgstr "Niet ingesteld"
@@ -1404,20 +1647,17 @@ msgstr "Korte Omschrijving: %s\n"
 msgid "Long Desc: %s\n"
 msgstr "Lange Omschrijving: %s\n"
 
-#: gconf/gconftool.c:1071
-#: gconf/gconftool.c:1365
+#: gconf/gconftool.c:1071 gconf/gconftool.c:1365
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Geen waarde ingesteld voor `%s'\n"
 
-#: gconf/gconftool.c:1075
-#: gconf/gconftool.c:1369
+#: gconf/gconftool.c:1075 gconf/gconftool.c:1369
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Fout bij het vergaren van waarde voor `%s': %s\n"
 
-#: gconf/gconftool.c:1118
-#: gconf/gconftool.c:1130
+#: gconf/gconftool.c:1118 gconf/gconftool.c:1130
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "Type `%s' niet begrepen\n"
@@ -1437,11 +1677,14 @@ msgstr "Kan schema niet in stellen als waarde\n"
 
 #: gconf/gconftool.c:1200
 msgid "When setting a list you must specify a primitive list-type\n"
-msgstr "Als je een lijst instelt moet je een primitief lijst-type specificeren\n"
+msgstr ""
+"Als je een lijst instelt moet je een primitief lijst-type specificeren\n"
 
 #: gconf/gconftool.c:1214
-msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "Als je paren instelt moet je een primtief car-type en cdr-type specificeren\n"
+msgid ""
+"When setting a pair you must specify a primitive car-type and cdr-type\n"
+msgstr ""
+"Als je paren instelt moet je een primtief car-type en cdr-type specificeren\n"
 
 #: gconf/gconftool.c:1229
 #, c-format
@@ -1449,60 +1692,58 @@ msgid "Error: %s\n"
 msgstr "Fout: %s\n"
 
 #: gconf/gconftool.c:1242
-#, fuzzy, c-format
+#, c-format
 msgid "Error setting value: %s\n"
-msgstr "Fout bij instellen waarde: %s"
+msgstr "Fout bij instellen waarde: %s\n"
 
 #: gconf/gconftool.c:1260
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing: %s\n"
-msgstr "Fout bij synchronizeren: %s"
+msgstr "Fout bij synchronizeren: %s\n"
 
 #: gconf/gconftool.c:1283
-#, fuzzy
 msgid "Must specify a key or keys on the command line\n"
-msgstr "Moet een sleutel of meerdere sleutels specificeren om te 'vergaren'\n"
+msgstr ""
+"Moet een sleutel of meerdere sleutels specificeren op de commandoregel\n"
 
 #: gconf/gconftool.c:1303
-#, fuzzy, c-format
+#, c-format
 msgid "No schema known for `%s'\n"
-msgstr "Bestand `%s' bestaat niet\n"
+msgstr "Geen schema bekend voor `%s'\n"
 
 #: gconf/gconftool.c:1336
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
-msgstr ""
+msgstr "Geen doc string opgeslagen in schema op '%s'\n"
 
 #: gconf/gconftool.c:1341
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting schema at '%s': %s\n"
-msgstr "Fout bij het instellen van schema voor `%s': %s"
+msgstr "Fout bij het instellen van schema voor `%s': %s\n"
 
 #: gconf/gconftool.c:1348
-#, fuzzy, c-format
+#, c-format
 msgid "No schema stored at '%s'\n"
-msgstr "Bestand `%s' bestaat niet\n"
+msgstr "Schema op `%s' bestaat niet\n"
 
 #: gconf/gconftool.c:1351
 #, c-format
 msgid "Value at '%s' is not a schema\n"
-msgstr ""
+msgstr "Waarde op '%s\" is niet in schema\n"
 
-#: gconf/gconftool.c:1407
-#: gconf/gconftool.c:1432
-#, fuzzy
+#: gconf/gconftool.c:1407 gconf/gconftool.c:1432
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "Moet een sleutel (schema naam) specificeren als het enige argument\n"
 
 #: gconf/gconftool.c:1414
-#, fuzzy, c-format
+#, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
-msgstr "WAARSCHUWING: fout bij associeren schema `%s' met sleutel `%s': %s\n"
+msgstr "Fout bij associeren schema `%s' met sleutel `%s': %s\n"
 
 #: gconf/gconftool.c:1442
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "Fout bij het instellen van schema voor `%s': %s"
+msgstr "Fout bij het verwijderen van schema naam van `%s': %s\n"
 
 #: gconf/gconftool.c:1467
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1514,11 +1755,13 @@ msgstr "Lijst type moet een primitief type zijn: string, int, float of bool\n"
 
 #: gconf/gconftool.c:1529
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
-msgstr "Paar car type moet een primitief type zijn: string, int, float of bool\n"
+msgstr ""
+"Paar car type moet een primitief type zijn: string, int, float of bool\n"
 
 #: gconf/gconftool.c:1549
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
-msgstr "Paar cdr type moet een primitief type zijn: string, int, float of bool\n"
+msgstr ""
+"Paar cdr type moet een primitief type zijn: string, int, float of bool\n"
 
 #: gconf/gconftool.c:1564
 #, c-format
@@ -1532,7 +1775,9 @@ msgstr "Fout bij synchronizeren: %s"
 
 #: gconf/gconftool.c:1593
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
-msgstr "Moet een of meer directories specificeren om sleutel/waarde paren van te laden.\n"
+msgstr ""
+"Moet een of meer directories specificeren om sleutel/waarde paren van te "
+"laden.\n"
 
 #: gconf/gconftool.c:1607
 msgid "Must specify one or more keys to unset.\n"
@@ -1544,18 +1789,19 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Fout bij uitzetten `%s': %s\n"
 
 #: gconf/gconftool.c:1638
-#, fuzzy
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Moet een of meerdere directories specificeren om recursief weer te geven.\n"
+msgstr "Moet een of meerdere sleutels specificeren om recursief leeg te maken\n"
 
 #: gconf/gconftool.c:1652
-#, fuzzy, c-format
+#, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "Fout bij het weergeven van paren in `%s': %s"
+msgstr "Fout bij het recursief leegmaken van `%s': %s\n"
 
 #: gconf/gconftool.c:1670
 msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr "Moet specificeren met een of meerdere directories om subdirectories van te vergaren specificeren.\n"
+msgstr ""
+"Moet specificeren met een of meerdere directories om subdirectories van te "
+"vergaren specificeren.\n"
 
 #: gconf/gconftool.c:1704
 #, c-format
@@ -1572,17 +1818,17 @@ msgstr "WAARSCHUWING: ongeldig of ontbrekend type voor schema (%s)\n"
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "WAARSCHUWING: ongeldig of ontbrekend list_type voor schema (%s)\n"
 
-#: gconf/gconftool.c:1766
-#: gconf/gconftool.c:1796
-#: gconf/gconftool.c:1825
+#: gconf/gconftool.c:1766 gconf/gconftool.c:1796 gconf/gconftool.c:1825
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "WAARSCHUWING: Fout bij ontleden standaardwaarde voor `%s' voor schema (%s)\n"
+msgstr ""
+"WAARSCHUWING: Fout bij ontleden standaardwaarde voor `%s' voor schema (%s)\n"
 
 #: gconf/gconftool.c:1784
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr "WAARSCHUWING: ongeldig of ontbrekend car_type of cdr_type voor schema (%s)\n"
+msgstr ""
+"WAARSCHUWING: ongeldig of ontbrekend car_type of cdr_type voor schema (%s)\n"
 
 #: gconf/gconftool.c:1809
 msgid "WARNING: You cannot set a default value for a schema\n"
@@ -1592,9 +1838,7 @@ msgstr "WAARSCHUWING: Je kunt geen standaardwaarde instellen voor een schema\n"
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "WAARSCHUWING: gconftool interne fout, onbekend GConfValueType\n"
 
-#: gconf/gconftool.c:1885
-#: gconf/gconftool.c:1906
-#: gconf/gconftool.c:1927
+#: gconf/gconftool.c:1885 gconf/gconftool.c:1906 gconf/gconftool.c:1927
 #: gconf/gconftool.c:1948
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
@@ -1602,25 +1846,31 @@ msgstr "WAARSCHUWING: fout bij ontleden type naam `%s'\n"
 
 #: gconf/gconftool.c:1902
 #, c-format
-msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr "WAARSCHUWING: list_type kan alleen int, float, string of bool zijn en niet `%s'\n"
+msgid ""
+"WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+msgstr ""
+"WAARSCHUWING: list_type kan alleen int, float, string of bool zijn en niet "
+"`%s'\n"
 
 #: gconf/gconftool.c:1923
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "WAARSCHUWING: car_type kan alleen int, float, string of bool zijn en niet `%s'\n"
+msgstr ""
+"WAARSCHUWING: car_type kan alleen int, float, string of bool zijn en niet "
+"`%s'\n"
 
 #: gconf/gconftool.c:1944
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "WAARSCHUWING: cdr_type kan alleen int, float, string of bool zijn en niet `%s'\n"
+msgstr ""
+"WAARSCHUWING: cdr_type kan alleen int, float, string of bool zijn en niet "
+"`%s'\n"
 
 #: gconf/gconftool.c:1972
 msgid "WARNING: empty <applyto> node"
 msgstr "WAARSCHUWING: lege <applyto> node"
 
-#: gconf/gconftool.c:1975
-#: gconf/gconftool.c:2238
+#: gconf/gconftool.c:1975 gconf/gconftool.c:2238
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "WAARSCHUWING: node <%s> niet begrepen onder <schema>\n"
@@ -1631,12 +1881,17 @@ msgstr "WAARSCHUWING: geen sleutel gespecificeerd voor schema\n"
 
 #: gconf/gconftool.c:2018
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr "WAARSCHUWING: <locale> node heeft geen `name=\"locale\"' attribuut, wordt genegeerd\n"
+msgstr ""
+"WAARSCHUWING: <locale> node heeft geen `name=\"locale\"' attribuut, wordt "
+"genegeerd\n"
 
 #: gconf/gconftool.c:2024
 #, c-format
-msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr "WAARSCHUWING: meerdere <locale> nodes voor locale `%s', alle na de eerste worden genegeerd\n"
+msgid ""
+"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
+msgstr ""
+"WAARSCHUWING: meerdere <locale> nodes voor locale `%s', alle na de eerste "
+"worden genegeerd\n"
 
 #: gconf/gconftool.c:2105
 #, c-format
@@ -1684,8 +1939,12 @@ msgstr "Document `%s' is leeg?\n"
 
 #: gconf/gconftool.c:2324
 #, c-format
-msgid "Document `%s' has the wrong type of root node (<%s>, should be <gconfschemafile>)\n"
-msgstr "Document `%s' heeft verkeerd root node type (<%s>, zou <gconfschemafile> moeten zijn\n"
+msgid ""
+"Document `%s' has the wrong type of root node (<%s>, should be "
+"<gconfschemafile>)\n"
+msgstr ""
+"Document `%s' heeft verkeerd root node type (<%s>, zou <gconfschemafile> "
+"moeten zijn\n"
 
 #: gconf/gconftool.c:2337
 #, c-format
@@ -1697,8 +1956,7 @@ msgstr "Document `%s' heeft geen top niveau <gconfschemafile> node\n"
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "WAARSCHUWING: node <%s> onder <gconfschemafile> niet begrepen\n"
 
-#: gconf/gconftool.c:2362
-#: gconf/gconftool.c:2394
+#: gconf/gconftool.c:2362 gconf/gconftool.c:2394
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Fout bij synchronizeren configuratie gegevens: %s"
@@ -1709,9 +1967,11 @@ msgstr "Je moet enkele te installeren schema bestanden specificeren\n"
 
 #: gconf/gconftool.c:2415
 #, c-format
-msgid "\n"
+msgid ""
+"\n"
 "%s\n"
-msgstr "\n"
+msgstr ""
+"\n"
 "%s\n"
 
 #: gconf/gconftool.c:2435
@@ -1725,9 +1985,12 @@ msgstr "Moet enkele te breken sleutels specificeren\n"
 
 #: gconf/gconftool.c:2567
 #, c-format
-msgid "Trying to break your application by setting bad values for key:\n"
+msgid ""
+"Trying to break your application by setting bad values for key:\n"
 "  %s\n"
-msgstr "Probeer je applicatie te breken d.m.v. het instellen van slechte waarden voor een sleutel:\n"
+msgstr ""
+"Probeer je applicatie te breken d.m.v. het instellen van slechte waarden voor "
+"een sleutel:\n"
 "  %s\n"
 
 #: gconf/gconftool.c:2585
@@ -1736,8 +1999,11 @@ msgstr "Moet enkele te breken directories specificeren\n"
 
 #: gconf/gconftool.c:2604
 #, c-format
-msgid "Trying to break your application by setting bad values for keys in directory:\n"
-"  %s\n"
-msgstr "Probeer je applicatie te breken d.m.v. het instellen van slechte waarden voor sleutels in directory:\n"
+msgid ""
+"Trying to break your application by setting bad values for keys in "
+"directory:\n  %s\n"
+msgstr ""
+"Probeer je applicatie te breken d.m.v. het instellen van slechte waarden voor "
+"sleutels in directory:\n"
 "  %s\n"
 
