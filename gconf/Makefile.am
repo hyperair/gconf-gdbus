@@ -64,7 +64,7 @@ libgconf_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_A
 
 libgconf_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
 
-EXTRA_DIST=GConf.idl gconfd.oafinfo default.path
+EXTRA_DIST=GConf.idl gconfd.oafinfo default.path.in
 
 oafinfodir=$(datadir)/oaf
 oafinfo_DATA=gconfd.oafinfo
