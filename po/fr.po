@@ -1,17 +1,17 @@
 # French translation of GConf.
-# Copyright (C) 2000-2003 Free Software Foundation, Inc.
+# Copyright (C) 2000-2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gconf package.
 #
 # Vincent Renardias <vincent@ldsol.com>, 2000.
-# maintainer: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>, 2000-2003.
+# maintainer: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>, 2000-2004.
 # Sun G11n <gnome_int_l10n@ireland.sun.com>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 2.5.0\n"
+"Project-Id-Version: GConf 2.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-11-22 11:22+0100\n"
+"POT-Creation-Date: 2004-01-02 21:06+0100\n"
+"PO-Revision-Date: 2004-01-02 20:55+0100\n"
 "Last-Translator: Christophe Merlet (RedFox) <redfox@redfoxcenter.org>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,41 @@ msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "Impossible de lire ou d'écrire dans le répertoire racine %s à l'adresse « %"
 "s »"
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Impossible de trouver le répertoire %s\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr ""
+"Erreur lors de l'enregistrement de l'arborescence GConf dans « %s » : %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Usage : %s <rép>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Usage : %s <rép>\n"
+"  Fusionne une hiérarchie de fichiers tel que :\n"
+"    rép/%%gconf.xml\n"
+"        sousrép1/%%gconf.xml\n"
+"        sousrép2/%%gconf.xml\n"
+"  en :\n"
+"    rép/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -109,7 +144,7 @@ msgstr ""
 #: backends/xml-dir.c:171
 #, c-format
 msgid "Could not stat `%s': %s"
-msgstr "Ne peut avoir les statistiques « %s » : %s"
+msgstr "Impossible d'obtenir les statistiques « %s » : %s"
 
 #: backends/xml-dir.c:181
 #, c-format
@@ -182,7 +217,7 @@ msgstr ""
 #: backends/xml-dir.c:1255
 #, c-format
 msgid "Could not make directory \"%s\": %s"
-msgstr "Ne peut créer le répertoire « %s » : %s"
+msgstr "Impossible de créer le répertoire « %s » : %s"
 
 #: backends/xml-dir.c:1271
 #, c-format
@@ -2379,10 +2414,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Suppressions de répertoire non synchronisées lors de l'extinction du "
 #~ "module XML"
-
-#, fuzzy
-#~ msgid "Error listing subdirs of '%s': %s\n"
-#~ msgstr "Erreur lors du listage des répertoires dans « %s » : %s"
 
 #, fuzzy
 #~ msgid "Error unsetting '%s': %s\n"
