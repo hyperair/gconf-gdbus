@@ -26,58 +26,53 @@
 /* Dir stores the information about a given directory */
 
 typedef struct _Dir Dir;
+Dir*           dir_new             (const gchar  *keyname,
+                                    const gchar  *xml_root_dir);
+Dir*           dir_load            (const gchar  *key,
+                                    const gchar  *xml_root_dir,
+                                    GConfError  **err);
+void           dir_destroy         (Dir          *d);
+gboolean       dir_ensure_exists   (Dir          *d,
+                                    GConfError  **err);
+gboolean       dir_sync            (Dir          *d,
+                                    GConfError  **err);
 
-Dir*           dir_new           (const gchar  *keyname,
-                                  const gchar  *xml_root_dir);
-
-void           dir_destroy       (Dir          *d);
-
-gboolean       dir_ensure_exists (Dir          *d,
-                                  GConfError  **err);
-
-gboolean       dir_sync          (Dir          *d,
-                                  GConfError  **err);
-
+const gchar*   dir_get_name        (Dir          *d);
 
 /* key should have no slashes in it */
-void           dir_set_value     (Dir          *d,
-                                  const gchar  *relative_key,
-                                  GConfValue   *value,
-                                  GConfError  **err);
+void           dir_set_value       (Dir          *d,
+                                    const gchar  *relative_key,
+                                    GConfValue   *value,
+                                    GConfError  **err);
+GConfValue*    dir_get_value       (Dir          *d,
+                                    const gchar  *relative_key,
+                                    const gchar **locales,
+                                    gchar       **schema_name,
+                                    GConfError  **err);
+GConfMetaInfo* dir_get_metainfo    (Dir          *d,
+                                    const gchar  *relative_key,
+                                    GConfError  **err);
+void           dir_unset_value     (Dir          *d,
+                                    const gchar  *relative_key,
+                                    const gchar  *locale,
+                                    GConfError  **err);
+GSList*        dir_all_entries     (Dir          *d,
+                                    const gchar **locales,
+                                    GConfError  **err);
+GSList*        dir_all_subdirs     (Dir          *d,
+                                    GConfError  **err);
+void           dir_set_schema      (Dir          *d,
+                                    const gchar  *relative_key,
+                                    const gchar  *schema_key,
+                                    GConfError  **err);
+GTime          dir_get_last_access (Dir          *d);
 
-GConfValue*    dir_get_value     (Dir          *d,
-                                  const gchar  *relative_key,
-                                  const gchar **locales,
-                                  gchar       **schema_name,
-                                  GConfError  **err);
-
-GConfMetaInfo* dir_get_metainfo  (Dir          *d,
-                                  const gchar  *relative_key,
-                                  GConfError  **err);
-
-void           dir_unset_value   (Dir          *d,
-                                  const gchar  *relative_key,
-                                  const gchar  *locale,
-                                  GConfError  **err);
-
-GSList*        dir_all_entries   (Dir          *d,
-                                  const gchar **locales,
-                                  GConfError  **err);
-
-GSList*        dir_all_subdirs   (Dir          *d,
-                                  GConfError  **err);
-
-void           dir_set_schema    (Dir          *d,
-                                  const gchar  *relative_key,
-                                  const gchar  *schema_key,
-                                  GConfError  **err);
-
-GTime          dir_get_last_access   (Dir          *d);
 
 
 /* Marks for deletion; dir cache really has to implement directory
    deletion, since it is recursive */
-void           dir_mark_deleted        (Dir          *d);
-gboolean       dir_is_deleted       (Dir          *d);
+void           dir_mark_deleted    (Dir          *d);
+gboolean       dir_is_deleted      (Dir          *d);
+
 
 #endif

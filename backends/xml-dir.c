@@ -20,7 +20,60 @@
 #include "xml-dir.h"
 #include "xml-entry.h"
 
-typedef struct _Dir Dir;
+#include <gnome-xml/parser.h>
+
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <dirent.h>
+#include <limits.h>
+
+#include <gconf/gconf-internals.h>
+#include "xml-entry.h"
+
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
+/* This makes hash table safer when debugging */
+#ifndef GCONF_ENABLE_DEBUG
+#define safe_g_hash_table_insert g_hash_table_insert
+#else
+static void
+safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
+{
+  gpointer oldkey = NULL, oldval = NULL;
+
+  if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
+    {
+      gconf_log(GCL_WARNING, "Hash key `%s' is already in the table!",
+                (gchar*)key);
+      return;
+    }
+  else
+    {
+      g_hash_table_insert(ht, key, value);
+    }
+}
+#endif
+
+static gchar* parent_dir(const gchar* dir);
 
 struct _Dir {
   gchar* key;
@@ -42,19 +95,16 @@ static Entry* dir_make_new_entry(Dir* d, const gchar* relative_key);
 
 static gboolean dir_forget_entry_if_useless(Dir* d, Entry* e);
 
-Dir*
-dir_new(const gchar  *keyname,
-        const gchar  *xml_root_dir)
+static Dir*
+dir_blank(const gchar* key)
 {
   Dir* d;
   
   d = g_new0(Dir, 1);
-  
-  d->key = g_strdup(keyname);
 
-  d->fs_dirname = g_concat_key_and_dir(xml_root_dir, keyname);
-  d->xml_filename =  g_strconcat(d->fs_dirname, "/%gconf.xml", NULL);
-  d->root_dir_len = strlen(xml_root_dir);
+  g_assert(gconf_valid_key(key, NULL));
+  
+  d->key = g_strdup(key);
   
   d->last_access = time(NULL);
   d->doc = NULL;
@@ -66,6 +116,70 @@ dir_new(const gchar  *keyname,
 
   return d;
 }
+
+Dir*
+dir_new(const gchar  *keyname,
+        const gchar  *xml_root_dir)
+{
+  Dir* d;
+  
+  d = dir_blank(keyname);
+
+  /* sync with dir_load() */
+  d->fs_dirname = gconf_concat_key_and_dir(xml_root_dir, keyname);
+  d->xml_filename =  g_strconcat(d->fs_dirname, "/%gconf.xml", NULL);
+  d->root_dir_len = strlen(xml_root_dir);
+
+  return d;
+}
+
+Dir*
+dir_load        (const gchar* xml_root_dir, const gchar* key, GConfError** err)
+{
+  Dir* d;
+  gchar* fs_dirname;
+  gchar* xml_filename;
+  
+  fs_dirname = gconf_concat_key_and_dir(xml_root_dir, key);
+  xml_filename = g_strconcat(fs_dirname, "/%gconf.xml", NULL);
+
+  {
+    struct stat s;
+    gboolean error = FALSE;
+    
+    if (stat(xml_filename, &s) != 0)
+      {
+        gconf_set_error(err, GCONF_FAILED,
+                         _("Could not stat `%s': %s"),
+                         xml_filename, strerror(errno));
+        error = TRUE;
+      }
+    else if (S_ISDIR(s.st_mode))
+      {
+        gconf_set_error(err, GCONF_FAILED,
+                         _("XML filename `%s' is a directory"),
+                         xml_filename);
+        error = TRUE;
+      }
+
+    if (error)
+      {
+        g_free(fs_dirname);
+        g_free(xml_filename);
+        return NULL;
+      }
+  }
+    
+  d = dir_blank(key);
+
+  /* sync with dir_new() */
+  d->fs_dirname = fs_dirname;
+  d->xml_filename = xml_filename;
+  d->root_dir_len = strlen(xml_root_dir);
+  
+  return d;
+}
+
 
 static void
 entry_destroy_foreach(const gchar* name, Entry* e, gpointer data)
@@ -99,11 +213,11 @@ gboolean
 dir_ensure_exists (Dir* d,
                    GConfError** err)
 {
-  if (!create_fs_dir(d->fs_dirname, d->xml_filename, err))
+  if (!create_fs_dir(d->fs_dirname, d->xml_filename, d->root_dir_len, err))
     {
 
       /* check that error is set */
-      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), FALSE );
       
       return FALSE;
     }
@@ -114,7 +228,7 @@ dir_ensure_exists (Dir* d,
 static void
 entry_sync_foreach(const gchar* name, Entry* e, gpointer data)
 {
-  entry_sync(e);
+  entry_sync_to_node(e);
 }
 
 gboolean
@@ -171,7 +285,7 @@ dir_sync        (Dir* d, GConfError** err)
           /* Try to solve the problem by creating the FS dir */
           if (!gconf_file_exists(d->fs_dirname))
             {
-              if (create_fs_dir(d->fs_dirname, NULL, d->source->root_dir, err))
+              if (create_fs_dir(d->fs_dirname, NULL, d->root_dir_len, err))
                 {
                   if (xmlSaveFile(tmp_filename, d->doc) >= 0)
                     recovered = TRUE;
@@ -266,7 +380,7 @@ dir_set_value   (Dir* d, const gchar* relative_key,
   if (e == NULL)
     e = dir_make_new_entry(d, relative_key);
 
-  entry_set(e, value);
+  entry_set_value(e, value);
 
   d->last_access = time(NULL);
   entry_set_mod_time(e, d->last_access);
@@ -309,7 +423,7 @@ dir_get_value   (Dir* d,
 
       g_assert(e != NULL);
 
-      val = entry_get_value(e, locales);
+      val = entry_get_value(e, locales, err);
 
       /* Fill schema name if value is NULL because we might be
          interested in the default value of the key in that case. */
@@ -326,10 +440,16 @@ dir_get_value   (Dir* d,
     }
 }
 
+const gchar*
+dir_get_name        (Dir          *d)
+{
+  g_return_val_if_fail(d != NULL, NULL);
+  return d->key;
+}
+
 GConfMetaInfo*
 dir_get_metainfo(Dir* d, const gchar* relative_key, GConfError** err)
 {
-  GConfMetaInfo* gcmi;
   Entry* e;
   
   d->last_access = time(NULL);
@@ -373,7 +493,7 @@ dir_unset_value (Dir* d, const gchar* relative_key,
   if (e == NULL)     /* nothing to change */
     return;
 
-  if (entry_unset(e, locale))
+  if (entry_unset_value(e, locale))
     {
       /* If entry_unset() returns TRUE then
          the entry was changed (not already unset) */
@@ -406,16 +526,24 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 {
   GConfValue* val;
   GConfEntry* entry;
+  GConfError* error = NULL;
   
-  val = entry_get_value(e, ld->locales);
+  val = entry_get_value(e, ld->locales, &error);
 
+  if (error != NULL)
+    {
+      g_assert(val == NULL);
+      gconf_error_destroy(error);
+      return;
+    }
+  
   entry = gconf_entry_new_nocopy(g_strdup(key),
                                  val ? gconf_value_copy(val) : NULL);
   
   if (val == NULL &&
-      e->schema_name)
+      entry_get_schema_name(e))
     {
-      gconf_entry_set_schema_name(entry, e->schema_name);
+      gconf_entry_set_schema_name(entry, entry_get_schema_name(e));
     }
   
   ld->list = g_slist_prepend(ld->list, entry);
@@ -582,7 +710,7 @@ dir_last_access (Dir* d)
 /* private Dir functions */
 
 static void
-dir_fill_cache_from_doc(Dir* d);     
+dir_fill_cache_from_doc(Dir* d);
 
 static void
 dir_load_doc(Dir* d, GConfError** err)
@@ -700,8 +828,8 @@ dir_make_new_entry(Dir* d, const gchar* relative_key)
 
   entry_set_node(e, xmlNewChild(d->doc->root, NULL, "entry", NULL));
   
-  safe_g_hash_table_insert(d->entry_cache, entry_get_name(e), e);
-
+  safe_g_hash_table_insert(d->entry_cache, (gchar*)entry_get_name(e), e);
+  
   return e;
 }
 
@@ -713,7 +841,7 @@ dir_forget_entry_if_useless(Dir* d, Entry* e)
   if (entry_get_schema_name(e) != NULL)
     return FALSE;
   
-  val = entry_get_value(e, NULL);
+  val = entry_get_value(e, NULL, NULL);
   
   if (val != NULL)
     return FALSE; /* not useless */
@@ -723,6 +851,14 @@ dir_forget_entry_if_useless(Dir* d, Entry* e)
   entry_destroy(e);
 
   return TRUE;
+}
+
+static void
+dir_fill_cache_from_doc(Dir* d)
+{
+
+  /* FIXME */
+
 }
 
 /*
@@ -798,3 +934,38 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
   
   return TRUE;
 }
+
+static gchar* 
+parent_dir(const gchar* dir)
+{
+  /* We assume the dir doesn't have a trailing slash, since that's our
+     standard canonicalization in GConf */
+  gchar* parent;
+  gchar* last_slash;
+
+  g_return_val_if_fail(*dir != '\0', NULL);
+
+  if (dir[1] == '\0')
+    {
+      g_assert(dir[0] == '/');
+      return NULL;
+    }
+
+  parent = g_strdup(dir);
+
+  last_slash = strrchr(parent, '/');
+
+  /* dir must have had at least the root slash in it */
+  g_assert(last_slash != NULL);
+  
+  if (last_slash != parent)
+    *last_slash = '\0';
+  else 
+    {
+      ++last_slash;
+      *last_slash = '\0';
+    }
+
+  return parent;
+}
+

@@ -18,6 +18,23 @@
  */
 
 #include "xml-entry.h"
+#include <gconf/gconf-internals.h>
+#include <stdlib.h>
+
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
 
 struct _Entry {
   gchar* name; /* a relative key */
@@ -88,9 +105,10 @@ entry_get_node (Entry*e)
 GConfValue*
 entry_get_value(Entry* e, const gchar** locales, GConfError** err)
 {
-  g_return_if_fail(e != NULL);
+  g_return_val_if_fail(e != NULL, NULL);
   /* FIXME */
 
+  return NULL;
 }
 
 void
@@ -103,10 +121,10 @@ entry_set_value(Entry* e, GConfValue* value)
 }
 
 gboolean
-entry_unset_value     (Entry        *entry,
+entry_unset_value     (Entry        *e,
                        const gchar  *locale)
 {
-  g_return_if_fail(e != NULL);
+  g_return_val_if_fail(e != NULL, FALSE);
 
   /* FIXME */
   e->dirty = TRUE;
@@ -119,7 +137,7 @@ entry_get_metainfo(Entry* e)
 {
   GConfMetaInfo* gcmi;
   
-  g_return_if_fail(e != NULL);
+  g_return_val_if_fail(e != NULL, NULL);
 
   gcmi = gconf_meta_info_new();
 
@@ -180,16 +198,31 @@ entry_set_mod_user (Entry *e,
  * XML-related cruft
  */
 
-void my_xmlSetProp(xmlNodePtr node,
-                   const gchar* name,
-                   const gchar* str);
+static void my_xmlSetProp(xmlNodePtr node,
+                          const gchar* name,
+                          const gchar* str);
 
-char* my_xmlGetProp(xmlNodePtr node,
-                    const gchar* name);
+static char* my_xmlGetProp(xmlNodePtr node,
+                           const gchar* name);
 
 
 static GConfValue*
 node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err);
+static xmlNodePtr
+find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale);
+
+static void
+entry_sync_if_needed(Entry* e, GConfValue* val)
+{
+  if (!e->dirty)
+    return;
+  
+  if (e->cached_value &&
+      e->cached_value->type == GCONF_VALUE_SCHEMA)
+    {
+      entry_sync_to_node(e);
+    }
+}
 
 void
 entry_fill_from_node(Entry* e, const gchar* name)
@@ -265,8 +298,8 @@ entry_fill_from_node(Entry* e, const gchar* name)
   if (e->cached_value != NULL)
     gconf_value_destroy(e->cached_value);
   
-  e->cached_value = xentry_extract_value(e->node, NULL, /* FIXME current locale as a guess */
-                                         &error);
+  e->cached_value = node_extract_value(e->node, NULL, /* FIXME current locale as a guess */
+                                       &error);
 
   if (e->cached_value)
     {
@@ -856,7 +889,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
                     /* What the hell is this? */
                     gconf_log(GCL_WARNING,
                               _("Didn't understand XML node <%s> inside an XML list node"),
-                              iter->name ? iter->name : "???");
+                              iter->name ? iter->name : (guchar*)"???");
                   }
 
                 if (v != NULL)
@@ -881,7 +914,6 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
         GConfValue* car = NULL;
         GConfValue* cdr = NULL;
         xmlNodePtr iter;
-        GSList* bad_nodes = NULL;
         
         iter = node->childs;
 
@@ -939,7 +971,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
                     /* What the hell is this? */
                     gconf_log(GCL_WARNING,
                               _("Didn't understand XML node <%s> inside an XML pair node"),
-                              iter->name ? iter->name : "???");                    
+                              iter->name ? (gchar*)iter->name : "???");                    
                   }
               }
             iter = iter->next;
@@ -965,7 +997,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
  */
 
 /* makes setting to NULL or empty string equal to unset */
-void
+static void
 my_xmlSetProp(xmlNodePtr node,
               const gchar* name,
               const gchar* str)
@@ -1001,7 +1033,7 @@ my_xmlSetProp(xmlNodePtr node,
 }
 
 /* Makes empty strings equal to "unset" */
-char*
+static char*
 my_xmlGetProp(xmlNodePtr node,
               const gchar* name)
 {

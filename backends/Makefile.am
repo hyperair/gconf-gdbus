@@ -5,6 +5,12 @@ backenddir = $(libdir)/gconf
 backend_LTLIBRARIES = libgconfbackend-xml.la
 
 libgconfbackend_xml_la_SOURCES = \
+	xml-cache.h		\
+	xml-cache.c		\
+	xml-dir.h		\
+	xml-dir.c		\
+	xml-entry.h		\
+	xml-entry.c		\
 	xml-backend.c
 
 libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
