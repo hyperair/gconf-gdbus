@@ -2673,7 +2673,8 @@ register_engine(GConfEnginePrivate* priv)
 static GConfEnginePrivate*
 lookup_engine(ConfigServer_Context context)
 {
-  g_return_val_if_fail(context_to_engine_hash != NULL, NULL);
+  if (context_to_engine_hash == NULL)
+    return NULL;
 
   return g_hash_table_lookup(context_to_engine_hash, &context);
 }
