@@ -760,11 +760,8 @@ fast_cleanup(void)
     oaf_active_server_unregister("", server);
 #endif
   /* OK we aren't going to unregister, because it can cause weird oafd
-     spawning. The problem is that we have a race condition because
-     we're going to destroy everything in shutdown_databases and if we
-     get incoming connections we'll just segfault and crash
-     spectacularly. Should probably add a we_are_shut_down flag or
-     something. FIXME */
+   *  spawning. FIXME ????? What the heck was the problem here?
+   */
 }
 
 
