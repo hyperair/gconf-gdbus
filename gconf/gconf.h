@@ -120,6 +120,8 @@ void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
 GSList*      g_conf_all_pairs(GConf* conf, const gchar* dir);
 
+GSList*      g_conf_all_dirs(GConf* conf, const gchar* dir);
+
 void         g_conf_sync(GConf* conf);
 
 gboolean     g_conf_valid_key      (const gchar* key);

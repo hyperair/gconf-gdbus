@@ -411,12 +411,66 @@ g_conf_all_pairs(GConf* conf, const gchar* dir)
       ++i;
     }
   
-  /* hmm, not sure this is correct - does it free all the strings 
-     in keys? */
   CORBA_free(keys);
   CORBA_free(values);
 
   return pairs;
+}
+
+GSList*      
+g_conf_all_dirs(GConf* conf, const gchar* dir)
+{
+  GSList* subdirs = NULL;
+  ConfigServer_KeyList* keys;
+  CORBA_Environment ev;
+  ConfigServer cs;
+  guint i;
+
+  if (!g_conf_valid_key(dir))
+    {
+      g_warning("Invalid dir `%s'", dir);
+      return NULL;
+    }
+
+  cs = g_conf_get_config_server(TRUE);
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return NULL;
+    }
+
+  CORBA_exception_init(&ev);
+  
+  ConfigServer_all_dirs(cs, (gchar*)dir, 
+                        &keys,
+                        &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure getting list of subdirs in `%s' from config server: %s",
+                dir, CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+
+      return NULL;
+    }
+  
+  i = 0;
+  while (i < keys->_length)
+    {
+      gchar* s;
+
+      s = g_strdup(keys->_buffer[i]);
+      
+      subdirs = g_slist_prepend(subdirs, s);
+      
+      ++i;
+    }
+  
+  CORBA_free(keys);
+
+  return subdirs;
 }
 
 void 
@@ -736,6 +790,9 @@ g_conf_init           ()
  * are allowed as separators. % disallowed to avoid printf confusion.
  */
 
+/* Key/dir validity is exactly the same, except that '/' must be a dir, 
+   but we are sort of ignoring that for now. */
+
 static const gchar invalid_chars[] = "\"$&<>,+=#!()'|{}[]?~`;%\\";
 
 gboolean     
@@ -747,6 +804,10 @@ g_conf_valid_key      (const gchar* key)
   /* Key must start with the root */
   if (*key != '/')
     return FALSE;
+  
+  /* Root key is a valid dir */
+  if (*key == '/' && key[1] == '\0')
+    return TRUE;
 
   while (*s)
     {

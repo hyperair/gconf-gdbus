@@ -314,6 +314,17 @@ g_conf_source_all_pairs         (GConfSource* source,
   return (*source->backend->vtable->all_entries)(source, dir);
 }
 
+GSList*      
+g_conf_source_all_dirs          (GConfSource* source,
+                                 const gchar* dir)
+{
+  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
+    {
+      g_warning("Invalid directory `%s'", dir);
+    }
+  return (*source->backend->vtable->all_subdirs)(source, dir);
+}
+
 gboolean
 g_conf_source_sync_all         (GConfSource* source)
 {
@@ -767,12 +778,87 @@ g_conf_sources_all_pairs   (GConfSources* sources,
   return flattened;
 }
 
+GSList*       
+g_conf_sources_all_dirs   (GConfSources* sources,
+                           const gchar* dir)
+{
+  GList* tmp;
+  GHashTable* hash;
+  GSList* flattened;
+  gboolean first_pass = TRUE; /* as an optimization, don't bother
+                                 doing hash lookups on first source
+                              */
+
+  /* As another optimization, skip the whole 
+     hash thing if there's only zero or one sources
+  */
+  if (sources->sources == NULL)
+    return NULL;
+
+  if (sources->sources->next == NULL)
+    {
+      return g_conf_source_all_dirs(sources->sources->data, dir);
+    }
+
+  g_assert(g_list_length(sources->sources) > 1);
+
+  hash = g_hash_table_new(g_str_hash, g_str_equal);
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+      GSList* subdirs = g_conf_source_all_dirs(src, dir);
+      GSList* iter = subdirs;
+
+      while (iter != NULL)
+        {
+          gchar* subdir = iter->data;
+          gchar* previous;
+          
+          if (first_pass)
+            previous = NULL; /* Can't possibly be there. */
+          else
+            previous = g_hash_table_lookup(hash, subdir);
+          
+          if (previous != NULL)
+            {
+              /* Discard */
+              g_free(subdir);
+            }
+          else
+            {
+              /* Save */
+              g_hash_table_insert(hash, subdir, subdir);
+            }
+
+          iter = g_slist_next(iter);
+        }
+      
+      /* All pairs are either stored or destroyed. */
+      g_slist_free(subdirs);
+
+      first_pass = FALSE;
+
+      tmp = g_list_next(tmp);
+    }
+
+  flattened = NULL;
+
+  g_hash_table_foreach(hash, hash_listify_func, &flattened);
+
+  g_hash_table_destroy(hash);
+
+  return flattened;
+}
+
 gboolean
 g_conf_sources_sync_all    (GConfSources* sources)
 {
   GList* tmp;
   gboolean failed = FALSE;
-
+  
   tmp = sources->sources;
 
   while (tmp != NULL)
@@ -923,4 +1009,50 @@ g_conf_load_source_path(const gchar* filename)
   g_assert(addresses[0] != NULL); /* since we used malloc0 this detects bad logic */
 
   return addresses;
+}
+
+/* This should also support concatting filesystem dirs and keys, 
+   or dir and subdir.
+*/
+gchar*        
+g_conf_concat_key_and_dir(const gchar* dir, const gchar* key)
+{
+  guint dirlen;
+  guint keylen;
+  gchar* retval;
+
+  g_return_val_if_fail(dir != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  g_return_val_if_fail(*dir == '/', NULL);
+
+  dirlen = strlen(dir);
+  keylen = strlen(key);
+
+  retval = g_malloc0(dirlen+keylen+3); /* auto-null-terminate */
+
+  strcpy(retval, dir);
+
+  if (dir[dirlen-1] == '/')
+    {
+      /* dir ends in slash, strip key slash if needed */
+      if (*key == '/')
+        ++key;
+
+      strcpy((retval+dirlen), key);
+    }
+  else 
+    {
+      /* Dir doesn't end in slash, add slash if key lacks one. */
+      gchar* dest = retval + dirlen;
+
+      if (*key != '/')
+        {
+          *dest = '/';
+          ++dest;
+        }
+      
+      strcpy(dest, key);
+    }
+  
+  return retval;
 }

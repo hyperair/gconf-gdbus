@@ -51,6 +51,8 @@ void          g_conf_source_set_value        (GConfSource* source,
                                               GConfValue* value);
 GSList*      g_conf_source_all_pairs         (GConfSource* source,
                                               const gchar* dir);
+GSList*      g_conf_source_all_dirs          (GConfSource* source,
+                                              const gchar* dir);
 gboolean     g_conf_source_sync_all          (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
 
@@ -94,6 +96,8 @@ void          g_conf_sources_set_value   (GConfSources* sources,
                                           GConfValue* value);
 GSList*       g_conf_sources_all_pairs   (GConfSources* sources,
                                           const gchar* dir);
+GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
+                                         const gchar* dir);
 gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 
 gchar**       g_conf_load_source_path(const gchar* filename);
@@ -102,6 +106,8 @@ gchar**       g_conf_load_source_path(const gchar* filename);
 void          g_conf_shutdown_daemon(void);
 gboolean      g_conf_ping_daemon(void);
 gboolean      g_conf_spawn_daemon(void);
+
+gchar*        g_conf_concat_key_and_dir(const gchar* dir, const gchar* key);
 
 #endif
 

@@ -144,6 +144,10 @@ gconfd_all_pairs (PortableServer_Servant servant, CORBA_char * dir,
                   ConfigServer_ValueList ** values, CORBA_Environment * ev);
 
 void 
+gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
+                 ConfigServer_KeyList ** keys, CORBA_Environment * ev);
+
+void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 
 CORBA_long
@@ -165,6 +169,7 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_lookup, 
   gconfd_set, 
   gconfd_all_pairs,
+  gconfd_all_dirs,
   gconfd_sync,
   gconfd_ping,
   gconfd_shutdown
@@ -268,7 +273,7 @@ gconfd_all_pairs (PortableServer_Servant servant,
 
   if (sources == NULL)
     {
-      syslog(LOG_ERR, "Received set request before initializing sources list; bug?");
+      syslog(LOG_ERR, "Received pair listing request before initializing sources list; bug?");
       return;
     } 
 
@@ -292,6 +297,10 @@ gconfd_all_pairs (PortableServer_Servant servant,
     {
       GConfPair* p = tmp->data;
 
+      g_assert(p != NULL);
+      g_assert(p->key != NULL);
+      g_assert(p->value != NULL);
+
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_g_conf_value(p->value, &((*values)->_buffer[i]));
 
@@ -304,6 +313,51 @@ gconfd_all_pairs (PortableServer_Servant servant,
   g_assert(i == n);
 
   g_slist_free(pairs);
+}
+
+void 
+gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
+                 ConfigServer_KeyList ** keys, CORBA_Environment * ev)
+{
+  GSList* subdirs;
+  guint n;
+  GSList* tmp;
+  guint i;
+
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received subdirs list request before initializing sources list; bug?");
+      return;
+    } 
+
+  syslog(LOG_DEBUG, "Received request to list all subdirs in `%s'", dir);
+
+  subdirs = g_conf_sources_all_dirs(sources, dir);
+  n = g_slist_length(subdirs);
+
+  *keys= ConfigServer_KeyList__alloc();
+  (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
+  (*keys)->_length = n;
+  (*keys)->_maximum = n;
+
+  tmp = subdirs;
+  i = 0;
+
+  while (tmp != NULL)
+    {
+      gchar* subdir = tmp->data;
+
+      (*keys)->_buffer[i] = CORBA_string_dup(subdir);
+
+      g_free(subdir);
+
+      ++i;
+      tmp = g_slist_next(tmp);
+    }
+  
+  g_assert(i == n);
+
+  g_slist_free(subdirs);
 }
 
 void 
@@ -688,9 +742,6 @@ main(int argc, char** argv)
     }
 
   CORBA_free(ior);
-  
-
-  
 
   /* If we got a fd on the command line, write the magic byte 'g' 
      to it to notify our spawning client that we're ready.

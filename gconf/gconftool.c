@@ -41,6 +41,7 @@
 int set_mode = FALSE;
 int get_mode = FALSE;
 int all_pairs_mode = FALSE;
+int all_subdirs_mode = FALSE;
 char* value_type = NULL;
 int shutdown_gconfd = FALSE;
 int ping_gconfd = FALSE;
@@ -81,6 +82,15 @@ struct poptOption options[] = {
     &all_pairs_mode,
     0,
     N_("Print all key/value pairs in a directory."),
+    NULL
+  },
+  {
+    "all-dirs",
+    '\0',
+    POPT_ARG_NONE,
+    &all_subdirs_mode,
+    0,
+    N_("Print all subdirectories in a directory."),
     NULL
   },
   { 
@@ -165,6 +175,14 @@ main (int argc, char** argv)
       fprintf(stderr, _("Can't use --all-pairs with --get or --set\n"));
       return 1;
     }
+
+  if ((all_subdirs_mode && get_mode) ||
+      (all_subdirs_mode && set_mode))
+    {
+      fprintf(stderr, _("Can't use --all-subdirs with --get or --set\n"));
+      return 1;
+    }
+
 
   if ((value_type != NULL) && !set_mode)
     {
@@ -358,15 +376,8 @@ main (int argc, char** argv)
                   gchar* s;
 
                   s = g_conf_value_to_string(pair->value);
-                  
-                  /* use fputs in case value contains printf 
-                     formats 
-                  */
-                  fputs(" ", stdout);
-                  fputs(pair->key, stdout);
-                  fputs(" = ", stdout);
-                  fputs(s, stdout);
-                  fputs("\n", stdout);
+
+                  printf(" %s = %s\n", pair->key, s);
 
                   g_free(s);
                   
@@ -379,7 +390,53 @@ main (int argc, char** argv)
             }
           else
             {
-              fprintf(stderr, _("Directory `%s' is empty.\n"), *args);
+              fprintf(stderr, _("Directory `%s' contains no key-value pairs.\n"), *args);
+            }
+ 
+          ++args;
+        }
+    }
+
+
+  if (all_subdirs_mode)
+    {
+      gchar** args = poptGetArgs(ctx);
+
+      if (args == NULL)
+        {
+          fprintf(stderr, _("Must specify one or more dirs to get subdirs from.\n"));
+          return 1;
+        }
+      
+      while (*args)
+        {
+          GSList* subdirs;
+          GSList* tmp;
+
+          subdirs = g_conf_all_dirs(conf, *args);
+          
+          if (subdirs != NULL)
+            {
+              printf(_("# Subdirectories in `%s':\n"), *args);
+
+              tmp = subdirs;
+
+              while (tmp != NULL)
+                {
+                  gchar* s = tmp->data;
+
+                  printf(" %s\n", s);
+
+                  g_free(s);
+
+                  tmp = g_slist_next(tmp);
+                }
+
+              g_slist_free(subdirs);
+            }
+          else
+            {
+              fprintf(stderr, _("Directory `%s' has no subdirectories.\n"), *args);
             }
  
           ++args;

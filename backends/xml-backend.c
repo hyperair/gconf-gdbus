@@ -99,13 +99,12 @@
  * file into place, then deleting the original file, checking for
  * errors and mod times along the way.
  *      
- */
-
-/* FIXME right now we don't cache failures to find a key or directory.
- *  We should probably do that. i.e. if a key/directory doesn't exist, 
- *  we'll do a full search for it every time we request it.
- * We need a concept of "nonexistent" cache entries anyway, so we can 
- * sync deleted directories to disk.
+ * Failed lookup caching
+ *
+ * If a key/directory doesn't exist, we create a cache entry anyway
+ * so we can rapidly re-determine that it doesn't exist.
+ * We also need to save "dirty" nonexistent entries, so we can delete
+ * the stuff off disk. 
  */
 
 typedef struct _XMLSource XMLSource;
@@ -122,15 +121,15 @@ typedef struct _KeyCacheEntry KeyCacheEntry;
 struct _KeyCacheEntry {
   gchar* key;   /* This string is used in multiple places, saving RAM, but 
                    the KeyCacheEntry owns it */
-  GConfValue* value;
-  xmlNodePtr node;
+  GConfValue* value;  /* NULL if the key is unset */
+  xmlNodePtr node;    /* NULL if the key has no value */
   GTime last_access;
 };
 
 typedef struct _TreeCacheEntry TreeCacheEntry;
 
 struct _TreeCacheEntry {
-  xmlDocPtr tree;
+  xmlDocPtr tree;      /* NULL if the dir doesn't exist */
   xmlNodePtr dirs;     /* Node holding list of child dirs; can be NULL */
   GSList* cached_keys; /* list of KeyCacheEntry for keys belonging to this tree */
   GTime last_access;
@@ -160,14 +159,17 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value);
 static xmlDocPtr
 xs_load_dir(XMLSource* source, const gchar* dir);
 
-static TreeCacheEntry*
-xs_create_new_dir(XMLSource* xsource, const gchar* dir);
+static void
+xs_create_new_dir(XMLSource* xsource, const gchar* dir, TreeCacheEntry* entry);
 
 static gboolean
 xs_sync_all(XMLSource* source);
 
 static GSList* 
 xs_pairs_in_dir(XMLSource* source, const gchar* dir);
+
+static GSList*
+xs_dirs_in_dir(XMLSource* source, const gchar* dir);
 
 /*
  * Dyna-load implementation
@@ -254,8 +256,10 @@ query_value (GConfSource* source, const gchar* key)
   KeyCacheEntry* entry;
 
   entry = xs_lookup_key(xsource, key);
+
+  g_assert(entry != NULL);
   
-  return entry ? g_conf_value_copy(entry->value) : NULL;
+  return entry->value ? g_conf_value_copy(entry->value) : NULL;
 }
 
 static void          
@@ -283,7 +287,7 @@ all_subdirs     (GConfSource* source,
 {  
   XMLSource* xsource = (XMLSource*)source;
 
-  return NULL;
+  return xs_dirs_in_dir(xsource, dir);
 }
 
 static gboolean      
@@ -370,7 +374,7 @@ xs_load_dir(XMLSource* source, const gchar* dir)
   gchar* xmlfile;
   xmlDocPtr doc;
 
-  relative = g_strconcat(source->root_dir, dir, NULL);
+  relative = g_conf_concat_key_and_dir(source->root_dir, dir);
 
   if (!g_conf_file_test(relative, G_CONF_FILE_ISDIR))
     {
@@ -383,7 +387,6 @@ xs_load_dir(XMLSource* source, const gchar* dir)
 
   if (!g_conf_file_test(xmlfile, G_CONF_FILE_ISFILE))
     {
-      g_warning("Directory `%s' exists but lacks a .gconf.xml", relative);
       g_free(relative);
       g_free(xmlfile);
       return NULL;
@@ -428,39 +431,39 @@ xs_lookup_key_given_dir(XMLSource* source,
          a key_node 
       */
       xmlNodePtr node;
+      GConfValue* value;
 
       if (key_node == NULL)
         node = xdoc_find_entry(tree_entry->tree, key);
       else 
         node = key_node;
+     
+      if (node != NULL)
+        value = xentry_extract_value(node);
+      else
+        value = NULL;
+
+      if (node != NULL && value == NULL)
+        {
+          /* Node was corrupt; no value set. */
+          g_warning("Node for key `%s' has no value?", key);
+          node = NULL;
+        }
+
+      /* Add key to key cache, then return the new entry. */
+      key_entry = key_cache_entry_new(key, value, node); /* not that value/node are NULL if nonexistent key */
       
-      if (node == NULL)
-        {
-          g_assert(key_node == NULL);
-          /* no such key */
-          return NULL;
-        }
-      else 
-        {
-          GConfValue* value;
-          
-          value = xentry_extract_value(node);
-          
-          /* Add key to key cache, then return the new entry. */
-          key_entry = key_cache_entry_new(key, value, node);
-          
-          /* Very important to use key_entry->key as the hash key */
-          g_hash_table_insert(source->keys, key_entry->key, key_entry);
-          
-          /* Tree entries track associated keys,
-             because the key entries hold a pointer into the XML 
-             tree 
-          */
-          tree_entry->cached_keys = g_slist_prepend(tree_entry->cached_keys,
-                                                    key_entry);
-          
-          return key_entry;
-        }
+      /* Very important to use key_entry->key as the hash key */
+      g_hash_table_insert(source->keys, key_entry->key, key_entry);
+      
+      /* Tree entries track associated keys,
+         because the key entries hold a pointer into the XML 
+         tree 
+      */
+      tree_entry->cached_keys = g_slist_prepend(tree_entry->cached_keys,
+                                                key_entry);
+      
+      return key_entry;
     }
 }
 
@@ -471,6 +474,7 @@ xs_lookup_key_and_dir(XMLSource* source, const gchar* key,
 {
   TreeCacheEntry* tree_entry;
   gchar* dir;
+  KeyCacheEntry* key_entry;
 
   g_return_if_fail(tree_entry_p != NULL);
   g_return_if_fail(key_entry_p != NULL);
@@ -488,17 +492,16 @@ xs_lookup_key_and_dir(XMLSource* source, const gchar* key,
   g_return_if_fail(dir != NULL);
 
   tree_entry = xs_lookup_dir(source, dir);
+ 
+  g_assert(tree_entry != NULL);
+ 
+  *tree_entry_p = tree_entry;
   
-  if (tree_entry != NULL)
-    {
-      KeyCacheEntry* key_entry;
+  key_entry = xs_lookup_key_given_dir(source, tree_entry, key, NULL);
 
-      *tree_entry_p = tree_entry;
-
-      key_entry = xs_lookup_key_given_dir(source, tree_entry, key, NULL);
-      
-      *key_entry_p = key_entry;
-    }
+  g_assert(key_entry != NULL);
+  
+  *key_entry_p = key_entry;
 
   g_free(dir);
 }
@@ -535,13 +538,9 @@ xs_lookup_dir(XMLSource* source, const gchar* dir)
   
   doc = xs_load_dir(source, dir);
 
-  if (doc == NULL)
-    {
-      printf("Key's directory (`%s') didn't exist\n", dir);
-      return NULL;
-    }
-  
-  printf("Loaded XML for directory `%s', adding to cache\n", dir);
+  printf("Loaded dir `%s', doc is %p\n", dir, doc);
+
+  /* doc MAY BE NULL if the dir doesn't exist */
   
   tree_entry = tree_cache_entry_new(doc);
 
@@ -591,7 +590,7 @@ xs_pairs_in_dir(XMLSource* source, const gchar* dir)
           
           if (attr != NULL)
             {
-              gchar* key = g_strconcat(dir, "/", attr, NULL);
+              gchar* key = g_conf_concat_key_and_dir(dir, attr);
               KeyCacheEntry* key_entry;
               GConfPair* pair;
 
@@ -601,12 +600,59 @@ xs_pairs_in_dir(XMLSource* source, const gchar* dir)
 
               pair = g_conf_pair_new(key, g_conf_value_copy(key_entry->value));
 
+              g_assert(pair->key != NULL);
+              g_assert(pair->value != NULL);
+
               retval = g_slist_prepend(retval, pair);
               
               free(attr);
               /* don't free key, because the GConfPair now owns it */
             }
+          else
+            g_warning("Entry with no name???");
         }
+
+      node = node->next;
+    }
+
+  return retval;
+}
+
+static GSList*
+xs_dirs_in_dir(XMLSource* source, const gchar* dir)
+{
+  GSList* retval = NULL;
+  TreeCacheEntry* entry;
+  xmlNodePtr node;
+
+  printf("Listing all dirs in `%s'\n", dir);
+
+  entry = xs_lookup_dir(source, dir);
+  
+  if (entry->dirs == NULL)
+    {
+      printf("No subdirectories in the dir entry\n");
+      return NULL;
+    }
+
+  node = entry->dirs->childs;
+
+  while (node != NULL)
+    {
+      gchar* attr = xmlGetProp(node, "name");      
+
+      if (attr != NULL)
+        {
+          gchar* s;
+          
+          s = g_conf_concat_key_and_dir(dir, attr);
+
+          free(attr);
+
+          retval = g_slist_prepend(retval, s);
+        }
+      else 
+        g_warning("Dir with no name???");
 
       node = node->next;
     }
@@ -669,17 +715,21 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
 {
   KeyCacheEntry* key_entry;
   TreeCacheEntry* tree_entry;
-  xmlNodePtr node;
 
   xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
 
-  if (key_entry != NULL)
+  g_assert(tree_entry != NULL);
+  g_assert(key_entry != NULL);
+
+  if (key_entry->node != NULL)
     {
       g_return_if_fail(tree_entry != NULL);
 
       tree_entry->dirty = TRUE;
 
       xentry_set_value(key_entry->node, value);
+
+      g_assert(key_entry->value != NULL); /* should have a value if we have a node */
 
       g_conf_value_destroy(key_entry->value);
 
@@ -690,8 +740,7 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
       return;
     }
 
-
-  if (tree_entry == NULL)
+  if (tree_entry->tree == NULL)
     {
       /* Directory doesn't exist; we need to create it then stick it in 
        * the cache. 
@@ -700,30 +749,28 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
 
       g_return_if_fail(dir != NULL);
 
-      tree_entry = xs_create_new_dir(source, dir);
+      xs_create_new_dir(source, dir, tree_entry);
 
-      if (tree_entry == NULL)
-        {
-          g_warning("Failed to create new directory `%s'", dir);
-          g_free(dir);
-          return;
-        }
+      g_assert(tree_entry->tree != NULL);
 
       g_free(dir);  
     }
   
-  g_assert(tree_entry != NULL);
-  
+  g_assert(tree_entry->tree != NULL);
 
   /* Add the key/value to the XML tree, update it in the key cache,
      and return. 
   */
 
-  node = xdoc_add_entry(tree_entry->tree, key, value);
+  g_assert(key_entry->node == NULL);
+  g_assert(key_entry->value == NULL);
 
-  key_entry = key_cache_entry_new(key, value, node);
+  key_entry->node = xdoc_add_entry(tree_entry->tree, key, value);
+  
+  key_entry->value = g_conf_value_copy(value);
 
-  g_hash_table_insert(source->keys, key_entry->key, key_entry);
+  g_assert(key_entry->node != NULL);
+  g_assert(key_entry->value != NULL);
 }
 
 static gchar* 
@@ -760,17 +807,15 @@ parent_dir(const gchar* dir)
   return parent;
 }
 
-static TreeCacheEntry*
-xs_create_new_dir(XMLSource* source, const gchar* dir)
+static void
+xs_create_new_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
 {
   xmlDocPtr doc = NULL;
-  TreeCacheEntry* entry = NULL;
   TreeCacheEntry* parent_entry = NULL;
   gchar* absolute;
-  gboolean failed = FALSE;
   gchar* parent;
 
-  absolute = g_strconcat(source->root_dir, dir, NULL);
+  absolute = g_conf_concat_key_and_dir(source->root_dir, dir);
 
   parent = parent_dir(dir);
 
@@ -778,45 +823,30 @@ xs_create_new_dir(XMLSource* source, const gchar* dir)
     {
       parent_entry = xs_lookup_dir(source, parent);
 
-      if (parent_entry == NULL)
+      if (parent_entry->tree == NULL)
         {
           /* Recursively create parents */
-          parent_entry = xs_create_new_dir(source, parent);
-              
-          if (parent_entry == NULL)
-            {
-              failed = TRUE;
-            }
+          xs_create_new_dir(source, parent, parent_entry);
         }
+
+      g_assert(parent_entry->tree != NULL);
 
       g_free(parent);
     }
 
-  if (failed)
+  if (mkdir(absolute, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
     {
-      g_free(absolute);
-      return NULL;
-    }
-
-  /* Debug check, just a slowdown, remove someday */
-  if (g_conf_file_test(absolute, G_CONF_FILE_ISDIR))
-    {
-      g_warning("Filesystem directory `%s' already exists?", absolute);
-    }
-  else
-    {
-      if (mkdir(absolute, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
+      if (errno == EEXIST)
         {
-          g_warning("Could not make directory `%s': %s",
-                    (gchar*)absolute, strerror(errno));
-          failed = TRUE;
+          if (g_conf_file_test(absolute, G_CONF_FILE_ISDIR))
+            /* nothing, no problem */;
         }
+      else
+        g_warning("Could not make directory `%s': %s",
+                  (gchar*)absolute, strerror(errno));
     }
 
   g_free(absolute);
-
-  if (failed)
-    return NULL;
 
   /* Create the parse tree, mark dirty so we eventually save the
      .gconf.xml file */
@@ -825,7 +855,7 @@ xs_create_new_dir(XMLSource* source, const gchar* dir)
 
   doc->root = xmlNewDocNode(doc, NULL, "gconf", NULL);
 
-  entry = tree_cache_entry_new(doc);
+  entry->tree = doc;
 
   entry->dirty = TRUE;
 
@@ -852,7 +882,7 @@ xs_create_new_dir(XMLSource* source, const gchar* dir)
       xdirs_add_child_dir(parent_entry->dirs, relative_dir);
     }
 
-  return entry;
+  return;
 }
 
 struct SyncData {
@@ -872,68 +902,86 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
   if (!entry->dirty)
     return;
 
-  relative_dir = g_strconcat(data->source->root_dir, dir, NULL);
+  /* FIXME make any missing directories */
+
+  relative_dir = g_conf_concat_key_and_dir(data->source->root_dir, dir);
 
   tmp_filename = g_strconcat(relative_dir, "/.gconf.xml.tmp", NULL);
   filename = g_strconcat(relative_dir, "/.gconf.xml", NULL);
   old_filename = g_strconcat(relative_dir, "/.gconf.xml.old", NULL);
 
-  if (xmlSaveFile(tmp_filename, entry->tree) < 0)
+  if (entry->tree == NULL)
     {
-      /* I think libxml may mangle errno, but we might as well 
-         try. */
-      g_warning("Failed to write file `%s': %s", 
-                tmp_filename, strerror(errno));
-
-      data->failed = TRUE;
-
-      goto end_of_sync;
+      /* We don't check errors here because the file may not exist to 
+         delete, or the directory may not be empty, and neither of those
+         are really bad things per se. The right thing is probably to 
+         switch on errno, so FIXME sometime in the future.
+      */
+      unlink(filename);
+      unlink(relative_dir);
+      goto successful_end_of_sync;
     }
-
-  old_existed = g_conf_file_exists(filename);
-
-  if (old_existed)
+  else 
     {
-      if (rename(filename, old_filename) < 0)
+      if (xmlSaveFile(tmp_filename, entry->tree) < 0)
         {
-          g_warning("Failed to rename `%s' to `%s': %s",
-                    filename, old_filename, strerror(errno));
+          /* I think libxml may mangle errno, but we might as well 
+             try. */
+          g_warning("Failed to write file `%s': %s", 
+                    tmp_filename, strerror(errno));
 
           data->failed = TRUE;
-          goto end_of_sync;
+
+          goto failed_end_of_sync;
         }
-    }
 
-  if (rename(tmp_filename, filename) < 0)
-    {
-      g_warning("Failed to rename `%s' to `%s': %s",
-                tmp_filename, filename, strerror(errno));
+      old_existed = g_conf_file_exists(filename);
 
-      /* Put the original file back, so this isn't a total disaster. */
-      if (rename(old_filename, filename) < 0)
+      if (old_existed)
         {
-          g_warning("Failed to restore `%s' from `%s': %s",
-                    filename, old_filename, strerror(errno));
+          if (rename(filename, old_filename) < 0)
+            {
+              g_warning("Failed to rename `%s' to `%s': %s",
+                        filename, old_filename, strerror(errno));
+
+              data->failed = TRUE;
+              goto failed_end_of_sync;
+            }
         }
 
-      data->failed = TRUE;
-      goto end_of_sync;
-    }
-
-  if (old_existed)
-    {
-      if (unlink(old_filename) < 0)
+      if (rename(tmp_filename, filename) < 0)
         {
-          g_warning("Failed to delete old file `%s': %s",
-                    old_filename, strerror(errno));
-          /* Not a failure, just leaves cruft around. */
+          g_warning("Failed to rename `%s' to `%s': %s",
+                    tmp_filename, filename, strerror(errno));
+
+          /* Put the original file back, so this isn't a total disaster. */
+          if (rename(old_filename, filename) < 0)
+            {
+              g_warning("Failed to restore `%s' from `%s': %s",
+                        filename, old_filename, strerror(errno));
+            }
+
+          data->failed = TRUE;
+          goto failed_end_of_sync;
+        }
+
+      if (old_existed)
+        {
+          if (unlink(old_filename) < 0)
+            {
+              g_warning("Failed to delete old file `%s': %s",
+                        old_filename, strerror(errno));
+              /* Not a failure, just leaves cruft around. */
+            }
         }
     }
+
+ successful_end_of_sync:
   
   /* All successful, mark it not-dirty-anymore */
   entry->dirty = FALSE;
 
- end_of_sync:
+ failed_end_of_sync:
 
   g_free(old_filename);
   g_free(tmp_filename);
@@ -1103,6 +1151,9 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
     case G_CONF_VALUE_FLOAT:
       type = "float";
       break;
+    case G_CONF_VALUE_BOOL:
+      type = "bool";
+      break;
     default:
       g_assert_not_reached();
       type = NULL; /* for warnings */
@@ -1144,6 +1195,8 @@ xentry_extract_value(xmlNodePtr node)
     type = G_CONF_VALUE_FLOAT;
   else if (strcmp(type_str, "string") == 0)
     type = G_CONF_VALUE_STRING;
+  else if (strcmp(type_str, "bool") == 0)
+    type = G_CONF_VALUE_BOOL;
   else
     {
       g_warning("Unknown type `%s'", type_str);
@@ -1170,10 +1223,15 @@ key_cache_entry_new(const gchar* key, GConfValue* value, xmlNodePtr node)
   GConfValue* stored_val;
   KeyCacheEntry* entry;
 
-  stored_val = g_conf_value_copy(value);
+  g_assert((node && value) || (!node && !value));
+
+  if (value)
+    stored_val = g_conf_value_copy(value);
+  else
+    stored_val = NULL;
 
   /* Prime candidate for mem chunks */
-  entry = g_new(KeyCacheEntry, 1);
+  entry = g_new0(KeyCacheEntry, 1);
   
   entry->key = g_strdup(key);
   entry->node = node;
@@ -1190,7 +1248,8 @@ key_cache_entry_destroy(KeyCacheEntry* entry)
 
   g_free(entry->key);
 
-  g_conf_value_destroy(entry->value);
+  if (entry->value)
+    g_conf_value_destroy(entry->value);
   
   g_free(entry);
 }
@@ -1204,7 +1263,7 @@ tree_cache_entry_new(xmlDocPtr tree)
   entry = g_new(TreeCacheEntry, 1);
 
   entry->tree = tree;
-  entry->dirs = xdoc_find_dirs(tree);
+  entry->dirs = tree ? xdoc_find_dirs(tree) : NULL;
   entry->cached_keys = NULL;
   entry->last_access = time(NULL);
   entry->dirty = FALSE;
@@ -1217,7 +1276,8 @@ tree_cache_entry_destroy(TreeCacheEntry* entry)
 {
   g_slist_free(entry->cached_keys);
 
-  xmlFreeDoc(entry->tree);
+  if (entry->tree)
+    xmlFreeDoc(entry->tree);
   
   g_free(entry);
 }
@@ -1229,3 +1289,4 @@ tree_cache_entry_make_dirs(TreeCacheEntry* entry)
 
   entry->dirs = xmlNewChild(entry->tree->root, NULL, "dirs", NULL);
 }
+
