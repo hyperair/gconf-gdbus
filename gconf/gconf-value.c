@@ -966,6 +966,14 @@ gconf_value_set_int(GConfValue* value, gint the_int)
 
 void        
 gconf_value_set_string(GConfValue* value, const gchar* the_str)
+{  
+  gconf_value_set_string_nocopy (value,
+                                 g_strdup (the_str));
+}
+
+void
+gconf_value_set_string_nocopy (GConfValue *value,
+                               char       *str)
 {
   GConfRealValue *real;
 
@@ -973,8 +981,9 @@ gconf_value_set_string(GConfValue* value, const gchar* the_str)
   g_return_if_fail(value->type == GCONF_VALUE_STRING);
 
   real = REAL_VALUE (value);
-  
-  set_string(&real->d.string_data, the_str);
+
+  g_free (real->d.string_data);
+  real->d.string_data = str;
 }
 
 void        

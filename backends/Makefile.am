@@ -12,7 +12,7 @@ else
 BDBBACKEND=
 endif
 
-backend_LTLIBRARIES = libgconfbackend-xml.la $(BDBBACKEND)
+backend_LTLIBRARIES = libgconfbackend-xml.la $(BDBBACKEND) libgconfbackend-markup.la
 
 libgconfbackend_xml_la_SOURCES = \
 	xml-cache.h		\
@@ -31,6 +31,14 @@ libgconfbackend_bdb_la_SOURCES = bdb.c bdb.h bdb-backend.c val-encode.c val-enco
 
 libgconfbackend_bdb_la_LDFLAGS = -avoid-version -module
 libgconfbackend_bdb_la_LIBADD = $(DEPENDENT_LIBS) $(BDB_LIBS)
+
+libgconfbackend_markup_la_SOURCES = 	\
+	markup-tree.h			\
+	markup-tree.c
+
+libgconfbackend_markup_la_LDFLAGS = -avoid-version -module
+libgconfbackend_markup_la_LIBADD  = $(DEPENDENT_LIBS)
+
 
 noinst_PROGRAMS = xml-test
 

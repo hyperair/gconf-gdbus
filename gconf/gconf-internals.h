@@ -242,6 +242,9 @@ int         gconf_value_compare (const GConfValue *value_a,
 
 GConfValue* gconf_schema_steal_default_value (GConfSchema *schema);
 
+void gconf_value_set_string_nocopy (GConfValue *value,
+                                    char       *str);
+
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */
