@@ -773,8 +773,9 @@ gconf_server_load_sources(void)
       tmp = g_list_next(tmp);
     }
 
+  /* In this case, some sources may still return TRUE from their writeable() function */
   if (!have_writeable)
-    gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, won't be able to save configuration changes"));
+    gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, may not be able to save some configuration changes"));
 
   /* Install the sources as the default context */
   set_default_context(context_new(sources));
