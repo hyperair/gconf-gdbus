@@ -165,7 +165,7 @@ gconfd_get_default_database(PortableServer_Servant servant,
   db = lookup_database (NULL);
 
   if (db)
-    return db->objref;
+    return CORBA_Object_duplicate (db->objref, ev);
   else
     return CORBA_OBJECT_NIL;
 }
@@ -181,7 +181,7 @@ gconfd_get_database(PortableServer_Servant servant,
   db = obtain_database (address, &error);
 
   if (db != NULL)
-    return db->objref;
+    return CORBA_Object_duplicate (db->objref, ev);
   else if (gconf_set_exception(&error, ev))
     return CORBA_OBJECT_NIL;
   else
@@ -575,9 +575,6 @@ init_databases (void)
 static void
 set_default_database (GConfDatabase* db)
 {
-  g_assert(db_list != NULL);
-  g_assert(dbs_by_address != NULL);
-
   default_db = db;
   
   /* Default database isn't in the address hash since it has
@@ -659,8 +656,6 @@ drop_old_databases(void)
   GList *dead = NULL;
   GTime now;
   
-  g_assert(db_list != NULL);
-  
   now = time(NULL);
   
   tmp_list = db_list;
@@ -694,11 +689,11 @@ drop_old_databases(void)
 static void
 shutdown_databases (void)
 {
-  GList *tmp_list;
-  
-  if (db_list == NULL)
-    return; /* Can happen if we get a signal before creating it */
+  GList *tmp_list;  
 
+  /* This may be called before we init fully,
+     so check that everything != NULL */
+  
   tmp_list = db_list;
 
   while (tmp_list)
@@ -713,11 +708,13 @@ shutdown_databases (void)
   g_list_free (db_list);
   db_list = NULL;
 
-  g_hash_table_destroy(dbs_by_address);
+  if (dbs_by_address)
+    g_hash_table_destroy(dbs_by_address);
 
   dbs_by_address = NULL;
 
-  gconf_database_destroy (default_db);
+  if (default_db)
+    gconf_database_destroy (default_db);
 }
 
 /*
@@ -901,6 +898,7 @@ restore_listener (GConfDatabase* db,
   ConfigListener cl;
   CORBA_Environment ev;
   guint new_cnxn;
+  gchar *address;
   
   if (strcmp (node->name, "listener") != 0)
     {
@@ -953,8 +951,14 @@ restore_listener (GConfDatabase* db,
   
   new_cnxn = gconf_database_add_listener(db, cl, location);
 
+  if (db == default_db)
+    address = "def"; /* cheesy hack */
+  else
+    address = ((GConfSource*)db->sources->sources->data)->address;
+  
   ConfigListener_update_listener (cl,
                                   db->objref,
+                                  address,
                                   atoi (cnxn),
                                   location,
                                   new_cnxn,

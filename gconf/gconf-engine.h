@@ -36,9 +36,10 @@ struct _GConfEngine {
   gpointer dummy;
 };
   
-GConfEngine* gconf_engine_get_default             (void); /* Default source stack */
+GConfEngine* gconf_engine_get_default     (void);
 /* returns NULL on error; requests single specified source */
-GConfEngine* gconf_engine_get_for_address(const gchar* address, GConfError** err);
+GConfEngine* gconf_engine_get_for_address (const gchar* address,
+                                           GConfError** err);
 void         gconf_engine_unref           (GConfEngine* conf);
 void         gconf_engine_ref             (GConfEngine* conf);
 

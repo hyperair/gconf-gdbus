@@ -78,6 +78,7 @@ interface ConfigListener {
   /// busy clients.
 
   oneway void update_listener (in ConfigDatabase database,
+                               in string db_address,
                                in unsigned long old_cnxn,
                                in string where,
                                in unsigned long new_cnxn);

@@ -22,6 +22,8 @@
 #include "gconf-sources.h"
 #include "gconf-locale.h"
 #include "gconfd.h"
+#include <unistd.h>
+#include <liboaf/liboaf.h>
 #include <time.h>
 
 
@@ -499,7 +501,6 @@ gconf_database_new (GConfSources  *sources)
     PortableServer_POA_activate_object(gconf_get_poa (),
                                        &db->servant,
                                        &ev);
-  CORBA_free (objid);
   
   db->objref = PortableServer_POA_servant_to_reference(gconf_get_poa (),
                                                        &db->servant,
@@ -511,6 +512,8 @@ gconf_database_new (GConfSources  *sources)
 
       exit (1);
     }
+
+  CORBA_free (objid);
 
   db->listeners = gconf_listeners_new();
 
@@ -1133,6 +1136,8 @@ gconf_database_to_node (GConfDatabase *db, gboolean is_default)
     }
   else
     {
+      gchar *address;
+      
       node = g_markup_node_new_element ("database");
       
       address = ((GConfSource*)db->sources->sources->data)->address;

@@ -1,3 +1,20 @@
+2000-08-30  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf.c: Change client to new system (use object
+	references to ConfigDatabase instead of the integer context ID).
+	
+	* gconf/gconf-backend.c: Fix path to uninstalled modules, and 
+	put the whole uninstalled modules thing in GCONF_ENABLE_DEBUG 
+
+	* gconf/gconf-database.c: add some missing includes, and fix
+	a typo bug
+
+	* gconf/gconfd.c: CORBA_Object_duplicate() the ConfigDatabase
+	objrefs before passing them back out to ORBit. Remove
+	some bogus assertions.
+	
+	* TODO: Updates, added notes from Colm
+
 2000-08-30  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconfd.c, gconf/gconf-database.h, gconf/gconf-database.c, 

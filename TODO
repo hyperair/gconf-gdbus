@@ -8,10 +8,12 @@
 * Performance tuning
 
 * Document locking issues for backends (backends should perform
-  their own locking, etc.)
+  their own locking, handle concurrency, etc.)
 
 * Document which database GConf will write to given multiple 
-  writeable databases
+  writeable databases (i.e. the first one it can write to,
+  at the moment, maybe eventually the "database map" will 
+  specify which it writes to)
 
 * Fix spelling of "writable" throughout, or at least
   in public API (s/writeable/writable/g)
@@ -61,4 +63,11 @@
   comes from the backend. Hmm.
 
 * Change _() to actually call gettext or dgettext
+
+* Implement dump/slurp functionality (define XML DTD to represent 
+  modifications to the database; augment gconftool to be able to 
+  write out the current state of the database in this format, 
+  and also apply the changes given in the format)
+
+* Use a real DTD and a nicer structure for the XML backend format
 

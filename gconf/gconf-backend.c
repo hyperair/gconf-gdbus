@@ -160,10 +160,12 @@ gconf_backend_file(const gchar* address)
   else
     {
       /* -- debug only */
+#ifdef GCONF_ENABLE_DEBUG      
       gchar* dir;
 
       g_free(retval);
-      dir = g_strconcat(GCONF_BUILDDIR, "/backends/.libs", NULL);
+      dir = g_strconcat(GCONF_SRCDIR, "/gconf/",
+                        GCONF_BUILDDIR, "/backends/.libs", NULL);
 
       retval = g_module_build_path(dir, file);
 
@@ -174,7 +176,7 @@ gconf_backend_file(const gchar* address)
           g_free(file);
           return retval;
         }
-
+#endif
       /* -- end debug only */
 
       gconf_log(GCL_ERR, _("No such file `%s'\n"), retval);
