@@ -869,10 +869,10 @@ gconf_server_load_sources(void)
 
   if (addresses == NULL)
     {      
-      /* Try using the default address xml:$(HOME)/.gconf */
+      /* Try using the default address xml:readwrite:$(HOME)/.gconf */
       addresses = g_new0(gchar*, 2);
 
-      addresses[0] = g_strconcat("xml:", g_get_home_dir(), "/.gconf", NULL);
+      addresses[0] = g_strconcat("xml:readwrite:", g_get_home_dir(), "/.gconf", NULL);
 
       addresses[1] = NULL;
       
