@@ -1,5 +1,17 @@
 2000-09-09  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconfd.c (half_hour_timeout): Convert one_hour_timeout to
+	half_hour_timeout() to more agressively prune resources. In the
+	half hour timeout, if we have no connected listeners on any
+	database, shut down gconfd. (We might want to make the timeout
+	length configurable; and for laptops people might not want any 
+	timeouts at all, since it will wake up their laptop.)
+	(fast_cleanup): Remove comment about getting incoming connections
+	after shutting things down; this is no longer a problem because
+	we deactivate databases in the POA
+
+2000-09-09  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/Makefile.am (libgconf_1_la_SOURCES): Move gconf-backend.h
 	here, I don't see why it was in the public headers
 

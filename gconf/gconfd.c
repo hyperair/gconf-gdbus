@@ -116,6 +116,7 @@ static GConfDatabase*       lookup_database (const gchar *address);
 static GConfDatabase*       obtain_database (const gchar *address,
                                              GError **err);
 static void                 drop_old_databases (void);
+static gboolean             no_databases_in_use (void);
 
 /* 
  * CORBA goo
@@ -341,7 +342,8 @@ signal_handler (int signo)
     break;
     
   case SIGHUP:
-    gconf_log(GCL_INFO, _("Received signal %d, ignoring"), signo);
+    gconf_log(GCL_INFO, _("Received signal %d, shutting down cleanly"), signo);
+    gconf_main_quit ();
     --in_fatal;
     break;
     
@@ -502,12 +504,18 @@ static GSList* main_loops = NULL;
 static guint timeout_id = 0;
 
 static gboolean
-one_hour_timeout(gpointer data)
+half_hour_timeout(gpointer data)
 {
   gconf_log (GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
   
   drop_old_databases ();
 
+  if (no_databases_in_use ())
+    {
+      gconf_main_quit ();
+      return FALSE;
+    }
+  
   /* expire old locale cache entries */
   gconfd_locale_cache_expire ();
 
@@ -527,8 +535,8 @@ gconf_main(void)
   if (main_loops == NULL)
     {
       g_assert(timeout_id == 0);
-      timeout_id = g_timeout_add(1000*60*60, /* 1 sec * 60 s/min * 60 min */
-                                 one_hour_timeout,
+      timeout_id = g_timeout_add(1000*60*30, /* 1 sec * 60 s/min * 30 min */
+                                 half_hour_timeout,
                                  NULL);
 
     }
@@ -671,7 +679,7 @@ drop_old_databases(void)
 
       if (db->listeners &&                             /* not already hibernating */
           gconf_listeners_count(db->listeners) == 0 && /* Can hibernate */
-          (now - db->last_access) > (60*45))   /* 45 minutes without access */
+          (now - db->last_access) > (60*20))           /* 20 minutes without access */
         {
           dead = g_list_prepend (dead, db);
         }
@@ -721,6 +729,18 @@ shutdown_databases (void)
 
   if (default_db)
     gconf_database_destroy (default_db);
+
+  default_db = NULL;
+}
+
+static gboolean
+no_databases_in_use (void)
+{
+  /* Only the default database still open, and
+   * it has no listeners
+   */
+  return db_list == NULL &&
+    gconf_listeners_count (default_db->listeners) == 0;
 }
 
 /*

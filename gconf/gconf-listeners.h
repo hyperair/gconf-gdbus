@@ -76,7 +76,6 @@ gboolean gconf_listeners_get_data (GConfListeners          *listeners,
                                    gpointer                *listener_data_p,
                                    const gchar            **location_p);
 
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
