@@ -3070,7 +3070,7 @@ parse_tree (MarkupDir  *root,
   ParseInfo info;
   char *filename;
   char *text;
-  int length;
+  gsize length;
 
   filename = markup_dir_build_path (root, TRUE, parse_subtree);
   

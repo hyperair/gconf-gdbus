@@ -1,3 +1,11 @@
+2004-06-12  Mark McLoughlin  <mark@skynet.ie>
+
+	64-bit fix from Joe Marcus Clarke <marcus@freebsd.org>
+
+	* backends/markup-tree.c: (parse_tree): the length
+	returned from g_file_get_contents() is a gsize
+	not an int.
+
 2004-06-09  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* gconf/gconf-internals.c: (gconf_activate_server):
