@@ -1,3 +1,13 @@
+2003-03-16  Jeffrey Stedfast  <fejj@ximian.com>
+
+	Fixes bug #108574
+
+	* backends/xml-dir.c (gconf_xml_doc_dump): Replacement for
+	xmlDocDump() which is not reliable. While we're at it, also dump
+	formatted xml.
+	(dir_sync): Call the new gconf_xml_doc_dump() rather than
+	xmlDocDump() because we don't want to risk losing user settings.
+
 2003-07-19  Havoc Pennington  <hp@pobox.com>
 
 	* doc/gconf/gconf.sgml: doc fixes from Samuel Stringham

@@ -345,6 +345,50 @@ dir_useless (Dir *d)
     g_hash_table_size (d->entry_cache) == 0;
 }
 
+/* for info on why this is used rather than xmlDocDump or xmlSaveFile
+ * and friends, see http://bugzilla.gnome.org/show_bug.cgi?id=108329 */
+static int
+gconf_xml_doc_dump (FILE *fp, xmlDocPtr doc)
+{
+  char *xmlbuf;
+  int fd, n;
+  
+  xmlDocDumpFormatMemory (doc, (xmlChar **) &xmlbuf, &n, TRUE);
+  if (n <= 0)
+    {
+      errno = ENOMEM;
+      return -1;
+    }
+  
+  if (fwrite (xmlbuf, sizeof (xmlChar), n, fp) < n)
+    {
+      xmlFree (xmlbuf);
+      return -1;
+    }
+  
+  xmlFree (xmlbuf);
+  
+  /* From the fflush(3) man page:
+   *
+   * Note that fflush() only flushes the user space buffers provided by the
+   * C library. To ensure that the data is physically stored on disk the
+   * kernel buffers must be flushed too, e.g. with sync(2) or fsync(2).
+   */
+  
+  /* flush user-space buffers */
+  if (fflush (fp) != 0)
+    return -1;
+  
+  if ((fd = fileno (fp)) == -1)
+    return -1;
+  
+  /* sync kernel-space buffers to disk */
+  if (fsync (fd) == -1)
+    return -1;
+  
+  return 0;
+}
+
 gboolean
 dir_sync (Dir      *d,
           gboolean *deleted,
@@ -444,7 +488,7 @@ dir_sync (Dir      *d,
           goto failed_end_of_sync;
         }  
 
-      if (xmlDocDump (outfile, d->doc) < 0)
+      if (gconf_xml_doc_dump (outfile, d->doc) < 0)
         {
           gconf_set_error (err, GCONF_ERROR_FAILED, 
                            _("Failed to write XML data to `%s': %s"),
