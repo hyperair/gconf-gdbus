@@ -61,15 +61,16 @@ msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Los permisos del archivo/directorio de la fuente XML en %s son: %o/%o"
 
 #: backends/xml-backend.c:584
-#, fuzzy, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Error sincronizando datos: %s"
+msgstr "Error sincronizando la cache del directorio en XML: %s"
 
 #: backends/xml-backend.c:651
 msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
 msgstr ""
+"La operación de eliminar directorio ya no esta soportada, elimine todos los "
+"valores en el directorio"
 
 #: backends/xml-backend.c:718
 msgid "Initializing XML backend module"
@@ -82,7 +83,7 @@ msgstr "Fallo al liberar el bloqueo en el directorio XML `%s': %s"
 
 #: backends/xml-cache.c:248
 msgid "Failed to sync XML cache contents to disk"
-msgstr ""
+msgstr "Error al sincronizar la cache XML a disco"
 
 #: backends/xml-cache.c:278
 #, c-format
@@ -113,9 +114,8 @@ msgid "XML filename `%s' is a directory"
 msgstr "El archivo XML `%s' es un directorio"
 
 #: backends/xml-dir.c:369 backends/xml-dir.c:376
-#, fuzzy, c-format
 msgid "Failed to delete \"%s\": %s"
-msgstr "Error al borrar `%s': %s"
+msgstr "Error al borrar \"%s\": %s"
 
 #: backends/xml-dir.c:421
 #, c-format
@@ -346,13 +346,12 @@ msgstr "Error al sincronizar uno o más recursos: %s"
 #. * app to simply continue.
 #.
 #: gconf/gconf-database.c:1076
-#, fuzzy, c-format
 msgid ""
 "Failed to log addition of listener %s (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Fallo al registrar la adición de un control (%s); no seré capaz de restaurar "
+"Fallo al registrar la adición del control %s (%s); no seré capaz de restaurar "
 "este control al reiniciar gconfd, resultando en una mala notificación de los "
 "cambios de configuración."
 
@@ -392,14 +391,12 @@ msgid "Error getting default value for `%s': %s"
 msgstr "Error al obtener el valor por defecto para `%s': %s"
 
 #: gconf/gconf-database.c:1405
-#, fuzzy, c-format
 msgid "Error unsetting \"%s\": %s"
-msgstr "Error eliminando `%s': %s"
+msgstr "Error eliminando \"%s\": %s"
 
 #: gconf/gconf-database.c:1437
-#, fuzzy, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "Error al obtener el valor para `%s': %s"
+msgstr "Error al obtener un nuevo valor para \"%s\": %s"
 
 #: gconf/gconf-database.c:1485
 #, c-format
@@ -491,9 +488,8 @@ msgid "No database available to save your configuration"
 msgstr "No hay bases de datos disponibles para guardar su configuración"
 
 #: gconf/gconf-internals.c:86
-#, fuzzy, c-format
 msgid "No '/' in key \"%s\""
-msgstr "No hay '/' en la clave `%s'"
+msgstr "No hay '/' en la clave \"%s\""
 
 #: gconf/gconf-internals.c:199
 #, c-format
@@ -607,11 +603,12 @@ msgid "Failed to create or open '%s'"
 msgstr "Error al crear o abrir '%s'"
 
 #: gconf/gconf-internals.c:2397
-#, fuzzy, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
-msgstr "Error al bloquear '%s': otro proceso tiene el bloqueo (%s)"
+msgstr ""
+"Error al bloquear '%s': probablemente otro proceso tiene el bloqueo, "
+"o el sistema operativo tine el bloqueo por NFS mal configurado (%s)"
 
 #: gconf/gconf-internals.c:2425
 #, c-format
@@ -689,7 +686,6 @@ msgid "Failed to launch configuration server: %s\n"
 msgstr "Error al ejecutar el servidor de configuración: %s\n"
 
 #: gconf/gconf-internals.c:2923
-#, fuzzy
 msgid ""
 "Failed to contact configuration server; some possible causes are:\n"
 "a) you have an existing configuration server (gconfd) running, but it isn't "
@@ -700,44 +696,50 @@ msgid ""
 "crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no "
 "gconfd processes are running on any machine using your home dir"
 msgstr ""
-"Error al contactar con el servidor de configuraciones (una causa probable de "
-"esto es que tengas un servidor de configuraciones ejecutandose (gconfd), "
-"pero no se puede llegar haste el desde aquí - si estas conectado desde dos "
-"máquinas al mismo tiempo, puede que necesite habilitar el soporte TCP de "
-"ORBit\n"
+"Error al contactar con el servidor de configuraciones. Algunas causas "
+"probables son:\n"
+"a) hay un servidor de configuraciones ejecutandose (gconfd), pero no es "
+"accesible desde aqui - si está conectado desde dos máquinas a la vez, "
+"puede que necesite habilitar el soporte TCP en ORBIT poniendo la línea "
+"\"ORBIIOPIPv4=1\" in /etc/orbitrc\n"
+"b) tiene locks antiguos en su directorio raíz montado por NFS debido a "
+"una caida del sistema, pruebe eliminando ~/.gconf/*.lock y ~/.gconfd/lock "
+"si está seguro que no hay ningún proceso gconfd ejecutandose usando su "
+"directorio raíz"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
-#, fuzzy
 msgid "Schema contains invalid UTF-8"
-msgstr "El texto contiene UTF-8 inválido"
+msgstr "El schema contiene UTF-8 inválido"
 
 #: gconf/gconf-sources.c:319
-#, fuzzy, c-format
 msgid "Failed to load source \"%s\": %s"
-msgstr "Error al cargar la fuente `%s': %s"
+msgstr "Error al cargar la fuente \"%s\": %s"
 
 #: gconf/gconf-sources.c:346
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
-msgstr ""
+msgstr "Dirección \"%s\" resuelta a una fuente de escritura en la posición %d"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
-msgstr ""
+msgstr "Dirección \"%s\" resuelta a una fuente de lectura en la posición %d"
 
 #: gconf/gconf-sources.c:359
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
+"Dirección \"%s\" resuelta a una fuente de escritura parcial en la posición %d"
 
 #: gconf/gconf-sources.c:368
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
 msgstr ""
+"Ninguna de las direcciones resueltas son de escritura. No será posible guardar "
+"la configuración"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -749,16 +751,14 @@ msgid "The '/' name can only be a directory, not a key"
 msgstr "El nombre '/' solo puede ser un directorio, no una clave"
 
 #: gconf/gconf-sources.c:679
-#, fuzzy, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr ""
-"El valor de `%s' está definido en una fuente de solo lectura en la parte "
-"superior de su configuración."
+"El valor de `%s' es una fuente de solo lectura en la parte superior de su "
+"configuración"
 
 #: gconf/gconf-sources.c:691
-#, fuzzy, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writable databases. There are some common causes of this problem: 1) your "
@@ -779,15 +779,22 @@ msgid ""
 msgstr ""
 "No pude guardar un valor en la clave '%s', ya que el servidor de "
 "configuraciones no tiene ninguna base de datos escribible. Hay dos causas "
-"comunes para este problema: 1) su ruta de configuración no contiene ninguna "
-"base de datos o no ha sido encontrada o 2) de alguna manera hemos creado "
-"erroneamente dos procesos gconfd. Si tiene dos procesos gconfd (o tenia dos "
-"en el momento en el que el segundo fue lanzado), salga, mate todas las "
-"copias de gconfd, y vuelva a entrar, esto puede solucionar el problema. "
-"Quizá el problema está en que intento usar GConf desde dos maquinas al mismo "
+"comunes para este problema: 1) su ruta de configuración %s/path no contiene "
+"ninguna base de datos o no ha sido encontrada o 2) de alguna manera hemos "
+"creado erroneamente dos procesos gconfd 3) el sistema está mal configurado "
+"y el bloqueo de NFS no funciona en su directorio raíz o 4) la máquina NFS "
+"cliente murió y no notificó correctamente al servidor al reiniciarse que "
+"se deberian eliminar los bloqueos de archivo. Si tiene dos procesos "
+"gconfd (o tenia dos en el momento en el que el segundo fue lanzado), salga, "
+"mate todas las copias de gconfd, y vuelva a entrar, esto puede solucionar el "
+"problema. Si tiene bloqueos antiguos, elimine ~/.gconf*/*lock. Quiza el "
+"problema está en que intento usar GConf desde dos maquinas al mismo "
 "tiempo, y ORBit todavía tiene la configuración por defecto que previene las "
-"conexiones remotas de CORBA. Como siempre, compruebe los logs user.* para "
-"obtener detalles acerca de los problemas encontrados por gconfd."
+"conexiones remotas de CORBAi - ponga \"ORBIIOPIPv4=1\" en /etc/orbitrc. Como "
+"siempre, compruebe los logs user.* para obtener más detalles acerca de los "
+"problemas encontrados por gconfd. Solo puede haber un gconfd por directorio "
+"raíz, y debe tener un archivo de bloqueo en ~/.gconfd y también archivos de "
+"bloqueo en los sitios de almacenamiento locales como ~/.gconf"
 
 #: gconf/gconf-sources.c:1410
 #, c-format
@@ -867,12 +874,11 @@ msgstr "No entendí `%s' (hay un ')' extra dentro del par)"
 #: gconf/gconf.c:54
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "La clave \"%s\" es NULL"
 
 #: gconf/gconf.c:61
-#, fuzzy, c-format
 msgid "\"%s\": %s"
-msgstr "`%s': %s"
+msgstr "\"%s\": %s"
 
 #: gconf/gconf.c:333
 #, c-format
@@ -903,7 +909,7 @@ msgstr "No puede haber un punto (.) tras una barra (/)"
 #: gconf/gconf.c:2436
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
-msgstr "`%c' no es un carácter ASCII, no está permitido en nombres de claves"
+msgstr "'%c' no es un carácter ASCII, no está permitido en nombres de claves"
 
 #: gconf/gconf.c:2446
 #, c-format
@@ -1375,9 +1381,8 @@ msgstr ""
 "schema llamado"
 
 #: gconf/gconftool.c:342
-#, fuzzy
 msgid "Remove any schema name applied to the given keys"
-msgstr "Obtener el nombre del schema aplicado a esta clave"
+msgstr "Eliminar cualquier nombre de schema aplicado a la clave dada"
 
 #: gconf/gconftool.c:351
 msgid "Get the name of the default source"
@@ -1465,7 +1470,7 @@ msgstr ""
 
 #: gconf/gconftool.c:552
 msgid "You should use --direct when using a non-default configuration source\n"
-msgstr ""
+msgstr "Debe usar --direct cuando use una fuente de configuración no predefinida\n"
 
 #: gconf/gconftool.c:558
 #, c-format
@@ -1475,6 +1480,8 @@ msgstr "Error al iniciar GConf: %s\n"
 #: gconf/gconftool.c:587
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL esta definido, no se instalan los "
+"schemas\n"
 
 #: gconf/gconftool.c:600
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1651,9 +1658,8 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Error al asociar el esquema `%s' con la clave `%s': %s\n"
 
 #: gconf/gconftool.c:1442
-#, fuzzy, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "Error al obtener el esquema de `%s': %s\n"
+msgstr "Error al eliminar nombre de esquema para '%s': %s\n"
 
 #: gconf/gconftool.c:1467
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1700,9 +1706,8 @@ msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Debe especificar uno o mas claves para desasignar recursivamente.\n"
 
 #: gconf/gconftool.c:1652
-#, fuzzy, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "Error al listar entradas en `%s': %s\n"
+msgstr "Error al eliminar recursivamente \"%s\": %s\n"
 
 #: gconf/gconftool.c:1670
 msgid "Must specify one or more dirs to get subdirs from.\n"
