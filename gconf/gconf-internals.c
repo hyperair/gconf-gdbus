@@ -283,7 +283,7 @@ g_conf_value_to_string(GConfValue* value)
         g_free(cdr);
       }
       break;
-      /* These remaining shouldn't really be used... */
+      /* These remaining shouldn't really be used outside of debug spew... */
     case G_CONF_VALUE_INVALID:
       retval = g_strdup("Invalid");
       break;

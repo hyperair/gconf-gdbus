@@ -229,9 +229,30 @@ gboolean     g_conf_get_bool  (GConf* conf, const gchar* key,
 /* this one has no default since it would be expensive and make little
    sense; it returns NULL as a default, to indicate unset or error */
 /* free the retval */
+/* Note that this returns the schema stored at key, NOT
+   the schema that key conforms to. */
 GConfSchema* g_conf_get_schema  (GConf* conf, const gchar* key);
 
+/* No convenience functions for lists or pairs, since there are too
+   many combinations of types possible
+*/
 
+/* setters return TRUE on success; note that you still have to sync */
+
+gboolean     g_conf_set_float   (GConf* conf, const gchar* key,
+                                 gdouble val);
+
+gboolean     g_conf_set_int     (GConf* conf, const gchar* key,
+                                 gint val);
+
+gboolean     g_conf_set_string  (GConf* conf, const gchar* key,
+                                 const gchar* val);
+
+gboolean     g_conf_set_bool    (GConf* conf, const gchar* key,
+                                 gboolean val);
+
+gboolean     g_conf_set_schema  (GConf* conf, const gchar* key,
+                                 GConfSchema* val);
 
 
 #endif

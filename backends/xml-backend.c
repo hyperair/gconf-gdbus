@@ -34,7 +34,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-
+#include <dirent.h>
+#include <limits.h>
 
 /* Quick hack so I can mark strings */
 
@@ -374,7 +375,8 @@ set_value (GConfSource* source, const gchar* key, GConfValue* value)
   gchar* parent;
   
   g_return_if_fail(value != NULL);
-
+  g_return_if_fail(source->flags & G_CONF_SOURCE_WRITEABLE);
+  
   parent = g_conf_key_directory(key);
   
   g_assert(parent != NULL);
@@ -434,8 +436,13 @@ unset_value     (GConfSource* source,
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
+  gchar* parent;
+
+  parent = g_conf_key_directory(key);
   
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent);
+
+  g_free(parent);
   
   if (dir == NULL)
     return;
@@ -838,6 +845,7 @@ dir_cache_create_or_load_dir      (DirCache* dc,
   
   if (dir == NULL)
     {
+      g_conf_clear_error(); /* Only pass an error up if we can't create */
       dir = dir_create(dc->source, key);
 
       if (dir == NULL)
@@ -974,34 +982,72 @@ dir_load        (XMLSource* source, const gchar* key)
 }
 
 static gboolean
-create_fs_dir(const gchar* dir)
+create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir)
 {
-  gchar* parent;
-
   if (g_conf_file_test(dir, G_CONF_FILE_ISDIR))
     return TRUE;
 
-  parent = parent_dir(dir);
-
-  if (parent != NULL)
+  /* Don't create anything above the root directory */
+  if (strlen(dir) > strlen(root_dir))
     {
-      if (!create_fs_dir(parent))
+      gchar* parent;
+      
+      parent = parent_dir(dir);
+      
+      if (parent != NULL)
         {
-          g_free(parent);
-          return FALSE;
-        }
+          gchar* parent_xml = NULL;
+          gboolean success = FALSE;
+          
+          if (xml_filename)
+            parent_xml = g_strconcat(parent, "/.gconf.xml", NULL);
+          
+          success = create_fs_dir(parent, parent_xml, root_dir);
 
-      g_free(parent);
+          g_free(parent);
+          if (parent_xml)
+            g_free(parent_xml);
+
+          if (!success)
+            return FALSE;
+        }
     }
   
-  if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
+  if (mkdir(dir, 0700) < 0)
     {
-      g_conf_set_error(G_CONF_FAILED, _("Could not make directory `%s': %s"),
-                       (gchar*)dir, strerror(errno));
-      return FALSE;
+      if (errno != EEXIST)
+        {
+          g_conf_set_error(G_CONF_FAILED,
+                           _("Could not make directory `%s': %s"),
+                           (gchar*)dir, strerror(errno));
+          return FALSE;
+        }
     }
-  else
-    return TRUE;
+
+  if (xml_filename != NULL)
+    {
+      int fd;
+      /* don't truncate the file, it may well already exist */
+      fd = open(xml_filename, O_CREAT | O_WRONLY, 0600);
+      
+      if (fd < 0)
+        {
+          g_conf_set_error(G_CONF_FAILED, _("Failed to create file `%s': %s"),
+                           xml_filename, strerror(errno));
+          
+          return FALSE;
+        }
+      
+      if (close(fd) < 0)
+        {
+          g_conf_set_error(G_CONF_FAILED, _("Failed to close file `%s': %s"),
+                           xml_filename, strerror(errno));
+          
+          return FALSE;
+        }
+    }
+  
+  return TRUE;
 }
 
 static Dir*
@@ -1014,8 +1060,9 @@ dir_create      (XMLSource* source, const gchar* key)
   fs_dirname = g_conf_concat_key_and_dir(source->root_dir, key);
   xml_filename = g_strconcat(fs_dirname, "/.gconf.xml", NULL);
 
-  if (!create_fs_dir(fs_dirname))
+  if (!create_fs_dir(fs_dirname, xml_filename, source->root_dir))
     {
+      /* Error is already set */
       g_free(fs_dirname);
       g_free(xml_filename);
       return NULL;
@@ -1110,7 +1157,7 @@ dir_sync        (Dir* d)
           /* Try to solve the problem by creating the FS dir */
           if (!g_conf_file_exists(d->fs_dirname))
             {
-              if (create_fs_dir(d->fs_dirname))
+              if (create_fs_dir(d->fs_dirname, NULL, d->source->root_dir))
                 {
                   if (xmlSaveFile(tmp_filename, d->doc) >= 0)
                     recovered = TRUE;
@@ -1193,6 +1240,11 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
   
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
+  if (e)
+    fprintf(stderr, "got `%s' from cache\n", e->name);
+  else
+    fprintf(stderr, "creating own entry `%s'\n", relative_key);
+  
   if (e == NULL)
     e = dir_make_new_entry(d, relative_key);
 
@@ -1295,25 +1347,102 @@ dir_unset_value (Dir* d, const gchar* relative_key)
     }
 }
 
+typedef struct _ListifyData ListifyData;
+
+struct _ListifyData {
+  GSList* list;
+  const gchar* name;
+};
+
+static void
+listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
+{
+  ld->list = g_slist_prepend(ld->list,
+                             g_conf_concat_key_and_dir(ld->name, key));
+}
+
 static GSList*
 dir_all_entries (Dir* d)
 {
-  /* FIXME */
+  ListifyData ld;
+  
   if (d->doc == NULL)
     dir_load_doc(d);
+
+  ld.list = NULL;
+  ld.name = d->key;
+
+  g_hash_table_foreach(d->entry_cache, (GHFunc)listify_foreach,
+                       &ld);
   
-  return NULL;
+  return ld.list;
 }
 
 static GSList*
 dir_all_subdirs (Dir* d)
 {
-  /* FIXME */
-
+  DIR* dp;
+  struct dirent* dent;
+  struct stat statbuf;
+  GSList* retval = NULL;
+  gchar* fullpath;
+  gchar* fullpath_end;
+  guint len;
+  guint subdir_len;
+  
   if (d->doc == NULL)
     dir_load_doc(d);
+
+  dp = opendir(d->fs_dirname);
+
+  if (dp == NULL)
+    {
+      g_conf_set_error(G_CONF_FAILED, _("Failed to open directory `%s': %s"),
+                       d->fs_dirname, strerror(errno));
+      return NULL;
+    }
+
+  len = strlen(d->fs_dirname);
+  subdir_len = PATH_MAX - len;
   
-  return NULL;
+  fullpath = g_malloc0(subdir_len + len + 20); /* ensure null termination */
+  strcpy(fullpath, d->fs_dirname);
+  
+  fullpath_end = fullpath + len;
+  *fullpath_end = '/';
+  ++fullpath_end;
+  *fullpath_end = '\0';
+
+  while ((dent = readdir(dp)) != NULL)
+    {
+      /* ignore ., .., and all dot-files */
+      if (dent->d_name[0] == '.')
+        continue;
+
+      len = strlen(dent->d_name);
+
+      if (len < subdir_len)
+        {
+          strcpy(fullpath_end, dent->d_name);
+          strncpy(fullpath_end+len, "/.gconf.xml", subdir_len - len);
+        }
+      else
+        continue; /* Shouldn't ever happen since PATH_MAX is available */
+      
+      if (stat(fullpath, &statbuf) < 0)
+        {
+          /* This is some kind of cruft, not an XML directory */
+          continue;
+        }
+      
+      retval = g_slist_prepend(retval, g_conf_concat_key_and_dir(d->key, dent->d_name));
+    }
+
+  /* if this fails, we really can't do a thing about it
+     and it's not a meaningful error */
+  closedir(dp);
+  
+  return retval;
 }
 
 static void
@@ -1385,44 +1514,45 @@ dir_fill_cache_from_doc(Dir* d);
 static void
 dir_load_doc(Dir* d)
 {
-  xmlDocPtr doc;
-  
-  doc = xmlParseFile(d->xml_filename);
+  d->doc = xmlParseFile(d->xml_filename);
 
-  if (doc == NULL)
-    {
-      g_conf_set_error(G_CONF_FAILED,
-                       _("Couldn't load file `%s'"), d->xml_filename);
-    }
-  else if (doc->root == NULL ||
-      strcmp(doc->root->name, "gconf") != 0)
-    {
-      g_conf_set_error(G_CONF_FAILED,
-                       _("Empty or wrong type document `%s'"),
-                       d->xml_filename);
-      xmlFreeDoc(doc);
-      doc = NULL;
-    }
+  /* We recover from these errors instead of passing them up */
 
-  
   /* This has the potential to just blow away an entire corrupted
      config file; but I think that is better than the alternatives
      (disabling config for a directory because the document is mangled)
-  */
+  */  
 
-  if (doc == NULL)
+  /* Also we create empty .gconf.xml files when we create a new dir,
+     and those return a parse error */
+  
+  if (d->doc == NULL)
     {
-      doc = xmlNewDoc("1.0");
-      
-      doc->root = xmlNewDocNode(doc, NULL, "gconf", NULL);
+      d->doc = xmlNewDoc("1.0");
+    }
+  
+  if (d->doc->root == NULL)
+    {
+      /* fill it in */
+      d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+    }
+  else if (strcmp(d->doc->root->name, "gconf") != 0)
+    {
+      fprintf(stderr, "Document root was `%s', recreating\n", d->doc->root->name);
+      xmlFreeDoc(d->doc);
+      d->doc = xmlNewDoc("1.0");
+      d->doc->root = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
     }
   else
     {
+      fprintf(stderr, "filling cache from document\n");
+      /* We had an initial doc with a valid root */
       /* Fill child_cache from entries */
       dir_fill_cache_from_doc(d);
     }
-    
-  d->doc = doc;
+
+  g_assert(d->doc != NULL);
+  g_assert(d->doc->root != NULL);
 }
 
 static Dir*
@@ -1498,6 +1628,9 @@ dir_fill_cache_from_doc(Dir* d)
       d->doc->root == NULL ||
       d->doc->root->childs == NULL)
     {
+      fprintf(stderr, "Empty document, doc: %p root: %p childs: %p\n",
+              d->doc, d->doc ? d->doc->root : NULL,
+              d->doc ? (d->doc->root ? d->doc->root->childs : NULL) : NULL);
       /* Empty document - just return. */
       return;
     }
@@ -1513,18 +1646,29 @@ dir_fill_cache_from_doc(Dir* d)
 
           if (attr != NULL)
             {
-              Entry* e;
+              if (g_hash_table_lookup(d->entry_cache, attr) != NULL)
+                {
+                  g_warning("Duplicate entry, deleting");
+                  bad_entries = g_slist_prepend(bad_entries, node);
+                }
+              else
+                {
+                  Entry* e;
+                  e = entry_new();
 
-              e = entry_new();
+                  e->name = g_strdup(attr);
+                  e->node = node;
 
-              e->name = g_strdup(attr);
-              e->node = node;
+                  entry_fill(e);
 
-              entry_fill(e);
+                  safe_g_hash_table_insert(d->entry_cache, e->name, e);
 
-              safe_g_hash_table_insert(d->entry_cache, e->name, e);
-              
+                  fprintf(stderr, "`%s' added to cache for `%s'\n",
+                          e->name, d->key);
+                }
+
               free(attr);
+
             }
           else
             {
@@ -1532,7 +1676,12 @@ dir_fill_cache_from_doc(Dir* d)
               bad_entries = g_slist_prepend(bad_entries, node);
             }
         }
-
+      else
+        {
+          g_warning("Non-entry in the XML document, deleting");
+          bad_entries = g_slist_prepend(bad_entries, node);
+        }
+      
       node = node->next;
     }
 
@@ -1588,7 +1737,8 @@ entry_sync    (Entry* e)
     return;
 
   /* Unset all properties, so we don't have old cruft. */
-  xmlFreePropList(e->node->properties);
+  if (e->node->properties)
+    xmlFreePropList(e->node->properties);
   e->node->properties = NULL;
   
   xmlSetProp(e->node, "name", e->name);
@@ -1627,8 +1777,7 @@ entry_fill    (Entry* e)
       e->name = g_strdup(tmp);
       free(tmp);
     }
-
-
+  
   tmp = xmlGetProp(e->node, "schema");
   
   if (tmp != NULL)
@@ -1972,7 +2121,8 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
         GSList* list;
 
         /* Nuke any existing nodes */
-        xmlFreeNodeList(node->childs);
+        if (node->childs)
+          xmlFreeNodeList(node->childs);
         node->childs = NULL;
         node->last = NULL;
 
@@ -1997,8 +2147,9 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
     case G_CONF_VALUE_PAIR:
       {
         xmlNodePtr car, cdr;
-        
-        xmlFreeNodeList(node->childs);
+
+        if (node->childs)
+          xmlFreeNodeList(node->childs);
         node->childs = NULL;
         node->last = NULL;
 

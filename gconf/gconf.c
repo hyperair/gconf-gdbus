@@ -1412,3 +1412,88 @@ g_conf_get_schema  (GConf* conf, const gchar* key)
       return retval;
     }
 }
+
+/*
+ * Setters
+ */
+
+static gboolean
+error_checked_set(GConf* conf, const gchar* key,
+                  GConfValue* gval)
+{
+  g_conf_clear_error();
+  
+  g_conf_set(conf, key, gval);
+
+  g_conf_value_destroy(gval);
+  
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    return FALSE;
+  else
+    return TRUE;
+}
+
+gboolean
+g_conf_set_float   (GConf* conf, const gchar* key,
+                    gdouble val)
+{
+  GConfValue* gval;
+
+  gval = g_conf_value_new(G_CONF_VALUE_FLOAT);
+
+  g_conf_value_set_float(gval, val);
+
+  return error_checked_set(conf, key, gval);
+}
+
+gboolean
+g_conf_set_int     (GConf* conf, const gchar* key,
+                    gint val)
+{
+  GConfValue* gval;
+
+  gval = g_conf_value_new(G_CONF_VALUE_INT);
+
+  g_conf_value_set_int(gval, val);
+
+  return error_checked_set(conf, key, gval);
+}
+
+gboolean
+g_conf_set_string  (GConf* conf, const gchar* key,
+                    const gchar* val)
+{
+  GConfValue* gval;
+
+  gval = g_conf_value_new(G_CONF_VALUE_STRING);
+
+  g_conf_value_set_string(gval, val);
+
+  return error_checked_set(conf, key, gval);
+}
+
+gboolean
+g_conf_set_bool    (GConf* conf, const gchar* key,
+                    gboolean val)
+{
+  GConfValue* gval;
+
+  gval = g_conf_value_new(G_CONF_VALUE_BOOL);
+
+  g_conf_value_set_bool(gval, val);
+
+  return error_checked_set(conf, key, gval);
+}
+
+gboolean
+g_conf_set_schema  (GConf* conf, const gchar* key,
+                    GConfSchema* val)
+{
+  GConfValue* gval;
+
+  gval = g_conf_value_new(G_CONF_VALUE_SCHEMA);
+
+  g_conf_value_set_schema(gval, val);
+
+  return error_checked_set(conf, key, gval);
+}
