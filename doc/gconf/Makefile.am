@@ -12,12 +12,12 @@ TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)/$(MAJOR_VERSION)
 # not sure this will work...
 GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
 GTKDOC_CC=$(LIBTOOL) --mode=compile $(CC)
-LDFLAGS=$(ORBIT_LIBS) $(GTK_LIBS) $(OAF_LIBS) $(top_builddir)/wrappers/gtk/libgconf-gtk-1.la $(top_builddir)/gconf/libgconf-1.la
+LDFLAGS=$(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
-CFLAGS=$(GMODULE_CFLAGS) $(ORBIT_CFLAGS) $(GTK_CFLAGS) $(OAF_CFLAGS) -I$(top_srcdir)/wrappers/gtk -I$(top_srcdir)
+CFLAGS= -I$(top_srcdir) $(DEPENDENT_CFLAGS)
 
 scan:
-	(cd $(srcdir) && env LD="$(GTKDOC_LD)" CC="$(GTKDOC_CC)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" gtkdoc-scanobj --module=$(DOC_MODULE))
+	(cd $(srcdir) && env LD="$(GTKDOC_LD)" CC="$(GTKDOC_CC)" CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" gtkdoc-scangobj --module=$(DOC_MODULE) --nogtkinit)
 	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(top_srcdir)
 
 templates: scan
