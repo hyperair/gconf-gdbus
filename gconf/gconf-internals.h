@@ -172,7 +172,9 @@ GConfLock* gconf_get_lock     (const gchar  *lock_directory,
                                GError      **err);
 gboolean   gconf_release_lock (GConfLock    *lock,
                                GError      **err);
-
+GConfLock* gconf_get_lock_or_current_holder (const gchar  *lock_directory,
+                                             ConfigServer *current_server,
+                                             GError      **err);
 
 
 

@@ -123,6 +123,7 @@ static gboolean in_shutdown = FALSE;
 
 static ConfigServer server = CORBA_OBJECT_NIL;
 static PortableServer_POA the_poa;
+static GConfLock *daemon_lock = NULL;
 
 static ConfigDatabase
 gconfd_get_default_database(PortableServer_Servant servant,
@@ -470,8 +471,11 @@ main(int argc, char** argv)
   gchar* ior;
   OAF_RegistrationResult result;
   int exit_code = 0;
-
-
+  GError *err;
+  char *lock_dir;
+  char *gconfd_dir;
+  ConfigServer other_server;
+  
   chdir ("/");
 
   /* This is so we don't prevent unmounting of devices. We divert
@@ -533,7 +537,7 @@ main(int argc, char** argv)
   init_databases ();
 
   orb = oaf_orb_get();
-
+  
   POA_ConfigServer__init(&poa_server_servant, &ev);
   
   the_poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
@@ -551,9 +555,68 @@ main(int argc, char** argv)
     }
 
   /* Needs to be done before loading sources */
-  ior = CORBA_ORB_object_to_string(orb, server, &ev);
-  gconf_set_daemon_ior(ior);
-  CORBA_free(ior);
+  ior = CORBA_ORB_object_to_string (orb, server, &ev);
+  gconf_set_daemon_ior (ior);
+  CORBA_free (ior);
+
+  gconfd_dir = g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
+  lock_dir = g_strconcat (gconfd_dir, "/lock", NULL);
+
+  if (mkdir (gconfd_dir, 0700) < 0)
+    gconf_log (GCL_ERR, _("Failed to create %s: %s"),
+               gconfd_dir, g_strerror (errno));
+  
+  err = NULL;
+  daemon_lock = gconf_get_lock_or_current_holder (lock_dir,
+                                                  &other_server,
+                                                  &err);
+
+  if (daemon_lock == NULL)
+    {
+      g_assert (err);
+      
+      /* Bad hack alert - register the current lockholder with oafd,
+       * since oafd seems to have forgotten about us.
+       */
+      gconf_log (GCL_WARNING, _("Failed to get lock for daemon: %s"),
+                 err->message);
+      g_error_free (err);
+
+      if (other_server != CORBA_OBJECT_NIL)
+        {
+          gconf_log (GCL_WARNING, _("Registering existing server with oafd, since OAF appears to have leaked it"));
+          
+          result = oaf_active_server_register (IID, other_server);
+          
+          if (result != OAF_REG_SUCCESS)
+            {
+              switch (result)
+                {
+                case OAF_REG_NOT_LISTED:
+                  gconf_log(GCL_ERR, _("OAF doesn't know about our IID; indicates broken installation; can't register existing server."));
+                  break;
+                  
+                case OAF_REG_ALREADY_ACTIVE:
+                  gconf_log(GCL_ERR, _("Another gconfd already registered with OAF, so we can't register the existing server"));
+                  break;
+                  
+                case OAF_REG_ERROR:
+                default:
+                  gconf_log(GCL_ERR, _("Unknown error registering existing gconfd with OAF; exiting"));
+                  break;
+                }
+            }
+
+          {
+            CORBA_Environment localev;
+            CORBA_exception_init (&localev);
+            CORBA_Object_release (server, &localev);
+            CORBA_exception_free (&localev);
+          }
+        }
+
+      return 1;
+    }
   
   /* Needs to be done right before registration,
      after setting up the POA etc. */
@@ -612,6 +675,20 @@ main(int argc, char** argv)
       oaf_active_server_unregister ("", server);
       server = CORBA_OBJECT_NIL;
     }
+
+  if (daemon_lock)
+    {
+      err = NULL;
+      gconf_release_lock (daemon_lock, &err);
+      if (err != NULL)
+        {
+          gconf_log (GCL_WARNING, _("Failed to release lockfile: %s"),
+                     err->message);
+          g_error_free (err);
+        }
+    }
+
+  daemon_lock = NULL;
   
   gconf_log (GCL_INFO, _("Exiting"));
   

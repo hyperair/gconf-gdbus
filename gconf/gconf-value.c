@@ -987,6 +987,8 @@ gconf_entry_free(GConfEntry* pair)
   g_free(pair->key);
   if (pair->value)
     gconf_value_free(pair->value);
+  if (pair->schema_name)
+    g_free (pair->schema_name);
   g_free(pair);
 }
 

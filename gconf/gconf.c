@@ -669,13 +669,14 @@ gconf_engine_notify_remove(GConfEngine* conf,
 }
 
 GConfValue *
-gconf_engine_get_full (GConfEngine *conf,
-                       const gchar *key,
-                       const gchar *locale,
-                       gboolean use_schema_default,
-                       gboolean *is_default_p,
-                       gboolean *is_writable_p,
-                       GError **err)
+gconf_engine_get_fuller (GConfEngine *conf,
+                         const gchar *key,
+                         const gchar *locale,
+                         gboolean use_schema_default,
+                         gboolean *is_default_p,
+                         gboolean *is_writable_p,
+                         gchar   **schema_name_p,
+                         GError **err)
 {
   GConfValue* val;
   ConfigValue* cv;
@@ -684,6 +685,7 @@ gconf_engine_get_full (GConfEngine *conf,
   gint tries = 0;
   CORBA_boolean is_default = FALSE;
   CORBA_boolean is_writable = TRUE;
+  CORBA_char *corba_schema_name = NULL;
   
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
@@ -697,6 +699,7 @@ gconf_engine_get_full (GConfEngine *conf,
       gchar** locale_list;
       gboolean tmp_is_default = FALSE;
       gboolean tmp_is_writable = TRUE;
+      gchar *tmp_schema_name = NULL;
       
       locale_list = gconf_split_locale(locale);
       
@@ -706,17 +709,22 @@ gconf_engine_get_full (GConfEngine *conf,
                                       use_schema_default,
                                       &tmp_is_default,
                                       &tmp_is_writable,
+                                      schema_name_p ? &tmp_schema_name : NULL,
                                       err);
 
       if (locale_list != NULL)
         g_strfreev(locale_list);
-
-
+      
       if (is_default_p)
         *is_default_p = tmp_is_default;
 
       if (is_writable_p)
         *is_writable_p = tmp_is_writable;
+
+      if (schema_name_p)
+        *schema_name_p = tmp_schema_name;
+      else
+        g_free (tmp_schema_name);
       
       return val;
     }
@@ -736,14 +744,35 @@ gconf_engine_get_full (GConfEngine *conf,
       return NULL;
     }
 
-  cv = ConfigDatabase_lookup_with_locale(db,
-                                         (gchar*)key, (gchar*)
-                                         (locale ? locale : gconf_current_locale()),
-                                         use_schema_default,
-                                         &is_default,
-                                         &is_writable,
-                                         &ev);
-  
+  if (schema_name_p)
+    *schema_name_p = NULL;
+
+
+  corba_schema_name = NULL;
+  cv = ConfigDatabase2_lookup_with_schema_name (db,
+                                                (gchar*)key, (gchar*)
+                                                (locale ? locale : gconf_current_locale()),
+                                                use_schema_default,
+                                                &corba_schema_name,
+                                                &is_default,
+                                                &is_writable,
+                                                &ev);
+
+  if (ev._major == CORBA_SYSTEM_EXCEPTION &&
+      CORBA_exception_id (&ev) &&
+      strcmp (CORBA_exception_id (&ev), "IDL:CORBA/BAD_OPERATION:1.0") == 0)
+    {
+      CORBA_exception_free (&ev);
+      CORBA_exception_init (&ev);
+      
+      cv = ConfigDatabase_lookup_with_locale(db,
+                                             (gchar*)key, (gchar*)
+                                             (locale ? locale : gconf_current_locale()),
+                                             use_schema_default,
+                                             &is_default,
+                                             &is_writable,
+                                             &ev);
+    }
   
   if (gconf_server_broken(&ev))
     {
@@ -771,10 +800,40 @@ gconf_engine_get_full (GConfEngine *conf,
       if (is_writable_p)
         *is_writable_p = !!is_writable;
 
+      /* we can't get a null pointer through corba
+       * so the server sent us an empty string
+       */
+      if (corba_schema_name && corba_schema_name[0] != '/')
+        {
+          CORBA_free (corba_schema_name);
+          corba_schema_name = NULL;
+        }
+
+      if (schema_name_p)
+        *schema_name_p = g_strdup (corba_schema_name);
+
+      if (corba_schema_name)
+        CORBA_free (corba_schema_name);
+      
       return val;
     }
 }
-                       
+
+
+GConfValue *
+gconf_engine_get_full (GConfEngine *conf,
+                       const gchar *key,
+                       const gchar *locale,
+                       gboolean use_schema_default,
+                       gboolean *is_default_p,
+                       gboolean *is_writable_p,
+                       GError **err)
+{
+  return gconf_engine_get_fuller (conf, key, locale, use_schema_default,
+                                  is_default_p, is_writable_p,
+                                  NULL, err);
+}
+
 GConfEntry*
 gconf_engine_get_entry(GConfEngine* conf,
                        const gchar* key,
@@ -787,10 +846,13 @@ gconf_engine_get_entry(GConfEngine* conf,
   GConfValue *val;
   GError *error;
   GConfEntry *entry;
-  
+  gchar *schema_name;
+
+  schema_name = NULL;
   error = NULL;
-  val = gconf_engine_get_full (conf, key, locale, use_schema_default,
-                               &is_default, &is_writable, &error);
+  val = gconf_engine_get_fuller (conf, key, locale, use_schema_default,
+                                 &is_default, &is_writable,
+                                 &schema_name, &error);
   if (error != NULL)
     {
       g_propagate_error (err, error);
@@ -802,6 +864,7 @@ gconf_engine_get_entry(GConfEngine* conf,
   
   entry->is_default = is_default;
   entry->is_writable = is_writable;
+  entry->schema_name = schema_name; /* transfer memory ownership */
 
   return entry;
 }
@@ -1170,6 +1233,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   ConfigDatabase_KeyList* keys;
   ConfigDatabase_IsDefaultList* is_defaults;
   ConfigDatabase_IsWritableList* is_writables;
+  ConfigDatabase2_SchemaNameList *schema_names;
   CORBA_Environment ev;
   ConfigDatabase db;
   guint i;
@@ -1232,12 +1296,29 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 
       return NULL;
     }
+
+  schema_names = NULL;
   
-  ConfigDatabase_all_entries(db,
-                             (gchar*)dir,
-                             (gchar*)gconf_current_locale(),
-                             &keys, &values, &is_defaults, &is_writables,
-                             &ev);
+  ConfigDatabase2_all_entries_with_schema_name (db,
+                                                (gchar*)dir,
+                                                (gchar*)gconf_current_locale(),
+                                                &keys, &values, &schema_names,
+                                                &is_defaults, &is_writables,
+                                                &ev);
+  
+  if (ev._major == CORBA_SYSTEM_EXCEPTION &&
+      CORBA_exception_id (&ev) &&
+      strcmp (CORBA_exception_id (&ev), "IDL:CORBA/BAD_OPERATION:1.0") == 0)
+    {
+      CORBA_exception_free (&ev);
+      CORBA_exception_init (&ev);
+      
+      ConfigDatabase_all_entries(db,
+                                 (gchar*)dir,
+                                 (gchar*)gconf_current_locale(),
+                                 &keys, &values, &is_defaults, &is_writables,
+                                 &ev);
+    }
 
   if (gconf_server_broken(&ev))
     {
@@ -1273,6 +1354,8 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
          cheating and not using */
       pair->is_default = is_defaults->_buffer[i];
       pair->is_writable = is_writables->_buffer[i];
+      if (schema_names)
+        pair->schema_name = g_strdup (schema_names->_buffer[i]);
       
       pairs = g_slist_prepend(pairs, pair);
       
@@ -1283,6 +1366,8 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   CORBA_free(values);
   CORBA_free(is_defaults);
   CORBA_free(is_writables);
+  if (schema_names)
+    CORBA_free (schema_names);
   
   return pairs;
 }
@@ -1764,7 +1849,7 @@ try_to_contact_server(gboolean start_if_not_found, GError** err)
   if (!start_if_not_found)
     flags |= OAF_FLAG_EXISTING_ONLY;
   
-  server = oaf_activate_from_id("OAFAID:["IID"]", flags, NULL, &ev);
+  server = oaf_activate_from_id ("OAFAID:["IID"]", flags, NULL, &ev);
 
   /* So try to ping server, by adding ourselves as a client */
   if (!CORBA_Object_is_nil (server, &ev))
@@ -1794,7 +1879,8 @@ try_to_contact_server(gboolean start_if_not_found, GError** err)
         }
 
       if (err && *err == NULL)
-        *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
+        *err = gconf_error_new(GCONF_ERROR_NO_SERVER,
+                               _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. This is a bug in the OAF package; something went wrong in OAF, and no error was reported. This is not a bug in the GConf package. Do not report a GConf bug unless you have information indicating what went wrong with OAF that was caused by GConf."));
     }
 
 #ifdef GCONF_ENABLE_DEBUG      

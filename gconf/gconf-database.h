@@ -38,7 +38,7 @@ struct _GConfDatabase
 {
   /* "inherit" from the servant,
      must be first in struct */
-  POA_ConfigDatabase servant;
+  POA_ConfigDatabase2 servant;
 
   ConfigDatabase objref;
   
@@ -78,6 +78,7 @@ GConfValue* gconf_database_query_value         (GConfDatabase  *db,
                                                 const gchar    *key,
                                                 const gchar   **locales,
                                                 gboolean        use_schema_default,
+                                                gchar         **schema_name,
                                                 gboolean       *value_is_default,
                                                 gboolean       *value_is_writable,
                                                 GError    **err);

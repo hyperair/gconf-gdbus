@@ -116,7 +116,7 @@ interface ConfigDatabase {
   typedef sequence<ConfigValue> ValueList;
   typedef sequence<boolean> IsDefaultList;
   typedef sequence<boolean> IsWritableList;
-
+  
   // "where" is the portion of the namespace to listen to
   // Returns a connection ID for removal
   unsigned long add_listener(in string where,
@@ -197,6 +197,30 @@ interface ConfigDatabase {
   
   void synchronous_sync()
     raises (ConfigException);
+};
+
+interface ConfigDatabase2 : ConfigDatabase {
+
+  typedef sequence<string> SchemaNameList;
+  
+  // Fixed version of lookup_with_locale that gets
+  // all the relevant information
+  ConfigValue lookup_with_schema_name (in string key,
+                                       in string locale,
+                                       in boolean use_schema_default,
+                                       out string  schema_name,
+                                       out boolean value_is_default,
+                                       out boolean value_is_writable)
+    raises (ConfigException);
+  
+  void all_entries_with_schema_name (in string dir,
+                                     in string locale,
+                                     out KeyList keys,
+                                     out ValueList values,
+                                     out SchemaNameList schema_names,
+                                     out IsDefaultList is_defaults,
+                                     out IsWritableList is_writables)
+    raises (ConfigException);  
 };
 
 interface ConfigServer {

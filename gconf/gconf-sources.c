@@ -387,6 +387,7 @@ gconf_sources_query_value (GConfSources* sources,
                            gboolean use_schema_default,
                            gboolean* value_is_default,
                            gboolean* value_is_writable,
+                           gchar   **schema_namep,
                            GError** err)
 {
   GList* tmp;
@@ -411,6 +412,9 @@ gconf_sources_query_value (GConfSources* sources,
 
   if (value_is_writable)
     *value_is_writable = FALSE;
+
+  if (schema_namep)
+    *schema_namep = NULL;
   
   tmp = sources->sources;
 
@@ -487,7 +491,7 @@ gconf_sources_query_value (GConfSources* sources,
       
       /* We do look for a schema describing the schema, just for funnies */
       val = gconf_sources_query_value(sources, schema_name, locales,
-                                      TRUE, NULL, NULL, &error);
+                                      TRUE, NULL, NULL, NULL, &error);
 
       if (error != NULL)
         {
@@ -504,8 +508,11 @@ gconf_sources_query_value (GConfSources* sources,
         {
           gconf_set_error(err, GCONF_ERROR_FAILED,
                           _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
-                
-          g_free(schema_name);
+
+          if (schema_namep)
+            *schema_namep = schema_name;
+          else
+            g_free (schema_name);
 
           return NULL;
         }
@@ -516,14 +523,19 @@ gconf_sources_query_value (GConfSources* sources,
           gconf_value_get_schema(val)->default_value = NULL;
           gconf_value_free(val);
 
-          g_free(schema_name);
+          if (schema_namep)
+            *schema_namep = schema_name;
+          else
+            g_free (schema_name);
           
           return retval;
         }
       else
         {
-          /* Schema value was not set */
-          g_free(schema_name);
+          if (schema_namep)
+            *schema_namep = schema_name;
+          else
+            g_free (schema_name);
           
           return NULL;
         }
@@ -593,7 +605,7 @@ gconf_sources_set_value   (GConfSources* sources,
   g_set_error (err,
                GCONF_ERROR,
                GCONF_ERROR_NO_WRITABLE_DATABASE,
-               _("Unable to store a value at key '%s'"),
+               _("Unable to store a value at key '%s', as the configuration server has no writeable databases. There are two common causes of this problem: 1) your configuration path file doesn't contain any databases or wasn't found or 2) OAF mistakenly created two gconfd processes. If you have two gconfd processes (or had two at the time the second was launched), then it's an OAF bug, not a GConf issue. Logging out, killing oafd and gconfd, and logging back in may help. As always, check the user.* syslog for details on problems gconfd encountered."),
                key);
 }
 
@@ -788,6 +800,7 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
                                           gconf_entry_get_schema_name(entry),
                                           locales,
                                           TRUE,
+                                          NULL,
                                           NULL,
                                           NULL,
                                           NULL);
@@ -1232,7 +1245,7 @@ gconf_sources_query_default_value(GConfSources* sources,
       
   val = gconf_sources_query_value(sources,
                                   gconf_meta_info_get_schema(mi), locales,
-                                  TRUE, NULL, NULL, &error);
+                                  TRUE, NULL, NULL, NULL, &error);
   
   if (val != NULL)
     {

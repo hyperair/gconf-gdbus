@@ -118,6 +118,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
   
   val = gconf_database_query_value(db, key, locale_list->list,
                                    use_schema_default,
+                                   NULL,
                                    &is_default,
                                    &is_writable,
                                    &error);
@@ -539,6 +540,166 @@ impl_ConfigDatabase_synchronous_sync(PortableServer_Servant servant,
   gconf_set_exception(&error, ev);
 }
 
+
+static ConfigValue*
+impl_ConfigDatabase2_lookup_with_schema_name(PortableServer_Servant servant,
+                                             const CORBA_char * key,
+                                             const CORBA_char * locale,
+                                             CORBA_boolean use_schema_default,
+                                             CORBA_char    **schema_name,
+                                             CORBA_boolean * value_is_default,
+                                             CORBA_boolean * value_is_writable,
+                                             CORBA_Environment * ev)
+{
+  GConfDatabase *db = (GConfDatabase*) servant;
+  GConfValue* val;
+  GError* error = NULL;
+  GConfLocaleList* locale_list;
+  gboolean is_default = FALSE;
+  gboolean is_writable = TRUE;
+  char *s;
+  ConfigValue* cval;
+  
+  if (gconfd_check_in_shutdown (ev))
+    return invalid_corba_value ();
+  
+  locale_list = locale_cache_lookup(locale);
+
+  s = NULL;
+  val = gconf_database_query_value(db, key, locale_list->list,
+                                   use_schema_default,
+                                   &s,
+                                   &is_default,
+                                   &is_writable,
+                                   &error);
+
+  *value_is_default = is_default;
+  *value_is_writable = is_writable;
+
+  if (s)
+    *schema_name = CORBA_string_dup (s);
+  else
+    *schema_name = CORBA_string_dup ("");
+
+  g_free (s);
+  
+  gconf_locale_list_unref(locale_list);
+  
+  if (val != NULL)
+    {
+      cval = corba_value_from_gconf_value(val);
+      gconf_value_free(val);
+      g_return_val_if_fail(error == NULL, cval);
+    }
+  else
+    {
+      cval = invalid_corba_value();
+    }
+
+  gconf_log (GCL_DEBUG, "In lookup_with_schema_name returning schema name '%s' error '%s'",
+             *schema_name, error ? error->message : "none");
+  
+  if (error != NULL)
+    {
+      gconf_set_exception (&error, ev);
+    }
+
+  return cval;
+}
+
+static void
+impl_ConfigDatabase2_all_entries_with_schema_name(PortableServer_Servant servant,
+                                                  const CORBA_char * dir,
+                                                  const CORBA_char * locale,
+                                                  ConfigDatabase_KeyList ** keys,
+                                                  ConfigDatabase_ValueList ** values,
+                                                  ConfigDatabase2_SchemaNameList **schema_names,
+                                                  ConfigDatabase_IsDefaultList   **is_defaults,
+                                                  ConfigDatabase_IsWritableList  **is_writables,
+                                                  CORBA_Environment * ev)
+{
+  GConfDatabase *db = (GConfDatabase*) servant;
+  GSList* pairs;
+  guint n;
+  GSList* tmp;
+  guint i;
+  GError* error = NULL;
+  GConfLocaleList* locale_list;  
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
+  locale_list = locale_cache_lookup(locale);
+  
+  pairs = gconf_database_all_entries(db, dir, locale_list->list, &error);
+  
+  gconf_locale_list_unref(locale_list);
+
+  if (error != NULL)
+    {
+      gconf_set_exception(&error, ev);
+      return;
+    }
+  
+  n = g_slist_length(pairs);
+
+  *keys= ConfigDatabase_KeyList__alloc();
+  (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
+  (*keys)->_length = n;
+  (*keys)->_maximum = n;
+  (*keys)->_release = CORBA_TRUE; /* free buffer */
+  
+  *values= ConfigDatabase_ValueList__alloc();
+  (*values)->_buffer = CORBA_sequence_ConfigValue_allocbuf(n);
+  (*values)->_length = n;
+  (*values)->_maximum = n;
+  (*values)->_release = CORBA_TRUE; /* free buffer */
+
+  *schema_names = ConfigDatabase2_SchemaNameList__alloc();
+  (*schema_names)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
+  (*schema_names)->_length = n;
+  (*schema_names)->_maximum = n;
+  (*schema_names)->_release = CORBA_TRUE; /* free buffer */
+  
+  *is_defaults = ConfigDatabase_IsDefaultList__alloc();
+  (*is_defaults)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
+  (*is_defaults)->_length = n;
+  (*is_defaults)->_maximum = n;
+  (*is_defaults)->_release = CORBA_TRUE; /* free buffer */
+
+  *is_writables = ConfigDatabase_IsWritableList__alloc();
+  (*is_writables)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
+  (*is_writables)->_length = n;
+  (*is_writables)->_maximum = n;
+  (*is_writables)->_release = CORBA_TRUE; /* free buffer */
+  
+  tmp = pairs;
+  i = 0;
+
+  while (tmp != NULL)
+    {
+      GConfEntry* p = tmp->data;
+
+      g_assert(p != NULL);
+      g_assert(p->key != NULL);
+
+      (*keys)->_buffer[i] = CORBA_string_dup(p->key);
+      fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
+      (*schema_names)->_buffer[i] = CORBA_string_dup (gconf_entry_get_schema_name (p));
+      (*is_defaults)->_buffer[i] = gconf_entry_get_is_default(p);
+      (*is_writables)->_buffer[i] = gconf_entry_get_is_writable(p);
+      
+      gconf_entry_free(p);
+
+      ++i;
+      tmp = g_slist_next(tmp);
+    }
+  
+  g_assert(i == n);
+
+  g_slist_free(pairs);
+}
+
 static PortableServer_ServantBase__epv base_epv = {
   NULL,
   NULL,
@@ -567,7 +728,13 @@ static POA_ConfigDatabase__epv server_epv = {
   impl_ConfigDatabase_synchronous_sync
 };
 
-static POA_ConfigDatabase__vepv poa_server_vepv = { &base_epv, &server_epv };
+static POA_ConfigDatabase2__epv server2_epv = { 
+  NULL,
+  impl_ConfigDatabase2_lookup_with_schema_name,
+  impl_ConfigDatabase2_all_entries_with_schema_name
+};
+
+static POA_ConfigDatabase2__vepv poa_server_vepv = { &base_epv, &server_epv, &server2_epv };
 
 static void gconf_database_really_sync(GConfDatabase* db);
 
@@ -585,7 +752,7 @@ gconf_database_new (GConfSources  *sources)
 
   CORBA_exception_init (&ev);
   
-  POA_ConfigDatabase__init (&db->servant, &ev);
+  POA_ConfigDatabase2__init (&db->servant, &ev);
 
   objid =
     PortableServer_POA_activate_object(gconf_get_poa (),
@@ -639,7 +806,7 @@ gconf_database_free (GConfDatabase *db)
 
   CORBA_exception_free (&ev);
   
-  POA_ConfigDatabase__fini (&db->servant, &ev);
+  POA_ConfigDatabase2__fini (&db->servant, &ev);
 
   CORBA_free (oid);
 
@@ -976,6 +1143,7 @@ gconf_database_query_value (GConfDatabase  *db,
                             const gchar    *key,
                             const gchar   **locales,
                             gboolean        use_schema_default,
+                            char          **schema_name,
                             gboolean       *value_is_default,
                             gboolean       *value_is_writable,
                             GError    **err)
@@ -991,7 +1159,9 @@ gconf_database_query_value (GConfDatabase  *db,
                                   use_schema_default,
                                   value_is_default,
                                   value_is_writable,
+                                  schema_name,
                                   err);
+  
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error getting value for `%s': %s"),

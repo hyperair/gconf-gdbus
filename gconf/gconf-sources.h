@@ -69,7 +69,7 @@ struct _GConfSources {
 GConfSources* gconf_sources_new_from_addresses (GSList* addresses,
                                                 GError   **err);
 GConfSources* gconf_sources_new_from_source    (GConfSource   *source);
-void          gconf_sources_free            (GConfSources  *sources);
+void          gconf_sources_free               (GConfSources  *sources);
 void          gconf_sources_clear_cache        (GConfSources  *sources);
 GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
                                                 const gchar   *key,
@@ -77,6 +77,7 @@ GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
                                                 gboolean       use_schema_default,
                                                 gboolean      *value_is_default,
                                                 gboolean      *value_is_writable,
+                                                gchar        **schema_name,
                                                 GError   **err);
 void          gconf_sources_set_value          (GConfSources  *sources,
                                                 const gchar   *key,
