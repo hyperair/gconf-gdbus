@@ -4,7 +4,7 @@ AC_INIT(gconf/gconf.h)
 
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(GConf, 1.1.6)
+AM_INIT_AUTOMAKE(GConf, 1.1.7)
 
 AM_MAINTAINER_MODE
 
@@ -49,16 +49,16 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 dnl libtool versioning for libgconf
 
 dnl increment if the interface has additions, changes, removals.
-GCONF_CURRENT=3
+GCONF_CURRENT=4
 
 dnl increment any time the source changes; set to 
 dnl  0 if you increment CURRENT
-GCONF_REVISION=2
+GCONF_REVISION=0
 
 dnl increment if any interfaces have been added; set to 0
 dnl  if any interfaces have been removed. removal has 
 dnl  precedence over adding, so set to 0 if both happened.
-GCONF_AGE=1
+GCONF_AGE=0
 
 AC_SUBST(GCONF_CURRENT)
 AC_SUBST(GCONF_REVISION)
@@ -181,7 +181,7 @@ AC_SUBST(DEPENDENT_WITH_XML_CFLAGS)
 AC_SUBST(DEPENDENT_WITH_GTK_LIBS)
 AC_SUBST(DEPENDENT_WITH_GTK_CFLAGS)
 
-AC_ARG_ENABLE(bdbbackend, Enable BDB backend,,enable_bdbbackend=yes)
+AC_ARG_ENABLE(bdbbackend, Enable BDB backend,,enable_bdbbackend=no)
 AC_ARG_WITH(db3-includes, [  --with-db3-includes=PREFIX     Location of DB3 includes.],
             with_db3_includes="$withval", with_db3_includes="/usr/include")
 AC_ARG_WITH(db3-libs, [  --with-db3-libs=PREFIX     Location of DB3 libs.],

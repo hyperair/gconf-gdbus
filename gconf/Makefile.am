@@ -30,8 +30,6 @@ CORBA_SOURCECODE = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 ## not BUILT_SOURCES which seems to make a mess. fix with automake 1.5?
 built_sourcecode = 			\
 	$(CORBA_SOURCECODE)		\
-	gconf-enum-types.h		\
-	gconf-enum-types.c		\
 	gconfmarshal.h			\
 	gconfmarshal.c
 
@@ -41,8 +39,6 @@ CLEANFILES = \
 	$(built_sourcecode)	\
 	stamp-gconfmarshal.h	\
 	stamp-gconfmarshal.c	\
-	s-enum-types-h		\
-	s-enum-types-c		\
 	stamp-gconfmarshal.h    \
 	stamp-gconfmarshal.c
 
@@ -137,18 +133,7 @@ stamp-gconfmarshal.c: @REBUILD@ gconfmarshal.list
 	&& (cmp -s xgen-gmc gconfmarshal.c || cp xgen-gmc gconfmarshal.c) \
 	&& rm -f xgen-gmc xgen-gmc~
 
-
-gconf-enum-types.h: s-enum-types-h
-	@true
-
-s-enum-types-h: @REBUILD@ $(gconf_headers) Makefile regenerate-enum-header.sh
-	GCONF_SRCDIR=$(srcdir) $(srcdir)/regenerate-enum-header.sh $(gconf_headers) \
-	&& echo timestamp > $(@F)
-
-gconf-enum-types.c: s-enum-types-c
-	@true
-
-s-enum-types-c: @REBUILD@ $(gconf_headers) Makefile regenerate-enum-footer.sh
-	GCONF_SRCDIR=$(srcdir) $(srcdir)/regenerate-enum-footer.sh $(gconf_headers) \
-	&& echo timestamp > $(@F)
+regenerate-built-sources:
+	GCONF_SRCDIR=$(srcdir) $(srcdir)/regenerate-enum-header.sh $(gconf_headers)
+	GCONF_SRCDIR=$(srcdir) $(srcdir)/regenerate-enum-footer.sh $(gconf_headers)
 
