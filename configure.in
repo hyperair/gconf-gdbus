@@ -42,7 +42,7 @@ dnl not incremented for bugfix or unstable releases.
 MAJOR_VERSION=2
 AC_SUBST(MAJOR_VERSION)
 
-GETTEXT_PACKAGE=gconf$MAJOR_VERSION
+GETTEXT_PACKAGE=GConf$MAJOR_VERSION
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
 
@@ -231,7 +231,7 @@ fi # docs_only
 
 ALL_LINGUAS="az ca cs da de el es fi fr ga gl hu it ja ko nl nn no pt_BR ro ru sk sl sv tr uk zh_CN"
 
-AM_GCONF_GNU_GETTEXT
+AM_GLIB_GNU_GETTEXT
 
 # AM_GNU_GETTEXT above substs $DATADIRNAME
 # this is the directory where the *.{mo,gmo} files are installed

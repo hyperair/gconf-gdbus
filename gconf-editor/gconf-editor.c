@@ -61,8 +61,8 @@ main(int argc, char** argv)
   GnomeClient* client;
   GError* err = NULL;
   
-  bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
-  textdomain(PACKAGE);
+  bindtextdomain(GETTEXT_PACKAGE, GNOMELOCALEDIR);  
+  textdomain(GETTEXT_PACKAGE);
 
   if (!gconf_init(argc, argv, &err))
     {

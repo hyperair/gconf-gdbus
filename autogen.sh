@@ -104,6 +104,14 @@ do
 	echo "Making $dr/aclocal.m4 writable ..."
 	test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
       fi
+      if grep "^AM_GLIB_GNU_GETTEXT" configure.in >/dev/null; then
+	echo "Creating $dr/aclocal.m4 ..."
+	test -r $dr/aclocal.m4 || touch $dr/aclocal.m4
+	echo "Running gettextize...  Ignore non-fatal messages."
+	echo "no" | glib-gettextize --force --copy
+	echo "Making $dr/aclocal.m4 writable ..."
+	test -r $dr/aclocal.m4 && chmod u+w $dr/aclocal.m4
+      fi
       if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
 	echo "Running libtoolize..."
 	libtoolize --force --copy
