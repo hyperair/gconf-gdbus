@@ -82,16 +82,16 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  * directory.  The directory tree reflects the configuration
  * namespace. Each directory contains an XML file which contains
  * metadata for the directory and the key-value pairs in that
- * directory.  The magic file in each directory is called .gconf.xml,
- * and can't clash with the database namespace because names starting
- * with . aren't allowed.  So:
+ * directory.  The magic file in each directory is called %gconf.xml,
+ * and can't clash with the database namespace because names containing
+ * % aren't allowed.  So:
  *
  * /
- *  .gconf.xml
+ *  %gconf.xml
  *   guppi/
- *     .gconf.xml
+ *     %gconf.xml
  *   gnumeric/
- *     .gconf.xml
+ *     %gconf.xml
  *
  *
  * Locking
@@ -998,7 +998,7 @@ dir_load        (XMLSource* source, const gchar* key)
   gchar* xml_filename;
   
   fs_dirname = gconf_concat_key_and_dir(source->root_dir, key);
-  xml_filename = g_strconcat(fs_dirname, "/.gconf.xml", NULL);
+  xml_filename = g_strconcat(fs_dirname, "/%gconf.xml", NULL);
 
   {
     struct stat s;
@@ -1051,7 +1051,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
           gboolean success = FALSE;
           
           if (xml_filename)
-            parent_xml = g_strconcat(parent, "/.gconf.xml", NULL);
+            parent_xml = g_strconcat(parent, "/%gconf.xml", NULL);
           
           success = create_fs_dir(parent, parent_xml, root_dir);
 
@@ -1109,7 +1109,7 @@ dir_create      (XMLSource* source, const gchar* key)
   gchar* xml_filename;
   
   fs_dirname = gconf_concat_key_and_dir(source->root_dir, key);
-  xml_filename = g_strconcat(fs_dirname, "/.gconf.xml", NULL);
+  xml_filename = g_strconcat(fs_dirname, "/%gconf.xml", NULL);
 
   if (!create_fs_dir(fs_dirname, xml_filename, source->root_dir))
     {
@@ -1198,8 +1198,8 @@ dir_sync        (Dir* d)
          XML nodes */
       g_hash_table_foreach(d->entry_cache, (GHFunc)entry_sync_foreach, NULL);
       
-      tmp_filename = g_strconcat(d->fs_dirname, "/.gconf.xml.tmp", NULL);
-      old_filename = g_strconcat(d->fs_dirname, "/.gconf.xml.old", NULL);
+      tmp_filename = g_strconcat(d->fs_dirname, "/%gconf.xml.tmp", NULL);
+      old_filename = g_strconcat(d->fs_dirname, "/%gconf.xml.old", NULL);
 
       if (xmlSaveFile(tmp_filename, d->doc) < 0)
         {
@@ -1487,7 +1487,7 @@ dir_all_subdirs (Dir* d)
       if (len < subdir_len)
         {
           strcpy(fullpath_end, dent->d_name);
-          strncpy(fullpath_end+len, "/.gconf.xml", subdir_len - len);
+          strncpy(fullpath_end+len, "/%gconf.xml", subdir_len - len);
         }
       else
         continue; /* Shouldn't ever happen since PATH_MAX is available */
@@ -1619,7 +1619,7 @@ dir_load_doc(Dir* d)
      (disabling config for a directory because the document is mangled)
   */  
 
-  /* Also we create empty .gconf.xml files when we create a new dir,
+  /* Also we create empty %gconf.xml files when we create a new dir,
      and those return a parse error */
   
   if (d->doc == NULL)
@@ -1663,7 +1663,7 @@ dir_load_doc(Dir* d)
       
       rename(d->xml_filename, backup);
       
-      /* Recreate .gconf.xml to maintain our integrity and be sure
+      /* Recreate %gconf.xml to maintain our integrity and be sure
          all_subdirs works */
       /* If we failed to rename, we just give up and truncate the file */
       fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
