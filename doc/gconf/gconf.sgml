@@ -248,17 +248,20 @@
       <sect2>
         <title>Configuration Sources</title>
 
-        <para> 
-          Users can specify <firstterm>configuration sources</firstterm>
-          which will be used by the <application>gconfd</application> per-user
-          configuration server.  <application>gconfd</application> loads the file
-          <filename>/etc/gconf/path</filename> on startup; this file contains a
-          list of <firstterm>configuration source addresses</firstterm>.  A
-          source address is similar to a URL; it contains a "protocol" name (in
-          this case, the name of the backend to use), followed by a colon and
-          backend-specific information. For example, the address <filename>
-          xml:/home/hp/.gconf</filename> refers to an XML backend file tree
-          rooted at <filename>/home/hp/.gconf.xml</filename>:
+        <para> Users can specify <firstterm>configuration
+          sources</firstterm> which will be used by the
+          <application>gconfd</application> per-user configuration
+          server.  <application>gconfd</application> loads the file
+          <filename>/etc/gconf/path</filename> (or
+          <filename>${sysconfdir}/gconf/path</filename>) on startup;
+          this file contains a list of <firstterm>configuration source
+          addresses</firstterm>.  A source address is similar to a
+          URL; it contains a "protocol" name (in this case, the name
+          of the backend to use), followed by a colon and
+          backend-specific information. For example, the address
+          <filename> xml:/home/hp/.gconf.xml</filename> refers to an XML
+          backend file tree rooted at
+          <filename>/home/hp/.gconf.xml</filename>:
         </para>
 
         <para>
@@ -751,11 +754,6 @@ print_value(GConfValue* value)
          use it yourself to indicate errors and such. It
          won't be returned from GConf functions though. */
       printf("invalid value");
-      break;
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
-      /* This is totally internal and you should ignore it,
-         GConf won't give you a value like this. */
-      g_assert_not_reached();
       break;
       
     default:
@@ -1268,14 +1266,31 @@ key and their effect on the application.
       <title>Schema File DTD</title>
       
       <para>
-        There is no DTD right now, but I'd appreciate having one based 
-        on the above description. If someone makes one I'll put it
-        here.
+        The following DTD was contributed by Mirko Streckenbach.
       </para>
 
       <para>
         <programlisting>
-          DTD DTD DTD DTD I am a DTD
+&lt;!ELEMENT gconfschemafile (schemalist)&gt;
+
+&lt;!ELEMENT schemalist (schema)*&gt;
+
+&lt;!ELEMENT schema  (key,applyto*,owner?,type,locale*)&gt;
+
+&lt;!ELEMENT key     (#PCDATA)&gt;
+
+&lt;!ELEMENT applyto (#PCDATA)&gt;
+
+&lt;!ELEMENT owner   (#PCDATA)&gt;
+
+&lt;!ELEMENT type    (#PCDATA)&gt;
+
+&lt;!ELEMENT locale  (default?,short?,long?)&gt;
+&lt;!ATTLIST locale  name CDATA #REQUIRED&gt;
+
+&lt;!ELEMENT short   (#PCDATA)&gt;
+&lt;!ELEMENT long    (#PCDATA)&gt;
+&lt;!ELEMENT default (#PCDATA)&gt;
         </programlisting>
       </para>   
     </sect1>

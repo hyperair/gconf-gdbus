@@ -72,6 +72,6 @@ oafinfo_DATA=gconfd.oafinfo
 
 install-data-local:
 	-mkdir $(sysconfdir)/gconf
-	$(INSTALL_DATA) $(top_srcdir)/gconf/default.path $(sysconfdir)/gconf/path
+	$(INSTALL_DATA) $(top_srcdir)/gconf/default.path $(sysconfdir)/gconf/path.example
 
 

@@ -138,7 +138,7 @@ dir_new(const gchar  *keyname,
   d->fs_dirname = gconf_concat_key_and_dir(xml_root_dir, keyname);
   d->xml_filename =  g_strconcat(d->fs_dirname, "/%gconf.xml", NULL);
   d->root_dir_len = strlen(xml_root_dir);
-
+  
   return d;
 }
 
@@ -156,7 +156,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
 
   {
     struct stat s;
-    gboolean error = FALSE;
+    gboolean notfound = FALSE;
     
     if (stat(xml_filename, &s) != 0)
       {
@@ -165,31 +165,36 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
             gconf_set_error(err, GCONF_ERROR_FAILED,
                             _("Could not stat `%s': %s"),
                             xml_filename, strerror(errno));
-            error = TRUE;
+
           }
+        
+        notfound = TRUE;
       }
     else if (S_ISDIR(s.st_mode))
       {
         gconf_set_error(err, GCONF_ERROR_FAILED,
                          _("XML filename `%s' is a directory"),
                          xml_filename);
-        error = TRUE;
+        notfound = TRUE;
       }
 
-    if (error)
+    if (notfound)
       {
+        gconf_log(GCL_DEBUG, "dir file %s not found", xml_filename);
         g_free(fs_dirname);
         g_free(xml_filename);
         return NULL;
       }
   }
-    
+
   d = dir_blank(key);
 
   /* sync with dir_new() */
   d->fs_dirname = fs_dirname;
   d->xml_filename = xml_filename;
   d->root_dir_len = strlen(xml_root_dir);
+
+  gconf_log(GCL_DEBUG, "loaded dir %s", fs_dirname);
   
   return d;
 }
@@ -227,7 +232,8 @@ gboolean
 dir_ensure_exists (Dir* d,
                    GConfError** err)
 {
-  if (!create_fs_dir(d->fs_dirname, d->xml_filename, d->root_dir_len, err))
+  if (!create_fs_dir(d->fs_dirname, d->xml_filename, d->root_dir_len,
+                     err))
     {
 
       /* check that error is set */
@@ -236,7 +242,9 @@ dir_ensure_exists (Dir* d,
       return FALSE;
     }
   else
-    return TRUE;
+    {
+      return TRUE;
+    }
 }
 
 static void
@@ -305,7 +313,8 @@ dir_sync        (Dir* d, GConfError** err)
           /* Try to solve the problem by creating the FS dir */
           if (!gconf_file_exists(d->fs_dirname))
             {
-              if (create_fs_dir(d->fs_dirname, NULL, d->root_dir_len, err))
+              if (create_fs_dir(d->fs_dirname, d->xml_filename,
+                                d->root_dir_len, err))
                 {
                   if (xmlSaveFile(tmp_filename, d->doc) >= 0)
                     recovered = TRUE;
@@ -630,11 +639,7 @@ dir_all_subdirs (Dir* d, GConfError** err)
   dp = opendir(d->fs_dirname);
 
   if (dp == NULL)
-    {
-      gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to open directory `%s': %s"),
-                      d->fs_dirname, strerror(errno));
-      return NULL;
-    }
+    return NULL;
 
   len = strlen(d->fs_dirname);
   subdir_len = PATH_MAX - len;
@@ -958,15 +963,24 @@ static gboolean
 create_fs_dir(const gchar* dir, const gchar* xml_filename,
               guint root_dir_len, GConfError** err)
 {
-  if (gconf_file_test(dir, GCONF_FILE_ISDIR))
-    return TRUE;
-
+  g_return_val_if_fail(xml_filename != NULL, FALSE);
+  
+  gconf_log(GCL_DEBUG, "Enter create_fs_dir: %s", dir);
+  
+  if (gconf_file_test(xml_filename, GCONF_FILE_ISFILE))
+    {
+      gconf_log(GCL_DEBUG, "XML backend file %s already exists", xml_filename);
+      return TRUE;
+    }
+      
   /* Don't create anything above the root directory */
   if (strlen(dir) > root_dir_len)
     {
       gchar* parent;
       
       parent = parent_dir(dir);
+
+      gconf_log(GCL_DEBUG, "Parent dir is %s", parent);
       
       if (parent != NULL)
         {
@@ -978,14 +992,25 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
           
           success = create_fs_dir(parent, parent_xml, root_dir_len, err);
 
+          if (success)
+            gconf_log(GCL_DEBUG, "created parent: %s", parent);
+          else
+            gconf_log(GCL_DEBUG, "failed parent: %s", parent);
+          
           g_free(parent);
           if (parent_xml)
             g_free(parent_xml);
-
+          
           if (!success)
             return FALSE;
         }
+      else
+        {
+          gconf_log(GCL_DEBUG, "%s has no parent", dir);
+        }
     }
+
+  gconf_log(GCL_DEBUG, "Making directory %s", dir);
   
   if (mkdir(dir, 0700) < 0)
     {
@@ -1003,6 +1028,8 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
       int fd;
       /* don't truncate the file, it may well already exist */
       fd = open(xml_filename, O_CREAT | O_WRONLY, 0600);
+
+      gconf_log(GCL_DEBUG, "Creating XML file %s", xml_filename);
       
       if (fd < 0)
         {
@@ -1019,6 +1046,10 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
           
           return FALSE;
         }
+    }
+  else
+    {
+      gconf_log(GCL_DEBUG, "No XML filename passed to create_fs_dir() for %s", dir);
     }
   
   return TRUE;

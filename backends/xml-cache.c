@@ -376,6 +376,7 @@ cache_lookup     (Cache        *cache,
   
   if (dir != NULL)
     {
+      gconf_log(GCL_DEBUG, "Using dir %s from cache", key);
       return dir;
     }
   else
@@ -428,6 +429,8 @@ cache_lookup     (Cache        *cache,
   
   if (dir == NULL)
     {
+      gconf_log(GCL_DEBUG, "Creating new dir %s", key);
+      
       dir = dir_new(key, cache->root_dir);
 
       if (!dir_ensure_exists(dir, err))
@@ -487,6 +490,9 @@ cache_insert (Cache* cache,
               Dir* d)
 {
   g_return_if_fail(d != NULL);
+
+  gconf_log(GCL_DEBUG, "Caching dir %s", dir_get_name(d));
+  
   safe_g_hash_table_insert(cache->cache, (gchar*)dir_get_name(d), d);
 }
 

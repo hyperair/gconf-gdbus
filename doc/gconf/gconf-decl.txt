@@ -67,6 +67,10 @@
 #define HAVE_MUNMAP 1
 </MACRO>
 <MACRO>
+<NAME>HAVE_NANOSLEEP</NAME>
+#define HAVE_NANOSLEEP 1
+</MACRO>
+<MACRO>
 <NAME>HAVE_PUTENV</NAME>
 #define HAVE_PUTENV 1
 </MACRO>
@@ -93,6 +97,10 @@
 <MACRO>
 <NAME>HAVE_STRDUP</NAME>
 #define HAVE_STRDUP 1
+</MACRO>
+<MACRO>
+<NAME>HAVE_USLEEP</NAME>
+#define HAVE_USLEEP 1
 </MACRO>
 <MACRO>
 <NAME>HAVE_ARGZ_H</NAME>
@@ -137,6 +145,220 @@
 <STRUCT>
 <NAME>GThreadPool</NAME>
 </STRUCT>
+<STRUCT>
+<NAME>Cache</NAME>
+</STRUCT>
+<FUNCTION>
+<NAME>cache_new</NAME>
+<RETURNS>Cache *</RETURNS>
+const gchar  *root_dir
+</FUNCTION>
+<FUNCTION>
+<NAME>cache_destroy</NAME>
+<RETURNS>void  </RETURNS>
+Cache        *cache
+</FUNCTION>
+<FUNCTION>
+<NAME>cache_sync</NAME>
+<RETURNS>gboolean  </RETURNS>
+Cache        *cache,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>cache_clean</NAME>
+<RETURNS>void  </RETURNS>
+Cache        *cache,GTime         older_than
+</FUNCTION>
+<FUNCTION>
+<NAME>cache_delete_dir</NAME>
+<RETURNS>void  </RETURNS>
+Cache        *cache,const gchar  *key,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>cache_lookup</NAME>
+<RETURNS>Dir *</RETURNS>
+Cache        *cache,const gchar  *key,gboolean create_if_missing,GConfError  **err
+</FUNCTION>
+<STRUCT>
+<NAME>Dir</NAME>
+</STRUCT>
+<FUNCTION>
+<NAME>dir_new</NAME>
+<RETURNS>Dir *</RETURNS>
+const gchar  *keyname,const gchar  *xml_root_dir
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_load</NAME>
+<RETURNS>Dir *</RETURNS>
+const gchar  *key,const gchar  *xml_root_dir,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_destroy</NAME>
+<RETURNS>void  </RETURNS>
+Dir          *d
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_clear_cache</NAME>
+<RETURNS>void  </RETURNS>
+Dir          *d
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_ensure_exists</NAME>
+<RETURNS>gboolean  </RETURNS>
+Dir          *d,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_sync</NAME>
+<RETURNS>gboolean  </RETURNS>
+Dir          *d,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_get_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+Dir          *d
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_set_value</NAME>
+<RETURNS>void  </RETURNS>
+Dir          *d,const gchar  *relative_key,GConfValue   *value,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_get_value</NAME>
+<RETURNS>GConfValue *</RETURNS>
+Dir          *d,const gchar  *relative_key,const gchar **locales,gchar       **schema_name,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_get_metainfo</NAME>
+<RETURNS>GConfMetaInfo *</RETURNS>
+Dir          *d,const gchar  *relative_key,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_unset_value</NAME>
+<RETURNS>void  </RETURNS>
+Dir          *d,const gchar  *relative_key,const gchar  *locale,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_all_entries</NAME>
+<RETURNS>GSList *</RETURNS>
+Dir          *d,const gchar **locales,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_all_subdirs</NAME>
+<RETURNS>GSList *</RETURNS>
+Dir          *d,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_set_schema</NAME>
+<RETURNS>void  </RETURNS>
+Dir          *d,const gchar  *relative_key,const gchar  *schema_key,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_get_last_access</NAME>
+<RETURNS>GTime  </RETURNS>
+Dir          *d
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_sync_pending</NAME>
+<RETURNS>gboolean  </RETURNS>
+Dir          *d
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_mark_deleted</NAME>
+<RETURNS>void  </RETURNS>
+Dir          *d
+</FUNCTION>
+<FUNCTION>
+<NAME>dir_is_deleted</NAME>
+<RETURNS>gboolean  </RETURNS>
+Dir          *d
+</FUNCTION>
+<STRUCT>
+<NAME>Entry</NAME>
+</STRUCT>
+<FUNCTION>
+<NAME>entry_new</NAME>
+<RETURNS>Entry *</RETURNS>
+const gchar  *relative_name
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_destroy</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_get_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+Entry        *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_set_node</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *entry,xmlNodePtr    node
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_get_node</NAME>
+<RETURNS>xmlNodePtr  </RETURNS>
+Entry        *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_fill_from_node</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_sync_to_node</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_get_value</NAME>
+<RETURNS>GConfValue *</RETURNS>
+Entry        *entry,const gchar **locales,GConfError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_set_value</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *entry,GConfValue   *value
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_unset_value</NAME>
+<RETURNS>gboolean  </RETURNS>
+Entry        *entry,const gchar  *locale
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_get_metainfo</NAME>
+<RETURNS>GConfMetaInfo *</RETURNS>
+Entry        *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_set_mod_time</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *entry,GTime         mod_time
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_set_mod_user</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *e,const gchar  *user
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_get_schema_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+Entry        *e
+</FUNCTION>
+<FUNCTION>
+<NAME>entry_set_schema_name</NAME>
+<RETURNS>void  </RETURNS>
+Entry        *e,const gchar  *name
+</FUNCTION>
+<FUNCTION>
+<NAME>my_xmlSetProp</NAME>
+<RETURNS>void  </RETURNS>
+xmlNodePtr node,const gchar* name,const gchar* str
+</FUNCTION>
+<FUNCTION>
+<NAME>my_xmlGetProp</NAME>
+<RETURNS>char *</RETURNS>
+xmlNodePtr node,const gchar* name
+</FUNCTION>
 <STRUCT>
 <NAME>GConfBackendVTable</NAME>
 </STRUCT>
@@ -231,6 +453,9 @@ struct GConfBackendVTable {
                                            GConfError** err);
 
   void                (* destroy_source)  (GConfSource* source);
+
+  /* This is basically used by the test suite */
+  void                (* clear_cache)     (GConfSource* source);
 };
 </STRUCT>
 <STRUCT>
@@ -278,6 +503,127 @@ GConfBackend* backend
 GConfBackend* backend,const gchar* address,GConfError** err
 </FUNCTION>
 <STRUCT>
+<NAME>GConfChangeSet</NAME>
+</STRUCT>
+<USER_FUNCTION>
+<NAME>GConfChangeSetForeachFunc</NAME>
+<RETURNS>void </RETURNS>
+GConfChangeSet* cs,
+                                            const gchar* key,
+                                            GConfValue* value,
+                                            gpointer user_data
+</USER_FUNCTION>
+<FUNCTION>
+<NAME>gconf_commit_change_set</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_create_reverse_change_set</NAME>
+<RETURNS>GConfChangeSet *</RETURNS>
+GConfEngine* conf,GConfChangeSet* cs,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_create_change_set_from_currentv</NAME>
+<RETURNS>GConfChangeSet *</RETURNS>
+GConfEngine* conf,const gchar** keys,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_create_change_set_from_current</NAME>
+<RETURNS>GConfChangeSet *</RETURNS>
+GConfEngine* conf,GConfError** err,const gchar* first_key,...
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_new</NAME>
+<RETURNS>GConfChangeSet *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_ref</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_unref</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_clear</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_size</NAME>
+<RETURNS>guint  </RETURNS>
+GConfChangeSet* cs
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_remove</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs,const gchar* key
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_foreach</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs,GConfChangeSetForeachFunc func,gpointer user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_check_value</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfChangeSet* cs, const gchar* key,GConfValue** value_retloc
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,GConfValue* value
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_nocopy</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,GConfValue* value
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_unset</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_float</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,gdouble val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_int</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,gint val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_string</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,const gchar* val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_bool</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,gboolean val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_schema</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,GConfSchema* val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_list</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,GConfValueType list_type,GSList* list
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_pair</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet* cs, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr
+</FUNCTION>
+<STRUCT>
 <NAME>GConfEngine</NAME>
 </STRUCT>
 <STRUCT>
@@ -314,23 +660,24 @@ const gchar* address, GConfError** err
 <ENUM>
 <NAME>GConfErrNo</NAME>
 typedef enum {
-  GCONF_SUCCESS = 0,
-  GCONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
-                               so there's no point having a more specific errno */
+  GCONF_ERROR_SUCCESS = 0,
+  GCONF_ERROR_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
+                                    so there's no point having a more specific errno */
 
-  GCONF_NO_SERVER = 2,     /* Server can't be launched/contacted */
-  GCONF_NO_PERMISSION = 3, /* don't have permission for that */
-  GCONF_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
-  GCONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
-                               characters, or malformed slash arrangement) */
-  GCONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
-  GCONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
-  GCONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
-  GCONF_IS_DIR = 9,        /* Requested key operation on a dir */
-  GCONF_IS_KEY = 10,       /* Requested dir operation on a key */
-  GCONF_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
-  GCONF_OAF_ERROR = 12,    /* liboaf error */
-  GCONF_LOCAL_ENGINE = 13  /* Tried to use remote operations on a local engine */
+  GCONF_ERROR_NO_SERVER = 2,     /* Server can't be launched/contacted */
+  GCONF_ERROR_NO_PERMISSION = 3, /* don't have permission for that */
+  GCONF_ERROR_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
+  GCONF_ERROR_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
+                                    characters, or malformed slash arrangement) */
+  GCONF_ERROR_PARSE_ERROR = 6,   /* Syntax error when parsing */
+  GCONF_ERROR_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
+  GCONF_ERROR_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
+  GCONF_ERROR_IS_DIR = 9,        /* Requested key operation on a dir */
+  GCONF_ERROR_IS_KEY = 10,       /* Requested dir operation on a key */
+  GCONF_ERROR_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
+  GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
+  GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
+  GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
 } GConfErrNo;
 </ENUM>
 <STRUCT>
@@ -379,6 +726,242 @@ GConfError* err1, GConfError* err2
 <RETURNS>const gchar *</RETURNS>
 GConfErrNo en
 </FUNCTION>
+<FUNCTION>
+<NAME>gconf_key_directory</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar* key
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_key_key</NAME>
+<RETURNS>const gchar *</RETURNS>
+const gchar* key
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_file_test</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar* filename, int test
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_file_exists</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar* filename
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_from_corba_value</NAME>
+<RETURNS>GConfValue *</RETURNS>
+const ConfigValue* value
+</FUNCTION>
+<FUNCTION>
+<NAME>corba_value_from_gconf_value</NAME>
+<RETURNS>ConfigValue *</RETURNS>
+GConfValue* value
+</FUNCTION>
+<FUNCTION>
+<NAME>fill_corba_value_from_gconf_value</NAME>
+<RETURNS>void  </RETURNS>
+GConfValue* value,ConfigValue* dest
+</FUNCTION>
+<FUNCTION>
+<NAME>invalid_corba_value</NAME>
+<RETURNS>ConfigValue *</RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>fill_corba_schema_from_gconf_schema</NAME>
+<RETURNS>void  </RETURNS>
+GConfSchema* sc,ConfigSchema* dest
+</FUNCTION>
+<FUNCTION>
+<NAME>corba_schema_from_gconf_schema</NAME>
+<RETURNS>ConfigSchema *</RETURNS>
+GConfSchema* sc
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_schema_from_corba_schema</NAME>
+<RETURNS>GConfSchema *</RETURNS>
+const ConfigSchema* cs
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_type_to_string</NAME>
+<RETURNS>const gchar *</RETURNS>
+GConfValueType type
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_type_from_string</NAME>
+<RETURNS>GConfValueType  </RETURNS>
+const gchar* str
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_load_source_path</NAME>
+<RETURNS>gchar **</RETURNS>
+const gchar* filename, GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_shutdown_daemon</NAME>
+<RETURNS>void  </RETURNS>
+GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_ping_daemon</NAME>
+<RETURNS>gboolean  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_spawn_daemon</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_string_to_gulong</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar* str
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_string_to_double</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar* str, gdouble* val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_double_to_string</NAME>
+<RETURNS>gchar *</RETURNS>
+gdouble val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_current_locale</NAME>
+<RETURNS>const gchar *</RETURNS>
+void
+</FUNCTION>
+<ENUM>
+<NAME>GConfLogPriority</NAME>
+typedef enum {
+  GCL_EMERG,
+  GCL_ALERT,
+  GCL_CRIT,
+  GCL_ERR,
+  GCL_WARNING,
+  GCL_NOTICE,
+  GCL_INFO,
+  GCL_DEBUG
+} GConfLogPriority;
+</ENUM>
+<FUNCTION>
+<NAME>gconf_log</NAME>
+<RETURNS>void  </RETURNS>
+GConfLogPriority pri, const gchar* format, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_key_check</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar* key, GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_new_from_string</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfValueType type, const gchar* str,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_new_list_from_string</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfValueType list_type,const gchar* str
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_new_pair_from_string</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfValueType car_type,GConfValueType cdr_type,const gchar* str
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_quote_string</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar* str
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_unquote_string</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar* str, const gchar** end, GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_unquote_string_inplace</NAME>
+<RETURNS>void  </RETURNS>
+gchar* str, gchar** end, GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_decode</NAME>
+<RETURNS>GConfValue *</RETURNS>
+const gchar* encoded
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_encode</NAME>
+<RETURNS>gchar *</RETURNS>
+GConfValue* val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_quote_percents</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar* src
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_list_from_primitive_list</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfValueType list_type, GSList* list
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_pair_from_primitive_pair</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfValueType car_type,GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_list_to_primitive_list_destructive</NAME>
+<RETURNS>GSList *</RETURNS>
+GConfValue* val,GConfValueType list_type,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_value_pair_to_primitive_pair_destructive</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_set_daemon_mode</NAME>
+<RETURNS>void  </RETURNS>
+gboolean setting
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_in_daemon_mode</NAME>
+<RETURNS>gboolean  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_set_daemon_ior</NAME>
+<RETURNS>void  </RETURNS>
+const gchar* ior
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_get_daemon_ior</NAME>
+<RETURNS>const gchar *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_handle_oaf_exception</NAME>
+<RETURNS>gboolean  </RETURNS>
+CORBA_Environment* ev, GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_nanosleep</NAME>
+<RETURNS>void  </RETURNS>
+gulong useconds
+</FUNCTION>
+<STRUCT>
+<NAME>GConfLock</NAME>
+</STRUCT>
+<FUNCTION>
+<NAME>gconf_get_lock</NAME>
+<RETURNS>GConfLock *</RETURNS>
+const gchar* lock_directory,GConfError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_release_lock</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfLock* lock,GConfError** err
+</FUNCTION>
 <STRUCT>
 <NAME>GConfListeners</NAME>
 </STRUCT>
@@ -426,6 +1009,53 @@ GConfListeners* listeners,const gchar* all_above,GConfListenersCallback callback
 <NAME>gconf_listeners_count</NAME>
 <RETURNS>guint  </RETURNS>
 GConfListeners* listeners
+</FUNCTION>
+<STRUCT>
+<NAME>GConfLocaleCache</NAME>
+</STRUCT>
+<FUNCTION>
+<NAME>gconf_locale_cache_new</NAME>
+<RETURNS>GConfLocaleCache *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_locale_cache_destroy</NAME>
+<RETURNS>void  </RETURNS>
+GConfLocaleCache* cache
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_locale_cache_expire</NAME>
+<RETURNS>void  </RETURNS>
+GConfLocaleCache* cache,guint max_age_exclusive_in_seconds
+</FUNCTION>
+<STRUCT>
+<NAME>GConfLocaleList</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GConfLocaleList</NAME>
+struct GConfLocaleList {
+  const gchar** list;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gconf_locale_list_ref</NAME>
+<RETURNS>void  </RETURNS>
+GConfLocaleList* list
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_locale_list_unref</NAME>
+<RETURNS>void  </RETURNS>
+GConfLocaleList* list
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_locale_cache_get_list</NAME>
+<RETURNS>GConfLocaleList *</RETURNS>
+GConfLocaleCache* cache,const gchar* locale
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_split_locale</NAME>
+<RETURNS>gchar **</RETURNS>
+const gchar* locale
 </FUNCTION>
 <STRUCT>
 <NAME>GConfSchema</NAME>
@@ -561,7 +1191,7 @@ struct GConfSources {
 <FUNCTION>
 <NAME>gconf_sources_new_from_addresses</NAME>
 <RETURNS>GConfSources *</RETURNS>
-gchar        **addresses,GConfError   **err
+const gchar **addresses,GConfError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_new_from_source</NAME>
@@ -570,6 +1200,11 @@ GConfSource   *source
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_destroy</NAME>
+<RETURNS>void  </RETURNS>
+GConfSources  *sources
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_sources_clear_cache</NAME>
 <RETURNS>void  </RETURNS>
 GConfSources  *sources
 </FUNCTION>
@@ -860,6 +1495,8 @@ GConfMetaInfo* gcmi,GTime mod_time
 struct GConfEntry {
   gchar* key;
   GConfValue* value;
+  gchar* schema_name;
+  gboolean is_default;
 };
 </STRUCT>
 <MACRO>
@@ -870,20 +1507,43 @@ struct GConfEntry {
 <NAME>gconf_entry_value</NAME>
 #define     gconf_entry_value(x)    ((x)->value)
 </MACRO>
+<MACRO>
+<NAME>gconf_entry_schema_name</NAME>
+#define     gconf_entry_schema_name(x) ((x)->schema_name)
+</MACRO>
+<MACRO>
+<NAME>gconf_entry_is_default</NAME>
+#define     gconf_entry_is_default(x)  ((x)->is_default)
+</MACRO>
 <FUNCTION>
 <NAME>gconf_entry_new_nocopy</NAME>
 <RETURNS>GConfEntry *</RETURNS>
-gchar* key, GConfValue* val
+gchar       *key,GConfValue  *val
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_entry_destroy</NAME>
 <RETURNS>void  </RETURNS>
-GConfEntry* entry
+GConfEntry  *entry
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_entry_steal_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEntry* entry
+GConfEntry  *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_entry_set_value_nocopy</NAME>
+<RETURNS>void  </RETURNS>
+GConfEntry  *entry,GConfValue  *val
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_entry_set_schema_name</NAME>
+<RETURNS>void  </RETURNS>
+GConfEntry  *entry,const gchar *name
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_entry_set_is_default</NAME>
+<RETURNS>void  </RETURNS>
+GConfEntry  *entry,gboolean     is_default
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_is_initialized</NAME>
@@ -974,6 +1634,16 @@ const gchar* key, gchar** why_invalid
 <NAME>gconf_key_is_below</NAME>
 <RETURNS>gboolean  </RETURNS>
 const gchar* above, const gchar* below
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_concat_key_and_dir</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar* dir, const gchar* key
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_unique_key</NAME>
+<RETURNS>gchar *</RETURNS>
+void
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_float</NAME>
@@ -1080,52 +1750,15 @@ GConfEnumStringPair lookup_table[],const gchar* str,gint* enum_value_retloc
 <RETURNS>const gchar *</RETURNS>
 GConfEnumStringPair lookup_table[],gint enum_value
 </FUNCTION>
-<STRUCT>
-<NAME>GConfLocaleCache</NAME>
-</STRUCT>
 <FUNCTION>
-<NAME>gconf_locale_cache_new</NAME>
-<RETURNS>GConfLocaleCache *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_locale_cache_destroy</NAME>
+<NAME>gconf_clear_cache</NAME>
 <RETURNS>void  </RETURNS>
-GConfLocaleCache* cache
+GConfEngine* conf, GConfError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_locale_cache_expire</NAME>
+<NAME>gconf_synchronous_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfLocaleCache* cache,guint max_age_exclusive_in_seconds
-</FUNCTION>
-<STRUCT>
-<NAME>GConfLocaleList</NAME>
-</STRUCT>
-<STRUCT>
-<NAME>GConfLocaleList</NAME>
-struct GConfLocaleList {
-  const gchar** list;
-};
-</STRUCT>
-<FUNCTION>
-<NAME>gconf_locale_list_ref</NAME>
-<RETURNS>void  </RETURNS>
-GConfLocaleList* list
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_locale_list_unref</NAME>
-<RETURNS>void  </RETURNS>
-GConfLocaleList* list
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_locale_cache_get_list</NAME>
-<RETURNS>GConfLocaleList *</RETURNS>
-GConfLocaleCache* cache,const gchar* locale
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_split_locale</NAME>
-<RETURNS>gchar **</RETURNS>
-const gchar* locale
+GConfEngine* conf, GConfError** err
 </FUNCTION>
 <MACRO>
 <NAME>ORBIT_IDL_SERIAL</NAME>
@@ -1553,7 +2186,8 @@ gpointer mem, gpointer dat, CORBA_boolean free_strings
       ConfigTypeMismatch,
       ConfigIsDir,
       ConfigIsKey,
-      ConfigOverridden
+      ConfigOverridden,
+      ConfigLockFailed
    } ConfigErrorType;
 </ENUM>
 <MACRO>
@@ -1885,6 +2519,116 @@ void
 <RETURNS>gpointer  </RETURNS>
 gpointer mem, gpointer dat, CORBA_boolean free_strings
 </FUNCTION>
+<MACRO>
+<NAME>ORBIT_DECL_CORBA_sequence_CORBA_boolean</NAME>
+#define ORBIT_DECL_CORBA_sequence_CORBA_boolean 1
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_0</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_0 'G'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_1</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_1 'C'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_2</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_2 'o'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_3</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_3 'n'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_4</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_4 'f'
+</MACRO>
+<TYPEDEF>
+<NAME>CORBA_sequence_CORBA_boolean</NAME>
+   typedef struct {
+      CORBA_unsigned_long _maximum,
+       _length;
+      CORBA_boolean *_buffer;
+      CORBA_boolean _release;
+   } CORBA_sequence_CORBA_boolean;
+</TYPEDEF>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_0</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_0 'G'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_1</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_1 'C'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_2</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_2 'o'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_3</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_3 'n'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_4</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_4 'f'
+</MACRO>
+<MACRO>
+<NAME>TC_CORBA_sequence_CORBA_boolean</NAME>
+#define TC_CORBA_sequence_CORBA_boolean ((CORBA_TypeCode)&TC_CORBA_sequence_CORBA_boolean_struct)
+</MACRO>
+<FUNCTION>
+<NAME>CORBA_sequence_CORBA_boolean__alloc</NAME>
+<RETURNS>CORBA_sequence_CORBA_boolean  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>CORBA_sequence_CORBA_boolean__free</NAME>
+<RETURNS>gpointer  </RETURNS>
+gpointer mem, gpointer dat, CORBA_boolean free_strings
+</FUNCTION>
+<FUNCTION>
+<NAME>CORBA_sequence_CORBA_boolean_allocbuf</NAME>
+<RETURNS>CORBA_boolean  *</RETURNS>
+CORBA_unsigned_long len
+</FUNCTION>
+<TYPEDEF>
+<NAME>ConfigServer_IsDefaultList</NAME>
+   typedef CORBA_sequence_CORBA_boolean ConfigServer_IsDefaultList;
+</TYPEDEF>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigServer_IsDefaultList_0</NAME>
+#define TC_IMPL_TC_ConfigServer_IsDefaultList_0 'G'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigServer_IsDefaultList_1</NAME>
+#define TC_IMPL_TC_ConfigServer_IsDefaultList_1 'C'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigServer_IsDefaultList_2</NAME>
+#define TC_IMPL_TC_ConfigServer_IsDefaultList_2 'o'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigServer_IsDefaultList_3</NAME>
+#define TC_IMPL_TC_ConfigServer_IsDefaultList_3 'n'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigServer_IsDefaultList_4</NAME>
+#define TC_IMPL_TC_ConfigServer_IsDefaultList_4 'f'
+</MACRO>
+<MACRO>
+<NAME>TC_ConfigServer_IsDefaultList</NAME>
+#define TC_ConfigServer_IsDefaultList ((CORBA_TypeCode)&TC_ConfigServer_IsDefaultList_struct)
+</MACRO>
+<FUNCTION>
+<NAME>ConfigServer_IsDefaultList__alloc</NAME>
+<RETURNS>ConfigServer_IsDefaultList  *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>ConfigServer_IsDefaultList__free</NAME>
+<RETURNS>gpointer  </RETURNS>
+gpointer mem, gpointer dat, CORBA_boolean free_strings
+</FUNCTION>
 <TYPEDEF>
 <NAME>ConfigServer_Context</NAME>
    typedef CORBA_unsigned_long ConfigServer_Context;
@@ -1925,7 +2669,7 @@ gpointer mem, gpointer dat, CORBA_boolean free_strings
 <NAME>POA_ConfigListener__epv</NAME>
    typedef struct {
       void *_private;
-      void (*notify) (PortableServer_Servant _servant, CORBA_unsigned_long server_context, CORBA_unsigned_long cnxn, CORBA_char * key, ConfigValue * value, CORBA_boolean is_default, CORBA_Environment * ev);
+      void (*notify) (PortableServer_Servant _servant, const CORBA_unsigned_long server_context, const CORBA_unsigned_long cnxn, const CORBA_char * key, const ConfigValue * value, const CORBA_boolean is_default, CORBA_Environment * ev);
    } POA_ConfigListener__epv;
 </TYPEDEF>
 <TYPEDEF>
@@ -1956,23 +2700,25 @@ PortableServer_Servant servant, CORBA_Environment * ev
 <NAME>POA_ConfigServer__epv</NAME>
    typedef struct {
       void *_private;
-       ConfigServer_Context(*get_context) (PortableServer_Servant _servant, CORBA_char * address, CORBA_Environment * ev);
-       CORBA_unsigned_long(*add_listener) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * where, ConfigListener who, CORBA_Environment * ev);
-      void (*remove_listener) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_unsigned_long cnxn, CORBA_Environment * ev);
-      ConfigValue *(*lookup) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, CORBA_Environment * ev);
-      ConfigValue *(*lookup_with_locale) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * locale, CORBA_boolean use_schema_default, CORBA_boolean * value_is_default, CORBA_Environment * ev);
-      ConfigValue *(*lookup_default_value) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * locale, CORBA_Environment * ev);
-      void (*set) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, ConfigValue * value, CORBA_Environment * ev);
-      void (*unset) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, CORBA_Environment * ev);
-      void (*unset_with_locale) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * locale, CORBA_Environment * ev);
-       CORBA_boolean(*dir_exists) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * dir, CORBA_Environment * ev);
-      void (*remove_dir) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * dir, CORBA_Environment * ev);
-      void (*all_entries) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * dir, CORBA_char * locale, ConfigServer_KeyList ** keys, ConfigServer_ValueList ** values, CORBA_Environment * ev);
-      void (*all_dirs) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * dir, ConfigServer_KeyList ** subdirs, CORBA_Environment * ev);
-      void (*set_schema) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * schema_key, CORBA_Environment * ev);
-      void (*sync) (PortableServer_Servant _servant, ConfigServer_Context ctx, CORBA_Environment * ev);
+       ConfigServer_Context(*get_context) (PortableServer_Servant _servant, const CORBA_char * address, CORBA_Environment * ev);
+       CORBA_unsigned_long(*add_listener) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * where, const ConfigListener who, CORBA_Environment * ev);
+      void (*remove_listener) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_unsigned_long cnxn, CORBA_Environment * ev);
+      ConfigValue *(*lookup) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, CORBA_Environment * ev);
+      ConfigValue *(*lookup_with_locale) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * locale, const CORBA_boolean use_schema_default, CORBA_boolean * value_is_default, CORBA_Environment * ev);
+      ConfigValue *(*lookup_default_value) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * locale, CORBA_Environment * ev);
+      void (*set) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, const ConfigValue * value, CORBA_Environment * ev);
+      void (*unset) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, CORBA_Environment * ev);
+      void (*unset_with_locale) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * locale, CORBA_Environment * ev);
+       CORBA_boolean(*dir_exists) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * dir, CORBA_Environment * ev);
+      void (*remove_dir) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * dir, CORBA_Environment * ev);
+      void (*all_entries) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * dir, const CORBA_char * locale, ConfigServer_KeyList ** keys, ConfigServer_ValueList ** values, ConfigServer_IsDefaultList ** is_defaults, CORBA_Environment * ev);
+      void (*all_dirs) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * dir, ConfigServer_KeyList ** subdirs, CORBA_Environment * ev);
+      void (*set_schema) (PortableServer_Servant _servant, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * schema_key, CORBA_Environment * ev);
+      void (*sync) (PortableServer_Servant _servant, const ConfigServer_Context ctx, CORBA_Environment * ev);
        CORBA_long(*ping) (PortableServer_Servant _servant, CORBA_Environment * ev);
       void (*shutdown) (PortableServer_Servant _servant, CORBA_Environment * ev);
+      void (*clear_cache) (PortableServer_Servant _servant, const ConfigServer_Context ctx, CORBA_Environment * ev);
+      void (*synchronous_sync) (PortableServer_Servant _servant, const ConfigServer_Context ctx, CORBA_Environment * ev);
    } POA_ConfigServer__epv;
 </TYPEDEF>
 <TYPEDEF>
@@ -2002,82 +2748,82 @@ PortableServer_Servant servant, CORBA_Environment * ev
 <FUNCTION>
 <NAME>ConfigListener_notify</NAME>
 <RETURNS>void  </RETURNS>
-ConfigListener _obj, CORBA_unsigned_long server_context, CORBA_unsigned_long cnxn, CORBA_char * key, ConfigValue * value, CORBA_boolean is_default, CORBA_Environment * ev
+ConfigListener _obj, const CORBA_unsigned_long server_context, const CORBA_unsigned_long cnxn, const CORBA_char * key, const ConfigValue * value, const CORBA_boolean is_default, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_get_context</NAME>
 <RETURNS>ConfigServer_Context  </RETURNS>
-ConfigServer _obj, CORBA_char * address, CORBA_Environment * ev
+ConfigServer _obj, const CORBA_char * address, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_add_listener</NAME>
 <RETURNS>CORBA_unsigned_long  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * where, ConfigListener who, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * where, const ConfigListener who, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_remove_listener</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_unsigned_long cnxn, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_unsigned_long cnxn, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_lookup</NAME>
 <RETURNS>ConfigValue  *</RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_lookup_with_locale</NAME>
 <RETURNS>ConfigValue  *</RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * locale, CORBA_boolean use_schema_default, CORBA_boolean * value_is_default, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * locale, const CORBA_boolean use_schema_default, CORBA_boolean * value_is_default, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_lookup_default_value</NAME>
 <RETURNS>ConfigValue  *</RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * locale, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * locale, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_set</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, ConfigValue * value, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, const ConfigValue * value, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_unset</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_unset_with_locale</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * locale, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * locale, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_dir_exists</NAME>
 <RETURNS>CORBA_boolean  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * dir, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * dir, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_remove_dir</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * dir, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * dir, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_all_entries</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * dir, CORBA_char * locale, ConfigServer_KeyList ** keys, ConfigServer_ValueList ** values, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * dir, const CORBA_char * locale, ConfigServer_KeyList ** keys, ConfigServer_ValueList ** values, ConfigServer_IsDefaultList ** is_defaults, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_all_dirs</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * dir, ConfigServer_KeyList ** subdirs, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * dir, ConfigServer_KeyList ** subdirs, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_set_schema</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_char * key, CORBA_char * schema_key, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, const CORBA_char * key, const CORBA_char * schema_key, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_sync</NAME>
 <RETURNS>void  </RETURNS>
-ConfigServer _obj, ConfigServer_Context ctx, CORBA_Environment * ev
+ConfigServer _obj, const ConfigServer_Context ctx, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigServer_ping</NAME>
@@ -2090,338 +2836,217 @@ ConfigServer _obj, CORBA_Environment * ev
 ConfigServer _obj, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_key_directory</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar* key
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_key_key</NAME>
-<RETURNS>const gchar *</RETURNS>
-const gchar* key
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_file_test</NAME>
-<RETURNS>gboolean  </RETURNS>
-const gchar* filename, int test
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_file_exists</NAME>
-<RETURNS>gboolean  </RETURNS>
-const gchar* filename
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_server_info_file</NAME>
-<RETURNS>gchar *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_server_info_dir</NAME>
-<RETURNS>gchar *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_read_server_ior</NAME>
-<RETURNS>gchar *</RETURNS>
-GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_from_corba_value</NAME>
-<RETURNS>GConfValue *</RETURNS>
-const ConfigValue* value
-</FUNCTION>
-<FUNCTION>
-<NAME>corba_value_from_gconf_value</NAME>
-<RETURNS>ConfigValue *</RETURNS>
-GConfValue* value
-</FUNCTION>
-<FUNCTION>
-<NAME>fill_corba_value_from_gconf_value</NAME>
+<NAME>ConfigServer_clear_cache</NAME>
 <RETURNS>void  </RETURNS>
-GConfValue* value,ConfigValue* dest
+ConfigServer _obj, const ConfigServer_Context ctx, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
-<NAME>invalid_corba_value</NAME>
-<RETURNS>ConfigValue *</RETURNS>
-
-</FUNCTION>
-<FUNCTION>
-<NAME>fill_corba_schema_from_gconf_schema</NAME>
+<NAME>ConfigServer_synchronous_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc,ConfigSchema* dest
+ConfigServer _obj, const ConfigServer_Context ctx, CORBA_Environment * ev
 </FUNCTION>
-<FUNCTION>
-<NAME>corba_schema_from_gconf_schema</NAME>
-<RETURNS>ConfigSchema *</RETURNS>
-GConfSchema* sc
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_schema_from_corba_schema</NAME>
-<RETURNS>GConfSchema *</RETURNS>
-const ConfigSchema* cs
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_type_to_string</NAME>
-<RETURNS>const gchar *</RETURNS>
-GConfValueType type
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_type_from_string</NAME>
-<RETURNS>GConfValueType  </RETURNS>
-const gchar* str
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_load_source_path</NAME>
-<RETURNS>gchar **</RETURNS>
-const gchar* filename, GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_shutdown_daemon</NAME>
-<RETURNS>void  </RETURNS>
-GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_ping_daemon</NAME>
-<RETURNS>gboolean  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_spawn_daemon</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_concat_key_and_dir</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar* dir, const gchar* key
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_string_to_gulong</NAME>
-<RETURNS>gulong  </RETURNS>
-const gchar* str
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_current_locale</NAME>
-<RETURNS>const gchar *</RETURNS>
-void
-</FUNCTION>
-<ENUM>
-<NAME>GConfLogPriority</NAME>
-typedef enum {
-  GCL_EMERG,
-  GCL_ALERT,
-  GCL_CRIT,
-  GCL_ERR,
-  GCL_WARNING,
-  GCL_NOTICE,
-  GCL_INFO,
-  GCL_DEBUG
-} GConfLogPriority;
-</ENUM>
-<FUNCTION>
-<NAME>gconf_log</NAME>
-<RETURNS>void  </RETURNS>
-GConfLogPriority pri, const gchar* format, ...
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_key_check</NAME>
-<RETURNS>gboolean  </RETURNS>
-const gchar* key, GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_new_from_string</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfValueType type, const gchar* str,GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_new_list_from_string</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfValueType list_type,const gchar* str
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_new_pair_from_string</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfValueType car_type,GConfValueType cdr_type,const gchar* str
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_quote_string</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar* str
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_unquote_string</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar* str, const gchar** end, GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_unquote_string_inplace</NAME>
-<RETURNS>void  </RETURNS>
-gchar* str, gchar** end, GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_decode</NAME>
-<RETURNS>GConfValue *</RETURNS>
-const gchar* encoded
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_encode</NAME>
-<RETURNS>gchar *</RETURNS>
-GConfValue* val
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_quote_percents</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar* src
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_list_from_primitive_list</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfValueType list_type, GSList* list
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_pair_from_primitive_pair</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfValueType car_type,GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_list_to_primitive_list_destructive</NAME>
-<RETURNS>GSList *</RETURNS>
-GConfValue* val,GConfValueType list_type,GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_value_pair_to_primitive_pair_destructive</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_set_daemon_mode</NAME>
-<RETURNS>void  </RETURNS>
-gboolean setting
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_handle_oaf_exception</NAME>
-<RETURNS>gboolean  </RETURNS>
-CORBA_Environment* ev, GConfError** err
-</FUNCTION>
+<MACRO>
+<NAME>MO_REVISION_NUMBER</NAME>
+#define MO_REVISION_NUMBER 0
+</MACRO>
+<MACRO>
+<NAME>UINT_MAX_32_BITS</NAME>
+# define UINT_MAX_32_BITS 4294967295U
+</MACRO>
+<MACRO>
+<NAME>UINT_MAX_32_BITS</NAME>
+# define UINT_MAX_32_BITS 0xFFFFFFFF
+</MACRO>
+<MACRO>
+<NAME>UINT_MAX</NAME>
+# define UINT_MAX UINT_MAX_32_BITS
+</MACRO>
+<TYPEDEF>
+<NAME>nls_uint32</NAME>
+typedef unsigned nls_uint32;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>nls_uint32</NAME>
+typedef unsigned short nls_uint32;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>nls_uint32</NAME>
+typedef unsigned long nls_uint32;
+</TYPEDEF>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(args) args
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(args) ()
+</MACRO>
+<MACRO>
+<NAME>internal_function</NAME>
+# define internal_function
+</MACRO>
+<MACRO>
+<NAME>W</NAME>
+# define W(flag, data) ((flag) ? SWAP (data) : (data))
+</MACRO>
+<MACRO>
+<NAME>SWAP</NAME>
+# define SWAP(i) bswap_32 (i)
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(Args) Args
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(Args) ()
+</MACRO>
+<MACRO>
+<NAME>HASHWORDBITS</NAME>
+#define HASHWORDBITS 32
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(args) args
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(args) ()
+</MACRO>
+<MACRO>
+<NAME>NULL</NAME>
+#  define NULL ((void *) 0)
+</MACRO>
+<MACRO>
+<NAME>NULL</NAME>
+#  define NULL (0)
+</MACRO>
+<MACRO>
+<NAME>LC_MESSAGES</NAME>
+# define LC_MESSAGES (-1)
+</MACRO>
 <STRUCT>
-<NAME>GConfChangeSet</NAME>
+<NAME>msg_ent</NAME>
+struct msg_ent
+{
+  const char *_msg;
+  int _msg_number;
+};
 </STRUCT>
-<USER_FUNCTION>
-<NAME>GConfChangeSetForeachFunc</NAME>
-<RETURNS>void </RETURNS>
-GConfChangeSet* cs,
-                                            const gchar* key,
-                                            GConfValue* value,
-                                            gpointer user_data
-</USER_FUNCTION>
+<MACRO>
+<NAME>gettext_noop</NAME>
+#define gettext_noop(Str) (Str)
+</MACRO>
+<MACRO>
+<NAME>gettext</NAME>
+#  define gettext(Msgid)						      \
+     dgettext (NULL, Msgid)
+</MACRO>
+<MACRO>
+<NAME>dgettext</NAME>
+#  define dgettext(Domainname, Msgid)					      \
+     dcgettext (Domainname, Msgid, LC_MESSAGES)
+</MACRO>
+<MACRO>
+<NAME>dcgettext</NAME>
+#   define dcgettext(Domainname, Msgid, Category)			      \
+  (__extension__							      \
+   ({									      \
+     char *__result;							      \
+     if (__builtin_constant_p (Msgid))					      \
+       {								      \
+	 static char *__translation__;					      \
+	 static int __catalog_counter__;				      \
+	 if (! __translation__ || __catalog_counter__ != _nl_msg_cat_cntr)    \
+	   {								      \
+	     __translation__ =						      \
+	       dcgettext__ (Domainname, Msgid, Category);		      \
+	     __catalog_counter__ = _nl_msg_cat_cntr;			      \
+	   }								      \
+	 __result = __translation__;					      \
+       }								      \
+     else								      \
+       __result = dcgettext__ (Domainname, Msgid, Category);		      \
+     __result;								      \
+    }))
+</MACRO>
+<MACRO>
+<NAME>gettext</NAME>
+# define gettext(Msgid) (Msgid)
+</MACRO>
+<MACRO>
+<NAME>dgettext</NAME>
+# define dgettext(Domainname, Msgid) (Msgid)
+</MACRO>
+<MACRO>
+<NAME>dcgettext</NAME>
+# define dcgettext(Domainname, Msgid, Category) (Msgid)
+</MACRO>
+<MACRO>
+<NAME>textdomain</NAME>
+# define textdomain(Domainname) ((char *) Domainname)
+</MACRO>
+<MACRO>
+<NAME>bindtextdomain</NAME>
+# define bindtextdomain(Domainname, Dirname) ((char *) Dirname)
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(args) args
+</MACRO>
+<MACRO>
+<NAME>PARAMS</NAME>
+#  define PARAMS(args) ()
+</MACRO>
+<MACRO>
+<NAME>CEN_REVISION</NAME>
+#define CEN_REVISION		1
+</MACRO>
+<MACRO>
+<NAME>CEN_SPONSOR</NAME>
+#define CEN_SPONSOR		2
+</MACRO>
+<MACRO>
+<NAME>CEN_SPECIAL</NAME>
+#define CEN_SPECIAL		4
+</MACRO>
+<MACRO>
+<NAME>XPG_NORM_CODESET</NAME>
+#define XPG_NORM_CODESET	8
+</MACRO>
+<MACRO>
+<NAME>XPG_CODESET</NAME>
+#define XPG_CODESET		16
+</MACRO>
+<MACRO>
+<NAME>TERRITORY</NAME>
+#define TERRITORY		32
+</MACRO>
+<MACRO>
+<NAME>CEN_AUDIENCE</NAME>
+#define CEN_AUDIENCE		64
+</MACRO>
+<MACRO>
+<NAME>XPG_MODIFIER</NAME>
+#define XPG_MODIFIER		128
+</MACRO>
+<MACRO>
+<NAME>CEN_SPECIFIC</NAME>
+#define CEN_SPECIFIC	(CEN_REVISION|CEN_SPONSOR|CEN_SPECIAL|CEN_AUDIENCE)
+</MACRO>
+<MACRO>
+<NAME>XPG_SPECIFIC</NAME>
+#define XPG_SPECIFIC	(XPG_CODESET|XPG_NORM_CODESET|XPG_MODIFIER)
+</MACRO>
 <FUNCTION>
-<NAME>gconf_commit_change_set</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GConfError** err
+<NAME>PARAMS</NAME>
+<RETURNS>_nl_make_l10nflist  </RETURNS>
+(struct loaded_l10nfile **l10nfile_list,const char *dirlist, size_t dirlist_len, int mask,const char *language, const char *territory,const char *codeset,const char *normalized_codeset,const char *modifier, const char *special,const char *sponsor, const char *revision,const char *filename, int do_allocate)
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_create_reverse_change_set</NAME>
-<RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,GConfChangeSet* cs,GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_create_change_set_from_currentv</NAME>
-<RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,const gchar** keys,GConfError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_create_change_set_from_current</NAME>
-<RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,GConfError** err,const gchar* first_key,...
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_new</NAME>
-<RETURNS>GConfChangeSet *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_ref</NAME>
+<NAME>gce_install_menus_and_toolbar</NAME>
 <RETURNS>void  </RETURNS>
-GConfChangeSet* cs
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_unref</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_clear</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_size</NAME>
-<RETURNS>guint  </RETURNS>
-GConfChangeSet* cs
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_remove</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs,const gchar* key
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_foreach</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs,GConfChangeSetForeachFunc func,gpointer user_data
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_check_value</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfChangeSet* cs, const gchar* key,GConfValue** value_retloc
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,GConfValue* value
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_nocopy</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,GConfValue* value
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_unset</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_float</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,gdouble val
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_int</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,gint val
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_string</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,const gchar* val
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_bool</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,gboolean val
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_schema</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,GConfSchema* val
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_list</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,GConfValueType list_type,GSList* list
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_change_set_set_pair</NAME>
-<RETURNS>void  </RETURNS>
-GConfChangeSet* cs, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr
+GtkWidget* app
 </FUNCTION>
 <FUNCTION>
 <NAME>gce_app_new</NAME>
@@ -2431,11 +3056,6 @@ const gchar* geometry
 <FUNCTION>
 <NAME>gce_app_close</NAME>
 <RETURNS>void</RETURNS>
-GtkWidget* app
-</FUNCTION>
-<FUNCTION>
-<NAME>gce_install_menus_and_toolbar</NAME>
-<RETURNS>void  </RETURNS>
 GtkWidget* app
 </FUNCTION>
 <FUNCTION>
@@ -2587,7 +3207,7 @@ struct GConfClient
   GConfClientErrorHandlingMode error_mode;
   GConfClientParentWindowFunc parent_func;
   gpointer parent_user_data;
-  GSList* dir_list;
+  GHashTable* dir_hash;
   GHashTable* cache_hash;
   GConfListeners* listeners;
 };
@@ -2827,202 +3447,4 @@ SCM obj
 <NAME>gconf2scm</NAME>
 <RETURNS>SCM  </RETURNS>
 GConfEngine* conf
-</FUNCTION>
-<MACRO>
-<NAME>MO_REVISION_NUMBER</NAME>
-#define MO_REVISION_NUMBER 0
-</MACRO>
-<MACRO>
-<NAME>UINT_MAX_32_BITS</NAME>
-# define UINT_MAX_32_BITS 4294967295U
-</MACRO>
-<MACRO>
-<NAME>UINT_MAX_32_BITS</NAME>
-# define UINT_MAX_32_BITS 0xFFFFFFFF
-</MACRO>
-<MACRO>
-<NAME>UINT_MAX</NAME>
-# define UINT_MAX UINT_MAX_32_BITS
-</MACRO>
-<TYPEDEF>
-<NAME>nls_uint32</NAME>
-typedef unsigned nls_uint32;
-</TYPEDEF>
-<TYPEDEF>
-<NAME>nls_uint32</NAME>
-typedef unsigned short nls_uint32;
-</TYPEDEF>
-<TYPEDEF>
-<NAME>nls_uint32</NAME>
-typedef unsigned long nls_uint32;
-</TYPEDEF>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(args) args
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(args) ()
-</MACRO>
-<MACRO>
-<NAME>internal_function</NAME>
-# define internal_function
-</MACRO>
-<MACRO>
-<NAME>W</NAME>
-# define W(flag, data) ((flag) ? SWAP (data) : (data))
-</MACRO>
-<MACRO>
-<NAME>SWAP</NAME>
-# define SWAP(i) bswap_32 (i)
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(Args) Args
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(Args) ()
-</MACRO>
-<MACRO>
-<NAME>HASHWORDBITS</NAME>
-#define HASHWORDBITS 32
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(args) args
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(args) ()
-</MACRO>
-<MACRO>
-<NAME>NULL</NAME>
-#  define NULL ((void *) 0)
-</MACRO>
-<MACRO>
-<NAME>NULL</NAME>
-#  define NULL (0)
-</MACRO>
-<MACRO>
-<NAME>LC_MESSAGES</NAME>
-# define LC_MESSAGES (-1)
-</MACRO>
-<STRUCT>
-<NAME>msg_ent</NAME>
-struct msg_ent
-{
-  const char *_msg;
-  int _msg_number;
-};
-</STRUCT>
-<MACRO>
-<NAME>gettext_noop</NAME>
-#define gettext_noop(Str) (Str)
-</MACRO>
-<MACRO>
-<NAME>gettext</NAME>
-#  define gettext(Msgid)						      \
-     dgettext (NULL, Msgid)
-</MACRO>
-<MACRO>
-<NAME>dgettext</NAME>
-#  define dgettext(Domainname, Msgid)					      \
-     dcgettext (Domainname, Msgid, LC_MESSAGES)
-</MACRO>
-<MACRO>
-<NAME>dcgettext</NAME>
-#   define dcgettext(Domainname, Msgid, Category)			      \
-  (__extension__							      \
-   ({									      \
-     char *__result;							      \
-     if (__builtin_constant_p (Msgid))					      \
-       {								      \
-	 static char *__translation__;					      \
-	 static int __catalog_counter__;				      \
-	 if (! __translation__ || __catalog_counter__ != _nl_msg_cat_cntr)    \
-	   {								      \
-	     __translation__ =						      \
-	       dcgettext__ (Domainname, Msgid, Category);		      \
-	     __catalog_counter__ = _nl_msg_cat_cntr;			      \
-	   }								      \
-	 __result = __translation__;					      \
-       }								      \
-     else								      \
-       __result = dcgettext__ (Domainname, Msgid, Category);		      \
-     __result;								      \
-    }))
-</MACRO>
-<MACRO>
-<NAME>gettext</NAME>
-# define gettext(Msgid) (Msgid)
-</MACRO>
-<MACRO>
-<NAME>dgettext</NAME>
-# define dgettext(Domainname, Msgid) (Msgid)
-</MACRO>
-<MACRO>
-<NAME>dcgettext</NAME>
-# define dcgettext(Domainname, Msgid, Category) (Msgid)
-</MACRO>
-<MACRO>
-<NAME>textdomain</NAME>
-# define textdomain(Domainname) ((char *) Domainname)
-</MACRO>
-<MACRO>
-<NAME>bindtextdomain</NAME>
-# define bindtextdomain(Domainname, Dirname) ((char *) Dirname)
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(args) args
-</MACRO>
-<MACRO>
-<NAME>PARAMS</NAME>
-#  define PARAMS(args) ()
-</MACRO>
-<MACRO>
-<NAME>CEN_REVISION</NAME>
-#define CEN_REVISION		1
-</MACRO>
-<MACRO>
-<NAME>CEN_SPONSOR</NAME>
-#define CEN_SPONSOR		2
-</MACRO>
-<MACRO>
-<NAME>CEN_SPECIAL</NAME>
-#define CEN_SPECIAL		4
-</MACRO>
-<MACRO>
-<NAME>XPG_NORM_CODESET</NAME>
-#define XPG_NORM_CODESET	8
-</MACRO>
-<MACRO>
-<NAME>XPG_CODESET</NAME>
-#define XPG_CODESET		16
-</MACRO>
-<MACRO>
-<NAME>TERRITORY</NAME>
-#define TERRITORY		32
-</MACRO>
-<MACRO>
-<NAME>CEN_AUDIENCE</NAME>
-#define CEN_AUDIENCE		64
-</MACRO>
-<MACRO>
-<NAME>XPG_MODIFIER</NAME>
-#define XPG_MODIFIER		128
-</MACRO>
-<MACRO>
-<NAME>CEN_SPECIFIC</NAME>
-#define CEN_SPECIFIC	(CEN_REVISION|CEN_SPONSOR|CEN_SPECIAL|CEN_AUDIENCE)
-</MACRO>
-<MACRO>
-<NAME>XPG_SPECIFIC</NAME>
-#define XPG_SPECIFIC	(XPG_CODESET|XPG_NORM_CODESET|XPG_MODIFIER)
-</MACRO>
-<FUNCTION>
-<NAME>PARAMS</NAME>
-<RETURNS>_nl_make_l10nflist  </RETURNS>
-(struct loaded_l10nfile **l10nfile_list,const char *dirlist, size_t dirlist_len, int mask,const char *language, const char *territory,const char *codeset,const char *normalized_codeset,const char *modifier, const char *special,const char *sponsor, const char *revision,const char *filename, int do_allocate)
 </FUNCTION>

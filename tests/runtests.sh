@@ -2,7 +2,7 @@
 
 export GCONFTOOL=`pwd`/../gconf/gconftool
 LOGFILE=runtests.log
-POTENTIAL_TESTS='testgconf testlisteners testschemas testpersistence'
+POTENTIAL_TESTS='testdirlist testgconf testlisteners testschemas testpersistence'
 
 for I in $POTENTIAL_TESTS
 do

@@ -34,7 +34,8 @@ If non-<symbol>NULL</symbol>, the argument should be the address of a
 If an error occurs, a #GConfError will be allocated and placed in the
 return location; the caller must free the #GConfError with
 gconf_error_destroy(). If no error occurs, the return location will be
-left untouched.
+left untouched. That is, the test <literal>error != NULL</literal> 
+should always be a reliable indicator of whether the operation failed.
 </para>
 </listitem>
 </itemizedlist>
@@ -81,20 +82,21 @@ differentiate between different kinds of error. You may wish to take
 specific actions depending on the error type.
 </para>
 
-@GCONF_SUCCESS: indicates that no error occurred, won't be returned in a #GConfError.
-@GCONF_FAILED: indicates failure, but no more specific #GConfErrNo applied.
-@GCONF_NO_SERVER: indicates that the GConf server couldn't be contacted, probably a CORBA problem.
-@GCONF_NO_PERMISSION: indicates that permission to access some resource was denied.
-@GCONF_BAD_ADDRESS: indicates that a configuration source address was syntactically invalid or impossible to resolve.
-@GCONF_BAD_KEY: indicates that a key was malformed.
-@GCONF_PARSE_ERROR: indicates that some parsing was done (perhaps in a backend) and it failed.
-@GCONF_CORRUPT: indicates that some part of the database is corrupt.
-@GCONF_TYPE_MISMATCH: indicates that a specific type was required, and another type was found.
-@GCONF_IS_DIR: indicates that an operation only applicable to keys was performed on a directory.
-@GCONF_IS_KEY: indicates that an operation only applicable to directories was performed on a key.
-@GCONF_OVERRIDDEN: indicates that the administrator has imposed a mandatory value, and it could not be changed.
-@GCONF_OAF_ERROR: 
-@GCONF_LOCAL_ENGINE: 
+@GCONF_ERROR_SUCCESS: indicates that no error occurred, won't be returned in a #GConfError.
+@GCONF_ERROR_FAILED: indicates failure, but no more specific #GConfErrNo applied.
+@GCONF_ERROR_NO_SERVER: indicates that the GConf server couldn't be contacted, probably a CORBA problem.
+@GCONF_ERROR_NO_PERMISSION: indicates that permission to access some resource was denied.
+@GCONF_ERROR_BAD_ADDRESS: indicates that a configuration source address was syntactically invalid or impossible to resolve.
+@GCONF_ERROR_BAD_KEY: indicates that a key was malformed.
+@GCONF_ERROR_PARSE_ERROR: indicates that some parsing was done (perhaps in a backend) and it failed.
+@GCONF_ERROR_CORRUPT: indicates that some part of the database is corrupt.
+@GCONF_ERROR_TYPE_MISMATCH: indicates that a specific type was required, and another type was found.
+@GCONF_ERROR_IS_DIR: indicates that an operation only applicable to keys was performed on a directory.
+@GCONF_ERROR_IS_KEY: indicates that an operation only applicable to directories was performed on a key.
+@GCONF_ERROR_OVERRIDDEN: indicates that the administrator has imposed a mandatory value, and it could not be changed.
+@GCONF_ERROR_OAF_ERROR: 
+@GCONF_ERROR_LOCAL_ENGINE: 
+@GCONF_ERROR_LOCK_FAILED: 
 
 <!-- ##### STRUCT GConfError ##### -->
 <para>
