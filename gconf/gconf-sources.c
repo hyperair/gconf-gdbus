@@ -311,13 +311,13 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
 
       if (source != NULL)
         {
-          sources->sources = g_list_prepend(sources->sources, source);
+          sources->sources = g_list_prepend(sources->sources, source);          
           g_return_val_if_fail(error == NULL, NULL);
         }
       else
         {
           g_assert(error != NULL);
-          gconf_log(GCL_WARNING, _("Failed to load source `%s': %s"),
+          gconf_log(GCL_WARNING, _("Failed to load source \"%s\": %s"),
                     (const gchar*)addresses->data, error->message);
           
           g_error_free(error);
@@ -327,6 +327,47 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
     }
 
   sources->sources = g_list_reverse(sources->sources);
+
+  {
+    GList *tmp;
+    int i;
+    gboolean some_writable;
+
+    some_writable = FALSE;
+    i = 0;
+    tmp = sources->sources;
+    while (tmp != NULL)
+      {
+        GConfSource *source = tmp->data;
+
+        if (source->flags & GCONF_SOURCE_ALL_WRITEABLE)
+          {
+            some_writable = TRUE;
+            gconf_log (GCL_INFO,
+                       _("Resolved address \"%s\" to a writable config source at position %d"),
+                       source->address, i);
+          }
+        else if (source->flags & GCONF_SOURCE_NEVER_WRITEABLE)
+          {
+            gconf_log (GCL_INFO,
+                       _("Resolved address \"%s\" to a read-only config source at position %d"),
+                       source->address, i);
+          }
+        else
+          {
+            some_writable = TRUE;
+            gconf_log (GCL_INFO,
+                       _("Resolved address \"%s\" to a partially writable config source at position %d"),
+                       source->address, i);
+          }
+
+        ++i;
+        tmp = tmp->next;
+      }
+
+    if (!some_writable)
+      gconf_log (GCL_WARNING, _("None of the resolved addresses are writable; saving configuration settings will not be possible"));
+  }
   
   return sources;
 }
@@ -574,9 +615,16 @@ gconf_sources_set_value   (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
 
-      if (gconf_source_set_value(src, key, value, err))
+      gconf_log (GCL_DEBUG, "Setting %s in %s",
+                 key, src->address);
+      
+      /* gconf_source_set_value return value is whether source
+       * was writable at key, not whether err was set.
+       */
+      if (gconf_source_set_value (src, key, value, err))
         {
-          /* source was writable */
+          /* source was writable, err may be set */
+          gconf_log (GCL_DEBUG, "%s was writable in %s", key, src->address);
           return;
         }
       else
@@ -591,9 +639,11 @@ gconf_sources_set_value   (GConfSources* sources,
           
           if (val != NULL)
             {
+              gconf_log (GCL_DEBUG, "%s was already set in %s", key, src->address);
+              
               gconf_value_free(val);
               gconf_set_error(err, GCONF_ERROR_OVERRIDDEN,
-                              _("Value for `%s' set in a read-only source at the front of your configuration path."), key);
+                              _("Value for `%s' set in a read-only source at the front of your configuration path"), key);
               return;
             }
         }
@@ -605,7 +655,7 @@ gconf_sources_set_value   (GConfSources* sources,
   g_set_error (err,
                GCONF_ERROR,
                GCONF_ERROR_NO_WRITABLE_DATABASE,
-               _("Unable to store a value at key '%s', as the configuration server has no writable databases. There are two common causes of this problem: 1) your configuration path file doesn't contain any databases or wasn't found or 2) somehow we mistakenly created two gconfd processes. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections? As always, check the user.* syslog for details on problems gconfd encountered."),
+               _("Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections? As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconf"),
                key);
 }
 

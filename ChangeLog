@@ -1,3 +1,14 @@
+2001-12-09  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-internals.c (gconf_load_source_path): for fuck's
+	sake - we've been reading the config source backward forever - 
+	this has never fricking worked. Dammit.
+
+	* gconf/gconf-sources.c (gconf_sources_set_value): make huge error
+	message even more so
+	(gconf_sources_new_from_addresses): add debug log about config
+	source writability
+
 2001-12-08  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-client.c: fix some warnings
