@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf VERSION\n"
-"POT-Creation-Date: 2000-04-12 19:12+0200\n"
+"POT-Creation-Date: 2000-07-27 13:55-0400\n"
 "PO-Revision-Date: 2000-03-09 14:58-0500\n"
 "Last-Translator: George Lebl <jirka@5z.com>\n"
 "Language-Team: czech <cs@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr ""
 
-#: backends/xml-backend.c:315
+#: backends/xml-backend.c:315 backends/xml-dir.c:1047
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Nelze vytvoøit adresáø `%s': %s"
@@ -45,6 +45,191 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Failed to give up lock on XML dir `%s': %s"
 msgstr "Nelze otevøít adresáø `%s': %s"
+
+#: backends/xml-cache.c:134
+msgid "Unsynced directory deletions when shutting down XML backend"
+msgstr ""
+
+#: backends/xml-cache.c:243
+#, c-format
+msgid ""
+"Unable to remove directory `%s' from the XML backend cache, because it has "
+"not been successfully synced to disk"
+msgstr ""
+
+#: backends/xml-cache.c:268
+#, c-format
+msgid ""
+"%u items remain in the cache after cleaning already-synced items older than "
+"%u seconds"
+msgstr ""
+
+#: backends/xml-dir.c:178
+#, c-format
+msgid "Could not stat `%s': %s"
+msgstr "`stat' selhal na `%s': %s"
+
+#: backends/xml-dir.c:188
+#, c-format
+msgid "XML filename `%s' is a directory"
+msgstr "XML soubor `%s' je adresáø"
+
+#: backends/xml-dir.c:307 backends/xml-dir.c:314
+#, c-format
+msgid "Failed to delete `%s': %s"
+msgstr "Nelze vymazat `%s': %s"
+
+#: backends/xml-dir.c:355
+#, fuzzy, c-format
+msgid "Failed to write file `%s': %s"
+msgstr "Nelze zavøít soubor `%s': %s"
+
+#: backends/xml-dir.c:371 backends/xml-dir.c:381
+#, c-format
+msgid "Failed to rename `%s' to `%s': %s"
+msgstr "Nelze pøejmenovat `%s' na `%s': %s"
+
+#: backends/xml-dir.c:387
+#, fuzzy, c-format
+msgid "Failed to restore `%s' from `%s': %s"
+msgstr "Nelze pøejmenovat `%s' na `%s': %s"
+
+#: backends/xml-dir.c:399
+#, c-format
+msgid "Failed to delete old file `%s': %s"
+msgstr "Nelze smazat starý soubor `%s': %s"
+
+#. These are all fatal errors
+#: backends/xml-dir.c:802
+#, c-format
+msgid "Failed to stat `%s': %s"
+msgstr "`stat' selhal na `%s': %s"
+
+#: backends/xml-dir.c:946
+#, fuzzy, c-format
+msgid "Duplicate entry `%s' in `%s', ignoring"
+msgstr "Zdvojená polo¾ka `%s' v `%s', vymazávám"
+
+#: backends/xml-dir.c:968
+#, fuzzy, c-format
+msgid "Entry with no name in XML file `%s', ignoring"
+msgstr "Polo¾ka beze jména v XML souboru `%s', vymazávám"
+
+#: backends/xml-dir.c:975
+#, c-format
+msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
+msgstr ""
+
+#: backends/xml-dir.c:1063
+#, fuzzy, c-format
+msgid "Failed to create file `%s': %s"
+msgstr "Nelze zavøít soubor `%s': %s"
+
+#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2416
+#, c-format
+msgid "Failed to close file `%s': %s"
+msgstr "Nelze zavøít soubor `%s': %s"
+
+#. There was an error
+#: backends/xml-entry.c:162
+#, c-format
+msgid "Ignoring XML node with name `%s': %s"
+msgstr ""
+
+#: backends/xml-entry.c:213 gconf/gconf-internals.c:2120
+#, c-format
+msgid "%s"
+msgstr ""
+
+#: backends/xml-entry.c:340
+#, c-format
+msgid "Ignoring schema name `%s', invalid: %s"
+msgstr ""
+
+#. FIXME for nodes with no value stored, but containing a schema name,
+#. * we improperly log an error here
+#.
+#: backends/xml-entry.c:386
+#, c-format
+msgid "Ignoring XML node `%s', except for possible schema name: %s"
+msgstr ""
+
+#: backends/xml-entry.c:688
+msgid "found <local_schema> with no locale setting"
+msgstr ""
+
+#: backends/xml-entry.c:710
+#, c-format
+msgid "Failed reading default value for schema: %s"
+msgstr ""
+
+#: backends/xml-entry.c:892
+#, c-format
+msgid "No \"type\" attribute for <%s> node"
+msgstr ""
+
+#: backends/xml-entry.c:906
+#, c-format
+msgid "A node has unknown \"type\" attribute `%s', ignoring"
+msgstr ""
+
+#: backends/xml-entry.c:921
+msgid "No \"value\" attribute for node"
+msgstr ""
+
+#: backends/xml-entry.c:969 backends/xml-entry.c:1045
+#, c-format
+msgid "Didn't understand XML node <%s> inside an XML list node"
+msgstr ""
+
+#: backends/xml-entry.c:1003
+msgid "Invalid type (list, pair, or unknown) in a list node"
+msgstr ""
+
+#: backends/xml-entry.c:1026
+#, c-format
+msgid "Bad XML node: %s"
+msgstr ""
+
+#: backends/xml-entry.c:1034
+#, c-format
+msgid "List contains a badly-typed node (%s, should be %s)"
+msgstr ""
+
+#: backends/xml-entry.c:1086
+#, c-format
+msgid "Ignoring bad car from XML pair: %s"
+msgstr ""
+
+#: backends/xml-entry.c:1095 backends/xml-entry.c:1118
+msgid "parsing XML file: lists and pairs may not be placed inside a pair"
+msgstr ""
+
+#: backends/xml-entry.c:1108
+#, c-format
+msgid "Ignoring bad cdr from XML pair: %s"
+msgstr ""
+
+#: backends/xml-entry.c:1127
+#, c-format
+msgid "Didn't understand XML node <%s> inside an XML pair node"
+msgstr ""
+
+#: backends/xml-entry.c:1145
+msgid "Didn't find car and cdr for XML pair node"
+msgstr ""
+
+#: backends/xml-entry.c:1151
+msgid "Missing cdr from pair of values in XML file"
+msgstr ""
+
+#: backends/xml-entry.c:1158
+msgid "Missing car from pair of values in XML file"
+msgstr ""
+
+#: backends/xml-entry.c:1163
+msgid "Missing both car and cdr values from pair in XML file"
+msgstr ""
 
 #. -- end debug only
 #: gconf/gconf-backend.c:180
@@ -74,6 +259,67 @@ msgstr ""
 #: gconf/gconf-backend.c:312
 msgid "Failed to shut down backend"
 msgstr ""
+
+#: gconf/gconf-error.c:39
+msgid "Success"
+msgstr ""
+
+#: gconf/gconf-error.c:40
+msgid "Failed"
+msgstr ""
+
+#: gconf/gconf-error.c:41
+msgid "Configuration server couldn't be contacted"
+msgstr ""
+
+#: gconf/gconf-error.c:42
+msgid "Permission denied"
+msgstr ""
+
+#: gconf/gconf-error.c:43
+msgid "Couldn't resolve address for configuration source"
+msgstr ""
+
+#: gconf/gconf-error.c:44
+msgid "Bad key or directory name"
+msgstr ""
+
+#: gconf/gconf-error.c:45
+msgid "Parse error"
+msgstr ""
+
+#: gconf/gconf-error.c:46
+msgid "Corrupt data in configuration source database"
+msgstr ""
+
+#: gconf/gconf-error.c:47
+msgid "Type mismatch"
+msgstr ""
+
+#: gconf/gconf-error.c:48
+msgid "Key operation on directory"
+msgstr ""
+
+#: gconf/gconf-error.c:49
+msgid "Directory operation on key"
+msgstr ""
+
+#: gconf/gconf-error.c:50
+msgid "Can't overwrite existing read-only value"
+msgstr ""
+
+#: gconf/gconf-error.c:51
+msgid "Object Activation Framework error"
+msgstr ""
+
+#: gconf/gconf-error.c:52
+msgid "Operation not allowed without configuration server"
+msgstr ""
+
+#: gconf/gconf-error.c:53
+#, fuzzy
+msgid "Failed to get a lock"
+msgstr "Nelze vymazat `%s': %s"
 
 #: gconf/gconf-internals.c:100
 #, c-format
@@ -108,221 +354,272 @@ msgstr "Zdroj `%s' pøidán\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Chyba v ètení souboru `%s': %s\n"
 
-#: gconf/gconf-internals.c:1284
+#: gconf/gconf-internals.c:1282
 #, c-format
 msgid "Expected list, got %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:1294
+#: gconf/gconf-internals.c:1292
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:1433
+#: gconf/gconf-internals.c:1431
 #, c-format
 msgid "Expected pair, got %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:1447
+#: gconf/gconf-internals.c:1445
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 
-#: gconf/gconf-internals.c:1463
+#: gconf/gconf-internals.c:1461
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr ""
 
-#: gconf/gconf-internals.c:1579
+#: gconf/gconf-internals.c:1577
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr ""
 
-#: gconf/gconf-internals.c:1641
+#: gconf/gconf-internals.c:1639
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr ""
 
-#: gconf/gconf-internals.c:2107 gconf/gconf.c:2615
+#: gconf/gconf-internals.c:2105 gconf/gconf.c:2643
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA chyba: %s"
 
-#: gconf/gconf-internals.c:2122
-#, c-format
-msgid "%s"
-msgstr ""
-
-#: gconf/gconf-internals.c:2127
+#: gconf/gconf-internals.c:2125
 msgid "attempt to remove not-listed OAF object directory"
 msgstr ""
 
-#: gconf/gconf-internals.c:2132
+#: gconf/gconf-internals.c:2130
 msgid "attempt to add already-listed OAF directory"
 msgstr ""
 
-#: gconf/gconf-internals.c:2139
+#: gconf/gconf-internals.c:2137
 #, c-format
 msgid "OAF parse error: %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:2144
+#: gconf/gconf-internals.c:2142
 msgid "Unknown OAF error"
 msgstr ""
 
-#: gconf/gconf-internals.c:2227
+#: gconf/gconf-internals.c:2225
 #, c-format
 msgid "No ior file in `%s'"
 msgstr ""
 
-#: gconf/gconf-internals.c:2258
+#: gconf/gconf-internals.c:2256
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr ""
 
-#: gconf/gconf-internals.c:2269
+#: gconf/gconf-internals.c:2267
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr ""
 
-#: gconf/gconf-internals.c:2289
+#: gconf/gconf-internals.c:2287
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr ""
 
-#: gconf/gconf-internals.c:2297
+#: gconf/gconf-internals.c:2295
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
 "reference, IOR `%s'"
 msgstr ""
 
-#: gconf/gconf-internals.c:2309
+#: gconf/gconf-internals.c:2307
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:2321
+#: gconf/gconf-internals.c:2319
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr ""
 
-#: gconf/gconf-internals.c:2335
+#: gconf/gconf-internals.c:2333
 #, fuzzy, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "Nelze vytvoøit adresáø `%s': %s"
 
-#: gconf/gconf-internals.c:2370
+#: gconf/gconf-internals.c:2368
 #, fuzzy, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "Nelze vytvoøit soubor `%s': %s"
 
-#: gconf/gconf-internals.c:2406
+#: gconf/gconf-internals.c:2404
 #, fuzzy, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Nelze psát do souboru `%s': %s"
 
-#: gconf/gconf-internals.c:2418
-#, c-format
-msgid "Failed to close file `%s': %s"
-msgstr "Nelze zavøít soubor `%s': %s"
-
-#: gconf/gconf-internals.c:2449
+#: gconf/gconf-internals.c:2447
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:2466
+#: gconf/gconf-internals.c:2464
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr ""
 
-#: gconf/gconf-internals.c:2476
+#: gconf/gconf-internals.c:2474
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
 "took our lock"
 msgstr ""
 
-#: gconf/gconf-internals.c:2493
+#: gconf/gconf-internals.c:2491
 #, fuzzy, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Nelze otevøít adresáø `%s': %s"
+
+#: gconf/gconf-sources.c:334
+#, fuzzy, c-format
+msgid "Failed to load source `%s': %s"
+msgstr "Nelze zavøít soubor `%s': %s"
+
+#: gconf/gconf-sources.c:506
+#, c-format
+msgid "Schema `%s' specified for `%s' stores a non-schema value"
+msgstr ""
+
+#: gconf/gconf-sources.c:555
+msgid "The '/' name can only be a directory, not a key"
+msgstr ""
+
+#: gconf/gconf-sources.c:584
+#, c-format
+msgid ""
+"Value for `%s' set in a read-only source at the front of your configuration "
+"path."
+msgstr ""
+
+#: gconf/gconf-sources.c:1079
+#, c-format
+msgid "Error finding metainfo: %s"
+msgstr ""
+
+#: gconf/gconf-sources.c:1144
+#, c-format
+msgid "Error getting metainfo: %s"
+msgstr ""
+
+#: gconf/gconf-sources.c:1168
+#, c-format
+msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
+msgstr ""
+
+#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
+#, c-format
+msgid "Error getting value for `%s': %s"
+msgstr ""
+
+#: gconf/gconf-value.c:96
+#, c-format
+msgid "Didn't understand `%s' (expected integer)"
+msgstr ""
+
+#: gconf/gconf-value.c:106
+#, c-format
+msgid "Integer `%s' is too large or small"
+msgstr ""
+
+#: gconf/gconf-value.c:127
+#, c-format
+msgid "Didn't understand `%s' (expected real number)"
+msgstr ""
+
+#: gconf/gconf-value.c:160
+#, c-format
+msgid "Didn't understand `%s' (expected true or false)"
+msgstr ""
 
 #: gconf/gconf.c:69
 #, c-format
 msgid "`%s': %s"
 msgstr ""
 
-#: gconf/gconf.c:261
+#: gconf/gconf.c:271
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr ""
 
-#: gconf/gconf.c:391
+#: gconf/gconf.c:408
 msgid "Can't add notifications to a local configuration source"
 msgstr ""
 
-#: gconf/gconf.c:1449
+#: gconf/gconf.c:1466
 #, c-format
 msgid "Pinging the server failed, CORBA error: %s"
 msgstr ""
 
-#: gconf/gconf.c:1465
+#: gconf/gconf.c:1482
 msgid ""
 "Error contacting configuration server: OAF returned nil from "
 "oaf_activate_from_id() and did not set an exception explaining the problem. "
 "Please file an OAF bug report."
 msgstr ""
 
-#: gconf/gconf.c:1660
+#: gconf/gconf.c:1677
 msgid "Failed to init GConf, exiting\n"
 msgstr ""
 
-#: gconf/gconf.c:1697
+#: gconf/gconf.c:1714
 msgid "Must begin with a slash (/)"
 msgstr ""
 
-#: gconf/gconf.c:1719
+#: gconf/gconf.c:1736
 msgid "Can't have two slashes (/) in a row"
 msgstr ""
 
-#: gconf/gconf.c:1721
+#: gconf/gconf.c:1738
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr ""
 
-#: gconf/gconf.c:1742
+#: gconf/gconf.c:1759
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr ""
 
-#: gconf/gconf.c:1756
+#: gconf/gconf.c:1773
 msgid "Key/directory may not end with a slash (/)"
 msgstr ""
 
-#: gconf/gconf.c:2087
+#: gconf/gconf.c:2115
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr ""
 
-#: gconf/gconf.c:2148
+#: gconf/gconf.c:2176
 #, c-format
 msgid "Expected float, got %s"
 msgstr ""
 
-#: gconf/gconf.c:2183
+#: gconf/gconf.c:2211
 #, c-format
 msgid "Expected int, got %s"
 msgstr ""
 
-#: gconf/gconf.c:2218
+#: gconf/gconf.c:2246
 #, c-format
 msgid "Expected string, got %s"
 msgstr ""
 
-#: gconf/gconf.c:2255
+#: gconf/gconf.c:2283
 #, c-format
 msgid "Expected bool, got %s"
 msgstr ""
 
-#: gconf/gconf.c:2288
+#: gconf/gconf.c:2316
 #, c-format
 msgid "Expected schema, got %s"
 msgstr ""
@@ -434,11 +731,6 @@ msgstr "Normální konec"
 msgid "Failed to sync one or more sources: %s"
 msgstr ""
 
-#: gconf/gconfd.c:1523
-#, c-format
-msgid "Error getting value for `%s': %s"
-msgstr ""
-
 #: gconf/gconfd.c:1561
 #, c-format
 msgid "Error setting value for `%s': %s"
@@ -479,31 +771,31 @@ msgstr ""
 msgid "Error setting schema for `%s': %s"
 msgstr ""
 
-#: gconf/gconfd.c:1911
+#: gconf/gconfd.c:1913
 msgid "Attempt to unregister invalid context ID"
 msgstr ""
 
-#: gconf/gconfd.c:1918
+#: gconf/gconfd.c:1920
 #, c-format
 msgid "Bad context ID %lu, request ignored"
 msgstr ""
 
-#: gconf/gconfd.c:1926
+#: gconf/gconfd.c:1928
 #, c-format
 msgid "Already-unregistered context ID %lu, request ignored"
 msgstr ""
 
-#: gconf/gconfd.c:1951
+#: gconf/gconfd.c:1953
 #, c-format
 msgid "Attempt to use invalid context ID %lu"
 msgstr ""
 
-#: gconf/gconfd.c:1961
+#: gconf/gconfd.c:1963
 #, c-format
 msgid "Attempt to use already-unregistered context ID %lu"
 msgstr ""
 
-#: gconf/gconfd.c:2121
+#: gconf/gconfd.c:2123
 #, c-format
 msgid "Returning exception: %s"
 msgstr ""
@@ -715,7 +1007,7 @@ msgstr ""
 #. Eventually you should be able to run gconfd as long as
 #. you're installing to a different database from the one
 #. it's using, but I don't trust the locking right now.
-#: gconf/gconftool.c:488
+#: gconf/gconftool.c:487
 msgid ""
 "Shouldn't run gconfd while installing new schema files.\n"
 "Use gconftool --shutdown to shut down the daemon, most safely while no "
@@ -723,278 +1015,288 @@ msgid ""
 "(though things theoretically work if apps are running).\n"
 msgstr ""
 
-#: gconf/gconftool.c:510
+#: gconf/gconftool.c:509
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:670
+#: gconf/gconftool.c:669
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:715
+#: gconf/gconftool.c:714
 msgid "Must specify one or more dirs to recursively list.\n"
 msgstr ""
 
-#: gconf/gconftool.c:749
+#: gconf/gconftool.c:748
 #, c-format
 msgid "Failure listing pairs in `%s': %s"
 msgstr ""
 
-#: gconf/gconftool.c:767
+#: gconf/gconftool.c:766
 msgid "(no value set)"
 msgstr ""
 
-#: gconf/gconftool.c:820
+#: gconf/gconftool.c:819
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:834
+#: gconf/gconftool.c:833
 msgid "Must specify a key or keys to get\n"
 msgstr ""
 
-#: gconf/gconftool.c:865
+#: gconf/gconftool.c:864
 #, c-format
 msgid "Type: %s\n"
 msgstr "Typ: %s\n"
 
-#: gconf/gconftool.c:866
+#: gconf/gconftool.c:865
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Vlastník: %s\n"
 
-#: gconf/gconftool.c:866 gconf/gconftool.c:867 gconf/gconftool.c:868
+#: gconf/gconftool.c:865 gconf/gconftool.c:866 gconf/gconftool.c:867
 msgid "Unset"
 msgstr ""
 
-#: gconf/gconftool.c:867
+#: gconf/gconftool.c:866
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:868
+#: gconf/gconftool.c:867
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:877
+#: gconf/gconftool.c:876
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:881
+#: gconf/gconftool.c:880
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:900
+#: gconf/gconftool.c:899
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr ""
 
-#: gconf/gconftool.c:917
+#: gconf/gconftool.c:916
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:940 gconf/gconftool.c:1052 gconf/gconftool.c:1056
+#: gconf/gconftool.c:939 gconf/gconftool.c:1051 gconf/gconftool.c:1055
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:951
+#: gconf/gconftool.c:950
 #, c-format
 msgid "Error: %s\n"
 msgstr "Chyba: %s\n"
 
-#: gconf/gconftool.c:964 gconf/gconftool.c:1070
+#: gconf/gconftool.c:963 gconf/gconftool.c:1069
 #, c-format
 msgid "Error setting value: %s"
 msgstr ""
 
-#: gconf/gconftool.c:982 gconf/gconftool.c:1084
+#: gconf/gconftool.c:981 gconf/gconftool.c:1083
 #, c-format
 msgid "Error syncing: %s"
 msgstr ""
 
-#: gconf/gconftool.c:1000
+#: gconf/gconftool.c:999
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr ""
 
-#: gconf/gconftool.c:1099
+#: gconf/gconftool.c:1098
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1113
+#: gconf/gconftool.c:1112
 msgid "Must specify one or more keys to unset.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1124
+#: gconf/gconftool.c:1123
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1147
+#: gconf/gconftool.c:1146
 msgid "Must specify one or more dirs to get subdirs from.\n"
 msgstr ""
 
-#: gconf/gconftool.c:1181
+#: gconf/gconftool.c:1180
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1220
+#: gconf/gconftool.c:1219
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr ""
 
-#: gconf/gconftool.c:1227
+#: gconf/gconftool.c:1226
 msgid ""
 "WARNING: For now gconftool only knows how to install default values for "
 "simple types (int, string, bool, float)\n"
 msgstr ""
 
-#: gconf/gconftool.c:1243
+#: gconf/gconftool.c:1242
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
 
-#: gconf/gconftool.c:1256
+#: gconf/gconftool.c:1255
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr ""
 
-#: gconf/gconftool.c:1304
+#: gconf/gconftool.c:1303
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:1327
+#: gconf/gconftool.c:1326
 msgid "WARNING: empty <applyto> node"
 msgstr ""
 
-#: gconf/gconftool.c:1330 gconf/gconftool.c:1575
+#: gconf/gconftool.c:1329 gconf/gconftool.c:1574
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr ""
 
-#: gconf/gconftool.c:1340
+#: gconf/gconftool.c:1339
 msgid "WARNING: no key specified for schema\n"
 msgstr ""
 
-#: gconf/gconftool.c:1373
+#: gconf/gconftool.c:1372
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 
-#: gconf/gconftool.c:1379
+#: gconf/gconftool.c:1378
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 
-#: gconf/gconftool.c:1451
+#: gconf/gconftool.c:1450
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr ""
 
-#: gconf/gconftool.c:1480
+#: gconf/gconftool.c:1479
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1488
+#: gconf/gconftool.c:1487
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:1510
+#: gconf/gconftool.c:1509
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1518
+#: gconf/gconftool.c:1517
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr ""
 
-#: gconf/gconftool.c:1588
+#: gconf/gconftool.c:1587
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr ""
 
-#: gconf/gconftool.c:1617
+#: gconf/gconftool.c:1616
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr ""
 
-#: gconf/gconftool.c:1639
+#: gconf/gconftool.c:1638
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Nelze otevøít `%s': %s\n"
 
-#: gconf/gconftool.c:1646
+#: gconf/gconftool.c:1645
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Dokument `%s' je prázdný?\n"
 
-#: gconf/gconftool.c:1658
+#: gconf/gconftool.c:1657
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
 msgstr ""
 
-#: gconf/gconftool.c:1671
+#: gconf/gconftool.c:1670
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr ""
 
-#: gconf/gconftool.c:1685
+#: gconf/gconftool.c:1684
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr ""
 
-#: gconf/gconftool.c:1696 gconf/gconftool.c:1728
+#: gconf/gconftool.c:1695 gconf/gconftool.c:1727
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr ""
 
-#: gconf/gconftool.c:1712
+#: gconf/gconftool.c:1711
 msgid "Must specify some schema files to install\n"
 msgstr ""
 
-#: gconf/gconftool.c:1749
+#: gconf/gconftool.c:1748
 #, c-format
 msgid ""
 "\n"
 "%s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1769
+#: gconf/gconftool.c:1768
 #, fuzzy, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Nelze vytvoøit soubor `%s': %s"
 
-#: gconf/gconftool.c:1895
+#: gconf/gconftool.c:1894
 msgid "Must specify some keys to break\n"
 msgstr ""
 
-#: gconf/gconftool.c:1901
+#: gconf/gconftool.c:1900
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
 
-#: gconf/gconftool.c:1919
+#: gconf/gconftool.c:1918
 msgid "Must specify some directories to break\n"
 msgstr ""
 
-#: gconf/gconftool.c:1938
+#: gconf/gconftool.c:1937
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
 "directory:\n"
 "  %s\n"
+msgstr ""
+
+#: wrappers/gtk/gconf-client.c:812
+#, c-format
+msgid "GConf warning: failure listing pairs in `%s': %s"
+msgstr ""
+
+#: wrappers/gtk/gconf-client.c:990
+#, c-format
+msgid "Expected `%s' got `%s' for key %s"
 msgstr ""
 
 #~ msgid "Key"
@@ -1005,27 +1307,3 @@ msgstr ""
 
 #~ msgid "Configuration Editor"
 #~ msgstr "Editor konfigurace"
-
-#~ msgid "Could not stat `%s': %s"
-#~ msgstr "`stat' selhal na `%s': %s"
-
-#~ msgid "XML filename `%s' is a directory"
-#~ msgstr "XML soubor `%s' je adresáø"
-
-#~ msgid "Failed to delete `%s': %s"
-#~ msgstr "Nelze vymazat `%s': %s"
-
-#~ msgid "Failed to rename `%s' to `%s': %s"
-#~ msgstr "Nelze pøejmenovat `%s' na `%s': %s"
-
-#~ msgid "Failed to delete old file `%s': %s"
-#~ msgstr "Nelze smazat starý soubor `%s': %s"
-
-#~ msgid "Failed to stat `%s': %s"
-#~ msgstr "`stat' selhal na `%s': %s"
-
-#~ msgid "Duplicate entry `%s' in `%s', deleting"
-#~ msgstr "Zdvojená polo¾ka `%s' v `%s', vymazávám"
-
-#~ msgid "Entry with no name in XML file `%s', deleting"
-#~ msgstr "Polo¾ka beze jména v XML souboru `%s', vymazávám"

@@ -16,13 +16,13 @@ AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 
 dnl used to rename everything and support simultaneous installs.
-dnl not incremented for bugfix releases.
-MAJOR_VERSION=0.6
+dnl not incremented for bugfix or unstable releases.
+MAJOR_VERSION=1
 AC_SUBST(MAJOR_VERSION)
 
 dnl libtool versioning for guile wrapper
 
-SCMGCONF_CURRENT=1
+SCMGCONF_CURRENT=0
 SCMGCONF_REVISION=0
 SCMGCONF_AGE=0
 
@@ -32,7 +32,7 @@ AC_SUBST(SCMGCONF_AGE)
 
 dnl libtool versioning for GConfClient wrapper
 
-GCONFGTK_CURRENT=2
+GCONFGTK_CURRENT=0
 GCONFGTK_REVISION=0
 GCONFGTK_AGE=0
 
@@ -43,7 +43,7 @@ AC_SUBST(GCONFGTK_AGE)
 dnl libtool versioning for libgconf
 
 dnl increment if the interface has additions, changes, removals.
-GCONF_CURRENT=9
+GCONF_CURRENT=0
 
 dnl increment any time the source changes; set to 
 dnl  0 if you increment CURRENT

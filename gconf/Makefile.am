@@ -5,9 +5,9 @@ INCLUDES=-I$(top_srcdir) -I$(top_builddir) \
 
 EFENCE=
 
-lib_LTLIBRARIES = libgconf-0.6.la
+lib_LTLIBRARIES = libgconf-1.la
 
-bin_PROGRAMS = gconfd-0.6 gconftool-0.6
+bin_PROGRAMS = gconfd-1 gconftool-1
 
 CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
@@ -26,26 +26,26 @@ gconfinclude_HEADERS =     \
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
-gconfd_0_6_SOURCES = \
+gconfd_1_SOURCES = \
 	gconf-sources.h		\
 	gconfd.c
 
-gconfd_0_6_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
+gconfd_1_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
 
 # gconf_testclient_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
-gconftool_0_6_SOURCES = \
+gconftool_1_SOURCES = \
 	gconftool.c
 
-gconftool_0_6_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf-$(MAJOR_VERSION).la
+gconftool_1_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf-$(MAJOR_VERSION).la
 
 $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
 
-libgconf_0_6_la_SOURCES = \
+libgconf_1_la_SOURCES = \
 	gconf-internals.c	\
 	gconf-internals.h	\
 	gconf-backend.c		\
@@ -60,9 +60,9 @@ libgconf_0_6_la_SOURCES = \
 	gconf.c			\
 	$(CORBA_SOURCES)
 
-libgconf_0_6_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
+libgconf_1_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
 
-libgconf_0_6_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
+libgconf_1_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
 
 EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in
 
