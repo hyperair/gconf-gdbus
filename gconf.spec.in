@@ -86,12 +86,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 %doc AUTHORS COPYING ChangeLog NEWS README
-%config %{sysconfdir}/gconf/1/*.example
-%config %{sysconfdir}/gconf/gconf.xml.defaults/*.xml
-%config %{sysconfdir}/gconf/gconf.xml.defaults/schemas/*.xml
-%config %{sysconfdir}/gconf/gconf.xml.defaults/schemas/desktop/*.xml
-%config %{sysconfdir}/gconf/gconf.xml.defaults/schemas/desktop/standard/*.xml
-%config %{sysconfdir}/gconf/schemas/*.schemas
+%config %{sysconfdir}/etc/gconf/1/*.example
+%config %{sysconfdir}/etc/gconf/schemas/*.schemas
 %{prefix}/bin/gconf-config
 %{prefix}/bin/gconf-config-1
 %{prefix}/bin/gconfd-1
@@ -104,6 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/locale/*/LC_MESSAGES/*.mo
 %{prefix}/share/oaf/*.oafinfo
 
+
 ## /etc/gconf/schemas/desktop.schemas is notably missing;
 ## it will be shared between versions of GConf, preventing
 ## simulataneous installation, so maybe should be in 
@@ -111,9 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%{prefix}/include/gconf/1/gconf/*.h
-%{prefix}/share/aclocal/*.m4
 %{prefix}/lib/*.a
 %{prefix}/lib/*.la
 %{prefix}/lib/GConf/1/*.a
 %{prefix}/lib/GConf/1/*.la
+%{prefix}/include/gconf/1/gconf/*.h
+%{prefix}/share/aclocal/*.m4
