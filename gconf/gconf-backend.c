@@ -168,6 +168,7 @@ gconf_get_backend(const gchar* address, GConfError** err)
     {
       /* Returning a "copy" */
       gconf_backend_ref(backend);
+      g_free(name);
       return backend;
     }
   else

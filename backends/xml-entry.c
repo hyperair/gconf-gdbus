@@ -817,6 +817,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
                       if (strcmp(locales[i], locale_name) == 0)
                         {
                           localized_nodes[i] = iter;
+                          free(locale_name);
                           break;
                         }
                       ++i;

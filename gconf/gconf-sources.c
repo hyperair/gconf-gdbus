@@ -301,7 +301,7 @@ GConfSources*
 gconf_sources_new_from_addresses(const gchar** addresses, GConfError** err)
 {
   GConfSources* sources;
-  GConfError* all_errors = NULL;
+  gboolean errors_occurred = FALSE;
 
   g_return_val_if_fail( (err == NULL) || (*err == NULL), NULL);
   
@@ -321,8 +321,9 @@ gconf_sources_new_from_addresses(const gchar** addresses, GConfError** err)
         }
       else
         {
-          if (err)
-            all_errors = gconf_compose_errors(all_errors, error);
+          g_assert(error != NULL);
+          gconf_log(GCL_WARNING, _("Failed to load source `%s': %s"),
+                    *addresses, error->str);
           
           gconf_error_destroy(error);
         }
@@ -331,12 +332,6 @@ gconf_sources_new_from_addresses(const gchar** addresses, GConfError** err)
     }
 
   sources->sources = g_list_reverse(sources->sources);
-
-  if (err)
-    {
-      g_return_val_if_fail(*err == NULL, sources);
-      *err = all_errors;
-    }
   
   return sources;
 }

@@ -1,5 +1,23 @@
 2000-01-24  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconf-sources.c (gconf_sources_new_from_addresses):
+	never return errors, just log them.
+
+	* gconf/gconf-backend.c (gconf_get_backend): fix mem leak (free
+	"name" if we don't create a new backend to use it in)
+
+	* gconf/gconf-internals.c (gconf_get_lock): fix mem leak
+
+	* backends/xml-entry.c (schema_node_extract_value): fix a mem leak
+
+	* gconf/gconfd.c (main): keep a pointer to the object ID returned
+	from PortableServer_POA_activate_object()
+
+	* backends/xml-backend.c (resolve_address): fix a mem leak on
+	error
+
+2000-01-24  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconf-internals.c (gconf_get_lock): Use a long enough
 	buffer to read in the IOR
 

@@ -307,6 +307,7 @@ resolve_address (const gchar* address, GConfError** err)
           gconf_set_error(err, GCONF_ERROR_FAILED,
                           _("Could not make directory `%s': %s"),
                           (gchar*)root_dir, strerror(errno));
+          g_free(root_dir);
           return NULL;
         }
     }

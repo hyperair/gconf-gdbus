@@ -2381,6 +2381,8 @@ gconf_get_lock(const gchar* lock_directory,
         
         retval = write(fd, s, strlen(s));
 
+        g_free(s);
+        
         if (retval >= 0)
           {
             ior = gconf_get_daemon_ior();
