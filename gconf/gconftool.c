@@ -62,6 +62,7 @@ static char* entry_file = NULL;
 static const char* config_source = NULL;
 static int use_local_source = FALSE;
 static int makefile_install_mode = FALSE;
+static int makefile_uninstall_mode = FALSE;
 static int break_key_mode = FALSE;
 static int break_dir_mode = FALSE;
 static int short_docs_mode = FALSE;
@@ -337,6 +338,15 @@ struct poptOption options[] = {
     NULL
   },
   {
+    "makefile-uninstall-rule",
+    '\0',
+    POPT_ARG_NONE,
+    &makefile_uninstall_mode,
+    0,
+    N_("Properly uninstalls schema files on the command line from the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
+    NULL
+  },
+  {
     "break-key",
     '\0',
     POPT_ARG_NONE,
@@ -431,6 +441,7 @@ struct poptOption options[] = {
 static int do_break_key(GConfEngine* conf, const gchar** args);
 static int do_break_directory(GConfEngine* conf, const gchar** args);
 static int do_makefile_install(GConfEngine* conf, const gchar** args);
+static int do_makefile_uninstall(GConfEngine* conf, const gchar** args);
 static int do_recursive_list(GConfEngine* conf, const gchar** args);
 static int do_dump_values(GConfEngine* conf, const gchar** args);
 static int do_all_pairs(GConfEngine* conf, const gchar** args);
@@ -585,7 +596,8 @@ main (int argc, char** argv)
   if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
                       get_type_mode || get_list_size_mode || get_list_element_mode ||
-                      spawn_gconfd || dir_exists || schema_file || makefile_install_mode ||
+                      spawn_gconfd || dir_exists || schema_file ||
+                      makefile_install_mode || makefile_uninstall_mode ||
                       break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
@@ -596,7 +608,8 @@ main (int argc, char** argv)
   if (dir_exists && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                      all_subdirs_mode || all_entries_mode || recursive_list || 
                      get_type_mode || get_list_size_mode || get_list_element_mode ||
-                     spawn_gconfd || schema_file || makefile_install_mode ||
+                     spawn_gconfd || schema_file ||
+                     makefile_install_mode || makefile_uninstall_mode ||
                      break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
@@ -607,7 +620,8 @@ main (int argc, char** argv)
   if (schema_file && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
                       get_type_mode || get_list_size_mode || get_list_element_mode ||
-                      spawn_gconfd || dir_exists || makefile_install_mode ||
+                      spawn_gconfd || dir_exists ||
+                      makefile_install_mode || makefile_uninstall_mode ||
                       break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
@@ -619,6 +633,7 @@ main (int argc, char** argv)
   if (makefile_install_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                                 all_subdirs_mode || all_entries_mode || recursive_list || 
                                 get_type_mode || get_list_size_mode || get_list_element_mode ||
+                                makefile_uninstall_mode ||
                                 spawn_gconfd || dir_exists || schema_file ||
                                 break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
@@ -626,13 +641,25 @@ main (int argc, char** argv)
       fprintf(stderr, _("--makefile-install-rule must be used by itself.\n"));
       return 1;
     }
-
-
+  
+  if (makefile_uninstall_mode && (shutdown_gconfd || set_mode || get_mode ||
+                                  unset_mode || all_subdirs_mode ||
+                                  all_entries_mode || recursive_list || 
+                                  makefile_install_mode ||
+                                  spawn_gconfd || dir_exists || schema_file ||
+                                  break_key_mode || break_dir_mode || short_docs_mode ||
+                                  long_docs_mode || schema_name_mode))
+    {
+      fprintf(stderr, _("--makefile-uninstall-rule must be used by itself.\n"));
+      return 1;
+    }
+  
   if (break_key_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                                 all_subdirs_mode || all_entries_mode || recursive_list || 
                                 get_type_mode || get_list_size_mode || get_list_element_mode ||
                                 spawn_gconfd || dir_exists || schema_file ||
-                                makefile_install_mode || break_dir_mode || short_docs_mode ||
+                                makefile_install_mode || makefile_uninstall_mode ||
+                                break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
       fprintf(stderr, _("--break-key must be used by itself.\n"));
@@ -644,7 +671,8 @@ main (int argc, char** argv)
                                 all_subdirs_mode || all_entries_mode || recursive_list || 
                                 get_type_mode || get_list_size_mode || get_list_element_mode ||
                                 spawn_gconfd || dir_exists || schema_file ||
-                                break_key_mode || makefile_install_mode || short_docs_mode ||
+                                break_key_mode || makefile_install_mode ||
+                                makefile_uninstall_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
       fprintf(stderr, _("--break-directory must be used by itself.\n"));
@@ -699,8 +727,15 @@ main (int argc, char** argv)
       g_print (_("GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"));
       makefile_install_mode = FALSE;
     }
-  
-  if (makefile_install_mode)
+
+  if (makefile_uninstall_mode &&
+      g_getenv ("GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL"))
+    {
+      g_print (_("GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"));
+      makefile_uninstall_mode = FALSE;
+    }
+
+  if (makefile_install_mode || makefile_uninstall_mode)
     {
       g_assert (config_source == NULL);
 
@@ -798,6 +833,16 @@ main (int argc, char** argv)
     {
       const gchar** args = poptGetArgs(ctx);
       gint retval = do_makefile_install (conf, args);
+      
+      gconf_engine_unref (conf);
+
+      return retval;
+    }
+
+  if (makefile_uninstall_mode)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      gint retval = do_makefile_uninstall (conf, args);
       
       gconf_engine_unref (conf);
 
@@ -3244,8 +3289,12 @@ process_key_list(GConfEngine* conf, const gchar* schema_name, GSList* keylist)
   GSList* tmp;
   GError* error = NULL;
 
-  tmp = keylist;
+  if (makefile_uninstall_mode)
+    {
+      schema_name = NULL;
+    }
 
+  tmp = keylist;
   while (tmp != NULL)
     {
       if (!gconf_engine_associate_schema(conf, tmp->data, schema_name,  &error))
@@ -3381,6 +3430,38 @@ hash_install_foreach(gpointer key, gpointer value, gpointer user_data)
   gconf_schema_free(schema);
 }
 
+static void
+hash_uninstall_foreach(gpointer key, gpointer value, gpointer user_data)
+{
+  struct {
+    GConfEngine* conf;
+    char* key;
+  } *info;
+  GConfSchema* schema;
+  GError* error = NULL;
+  
+  info = user_data;
+  schema = value;
+
+  if (!gconf_engine_unset (info->conf, info->key, &error))
+    {
+      g_assert(error != NULL);
+
+      fprintf(stderr, _("WARNING: failed to uninstall schema `%s' locale `%s': %s\n"),
+              info->key, gconf_schema_get_locale(schema), error->message);
+      g_error_free(error);
+      error = NULL;
+    }
+  else
+    {
+      g_assert(error == NULL);
+      printf(_("Uninstalled schema `%s' from locale `%s'\n"),
+             info->key, gconf_schema_get_locale(schema));
+    }
+
+  gconf_schema_free(schema);
+}
+
 static int
 process_schema(GConfEngine* conf, xmlNodePtr node)
 {
@@ -3405,7 +3486,10 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
 
       hash_foreach_info.conf = conf;
       hash_foreach_info.key = schema_key;
-      g_hash_table_foreach(schemas_hash, hash_install_foreach, &hash_foreach_info);
+      if (makefile_uninstall_mode)
+        g_hash_table_foreach(schemas_hash, hash_uninstall_foreach, &hash_foreach_info);
+      else 
+        g_hash_table_foreach(schemas_hash, hash_install_foreach, &hash_foreach_info);
     }
   else
     {
@@ -3558,6 +3642,38 @@ do_makefile_install(GConfEngine* conf, const gchar** args)
   if (args == NULL)
     {
       fprintf(stderr, _("Must specify some schema files to install\n"));
+      return 1;
+    }
+
+  while (*args)
+    {
+      if (do_load_file(conf, LOAD_SCHEMA_FILE, *args, NULL) != 0)
+        return 1;
+
+      ++args;
+    }
+
+  gconf_engine_suggest_sync(conf, &err);
+
+  if (err != NULL)
+    {
+      fprintf(stderr, _("Error syncing config data: %s"),
+              err->message);
+      g_error_free(err);
+      return 1;
+    }
+  
+  return 0;
+}
+
+static int
+do_makefile_uninstall(GConfEngine* conf, const gchar** args)
+{
+  GError* err = NULL;
+  
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify some schema files to uninstall\n"));
       return 1;
     }
 
