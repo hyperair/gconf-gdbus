@@ -59,6 +59,7 @@ static char* long_desc = NULL;
 static char* owner = NULL;
 static char* schema_file = NULL;
 static char* entry_file = NULL;
+static char* unload_entry_file = NULL;
 static const char* config_source = NULL;
 static int use_local_source = FALSE;
 static int makefile_install_mode = FALSE;
@@ -165,6 +166,15 @@ struct poptOption options[] = {
     &entry_file,
     0,
     N_("Load from the specified file an XML description of values and set them relative to a dir."),
+    NULL
+  },
+  {
+    "unload",
+    '\0',
+    POPT_ARG_STRING,
+    &unload_entry_file,
+    0,
+    N_("Unload a set of values described in an XML file."),
     NULL
   },
   {
@@ -472,7 +482,7 @@ static int do_all_entries(GConfEngine* conf, const gchar** args);
 static int do_unset(GConfEngine* conf, const gchar** args);
 static int do_recursive_unset (GConfEngine* conf, const gchar** args);
 static int do_all_subdirs(GConfEngine* conf, const gchar** args);
-static int do_load_file(GConfEngine* conf, LoadType load_type, const gchar* file, const gchar** base_dirs);
+static int do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar* file, const gchar** base_dirs);
 static int do_short_docs (GConfEngine *conf, const gchar **args);
 static int do_long_docs (GConfEngine *conf, const gchar **args);
 static int do_get_schema_name (GConfEngine *conf, const gchar **args);
@@ -837,7 +847,7 @@ main (int argc, char** argv)
     {
       gint retval;
 
-      retval = do_load_file(conf, LOAD_SCHEMA_FILE, schema_file, NULL);
+      retval = do_load_file(conf, LOAD_SCHEMA_FILE, FALSE, schema_file, NULL);
 
       gconf_engine_unref(conf);
 
@@ -849,13 +859,25 @@ main (int argc, char** argv)
       const gchar** args = poptGetArgs(ctx);
       gint retval;
 
-      retval = do_load_file(conf, LOAD_ENTRY_FILE, entry_file, args);
+      retval = do_load_file(conf, LOAD_ENTRY_FILE, FALSE, entry_file, args);
 
       gconf_engine_unref(conf);
 
       return retval;
     }
   
+  if (unload_entry_file != NULL)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      gint retval;
+
+      retval = do_load_file(conf, LOAD_ENTRY_FILE, TRUE, unload_entry_file, args);
+
+      gconf_engine_unref(conf);
+
+      return retval;
+    }
+
   if (spawn_gconfd)
     {
       do_spawn_daemon(conf);
@@ -2794,7 +2816,7 @@ typedef struct {
 } EntryInfo;
 
 static void
-set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const char* schema_key, GSList* values)
+set_values(GConfEngine* conf, gboolean unload, const gchar* base_dir, const gchar* key, const char* schema_key, GSList* values)
 {
   GSList* tmp;
   gchar* full_key;
@@ -2804,30 +2826,29 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
   else
     full_key = g_strdup(key);
 
-  if (schema_key)
+  if (unload || schema_key)
     {
-      gchar* full_schema_key;
+      gchar* full_schema_key = NULL;
+      GError* error = NULL;
 
-      if (base_dir && *schema_key != '/')
-        full_schema_key = gconf_concat_dir_and_key(base_dir, schema_key);
-      else
-        full_schema_key = g_strdup(schema_key);
-
-      if (full_schema_key)
+      if (!unload)
         {
-	  GError* error = NULL;
-	  
-          if (!gconf_engine_associate_schema(conf, full_key, full_schema_key,  &error))
-            {
-              g_assert(error != NULL);
-          
-              g_printerr (_("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
-			  full_schema_key, full_key, error->message);
-              g_error_free(error);
-            }
+          if (base_dir && *schema_key != '/')
+            full_schema_key = gconf_concat_dir_and_key(base_dir, schema_key);
+          else
+            full_schema_key = g_strdup(schema_key);
+        }
 
-	  g_free(full_schema_key);
-	}
+      if (!gconf_engine_associate_schema(conf, full_key, full_schema_key,  &error))
+        {
+          g_assert(error != NULL);
+          
+          g_printerr (_("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
+                      full_schema_key, full_key, error->message);
+          g_error_free(error);
+        }
+
+      g_free(full_schema_key);
     }
 
   tmp = values;
@@ -2837,7 +2858,10 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
       GError* error;
 
       error = NULL;
-      gconf_engine_set(conf, full_key, value, &error);
+      if (!unload)
+        gconf_engine_set(conf, full_key, value, &error);
+      else
+        gconf_engine_unset(conf, full_key, &error);
       if (error != NULL)
         {
           g_printerr (_("Error setting value: %s\n"), error->message);
@@ -2852,7 +2876,7 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
 }
 
 static int
-process_entry(GConfEngine* conf, xmlNodePtr node, const gchar** base_dirs, const char* orig_base)
+process_entry(GConfEngine* conf, gboolean unload, xmlNodePtr node, const gchar** base_dirs, const char* orig_base)
 {
   xmlNodePtr iter;
   GSList* values = NULL;
@@ -2879,11 +2903,11 @@ process_entry(GConfEngine* conf, xmlNodePtr node, const gchar** base_dirs, const
   if (key && (values || schema_key))
     {
       if (!base_dirs)
-        set_values(conf, orig_base, key, schema_key, values);
+        set_values(conf, unload, orig_base, key, schema_key, values);
 
       else while (*base_dirs)
         {
-          set_values(conf, *base_dirs, key, schema_key, values);
+          set_values(conf, unload, *base_dirs, key, schema_key, values);
           ++base_dirs;
         }
     }
@@ -3348,20 +3372,16 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
 }
 
 static int
-process_key_list(GConfEngine* conf, const gchar* schema_name, GSList* keylist)
+process_key_list(GConfEngine* conf, gboolean unload, const gchar* schema_name, GSList* keylist)
 {
   GSList* tmp;
-  GError* error = NULL;
-
-  if (makefile_uninstall_mode)
-    {
-      schema_name = NULL;
-    }
 
   tmp = keylist;
   while (tmp != NULL)
     {
-      if (!gconf_engine_associate_schema(conf, tmp->data, schema_name,  &error))
+      GError* error = NULL;
+
+      if (!gconf_engine_associate_schema(conf, tmp->data, unload ? schema_name : NULL, &error))
         {
           g_assert(error != NULL);
           
@@ -3467,6 +3487,7 @@ hash_install_foreach(gpointer key, gpointer value, gpointer user_data)
 {
   struct {
     GConfEngine* conf;
+    gboolean unload;
     char* key;
   } *info;
   GConfSchema* schema;
@@ -3475,62 +3496,52 @@ hash_install_foreach(gpointer key, gpointer value, gpointer user_data)
   info = user_data;
   schema = value;
 
-  if (!gconf_engine_set_schema(info->conf, info->key, schema, &error))
+  if (!info->unload)
     {
-      g_assert(error != NULL);
+      if (!gconf_engine_set_schema(info->conf, info->key, schema, &error))
+	{
+	  g_assert(error != NULL);
 
-      g_printerr (_("WARNING: failed to install schema `%s' locale `%s': %s\n"),
-		  info->key, gconf_schema_get_locale(schema), error->message);
-      g_error_free(error);
-      error = NULL;
+	  g_printerr (_("WARNING: failed to install schema `%s' locale `%s': %s\n"),
+		      info->key, gconf_schema_get_locale(schema), error->message);
+	  g_error_free(error);
+	  error = NULL;
+	}
+      else
+	{
+	  g_assert(error == NULL);
+	  g_print (_("Installed schema `%s' for locale `%s'\n"),
+		   info->key, gconf_schema_get_locale(schema));
+	}
     }
   else
     {
-      g_assert(error == NULL);
-      g_print (_("Installed schema `%s' for locale `%s'\n"),
-	       info->key, gconf_schema_get_locale(schema));
-    }
+      if (!gconf_engine_unset (info->conf, info->key, &error))
+	{
+	  g_assert(error != NULL);
 
-  gconf_schema_free(schema);
-}
-
-static void
-hash_uninstall_foreach(gpointer key, gpointer value, gpointer user_data)
-{
-  struct {
-    GConfEngine* conf;
-    char* key;
-  } *info;
-  GConfSchema* schema;
-  GError* error = NULL;
-  
-  info = user_data;
-  schema = value;
-
-  if (!gconf_engine_unset (info->conf, info->key, &error))
-    {
-      g_assert(error != NULL);
-
-      g_printerr (_("WARNING: failed to uninstall schema `%s' locale `%s': %s\n"),
-		  info->key, gconf_schema_get_locale(schema), error->message);
-      g_error_free(error);
-      error = NULL;
-    }
-  else
-    {
-      g_assert(error == NULL);
-      g_print (_("Uninstalled schema `%s' from locale `%s'\n"),
-	       info->key, gconf_schema_get_locale(schema));
+	  g_printerr (_("WARNING: failed to uninstall schema `%s' locale `%s': %s\n"),
+		      info->key, gconf_schema_get_locale(schema), error->message);
+	  g_error_free(error);
+	  error = NULL;
+	}
+      else
+	{
+	  g_assert(error == NULL);
+	  g_print (_("Uninstalled schema `%s' from locale `%s'\n"),
+		   info->key, gconf_schema_get_locale(schema));
+	}
     }
 
   gconf_schema_free(schema);
 }
 
 static int
-process_schema(GConfEngine* conf, xmlNodePtr node)
+process_schema(GConfEngine* conf, gboolean unload, xmlNodePtr node)
 {
   struct {
     GConfEngine* conf;
+    gboolean unload;
     char* key;
   } hash_foreach_info;
   GHashTable* schemas_hash = NULL;
@@ -3546,14 +3557,12 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
 
   if (schema_key != NULL)
     {
-      process_key_list(conf, schema_key, applyto_list);
+      process_key_list(conf, unload, schema_key, applyto_list);
 
       hash_foreach_info.conf = conf;
+      hash_foreach_info.unload = unload;
       hash_foreach_info.key = schema_key;
-      if (makefile_uninstall_mode)
-        g_hash_table_foreach(schemas_hash, hash_uninstall_foreach, &hash_foreach_info);
-      else 
-        g_hash_table_foreach(schemas_hash, hash_install_foreach, &hash_foreach_info);
+      g_hash_table_foreach(schemas_hash, hash_install_foreach, &hash_foreach_info);
     }
   else
     {
@@ -3577,7 +3586,7 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
 }
 
 static int
-process_list(GConfEngine* conf, LoadType load_type, xmlNodePtr node, const gchar** base_dirs)
+process_list(GConfEngine* conf, LoadType load_type, gboolean unload, xmlNodePtr node, const gchar** base_dirs)
 {
 #define LOAD_TYPE_TO_LIST(t) ((t == LOAD_SCHEMA_FILE) ? "schemalist" : "entrylist")
 
@@ -3594,9 +3603,9 @@ process_list(GConfEngine* conf, LoadType load_type, xmlNodePtr node, const gchar
       if (iter->type == XML_ELEMENT_NODE)
         {
           if (load_type == LOAD_SCHEMA_FILE && strcmp(iter->name, "schema") == 0)
-            process_schema(conf, iter);
+            process_schema(conf, unload, iter);
           else if (load_type == LOAD_ENTRY_FILE && strcmp(iter->name, "entry") == 0)
-            process_entry(conf, iter, base_dirs, orig_base);
+            process_entry(conf, unload, iter, base_dirs, orig_base);
           else
             g_printerr (_("WARNING: node <%s> not understood below <%s>\n"),
 			iter->name, LOAD_TYPE_TO_LIST(load_type));
@@ -3614,7 +3623,7 @@ process_list(GConfEngine* conf, LoadType load_type, xmlNodePtr node, const gchar
 }
 
 static int
-do_load_file(GConfEngine* conf, LoadType load_type, const gchar* file, const gchar** base_dirs)
+do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar* file, const gchar** base_dirs)
 {
 #define LOAD_TYPE_TO_ROOT(t) ((t == LOAD_SCHEMA_FILE) ? "gconfschemafile" : "gconfentryfile")
 #define LOAD_TYPE_TO_LIST(t) ((t == LOAD_SCHEMA_FILE) ? "schemalist" : "entrylist")
@@ -3673,7 +3682,7 @@ do_load_file(GConfEngine* conf, LoadType load_type, const gchar* file, const gch
       if (iter->type == XML_ELEMENT_NODE)
         {
           if (strcmp(iter->name, LOAD_TYPE_TO_LIST(load_type)) == 0)
-            process_list(conf, load_type, iter, base_dirs);
+            process_list(conf, load_type, unload, iter, base_dirs);
           else
             g_printerr (_("WARNING: node <%s> below <%s> not understood\n"),
 			iter->name, LOAD_TYPE_TO_ROOT(load_type));
@@ -3711,7 +3720,7 @@ do_makefile_install(GConfEngine* conf, const gchar** args)
 
   while (*args)
     {
-      if (do_load_file(conf, LOAD_SCHEMA_FILE, *args, NULL) != 0)
+      if (do_load_file(conf, LOAD_SCHEMA_FILE, FALSE, *args, NULL) != 0)
         return 1;
 
       ++args;
@@ -3743,7 +3752,7 @@ do_makefile_uninstall(GConfEngine* conf, const gchar** args)
 
   while (*args)
     {
-      if (do_load_file(conf, LOAD_SCHEMA_FILE, *args, NULL) != 0)
+      if (do_load_file(conf, LOAD_SCHEMA_FILE, TRUE, *args, NULL) != 0)
         return 1;
 
       ++args;

@@ -1,5 +1,19 @@
 2004-07-02  Mark McLoughlin  <mark@skynet.ie>
 
+	Based on a patch to add --unload option from
+	Julio M. Merino Vidal <jmmv@menta.net> in bug #130129.
+
+	* gconf/gconftool.c:
+	(main): add --unload option.
+	(do_load_file): add an 'unload' flag.
+	(set_values), (process_entry),
+	(process_key_list), (hash_install_foreach), (process_schema),
+	(process_list): pass the flag about and unset/unassociate
+	things as appropriate.
+	(do_makefile_uninstall): pass the unload flag to do_load_file().
+
+2004-07-02  Mark McLoughlin  <mark@skynet.ie>
+
 	Fix for bug #145141.
 
 	* backends/markup-tree.c: (load_subdirs): recognise
