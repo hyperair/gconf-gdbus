@@ -87,10 +87,16 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{prefix}/bin/*
 %{prefix}/lib/lib*.so.*
-%{prefix}/lib/gconf/@MAJOR_VERSION@/lib*.so
+%{prefix}/lib/GConf/@MAJOR_VERSION@/lib*.so
+%config /etc/gconf/@MAJOR_VERSION@/*
+%config /etc/gconf/*xml*/*xml
+%config /etc/gconf/*xml*/schemas/*xml
+%config /etc/gconf/*xml*/schemas/desktop/*xml
+%config /etc/gconf/*xml*/schemas/desktop/standard/*xml
 %{prefix}/share/aclocal/*
 %{prefix}/share/oaf/*
-%config /etc/gconf/@MAJOR_VERSION@/*
+%{prefix}/share/gconf/
+%{prefix}/share/locale/*/*/*.mo
 
 ## /etc/gconf/schemas/desktop.schemas is notably missing;
 ## it will be shared between versions of GConf, preventing
@@ -99,6 +105,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%{prefix}/lib/*.a
-%{prefix}/lib/gconf/*.a
-%{prefix}/include/gconf/@MAJOR_VERSION@/*
+%{prefix}/lib/*a
+%{prefix}/include/gconf/@MAJOR_VERSION@/gconf/*.h
+%{prefix}/lib/GConf/@MAJOR_VERSION@/lib*a
