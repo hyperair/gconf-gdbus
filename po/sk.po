@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 1.1\n"
-"POT-Creation-Date: 2001-09-14 12:44-0400\n"
-"PO-Revision-Date: 2001-09-03 15:45CET\n"
+"POT-Creation-Date: 2001-10-12 18:23+0200\n"
+"PO-Revision-Date: 2001-10-12 18:39CET\n"
 "Last-Translator: Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "Inicializujem BDB modul"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "Nie je mo¾né nájs» koreòový prieèinok pre %s na adrese `%s'"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:301 backends/xml-dir.c:1051
+#: backends/dir-utils.c:124 backends/xml-backend.c:301 backends/xml-dir.c:1075
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Nie je mo¾né vytvori» prieèinok '%s': %s"
@@ -111,61 +111,66 @@ msgstr "Meno súboru XML `%s' je prieèinok"
 msgid "Failed to delete `%s': %s"
 msgstr "Nepodarilo sa odstráni»  `%s': %s"
 
-#: backends/xml-dir.c:346
+#: backends/xml-dir.c:344
 #, c-format
 msgid "Failed to write file `%s': %s"
 msgstr "Nepodarilo sa zapísa» do súboru `%s': %s"
 
-#: backends/xml-dir.c:359
+#: backends/xml-dir.c:357
 #, c-format
 msgid "Failed to set mode on `%s': %s"
 msgstr "Nepodarilo sa nastavi» mód na `%s': %s"
 
-#: backends/xml-dir.c:373 backends/xml-dir.c:383
+#: backends/xml-dir.c:367
+#, c-format
+msgid "Failed to write XML data to `%s': %s"
+msgstr "Nepodarilo sa zapísa» XML dáta do `%s': %s"
+
+#: backends/xml-dir.c:377 backends/xml-dir.c:1099
+#, c-format
+msgid "Failed to close file `%s': %s"
+msgstr "Nepodarilo sa zavrie» súbor `%s': %s"
+
+#: backends/xml-dir.c:393 backends/xml-dir.c:403
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "Nepodarilo sa premenova» súbor `%s' na `%s': %s"
 
-#: backends/xml-dir.c:389
+#: backends/xml-dir.c:409
 #, c-format
 msgid "Failed to restore `%s' from `%s': %s"
 msgstr "Nepodarilo sa obnovi» `%s' zo súboru `%s': %s"
 
-#: backends/xml-dir.c:401
+#: backends/xml-dir.c:421
 #, c-format
 msgid "Failed to delete old file `%s': %s"
 msgstr "Nepodarilo sa odstráni» starý súbor `%s': %s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:806
+#: backends/xml-dir.c:828
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Nepodarilo sa zisti» stav `%s': %s"
 
-#: backends/xml-dir.c:950
+#: backends/xml-dir.c:972
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "Duplikovaná polo¾ka `%s' v `%s', ignorujem"
 
-#: backends/xml-dir.c:972
+#: backends/xml-dir.c:994
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Polo¾ka bez mena v súbore XML `%s', ignorujem"
 
-#: backends/xml-dir.c:979
+#: backends/xml-dir.c:1002
 #, c-format
-msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
-msgstr "Uzol na najvy¹¹ej úrovni v súbore XML `%s' nie je <entry>, ignorujem"
+msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
+msgstr "Uzol na najvy¹¹ej úrovni v súbore XML `%s' je <%s> a nie <entry>, ignorujem"
 
-#: backends/xml-dir.c:1067
+#: backends/xml-dir.c:1091
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "Nepodarilo sa vytvori» súbor `%s': %s"
-
-#: backends/xml-dir.c:1075 gconf/gconf-internals.c:2437
-#, c-format
-msgid "Failed to close file `%s': %s"
-msgstr "Nepodarilo sa zavrie» súbor `%s': %s"
 
 #. There was an error
 #: backends/xml-entry.c:150
@@ -290,28 +295,28 @@ msgstr "Nie je mo¾né nájs» modul pre `%s'"
 msgid "Failed to shut down backend"
 msgstr "Nepodarilo sa ukonèi» modul"
 
-#: gconf/gconf-database.c:232
+#: gconf/gconf-database.c:231
 msgid "Received invalid value in set request"
 msgstr "Zachytená neplatná hodnota v po¾iadavke"
 
-#: gconf/gconf-database.c:240
+#: gconf/gconf-database.c:239
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr "Nezmyselná CORBA hodnota vrátená pri po¾iadavke na kµúè `%s'"
 
-#: gconf/gconf-database.c:518
+#: gconf/gconf-database.c:517
 msgid "Received request to drop all cached data"
 msgstr "Prijatá po¾iadavka pre zahodenie v¹etkých dát v ke¹i"
 
-#: gconf/gconf-database.c:535
+#: gconf/gconf-database.c:534
 msgid "Received request to sync synchronously"
 msgstr "Prijatá po¾iadavka na synchronizáciu"
 
-#: gconf/gconf-database.c:770
+#: gconf/gconf-database.c:769
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr "Kritická chyba: nepodarilo sa získa» referenciu na ConfigDatabase"
 
-#: gconf/gconf-database.c:929
+#: gconf/gconf-database.c:928
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Nepodarilo sa synchronizova» jeden alebo viac zdrojov: %s"
@@ -320,7 +325,7 @@ msgstr "Nepodarilo sa synchronizova» jeden alebo viac zdrojov: %s"
 #. * Because it's likely the right thing for the client
 #. * app to simply continue.
 #.
-#: gconf/gconf-database.c:1015
+#: gconf/gconf-database.c:1014
 #, c-format
 msgid ""
 "Failed to log addition of listener (%s); will not be able to restore this "
@@ -331,12 +336,12 @@ msgstr ""
 "Tohto listenera nebude mo¾né obnovi» pri re¹tarte gconfd. Výsledkom bude "
 "nespoµahlivé upozoròovanie na zmeny konfigurácie."
 
-#: gconf/gconf-database.c:1042
+#: gconf/gconf-database.c:1041
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Listener ID %lu neexistuje"
 
-#: gconf/gconf-database.c:1051
+#: gconf/gconf-database.c:1050
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -345,47 +350,47 @@ msgstr ""
 "Nepodarilo sa zaznamena» odstránenie listenera do súboru so záznamom (asi "
 "ne¹kodné, ale mô¾e sa objavi» divné opakovanie upozornení): %s"
 
-#: gconf/gconf-database.c:1169 gconf/gconf-sources.c:1294
+#: gconf/gconf-database.c:1168 gconf/gconf-sources.c:1294
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Chyba pri získavaní hodnoty pre `%s': %s"
 
-#: gconf/gconf-database.c:1216
+#: gconf/gconf-database.c:1215
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Chyba pri nastavovaní hodnoty pre `%s': %s"
 
-#: gconf/gconf-database.c:1259
+#: gconf/gconf-database.c:1258
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Chyba pri mazaní hodnoty pre `%s': %s"
 
-#: gconf/gconf-database.c:1283
+#: gconf/gconf-database.c:1282
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Chyba pri získavaní ¹tandardnej hodnoty pre `%s': %s"
 
-#: gconf/gconf-database.c:1323
+#: gconf/gconf-database.c:1322
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Chyba pri kontrole existencie `%s': %s"
 
-#: gconf/gconf-database.c:1347
+#: gconf/gconf-database.c:1346
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Chyba pri odstraòovaní prieèinku `%s': %s"
 
-#: gconf/gconf-database.c:1374
+#: gconf/gconf-database.c:1373
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Nepodarilo sa získa» v¹etky polo¾ky v `%s': %s"
 
-#: gconf/gconf-database.c:1400
+#: gconf/gconf-database.c:1399
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Chyba pri výpise prieèinkov v `%s': %s"
 
-#: gconf/gconf-database.c:1421
+#: gconf/gconf-database.c:1420
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Chyba pri nastavovaní schémy pre `%s': %s"
@@ -472,163 +477,158 @@ msgstr "Nesprávny typ pre element zoznamu v %s"
 msgid "Received list from gconfd with a bad list type"
 msgstr "Prijatý zoznam od gconfd s neplatným typom zoznamu"
 
-#: gconf/gconf-internals.c:447
+#: gconf/gconf-internals.c:446
 msgid "Failed to convert object to IOR"
 msgstr "Nepodarilo sa previes» objekt na IOR"
 
-#: gconf/gconf-internals.c:811
+#: gconf/gconf-internals.c:810
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "Nie je mo¾né otvori» súbor `%s': %s\n"
 
-#: gconf/gconf-internals.c:860
+#: gconf/gconf-internals.c:859
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "Pridávam zdroj `%s'\n"
 
-#: gconf/gconf-internals.c:872
+#: gconf/gconf-internals.c:871
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "Chyba pri èítaní súboru `%s': %s\n"
 
-#: gconf/gconf-internals.c:1295
+#: gconf/gconf-internals.c:1294
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Oèakávaný zoznam, prijaté %s"
 
-#: gconf/gconf-internals.c:1305
+#: gconf/gconf-internals.c:1304
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Oèakávaný zoznam %s, prijatý zoznam %s"
 
-#: gconf/gconf-internals.c:1444
+#: gconf/gconf-internals.c:1443
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Oèakávaný pár, prijaté %s"
 
-#: gconf/gconf-internals.c:1458
+#: gconf/gconf-internals.c:1457
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
-msgstr ""
-"Oèakávaný (%s,%s) pár, prijatý pár s jednou alebo obomi chýbajúcimi hodnotami"
+msgstr "Oèakávaný (%s,%s) pár, prijatý pár s jednou alebo obomi chýbajúcimi hodnotami"
 
-#: gconf/gconf-internals.c:1474
+#: gconf/gconf-internals.c:1473
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Oèakávaný pár typu (%s,%s), naèítaný typ (%s,%s)"
 
-#: gconf/gconf-internals.c:1590
+#: gconf/gconf-internals.c:1589
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Text v úvodzovkách nezaèína úvodzovkami"
 
-#: gconf/gconf-internals.c:1652
+#: gconf/gconf-internals.c:1651
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Text v úvodzovkách nekonèí úvodzovkami"
 
-#: gconf/gconf-internals.c:2132 gconf/gconf.c:3092
+#: gconf/gconf-internals.c:2240
 #, c-format
-msgid "CORBA error: %s"
-msgstr "Chyba CORBA: %s"
+msgid "Could not lock temporary file '%s': %s"
+msgstr "Nie je mo¾né uzamknú» doèasný súbor `%s': %s"
 
-#: gconf/gconf-internals.c:2148
+#: gconf/gconf-internals.c:2267
 #, c-format
-msgid "bonobo-activation problem description: '%s'"
-msgstr "Popis problému bonobo-activation: '%s'"
+msgid "Could not create file '%s', probably because it already exists"
+msgstr "Nie je mo¾né vytvori» súbor '%s', mo¾no u¾ existuje"
 
-#: gconf/gconf-internals.c:2154
-msgid "attempt to remove not-listed OAF object directory"
-msgstr "Pokus o odstránenie neexistujúceho prieèinku objektov OAF"
-
-#: gconf/gconf-internals.c:2159
-msgid "attempt to add already-listed OAF directory"
-msgstr "Pokus o pridanie u¾ pridaného prieèinku objektov OAF"
-
-#: gconf/gconf-internals.c:2166
+#: gconf/gconf-internals.c:2313
 #, c-format
-msgid "OAF parse error: %s"
-msgstr "Chyba spracovania OAF: %s"
+msgid "Failed to create or open '%s'"
+msgstr "Nepodarilo sa vytvori» alebo otvori» '%s'"
 
-#: gconf/gconf-internals.c:2171
-msgid "Unknown OAF error"
-msgstr "Neznáma chyba OAF"
-
-#: gconf/gconf-internals.c:2233
+#: gconf/gconf-internals.c:2323
 #, c-format
-msgid "No ior file in `%s'"
-msgstr "Nie je IOR súbor v `%s'"
+msgid "Failed to lock '%s': another process has the lock (%s)"
+msgstr "Nepodarilo sa uzamknú» '%s': zamknuté iným procesom (%s)"
 
-#: gconf/gconf-internals.c:2264
+#: gconf/gconf-internals.c:2351
 #, c-format
-msgid "gconfd taking lock `%s' from some other process"
-msgstr "Gconfd preberá zámok `%s' od iného procesu"
+msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
+msgstr "Súbor IOR '%s' nebol úspe¹ne otvorený, na adrese nebol nájdený gconfd: %s"
 
-#: gconf/gconf-internals.c:2275
+#: gconf/gconf-internals.c:2381
 #, c-format
-msgid "Another program has lock `%s'"
-msgstr "Iný program dr¾í zámok `%s'"
+msgid "gconftool or other non-gconfd process has the lock file '%s'"
+msgstr "gconftool alebo proces  iný ako gconfd má zamknutý súbor '%s'"
 
-#: gconf/gconf-internals.c:2294
-msgid "couldn't contact ORB to ping existing gconfd"
-msgstr "Nie je mo¾né spoji» sa s ORBom pre ping na existujúci gconfd"
+#: gconf/gconf-internals.c:2398
+msgid "couldn't contact ORB to resolve existing gconfd object reference"
+msgstr "nie je mo¾né spoji» sa s ORBom pre zistenie referencie na existujúci gconfd"
 
-#: gconf/gconf-internals.c:2302
+#: gconf/gconf-internals.c:2408
 #, c-format
-msgid ""
-"Removing stale lock `%s' because IOR couldn't be converted to object "
-"reference, IOR `%s'"
-msgstr ""
-"Odstraòujem zabudnutý zámok `%s', preto¾e IOR nie je mo¾né previes» na "
-"objektovú referenciu, IOR `%s'"
+msgid "Failed to convert IOR '%s' to an object reference"
+msgstr "Nepodarilo sa previes» IOR '%s' na referenciu na objekt"
 
-#: gconf/gconf-internals.c:2314
-#, c-format
-msgid "Removing stale lock `%s' because of error pinging server: %s"
-msgstr "Odstraòujem zabudnutý zámok `%s' kvôli chyba pri pingu na server: %s"
-
-#: gconf/gconf-internals.c:2326
-#, c-format
-msgid "GConf configuration daemon (gconfd) has lock `%s'"
-msgstr "Konfiguraèný démon GConf (gconfd) dr¾í zámok `%s'"
-
-#: gconf/gconf-internals.c:2340
+#: gconf/gconf-internals.c:2436
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "Nie je mo¾né vytvori» prieèinok `%s': %s"
 
-#: gconf/gconf-internals.c:2389
-#, c-format
-msgid "Can't create lock `%s': %s"
-msgstr "Nie je mo¾né vytvori» zámok `%s': %s"
-
-#: gconf/gconf-internals.c:2425
+#: gconf/gconf-internals.c:2495
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Nie je mo¾né zapisova» do súboru `%s': %s"
 
-#: gconf/gconf-internals.c:2475
+#: gconf/gconf-internals.c:2536
 #, c-format
-msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
-msgstr ""
-"Nie je mo¾né otvori» súbor so zámkom `%s', predpokladám, ¾e nám nepatrí: %s"
+msgid "We didn't have the lock on file `%s', but we should have"
+msgstr "Nemáme zámok pre súbor `%s', ale mali by sme ma»"
 
-#: gconf/gconf-internals.c:2492
+#: gconf/gconf-internals.c:2557
 #, c-format
-msgid "Corrupt lock file `%s', removing anyway"
-msgstr "Po¹kodený súbor so zámkom `%s', aj tak ho odstraòujem"
+msgid "Failed to link '%s' to '%s': %s"
+msgstr "Nepodarilo sa vytvori» odkaz `%s' na `%s': %s"
 
-#: gconf/gconf-internals.c:2502
+#: gconf/gconf-internals.c:2569
 #, c-format
+msgid "Failed to remove lock file `%s': %s"
+msgstr "Nepodarilo sa odstráni» súbor so zámkom `%s': %s"
+
+#: gconf/gconf-internals.c:2588
+#, c-format
+msgid "Failed to clean up file '%s': %s"
+msgstr "Nepodarilo sa vyèisti» súbor `%s': %s"
+
+#: gconf/gconf-internals.c:2602
+#, c-format
+msgid "Failed to remove lock directory `%s': %s"
+msgstr "Nepodarilo sa odstráni» prieèinok pre zámky `%s': %s"
+
+#: gconf/gconf-internals.c:2767 gconf/gconfd.c:576
+#, c-format
+msgid "Failed to create %s: %s"
+msgstr "Nepodarilo sa vytvori» %s: %s"
+
+#: gconf/gconf-internals.c:2800
+#, c-format
+msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
+msgstr "Nepodarilo sa vytvori» rúru pre komunikáciu s potomkami démona gconf: %s\n"
+
+#: gconf/gconf-internals.c:2824
+#, c-format
+msgid "Failed to launch configuration server: %s\n"
+msgstr "Nepodarilo sa spusti» konfiguraèný server: %s\n"
+
+#: gconf/gconf-internals.c:2846
 msgid ""
-"Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
-"took our lock"
+"Failed to contact configuration server (a likely cause of this is that you "
+"have an existing configuration server (gconfd) running, but it isn't "
+"reachable from here - if you're logged in from two machines at once, you may "
+"need to enable TCP networking for ORBit)\n"
 msgstr ""
-"Nie je mo¾né vytvori» súbor so zámkom `%s' (vytvoril pid %u, na¹e pid %u; "
-"asi nám niekto zobral ná¹ zámok)"
-
-#: gconf/gconf-internals.c:2519
-#, c-format
-msgid "Failed to release lock directory `%s': %s"
-msgstr "Nepodarilo sa uvoµni» prieèinok pre zámky `%s': %s"
+"Nepodarilo sa spoji» s konfiguraèným serverom (èastá príèina je ¾e máte "
+"spojenie na be¾iaci konfiguraèný server (gconfd), ale odtiaµto nie je "
+"dostupný - ak ste prihlásený na dvoj poèítaèoch naraz, mo¾no budete musie» "
+"povoli» sie» TCP pre ORBit)\n"
 
 #: gconf/gconf-sources.c:320
 #, c-format
@@ -657,22 +657,25 @@ msgstr ""
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
-"writeable databases. There are two common causes of this problem: 1) your "
+"writable databases. There are two common causes of this problem: 1) your "
 "configuration path file doesn't contain any databases or wasn't found or 2) "
-"bonobo-activation mistakenly created two gconfd processes. If you have two "
-"gconfd processes (or had two at the time the second was launched), then it's "
-"an bonobo-activation bug, not a GConf issue. Logging out, killing bonobo-"
-"activation-server and gconfd, and logging back in may help. As always, check "
-"the user.* syslog for details on problems gconfd encountered."
+"somehow we mistakenly created two gconfd processes. If you have two gconfd "
+"processes (or had two at the time the second was launched), logging out, "
+"killing all copies of gconfd, and logging back in may help. Perhaps the "
+"problem is that you attempted to use GConf from two machines at once, and "
+"ORBit still has its default configuration that prevents remote CORBA "
+"connections? As always, check the user.* syslog for details on problems "
+"gconfd encountered."
 msgstr ""
 "Nepodarilo sa ulo¾i» kµúè '%s', preto¾e konfiguraèný server nemá ¾iadne "
 "databáze pre zápis. Typické dôvody sú dva: 1) cesta v konfiguraènom súbore "
-"neobsahuje ¾iadne databáze, alebo neexistuje; 2) bonobo-activation nesprávne "
-"vytvoril dva procesy gconfd. Ak vám be¾ia dva procesy (alebo ste u¾ dva mali "
-"v momente ¹tartu druhého), je to chyba bonobo-activation a nie GConf. Mo¾no "
-"pomô¾e odhlási» sa, zabi» bonobo-activation-server a gconfd, a znovu sa "
-"prihlási». Nezabudnite sa pozrie» do súboru so záznamom user.*, èi gconfd "
-"nenarazil na nejaké problémy."
+"neobsahuje ¾iadne databáze, alebo neexistuje; 2) nejako sa nesprávne "
+"vytvorili dva procesy gconfd. Ak vám be¾ia dva procesy (alebo ste u¾ dva mali "
+"v momente ¹tartu druhého), mo¾no pomô¾e odhlási» sa, zabi» v¹etky procesy gconfd, "
+"a znovu sa prihlási». Jeden z dôvodov mô¾e by», ¾e ste sa pokúsili pou¾i» GConf "
+"z dvoch poèítaèov naraz a ORBit má stále ¹tandardné nastavenie, v ktorom je zakázané "
+"pou¾íva» vzdialené spojenia CORBA. Nezabudnite sa pozrie» do súboru so "
+"záznamom user.*, èi gconfd nenarazil na nejaké problémy."
 
 #: gconf/gconf-sources.c:1164
 #, c-format
@@ -751,101 +754,91 @@ msgstr "Nerozpoznané `%s' (nesprávny poèet elementov)"
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr "Nerozpoznané `%s' (extra ')' nájdená v rámci páru)"
 
-#: gconf/gconf.c:54
+#: gconf/gconf.c:53
 #, c-format
 msgid "`%s': %s"
 msgstr "`%s': %s"
 
-#: gconf/gconf.c:289
+#: gconf/gconf.c:286
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Server nemohol zisti» adresu `%s'"
 
-#: gconf/gconf.c:574
+#: gconf/gconf.c:571
 msgid "Can't add notifications to a local configuration source"
 msgstr "Nie je mo¾né pridáva» upozornenia k lokálnemu konfiguraènému zdroju"
 
-#: gconf/gconf.c:1870
+#: gconf/gconf.c:1866
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Pridanie klienta do zoznamu serveru zlyhalo, chyba CORBA: %s"
 
-#: gconf/gconf.c:1887
-msgid ""
-"Error contacting configuration server: bonobo-activation returned nil from "
-"bonobo_activation_activate_from_id() and did not set an exception explaining "
-"the problem. This is a bug in the bonobo-activation package; something went "
-"wrong in bonobo-activation, and no error was reported. This is not a bug in "
-"the GConf package. Do not report a GConf bug unless you have information "
-"indicating what went wrong with bonobo-activation that was caused by GConf."
-msgstr ""
-"Chyba pri spojení s konfiguraèným serverom: bonobo-activation vrátil nil z "
-"volania bonobo_activation_activate_from_id() a nenastavil výnimku, ktorá by "
-"to vysvetlila. Je to chyba balíka bonobo-activation, nieèo sa v bonobo-"
-"activation pokazilo a chyba nebola oznámená. Chyba teda nie je v GConf. "
-"Neoznamujte to ako chybu GConf, ak nematé informácie ukazujúce aj na chybu v "
-"bonobo-activation spôsobenú GConf."
-
-#: gconf/gconf.c:2198
-msgid "Failed to init GConf, exiting\n"
-msgstr "Nepodarilo sa inicializova» GConf, konèím\n"
-
-#: gconf/gconf.c:2235
+#: gconf/gconf.c:2192
 msgid "Must begin with a slash (/)"
 msgstr "Musí zaèína» znamienkom lomeno (/)"
 
-#: gconf/gconf.c:2257
+#: gconf/gconf.c:2214
 msgid "Can't have two slashes (/) in a row"
 msgstr "Dve znamienka lomeno (/) nesmú by» hneï za sebou"
 
-#: gconf/gconf.c:2259
+#: gconf/gconf.c:2216
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Bodka (.) nesmie by» hneï za znamienkom lomeno (/)"
 
-#: gconf/gconf.c:2280
+#: gconf/gconf.c:2235
+#, c-format
+msgid "'%c' is not an ASCII character, so isn't allowed in key names"
+msgstr "'%c' nie je platný znak v menách kµúèov/prieèinkov"
+
+#: gconf/gconf.c:2245
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' nie je platný znak v menách kµúèov/prieèinkov"
 
-#: gconf/gconf.c:2294
+#: gconf/gconf.c:2259
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Kµúè/prieèinok nesmie konèi» znamienkom lomeno (/)"
 
-#: gconf/gconf.c:2547
+#: gconf/gconf.c:2616
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Zlyhalo vypnutie konfiguraèného serveru: %s"
 
-#: gconf/gconf.c:2608
+#: gconf/gconf.c:2677
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Oèakávaný float, prijaté %s"
 
-#: gconf/gconf.c:2643
+#: gconf/gconf.c:2712
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Oèakávaný int, prijaté %s"
 
-#: gconf/gconf.c:2678
+#: gconf/gconf.c:2747
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Oèakávaný string, prijaté %s"
 
-#: gconf/gconf.c:2715
+#: gconf/gconf.c:2784
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Oèakávaný bool, prijaté %s"
 
-#: gconf/gconf.c:2748
+#: gconf/gconf.c:2817
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Oèakávaná schéma, prijaté %s"
 
-#: gconf/gconfd.c:247
+#: gconf/gconf.c:3161
+#, c-format
+msgid "CORBA error: %s"
+msgstr "Chyba CORBA: %s"
+
+#: gconf/gconfd.c:246
 msgid "Shutdown request received"
 msgstr "Prijatá po¾iadavka na ukonèenie"
 
-#: gconf/gconfd.c:279
+#: gconf/gconfd.c:278
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -853,10 +846,9 @@ msgstr ""
 "gconfd bol prelo¾ený s ladiacimi informáciami, pokú¹am sa naèíta» gconf.path "
 "zo zdrojového prieèinku"
 
-#: gconf/gconfd.c:293
+#: gconf/gconfd.c:292
 #, c-format
-msgid ""
-"No configuration files found, trying to use the default config source `%s'"
+msgid "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
 "Nenájdené ¾iadne konfiguraèné súbory, pokúsim sa pou¾i» ¹tandardný "
 "konfiguraèný zdroj `%s'"
@@ -864,7 +856,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:301
+#: gconf/gconfd.c:300
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -872,16 +864,16 @@ msgstr ""
 "Nenájdené ¾iadne konfiguraèné súbory v zdrojovej ceste, konfigurácia nebude "
 "ulo¾ená ani upravená"
 
-#: gconf/gconfd.c:301
+#: gconf/gconfd.c:300
 msgid "/path"
 msgstr "/cesta"
 
-#: gconf/gconfd.c:314
+#: gconf/gconfd.c:313
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Chyba pri nahrávaní niektorých konfiguraèných zdrojov: %s"
 
-#: gconf/gconfd.c:326
+#: gconf/gconfd.c:325
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -889,7 +881,7 @@ msgstr ""
 "Neboli úspe¹ne nájdené ¾iadne konfiguraèné zdroje, nebude mo¾né uklada» ani "
 "naèíta» konfiguraèné dáta"
 
-#: gconf/gconfd.c:343
+#: gconf/gconfd.c:342
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -897,120 +889,63 @@ msgstr ""
 "Neboli úspe¹ne nájdené ¾iadne konfiguraèné zdroje, do ktorých je mo¾ný "
 "zápis, niektoré zmeny konfigurácie asi nebude mo¾né ulo¾i»"
 
-#: gconf/gconfd.c:369
+#: gconf/gconfd.c:368
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr ""
-"Zachytený signál %d, zapisujem súbor core. Prosím, oznámte chybu GConfu."
+msgstr "Zachytený signál %d, zapisujem súbor core. Prosím, oznámte chybu GConfu."
 
-#: gconf/gconfd.c:385
+#: gconf/gconfd.c:384
 #, c-format
-msgid ""
-"Received signal %d, shutting down abnormally. Please file a GConf bug report."
+msgid "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Zachytený signál %d, konèím abnormálne. Prosím, vyplòte správu o chybe v "
 "GConf."
 
-#: gconf/gconfd.c:402
+#: gconf/gconfd.c:401
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Zachytený signál %d, vypínam"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:519
+#: gconf/gconfd.c:522
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "starting (version %s), pid %u user '%s'"
 
-#: gconf/gconfd.c:546
-msgid ""
-"Failed to init Object Activation Framework: please mail bug report to bonobo-"
-"activation maintainers"
-msgstr ""
-"Nepodarilo sa inicializova» Object Activation Framework: prosím, po¹lite "
-"správu o chybe správcom bonobo-activation"
-
-#: gconf/gconfd.c:566
+#: gconf/gconfd.c:563
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Nepodarilo sa získa» referenciu na objekt pre ConfigServer"
 
-#: gconf/gconfd.c:579
+#: gconf/gconfd.c:601
 #, c-format
-msgid "Failed to create %s: %s"
-msgstr "Nepodarilo sa vytvori» %s: %s"
+msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
+msgstr "Nepodarilo sa zapísa» bajt do rúry %d, tak¾e klientský program mô¾e presta» reagova»: %s"
 
-#. Bad hack alert - register the current lockholder with bonobo-activation-server,
-#. * since bonobo-activation-server seems to have forgotten about us.
-#.
-#: gconf/gconfd.c:594
+#: gconf/gconfd.c:611
 #, c-format
-msgid "Failed to get lock for daemon: %s"
-msgstr "Nepodarilo sa získa» zámok pre démona: %s"
-
-#: gconf/gconfd.c:600
-msgid ""
-"Registering existing server with bonobo-activation-server, since we seem to "
-"have been leaked"
-msgstr ""
-"Registrujem existujúci server pomocou bonobo-activation-server, vyzerá to "
-"toti¾ na stratenú referenciu"
-
-#: gconf/gconfd.c:609
-msgid ""
-"OAF doesn't know about our IID; indicates broken installation; can't "
-"register existing server."
-msgstr ""
-"OAF nevie o na¹om IID; to vyzerá ako nesprávna in¹talácia; nemô¾e sa "
-"zaregistrova»."
-
-#: gconf/gconfd.c:613
-msgid ""
-"Another gconfd already registered with OAF, so we can't register the "
-"existing server"
-msgstr ""
-"U OAF u¾ je zaregistrovaný iný gconfd, tak¾e nie je mo¾né registrova» u¾ "
-"existujúci server"
-
-#: gconf/gconfd.c:618
-msgid "Unknown error registering existing gconfd with OAF; exiting"
-msgstr "Neznáma chyba pri registrácii gconfd u OAF; konèím"
-
-#: gconf/gconfd.c:645
-msgid ""
-"bonobo-activation doesn't know about our IID; indicates broken installation; "
-"can't register; exiting\n"
-msgstr ""
-"bonobo-activation nevie o na¹om IID; to vyzerá ako nesprávna in¹talácia; "
-"nemô¾e sa zaregistrova»; konèím\n"
+msgid "Failed to get lock for daemon, exiting: %s"
+msgstr "Nepodarilo sa získa» zámok pre démona, konèím: %s"
 
 #: gconf/gconfd.c:649
-msgid "Another gconfd already registered with bonobo-activation; exiting\n"
-msgstr "U bonobo-activation u¾ je zaregistrovaný iný gconfd, konèím\n"
-
-#: gconf/gconfd.c:654
-msgid "Unknown error registering gconfd with bonobo-activation; exiting\n"
-msgstr "Neznáma chyba pri registrácii gconfd u bonobo-activation; konèím\n"
-
-#: gconf/gconfd.c:698
 #, c-format
-msgid "Failed to release lockfile: %s"
+msgid "Error releasing lockfile: %s"
 msgstr "Nepodarilo sa uvoµni» súbor zámku: %s"
 
-#: gconf/gconfd.c:706
+#: gconf/gconfd.c:657
 msgid "Exiting"
 msgstr "Konèím"
 
-#: gconf/gconfd.c:731
+#: gconf/gconfd.c:682
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf server sa nepou¾íva, konèím."
 
-#: gconf/gconfd.c:1090
+#: gconf/gconfd.c:1041
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Vraciam výnimku: %s"
 
-#: gconf/gconfd.c:1190
+#: gconf/gconfd.c:1141
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1019,66 +954,63 @@ msgstr ""
 "Nepodarilo sa otvori» súbor so záznamom pre gconfd; nebude mo¾né obnovi» "
 "listenerom po vypnutí gconfd (%s)"
 
-#: gconf/gconfd.c:1225
+#: gconf/gconfd.c:1176
 #, c-format
-msgid ""
-"Failed to close gconfd logfile; data may not have been properly saved (%s)"
+msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Nepodarilo sa zavrie» súbor so záznamom pre gconfd, dáta mo¾no nie sú "
 "správne ulo¾ené (%s)"
 
-#: gconf/gconfd.c:1294
+#: gconf/gconfd.c:1245
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Nepodarilo sa otvori» súbor s ulo¾eným stavom '%s' pre zápis: %s"
 
-#: gconf/gconfd.c:1308
+#: gconf/gconfd.c:1259
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Nie je mo¾né sa zapisova» do súboru s ulo¾eným stavom '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1317
+#: gconf/gconfd.c:1268
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Nepodarilo sa zavrie» súbor s ulo¾eným stavom '%s': %s"
 
-#: gconf/gconfd.c:1331
+#: gconf/gconfd.c:1282
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Nie je mo¾né odsunú» nabok starý súbor s ulo¾eným stavom '%s': %s"
 
-#: gconf/gconfd.c:1341
+#: gconf/gconfd.c:1292
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Nepodarilo sa presunú» nový súbor s ulo¾eným stavom na miesto: %s"
 
-#: gconf/gconfd.c:1350
+#: gconf/gconfd.c:1301
 #, c-format
-msgid ""
-"Failed to restore original saved state file that had been moved to '%s': %s"
+msgid "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "Nepodarilo sa obnovi» pôvodný súbor s ulo¾eným stavom, ktorý bol presunutý "
 "do '%s': %s"
 
-#: gconf/gconfd.c:1823
+#: gconf/gconfd.c:1772
 #, c-format
-msgid ""
-"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Nepodarilo sa obnovi» listenera na adrese '%s', nie je mo¾né zisti» adresu "
 "databáze"
 
-#: gconf/gconfd.c:1869
+#: gconf/gconfd.c:1818
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Chyba pri èítaní súboru s ulo¾eným stavom: %s"
 
-#: gconf/gconfd.c:1922
+#: gconf/gconfd.c:1871
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Nepodarilo sa otvori» súbor s ulo¾eným stavom '%s': %s"
 
-#: gconf/gconfd.c:2039
+#: gconf/gconfd.c:1988
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1087,7 +1019,7 @@ msgstr ""
 "Nepodarilo sa zaznamena» pridanie listeneru do súboru so záznamom pre "
 "gconfd, nebude mo¾né znovu-prida» listenera aj bude gconfd ukonèený (%s)"
 
-#: gconf/gconfd.c:2044
+#: gconf/gconfd.c:1993
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1097,29 +1029,28 @@ msgstr ""
 "gconfd, je mo¾né, ¾e bude listener nesprávne znovu-pridaný pri ukonèení "
 "gconfd (%s)"
 
-#: gconf/gconfd.c:2067 gconf/gconfd.c:2232
+#: gconf/gconfd.c:2016 gconf/gconfd.c:2181
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Nepodarilo sa získa» IOR klienta: %s"
 
-#: gconf/gconfd.c:2082
+#: gconf/gconfd.c:2031
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Nepodarilo sa otvori» súbor s ulo¾eným stavom: %s"
 
-#: gconf/gconfd.c:2095
+#: gconf/gconfd.c:2044
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Nepodarilo sa zapísa» dáta od klienta do súboru s ulo¾eným stavom: %s"
 
-#: gconf/gconfd.c:2103
+#: gconf/gconfd.c:2052
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Nepodarilo sa prida» dáta od klienta do súboru s ulo¾eným stavom: %s"
 
-#: gconf/gconfd.c:2193
-msgid ""
-"Some client removed itself from the GConf server when it hadn't been added."
+#: gconf/gconfd.c:2142
+msgid "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "Niektorý klient sa odstránil z GConf serveru keï tam nebol pridaný."
 
 #: gconf/gconftool.c:69
@@ -1302,8 +1233,7 @@ msgstr "Získa» meno schémy pou¾itej pre tento kµúè"
 
 #: gconf/gconftool.c:322
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr ""
-"Zadajte meno schémy nasledované kµúèom, na ktorý sa má táto schéma pou¾i»"
+msgstr "Zadajte meno schémy nasledované kµúèom, na ktorý sa má táto schéma pou¾i»"
 
 #: gconf/gconftool.c:331
 msgid "Get the name of the default source"
@@ -1383,8 +1313,7 @@ msgid "--break-directory must be used by itself.\n"
 msgstr "--break-directory musí by» pou¾ité iba samostatne.\n"
 
 #: gconf/gconftool.c:523
-msgid ""
-"You must specify a config source with --config-source when using --direct\n"
+msgid "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "Keï pou¾ívate --direct, musíte zada» konfiguraèný zdroj pomocou --config-"
 "source\n"
@@ -1398,369 +1327,346 @@ msgstr "Nepodarilo sa inicializova» GConf: %s\n"
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "Musíte nastavi» premenné prostredia GCONF_CONFIG_SOURCE\n"
 
-#. Eventually you should be able to run gconfd as long as
-#. you're installing to a different database from the one
-#. it's using, but I don't trust the locking right now.
-#: gconf/gconftool.c:569
-msgid ""
-"Shouldn't run gconfd while installing new schema files.\n"
-"Use gconftool --shutdown to shut down the daemon, most safely while no "
-"applications are running\n"
-"(though things theoretically work if apps are running).\n"
-msgstr ""
-"Gconfd by nemal be¾a» poèas in¹talácie nových súborov schém.\n"
-"Pou¾ite gconftool --shutdown pre ukonèenie démona, najlep¹ie ak nebude be¾a» "
-"¾iadna aplikácia\n"
-"(aj keï by v¹etko malo fungova» aj tak).\n"
-
-#: gconf/gconftool.c:591
+#: gconf/gconftool.c:580
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Nepodaril sa prístup ku konfiguraènému zdroju: %s\n"
 
-#: gconf/gconftool.c:802
+#: gconf/gconftool.c:791
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Chyba pri ukonèovaní: %s\n"
 
-#: gconf/gconftool.c:845
+#: gconf/gconftool.c:834
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr ""
-"Musíte zada» jeden alebo viac prieèinkov, ktoré chcete rekurzívne vypísa».\n"
+msgstr "Musíte zada» jeden alebo viac prieèinkov, ktoré chcete rekurzívne vypísa».\n"
 
-#: gconf/gconftool.c:879
+#: gconf/gconftool.c:868
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "Nepodarilo sa vypísa» zoznam hodnôt v `%s': %s\n"
 
-#: gconf/gconftool.c:897
+#: gconf/gconftool.c:886
 msgid "(no value set)"
 msgstr "(hodnota nenastavená)"
 
-#: gconf/gconftool.c:952
+#: gconf/gconftool.c:941
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Nepodarilo sa spusti» konfiguraèný server (gconfd): %s\n"
 
-#: gconf/gconftool.c:966
+#: gconf/gconftool.c:955
 msgid "Must specify a key or keys to get\n"
 msgstr "Musíte zada», ktorý kµúè alebo kµúèe chcete získa»\n"
 
-#: gconf/gconftool.c:1001
+#: gconf/gconftool.c:990
 #, c-format
 msgid "Type: %s\n"
 msgstr "Typ: %s\n"
 
-#: gconf/gconftool.c:1002
+#: gconf/gconftool.c:991
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Typ zoznamu: %s\n"
 
-#: gconf/gconftool.c:1003
+#: gconf/gconftool.c:992
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Typ car: %s\n"
 
-#: gconf/gconftool.c:1004
+#: gconf/gconftool.c:993
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Typ cdr: %s\n"
 
-#: gconf/gconftool.c:1009
+#: gconf/gconftool.c:998
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "©tandardná hodnota: %s\n"
 
-#: gconf/gconftool.c:1009 gconf/gconftool.c:1011 gconf/gconftool.c:1012
-#: gconf/gconftool.c:1013
+#: gconf/gconftool.c:998 gconf/gconftool.c:1000 gconf/gconftool.c:1001
+#: gconf/gconftool.c:1002
 msgid "Unset"
 msgstr "Nenaplnená"
 
-#: gconf/gconftool.c:1011
+#: gconf/gconftool.c:1000
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Vlastník: %s\n"
 
-#: gconf/gconftool.c:1012
+#: gconf/gconftool.c:1001
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Krátky popis: %s\n"
 
-#: gconf/gconftool.c:1013
+#: gconf/gconftool.c:1002
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Dlhý popis: %s\n"
 
-#: gconf/gconftool.c:1022 gconf/gconftool.c:1316
+#: gconf/gconftool.c:1011 gconf/gconftool.c:1305
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Pre `%s' nie je nastavená hodnota\n"
 
-#: gconf/gconftool.c:1026 gconf/gconftool.c:1320
+#: gconf/gconftool.c:1015 gconf/gconftool.c:1309
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Nepodarilo sa získa» hodnotu pre `%s': %s\n"
 
-#: gconf/gconftool.c:1069 gconf/gconftool.c:1081
+#: gconf/gconftool.c:1058 gconf/gconftool.c:1070
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "Nerozpoznaný typ `%s'\n"
 
-#: gconf/gconftool.c:1093
+#: gconf/gconftool.c:1082
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Musíte zada» striedavo kµúèe a hodnoty ako argumenty\n"
 
-#: gconf/gconftool.c:1113
+#: gconf/gconftool.c:1102
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "Pre kµúè nie je nastavená hodnota: `%s'\n"
 
-#: gconf/gconftool.c:1141
+#: gconf/gconftool.c:1130
 msgid "Cannot set schema as value\n"
 msgstr "Nie je mo¾né nastavi» schému ako hodnotu\n"
 
-#: gconf/gconftool.c:1151
+#: gconf/gconftool.c:1140
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Pri nastavovaní zoznamu musíte zada» primitívny typ zoznamu.\n"
 
-#: gconf/gconftool.c:1165
-msgid ""
-"When setting a pair you must specify a primitive car-type and cdr-type\n"
+#: gconf/gconftool.c:1154
+msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Pri nastavovaní páru musíte zada» primitívny typ car alebo typ cdr.\n"
 
-#: gconf/gconftool.c:1180
+#: gconf/gconftool.c:1169
 #, c-format
 msgid "Error: %s\n"
 msgstr "Chyba: %s\n"
 
-#: gconf/gconftool.c:1193
+#: gconf/gconftool.c:1182
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Chyba pri nastavovaní hodnoty: %s\n"
 
-#: gconf/gconftool.c:1211
+#: gconf/gconftool.c:1200
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Chyba pri synchronizácii: %s\n"
 
-#: gconf/gconftool.c:1234
+#: gconf/gconftool.c:1223
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Musíte zada», ktorý kµúè alebo kµúèe na príkazovom riadku\n"
 
-#: gconf/gconftool.c:1254
+#: gconf/gconftool.c:1243
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "Pre `%s' nie je známa schéma\n"
 
-#: gconf/gconftool.c:1287
+#: gconf/gconftool.c:1276
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "V schéme '%s' nie je ulo¾ený ¾iadny dokumentaèný re»azec\n"
 
-#: gconf/gconftool.c:1292
+#: gconf/gconftool.c:1281
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "Chyba pri získavaní schémy z '%s': %s\n"
 
-#: gconf/gconftool.c:1299
+#: gconf/gconftool.c:1288
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "V '%s' nie je ulo¾ená schéma\n"
 
-#: gconf/gconftool.c:1302
+#: gconf/gconftool.c:1291
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "Hodnota v '%s' nie je schéma\n"
 
-#: gconf/gconftool.c:1358
+#: gconf/gconftool.c:1347
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "Musíte zada» meno schémy a za ním meno kµúèa, na ktorý sa má pou¾i».\n"
 
-#: gconf/gconftool.c:1365
+#: gconf/gconftool.c:1354
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Nepodarilo sa asociova» schému '%s' s kµúèom '%s': %s\n"
 
-#: gconf/gconftool.c:1385
+#: gconf/gconftool.c:1374
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Musíte zada» kµúè (meno schémy) ako jediný argument\n"
 
-#: gconf/gconftool.c:1427
+#: gconf/gconftool.c:1416
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "Typ zoznamu musí by» primitívny typ: string, int, float alebo bool\n"
 
-#: gconf/gconftool.c:1447
+#: gconf/gconftool.c:1436
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Typ car páru musí by» primitívny typ: string, int, float alebo bool\n"
 
-#: gconf/gconftool.c:1467
+#: gconf/gconftool.c:1456
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Typ cdr páru musí by» primitívny typ: string, int, float alebo bool\n"
 
-#: gconf/gconftool.c:1482
+#: gconf/gconftool.c:1471
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Chyba pri nastavovaní hodnoty: %s"
 
-#: gconf/gconftool.c:1496
+#: gconf/gconftool.c:1485
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Chyba pri synchronizácii: %s"
 
-#: gconf/gconftool.c:1511
+#: gconf/gconftool.c:1500
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr ""
 "Musíte zada» jeden alebo viac prieèinkov, z ktorých chcete páry kµúè/"
 "hodnota.\n"
 
-#: gconf/gconftool.c:1525
+#: gconf/gconftool.c:1514
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Musíte uvies» jeden alebo viac kµúèov, ktoré chcete vymaza».\n"
 
-#: gconf/gconftool.c:1536
+#: gconf/gconftool.c:1525
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "Chyba mazania `%s': %s\n"
 
-#: gconf/gconftool.c:1559
+#: gconf/gconftool.c:1548
 msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr ""
-"Musíte zada» jeden alebo viac prieèinkov, z ktorých chcete podprieèinky.\n"
+msgstr "Musíte zada» jeden alebo viac prieèinkov, z ktorých chcete podprieèinky.\n"
 
-#: gconf/gconftool.c:1593
+#: gconf/gconftool.c:1582
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Chyba pri vypisovaní prieèinkov: %s\n"
 
-#: gconf/gconftool.c:1635
+#: gconf/gconftool.c:1624
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "VAROVANIE: neplatný alebo chýbajúci typ pre schému (%s)\n"
 
-#: gconf/gconftool.c:1644
+#: gconf/gconftool.c:1633
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "VAROVANIE: neplatný alebo chýbajúci list_type pre schému (%s)\n"
 
-#: gconf/gconftool.c:1655 gconf/gconftool.c:1685 gconf/gconftool.c:1714
+#: gconf/gconftool.c:1644 gconf/gconftool.c:1674 gconf/gconftool.c:1703
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr ""
-"VAROVANIE: Neporadilo sa spracova» ¹tandardnú hodnotu `%s' pre schému (%s)\n"
+msgstr "VAROVANIE: Neporadilo sa spracova» ¹tandardnú hodnotu `%s' pre schému (%s)\n"
 
-#: gconf/gconftool.c:1673
+#: gconf/gconftool.c:1662
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr ""
-"VAROVANIE: neplatný alebo chýbajúci car_type alebo cdr_type pre schému (%s)\n"
+msgstr "VAROVANIE: neplatný alebo chýbajúci car_type alebo cdr_type pre schému (%s)\n"
 
-#: gconf/gconftool.c:1698
+#: gconf/gconftool.c:1687
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "VAROVANIE: Nemô¾ete nastavi» ¹tandardnú hodnotu pre schému\n"
 
-#: gconf/gconftool.c:1727
+#: gconf/gconftool.c:1716
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "VAROVANIE: interná chyba gconftool, neznámy GConfValueType\n"
 
-#: gconf/gconftool.c:1774 gconf/gconftool.c:1795 gconf/gconftool.c:1816
-#: gconf/gconftool.c:1837
+#: gconf/gconftool.c:1763 gconf/gconftool.c:1784 gconf/gconftool.c:1805
+#: gconf/gconftool.c:1826
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "VAROVANIE: nepodarilo sa spracova» meno typu `%s'\n"
 
-#: gconf/gconftool.c:1791
+#: gconf/gconftool.c:1780
 #, c-format
-msgid ""
-"WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "VAROVANIE: list_type mô¾e by» iba int, float, string alebo bool, ale nie `%"
 "s'\n"
 
-#: gconf/gconftool.c:1812
+#: gconf/gconftool.c:1801
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "VAROVANIE: car_type mô¾e by» iba int, float, string alebo bool, ale nie `%"
 "s'\n"
 
-#: gconf/gconftool.c:1833
+#: gconf/gconftool.c:1822
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "VAROVANIE: cdr_type mô¾e by» iba int, float, string alebo bool, ale nie `%"
 "s'\n"
 
-#: gconf/gconftool.c:1861
+#: gconf/gconftool.c:1850
 msgid "WARNING: empty <applyto> node"
 msgstr "VAROVANIE: prázdny uzol <applyto>"
 
-#: gconf/gconftool.c:1864 gconf/gconftool.c:2127
+#: gconf/gconftool.c:1853 gconf/gconftool.c:2116
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "VAROVANIE: uzol <%s> nie je rozpoznaný pod <schema>\n"
 
-#: gconf/gconftool.c:1874
+#: gconf/gconftool.c:1863
 msgid "WARNING: no key specified for schema\n"
 msgstr "VAROVANIE: neuvedený ¾iadny kµúè pre schému\n"
 
-#: gconf/gconftool.c:1907
+#: gconf/gconftool.c:1896
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr ""
-"VAROVANIE: uzol <locale> neobsahuje atribút `name=\"locale\"', ignorujem\n"
+msgstr "VAROVANIE: uzol <locale> neobsahuje atribút `name=\"locale\"', ignorujem\n"
 
-#: gconf/gconftool.c:1913
+#: gconf/gconftool.c:1902
 #, c-format
-msgid ""
-"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
+msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "VAROVANIE: viacnásobný uzol <locale> pre locale `%s', ignorujem v¹etky okrem "
 "prvého\n"
 
-#: gconf/gconftool.c:1994
+#: gconf/gconftool.c:1983
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "VAROVANIE: Neplatný uzol <%s> v uzle <locale>\n"
 
-#: gconf/gconftool.c:2023
+#: gconf/gconftool.c:2012
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "VAROVANIE: Nepodarilo sa nain¹talova» schému `%s' locale `%s': %s\n"
 
-#: gconf/gconftool.c:2031
+#: gconf/gconftool.c:2020
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Nain¹talovaná schéma `%s' pre locale `%s'\n"
 
-#: gconf/gconftool.c:2053
+#: gconf/gconftool.c:2042
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "VAROVANIE: Nepodarilo sa asociova» schému `%s' s kµúèom `%s': %s\n"
 
-#: gconf/gconftool.c:2061
+#: gconf/gconftool.c:2050
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Schéma `%s' pripojená ku kµúèu `%s'\n"
 
-#: gconf/gconftool.c:2140
+#: gconf/gconftool.c:2129
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Musíte ma» aspoò jednu polo¾ku <locale> v <schema>\n"
 
-#: gconf/gconftool.c:2169
+#: gconf/gconftool.c:2158
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "VAROVANIE: uzol <%s> nie je rozpoznaný pod <schemalist>\n"
 
-#: gconf/gconftool.c:2191
+#: gconf/gconftool.c:2180
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Nepodarilo sa otvori» `%s': %s\n"
 
-#: gconf/gconftool.c:2198
+#: gconf/gconftool.c:2187
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Dokument `%s' je prázdny?\n"
 
-#: gconf/gconftool.c:2210
+#: gconf/gconftool.c:2199
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -1769,26 +1675,26 @@ msgstr ""
 "Dokument `%s' má nesprávny typ koreòového uzlu ( <%s>, má by» "
 "<gconfschemafile>)\n"
 
-#: gconf/gconftool.c:2223
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "Dokument `%s' nie je <gconfschemafile> uzol na najvy¹¹ej úrovni\n"
 
-#: gconf/gconftool.c:2237
+#: gconf/gconftool.c:2226
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "VAROVANIE: uzol <%s> pod <gconfschemafile> nerozpoznaný\n"
 
-#: gconf/gconftool.c:2248 gconf/gconftool.c:2280
+#: gconf/gconftool.c:2237 gconf/gconftool.c:2269
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Chyba pri synchronizácii konfiguraèných dát: %s"
 
-#: gconf/gconftool.c:2264
+#: gconf/gconftool.c:2253
 msgid "Must specify some schema files to install\n"
 msgstr "Musíte zada» nejaké súbory so schémou, ktoré sa majú nain¹talova»\n"
 
-#: gconf/gconftool.c:2301
+#: gconf/gconftool.c:2290
 #, c-format
 msgid ""
 "\n"
@@ -1797,16 +1703,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2321
+#: gconf/gconftool.c:2310
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Nepodarilo sa zru¹i» hodnotu prelamovacieho kµúèa %s: %s\n"
 
-#: gconf/gconftool.c:2447
+#: gconf/gconftool.c:2436
 msgid "Must specify some keys to break\n"
 msgstr "Musíte zada» kµúèe, ktoré majú by» po¹kodené\n"
 
-#: gconf/gconftool.c:2453
+#: gconf/gconftool.c:2442
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -1815,11 +1721,11 @@ msgstr ""
 "Pokú¹am sa o poru¹enie aplikácie nastavením nesprávnych hodnôt pre kµúè:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2471
+#: gconf/gconftool.c:2460
 msgid "Must specify some directories to break\n"
 msgstr "Musíte zada» prieèinky, ktoré majú by» po¹kodené\n"
 
-#: gconf/gconftool.c:2490
+#: gconf/gconftool.c:2479
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -1844,3 +1750,4 @@ msgstr "Varovanie GConf: zlyhanie v zozname párov v `%s': %s"
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Oèakávané `%s' prijaté `%s' pre kµúè %s"
+
