@@ -558,8 +558,12 @@ load_subdirs (MarkupDir *dir)
 
       if (stat (fullpath, &statbuf) < 0)
         {
-          /* This is some kind of cruft, not an XML directory */
-          continue;
+          strncpy (fullpath_end+len, "/%gconf-tree.xml", subdir_len - len);
+          if (stat (fullpath, &statbuf) < 0)
+            {
+              /* This is some kind of cruft, not an XML directory */
+              continue;
+            }
         }      
 
       markup_dir_new (dir->tree, dir, dent->d_name);
