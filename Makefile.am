@@ -12,15 +12,15 @@ all-local:
 	echo "**************"
 
 install-exec-local:
-	$(INSTALL_SCRIPT) gconf-config $(bindir)/gconf-config-$(MAJOR_VERSION)
-	(cd $(bindir) && $(LN_S) -f gconf-config-$(MAJOR_VERSION) gconf-config)
+	$(INSTALL_SCRIPT) gconf-config $(DESTDIR)$(bindir)/gconf-config-$(MAJOR_VERSION)
+	(cd $(DESTDIR)$(bindir) && $(LN_S) -f gconf-config-$(MAJOR_VERSION) gconf-config)
 	echo "**** NOTE ****" && \
 	echo $(WARNING_MESSAGE) && \
 	echo "**************"
 
 install-data-local:
-	-mkdir -p $(datadir)/aclocal
-	$(INSTALL_DATA) gconf.m4 $(datadir)/aclocal/gconf-$(MAJOR_VERSION).m4
+	-mkdir -p $(DESTDIR)$(datadir)/aclocal
+	$(INSTALL_DATA) gconf.m4 $(DESTDIR)$(datadir)/aclocal/gconf-$(MAJOR_VERSION).m4
 	echo "**** NOTE ****" && \
 	echo $(WARNING_MESSAGE) && \
 	echo "**************"

@@ -4,7 +4,7 @@ AC_INIT(gconf/gconf.h)
 
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(GConf, 0.7)
+AM_INIT_AUTOMAKE(GConf, 0.8)
 
 AM_MAINTAINER_MODE
 
@@ -83,12 +83,14 @@ AC_ARG_ENABLE(gconf-source,
 
 if test "x$GCONF_CONFIG_SOURCE" = "x"; then
         GCONF_CONFIG_SOURCE="xml::\${sysconfdir}/gconf/gconf.xml.defaults"
+	INSTALL_GCONF_CONFIG_SOURCE="xml::\$(DESTDIR)\${sysconfdir}/gconf/gconf.xml.defaults"
         AC_FYI("Using default config source $GCONF_CONFIG_SOURCE for schema installation")
 else
         AC_FYI("Using config source $GCONF_CONFIG_SOURCE for schema installation")
 fi
 
 AC_SUBST(GCONF_CONFIG_SOURCE)
+AC_SUBST(INSTALL_GCONF_CONFIG_SOURCE)
 
 dnl Default to debug spew for now
 AC_ARG_ENABLE(debug, 

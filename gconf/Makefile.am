@@ -80,11 +80,11 @@ libgconf_1_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
 EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in
 
 install-exec-local:
-	(cd $(bindir) && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
+	(cd $(DESTDIR)$(bindir) && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
 
 install-data-local:
-	-mkdir -p $(sysconfdir)/gconf/$(MAJOR_VERSION)
-	$(INSTALL_DATA) default.path $(sysconfdir)/gconf/$(MAJOR_VERSION)/path.example
-	-mkdir -p $(datadir)/oaf
-	$(INSTALL_DATA) gconfd.oafinfo $(datadir)/oaf/gconfd-$(MAJOR_VERSION).oafinfo
+	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)
+	$(INSTALL_DATA) default.path $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)/path.example
+	-mkdir -p $(DESTDIR)$(datadir)/oaf
+	$(INSTALL_DATA) gconfd.oafinfo $(DESTDIR)$(datadir)/oaf/gconfd-$(MAJOR_VERSION).oafinfo
 
