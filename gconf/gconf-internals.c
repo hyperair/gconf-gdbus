@@ -640,19 +640,6 @@ g_conf_source_remove_dir        (GConfSource* source,
   return (*source->backend->vtable->remove_dir)(source, dir);
 }
 
-void          
-g_conf_source_nuke_dir        (GConfSource* source,
-                               const gchar* dir)
-{
-  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return;
-    }
-
-  return (*source->backend->vtable->nuke_dir)(source, dir);
-}
-
 void         
 g_conf_source_set_schema        (GConfSource* source,
                                  const gchar* key,
@@ -723,7 +710,7 @@ g_conf_key_directory  (const gchar* key)
   return retval;
 }
 
-gchar*
+const gchar*
 g_conf_key_key        (const gchar* key)
 {
   const gchar* end;
@@ -732,7 +719,7 @@ g_conf_key_key        (const gchar* key)
 
   ++end;
 
-  return g_strdup(end);
+  return end;
 }
 
 /*
@@ -1297,28 +1284,6 @@ g_conf_sources_remove_dir (GConfSources* sources,
       tmp = g_list_next(tmp);
     }
 }
-
-
-void          
-g_conf_sources_nuke_dir (GConfSources* sources,
-                         const gchar* dir)
-{
-  /* We remove in every layer we can write to... */
-  GList* tmp;
-
-  tmp = sources->sources;
-
-  while (tmp != NULL)
-    {
-      GConfSource* src = tmp->data;
-
-      if (src->flags & G_CONF_SOURCE_WRITEABLE)
-        g_conf_source_nuke_dir(src, dir);
-      
-      tmp = g_list_next(tmp);
-    }
-}
-
 
 void         
 g_conf_sources_set_schema        (GConfSources* sources,

@@ -54,10 +54,7 @@ struct _GConfBackendVTable {
 
   void                (* remove_dir)      (GConfSource* source,
                                            const gchar* dir);
-
-  void                (* nuke_dir)      (GConfSource* source,
-                                         const gchar* dir);
-
+  
   void                (* set_schema)    (GConfSource* source,
                                          const gchar* key,
                                          const gchar* schema_key);

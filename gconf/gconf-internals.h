@@ -63,14 +63,12 @@ void         g_conf_source_set_schema        (GConfSource* source,
 
 void         g_conf_source_remove_dir        (GConfSource* source,
                                               const gchar* dir);
-void          g_conf_source_nuke_dir        (GConfSource* source,
-                                             const gchar* dir);
 
 gboolean     g_conf_source_sync_all          (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
 
 gchar*       g_conf_key_directory  (const gchar* key);
-gchar*       g_conf_key_key        (const gchar* key);
+const gchar* g_conf_key_key        (const gchar* key);
 
 /* These file tests are in libgnome, I cut-and-pasted them */
 enum {
@@ -124,9 +122,6 @@ GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
                                          const gchar* dir);
 void          g_conf_sources_remove_dir (GConfSources* sources,
                                          const gchar* dir);
-
-void          g_conf_sources_nuke_dir (GConfSources* sources,
-                                       const gchar* dir);
 
 void          g_conf_sources_set_schema        (GConfSources* sources,
                                                 const gchar* key,
