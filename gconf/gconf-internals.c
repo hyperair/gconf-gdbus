@@ -433,73 +433,54 @@ g_conf_server_info_dir(void)
   return g_strconcat(home_dir, "/.gconfd", NULL);
 }
 
-
-gboolean
-g_conf_server_write_info_file(const gchar* ior)
+gchar* 
+g_conf_read_server_ior(void)
 {
-  gchar* fn;
   int fd;
+  gchar* info_file;
 
-  fn = g_conf_server_info_file();
+  info_file = g_conf_server_info_file();
 
-  if (!g_conf_file_exists(fn))
+  /* We could detect this if the open fails, but 
+     the file not existing isn't an error, failure 
+     to open it is an error, and we want to distinguish the 
+     cases.
+  */
+  if (!g_conf_file_exists(info_file))
     {
-      gchar* dir = g_conf_server_info_dir();
-
-      if (!g_conf_file_test(dir, G_CONF_FILE_ISDIR))
-        {
-          if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
-            {
-              g_free(dir);
-              return FALSE;
-            }
-          else
-            {
-              g_free(dir);
-            }
-        }
+      g_free(info_file);
+      return NULL;
     }
 
-  fd = open(fn, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+  fd = open(info_file, O_RDONLY);
 
-  g_free(fn);
+  g_free(info_file);
 
   if (fd < 0)
-    return FALSE;
-  else 
     {
-      gint len = strlen(ior);
-      gint written = 0;
-      gboolean done = FALSE;
+      g_warning("info file open failed: %s", strerror(errno));
+      return NULL;
+    }
+  else
+    {
+      gchar buf[512];
+      int bytes_read;
 
-      while (!done)
+      bytes_read = read(fd, buf, 510);
+
+      close(fd);
+
+      if (bytes_read < 0)
         {
-          written = write(fd, ior, len);
-         
-          if (written == len)
-            done = TRUE;
-          else if (written < 0)
-            {
-              if (errno != EINTR)
-                return FALSE;
-              else
-                continue;
-            }
-          else
-            {
-              g_assert(written < len);
-              ior += written;
-              len -= written;
-              g_assert(len == strlen(ior));
-            }
+          g_warning("IOR read failed: %s", strerror(errno));
+          return NULL;
+        }
+      else
+        {
+          buf[bytes_read] = '\0';
+          return g_strdup(buf);
         }
     }
-
-  if (close(fd) < 0)
-    return FALSE;
-
-  return TRUE;
 }
-
 
 

@@ -75,7 +75,7 @@ struct _GConf {
   gpointer dummy;
 };
 
-typedef void (*GConfNotifyFunc)(GConf* conf, GConfValue* value, gpointer user_data);
+typedef void (*GConfNotifyFunc)(GConf* conf, const gchar* key, GConfValue* value, gpointer user_data);
 
 GConf*       g_conf_global_conf    (void);
 
@@ -84,18 +84,14 @@ gboolean     g_conf_error_pending  (void);
 void         g_conf_set_error      (const gchar* str);
 
 
-/* You can only have one notify per namespace_section per app; 
-   it's just not efficient to have more.
-   In Gnome we'll probably have a more signal-like convenience wrapper to permit
-   multiple notify callbacks 
-*/
-void         g_conf_notify_add(GConf* conf,
+/* Returns ID of the notification */
+guint        g_conf_notify_add(GConf* conf,
                                const gchar* namespace_section, /* dir or key to listen to */
                                GConfNotifyFunc func,
                                gpointer user_data);
 
 void         g_conf_notify_remove(GConf* conf,
-                                  const gchar* namespace_section);
+                                  guint cnxn);
 
 
 /* We'll have higher-level versions that return a double or string instead of a GConfValue */

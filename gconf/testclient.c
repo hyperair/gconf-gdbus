@@ -19,12 +19,64 @@
  */
 
 #include "gconf.h"
+#include <stdio.h>
+#include <unistd.h>
+
+
+static void testclient_main(void);
+static void notify_func(GConf* conf, const gchar* key, GConfValue* value, gpointer user_data);
 
 
 int 
 main (int argc, char** argv)
 {
+  GConf* conf;
+  guint cnxn;
 
+  conf = g_conf_global_conf();
+
+  cnxn = g_conf_notify_add(conf, "/hello/world", notify_func, NULL);
+
+  if (cnxn != 0)
+    printf("Connection %u added\n", cnxn);
+  else
+    {
+      fprintf(stderr, "Failed to add listener\n");
+      return 1;
+    }
+  
+  testclient_main();
 
   return 0;
 }
+
+static void 
+notify_func(GConf* conf, const gchar* key, GConfValue* value, gpointer user_data)
+{
+  int pid = getpid();
+  printf("PID %d received notify on key `%s'\n", pid, key);
+}
+
+/*
+ * Main loop
+ */
+
+static GSList* main_loops = NULL;
+
+static void
+testclient_main(void)
+{
+  GMainLoop* loop;
+
+  loop = g_main_new(TRUE);
+
+  main_loops = g_slist_prepend(main_loops, loop);
+
+  g_main_run(loop);
+
+  main_loops = g_slist_remove(main_loops, loop);
+
+  g_main_destroy(loop);
+}
+
+

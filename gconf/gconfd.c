@@ -44,6 +44,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 
 
 /* Quick hack so I can mark strings */
@@ -173,6 +174,10 @@ gconfd_set(PortableServer_Servant servant, const CORBA_char * key,
 void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 
+CORBA_long
+gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
+
+
 PortableServer_ServantBase__epv base_epv = {
   NULL,
   NULL,
@@ -184,7 +189,9 @@ POA_ConfigServer__epv server_epv = { NULL,
                                      gconfd_remove_listener, 
                                      gconfd_lookup, 
                                      gconfd_set, 
-                                     gconfd_sync };
+                                     gconfd_sync,
+                                     gconfd_ping
+};
 POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
 POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
@@ -232,6 +239,12 @@ gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
   
 }
 
+CORBA_long
+gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
+{
+  return getpid();
+}
+
 #if 0
 
 void
@@ -270,6 +283,141 @@ test_set(GConfSource* source, const gchar* key, int val)
   syslog(LOG_INFO, "Set value of `%s' to %d\n", key, val);
 }
 #endif
+
+/* From Stevens */
+int
+lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len)
+{
+  struct flock lock;
+  lock.l_type = type;
+  lock.l_start = offset;
+  lock.l_whence = whence;
+  lock.l_len = len;
+
+  return fcntl(fd, cmd, &lock);
+}
+
+#define write_lock(fd, offset, whence, len) \
+  lock_reg(fd, F_SETLK, F_WRLCK, offset, whence, len)
+
+gboolean
+g_conf_server_write_info_file(const gchar* ior)
+{
+  /* This writing-IOR-to-file crap is a temporary hack. */
+  gchar* fn;
+  int fd;
+
+  fn = g_conf_server_info_file();
+
+  if (!g_conf_file_exists(fn))
+    {
+      gchar* dir = g_conf_server_info_dir();
+
+      if (!g_conf_file_test(dir, G_CONF_FILE_ISDIR))
+        {
+          if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
+            {
+              g_free(dir);
+              return FALSE;
+            }
+          else
+            {
+              g_free(dir);
+            }
+        }
+    }
+
+  /* Can't O_TRUNC until we have the silly lock */
+  fd = open(fn, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+
+  g_free(fn);
+
+  if (fd < 0)
+    {
+      syslog(LOG_ERR, "Failed to open info file: %s", strerror(errno));
+      return FALSE;
+    }
+
+
+  if (write_lock(fd, 0, SEEK_SET, 0) < 0)
+    {
+      if (errno == EACCES || errno == EAGAIN)
+        {
+          syslog(LOG_ERR, "Lock on info file is held by another process.");
+          return FALSE;
+        }
+      else
+        {
+          syslog(LOG_ERR, "Couldn't get lock on the info file: %s",
+                 strerror(errno));
+          return FALSE;
+        }
+    }
+
+  if (ftruncate(fd, 0) < 0)
+    {
+      syslog(LOG_ERR, "Couldn't truncate info file: %s",
+             strerror(errno));
+      return FALSE;
+    }
+
+  /* This block writes the file contents */
+  {
+    gint len = strlen(ior);
+    gint written = 0;
+    gboolean done = FALSE;
+
+    while (!done)
+      {
+        written = write(fd, ior, len);
+         
+        if (written == len)
+          done = TRUE;
+        else if (written < 0)
+          {
+            if (errno != EINTR)
+              {
+                syslog(LOG_ERR, "Failed to write info file: %s", strerror(errno));
+                return FALSE;
+              }
+            else
+              continue;
+          }
+        else
+          {
+            g_assert(written < len);
+            ior += written;
+            len -= written;
+            g_assert(len == strlen(ior));
+          }
+      }
+  }
+      
+  /* Make the FD close-on-exec */
+  {
+    int val;
+
+    val = fcntl(fd, F_GETFD, 0);
+
+    if (val < 0)
+      {
+        syslog(LOG_ERR, "fcntl() F_GETFD failed for info file: %s", strerror(errno));
+        return FALSE;
+      }
+
+    val |= FD_CLOEXEC;
+
+    if (fcntl(fd, F_SETFD, val) < 0)
+      {
+        syslog(LOG_ERR, "fcntl() F_SETFD failed for info file: %s", strerror(errno));
+        return FALSE;
+      }
+  }
+
+  /* Don't close the file until we exit and implicitly kill the lock. */
+
+  return TRUE;
+}
 
 static void
 signal_handler (int signo)
@@ -330,6 +478,7 @@ main(int argc, char** argv)
   act.sa_handler = signal_handler;
   act.sa_mask    = empty_mask;
   act.sa_flags   = 0;
+  sigaction (SIGTERM,  &act, 0);
   sigaction (SIGINT,  &act, 0);
   sigaction (SIGHUP,  &act, 0);
   sigaction (SIGSEGV, &act, 0);
@@ -385,6 +534,12 @@ main(int argc, char** argv)
 
   CORBA_exception_init(&ev);
   orb = CORBA_ORB_init(&argc, argv, "orbit-local-orb", &ev);
+
+  if (orb == CORBA_OBJECT_NIL)
+    {
+      syslog(LOG_ERR, "Failed to get ORB reference");
+      exit(1);
+    }
   
   POA_ConfigServer__init(&poa_server_servant, &ev);
   
@@ -396,7 +551,7 @@ main(int argc, char** argv)
   server = PortableServer_POA_servant_to_reference(poa,
                                                    &poa_server_servant,
                                                    &ev);
-  if (server == NULL) 
+  if (server == CORBA_OBJECT_NIL) 
     {
       syslog(LOG_ERR, "Failed to get object reference for ConfigServer");
       return 1;
@@ -407,7 +562,7 @@ main(int argc, char** argv)
   /* Write IOR to a file (temporary hack, name server will be used eventually */
   if (!g_conf_server_write_info_file(ior))
     {
-      syslog(LOG_ERR, "Failed to write info file");
+      syslog(LOG_ERR, "Failed to write info file - maybe another gconfd is running. Exiting.");
       return 1;
     }
 
@@ -450,7 +605,8 @@ g_conf_main(void)
  * The listener table
  */
 
-static guint next_cnxn = 0;
+/* 0 is an error value */
+static guint next_cnxn = 1;
 
 static Listener* 
 listener_new(ConfigListener obj)
@@ -489,6 +645,10 @@ ltable_new(void)
   lt = g_new0(LTable, 1);
 
   lt->listeners = g_ptr_array_new();
+
+  /* Set initial size and init error value (0) to NULL */
+  g_ptr_array_set_size(lt->listeners, 5);
+  g_ptr_array_index(lt->listeners, 0) = NULL;
 
   lte = ltable_entry_new("/");
 
@@ -676,6 +836,7 @@ notify_listener_list(GList* list, const gchar* key, const CORBA_any* value)
 
           CORBA_exception_free(&ev);
         }
+
 
       tmp = g_list_next(tmp);
     }
