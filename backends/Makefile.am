@@ -4,9 +4,9 @@ INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
 
 backenddir = $(pkglibdir)/$(MAJOR_VERSION)
 
-backend_LTLIBRARIES = libgconfbackend-xml.la libgconfbackend-markup.la
+backend_LTLIBRARIES = libgconfbackend-xml.la libgconfbackend-oldxml.la
 
-libgconfbackend_xml_la_SOURCES = \
+libgconfbackend_oldxml_la_SOURCES = \
 	xml-cache.h		\
 	xml-cache.c		\
 	xml-dir.h		\
@@ -15,20 +15,20 @@ libgconfbackend_xml_la_SOURCES = \
 	xml-entry.c		\
 	xml-backend.c
 
-libgconfbackend_xml_la_LDFLAGS = -avoid-version -module -no-undefined
-libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
+libgconfbackend_oldxml_la_LDFLAGS = -avoid-version -module -no-undefined
+libgconfbackend_oldxml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
-libgconfbackend_markup_la_SOURCES = 	\
+libgconfbackend_xml_la_SOURCES = 	\
 	markup-backend.c		\
 	markup-tree.h			\
 	markup-tree.c
 
-libgconfbackend_markup_la_LDFLAGS = -avoid-version -module -no-undefined
-libgconfbackend_markup_la_LIBADD  = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
+libgconfbackend_xml_la_LDFLAGS = -avoid-version -module -no-undefined
+libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
 noinst_PROGRAMS = xml-test
 
-xml_test_SOURCES= $(libgconfbackend_xml_la_SOURCES) xml-test.c
+xml_test_SOURCES= $(libgconfbackend_oldxml_la_SOURCES) xml-test.c
 xml_test_LDADD = $(DEPENDENT_WITH_XML_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
 bin_PROGRAMS = gconf-merge-tree
