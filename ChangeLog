@@ -1,5 +1,11 @@
 2002-06-02  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-cache.c (cache_sync): avoid zombie directory cruft by 
+	aggressively redoing the resync anytime we delete a subdir, which
+	might enable a parent dir to also be deleted.
+
+2002-06-02  Havoc Pennington  <hp@pobox.com>
+
 	* backends/xml-cache.c (cache_lookup): don't leave a dir marked
 	nonexistent after creating it
 	(cache_set_nonexistent): remove hash entry _before_ freeing 

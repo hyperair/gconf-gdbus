@@ -113,6 +113,7 @@ typedef struct _SyncData SyncData;
 struct _SyncData {
   gboolean failed;
   Cache* dc;
+  gboolean deleted_some;
 };
 
 static void
@@ -155,6 +156,8 @@ cache_sync_foreach (Dir      *dir,
           cache_set_nonexistent (sd->dc, dir_get_name (dir),
                                  TRUE);
           dir_destroy (dir);
+
+          sd->deleted_some = TRUE;
         }
     }
 }
@@ -216,13 +219,17 @@ gboolean
 cache_sync (Cache    *cache,
             GError  **err)
 {
-  SyncData sd = { FALSE, NULL };
+  SyncData sd = { FALSE, NULL, FALSE };
   GSList *list;
   
   sd.dc = cache;
 
   gconf_log (GCL_DEBUG, "Syncing the dir cache");
 
+ redo:
+  sd.failed = FALSE;
+  sd.deleted_some = FALSE;
+  
   /* get a list of everything; we can't filter by
    * whether a sync is pending since we may make parents
    * of removed directories dirty when we sync their child
@@ -236,6 +243,13 @@ cache_sync (Cache    *cache,
 
   /* sync it all */
   g_slist_foreach (list, (GFunc) cache_sync_foreach, &sd);
+
+  /* If we deleted some subdirs, we may now be able to delete
+   * more parent dirs. So go ahead and do the sync again.
+   * Yeah this could be more efficient.
+   */
+  if (!sd.failed && sd.deleted_some)
+    goto redo;
   
   if (sd.failed && err && *err == NULL)
     {
