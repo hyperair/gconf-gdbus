@@ -22,6 +22,10 @@
 
 #include <glib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include "gconf-schema.h"
 #include "gconf-orbit.h"
 
@@ -113,7 +117,8 @@ gboolean     g_conf_is_initialized  (void);
 GConf*       g_conf_new             (void); /* Default source stack */
 /* returns NULL on error; requests single specified source */
 GConf*       g_conf_new_from_address(const gchar* address);
-void         g_conf_destroy         (GConf* conf);
+void         g_conf_unref           (GConf* conf);
+void         g_conf_ref             (GConf* conf);
 
 /* Returns ID of the notification */
 guint        g_conf_notify_add(GConf* conf,
@@ -193,6 +198,10 @@ gboolean     g_conf_set_bool    (GConf* conf, const gchar* key,
 gboolean     g_conf_set_schema  (GConf* conf, const gchar* key,
                                  GConfSchema* val);
 
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif
 

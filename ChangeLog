@@ -1,3 +1,18 @@
+1999-09-01  Havoc Pennington  <hp@pobox.com>
+
+	* configure.in: add gmodule check to AM_PATH_GLIB, add an error if
+	glib isn't found, use detected $XML_CONFIG to instead of
+	xml-config, AC_PATH_PROG orbit-config, check for C++ compiler
+	(since we'll have a C++ wrapper soon)
+
+	* gconf/Makefile.am: Assume GMODULE_CFLAGS are now included in
+	GLIB_CFLAGS since we fixed configure.in
+
+	* gconf/gconf.c, gconf/gconf.h: Reference count the GConf object, 
+	add extern "C" when using C++
+
+	* gconf/gconftool.c: unref instead of destroying the GConf object
+
 1999-08-31  Dave Camp  <campd@oit.edu>
 
 	* gconf/gconf.c (g_conf_is_initialized): New function.

@@ -1,4 +1,4 @@
-INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) \
+INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
 
 lib_LTLIBRARIES = libgconf-client.la
@@ -22,17 +22,17 @@ gconfinclude_HEADERS =     \
 gconfd_SOURCES = \
 	gconfd.c
 
-gconfd_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) libgconf-client.la
+gconfd_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
 
-# gconf_testclient_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) libgconf-client.la
+# gconf_testclient_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
 gconftool_SOURCES = \
 	gconftool.c
 
-gconftool_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) -lpopt libgconf-client.la
+gconftool_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) -lpopt libgconf-client.la
 
 $(CORBA_SOURCES): GConf.idl
 	orbit-idl GConf.idl
@@ -50,7 +50,7 @@ libgconf_client_la_SOURCES = \
 	gconf.c			\
 	$(CORBA_SOURCES)
 
-libgconf_client_la_LIBADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS)
+libgconf_client_la_LIBADD = $(GLIB_LIBS) $(ORBIT_LIBS)
 
 ## This is totally broken, I just don't feel like doing the configure.in work to 
 ## detect Gnome, etc. Depends on the non-GUI testclient to suck in its dependencies.

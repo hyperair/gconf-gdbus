@@ -715,7 +715,7 @@ main (int argc, char** argv)
 
   g_conf_clear_error();
   
-  g_conf_destroy(conf);
+  g_conf_unref(conf);
 
   if (shutdown_gconfd)
     g_conf_shutdown_daemon();

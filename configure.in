@@ -11,16 +11,13 @@ AM_MAINTAINER_MODE
 AM_ACLOCAL_INCLUDE(macros)
 
 AC_PROG_CC
+AC_PROG_CXX
 AC_ISC_POSIX
 AC_HEADER_STDC
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 
-AM_PATH_GLIB(1.2.0)
-GMODULE_CFLAGS=`glib-config --cflags gmodule`
-AC_SUBST(GMODULE_CFLAGS)
-GMODULE_LIBS=`glib-config --libs gmodule`
-AC_SUBST(GMODULE_LIBS)
+AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib not found),gmodule)
 
 GNOME_INIT
 
@@ -28,16 +25,20 @@ AC_PATH_PROG(XML_CONFIG,xml-config,no)
 if test x$XML_CONFIG = xno; then
   AC_MSG_ERROR(Couldn't find xml-config)
 fi
-XML_LIBS=`xml-config --libs`
-XML_CFLAGS=`xml-config --cflags`
+XML_LIBS=`$XML_CONFIG --libs`
+XML_CFLAGS=`$XML_CONFIG --cflags`
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
-ORBIT_LIBS=`orbit-config --libs server`
-ORBIT_CFLAGS=`orbit-config --cflags server`
+AC_PATH_PROG(ORBIT_CONFIG,orbit-config,no)
+if test x$ORBIT_CONFIG = xno; then
+  AC_MSG_ERROR(Couldn't find orbit-config)
+fi
+
+ORBIT_LIBS=`$ORBIT_CONFIG --libs server`
+ORBIT_CFLAGS=`$ORBIT_CONFIG --cflags server`
 AC_SUBST(ORBIT_LIBS)
 AC_SUBST(ORBIT_CFLAGS)
-AC_FYI("Orbit libs are: "$ORBIT_LIBS)
 
 ALL_LINGUAS="no"
 AM_GNU_GETTEXT
@@ -58,6 +59,8 @@ gconf-config
 gconf/Makefile
 backends/Makefile
 gconf-editor/Makefile
+wrappers/Makefile
+wrappers/gtk/Makefile
 intl/Makefile
 po/Makefile.in
 ],

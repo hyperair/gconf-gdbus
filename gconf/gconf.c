@@ -129,7 +129,7 @@ typedef struct _GConfPrivate GConfPrivate;
 
 struct _GConfPrivate {
   ConfigServer_Context context;
-
+  guint refcount;
 };
 
 typedef struct _GConfCnxn GConfCnxn;
@@ -177,7 +177,7 @@ static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long 
  *  Public Interface
  */
 
-GConf*       
+GConf*
 g_conf_new            (void)
 {
   GConfPrivate* priv;
@@ -185,6 +185,7 @@ g_conf_new            (void)
   priv = g_new0(GConfPrivate, 1);
 
   priv->context = ConfigServer_default_context;
+  priv->refcount = 1;
   
   return (GConf*) priv;
 }
@@ -231,60 +232,82 @@ g_conf_new_from_address(const gchar* address)
   priv = (GConfPrivate*)gconf;
 
   priv->context = ctx;
+  priv->refcount = 1;
   
   return gconf;
 }
 
-void         
-g_conf_destroy        (GConf* conf)
+void
+g_conf_ref             (GConf* conf)
 {
-  /* Remove all connections associated with this GConf */
-  GSList* removed;
-  GSList* tmp;
-  CORBA_Environment ev;
-  ConfigServer cs;
   GConfPrivate* priv = (GConfPrivate*)conf;
 
-  cs = g_conf_get_config_server(FALSE); /* don't restart it if down, since
-                                           the new one won't have the connections
-                                           to remove */
+  g_return_if_fail(priv != NULL);
+  g_return_if_fail(priv->refcount > 0);
 
-  if (cs == CORBA_OBJECT_NIL)
-    g_warning("Config server is down while destroying GConf %p", conf);
+  priv->refcount += 1;
+}
 
-  CORBA_exception_init(&ev);
+void         
+g_conf_unref        (GConf* conf)
+{
+  GConfPrivate* priv = (GConfPrivate*)conf;
 
-  removed = ctable_remove_by_conf(ctable, conf);
+  g_return_if_fail(priv != NULL);
+  g_return_if_fail(priv->refcount > 0);
+
+  priv->refcount -= 1;
   
-  tmp = removed;
-  while (tmp != NULL)
+  if (priv->refcount == 0)
     {
-      GConfCnxn* gcnxn = tmp->data;
+      /* Remove all connections associated with this GConf */
+      GSList* removed;
+      GSList* tmp;
+      CORBA_Environment ev;
+      ConfigServer cs;
 
-      if (cs != CORBA_OBJECT_NIL)
+
+      cs = g_conf_get_config_server(FALSE); /* don't restart it if down, since
+                                               the new one won't have the connections
+                                               to remove */
+
+      if (cs == CORBA_OBJECT_NIL)
+        g_warning("Config server is down while destroying GConf %p", conf);
+
+      CORBA_exception_init(&ev);
+
+      removed = ctable_remove_by_conf(ctable, conf);
+  
+      tmp = removed;
+      while (tmp != NULL)
         {
-          ConfigServer_remove_listener(cs,
-                                       priv->context,
-                                       gcnxn->server_id,
-                                       &ev);
-          
-          if (ev._major != CORBA_NO_EXCEPTION)
+          GConfCnxn* gcnxn = tmp->data;
+
+          if (cs != CORBA_OBJECT_NIL)
             {
-              /* Don't set error because realistically this doesn't matter to 
-                 clients */
-              g_warning("Failure removing listener %u from the config server: %s",
-                        (guint)gcnxn->server_id,
-                        CORBA_exception_id(&ev));
-              CORBA_exception_free(&ev);
+              ConfigServer_remove_listener(cs,
+                                           priv->context,
+                                           gcnxn->server_id,
+                                           &ev);
+          
+              if (ev._major != CORBA_NO_EXCEPTION)
+                {
+                  /* Don't set error because realistically this doesn't matter to 
+                     clients */
+                  g_warning("Failure removing listener %u from the config server: %s",
+                            (guint)gcnxn->server_id,
+                            CORBA_exception_id(&ev));
+                  CORBA_exception_free(&ev);
+                }
             }
+
+          g_conf_cnxn_destroy(gcnxn);
+
+          tmp = g_slist_next(tmp);
         }
 
-      g_conf_cnxn_destroy(gcnxn);
-
-      tmp = g_slist_next(tmp);
+      g_slist_free(removed);
     }
-
-  g_slist_free(removed);
 }
 
 guint
