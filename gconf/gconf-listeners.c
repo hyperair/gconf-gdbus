@@ -356,12 +356,11 @@ ltable_remove(LTable* lt, guint cnxn)
   if (index >= lt->listeners->len) /* robust even with checks off */
     return;
   
-  /* Remove from the flat table */
+  /* Lookup in the flat table */
   node = g_ptr_array_index(lt->listeners, index);
-  g_ptr_array_index(lt->listeners, index) = NULL;
 
   g_return_if_fail(node != NULL);
-  if (node == NULL)
+  if (node == NULL) /* a client is broken probably */
     return;
 
   g_assert(lt->tree != NULL);
@@ -404,8 +403,17 @@ ltable_remove(LTable* lt, guint cnxn)
       tmp = g_list_next(tmp);
     }
 
-  /* note that tmp is invalid, but should be nonzero */
-  g_return_if_fail(tmp != NULL);
+  /* note that tmp is invalid, but should be nonzero if
+     the connection was found. If the connection wasn't found,
+     then this is a duplicate index and we have a broken client;
+     we were saved by the uniqueness bits */
+
+  if (tmp == NULL)
+    return;
+
+  /* Since we did have a valid connection, set the
+     flat table entry to NULL */
+  g_ptr_array_index(lt->listeners, index) = NULL;
 
   /* Remove from the tree if this node is now pointless */
     {
