@@ -430,7 +430,7 @@ resolve_address (const gchar* address, GConfError** err)
         {
           gconf_set_error(err, GCONF_FAILED,
                           _("Could not make directory `%s': %s"),
-                          (gchar*)dir, strerror(errno));
+                          (gchar*)root_dir, strerror(errno));
           return NULL;
         }
     }
