@@ -4,6 +4,7 @@ DIST_SUBDIRS=tests $(SUBDIRS)
 
 EXTRA_DIST =            \
 	gconf-2.m4.in   \
+	gconf-zip.in	\
 	TODO            \
 	gconf-2.0.pc.in \
 	gtk-doc.make

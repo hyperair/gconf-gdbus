@@ -79,15 +79,7 @@ static int recursive_unset_mode = FALSE;
 static int do_version = FALSE;
 
 struct poptOption options[] = {
-  { 
-    NULL, 
-    '\0', 
-    POPT_ARG_INCLUDE_TABLE, 
-    poptHelpOptions,
-    0, 
-    N_("Help options"), 
-    NULL 
-  },
+  POPT_AUTOHELP
   {
     "set",
     's',
@@ -3985,12 +3977,15 @@ do_break_directory(GConfEngine* conf, const gchar** args)
 static int
 do_get_default_source (const gchar** args)
 {
+  gchar *filename;
   gchar *source;
   gchar buf[512];
   FILE *f;
 
   /* Try with $sysgconfdir/schema-install-source */
-  f = fopen(GCONF_ETCDIR"/schema-install-source", "r");
+  filename = g_strconcat (GCONF_ETCDIR, "/schema-install-source", NULL);
+  f = fopen(filename, "r");
+  g_free (filename);
 
   if (f != NULL)
     {

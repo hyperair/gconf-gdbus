@@ -29,7 +29,9 @@
 #include <errno.h>
 #include <time.h>
 #include <sys/types.h>
+#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
+#endif
 #include <sys/time.h>
 #include <unistd.h>
 
@@ -2803,16 +2805,20 @@ gconf_unique_key (void)
   static guint serial = 0;
   gchar* key;
   guint t, ut, p, u, r;
-  struct timeval tv;
+  GTimeVal tv;
   
-  gettimeofday(&tv, NULL);
+  g_get_current_time(&tv);
   
   t = tv.tv_sec;
   ut = tv.tv_usec;
 
   p = getpid();
   
+#ifdef HAVE_GETUID
   u = getuid();
+#else
+  u = 0;
+#endif
 
   /* don't bother to seed; if it's based on the time or any other
      changing info we can get, we may as well just use that changing

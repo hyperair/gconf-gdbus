@@ -39,6 +39,54 @@
 #include "gconf-sources.h"
 #include "GConfX.h"
 
+#ifdef G_OS_WIN32
+
+#define DEV_NULL "NUL:"
+
+#include <sys/stat.h>
+#include <io.h>
+
+#define mkdir(path, mode) _mkdir (path)
+
+#ifndef S_IRWXU
+#define S_IRWXU (_S_IREAD|_S_IWRITE|_S_IEXEC)
+#endif
+#ifndef S_IRWXG
+#define S_IRWXG (S_IRWXU >> 3)
+#endif
+#ifndef S_IRWXO
+#define S_IRWXO (S_IRWXU >> 6)
+#endif
+
+#undef GCONF_LOCALE_DIR
+extern const char *gconf_win32_locale_dir;
+#define GCONF_LOCALE_DIR gconf_win32_locale_dir
+
+#undef GCONF_CONFDIR
+extern const char *gconf_win32_confdir;
+#define GCONF_CONFDIR gconf_win32_confdir
+
+#undef GCONF_ETCDIR
+extern const char *gconf_win32_etcdir;
+#define GCONF_ETCDIR gconf_win32_etcdir
+
+#undef GCONF_SERVERDIR
+extern const char *gconf_win32_serverdir;
+#define GCONF_SERVERDIR gconf_win32_serverdir
+
+#undef GCONF_BACKEND_DIR
+extern const char *gconf_win32_backend_dir;
+#define GCONF_BACKEND_DIR gconf_win32_backend_dir
+
+char *gconf_win32_replace_prefix (const char *configure_time_path);
+const char *gconf_win32_get_home_dir (void);
+
+#else
+
+#define DEV_NULL "/dev/null"
+
+#endif
+
 #define GCONF_DATABASE_LIST_DELIM ';'
 
 gchar*       gconf_key_directory  (const gchar* key);
@@ -254,5 +302,3 @@ gboolean gconf_use_local_locks (void);
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */
-
-

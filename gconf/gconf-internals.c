@@ -36,6 +36,11 @@
 #include <time.h>
 #include <math.h>
 
+#ifdef G_OS_WIN32
+#include <windows.h>
+#include <share.h>
+#endif
+
 gboolean gconf_log_debug_messages = FALSE;
 
 static gboolean gconf_daemon_mode = FALSE;
@@ -715,6 +720,54 @@ unquote_string(gchar* s)
   return s;
 }
 
+#ifdef G_OS_WIN32
+
+/* Return the home directory with forward slashes instead of backslashes,
+ * also always return something, unlike g_get_home_dir(), which might return
+ * NULL on odd Win32 boxes.
+ */
+
+const char*
+gconf_win32_get_home_dir (void)
+{
+  static GQuark quark = 0;
+  const char *home;
+  char *home_copy, *p;
+
+  if (quark != 0)
+    return g_quark_to_string (quark);
+  
+  home = g_get_home_dir ();
+  if (home == NULL)
+    {
+      char windowsdir[1000];
+
+      if (!GetWindowsDirectory (windowsdir, sizeof (windowsdir)))
+	home = "C:\\";
+      else if (windowsdir[1] == ':' && windowsdir[2] == '\\')
+	{
+	  windowsdir[3] = '\0';
+	  home = windowsdir;
+	}
+      else
+	home = "C:\\";
+    }
+
+  home_copy = g_strdup (home);
+
+  /* Replace backslashes with forward slashes */
+  for (p = home_copy; *p; p++)
+    if (*p == '\\')
+      *p = '/';
+  
+  quark = g_quark_from_string (home_copy);
+  g_free (home_copy);
+
+  return g_quark_to_string (quark);
+}
+
+#endif
+
 static const gchar*
 get_variable(const gchar* varname)
 {
@@ -723,7 +776,11 @@ get_variable(const gchar* varname)
   */
   if (strcmp(varname, "HOME") == 0)
     {
-      return g_get_home_dir();
+#ifndef G_OS_WIN32
+      return g_get_home_dir ();
+#else
+      return gconf_win32_get_home_dir ();
+#endif
     }
   else if (strcmp(varname, "USER") == 0)
     {
@@ -867,6 +924,13 @@ gconf_load_source_path(const gchar* filename, GError** err)
           unq = unquote_string(s);
 
           varsubst = subst_variables (unq);
+#ifdef G_OS_WIN32
+	  {
+	    gchar *tem = varsubst;
+	    varsubst = gconf_win32_replace_prefix (varsubst);
+	    g_free (tem);
+	  }
+#endif
           included = gconf_load_source_path (varsubst, NULL);
           g_free (varsubst);
           
@@ -1086,15 +1150,19 @@ gconf_current_locale(void)
  * Log
  */
 
+#ifdef HAVE_SYSLOG_H
 #include <syslog.h>
+#endif
 
 void
 gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
 {
   gchar* msg;
-  gchar* convmsg;
   va_list args;
+#ifdef HAVE_SYSLOG_H
+  gchar* convmsg;
   int syslog_pri = LOG_DEBUG;
+#endif
 
   if (!gconf_log_debug_messages && 
       pri == GCL_DEBUG)
@@ -1104,6 +1172,7 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
   msg = g_strdup_vprintf(fmt, args);
   va_end (args);
 
+#ifdef HAVE_SYSLOG_H
   if (gconf_daemon_mode)
     {
       switch (pri)
@@ -1155,6 +1224,7 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
 	}
     }
   else
+#endif
     {
       switch (pri)
         {
@@ -2225,9 +2295,12 @@ gconf_lock_destroy (GConfLock* lock)
   g_free (lock);
 }
 
+#ifndef G_OS_WIN32
+
 static void
 set_close_on_exec (int fd)
 {
+#if defined (F_GETFD) && defined (FD_CLOEXEC)
   int val;
 
   val = fcntl (fd, F_GETFD, 0);
@@ -2241,8 +2314,12 @@ set_close_on_exec (int fd)
 
   if (fcntl (fd, F_SETFD, val) < 0)
     gconf_log (GCL_DEBUG, "couldn't F_SETFD: %s\n", g_strerror (errno));
+#endif
 }
 
+#endif
+
+#ifdef F_SETLK
 /* Your basic Stevens cut-and-paste */
 static int
 lock_reg (int fd, int cmd, int type, off_t offset, int whence, off_t len)
@@ -2256,15 +2333,25 @@ lock_reg (int fd, int cmd, int type, off_t offset, int whence, off_t len)
 
   return fcntl (fd, cmd, &lock);
 }
+#endif
 
+#ifdef F_SETLK
 #define lock_entire_file(fd) \
   lock_reg ((fd), F_SETLK, F_WRLCK, 0, SEEK_SET, 0)
 #define unlock_entire_file(fd) \
   lock_reg ((fd), F_SETLK, F_UNLCK, 0, SEEK_SET, 0)
+#elif defined (G_OS_WIN32)
+/* We don't use these macros */
+#else
+#warning Please implement proper locking
+#define lock_entire_file(fd) 0
+#define unlock_entire_file(fd) 0
+#endif
 
 static gboolean
 file_locked_by_someone_else (int fd)
 {
+#ifdef F_SETLK
   struct flock lock;
 
   lock.l_type = F_WRLCK;
@@ -2279,7 +2366,12 @@ file_locked_by_someone_else (int fd)
     return FALSE; /* we have the lock */
   else
     return TRUE; /* someone else has it */
+#else
+  return FALSE;
+#endif
 }
+
+#ifndef G_OS_WIN32
 
 static char*
 unique_filename (const char *directory)
@@ -2294,18 +2386,19 @@ unique_filename (const char *directory)
   return uniquefile;
 }
 
+#endif
+
 static int
 create_new_locked_file (const gchar *directory,
                         const gchar *filename,
                         GError     **err)
 {
   int fd;
-  char *uniquefile;
-  gboolean got_lock;
-  
-  got_lock = FALSE;
-  
-  uniquefile = unique_filename (directory);
+  gboolean got_lock = FALSE;
+
+#ifndef G_OS_WIN32
+
+  char *uniquefile = unique_filename (directory);
 
   fd = open (uniquefile, O_WRONLY | O_CREAT, 0700);
 
@@ -2357,6 +2450,14 @@ create_new_locked_file (const gchar *directory,
   unlink (uniquefile);
   g_free (uniquefile);
 
+#else
+
+  fd = _sopen (filename, O_WRONLY|O_CREAT|O_EXCL, SH_DENYWR, 0700);
+
+  got_lock = (fd >= 0);
+
+#endif
+
   if (!got_lock)
     {
       if (fd >= 0)
@@ -2383,6 +2484,9 @@ open_empty_locked_file (const gchar *directory,
    * existed; try to get the lock on the existing file, and if we can
    * get that lock, delete it, then start over.
    */
+
+#ifndef G_OS_WIN32
+
   fd = open (filename, O_RDWR, 0700);
   if (fd < 0)
     {
@@ -2411,6 +2515,20 @@ open_empty_locked_file (const gchar *directory,
   unlink (filename);
   close (fd);
   fd = -1;
+
+#else
+  /* Unlinking open files fail on Win32 */
+
+  if (remove (filename) == -1)
+    {
+      g_set_error (err,
+		   GCONF_ERROR,
+		   GCONF_ERROR_LOCK_FAILED,
+		   _("Failed to remove '%s': %s"),
+		   filename, g_strerror (errno));
+      return -1;
+    }
+#endif
 
   /* Now retry creating our file */
   fd = create_new_locked_file (directory, filename, err);
@@ -2642,6 +2760,8 @@ gconf_release_lock (GConfLock *lock,
       goto out;
     }
 
+#ifndef G_OS_WIN32
+
   /* To avoid annoying .nfs3435314513453145 files on unlink, which keep us
    * from removing the lock directory, we don't want to hold the
    * lockfile open after removing all links to it. But we can't
@@ -2676,12 +2796,16 @@ gconf_release_lock (GConfLock *lock,
       goto out;
     }
 
+#endif
+
   /* Now drop our lock */
   if (lock->lock_fd >= 0)
     {
       close (lock->lock_fd);
       lock->lock_fd = -1;
     }
+
+#ifndef G_OS_WIN32
 
   /* Now remove the temporary link we used to avoid .nfs351453 garbage */
   if (unlink (uniquefile) < 0)
@@ -2694,6 +2818,8 @@ gconf_release_lock (GConfLock *lock,
 
       goto out;
     }
+
+#endif
 
   /* And finally clean up the directory - this would have failed if
    * we had .nfs323423423 junk
@@ -2820,7 +2946,14 @@ gconf_get_daemon_dir (void)
       return s;
     }
   else
-    return g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
+    {
+#ifndef G_OS_WIN32
+      const char *home = g_get_home_dir ();
+#else
+      const char *home = gconf_win32_get_home_dir ();
+#endif
+      return g_strconcat (home, "/.gconfd", NULL);
+    }
 }
 
 char*
@@ -2835,6 +2968,8 @@ gconf_get_lock_dir (void)
   g_free (gconfd_dir);
   return lock_dir;
 }
+
+#if defined (F_SETFD) && defined (FD_CLOEXEC)
 
 static void
 set_cloexec (gint fd)
@@ -2858,6 +2993,12 @@ close_fd_func (gpointer data)
         set_cloexec (i);
     }
 }
+
+#else
+
+#define close_fd_func NULL
+
+#endif
 
 ConfigServer
 gconf_activate_server (gboolean  start_if_not_found,
@@ -2946,7 +3087,7 @@ gconf_activate_server (gboolean  start_if_not_found,
                           NULL,
                           G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
                           close_fd_func,
-                          p,
+			  p,
                           NULL,
                           &tmp_err))
         {

@@ -1,3 +1,75 @@
+2005-03-18  Tor Lillqvist  <tml@novell.com>
+
+	Port to Windows:
+	
+	* gconf-zip.in: New file, script to build zipfile-based
+	distribution for Windows.
+
+	* Makefile.am
+	* configure.in: Distribute and expand it.
+
+	* configure.in: Check for Win32, Define automake conditional
+	OS_WIN32. Force shared library (DLL) build on Windows. Check for
+	some more headers and functions.
+
+	* */*.c: Conditionalize on HAVE_SYSLOG_H, HAVE_SYS_WAIT_H,
+	HAVE_GETUID, HAVE_FSYNC, HAVE_FCHMOD, HAVE_SIGACTION, F_GETFD,
+	FD_CLOEXEC, F_SETLK, SIGBUS, SIGPIPE, SIGHUP, SIGUSR1, and ELOOP.
+	
+	* backends/Makefile.am: Explicitly link with INTLLIBS.
+
+	* backends/markup-tree.c (save_tree): Can't rename or remove open
+	files on Win32.
+
+	* backends/xml-backend.c: Don't use G_MODULE_EXPORT on Win32. If
+	we use it, only the functions thus marked will be exported, and
+	xml-test uses also other ones. Instead rely on the auto-export
+	feature.
+
+	* gconf/Makefile.am: Pass -DPREFIX=$(prefix). Include dllmain.c
+	on Win32.
+
+	* gconf/dllmain.c: New file. Used for installation location
+	independence.
+	(DllMain) DLL entry point. Automatically called when the DLL is
+	attached to a process. Deduce the run-time installation location
+	and construct run-time pathnames.
+	(gconf_win32_replace_prefix): New funcion. Replaces a
+	configure-time prefix in a pathname with the corresponding
+	end-user run-time installation prefix.
+
+	* gconf/gconf-internals.c (gconf_win32_get_home_dir): New
+	function, returns the home directory with forward
+	slashes. Guaranteed to return non-NULL, unlike GLib's
+	g_get_home_dir().
+	(get_variable, gconf_get_daemon_dir): Use gconf_win32_get_home_dir().
+	(gconf_load_source_path): Use gconf_win32_replace_prefix().
+	(create_new_locked_file, open_empty_locked_file,
+	gconf_release_lock): Use _sopen() to open file with locking on
+	Win32.
+	(close_fd_func): Not used on Win32, where there is no FD_CLOEXEC,
+	and a gspawn child setup function is run in the parent process
+	anyway.
+
+	* gconf/gconf-internals.h: mkdir() takes only one parameter on
+	Win32. S_IRWX{U,G,O} aren't in mingw's sys/stat.h. Use run-time
+	installation prefix instead of configure-time. Redefine the
+	GCONF_*DIR macros to refer to the variables from the dllmain.c
+	file. Use NUL: on Windows instead of /dev/null.
+
+	* gconf/gconf-sanity-check.c
+	* gconf/gconftool.c: Use POPT_AUTOHELP.
+
+	* gconf/gconf.c: Use g_get_current_time() instead of gettimeofday().
+
+	* gconf/gconfd.c (gconf_server_load, get_log_names): Use
+	gconf_win32_get_home_dir().
+	(signal_handler): If we don't HAVE_SIGACTION, use signal(), and
+	re-arm the signal handler.
+	(test_safe_tmp_dir): Can't open() a directory on Win32.
+	(get_log_names): Use g_build_filename() instead of
+	gconf_concat_dir_and_key() on all platforms.
+
 2005-03-14  Mark McLoughlin  <mark@skynet.ie>
 
 	* acinclude.m4: remove - we don't use anything from

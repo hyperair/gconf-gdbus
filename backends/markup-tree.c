@@ -3702,6 +3702,10 @@ save_tree (MarkupDir  *dir,
   int new_fd;
   char *filename;
   char *new_filename;
+#ifdef G_OS_WIN32
+  char *tmp_filename;
+  gboolean target_renamed;
+#endif
   char *err_str;
   gboolean write_failed;
   GSList *tmp;
@@ -3714,6 +3718,9 @@ save_tree (MarkupDir  *dir,
   filename = markup_dir_build_file_path (dir, save_as_subtree);
   
   new_filename = g_strconcat (filename, ".new", NULL);
+#ifdef G_OS_WIN32
+  tmp_filename = g_strconcat (filename, ".tmp", NULL);
+#endif
   new_fd = open (new_filename, O_WRONLY | O_CREAT, file_mode);
   if (new_fd < 0)
     {
@@ -3726,7 +3733,11 @@ save_tree (MarkupDir  *dir,
    * if there are no entries in it.
    */
   if (dir->entries == NULL && (!save_as_subtree || dir->subdirs == NULL))
-    goto done_writing;
+    {
+      close (new_fd);
+      new_fd = -1;
+      goto done_writing;
+    }
   
   f = fdopen (new_fd, "w");
   if (f == NULL)
@@ -3810,14 +3821,30 @@ save_tree (MarkupDir  *dir,
       goto out;
     }
   
+#ifdef G_OS_WIN32
+  remove (tmp_filename);
+  target_renamed = (rename (filename, tmp_filename) == 0);
+#endif
+
   if (rename (new_filename, filename) < 0)
     {
       err_str = g_strdup_printf (_("Failed to move temporary file \"%s\" to final location \"%s\": %s"),                                 
                                  new_filename, filename, g_strerror (errno));
+#ifdef G_OS_WIN32
+      if (target_renamed)
+	rename (tmp_filename, filename);
+#endif
       goto out;
     }
+#ifdef G_OS_WIN32
+  if (target_renamed)
+    remove (tmp_filename);
+#endif
   
  out:
+#ifdef G_OS_WIN32
+  g_free (tmp_filename);
+#endif
   g_free (new_filename);
   g_free (filename);
   

@@ -49,9 +49,13 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
+#ifdef HAVE_SYSLOG_H
 #include <syslog.h>
+#endif
 #include <time.h>
+#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
+#endif
 #include <locale.h>
 
 /* This makes hash table safer when debugging */
@@ -338,8 +342,14 @@ gconf_server_load_sources(void)
 
   if (addresses == NULL)
     {      
+#ifndef G_OS_WIN32
+      const char *home = g_get_home_dir ();
+#else
+      const char *home = gconf_win32_get_home_dir ();
+#endif
+
       /* Try using the default address xml:readwrite:$(HOME)/.gconf */
-      addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", g_get_home_dir(), "/.gconf", NULL));
+      addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", home, "/.gconf", NULL));
 
       gconf_log(GCL_DEBUG, _("No configuration files found, trying to use the default config source `%s'"), (char *)addresses->data);
     }
@@ -349,7 +359,7 @@ gconf_server_load_sources(void)
       /* We want to stay alive but do nothing, because otherwise every
          request would result in another failed gconfd being spawned.  
       */
-      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit %s"), GCONF_CONFDIR"/path");
+      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit %s%s"), GCONF_CONFDIR, "/path");
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(NULL, NULL);
 
@@ -413,19 +423,30 @@ signal_handler (int signo)
   switch (signo) {
     /* Fast cleanup only */
   case SIGSEGV:
+#ifdef SIGBUS
   case SIGBUS:
+#endif
   case SIGILL:
     enter_shutdown ();
+#ifndef G_OS_WIN32
     gconf_log (GCL_ERR,
                _("Received signal %d, dumping core. Please report a GConf bug."),
                signo);
     if (g_getenv ("DISPLAY"))
       gconf_handle_segv (signo);
+#else
+    gconf_log (GCL_ERR,
+               _("Received signal %d. Please report a GConf bug."),
+               signo);
+    gconf_handle_segv (signo);
+#endif
     abort ();
     break;
 
   case SIGFPE:
+#ifdef SIGPIPE
   case SIGPIPE:
+#endif
     /* Go ahead and try the full cleanup on these,
      * though it could well not work out very well.
      */
@@ -457,21 +478,28 @@ signal_handler (int signo)
       gconf_main_quit ();
     break;
 
+#ifdef SIGHUP
   case SIGHUP:
     --in_fatal;
 
     /* reload sources during next periodic_cleanup() */
     need_db_reload = TRUE;
     break;
+#endif
 
+#ifdef SIGUSR1
   case SIGUSR1:
     --in_fatal;
     
     /* it'd be nice to log a message here but it's not very safe, so */
     gconf_log_debug_messages = !gconf_log_debug_messages;
     break;
+#endif
     
   default:
+#ifndef HAVE_SIGACTION
+    signal (signo, signal_handler);
+#endif
     break;
   }
 }
@@ -526,9 +554,9 @@ static gboolean
 test_safe_tmp_dir (const char *dirname)
 {
   struct stat statbuf;
-  int fd;
 
-  fd = open (dirname, O_RDONLY);  
+#ifndef G_OS_WIN32
+  int fd = open (dirname, O_RDONLY);  
   if (fd < 0)
     {
       gconf_log (GCL_WARNING, _("Failed to open %s: %s"),
@@ -544,14 +572,19 @@ test_safe_tmp_dir (const char *dirname)
       return FALSE;
     }
   close (fd);
-  
+#else
+  /* Can't open() a directory on Win32 */
+  stat (dirname, &statbuf);
+#endif
+
+#ifdef HAVE_GETUID  
   if (statbuf.st_uid != getuid ())
     {
       gconf_log (GCL_WARNING, _("Owner of %s is not the current user"),
                  dirname);
       return FALSE;
     }
-  
+#endif
   if ((statbuf.st_mode & (S_IRWXG|S_IRWXO)) ||
       !S_ISDIR (statbuf.st_mode))
     {
@@ -566,8 +599,10 @@ test_safe_tmp_dir (const char *dirname)
 int 
 main(int argc, char** argv)
 {
+#ifdef HAVE_SIGACTION
   struct sigaction act;
   sigset_t empty_mask;
+#endif
   CORBA_Environment ev;
   CORBA_ORB orb;
   gchar* logname;
@@ -602,7 +637,7 @@ main(int argc, char** argv)
 
   if (!g_getenv ("GCONF_DEBUG_OUTPUT"))
     {
-      dev_null_fd = open ("/dev/null", O_RDWR);
+      dev_null_fd = open (DEV_NULL, O_RDWR);
       if (dev_null_fd >= 0)
         {
 	  dup2 (dev_null_fd, 0);
@@ -623,7 +658,9 @@ main(int argc, char** argv)
   username = g_get_user_name();
   logname = g_strdup_printf("gconfd (%s-%u)", username, (guint)getpid());
 
+#ifdef HAVE_SYSLOG_H
   openlog (logname, LOG_NDELAY, LOG_USER);
+#endif
 
   g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
                      log_handler, NULL);
@@ -645,6 +682,7 @@ main(int argc, char** argv)
 #endif
   
   /* Session setup */
+#ifdef HAVE_SIGACTION
   sigemptyset (&empty_mask);
   act.sa_handler = signal_handler;
   act.sa_mask    = empty_mask;
@@ -657,9 +695,25 @@ main(int argc, char** argv)
   sigaction (SIGSEGV, &act, NULL);
   sigaction (SIGABRT, &act, NULL);
   sigaction (SIGUSR1,  &act, NULL);
-  
+
   act.sa_handler = SIG_IGN;
   sigaction (SIGINT, &act, NULL);
+#else
+  signal (SIGTERM, signal_handler);
+  signal (SIGILL,  signal_handler);
+#ifdef SIGBUS
+  signal (SIGBUS,  signal_handler);
+#endif
+  signal (SIGFPE,  signal_handler);
+#ifdef SIGHUP
+  signal (SIGHUP,  signal_handler);
+#endif
+  signal (SIGSEGV, signal_handler);
+  signal (SIGABRT, signal_handler);
+#ifdef SIGUSR1
+  signal (SIGUSR1,  signal_handler);
+#endif
+#endif
 
   CORBA_exception_init(&ev);
 
@@ -692,7 +746,7 @@ main(int argc, char** argv)
   if (mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
     gconf_log (GCL_WARNING, _("Failed to create %s: %s"),
                gconfd_dir, g_strerror (errno));
-
+  
   if (!test_safe_tmp_dir (gconfd_dir))
     {
       err = g_error_new (GCONF_ERROR,
@@ -731,7 +785,7 @@ main(int argc, char** argv)
         {
           gconf_log (GCL_ERR, _("Failed to write byte to pipe file descriptor %d so client program may hang: %s"), write_byte_fd, g_strerror (errno));
         }
-
+      
       close (write_byte_fd);
     }
   
@@ -1323,8 +1377,14 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
 static void
 get_log_names (gchar **logdir, gchar **logfile)
 {
-  *logdir = gconf_concat_dir_and_key (g_get_home_dir (), ".gconfd");
-  *logfile = gconf_concat_dir_and_key (*logdir, "saved_state");
+#ifndef G_OS_WIN32
+      const char *home = g_get_home_dir ();
+#else
+      const char *home = gconf_win32_get_home_dir ();
+#endif
+
+  *logdir = g_build_filename (home, ".gconfd", NULL);
+  *logfile = g_build_filename (*logdir, "saved_state", NULL);
 }
 
 static void close_append_handle (void);

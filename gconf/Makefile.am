@@ -7,6 +7,7 @@ INCLUDES=								\
 	-I$(top_builddir)						\
 	$(DEPENDENT_WITH_XML_AND_GTK_CFLAGS) 				\
 	-DG_LOG_DOMAIN=\"GConf\"					\
+	-DPREFIX=\""$(prefix)"\"					\
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"			\
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\"			\
 	-DGCONF_CONFDIR=\""$(sysgconfdir)/$(MAJOR_VERSION)"\"		\
@@ -91,6 +92,10 @@ gconf_sanity_check_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_
 $(CORBA_SOURCECODE): $(srcdir)/GConfX.idl $(ORBIT_IDL)
 	$(ORBIT_IDL) $(srcdir)/GConfX.idl
 
+if OS_WIN32
+WIN32_SOURCECODE = dllmain.c
+endif
+
 libgconf_2_la_SOURCES = \
 	gconf-internals.c	\
 	gconf-internals.h	\
@@ -107,7 +112,8 @@ libgconf_2_la_SOURCES = \
 	gconf.c			\
 	gconf-client.c		\
 	gconf-enum-types.c	\
-	$(CORBA_SOURCECODE)
+	$(CORBA_SOURCECODE)	\
+	$(WIN32_SOURCECODE)
 
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) -no-undefined
 

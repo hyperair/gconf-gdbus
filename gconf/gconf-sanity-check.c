@@ -31,15 +31,7 @@
 #include <fcntl.h>
 
 struct poptOption options[] = {
-  { 
-    NULL, 
-    '\0', 
-    POPT_ARG_INCLUDE_TABLE, 
-    poptHelpOptions,
-    0, 
-    N_("Help options"), 
-    NULL 
-  },
+  POPT_AUTOHELP
   {
     NULL,
     '\0',
@@ -98,6 +90,7 @@ main (int argc, char** argv)
   return 0;
 }
 
+#ifdef F_SETLK
 /* Your basic Stevens cut-and-paste */
 static int
 lock_reg (int fd, int cmd, int type, off_t offset, int whence, off_t len)
@@ -111,11 +104,18 @@ lock_reg (int fd, int cmd, int type, off_t offset, int whence, off_t len)
 
   return fcntl (fd, cmd, &lock);
 }
+#endif
 
+#ifdef F_SETLK
 #define lock_entire_file(fd) \
   lock_reg ((fd), F_SETLK, F_WRLCK, 0, SEEK_SET, 0)
 #define unlock_entire_file(fd) \
   lock_reg ((fd), F_SETLK, F_UNLCK, 0, SEEK_SET, 0)
+#else
+#warning Please implement proper locking
+#define lock_entire_file(fd) 0
+#define unlock_entire_file(fd) 0
+#endif
 
 static gboolean
 check_file_locking (void)

@@ -803,7 +803,13 @@ blow_away_locks (const char *address)
 
 /* Initializer */
 
-G_MODULE_EXPORT const gchar*
+#ifndef G_OS_WIN32
+/* If we use G_MODULE_EXPORT, *only* thusly marked functions will be
+ * exported, and xml-test uses other ones, too.
+ */
+G_MODULE_EXPORT
+#endif
+const gchar*
 g_module_check_init (GModule *module)
 {
   gconf_log(GCL_DEBUG, _("Initializing XML backend module"));
@@ -814,7 +820,10 @@ g_module_check_init (GModule *module)
   return NULL;
 }
 
-G_MODULE_EXPORT GConfBackendVTable* 
+#ifndef G_OS_WIN32
+G_MODULE_EXPORT
+#endif
+GConfBackendVTable* 
 gconf_backend_get_vtable(void)
 {
   return &xml_vtable;

@@ -382,10 +382,12 @@ gconf_xml_doc_dump (FILE *fp, xmlDocPtr doc)
   if ((fd = fileno (fp)) == -1)
     return -1;
   
+#ifdef HAVE_FSYNC
   /* sync kernel-space buffers to disk */
   if (fsync (fd) == -1)
     return -1;
-  
+#endif
+
   return 0;
 }
 
@@ -477,6 +479,7 @@ dir_sync (Dir      *d,
             }
         }
 
+#ifdef HAVE_FCHMOD
       /* Set permissions on the new file */
       if (fchmod (fileno (outfile), d->file_mode) != 0)
         {
@@ -486,7 +489,8 @@ dir_sync (Dir      *d,
           
           retval = FALSE;
           goto failed_end_of_sync;
-        }  
+        }
+#endif
 
       if (gconf_xml_doc_dump (outfile, d->doc) < 0)
         {
@@ -510,6 +514,19 @@ dir_sync (Dir      *d,
 
       outfile = NULL;
       
+#ifndef HAVE_FCHMOD
+      /* Set permissions on the new file */
+      if (chmod (tmp_filename, d->file_mode) != 0)
+        {
+          gconf_set_error(err, GCONF_ERROR_FAILED, 
+                          _("Failed to set mode on `%s': %s"),
+                          tmp_filename, strerror(errno));
+          
+          retval = FALSE;
+          goto failed_end_of_sync;
+        }
+#endif
+
       old_existed = gconf_file_exists (d->xml_filename);
 
       if (old_existed)
@@ -968,7 +985,9 @@ dir_load_doc(Dir* d, GError** err)
           xml_already_exists = FALSE;
           break;
         case ENOTDIR:
+#ifdef ELOOP
         case ELOOP:
+#endif
         case EFAULT:
         case EACCES:
         case ENOMEM:
