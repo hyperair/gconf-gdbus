@@ -28,7 +28,7 @@
 #include <guile/gh.h>
 #include "gconf.h"
 
-void g_conf_init_scm(void);
+void gconf_init_scm(void);
 
 gboolean       scm_gconfp (SCM obj);
 GConfEngine*   scm2gconf  (SCM obj);

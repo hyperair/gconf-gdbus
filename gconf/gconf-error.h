@@ -56,13 +56,13 @@ struct _GConfError {
   GConfErrNo num;
 };
 
-GConfError*  g_conf_error_new      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-void         g_conf_error_destroy  (GConfError* err);
+GConfError*  gconf_error_new      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void         gconf_error_destroy  (GConfError* err);
 
 /* strerror() really shouldn't be used, because GConfError->str gives
  * a more complete error message.
  */
-const gchar* g_conf_strerror       (GConfErrNo en);
+const gchar* gconf_strerror       (GConfErrNo en);
 
 #ifdef __cplusplus
 }

@@ -52,7 +52,7 @@ static const gchar* err_msgs[11] = {
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);
 
 const gchar* 
-g_conf_strerror       (GConfErrNo en)
+gconf_strerror       (GConfErrNo en)
 {
   g_return_val_if_fail (en < n_err_msgs, NULL);
 
@@ -68,7 +68,7 @@ struct _GConfErrorPrivate {
 };
 
 GConfError*
-g_conf_error_new(GConfErrNo en, const gchar* fmt, ...)
+gconf_error_new(GConfErrNo en, const gchar* fmt, ...)
 {
   GConfErrorPrivate* priv;
   va_list args;
@@ -79,7 +79,7 @@ g_conf_error_new(GConfErrNo en, const gchar* fmt, ...)
   priv->str = g_strdup_vprintf(fmt, args);
   va_end (args);
 
-  priv->str = g_strconcat(g_conf_strerror(en), ":\n ", priv->str, NULL);
+  priv->str = g_strconcat(gconf_strerror(en), ":\n ", priv->str, NULL);
 
   priv->num = en;
 
@@ -87,7 +87,7 @@ g_conf_error_new(GConfErrNo en, const gchar* fmt, ...)
 }
 
 void
-g_conf_error_destroy(GConfError* err)
+gconf_error_destroy(GConfError* err)
 {
   GConfErrorPrivate* priv = (GConfErrorPrivate*)err;
 

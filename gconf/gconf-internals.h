@@ -26,8 +26,8 @@
 #include "gconf-value.h"
 #include "GConf.h"
 
-gchar*       g_conf_key_directory  (const gchar* key);
-const gchar* g_conf_key_key        (const gchar* key);
+gchar*       gconf_key_directory  (const gchar* key);
+const gchar* gconf_key_key        (const gchar* key);
 
 /* These file tests are in libgnome, I cut-and-pasted them */
 enum {
@@ -37,38 +37,38 @@ enum {
   G_CONF_FILE_ISDIR=1<<2
 };
 
-gboolean g_conf_file_test   (const gchar* filename, int test);
-gboolean g_conf_file_exists (const gchar* filename);
+gboolean gconf_file_test   (const gchar* filename, int test);
+gboolean gconf_file_exists (const gchar* filename);
 
-gchar*   g_conf_server_info_file(void);
-gchar*   g_conf_server_info_dir(void);
-gchar*   g_conf_read_server_ior(GConfError** err);
+gchar*   gconf_server_info_file(void);
+gchar*   gconf_server_info_dir(void);
+gchar*   gconf_read_server_ior(GConfError** err);
 
-GConfValue* g_conf_value_from_corba_value(const ConfigValue* value);
-ConfigValue*  corba_value_from_g_conf_value(GConfValue* value);
-void          fill_corba_value_from_g_conf_value(GConfValue* value, 
+GConfValue* gconf_value_from_corba_value(const ConfigValue* value);
+ConfigValue*  corba_value_from_gconf_value(GConfValue* value);
+void          fill_corba_value_from_gconf_value(GConfValue* value, 
                                                  ConfigValue* dest);
 ConfigValue*  invalid_corba_value();
 
-void          fill_corba_schema_from_g_conf_schema(GConfSchema* sc, 
+void          fill_corba_schema_from_gconf_schema(GConfSchema* sc, 
                                                    ConfigSchema* dest);
-ConfigSchema* corba_schema_from_g_conf_schema(GConfSchema* sc);
-GConfSchema*  g_conf_schema_from_corba_schema(const ConfigSchema* cs);
+ConfigSchema* corba_schema_from_gconf_schema(GConfSchema* sc);
+GConfSchema*  gconf_schema_from_corba_schema(const ConfigSchema* cs);
 
-const gchar* g_conf_value_type_to_string(GConfValueType type);
-GConfValueType g_conf_value_type_from_string(const gchar* str);
+const gchar* gconf_value_type_to_string(GConfValueType type);
+GConfValueType gconf_value_type_from_string(const gchar* str);
 
-gchar**       g_conf_load_source_path(const gchar* filename, GConfError** err);
+gchar**       gconf_load_source_path(const gchar* filename, GConfError** err);
 
 /* shouldn't be used in applications (although implemented in gconf.c) */
-void          g_conf_shutdown_daemon(GConfError** err);
-gboolean      g_conf_ping_daemon(void);
-gboolean      g_conf_spawn_daemon(GConfError** err);
+void          gconf_shutdown_daemon(GConfError** err);
+gboolean      gconf_ping_daemon(void);
+gboolean      gconf_spawn_daemon(GConfError** err);
 
-gchar*        g_conf_concat_key_and_dir(const gchar* dir, const gchar* key);
+gchar*        gconf_concat_key_and_dir(const gchar* dir, const gchar* key);
 
 /* Returns 0 on failure */
-gulong        g_conf_string_to_gulong(const gchar* str);
+gulong        gconf_string_to_gulong(const gchar* str);
 
 /* Log wrapper; we might want to not use syslog someday */
 typedef enum {
@@ -82,10 +82,10 @@ typedef enum {
   GCL_DEBUG
 } GConfLogPriority;
 
-void          g_conf_log      (GConfLogPriority pri, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void          gconf_log      (GConfLogPriority pri, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
 
 /* return FALSE and set error if the key is bad */
-gboolean      g_conf_key_check(const gchar* key, GConfError** err);
+gboolean      gconf_key_check(const gchar* key, GConfError** err);
 
 #endif
 

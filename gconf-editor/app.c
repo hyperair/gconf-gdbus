@@ -122,7 +122,7 @@ gce_app_new(const gchar* geometry)
 
   /* Setup config stuff */
 
-  ai->conf = g_conf_engine_new();
+  ai->conf = gconf_engine_new();
 
   /* Show widgets */
 

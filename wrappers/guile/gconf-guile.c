@@ -44,21 +44,21 @@ real_main(void* closure, int argc, char* argv[])
 {
   GConfError* err = NULL;
   
-  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
+  if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
       fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       exit(1);
     }
   
-  if (!g_conf_init(&err))
+  if (!gconf_init(&err))
     {
       fprintf(stderr, _("Failed to init gconf: %s\n"), err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       exit(1);
     }
   
-  g_conf_init_scm();
+  gconf_init_scm();
 
   gh_eval_str("(set-repl-prompt! \"gconf> \")");
 

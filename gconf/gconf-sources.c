@@ -50,21 +50,21 @@
 
 /* hack until we move server to new error model */
 static gboolean
-g_conf_key_check_hack(const gchar* key)
+gconf_key_check_hack(const gchar* key)
 {
   GConfError* err;
   gboolean retval;
 
-  g_conf_clear_error();
+  gconf_clear_error();
   
-  retval = g_conf_key_check(key, &err);
+  retval = gconf_key_check(key, &err);
 
   if (retval)
     return TRUE;
   else
     {
-      g_conf_set_error(err->num, err->str);
-      g_conf_error_destroy(err);
+      gconf_set_error(err->num, err->str);
+      gconf_error_destroy(err);
       return FALSE;
     }
 }
@@ -74,11 +74,11 @@ g_conf_key_check_hack(const gchar* key)
  */
 
 GConfSource* 
-g_conf_resolve_address(const gchar* address)
+gconf_resolve_address(const gchar* address)
 {
   GConfBackend* backend;
 
-  backend = g_conf_get_backend(address);
+  backend = gconf_get_backend(address);
 
   if (backend == NULL)
     return NULL;
@@ -86,11 +86,11 @@ g_conf_resolve_address(const gchar* address)
     {
       GConfSource* retval;
 
-      retval = g_conf_backend_resolve_address(backend, address);
+      retval = gconf_backend_resolve_address(backend, address);
 
       if (retval == NULL)
         {
-          g_conf_backend_unref(backend);
+          gconf_backend_unref(backend);
           return NULL;
         }
       else
@@ -106,32 +106,32 @@ g_conf_resolve_address(const gchar* address)
 }
 
 GConfValue*   
-g_conf_source_query_value      (GConfSource* source,
+gconf_source_query_value      (GConfSource* source,
                                 const gchar* key,
                                 gchar** schema_name)
 {
-  if (!g_conf_key_check_hack(key))
+  if (!gconf_key_check_hack(key))
     return NULL;
   
   return (*source->backend->vtable->query_value)(source, key, schema_name);
 }
 
 void          
-g_conf_source_set_value        (GConfSource* source,
+gconf_source_set_value        (GConfSource* source,
                                 const gchar* key,
                                 GConfValue* value)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(key != NULL);
 
-  if (!g_conf_key_check_hack(key))
+  if (!gconf_key_check_hack(key))
     return;
 
   g_assert(*key != '\0');
 
   if (key[1] == '\0')
     {
-      g_conf_set_error(G_CONF_IS_DIR, _("The '/' name can only be a directory, not a key"));
+      gconf_set_error(G_CONF_IS_DIR, _("The '/' name can only be a directory, not a key"));
       return;
     }
 
@@ -139,84 +139,84 @@ g_conf_source_set_value        (GConfSource* source,
 }
 
 void          
-g_conf_source_unset_value      (GConfSource* source,
+gconf_source_unset_value      (GConfSource* source,
                                 const gchar* key)
 {
-  if (!g_conf_key_check_hack(key))
+  if (!gconf_key_check_hack(key))
     return;
 
   (*source->backend->vtable->unset_value)(source, key);
 }
 
 GSList*      
-g_conf_source_all_entries         (GConfSource* source,
+gconf_source_all_entries         (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_key_check_hack(dir))
+  if (!gconf_key_check_hack(dir))
     return NULL;
 
   return (*source->backend->vtable->all_entries)(source, dir);
 }
 
 GSList*      
-g_conf_source_all_dirs          (GConfSource* source,
+gconf_source_all_dirs          (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_key_check_hack(dir))
+  if (!gconf_key_check_hack(dir))
     return NULL;
 
   return (*source->backend->vtable->all_subdirs)(source, dir);
 }
 
 gboolean
-g_conf_source_dir_exists        (GConfSource* source,
+gconf_source_dir_exists        (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_key_check_hack(dir))
+  if (!gconf_key_check_hack(dir))
     return FALSE;
   
   return (*source->backend->vtable->dir_exists)(source, dir);
 }
 
 void         
-g_conf_source_remove_dir        (GConfSource* source,
+gconf_source_remove_dir        (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_key_check_hack(dir))
+  if (!gconf_key_check_hack(dir))
     return;
 
   return (*source->backend->vtable->remove_dir)(source, dir);
 }
 
 void         
-g_conf_source_set_schema        (GConfSource* source,
+gconf_source_set_schema        (GConfSource* source,
                                  const gchar* key,
                                  const gchar* schema_key)
 {
-  if (!g_conf_key_check_hack(key))
+  if (!gconf_key_check_hack(key))
     return;
 
-  if (!g_conf_key_check_hack(schema_key))
+  if (!gconf_key_check_hack(schema_key))
     return;
   
   return (*source->backend->vtable->set_schema)(source, key, schema_key);
 }
 
 gboolean
-g_conf_source_sync_all         (GConfSource* source)
+gconf_source_sync_all         (GConfSource* source)
 {
   return (*source->backend->vtable->sync_all)(source);
 }
 
 void         
-g_conf_source_destroy (GConfSource* source)
+gconf_source_destroy (GConfSource* source)
 {
   GConfBackend* backend = source->backend;
 
   (*source->backend->vtable->destroy_source)(source);
 
   /* Remove ref held by the source. */
-  g_conf_backend_unref(backend);
+  gconf_backend_unref(backend);
 }
 
 
@@ -225,7 +225,7 @@ g_conf_source_destroy (GConfSource* source)
  */
 
 GConfSources* 
-g_conf_sources_new(gchar** addresses)
+gconf_sources_new(gchar** addresses)
 {
   GConfSources* sources;
   GSList* failed = NULL;
@@ -236,7 +236,7 @@ g_conf_sources_new(gchar** addresses)
     {
       GConfSource* source;
 
-      source = g_conf_resolve_address(*addresses);
+      source = gconf_resolve_address(*addresses);
 
       if (source != NULL)
         sources->sources = g_list_prepend(sources->sources, source);
@@ -266,7 +266,7 @@ g_conf_sources_new(gchar** addresses)
           tmp = g_slist_next(tmp);
         }
       
-      g_conf_set_error(G_CONF_BAD_ADDRESS, 
+      gconf_set_error(G_CONF_BAD_ADDRESS, 
                        _("The following config source addresses were not resolved:\n%s"),
                        all);
       g_free(all);
@@ -276,7 +276,7 @@ g_conf_sources_new(gchar** addresses)
 }
 
 void
-g_conf_sources_destroy(GConfSources* sources)
+gconf_sources_destroy(GConfSources* sources)
 {
   GList* tmp;
 
@@ -284,7 +284,7 @@ g_conf_sources_destroy(GConfSources* sources)
 
   while (tmp != NULL)
     {
-      g_conf_source_destroy(tmp->data);
+      gconf_source_destroy(tmp->data);
       
       tmp = g_list_next(tmp);
     }
@@ -295,7 +295,7 @@ g_conf_sources_destroy(GConfSources* sources)
 }
 
 GConfValue*   
-g_conf_sources_query_value (GConfSources* sources, 
+gconf_sources_query_value (GConfSources* sources, 
                             const gchar* key)
 {
   GList* tmp;
@@ -307,14 +307,14 @@ g_conf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
 
-      g_conf_clear_error();
+      gconf_clear_error();
 
-      val = g_conf_source_query_value(tmp->data, key,
+      val = gconf_source_query_value(tmp->data, key,
                                       schema_name ? NULL : &schema_name); /* once we have one, no more. */
 
       if (val == NULL)
         {
-          switch (g_conf_errno())
+          switch (gconf_errno())
             {
             case G_CONF_BAD_KEY:
               /* this isn't getting any better, so bail */
@@ -330,7 +330,7 @@ g_conf_sources_query_value (GConfSources* sources,
       else if (val->type == G_CONF_VALUE_IGNORE_SUBSEQUENT)
         {
           /* Bail now, instead of looking for the standard values */
-          g_conf_value_destroy(val);
+          gconf_value_destroy(val);
           break;
         }
       else
@@ -348,11 +348,11 @@ g_conf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
 
-      g_conf_clear_error();
+      gconf_clear_error();
       
-      val = g_conf_sources_query_value(sources, schema_name);
+      val = gconf_sources_query_value(sources, schema_name);
 
-      if (g_conf_errno() != G_CONF_SUCCESS)
+      if (gconf_errno() != G_CONF_SUCCESS)
         {
           g_free(schema_name);
           return NULL;
@@ -361,7 +361,7 @@ g_conf_sources_query_value (GConfSources* sources,
       if (val != NULL &&
           val->type != G_CONF_VALUE_SCHEMA)
         {
-          g_conf_set_error(G_CONF_FAILED, _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
+          gconf_set_error(G_CONF_FAILED, _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
                 
           g_free(schema_name);
 
@@ -369,10 +369,10 @@ g_conf_sources_query_value (GConfSources* sources,
         }
       else if (val != NULL)
         {
-          GConfValue* retval = g_conf_value_schema(val)->default_value;
+          GConfValue* retval = gconf_value_schema(val)->default_value;
           /* cheat, "unparent" the value to avoid a copy */
-          g_conf_value_schema(val)->default_value = NULL;
-          g_conf_value_destroy(val);
+          gconf_value_schema(val)->default_value = NULL;
+          gconf_value_destroy(val);
 
           g_free(schema_name);      
           
@@ -391,7 +391,7 @@ g_conf_sources_query_value (GConfSources* sources,
 
 
 void
-g_conf_sources_set_value   (GConfSources* sources,
+gconf_sources_set_value   (GConfSources* sources,
                             const gchar* key,
                             GConfValue* value)
 {
@@ -399,7 +399,7 @@ g_conf_sources_set_value   (GConfSources* sources,
 
   tmp = sources->sources;
 
-  g_conf_clear_error();
+  gconf_clear_error();
   
   while (tmp != NULL)
     {
@@ -408,7 +408,7 @@ g_conf_sources_set_value   (GConfSources* sources,
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
         {
           /* may set error, we just leave its setting */
-          g_conf_source_set_value(src, key, value);
+          gconf_source_set_value(src, key, value);
           return;
         }
       else
@@ -419,12 +419,12 @@ g_conf_sources_set_value   (GConfSources* sources,
           */
           GConfValue* val;
 
-          val = g_conf_source_query_value(tmp->data, key, NULL);
+          val = gconf_source_query_value(tmp->data, key, NULL);
           
           if (val != NULL)
             {
-              g_conf_value_destroy(val);
-              g_conf_set_error(G_CONF_OVERRIDDEN,
+              gconf_value_destroy(val);
+              gconf_set_error(G_CONF_OVERRIDDEN,
                                _("Value for `%s' set in a read-only source at the front of your configuration path."), key);
               return;
             }
@@ -435,7 +435,7 @@ g_conf_sources_set_value   (GConfSources* sources,
 }
 
 void
-g_conf_sources_unset_value   (GConfSources* sources,
+gconf_sources_unset_value   (GConfSources* sources,
                               const gchar* key)
 {
   /* We unset in every layer we can write to... */
@@ -449,7 +449,7 @@ g_conf_sources_unset_value   (GConfSources* sources,
 
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
         {
-          g_conf_source_unset_value(src, key);    /* we might pile up errors here */
+          gconf_source_unset_value(src, key);    /* we might pile up errors here */
         }
 
       /* FIXME we should probably set IGNORE_SUBSEQUENT in our first
@@ -460,7 +460,7 @@ g_conf_sources_unset_value   (GConfSources* sources,
 }
 
 gboolean
-g_conf_sources_dir_exists (GConfSources* sources,
+gconf_sources_dir_exists (GConfSources* sources,
                            const gchar* dir)
 {
   GList *tmp;
@@ -471,7 +471,7 @@ g_conf_sources_dir_exists (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
       
-      if (g_conf_source_dir_exists (src, dir)) 
+      if (gconf_source_dir_exists (src, dir)) 
         return TRUE;
 
       tmp = g_list_next(tmp);
@@ -481,7 +481,7 @@ g_conf_sources_dir_exists (GConfSources* sources,
 }
           
 void          
-g_conf_sources_remove_dir (GConfSources* sources,
+gconf_sources_remove_dir (GConfSources* sources,
                            const gchar* dir)
 {
   /* We remove in every layer we can write to... */
@@ -494,14 +494,14 @@ g_conf_sources_remove_dir (GConfSources* sources,
       GConfSource* src = tmp->data;
 
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
-        g_conf_source_remove_dir(src, dir);    /* might pile up errors */
+        gconf_source_remove_dir(src, dir);    /* might pile up errors */
       
       tmp = g_list_next(tmp);
     }
 }
 
 void         
-g_conf_sources_set_schema        (GConfSources* sources,
+gconf_sources_set_schema        (GConfSources* sources,
                                   const gchar* key,
                                   const gchar* schema_key)
 {
@@ -516,7 +516,7 @@ g_conf_sources_set_schema        (GConfSources* sources,
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
         {
           /* may set error, we just leave its setting */
-          g_conf_source_set_schema(src, key, schema_key);
+          gconf_source_set_schema(src, key, schema_key);
           return;
         }
 
@@ -541,7 +541,7 @@ hash_listify_func(gpointer key, gpointer value, gpointer user_data)
 }
 
 GSList*       
-g_conf_sources_all_entries   (GConfSources* sources,
+gconf_sources_all_entries   (GConfSources* sources,
                               const gchar* dir)
 {
   GList* tmp;
@@ -559,7 +559,7 @@ g_conf_sources_all_entries   (GConfSources* sources,
 
   if (sources->sources->next == NULL)
     {
-      return g_conf_source_all_entries(sources->sources->data, dir);
+      return gconf_source_all_entries(sources->sources->data, dir);
     }
 
   g_assert(g_list_length(sources->sources) > 1);
@@ -571,7 +571,7 @@ g_conf_sources_all_entries   (GConfSources* sources,
   while (tmp != NULL)
     {
       GConfSource* src = tmp->data;
-      GSList* pairs = g_conf_source_all_entries(src, dir);
+      GSList* pairs = gconf_source_all_entries(src, dir);
       GSList* iter = pairs;
 
       while (iter != NULL)
@@ -587,7 +587,7 @@ g_conf_sources_all_entries   (GConfSources* sources,
           if (previous != NULL)
             {
               /* Discard */
-              g_conf_entry_destroy(pair);
+              gconf_entry_destroy(pair);
             }
           else
             {
@@ -616,7 +616,7 @@ g_conf_sources_all_entries   (GConfSources* sources,
 }
 
 GSList*       
-g_conf_sources_all_dirs   (GConfSources* sources,
+gconf_sources_all_dirs   (GConfSources* sources,
                            const gchar* dir)
 {
   GList* tmp = NULL;
@@ -637,7 +637,7 @@ g_conf_sources_all_dirs   (GConfSources* sources,
 
   if (sources->sources->next == NULL)
     {
-      return g_conf_source_all_dirs(sources->sources->data, dir);
+      return gconf_source_all_dirs(sources->sources->data, dir);
     }
 
   g_assert(g_list_length(sources->sources) > 1);
@@ -649,7 +649,7 @@ g_conf_sources_all_dirs   (GConfSources* sources,
   while (tmp != NULL)
     {
       GConfSource* src = tmp->data;
-      GSList* subdirs = g_conf_source_all_dirs(src, dir);
+      GSList* subdirs = gconf_source_all_dirs(src, dir);
       GSList* iter = subdirs;
 
       while (iter != NULL)
@@ -694,7 +694,7 @@ g_conf_sources_all_dirs   (GConfSources* sources,
 }
 
 gboolean
-g_conf_sources_sync_all    (GConfSources* sources)
+gconf_sources_sync_all    (GConfSources* sources)
 {
   GList* tmp;
   gboolean failed = FALSE;
@@ -705,7 +705,7 @@ g_conf_sources_sync_all    (GConfSources* sources)
     {
       GConfSource* src = tmp->data;
 
-      if (!g_conf_source_sync_all(src))
+      if (!gconf_source_sync_all(src))
         failed = TRUE;
 
       tmp = g_list_next(tmp);

@@ -301,11 +301,11 @@
 
       <para>
         If an error is returned, you must free it with
-        <function>g_conf_error_destroy()</function>:
+        <function>gconf_error_destroy()</function>:
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_error_destroy</function>
+            <function>gconf_error_destroy</function>
           </funcdef>
           <paramdef>GConfError* <parameter>error</parameter></paramdef>          
         </funcsynopsis>
@@ -316,14 +316,14 @@
         <programlisting>
           GConfError* err = NULL;
 
-          if (!g_conf_init(&amp;err))
+          if (!gconf_init(&amp;err))
             {
               fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-              g_conf_error_destroy(err); 
+              gconf_error_destroy(err); 
               err = NULL;
             }
         </programlisting>
-        Note that <function>g_conf_init()</function> returns <symbol>TRUE</symbol> 
+        Note that <function>gconf_init()</function> returns <symbol>TRUE</symbol> 
         on success and <symbol>FALSE</symbol> on failure, other functions may have
         different ways of indicating success/failure.
       </para>
@@ -414,7 +414,7 @@
               <para>
                 Some routines in the GConf libraries impose type
                 constraints; if these are violated you get this error.
-                For example, <function>g_conf_get_int()</function>
+                For example, <function>gconf_get_int()</function>
                 returns this error if the value found is actually a 
                 string.
               </para>
@@ -456,7 +456,7 @@
       </para>
 
       <para>
-        <function>g_conf_error_new()</function> is used inside the
+        <function>gconf_error_new()</function> is used inside the
         library and inside the library backends. It is typically not
         useful to clients. It simply creates a new error, from a
         <symbol>GConfErrNo</symbol> and a
@@ -465,7 +465,7 @@
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_error_new</function>
+            <function>gconf_error_new</function>
           </funcdef>
           <paramdef>GConfErrNo <parameter>en</parameter></paramdef>
           <paramdef>const gchar*
@@ -486,20 +486,20 @@
         establishes a connection to the ORB (because CORBA is currently used to
         implement GConf, though clients never have to see this) and sets up some
         global data structures. The only argument to
-        <function>g_conf_init()</function> is a location to place any error that
-        occurs. <function>g_conf_init()</function> returns <symbol>TRUE</symbol>
+        <function>gconf_init()</function> is a location to place any error that
+        occurs. <function>gconf_init()</function> returns <symbol>TRUE</symbol>
         on success.
       </para>
 
       <para>
         Before initializing GConf, you can specify the ORB object reference to
         use when connecting to the configuration database; call
-        <function>g_conf_set_orb()</function>. You would normally use this if
+        <function>gconf_set_orb()</function>. You would normally use this if
         you are writing a GNOME application, and you want to use
         <function>gnome_CORBA_init()</function> to obtain your ORB reference. If
         you specify an ORB reference you must also initialize all CORBA-related
         stuff, such as the event loop integration and authentication. If you
-        don't call <function>g_conf_set_orb()</function>, GConf will set up
+        don't call <function>gconf_set_orb()</function>, GConf will set up
         these things for you. Note that GConf's default CORBA setup requires the
         glib main loop to be running, which happens automatically in GTK+
         programs.
@@ -523,7 +523,7 @@
 
       <para>
         You can check whether GConf is initialized with
-        <function>g_conf_initialized()</function>.
+        <function>gconf_initialized()</function>.
       </para>
 
     </sect2>
@@ -536,9 +536,9 @@
         connection to a configuration database. Normally the database
         you're connecting to is the user's default database, defined
         by all the sources in their configuration source
-        path. <function>g_conf_engine_new()</function> returns a handle to
+        path. <function>gconf_engine_new()</function> returns a handle to
         this default
-        database. <function>g_conf_engine_new_with_address()</function>
+        database. <function>gconf_engine_new_with_address()</function>
         returns a handle to a single configuration source; normally,
         applications will not use this function&mdash;it's intended
         for system configuration tools and the like.        
@@ -547,14 +547,14 @@
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>GConfEngine*
-            <function>g_conf_engine_new</function>
+            <function>gconf_engine_new</function>
           </funcdef>
           <void>
         </funcsynopsis>        
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>GConfEngine*
-            <function>g_conf_engine_new_with_address</function>
+            <function>gconf_engine_new_with_address</function>
           </funcdef>
           <paramdef>const gchar* <parameter>address</parameter></paramdef>
         </funcsynopsis>
@@ -566,13 +566,13 @@
         the count reaches 0. In other words, the creator of the
         <structname>GConfEngine</structname> "owns" a reference to the 
         <structname>GConfEngine</structname> as soon as it's created, and
-        should call <function>g_conf_engine_unref()</function> to make it 
-        go away. <function>g_conf_engine_ref()</function> creates a new
+        should call <function>gconf_engine_unref()</function> to make it 
+        go away. <function>gconf_engine_ref()</function> creates a new
         reference to the <structname>GConfEngine</structname>.
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_engine_ref</function>
+            <function>gconf_engine_ref</function>
           </funcdef>
           <paramdef>GConfEngine* <parameter>conf</parameter></paramdef>
         </funcsynopsis>
@@ -580,7 +580,7 @@
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_engine_unref</function>
+            <function>gconf_engine_unref</function>
           </funcdef>
           <paramdef>GConfEngine* <parameter>conf</parameter></paramdef>
         </funcsynopsis>
@@ -621,27 +621,27 @@ print_value(GConfValue* value)
   switch (value->type)
     {
     case G_CONF_VALUE_STRING:
-      printf("%s\n", g_conf_value_string(value));
+      printf("%s\n", gconf_value_string(value));
       break;
     case G_CONF_VALUE_INT:
-      printf("%d\n", g_conf_value_int(value));
+      printf("%d\n", gconf_value_int(value));
       break;
     case G_CONF_VALUE_FLOAT:
-      printf("%g\n", g_conf_value_float(value));
+      printf("%g\n", gconf_value_float(value));
       break;
     case G_CONF_VALUE_BOOL:
-      printf("%s", g_conf_value_bool(value) ? "true" : "false");
+      printf("%s", gconf_value_bool(value) ? "true" : "false");
       break;
     case G_CONF_VALUE_SCHEMA:
       {
-        GConfSchema* schema = g_conf_value_schema(value);
+        GConfSchema* schema = gconf_value_schema(value);
 
         /* printing a schema would be complicated, you get the idea */
       }
       break;
     case G_CONF_VALUE_LIST:
       {
-        GSList* iter = g_conf_value_list(value);
+        GSList* iter = gconf_value_list(value);
 
         while (iter != NULL)
           {
@@ -654,8 +654,8 @@ print_value(GConfValue* value)
       }
       break;
     case G_CONF_VALUE_PAIR:
-      print_value(g_conf_value_car(value));
-      print_value(g_conf_value_cdr(value));
+      print_value(gconf_value_car(value));
+      print_value(gconf_value_cdr(value));
       break;
     case G_CONF_VALUE_INVALID:
       /* This is used internally by GConf, you can also
@@ -680,17 +680,17 @@ print_value(GConfValue* value)
         <para>
           For convenience, here's a summary of the accessor macros:
           <programlisting>
-#define g_conf_value_string(x)    ((x)->d.string_data)
-#define g_conf_value_int(x)       ((x)->d.int_data)
-#define g_conf_value_float(x)     ((x)->d.float_data)
-#define g_conf_value_list_type(x) ((x)->d.list_data.type)
-#define g_conf_value_list(x)      ((x)->d.list_data.list)
-#define g_conf_value_car(x)       ((x)->d.pair_data.car)
-#define g_conf_value_cdr(x)       ((x)->d.pair_data.cdr)
-#define g_conf_value_bool(x)      ((x)->d.bool_data)
-#define g_conf_value_schema(x)    ((x)->d.schema_data)
+#define gconf_value_string(x)    ((x)->d.string_data)
+#define gconf_value_int(x)       ((x)->d.int_data)
+#define gconf_value_float(x)     ((x)->d.float_data)
+#define gconf_value_list_type(x) ((x)->d.list_data.type)
+#define gconf_value_list(x)      ((x)->d.list_data.list)
+#define gconf_value_car(x)       ((x)->d.pair_data.car)
+#define gconf_value_cdr(x)       ((x)->d.pair_data.cdr)
+#define gconf_value_bool(x)      ((x)->d.bool_data)
+#define gconf_value_schema(x)    ((x)->d.schema_data)
           </programlisting>
-          Note the <function>g_conf_value_list_type()</function>
+          Note the <function>gconf_value_list_type()</function>
           macro, which returns the type of the elements in a list.
           Lists must have a uniform type.
         </para>
@@ -701,16 +701,16 @@ print_value(GConfValue* value)
         <title>Creating/destroying a <structname>GConfValue</structname></title>
         <para>
           Often you obtain a <structname>GConfValue</structname> from 
-          a GConf routine such as <function>g_conf_get()</function>,
+          a GConf routine such as <function>gconf_get()</function>,
           but you can also create them yourself with
-          <function>g_conf_value_new()</function>.
-          <function>g_conf_value_new()</function> takes a single
+          <function>gconf_value_new()</function>.
+          <function>gconf_value_new()</function> takes a single
           argument, the type of the newly-created values. Value types
           can't be changed after creating the value.
           <funcsynopsis>
             <funcsynopsisinfo>#include &lt;gconf/gconf-value.h&gt;</funcsynopsisinfo>
             <funcdef>GConfValue*
-              <function>g_conf_value_new</function>
+              <function>gconf_value_new</function>
             </funcdef>
             <paramdef>GConfValueType <parameter>type</parameter></paramdef>
           </funcsynopsis>
@@ -728,21 +728,21 @@ print_value(GConfValue* value)
 
         <para>
           You can destroy a <structname>GConfValue</structname> with 
-          <function>g_conf_value_destroy()</function>, and copy one
-          with <function>g_conf_value_copy()</function>. The copy is a
+          <function>gconf_value_destroy()</function>, and copy one
+          with <function>gconf_value_copy()</function>. The copy is a
           deep copy, that is, child values contained in lists or 
           pairs are also copied.
           <funcsynopsis>
             <funcsynopsisinfo>#include &lt;gconf/gconf-value.h&gt;</funcsynopsisinfo>
             <funcdef>GConfValue*
-              <function>g_conf_value_copy</function>
+              <function>gconf_value_copy</function>
             </funcdef>
             <paramdef>GConfValue* <parameter>src</parameter></paramdef>
           </funcsynopsis>
           <funcsynopsis>
             <funcsynopsisinfo>#include &lt;gconf/gconf-value.h&gt;</funcsynopsisinfo>
             <funcdef>void
-              <function>g_conf_value_destroy</function>
+              <function>gconf_value_destroy</function>
             </funcdef>
             <paramdef>GConfValue* <parameter>value</parameter></paramdef>
           </funcsynopsis>
@@ -757,8 +757,8 @@ print_value(GConfValue* value)
 
       <para>
         The "raw" function for obtaining the value stored at a given key in the
-        configuration database is <function>g_conf_get()</function>.
-        <function>g_conf_get()</function> returns a
+        configuration database is <function>gconf_get()</function>.
+        <function>gconf_get()</function> returns a
         <structname>GConfValue</structname> if the key was set, or
         <symbol>NULL</symbol> if the key was unset or an error occurred. If an
         error occurred a <structname>GConfError</structname> is returned in the

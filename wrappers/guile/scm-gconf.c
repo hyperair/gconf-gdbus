@@ -71,7 +71,7 @@ free_gconf (SCM obj)
   static const scm_sizet size = sizeof(GConfEngine);
 
   gh_defer_ints();
-  g_conf_engine_unref(conf);
+  gconf_engine_unref(conf);
   gh_allow_ints();
 
   return size;
@@ -100,7 +100,7 @@ static scm_smobfuns gconf_funcs = {
  */
 
 SCM
-g_conf_value_to_scm(GConfValue* val)
+gconf_value_to_scm(GConfValue* val)
 {
   SCM retval = SCM_EOL;
 
@@ -113,16 +113,16 @@ g_conf_value_to_scm(GConfValue* val)
       /* EOL */
       break;
     case G_CONF_VALUE_STRING:
-      retval = gh_str02scm(g_conf_value_string(val));
+      retval = gh_str02scm(gconf_value_string(val));
       break;
     case G_CONF_VALUE_INT:
-      retval = gh_int2scm(g_conf_value_int(val));
+      retval = gh_int2scm(gconf_value_int(val));
       break;
     case G_CONF_VALUE_FLOAT:
-      retval = gh_double2scm(g_conf_value_float(val));
+      retval = gh_double2scm(gconf_value_float(val));
       break;
     case G_CONF_VALUE_BOOL:
-      retval = gh_bool2scm(g_conf_value_bool(val));
+      retval = gh_bool2scm(gconf_value_bool(val));
       break;
     case G_CONF_VALUE_SCHEMA:
       /* FIXME this is more complicated, we need a smob or something */
@@ -131,8 +131,8 @@ g_conf_value_to_scm(GConfValue* val)
       /* FIXME This is complicated too... */
       break;
     case G_CONF_VALUE_PAIR:
-      retval = gh_cons(g_conf_value_to_scm(g_conf_value_car(val)),
-                       g_conf_value_to_scm(g_conf_value_cdr(val)));
+      retval = gh_cons(gconf_value_to_scm(gconf_value_car(val)),
+                       gconf_value_to_scm(gconf_value_cdr(val)));
       break;
     default:
       g_warning("Unhandled type in %s", __FUNCTION__);
@@ -143,7 +143,7 @@ g_conf_value_to_scm(GConfValue* val)
 }
 
 GConfValue*
-g_conf_value_new_from_scm(SCM obj)
+gconf_value_new_from_scm(SCM obj)
 {
 
 
@@ -163,7 +163,7 @@ GCONF_PROC(make_gconf,"gconf-default",0,0,0,())
 {
   GConfEngine* conf;
   gh_defer_ints();
-  conf = g_conf_engine_new();
+  conf = gconf_engine_new();
   scm_done_malloc(sizeof(GConfEngine));
   gh_allow_ints();
   return gconf2scm(conf);
@@ -183,7 +183,7 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
   
   str = gh_scm2newstr(keyname, NULL);
   
-  val = g_conf_get(SCM_TO_GCONF(obj), str, &err);
+  val = gconf_get(SCM_TO_GCONF(obj), str, &err);
 
   free(str);
 
@@ -191,17 +191,17 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
       err != NULL)
     {
       printf("Failed: %s\n", err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
       retval = SCM_EOL;
     }
   else
     {
       /* NULL val is OK */
-      retval = g_conf_value_to_scm(val);
+      retval = gconf_value_to_scm(val);
       
       if (val)
-        g_conf_value_destroy(val);
+        gconf_value_destroy(val);
     }
       
   gh_allow_ints();
@@ -210,7 +210,7 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
 }
 
 void
-g_conf_init_scm()
+gconf_init_scm()
 {
   gconf_type_tag = scm_newsmob(&gconf_funcs);
 

@@ -29,10 +29,10 @@ extern "C" {
 
 /* This global error handling is used by gconfd */
 
-const gchar* g_conf_error          (void);
-GConfErrNo   g_conf_errno          (void);
-void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-void         g_conf_clear_error    (void); /* like setting errno to 0 */
+const gchar* gconf_error          (void);
+GConfErrNo   gconf_errno          (void);
+void         gconf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void         gconf_clear_error    (void); /* like setting errno to 0 */
 
 #ifdef __cplusplus
 }

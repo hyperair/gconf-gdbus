@@ -21,7 +21,7 @@
 
 
 GConfSchema*  
-g_conf_schema_new(void)
+gconf_schema_new(void)
 {
   GConfSchema* sc;
 
@@ -33,7 +33,7 @@ g_conf_schema_new(void)
 }
 
 void          
-g_conf_schema_destroy(GConfSchema* sc)
+gconf_schema_destroy(GConfSchema* sc)
 {
   if (sc->short_desc)
     g_free(sc->short_desc);
@@ -48,11 +48,11 @@ g_conf_schema_destroy(GConfSchema* sc)
 }
 
 GConfSchema*  
-g_conf_schema_copy(GConfSchema* sc)
+gconf_schema_copy(GConfSchema* sc)
 {
   GConfSchema* dest;
 
-  dest = g_conf_schema_new();
+  dest = gconf_schema_new();
 
   dest->type = sc->type;
 
@@ -66,13 +66,13 @@ g_conf_schema_copy(GConfSchema* sc)
 }
 
 void          
-g_conf_schema_set_type(GConfSchema* sc, GConfValueType type)
+gconf_schema_set_type(GConfSchema* sc, GConfValueType type)
 {
   sc->type = type;
 }
 
 void          
-g_conf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
+gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
 {
   if (sc->short_desc)
     g_free(sc->short_desc);
@@ -84,7 +84,7 @@ g_conf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
 }
 
 void          
-g_conf_schema_set_long_desc(GConfSchema* sc, const gchar* desc)
+gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc)
 {
   if (sc->long_desc)
     g_free(sc->long_desc);
@@ -96,7 +96,7 @@ g_conf_schema_set_long_desc(GConfSchema* sc, const gchar* desc)
 }
 
 void          
-g_conf_schema_set_owner(GConfSchema* sc, const gchar* owner)
+gconf_schema_set_owner(GConfSchema* sc, const gchar* owner)
 {
   if (sc->owner)
     g_free(sc->owner);
@@ -108,19 +108,19 @@ g_conf_schema_set_owner(GConfSchema* sc, const gchar* owner)
 }
 
 void
-g_conf_schema_set_default_value(GConfSchema* sc, GConfValue* val)
+gconf_schema_set_default_value(GConfSchema* sc, GConfValue* val)
 {
   if (sc->default_value != NULL)
-    g_conf_value_destroy(sc->default_value);
+    gconf_value_destroy(sc->default_value);
 
-  sc->default_value = g_conf_value_copy(val);
+  sc->default_value = gconf_value_copy(val);
 }
 
 void
-g_conf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val)
+gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val)
 {
   if (sc->default_value != NULL)
-    g_conf_value_destroy(sc->default_value);
+    gconf_value_destroy(sc->default_value);
 
   sc->default_value = val;
 }

@@ -36,11 +36,11 @@ struct _GConfEngine {
   gpointer dummy;
 };
   
-GConfEngine* g_conf_engine_new             (void); /* Default source stack */
+GConfEngine* gconf_engine_new             (void); /* Default source stack */
 /* returns NULL on error; requests single specified source */
-GConfEngine* g_conf_engine_new_from_address(const gchar* address, GConfError** err);
-void         g_conf_engine_unref           (GConfEngine* conf);
-void         g_conf_engine_ref             (GConfEngine* conf);
+GConfEngine* gconf_engine_new_from_address(const gchar* address, GConfError** err);
+void         gconf_engine_unref           (GConfEngine* conf);
+void         gconf_engine_ref             (GConfEngine* conf);
 
 #ifdef __cplusplus
 }

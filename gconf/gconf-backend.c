@@ -42,7 +42,7 @@
 
 
 gchar* 
-g_conf_address_backend(const gchar* address)
+gconf_address_backend(const gchar* address)
 {
   const gchar* end;
 
@@ -65,7 +65,7 @@ g_conf_address_backend(const gchar* address)
 }
 
 gchar* 
-g_conf_address_resource(const gchar* address)
+gconf_address_resource(const gchar* address)
 {
   const gchar* start;
 
@@ -85,7 +85,7 @@ g_conf_address_resource(const gchar* address)
 }
 
 gchar*       
-g_conf_backend_file(const gchar* address)
+gconf_backend_file(const gchar* address)
 {
   gchar* back;
   gchar* file;
@@ -93,7 +93,7 @@ g_conf_backend_file(const gchar* address)
 
   g_return_val_if_fail(address != NULL, NULL);
 
-  back = g_conf_address_backend(address);
+  back = gconf_address_backend(address);
 
   if (back == NULL)
     return NULL;
@@ -104,7 +104,7 @@ g_conf_backend_file(const gchar* address)
 
   g_free(back);
 
-  if (g_conf_file_exists(retval))
+  if (gconf_file_exists(retval))
     {
       g_free(file);
 
@@ -122,7 +122,7 @@ g_conf_backend_file(const gchar* address)
 
       g_free(dir);
       
-      if (g_conf_file_exists(retval))
+      if (gconf_file_exists(retval))
         {
           g_free(file);
           return retval;
@@ -130,7 +130,7 @@ g_conf_backend_file(const gchar* address)
 
       /* -- end debug only */
 
-      g_conf_log(GCL_ERR, _("No such file `%s'\n"), retval);
+      gconf_log(GCL_ERR, _("No such file `%s'\n"), retval);
 
       g_free(file);
       g_free(retval);
@@ -145,7 +145,7 @@ g_conf_backend_file(const gchar* address)
 static GHashTable* loaded_backends = NULL;
 
 GConfBackend* 
-g_conf_get_backend(const gchar* address)
+gconf_get_backend(const gchar* address)
 {
   GConfBackend* backend;
   gchar* name;
@@ -154,11 +154,11 @@ g_conf_get_backend(const gchar* address)
     {
       loaded_backends = g_hash_table_new(g_str_hash, g_str_equal);
     }
-  name = g_conf_address_backend(address);
+  name = gconf_address_backend(address);
       
   if (name == NULL)
     {
-      g_conf_log(GCL_ERR, _("Bad address `%s'"), address);
+      gconf_log(GCL_ERR, _("Bad address `%s'"), address);
       return NULL;
     }
 
@@ -167,14 +167,14 @@ g_conf_get_backend(const gchar* address)
   if (backend != NULL)
     {
       /* Returning a "copy" */
-      g_conf_backend_ref(backend);
+      gconf_backend_ref(backend);
       return backend;
     }
   else
     {
       gchar* file;
           
-      file = g_conf_backend_file(address);
+      file = gconf_backend_file(address);
           
       if (file != NULL)
         {
@@ -198,7 +198,7 @@ g_conf_get_backend(const gchar* address)
             }
 
           if (!g_module_symbol(module, 
-                               "g_conf_backend_get_vtable", 
+                               "gconf_backend_get_vtable", 
                                (gpointer*)&get_vtable))
             {
               g_free(name);
@@ -216,20 +216,20 @@ g_conf_get_backend(const gchar* address)
           g_hash_table_insert(loaded_backends, (gchar*)backend->name, backend);
           
           /* Returning a "copy" */
-          g_conf_backend_ref(backend);
+          gconf_backend_ref(backend);
 
           return backend;
         }
       else
         {
-          g_conf_log(GCL_ERR, _("Couldn't locate backend module for `%s'"), address);
+          gconf_log(GCL_ERR, _("Couldn't locate backend module for `%s'"), address);
           return NULL;
         }
     }
 }
 
 void          
-g_conf_backend_ref(GConfBackend* backend)
+gconf_backend_ref(GConfBackend* backend)
 {
   g_return_if_fail(backend != NULL);
 
@@ -237,7 +237,7 @@ g_conf_backend_ref(GConfBackend* backend)
 }
 
 void          
-g_conf_backend_unref(GConfBackend* backend)
+gconf_backend_unref(GConfBackend* backend)
 {
   g_return_if_fail(backend != NULL);
   g_return_if_fail(backend->refcount > 0);
@@ -266,7 +266,7 @@ g_conf_backend_unref(GConfBackend* backend)
  */
 
 GConfSource*  
-g_conf_backend_resolve_address (GConfBackend* backend, 
+gconf_backend_resolve_address (GConfBackend* backend, 
                                 const gchar* address)
 {
   return (*backend->vtable->resolve_address)(address);

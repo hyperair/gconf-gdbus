@@ -65,17 +65,17 @@ main(int argc, char** argv)
   bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
   textdomain(PACKAGE);
 
-  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
+  if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
       fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       return 1;
     }
 
-  if (!g_conf_init(&err))
+  if (!gconf_init(&err))
     {
       fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       return 1;
     }
 

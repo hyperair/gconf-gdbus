@@ -40,22 +40,22 @@ struct _GConfSchema {
   GConfValue* default_value; /* Default value of the key */
 };
 
-GConfSchema*  g_conf_schema_new(void);
-void          g_conf_schema_destroy(GConfSchema* sc);
-GConfSchema*  g_conf_schema_copy(GConfSchema* sc);
+GConfSchema*  gconf_schema_new(void);
+void          gconf_schema_destroy(GConfSchema* sc);
+GConfSchema*  gconf_schema_copy(GConfSchema* sc);
 
-void          g_conf_schema_set_type(GConfSchema* sc, GConfValueType type);
-void          g_conf_schema_set_short_desc(GConfSchema* sc, const gchar* desc);
-void          g_conf_schema_set_long_desc(GConfSchema* sc, const gchar* desc);
-void          g_conf_schema_set_owner(GConfSchema* sc, const gchar* owner);
-void          g_conf_schema_set_default_value(GConfSchema* sc, GConfValue* val);
-void          g_conf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val);
+void          gconf_schema_set_type(GConfSchema* sc, GConfValueType type);
+void          gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc);
+void          gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc);
+void          gconf_schema_set_owner(GConfSchema* sc, const gchar* owner);
+void          gconf_schema_set_default_value(GConfSchema* sc, GConfValue* val);
+void          gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val);
 
-#define       g_conf_schema_type(x) (x->type)
-#define       g_conf_schema_short_desc(x) ((const gchar*)(x)->short_desc)
-#define       g_conf_schema_long_desc(x)  ((const gchar*)(x)->long_desc)
-#define       g_conf_schema_owner(x)      ((const gchar*)(x)->owner)
-#define       g_conf_schema_default_value(x) ((x)->default_value)
+#define       gconf_schema_type(x) (x->type)
+#define       gconf_schema_short_desc(x) ((const gchar*)(x)->short_desc)
+#define       gconf_schema_long_desc(x)  ((const gchar*)(x)->long_desc)
+#define       gconf_schema_owner(x)      ((const gchar*)(x)->owner)
+#define       gconf_schema_default_value(x) ((x)->default_value)
 
 #endif
 

@@ -47,7 +47,7 @@
 #endif
 
 gchar*
-g_conf_key_directory  (const gchar* key)
+gconf_key_directory  (const gchar* key)
 {
   const gchar* end;
   gchar* retval;
@@ -57,7 +57,7 @@ g_conf_key_directory  (const gchar* key)
 
   if (end == NULL)
     {
-      g_conf_log(GCL_ERR, _("No '/' in key `%s'"), key);
+      gconf_log(GCL_ERR, _("No '/' in key `%s'"), key);
       return NULL;
     }
 
@@ -81,7 +81,7 @@ g_conf_key_directory  (const gchar* key)
 }
 
 const gchar*
-g_conf_key_key        (const gchar* key)
+gconf_key_key        (const gchar* key)
 {
   const gchar* end;
   
@@ -97,7 +97,7 @@ g_conf_key_key        (const gchar* key)
  */
 
 gboolean
-g_conf_file_exists (const gchar* filename)
+gconf_file_exists (const gchar* filename)
 {
   struct stat s;
   
@@ -107,7 +107,7 @@ g_conf_file_exists (const gchar* filename)
 }
 
 gboolean
-g_conf_file_test(const gchar* filename, int test)
+gconf_file_test(const gchar* filename, int test)
 {
   struct stat s;
   if(stat (filename, &s) != 0)
@@ -122,13 +122,13 @@ g_conf_file_test(const gchar* filename, int test)
 }
 
 gchar*   
-g_conf_server_info_file(void)
+gconf_server_info_file(void)
 {
   gchar* info_dir;
   gchar* entire_file;
   gchar* host_name = NULL;
 
-  info_dir = g_conf_server_info_dir();
+  info_dir = gconf_server_info_dir();
 
   entire_file = g_strconcat(info_dir, "/.gconfd.info", host_name ? "." : NULL, host_name, NULL);
 
@@ -138,7 +138,7 @@ g_conf_server_info_file(void)
 }
 
 gchar*   
-g_conf_server_info_dir(void)
+gconf_server_info_dir(void)
 {
   const gchar* home_dir;
 
@@ -148,19 +148,19 @@ g_conf_server_info_dir(void)
 }
 
 gchar* 
-g_conf_read_server_ior(GConfError** err)
+gconf_read_server_ior(GConfError** err)
 {
   int fd;
   gchar* info_file;
 
-  info_file = g_conf_server_info_file();
+  info_file = gconf_server_info_file();
 
   /* We could detect this if the open fails, but 
      the file not existing isn't an error, failure 
      to open it is an error, and we want to distinguish the 
      cases.
   */
-  if (!g_conf_file_exists(info_file))
+  if (!gconf_file_exists(info_file))
     {
       g_free(info_file);
       return NULL;
@@ -173,7 +173,7 @@ g_conf_read_server_ior(GConfError** err)
   if (fd < 0)
     {
       if (err)
-        *err = g_conf_error_new(G_CONF_FAILED, _("info file open failed: %s"), strerror(errno));
+        *err = gconf_error_new(G_CONF_FAILED, _("info file open failed: %s"), strerror(errno));
       return NULL;
     }
   else
@@ -188,7 +188,7 @@ g_conf_read_server_ior(GConfError** err)
       if (bytes_read < 0)
         {
           if (err)
-            *err = g_conf_error_new(G_CONF_FAILED, _("IOR read failed: %s"), strerror(errno));
+            *err = gconf_error_new(G_CONF_FAILED, _("IOR read failed: %s"), strerror(errno));
           return NULL;
         }
       else
@@ -200,7 +200,7 @@ g_conf_read_server_ior(GConfError** err)
 }
 
 GConfValue* 
-g_conf_value_from_corba_value(const ConfigValue* value)
+gconf_value_from_corba_value(const ConfigValue* value)
 {
   GConfValue* gval;
   GConfValueType type = G_CONF_VALUE_INVALID;
@@ -232,29 +232,29 @@ g_conf_value_from_corba_value(const ConfigValue* value)
       type = G_CONF_VALUE_PAIR;
       break;
     default:
-      g_conf_log(GCL_DEBUG, "Invalid type in %s", __FUNCTION__);
+      gconf_log(GCL_DEBUG, "Invalid type in %s", __FUNCTION__);
       return NULL;
     }
 
-  gval = g_conf_value_new(type);
+  gval = gconf_value_new(type);
 
   switch (gval->type)
     {
     case G_CONF_VALUE_INT:
-      g_conf_value_set_int(gval, value->_u.int_value);
+      gconf_value_set_int(gval, value->_u.int_value);
       break;
     case G_CONF_VALUE_STRING:
-      g_conf_value_set_string(gval, value->_u.string_value);
+      gconf_value_set_string(gval, value->_u.string_value);
       break;
     case G_CONF_VALUE_FLOAT:
-      g_conf_value_set_float(gval, value->_u.float_value);
+      gconf_value_set_float(gval, value->_u.float_value);
       break;
     case G_CONF_VALUE_BOOL:
-      g_conf_value_set_bool(gval, value->_u.bool_value);
+      gconf_value_set_bool(gval, value->_u.bool_value);
       break;
     case G_CONF_VALUE_SCHEMA:
-      g_conf_value_set_schema_nocopy(gval, 
-                                     g_conf_schema_from_corba_schema(&(value->_u.schema_value)));
+      gconf_value_set_schema_nocopy(gval, 
+                                     gconf_schema_from_corba_schema(&(value->_u.schema_value)));
       break;
     case G_CONF_VALUE_LIST:
       {
@@ -264,16 +264,16 @@ g_conf_value_from_corba_value(const ConfigValue* value)
         switch (value->_u.list_value.list_type)
           {
           case BIntVal:
-            g_conf_value_set_list_type(gval, G_CONF_VALUE_INT);
+            gconf_value_set_list_type(gval, G_CONF_VALUE_INT);
             break;
           case BBoolVal:
-            g_conf_value_set_list_type(gval, G_CONF_VALUE_BOOL);
+            gconf_value_set_list_type(gval, G_CONF_VALUE_BOOL);
             break;
           case BFloatVal:
-            g_conf_value_set_list_type(gval, G_CONF_VALUE_FLOAT);
+            gconf_value_set_list_type(gval, G_CONF_VALUE_FLOAT);
             break;
           case BStringVal:
-            g_conf_value_set_list_type(gval, G_CONF_VALUE_STRING);
+            gconf_value_set_list_type(gval, G_CONF_VALUE_STRING);
             break;
           case BInvalidVal:
             break;
@@ -292,9 +292,9 @@ g_conf_value_from_corba_value(const ConfigValue* value)
                the CORBA and C specs kick in, not sure we are guaranteed
                to be able to do this.
             */
-            val = g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[i]);
+            val = gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[i]);
 
-            if (val->type != g_conf_value_list_type(gval))
+            if (val->type != gconf_value_list_type(gval))
               g_warning("Incorrect type for list element in %s", __FUNCTION__);
             else
               list = g_slist_prepend(list, val);
@@ -304,18 +304,18 @@ g_conf_value_from_corba_value(const ConfigValue* value)
         
         list = g_slist_reverse(list);
             
-        g_conf_value_set_list_nocopy(gval, list);
+        gconf_value_set_list_nocopy(gval, list);
       }
       break;
     case G_CONF_VALUE_PAIR:
       {
         g_return_val_if_fail(value->_u.pair_value._length == 2, gval);
         
-        g_conf_value_set_car_nocopy(gval,
-                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[0]));
+        gconf_value_set_car_nocopy(gval,
+                                    gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[0]));
 
-        g_conf_value_set_cdr_nocopy(gval,
-                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[1]));
+        gconf_value_set_cdr_nocopy(gval,
+                                    gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[1]));
       }
       break;
     default:
@@ -327,7 +327,7 @@ g_conf_value_from_corba_value(const ConfigValue* value)
 }
 
 void          
-fill_corba_value_from_g_conf_value(GConfValue* value, 
+fill_corba_value_from_gconf_value(GConfValue* value, 
                                    ConfigValue* cv)
 {
   if (value == NULL)
@@ -340,23 +340,23 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
     {
     case G_CONF_VALUE_INT:
       cv->_d = IntVal;
-      cv->_u.int_value = g_conf_value_int(value);
+      cv->_u.int_value = gconf_value_int(value);
       break;
     case G_CONF_VALUE_STRING:
       cv->_d = StringVal;
-      cv->_u.string_value = CORBA_string_dup(g_conf_value_string(value));
+      cv->_u.string_value = CORBA_string_dup(gconf_value_string(value));
       break;
     case G_CONF_VALUE_FLOAT:
       cv->_d = FloatVal;
-      cv->_u.float_value = g_conf_value_float(value);
+      cv->_u.float_value = gconf_value_float(value);
       break;
     case G_CONF_VALUE_BOOL:
       cv->_d = BoolVal;
-      cv->_u.bool_value = g_conf_value_bool(value);
+      cv->_u.bool_value = gconf_value_bool(value);
       break;
     case G_CONF_VALUE_SCHEMA:
       cv->_d = SchemaVal;
-      fill_corba_schema_from_g_conf_schema(g_conf_value_schema(value),
+      fill_corba_schema_from_gconf_schema(gconf_value_schema(value),
                                            &cv->_u.schema_value);
       break;
     case G_CONF_VALUE_LIST:
@@ -366,7 +366,7 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
         
         cv->_d = ListVal;
 
-        list = g_conf_value_list(value);
+        list = gconf_value_list(value);
 
         n = g_slist_length(list);
 
@@ -376,7 +376,7 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
         cv->_u.list_value.seq._maximum = n;
         CORBA_sequence_set_release(&cv->_u.list_value.seq, TRUE);
         
-        switch (g_conf_value_list_type(value))
+        switch (gconf_value_list_type(value))
           {
           case G_CONF_VALUE_INT:
             cv->_u.list_value.list_type = BIntVal;
@@ -408,7 +408,7 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
         while (list != NULL)
           {
             /* That dubious ConfigBasicValue->ConfigValue cast again */
-            fill_corba_value_from_g_conf_value((GConfValue*)list->data,
+            fill_corba_value_from_gconf_value((GConfValue*)list->data,
                                                (ConfigValue*)&cv->_u.list_value.seq._buffer[i]);
 
             list = g_slist_next(list);
@@ -427,9 +427,9 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
         CORBA_sequence_set_release(&cv->_u.pair_value, TRUE);
         
         /* dubious cast */
-        fill_corba_value_from_g_conf_value(g_conf_value_car(value),
+        fill_corba_value_from_gconf_value(gconf_value_car(value),
                                            (ConfigValue*)&cv->_u.pair_value._buffer[0]);
-        fill_corba_value_from_g_conf_value(g_conf_value_cdr(value),
+        fill_corba_value_from_gconf_value(gconf_value_cdr(value),
                                            (ConfigValue*)&cv->_u.pair_value._buffer[1]);
       }
       break;
@@ -439,19 +439,19 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
       break;
     default:
       cv->_d = InvalidVal;
-      g_conf_log(GCL_DEBUG, "Unknown type in %s", __FUNCTION__);
+      gconf_log(GCL_DEBUG, "Unknown type in %s", __FUNCTION__);
       break;
     }
 }
 
 ConfigValue*  
-corba_value_from_g_conf_value(GConfValue* value)
+corba_value_from_gconf_value(GConfValue* value)
 {
   ConfigValue* cv;
 
   cv = ConfigValue__alloc();
 
-  fill_corba_value_from_g_conf_value(value, cv);
+  fill_corba_value_from_gconf_value(value, cv);
 
   return cv;
 }
@@ -469,7 +469,7 @@ invalid_corba_value()
 }
 
 void          
-fill_corba_schema_from_g_conf_schema(GConfSchema* sc, 
+fill_corba_schema_from_gconf_schema(GConfSchema* sc, 
                                      ConfigSchema* cs)
 {
   switch (sc->type)
@@ -509,19 +509,19 @@ fill_corba_schema_from_g_conf_schema(GConfSchema* sc,
 }
 
 ConfigSchema* 
-corba_schema_from_g_conf_schema(GConfSchema* sc)
+corba_schema_from_gconf_schema(GConfSchema* sc)
 {
   ConfigSchema* cs;
 
   cs = ConfigSchema__alloc();
 
-  fill_corba_schema_from_g_conf_schema(sc, cs);
+  fill_corba_schema_from_gconf_schema(sc, cs);
 
   return cs;
 }
 
 GConfSchema*  
-g_conf_schema_from_corba_schema(const ConfigSchema* cs)
+gconf_schema_from_corba_schema(const ConfigSchema* cs)
 {
   GConfSchema* sc;
   GConfValueType type = G_CONF_VALUE_INVALID;
@@ -556,19 +556,19 @@ g_conf_schema_from_corba_schema(const ConfigSchema* cs)
       break;
     }
 
-  sc = g_conf_schema_new();
+  sc = gconf_schema_new();
 
-  g_conf_schema_set_type(sc, type);
+  gconf_schema_set_type(sc, type);
 
-  g_conf_schema_set_short_desc(sc, cs->short_desc);
-  g_conf_schema_set_long_desc(sc, cs->long_desc);
-  g_conf_schema_set_owner(sc, cs->owner);
+  gconf_schema_set_short_desc(sc, cs->short_desc);
+  gconf_schema_set_long_desc(sc, cs->long_desc);
+  gconf_schema_set_owner(sc, cs->owner);
 
   return sc;
 }
 
 const gchar* 
-g_conf_value_type_to_string(GConfValueType type)
+gconf_value_type_to_string(GConfValueType type)
 {
   switch (type)
     {
@@ -604,7 +604,7 @@ g_conf_value_type_to_string(GConfValueType type)
 }
 
 GConfValueType 
-g_conf_value_type_from_string(const gchar* type_str)
+gconf_value_type_from_string(const gchar* type_str)
 {
   if (strcmp(type_str, "int") == 0)
     return G_CONF_VALUE_INT;
@@ -762,7 +762,7 @@ subst_variables(const gchar* src)
 }
 
 gchar**       
-g_conf_load_source_path(const gchar* filename, GConfError** err)
+gconf_load_source_path(const gchar* filename, GConfError** err)
 {
   FILE* f;
   GSList* l = NULL;
@@ -776,7 +776,7 @@ g_conf_load_source_path(const gchar* filename, GConfError** err)
   if (f == NULL)
     {
       if (err)
-        *err = g_conf_error_new(G_CONF_FAILED,
+        *err = gconf_error_new(G_CONF_FAILED,
                                 _("Couldn't open path file `%s': %s\n"), 
                                 filename, 
                                 strerror(errno));
@@ -807,7 +807,7 @@ g_conf_load_source_path(const gchar* filename, GConfError** err)
 
           unq = unquote_string(s);
 
-          included = g_conf_load_source_path(unq, NULL);
+          included = gconf_load_source_path(unq, NULL);
 
           if (included != NULL)
             {
@@ -832,7 +832,7 @@ g_conf_load_source_path(const gchar* filename, GConfError** err)
           
           if (*varsubst != '\0') /* Drop lines with just two quote marks or something */
             {
-              g_conf_log(GCL_INFO, _("Adding source `%s'\n"), varsubst);
+              gconf_log(GCL_INFO, _("Adding source `%s'\n"), varsubst);
               l = g_slist_prepend(l, g_strdup(varsubst));
             }
           g_free(varsubst);
@@ -843,7 +843,7 @@ g_conf_load_source_path(const gchar* filename, GConfError** err)
     {
       /* This should basically never happen */
       if (err)
-        *err = g_conf_error_new(G_CONF_FAILED,
+        *err = gconf_error_new(G_CONF_FAILED,
                                 _("Read error on file `%s': %s\n"), 
                                 filename,
                                 strerror(errno));
@@ -888,7 +888,7 @@ g_conf_load_source_path(const gchar* filename, GConfError** err)
    or dir and subdir.
 */
 gchar*        
-g_conf_concat_key_and_dir(const gchar* dir, const gchar* key)
+gconf_concat_key_and_dir(const gchar* dir, const gchar* key)
 {
   guint dirlen;
   guint keylen;
@@ -931,7 +931,7 @@ g_conf_concat_key_and_dir(const gchar* dir, const gchar* key)
 }
 
 gulong
-g_conf_string_to_gulong(const gchar* str)
+gconf_string_to_gulong(const gchar* str)
 {
   gulong retval;
   errno = 0;
@@ -949,7 +949,7 @@ g_conf_string_to_gulong(const gchar* str)
 #include <syslog.h>
 
 void
-g_conf_log(GConfLogPriority pri, const gchar* fmt, ...)
+gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
 {
   gchar* msg;
   va_list args;

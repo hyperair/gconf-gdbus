@@ -52,7 +52,7 @@ static gchar* last_details = NULL;
 static GConfErrNo last_errno = G_CONF_SUCCESS;
 
 void         
-g_conf_clear_error(void)
+gconf_clear_error(void)
 {
   if (last_details)
     {
@@ -63,7 +63,7 @@ g_conf_clear_error(void)
 }
 
 void
-g_conf_set_error(GConfErrNo en, const gchar* fmt, ...)
+gconf_set_error(GConfErrNo en, const gchar* fmt, ...)
 {
   gchar* details;
   va_list args;
@@ -75,7 +75,7 @@ g_conf_set_error(GConfErrNo en, const gchar* fmt, ...)
   details = g_strdup_vprintf(fmt, args);
   va_end (args);
 
-  last_details = g_strconcat(g_conf_strerror(en), ":\n ", details, NULL);
+  last_details = g_strconcat(gconf_strerror(en), ":\n ", details, NULL);
 
   last_errno = en;
 
@@ -83,13 +83,13 @@ g_conf_set_error(GConfErrNo en, const gchar* fmt, ...)
 }
 
 const gchar* 
-g_conf_error          (void)
+gconf_error          (void)
 {
   return last_details ? last_details : _("No error");
 }
 
 GConfErrNo   
-g_conf_errno          (void)
+gconf_errno          (void)
 {
   return last_errno;
 }

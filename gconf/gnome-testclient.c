@@ -32,7 +32,7 @@ notify_func(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpo
   int pid = getpid();
   printf("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
   self_change = TRUE;
-  gtk_entry_set_text(GTK_ENTRY(user_data), g_conf_value_string(value));
+  gtk_entry_set_text(GTK_ENTRY(user_data), gconf_value_string(value));
   self_change = FALSE;
 }
 
@@ -48,11 +48,11 @@ changed_cb(GtkWidget* entry, gpointer data)
 
   txt = gtk_entry_get_text(GTK_ENTRY(entry));
   
-  value = g_conf_value_new(G_CONF_VALUE_STRING);
+  value = gconf_value_new(G_CONF_VALUE_STRING);
 
-  g_conf_value_set_string(value, txt);
+  gconf_value_set_string(value, txt);
 
-  g_conf_set(conf, "/gnome/gconf-testclient/entry_contents", value);
+  gconf_set(conf, "/gnome/gconf-testclient/entry_contents", value);
 }
 
 int 
@@ -82,26 +82,26 @@ main(int argc, char* argv[])
     }
 
 
-  g_conf_set_orb(orb); 
+  gconf_set_orb(orb); 
 #endif
   gnome_init(PACKAGE, VERSION, argc, argv);
 
-  g_conf_init_orb(&argc, argv);
+  gconf_init_orb(&argc, argv);
 
-  g_conf_init();
+  gconf_init();
 
-  conf = g_conf_new();
+  conf = gconf_new();
 
   app = gnome_app_new("gconf-test", "Testing GConf");
 
   entry = gtk_entry_new();
   
-  val = g_conf_get(conf, "/gnome/gconf-testclient/entry_contents");
+  val = gconf_get(conf, "/gnome/gconf-testclient/entry_contents");
 
   if (val != NULL)
     {
-      gtk_entry_set_text(GTK_ENTRY(entry), g_conf_value_string(val));
-      g_conf_value_destroy(val);
+      gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(val));
+      gconf_value_destroy(val);
       val = NULL;
     }
 
@@ -117,7 +117,7 @@ main(int argc, char* argv[])
                      GTK_SIGNAL_FUNC(gtk_main_quit),
                      NULL);
 
-  cnxn = g_conf_notify_add(conf, "/gnome/gconf-testclient/entry_contents", notify_func, entry);
+  cnxn = gconf_notify_add(conf, "/gnome/gconf-testclient/entry_contents", notify_func, entry);
 
   if (cnxn != 0)
     printf("Connection %u added\n", cnxn);
@@ -131,7 +131,7 @@ main(int argc, char* argv[])
 
   gtk_main();
 
-  g_conf_destroy(conf);
+  gconf_destroy(conf);
 
   return 0;
 }

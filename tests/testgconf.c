@@ -148,12 +148,12 @@ check_unset(GConfEngine* conf)
 
   while (*keyp)
     {
-      g_conf_unset(conf, *keyp, &err);
+      gconf_unset(conf, *keyp, &err);
 
       if (err != NULL)
         {
           fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->str);
-          g_conf_error_destroy(err);
+          gconf_error_destroy(err);
           err = NULL;
         }
       else
@@ -161,11 +161,11 @@ check_unset(GConfEngine* conf)
           GConfValue* val;
           gchar* valstr;
           
-          val = g_conf_get(conf, *keyp, &err);
+          val = gconf_get(conf, *keyp, &err);
 
 
           if (val)
-            valstr = g_conf_value_to_string(val);
+            valstr = gconf_value_to_string(val);
           else
             valstr = g_strdup("(none)");
           
@@ -197,23 +197,23 @@ check_string_storage(GConfEngine* conf)
         {
           gchar* gotten;
           
-          if (!g_conf_set_string(conf, *keyp, *valp, &err))
+          if (!gconf_set_string(conf, *keyp, *valp, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%s': %s\n",
                       *keyp, *valp, err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_string(conf, *keyp, NULL, &err);
+              gotten = gconf_get_string(conf, *keyp, NULL, &err);
               
               if (err != NULL)
                 {
                   check(gotten == NULL, "string was returned though there was an error");
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -242,22 +242,22 @@ check_string_storage(GConfEngine* conf)
         {
           gchar* gotten;
           
-          if (!g_conf_set_string(conf, *keyp, *valp, &err))
+          if (!gconf_set_string(conf, *keyp, *valp, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%s': %s\n",
                       *keyp, *valp, err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
 
-          gotten = g_conf_get_string(conf, *keyp, NULL, &err);
+          gotten = gconf_get_string(conf, *keyp, NULL, &err);
 
           if (err != NULL)
             {
               check(gotten == NULL, "string was returned though there was an error");
               fprintf(stderr, "Failed to get key `%s': %s\n",
                       *keyp, err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
@@ -296,16 +296,16 @@ check_bool_storage(GConfEngine* conf)
         {
           gboolean gotten;
           
-          if (!g_conf_set_bool(conf, *keyp, bools[i], &err))
+          if (!gconf_set_bool(conf, *keyp, bools[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, bools[i], err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_bool(conf, *keyp, FALSE, &err);
+              gotten = gconf_get_bool(conf, *keyp, FALSE, &err);
 
               if (err != NULL)
                 {
@@ -313,7 +313,7 @@ check_bool_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -342,16 +342,16 @@ check_bool_storage(GConfEngine* conf)
         {
           gboolean gotten;
           
-          if (!g_conf_set_bool(conf, *keyp, bools[i], &err))
+          if (!gconf_set_bool(conf, *keyp, bools[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, bools[i], err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_bool(conf, *keyp, FALSE, &err);
+              gotten = gconf_get_bool(conf, *keyp, FALSE, &err);
               
               if (err != NULL)
                 {
@@ -359,7 +359,7 @@ check_bool_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -398,16 +398,16 @@ check_float_storage(GConfEngine* conf)
         {
           gdouble gotten;
           
-          if (!g_conf_set_float(conf, *keyp, floats[i], &err))
+          if (!gconf_set_float(conf, *keyp, floats[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%g': %s\n",
                       *keyp, floats[i], err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_float(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_float(conf, *keyp, 0.0, &err);
 
               if (err != NULL)
                 {
@@ -415,7 +415,7 @@ check_float_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -445,16 +445,16 @@ check_float_storage(GConfEngine* conf)
         {
           gdouble gotten;
           
-          if (!g_conf_set_float(conf, *keyp, floats[i], &err))
+          if (!gconf_set_float(conf, *keyp, floats[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%g': %s\n",
                       *keyp, floats[i], err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_float(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_float(conf, *keyp, 0.0, &err);
 
               if (err != NULL)
                 {
@@ -462,7 +462,7 @@ check_float_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -502,16 +502,16 @@ check_int_storage(GConfEngine* conf)
         {
           gint gotten;
           
-          if (!g_conf_set_int(conf, *keyp, ints[i], &err))
+          if (!gconf_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, ints[i], err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_int(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_int(conf, *keyp, 0.0, &err);
 
               if (err != NULL)
                 {
@@ -519,7 +519,7 @@ check_int_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -549,16 +549,16 @@ check_int_storage(GConfEngine* conf)
         {
           gint gotten;
           
-          if (!g_conf_set_int(conf, *keyp, ints[i], &err))
+          if (!gconf_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, ints[i], err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get_int(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_int(conf, *keyp, 0.0, &err);
 
               if (err != NULL)
                 {
@@ -566,7 +566,7 @@ check_int_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
@@ -596,11 +596,11 @@ compare_listvals(GConfValue* first, GConfValue* second)
   
   check(first->type == G_CONF_VALUE_LIST, "first list value isn't a list value");
   check(second->type == G_CONF_VALUE_LIST, "second list value isn't a list value");
-  check(g_conf_value_list_type(first) == g_conf_value_list_type(second),
+  check(gconf_value_list_type(first) == gconf_value_list_type(second),
         "two lists don't have the same type");
 
-  l1 = g_conf_value_list(first);
-  l2 = g_conf_value_list(second);
+  l1 = gconf_value_list(first);
+  l2 = gconf_value_list(second);
 
   while (l1 != NULL)
     {
@@ -614,30 +614,30 @@ compare_listvals(GConfValue* first, GConfValue* second)
 
       check(val1->type == val2->type, "values in list have a different type");
 
-      check(val1->type == g_conf_value_list_type(first), "first list has incorrectly typed value");
-      check(val2->type == g_conf_value_list_type(second), "second list has incorrectly typed value");
+      check(val1->type == gconf_value_list_type(first), "first list has incorrectly typed value");
+      check(val2->type == gconf_value_list_type(second), "second list has incorrectly typed value");
       
       switch (val1->type)
         {
         case G_CONF_VALUE_INT:
-          check(g_conf_value_int(val1) == g_conf_value_int(val2),
-                "integer values %d and %d are not equal", g_conf_value_int(val1),
-                g_conf_value_int(val2));
+          check(gconf_value_int(val1) == gconf_value_int(val2),
+                "integer values %d and %d are not equal", gconf_value_int(val1),
+                gconf_value_int(val2));
           break;
         case G_CONF_VALUE_BOOL:
-          check(g_conf_value_bool(val1) == g_conf_value_bool(val2),
-                "boolean values %d and %d are not equal", g_conf_value_bool(val1),
-                g_conf_value_bool(val2));
+          check(gconf_value_bool(val1) == gconf_value_bool(val2),
+                "boolean values %d and %d are not equal", gconf_value_bool(val1),
+                gconf_value_bool(val2));
           break;
         case G_CONF_VALUE_FLOAT:
-          check(fabs(g_conf_value_float(val1) - g_conf_value_float(val2)) < 1e-5,
-                "float values %g and %g are not equal (epsilon %g)", g_conf_value_float(val1),
-                g_conf_value_float(val2), g_conf_value_float(val1) - g_conf_value_float(val2));
+          check(fabs(gconf_value_float(val1) - gconf_value_float(val2)) < 1e-5,
+                "float values %g and %g are not equal (epsilon %g)", gconf_value_float(val1),
+                gconf_value_float(val2), gconf_value_float(val1) - gconf_value_float(val2));
           break;
         case G_CONF_VALUE_STRING:
-          check(strcmp(g_conf_value_string(val1), g_conf_value_string(val2)) == 0, 
-                "string values `%s' and `%s' are not equal", g_conf_value_string(val1),
-                g_conf_value_string(val2));
+          check(strcmp(gconf_value_string(val1), gconf_value_string(val2)) == 0, 
+                "string values `%s' and `%s' are not equal", gconf_value_string(val1),
+                gconf_value_string(val2));
           break;
         default:
           g_assert_not_reached();
@@ -656,7 +656,7 @@ free_value_list(GSList* list)
 
   while (tmp != NULL)
     {
-      g_conf_value_destroy(tmp->data);
+      gconf_value_destroy(tmp->data);
 
       tmp = g_slist_next(tmp);
     }
@@ -673,9 +673,9 @@ list_of_intvals(void)
     {
       GConfValue* val;
 
-      val = g_conf_value_new(G_CONF_VALUE_INT);
+      val = gconf_value_new(G_CONF_VALUE_INT);
 
-      g_conf_value_set_int(val, ints[i]);
+      gconf_value_set_int(val, ints[i]);
       
       retval = g_slist_prepend(retval, val);
       
@@ -693,9 +693,9 @@ list_of_stringvals(void)
     {
       GConfValue* val;
 
-      val = g_conf_value_new(G_CONF_VALUE_STRING);
+      val = gconf_value_new(G_CONF_VALUE_STRING);
 
-      g_conf_value_set_string(val, *stringp);
+      gconf_value_set_string(val, *stringp);
       
       retval = g_slist_prepend(retval, val);
       
@@ -713,9 +713,9 @@ list_of_boolvals(void)
     {
       GConfValue* val;
 
-      val = g_conf_value_new(G_CONF_VALUE_BOOL);
+      val = gconf_value_new(G_CONF_VALUE_BOOL);
 
-      g_conf_value_set_bool(val, bools[i]);
+      gconf_value_set_bool(val, bools[i]);
       
       retval = g_slist_prepend(retval, val);
       
@@ -733,9 +733,9 @@ list_of_floatvals(void)
     {
       GConfValue* val;
 
-      val = g_conf_value_new(G_CONF_VALUE_FLOAT);
+      val = gconf_value_new(G_CONF_VALUE_FLOAT);
 
-      g_conf_value_set_float(val, floats[i]);
+      gconf_value_set_float(val, floats[i]);
       
       retval = g_slist_prepend(retval, val);
       
@@ -789,22 +789,22 @@ check_list_storage(GConfEngine* conf)
           GConfValue* gotten = NULL;
           GConfValue* thislist = NULL;
 
-          thislist = g_conf_value_new(G_CONF_VALUE_LIST);
+          thislist = gconf_value_new(G_CONF_VALUE_LIST);
 
-          g_conf_value_set_list_type(thislist, list_types[i]);
+          gconf_value_set_list_type(thislist, list_types[i]);
 
-          g_conf_value_set_list(thislist, lists[i]); /* makes a copy */
+          gconf_value_set_list(thislist, lists[i]); /* makes a copy */
           
-          if (!g_conf_set(conf, *keyp, thislist, &err))
+          if (!gconf_set(conf, *keyp, thislist, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to list: %s\n",
                       *keyp, err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
           else
             {
-              gotten = g_conf_get(conf, *keyp, &err);
+              gotten = gconf_get(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -812,17 +812,17 @@ check_list_storage(GConfEngine* conf)
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
                           *keyp, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
               else
                 {
                   compare_listvals(gotten, thislist);
-                  g_conf_value_destroy(gotten);
+                  gconf_value_destroy(gotten);
                 }
             }
 
-          g_conf_value_destroy(thislist);
+          gconf_value_destroy(thislist);
 
           ++i;
         }
@@ -841,23 +841,23 @@ main (int argc, char** argv)
   GConfEngine* conf;
   GConfError* err = NULL;
 
-  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
+  if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
       fprintf(stderr, "Failed to init orb: %s\n", err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
       return 1;
     }
 
-  if (!g_conf_init(&err))
+  if (!gconf_init(&err))
     {
       fprintf(stderr, "Failed to init GConf: %s\n", err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
       return 1;
     }
   
-  conf = g_conf_engine_new();
+  conf = gconf_engine_new();
 
   check(conf != NULL, "create the default conf engine");
 
@@ -881,7 +881,7 @@ main (int argc, char** argv)
   
   check_bool_storage(conf);
   
-  g_conf_engine_unref(conf);
+  gconf_engine_unref(conf);
 
   printf("\n\n");
   

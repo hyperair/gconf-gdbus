@@ -85,21 +85,21 @@ struct _GConfBackend {
 /* Address utility stuff */
 
 /* Get the backend name */
-gchar* g_conf_address_backend(const gchar* address);
+gchar* gconf_address_backend(const gchar* address);
 /* Get the resource name understood only by the backend */
-gchar* g_conf_address_resource(const gchar* address);
+gchar* gconf_address_resource(const gchar* address);
 
-gchar*       g_conf_backend_file(const gchar* address);
+gchar*       gconf_backend_file(const gchar* address);
 
 /* Obtain the GConfBackend for this address, based on the first part of the 
  * address. The refcount is always incremented, and you must unref() later
  */
-GConfBackend* g_conf_get_backend(const gchar* address);
+GConfBackend* gconf_get_backend(const gchar* address);
 
-void          g_conf_backend_ref(GConfBackend* backend);
-void          g_conf_backend_unref(GConfBackend* backend);
+void          gconf_backend_ref(GConfBackend* backend);
+void          gconf_backend_unref(GConfBackend* backend);
 
-GConfSource*  g_conf_backend_resolve_address (GConfBackend* backend, 
+GConfSource*  gconf_backend_resolve_address (GConfBackend* backend, 
                                               const gchar* address);
 
 #endif

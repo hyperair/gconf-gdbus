@@ -37,7 +37,7 @@ extern "C" {
  * 
  *  - It allows you to register per-key callbacks within these directories,
  *    without having to register multiple server-side callbacks
- *    (g_conf_notify_add() adds a request-for-notify to the server,
+ *    (gconf_notify_add() adds a request-for-notify to the server,
  *    this wrapper adds a notify to the server for the whole directory
  *    and keeps your per-key notify requests on the client side).
  *

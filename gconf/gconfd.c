@@ -76,7 +76,7 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 
   if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
     {
-      g_conf_log(GCL_DEBUG, "Hash key `%s' is already in the table!",
+      gconf_log(GCL_DEBUG, "Hash key `%s' is already in the table!",
                  (gchar*)key);
       return;
     }
@@ -92,10 +92,10 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  */
 
 /* return TRUE if the exception was set */
-static gboolean g_conf_set_exception(CORBA_Environment* ev);
+static gboolean gconf_set_exception(CORBA_Environment* ev);
 
-static void g_conf_main(void);
-static void g_conf_main_quit(void);
+static void gconf_main(void);
+static void gconf_main_quit(void);
 
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
@@ -264,7 +264,7 @@ gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
   if (ctx != ConfigServer_invalid_context)
     return ctx;
 
-  sources = g_conf_sources_new(addresses);
+  sources = gconf_sources_new(addresses);
 
   if (sources == NULL)
     return ConfigServer_invalid_context;
@@ -318,21 +318,21 @@ gconfd_lookup(PortableServer_Servant servant,
   
   gcc = lookup_context(ctx);
   
-  g_conf_clear_error();
+  gconf_clear_error();
   
   val = context_lookup_value(gcc, key);
 
   if (val != NULL)
     {
-      ConfigValue* cval = corba_value_from_g_conf_value(val);
+      ConfigValue* cval = corba_value_from_gconf_value(val);
 
-      g_conf_value_destroy(val);
+      gconf_value_destroy(val);
 
       return cval;
     }
   else
     {
-      g_conf_set_exception(ev);
+      gconf_set_exception(ev);
 
       return invalid_corba_value();
     }
@@ -350,15 +350,15 @@ gconfd_set(PortableServer_Servant servant,
   
   if (value->_d == InvalidVal)
     {
-      g_conf_log(GCL_ERR, "Received invalid value in set request");
+      gconf_log(GCL_ERR, "Received invalid value in set request");
       return;
     }
 
-  val = g_conf_value_from_corba_value(value);
+  val = gconf_value_from_corba_value(value);
 
-  str = g_conf_value_to_string(val);
+  str = gconf_value_to_string(val);
 
-  g_conf_log(GCL_DEBUG, "Received request to set key `%s' to `%s'", key, str);
+  gconf_log(GCL_DEBUG, "Received request to set key `%s' to `%s'", key, str);
 
   g_free(str);
 
@@ -366,9 +366,9 @@ gconfd_set(PortableServer_Servant servant,
   
   context_set(gcc, key, val, value);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 
-  g_conf_value_destroy(val);
+  gconf_value_destroy(val);
 }
 
 static void 
@@ -383,7 +383,7 @@ gconfd_unset(PortableServer_Servant servant,
 
   context_unset(gcc, key);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 }
 
 static CORBA_boolean
@@ -399,7 +399,7 @@ gconfd_dir_exists(PortableServer_Servant servant,
   
   retval = context_dir_exists(gcc, dir) ? CORBA_TRUE : CORBA_FALSE;
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 
   return retval;
 }
@@ -417,7 +417,7 @@ gconfd_remove_dir(PortableServer_Servant servant,
 
   context_remove_dir(gcc, dir);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 }
 
 static void 
@@ -465,9 +465,9 @@ gconfd_all_entries (PortableServer_Servant servant,
       g_assert(p->value != NULL);
 
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
-      fill_corba_value_from_g_conf_value(p->value, &((*values)->_buffer[i]));
+      fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
 
-      g_conf_entry_destroy(p);
+      gconf_entry_destroy(p);
 
       ++i;
       tmp = g_slist_next(tmp);
@@ -477,7 +477,7 @@ gconfd_all_entries (PortableServer_Servant servant,
 
   g_slist_free(pairs);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 }
 
 static void 
@@ -525,7 +525,7 @@ gconfd_all_dirs (PortableServer_Servant servant,
 
   g_slist_free(subdirs);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 }
 
 static void 
@@ -540,7 +540,7 @@ gconfd_set_schema (PortableServer_Servant servant,
 
   context_set_schema(gcc, key, schema_key);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 }
 
 static void 
@@ -554,7 +554,7 @@ gconfd_sync(PortableServer_Servant servant,
 
   context_sync(gcc);
 
-  g_conf_set_exception(ev);
+  gconf_set_exception(ev);
 }
 
 static CORBA_long
@@ -566,9 +566,9 @@ gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
 static void
 gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 {
-  g_conf_log(GCL_INFO, _("Shutdown request received"));
+  gconf_log(GCL_INFO, _("Shutdown request received"));
 
-  g_conf_main_quit();
+  gconf_main_quit();
 }
 
 /*
@@ -580,7 +580,7 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
    client requests prior to source loading. 
 */
 static void
-g_conf_server_load_sources(void)
+gconf_server_load_sources(void)
 {
   gchar** addresses;
   GList* tmp;
@@ -590,7 +590,7 @@ g_conf_server_load_sources(void)
   
   conffile = g_strconcat(GCONF_SYSCONFDIR, "/gconf/path", NULL);
 
-  addresses = g_conf_load_source_path(conffile, NULL);
+  addresses = gconf_load_source_path(conffile, NULL);
 
   g_free(conffile);
 
@@ -599,7 +599,7 @@ g_conf_server_load_sources(void)
   if (addresses == NULL)
     {
       conffile = g_strconcat(GCONF_SRCDIR, "/gconf/gconf.path", NULL);
-      addresses = g_conf_load_source_path(conffile, NULL);
+      addresses = gconf_load_source_path(conffile, NULL);
       g_free(conffile);
     }
 
@@ -611,19 +611,19 @@ g_conf_server_load_sources(void)
          request would result in another failed gconfd being spawned.  
       */
       gchar* empty_addr[] = { NULL };
-      g_conf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit /etc/gconf/path"));
-      sources = g_conf_sources_new(empty_addr);
+      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit /etc/gconf/path"));
+      sources = gconf_sources_new(empty_addr);
       return;
     }
   
-  sources = g_conf_sources_new(addresses);
+  sources = gconf_sources_new(addresses);
 
   g_free(addresses);
 
   g_assert(sources != NULL);
 
   if (sources->sources == NULL)
-    g_conf_log(GCL_ERR, _("No config source addresses successfully resolved, can't load or store config data"));
+    gconf_log(GCL_ERR, _("No config source addresses successfully resolved, can't load or store config data"));
     
   tmp = sources->sources;
 
@@ -639,7 +639,7 @@ g_conf_server_load_sources(void)
     }
 
   if (!have_writeable)
-    g_conf_log(GCL_WARNING, _("No writeable config sources successfully resolved, won't be able to save configuration changes"));
+    gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, won't be able to save configuration changes"));
 
   /* Install the sources as the default context */
   set_default_context(context_new(sources));
@@ -662,19 +662,19 @@ lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len)
   lock_reg(fd, F_SETLK, F_WRLCK, offset, whence, len)
 
 gboolean
-g_conf_server_write_info_file(const gchar* ior)
+gconf_server_write_info_file(const gchar* ior)
 {
   /* This writing-IOR-to-file crap is a temporary hack. */
   gchar* fn;
   int fd;
 
-  fn = g_conf_server_info_file();
+  fn = gconf_server_info_file();
 
-  if (!g_conf_file_exists(fn))
+  if (!gconf_file_exists(fn))
     {
-      gchar* dir = g_conf_server_info_dir();
+      gchar* dir = gconf_server_info_dir();
 
-      if (!g_conf_file_test(dir, G_CONF_FILE_ISDIR))
+      if (!gconf_file_test(dir, G_CONF_FILE_ISDIR))
         {
           if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
             {
@@ -693,7 +693,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
   if (fd < 0)
     {
-      g_conf_log(GCL_ERR, _("Failed to open info file: %s"), strerror(errno));
+      gconf_log(GCL_ERR, _("Failed to open info file: %s"), strerror(errno));
       return FALSE;
     }
 
@@ -702,12 +702,12 @@ g_conf_server_write_info_file(const gchar* ior)
     {
       if (errno == EACCES || errno == EAGAIN)
         {
-          g_conf_log(GCL_ERR, _("Lock on info file is held by another process."));
+          gconf_log(GCL_ERR, _("Lock on info file is held by another process."));
           return FALSE;
         }
       else
         {
-          g_conf_log(GCL_ERR, _("Couldn't get lock on the info file: %s"),
+          gconf_log(GCL_ERR, _("Couldn't get lock on the info file: %s"),
                      strerror(errno));
           return FALSE;
         }
@@ -715,7 +715,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
   if (ftruncate(fd, 0) < 0)
     {
-      g_conf_log(GCL_ERR, _("Couldn't truncate info file: %s"),
+      gconf_log(GCL_ERR, _("Couldn't truncate info file: %s"),
                  strerror(errno));
       return FALSE;
     }
@@ -724,7 +724,7 @@ g_conf_server_write_info_file(const gchar* ior)
      but before writing the file contents, so no one
      tries to contact gconfd before we have sources 
   */
-  g_conf_server_load_sources();
+  gconf_server_load_sources();
 
   /* This block writes the file contents */
   {
@@ -742,7 +742,7 @@ g_conf_server_write_info_file(const gchar* ior)
           {
             if (errno != EINTR)
               {
-                g_conf_log(GCL_ERR, _("Failed to write info file: %s"), strerror(errno));
+                gconf_log(GCL_ERR, _("Failed to write info file: %s"), strerror(errno));
                 return FALSE;
               }
             else
@@ -766,7 +766,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
     if (val < 0)
       {
-        g_conf_log(GCL_ERR, _("fcntl() F_GETFD failed for info file: %s"), strerror(errno));
+        gconf_log(GCL_ERR, _("fcntl() F_GETFD failed for info file: %s"), strerror(errno));
         return FALSE;
       }
 
@@ -774,7 +774,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
     if (fcntl(fd, F_SETFD, val) < 0)
       {
-        g_conf_log(GCL_ERR, _("fcntl() F_SETFD failed for info file: %s"), strerror(errno));
+        gconf_log(GCL_ERR, _("fcntl() F_SETFD failed for info file: %s"), strerror(errno));
         return FALSE;
       }
   }
@@ -795,7 +795,7 @@ signal_handler (int signo)
   
   ++in_fatal;
   
-  g_conf_log(GCL_ERR, _("Received signal %d\nshutting down."), signo);
+  gconf_log(GCL_ERR, _("Received signal %d\nshutting down."), signo);
   
   fast_cleanup();
 
@@ -869,11 +869,11 @@ main(int argc, char** argv)
   /* openlog() does not copy logname - what total brokenness.
      So we free it at the end of main() */
   
-  g_conf_log(GCL_INFO, _("starting, pid %u user `%s'"), 
+  gconf_log(GCL_INFO, _("starting, pid %u user `%s'"), 
              (guint)getpid(), g_get_user_name());
 
   if (nodaemon)
-    g_conf_log(GCL_INFO, _("starting in debug (no daemon) mode"));
+    gconf_log(GCL_INFO, _("starting in debug (no daemon) mode"));
   
   /* Session setup */
   sigemptyset (&empty_mask);
@@ -891,15 +891,15 @@ main(int argc, char** argv)
 
   CORBA_exception_init(&ev);
 
-  if (!g_conf_init_orb(&argc, argv, &err)) /* must do before our own arg parsing */
+  if (!gconf_init_orb(&argc, argv, &err)) /* must do before our own arg parsing */
     {
-      g_conf_log(GCL_ERR, _("Failed to init ORB: %s"), err->str);
+      gconf_log(GCL_ERR, _("Failed to init ORB: %s"), err->str);
       exit(1);
     }
 
   if (argc > 2)
     {
-      g_conf_log(GCL_ERR, _("Invalid command line arguments"));
+      gconf_log(GCL_ERR, _("Invalid command line arguments"));
       exit(1);
     }
   else if (argc == 2)
@@ -910,7 +910,7 @@ main(int argc, char** argv)
         {
           if (!isdigit(*s))
             {
-              g_conf_log(GCL_ERR, _("Command line arg should be a file descriptor, not `%s'"),
+              gconf_log(GCL_ERR, _("Command line arg should be a file descriptor, not `%s'"),
                      argv[1]);
               exit(1);
             }
@@ -919,19 +919,19 @@ main(int argc, char** argv)
 
       launcher_fd = atoi(argv[1]);
 
-      g_conf_log(GCL_DEBUG, _("Will notify launcher client on fd %d"), launcher_fd);
+      gconf_log(GCL_DEBUG, _("Will notify launcher client on fd %d"), launcher_fd);
 
       if (nodaemon)
-        g_conf_log(GCL_WARNING, _("GCONFD_NO_DAEMON environment variable is set to 1, but we are being launched as if from a GConf client"));
+        gconf_log(GCL_WARNING, _("GCONFD_NO_DAEMON environment variable is set to 1, but we are being launched as if from a GConf client"));
     }
 
   init_contexts();
 
-  orb = g_conf_get_orb();
+  orb = gconf_get_orb();
 
   if (orb == CORBA_OBJECT_NIL)
     {
-      g_conf_log(GCL_ERR, _("Failed to get ORB reference"));
+      gconf_log(GCL_ERR, _("Failed to get ORB reference"));
       exit(1);
     }
 
@@ -947,16 +947,16 @@ main(int argc, char** argv)
                                                    &ev);
   if (server == CORBA_OBJECT_NIL) 
     {
-      g_conf_log(GCL_ERR, _("Failed to get object reference for ConfigServer"));
+      gconf_log(GCL_ERR, _("Failed to get object reference for ConfigServer"));
       return 1;
     }
 
   ior = CORBA_ORB_object_to_string(orb, server, &ev);
 
   /* Write IOR to a file (temporary hack, name server will be used eventually */
-  if (!g_conf_server_write_info_file(ior))
+  if (!gconf_server_write_info_file(ior))
     {
-      g_conf_log(GCL_ERR, _("Failed to write info file - maybe another gconfd is running. Exiting."));
+      gconf_log(GCL_ERR, _("Failed to write info file - maybe another gconfd is running. Exiting."));
       return 1;
     }
 
@@ -969,21 +969,21 @@ main(int argc, char** argv)
   if (launcher_fd >= 0)
     {
       if (write(launcher_fd, "g", 1) != 1)
-        g_conf_log(GCL_ERR, _("Failed to notify spawning parent of server liveness: %s"),
+        gconf_log(GCL_ERR, _("Failed to notify spawning parent of server liveness: %s"),
                    strerror(errno));
 
       if (close(launcher_fd) < 0)
-        g_conf_log(GCL_ERR, _("Failed to close pipe to spawning parent: %s"), 
+        gconf_log(GCL_ERR, _("Failed to close pipe to spawning parent: %s"), 
                    strerror(errno));
     }
 
-  g_conf_main();
+  gconf_main();
 
   fast_cleanup();
 
   shutdown_contexts();
 
-  g_conf_log(GCL_INFO, _("Exiting"));
+  gconf_log(GCL_INFO, _("Exiting"));
   
   g_free(logname);
   
@@ -1006,7 +1006,7 @@ one_hour_timeout(gpointer data)
 }
 
 static void
-g_conf_main(void)
+gconf_main(void)
 {
   GMainLoop* loop;
 
@@ -1038,7 +1038,7 @@ g_conf_main(void)
 }
 
 static void 
-g_conf_main_quit(void)
+gconf_main_quit(void)
 {
   g_return_if_fail(main_loops != NULL);
 
@@ -1118,7 +1118,7 @@ context_destroy(GConfContext* ctx)
       g_assert(ctx->saved_address == NULL);
       
       ltable_destroy(ctx->ltable);
-      g_conf_sources_destroy(ctx->sources);
+      gconf_sources_destroy(ctx->sources);
     }
   else
     {
@@ -1141,7 +1141,7 @@ context_hibernate(GConfContext* ctx)
 
   ctx->saved_address = g_strdup(((GConfSource*)ctx->sources->sources->data)->address);
   
-  g_conf_sources_destroy(ctx->sources);
+  gconf_sources_destroy(ctx->sources);
   ctx->sources = NULL;  
 }
 
@@ -1157,11 +1157,11 @@ context_awaken(GConfContext* ctx)
   addresses[0] = ctx->saved_address;
   addresses[1] = NULL;
 
-  ctx->sources = g_conf_sources_new(addresses);
+  ctx->sources = gconf_sources_new(addresses);
 
   if (ctx->sources == NULL)
     {
-      g_conf_set_error(G_CONF_BAD_ADDRESS,
+      gconf_set_error(G_CONF_BAD_ADDRESS,
                        _("Couldn't re-resolve hibernating configuration source `%s'"), ctx->saved_address);
       return;
     }
@@ -1188,7 +1188,7 @@ context_add_listener(GConfContext* ctx,
 
   ltable_insert(ctx->ltable, where, l);
 
-  g_conf_log(GCL_DEBUG, "Added listener %u", (guint)l->cnxn);
+  gconf_log(GCL_DEBUG, "Added listener %u", (guint)l->cnxn);
 
   return l->cnxn;  
 }
@@ -1200,7 +1200,7 @@ context_remove_listener(GConfContext* ctx,
   g_assert(ctx->ltable != NULL);
   
   ctx->last_access = time(NULL);
-  g_conf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
+  gconf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
   ltable_remove(ctx->ltable, cnxn);
 }
 
@@ -1214,7 +1214,7 @@ context_lookup_value(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  val = g_conf_sources_query_value(ctx->sources, key);
+  val = gconf_sources_query_value(ctx->sources, key);
 
   return val;
 }
@@ -1228,13 +1228,13 @@ context_set(GConfContext* ctx,
   g_assert(ctx->ltable != NULL);
   
   ctx->last_access = time(NULL);
-  g_conf_clear_error();
-  g_conf_sources_set_value(ctx->sources, key, val);
+  gconf_clear_error();
+  gconf_sources_set_value(ctx->sources, key, val);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Error setting value for `%s': %s"),
-                 key, g_conf_error());
+      gconf_log(GCL_ERR, _("Error setting value for `%s': %s"),
+                 key, gconf_error());
     }
   else
     ltable_notify_listeners(ctx->ltable, key, value);
@@ -1250,16 +1250,16 @@ context_unset(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  g_conf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
+  gconf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
 
-  g_conf_clear_error();
+  gconf_clear_error();
 
-  g_conf_sources_unset_value(ctx->sources, key);
+  gconf_sources_unset_value(ctx->sources, key);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Error unsetting `%s': %s"),
-                 key, g_conf_error());
+      gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
+                 key, gconf_error());
     }
   else
     {
@@ -1281,16 +1281,16 @@ context_dir_exists(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  g_conf_log(GCL_DEBUG, "Received dir_exists request for `%s'", dir);
+  gconf_log(GCL_DEBUG, "Received dir_exists request for `%s'", dir);
   
-  g_conf_clear_error();
+  gconf_clear_error();
   
-  ret = g_conf_sources_dir_exists(ctx->sources, dir);
+  ret = gconf_sources_dir_exists(ctx->sources, dir);
   
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Error checking existence of `%s': %s"),
-                 dir, g_conf_error());
+      gconf_log(GCL_ERR, _("Error checking existence of `%s': %s"),
+                 dir, gconf_error());
       ret = FALSE;
     }
 
@@ -1305,16 +1305,16 @@ context_remove_dir(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  g_conf_log(GCL_DEBUG, "Received request to remove dir `%s'", dir);
+  gconf_log(GCL_DEBUG, "Received request to remove dir `%s'", dir);
 
-  g_conf_clear_error();
+  gconf_clear_error();
   
-  g_conf_sources_remove_dir(ctx->sources, dir);
+  gconf_sources_remove_dir(ctx->sources, dir);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Error removing dir `%s': %s"),
-                 dir, g_conf_error());
+      gconf_log(GCL_ERR, _("Error removing dir `%s': %s"),
+                 dir, gconf_error());
     }
 }
 
@@ -1327,14 +1327,14 @@ context_all_entries(GConfContext* ctx, const gchar* dir)
   
   ctx->last_access = time(NULL);
   
-  g_conf_clear_error();
+  gconf_clear_error();
   
-  entries = g_conf_sources_all_entries(ctx->sources, dir);
+  entries = gconf_sources_all_entries(ctx->sources, dir);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Failed to get all entries in `%s': %s"),
-                 dir, g_conf_error());
+      gconf_log(GCL_ERR, _("Failed to get all entries in `%s': %s"),
+                 dir, gconf_error());
     }
 
   return entries;
@@ -1349,16 +1349,16 @@ context_all_dirs(GConfContext* ctx, const gchar* dir)
   
   ctx->last_access = time(NULL);
     
-  g_conf_log(GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
+  gconf_log(GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
 
-  g_conf_clear_error();
+  gconf_clear_error();
 
-  subdirs = g_conf_sources_all_dirs(ctx->sources, dir);
+  subdirs = gconf_sources_all_dirs(ctx->sources, dir);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Error listing dirs in `%s': %s"),
-                 dir, g_conf_error());
+      gconf_log(GCL_ERR, _("Error listing dirs in `%s': %s"),
+                 dir, gconf_error());
     }
   return subdirs;
 }
@@ -1371,14 +1371,14 @@ context_set_schema(GConfContext* ctx, const gchar* key,
   
   ctx->last_access = time(NULL);
   
-  g_conf_clear_error();
+  gconf_clear_error();
 
-  g_conf_sources_set_schema(ctx->sources, key, schema_key);
+  gconf_sources_set_schema(ctx->sources, key, schema_key);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (gconf_errno() != G_CONF_SUCCESS)
     {
-      g_conf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
-             key, g_conf_error());
+      gconf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
+             key, gconf_error());
     }
 }
 
@@ -1389,12 +1389,12 @@ context_sync(GConfContext* ctx)
   
   ctx->last_access = time(NULL);
   
-  g_conf_log(GCL_DEBUG, "Received request to sync all config data");
+  gconf_log(GCL_DEBUG, "Received request to sync all config data");
   
-  if (!g_conf_sources_sync_all(ctx->sources))
+  if (!gconf_sources_sync_all(ctx->sources))
     {
-      g_conf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
-             g_conf_error());
+      gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
+             gconf_error());
       return;
     }
 }
@@ -1526,14 +1526,14 @@ unregister_context(ConfigServer_Context ctx)
 
   if (ctx == ConfigServer_invalid_context)
     {
-      g_conf_log(GCL_ERR, _("Attempt to unregister invalid context ID"));
+      gconf_log(GCL_ERR, _("Attempt to unregister invalid context ID"));
 
       return;
     }
   
   if (ctx >= context_list->len)
     {
-      g_conf_log(GCL_ERR, _("Bad context ID %lu, request ignored"), (gulong)ctx);
+      gconf_log(GCL_ERR, _("Bad context ID %lu, request ignored"), (gulong)ctx);
       return;
     }
 
@@ -1541,7 +1541,7 @@ unregister_context(ConfigServer_Context ctx)
 
   if (context == NULL)
     {
-      g_conf_log(GCL_ERR, _("Already-unregistered context ID %lu, request ignored"),
+      gconf_log(GCL_ERR, _("Already-unregistered context ID %lu, request ignored"),
              (gulong)ctx);
 
       return;
@@ -1565,7 +1565,7 @@ lookup_context(ConfigServer_Context ctx)
 
   if (ctx >= context_list->len || ctx == ConfigServer_invalid_context)
     {
-      g_conf_log(GCL_ERR, _("Attempt to use invalid context ID %lu"),
+      gconf_log(GCL_ERR, _("Attempt to use invalid context ID %lu"),
                  (gulong)ctx);
       return NULL;
     }
@@ -1574,7 +1574,7 @@ lookup_context(ConfigServer_Context ctx)
 
   if (gcc == NULL)
     {
-      g_conf_log(GCL_ERR, _("Attempt to use already-unregistered context ID %lu"),
+      gconf_log(GCL_ERR, _("Attempt to use already-unregistered context ID %lu"),
                  (gulong)ctx);
       return NULL;
     }
@@ -1764,7 +1764,7 @@ ltable_remove(LTable* lt, guint cnxn)
 
   if (cnxn >= lt->listeners->len)
     {
-      g_conf_log(GCL_WARNING, _("Attempt to remove nonexistent connection"));
+      gconf_log(GCL_WARNING, _("Attempt to remove nonexistent connection"));
       return;
     }
 
@@ -1774,7 +1774,7 @@ ltable_remove(LTable* lt, guint cnxn)
 
   if (node == NULL)
     {
-      g_conf_log(GCL_WARNING, _("Attempt to remove nonexistent connection"));
+      gconf_log(GCL_WARNING, _("Attempt to remove nonexistent connection"));
       return;
     }
 
@@ -1858,7 +1858,7 @@ notify_listener_list(GList* list, const gchar* key, ConfigValue* value, GList** 
 
   CORBA_exception_init(&ev);
 
-  g_conf_log(GCL_DEBUG, "%u listeners to notify", g_list_length(list));
+  gconf_log(GCL_DEBUG, "%u listeners to notify", g_list_length(list));
 
   tmp = list;
   while (tmp != NULL)
@@ -1870,7 +1870,7 @@ notify_listener_list(GList* list, const gchar* key, ConfigValue* value, GList** 
       
       if(ev._major != CORBA_NO_EXCEPTION) 
         {
-          g_conf_log(GCL_WARNING, "Failed to notify listener %u: %s", 
+          gconf_log(GCL_WARNING, "Failed to notify listener %u: %s", 
                  (guint)l->cnxn, CORBA_exception_id(&ev));
           CORBA_exception_free(&ev);
 
@@ -1879,7 +1879,7 @@ notify_listener_list(GList* list, const gchar* key, ConfigValue* value, GList** 
         }
       else
         {
-          g_conf_log(GCL_DEBUG, "Notified listener %u of change to key `%s'",
+          gconf_log(GCL_DEBUG, "Notified listener %u of change to key `%s'",
                  (guint)l->cnxn, key);
         }
 
@@ -1909,17 +1909,17 @@ ltable_notify_listeners(LTable* lt, const gchar* key, ConfigValue* value)
     {
       GNode* child = cur->children;
 
-      g_conf_log(GCL_DEBUG, "scanning for %s", dirs[i]);
+      gconf_log(GCL_DEBUG, "scanning for %s", dirs[i]);
 
       while (child != NULL)
         {
           LTableEntry* lte = child->data;
 
-          g_conf_log(GCL_DEBUG, "Looking at %s", lte->name);
+          gconf_log(GCL_DEBUG, "Looking at %s", lte->name);
 
           if (strcmp(lte->name, dirs[i]) == 0)
             {
-              g_conf_log(GCL_DEBUG, "Notifying listeners attached to `%s'",
+              gconf_log(GCL_DEBUG, "Notifying listeners attached to `%s'",
                          lte->name);
               notify_listener_list(lte->listeners, key, value, &dead);
               break;
@@ -1948,7 +1948,7 @@ ltable_notify_listeners(LTable* lt, const gchar* key, ConfigValue* value)
       {
         guint cnxn = GPOINTER_TO_UINT(tmp->data);
 
-        g_conf_log(GCL_DEBUG, "Removing dead listener %u", cnxn);
+        gconf_log(GCL_DEBUG, "Removing dead listener %u", cnxn);
 
         ltable_remove(lt, cnxn);
 
@@ -1986,14 +1986,14 @@ spew_func(GNode* node, gpointer data)
   LTableEntry* lte = node->data;  
   GList* tmp;
 
-  g_conf_log(GCL_DEBUG, " Spewing node `%s'", lte->name);
+  gconf_log(GCL_DEBUG, " Spewing node `%s'", lte->name);
 
   tmp = lte->listeners;
   while (tmp != NULL)
     {
       Listener* l = tmp->data;
 
-      g_conf_log(GCL_DEBUG, "   listener %u is here", (guint)l->cnxn);
+      gconf_log(GCL_DEBUG, "   listener %u is here", (guint)l->cnxn);
 
       tmp = g_list_next(tmp);
     }
@@ -2022,7 +2022,7 @@ fast_cleanup(void)
   */
   gchar* fn;
 
-  fn = g_conf_server_info_file();
+  fn = gconf_server_info_file();
 
   /* Nothing we can do if it fails */
   unlink(fn);
@@ -2034,9 +2034,9 @@ fast_cleanup(void)
 /* Exceptions */
 
 static gboolean
-g_conf_set_exception(CORBA_Environment* ev)
+gconf_set_exception(CORBA_Environment* ev)
 {
-  GConfErrNo en = g_conf_errno();
+  GConfErrNo en = gconf_errno();
 
   if (en == G_CONF_SUCCESS)
     return FALSE;
@@ -2045,7 +2045,7 @@ g_conf_set_exception(CORBA_Environment* ev)
       ConfigException* ce;
 
       ce = ConfigException__alloc();
-      ce->message = CORBA_string_dup((gchar*)g_conf_error()); /* cast const */
+      ce->message = CORBA_string_dup((gchar*)gconf_error()); /* cast const */
       
       switch (en)
         {

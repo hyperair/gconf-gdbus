@@ -26,16 +26,16 @@
 
 /* Sets up orb to work with a glib main loop, just as libgnorba does. */
 CORBA_ORB
-g_conf_init_orb(int* argc, char** argv, GConfError** err);
+gconf_init_orb(int* argc, char** argv, GConfError** err);
 
 /* Assumes orb is already set up (for example, via libgnorba)
    and just tells GConf where to find it 
 */
 void 
-g_conf_set_orb(CORBA_ORB orb);
+gconf_set_orb(CORBA_ORB orb);
 
 CORBA_ORB
-g_conf_get_orb(void);
+gconf_get_orb(void);
 
 #endif
 

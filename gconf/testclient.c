@@ -35,21 +35,21 @@ main (int argc, char** argv)
   guint cnxn;
   GConfValue* val;
 
-  if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
+  if (gconf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
     {
       g_warning("Failed to init orb");
       return 1;
     }
 
-  if (!g_conf_init())
+  if (!gconf_init())
     {
       g_warning("Failed to init GConf");
       return 1;
     }
 
-  conf = g_conf_new();
+  conf = gconf_new();
 
-  cnxn = g_conf_notify_add(conf, "/hello/world", notify_func, NULL);
+  cnxn = gconf_notify_add(conf, "/hello/world", notify_func, NULL);
 
   if (cnxn != 0)
     printf("Connection %u added\n", cnxn);
@@ -59,15 +59,15 @@ main (int argc, char** argv)
       return 1;
     }
 
-  val = g_conf_value_new(G_CONF_VALUE_INT);
+  val = gconf_value_new(G_CONF_VALUE_INT);
 
-  g_conf_value_set_int(val, 100);
+  gconf_value_set_int(val, 100);
  
-  g_conf_set(conf, "/hello/world/whoo", val);
+  gconf_set(conf, "/hello/world/whoo", val);
  
   testclient_main();
 
-  g_conf_destroy(conf);
+  gconf_destroy(conf);
 
   return 0;
 }

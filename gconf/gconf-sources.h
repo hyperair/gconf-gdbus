@@ -44,31 +44,31 @@ typedef enum {
   G_CONF_SOURCE_ALL_FLAGS = ((1 << 0))
 } GConfSourceFlags;
 
-GConfSource*  g_conf_resolve_address         (const gchar* address);
-GConfValue*   g_conf_source_query_value      (GConfSource* source,
+GConfSource*  gconf_resolve_address         (const gchar* address);
+GConfValue*   gconf_source_query_value      (GConfSource* source,
                                               const gchar* key,
                                               gchar** schema_name);
-void          g_conf_source_set_value        (GConfSource* source,
+void          gconf_source_set_value        (GConfSource* source,
                                               const gchar* key,
                                               GConfValue* value);
-void          g_conf_source_unset_value      (GConfSource* source,
+void          gconf_source_unset_value      (GConfSource* source,
                                               const gchar* key);
-GSList*      g_conf_source_all_entries         (GConfSource* source,
+GSList*      gconf_source_all_entries         (GConfSource* source,
                                                 const gchar* dir);
-GSList*      g_conf_source_all_dirs          (GConfSource* source,
+GSList*      gconf_source_all_dirs          (GConfSource* source,
                                               const gchar* dir);
 
-void         g_conf_source_set_schema        (GConfSource* source,
+void         gconf_source_set_schema        (GConfSource* source,
                                               const gchar* key,
                                               const gchar* schema_key);
 
-gboolean     g_conf_source_dir_exists        (GConfSource* source,
+gboolean     gconf_source_dir_exists        (GConfSource* source,
                                               const gchar* dir);
-void         g_conf_source_remove_dir        (GConfSource* source,
+void         gconf_source_remove_dir        (GConfSource* source,
                                               const gchar* dir);
 
-gboolean     g_conf_source_sync_all          (GConfSource* source);
-void         g_conf_source_destroy (GConfSource* source);
+gboolean     gconf_source_sync_all          (GConfSource* source);
+void         gconf_source_destroy (GConfSource* source);
 
 /* This is the actual thing we want to talk to, the stack of sources */
 typedef struct _GConfSources GConfSources;
@@ -78,29 +78,29 @@ struct _GConfSources {
   
 };
 
-GConfSources* g_conf_sources_new(gchar** addresses);
-void          g_conf_sources_destroy(GConfSources* sources);
-GConfValue*   g_conf_sources_query_value (GConfSources* sources, 
+GConfSources* gconf_sources_new(gchar** addresses);
+void          gconf_sources_destroy(GConfSources* sources);
+GConfValue*   gconf_sources_query_value (GConfSources* sources, 
                                           const gchar* key);
-void          g_conf_sources_set_value   (GConfSources* sources,
+void          gconf_sources_set_value   (GConfSources* sources,
                                           const gchar* key,
                                           GConfValue* value);
-void          g_conf_sources_unset_value (GConfSources* sources,
+void          gconf_sources_unset_value (GConfSources* sources,
                                           const gchar* key);
-GSList*       g_conf_sources_all_entries   (GConfSources* sources,
+GSList*       gconf_sources_all_entries   (GConfSources* sources,
                                             const gchar* dir);
-GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
+GSList*       gconf_sources_all_dirs   (GConfSources* sources,
                                          const gchar* dir);
-gboolean      g_conf_sources_dir_exists (GConfSources* sources,
+gboolean      gconf_sources_dir_exists (GConfSources* sources,
                                          const gchar* dir);
-void          g_conf_sources_remove_dir (GConfSources* sources,
+void          gconf_sources_remove_dir (GConfSources* sources,
                                          const gchar* dir);
 
-void          g_conf_sources_set_schema        (GConfSources* sources,
+void          gconf_sources_set_schema        (GConfSources* sources,
                                                 const gchar* key,
                                                 const gchar* schema_key);
 
-gboolean      g_conf_sources_sync_all    (GConfSources* sources);
+gboolean      gconf_sources_sync_all    (GConfSources* sources);
 
 #endif
 

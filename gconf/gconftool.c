@@ -321,23 +321,23 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
+  if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
       fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
       return 1;
     }
 
-  if (!g_conf_init(&err))
+  if (!gconf_init(&err))
     {
       fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
       return 1;
     }
 
-  conf = g_conf_engine_new();
+  conf = gconf_engine_new();
 
   g_assert(conf != NULL);
 
@@ -345,7 +345,7 @@ main (int argc, char** argv)
      it. */
   if (ping_gconfd)
     {
-      if (g_conf_ping_daemon())
+      if (gconf_ping_daemon())
         return 0;
       else 
         return 2;
@@ -353,12 +353,12 @@ main (int argc, char** argv)
 
   if (dir_exists != NULL) 
     {
-      gboolean exists = g_conf_dir_exists(conf, dir_exists, &err);
+      gboolean exists = gconf_dir_exists(conf, dir_exists, &err);
 
       if (err != NULL)
         {
           fprintf(stderr, "%s\n", err->str);
-          g_conf_error_destroy(err);
+          gconf_error_destroy(err);
           err = NULL;
         }
 
@@ -370,11 +370,11 @@ main (int argc, char** argv)
 
   if (spawn_gconfd)
     {
-      if (!g_conf_spawn_daemon(&err))
+      if (!gconf_spawn_daemon(&err))
         {
           fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
                   err->str);
-          g_conf_error_destroy(err);
+          gconf_error_destroy(err);
           err = NULL;
         }
       /* don't exit, it's OK to have this along with other options
@@ -398,13 +398,13 @@ main (int argc, char** argv)
 
           err = NULL;
 
-          value = g_conf_get(conf, *args, &err);
+          value = gconf_get(conf, *args, &err);
          
           if (value != NULL)
             {
               if (value->type != G_CONF_VALUE_SCHEMA)
                 {
-                  s = g_conf_value_to_string(value);
+                  s = gconf_value_to_string(value);
 
                   printf("%s\n", s);
 
@@ -412,19 +412,19 @@ main (int argc, char** argv)
                 }
               else
                 {
-                  GConfSchema* sc = g_conf_value_schema(value);
-                  GConfValueType stype = g_conf_schema_type(sc);
-                  const gchar* long_desc = g_conf_schema_long_desc(sc);
-                  const gchar* short_desc = g_conf_schema_short_desc(sc);
-                  const gchar* owner = g_conf_schema_owner(sc);
+                  GConfSchema* sc = gconf_value_schema(value);
+                  GConfValueType stype = gconf_schema_type(sc);
+                  const gchar* long_desc = gconf_schema_long_desc(sc);
+                  const gchar* short_desc = gconf_schema_short_desc(sc);
+                  const gchar* owner = gconf_schema_owner(sc);
 
-                  printf(_("Type: %s\n"), g_conf_value_type_to_string(stype));
+                  printf(_("Type: %s\n"), gconf_value_type_to_string(stype));
                   printf(_("Owner: %s\n"), owner ? owner : _("Unset"));
                   printf(_("Short Desc: %s\n"), short_desc ? short_desc : _("Unset"));
                   printf(_("Long Desc: %s\n"), long_desc ? long_desc : _("Unset"));
                 }
 
-              g_conf_value_destroy(value);
+              gconf_value_destroy(value);
             }
           else
             {
@@ -436,7 +436,7 @@ main (int argc, char** argv)
                 {
                   fprintf(stderr, _("Failed to get value for `%s': %s\n"),
                           *args, err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
             }
@@ -498,38 +498,38 @@ main (int argc, char** argv)
           
           err = NULL;
 
-          gval = g_conf_value_new_from_string(type, value, &err);
+          gval = gconf_value_new_from_string(type, value, &err);
 
           if (gval == NULL)
             {
               fprintf(stderr, _("Error: %s\n"),
                       err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
               return 1;
             }
 
           err = NULL;
           
-          g_conf_set(conf, key, gval, &err);
+          gconf_set(conf, key, gval, &err);
 
           if (err != NULL)
             {
               fprintf(stderr, _("Error setting value: %s"),
                       err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
               return 1;
             }
 
-          g_conf_value_destroy(gval);
+          gconf_value_destroy(gval);
 
           ++args;
         }
 
       err = NULL;
 
-      g_conf_sync(conf, &err);
+      gconf_sync(conf, &err);
 
       if (err != NULL)
         {
@@ -554,20 +554,20 @@ main (int argc, char** argv)
       
       key = *args;
 
-      val = g_conf_value_new(G_CONF_VALUE_SCHEMA);
+      val = gconf_value_new(G_CONF_VALUE_SCHEMA);
 
-      sc = g_conf_schema_new();
+      sc = gconf_schema_new();
 
-      g_conf_value_set_schema_nocopy(val, sc);
+      gconf_value_set_schema_nocopy(val, sc);
 
       if (short_desc)
-        g_conf_schema_set_short_desc(sc, short_desc);
+        gconf_schema_set_short_desc(sc, short_desc);
 
       if (long_desc)
-        g_conf_schema_set_long_desc(sc, long_desc);
+        gconf_schema_set_long_desc(sc, long_desc);
 
       if (owner)
-        g_conf_schema_set_owner(sc, owner);
+        gconf_schema_set_owner(sc, owner);
 
       if (value_type)
         {
@@ -609,32 +609,32 @@ main (int argc, char** argv)
             }
 
           if (type != G_CONF_VALUE_INVALID)
-            g_conf_schema_set_type(sc, type);
+            gconf_schema_set_type(sc, type);
         }
 
       err = NULL;
       
-      g_conf_set(conf, key, val, &err);
+      gconf_set(conf, key, val, &err);
       
       if (err != NULL)
         {
           fprintf(stderr, _("Error setting value: %s"),
                   err->str);
-          g_conf_error_destroy(err);
+          gconf_error_destroy(err);
           err = NULL;
           return 1;
         }
       
-      g_conf_value_destroy(val);
+      gconf_value_destroy(val);
 
       err = NULL;
-      g_conf_sync(conf, &err);
+      gconf_sync(conf, &err);
       
       if (err != NULL)
         {
           fprintf(stderr, _("Error syncing: %s"),
                   err->str);
-          g_conf_error_destroy(err);
+          gconf_error_destroy(err);
           err = NULL;
           return 1;
         }
@@ -666,13 +666,13 @@ main (int argc, char** argv)
       while (*args)
         {
           err = NULL;
-          g_conf_unset(conf, *args, &err);
+          gconf_unset(conf, *args, &err);
 
           if (err != NULL)
             {
               fprintf(stderr, _("Error unsetting `%s': %s\n"),
                       *args, err->str);
-              g_conf_error_destroy(err);
+              gconf_error_destroy(err);
               err = NULL;
             }
 
@@ -680,7 +680,7 @@ main (int argc, char** argv)
         }
 
       err = NULL;
-      g_conf_sync(conf, NULL); /* ignore errors */
+      gconf_sync(conf, NULL); /* ignore errors */
     }
 
   if (all_subdirs_mode)
@@ -700,7 +700,7 @@ main (int argc, char** argv)
 
           err = NULL;
 
-          subdirs = g_conf_all_dirs(conf, *args, &err);
+          subdirs = gconf_all_dirs(conf, *args, &err);
           
           if (subdirs != NULL)
             {
@@ -725,7 +725,7 @@ main (int argc, char** argv)
                 {
                   fprintf(stderr, _("Error listing dirs: %s\n"),
                           err->str);
-                  g_conf_error_destroy(err);
+                  gconf_error_destroy(err);
                   err = NULL;
                 }
             }
@@ -749,19 +749,19 @@ main (int argc, char** argv)
 
   poptFreeContext(ctx);
 
-  g_conf_engine_unref(conf);
+  gconf_engine_unref(conf);
 
   if (shutdown_gconfd)
     {
       err = NULL;
-      g_conf_shutdown_daemon(&err);
+      gconf_shutdown_daemon(&err);
     }
       
   if (err != NULL)
     {
       fprintf(stderr, _("Shutdown error: %s\n"),
               err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
     }
 
@@ -781,13 +781,13 @@ recurse_subdir_list(GConfEngine* conf, GSList* subdirs, const gchar* parent, gui
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
-      gchar* full = g_conf_concat_key_and_dir(parent, s);
+      gchar* full = gconf_concat_key_and_dir(parent, s);
       
       printf("%s%s:\n", whitespace, s);
       
       list_pairs_in_dir(conf, full, depth);
 
-      recurse_subdir_list(conf, g_conf_all_dirs(conf, full, NULL), full, depth+1);
+      recurse_subdir_list(conf, gconf_all_dirs(conf, full, NULL), full, depth+1);
 
       g_free(s);
       g_free(full);
@@ -806,7 +806,7 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
     {
       GSList* subdirs;
 
-      subdirs = g_conf_all_dirs(conf, *args, NULL);
+      subdirs = gconf_all_dirs(conf, *args, NULL);
 
       list_pairs_in_dir(conf, *args, 0);
           
@@ -826,13 +826,13 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
   
   whitespace = g_strnfill(depth, ' ');
 
-  pairs = g_conf_all_entries(conf, dir, &err);
+  pairs = gconf_all_entries(conf, dir, &err);
           
   if (err != NULL)
     {
       fprintf(stderr, _("Failure listing pairs in `%s': %s"),
               dir, err->str);
-      g_conf_error_destroy(err);
+      gconf_error_destroy(err);
       err = NULL;
     }
 
@@ -845,13 +845,13 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
           GConfEntry* pair = tmp->data;
           gchar* s;
 
-          s = g_conf_value_to_string(pair->value);
+          s = gconf_value_to_string(pair->value);
 
           printf(" %s%s = %s\n", whitespace, pair->key, s);
 
           g_free(s);
                   
-          g_conf_entry_destroy(pair);
+          gconf_entry_destroy(pair);
 
           tmp = g_slist_next(tmp);
         }
