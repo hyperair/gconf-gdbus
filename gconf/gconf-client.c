@@ -1447,7 +1447,7 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   
   if (gconf_set_pair(client->engine, key, car_type, cdr_type,
-                     address_of_car, address_of_car, &error))
+                     address_of_car, address_of_cdr, &error))
     return TRUE;
   else
     {

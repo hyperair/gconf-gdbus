@@ -1,3 +1,8 @@
+2000-06-22  Dan Winship  <danw@helixcode.com>
+
+	* wrappers/gtk/gconf-client.c (gconf_client_set_pair): Pass both
+	car and cdr to gconf_set_pair rather than passing car twice. Oops.
+
 2000-06-12  Eskil Heyn Olsen  <eskil@eazel.com>
 
 	* gconf.spec.in: Removed the .a libs from the base package, but
