@@ -894,7 +894,8 @@ gconf_sources_recursive_unset (GConfSources   *sources,
   recursive_unset_helper (sources, key, locale, flags,
                           notifies, &first_error);
 
-  g_propagate_error (err, first_error);
+  if (first_error)
+    g_propagate_error (err, first_error);
 }
 
 gboolean
