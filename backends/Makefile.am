@@ -1,18 +1,10 @@
 INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
-	$(DEPENDENT_WITH_XML_CFLAGS) $(BDB_CFLAGS) \
+	$(DEPENDENT_WITH_XML_CFLAGS) \
 	-DGCONF_ENABLE_INTERNALS=1 -DG_LOG_DOMAIN=\"GConf-Backends\"
-
-EXTRA_DIST=README.bdb
 
 backenddir = $(pkglibdir)/$(MAJOR_VERSION)
 
-if BDB
-BDBBACKEND=libgconfbackend-bdb.la
-else
-BDBBACKEND=
-endif
-
-backend_LTLIBRARIES = libgconfbackend-xml.la $(BDBBACKEND)
+backend_LTLIBRARIES = libgconfbackend-xml.la
 noinst_LTLIBRARIES = libgconfbackend-markup.la
 
 libgconfbackend_xml_la_SOURCES = \
@@ -29,10 +21,6 @@ libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS)
 
 libgconfbackend_bdb_la_SOURCES = bdb.c bdb.h bdb-backend.c val-encode.c val-encode.h dir-utils.c dir-utils.h
 
-
-libgconfbackend_bdb_la_LDFLAGS = -avoid-version -module
-libgconfbackend_bdb_la_LIBADD = $(DEPENDENT_LIBS) $(BDB_LIBS)
-
 libgconfbackend_markup_la_SOURCES = 	\
 	markup-backend.c		\
 	markup-tree.h			\
@@ -40,7 +28,6 @@ libgconfbackend_markup_la_SOURCES = 	\
 
 libgconfbackend_markup_la_LDFLAGS = -avoid-version -module
 libgconfbackend_markup_la_LIBADD  = $(DEPENDENT_LIBS)
-
 
 noinst_PROGRAMS = xml-test
 
