@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# gConf de.po file.
+# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+# Matthias Warkus <mawa@iname.com>, 1999.
 # Christian Meyer <linux@chrisime.de>, 2000.
 # Kai Lahmann <kl@linuxfaqs.de>, 2000
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: gConf 0.5\n"
-"POT-Creation-Date: 2000-09-19 22:35+0200\n"
-"PO-Revision-Date: 2000-09-19 22:35+0200\n"
-"Last-Translator: Christian Meyer <linux@chrisime.de>\n"
+"Project-Id-Version: gConf-0.9\n"
+"POT-Creation-Date: 2000-09-14 22:20-0400\n"
+"PO-Revision-Date: 2000-09-20 14:28+02:00\n"
+"Last-Translator: Matthias Warkus <mawarkus@gnome.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
@@ -75,7 +75,7 @@ msgstr ""
 #: backends/xml-dir.c:164
 #, c-format
 msgid "Could not stat `%s': %s"
-msgstr "Konnte '%s' nicht öffnen: %s"
+msgstr "Konnte `%s' nicht mit stat() untersuchen: %s"
 
 #: backends/xml-dir.c:174
 #, c-format
@@ -95,7 +95,7 @@ msgstr "Schreiben von %s gescheitert: %s"
 #: backends/xml-dir.c:357 backends/xml-dir.c:367
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
-msgstr "umbenennen von %s gescheitert: %s"
+msgstr "umbenennen von `%s' in `%s' gescheitert: %s"
 
 #: backends/xml-dir.c:373
 #, c-format
@@ -111,7 +111,7 @@ msgstr "löschen der alten Datei %s gescheitert: %s"
 #: backends/xml-dir.c:788
 #, c-format
 msgid "Failed to stat `%s': %s"
-msgstr "Konnte `%s' nicht öffnen: %s"
+msgstr "Konnte `%s' nicht mit stat() untersuchen: %s"
 
 #: backends/xml-dir.c:932
 #, c-format
@@ -126,7 +126,7 @@ msgstr "Eintrag ohne Namen in der XML-Datei %s, ignoriere"
 #: backends/xml-dir.c:961
 #, c-format
 msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
-msgstr "Oberstes Element in der XML-Datei ist kein <entry>, ignoriere"
+msgstr "Oberstes Element in der XML-Datei `%s' ist kein <entry>, ignoriere"
 
 #: backends/xml-dir.c:1049
 #, c-format
@@ -179,7 +179,7 @@ msgstr "Kein \"type\"-Attribut für <%s>-Element"
 #: backends/xml-entry.c:944
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr "Ein Element hat unbekanntes \"type\"-Attribut, ignoriere"
+msgstr "Ein Element hat unbekanntes \"type\"-Attribut `%s', ignoriere"
 
 #: backends/xml-entry.c:959
 msgid "No \"value\" attribute for node"
@@ -208,7 +208,7 @@ msgstr ""
 #: backends/xml-entry.c:1124
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
-msgstr "Ignorierie schlechtes car vom XML-Paar: %s"
+msgstr "Ignoriere ungültiges car aus XML-Paar: %s"
 
 #: backends/xml-entry.c:1133 backends/xml-entry.c:1156
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
@@ -217,7 +217,8 @@ msgstr "parse XML-Datei: Liste und Paare sollen nicht in einem Paar sein"
 #: backends/xml-entry.c:1146
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
-msgstr "Ignorierie schlechtes cdr vom XML-Paar: %s"
+msgstr "Ignoriere ungültiges cdr aus XML-Paar: %s"
+
 
 #: backends/xml-entry.c:1165
 #, c-format
@@ -226,19 +227,20 @@ msgstr "Verstehe XML-Element <%s> in einem XML-Paar-Element nicht"
 
 #: backends/xml-entry.c:1183
 msgid "Didn't find car and cdr for XML pair node"
-msgstr "konnte car und cdr vom XML-Paar nicht finden"
+msgstr "Konnte car und cdr für XML-Paarknoten nicht finden"
 
-#: backends/xml-entry.c:1189
+
 msgid "Missing cdr from pair of values in XML file"
-msgstr "cdr vom XML-Wertepaar fehlt"
+msgstr "Fehlendes cdr in Wertepaar aus XML-Datei"
+
 
 #: backends/xml-entry.c:1196
 msgid "Missing car from pair of values in XML file"
-msgstr "car vom XML-Wertepaar fehlt"
+msgstr "Fehlendes car in Wertepaar aus XML-Datei"
 
 #: backends/xml-entry.c:1201
 msgid "Missing both car and cdr values from pair in XML file"
-msgstr "car und cdr vom XML-Wertepaar fehlen"
+msgstr "car- und cdr-Werte fehlen beide in Paar aus XML-Datei"
 
 #. -- end debug only
 #: gconf/gconf-backend.c:167
@@ -308,19 +310,19 @@ msgid ""
 "Failed to log addition of listener (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
-msgstr ""
+msgstr "Konnte Hinzufügen eines Zuhörers (%s) nicht in Logdatei verzeichnen; werde nicht in der Lage sein, ihn bei einem Neustart von gconfd wiederherzustellen, was zu einer unzuverlässigen Benachrichtigung über Konfigurationsänderungen führen wird."
 
 #: gconf/gconf-database.c:766
 #, c-format
 msgid "Listener ID %lu doesn't exist"
-msgstr ""
+msgstr "Zuhörer-ID %lu existiert nicht"
 
 #: gconf/gconf-database.c:775
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
-msgstr ""
+msgstr "Konnte Entfernen eines Zuhörers nicht in der Logdatei verzeichnen (wahrscheinlich harmlos, könnte zu einer seltsamerweise neu erscheinenden Benachrichtung führen): %s"
 
 #: gconf/gconf-database.c:887 gconf/gconf-sources.c:1277
 #, c-format
@@ -401,7 +403,7 @@ msgstr "Beschädigte Daten in der Konfigurations-Quell-Datenbank"
 
 #: gconf/gconf-error.c:33
 msgid "Type mismatch"
-msgstr "Typ passt nicht"
+msgstr "Typen stimmen nicht überein"
 
 #: gconf/gconf-error.c:34
 msgid "Key operation on directory"
@@ -425,11 +427,11 @@ msgstr "Operation ohne Konfigurationsserver nicht erlaubt"
 
 #: gconf/gconf-error.c:39
 msgid "Failed to get a lock"
-msgstr "Konnte nicht sichern"
+msgstr "Konnte kein Lock erhalten"
 
 #: gconf/gconf-error.c:40
 msgid "No database available to save your configuration"
-msgstr "Es wurde keine Datenbank gefunden um die Konfiguration abzuspeichern."
+msgstr "Es wurde keine Datenbank gefunden, um die Konfiguration abzuspeichern."
 
 #: gconf/gconf-glib.c:657
 #, c-format
@@ -437,29 +439,26 @@ msgid ""
 "Error on line %d char %d: %s\n"
 "(Some surrounding text was '%s')\n"
 msgstr ""
-"Fehler in Zeile %d Zeichen %d: %s\n"
+"Fehler in Zeile %d, Zeichen %d: %s\n"
 "(Der umgebende Text war '%s')\n"
 
-#: gconf/gconf-glib.c:777
 msgid ""
 "Text ended in the middle of an entity, or entity name too long to be valid "
 "('&' should begin an entity such as '&quot;')"
 msgstr ""
-"Text endete mitten in einem `Entity', oder Objektname ist zu lang, um gültig "
-"zu sein ('&' sollte am Anfang eines Objekt mit '&quot;' stehen)"
+"Text endete mitten in einer Entity, oder Entityname ist zu lang, um gültig "
+"zu sein ('&' sollte am Anfang einer Entity wie '&quot;' stehen)"
 
-#: gconf/gconf-glib.c:829
-#, c-format
 msgid ""
 "Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
 msgstr ""
-"Unbekanntes `Entity' '%s' ('&' muss am Anfang eines Objekt mit &amp; &quot; "
-"&lt; &gt; &apos; starten)"
+"Unbekannte Entity '%s' ('&' muss am Anfang einer Entity wie &amp; &quot; "
+"&lt; &gt; &apos; stehen)"
 
 #: gconf/gconf-glib.c:869
 msgid ""
 "Markup text ended in the middle of a character reference, just after '&#'"
-msgstr "Markierter Text endete mitten in einer Zeichenreferenz, bei '&#'"
+msgstr "Markierter Text endete mitten in einer Zeichenreferenz, gleich nach '&#'"
 
 #: gconf/gconf-glib.c:895
 #, c-format
@@ -468,7 +467,7 @@ msgid ""
 "to a unicode character, such as '&#2342;')"
 msgstr ""
 "Zeichenreferenz enhielt `non-digit' '%s' ('&#' sollte am Anfang einer "
-"Referenz mit einem Unicode Zeichen stehen, z.B. '&#2342;')"
+"Referenz mit einem Unicode-Zeichen stehen, z.B. '&#2342;')"
 
 #: gconf/gconf-glib.c:919
 msgid ""
@@ -476,7 +475,7 @@ msgid ""
 "character reference such as '&#2342;')"
 msgstr ""
 "Text endete in der Mitte einer Zeichenreferenz ('&#' sollte am Anfang einer "
-"Zeichenreferenz stehen, z.B. '&#2342;')"
+"Zeichenreferenz wie '&#2342;' stehen)"
 
 #: gconf/gconf-glib.c:944
 #, c-format
@@ -493,16 +492,15 @@ msgid ""
 "Character code %#lx is not allowed in XML documents or is not a valid "
 "Unicode character"
 msgstr ""
-"Zeichen Code %#lx ist in XML-Dokumenten nicht erlaubt oder ist kein gültiges "
-"Unicode Zeichen"
+"Zeichencode %#lx ist in XML-Dokumenten nicht erlaubt oder ist kein gültiges "
+"Unicode-Zeichen"
 
-#: gconf/gconf-glib.c:1041
 msgid ""
 "Documented ended just after an '&', '&' should begin an entity or character "
 "reference."
 msgstr ""
-"Dokument endete genau nach einem '&', '&' sollte mit einem `Entity' oder "
-"einer Zeichenreferenz beginnen"
+"Dokument endete genau nach einem '&', '&' sollte eine Entity oder eine "
+"Zeichenreferenz einleiten"
 
 #: gconf/gconf-glib.c:1055
 msgid ""
@@ -510,8 +508,8 @@ msgid ""
 "<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
 "&lt; and &gt;"
 msgstr ""
-"'<' oder '>' Zeichen sind hier nicht erlaubt, sie sind nur bei Tags erlaubt, "
-"z.B. <bold> oder <paragraph>. Um sie sonst zu verwenden, bitte &lt; and &gt; "
+"Die Zeichen'<' oder '>' sind hier nicht erlaubt, sondern nur bei Tags wie "
+"<bold> oder <paragraph>. Um sie sonst zu verwenden, bitte &lt; and &gt; "
 "benutzen"
 
 #: gconf/gconf-glib.c:1110
@@ -647,7 +645,6 @@ msgstr "Konnte Datei `%s' nicht öffnen: %s"
 msgid "Error reading file '%s': %s"
 msgstr "Fehler beim Lesen der Datei '%s': %s"
 
-#: gconf/gconf-internals.c:85
 #, c-format
 msgid "No '/' in key `%s'"
 msgstr "Kein `/' in Schlüssel `%s'"
@@ -667,7 +664,7 @@ msgstr "Habe Liste von gconfd mit falschem Listentyp empfangen"
 
 #: gconf/gconf-internals.c:445
 msgid "Failed to convert object to IOR"
-msgstr "Objekt konnte nicht nach IOR konvertiert werden"
+msgstr "Konnte Objekt nicht in IOR umwandeln"
 
 #: gconf/gconf-internals.c:811
 #, c-format
@@ -1125,94 +1122,67 @@ msgstr "Gebe Ausnahmezustand zurück: %s"
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
-msgstr ""
+msgstr "Konnte gconfd-Logdatei nicht öffnen; werde nicht in der Lage sein, Zuhörer nach gconfd-Herunterfahren wiederherzustellen (%s)"
 
 #: gconf/gconfd.c:912
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr ""
-"Schließen der Berichsdatei fehlgeschlagen. Daten wurden wahrscheinlich nicht "
-"ordnungsgemäß gespeichert (%s)"
+msgstr "Konnte gconfd-Logdatei nicht schließen; Daten können evtl. nicht ordnungsgemäß gespeichert worden sein (%s)"
 
-#: gconf/gconfd.c:970
-#, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
-msgstr ""
-"Gespeicherte Statusdatei '%s' konnte zum Schreiben nicht geöffnet werden: %s"
+msgstr "Konnte Statusspeicherungs-Datei '%s' nicht zum Schreiben öffnen: %s"
 
-#: gconf/gconfd.c:984
-#, c-format
+
 msgid "Could not write saved state file '%s' fd: %d: %s"
-msgstr ""
-"Gespeicherte Statusdatei '%s' konnte nicht geschrieben werden fd: %d: %s"
+msgstr "Konnte Statusspeicherungs-Datei '%s', FD %d, nicht schreiben: %s"
 
-#: gconf/gconfd.c:993
-#, c-format
 msgid "Failed to close new saved state file '%s': %s"
-msgstr "Schließen der gespeicherten Statusdatei '%s' fehlgeschlagen: %s"
+msgstr "Konnte neue Statusspeicherungs-Datei '%s' nicht schließen: %s"
 
-#: gconf/gconfd.c:1007
-#, c-format
 msgid "Could not move aside old saved state file '%s': %s"
-msgstr "Alte Statusdatei '%s' konnte nicht beiseite gelegt werden: %s"
+msgstr "Konnte alte Statusspeicherungs-Datei '%s' nicht wegbewegen: %s"
 
-#: gconf/gconfd.c:1017
-#, c-format
+
 msgid "Failed to move new save state file into place: %s"
-msgstr "Verschieben der gespeicherten Statusdatei '%s' fehlgeschlagen: %s"
+msgstr "Konnte neue Statusspeicherungsdatei nicht auf ihren Platz bringen: %s"
 
-#: gconf/gconfd.c:1026
-#, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr ""
-"Wiederherstellen der original gespeicherten Statusdatei, die nach '%s' "
-"verschoben wurde, fehlgeschlagen: %s"
+msgstr "Konnte ursprüngliche Statusspeicherungs-Datei, die auf '%s' verschoben worden war, nicht wiederherstellen: %s"
 
-#: gconf/gconfd.c:1114
-#, c-format
 msgid "Didn't understand line in saved state file: '%s'"
-msgstr "Zeile in gespeicherter Statusdatei unbekannt: '%s'"
+msgstr "Konnte Zeile in Statusspeicherungs-Datei nicht verstehen: '%s'"
 
-#: gconf/gconfd.c:1129
 msgid "Failed to parse connection ID in saved state file"
-msgstr "Analyse der Verbindungs-ID in gespeicherter Statusdatei fehlgeschlagen"
+msgstr "Konnte Verbindungs-ID in Statusspeicherungs-Datei nicht parsen"
 
-#: gconf/gconfd.c:1144
-#, c-format
 msgid "Failed to unquote config source address from saved state file: %s"
-msgstr ""
-"Zitat beenden in Konfig-Quellen-Adresse von gespeicherter Statusdatei "
-"fehlgeschlagen: %s"
+msgstr "Konnte Konfigurations-Quelladresse aus Statusspeicherungs-Datei nicht unquoten: %s"
 
-#: gconf/gconfd.c:1164
-#, c-format
 msgid "Failed to unquote listener location from saved state file: %s"
-msgstr ""
+msgstr "Konnte Zuhörer-Ort aus Statusspeicherungs-Datei nicht unquoten: %s"
 
-#: gconf/gconfd.c:1184
-#, c-format
 msgid "Failed to unquote IOR from saved state file: %s"
-msgstr "Zitat beenden in IOR in gespeicherter Statusdatei fehlgeschlagen: %s"
+msgstr "Konnte IOR aus Statusspeicherungs-Datei nicht unquoten: %s"
 
 #: gconf/gconfd.c:1208
 msgid ""
 "Saved state file records the same listener added twice; ignoring the second "
 "instance"
-msgstr ""
+msgstr "Statusspeicherungs-Datei verzeichnet zweimaliges Hinzufügen des gleichen Zuhörers; ignoriere das zweite Auftreten"
 
 #: gconf/gconfd.c:1229
 msgid ""
 "Saved state file had a removal of a listener that wasn't added; ignoring the "
 "removal."
-msgstr ""
+msgstr "Statusspeicherungsdatei enthält das Entfernen eines Zuhörers, der nie hinzugefügt wurde; ignoriere das Entfernen"
 
 #: gconf/gconfd.c:1350
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr ""
+msgstr "Kann keinen Zuhörer auf Adresse '%s' wiederherstellen, konnte Datenbank nicht auflösen"
 
 #: gconf/gconfd.c:1381
 #, c-format
@@ -1224,14 +1194,14 @@ msgstr "Öffnen der gespeicherten Status Datei '%s' nicht möglich: %s"
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to "
 "re-add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
+msgstr "Konnte Hinzufügen eines Zuhörers nicht in der gconfd-Logdatei verzeichnen; werde nicht in der Lage sein, ihn wieder hinzuzufügen, wenn gconfd beendet wird oder herunterfährt (%s)"
 
 #: gconf/gconfd.c:1485
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously "
 "re-add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
+msgstr "Konnte Entfernen eines Zuhörers nicht in der gconfd-Logdatei verzeichnen; werde ihn vielleicht irrtümlich wieder hinzufügen, wenn gconfd beendet wird oder herunterfährt (%s)"
 
 #: gconf/gconftool.c:62
 msgid "Help options"
