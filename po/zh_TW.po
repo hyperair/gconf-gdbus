@@ -1,12 +1,12 @@
-# traditional Chinese translation of gconf.
+# Traditional Chinese translation of gconf.
 # Copyright (C) 2002 Free Software Foundation, Inc.
 # Ben Wu <hpwu@redhat.com>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 1.1.9\n"
-"POT-Creation-Date: 2002-06-02 22:33-0400\n"
-"PO-Revision-Date: 2002-04-11 12:32+1000\n"
+"Project-Id-Version: GConf 1.2.0\n"
+"POT-Creation-Date: 2002-06-11 01:07+0200\n"
+"PO-Revision-Date: 2002-06-11 15:49+1000\n"
 "Last-Translator: Ben Wu <hpwu@redhat.com>\n"
 "Language-Team: traditional Chinese <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
@@ -61,15 +61,15 @@ msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "在 %s 的 XML 原始檔之 目錄/檔案 權限設定為： %o/%o"
 
 #: backends/xml-backend.c:590
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "同步化 config 資料發生錯誤： %s"
+msgstr "同步化 XML 後端目錄的快取發生錯誤： %s"
 
 #: backends/xml-backend.c:655
 msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
-msgstr ""
+msgstr "已不再支援移除目錄的操作，只能移除目錄中的所有數值"
 
 #: backends/xml-backend.c:722
 msgid "Initializing XML backend module"
@@ -82,7 +82,7 @@ msgstr "無法放棄在 XML 目錄 `%s' 的鎖定： %s"
 
 #: backends/xml-cache.c:257
 msgid "Failed to sync XML cache contents to disk"
-msgstr ""
+msgstr "同步 XML 快取內容到磁碟失敗"
 
 #: backends/xml-cache.c:287
 #, c-format
@@ -109,9 +109,9 @@ msgid "XML filename `%s' is a directory"
 msgstr "XML 檔名 `%s' 是一個目錄"
 
 #: backends/xml-dir.c:372 backends/xml-dir.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to delete \"%s\": %s"
-msgstr "無法刪除 `%s'： %s"
+msgstr "無法刪除 \"%s\"： %s"
 
 #: backends/xml-dir.c:427
 #, c-format
@@ -124,9 +124,9 @@ msgid "Failed to set mode on `%s': %s"
 msgstr "無法在 `%s' 設定模式： %s"
 
 #: backends/xml-dir.c:450
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write XML data to `%s': %s"
-msgstr "無法寫入 `%s' 檔案： %s"
+msgstr "無法寫入 XML 檔案至 `%s'： %s"
 
 #: backends/xml-dir.c:460 backends/xml-dir.c:1236
 #, c-format
@@ -155,11 +155,9 @@ msgid "Failed to stat `%s': %s"
 msgstr "無法 stat `%s'： %s"
 
 #: backends/xml-dir.c:959
-#, fuzzy, c-format
+#, c-format
 msgid "%s"
-msgstr ""
-"\n"
-"%s\n"
+msgstr "%s"
 
 #: backends/xml-dir.c:1109
 #, c-format
@@ -182,9 +180,9 @@ msgid "Failed to create file `%s': %s"
 msgstr "無法建立檔案 `%s'： %s"
 
 #: backends/xml-dir.c:1327
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "無法寫入 `%s' 檔案： %s"
+msgstr "無法解析 XML 檔案 \"%s\""
 
 #. There was an error
 #: backends/xml-entry.c:154
@@ -346,14 +344,14 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "同步化一個或更多的原始資料失敗： %s"
 
 #: gconf/gconf-database.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"紀錄 listener (%s) 的增加失敗; 這將導致無法在 gconfd 重新啟動後回復 這個 "
-"listener，以及影響組態設定更改提示的可靠性。"
+"紀錄 listener %s (%s) 的增加失敗;這將導致無法在 gconfd 重新啟動後回復這個"
+"listener，以及影響提示組態設定更改的可靠性。"
 
 #: gconf/gconf-database.c:1111
 #, c-format
@@ -390,14 +388,14 @@ msgid "Error getting default value for `%s': %s"
 msgstr "取得 `%s' 的預設值發生錯誤： %s"
 
 #: gconf/gconf-database.c:1413
-#, fuzzy, c-format
+#, c-format
 msgid "Error unsetting \"%s\": %s"
-msgstr "解除設定 `%s' 發生錯誤： %s"
+msgstr "解除設定 \"%s\" 發生錯誤： %s"
 
 #: gconf/gconf-database.c:1445
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "取得 `%s' 的數值發生錯誤： %s"
+msgstr "取得 \"%s\" 的新數值發生錯誤： %s"
 
 #: gconf/gconf-database.c:1493
 #, c-format
@@ -489,9 +487,9 @@ msgid "No database available to save your configuration"
 msgstr "沒有可使用的資料庫來儲存您的組態設定"
 
 #: gconf/gconf-internals.c:86
-#, fuzzy, c-format
+#, c-format
 msgid "No '/' in key \"%s\""
-msgstr "沒有 '/' 在金鑰 `%s'"
+msgstr "在金鑰 \"%s\" 沒有 '/'"
 
 #: gconf/gconf-internals.c:199
 #, c-format
@@ -605,13 +603,13 @@ msgid "Failed to create or open '%s'"
 msgstr "建立或開啟 '%s' 失敗"
 
 #: gconf/gconf-internals.c:2370
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
-"鎖定 '%s' 失敗： 也許另一個程序有這個鎖，或您的 作業系統的 NFS 檔案鎖定設定錯"
-"誤或是一個 hard NFS 客戶端 失敗造成失去時效的鎖定 (%s)"
+"鎖定 '%s' 失敗： 也許另一個程序有這個鎖，或您作業系統的 NFS 檔案鎖定設定錯誤 "
+"(%s)"
 
 #: gconf/gconf-internals.c:2399
 #, c-format
@@ -628,9 +626,9 @@ msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "無法聯繫 ORB 以辨析既存的 gconfd 物件參考"
 
 #: gconf/gconf-internals.c:2456
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr "轉換物件為 IOR 失敗"
+msgstr "轉換 IOR '%s' 為物件索引時失敗"
 
 #: gconf/gconf-internals.c:2506
 #, c-format
@@ -673,9 +671,9 @@ msgid "Failed to create %s: %s"
 msgstr "建立 `%s' 失敗： %s"
 
 #: gconf/gconf-internals.c:2837
-#, fuzzy, c-format
+#, c-format
 msgid "Server ping error: %s"
-msgstr "關閉發生錯誤： %s\n"
+msgstr "伺服器 ping 時發生錯誤： %s"
 
 #: gconf/gconf-internals.c:2858
 #, c-format
@@ -695,10 +693,13 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"無法聯繫組態設定程式； 有些可能的原因是您必須啟用 ORBit 的 TCP/IP 網路連線， "
+"或由於系統當機使您有老舊的 NFS 鎖定。 請參考 http://www.gnome.org/projects/"
+"gconf/ 以取得更多資訊。 (Details - %s)"
 
 #: gconf/gconf-internals.c:2908
 msgid "none"
-msgstr ""
+msgstr "沒有"
 
 #: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:73
 msgid "Help options"
@@ -721,6 +722,9 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
+"請聯繫您的系統管理員以解決下列的問題：\n"
+"無法開啟或建立 \"%s\" 檔案； 這表示您的組態設定 有問題，因為許多程式都需要在"
+"您的家目錄建立檔案。 這個錯誤是 \"%s\" (errno = %d)。"
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
@@ -733,11 +737,16 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
+"請聯繫您的系統管理員以解決下列的問題：\n"
+"無法鎖定 \"%s\" 檔案； 這表示也許您的作業系統組態設定 有問題。 假如您有一個 "
+"NFS 掛載的家目錄， 也許用戶端或 伺服端設定不正確。 請參考 rpc.statd 與 rpc."
+"lockd 的說明文件。 導致這個錯誤的常見因素是 \"nfslock\" 服務已停用。 錯誤是 "
+"\"%s\" (errno = %d)。"
 
 #: gconf/gconf-sanity-check.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr "無法寫入檔案 `%s'： %s"
+msgstr "無法移除檔案 %s： %s\n"
 
 #: gconf/gconf-sanity-check.c:195
 #, c-format
@@ -746,11 +755,12 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
+"請聯繫您的系統管理員以解決下列的問題：\n"
+"在組態設定檔 \"%s\" 中沒有設定原始檔； 這表示 選項與其他設定無法被儲存。 %s%s"
 
 #: gconf/gconf-sanity-check.c:198
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "讀取儲存的狀態檔發生錯誤： %s"
+msgstr "讀取檔案發生錯誤："
 
 #: gconf/gconf-sanity-check.c:220
 #, c-format
@@ -758,39 +768,40 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
+"請聯繫您的系統管理員以解決下列的問題：\n"
+"無法解析 \"%s\" 位址在 \"%s\" 設定檔中： %s"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
-#, fuzzy
 msgid "Schema contains invalid UTF-8"
-msgstr "文字包含無效的 UTF-8"
+msgstr "概要包含無效的 UTF-8"
 
 #: gconf/gconf-sources.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load source \"%s\": %s"
-msgstr "載入原始檔 `%s' 失敗： %s"
+msgstr "載入原始檔 \"%s\" 失敗： %s"
 
 #: gconf/gconf-sources.c:346
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
-msgstr ""
+msgstr "解析 \"%s\" 位址到 %d 位置的一個可寫入的設定原始檔"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
-msgstr ""
+msgstr "解析 \"%s\" 位址到 %d 位置的一個只能讀取的設定原始檔"
 
 #: gconf/gconf-sources.c:359
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
-msgstr ""
+msgstr "解析 \"%s\" 位址到 %d 位置的一個可部份寫入的設定原始檔"
 
 #: gconf/gconf-sources.c:368
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
-msgstr ""
+msgstr "所有已解析的位址都無法被讀取； 導致將無法儲存組態設定"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -802,14 +813,14 @@ msgid "The '/' name can only be a directory, not a key"
 msgstr "'/' 名稱只能當作是一個目錄而不是一支金鑰"
 
 #: gconf/gconf-sources.c:680
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
-msgstr "`%s' 的數值設定在您的組態設定路徑之前只能讀取的原始檔。"
+msgstr "`%s' 的數值設定在您的組態設定路徑之前的一個只能讀取的原始檔"
 
 #: gconf/gconf-sources.c:692
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writable databases. There are some common causes of this problem: 1) your "
@@ -829,11 +840,16 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 "無法儲存數值在金鑰 '%s'，因為組態設定程式沒有 可寫入的資料庫。 這個問題的起因"
-"有兩種可能： 1) 您的 組態設定路徑沒有包含任何的資料庫或找不到或 2) 因某種因素"
-"我們不小心建立了兩個 gconfd 程序。 假如您有兩個 gconfd 程序 (或在第二個啟動後"
-"有兩個)， 請登出後， 終止所有的 gconfd 程序並重新登入。 或許 問題是由於您想在"
-"兩部機器上同時使用 GConf， 而 ORBit 仍有預設的組態設定以防止遠端的 CORBA 連"
-"線？ 在 gconfd 發生問題時，通常都檢查 user.* syslog 的詳細情況。"
+"有幾種可能： 1) 您的 組態設定路徑檔案 %s/path 沒有包含任何的資料庫或找不到 "
+"2) 因某種因素我們不小心建立了兩個 gconfd 程序 3) 您的作業系統組態設定錯誤， "
+"導致 NFS 檔案鎖定無法在您的家目錄使用，或 4) 您的 NFS 用戶端機器已當機，而且"
+"並沒有 在重新開機後通知伺服器應該停止檔案鎖定。 假如您有兩個 gconfd 程序 (或"
+"在第二個啟動後有兩個)，請登出後，終止所有的 gconfd 程序並重新登入。 假如您有"
+"老舊的鎖定，請移除 ~/.gconf*/*lock。 或許問題是由於您想在兩部機器上同時使用 "
+"GConf， 而 ORBit 仍有預設 的組態設定以防止遠端的 CORBA 連線 - 將 "
+"\"ORBIIOPIPv4=1\" 放入 /etc/orbitrc 檔案中。 在 gconfd 發生問題時，通常都檢"
+"查 user.* syslog 的詳細情況。 每一個家目錄只能有一個 gconfd，而且它必須擁有一"
+"個鎖定檔在 ~/.gconfd，以及在每一個存放位置（例如 ~/.gconf） 都有鎖定檔"
 
 #: gconf/gconf-sources.c:1413
 #, c-format
@@ -913,12 +929,12 @@ msgstr "無法了解 `%s' (在一對中找到多餘的 ')')"
 #: gconf/gconf.c:55
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "金鑰 \"%s\" 的值為 NULL"
 
 #: gconf/gconf.c:62
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\": %s"
-msgstr "`%s'： %s"
+msgstr "\"%s\"： %s"
 
 #: gconf/gconf.c:345
 #, c-format
@@ -947,9 +963,9 @@ msgid "Can't have a period (.) right after a slash (/)"
 msgstr "不能有一個句號 (.) 在短斜線 (/) 之後"
 
 #: gconf/gconf.c:2476
-#, fuzzy, c-format
+#, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
-msgstr "`%c' 是一個在 金鑰/目錄 名稱中無效的字元"
+msgstr "`%c' 不是一個 ASCII 的字元，所以不允許使用在金鑰名稱"
 
 #: gconf/gconf.c:2486
 #, c-format
@@ -1202,7 +1218,7 @@ msgstr "有些客戶在他們還沒有被加入前，將自己從 GConf 伺服�
 #. dialog display isn't working out
 #: gconf/gconfd.c:2318
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr ""
+msgstr "發生多重分割錯誤； 導致無法顯示錯誤對話窗\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2327
@@ -1211,6 +1227,8 @@ msgid ""
 "Segmentation fault!\n"
 "Cannot display crash dialog: %s\n"
 msgstr ""
+"分割錯誤！\n"
+"無法顯示當機對話窗： %s\n"
 
 #: gconf/gconftool.c:82
 msgid "Set a key to a value and sync. Use with --type."
@@ -1232,11 +1250,10 @@ msgid "Unset the keys on the command line"
 msgstr "在命令列取消設定這個金鑰"
 
 #: gconf/gconftool.c:119
-#, fuzzy
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
-msgstr "必須在命令列指定金鑰\n"
+msgstr "在命令列遞迴地解除設定在金鑰/目錄名稱中的所有金鑰"
 
 #: gconf/gconftool.c:128
 msgid "Print all key/value pairs in a directory."
@@ -1385,9 +1402,8 @@ msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "指定概要名稱以及要套用於其上的金鑰"
 
 #: gconf/gconftool.c:344
-#, fuzzy
 msgid "Remove any schema name applied to the given keys"
-msgstr "取得套用在此金鑰的概要名稱"
+msgstr "移除套用在此金鑰的任何概要名稱"
 
 #: gconf/gconftool.c:353
 msgid "Get the name of the default source"
@@ -1395,7 +1411,7 @@ msgstr "取得預設原始檔的名稱"
 
 #: gconf/gconftool.c:362
 msgid "Print version"
-msgstr ""
+msgstr "列出版本資訊"
 
 #: gconf/gconftool.c:441
 msgid "Can't get and set/unset simultaneously\n"
@@ -1478,7 +1494,7 @@ msgstr "初始化 GConf 失敗： %s\n"
 
 #: gconf/gconftool.c:608
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
-msgstr ""
+msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL 已設定，並非安裝概要\n"
 
 #: gconf/gconftool.c:621
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1652,9 +1668,9 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "要使概要名稱 '%s' 與金鑰名稱 '%s' 產生關聯發生錯誤： %s\n"
 
 #: gconf/gconftool.c:1463
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "在 '%s' 取得概要發生錯誤： %s\n"
+msgstr "從 '%s' 移除概要名稱發生錯誤： %s\n"
 
 #: gconf/gconftool.c:1488
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1696,14 +1712,13 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "反設定時發生錯誤 `%s'： %s\n"
 
 #: gconf/gconftool.c:1659
-#, fuzzy
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "必須指定一個或多個目錄給循環的名單。\n"
+msgstr "必須指定一個或多個金鑰給遞迴地解除設定。\n"
 
 #: gconf/gconftool.c:1673
-#, fuzzy, c-format
+#, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "無法列出在 `%s' 的紀錄： %s\n"
+msgstr "遞迴的解除設定 \"%s\" 時失敗： %s\n"
 
 #: gconf/gconftool.c:1691
 msgid "Must specify one or more dirs to get subdirs from.\n"
