@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-11-02 19:04+0300\n"
-"PO-Revision-Date: 2000-11-02 19:29+03:00\n"
+"POT-Creation-Date: 2000-11-08 19:24+0300\n"
+"PO-Revision-Date: 2000-11-08 19:53+03:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -125,7 +125,7 @@ msgstr "Узел верхнего уровня в XML-файле \"%s\" не <entry>, игнорируется"
 msgid "Failed to create file `%s': %s"
 msgstr "Не удалось создать файл \"%s\": %s"
 
-#: backends/xml-dir.c:1059 gconf/gconf-internals.c:2470
+#: backends/xml-dir.c:1059 gconf/gconf-internals.c:2471
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Не удалось закрыть файл '%s': %s"
@@ -422,191 +422,6 @@ msgstr "Не удалось создать lock"
 msgid "No database available to save your configuration"
 msgstr "База данных для сохранения вашей конфигурации не доступна"
 
-#: gconf/gconf-glib.c:657
-#, c-format
-msgid ""
-"Error on line %d char %d: %s\n"
-"(Some surrounding text was '%s')\n"
-msgstr ""
-"Ошибка в строке %d символе %d: %s\n"
-"(Окружающий текст был \"%s\")\n"
-
-#: gconf/gconf-glib.c:777
-msgid ""
-"Text ended in the middle of an entity, or entity name too long to be valid "
-"('&' should begin an entity such as '&quot;')"
-msgstr ""
-
-#: gconf/gconf-glib.c:829
-#, c-format
-msgid ""
-"Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
-msgstr ""
-
-#: gconf/gconf-glib.c:869
-msgid ""
-"Markup text ended in the middle of a character reference, just after '&#'"
-msgstr ""
-
-#: gconf/gconf-glib.c:895
-#, c-format
-msgid ""
-"Character reference contained non-digit '%s' ('&#' should begin a reference "
-"to a unicode character, such as '&#2342;')"
-msgstr ""
-
-#: gconf/gconf-glib.c:919
-msgid ""
-"Text ended in the middle of an character reference ('&#' should begin a "
-"character reference such as '&#2342;')"
-msgstr ""
-
-#: gconf/gconf-glib.c:944
-#, c-format
-msgid ""
-"Couldn't parse character reference '%s' ('&#' must begin a character "
-"reference such as '&#2343;')"
-msgstr ""
-
-#: gconf/gconf-glib.c:966
-#, c-format
-msgid ""
-"Character code %#lx is not allowed in XML documents or is not a valid "
-"Unicode character"
-msgstr ""
-
-#: gconf/gconf-glib.c:1041
-msgid ""
-"Document ended just after an '&', '&' should begin an entity or character "
-"reference."
-msgstr ""
-
-#: gconf/gconf-glib.c:1055
-msgid ""
-"'<' or '>' character not allowed here; only allowed around tags, for example "
-"<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
-"&lt; and &gt;"
-msgstr ""
-
-#: gconf/gconf-glib.c:1110
-#, c-format
-msgid "Character '%s' is not valid at the start of an attribute name"
-msgstr ""
-
-#: gconf/gconf-glib.c:1137
-msgid "Document ended just after attribute name"
-msgstr "Документ заканчивается сразу после названия аттрибута"
-
-#: gconf/gconf-glib.c:1148
-msgid "Attribute name must be immediately followed by an '=' character"
-msgstr ""
-
-#: gconf/gconf-glib.c:1163
-msgid ""
-"'=' character after attribute must be immediately followed by an '\"' "
-"character"
-msgstr ""
-
-#: gconf/gconf-glib.c:1189
-#, c-format
-msgid ""
-"Character '%c' found inside an attribute value; perhaps your attribute value "
-"is missing the closing quotation mark '\"'"
-msgstr ""
-
-#: gconf/gconf-glib.c:1209
-msgid ""
-"Ran out of text before a quote mark ('\"') was seen at the end of an "
-"attribute value"
-msgstr ""
-
-#: gconf/gconf-glib.c:1222
-msgid ""
-"Text ends immediately after an attribute value, before the element was closed"
-msgstr ""
-
-#: gconf/gconf-glib.c:1536
-msgid "Missing '<' at start of element"
-msgstr "Ошибочный символ \"<\" в начале элемента"
-
-#: gconf/gconf-glib.c:1547
-msgid "Document ended just after '<' character"
-msgstr "Документ заканчивается сразу после символа \"<\""
-
-#: gconf/gconf-glib.c:1575
-msgid "No closing '>' found for a <? or <!"
-msgstr "Не найдена закрывающая \">\" для <? или <!"
-
-#: gconf/gconf-glib.c:1604
-#, c-format
-msgid "Character '%s' is not valid at the start of an element name"
-msgstr ""
-
-#: gconf/gconf-glib.c:1628 gconf/gconf-glib.c:1641
-msgid "Document ended just after element name, no '>' seen"
-msgstr "Документ заканчивается сразу после названия элемента, символ \">\" не найден"
-
-#: gconf/gconf-glib.c:1666
-#, c-format
-msgid "Elements should be closed with '>' or '/>', not with '%s'"
-msgstr "Элементы должны закрываться символами \">\" или \"/>\", а не \"%s\""
-
-#: gconf/gconf-glib.c:1683
-msgid ""
-"Element ended just after '/', no '>' seen; empty elements should end with "
-"'/>'"
-msgstr "Элемент заканчивается сразу после \"/\", \">\" не найден; пустые элементы должны оканчиваться на \"/>\""
-
-#: gconf/gconf-glib.c:1722
-msgid "Close tag not found at end of element"
-msgstr "Закрывающий тэг в конце элемента не найден"
-
-#: gconf/gconf-glib.c:1737
-msgid "Close tag ends just after '<' character"
-msgstr "Закрывающий тэг заканчивается сразу после символа \"<\""
-
-#: gconf/gconf-glib.c:1751
-msgid "Close tag should begin with '</', '/' character is missing"
-msgstr "Закрывающий тэг должен начинаться с \"</\", символ \"/\" пропущен"
-
-#: gconf/gconf-glib.c:1765
-msgid "Close tag ends just after '/' character"
-msgstr "Эакрывающий тэг заканчивается сразу после символа \"/\""
-
-#: gconf/gconf-glib.c:1800
-msgid "Document ended just after element name in close tag, no '>' seen"
-msgstr "Документ заканчивается сразу после названия элемента в закрывающем тэге, \">\" не найден"
-
-#: gconf/gconf-glib.c:1816
-msgid "Document ended just after close tag name, no '>' seen"
-msgstr "Документ заканчивается сразу после названия закрывающего тэга, \">\" не найден"
-
-#: gconf/gconf-glib.c:1835
-#, c-format
-msgid "Close tag '%s' does not match opening tag '%s'"
-msgstr ""
-
-#: gconf/gconf-glib.c:2173
-#, c-format
-msgid ""
-"Invalid UTF-8 character at byte %d in marked-up text. Some text before the "
-"bad character was '%s'"
-msgstr ""
-
-#: gconf/gconf-glib.c:2230
-msgid "The marked-up text contained nothing but whitespace."
-msgstr ""
-
-#: gconf/gconf-glib.c:10694
-#, c-format
-msgid "Failed to open file '%s': %s"
-msgstr "Не удалось открыть файл '%s': %s"
-
-#: gconf/gconf-glib.c:10711
-#, c-format
-msgid "Error reading file '%s': %s"
-msgstr "Ошибка чтения файла \"%s\": %s"
-
 #: gconf/gconf-internals.c:85
 #, c-format
 msgid "No '/' in key `%s'"
@@ -644,87 +459,87 @@ msgstr "Добавление источника '%s'\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Ошибка чтения файла '%s': %s\n"
 
-#: gconf/gconf-internals.c:1320
+#: gconf/gconf-internals.c:1321
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Ожидался список, получен %s"
 
-#: gconf/gconf-internals.c:1330
+#: gconf/gconf-internals.c:1331
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Ожидался список %s, получен список %s"
 
-#: gconf/gconf-internals.c:1469
+#: gconf/gconf-internals.c:1470
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Ожидалась пара, получен %s"
 
-#: gconf/gconf-internals.c:1483
+#: gconf/gconf-internals.c:1484
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Ожидалась пара (%s,%s), получена пара с неверными одним или обоими значениями"
 
-#: gconf/gconf-internals.c:1499
+#: gconf/gconf-internals.c:1500
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Ожидалась пара типа (%s,%s) получена типа (%s,%s)"
 
-#: gconf/gconf-internals.c:1615
+#: gconf/gconf-internals.c:1616
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Строка в кавычках не начинается с кавычки"
 
-#: gconf/gconf-internals.c:1677
+#: gconf/gconf-internals.c:1678
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Строка в кавычках не заканчивается кавычкой"
 
-#: gconf/gconf-internals.c:2157 gconf/gconf.c:2945
+#: gconf/gconf-internals.c:2158 gconf/gconf.c:2945
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Ошибка CORBA: %s"
 
-#: gconf/gconf-internals.c:2173
+#: gconf/gconf-internals.c:2174
 #, c-format
 msgid "OAF problem description: '%s'"
 msgstr "Описание проблемы OAF: \"%s\""
 
-#: gconf/gconf-internals.c:2179
+#: gconf/gconf-internals.c:2180
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "попытка удалить не указанный в списке каталог объектов OAF"
 
-#: gconf/gconf-internals.c:2184
+#: gconf/gconf-internals.c:2185
 msgid "attempt to add already-listed OAF directory"
 msgstr "попытка добавить уже указанный в списке каталог OAF"
 
-#: gconf/gconf-internals.c:2191
+#: gconf/gconf-internals.c:2192
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "Ошибка анализа OAF: %s"
 
-#: gconf/gconf-internals.c:2196
+#: gconf/gconf-internals.c:2197
 msgid "Unknown OAF error"
 msgstr "Неизвестная ошибка OAF"
 
-#: gconf/gconf-internals.c:2279
+#: gconf/gconf-internals.c:2280
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Нет ior-файла в '%s'"
 
-#: gconf/gconf-internals.c:2310
+#: gconf/gconf-internals.c:2311
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd заблокировал '%s' от некоторых других процессов"
 
-#: gconf/gconf-internals.c:2321
+#: gconf/gconf-internals.c:2322
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Другая программа заблокировала '%s'"
 
-#: gconf/gconf-internals.c:2341
+#: gconf/gconf-internals.c:2342
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr "невозможно подключиться к ORB, чтобы проверить существующий gconfd"
 
-#: gconf/gconf-internals.c:2349
+#: gconf/gconf-internals.c:2350
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
@@ -733,50 +548,50 @@ msgstr ""
 "Удаление устаревшего lock \"%s\", так как IOR не может быть преобразован в "
 "ссылку на объект, IOR \"%s\""
 
-#: gconf/gconf-internals.c:2361
+#: gconf/gconf-internals.c:2362
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr ""
 "Удаление устаревшего lock \"%s\", в связи с неудачным ping сервера: %s "
 
-#: gconf/gconf-internals.c:2373
+#: gconf/gconf-internals.c:2374
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "Демон конфигурации GConf (gconfd) заблокировал '%s'"
 
-#: gconf/gconf-internals.c:2387
+#: gconf/gconf-internals.c:2388
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "не удалось создать каталог '%s': %s"
 
-#: gconf/gconf-internals.c:2422
+#: gconf/gconf-internals.c:2423
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "Невозможно создать блокировку '%s': %s"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2459
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Невозможно записать в файл '%s': %s"
 
-#: gconf/gconf-internals.c:2501
+#: gconf/gconf-internals.c:2502
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr "Невозможно открыть файл блокировки \"%s\"; возможно он не наш: %s"
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2519
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr "Поврежденный lock-файл \"%s\", удаляется"
 
-#: gconf/gconf-internals.c:2528
+#: gconf/gconf-internals.c:2529
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
 "took our lock"
 msgstr ""
 
-#: gconf/gconf-internals.c:2545
+#: gconf/gconf-internals.c:2546
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Не удалось освободить заблокированный каталог \"%s\": %s"
@@ -1024,13 +839,16 @@ msgstr ""
 #: gconf/gconfd.c:375
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr "Получен сигнал %d, ядро сброшено. Пожалуйста сообщите об ошибке в GConf."
+msgstr ""
+"Получен сигнал %d, ядро сброшено. Пожалуйста сообщите об ошибке в GConf."
 
 #: gconf/gconfd.c:391
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
-msgstr "Получен сигнал %d, ненормальное выключение. Пожалуйста сообщите об ошибке в GConf."
+msgstr ""
+"Получен сигнал %d, ненормальное выключение. Пожалуйста сообщите об ошибке в "
+"GConf."
 
 #: gconf/gconfd.c:408
 #, c-format
@@ -1129,7 +947,9 @@ msgstr "Не удалось переместить новый сохраненный файл состояния в: %s"
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "Не удалось восстановить исходный сохраненный файл состояния, который был перемещен в \"%s\": %s"
+msgstr ""
+"Не удалось восстановить исходный сохраненный файл состояния, который был "
+"перемещен в \"%s\": %s"
 
 #: gconf/gconfd.c:1633
 #, c-format
@@ -1528,7 +1348,7 @@ msgstr "Непонятный тип '%s'\n"
 
 #: gconf/gconftool.c:971
 msgid "Must specify alternating keys/values as arguments\n"
-msgstr ""
+msgstr "Нужно указать алтернативные ключи/значения в качестве аргументов\n"
 
 #: gconf/gconftool.c:991
 #, c-format
