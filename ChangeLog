@@ -1,3 +1,10 @@
+2001-11-18  Miles Lane  <miles@megapathdsl.net>
+
+	* gconf/gconf-client.h: replace include of gobject/gobject.h
+	with glib-object.h, due to a change in gobject/gobject.h
+	that forces an #error for all direct includes.
+	This checkin was approved by Havoc.
+
 2001-10-31  Havoc Pennington  <hp@pobox.com>
 
 	* configure.in: bump version to 1.1.4, and set revision to 1

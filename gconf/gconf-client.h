@@ -21,7 +21,7 @@
 #ifndef GCONF_GCONF_CLIENT_H
 #define GCONF_GCONF_CLIENT_H
 
-#include <gobject/gobject.h>
+#include <glib-object.h>
 #include <gconf/gconf.h>
 #include <gconf/gconf-listeners.h>
 #include <gconf/gconf-changeset.h>
