@@ -1,5 +1,21 @@
 1999-09-02  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-internals.h, gconf/gconf-internals.c: Add a new
+	g_conf_log() function for logging errors in backends; 
+	for now this wraps syslog() but if we eventually have non-daemon
+	direct access to backends, we will need to change it. Use
+	g_conf_log() throughout this file instead of printf() and
+	g_warning().
+
+	* gconf/backends/xml-backend.c: Install a timeout which cleans
+	old stuff out of the cache every 5 minutes; use g_conf_log 
+	to report problems.
+
+	* gconf/gconfd.c: Use g_conf_log(); log "exiting" later than we 
+	had been, after shutting everything down. 
+
+1999-09-02  Havoc Pennington  <hp@pobox.com>
+
 	* backends/Makefile.am: Install backends in $(libdir)/gconf
 
 	* gconf/Makefile.am: Look for backends in $(libdir)/gconf

@@ -62,8 +62,8 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 
   if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
     {
-      g_warning("Hash key `%s' is already in the table!",
-                (gchar*)key);
+      g_conf_log(GCL_DEBUG, "Hash key `%s' is already in the table!",
+                 (gchar*)key);
       return;
     }
   else
@@ -232,6 +232,7 @@ struct _XMLSource {
   GConfSource source;
   gchar* root_dir;
   DirCache* cache;
+  guint timeout_id;
 };
 
 static XMLSource* xs_new       (const gchar* root_dir);
@@ -290,7 +291,7 @@ static GConfBackendVTable xml_vtable = {
 static void          
 shutdown (void)
 {
-  printf("Shutting down XML module\n");
+  g_conf_log(GCL_INFO, _("Unloading XML backend module."));
 }
 
 static GConfSource*  
@@ -320,14 +321,14 @@ resolve_address (const gchar* address)
   xsource = xs_new(root_dir);
 
   g_free(root_dir);
-
+  
   source = (GConfSource*)xsource;
   
   /* FIXME just a hack for now, eventually
      it'll be based on something 
   */
   source->flags |= G_CONF_SOURCE_WRITEABLE;
-
+  
   return source;
 }
 
@@ -552,7 +553,7 @@ destroy_source  (GConfSource* source)
 G_MODULE_EXPORT const gchar*
 g_module_check_init (GModule *module)
 {
-  printf("Initializing XML module\n");
+  g_conf_log(GCL_INFO, _("Initializing XML backend module"));
 
   return NULL;
 }
@@ -569,6 +570,18 @@ g_conf_backend_get_vtable(void)
  *  XMLSource
  */ 
 
+/* This timeout periodically cleans up
+   the old cruft in the cache */
+static gboolean
+cleanup_timeout(gpointer data)
+{
+  XMLSource* xs = (XMLSource*)data;
+
+  dir_cache_clean(xs->cache);
+
+  return TRUE;
+}
+
 static XMLSource*
 xs_new       (const gchar* root_dir)
 {
@@ -582,7 +595,9 @@ xs_new       (const gchar* root_dir)
 
   xs->cache = dir_cache_new(xs, 300);
 
-  printf("root dir: `%s'\n", xs->root_dir);
+  xs->timeout_id = g_timeout_add(1000*60*5, /* 1 sec * 60 s/min * 5 min */
+                                      cleanup_timeout,
+                                      xs);
   
   return xs;
 }
@@ -592,6 +607,12 @@ xs_destroy   (XMLSource* xs)
 {
   g_return_if_fail(xs != NULL);
 
+  if (!g_source_remove(xs->timeout_id))
+    {
+      /* should not happen, don't translate */
+      g_conf_log(GCL_ERR, "timeout not found to remove?");
+    }
+  
   dir_cache_destroy(xs->cache);
   g_free(xs->root_dir);
   g_free(xs);
@@ -1238,8 +1259,8 @@ dir_sync        (Dir* d)
         {
           if (unlink(old_filename) < 0)
             {
-              g_warning("Failed to delete old file `%s': %s",
-                        old_filename, strerror(errno));
+              g_conf_log(GCL_WARNING, _("Failed to delete old file `%s': %s"),
+                         old_filename, strerror(errno));
               /* Not a failure, just leaves cruft around. */
             }
         }
@@ -1265,11 +1286,6 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
     dir_load_doc(d);
   
   e = g_hash_table_lookup(d->entry_cache, relative_key);
-
-  if (e)
-    fprintf(stderr, "got `%s' from cache\n", e->name);
-  else
-    fprintf(stderr, "creating own entry `%s'\n", relative_key);
   
   if (e == NULL)
     e = dir_make_new_entry(d, relative_key);
@@ -1727,9 +1743,6 @@ dir_fill_cache_from_doc(Dir* d)
       d->doc->root == NULL ||
       d->doc->root->childs == NULL)
     {
-      fprintf(stderr, "Empty document, doc: %p root: %p childs: %p\n",
-              d->doc, d->doc ? d->doc->root : NULL,
-              d->doc ? (d->doc->root ? d->doc->root->childs : NULL) : NULL);
       /* Empty document - just return. */
       return;
     }
@@ -1747,7 +1760,9 @@ dir_fill_cache_from_doc(Dir* d)
             {
               if (g_hash_table_lookup(d->entry_cache, attr) != NULL)
                 {
-                  g_warning("Duplicate entry, deleting");
+                  g_conf_log(GCL_WARNING,
+                             _("Duplicate entry `%s' in `%s', deleting"),
+                             attr, d->xml_filename);
                   bad_entries = g_slist_prepend(bad_entries, node);
                 }
               else
@@ -1761,9 +1776,6 @@ dir_fill_cache_from_doc(Dir* d)
                   entry_fill(e);
 
                   safe_g_hash_table_insert(d->entry_cache, e->name, e);
-
-                  fprintf(stderr, "`%s' added to cache for `%s'\n",
-                          e->name, d->key);
                 }
 
               free(attr);
@@ -1771,13 +1783,17 @@ dir_fill_cache_from_doc(Dir* d)
             }
           else
             {
-              g_warning("Entry with no name, deleting");
+              g_conf_log(GCL_WARNING,
+                         _("Entry with no name in XML file `%s', deleting"),
+                         d->xml_filename);
               bad_entries = g_slist_prepend(bad_entries, node);
             }
         }
       else
         {
-          g_warning("Non-entry in the XML document, deleting");
+          g_conf_log(GCL_WARNING,
+                     _("Toplevel node in XML file `%s' is not an <entry>, deleting"),
+                     d->xml_filename);
           bad_entries = g_slist_prepend(bad_entries, node);
         }
       
@@ -2039,7 +2055,7 @@ xentry_extract_value(xmlNodePtr node)
     {
     case G_CONF_VALUE_INVALID:
       {
-        g_warning("Unknown type `%s'", type_str);
+        g_conf_log(GCL_WARNING, _("A node has unknown \"type\" attribute `%s', ignoring"), type_str);
         return NULL;
       }
       break;

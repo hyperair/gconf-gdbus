@@ -148,6 +148,20 @@ const gchar*  g_conf_global_appname(void);
 /* Returns 0 on failure */
 gulong        g_conf_string_to_gulong(const gchar* str);
 
+/* Log wrapper; we might want to not use syslog someday */
+typedef enum {
+  GCL_EMERG,
+  GCL_ALERT,
+  GCL_CRIT,
+  GCL_ERR,
+  GCL_WARNING,
+  GCL_NOTICE,
+  GCL_INFO,
+  GCL_DEBUG
+} GConfLogPriority;
+
+void          g_conf_log      (GConfLogPriority pri, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+
 #endif
 
 

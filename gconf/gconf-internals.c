@@ -807,7 +807,7 @@ g_conf_key_directory  (const gchar* key)
 
   if (end == NULL)
     {
-      g_warning("No '/' in key `%s'", key);
+      g_conf_log(GCL_ERR, _("No '/' in key `%s'"), key);
       return NULL;
     }
 
@@ -980,7 +980,7 @@ g_conf_value_from_corba_value(const ConfigValue* value)
       type = G_CONF_VALUE_PAIR;
       break;
     default:
-      g_warning("Invalid type in %s", __FUNCTION__);
+      g_conf_log(GCL_DEBUG, "Invalid type in %s", __FUNCTION__);
       return NULL;
     }
 
@@ -1131,7 +1131,7 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
       break;
     default:
       cv->_d = InvalidVal;
-      g_warning("Unknown type in %s", __FUNCTION__);
+      g_conf_log(GCL_DEBUG, "Unknown type in %s", __FUNCTION__);
       break;
     }
 }
@@ -1858,8 +1858,6 @@ g_conf_load_source_path(const gchar* filename)
             {
               gchar** iter = included;
 
-              printf("Including file `%s'\n", unq);
-
               while (*iter)
                 {
                   l = g_slist_prepend(l, *iter); /* Note that we won't free *included */
@@ -1877,7 +1875,7 @@ g_conf_load_source_path(const gchar* filename)
 
           if (*unq != '\0') /* Drop lines with just two quote marks or something */
             {
-              printf("Adding source `%s'\n", unq);
+              g_conf_log(GCL_INFO, _("Adding source `%s'\n"), unq);
               l = g_slist_prepend(l, g_strdup(unq));
             }
         }
@@ -1983,4 +1981,63 @@ g_conf_string_to_gulong(const gchar* str)
     retval = 0;
 
   return retval;
+}
+
+/*
+ * Log
+ */
+
+#include <syslog.h>
+
+void
+g_conf_log(GConfLogPriority pri, const gchar* fmt, ...)
+{
+  gchar* msg;
+  va_list args;
+  int syslog_pri = LOG_DEBUG;
+  
+  va_start (args, fmt);
+  msg = g_strdup_vprintf(fmt, args);
+  va_end (args);
+  
+  switch (pri)
+    {
+    case GCL_EMERG:
+      syslog_pri = LOG_EMERG;
+      break;
+      
+    case GCL_ALERT:
+      syslog_pri = LOG_ALERT;
+      break;
+      
+    case GCL_CRIT:
+      syslog_pri = LOG_CRIT;
+      break;
+      
+    case GCL_ERR:
+      syslog_pri = LOG_ERR;
+      break;
+      
+    case GCL_WARNING:
+      syslog_pri = LOG_WARNING;
+      break;
+      
+    case GCL_NOTICE:
+      syslog_pri = LOG_NOTICE;
+      break;
+      
+    case GCL_INFO:
+      syslog_pri = LOG_INFO;
+      break;
+      
+    case GCL_DEBUG:
+      syslog_pri = LOG_DEBUG;
+      break;
+
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  syslog(syslog_pri, msg);
 }
