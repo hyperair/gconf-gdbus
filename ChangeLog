@@ -1,3 +1,10 @@
+2002-01-27  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/Makefile.am: don't use BUILT_SOURCES, might fix annoying
+	build problems
+	(CLEANFILES): put stamp files in CLEANFILES
+	(s-enum-types-h): make enum stamps depend on Makefile
+
 2002-01-20  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/Makefile.am: add gconf-enum-types.h/gconf-enum-types.c 

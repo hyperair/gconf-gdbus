@@ -5,7 +5,7 @@ GCONFD_BINARY_NAME=gconfd-2
 INCLUDES=								\
 	-I$(top_srcdir)							\
 	-I$(top_builddir)						\
-	$(DEPENDENT_WITH_XML_CFLAGS)						\
+	$(DEPENDENT_WITH_XML_CFLAGS)					\
 	-DG_LOG_DOMAIN=\"GConf\"					\
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"			\
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\"			\
@@ -27,18 +27,23 @@ bin_PROGRAMS = gconfd-2 gconftool-2
 
 CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
-BUILT_SOURCES = \
+## not BUILT_SOURCES which seems to make a mess. fix with automake 1.5?
+built_sourcecode = 		\
 	$(CORBA_SOURCES)	\
 	gconf-enum-types.h	\
 	gconf-enum-types.c	\
 	gconfmarshal.h		\
 	gconfmarshal.c
 
-$(OBJECTS) $(libgconf_2_la_OBJECTS): $(BUILT_SOURCES)
+$(OBJECTS) $(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
 
 CLEANFILES = \
-	$(BUILT_SOURCES)	\
+	$(built_sourcecode)	\
 	stamp-gconfmarshal.h	\
+	stamp-gconfmarshal.c	\
+	s-enum-types-h		\
+	s-enum-types-c		\
+	stamp-gconfmarshal.h    \
 	stamp-gconfmarshal.c
 
 dist-hook:
@@ -138,7 +143,7 @@ gconf-enum-types.h: s-enum-types-h
 
 FIX_ENUM_FILES=sed -e 's/g_conf/gconf/g' -e 's/TYPE_CONF/TYPE/g'
 
-s-enum-types-h: @REBUILD@ $(gconf_headers)
+s-enum-types-h: @REBUILD@ $(gconf_headers) Makefile
 	( cd $(srcdir) && glib-mkenums														\
 			--fhead "#ifndef __GCONF_ENUM_TYPES_H__\n#define __GCONF_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n"	\
 			--fprod "/* enumerations from \"@filename@\" */\n"									\
@@ -152,7 +157,7 @@ s-enum-types-h: @REBUILD@ $(gconf_headers)
 gconf-enum-types.c: s-enum-types-c
 	@true
 
-s-enum-types-c: @REBUILD@ $(gconf_headers)
+s-enum-types-c: @REBUILD@ $(gconf_headers) Makefile
 	( cd $(srcdir) && glib-mkenums																    \
 			--fhead "#include \"gconf-client.h\""														    \
 			--fprod "\n/* enumerations from \"@filename@\" */"											    \
