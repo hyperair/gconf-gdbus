@@ -1117,7 +1117,7 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
 {
   if (args == NULL)
     {
-      g_printerr (_("Must specify one or more dirs to recursively list.\n"));
+      g_printerr (_("Must specify one or more directories to recursively list.\n"));
       return 1;
     }
 
@@ -1167,7 +1167,7 @@ do_dump_values(GConfEngine* conf, const gchar** args)
 {
   if (args == NULL)
     {
-      g_printerr (_("Must specify one or more dirs to dump.\n"));
+      g_printerr (_("Must specify one or more directories to dump.\n"));
       return 1;
     }
 
@@ -2270,7 +2270,7 @@ do_all_entries(GConfEngine* conf, const gchar** args)
 {
   if (args == NULL)
     {
-      g_printerr (_("Must specify one or more dirs to get key/value pairs from.\n"));
+      g_printerr (_("Must specify one or more directories to get key/value pairs from.\n"));
       return 1;
     }
   
@@ -2349,7 +2349,7 @@ do_all_subdirs(GConfEngine* conf, const gchar** args)
   
   if (args == NULL)
     {
-      g_printerr (_("Must specify one or more dirs to get subdirs from.\n"));
+      g_printerr (_("Must specify one or more directories to get subdirs from.\n"));
       return 1;
     }
       

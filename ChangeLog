@@ -1,5 +1,41 @@
 2003-10-22  Havoc Pennington  <hp@redhat.com>
 
+        * gconf/gconf.c, gconf/gconfd.c: use g_string_new (NULL) 
+	rather than g_string_new ("") #106974 Morten Welinder
+	
+	* gconf/gconfd.c (gconf_main): change cleanup/exit timeout to 30
+	seconds, bug #97361
+
+	* backends/xml-cache.c (cache_clean): whack string that needed
+	ngettext, as it was dumb debug spew. #123866 Danilo Segan
+
+	* gconf/gconf.c (gconf_handle_corba_exception): fix to avoid
+	passing arbitrary data as printf format, #123556 Dan Winship
+
+	* backends/markup-backend.c (resolve_address): remove unused
+	variables, #122734 Kjartan Maraas
+
+        * gconf.spec.in: remove, not maintained
+	
+	* gconf/gconf-error.c (gconf_error_new_valist): don't put a
+	newline in error messages, bug #111845 Morten Welinder
+
+        * throughout: s/dir/directory/ bug #111822 Christian Rose
+	
+	* gconf/gconfd.c (gconf_server_load_sources): avoid string
+	concatenation with #defines, confuses gettext, #111821
+	Christian Rose
+
+	* gconf/gconfd.h: fix gconf_get_poa() declaration, #110186
+	Morten Welinder 
+	
+	* gconf/gconf-internals.c (read_current_server_and_set_warning):
+	fix a warning, bug #110179
+
+	* gconf/gconfd.c (test_safe_tmp_dir): fix warning
+
+2003-10-22  Havoc Pennington  <hp@redhat.com>
+	
 	* gconf/gconf-client.c: patch from Ray Strode to avoid breaking
 	the schema name cache, bug #94412
 

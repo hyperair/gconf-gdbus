@@ -546,7 +546,7 @@ gconf_client_add_dir     (GConfClient* client,
 
   g_return_if_fail (gconf_valid_key (dirname, NULL));
 
-  trace ("Adding dir '%s'\n", dirname);
+  trace ("Adding directory '%s'\n", dirname);
   
   d = g_hash_table_lookup (client->dir_hash, dirname);
 
@@ -684,7 +684,7 @@ gconf_client_remove_dir  (GConfClient* client,
 {
   Dir* found = NULL;
 
-  trace ("Removing dir '%s'\n", dirname);
+  trace ("Removing directory '%s'\n", dirname);
   
   found = g_hash_table_lookup (client->dir_hash,
                                dirname);
@@ -1112,7 +1112,7 @@ gconf_client_dir_exists(GConfClient* client,
   GError* error = NULL;
   gboolean retval;
 
-  trace ("Checking whether dir '%s' exists...\n", dir);
+  trace ("Checking whether directory '%s' exists...\n", dir);
   
   PUSH_USE_ENGINE (client);
   retval = gconf_engine_dir_exists (client->engine, dir, &error);

@@ -301,7 +301,7 @@ gconf_server_load_sources(void)
       /* We want to stay alive but do nothing, because otherwise every
          request would result in another failed gconfd being spawned.  
       */
-      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_CONFDIR"/path"));
+      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit %s"), GCONF_CONFDIR"/path");
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(NULL, NULL);
 
@@ -423,7 +423,7 @@ signal_handler (int signo)
 }
 
 PortableServer_POA
-gconf_get_poa ()
+gconf_get_poa (void)
 {
   return the_poa;
 }
@@ -468,7 +468,6 @@ log_handler (const gchar   *log_domain,
  * the given directory and keeps us from creating
  * it
  */
-/* FIXME this is just paranoia now since we use linc_get_tmpdir() */
 static gboolean
 test_safe_tmp_dir (const char *dirname)
 {
@@ -502,8 +501,8 @@ test_safe_tmp_dir (const char *dirname)
   if ((statbuf.st_mode & (S_IRWXG|S_IRWXO)) ||
       !S_ISDIR (statbuf.st_mode))
     {
-      gconf_log (GCL_WARNING, _("Bad permissions %o on dir %s"),
-                 statbuf.st_mode & 07777, dirname);
+      gconf_log (GCL_WARNING, _("Bad permissions %lo on directory %s"),
+                 (unsigned long) statbuf.st_mode & 07777, dirname);
       return FALSE;
     }
   
@@ -792,7 +791,7 @@ gconf_main(void)
 
   if (main_loops == NULL)
     {
-      gulong timeout_len = 1000*60*2; /* 1 sec * 60 s/min * 2 min */
+      gulong timeout_len = 1000*60*0.5; /* 1 sec * 60 s/min * .5 min */
       
       g_assert(timeout_id == 0);
       timeout_id = g_timeout_add (timeout_len,
@@ -1292,7 +1291,7 @@ logfile_save (void)
                          * that matter on open()
                          */
 
-  saveme = g_string_new ("");
+  saveme = g_string_new (NULL);
 
   /* Clients */
   log_clients_to_string (saveme);
@@ -1884,7 +1883,7 @@ read_line (FILE *f)
   int c;
   GString *str;
   
-  str = g_string_new ("");
+  str = g_string_new (NULL);
   
   flockfile (f);
 

@@ -327,7 +327,6 @@ cache_clean      (Cache        *cache,
                   GTime         older_than)
 {
   CleanData cd = { 0, 0, 0 };
-  guint size;
   cd.cache = cache;
   cd.length = older_than;
   
@@ -336,13 +335,15 @@ cache_clean      (Cache        *cache,
   g_hash_table_foreach_remove(cache->cache, (GHRFunc)cache_clean_foreach,
                               &cd);
 
+#if 0
   size = g_hash_table_size(cache->cache);
 
   if (size != 0)
     gconf_log (GCL_DEBUG,
-               _("%u items remain in the cache after cleaning already-synced items older than %u seconds"),
+               "%u items remain in the cache after cleaning already-synced items older than %u seconds",
                size,
                older_than);
+#endif
 }
 
 Dir*

@@ -30,7 +30,7 @@ extern "C" {
 #include "GConfX.h"
 #include "gconf-database.h"
 
-PortableServer_POA gconf_get_poa ();
+PortableServer_POA gconf_get_poa (void);
 
 /* return TRUE if the exception was set, clear err if needed */
 gboolean gconf_set_exception (GError** err, CORBA_Environment* ev);

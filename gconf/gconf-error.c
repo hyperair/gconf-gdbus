@@ -69,7 +69,7 @@ gconf_error_new_valist(GConfError en, const gchar* fmt, va_list args)
   
   orig = g_strdup_vprintf(fmt, args);
 
-  err = g_error_new (GCONF_ERROR, en, "%s:\n %s",
+  err = g_error_new (GCONF_ERROR, en, "%s: %s",
                      gconf_strerror (en),
                      orig);  
 

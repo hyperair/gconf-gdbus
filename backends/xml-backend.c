@@ -681,7 +681,7 @@ remove_dir      (GConfSource* source,
 {
   g_set_error (err, GCONF_ERROR,
                GCONF_ERROR_FAILED,
-               _("Remove dir operation is no longer supported, just remove all the values in the directory"));
+               _("Remove directory operation is no longer supported, just remove all the values in the directory"));
 }
 
 static void          
@@ -874,8 +874,8 @@ xs_destroy   (XMLSource* xs)
      situation */
   if (xs->lock != NULL && !gconf_release_lock(xs->lock, &error))
     {
-      gconf_log(GCL_ERR, _("Failed to give up lock on XML dir \"%s\": %s"),
-                xs->root_dir, error->message);
+      gconf_log (GCL_ERR, _("Failed to give up lock on XML directory \"%s\": %s"),
+                 xs->root_dir, error->message);
       g_error_free(error);
       error = NULL;
     }

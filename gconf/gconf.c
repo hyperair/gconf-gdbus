@@ -2556,7 +2556,7 @@ gconf_escape_key (const char *arbitrary_text,
   if (len < 0)
     len = strlen (arbitrary_text);
 
-  retval = g_string_new ("");
+  retval = g_string_new (NULL);
 
   p = arbitrary_text;
   end = arbitrary_text + len;
@@ -2602,7 +2602,7 @@ gconf_unescape_key (const char *escaped_key,
   if (len < 0)
     len = strlen (escaped_key);
 
-  retval = g_string_new ("");
+  retval = g_string_new (NULL);
 
   p = escaped_key;
   end = escaped_key + len;
@@ -3453,7 +3453,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GError** err)
 
         if (err)
           *err = gconf_error_new (corba_errno_to_gconf_errno (ce->err_no),
-                                  ce->message);
+                                  "%s", ce->message);
         CORBA_exception_free (ev);
         return TRUE;
       }

@@ -1511,13 +1511,13 @@ gconf_database_remove_dir  (GConfDatabase  *db,
   
   db->last_access = time(NULL);
   
-  gconf_log(GCL_DEBUG, "Received request to remove dir `%s'", dir);
+  gconf_log (GCL_DEBUG, "Received request to remove directory \"%s\"", dir);
   
   gconf_sources_remove_dir(db->sources, dir, err);
 
   if (err && *err != NULL)
     {
-      gconf_log(GCL_ERR, _("Error removing dir `%s': %s"),
+      gconf_log (GCL_ERR, _("Error removing directory \"%s\": %s"),
                  dir, (*err)->message);
     }
   else
@@ -1564,13 +1564,13 @@ gconf_database_all_dirs (GConfDatabase  *db,
   
   db->last_access = time(NULL);
     
-  gconf_log(GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
+  gconf_log (GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
 
   subdirs = gconf_sources_all_dirs (db->sources, dir, err);
 
   if (err && *err != NULL)
     {
-      gconf_log(GCL_ERR, _("Error listing dirs in `%s': %s"),
+      gconf_log (GCL_ERR, _("Error listing dirs in `%s': %s"),
                  dir, (*err)->message);
     }
   return subdirs;

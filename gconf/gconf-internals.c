@@ -2422,7 +2422,7 @@ read_current_server_and_set_warning (const gchar *iorfile,
        * or <pid>:none for gconftool
        */
       str = buf;
-      while (isdigit(*str))
+      while (isdigit ((unsigned char) *str))
         ++str;
 
       if (*str == ':')

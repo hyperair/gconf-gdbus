@@ -250,7 +250,6 @@ resolve_address (const char *address,
   char* root_dir;
   MarkupSource* xsource;
   GConfSource *source;
-  guint len;
   gint flags = 0;
   GConfLock* lock = NULL;
   guint dir_mode = 0700;
@@ -731,7 +730,7 @@ remove_dir (GConfSource *source,
 {
   g_set_error (err, GCONF_ERROR,
                GCONF_ERROR_FAILED,
-               _("Remove dir operation is no longer supported, just remove all the values in the directory"));
+               _("Remove directory operation is no longer supported, just remove all the values in the directory"));
 }
 
 static void          
@@ -879,9 +878,9 @@ gconf_backend_get_vtable (void)
 static gboolean
 cleanup_timeout (void  *data)
 {
+#if 0
   MarkupSource* ms = (MarkupSource*)data;
 
-#if 0
   cache_clean(xs->cache, 60*5 /* 5 minutes */);
 #endif
   
@@ -928,7 +927,7 @@ ms_destroy (MarkupSource* ms)
    */
   if (ms->lock != NULL && !gconf_release_lock (ms->lock, &error))
     {
-      gconf_log (GCL_ERR, _("Failed to give up lock on XML dir \"%s\": %s"),
+      gconf_log (GCL_ERR, _("Failed to give up lock on XML directory \"%s\": %s"),
                  ms->root_dir, error->message);
       g_error_free(error);
       error = NULL;
