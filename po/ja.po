@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf HEAD\n"
-"POT-Creation-Date: 2003-03-28 00:21+0900\n"
+"POT-Creation-Date: 2003-05-03 13:12-0400\n"
 "PO-Revision-Date: 2003-03-28 00:20+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
@@ -699,7 +699,7 @@ msgstr "ロックディレクトリ '%s' の解放に失敗しました: %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "ロックファイル %s のロック解除に失敗しました: %s\n"
 
-#: gconf/gconf-internals.c:2856 gconf/gconfd.c:643
+#: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "ファイル %s の作成に失敗しました: %s"
@@ -1215,53 +1215,53 @@ msgstr "パーミッション %o (ディレクトリ %s)"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:590
+#: gconf/gconfd.c:587
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "起動中 (バージョン %s), PID %u ユーザー '%s'"
 
-#: gconf/gconfd.c:630
+#: gconf/gconfd.c:627
 msgid "Failed to get object reference for ConfigServer"
 msgstr "設定サーバー用のオブジェクトリファレンスの取得に失敗しました。"
 
-#: gconf/gconfd.c:650
+#: gconf/gconfd.c:647
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr ""
 "ディレクトリ %s には問題があります。gconfd はそのディレクトリを使用できませ"
 "ん。"
 
-#: gconf/gconfd.c:679
+#: gconf/gconfd.c:676
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "fd %d のパイプに対するバイト書き込みに失敗しました。クライアントアプリがハン"
 "グします: %s"
 
-#: gconf/gconfd.c:689
+#: gconf/gconfd.c:686
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "デーモンのロックの取得に失敗しました。終了します: %s"
 
-#: gconf/gconfd.c:727
+#: gconf/gconfd.c:724
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "ロックファイルの解放でエラー: %s"
 
-#: gconf/gconfd.c:735
+#: gconf/gconfd.c:732
 msgid "Exiting"
 msgstr "終了します。"
 
-#: gconf/gconfd.c:761
+#: gconf/gconfd.c:758
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf サーバーが使用されていません。シャットダウンします。"
 
-#: gconf/gconfd.c:1127
+#: gconf/gconfd.c:1124
 #, c-format
 msgid "Returning exception: %s"
 msgstr "返された例外: %s"
 
-#: gconf/gconfd.c:1227
+#: gconf/gconfd.c:1224
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1270,7 +1270,7 @@ msgstr ""
 "gconfd ログファイルのオープンに失敗しました: gconf をシャットダウンした後にロ"
 "グを復活することはできません (%s)"
 
-#: gconf/gconfd.c:1262
+#: gconf/gconfd.c:1259
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1278,38 +1278,38 @@ msgstr ""
 "gconfd ログファイルのクローズに失敗しました: おそらくデータは保存されません "
 "(%s)"
 
-#: gconf/gconfd.c:1331
+#: gconf/gconfd.c:1328
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "状態保持ファイル '%s' を書き込みモードで開けませんでした: %s"
 
-#: gconf/gconfd.c:1345
+#: gconf/gconfd.c:1342
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "状態保持ファイル '%s' に書き込めませんでした　fd: %d: %s"
 
-#: gconf/gconfd.c:1354
+#: gconf/gconfd.c:1351
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "新しい状態保持ファイル '%s' を閉じるのに失敗しました: %s"
 
-#: gconf/gconfd.c:1368
+#: gconf/gconfd.c:1365
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "古い状態保持ファイル '%s' を別の場所に移動できませんでした: %s"
 
-#: gconf/gconfd.c:1378
+#: gconf/gconfd.c:1375
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "新しい状態保持ファイルの移動に失敗しました: %s"
 
-#: gconf/gconfd.c:1387
+#: gconf/gconfd.c:1384
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "'%s' に移動した状態保持ファイルの復帰に失敗しました: %s"
 
-#: gconf/gconfd.c:1858
+#: gconf/gconfd.c:1855
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1317,17 +1317,17 @@ msgstr ""
 "アドレス '%s' のリスナーの復帰ができません。データベースを解決できませんでし"
 "た"
 
-#: gconf/gconfd.c:1904
+#: gconf/gconfd.c:1901
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "状態保持ファイルの読み込みでエラー: %s"
 
-#: gconf/gconfd.c:1957
+#: gconf/gconfd.c:1955
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "状態保持ファイル '%s' のオープンに失敗しました: %s"
 
-#: gconf/gconfd.c:2076
+#: gconf/gconfd.c:2074
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1336,7 +1336,7 @@ msgstr ""
 "gconfd ログファイルへのログの追加に失敗しました。gconfd を終了またはシャット"
 "ダウンしたらリスナーの追加はできません (%s)"
 
-#: gconf/gconfd.c:2081
+#: gconf/gconfd.c:2079
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1345,27 +1345,27 @@ msgstr ""
 "gconfd ログファイルへのログの削除に失敗しました。gconfd を終了またはシャット"
 "ダウンしたらリスナーの再追加はエラーになるかもしれません (%s)"
 
-#: gconf/gconfd.c:2104 gconf/gconfd.c:2278
+#: gconf/gconfd.c:2102 gconf/gconfd.c:2276
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "クライアントの IOR 取得に失敗しました: %s"
 
-#: gconf/gconfd.c:2119
+#: gconf/gconfd.c:2117
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "状態保持ファイルのオープンに失敗しました: %s"
 
-#: gconf/gconfd.c:2132
+#: gconf/gconfd.c:2130
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "状態保持ファイルへのクライアントの追加に失敗しました: %s"
 
-#: gconf/gconfd.c:2140
+#: gconf/gconfd.c:2138
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "状態保持ファイルへの追加クライアントのフラッシュに失敗しました: %s"
 
-#: gconf/gconfd.c:2239
+#: gconf/gconfd.c:2237
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
