@@ -85,18 +85,23 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 %doc AUTHORS COPYING ChangeLog NEWS README
-%{prefix}/bin/*
-%{prefix}/lib/lib*.so.*
-%{prefix}/lib/GConf/@MAJOR_VERSION@/lib*.so
-%config /etc/gconf/@MAJOR_VERSION@/*
-%config /etc/gconf/*xml*/*xml
-%config /etc/gconf/*xml*/schemas/*xml
-%config /etc/gconf/*xml*/schemas/desktop/*xml
-%config /etc/gconf/*xml*/schemas/desktop/standard/*xml
-%{prefix}/share/aclocal/*
-%{prefix}/share/oaf/*
-%{prefix}/share/gconf/
-%{prefix}/share/locale/*/*/*.mo
+%{config} /etc/gconf/1/*.example
+%{config} /etc/gconf/gconf.xml.defaults/*.xml
+%{config} /etc/gconf/gconf.xml.defaults/schemas/*.xml
+%{config} /etc/gconf/gconf.xml.defaults/schemas/desktop/*.xml
+%{config} /etc/gconf/gconf.xml.defaults/schemas/desktop/standard/*.xml
+%{config} /etc/gconf/schemas/*.schemas
+%{prefix}/bin/gconf-config
+%{prefix}/bin/gconf-config-1
+%{prefix}/bin/gconfd-1
+%{prefix}/bin/gconftool
+%{prefix}/bin/gconftool-1
+%{prefix}/lib/*.0
+%{prefix}/lib/*.1
+%{prefix}/lib/*.so
+%{prefix}/lib/GConf/1/*.so
+%{prefix}/share/locale/*/LC_MESSAGES/*.mo
+%{prefix}/share/oaf/*.oafinfo
 
 ## /etc/gconf/schemas/desktop.schemas is notably missing;
 ## it will be shared between versions of GConf, preventing
@@ -105,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%{prefix}/lib/*a
-%{prefix}/include/gconf/@MAJOR_VERSION@/gconf/*.h
-%{prefix}/lib/GConf/@MAJOR_VERSION@/lib*a
+%{prefix}/include/gconf/1/gconf/*.h
+%{prefix}/share/aclocal/*.m4
+%{prefix}/lib/*.a
+%{prefix}/lib/*.la
+%{prefix}/lib/GConf/1/*.a
+%{prefix}/lib/GConf/1/*.la
