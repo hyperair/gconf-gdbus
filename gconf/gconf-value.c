@@ -1194,7 +1194,7 @@ gconf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
  */
 
 GConfEntry*
-gconf_entry_new (const gchar *key,
+gconf_entry_new (const char *key,
                  const GConfValue  *val)
 {
   return gconf_entry_new_nocopy (g_strdup (key),
@@ -1203,11 +1203,11 @@ gconf_entry_new (const gchar *key,
 }
 
 GConfEntry* 
-gconf_entry_new_nocopy(gchar* key, GConfValue* val)
+gconf_entry_new_nocopy (char* key, GConfValue* val)
 {
   GConfEntry* pair;
 
-  pair = g_new(GConfEntry, 1);
+  pair = g_new (GConfEntry, 1);
 
   pair->key   = key;
   pair->value = val;
@@ -1219,11 +1219,11 @@ gconf_entry_new_nocopy(gchar* key, GConfValue* val)
 }
 
 void
-gconf_entry_free(GConfEntry* pair)
+gconf_entry_free (GConfEntry* pair)
 {
-  g_free(pair->key);
+  g_free (pair->key);
   if (pair->value)
-    gconf_value_free(pair->value);
+    gconf_value_free (pair->value);
   if (pair->schema_name)
     g_free (pair->schema_name);
   g_free(pair);
@@ -1241,6 +1241,38 @@ gconf_entry_copy (const GConfEntry *src)
   entry->is_writable = src->is_writable;
 
   return entry;
+}
+
+gboolean
+gconf_entry_equal (const GConfEntry *a,
+                   const GConfEntry *b)
+{
+  g_return_val_if_fail (a != NULL, FALSE);
+  g_return_val_if_fail (b != NULL, FALSE);
+
+  /* do the cheap checks first, why not */
+  if (a->value && !b->value)
+    return FALSE;
+  else if (!a->value && b->value)
+    return FALSE;
+  else if (a->is_default != b->is_default)
+    return FALSE;
+  else if (a->is_writable != b->is_writable)
+    return FALSE;
+  else if (strcmp (a->key, b->key) != 0)
+    return FALSE;
+  else if (a->schema_name && !b->schema_name)
+    return FALSE;
+  else if (!a->schema_name && b->schema_name)
+    return FALSE;
+  else if (a->schema_name && b->schema_name &&
+           strcmp (a->schema_name, b->schema_name) != 0)
+    return FALSE;
+  else if (a->value && b->value &&
+           gconf_value_compare (a->value, b->value) != 0)
+    return FALSE;
+  else
+    return TRUE;
 }
 
 GConfValue*

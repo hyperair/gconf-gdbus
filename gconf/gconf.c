@@ -1827,7 +1827,8 @@ gconf_engine_remove_dir (GConfEngine* conf,
   g_return_if_fail(dir != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
 
-  CHECK_OWNER_USE (conf);
+  /* FIXME we have no GConfClient method for doing this */
+  /*   CHECK_OWNER_USE (conf); */
   
   if (!gconf_key_check(dir, err))
     return;

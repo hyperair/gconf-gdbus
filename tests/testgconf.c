@@ -177,6 +177,16 @@ check_unset(GConfEngine* conf)
 
   while (*keyp)
     {
+      gconf_engine_associate_schema (conf, *keyp, "/test-bogus-schema", &err);
+
+      if (err != NULL)
+        {
+          fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->message);
+          g_error_free(err);
+          err = NULL;
+          exit (1);
+        }
+      
       gconf_engine_unset(conf, *keyp, &err);
 
       if (err != NULL)
@@ -184,6 +194,7 @@ check_unset(GConfEngine* conf)
           fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->message);
           g_error_free(err);
           err = NULL;
+          exit (1);
         }
       else
         {

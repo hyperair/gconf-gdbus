@@ -1,3 +1,31 @@
+2002-01-12  Havoc Pennington  <hp@pobox.com>
+
+	* examples/basic-gconf-app.c (main): remove unused variable, 
+	fix from  Markus Bertheau 
+
+	* gconf/gconf-client.c (get): fix to always store the same
+	semantic thing in the cache, regardless of whether 
+	user wanted the schema default (always pass use_default = TRUE 
+	to GConfEngine)
+	(gconf_client_key_is_writable): avoid pointless copies if
+	possible, to make this fast
+
+	* gconf/gconf-schema.h: add padding to GConfSchema
+
+	* gconf/gconf-value.h: add padding to GConfEntry
+
+	* gconf/gconf-value.c (gconf_entry_equal): new internal function
+
+	* gconf/gconf-client.c: queue notifies to an idle handler, replace 
+	CacheEntry with GConfEntry
+
+	* gconf/gconf-client.h (struct _GConfClientClass): add padding
+	(struct _GConfClient): add padding
+
+2001-12-11  Havoc Pennington  <hp@redhat.com>
+
+	* tests/testgconf.c (check_unset): fixes
+
 2002-01-10  Havoc Pennington  <hp@pobox.com>
 
 	* configure.in: version to 1.1.6

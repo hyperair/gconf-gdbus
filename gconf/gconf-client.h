@@ -98,6 +98,11 @@ struct _GConfClient
   GHashTable* dir_hash;
   GHashTable* cache_hash;
   GConfListeners* listeners;
+  GSList *notify_list;
+  guint notify_handler;
+  int pending_notify_count;
+  gpointer pad1;
+  int pad2;  
 };
 
 struct _GConfClientClass
@@ -132,6 +137,10 @@ struct _GConfClientClass
      something. */
   void (* error)            (GConfClient* client,
                              GError* error);
+
+  GFunc pad1;
+  GFunc pad2;
+  GFunc pad3;
 };
 
 

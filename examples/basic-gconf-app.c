@@ -92,7 +92,6 @@ static GtkWidget* create_prefs_dialog (GtkWidget   *parent,
 int
 main (int argc, char** argv)
 {
-  GError *error;
   GConfClient *client;
   GtkWidget *main_window;
   

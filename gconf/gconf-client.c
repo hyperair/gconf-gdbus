@@ -66,26 +66,6 @@ gconf_client_set_global_default_error_handler(GConfClientErrorHandlerFunc func)
 }
 
 /*
- * CacheEntry
- */ 
-
-typedef struct _CacheEntry CacheEntry;
-
-struct _CacheEntry {
-  GConfValue* value;
-  /* Whether "value" was a default from a schema; i.e.
-     if this is TRUE, then value wasn't set, we just used
-     a default. */
-  guint is_default : 1;
-  guint is_writable : 1;
-};
-
-static CacheEntry* cache_entry_new(GConfValue* val,
-                                   gboolean is_default,
-                                   gboolean is_writable);
-static void        cache_entry_destroy(CacheEntry* ce);
-
-/*
  * Dir object (for list of directories we're watching)
  */
 
@@ -143,28 +123,26 @@ static void gconf_client_real_unreturned_error (GConfClient* client, GError* err
 static void gconf_client_real_error            (GConfClient* client, GError* error);
 static void gconf_client_finalize              (GObject* object); 
 
-static gboolean gconf_client_cache          (GConfClient* client,
-                                             const gchar* key,
-                                             gboolean is_default,
-                                             gboolean is_writable,
-                                             GConfValue* value); /* takes ownership of value */
+static gboolean gconf_client_cache          (GConfClient *client,
+                                             gboolean     take_ownership,
+                                             GConfEntry  *entry);
 
-static gboolean gconf_client_lookup         (GConfClient* client,
-                                             const gchar* key,
-                                             gboolean use_default,
-                                             gboolean* is_default,
-                                             gboolean* is_writable,
-                                             GConfValue** valp);
+static gboolean gconf_client_lookup         (GConfClient *client,
+                                             const char  *key,
+                                             GConfEntry **entryp);
 
 static void gconf_client_real_remove_dir    (GConfClient* client,
                                              Dir* d,
-					     GError** err);
+                                             GError** err);
 
-static GConfValue* get (GConfClient  *client,
+static void gconf_client_queue_notify       (GConfClient *client,
+                                             const char  *key);
+static void gconf_client_flush_notifies     (GConfClient *client);
+static void gconf_client_unqueue_notifies   (GConfClient *client);
+
+static GConfEntry* get (GConfClient  *client,
                         const gchar  *key,
                         gboolean      use_default,
-                        gboolean     *is_default_retloc,
-                        gboolean     *is_writable_retloc,
                         GError      **error);
 
 
@@ -255,6 +233,8 @@ gconf_client_init (GConfClient *client)
   client->cache_hash = g_hash_table_new (g_str_hash, g_str_equal);
   /* We create the listeners only if they're actually used */
   client->listeners = NULL;
+  client->notify_list = NULL;
+  client->notify_handler = 0;
 }
 
 static gboolean
@@ -308,22 +288,24 @@ static void
 gconf_client_finalize (GObject* object)
 {
   GConfClient* client = GCONF_CLIENT(object);
+
+  gconf_client_unqueue_notifies (client);
   
-  g_hash_table_foreach_remove(client->dir_hash,
-                              destroy_dir_foreach_remove, client);
+  g_hash_table_foreach_remove (client->dir_hash,
+                               destroy_dir_foreach_remove, client);
   
-  gconf_client_clear_cache(client);
+  gconf_client_clear_cache (client);
 
   if (client->listeners != NULL)
     {
-      gconf_listeners_free(client->listeners);
+      gconf_listeners_free (client->listeners);
       client->listeners = NULL;
     }
 
-  g_hash_table_destroy(client->dir_hash);
+  g_hash_table_destroy (client->dir_hash);
   client->dir_hash = NULL;
   
-  g_hash_table_destroy(client->cache_hash);
+  g_hash_table_destroy (client->cache_hash);
   client->cache_hash = NULL;
 
   unregister_client (client);
@@ -404,34 +386,10 @@ handle_error(GConfClient* client, GError* error, GError** err)
     return FALSE;
 }
 
-struct client_and_val {
-  GConfClient* client;
-  GConfEntry* entry;
-};
-
 static void
-notify_listeners_callback(GConfListeners* listeners,
-                          const gchar* key,
-                          guint cnxn_id,
-                          gpointer listener_data,
-                          gpointer user_data)
-{
-  struct client_and_val* cav = user_data;
-  Listener* l = listener_data;
-  
-  g_return_if_fail (cav != NULL);
-  g_return_if_fail (cav->client != NULL);
-  g_return_if_fail (GCONF_IS_CLIENT(cav->client));
-  g_return_if_fail (l != NULL);
-  g_return_if_fail (l->func != NULL);
-
-  (*l->func) (cav->client, cnxn_id, cav->entry, l->data);
-}
-
-static void
-notify_from_server_callback(GConfEngine* conf, guint cnxn_id,
-                            GConfEntry *entry,
-                            gpointer user_data)
+notify_from_server_callback (GConfEngine* conf, guint cnxn_id,
+                             GConfEntry *entry,
+                             gpointer user_data)
 {
   GConfClient* client = user_data;
   gboolean changed;
@@ -447,38 +405,12 @@ notify_from_server_callback(GConfEngine* conf, guint cnxn_id,
    * listeners or functions connected to value_changed.
    * We know this key is under a directory in our dir list.
    */
-  changed = gconf_client_cache (client,
-                                entry->key,
-                                entry->is_default,
-                                entry->is_writable,
-                                /* should really avoid this copy until
-                                 * we see if the value has changed
-                                 */
-                                entry->value ? gconf_value_copy (entry->value) : NULL);
+  changed = gconf_client_cache (client, FALSE, entry);                                
 
   if (!changed)
     return; /* don't do the notify */
-  
-  /* Emit the value_changed signal before notifying specific listeners;
-   * I'm not sure there's a reason this matters though
-   */
-  gconf_client_value_changed (client,
-                              entry->key,
-                              entry->value);
 
-  /* Now notify our listeners, if any */
-  if (client->listeners != NULL)
-    {
-      struct client_and_val cav;
-
-      cav.client = client;
-      cav.entry = entry;
-      
-      gconf_listeners_notify (client->listeners,
-                              entry->key,
-                              notify_listeners_callback,
-                              &cav);
-    }
+  gconf_client_queue_notify (client, entry->key);
 }
 
 /*
@@ -611,7 +543,7 @@ gconf_client_add_dir     (GConfClient* client,
   guint notify_id = 0;
   GError* error = NULL;
 
-  g_return_if_fail(gconf_valid_key(dirname, NULL));
+  g_return_if_fail (gconf_valid_key (dirname, NULL));
 
   trace ("Adding dir '%s'\n", dirname);
   
@@ -639,30 +571,30 @@ gconf_client_add_dir     (GConfClient* client,
           POP_USE_ENGINE (client);
           
           /* We got a notify ID or we got an error, not both */
-          g_return_if_fail( (notify_id != 0 && error == NULL) ||
-                            (notify_id == 0 && error != NULL) );
+          g_return_if_fail ( (notify_id != 0 && error == NULL) ||
+                             (notify_id == 0 && error != NULL) );
       
       
-          if (handle_error(client, error, err))
+          if (handle_error (client, error, err))
             return;
 
-          g_assert(error == NULL);
+          g_assert (error == NULL);
         }
       else
         {
           notify_id = 0;
         }
       
-      d = dir_new(dirname, notify_id);
+      d = dir_new (dirname, notify_id);
 
-      g_hash_table_insert(client->dir_hash, d->name, d);
+      g_hash_table_insert (client->dir_hash, d->name, d);
 
-      gconf_client_preload(client, dirname, preload, &error);
+      gconf_client_preload (client, dirname, preload, &error);
 
-      handle_error(client, error, err);
+      handle_error (client, error, err);
     }
 
-  g_assert(d != NULL);
+  g_assert (d != NULL);
 
   d->add_count += 1;
 }
@@ -825,10 +757,10 @@ gconf_client_set_error_handling(GConfClient* client,
 }
 
 static gboolean
-clear_cache_foreach(gchar* key, CacheEntry* ce, GConfClient* client)
+clear_cache_foreach (char* key, GConfEntry* entry, GConfClient* client)
 {
-  g_free(key);
-  cache_entry_destroy(ce);
+  g_free (key);
+  gconf_entry_free (entry);
 
   return TRUE;
 }
@@ -896,17 +828,37 @@ foreach_check_underneath (gpointer key, gpointer value, gpointer user_data)
 }
 
 static gboolean
-dir_being_monitored (GConfClient *client,
-                     const char  *dirname)
+key_being_monitored (GConfClient *client,
+                     const char  *key)
 {
-  CheckUnderneathData cud;
+  gboolean retval = FALSE;
+  char* parent = g_strdup (key);
+  char* end;
 
-  cud.found_parent = FALSE;
-  cud.key = dirname;
+  end = parent + strlen (parent);
   
-  g_hash_table_foreach (client->dir_hash, foreach_check_underneath, &cud);
+  while (end)
+    {
+      if (end == parent)
+        *(end + 1) = '\0'; /* special-case "/" root dir */
+      else
+        *end = '\0'; /* chop '/' off of dir */
+      
+      if (g_hash_table_lookup (client->dir_hash, parent) != NULL)
+        {
+          retval = TRUE;
+          break;
+        }
 
-  return cud.found_parent;
+      if (end != parent)
+        end = strrchr (parent, '/');
+      else
+        end = NULL;
+    }
+
+  g_free (parent);
+
+  return retval;
 }
 
 static void
@@ -921,13 +873,7 @@ cache_entry_list_destructively (GConfClient *client,
     {
       GConfEntry* entry = tmp->data;
       
-      gconf_client_cache (client,
-                          gconf_entry_get_key (entry),
-                          gconf_entry_get_is_default (entry),
-                          gconf_entry_get_is_writable (entry),
-                          gconf_entry_steal_value (entry));
-
-      gconf_entry_free (entry);
+      gconf_client_cache (client, TRUE, entry);
       
       tmp = g_slist_next (tmp);
     }
@@ -971,7 +917,7 @@ gconf_client_preload    (GConfClient* client,
   g_return_if_fail(dirname != NULL);
 
 #ifdef GCONF_ENABLE_DEBUG
-  if (!dir_being_monitored (client, dirname))
+  if (!key_being_monitored (client, dirname))
     {
       g_warning("Can only preload directories you've added with gconf_client_add_dir() (tried to preload %s)",
                 dirname);
@@ -1108,7 +1054,7 @@ gconf_client_all_entries    (GConfClient* client,
   if (error != NULL)
     return NULL;
 
-  if (dir_being_monitored (client, dir))
+  if (key_being_monitored (client, dir))
     cache_entry_list_destructively (client, copy_entry_list (retval));
   
   return retval;
@@ -1171,31 +1117,36 @@ gconf_client_dir_exists     (GConfClient* client,
 }
 
 gboolean
-gconf_client_key_is_writable(GConfClient* client,
-                             const gchar* key,
-                             GError**     err)
+gconf_client_key_is_writable (GConfClient* client,
+                              const gchar* key,
+                              GError**     err)
 {
   GError* error = NULL;
-  GConfValue* val = NULL;
-  gboolean is_writable = TRUE;
+  GConfEntry *entry = NULL;
+  gboolean is_writable;
   
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
   trace ("Checking whether key '%s' is writable... \n", key);
+
+  if (gconf_client_lookup (client, key, &entry))
+    {
+      g_assert (entry != NULL);
+
+      return gconf_entry_get_is_writable (entry);
+    }
   
-  val = get (client, key, TRUE,
-             NULL, &is_writable, &error);
+  entry = get (client, key, TRUE, &error);
 
-  if (val == NULL && error != NULL)
-    handle_error(client, error, err);
+  if (entry == NULL && error != NULL)
+    handle_error (client, error, err);
   else
-    g_assert(error == NULL);
+    g_assert (error == NULL);
 
-  /* FIXME we could avoid creating this value at all if
-   * we were somewhat less lame.
-   */
-  if (val)
-    gconf_value_free (val);
+  is_writable = gconf_entry_get_is_writable (entry);  
+
+  if (entry)
+    gconf_entry_free (entry);
 
   if (is_writable)
     trace ("%s is writable\n", key);
@@ -1221,94 +1172,67 @@ check_type(const gchar* key, GConfValue* val, GConfValueType t, GError** err)
     return TRUE;
 }
 
-static GConfValue*
+static GConfEntry*
 get (GConfClient *client,
      const gchar *key,
      gboolean     use_default,
-     gboolean    *is_default_retloc,
-     gboolean    *is_writable_retloc,
      GError     **error)
 {
-  GConfValue* val = NULL;
-  gboolean is_default = FALSE;
-  gboolean is_writable = TRUE;
+  GConfEntry *entry = NULL;
   
-  g_return_val_if_fail(client != NULL, NULL);
-  g_return_val_if_fail(GCONF_IS_CLIENT(client), NULL);
-  g_return_val_if_fail(error != NULL, NULL);
-  g_return_val_if_fail(*error == NULL, NULL);
+  g_return_val_if_fail (client != NULL, NULL);
+  g_return_val_if_fail (GCONF_IS_CLIENT(client), NULL);
+  g_return_val_if_fail (error != NULL, NULL);
+  g_return_val_if_fail (*error == NULL, NULL);
   
   /* Check our client-side cache */
-  if (gconf_client_lookup(client, key, use_default,
-                          &is_default,
-                          &is_writable,
-                          &val))
+  if (gconf_client_lookup (client, key, &entry))
+
     {
-      if (is_default_retloc)
-        *is_default_retloc = is_default;
-
-      if (is_writable_retloc)
-        *is_writable_retloc = is_writable;
-
       trace ("%s was in the client-side cache\n", key);
       
-      /* may be NULL of course */
-      return val ? gconf_value_copy (val) : NULL;
+      g_assert (entry != NULL);
+      
+      if (gconf_entry_get_is_default (entry) && !use_default)
+        return NULL;
+      else
+        return gconf_entry_copy (entry);
     }
       
-  g_assert(val == NULL); /* if it was in the cache we should have returned */
+  g_assert (entry == NULL); /* if it was in the cache we should have returned */
 
   /* Check the GConfEngine */
   trace ("Doing remote query for %s\n", key);
   PUSH_USE_ENGINE (client);
-  val = gconf_engine_get_full (client->engine, key,
-                               gconf_current_locale(),
-                               use_default, &is_default, &is_writable,
-                               error);
+  entry = gconf_engine_get_entry (client->engine, key,
+                                  gconf_current_locale(),
+                                  TRUE /* always use default here */,
+                                  error);
   POP_USE_ENGINE (client);
-
-  if (is_default_retloc)
-    *is_default_retloc = is_default;
-
-  if (is_writable_retloc)
-    *is_writable_retloc = is_writable;
   
   if (*error != NULL)
     {
-      g_return_val_if_fail(val == NULL, NULL);
+      g_return_val_if_fail (entry == NULL, NULL);
       return NULL;
     }
   else
     {
-      /* Cache this value, if it's in our directory list. FIXME could
-       * speed this up.
-       */
-      gchar* parent = g_strdup(key);
-      gchar* end;
-
-      end = strrchr (parent, '/');
-
-      while (end && parent != end)
+      g_assert (entry != NULL); /* gconf_engine_get_entry shouldn't return NULL ever */
+      
+      /* Cache this value, if it's in our directory list. */
+      if (key_being_monitored (client, key))
         {
-          *end = '\0';
-          
-          if (g_hash_table_lookup (client->dir_hash, parent) != NULL)
-            {
-              /* cache a copy of val */
-              gconf_client_cache (client, key, is_default, is_writable,
-                                  val ? gconf_value_copy (val) : NULL);
-              break;
-            }
-          
-          end = strrchr (parent, '/');
+          /* cache a copy of val */
+          gconf_client_cache (client, FALSE, entry);
         }
 
-      g_free (parent);
-
-      /* We don't own val, we're returning this copy belonging
+      /* We don't own the entry, we're returning this copy belonging
        * to the caller
        */
-      return val;
+      if (gconf_entry_get_is_default (entry) && !use_default)
+        return NULL;
+      else
+        return entry;
     }
 }
      
@@ -1316,36 +1240,27 @@ static GConfValue*
 gconf_client_get_full        (GConfClient* client,
                               const gchar* key, const gchar* locale,
                               gboolean use_schema_default,
-                              gboolean* value_is_default,
-                              gboolean* value_is_writable,
                               GError** err)
 {
   GError* error = NULL;
-  GConfValue* val = NULL;
-  gboolean is_default = FALSE;
-  gboolean is_writable = TRUE;
+  GConfEntry *entry;
   
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
   if (locale != NULL)
-    g_warning("haven't implemented getting a specific locale in GConfClient");
+    g_warning ("haven't implemented getting a specific locale in GConfClient");
   
-  val = get(client, key, use_schema_default,
-            &is_default, &is_writable, &error);
+  entry = get (client, key, use_schema_default,
+               &error);
 
-  if (val == NULL && error != NULL)
+  if (entry == NULL && error != NULL)
     handle_error(client, error, err);
   else
-    g_assert(error == NULL);
+    g_assert (error == NULL);
 
-
-  if (value_is_default)
-    *value_is_default = is_default;
-
-  if (value_is_writable)
-    *value_is_writable = is_writable;
-
-  return val;
+  return gconf_entry_get_value (entry) ?
+    gconf_value_copy (gconf_entry_get_value (entry)) :
+    NULL;
 }
 
 GConfEntry*
@@ -1356,9 +1271,6 @@ gconf_client_get_entry (GConfClient* client,
                         GError** err)
 {
   GError* error = NULL;
-  GConfValue* val = NULL;
-  gboolean is_default = FALSE;
-  gboolean is_writable = TRUE;
   GConfEntry *entry;
   
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -1366,17 +1278,13 @@ gconf_client_get_entry (GConfClient* client,
   if (locale != NULL)
     g_warning("haven't implemented getting a specific locale in GConfClient");
   
-  val = get(client, key, use_schema_default,
-            &is_default, &is_writable, &error);
+  entry = get (client, key, use_schema_default,
+               &error);
 
-  if (val == NULL && error != NULL)
-    handle_error(client, error, err);
+  if (entry == NULL && error != NULL)
+    handle_error (client, error, err);
   else
-    g_assert(error == NULL);
-
-  entry = gconf_entry_new_nocopy (g_strdup (key), val);
-  entry->is_default = is_default;
-  entry->is_writable = is_writable;
+    g_assert (error == NULL);
   
   return entry;
 }
@@ -1385,8 +1293,8 @@ GConfValue*
 gconf_client_get             (GConfClient* client,
                               const gchar* key,
                               GError** err)
-{
-  return gconf_client_get_full(client, key, NULL, TRUE, NULL, NULL, err);
+{  
+  return gconf_client_get_full (client, key, NULL, TRUE, err);
 }
 
 GConfValue*
@@ -1394,7 +1302,7 @@ gconf_client_get_without_default  (GConfClient* client,
                                    const gchar* key,
                                    GError** err)
 {
-  return gconf_client_get_full(client, key, NULL, FALSE, NULL, NULL, err);
+  return gconf_client_get_full (client, key, NULL, FALSE, err);
 }
 
 GConfValue*
@@ -1403,28 +1311,29 @@ gconf_client_get_default_from_schema (GConfClient* client,
                                       GError** err)
 {
   GError* error = NULL;
-  GConfValue* val = NULL;
-  gboolean is_default = FALSE;
+  GConfEntry *entry = NULL;
+  GConfValue *val = NULL;
   
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);  
-  g_return_val_if_fail(client != NULL, NULL);
-  g_return_val_if_fail(GCONF_IS_CLIENT(client), NULL);
+  g_return_val_if_fail (err == NULL || *err == NULL, NULL);  
+  g_return_val_if_fail (client != NULL, NULL);
+  g_return_val_if_fail (GCONF_IS_CLIENT(client), NULL);
 
   trace ("Getting default for %s from schema\n", key);
   
   /* Check our client-side cache to see if the default is the same as
    * the regular value (FIXME put a default_value field in the
-   * CacheEntry and store both, lose the is_default flag in CacheEntry)
+   * cache and store both, lose the is_default flag)
    */
-  if (gconf_client_lookup (client, key, TRUE,
-                           &is_default,
-                           NULL,
-                           &val))
+  if (gconf_client_lookup (client, key, &entry))
     {
-      if (is_default)
+      g_assert (entry != NULL);
+      
+      if (gconf_entry_get_is_default (entry))
         {
           trace ("Using cached value for schema default\n");
-          return val ? gconf_value_copy(val) : NULL;
+          return gconf_entry_get_value (entry) ?
+            gconf_value_copy (gconf_entry_get_value (entry)) :
+            NULL;
         }
     }
 
@@ -1437,14 +1346,15 @@ gconf_client_get_default_from_schema (GConfClient* client,
   
   if (error != NULL)
     {
-      g_assert(val == NULL);
-      handle_error(client, error, err);
+      g_assert (val == NULL);
+      handle_error (client, error, err);
       return NULL;
     }
   else
     {
       /* FIXME eventually we'll cache the value
-         by adding a field to CacheEntry */
+       * by adding a field to the cache
+       */
       return val;
     }
 }
@@ -1455,11 +1365,11 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
 {
   static const gdouble def = 0.0;
   GError* error = NULL;
-  GConfValue* val;
+  GConfValue *val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, 0.0);
-  
-  val = get(client, key, TRUE, NULL, NULL, &error);
+  g_return_val_if_fail (err == NULL || *err == NULL, 0.0);
+
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
@@ -1467,19 +1377,19 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(key, val, GCONF_VALUE_FLOAT, &error))
-        retval = gconf_value_get_float(val);
+      if (check_type (key, val, GCONF_VALUE_FLOAT, &error))
+        retval = gconf_value_get_float (val);
       else
-        handle_error(client, error, err);
+        handle_error (client, error, err);
 
-      gconf_value_free(val);
+      gconf_value_free (val);
 
       return retval;
     }
   else
     {
       if (error != NULL)
-        handle_error(client, error, err);
+        handle_error (client, error, err);
       return def;
     }
 }
@@ -1492,9 +1402,9 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
   GError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, 0);
+  g_return_val_if_fail (err == NULL || *err == NULL, 0);
 
-  val = get(client, key, TRUE, NULL, NULL, &error);
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
@@ -1502,19 +1412,19 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(key, val, GCONF_VALUE_INT, &error))
+      if (check_type (key, val, GCONF_VALUE_INT, &error))
         retval = gconf_value_get_int(val);
       else
-        handle_error(client, error, err);
+        handle_error (client, error, err);
 
-      gconf_value_free(val);
+      gconf_value_free (val);
 
       return retval;
     }
   else
     {
       if (error != NULL)
-        handle_error(client, error, err);
+        handle_error (client, error, err);
       return def;
     }
 }
@@ -1527,9 +1437,9 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
   GError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-  
-  val = get(client, key, TRUE, NULL, NULL, &error);
+  g_return_val_if_fail (err == NULL || *err == NULL, NULL);
+
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
@@ -1537,27 +1447,27 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(key, val, GCONF_VALUE_STRING, &error))
-	/* we cheat here (look below) so we have to cast this */
-        retval = (gchar *)gconf_value_get_string(val);
+      if (check_type (key, val, GCONF_VALUE_STRING, &error))
+        /* we cheat here (look below) so we have to cast this */
+        retval = (gchar *)gconf_value_get_string (val);
       else
-        handle_error(client, error, err);
+        handle_error (client, error, err);
 
       /* This is a cheat; don't copy */
       if (retval != NULL)
         val->d.string_data = NULL; /* don't delete the string we are returning */
       else
-        retval = def ? g_strdup(def) : NULL;
+        retval = def ? g_strdup (def) : NULL;
       
-      gconf_value_free(val);
+      gconf_value_free (val);
 
       return retval;
     }
   else
     {
       if (error != NULL)
-        handle_error(client, error, err);
-      return def ? g_strdup(def) : NULL;
+        handle_error (client, error, err);
+      return def ? g_strdup (def) : NULL;
     }
 }
 
@@ -1570,29 +1480,29 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
   GError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
-  val = get(client, key, TRUE, NULL, NULL, &error);  
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
       gboolean retval = def;
 
-      g_assert(error == NULL);
+      g_assert (error == NULL);
       
-      if (check_type(key, val, GCONF_VALUE_BOOL, &error))
-        retval = gconf_value_get_bool(val);
+      if (check_type (key, val, GCONF_VALUE_BOOL, &error))
+        retval = gconf_value_get_bool (val);
       else
-        handle_error(client, error, err);
+        handle_error (client, error, err);
 
-      gconf_value_free(val);
+      gconf_value_free (val);
 
       return retval;
     }
   else
     {
       if (error != NULL)
-        handle_error(client, error, err);
+        handle_error (client, error, err);
       return def;
     }
 }
@@ -1604,9 +1514,9 @@ gconf_client_get_schema  (GConfClient* client,
   GError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
-  val = get(client, key, TRUE, NULL, NULL, &error);
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
@@ -1614,23 +1524,23 @@ gconf_client_get_schema  (GConfClient* client,
 
       g_assert(error == NULL);
       
-      if (check_type(key, val, GCONF_VALUE_SCHEMA, &error))
-        retval = gconf_value_get_schema(val);
+      if (check_type (key, val, GCONF_VALUE_SCHEMA, &error))
+        retval = gconf_value_get_schema (val);
       else
-        handle_error(client, error, err);
+        handle_error (client, error, err);
 
       /* This is a cheat; don't copy */
       if (retval != NULL)
         val->d.schema_data = NULL; /* don't delete the schema */
       
-      gconf_value_free(val);
+      gconf_value_free (val);
 
       return retval;
     }
   else
     {
       if (error != NULL)
-        handle_error(client, error, err);
+        handle_error (client, error, err);
       return NULL;
     }
 }
@@ -1642,23 +1552,23 @@ gconf_client_get_list    (GConfClient* client, const gchar* key,
   GError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
-  val = get(client, key, TRUE, NULL, NULL, &error);
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
       GSList* retval;
 
-      g_assert(error == NULL);
+      g_assert (error == NULL);
 
       /* This function checks the type and destroys "val" */
-      retval = gconf_value_list_to_primitive_list_destructive(val, list_type, &error);
+      retval = gconf_value_list_to_primitive_list_destructive (val, list_type, &error);
 
       if (error != NULL)
         {
-          g_assert(retval == NULL);
-          handle_error(client, error, err);
+          g_assert (retval == NULL);
+          handle_error (client, error, err);
           return NULL;
         }
       else
@@ -1667,7 +1577,7 @@ gconf_client_get_list    (GConfClient* client, const gchar* key,
   else
     {
       if (error != NULL)
-        handle_error(client, error, err);
+        handle_error (client, error, err);
       return NULL;
     }
 }
@@ -1681,26 +1591,26 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
   GError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
-  val = get(client, key, TRUE, NULL, NULL, &error);  
+  val = gconf_client_get (client, key, err);
 
   if (val != NULL)
     {
       g_assert(error == NULL);
 
       /* This function checks the type and destroys "val" */
-      if (gconf_value_pair_to_primitive_pair_destructive(val, car_type, cdr_type,
-                                                         car_retloc, cdr_retloc,
-                                                         &error))
+      if (gconf_value_pair_to_primitive_pair_destructive (val, car_type, cdr_type,
+                                                          car_retloc, cdr_retloc,
+                                                          &error))
         {
-          g_assert(error == NULL);
+          g_assert (error == NULL);
           return TRUE;
         }
       else
         {
-          g_assert(error != NULL);
-          handle_error(client, error, err);
+          g_assert (error != NULL);
+          handle_error (client, error, err);
           return FALSE;
         }
     }
@@ -1708,13 +1618,12 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
     {
       if (error != NULL)
         {
-          handle_error(client, error, err);
+          handle_error (client, error, err);
           return FALSE;
         }
       else
         return TRUE;
     }
-
 }
 
 
@@ -1955,132 +1864,77 @@ gconf_client_value_changed          (GConfClient* client,
  */
 
 static gboolean
-gconf_client_cache (GConfClient* client,
-                    const gchar* key,
-                    gboolean is_default,
-                    gboolean is_writable,
-                    GConfValue* value)
+gconf_client_cache (GConfClient *client,
+                    gboolean     take_ownership,
+                    GConfEntry  *new_entry)
 {
-  /* Remember: value may be NULL */
-  
   gpointer oldkey = NULL, oldval = NULL;
 
-  if (g_hash_table_lookup_extended (client->cache_hash, key, &oldkey, &oldval))
+  if (g_hash_table_lookup_extended (client->cache_hash, new_entry->key, &oldkey, &oldval))
     {
       /* Already have a value, update it */
-      CacheEntry* ce = oldval;
+      GConfEntry *entry = oldval;
       gboolean changed;
       
-      g_assert (ce != NULL);
+      g_assert (entry != NULL);
 
-      changed = TRUE;
-      if (((value == NULL && ce->value == NULL) ||
-           (value && ce->value && gconf_value_compare (value, ce->value) == 0)) &&
-          ce->is_default == is_default &&
-          ce->is_writable == is_writable)
-        changed = FALSE;
-      
-      if (ce->value != NULL)
-        gconf_value_free (ce->value);
-
-      ce->value = value;
-      
-      ce->is_default = is_default;
-      ce->is_writable = is_writable;
+      changed = ! gconf_entry_equal (entry, new_entry);
 
       if (changed)
-        trace ("Updated value of '%s' in the cache\n",
-               key);
+        {
+          trace ("Updating value of '%s' in the cache\n",
+                 new_entry->key);
+
+          if (!take_ownership)
+            new_entry = gconf_entry_copy (new_entry);
+          
+          g_hash_table_replace (client->cache_hash,
+                                new_entry->key,
+                                new_entry);
+
+          /* oldkey is inside entry */
+          gconf_entry_free (entry);
+        }
       else
-        trace ("Value of '%s' hasn't actually changed, would have updated in cache\n",
-               key);
+        {
+          trace ("Value of '%s' hasn't actually changed, would have updated in cache if it had\n",
+                 new_entry->key);
+
+          if (take_ownership)
+            gconf_entry_free (new_entry);
+        }
 
       return changed;
     }
   else
     {
       /* Create a new entry */
-      CacheEntry* ce = cache_entry_new(value, is_default, is_writable);
-      g_hash_table_insert (client->cache_hash, g_strdup (key), ce);
+      if (!take_ownership)
+        new_entry = gconf_entry_copy (new_entry);
+      
+      g_hash_table_insert (client->cache_hash, new_entry->key, new_entry);
       trace ("Added value of '%s' to the cache\n",
-             key);
+             new_entry->key);
 
       return TRUE; /* changed */
     }
 }
 
 static gboolean
-gconf_client_lookup         (GConfClient* client,
-                             const gchar* key,
-                             gboolean use_default,
-                             gboolean* is_default,
-                             gboolean* is_writable,
-                             GConfValue** valp)
+gconf_client_lookup (GConfClient *client,
+                     const char  *key,
+                     GConfEntry **entryp)
 {
-  CacheEntry* ce;
+  GConfEntry *entry;
 
-  g_return_val_if_fail(valp != NULL, FALSE);
-  g_return_val_if_fail(*valp == NULL, FALSE);
+  g_return_val_if_fail (entryp != NULL, FALSE);
+  g_return_val_if_fail (*entryp == NULL, FALSE);
   
-  ce = g_hash_table_lookup(client->cache_hash, key);
+  entry = g_hash_table_lookup (client->cache_hash, key);
 
-  if (ce != NULL)
-    {
-      if (ce->is_default)
-        {
-          *is_default = TRUE;
-          
-          if (use_default)
-            *valp = ce->value;            
-          else
-            *valp = NULL;
-        }
-      else
-        {
-          *is_default = FALSE;
-
-          *valp = ce->value;
-        }
-
-      if (is_writable)
-        *is_writable = ce->is_writable;
+  *entryp = entry;
       
-      return TRUE;
-    }
-  else
-    return FALSE;
-}
-
-
-/*
- * CacheEntry
- */ 
-
-static CacheEntry*
-cache_entry_new(GConfValue* val,
-                gboolean is_default, gboolean is_writable)
-{
-  CacheEntry* ce;
-
-  ce = g_new(CacheEntry, 1);
-
-  /* val may be NULL */
-  ce->value = val;
-  ce->is_default = is_default;
-  ce->is_writable = is_writable;
-  
-  return ce;
-}
-
-static void
-cache_entry_destroy(CacheEntry* ce)
-{
-  g_return_if_fail(ce != NULL);
-  
-  if (ce->value != NULL)
-    gconf_value_free(ce->value);
-
-  g_free(ce);
+  return entry != NULL;
 }
 
 /*
@@ -2435,4 +2289,155 @@ unregister_client (GConfClient *client)
   g_return_if_fail (clients != NULL);
 
   g_hash_table_remove (clients, client->engine);
+}
+
+
+/*
+ * Notification
+ */
+
+static gboolean
+notify_idle_callback (gpointer data)
+{
+  GConfClient *client = data;
+
+  client->notify_handler = 0; /* avoid g_source_remove */
+  
+  gconf_client_flush_notifies (client);
+
+  /* remove handler */
+  return FALSE;
+}
+
+static void
+gconf_client_queue_notify (GConfClient *client,
+                           const char  *key)
+{
+  trace ("Queing notify on %s, %d pending already\n", key,
+         client->pending_notify_count);
+  
+  if (client->notify_handler == 0)
+    client->notify_handler = g_idle_add (notify_idle_callback, client);
+  
+  client->notify_list = g_slist_prepend (client->notify_list, g_strdup (key));
+  client->pending_notify_count += 1;
+}
+
+struct ClientAndEntry {
+  GConfClient* client;
+  GConfEntry* entry;
+};
+
+static void
+notify_listeners_callback(GConfListeners* listeners,
+                          const gchar* key,
+                          guint cnxn_id,
+                          gpointer listener_data,
+                          gpointer user_data)
+{
+  struct ClientAndEntry* cae = user_data;
+  Listener* l = listener_data;
+  
+  g_return_if_fail (cae != NULL);
+  g_return_if_fail (cae->client != NULL);
+  g_return_if_fail (GCONF_IS_CLIENT (cae->client));
+  g_return_if_fail (l != NULL);
+  g_return_if_fail (l->func != NULL);
+
+  (*l->func) (cae->client, cnxn_id, cae->entry, l->data);
+}
+  
+static void
+notify_one_entry (GConfClient *client,
+                  GConfEntry  *entry)
+{
+  /* Emit the value_changed signal before notifying specific listeners;
+   * I'm not sure there's a reason this matters though
+   */
+  gconf_client_value_changed (client,
+                              entry->key,
+                              entry->value);
+
+  /* Now notify our listeners, if any */
+  if (client->listeners != NULL)
+    {
+      struct ClientAndEntry cae;
+
+      cae.client = client;
+      cae.entry = entry;
+      
+      gconf_listeners_notify (client->listeners,
+                              entry->key,
+                              notify_listeners_callback,
+                              &cae);
+    }
+}
+
+static void
+gconf_client_flush_notifies (GConfClient *client)
+{
+  GSList *tmp;
+  GSList *to_notify;
+  GConfEntry *last_entry;
+
+  trace ("Flushing notify queue\n");
+  
+  /* Adopt notify list and clear it, to avoid reentrancy concerns.
+   * Sort it to compress duplicates, and keep people from relying on
+   * the notify order.
+   */
+  to_notify = g_slist_sort (client->notify_list, (GCompareFunc) strcmp);
+  client->notify_list = NULL;
+  client->pending_notify_count = 0;
+
+  gconf_client_unqueue_notifies (client);
+
+  last_entry = NULL;
+  tmp = to_notify;
+  while (tmp != NULL)
+    {
+      GConfEntry *entry = NULL;
+
+      if (gconf_client_lookup (client, tmp->data, &entry))
+        {
+          if (entry != last_entry)
+            {
+              trace ("Doing notification for %s\n", entry->key);
+              notify_one_entry (client, entry);
+              last_entry = entry;
+            }
+          else
+            {
+              trace ("Ignoring duplicate notify for %s\n", entry->key);
+            }
+        }
+      else
+        {
+          trace ("Key %s was in notify queue but not in cache; we must have stopped monitoring it; not notifying\n",
+                 tmp->data);
+        }
+      
+      tmp = tmp->next;
+    }
+  
+  g_slist_foreach (to_notify, (GFunc) g_free, NULL);
+  g_slist_free (to_notify);
+}
+
+static void
+gconf_client_unqueue_notifies (GConfClient *client)
+{
+  if (client->notify_handler != 0)
+    {
+      g_source_remove (client->notify_handler);
+      client->notify_handler = 0;
+    }
+  
+  if (client->notify_list != NULL)
+    {
+      g_slist_foreach (client->notify_list, (GFunc) g_free, NULL);
+      g_slist_free (client->notify_list);
+      client->notify_list = NULL;
+      client->pending_notify_count = 0;
+    }
 }
