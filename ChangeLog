@@ -1,3 +1,19 @@
+2000-07-12  Havoc Pennington  <hp@pobox.com>
+
+	* configure.in: Bump library versions, bump to 0.6
+
+	* gconf/gconf.c (gconf_engine_get_local): Rename from
+	gconf_engine_new_local
+	(gconf_engine_get_default): rename from gconf_engine_new
+	(gconf_engine_get_for_address): rename from
+	gconf_engine_new_from_address
+
+	* wrappers/gtk/gconf-client.c (gconf_client_get_default): rename
+	from gconf_client_new. Always sink the client, so we are strictly
+	refcounted, no floating state (for future GObject compatibility)
+	(gconf_client_get_for_engine): rename from
+	gconf_client_new_with_engine
+
 2000-07-11  Havoc Pennington  <hp@redhat.com>
 
 	* Makefile.am: spew messages about needing to create

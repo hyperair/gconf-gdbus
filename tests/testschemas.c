@@ -440,7 +440,7 @@ main (int argc, char** argv)
       return 1;
     }
   
-  conf = gconf_engine_new();
+  conf = gconf_engine_get_default();
 
   check(conf != NULL, "create the default conf engine");
   

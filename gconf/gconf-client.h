@@ -144,10 +144,10 @@ struct _GConfClientClass
 GtkType           gconf_client_get_type        (void);
 
 /* use the default engine */
-GConfClient*      gconf_client_new             (void);
+GConfClient*      gconf_client_get_default             (void);
 
 /* refcount on engine is incremented, you still own your ref */
-GConfClient*      gconf_client_new_with_engine (GConfEngine* engine);
+GConfClient*      gconf_client_get_for_engine (GConfEngine* engine);
 
 /* Add a directory to monitor and emit the value_changed signal and
    key notifications for.  Optionally pre-load the contents of this

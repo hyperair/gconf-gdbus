@@ -163,7 +163,7 @@ GCONF_PROC(make_gconf,"gconf-default",0,0,0,())
 {
   GConfEngine* conf;
   gh_defer_ints();
-  conf = gconf_engine_new();
+  conf = gconf_engine_get_default();
   scm_done_malloc(sizeof(GConfEngine));
   gh_allow_ints();
   return gconf2scm(conf);

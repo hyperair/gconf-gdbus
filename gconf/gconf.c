@@ -184,7 +184,7 @@ gconf_engine_is_local(GConfEngine* conf)
  */
 
 GConfEngine*
-gconf_engine_new_local      (const gchar* address,
+gconf_engine_get_local      (const gchar* address,
                              GConfError** err)
 {
   GConfEnginePrivate* priv;
@@ -208,7 +208,7 @@ gconf_engine_new_local      (const gchar* address,
 }
 
 GConfEngine*
-gconf_engine_new            (void)
+gconf_engine_get_default            (void)
 {
   GConfEnginePrivate* priv;
 
@@ -228,7 +228,7 @@ gconf_engine_new            (void)
 }
 
 GConfEngine*
-gconf_engine_new_from_address(const gchar* address, GConfError** err)
+gconf_engine_get_for_address(const gchar* address, GConfError** err)
 {
   GConfEngine* gconf;
   GConfEnginePrivate* priv;

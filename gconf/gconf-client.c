@@ -414,14 +414,14 @@ notify_from_server_callback(GConfEngine* conf, guint cnxn_id,
  */
 
 GConfClient*
-gconf_client_new (void)
+gconf_client_get_default (void)
 {
   GConfClient *client;
   GConfEngine *engine;
   
   g_return_val_if_fail(gconf_is_initialized(), NULL);
 
-  engine = gconf_engine_new ();
+  engine = gconf_engine_get_default ();
   
   client = lookup_client (engine);
   if (client)
@@ -434,6 +434,11 @@ gconf_client_new (void)
   else
     {
       client = gtk_type_new (gconf_client_get_type ());
+
+      /* Emulate GObject */
+      gtk_object_ref (GTK_OBJECT (client));
+      gtk_object_sink (GTK_OBJECT (client));
+
       client->engine = engine;
       register_client (client);
     }
@@ -442,7 +447,7 @@ gconf_client_new (void)
 }
 
 GConfClient*
-gconf_client_new_with_engine (GConfEngine* engine)
+gconf_client_get_for_engine (GConfEngine* engine)
 {
   GConfClient *client;
 
@@ -459,6 +464,10 @@ gconf_client_new_with_engine (GConfEngine* engine)
     {
       client = gtk_type_new (gconf_client_get_type ());
 
+      /* Emulate GObject */
+      gtk_object_ref (GTK_OBJECT (client));
+      gtk_object_sink (GTK_OBJECT (client));
+      
       client->engine = engine;
 
       gconf_engine_ref(client->engine);

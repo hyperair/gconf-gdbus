@@ -71,7 +71,7 @@ main(int argc, char** argv)
 
   g_assert(error == NULL);
 
-  client = gconf_client_new();
+  client = gconf_client_get_default();
 
   gconf_client_add_dir(client, "/apps/basic-gconf-app", GCONF_CLIENT_PRELOAD_NONE, NULL);
 

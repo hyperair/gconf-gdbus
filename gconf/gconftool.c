@@ -494,13 +494,13 @@ main (int argc, char** argv)
     }
   
   if (config_source == NULL)
-    conf = gconf_engine_new();
+    conf = gconf_engine_get_default();
   else
     {
       if (use_local_source)
-        conf = gconf_engine_new_local(config_source, &err);
+        conf = gconf_engine_get_local(config_source, &err);
       else
-        conf = gconf_engine_new_from_address(config_source, &err);
+        conf = gconf_engine_get_for_address(config_source, &err);
     }
   
   if (conf == NULL)

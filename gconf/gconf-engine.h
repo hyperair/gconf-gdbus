@@ -36,14 +36,14 @@ struct _GConfEngine {
   gpointer dummy;
 };
   
-GConfEngine* gconf_engine_new             (void); /* Default source stack */
+GConfEngine* gconf_engine_get_default             (void); /* Default source stack */
 /* returns NULL on error; requests single specified source */
-GConfEngine* gconf_engine_new_from_address(const gchar* address, GConfError** err);
+GConfEngine* gconf_engine_get_for_address(const gchar* address, GConfError** err);
 void         gconf_engine_unref           (GConfEngine* conf);
 void         gconf_engine_ref             (GConfEngine* conf);
 
 #ifdef GCONF_ENABLE_INTERNALS
-GConfEngine* gconf_engine_new_local      (const gchar* address, GConfError** err);
+GConfEngine* gconf_engine_get_local      (const gchar* address, GConfError** err);
 #endif
 
 #ifdef __cplusplus

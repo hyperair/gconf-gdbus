@@ -64,7 +64,7 @@ main(int argc, char** argv)
   gtk_init(&argc, &argv);
   gconf_init(argc, argv, NULL);
 
-  client = gconf_client_new();
+  client = gconf_client_get_default();
   
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 

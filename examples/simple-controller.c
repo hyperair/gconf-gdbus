@@ -56,7 +56,7 @@ main(int argc, char** argv)
 
   gtk_container_add(GTK_CONTAINER(window), entry);  
 
-  client = gconf_client_new();
+  client = gconf_client_get_default();
 
   gconf_client_add_dir(client,
                        "/extra/test/directory",
