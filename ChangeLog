@@ -1,3 +1,9 @@
+2004-08-27  Mark McLoughlin  <mark@skynet.ie>
+
+	* gconf/gconftool.c: (process_locale_info): don't explicitly
+	install the global default in a schema for every locale since
+	we happily fall back to the C locale anyway. Fixes bug #131488.
+
 2004-08-25  Mark McLoughlin  <mark@skynet.ie>
 
 	* backends/markup-tree.c: (markup_entry_get_value): don't

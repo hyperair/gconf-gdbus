@@ -3278,9 +3278,6 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
   xmlFree(name);
 
   /* Fill in the global info */
-  if (info->global_default != NULL)
-    gconf_schema_set_default_value(schema, info->global_default);
-      
   if (info->type != GCONF_VALUE_INVALID)
     gconf_schema_set_type(schema, info->type);
 
