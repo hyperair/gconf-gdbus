@@ -87,24 +87,19 @@ gboolean     gconf_key_is_below   (const gchar* above, const gchar* below);
  * Higher-level stuff 
  */
 
-/* 'def' (default) is used if the key is not set or if there's an error. */
 
 gdouble      gconf_get_float (GConfEngine* conf, const gchar* key,
-                              gdouble def, GConfError** err);
+                              GConfError** err);
 
 gint         gconf_get_int   (GConfEngine* conf, const gchar* key,
-                              gint def, GConfError** err);
+                              GConfError** err);
 
-/* free the retval */
+/* free the retval, retval can be NULL for "unset" */
 gchar*       gconf_get_string(GConfEngine* conf, const gchar* key,
-                              const gchar* def, /* def is copied when returned, 
-                                                 * and can be NULL to return 
-                                                 * NULL 
-                                                 */
                               GConfError** err);
 
 gboolean     gconf_get_bool  (GConfEngine* conf, const gchar* key,
-                              gboolean def, GConfError** err);
+                              GConfError** err);
 
 /* this one has no default since it would be expensive and make little
    sense; it returns NULL as a default, to indicate unset or error */

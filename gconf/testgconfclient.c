@@ -111,12 +111,12 @@ entry_attached_to(GConfClient* client, const gchar* key)
                            g_strdup(key), g_free);
 
 
-  val = gconf_client_get_string(client, key, "<<default value, unset>>", NULL);
+  val = gconf_client_get_string(client, key, NULL);
 
-  g_assert(val != NULL);
+  gtk_entry_set_text(GTK_ENTRY(entry), val ? val : "");
+
+  g_free(val);
   
-  gtk_entry_set_text(GTK_ENTRY(entry), val);
-
   notify_id = gconf_client_notify_add(client, key, entry_notify_func, entry, NULL, NULL);
 
   gtk_object_set_data(GTK_OBJECT(entry), "notify_id",

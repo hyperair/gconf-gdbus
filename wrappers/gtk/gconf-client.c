@@ -753,8 +753,9 @@ gconf_client_get             (GConfClient* client,
 
 gdouble
 gconf_client_get_float (GConfClient* client, const gchar* key,
-                        gdouble def, GConfError** err)
+                        GConfError** err)
 {
+  static const gdouble def = 0.0;
   GConfError* error = NULL;
   GConfValue* val;
 
@@ -787,8 +788,9 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
 
 gint
 gconf_client_get_int   (GConfClient* client, const gchar* key,
-                        gint def, GConfError** err)
+                        GConfError** err)
 {
+  static const gint def = 0;
   GConfError* error = NULL;
   GConfValue* val;
 
@@ -821,9 +823,9 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
 
 gchar*
 gconf_client_get_string(GConfClient* client, const gchar* key,
-                        const gchar* def, 
                         GConfError** err)
 {
+  static const gchar* def = NULL;
   GConfError* error = NULL;
   GConfValue* val;
 
@@ -863,8 +865,9 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_get_bool  (GConfClient* client, const gchar* key,
-                        gboolean def, GConfError** err)
+                        GConfError** err)
 {
+  static const gboolean def = FALSE;
   GConfError* error = NULL;
   GConfValue* val;
 

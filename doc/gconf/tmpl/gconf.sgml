@@ -291,14 +291,13 @@ it internally so here it is if you need it.
 Requests the floating point number (%GCONF_VALUE_FLOAT) stored at
 @key. Automatically performs type-checking, so if a non-float is
 stored at @key, an error is returned. On error, or if @key is unset, 
-@def is returned.
+0.0 is returned.
 </para>
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@def: default value in case of error or unset value.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: the value of @key, or @def if no value is obtained.
+@Returns: the value of @key, or 0.0 if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_get_int ##### -->
@@ -306,31 +305,26 @@ stored at @key, an error is returned. On error, or if @key is unset,
 Requests the integer (%GCONF_VALUE_INT) stored at
 @key. Automatically performs type-checking, so if a non-integer is
 stored at @key, an error is returned. On error, or if @key is unset, 
-@def is returned.
+0 is returned.
 </para>
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@def: default value in case of error or unset value.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: the value of @key, or @def if no value is obtained.
-
+@Returns: the value of @key, or 0 if no value is obtained.
 
 <!-- ##### FUNCTION gconf_get_string ##### -->
 <para>
 Requests the string (%GCONF_VALUE_STRING) stored at
 @key. Automatically performs type-checking, so if a non-string is
 stored at @key, an error is returned. On error, or if @key is unset, 
-a copy of @def is returned (or if @def is <symbol>NULL</symbol>,
-<symbol>NULL</symbol> is returned). @def is copied so you can always
-safely g_free() the returned string.
+<symbol>NULL</symbol> is returned.
 </para>
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@def: default value in case of error or unset value.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: allocated string (value of @key), or copy of @def if no value is obtained.
+@Returns: allocated string (value of @key), or <symbol>NULL</symbol> if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_get_bool ##### -->
@@ -338,14 +332,13 @@ safely g_free() the returned string.
 Requests the boolean value (%GCONF_VALUE_BOOL) stored at
 @key. Automatically performs type-checking, so if a non-bool is
 stored at @key, an error is returned. On error, or if @key is unset, 
-@def is returned.
+<symbol>FALSE</symbol> is returned.
 </para>
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@def: default value in case of error or unset value.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: the value of @key, or @def if no value is obtained.
+@Returns: the value of @key, or <symbol>FALSE</symbol> if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_get_schema ##### -->

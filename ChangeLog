@@ -1,3 +1,27 @@
+1999-12-01  Havoc Pennington  <hp@pobox.com>
+
+	* doc/gconf/gconf-sections.txt: Add new create_change_set
+	functions for GConfClient and GConfEngine
+
+	* doc/gconf/Makefile.am (LDFLAGS): Use proper cflags/ldflags 
+	for gtk and OAF when doing 'make scan'
+
+	* wrappers/gtk/testgconfclient.c (entry_attached_to): change for
+	new get_string() thing
+
+	* gconf/gconf-changeset.h: fix the "" vs. <> issue on an #include
+
+	* wrappers/gtk/gconf-client.c (gconf_client_get_bool): remove
+	"default" argument
+	(gconf_client_get_string): ditto
+	(gconf_client_get_int): ditto
+	(gconf_client_get_float): ditto
+
+	* gconf/gconf.c (gconf_get_bool): Remove "default" argument.
+	(gconf_get_string): ditto
+	(gconf_get_int): ditto
+	(gconf_get_float): ditto
+
 1999-11-30  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-backend.c (resolve_address): s/dir/root_dir/

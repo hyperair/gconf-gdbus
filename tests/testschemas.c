@@ -141,7 +141,7 @@ check_int_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_int(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -188,7 +188,7 @@ check_int_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_int(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {

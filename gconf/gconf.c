@@ -1560,10 +1560,11 @@ gconf_spawn_daemon(GConfError** err)
 
 gdouble      
 gconf_get_float (GConfEngine* conf, const gchar* key,
-                  gdouble deflt, GConfError** err)
+                 GConfError** err)
 {
   GConfValue* val;
-
+  static const gdouble deflt = 0.0;
+  
   g_return_val_if_fail(conf != NULL, 0.0);
   g_return_val_if_fail(key != NULL, 0.0);
   
@@ -1594,10 +1595,11 @@ gconf_get_float (GConfEngine* conf, const gchar* key,
 
 gint         
 gconf_get_int   (GConfEngine* conf, const gchar* key,
-                  gint deflt, GConfError** err)
+                 GConfError** err)
 {
   GConfValue* val;
-
+  static const gint deflt = 0;
+  
   g_return_val_if_fail(conf != NULL, 0);
   g_return_val_if_fail(key != NULL, 0);
   
@@ -1628,10 +1630,11 @@ gconf_get_int   (GConfEngine* conf, const gchar* key,
 
 gchar*       
 gconf_get_string(GConfEngine* conf, const gchar* key,
-                  const gchar* deflt, GConfError** err)
+                 GConfError** err)
 {
   GConfValue* val;
-
+  static const gchar* deflt = NULL;
+  
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   
@@ -1664,10 +1667,11 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
 
 gboolean     
 gconf_get_bool  (GConfEngine* conf, const gchar* key,
-                  gboolean deflt, GConfError** err)
+                 GConfError** err)
 {
   GConfValue* val;
-
+  static const gboolean deflt = FALSE;
+  
   g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(key != NULL, FALSE);
   

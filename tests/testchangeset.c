@@ -231,7 +231,7 @@ check_string_storage(GConfEngine* conf)
     {
       gchar* gotten;
       
-      gotten = gconf_get_string(conf, *keyp, NULL, &err);
+      gotten = gconf_get_string(conf, *keyp, &err);
       
       if (err != NULL)
         {

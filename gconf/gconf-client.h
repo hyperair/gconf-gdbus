@@ -252,24 +252,18 @@ gboolean     gconf_client_dir_exists     (GConfClient* client,
 
 /* Get/Set convenience wrappers */
 
-/* 'def' (default) is used if the key is not set or if there's an error. */
-
 gdouble      gconf_client_get_float (GConfClient* client, const gchar* key,
-                                     gdouble def, GConfError** err);
+                                     GConfError** err);
 
 gint         gconf_client_get_int   (GConfClient* client, const gchar* key,
-                                     gint def, GConfError** err);
+                                     GConfError** err);
 
-/* free the retval */
+/* free the retval, if non-NULL */
 gchar*       gconf_client_get_string(GConfClient* client, const gchar* key,
-                                     const gchar* def, /* def is copied when returned,
-                                                        * and can be NULL to return
-                                                        * NULL
-                                                        */
                                      GConfError** err);
 
 gboolean     gconf_client_get_bool  (GConfClient* client, const gchar* key,
-                                     gboolean def, GConfError** err);
+                                     GConfError** err);
 
 /* this one has no default since it would be expensive and make little
    sense; it returns NULL as a default, to indicate unset or error */

@@ -206,7 +206,7 @@ check_string_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_string(conf, *keyp, NULL, &err);
+              gotten = gconf_get_string(conf, *keyp, &err);
               
               if (err != NULL)
                 {
@@ -250,7 +250,7 @@ check_string_storage(GConfEngine* conf)
               err = NULL;
             }
 
-          gotten = gconf_get_string(conf, *keyp, NULL, &err);
+          gotten = gconf_get_string(conf, *keyp, &err);
 
           if (err != NULL)
             {
@@ -305,7 +305,7 @@ check_bool_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_bool(conf, *keyp, FALSE, &err);
+              gotten = gconf_get_bool(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -351,7 +351,7 @@ check_bool_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_bool(conf, *keyp, FALSE, &err);
+              gotten = gconf_get_bool(conf, *keyp, &err);
               
               if (err != NULL)
                 {
@@ -407,7 +407,7 @@ check_float_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_float(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_float(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -454,7 +454,7 @@ check_float_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_float(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_float(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -511,7 +511,7 @@ check_int_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_int(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -558,7 +558,7 @@ check_int_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_int(conf, *keyp, 0.0, &err);
+              gotten = gconf_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
