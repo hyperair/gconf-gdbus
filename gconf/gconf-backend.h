@@ -139,6 +139,8 @@ struct _GConfBackend {
 gchar*        gconf_address_backend(const gchar* address);
 /* Get the resource name understood only by the backend */
 gchar*        gconf_address_resource(const gchar* address);
+/* Get the backend flags */
+gchar**       gconf_address_flags(const gchar* address);
 
 gchar*        gconf_backend_file(const gchar* address);
 

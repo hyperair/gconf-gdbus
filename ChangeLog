@@ -1,3 +1,29 @@
+2000-02-01  Havoc Pennington  <hp@redhat.com>
+
+	* configure.in (GCONF_CONFIG_SOURCE): update default schema
+	install source
+	(XML_LIBS): add better check that we actually ran xml-config
+	successfully
+
+	* gconf/gconf-backend.c (gconf_backend_resolve_address): Honor the
+	"readonly" flag in address names
+
+	* gconf/gconf-sources.c (SOURCE_WRITEABLE): convert to a function,
+	source_is_writeable
+
+	* gconf/gconf-sources.h: add GCONF_SOURCE_NEVER_WRITEABLE flag
+
+	* tests/testaddress.c: new test to verify the functions that break
+	up a configuration source address
+
+	* gconf/gconf-backend.c (gconf_address_flags): function to extract
+	configuration source flags
+
+	* doc/gconf/gconf.sgml: note new configuration source URL format
+
+	* gconf/gconf.c: Add space, tab, carriage return, newline to the
+	invalid characters in a gconf key
+
 2000-01-31  Havoc Pennington  <hp@redhat.com>
 
 	* wrappers/gtk/gconf-client.c (check_type): include name of the

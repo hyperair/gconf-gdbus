@@ -248,20 +248,20 @@
       <sect2>
         <title>Configuration Sources</title>
 
-        <para> Users can specify <firstterm>configuration
-          sources</firstterm> which will be used by the
-          <application>gconfd</application> per-user configuration
-          server.  <application>gconfd</application> loads the file
-          <filename>/etc/gconf/path</filename> (or
-          <filename>${sysconfdir}/gconf/path</filename>) on startup;
-          this file contains a list of <firstterm>configuration source
-          addresses</firstterm>.  A source address is similar to a
-          URL; it contains a "protocol" name (in this case, the name
-          of the backend to use), followed by a colon and
-          backend-specific information. For example, the address
-          <filename> xml:/home/hp/.gconf.xml</filename> refers to an XML
-          backend file tree rooted at
-          <filename>/home/hp/.gconf.xml</filename>:
+        <para> Users can specify <firstterm>configuration sources</firstterm>
+          which will be used by the <application>gconfd</application> per-user
+          configuration server.  <application>gconfd</application> loads the
+          file <filename>/etc/gconf/path</filename> (or
+          <filename>${sysconfdir}/gconf/path</filename>) on startup; this file
+          contains a list of <firstterm>configuration source
+          addresses</firstterm>.  A source address is similar to a URL; it
+          contains a "protocol" name (in this case, the name of the backend to
+          use), followed by a colon, standard flags separated by commands,
+          another colon, and then backend-specific information. For example, the
+          address <filename> xml:readonly:/home/hp/.gconf.xml</filename> refers
+          to an XML backend file tree rooted at
+          <filename>/home/hp/.gconf.xml</filename> that should be "mounted
+          readonly" so that no data is written to it.
         </para>
 
         <para>
@@ -303,11 +303,11 @@
           this:
           <programlisting>
             # GConf configuration path file with an include statement
-            xml:/etc/gconf.xml.mandatory
+            xml:readonly:/etc/gconf.xml.mandatory
             include "$(HOME)/.gconf.path"
-            xml:/etc/gconf.xml.defaults
+            xml:readonly:/etc/gconf.xml.defaults
             # imaginary, no LDAP backend exists right now
-            ldap:/foo/bar/whatever/ldap/address
+            ldap::/foo/bar/whatever/ldap/address
           </programlisting>
         </para>
 

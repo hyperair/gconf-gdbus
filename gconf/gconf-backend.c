@@ -74,14 +74,61 @@ gconf_address_resource(const gchar* address)
   start = strchr(address, ':');
 
   if (start == NULL)
-    {
-      return NULL;
-    }
+    return NULL;
   else
     {
       ++start;
-      return g_strdup(start);
+      start = strchr(start, ':');
+
+      if (start == NULL)
+        return NULL;
+      else
+        {
+          ++start;
+          return g_strdup(start);
+        }
     }
+}
+
+gchar**
+gconf_address_flags(const gchar* address)
+{
+  const gchar* start;
+  const gchar* end;
+  gchar* csv_flags;
+  gchar** split_flags;
+  
+  g_return_val_if_fail(address != NULL, NULL);
+
+  start = strchr(address, ':');
+
+  if (start == NULL)
+    return NULL;
+
+  ++start;
+
+  end = strchr(start, ':');
+
+  if (end == NULL)
+    return NULL;
+
+  if (start == end)
+    return NULL;
+  
+  csv_flags = g_strndup(start, end - start);
+  
+  split_flags = g_strsplit(csv_flags, ",", 0);
+
+  g_free(csv_flags);
+
+  if (*split_flags == NULL)
+    {
+      /* don't return an empty vector */
+      g_strfreev(split_flags);
+      return NULL;
+    }
+  else
+    return split_flags;
 }
 
 gchar*       
@@ -281,7 +328,37 @@ gconf_backend_resolve_address (GConfBackend* backend,
                                const gchar* address,
                                GConfError** err)
 {
-  return (*backend->vtable->resolve_address)(address, err);
+  gchar** flags;
+  gchar** iter;
+  GConfSource* retval;
+
+  retval = (*backend->vtable->resolve_address)(address, err);
+
+  if (retval == NULL)
+    return NULL;
+
+  flags = gconf_address_flags(address);
+
+  if (flags == NULL)
+    return retval;
+
+  iter = flags;
+  while (*iter)
+    {
+      if (strcmp(*iter, "readonly") == 0)
+        {
+          retval->flags &= ~(GCONF_SOURCE_ALL_WRITEABLE);
+          retval->flags |= GCONF_SOURCE_NEVER_WRITEABLE;
+        }
+      /* no need to handle readwrite because backends should always
+         default to "maximum read/write privileges"
+      */
+      ++iter;
+    }
+
+  g_strfreev(flags);
+
+  return retval;
 }
 
 

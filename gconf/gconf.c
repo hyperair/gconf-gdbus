@@ -1674,7 +1674,7 @@ gconf_is_initialized (void)
 /* Key/dir validity is exactly the same, except that '/' must be a dir, 
    but we are sort of ignoring that for now. */
 
-static const gchar invalid_chars[] = "\"$&<>,+=#!()'|{}[]?~`;%\\";
+static const gchar invalid_chars[] = " \t\r\n\"$&<>,+=#!()'|{}[]?~`;%\\";
 
 gboolean     
 gconf_valid_key      (const gchar* key, gchar** why_invalid)

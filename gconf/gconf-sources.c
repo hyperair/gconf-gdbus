@@ -103,10 +103,19 @@ gconf_source_destroy (GConfSource* source)
        ((source)->backend->vtable->readable != NULL &&     \
         (*(source)->backend->vtable->readable)((source), (key), (err))) )
 
-#define SOURCE_WRITEABLE(source, key, err)                        \
-     ( ((source)->flags & GCONF_SOURCE_ALL_WRITEABLE) ||          \
-       ((source)->backend->vtable->writeable != NULL &&           \
-        (*(source)->backend->vtable->writeable)((source), (key), (err))) )
+static gboolean
+source_is_writeable(GConfSource* source, const gchar* key, GConfError** err)
+{
+  if ((source->flags & GCONF_SOURCE_NEVER_WRITEABLE) != 0)
+    return FALSE;
+  else if ((source->flags & GCONF_SOURCE_ALL_WRITEABLE) != 0)
+    return TRUE;
+  else if (source->backend->vtable->writeable != NULL &&
+           (*source->backend->vtable->writeable)(source, key, err))
+    return TRUE;
+  else
+    return FALSE;
+}
 
 static GConfValue*
 gconf_source_query_value      (GConfSource* source,
@@ -165,7 +174,7 @@ gconf_source_set_value        (GConfSource* source,
   
   /* don't check key validity */
 
-  if ( SOURCE_WRITEABLE(source, key, err) )
+  if ( source_is_writeable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
       (*source->backend->vtable->set_value)(source, key, value, err);
@@ -185,7 +194,7 @@ gconf_source_unset_value      (GConfSource* source,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
-  if ( SOURCE_WRITEABLE(source, key, err) )
+  if ( source_is_writeable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
       (*source->backend->vtable->unset_value)(source, key, locale, err);
@@ -259,7 +268,7 @@ gconf_source_remove_dir        (GConfSource* source,
   g_return_if_fail(dir != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
   
-  if ( SOURCE_WRITEABLE(source, dir, err) )
+  if ( source_is_writeable(source, dir, err) )
     {
       g_return_if_fail(err == NULL || *err == NULL);
       (*source->backend->vtable->remove_dir)(source, dir, err);
@@ -277,7 +286,7 @@ gconf_source_set_schema        (GConfSource* source,
   g_return_val_if_fail(schema_key != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
-  if ( SOURCE_WRITEABLE(source, key, err) )
+  if ( source_is_writeable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
       (*source->backend->vtable->set_schema)(source, key, schema_key, err);

@@ -46,6 +46,7 @@ typedef enum {
    */
   GCONF_SOURCE_ALL_WRITEABLE = 1 << 0,
   GCONF_SOURCE_ALL_READABLE = 1 << 1,
+  GCONF_SOURCE_NEVER_WRITEABLE = 1 << 2, 
   GCONF_SOURCE_ALL_FLAGS = ((1 << 0) | (1 << 1))
 } GConfSourceFlags;
 
