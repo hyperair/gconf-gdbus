@@ -36,10 +36,6 @@ extern "C" {
 
 typedef struct _GConfListeners GConfListeners;
 
-struct _GConfListeners {
-  gpointer dummy;
-};
-
 typedef void (*GConfListenersCallback)(GConfListeners* listeners,
                                        const gchar* all_above_key,
                                        guint cnxn_id,

@@ -25,6 +25,11 @@
 #include <stdio.h>
 #endif
 
+/* FIXME get rid of this stupid thing */
+struct _GConfListeners {
+  gpointer dummy;
+};
+
 /* 24 bits are the array index; 8 bits are just to reduce the
    chance of duplicate connection IDs. If CnxnID was just an
    array index, recycling the IDs would make it likely that
