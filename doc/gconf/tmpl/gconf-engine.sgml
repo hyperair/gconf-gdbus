@@ -30,7 +30,6 @@ configuration values.
 An opaque data type representing one or more configuration sources.
 </para>
 
-@dummy: 
 
 <!-- ##### FUNCTION gconf_engine_get_default ##### -->
 <para>
@@ -48,7 +47,7 @@ before exiting your application.
 
 <!-- ##### FUNCTION gconf_engine_get_for_address ##### -->
 <para>
-Creates a special #GConfEngine; mostly useful for specialized
+Obtains a special #GConfEngine; mostly useful for specialized
 GConf-related tools. Normal clients shouldn't need to use it.
 As with gconf_engine_get_default(), the returned #GConfEngine should be
 unreferenced by the caller of this function.
@@ -56,17 +55,20 @@ unreferenced by the caller of this function.
 
 @address: a configuration source address.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: a new #GConfEngine.
+@Returns: a #GConfEngine.
 
 
 <!-- ##### FUNCTION gconf_engine_get_local ##### -->
 <para>
-
+Obtain a local (non-process-transparent) #GConfEngine. Local engines
+do not support notification, and can only access config databases
+directly (they do not use the multiple sources in a path system
+supported by nonlocal engines).
 </para>
 
-@address: 
-@err: 
-@Returns: 
+@address: address of local database
+@err: return location of an allocated #GError
+@Returns: a #GConfEngine
 
 
 <!-- ##### FUNCTION gconf_engine_unref ##### -->

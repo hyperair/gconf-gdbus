@@ -74,16 +74,22 @@ typedef struct _GConfClient       GConfClient;
 typedef struct _GConfClientClass  GConfClientClass;
 
 
-typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data);
+typedef void (*GConfClientNotifyFunc)(GConfClient* client,
+                                      guint cnxn_id,
+                                      GConfEntry *entry,
+                                      gpointer user_data);
 
 /*
- * Return the parent window error dialogs should be associated with, or NULL for
- * none.
+ * Return the parent window error dialogs should be associated with,
+ * or NULL for none.
  */
 
-typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
+typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client,
+                                                   gpointer user_data);
 
-typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GError* error);
+typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client,
+                                             GConfClientParentWindowFunc parent_func,
+                                             gpointer parent_user_data, GError* error);
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
 #define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
@@ -244,12 +250,11 @@ GConfValue*       gconf_client_get_without_default  (GConfClient* client,
                                                      const gchar* key,
                                                      GError** err);
 
-/* Try not to use this function, it makes me nervous. */
-GConfValue*       gconf_client_get_full        (GConfClient* client,
-                                                const gchar* key, const gchar* locale,
-                                                gboolean use_schema_default,
-                                                gboolean* value_is_default,
-                                                GError** err);
+GConfEntry*       gconf_client_get_entry        (GConfClient* client,
+                                                 const gchar* key,
+                                                 const gchar* locale,
+                                                 gboolean use_schema_default,
+                                                 GError** err);
 
 GConfValue*       gconf_client_get_default_from_schema (GConfClient* client,
                                                         const gchar* key,
@@ -269,6 +274,10 @@ void         gconf_client_suggest_sync   (GConfClient* client,
 
 gboolean     gconf_client_dir_exists     (GConfClient* client,
                                           const gchar* dir, GError** err);
+
+gboolean     gconf_client_key_is_writable(GConfClient* client,
+                                          const gchar* key,
+                                          GError**     err);
 
 /* Get/Set convenience wrappers */
 

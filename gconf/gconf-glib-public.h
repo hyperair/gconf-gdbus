@@ -63,6 +63,12 @@ void     g_set_error           (GError       **err,
 /* if (err && *err) { g_error_free(*err); *err = NULL; } */
 void     g_clear_error         (GError       **err);
 
+/* if (dest) *dest = src; also has some sanity checks.
+ */
+void     g_propagate_error     (GError       **dest,
+				GError        *src);
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

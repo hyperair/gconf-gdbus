@@ -20,7 +20,7 @@ gconf_client_preload
 gconf_client_set
 gconf_client_get
 gconf_client_get_without_default
-gconf_client_get_full
+gconf_client_get_entry
 gconf_client_get_default_from_schema
 gconf_client_unset
 gconf_client_all_entries
@@ -127,6 +127,7 @@ gconf_value_list_to_primitive_list_destructive
 gconf_value_pair_to_primitive_pair_destructive
 gconf_set_daemon_mode
 gconf_handle_oaf_exception
+gconf_engine_get_full
 </SECTION>
 
 <SECTION>
@@ -196,7 +197,6 @@ gconf_sources_query_default_value
 GConfValueType
 GConfValue
 GCONF_VALUE_TYPE_VALID
-GCONF_INTERNAL_VALUE_TYPE_VALID
 gconf_value_new
 gconf_value_copy
 gconf_value_free
@@ -254,12 +254,12 @@ gconf_is_initialized
 GConfNotifyFunc
 gconf_engine_notify_add
 gconf_engine_notify_remove
-gconf_get
+gconf_engine_get
 gconf_engine_get_with_locale
 gconf_engine_get_without_default
-gconf_engine_get_full
+gconf_engine_get_entry
 gconf_engine_get_default_from_schema
-gconf_set
+gconf_engine_set
 gconf_engine_unset
 gconf_engine_associate_schema
 gconf_engine_all_entries

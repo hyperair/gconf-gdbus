@@ -95,21 +95,26 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
                                        const CORBA_char * locale,
                                        CORBA_boolean use_schema_default,
                                        CORBA_boolean * value_is_default,
+                                       CORBA_boolean * value_is_writable,
                                        CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GConfValue* val;
   GError* error = NULL;
   GConfLocaleList* locale_list;
-  gboolean is_default = FALSE;  
+  gboolean is_default = FALSE;
+  gboolean is_writable = TRUE;
 
   locale_list = locale_cache_lookup(locale);
   
   val = gconf_database_query_value(db, key, locale_list->list,
                                    use_schema_default,
-                                   &is_default, &error);
+                                   &is_default,
+                                   &is_writable,
+                                   &error);
 
   *value_is_default = is_default;
+  *value_is_writable = is_writable;
   
   gconf_locale_list_unref(locale_list);
   
@@ -137,7 +142,8 @@ impl_ConfigDatabase_lookup(PortableServer_Servant servant,
                            CORBA_Environment * ev)
 {
   return impl_ConfigDatabase_lookup_with_locale (servant, key,
-                                                 NULL, TRUE, NULL, ev);
+                                                 NULL, TRUE, NULL,
+                                                 NULL, ev);
 }
 
 static ConfigValue*
@@ -155,6 +161,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
   
   val = gconf_database_query_default_value(db, key,
                                            locale_list->list,
+                                           NULL,
                                            &error);
 
   gconf_locale_list_unref(locale_list);
@@ -276,6 +283,7 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
 				ConfigDatabase_KeyList ** keys,
 				ConfigDatabase_ValueList ** values,
 				ConfigDatabase_IsDefaultList ** is_defaults,
+                                ConfigDatabase_IsWritableList ** is_writables,
 				CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
@@ -308,6 +316,11 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   (*is_defaults)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
   (*is_defaults)->_length = n;
   (*is_defaults)->_maximum = n;
+
+  *is_writables = ConfigDatabase_IsWritableList__alloc();
+  (*is_writables)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
+  (*is_writables)->_length = n;
+  (*is_writables)->_maximum = n;
   
   tmp = pairs;
   i = 0;
@@ -322,6 +335,7 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
       (*is_defaults)->_buffer[i] = gconf_entry_get_is_default(p);
+      (*is_writables)->_buffer[i] = gconf_entry_get_is_writable(p);
       
       gconf_entry_free(p);
 
@@ -745,6 +759,7 @@ struct _ListenerNotifyClosure {
   GConfDatabase* db;
   const ConfigValue* value;
   gboolean is_default;
+  gboolean is_writable;
   GSList* dead;
   CORBA_Environment ev;
 };
@@ -765,6 +780,7 @@ notify_listeners_cb(GConfListeners* listeners,
                         (gchar*)all_above_key,
                         closure->value,
                         closure->is_default,
+                        closure->is_writable,
                         &closure->ev);
   
   if(closure->ev._major != CORBA_NO_EXCEPTION) 
@@ -787,7 +803,8 @@ void
 gconf_database_notify_listeners (GConfDatabase       *db,
                                  const gchar         *key,
                                  const ConfigValue   *value,
-                                 gboolean             is_default)
+                                 gboolean             is_default,
+                                 gboolean             is_writable)
 {
   ListenerNotifyClosure closure;
   GSList* tmp;
@@ -797,6 +814,7 @@ gconf_database_notify_listeners (GConfDatabase       *db,
   closure.db = db;
   closure.value = value;
   closure.is_default = is_default;
+  closure.is_writable = is_writable;
   closure.dead = NULL;
   
   CORBA_exception_init(&closure.ev);
@@ -821,6 +839,7 @@ gconf_database_query_value (GConfDatabase  *db,
                             const gchar   **locales,
                             gboolean        use_schema_default,
                             gboolean       *value_is_default,
+                            gboolean       *value_is_writable,
                             GError    **err)
 {
   GConfValue* val;
@@ -832,7 +851,9 @@ gconf_database_query_value (GConfDatabase  *db,
   
   val = gconf_sources_query_value(db->sources, key, locales,
                                   use_schema_default,
-                                  value_is_default, err);
+                                  value_is_default,
+                                  value_is_writable,
+                                  err);
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error getting value for `%s': %s"),
@@ -846,6 +867,7 @@ GConfValue*
 gconf_database_query_default_value (GConfDatabase  *db,
                                     const gchar    *key,
                                     const gchar   **locales,
+                                    gboolean       *is_writable,
                                     GError    **err)
 {
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -853,7 +875,9 @@ gconf_database_query_default_value (GConfDatabase  *db,
   
   db->last_access = time(NULL);
 
-  return gconf_sources_query_default_value(db->sources, key, locales, err);
+  return gconf_sources_query_default_value(db->sources, key, locales,
+                                           is_writable,
+                                           err);
 }
 
 void
@@ -863,26 +887,36 @@ gconf_database_set   (GConfDatabase      *db,
                       const ConfigValue  *cvalue,
                       GError        **err)
 {
+  GError *error = NULL;
+  
   g_assert(db->listeners != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
   
   db->last_access = time(NULL);
 
-  gconf_sources_set_value(db->sources, key, value, err);
+  gconf_sources_set_value(db->sources, key, value, &error);
 
-  if (err && *err != NULL)
+  if (error)
     {
       gconf_log(GCL_ERR, _("Error setting value for `%s': %s"),
-                 key, (*err)->message);
+                key, error->message);
+      
+      g_propagate_error (err, error);
+
+      return;
     }
   else
     {
       gconf_database_schedule_sync(db);
-
+      
       gconf_database_notify_listeners(db, key, cvalue,
                                       /* Can't possibly be the default,
-                                         since we just set it */
-                                      FALSE);
+                                         since we just set it,
+                                         and must be writable since
+                                         setting it succeeded.
+                                      */
+                                      FALSE,
+                                      TRUE);
     }
 }
 
@@ -908,7 +942,7 @@ gconf_database_unset (GConfDatabase      *db,
   if (error != NULL)
     {
       gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
-                 key, error->message);
+                key, error->message);
 
       if (err)
         *err = error;
@@ -921,11 +955,13 @@ gconf_database_unset (GConfDatabase      *db,
     {
       GConfValue* def_value;
       const gchar* locale_list[] = { locale, NULL };
-
+      gboolean is_writable = TRUE;
+      
       def_value = gconf_database_query_default_value(db,
-                                              key,
-                                              locale_list,
-                                              err);
+                                                     key,
+                                                     locale_list,
+                                                     &is_writable,
+                                                     err);
 
       if (err && *err)
         gconf_log(GCL_ERR, _("Error getting default value for `%s': %s"),
@@ -942,7 +978,8 @@ gconf_database_unset (GConfDatabase      *db,
         }
           
       gconf_database_schedule_sync(db);
-      gconf_database_notify_listeners(db, key, val, TRUE);
+
+      gconf_database_notify_listeners(db, key, val, TRUE, is_writable);
       
       CORBA_free(val);
     }

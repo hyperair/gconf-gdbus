@@ -160,10 +160,12 @@ is called).
 
 @client: the #GConfClient notifying us.
 @cnxn_id: connection ID from gconf_client_notify_add().
+@entry: 
+@user_data: user data from gconf_client_notify_add().
+<!-- # Unused Parameters # -->
 @key: key that has changed.
 @value: new value, or <symbol>NULL</symbol> for unset.
 @is_default: 
-@user_data: user data from gconf_client_notify_add().
 
 
 <!-- ##### USER_FUNCTION GConfClientParentWindowFunc ##### -->
@@ -382,7 +384,7 @@ modified.
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_client_get_full ##### -->
+<!-- ##### FUNCTION gconf_client_get_entry ##### -->
 <para>
 
 </para>
@@ -391,7 +393,6 @@ modified.
 @key: 
 @locale: 
 @use_schema_default: 
-@value_is_default: 
 @err: 
 @Returns: 
 

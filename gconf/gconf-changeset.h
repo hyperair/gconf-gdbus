@@ -124,6 +124,15 @@ void         gconf_change_set_set_pair    (GConfChangeSet* cs, const gchar* key,
                                            gconstpointer address_of_car,
                                            gconstpointer address_of_cdr);
 
+
+/* For use by language bindings only */
+void     gconf_change_set_set_user_data (GConfChangeSet *cs,
+                                         gpointer        data,
+                                         GDestroyNotify  dnotify);
+gpointer gconf_change_set_get_user_data (GConfChangeSet *cs);
+
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

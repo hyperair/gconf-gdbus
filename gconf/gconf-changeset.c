@@ -43,6 +43,8 @@ struct _GConfChangeSet {
   guint refcount;
   GHashTable* hash;
   gint in_foreach;
+  gpointer user_data;
+  GDestroyNotify dnotify;
 };
 
 GConfChangeSet*
@@ -55,6 +57,8 @@ gconf_change_set_new      (void)
   cs->refcount = 1;
   cs->hash = g_hash_table_new(g_str_hash, g_str_equal);
   cs->in_foreach = 0;
+  cs->user_data = NULL;
+  cs->dnotify = NULL;
   
   return cs;
 }
@@ -86,6 +90,24 @@ gconf_change_set_unref    (GConfChangeSet* cs)
       
       g_free(cs);
     }
+}
+
+void
+gconf_change_set_set_user_data (GConfChangeSet *cs,
+                                gpointer        data,
+                                GDestroyNotify  dnotify)
+{
+  if (cs->dnotify)
+    (* cs->dnotify) (cs->user_data);
+
+  cs->user_data = data;
+  cs->dnotify = dnotify;
+}
+
+gpointer
+gconf_change_set_get_user_data (GConfChangeSet *cs)
+{
+  return cs->user_data;
 }
 
 static Change*

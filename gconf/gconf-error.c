@@ -36,7 +36,8 @@ static const gchar* err_msgs[] = {
   N_("Can't overwrite existing read-only value"),
   N_("Object Activation Framework error"),
   N_("Operation not allowed without configuration server"),
-  N_("Failed to get a lock")
+  N_("Failed to get a lock"),
+  N_("No database available to save your configuration")
 };
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);
@@ -126,7 +127,7 @@ gconf_compose_errors (GError* err1, GError* err2)
     {
       GError *n;
 
-      n = g_error_new (GCONF_ERROR, GCONF_ERROR_FAILED, "");
+      n = g_error_new (GCONF_ERROR, GCONF_ERROR_FAILED, " ");
 
       if (err1->code == err2->code)
         n->code = err1->code;

@@ -154,13 +154,15 @@ struct _GConfEntry {
   gchar* key;
   GConfValue* value;
   gchar* schema_name;
-  gboolean is_default;
+  guint is_default : 1;
+  guint is_writable : 1;
 };
 
 #define     gconf_entry_get_key(x)         ((const gchar*)(x)->key)
 #define     gconf_entry_get_value(x)       ((x)->value)
 #define     gconf_entry_get_schema_name(x) ((const gchar*)(x)->schema_name)
 #define     gconf_entry_get_is_default(x)  ((x)->is_default)
+#define     gconf_entry_get_is_writable(x) ((x)->is_writable)
 
 GConfEntry* gconf_entry_new              (const gchar *key,
                                           GConfValue  *val);

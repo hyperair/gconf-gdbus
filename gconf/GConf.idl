@@ -69,7 +69,8 @@ interface ConfigListener {
                       in unsigned long cnxn,
                       in string key,
                       in ConfigValue value,
-                      in boolean is_default);
+                      in boolean is_default,
+                      in boolean is_writable);
 
   oneway void ping ();
 
@@ -103,6 +104,7 @@ interface ConfigDatabase {
   typedef sequence<string> KeyList;
   typedef sequence<ConfigValue> ValueList;
   typedef sequence<boolean> IsDefaultList;
+  typedef sequence<boolean> IsWritableList;
 
   // "where" is the portion of the namespace to listen to
   // Returns a connection ID for removal
@@ -118,7 +120,8 @@ interface ConfigDatabase {
   ConfigValue lookup_with_locale(in string key,
                                  in string locale,
                                  in boolean use_schema_default,
-                                 out boolean value_is_default)
+                                 out boolean value_is_default,
+                                 out boolean value_is_writable)
     raises (ConfigException);
 
   // syntactic sugar, semi-hack: should maybe use a get_metainfo()
@@ -146,7 +149,8 @@ interface ConfigDatabase {
                    in string locale,
                    out KeyList keys,
                    out ValueList values,
-                   out IsDefaultList is_defaults)
+                   out IsDefaultList is_defaults,
+                   out IsWritableList is_writables)
     raises (ConfigException);
 
   void all_dirs(in string dir,

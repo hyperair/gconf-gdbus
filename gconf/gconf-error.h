@@ -51,7 +51,8 @@ typedef enum {
   GCONF_ERROR_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
   GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
   GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
-  GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
+  GCONF_ERROR_LOCK_FAILED = 14,  /* Failed to get a lockfile */
+  GCONF_ERROR_NO_WRITABLE_DATABASE = 14 /* nowhere to write a value */
 } GConfError;
 
 GQuark gconf_error_quark (void);

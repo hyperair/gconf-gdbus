@@ -123,9 +123,7 @@ configurable_widget_destroy_callback(GtkWidget* widget, gpointer data)
 static void
 configurable_widget_config_notify(GConfClient* client,
                                   guint cnxn_id,
-                                  const gchar* key,
-                                  GConfValue* value,
-                                  gboolean is_default,
+                                  GConfEntry *entry,
                                   gpointer user_data)
 {
   GtkWidget* label = user_data;
@@ -136,13 +134,14 @@ configurable_widget_config_notify(GConfClient* client,
   /* Note that value can be NULL (unset) or it can have
      the wrong type! */
   
-  if (value == NULL)
+  if (entry->value == NULL)
     {
       gtk_label_set_text(GTK_LABEL(label), "");
     }
-  else if (value->type == GCONF_VALUE_STRING)
+  else if (entry->value->type == GCONF_VALUE_STRING)
     {
-      gtk_label_set_text(GTK_LABEL(label), gconf_value_get_string(value));
+      gtk_label_set_text(GTK_LABEL(label),
+                         gconf_value_get_string(entry->value));
     }
   else
     {

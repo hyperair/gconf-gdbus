@@ -975,6 +975,7 @@ gconf_entry_new_nocopy(gchar* key, GConfValue* val)
   pair->value = val;
   pair->schema_name = NULL;
   pair->is_default = FALSE;
+  pair->is_writable = TRUE;
   
   return pair;
 }

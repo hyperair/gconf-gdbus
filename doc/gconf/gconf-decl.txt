@@ -20,7 +20,7 @@
 </MACRO>
 <MACRO>
 <NAME>VERSION</NAME>
-#define VERSION "0.8"
+#define VERSION "0.9"
 </MACRO>
 <MACRO>
 <NAME>HAVE_GETTEXT</NAME>
@@ -37,6 +37,10 @@
 <MACRO>
 <NAME>ENABLE_NLS</NAME>
 #define ENABLE_NLS 1
+</MACRO>
+<MACRO>
+<NAME>GETTEXT_PACKAGE</NAME>
+#define GETTEXT_PACKAGE "gconf1"
 </MACRO>
 <MACRO>
 <NAME>HAVE___ARGZ_COUNT</NAME>
@@ -140,7 +144,7 @@
 </MACRO>
 <MACRO>
 <NAME>VERSION</NAME>
-#define VERSION "0.8"
+#define VERSION "0.9"
 </MACRO>
 <STRUCT>
 <NAME>GThreadPool</NAME>
@@ -425,7 +429,10 @@ struct GConfBackendVTable {
                                            GConfValue* value,
                                            GError** err);
 
-  /* Returns list of GConfEntry */
+  /* Returns list of GConfEntry with key set to a relative
+   * pathname. In the public client-side API the key
+   * is always absolute though.
+   */
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir,
                                            const gchar** locales,
@@ -633,14 +640,151 @@ GConfChangeSet* cs, const gchar* key,GConfValueType list_type,GSList* list
 <RETURNS>void  </RETURNS>
 GConfChangeSet* cs, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr
 </FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_set_user_data</NAME>
+<RETURNS>void  </RETURNS>
+GConfChangeSet *cs,gpointer        data,GDestroyNotify  dnotify
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_change_set_get_user_data</NAME>
+<RETURNS>gpointer  </RETURNS>
+GConfChangeSet *cs
+</FUNCTION>
 <STRUCT>
-<NAME>GConfEngine</NAME>
+<NAME>GConfDatabase</NAME>
 </STRUCT>
 <STRUCT>
-<NAME>GConfEngine</NAME>
-struct GConfEngine {
-  gpointer dummy;
+<NAME>GConfDatabase</NAME>
+struct GConfDatabase
+{
+  /* "inherit" from the servant,
+     must be first in struct */
+  POA_ConfigDatabase servant;
+
+  ConfigDatabase objref;
+  
+  GConfListeners* listeners;
+  GConfSources* sources;
+
+  GTime last_access;
+  guint sync_idle;
+  guint sync_timeout;
+
+  gchar *persistent_name;
 };
+</STRUCT>
+<FUNCTION>
+<NAME>gconf_database_new</NAME>
+<RETURNS>GConfDatabase *</RETURNS>
+GConfSources  *sources
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_free</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase *db
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_add_listener</NAME>
+<RETURNS>CORBA_unsigned_long  </RETURNS>
+GConfDatabase       *db,ConfigListener       who,const gchar         *where
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_remove_listener</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase       *db,CORBA_unsigned_long  cnxn
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_readd_listener</NAME>
+<RETURNS>CORBA_unsigned_long  </RETURNS>
+GConfDatabase       *db,ConfigListener       who,const gchar         *where
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_notify_listeners</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase       *db,const gchar         *key,const ConfigValue   *value,gboolean             is_default,gboolean             is_writable
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_query_value</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfDatabase  *db,const gchar    *key,const gchar   **locales,gboolean        use_schema_default,gboolean       *value_is_default,gboolean       *value_is_writable,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_query_default_value</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfDatabase  *db,const gchar    *key,const gchar   **locales,gboolean       *is_writable,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_set</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase      *db,const gchar        *key,GConfValue         *value,const ConfigValue  *cvalue,GError        **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_unset</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase      *db,const gchar        *key,const gchar        *locale,GError        **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_dir_exists</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfDatabase  *db,const gchar    *dir,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_remove_dir</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase  *db,const gchar    *dir,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_all_entries</NAME>
+<RETURNS>GSList *</RETURNS>
+GConfDatabase  *db,const gchar    *dir,const gchar   **locales,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_all_dirs</NAME>
+<RETURNS>GSList *</RETURNS>
+GConfDatabase  *db,const gchar    *dir,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_set_schema</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase  *db,const gchar    *key,const gchar    *schema_key,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_sync</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase  *db,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_synchronous_sync</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfDatabase  *db,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_clear_cache</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase  *db,GError    **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconfd_locale_cache_expire</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconfd_locale_cache_drop</NAME>
+<RETURNS>void  </RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_get_persistent_name</NAME>
+<RETURNS>const gchar *</RETURNS>
+GConfDatabase *db
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_database_log_listeners_to_string</NAME>
+<RETURNS>void  </RETURNS>
+GConfDatabase *db,gboolean is_default,GString *str
+</FUNCTION>
+<STRUCT>
+<NAME>GConfEngine</NAME>
 </STRUCT>
 <FUNCTION>
 <NAME>gconf_engine_get_default</NAME>
@@ -667,6 +811,16 @@ GConfEngine* conf
 <RETURNS>GConfEngine *</RETURNS>
 const gchar* address, GError** err
 </FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_user_data</NAME>
+<RETURNS>void  </RETURNS>
+GConfEngine   *engine,gpointer       data,GDestroyNotify dnotify
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_user_data</NAME>
+<RETURNS>gpointer  </RETURNS>
+GConfEngine   *engine
+</FUNCTION>
 <MACRO>
 <NAME>GCONF_ERROR</NAME>
 #define GCONF_ERROR gconf_error_quark ()
@@ -691,7 +845,8 @@ typedef enum {
   GCONF_ERROR_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
   GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
   GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
-  GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
+  GCONF_ERROR_LOCK_FAILED = 14,  /* Failed to get a lockfile */
+  GCONF_ERROR_NO_WRITABLE_DATABASE = 14 /* nowhere to write a value */
 } GConfError;
 </ENUM>
 <FUNCTION>
@@ -699,20 +854,500 @@ typedef enum {
 <RETURNS>GQuark  </RETURNS>
 void
 </FUNCTION>
+<ENUM>
+<NAME>GMarkupNodeType</NAME>
+typedef enum
+{
+  G_MARKUP_NODE_ELEMENT,
+  G_MARKUP_NODE_TEXT,
+  G_MARKUP_NODE_PASSTHROUGH
+} GMarkupNodeType;
+</ENUM>
+<ENUM>
+<NAME>GMarkupParseFlags</NAME>
+typedef enum
+{
+  G_MARKUP_PRESERVE_ALL_WHITESPACE = 1 << 0
+  
+} GMarkupParseFlags;
+</ENUM>
+<ENUM>
+<NAME>GMarkupToStringFlags</NAME>
+typedef enum
+{
+  G_MARKUP_NO_FORMATTING = 1 << 0
+
+} GMarkupToStringFlags;
+</ENUM>
+<STRUCT>
+<NAME>GMarkupNodeText</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GMarkupNodeElement</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GMarkupNodeText</NAME>
+struct GMarkupNodeText
+{
+  GMarkupNodeType type;
+  
+  gchar *text;
+};
+</STRUCT>
+<STRUCT>
+<NAME>GMarkupNodeElement</NAME>
+struct GMarkupNodeElement
+{
+  GMarkupNodeType type;
+
+  gchar *name;
+  
+  GList *children;
+
+  /* List members are an opaque datatype, so ignore this. */
+  GList *attributes;
+};
+</STRUCT>
+<UNION>
+<NAME>GMarkupNode</NAME>
+union GMarkupNode
+{
+  GMarkupNodeType type;
+
+  GMarkupNodeText text;
+  GMarkupNodeElement element;  
+};
+</UNION>
+<ENUM>
+<NAME>GMarkupErrorType</NAME>
+typedef enum
+{
+  G_MARKUP_ERROR_BAD_UTF8,
+  G_MARKUP_ERROR_EMPTY,
+  G_MARKUP_ERROR_PARSE
+} GMarkupErrorType;
+</ENUM>
+<MACRO>
+<NAME>G_MARKUP_ERROR</NAME>
+#define G_MARKUP_ERROR g_markup_error_quark ()
+</MACRO>
 <FUNCTION>
-<NAME>gconf_error_new</NAME>
-<RETURNS>GError *</RETURNS>
-GConfError en,const gchar* format, ...
+<NAME>g_markup_error_quark</NAME>
+<RETURNS>GQuark  </RETURNS>
+
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_error</NAME>
+<NAME>g_markup_node_new_text</NAME>
+<RETURNS>GMarkupNodeText *</RETURNS>
+const gchar *text
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_new_element</NAME>
+<RETURNS>GMarkupNodeElement *</RETURNS>
+const gchar *name
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_free</NAME>
 <RETURNS>void  </RETURNS>
-GError** err,GConfError en,const gchar* format, ...
+GMarkupNode *node
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_compose_errors</NAME>
+<NAME>g_markup_node_set_attribute</NAME>
+<RETURNS>void  </RETURNS>
+GMarkupNodeElement *node,const gchar *attribute_name,const gchar *attribute_value
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_get_attribute</NAME>
+<RETURNS>gchar *</RETURNS>
+GMarkupNodeElement *node,const gchar *attribute_name
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_unset_attribute</NAME>
+<RETURNS>void  </RETURNS>
+GMarkupNodeElement *node,const gchar *attribute_name
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_get_attributes</NAME>
+<RETURNS>void  </RETURNS>
+GMarkupNodeElement *node,gchar ***names,gchar ***values,gint    *n_attributes
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_from_string</NAME>
+<RETURNS>GMarkupNode  *</RETURNS>
+const gchar *text,gint length,GMarkupParseFlags flags,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_node_to_string</NAME>
+<RETURNS>gchar  *</RETURNS>
+GMarkupNode *node,GMarkupToStringFlags flags
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_nodes_from_string</NAME>
+<RETURNS>GList  *</RETURNS>
+const gchar *text,gint length,GMarkupParseFlags flags,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>g_markup_nodes_to_string</NAME>
+<RETURNS>gchar  *</RETURNS>
+GList *nodes,GMarkupToStringFlags flags
+</FUNCTION>
+<TYPEDEF>
+<NAME>gunichar</NAME>
+typedef guint32 gunichar;
+</TYPEDEF>
+<TYPEDEF>
+<NAME>gunichar2</NAME>
+typedef guint16 gunichar2;
+</TYPEDEF>
+<ENUM>
+<NAME>GUnicodeType</NAME>
+typedef enum {
+  G_UNICODE_CONTROL,
+  G_UNICODE_FORMAT,
+  G_UNICODE_UNASSIGNED,
+  G_UNICODE_PRIVATE_USE,
+  G_UNICODE_SURROGATE,
+  G_UNICODE_LOWERCASE_LETTER,
+  G_UNICODE_MODIFIER_LETTER,
+  G_UNICODE_OTHER_LETTER,
+  G_UNICODE_TITLECASE_LETTER,
+  G_UNICODE_UPPERCASE_LETTER,
+  G_UNICODE_COMBINING_MARK,
+  G_UNICODE_ENCLOSING_MARK,
+  G_UNICODE_NON_SPACING_MARK,
+  G_UNICODE_DECIMAL_NUMBER,
+  G_UNICODE_LETTER_NUMBER,
+  G_UNICODE_OTHER_NUMBER,
+  G_UNICODE_CONNECT_PUNCTUATION,
+  G_UNICODE_DASH_PUNCTUATION,
+  G_UNICODE_CLOSE_PUNCTUATION,
+  G_UNICODE_FINAL_PUNCTUATION,
+  G_UNICODE_INITIAL_PUNCTUATION,
+  G_UNICODE_OTHER_PUNCTUATION,
+  G_UNICODE_OPEN_PUNCTUATION,
+  G_UNICODE_CURRENCY_SYMBOL,
+  G_UNICODE_MODIFIER_SYMBOL,
+  G_UNICODE_MATH_SYMBOL,
+  G_UNICODE_OTHER_SYMBOL,
+  G_UNICODE_LINE_SEPARATOR,
+  G_UNICODE_PARAGRAPH_SEPARATOR,
+  G_UNICODE_SPACE_SEPARATOR
+} GUnicodeType;
+</ENUM>
+<FUNCTION>
+<NAME>g_get_charset</NAME>
+<RETURNS>gboolean  </RETURNS>
+char **charset
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isalnum</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isalpha</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_iscntrl</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isdigit</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isgraph</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_islower</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isprint</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_ispunct</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isspace</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isupper</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isxdigit</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_istitle</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_isdefined</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_iswide</NAME>
+<RETURNS>gboolean  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_toupper</NAME>
+<RETURNS>gunichar  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_tolower</NAME>
+<RETURNS>gunichar  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_totitle</NAME>
+<RETURNS>gunichar  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_digit_value</NAME>
+<RETURNS>gint  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_xdigit_value</NAME>
+<RETURNS>gint  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_type</NAME>
+<RETURNS>GUnicodeType  </RETURNS>
+gunichar c
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unicode_canonical_ordering</NAME>
+<RETURNS>void  </RETURNS>
+gunichar *string,size_t   len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unicode_canonical_decomposition</NAME>
+<RETURNS>gunichar  *</RETURNS>
+gunichar  ch,size_t   *result_len
+</FUNCTION>
+<MACRO>
+<NAME>GLIB_VAR</NAME>
+#      define GLIB_VAR __declspec(dllexport)
+</MACRO>
+<MACRO>
+<NAME>GLIB_VAR</NAME>
+#      define GLIB_VAR extern __declspec(dllimport)
+</MACRO>
+<MACRO>
+<NAME>GLIB_VAR</NAME>
+#    define GLIB_VAR extern
+</MACRO>
+<MACRO>
+<NAME>g_utf8_next_char</NAME>
+#define g_utf8_next_char(p) (char *)((p) + g_utf8_skip[*(guchar *)(p)])
+</MACRO>
+<FUNCTION>
+<NAME>g_utf8_get_char</NAME>
+<RETURNS>gunichar  </RETURNS>
+const gchar *p
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_offset_to_pointer</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *str,gint         offset
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_pointer_to_offset</NAME>
+<RETURNS>gint  </RETURNS>
+const gchar *str,const gchar *pos
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_prev_char</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *p
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_find_next_char</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *p,const gchar *bound
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_find_prev_char</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *str,const gchar *p
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_strlen</NAME>
+<RETURNS>gint  </RETURNS>
+const gchar *p,gint         max
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_strncpy</NAME>
+<RETURNS>gchar  *</RETURNS>
+gchar       *dest,const gchar *src,size_t       n
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_strchr</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *p,gunichar     ch
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_strrchr</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *p,gunichar     ch
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_to_utf16</NAME>
+<RETURNS>gunichar2  *</RETURNS>
+const gchar     *str,gint             len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_to_ucs4</NAME>
+<RETURNS>gunichar  *</RETURNS>
+const gchar     *str,gint             len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf16_to_ucs4</NAME>
+<RETURNS>gunichar  *</RETURNS>
+const gunichar2 *str,gint             len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf16_to_utf8</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gunichar2 *str,gint             len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_ucs4_to_utf16</NAME>
+<RETURNS>gunichar  *</RETURNS>
+const gunichar  *str,gint             len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_ucs4_to_utf8</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gunichar  *str,gint             len
+</FUNCTION>
+<FUNCTION>
+<NAME>g_unichar_to_utf8</NAME>
+<RETURNS>gint  </RETURNS>
+gunichar    c,char       *outbuf
+</FUNCTION>
+<FUNCTION>
+<NAME>g_utf8_validate</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar  *str,gint          len,const gchar **end
+</FUNCTION>
+<FUNCTION>
+<NAME>g_convert</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar  *str,gint          len,const gchar  *to_codeset,const gchar  *from_codeset,gint         *bytes_converted,gint         *bytes_written
+</FUNCTION>
+<MACRO>
+<NAME>G_FILE_ERROR</NAME>
+#define G_FILE_ERROR g_file_error_quark ()
+</MACRO>
+<ENUM>
+<NAME>GFileError</NAME>
+typedef enum
+{
+  G_FILE_ERROR_EXIST,
+  G_FILE_ERROR_ISDIR,
+  G_FILE_ERROR_ACCES,
+  G_FILE_ERROR_NAMETOOLONG,
+  G_FILE_ERROR_NOENT,
+  G_FILE_ERROR_NOTDIR,
+  G_FILE_ERROR_NXIO,
+  G_FILE_ERROR_NODEV,
+  G_FILE_ERROR_ROFS,
+  G_FILE_ERROR_TXTBSY,
+  G_FILE_ERROR_FAULT,
+  G_FILE_ERROR_LOOP,
+  G_FILE_ERROR_NOSPC,
+  G_FILE_ERROR_NOMEM,
+  G_FILE_ERROR_MFILE,
+  G_FILE_ERROR_NFILE,
+  G_FILE_ERROR_FAILED
+} GFileError;
+</ENUM>
+<FUNCTION>
+<NAME>g_file_error_quark</NAME>
+<RETURNS>GQuark  </RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>g_file_get_contents</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar *filename,GError     **error
+</FUNCTION>
+<STRUCT>
+<NAME>GError</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GError</NAME>
+struct GError
+{
+  GQuark       domain;
+  gint         code;
+  gchar       *message;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>g_error_new</NAME>
 <RETURNS>GError *</RETURNS>
-GError* err1, GError* err2
+GQuark         domain,gint           code,const gchar   *format,...
+</FUNCTION>
+<FUNCTION>
+<NAME>g_error_new_literal</NAME>
+<RETURNS>GError *</RETURNS>
+GQuark         domain,gint           code,const gchar   *message
+</FUNCTION>
+<FUNCTION>
+<NAME>g_error_free</NAME>
+<RETURNS>void  </RETURNS>
+GError        *error
+</FUNCTION>
+<FUNCTION>
+<NAME>g_error_copy</NAME>
+<RETURNS>GError *</RETURNS>
+const GError  *error
+</FUNCTION>
+<FUNCTION>
+<NAME>g_error_matches</NAME>
+<RETURNS>gboolean  </RETURNS>
+const GError  *error,GQuark         domain,gint           code
+</FUNCTION>
+<FUNCTION>
+<NAME>g_set_error</NAME>
+<RETURNS>void  </RETURNS>
+GError       **err,GQuark         domain,gint           code,const gchar   *format,...
+</FUNCTION>
+<FUNCTION>
+<NAME>g_clear_error</NAME>
+<RETURNS>void  </RETURNS>
+GError       **err
+</FUNCTION>
+<FUNCTION>
+<NAME>g_propagate_error</NAME>
+<RETURNS>void  </RETURNS>
+GError       **dest,GError        *src
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_key_directory</NAME>
@@ -737,47 +1372,52 @@ const gchar* filename
 <FUNCTION>
 <NAME>gconf_value_from_corba_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-const ConfigValue* value
+const ConfigValue *value
 </FUNCTION>
 <FUNCTION>
 <NAME>corba_value_from_gconf_value</NAME>
 <RETURNS>ConfigValue *</RETURNS>
-GConfValue* value
+GConfValue        *value
 </FUNCTION>
 <FUNCTION>
 <NAME>fill_corba_value_from_gconf_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfValue* value,ConfigValue* dest
+GConfValue        *value,ConfigValue       *dest
 </FUNCTION>
 <FUNCTION>
 <NAME>invalid_corba_value</NAME>
 <RETURNS>ConfigValue *</RETURNS>
-
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_object_to_string</NAME>
+<RETURNS>gchar *</RETURNS>
+CORBA_Object obj,GError **err
 </FUNCTION>
 <FUNCTION>
 <NAME>fill_corba_schema_from_gconf_schema</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc,ConfigSchema* dest
+GConfSchema        *sc,ConfigSchema       *dest
 </FUNCTION>
 <FUNCTION>
 <NAME>corba_schema_from_gconf_schema</NAME>
 <RETURNS>ConfigSchema *</RETURNS>
-GConfSchema* sc
+GConfSchema        *sc
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_from_corba_schema</NAME>
 <RETURNS>GConfSchema *</RETURNS>
-const ConfigSchema* cs
+const ConfigSchema *cs
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_type_to_string</NAME>
 <RETURNS>const gchar *</RETURNS>
-GConfValueType type
+GConfValueType  type
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_type_from_string</NAME>
 <RETURNS>GConfValueType  </RETURNS>
-const gchar* str
+const gchar    *str
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_load_source_path</NAME>
@@ -787,7 +1427,7 @@ const gchar* filename, GError** err
 <FUNCTION>
 <NAME>gconf_shutdown_daemon</NAME>
 <RETURNS>void  </RETURNS>
-GError** err
+GError **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_ping_daemon</NAME>
@@ -797,22 +1437,22 @@ void
 <FUNCTION>
 <NAME>gconf_spawn_daemon</NAME>
 <RETURNS>gboolean  </RETURNS>
-GError** err
+GError **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_string_to_gulong</NAME>
 <RETURNS>gulong  </RETURNS>
-const gchar* str
+const gchar *str
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_string_to_double</NAME>
 <RETURNS>gboolean  </RETURNS>
-const gchar* str, gdouble* val
+const gchar *str,gdouble     *val
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_double_to_string</NAME>
 <RETURNS>gchar *</RETURNS>
-gdouble val
+gdouble      val
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_current_locale</NAME>
@@ -845,7 +1485,7 @@ const gchar* key, GError** err
 <FUNCTION>
 <NAME>gconf_value_new_from_string</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfValueType type, const gchar* str,GError** err
+GConfValueType type,const gchar* str,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_new_list_from_string</NAME>
@@ -860,27 +1500,27 @@ GConfValueType car_type,GConfValueType cdr_type,const gchar* str,GError** err
 <FUNCTION>
 <NAME>gconf_quote_string</NAME>
 <RETURNS>gchar *</RETURNS>
-const gchar* str
+const gchar  *str
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_unquote_string</NAME>
 <RETURNS>gchar *</RETURNS>
-const gchar* str, const gchar** end, GError** err
+const gchar  *str,const gchar **end,GError      **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_unquote_string_inplace</NAME>
 <RETURNS>void  </RETURNS>
-gchar* str, gchar** end, GError** err
+gchar        *str,gchar       **end,GError      **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_decode</NAME>
 <RETURNS>GConfValue *</RETURNS>
-const gchar* encoded
+const gchar *encoded
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_encode</NAME>
 <RETURNS>gchar *</RETURNS>
-GConfValue* val
+GConfValue  *val
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_quote_percents</NAME>
@@ -890,27 +1530,27 @@ const gchar* src
 <FUNCTION>
 <NAME>gconf_value_list_from_primitive_list</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfValueType list_type, GSList* list
+GConfValueType  list_type,GSList         *list
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_pair_from_primitive_pair</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfValueType car_type,GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr
+GConfValueType  car_type,GConfValueType  cdr_type,gconstpointer   address_of_car,gconstpointer   address_of_cdr
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_list_to_primitive_list_destructive</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfValue* val,GConfValueType list_type,GError** err
+GConfValue      *val,GConfValueType   list_type,GError         **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_pair_to_primitive_pair_destructive</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GError** err
+GConfValue      *val,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GError         **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_daemon_mode</NAME>
 <RETURNS>void  </RETURNS>
-gboolean setting
+gboolean     setting
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_in_daemon_mode</NAME>
@@ -920,7 +1560,7 @@ void
 <FUNCTION>
 <NAME>gconf_set_daemon_ior</NAME>
 <RETURNS>void  </RETURNS>
-const gchar* ior
+const gchar *ior
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_daemon_ior</NAME>
@@ -943,13 +1583,68 @@ gulong useconds
 <FUNCTION>
 <NAME>gconf_get_lock</NAME>
 <RETURNS>GConfLock *</RETURNS>
-const gchar* lock_directory,GError** err
+const gchar  *lock_directory,GError      **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_release_lock</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfLock* lock,GError** err
+GConfLock    *lock,GError      **err
 </FUNCTION>
+<FUNCTION>
+<NAME>gconf_error_new</NAME>
+<RETURNS>GError *</RETURNS>
+GConfError en,const gchar* format, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_set_error</NAME>
+<RETURNS>void  </RETURNS>
+GError** err,GConfError en,const gchar* format, ...
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_compose_errors</NAME>
+<RETURNS>GError *</RETURNS>
+GError* err1, GError* err2
+</FUNCTION>
+<MACRO>
+<NAME>_</NAME>
+#    define _(String) dgettext (GETTEXT_PACKAGE, String)
+</MACRO>
+<MACRO>
+<NAME>N_</NAME>
+#        define N_(String) gettext_noop (String)
+</MACRO>
+<MACRO>
+<NAME>N_</NAME>
+#        define N_(String) (String)
+</MACRO>
+<MACRO>
+<NAME>textdomain</NAME>
+#    define textdomain(String) (String)
+</MACRO>
+<MACRO>
+<NAME>gettext</NAME>
+#    define gettext(String) (String)
+</MACRO>
+<MACRO>
+<NAME>dgettext</NAME>
+#    define dgettext(Domain,Message) (Message)
+</MACRO>
+<MACRO>
+<NAME>dcgettext</NAME>
+#    define dcgettext(Domain,Message,Type) (Message)
+</MACRO>
+<MACRO>
+<NAME>bindtextdomain</NAME>
+#    define bindtextdomain(Domain,Directory) (Domain)
+</MACRO>
+<MACRO>
+<NAME>_</NAME>
+#    define _(String) (String)
+</MACRO>
+<MACRO>
+<NAME>N_</NAME>
+#    define N_(String) (String)
+</MACRO>
 <STRUCT>
 <NAME>GConfListeners</NAME>
 </STRUCT>
@@ -988,22 +1683,27 @@ GConfListeners* listeners,const gchar* listen_point,gpointer listener_data,GFree
 <FUNCTION>
 <NAME>gconf_listeners_remove</NAME>
 <RETURNS>void  </RETURNS>
-GConfListeners* listeners,guint cnxn_id
+GConfListeners          *listeners,guint                    cnxn_id
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_listeners_notify</NAME>
 <RETURNS>void  </RETURNS>
-GConfListeners* listeners,const gchar* all_above,GConfListenersCallback callback,gpointer user_data
+GConfListeners          *listeners,const gchar             *all_above,GConfListenersCallback   callback,gpointer                 user_data
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_listeners_count</NAME>
 <RETURNS>guint  </RETURNS>
-GConfListeners* listeners
+GConfListeners          *listeners
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_listeners_foreach</NAME>
 <RETURNS>void  </RETURNS>
-GConfListeners* listeners,GConfListenersForeach callback,gpointer user_data
+GConfListeners          *listeners,GConfListenersForeach    callback,gpointer                 user_data
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_listeners_get_data</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfListeners          *listeners,guint                    cnxn_id,gpointer                *listener_data_p,const gchar            **location_p
 </FUNCTION>
 <STRUCT>
 <NAME>GConfLocaleCache</NAME>
@@ -1074,99 +1774,327 @@ void
 <FUNCTION>
 <NAME>gconf_schema_free</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc
+GConfSchema *sc
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_copy</NAME>
 <RETURNS>GConfSchema *</RETURNS>
-GConfSchema* sc
+GConfSchema *sc
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_type</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, GConfValueType type
+GConfSchema    *sc,GConfValueType  type
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_list_type</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, GConfValueType type
+GConfSchema    *sc,GConfValueType  type
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_car_type</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, GConfValueType type
+GConfSchema    *sc,GConfValueType  type
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_cdr_type</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, GConfValueType type
+GConfSchema    *sc,GConfValueType  type
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_locale</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, const gchar* locale
+GConfSchema    *sc,const gchar    *locale
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_short_desc</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, const gchar* desc
+GConfSchema    *sc,const gchar    *desc
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_long_desc</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, const gchar* desc
+GConfSchema    *sc,const gchar    *desc
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_owner</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, const gchar* owner
+GConfSchema    *sc,const gchar    *owner
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_default_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, GConfValue* val
+GConfSchema    *sc,GConfValue     *val
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_schema_set_default_value_nocopy</NAME>
 <RETURNS>void  </RETURNS>
-GConfSchema* sc, GConfValue* val
+GConfSchema    *sc,GConfValue     *val
 </FUNCTION>
 <MACRO>
 <NAME>gconf_schema_get_type</NAME>
-#define       gconf_schema_get_type(x) (x->type)
+#define       gconf_schema_get_type(x)          (x->type)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_list_type</NAME>
-#define       gconf_schema_get_list_type(x) (x->list_type)
+#define       gconf_schema_get_list_type(x)     (x->list_type)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_car_type</NAME>
-#define       gconf_schema_get_car_type(x) (x->car_type)
+#define       gconf_schema_get_car_type(x)      (x->car_type)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_cdr_type</NAME>
-#define       gconf_schema_get_cdr_type(x) (x->cdr_type)
+#define       gconf_schema_get_cdr_type(x)      (x->cdr_type)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_locale</NAME>
-#define       gconf_schema_get_locale(x)     ((const gchar*)(x)->locale)
+#define       gconf_schema_get_locale(x)        ((const gchar*)(x)->locale)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_short_desc</NAME>
-#define       gconf_schema_get_short_desc(x) ((const gchar*)(x)->short_desc)
+#define       gconf_schema_get_short_desc(x)    ((const gchar*)(x)->short_desc)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_long_desc</NAME>
-#define       gconf_schema_get_long_desc(x)  ((const gchar*)(x)->long_desc)
+#define       gconf_schema_get_long_desc(x)     ((const gchar*)(x)->long_desc)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_owner</NAME>
-#define       gconf_schema_get_owner(x)      ((const gchar*)(x)->owner)
+#define       gconf_schema_get_owner(x)         ((const gchar*)(x)->owner)
 </MACRO>
 <MACRO>
 <NAME>gconf_schema_get_default_value</NAME>
 #define       gconf_schema_get_default_value(x) ((x)->default_value)
 </MACRO>
+<FUNCTION>
+<NAME>gconf_is_initialized</NAME>
+<RETURNS>gboolean  </RETURNS>
+void
+</FUNCTION>
+<USER_FUNCTION>
+<NAME>GConfNotifyFunc</NAME>
+<RETURNS>void </RETURNS>
+GConfEngine* conf,
+                                 guint cnxn_id,
+                                 GConfEntry *entry,
+                                 gpointer user_data
+</USER_FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_notify_add</NAME>
+<RETURNS>guint  </RETURNS>
+GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GError      **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_notify_remove</NAME>
+<RETURNS>void  </RETURNS>
+GConfEngine      *conf,guint             cnxn
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfEngine  *conf,const gchar  *key,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_without_default</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfEngine  *conf,const gchar  *key,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_entry</NAME>
+<RETURNS>GConfEntry *</RETURNS>
+GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_with_locale</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfEngine  *conf,const gchar  *key,const gchar  *locale,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_default_from_schema</NAME>
+<RETURNS>GConfValue *</RETURNS>
+GConfEngine  *conf,const gchar  *key,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine  *conf,const gchar  *key,GConfValue   *value,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_unset</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine  *conf,const gchar  *key,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_associate_schema</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_all_entries</NAME>
+<RETURNS>GSList *</RETURNS>
+GConfEngine  *conf,const gchar  *dir,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_all_dirs</NAME>
+<RETURNS>GSList *</RETURNS>
+GConfEngine  *conf,const gchar  *dir,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_suggest_sync</NAME>
+<RETURNS>void  </RETURNS>
+GConfEngine  *conf,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_dir_exists</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine  *conf,const gchar  *dir,GError  **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_key_is_writable</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine *conf,const gchar *key,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_valid_key</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar  *key,gchar       **why_invalid
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_key_is_below</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar  *above,const gchar  *below
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_concat_dir_and_key</NAME>
+<RETURNS>gchar *</RETURNS>
+const gchar  *dir,const gchar  *key
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_unique_key</NAME>
+<RETURNS>gchar *</RETURNS>
+void
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_float</NAME>
+<RETURNS>gdouble  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_int</NAME>
+<RETURNS>gint  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_string</NAME>
+<RETURNS>gchar *</RETURNS>
+GConfEngine     *conf,const gchar     *key,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_bool</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_schema</NAME>
+<RETURNS>GConfSchema *</RETURNS>
+GConfEngine     *conf,const gchar     *key,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_list</NAME>
+<RETURNS>GSList *</RETURNS>
+GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_pair</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_float</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,gdouble          val,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_int</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,gint             val,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_string</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,const gchar     *val,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_bool</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,gboolean         val,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_schema</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_list</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GError     **err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_set_pair</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GError     **err
+</FUNCTION>
+<STRUCT>
+<NAME>GConfEnumStringPair</NAME>
+</STRUCT>
+<STRUCT>
+<NAME>GConfEnumStringPair</NAME>
+struct GConfEnumStringPair {
+  gint enum_value;
+  const gchar* str;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>gconf_string_to_enum</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfEnumStringPair  lookup_table[],const gchar         *str,gint                *enum_value_retloc
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_enum_to_string</NAME>
+<RETURNS>const gchar *</RETURNS>
+GConfEnumStringPair  lookup_table[],gint                 enum_value
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+int argc, char **argv, GError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_preinit</NAME>
+<RETURNS>void  </RETURNS>
+gpointer app, gpointer mod_info
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_postinit</NAME>
+<RETURNS>void  </RETURNS>
+gpointer app, gpointer mod_info
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_clear_cache</NAME>
+<RETURNS>void  </RETURNS>
+GConfEngine* conf, GError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_synchronous_sync</NAME>
+<RETURNS>void  </RETURNS>
+GConfEngine* conf, GError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_engine_get_full</NAME>
+<RETURNS>GConfValue  *</RETURNS>
+GConfEngine *conf,const gchar *key,const gchar *locale,gboolean use_schema_default,gboolean *is_default_p,gboolean *is_writable_p,GError **err
+</FUNCTION>
 <STRUCT>
 <NAME>GConfBackend</NAME>
 </STRUCT>
@@ -1237,7 +2165,7 @@ GConfSources  *sources
 <FUNCTION>
 <NAME>gconf_sources_query_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,GError   **err
+GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,gboolean      *value_is_writable,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_value</NAME>
@@ -1287,7 +2215,7 @@ GConfSources* sources,const gchar* key,GError** err
 <FUNCTION>
 <NAME>gconf_sources_query_default_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources* sources,const gchar* key,const gchar** locales,GError** err
+GConfSources* sources,const gchar* key,const gchar** locales,gboolean* is_writable,GError** err
 </FUNCTION>
 <ENUM>
 <NAME>GConfValueType</NAME>
@@ -1312,10 +2240,6 @@ typedef enum {
 <MACRO>
 <NAME>GCONF_VALUE_TYPE_VALID</NAME>
 #define GCONF_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_PAIR))
-</MACRO>
-<MACRO>
-<NAME>GCONF_INTERNAL_VALUE_TYPE_VALID</NAME>
-#define GCONF_INTERNAL_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_PAIR))
 </MACRO>
 <STRUCT>
 <NAME>GConfSchema</NAME>
@@ -1522,25 +2446,35 @@ struct GConfEntry {
   gchar* key;
   GConfValue* value;
   gchar* schema_name;
-  gboolean is_default;
+  guint is_default : 1;
+  guint is_writable : 1;
 };
 </STRUCT>
 <MACRO>
 <NAME>gconf_entry_get_key</NAME>
-#define     gconf_entry_get_key(x)      ((const gchar*)(x)->key)
+#define     gconf_entry_get_key(x)         ((const gchar*)(x)->key)
 </MACRO>
 <MACRO>
 <NAME>gconf_entry_get_value</NAME>
-#define     gconf_entry_get_value(x)    ((x)->value)
+#define     gconf_entry_get_value(x)       ((x)->value)
 </MACRO>
 <MACRO>
 <NAME>gconf_entry_get_schema_name</NAME>
-#define     gconf_entry_get_schema_name(x) ((x)->schema_name)
+#define     gconf_entry_get_schema_name(x) ((const gchar*)(x)->schema_name)
 </MACRO>
 <MACRO>
 <NAME>gconf_entry_get_is_default</NAME>
 #define     gconf_entry_get_is_default(x)  ((x)->is_default)
 </MACRO>
+<MACRO>
+<NAME>gconf_entry_get_is_writable</NAME>
+#define     gconf_entry_get_is_writable(x) ((x)->is_writable)
+</MACRO>
+<FUNCTION>
+<NAME>gconf_entry_new</NAME>
+<RETURNS>GConfEntry *</RETURNS>
+const gchar *key,GConfValue  *val
+</FUNCTION>
 <FUNCTION>
 <NAME>gconf_entry_new_nocopy</NAME>
 <RETURNS>GConfEntry *</RETURNS>
@@ -1555,6 +2489,11 @@ GConfEntry  *entry
 <NAME>gconf_entry_steal_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
 GConfEntry  *entry
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_entry_set_value</NAME>
+<RETURNS>void  </RETURNS>
+GConfEntry  *entry,GConfValue  *val
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_entry_set_value_nocopy</NAME>
@@ -1572,219 +2511,19 @@ GConfEntry  *entry,const gchar *name
 GConfEntry  *entry,gboolean     is_default
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_is_initialized</NAME>
+<NAME>gconf_get_poa</NAME>
+<RETURNS>PortableServer_POA  </RETURNS>
+
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_set_exception</NAME>
 <RETURNS>gboolean  </RETURNS>
-void
-</FUNCTION>
-<USER_FUNCTION>
-<NAME>GConfNotifyFunc</NAME>
-<RETURNS>void </RETURNS>
-GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data
-</USER_FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_notify_add</NAME>
-<RETURNS>guint  </RETURNS>
-GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GError      **err
+GError** err, CORBA_Environment* ev
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_engine_notify_remove</NAME>
-<RETURNS>void  </RETURNS>
-GConfEngine      *conf,guint             cnxn
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_get</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_without_default</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_full</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,gboolean     *value_is_default,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_with_locale</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *locale,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_default_from_schema</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_set</NAME>
+<NAME>gconfd_logfile_change_listener</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfValue   *value,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_unset</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_associate_schema</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_all_entries</NAME>
-<RETURNS>GSList *</RETURNS>
-GConfEngine  *conf,const gchar  *dir,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_all_dirs</NAME>
-<RETURNS>GSList *</RETURNS>
-GConfEngine  *conf,const gchar  *dir,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_suggest_sync</NAME>
-<RETURNS>void  </RETURNS>
-GConfEngine  *conf,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_dir_exists</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *dir,GError  **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_valid_key</NAME>
-<RETURNS>gboolean  </RETURNS>
-const gchar  *key,gchar       **why_invalid
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_key_is_below</NAME>
-<RETURNS>gboolean  </RETURNS>
-const gchar  *above,const gchar  *below
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_concat_dir_and_key</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar  *dir,const gchar  *key
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_unique_key</NAME>
-<RETURNS>gchar *</RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_float</NAME>
-<RETURNS>gdouble  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_int</NAME>
-<RETURNS>gint  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_string</NAME>
-<RETURNS>gchar *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_bool</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_schema</NAME>
-<RETURNS>GConfSchema *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_list</NAME>
-<RETURNS>GSList *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_get_pair</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_float</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gdouble          val,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_int</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gint             val,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_string</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,const gchar     *val,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_bool</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gboolean         val,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_schema</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_list</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_engine_set_pair</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GError     **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_init</NAME>
-<RETURNS>gboolean  </RETURNS>
-int argc, char **argv, GError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_preinit</NAME>
-<RETURNS>void  </RETURNS>
-gpointer app, gpointer mod_info
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_postinit</NAME>
-<RETURNS>void  </RETURNS>
-gpointer app, gpointer mod_info
-</FUNCTION>
-<STRUCT>
-<NAME>GConfEnumStringPair</NAME>
-</STRUCT>
-<STRUCT>
-<NAME>GConfEnumStringPair</NAME>
-struct GConfEnumStringPair {
-  gint enum_value;
-  const gchar* str;
-};
-</STRUCT>
-<FUNCTION>
-<NAME>gconf_string_to_enum</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfEnumStringPair  lookup_table[],const gchar         *str,gint                *enum_value_retloc
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_enum_to_string</NAME>
-<RETURNS>const gchar *</RETURNS>
-GConfEnumStringPair  lookup_table[],gint                 enum_value
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_clear_cache</NAME>
-<RETURNS>void  </RETURNS>
-GConfEngine* conf, GError** err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_synchronous_sync</NAME>
-<RETURNS>void  </RETURNS>
-GConfEngine* conf, GError** err
+GConfDatabase *db,gboolean add,guint connection_id,ConfigListener listener,const gchar *where,GError **err
 </FUNCTION>
 <MACRO>
 <NAME>ORBIT_IDL_SERIAL</NAME>
@@ -2586,6 +3325,97 @@ CORBA_unsigned_longlen
 gpointer mem,gpointer dat,CORBA_boolean free_strings
 </FUNCTION>
 <MACRO>
+<NAME>ORBIT_DECL_CORBA_sequence_CORBA_boolean</NAME>
+#define ORBIT_DECL_CORBA_sequence_CORBA_boolean 1
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_0</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_0 'G'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_1</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_1 'C'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_2</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_2 'o'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_3</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_3 'n'
+</MACRO>
+<MACRO>
+<NAME>ORBIT_IMPL_CORBA_sequence_CORBA_boolean_4</NAME>
+#define ORBIT_IMPL_CORBA_sequence_CORBA_boolean_4 'f'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_0</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_0 'G'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_1</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_1 'C'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_2</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_2 'o'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_3</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_3 'n'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_CORBA_sequence_CORBA_boolean_4</NAME>
+#define TC_IMPL_TC_CORBA_sequence_CORBA_boolean_4 'f'
+</MACRO>
+<MACRO>
+<NAME>TC_CORBA_sequence_CORBA_boolean</NAME>
+#define TC_CORBA_sequence_CORBA_boolean ((CORBA_TypeCode)&TC_CORBA_sequence_CORBA_boolean_struct)
+</MACRO>
+<FUNCTION>
+<NAME>CORBA_sequence_CORBA_boolean__free</NAME>
+<RETURNS>gpointer  </RETURNS>
+gpointer mem,gpointer dat,CORBA_boolean free_strings
+</FUNCTION>
+<FUNCTION>
+<NAME>CORBA_sequence_CORBA_boolean_allocbuf</NAME>
+<RETURNS>CORBA_boolean  *</RETURNS>
+CORBA_unsigned_longlen
+</FUNCTION>
+<TYPEDEF>
+<NAME>ConfigDatabase_IsWritableList</NAME>
+   typedef CORBA_sequence_CORBA_boolean ConfigDatabase_IsWritableList;
+</TYPEDEF>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigDatabase_IsWritableList_0</NAME>
+#define TC_IMPL_TC_ConfigDatabase_IsWritableList_0 'G'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigDatabase_IsWritableList_1</NAME>
+#define TC_IMPL_TC_ConfigDatabase_IsWritableList_1 'C'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigDatabase_IsWritableList_2</NAME>
+#define TC_IMPL_TC_ConfigDatabase_IsWritableList_2 'o'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigDatabase_IsWritableList_3</NAME>
+#define TC_IMPL_TC_ConfigDatabase_IsWritableList_3 'n'
+</MACRO>
+<MACRO>
+<NAME>TC_IMPL_TC_ConfigDatabase_IsWritableList_4</NAME>
+#define TC_IMPL_TC_ConfigDatabase_IsWritableList_4 'f'
+</MACRO>
+<MACRO>
+<NAME>TC_ConfigDatabase_IsWritableList</NAME>
+#define TC_ConfigDatabase_IsWritableList ((CORBA_TypeCode)&TC_ConfigDatabase_IsWritableList_struct)
+</MACRO>
+<FUNCTION>
+<NAME>ConfigDatabase_IsWritableList__free</NAME>
+<RETURNS>gpointer  </RETURNS>
+gpointer mem,gpointer dat,CORBA_boolean free_strings
+</FUNCTION>
+<MACRO>
 <NAME>ORBIT_DECL_ConfigServer</NAME>
 #define ORBIT_DECL_ConfigServer 1
 </MACRO>
@@ -2658,7 +3488,7 @@ PortableServer_Servant servant,CORBA_Environment * ev
 <FUNCTION>
 <NAME>ConfigListener_notify</NAME>
 <RETURNS>void  </RETURNS>
-ConfigListener _obj,const ConfigDatabase database,const CORBA_unsigned_long cnxn,const CORBA_char * key,const ConfigValue * value,const CORBA_boolean is_default,CORBA_Environment * ev
+ConfigListener _obj,const ConfigDatabase database,const CORBA_unsigned_long cnxn,const CORBA_char * key,const ConfigValue * value,const CORBA_boolean is_default,const CORBA_boolean is_writable,CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigListener_ping</NAME>
@@ -2688,7 +3518,7 @@ ConfigDatabase _obj,const CORBA_char * key,CORBA_Environment * ev
 <FUNCTION>
 <NAME>ConfigDatabase_lookup_with_locale</NAME>
 <RETURNS>ConfigValue  *</RETURNS>
-ConfigDatabase _obj,const CORBA_char * key,const CORBA_char * locale,const CORBA_booleanuse_schema_default,CORBA_boolean *value_is_default,CORBA_Environment * ev
+ConfigDatabase _obj,const CORBA_char * key,const CORBA_char * locale,const CORBA_booleanuse_schema_default,CORBA_boolean *value_is_default,CORBA_boolean *value_is_writable,CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigDatabase_lookup_default_value</NAME>
@@ -2723,7 +3553,7 @@ ConfigDatabase _obj, const CORBA_char * dir,CORBA_Environment * ev
 <FUNCTION>
 <NAME>ConfigDatabase_all_entries</NAME>
 <RETURNS>void  </RETURNS>
-ConfigDatabase _obj,const CORBA_char * dir,const CORBA_char * locale,ConfigDatabase_KeyList ** keys,ConfigDatabase_ValueList ** values,ConfigDatabase_IsDefaultList **is_defaults, CORBA_Environment * ev
+ConfigDatabase _obj,const CORBA_char * dir,const CORBA_char * locale,ConfigDatabase_KeyList ** keys,ConfigDatabase_ValueList ** values,ConfigDatabase_IsDefaultList **is_defaults,ConfigDatabase_IsWritableList **is_writables, CORBA_Environment * ev
 </FUNCTION>
 <FUNCTION>
 <NAME>ConfigDatabase_all_dirs</NAME>
@@ -2769,632 +3599,6 @@ ConfigServer _obj, CORBA_Environment * ev
 <NAME>ConfigServer_shutdown</NAME>
 <RETURNS>void  </RETURNS>
 ConfigServer _obj, CORBA_Environment * ev
-</FUNCTION>
-<ENUM>
-<NAME>GMarkupNodeType</NAME>
-typedef enum
-{
-  G_MARKUP_NODE_ELEMENT,
-  G_MARKUP_NODE_TEXT,
-  G_MARKUP_NODE_PASSTHROUGH
-} GMarkupNodeType;
-</ENUM>
-<ENUM>
-<NAME>GMarkupParseFlags</NAME>
-typedef enum
-{
-  G_MARKUP_PRESERVE_ALL_WHITESPACE = 1 << 0
-  
-} GMarkupParseFlags;
-</ENUM>
-<ENUM>
-<NAME>GMarkupToStringFlags</NAME>
-typedef enum
-{
-  G_MARKUP_NO_FORMATTING = 1 << 0
-
-} GMarkupToStringFlags;
-</ENUM>
-<STRUCT>
-<NAME>GMarkupNodeText</NAME>
-</STRUCT>
-<STRUCT>
-<NAME>GMarkupNodeElement</NAME>
-</STRUCT>
-<STRUCT>
-<NAME>GMarkupNodeText</NAME>
-struct GMarkupNodeText
-{
-  GMarkupNodeType type;
-  
-  gchar *text;
-};
-</STRUCT>
-<STRUCT>
-<NAME>GMarkupNodeElement</NAME>
-struct GMarkupNodeElement
-{
-  GMarkupNodeType type;
-
-  gchar *name;
-  
-  GList *children;
-
-  /* List members are an opaque datatype, so ignore this. */
-  GList *attributes;
-};
-</STRUCT>
-<UNION>
-<NAME>GMarkupNode</NAME>
-union GMarkupNode
-{
-  GMarkupNodeType type;
-
-  GMarkupNodeText text;
-  GMarkupNodeElement element;  
-};
-</UNION>
-<ENUM>
-<NAME>GMarkupErrorType</NAME>
-typedef enum
-{
-  G_MARKUP_ERROR_BAD_UTF8,
-  G_MARKUP_ERROR_EMPTY,
-  G_MARKUP_ERROR_PARSE
-} GMarkupErrorType;
-</ENUM>
-<MACRO>
-<NAME>G_MARKUP_ERROR</NAME>
-#define G_MARKUP_ERROR g_markup_error_quark ()
-</MACRO>
-<FUNCTION>
-<NAME>g_markup_error_quark</NAME>
-<RETURNS>GQuark  </RETURNS>
-
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_new_text</NAME>
-<RETURNS>GMarkupNodeText *</RETURNS>
-const gchar *text
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_new_element</NAME>
-<RETURNS>GMarkupNodeElement *</RETURNS>
-const gchar *name
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_free</NAME>
-<RETURNS>void  </RETURNS>
-GMarkupNode *node
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_set_attribute</NAME>
-<RETURNS>void  </RETURNS>
-GMarkupNodeElement *node,const gchar *attribute_name,const gchar *attribute_value
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_get_attribute</NAME>
-<RETURNS>gchar *</RETURNS>
-GMarkupNodeElement *node,const gchar *attribute_name
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_unset_attribute</NAME>
-<RETURNS>void  </RETURNS>
-GMarkupNodeElement *node,const gchar *attribute_name
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_get_attributes</NAME>
-<RETURNS>void  </RETURNS>
-GMarkupNodeElement *node,gchar ***names,gchar ***values,gint    *n_attributes
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_from_string</NAME>
-<RETURNS>GMarkupNode  *</RETURNS>
-const gchar *text,gint length,GMarkupParseFlags flags,GError **error
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_node_to_string</NAME>
-<RETURNS>gchar  *</RETURNS>
-GMarkupNode *node,GMarkupToStringFlags flags
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_nodes_from_string</NAME>
-<RETURNS>GList  *</RETURNS>
-const gchar *text,gint length,GMarkupParseFlags flags,GError **error
-</FUNCTION>
-<FUNCTION>
-<NAME>g_markup_nodes_to_string</NAME>
-<RETURNS>gchar  *</RETURNS>
-GList *nodes,GMarkupToStringFlags flags
-</FUNCTION>
-<TYPEDEF>
-<NAME>gunichar</NAME>
-typedef guint32 gunichar;
-</TYPEDEF>
-<TYPEDEF>
-<NAME>gunichar2</NAME>
-typedef guint16 gunichar2;
-</TYPEDEF>
-<ENUM>
-<NAME>GUnicodeType</NAME>
-typedef enum {
-  G_UNICODE_CONTROL,
-  G_UNICODE_FORMAT,
-  G_UNICODE_UNASSIGNED,
-  G_UNICODE_PRIVATE_USE,
-  G_UNICODE_SURROGATE,
-  G_UNICODE_LOWERCASE_LETTER,
-  G_UNICODE_MODIFIER_LETTER,
-  G_UNICODE_OTHER_LETTER,
-  G_UNICODE_TITLECASE_LETTER,
-  G_UNICODE_UPPERCASE_LETTER,
-  G_UNICODE_COMBINING_MARK,
-  G_UNICODE_ENCLOSING_MARK,
-  G_UNICODE_NON_SPACING_MARK,
-  G_UNICODE_DECIMAL_NUMBER,
-  G_UNICODE_LETTER_NUMBER,
-  G_UNICODE_OTHER_NUMBER,
-  G_UNICODE_CONNECT_PUNCTUATION,
-  G_UNICODE_DASH_PUNCTUATION,
-  G_UNICODE_CLOSE_PUNCTUATION,
-  G_UNICODE_FINAL_PUNCTUATION,
-  G_UNICODE_INITIAL_PUNCTUATION,
-  G_UNICODE_OTHER_PUNCTUATION,
-  G_UNICODE_OPEN_PUNCTUATION,
-  G_UNICODE_CURRENCY_SYMBOL,
-  G_UNICODE_MODIFIER_SYMBOL,
-  G_UNICODE_MATH_SYMBOL,
-  G_UNICODE_OTHER_SYMBOL,
-  G_UNICODE_LINE_SEPARATOR,
-  G_UNICODE_PARAGRAPH_SEPARATOR,
-  G_UNICODE_SPACE_SEPARATOR
-} GUnicodeType;
-</ENUM>
-<FUNCTION>
-<NAME>g_get_charset</NAME>
-<RETURNS>gboolean  </RETURNS>
-char **charset
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isalnum</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isalpha</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_iscntrl</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isdigit</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isgraph</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_islower</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isprint</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_ispunct</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isspace</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isupper</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isxdigit</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_istitle</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_isdefined</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_iswide</NAME>
-<RETURNS>gboolean  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_toupper</NAME>
-<RETURNS>gunichar  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_tolower</NAME>
-<RETURNS>gunichar  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_totitle</NAME>
-<RETURNS>gunichar  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_digit_value</NAME>
-<RETURNS>gint  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_xdigit_value</NAME>
-<RETURNS>gint  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_type</NAME>
-<RETURNS>GUnicodeType  </RETURNS>
-gunichar c
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unicode_canonical_ordering</NAME>
-<RETURNS>void  </RETURNS>
-gunichar *string,size_t   len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unicode_canonical_decomposition</NAME>
-<RETURNS>gunichar  *</RETURNS>
-gunichar  ch,size_t   *result_len
-</FUNCTION>
-<MACRO>
-<NAME>GLIB_VAR</NAME>
-#      define GLIB_VAR __declspec(dllexport)
-</MACRO>
-<MACRO>
-<NAME>GLIB_VAR</NAME>
-#      define GLIB_VAR extern __declspec(dllimport)
-</MACRO>
-<MACRO>
-<NAME>GLIB_VAR</NAME>
-#    define GLIB_VAR extern
-</MACRO>
-<MACRO>
-<NAME>g_utf8_next_char</NAME>
-#define g_utf8_next_char(p) (char *)((p) + g_utf8_skip[*(guchar *)(p)])
-</MACRO>
-<FUNCTION>
-<NAME>g_utf8_get_char</NAME>
-<RETURNS>gunichar  </RETURNS>
-const gchar *p
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_offset_to_pointer</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gchar *str,gint         offset
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_pointer_to_offset</NAME>
-<RETURNS>gint  </RETURNS>
-const gchar *str,const gchar *pos
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_prev_char</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gchar *p
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_find_next_char</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gchar *p,const gchar *bound
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_find_prev_char</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gchar *str,const gchar *p
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_strlen</NAME>
-<RETURNS>gint  </RETURNS>
-const gchar *p,gint         max
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_strncpy</NAME>
-<RETURNS>gchar  *</RETURNS>
-gchar       *dest,const gchar *src,size_t       n
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_strchr</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gchar *p,gunichar     ch
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_strrchr</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gchar *p,gunichar     ch
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_to_utf16</NAME>
-<RETURNS>gunichar2  *</RETURNS>
-const gchar     *str,gint             len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_to_ucs4</NAME>
-<RETURNS>gunichar  *</RETURNS>
-const gchar     *str,gint             len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf16_to_ucs4</NAME>
-<RETURNS>gunichar  *</RETURNS>
-const gunichar2 *str,gint             len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf16_to_utf8</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gunichar2 *str,gint             len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_ucs4_to_utf16</NAME>
-<RETURNS>gunichar  *</RETURNS>
-const gunichar  *str,gint             len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_ucs4_to_utf8</NAME>
-<RETURNS>gchar  *</RETURNS>
-const gunichar  *str,gint             len
-</FUNCTION>
-<FUNCTION>
-<NAME>g_unichar_to_utf8</NAME>
-<RETURNS>gint  </RETURNS>
-gunichar    c,char       *outbuf
-</FUNCTION>
-<FUNCTION>
-<NAME>g_utf8_validate</NAME>
-<RETURNS>gboolean  </RETURNS>
-const gchar  *str,gint          len,const gchar **end
-</FUNCTION>
-<FUNCTION>
-<NAME>g_convert</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar  *str,gint          len,const gchar  *to_codeset,const gchar  *from_codeset,gint         *bytes_converted,gint         *bytes_written
-</FUNCTION>
-<MACRO>
-<NAME>G_FILE_ERROR</NAME>
-#define G_FILE_ERROR g_file_error_quark ()
-</MACRO>
-<ENUM>
-<NAME>GFileError</NAME>
-typedef enum
-{
-  G_FILE_ERROR_EXIST,
-  G_FILE_ERROR_ISDIR,
-  G_FILE_ERROR_ACCES,
-  G_FILE_ERROR_NAMETOOLONG,
-  G_FILE_ERROR_NOENT,
-  G_FILE_ERROR_NOTDIR,
-  G_FILE_ERROR_NXIO,
-  G_FILE_ERROR_NODEV,
-  G_FILE_ERROR_ROFS,
-  G_FILE_ERROR_TXTBSY,
-  G_FILE_ERROR_FAULT,
-  G_FILE_ERROR_LOOP,
-  G_FILE_ERROR_NOSPC,
-  G_FILE_ERROR_NOMEM,
-  G_FILE_ERROR_MFILE,
-  G_FILE_ERROR_NFILE,
-  G_FILE_ERROR_FAILED
-} GFileError;
-</ENUM>
-<FUNCTION>
-<NAME>g_file_error_quark</NAME>
-<RETURNS>GQuark  </RETURNS>
-
-</FUNCTION>
-<FUNCTION>
-<NAME>g_file_get_contents</NAME>
-<RETURNS>gchar *</RETURNS>
-const gchar *filename,GError     **error
-</FUNCTION>
-<STRUCT>
-<NAME>GError</NAME>
-</STRUCT>
-<STRUCT>
-<NAME>GError</NAME>
-struct GError
-{
-  GQuark       domain;
-  gint         code;
-  gchar       *message;
-};
-</STRUCT>
-<FUNCTION>
-<NAME>g_error_new</NAME>
-<RETURNS>GError *</RETURNS>
-GQuark         domain,gint           code,const gchar   *format,...
-</FUNCTION>
-<FUNCTION>
-<NAME>g_error_new_literal</NAME>
-<RETURNS>GError *</RETURNS>
-GQuark         domain,gint           code,const gchar   *message
-</FUNCTION>
-<FUNCTION>
-<NAME>g_error_free</NAME>
-<RETURNS>void  </RETURNS>
-GError        *error
-</FUNCTION>
-<FUNCTION>
-<NAME>g_error_copy</NAME>
-<RETURNS>GError *</RETURNS>
-const GError  *error
-</FUNCTION>
-<FUNCTION>
-<NAME>g_error_matches</NAME>
-<RETURNS>gboolean  </RETURNS>
-const GError  *error,GQuark         domain,gint           code
-</FUNCTION>
-<FUNCTION>
-<NAME>g_set_error</NAME>
-<RETURNS>void  </RETURNS>
-GError       **err,GQuark         domain,gint           code,const gchar   *format,...
-</FUNCTION>
-<FUNCTION>
-<NAME>g_clear_error</NAME>
-<RETURNS>void  </RETURNS>
-GError       **err
-</FUNCTION>
-<STRUCT>
-<NAME>GConfDatabase</NAME>
-</STRUCT>
-<STRUCT>
-<NAME>GConfDatabase</NAME>
-struct GConfDatabase
-{
-  /* "inherit" from the servant,
-     must be first in struct */
-  POA_ConfigDatabase servant;
-
-  ConfigDatabase objref;
-  
-  GConfListeners* listeners;
-  GConfSources* sources;
-
-  GTime last_access;
-  guint sync_idle;
-  guint sync_timeout;
-};
-</STRUCT>
-<FUNCTION>
-<NAME>gconf_database_new</NAME>
-<RETURNS>GConfDatabase *</RETURNS>
-GConfSources  *sources
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_free</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase *db
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_add_listener</NAME>
-<RETURNS>CORBA_unsigned_long  </RETURNS>
-GConfDatabase       *db,ConfigListener       who,const gchar         *where
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_remove_listener</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase       *db,CORBA_unsigned_long  cnxn
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_notify_listeners</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase       *db,const gchar         *key,const ConfigValue   *value,gboolean             is_default
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_query_value</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfDatabase  *db,const gchar    *key,const gchar   **locales,gboolean        use_schema_default,gboolean       *value_is_default,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_query_default_value</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfDatabase  *db,const gchar    *key,const gchar   **locales,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_set</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase      *db,const gchar        *key,GConfValue         *value,const ConfigValue  *cvalue,GError        **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_unset</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase      *db,const gchar        *key,const gchar        *locale,GError        **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_dir_exists</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfDatabase  *db,const gchar    *dir,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_remove_dir</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase  *db,const gchar    *dir,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_all_entries</NAME>
-<RETURNS>GSList *</RETURNS>
-GConfDatabase  *db,const gchar    *dir,const gchar   **locales,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_all_dirs</NAME>
-<RETURNS>GSList *</RETURNS>
-GConfDatabase  *db,const gchar    *dir,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_set_schema</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase  *db,const gchar    *key,const gchar    *schema_key,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_sync</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase  *db,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_synchronous_sync</NAME>
-<RETURNS>gboolean  </RETURNS>
-GConfDatabase  *db,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_clear_cache</NAME>
-<RETURNS>void  </RETURNS>
-GConfDatabase  *db,GError    **err
-</FUNCTION>
-<FUNCTION>
-<NAME>gconfd_locale_cache_expire</NAME>
-<RETURNS>void  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconfd_locale_cache_drop</NAME>
-<RETURNS>void  </RETURNS>
-void
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_database_to_node</NAME>
-<RETURNS>GMarkupNode *</RETURNS>
-GConfDatabase *db, gboolean is_default
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_get_poa</NAME>
-<RETURNS>PortableServer_POA  </RETURNS>
-
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_set_exception</NAME>
-<RETURNS>gboolean  </RETURNS>
-GError** err, CORBA_Environment* ev
-</FUNCTION>
-<FUNCTION>
-<NAME>gconf_logfile_queue_save</NAME>
-<RETURNS>void  </RETURNS>
-void
 </FUNCTION>
 <MACRO>
 <NAME>MO_REVISION_NUMBER</NAME>
@@ -3595,11 +3799,6 @@ struct msg_ent
 (struct loaded_l10nfile **l10nfile_list,const char *dirlist, size_t dirlist_len, int mask,const char *language, const char *territory,const char *codeset,const char *normalized_codeset,const char *modifier, const char *special,const char *sponsor, const char *revision,const char *filename, int do_allocate)
 </FUNCTION>
 <FUNCTION>
-<NAME>gce_install_menus_and_toolbar</NAME>
-<RETURNS>void  </RETURNS>
-GtkWidget* app
-</FUNCTION>
-<FUNCTION>
 <NAME>gce_app_new</NAME>
 <RETURNS>GtkWidget *</RETURNS>
 const gchar* geometry
@@ -3607,6 +3806,11 @@ const gchar* geometry
 <FUNCTION>
 <NAME>gce_app_close</NAME>
 <RETURNS>void</RETURNS>
+GtkWidget* app
+</FUNCTION>
+<FUNCTION>
+<NAME>gce_install_menus_and_toolbar</NAME>
+<RETURNS>void  </RETURNS>
 GtkWidget* app
 </FUNCTION>
 <FUNCTION>
@@ -3719,17 +3923,23 @@ typedef enum {
 <USER_FUNCTION>
 <NAME>GConfClientNotifyFunc</NAME>
 <RETURNS>void </RETURNS>
-GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data
+GConfClient* client,
+                                      guint cnxn_id,
+                                      GConfEntry *entry,
+                                      gpointer user_data
 </USER_FUNCTION>
 <USER_FUNCTION>
 <NAME>GConfClientParentWindowFunc</NAME>
 <RETURNS>GtkWidget *</RETURNS>
-GConfClient* client, gpointer user_data
+GConfClient* client,
+                                                   gpointer user_data
 </USER_FUNCTION>
 <USER_FUNCTION>
 <NAME>GConfClientErrorHandlerFunc</NAME>
 <RETURNS>void </RETURNS>
-GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GError* error
+GConfClient* client,
+                                             GConfClientParentWindowFunc parent_func,
+                                             gpointer parent_user_data, GError* error
 </USER_FUNCTION>
 <MACRO>
 <NAME>GCONF_TYPE_CLIENT</NAME>
@@ -3839,9 +4049,9 @@ GConfClient* client,const gchar* key,GError** err
 GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_client_get_full</NAME>
-<RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key, const gchar* locale,gboolean use_schema_default,gboolean* value_is_default,GError** err
+<NAME>gconf_client_get_entry</NAME>
+<RETURNS>GConfEntry *</RETURNS>
+GConfClient* client,const gchar* key,const gchar* locale,gboolean use_schema_default,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_default_from_schema</NAME>
@@ -3872,6 +4082,11 @@ GConfClient* client,GError** err
 <NAME>gconf_client_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfClient* client,const gchar* dir, GError** err
+</FUNCTION>
+<FUNCTION>
+<NAME>gconf_client_key_is_writable</NAME>
+<RETURNS>gboolean  </RETURNS>
+GConfClient* client,const gchar* key,GError**     err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_float</NAME>

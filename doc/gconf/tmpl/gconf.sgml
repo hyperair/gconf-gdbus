@@ -79,10 +79,12 @@ gconf_engine_notify_add().
 
 @conf: the #GConfEngine passed to gconf_engine_notify_add().
 @cnxn_id: the ID returned from gconf_engine_notify_add().
+@entry: 
+@user_data: the user data passed to gconf_engine_notify_add().
+<!-- # Unused Parameters # -->
 @key: the full path of the changed key.
 @value: the new value, or <symbol>NULL</symbol> if the key was unset.
 @is_default: if <symbol>TRUE</symbol>, the key is unset but this is the default value for it.
-@user_data: the user data passed to gconf_engine_notify_add().
 
 
 <!-- ##### FUNCTION gconf_engine_notify_add ##### -->
@@ -163,16 +165,15 @@ return <symbol>NULL</symbol> if no default exists or an error occurs.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
-<!-- ##### FUNCTION gconf_engine_get_full ##### -->
+<!-- ##### FUNCTION gconf_engine_get_entry ##### -->
 <para>
-This function is basically for internal use.
+Obtain the full #GConfEntry for a value.
 </para>
 
 @conf: 
 @key: 
 @locale: 
 @use_schema_default: 
-@value_is_default: 
 @err: 
 @Returns: 
 

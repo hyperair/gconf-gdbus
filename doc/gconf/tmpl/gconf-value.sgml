@@ -74,14 +74,6 @@ list value.
 @x: 
 
 
-<!-- ##### MACRO GCONF_INTERNAL_VALUE_TYPE_VALID ##### -->
-<para>
-
-</para>
-
-@x: 
-
-
 <!-- ##### FUNCTION gconf_value_new ##### -->
 <para>
 Creates a new #GConfValue with type @type. The type is immutable after
@@ -465,16 +457,23 @@ with g_free().
 
 <!-- ##### STRUCT GConfEntry ##### -->
 <para>
-Stores a key-value pair.  @key should be an absolute key, not a relative key.
-(Note that internally GConf breaks this rule sometimes; but in the public
-interface, @key is always an absolute key.)  To access the key and value, use
-gconf_entry_get_key() and gconf_entry_get_value().
+Stores an entry from a GConf "directory," including a key-value pair,
+the name of the schema applicable to this entry, whether the value is
+a default value, and whether GConf can write a new value at this
+key. @key should be an absolute key, not a relative key.  (Note that
+internally GConf breaks this rule sometimes; but in the public
+interface, @key is always an absolute key.)  To access the key and
+value, use gconf_entry_get_key() and gconf_entry_get_value().
 </para>
+
+<warning><para>Value can be <symbol>NULL</symbol>, indicating that the
+value is not set.</para></warning>
 
 @key: an absolute key name
 @value: a #GConfValue
-@schema_name: 
-@is_default: 
+@schema_name: name of the schema applied to this entry
+@is_default: whether @value is a default from the schema
+@is_writable: whether a new value could be set for this entry
 
 <!-- ##### FUNCTION gconf_entry_new_nocopy ##### -->
 <para>

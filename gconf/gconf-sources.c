@@ -22,6 +22,7 @@
 #include "gconf-sources.h"
 #include "gconf-internals.h"
 #include "gconf-schema.h"
+#include "gconf.h"
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -182,6 +183,7 @@ gconf_source_unset_value      (GConfSource* source,
   if ( source_is_writable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+
       (*source->backend->vtable->unset_value)(source, key, locale, err);
       return TRUE;
     }
@@ -384,6 +386,7 @@ gconf_sources_query_value (GConfSources* sources,
                            const gchar** locales,
                            gboolean use_schema_default,
                            gboolean* value_is_default,
+                           gboolean* value_is_writable,
                            GError** err)
 {
   GList* tmp;
@@ -393,12 +396,21 @@ gconf_sources_query_value (GConfSources* sources,
   g_return_val_if_fail(sources != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   g_return_val_if_fail((err == NULL) || (*err == NULL), NULL);
+
+  /* A value is writable if it is unset and a writable source exists,
+   * or if it's set and the setting is within or after a writable source.
+   * So basically if we see a writable source before we get the value,
+   * or get the value from a writable source, the value is writable.
+   */
   
   if (!gconf_key_check(key, err))
     return NULL;
 
   if (value_is_default)
     *value_is_default = FALSE;
+
+  if (value_is_writable)
+    *value_is_writable = FALSE;
   
   tmp = sources->sources;
 
@@ -415,6 +427,9 @@ gconf_sources_query_value (GConfSources* sources,
         schema_name_retloc = NULL;
       
       source = tmp->data;
+
+      if (source_is_writable (source, key, NULL)) /* ignore errors */
+        *value_is_writable = TRUE;
       
       val = gconf_source_query_value(source, key, locales,
                                      schema_name_retloc, &error);
@@ -471,7 +486,7 @@ gconf_sources_query_value (GConfSources* sources,
       
       /* We do look for a schema describing the schema, just for funnies */
       val = gconf_sources_query_value(sources, schema_name, locales,
-                                      TRUE, NULL, &error);
+                                      TRUE, NULL, NULL, &error);
 
       if (error != NULL)
         {
@@ -572,6 +587,13 @@ gconf_sources_set_value   (GConfSources* sources,
 
       tmp = g_list_next(tmp);
     }
+
+  /* If we arrived here, then there was nowhere to write a value */
+  g_set_error (err,
+               GCONF_ERROR,
+               GCONF_ERROR_NO_WRITABLE_DATABASE,
+               _("Unable to store a value at key '%s'"),
+               key);
 }
 
 void
@@ -766,6 +788,7 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
                                           locales,
                                           TRUE,
                                           NULL,
+                                          NULL,
                                           NULL);
 
           if (val != NULL &&
@@ -785,6 +808,37 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
     }
 }
 
+
+static gboolean
+key_is_writable (GConfSources *sources,
+                 GConfSource  *value_in_src,
+                 const gchar *key,
+                 GError **err)
+{
+  GList *tmp;
+  
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src;
+      
+      src = tmp->data;
+      
+      if (source_is_writable (src, key, NULL))
+        return TRUE;
+
+      if (src == value_in_src)
+        return FALSE; /* didn't find a writable source before value-containing
+                         source.
+                      */
+      
+      tmp = g_list_next (tmp);
+    }
+
+  /* This shouldn't be reached actually */
+  return FALSE;
+}
 
 GSList*       
 gconf_sources_all_entries   (GConfSources* sources,
@@ -839,13 +893,15 @@ gconf_sources_all_entries   (GConfSources* sources,
             }
         }
 
-      /* Iterate over the list of entries, stuffing them
-         in the hash if they're new */
+      /* Iterate over the list of entries, stuffing them in the hash
+         and setting their writability flag if they're new
+      */
       
       while (iter != NULL)
         {
           GConfEntry* pair = iter->data;
           GConfEntry* previous;
+          gchar *full;
           
           if (first_pass)
             previous = NULL; /* Can't possibly be there. */
@@ -858,9 +914,24 @@ gconf_sources_all_entries   (GConfSources* sources,
                 /* Discard this latest one */
                 ;
               else
-                /* Save the new value, previously we had an entry but no value */
-                gconf_entry_set_value_nocopy(previous,
-                                             gconf_entry_steal_value(pair));
+                {
+                  /* Save the new value, previously we had an entry but no value */
+                  gconf_entry_set_value_nocopy(previous,
+                                               gconf_entry_steal_value(pair));
+
+                  /* As an efficiency hack, remember that
+                   * entry->key is relative not absolute on the
+                   * gconfd side
+                   */
+                  full = gconf_concat_dir_and_key (dir, previous->key);
+                  
+                  previous->is_writable = key_is_writable (sources,
+                                                           src,
+                                                           full,
+                                                           NULL);
+
+                  g_free (full);
+                }
               
               gconf_entry_free(pair);
             }
@@ -868,6 +939,19 @@ gconf_sources_all_entries   (GConfSources* sources,
             {
               /* Save */
               g_hash_table_insert(hash, pair->key, pair);
+              
+              /* As an efficiency hack, remember that
+               * entry->key is relative not absolute on the
+               * gconfd side
+               */
+              full = gconf_concat_dir_and_key (dir, pair->key);
+              
+              previous->is_writable = key_is_writable (sources,
+                                                       src,
+                                                       full,
+                                                       NULL);
+              
+              g_free (full);
             }
 
           iter = g_slist_next(iter);
@@ -888,7 +972,7 @@ gconf_sources_all_entries   (GConfSources* sources,
   g_hash_table_foreach(hash, hash_listify_func, &flattened);
 
   g_hash_table_destroy(hash);
-
+  
   return flattened;
 }
 
@@ -1107,6 +1191,7 @@ GConfValue*
 gconf_sources_query_default_value(GConfSources* sources,
                                   const gchar* key,
                                   const gchar** locales,
+                                  gboolean* is_writable,
                                   GError** err)
 {
   GError* error = NULL;
@@ -1114,6 +1199,9 @@ gconf_sources_query_default_value(GConfSources* sources,
   GConfMetaInfo* mi;
   
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  if (is_writable)
+    *is_writable = key_is_writable (sources, NULL, key, NULL);
   
   mi = gconf_sources_query_metainfo(sources, key,
                                     &error);
@@ -1140,7 +1228,7 @@ gconf_sources_query_default_value(GConfSources* sources,
       
   val = gconf_sources_query_value(sources,
                                   gconf_meta_info_get_schema(mi), locales,
-                                  TRUE, NULL, &error);
+                                  TRUE, NULL, NULL, &error);
   
   if (val != NULL)
     {

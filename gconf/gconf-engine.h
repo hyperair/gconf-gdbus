@@ -43,6 +43,15 @@ void         gconf_engine_ref             (GConfEngine* conf);
 GConfEngine* gconf_engine_get_local      (const gchar* address, GError** err);
 #endif
 
+/* For use by language bindings only, will be deprecated in GNOME 2.0
+ * when we can make GConfEngine a GObject
+ */
+void         gconf_engine_set_user_data  (GConfEngine   *engine,
+                                          gpointer       data,
+                                          GDestroyNotify dnotify);
+gpointer     gconf_engine_get_user_data  (GConfEngine   *engine);
+
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

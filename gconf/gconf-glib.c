@@ -160,6 +160,32 @@ g_set_error (GError     **err,
   va_end (args);
 }
 
+#define ERROR_OVERWRITTEN_WARNING "GError set over the top of a previous GError or uninitialized memory.\n" \
+               "This indicates a bug in someone's code. You must ensure an error is NULL before it's set."
+
+/**
+ * g_propagate_error:
+ * @dest: error return location
+ * @src: error to move into the return location
+ * 
+ * Does nothing if @dest is NULL; otherwise,
+ * moves @src into *@dest. *@dest must be NULL.
+ **/
+void    
+g_propagate_error (GError       **dest,
+		   GError        *src)
+{
+  g_return_if_fail (src != NULL);
+
+  if (dest == NULL)
+    return;
+  
+  if (*dest != NULL)
+    g_warning (ERROR_OVERWRITTEN_WARNING);
+ 
+  *dest = src;
+}
+
 void
 g_clear_error (GError **err)
 {
@@ -169,6 +195,8 @@ g_clear_error (GError **err)
       *err = NULL;
     }
 }
+
+
 
 /**********************************************************/
 

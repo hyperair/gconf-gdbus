@@ -55,14 +55,17 @@ main(int argc, char** argv)
 }
 
 static void
-entry_notify_func(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data)
+entry_notify_func(GConfClient* client, guint cnxn_id,
+                  GConfEntry *gconf_entry,
+                  gpointer user_data)
 {
   GtkWidget* entry = user_data;
   
   g_return_if_fail(GTK_IS_ENTRY(entry));
 
   gtk_signal_handler_block_by_data(GTK_OBJECT(entry), client);
-  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(value));
+  gtk_entry_set_text(GTK_ENTRY(entry),
+                     gconf_value_get_string(gconf_entry->value));
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(entry), client);
 }
 

@@ -77,6 +77,9 @@ struct _GConfEngine {
    */
   gchar *address;
 
+  gpointer user_data;
+  GDestroyNotify dnotify;
+  
   guint is_default : 1;
 
   /* If TRUE, this is a local engine (and therefore
@@ -105,9 +108,7 @@ static GConfCnxn* gconf_cnxn_new     (GConfEngine         *conf,
                                       gpointer             user_data);
 static void       gconf_cnxn_destroy (GConfCnxn           *cnxn);
 static void       gconf_cnxn_notify  (GConfCnxn           *cnxn,
-                                      const gchar         *key,
-                                      GConfValue          *value,
-                                      gboolean             is_default);
+                                      GConfEntry          *entry);
 
 
 static ConfigServer   gconf_get_config_server    (gboolean     start_if_not_found,
@@ -504,6 +505,11 @@ gconf_engine_unref        (GConfEngine* conf)
 
           g_slist_free(removed);
 
+          if (conf->dnotify)
+            {
+              (* conf->dnotify) (conf->user_data);
+            }
+          
           /* do this after removing the notifications,
              to avoid funky race conditions */
           if (conf->address)
@@ -519,12 +525,32 @@ gconf_engine_unref        (GConfEngine* conf)
     }
 }
 
+void
+gconf_engine_set_user_data  (GConfEngine   *engine,
+                             gpointer       data,
+                             GDestroyNotify dnotify)
+{
+  if (engine->dnotify)
+    {
+      (* engine->dnotify) (engine->user_data);
+    }
+
+  engine->dnotify = dnotify;
+  engine->user_data = data;
+}
+
+gpointer
+gconf_engine_get_user_data  (GConfEngine   *engine)
+{
+  return engine->user_data;
+}
+
 guint
 gconf_engine_notify_add(GConfEngine* conf,
-                 const gchar* namespace_section, /* dir or key to listen to */
-                 GConfNotifyFunc func,
-                 gpointer user_data,
-                 GError** err)
+                        const gchar* namespace_section,
+                        GConfNotifyFunc func,
+                        gpointer user_data,
+                        GError** err)
 {
   ConfigDatabase db;
   ConfigListener cl;
@@ -636,12 +662,14 @@ gconf_engine_notify_remove(GConfEngine* conf,
   gconf_cnxn_destroy(gcnxn);
 }
 
-GConfValue*
-gconf_engine_get_full(GConfEngine* conf,
-               const gchar* key, const gchar* locale,
-               gboolean use_schema_default,
-               gboolean* value_is_default,
-               GError** err)
+GConfValue *
+gconf_engine_get_full (GConfEngine *conf,
+                       const gchar *key,
+                       const gchar *locale,
+                       gboolean use_schema_default,
+                       gboolean *is_default_p,
+                       gboolean *is_writable_p,
+                       GError **err)
 {
   GConfValue* val;
   ConfigValue* cv;
@@ -649,7 +677,8 @@ gconf_engine_get_full(GConfEngine* conf,
   ConfigDatabase db;
   gint tries = 0;
   CORBA_boolean is_default = FALSE;
-
+  CORBA_boolean is_writable = TRUE;
+  
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -660,19 +689,29 @@ gconf_engine_get_full(GConfEngine* conf,
   if (gconf_engine_is_local(conf))
     {
       gchar** locale_list;
-
+      gboolean tmp_is_default = FALSE;
+      gboolean tmp_is_writable = TRUE;
+      
       locale_list = gconf_split_locale(locale);
       
       val = gconf_sources_query_value(conf->local_sources,
                                       key,
                                       (const gchar**)locale_list,
                                       use_schema_default,
-                                      value_is_default,
+                                      &tmp_is_default,
+                                      &tmp_is_writable,
                                       err);
 
       if (locale_list != NULL)
         g_strfreev(locale_list);
 
+
+      if (is_default_p)
+        *is_default_p = tmp_is_default;
+
+      if (is_writable_p)
+        *is_writable_p = tmp_is_writable;
+      
       return val;
     }
 
@@ -696,11 +735,10 @@ gconf_engine_get_full(GConfEngine* conf,
                                          (locale ? locale : gconf_current_locale()),
                                          use_schema_default,
                                          &is_default,
+                                         &is_writable,
                                          &ev);
-
-  if (value_is_default)
-    *value_is_default = !!is_default; /* canonicalize */
-
+  
+  
   if (gconf_server_broken(&ev))
     {
       if (tries < MAX_RETRIES)
@@ -722,8 +760,44 @@ gconf_engine_get_full(GConfEngine* conf,
       val = gconf_value_from_corba_value(cv);
       CORBA_free(cv);
 
+      if (is_default_p)
+        *is_default_p = !!is_default;
+      if (is_writable_p)
+        *is_writable_p = !!is_writable;
+
       return val;
     }
+}
+                       
+GConfEntry*
+gconf_engine_get_entry(GConfEngine* conf,
+                       const gchar* key,
+                       const gchar* locale,
+                       gboolean use_schema_default,
+                       GError** err)
+{
+  gboolean is_writable = TRUE;
+  gboolean is_default = FALSE;
+  GConfValue *val;
+  GError *error;
+  GConfEntry *entry;
+  
+  error = NULL;
+  val = gconf_engine_get_full (conf, key, locale, use_schema_default,
+                               &is_default, &is_writable, &error);
+  if (error != NULL)
+    {
+      g_propagate_error (err, error);
+      return NULL;
+    }
+
+  entry = gconf_entry_new_nocopy (g_strdup (key),
+                                  val);
+  
+  entry->is_default = is_default;
+  entry->is_writable = is_writable;
+
+  return entry;
 }
      
 GConfValue*  
@@ -733,22 +807,25 @@ gconf_engine_get (GConfEngine* conf, const gchar* key, GError** err)
 }
 
 GConfValue*
-gconf_engine_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
-                      GError** err)
+gconf_engine_get_with_locale(GConfEngine* conf, const gchar* key,
+                             const gchar* locale,
+                             GError** err)
 {
-  return gconf_engine_get_full(conf, key, locale, TRUE, NULL, err);
+  return gconf_engine_get_full(conf, key, locale, TRUE,
+                               NULL, NULL, err);
 }
 
 GConfValue*
-gconf_engine_get_without_default(GConfEngine* conf, const gchar* key, GError** err)
+gconf_engine_get_without_default(GConfEngine* conf, const gchar* key,
+                                 GError** err)
 {
-  return gconf_engine_get_full(conf, key, NULL, FALSE, NULL, err);
+  return gconf_engine_get_full(conf, key, NULL, FALSE, NULL, NULL, err);
 }
 
 GConfValue*
 gconf_engine_get_default_from_schema (GConfEngine* conf,
-                               const gchar* key,
-                               GError** err)
+                                      const gchar* key,
+                                      GError** err)
 {
   GConfValue* val;
   ConfigValue* cv;
@@ -772,6 +849,7 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
       val = gconf_sources_query_default_value(conf->local_sources,
                                               key,
                                               (const gchar**)locale_list,
+                                              NULL,
                                               err);
 
       if (locale_list != NULL)
@@ -1085,6 +1163,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   ConfigDatabase_ValueList* values;
   ConfigDatabase_KeyList* keys;
   ConfigDatabase_IsDefaultList* is_defaults;
+  ConfigDatabase_IsWritableList* is_writables;
   CORBA_Environment ev;
   ConfigDatabase db;
   guint i;
@@ -1151,7 +1230,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   ConfigDatabase_all_entries(db,
                              (gchar*)dir,
                              (gchar*)gconf_current_locale(),
-                             &keys, &values, &is_defaults,
+                             &keys, &values, &is_defaults, &is_writables,
                              &ev);
 
   if (gconf_server_broken(&ev))
@@ -1187,6 +1266,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
       /* note, there's an accesor function for setting this that we are
          cheating and not using */
       pair->is_default = is_defaults->_buffer[i];
+      pair->is_writable = is_writables->_buffer[i];
       
       pairs = g_slist_prepend(pairs, pair);
       
@@ -1196,7 +1276,8 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   CORBA_free(keys);
   CORBA_free(values);
   CORBA_free(is_defaults);
-
+  CORBA_free(is_writables);
+  
   return pairs;
 }
 
@@ -1542,6 +1623,16 @@ gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
   return (server_ret == CORBA_TRUE);
 }
 
+gboolean
+gconf_engine_key_is_writable  (GConfEngine *conf,
+                               const gchar *key,
+                               GError     **err)
+{
+  /* FIXME */
+  
+  return TRUE;
+}
+
 /*
  * Connection maintenance
  */
@@ -1579,12 +1670,11 @@ gconf_cnxn_destroy(GConfCnxn* cnxn)
 
 static void       
 gconf_cnxn_notify(GConfCnxn* cnxn,
-                  const gchar* key,
-                  GConfValue* value,
-                  gboolean is_default)
+                  GConfEntry *entry)
 {
-  (*cnxn->func)(cnxn->conf, cnxn->client_id, key, value,
-                is_default, cnxn->user_data);
+  (*cnxn->func)(cnxn->conf, cnxn->client_id,
+                entry,
+                cnxn->user_data);
 }
 
 /*
@@ -1691,6 +1781,7 @@ static void notify          (PortableServer_Servant     servant,
                              const CORBA_char          *key,
                              const ConfigValue         *value,
                              CORBA_boolean              is_default,
+                             CORBA_boolean              is_writable,
                              CORBA_Environment         *ev);
 static void ping            (PortableServer_Servant     _servant,
                              CORBA_Environment         *ev);
@@ -1719,12 +1810,14 @@ notify(PortableServer_Servant servant,
        const CORBA_char* key,
        const ConfigValue* value,
        CORBA_boolean is_default,
+       CORBA_boolean is_writable,
        CORBA_Environment *ev)
 {
   GConfCnxn* cnxn;
   GConfValue* gvalue;
   GConfEngine* conf;
-
+  GConfEntry* entry;
+  
   conf = lookup_engine_by_database (db);
 
   if (conf == NULL)
@@ -1748,10 +1841,14 @@ notify(PortableServer_Servant servant,
 
   gvalue = gconf_value_from_corba_value(value);
 
-  gconf_cnxn_notify(cnxn, key, gvalue, is_default);
+  entry = gconf_entry_new_nocopy (g_strdup (key),
+                                  gvalue);
+  entry->is_default = is_default;
+  entry->is_writable = is_writable;
+  
+  gconf_cnxn_notify(cnxn, entry);
 
-  if (gvalue != NULL)
-    gconf_value_free(gvalue);
+  gconf_entry_free (entry);
 }
 
 static void

@@ -34,9 +34,7 @@ gboolean     gconf_is_initialized  (void);
 
 typedef void (*GConfNotifyFunc) (GConfEngine* conf,
                                  guint cnxn_id,
-                                 const gchar* key,
-                                 GConfValue* value,
-                                 gboolean is_default,
+                                 GConfEntry *entry,
                                  gpointer user_data);
   
 /* Returns ID of the notification */
@@ -62,12 +60,11 @@ GConfValue* gconf_engine_get_without_default     (GConfEngine  *conf,
                                                   const gchar  *key,
                                                   GError  **err);
 
-GConfValue* gconf_engine_get_full                (GConfEngine  *conf,
-                                                  const gchar  *key,
-                                                  const gchar  *locale,
-                                                  gboolean      use_schema_default,
-                                                  gboolean     *value_is_default,
-                                                  GError  **err);
+GConfEntry* gconf_engine_get_entry                (GConfEngine  *conf,
+                                                   const gchar  *key,
+                                                   const gchar  *locale,
+                                                   gboolean      use_schema_default,
+                                                   GError  **err);
 
 
 /* Locale only matters if you are expecting to get a schema, or if you
@@ -114,6 +111,9 @@ gboolean gconf_engine_dir_exists       (GConfEngine  *conf,
                                         const gchar  *dir,
                                         GError  **err);
 
+gboolean gconf_engine_key_is_writable  (GConfEngine *conf,
+                                        const gchar *key,
+                                        GError     **err);
 
 /* if you pass non-NULL for why_invalid, it gives a user-readable
    explanation of the problem in g_malloc()'d memory
@@ -278,6 +278,15 @@ extern struct poptOption gconf_options[];
 
 void gconf_clear_cache(GConfEngine* conf, GError** err);
 void gconf_synchronous_sync(GConfEngine* conf, GError** err);
+
+GConfValue * gconf_engine_get_full (GConfEngine *conf,
+                                    const gchar *key,
+                                    const gchar *locale,
+                                    gboolean use_schema_default,
+                                    gboolean *is_default_p,
+                                    gboolean *is_writable_p,
+                                    GError **err);
+
 #endif
 
 #ifdef __cplusplus

@@ -12,9 +12,6 @@ time.
 API additions
 ==
 
-* API so clients can find out if they can write to a given key
-  (gconf_engine_key_is_writable() or the like)
-
 * Implement batch gets
 
 Other
@@ -50,6 +47,8 @@ Maybe 1.4
   on the server, at least in any sort of fast way, and 
   all other gconf-using apps will block while the server is searching,
   without some tricks to let the main loop run sometimes, so, dunno.)
+
+* Implement a way to get the GConfMetaInfo
 
 Future
 ===

@@ -27,24 +27,23 @@
 void
 key_changed_callback(GConfClient* client,
                      guint cnxn_id,
-                     const gchar* key,
-                     GConfValue* value,
-                     gboolean is_default,
+                     GConfEntry *entry,
                      gpointer user_data)
 {
   GtkWidget* label;
   
   label = GTK_WIDGET(user_data);
 
-  if (value == NULL)
+  if (entry->value == NULL)
     {
       gtk_label_set(GTK_LABEL(label), "<unset>");
     }
   else
     {
-      if (value->type == GCONF_VALUE_STRING)
+      if (entry->value->type == GCONF_VALUE_STRING)
         {
-          gtk_label_set(GTK_LABEL(label), gconf_value_get_string(value));
+          gtk_label_set(GTK_LABEL(label),
+                        gconf_value_get_string(entry->value));
         }
       else
         {

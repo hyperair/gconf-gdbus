@@ -69,7 +69,8 @@ CORBA_unsigned_long gconf_database_readd_listener   (GConfDatabase       *db,
 void                gconf_database_notify_listeners (GConfDatabase       *db,
                                                      const gchar         *key,
                                                      const ConfigValue   *value,
-                                                     gboolean             is_default);
+                                                     gboolean             is_default,
+                                                     gboolean             is_writable);
 
 
 GConfValue* gconf_database_query_value         (GConfDatabase  *db,
@@ -77,10 +78,12 @@ GConfValue* gconf_database_query_value         (GConfDatabase  *db,
                                                 const gchar   **locales,
                                                 gboolean        use_schema_default,
                                                 gboolean       *value_is_default,
+                                                gboolean       *value_is_writable,
                                                 GError    **err);
 GConfValue* gconf_database_query_default_value (GConfDatabase  *db,
                                                 const gchar    *key,
                                                 const gchar   **locales,
+                                                gboolean       *is_writable,
                                                 GError    **err);
 
 
