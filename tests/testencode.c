@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <locale.h>
 
 static void
 check(gboolean condition, const gchar* fmt, ...)

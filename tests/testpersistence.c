@@ -50,6 +50,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <locale.h>
 #include <gconf/gconf-internals.h>
 
 const char *null_safe(const char *s)
@@ -884,6 +885,8 @@ main (int argc, char** argv)
 {
   GConfEngine* conf;
   GError* err = NULL;
+
+  setlocale (LC_ALL, "");
   
   if (!gconf_init(argc, argv, &err))
     {

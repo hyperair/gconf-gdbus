@@ -31,3 +31,8 @@ libgconfbackend_bdb_la_SOURCES = bdb.c bdb.h bdb-backend.c val-encode.c val-enco
 
 libgconfbackend_bdb_la_LDFLAGS = -avoid-version -module
 libgconfbackend_bdb_la_LIBADD = $(DEPENDENT_LIBS) $(BDB_LIBS)
+
+noinst_PROGRAMS = xml-test
+
+xml_test_SOURCES= $(libgconfbackend_xml_la_SOURCES) xml-test.c
+xml_test_LDADD = $(DEPENDENT_WITH_XML_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la

@@ -161,12 +161,14 @@ struct _GConfEntry {
   gchar* schema_name;
   int pad1;
   gpointer pad2;
+  gpointer pad3;
+  GTime pad4;
   int refcount;
   guint is_default : 1;
   guint is_writable : 1;
-  guint pad3 : 1;
-  guint pad4 : 1;
   guint pad5 : 1;
+  guint pad6 : 1;
+  guint pad7 : 1;
 };
 
 #define     gconf_entry_get_key(x)         ((const gchar*)((GConfEntry*)(x))->key)

@@ -1,3 +1,31 @@
+2002-03-10  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-sources.c (gconf_sources_query_metainfo): fix
+	obnoxious typo (s/mi/this_mi/), also needed to fix bug 
+	reported by Kristian.
+
+	* backends/xml-backend.c (query_metainfo): make key relative prior
+	to looking up metainfo. Fixes bug where schema defaults would
+	mysteriously get lost in some cases, reported by Kristian
+	Rietveld.
+
+2002-03-07  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-test.c: test program for XML backend code
+
+	* configure.in: add a "minimum" debug mode and compile with it
+	by default.
+
+	* gconf/gconftool.c (main): call setlocale()
+
+	* tests/runtests.sh: run tests in various locales
+
+	* gconf/gconf-value.h: add more padding to GConfEntry
+	
+	* gconf/gconf-internals.c (gconf_CORBA_Object_equal):
+	(gconf_CORBA_Object_hash): remove stupid inlining of these
+	functions
+
 2002-02-26  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf-client.c (notify_one_entry): protect notify callback 

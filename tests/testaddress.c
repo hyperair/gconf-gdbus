@@ -49,6 +49,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <locale.h>
 #include <gconf/gconf-internals.h>
 #include <gconf/gconf-backend.h>
 

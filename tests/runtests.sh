@@ -36,17 +36,21 @@ do
     echo -n "Running test program \"$I\", please wait:"
     echo "" >> $LOGFILE
     echo "Output of $I:" >> $LOGFILE
-    if ./$I >>$LOGFILE 2>&1; then
-        echo " passed"
-    else
-        echo
-        echo
-        echo '***'
-        echo " Test failed: $I"
-        echo " See $LOGFILE for errors"
-        echo 
-        exit 1
-    fi
+    LOCALES="C en_US ja_JP ja_JP:en_US:C"
+    for L in $LOCALES
+    do
+        if LANG=$L ./$I >>$LOGFILE 2>&1; then
+            echo " passed in $L locale"
+        else
+            echo
+            echo
+            echo '***'
+            echo " Test failed: $I"
+            echo " See $LOGFILE for errors"
+            echo 
+            exit 1
+        fi
+    done
 done
 
 echo 

@@ -49,6 +49,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <locale.h>
 #include <gconf/gconf-internals.h>
 
 /* glibc printf() functions accept NULL for a %s format, but to be
@@ -784,6 +785,8 @@ main (int argc, char** argv)
 {
   GConfEngine* conf;
   GError* err = NULL;
+
+  setlocale (LC_ALL, "");
   
   if (!gconf_init(argc, argv, &err))
     {

@@ -163,7 +163,7 @@ void
 entry_set_value(Entry* e, const GConfValue* value)
 {
   g_return_if_fail(e != NULL);
-
+  
   entry_sync_if_needed(e);
   
   if (e->cached_value)
@@ -1282,3 +1282,12 @@ my_xmlGetProp(xmlNodePtr node,
     return prop;
 }
 
+void
+xml_test_entry (void)
+{
+#ifndef GCONF_DISABLE_TESTS
+  
+
+
+#endif
+}

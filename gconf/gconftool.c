@@ -28,6 +28,7 @@
 #include <libxml/globals.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <locale.h>
 
 static int set_mode = FALSE;
 static int get_mode = FALSE;
@@ -395,6 +396,8 @@ main (int argc, char** argv)
 
   LIBXML_TEST_VERSION;
   xmlKeepBlanksDefault(1);
+
+  setlocale (LC_ALL, "");
   
   ctx = poptGetContext("gconftool", argc, (const char **) argv, options, 0);
 

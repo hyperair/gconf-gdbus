@@ -62,4 +62,6 @@ void my_xmlSetProp(xmlNodePtr node,
 char* my_xmlGetProp(xmlNodePtr node,
                     const gchar* name);
 
+void xml_test_entry (void);
+
 #endif

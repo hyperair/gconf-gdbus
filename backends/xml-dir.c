@@ -1260,3 +1260,13 @@ _gconf_mode_t_to_mode(mode_t orig)
 
   return mode;
 }
+
+void
+xml_test_dir (void)
+{
+#ifndef GCONF_DISABLE_TESTS
+  
+
+
+#endif
+}

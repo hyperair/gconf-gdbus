@@ -507,3 +507,14 @@ cache_add_to_parent (Cache *cache,
 
   dir_child_added (parent, name);
 }
+
+
+void
+xml_test_cache (void)
+{
+#ifndef GCONF_DISABLE_TESTS
+  
+
+
+#endif
+}

@@ -39,4 +39,7 @@ Dir*     cache_lookup     (Cache        *cache,
                            gboolean      create_if_missing,
                            GError      **err);
 
+void xml_test_cache (void);
+
 #endif
+

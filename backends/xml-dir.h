@@ -86,4 +86,6 @@ void           dir_child_added     (Dir          *d,
 guint  _gconf_mode_t_to_mode (mode_t orig);
 gchar* _gconf_parent_dir (const gchar* dir);
 
+void xml_test_dir (void);
+
 #endif

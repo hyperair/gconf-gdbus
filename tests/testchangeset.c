@@ -46,6 +46,7 @@
 #include <gconf/gconf.h>
 #include <gconf/gconf-changeset.h>
 #include <stdio.h>
+#include <locale.h>
 #include <unistd.h>
 #include <math.h>
 
@@ -289,6 +290,8 @@ main (int argc, char** argv)
 {
   GConfEngine* conf;
   GError* err = NULL;
+
+  setlocale (LC_ALL, "");
   
   if (!gconf_init(argc, argv, &err))
     {
