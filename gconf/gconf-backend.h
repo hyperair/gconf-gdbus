@@ -24,6 +24,10 @@
 #include <gconf/gconf-internals.h>
 #include <gmodule.h>
 
+/* This vtable is more complicated than strictly necessary, hoping that
+   backends can be smart and optimize some calls
+*/
+
 typedef struct _GConfBackendVTable GConfBackendVTable;
 
 struct _GConfBackendVTable {
@@ -31,11 +35,14 @@ struct _GConfBackendVTable {
 
   GConfSource*        (* resolve_address) (const gchar* address);
 
+  /* schema_name filled if NULL or G_CONF_VALUE_IGNORE_SUBSEQUENT returned.
+     if schema_name is NULL, it isn't filled */
   GConfValue*         (* query_value)     (GConfSource* source, 
-                                           const gchar* key);
-
+                                           const gchar* key,
+                                           gchar** schema_name);
+  
   GConfMetaInfo*      (* query_metainfo)  (GConfSource* source,
-                                           const gchar* key_or_dir);
+                                           const gchar* key);
   
   void                (* set_value)       (GConfSource* source, 
                                            const gchar* key, 
@@ -45,7 +52,7 @@ struct _GConfBackendVTable {
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir);
 
-  /* Returns list of allocated strings */
+  /* Returns list of allocated strings, relative names */
   GSList*             (* all_subdirs)     (GConfSource* source,
                                            const gchar* dir);
 

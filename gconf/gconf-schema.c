@@ -107,3 +107,20 @@ g_conf_schema_set_owner(GConfSchema* sc, const gchar* owner)
     sc->owner = NULL;
 }
 
+void
+g_conf_schema_set_default_value(GConfSchema* sc, GConfValue* val)
+{
+  if (sc->default_value != NULL)
+    g_conf_value_destroy(sc->default_value);
+
+  sc->default_value = g_conf_value_copy(val);
+}
+
+void
+g_conf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val)
+{
+  if (sc->default_value != NULL)
+    g_conf_value_destroy(sc->default_value);
+
+  sc->default_value = val;
+}

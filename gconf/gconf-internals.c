@@ -152,6 +152,7 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
       break;
     case G_CONF_VALUE_LIST:
     case G_CONF_VALUE_PAIR:
+    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
     default:
       g_assert_not_reached();
       break;
@@ -290,6 +291,9 @@ g_conf_value_to_string(GConfValue* value)
     case G_CONF_VALUE_SCHEMA:
       retval = g_strdup("Schema");
       break;
+    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+      retval = g_strdup("Ignore Subsequent");
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -358,6 +362,9 @@ g_conf_value_copy(GConfValue* src)
 
       break;
 
+    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+      break;
+      
     default:
       g_assert_not_reached();
     }
@@ -656,14 +663,15 @@ g_conf_resolve_address(const gchar* address)
 
 GConfValue*   
 g_conf_source_query_value      (GConfSource* source,
-                                const gchar* key)
+                                const gchar* key,
+                                gchar** schema_name)
 {
   if (!g_conf_valid_key(key))
     {
       g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
       return NULL;
     }
-  return (*source->backend->vtable->query_value)(source, key);
+  return (*source->backend->vtable->query_value)(source, key, schema_name);
 }
 
 void          
@@ -1264,6 +1272,9 @@ g_conf_value_type_to_string(GConfValueType type)
     case G_CONF_VALUE_PAIR:
       return "pair";
       break;
+    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+      return "ignore_subseq";
+      break;
     default:
       g_assert_not_reached();
       return NULL; /* for warnings */
@@ -1288,6 +1299,8 @@ g_conf_value_type_from_string(const gchar* type_str)
     return G_CONF_VALUE_LIST;
   else if (strcmp(type_str, "pair") == 0)
     return G_CONF_VALUE_PAIR;
+  else if (strcmp(type_str, "ignore_subseq") == 0)
+    return G_CONF_VALUE_IGNORE_SUBSEQUENT;
   else
     return G_CONF_VALUE_INVALID;
 }
@@ -1371,6 +1384,7 @@ g_conf_sources_query_value (GConfSources* sources,
                             const gchar* key)
 {
   GList* tmp;
+  gchar* schema_name = NULL;
 
   tmp = sources->sources;
 
@@ -1380,7 +1394,8 @@ g_conf_sources_query_value (GConfSources* sources,
 
       g_conf_clear_error();
 
-      val = g_conf_source_query_value(tmp->data, key);
+      val = g_conf_source_query_value(tmp->data, key,
+                                      schema_name ? NULL : &schema_name); /* once we have one, no more. */
 
       if (val == NULL)
         {
@@ -1397,12 +1412,22 @@ g_conf_sources_query_value (GConfSources* sources,
               break;
             }
         }
+      else if (val->type == G_CONF_VALUE_IGNORE_SUBSEQUENT)
+        {
+          /* Bail now, instead of looking for the standard values */
+          g_conf_value_destroy(val);
+          break;
+        }
       else
         return val;
 
       tmp = g_list_next(tmp);
     }
 
+  /* FIXME look up default value in schema */
+
+  g_free(schema_name);
+  
   return NULL;
 }
 

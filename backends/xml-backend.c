@@ -244,9 +244,9 @@ static void          shutdown        (void);
 
 static GConfSource*  resolve_address (const gchar* address);
 
-static GConfValue*   query_value     (GConfSource* source, const gchar* key);
+static GConfValue*   query_value     (GConfSource* source, const gchar* key, gchar** schema_name);
 
-static GConfMetaInfo*query_metainfo  (GConfSource* source, const gchar* key_or_dir);
+static GConfMetaInfo*query_metainfo  (GConfSource* source, const gchar* key);
 
 static void          set_value       (GConfSource* source, const gchar* key, GConfValue* value);
 
@@ -330,7 +330,7 @@ resolve_address (const gchar* address)
 }
 
 static GConfValue* 
-query_value (GConfSource* source, const gchar* key)
+query_value (GConfSource* source, const gchar* key, gchar** schema_name)
 {
   XMLSource* xs = (XMLSource*)source;
   gchar* parent;
@@ -358,13 +358,26 @@ query_value (GConfSource* source, const gchar* key)
 }
 
 static GConfMetaInfo*
-query_metainfo  (GConfSource* source, const gchar* key_or_dir)
+query_metainfo  (GConfSource* source, const gchar* key)
 {
   XMLSource* xs = (XMLSource*)source;
+  gchar* parent;
+  Dir* dir;
 
-  /* FIXME */
-  
-  return NULL; /* for now */
+  parent = g_conf_key_directory(key);
+
+  if (parent != NULL)
+    {
+      dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent);
+      g_free(parent);
+      parent = NULL;
+      
+      if (dir != NULL)
+        return dir_get_metainfo(dir, key);
+    }
+
+  /* No metainfo found */
+  return NULL;
 }
 
 static void          
@@ -1925,6 +1938,12 @@ xentry_extract_value(xmlNodePtr node)
         return value;
       }
       break;
+    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+      {
+        value = g_conf_value_new(type);
+        return value;
+      }
+      break;
     case G_CONF_VALUE_SCHEMA:
       {
         gchar* sd_str;
@@ -2156,6 +2175,9 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
 
   switch (value->type)
     {
+    case G_CONF_VALUE_IGNORE_SUBSEQUENT:
+      break;
+
     case G_CONF_VALUE_INT:
     case G_CONF_VALUE_FLOAT:
     case G_CONF_VALUE_BOOL:

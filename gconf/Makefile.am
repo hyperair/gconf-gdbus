@@ -14,7 +14,8 @@ gconfinclude_HEADERS =     \
         GConf.h            \
 	gconf.h            \
 	gconf-orbit.h      \
-	gconf-schema.h 
+	gconf-schema.h 	   \
+	gconf-value.h
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 

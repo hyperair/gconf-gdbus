@@ -46,7 +46,8 @@ typedef enum {
 
 GConfSource*  g_conf_resolve_address         (const gchar* address);
 GConfValue*   g_conf_source_query_value      (GConfSource* source,
-                                              const gchar* key);
+                                              const gchar* key,
+                                              gchar** schema_name);
 void          g_conf_source_set_value        (GConfSource* source,
                                               const gchar* key,
                                               GConfValue* value);
