@@ -115,9 +115,10 @@ void        g_conf_value_set_list_type(GConfValue* value,
                                        GConfValueType type);
 void        g_conf_value_set_list_nocopy(GConfValue* value,
                                          GSList* list);
+void        g_conf_value_set_list       (GConfValue* value,
+                                         GSList* list);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
-
 
 /* Meta-information about a key. Not the same as a schema; a schema
  * is normative, this is descriptive.

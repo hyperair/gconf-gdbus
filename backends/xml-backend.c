@@ -244,7 +244,7 @@ static void       xs_destroy   (XMLSource* source);
  * VTable functions
  */
 
-static void          shutdown        (void);
+static void          x_shutdown        (void); /* shutdown() is a BSD libc function */
 
 static GConfSource*  resolve_address (const gchar* address);
 
@@ -275,7 +275,7 @@ static gboolean      sync_all        (GConfSource* source);
 static void          destroy_source  (GConfSource* source);
 
 static GConfBackendVTable xml_vtable = {
-  shutdown,
+  x_shutdown,
   resolve_address,
   query_value,
   query_metainfo,
@@ -291,7 +291,7 @@ static GConfBackendVTable xml_vtable = {
 };
 
 static void          
-shutdown (void)
+x_shutdown (void)
 {
   g_conf_log(GCL_INFO, _("Unloading XML backend module."));
 }
@@ -969,7 +969,7 @@ struct _Entry {
 Entry* entry_new     (void);
 void   entry_destroy (Entry* e);
 void   entry_sync    (Entry* e); /* syncs to the node */
-void   entry_fill    (Entry* e); /* syncs Entry from node */
+void   entry_fill    (Entry* e, const gchar* name); /* syncs Entry from node */
 
 /* xml manipulation */
 
@@ -1777,10 +1777,9 @@ dir_fill_cache_from_doc(Dir* d)
                   Entry* e;
                   e = entry_new();
 
-                  e->name = g_strdup(attr);
                   e->node = node;
-
-                  entry_fill(e);
+                  
+                  entry_fill(e, attr);
 
                   safe_g_hash_table_insert(d->entry_cache, e->name, e);
                 }
@@ -1845,9 +1844,15 @@ entry_new     (void)
 void
 entry_destroy (Entry* e)
 {
-  g_free(e->name);
+  if (e->name)
+    g_free(e->name);
+
   if (e->value)
     g_conf_value_destroy(e->value);
+
+  if (e->mod_user)
+    g_free(e->mod_user);
+  
   g_free(e);
 }
 
@@ -1887,19 +1892,30 @@ entry_sync    (Entry* e)
 }
 
 void
-entry_fill    (Entry* e)
+entry_fill    (Entry* e, const gchar* name)
 {
   gchar* tmp;
 
   g_return_if_fail(e->node != NULL);
-  
-  tmp = xmlGetProp(e->node, "name");
 
-  if (tmp != NULL)
+  if (e->name != NULL)
     {
-      e->name = g_strdup(tmp);
-      free(tmp);
+      g_free(e->name);
+      e->name = NULL;
     }
+  
+  if (name == NULL)
+    {
+      tmp = xmlGetProp(e->node, "name");
+      
+      if (tmp != NULL)
+        {
+          e->name = g_strdup(tmp);
+          free(tmp);
+        }
+    }
+  else
+    e->name = g_strdup(name);
   
   tmp = xmlGetProp(e->node, "schema");
   

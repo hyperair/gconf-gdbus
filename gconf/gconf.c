@@ -379,7 +379,7 @@ g_conf_get(GConfEngine* conf, const gchar* key, GConfError** err)
     }
 }
 
-void
+gboolean
 g_conf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
@@ -387,17 +387,17 @@ g_conf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** 
   CORBA_Environment ev;
   ConfigServer cs;
 
-  g_return_if_fail(value->type != G_CONF_VALUE_INVALID);
+  g_return_val_if_fail(value->type != G_CONF_VALUE_INVALID, FALSE);
 
   if (!g_conf_key_check(key, err))
-    return;
+    return FALSE;
 
   cs = g_conf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)));
-      return;
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), FALSE);
+      return FALSE;
     }
 
   cv = corba_value_from_g_conf_value(value);
@@ -413,10 +413,15 @@ g_conf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** 
   if (g_conf_handle_corba_exception(&ev, err))
     {
       /* FIXME we could do better here... maybe respawn the server if needed... */
+      return FALSE;
     }
+
+  g_return_val_if_fail(*err == NULL, FALSE);
+  
+  return TRUE;
 }
 
-void         
+gboolean
 g_conf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
@@ -424,14 +429,14 @@ g_conf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
   ConfigServer cs;
 
   if (!g_conf_key_check(key, err))
-    return;
+    return FALSE;
 
   cs = g_conf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)));
-      return;
+      g_return_val_if_fail(((err == NULL) || ((*err)->num == G_CONF_NO_SERVER)), FALSE);
+      return FALSE;
     }
 
   CORBA_exception_init(&ev);
@@ -443,7 +448,12 @@ g_conf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
   if (g_conf_handle_corba_exception(&ev, err))
     {
       /* FIXME we could do better here... maybe respawn the server if needed... */
+      return FALSE;
     }
+
+  g_return_val_if_fail(*err == NULL, FALSE);
+  
+  return TRUE;
 }
 
 GSList*      

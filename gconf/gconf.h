@@ -51,10 +51,10 @@ void         g_conf_notify_remove  (GConfEngine* conf,
 /* Low-level interfaces */
 GConfValue*  g_conf_get            (GConfEngine* conf, const gchar* key, GConfError** err);
 
-void         g_conf_set            (GConfEngine* conf, const gchar* key,
-                                    GConfValue* value, GConfError** err);
+gboolean     g_conf_set            (GConfEngine* conf, const gchar* key,
+                                        GConfValue* value, GConfError** err);
 
-void         g_conf_unset          (GConfEngine* conf, const gchar* key, GConfError** err);
+gboolean     g_conf_unset          (GConfEngine* conf, const gchar* key, GConfError** err);
 
 GSList*      g_conf_all_entries    (GConfEngine* conf, const gchar* dir, GConfError** err);
 

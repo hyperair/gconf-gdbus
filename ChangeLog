@@ -1,3 +1,48 @@
+1999-10-04  Havoc Pennington  <hp@pobox.com>
+
+	* tests/testgconf.c (main): Add checks for getting/setting lists,
+	bools, floats, and ints
+
+	* gconf/gconf-internals.c (fill_corba_value_from_g_conf_value): We
+	have to set the release flag on a sequence inside a union, since
+	the sequence isn't default initialized as it normally would be.
+	Plugs a big memory leak (all sequence buffers).
+
+	* backends/xml-backend.c (dir_fill_cache_from_doc): Plug a leak
+	where we set entry->name and then reset it in entry_fill()
+	(entry_destroy): Free entry->mod_user
+	(x_shutdown): Renamed shutdown() to x_shutdown() to avoid
+	namespace clash with some libcs. Bug report from Bjorn Andersson
+	<ban@lifix.fi>.
+
+	* gconf/gconf-internals.c (g_conf_log): Plug memory leak (not
+	freeing log string)
+
+	* gconf/gconfd.c (gconfd_set): Plug memory leak (not freeing the GConfValue)
+
+	* tests/Makefile.am: Make testgconf noinst
+
+	* gconf/gconfd.c (main): check GCONFD_NO_DAEMON environment
+	variable to run in no-daemon mode for debugging. Needless to say 
+	this does NOT work if you are trying to use gconf for real.
+
+	* gconf/gconf-internals.c (fill_corba_value_from_g_conf_value):
+	Fill in the list type in the CORBA value
+	(g_conf_value_from_corba_value): Fill in the list type in the 
+	GConfValue
+
+	* gconf/GConf.idl: Create ConfigList type to past the list type 
+	along with the sequence of values
+
+	* gconf/gconf-value.c (g_conf_value_set_list): New function, list
+	setter that copies the list
+
+	* gconf/gconf.c (g_conf_unset, g_conf_set): return boolean to
+	indicate success
+
+	* gconf/gconf-value.c (g_conf_value_new_from_string): Rewrite the
+	bool string parser with switch, accept y/n as values.
+
 1999-10-01  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-sources.c (g_conf_sources_query_value): Check for 

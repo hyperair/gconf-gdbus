@@ -134,19 +134,33 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str,
       g_conf_value_set_string(value, value_str);
       break;
     case G_CONF_VALUE_BOOL:
-      if (*value_str == 't' || *value_str == 'T' || *value_str == '1')
-        g_conf_value_set_bool(value, TRUE);
-      else if (*value_str == 'f' || *value_str == 'F' || *value_str == '0')
-        g_conf_value_set_bool(value, FALSE);
-      else
+      switch (*value_str)
         {
+        case 't':
+        case 'T':
+        case '1':
+        case 'y':
+        case 'Y':
+          g_conf_value_set_bool(value, TRUE);
+          break;
+
+        case 'f':
+        case 'F':
+        case '0':
+        case 'n':
+        case 'N':
+          g_conf_value_set_bool(value, FALSE);
+          break;
+          
+        default:
           if (err)
             *err = g_conf_error_new(G_CONF_PARSE_ERROR,
                                     _("Didn't understand `%s' (expected true or false)"),
                                     value_str);
-
+          
           g_conf_value_destroy(value);
           value = NULL;
+          break;
         }
       break;
     case G_CONF_VALUE_LIST:
@@ -301,6 +315,24 @@ g_conf_value_to_string(GConfValue* value)
   return retval;
 }
 
+static GSList*
+copy_value_list(GSList* list)
+{
+  GSList* copy = NULL;
+  GSList* tmp = list;
+  
+  while (tmp != NULL)
+    {
+      copy = g_slist_prepend(copy, g_conf_value_copy(tmp->data));
+      
+      tmp = g_slist_next(tmp);
+    }
+  
+  copy = g_slist_reverse(copy);
+
+  return copy;
+}
+
 GConfValue* 
 g_conf_value_copy(GConfValue* src)
 {
@@ -330,17 +362,9 @@ g_conf_value_copy(GConfValue* src)
       
     case G_CONF_VALUE_LIST:
       {
-        GSList* copy = NULL;
-        GSList* tmp = src->d.list_data.list;
+        GSList* copy;
 
-        while (tmp != NULL)
-          {
-            copy = g_slist_prepend(copy, g_conf_value_copy(tmp->data));
-
-            tmp = g_slist_next(tmp);
-          }
-        
-        copy = g_slist_reverse(copy);
+        copy = copy_value_list(src->d.list_data.list);
 
         dest->d.list_data.list = copy;
         dest->d.list_data.type = src->d.list_data.type;
@@ -376,7 +400,7 @@ g_conf_value_free_list(GConfValue* value)
 {
   GSList* tmp;
   g_return_if_fail(value != NULL);
-  g_return_if_fail(value->type != G_CONF_VALUE_LIST);
+  g_return_if_fail(value->type == G_CONF_VALUE_LIST);
   
   tmp = value->d.list_data.list;
 
@@ -554,6 +578,23 @@ g_conf_value_set_list_nocopy(GConfValue* value,
     g_conf_value_free_list(value);
 
   value->d.list_data.list = list;
+}
+
+void
+g_conf_value_set_list       (GConfValue* value,
+                             GSList* list)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_LIST);
+  g_return_if_fail(value->d.list_data.type != G_CONF_VALUE_INVALID);
+  g_return_if_fail((list == NULL) ||
+                   ((list->data != NULL) &&
+                    (((GConfValue*)list->data)->type == value->d.list_data.type)));
+  
+  if (value->d.list_data.list)
+    g_conf_value_free_list(value);
+
+  value->d.list_data.list = copy_value_list(list);
 }
 
 /*

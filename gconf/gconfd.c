@@ -367,6 +367,8 @@ gconfd_set(PortableServer_Servant servant,
   context_set(gcc, key, val, value);
 
   g_conf_set_exception(ev);
+
+  g_conf_value_destroy(val);
 }
 
 static void 
@@ -679,11 +681,9 @@ g_conf_server_write_info_file(const gchar* ior)
               g_free(dir);
               return FALSE;
             }
-          else
-            {
-              g_free(dir);
-            }
         }
+      
+      g_free(dir);
     }
 
   /* Can't O_TRUNC until we have the silly lock */
@@ -824,25 +824,36 @@ main(int argc, char** argv)
   const gchar* username;
   guint len;
   GConfError* err = NULL;
+  gchar* nodaemon_var;
+  gboolean nodaemon = FALSE;
   
   int launcher_fd = -1; /* FD passed from the client that spawned us */
 
-  /* Following all Stevens' rules for daemons */
-  
-  switch (fork())
+  nodaemon_var = g_getenv("GCONFD_NO_DAEMON");
+
+  if (nodaemon_var && strcmp(nodaemon_var, "1") == 0)
+    nodaemon = TRUE;
+
+  if (!nodaemon)
     {
-    case -1:
-      fprintf(stderr, _("Failed to fork gconfd"));
-      exit(1);
-      break;
-    case 0:
-      break;
-    default:
-      exit(0);
-      break;
+      /* Following all Stevens' rules for daemons, unless the GCONFD_NO_DAEMON env variable
+         is set to 1 */
+      
+      switch (fork())
+        {
+        case -1:
+          fprintf(stderr, _("Failed to fork gconfd"));
+          exit(1);
+          break;
+        case 0:
+          break;
+        default:
+          exit(0);
+          break;
+        }
+
+      setsid();
     }
-  
-  setsid();
 
   chdir ("/");
 
@@ -861,6 +872,9 @@ main(int argc, char** argv)
   g_conf_log(GCL_INFO, _("starting, pid %u user `%s'"), 
              (guint)getpid(), g_get_user_name());
 
+  if (nodaemon)
+    g_conf_log(GCL_INFO, _("starting in debug (no daemon) mode"));
+  
   /* Session setup */
   sigemptyset (&empty_mask);
   act.sa_handler = signal_handler;
@@ -906,6 +920,9 @@ main(int argc, char** argv)
       launcher_fd = atoi(argv[1]);
 
       g_conf_log(GCL_DEBUG, _("Will notify launcher client on fd %d"), launcher_fd);
+
+      if (nodaemon)
+        g_conf_log(GCL_WARNING, _("GCONFD_NO_DAEMON environment variable is set to 1, but we are being launched as if from a GConf client"));
     }
 
   init_contexts();

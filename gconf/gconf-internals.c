@@ -260,7 +260,30 @@ g_conf_value_from_corba_value(const ConfigValue* value)
       {
         GSList* list = NULL;
         guint i = 0;
-        while (i < value->_u.list_value._length)
+        
+        switch (value->_u.list_value.list_type)
+          {
+          case BIntVal:
+            g_conf_value_set_list_type(gval, G_CONF_VALUE_INT);
+            break;
+          case BBoolVal:
+            g_conf_value_set_list_type(gval, G_CONF_VALUE_BOOL);
+            break;
+          case BFloatVal:
+            g_conf_value_set_list_type(gval, G_CONF_VALUE_FLOAT);
+            break;
+          case BStringVal:
+            g_conf_value_set_list_type(gval, G_CONF_VALUE_STRING);
+            break;
+          case BInvalidVal:
+            break;
+          default:
+            g_warning("Bizarre list type in %s", __FUNCTION__);
+            break;
+          }
+
+        i = 0;
+        while (i < value->_u.list_value.seq._length)
           {
             GConfValue* val;
 
@@ -269,27 +292,30 @@ g_conf_value_from_corba_value(const ConfigValue* value)
                the CORBA and C specs kick in, not sure we are guaranteed
                to be able to do this.
             */
-            val = g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value._buffer[i]);
+            val = g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[i]);
 
-            list = g_slist_prepend(list, val);
+            if (val->type != g_conf_value_list_type(gval))
+              g_warning("Incorrect type for list element in %s", __FUNCTION__);
+            else
+              list = g_slist_prepend(list, val);
 
             ++i;
           }
         
         list = g_slist_reverse(list);
-
+            
         g_conf_value_set_list_nocopy(gval, list);
       }
       break;
     case G_CONF_VALUE_PAIR:
       {
         g_return_val_if_fail(value->_u.pair_value._length == 2, gval);
-
+        
         g_conf_value_set_car_nocopy(gval,
-                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value._buffer[0]));
+                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[0]));
 
         g_conf_value_set_cdr_nocopy(gval,
-                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value._buffer[1]));
+                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[1]));
       }
       break;
     default:
@@ -344,17 +370,46 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
 
         n = g_slist_length(list);
 
-        cv->_u.list_value._buffer =
+        cv->_u.list_value.seq._buffer =
           CORBA_sequence_ConfigBasicValue_allocbuf(n);
-        cv->_u.list_value._length = n;
-        cv->_u.list_value._maximum = n;
+        cv->_u.list_value.seq._length = n;
+        cv->_u.list_value.seq._maximum = n;
+        CORBA_sequence_set_release(&cv->_u.list_value.seq, TRUE);
+        
+        switch (g_conf_value_list_type(value))
+          {
+          case G_CONF_VALUE_INT:
+            cv->_u.list_value.list_type = BIntVal;
+            break;
 
+          case G_CONF_VALUE_BOOL:
+            cv->_u.list_value.list_type = BBoolVal;
+            break;
+            
+          case G_CONF_VALUE_STRING:
+            cv->_u.list_value.list_type = BStringVal;
+            break;
+
+          case G_CONF_VALUE_FLOAT:
+            cv->_u.list_value.list_type = BFloatVal;
+            break;
+
+          case G_CONF_VALUE_SCHEMA:
+            cv->_u.list_value.list_type = BSchemaVal;
+            break;
+            
+          default:
+            cv->_u.list_value.list_type = BInvalidVal;
+            g_warning("Invalid list type in %s", __FUNCTION__);
+            break;
+          }
+        
         i= 0;
         while (list != NULL)
           {
             /* That dubious ConfigBasicValue->ConfigValue cast again */
             fill_corba_value_from_g_conf_value((GConfValue*)list->data,
-                                               (ConfigValue*)&cv->_u.list_value._buffer[i]);
+                                               (ConfigValue*)&cv->_u.list_value.seq._buffer[i]);
 
             list = g_slist_next(list);
             ++i;
@@ -369,7 +424,8 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
           CORBA_sequence_ConfigBasicValue_allocbuf(2);
         cv->_u.pair_value._length = 2;
         cv->_u.pair_value._maximum = 2;
-
+        CORBA_sequence_set_release(&cv->_u.pair_value, TRUE);
+        
         /* dubious cast */
         fill_corba_value_from_g_conf_value(g_conf_value_car(value),
                                            (ConfigValue*)&cv->_u.pair_value._buffer[0]);
@@ -943,4 +999,6 @@ g_conf_log(GConfLogPriority pri, const gchar* fmt, ...)
     }
 
   syslog(syslog_pri, msg);
+
+  g_free(msg);
 }
