@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <liboaf/liboaf.h>
 #include <time.h>
+#include <stdlib.h>
 
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG
@@ -209,9 +210,6 @@ impl_ConfigDatabase_batch_lookup(PortableServer_Servant servant,
 {
   if (gconfd_check_in_shutdown (ev))
     return;
-    
-
-
 }
 
 static void
@@ -297,8 +295,6 @@ impl_ConfigDatabase_batch_change (PortableServer_Servant servant,
 {
   if (gconfd_check_in_shutdown (ev))
     return;
-
-
 }
 
 static CORBA_boolean
@@ -810,6 +806,8 @@ gconf_database_readd_listener   (GConfDatabase       *db,
 {
   Listener* l;
   guint cnxn;
+
+  gconfd_need_log_cleanup ();
   
   g_assert(db->listeners != NULL);
 
@@ -833,6 +831,8 @@ gconf_database_add_listener    (GConfDatabase       *db,
   GError *err;
   CORBA_unsigned_long cnxn;
 
+  gconfd_need_log_cleanup ();
+  
   cnxn = gconf_database_readd_listener (db, who, where);
   
   err = NULL;
@@ -857,6 +857,8 @@ gconf_database_remove_listener (GConfDatabase       *db,
   Listener *l = NULL;
   GError *err;
   const gchar *location = NULL;
+
+  gconfd_need_log_cleanup ();
   
   g_assert(db->listeners != NULL);
   
@@ -941,7 +943,7 @@ gconf_database_notify_listeners (GConfDatabase       *db,
 {
   ListenerNotifyClosure closure;
   GSList* tmp;
-
+  
   g_return_if_fail(db != NULL);
 
   closure.db = db;
@@ -956,10 +958,13 @@ gconf_database_notify_listeners (GConfDatabase       *db,
 
   tmp = closure.dead;
 
+  if (tmp)
+    gconfd_need_log_cleanup ();
+  
   while (tmp != NULL)
     {
       guint dead = GPOINTER_TO_UINT(tmp->data);
-
+      
       gconf_listeners_remove(db->listeners, dead);
 
       tmp = g_slist_next(tmp);
@@ -976,7 +981,7 @@ gconf_database_query_value (GConfDatabase  *db,
                             GError    **err)
 {
   GConfValue* val;
-
+  
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   g_assert(db->listeners != NULL);
   
@@ -1002,7 +1007,7 @@ gconf_database_query_default_value (GConfDatabase  *db,
                                     const gchar   **locales,
                                     gboolean       *is_writable,
                                     GError    **err)
-{
+{  
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   g_assert(db->listeners != NULL);
   
@@ -1130,6 +1135,7 @@ gconf_database_dir_exists  (GConfDatabase  *db,
                             GError    **err)
 {
   gboolean ret;
+  
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   g_assert(db->listeners != NULL);
@@ -1154,7 +1160,7 @@ void
 gconf_database_remove_dir  (GConfDatabase  *db,
                             const gchar    *dir,
                             GError    **err)
-{
+{  
   g_return_if_fail(err == NULL || *err == NULL);
   g_assert(db->listeners != NULL);
   
@@ -1182,6 +1188,7 @@ gconf_database_all_entries (GConfDatabase  *db,
                             GError    **err)
 {
   GSList* entries;
+  
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   
   g_assert(db->listeners != NULL);
@@ -1205,7 +1212,7 @@ gconf_database_all_dirs (GConfDatabase  *db,
                          GError    **err)
 {
   GSList* subdirs;
-
+  
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   
   g_assert(db->listeners != NULL);
@@ -1264,7 +1271,7 @@ gconf_database_sync (GConfDatabase  *db,
 gboolean
 gconf_database_synchronous_sync (GConfDatabase  *db,
                                  GError    **err)
-{
+{  
   /* remove the scheduled syncs */
   if (db->sync_timeout != 0)
     {

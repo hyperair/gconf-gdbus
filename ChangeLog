@@ -1,3 +1,15 @@
+2001-03-06  Havoc Pennington  <hp@redhat.com>
+
+        Merge from stable.
+	
+	* gconf/gconfd.c (gconf_main): change the periodic timeout to 15
+	minutes, to be a bit more aggressive about cleanup.
+	(open_append_handle): add a timeout to close the 
+	saved_state filehandle after a short time, to avoid keeping
+	descriptors open.
+	(gconfd_need_log_cleanup): new internal function used to control 
+	whether the periodic cleanup function needs to save a log file
+
 2001-02-27  Havoc Pennington  <hp@redhat.com>
 
 	* gconf.spec.in: %define prefix %{_prefix} instead of @prefix@
