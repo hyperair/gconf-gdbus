@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-02-28 22:12+0100\n"
+"POT-Creation-Date: 2002-03-08 02:42+0100\n"
 "PO-Revision-Date: 2001-02-12 20:02+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -343,6 +343,7 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "Nisem uspel uskladiti enega ali več virov: %s"
 
 #: gconf/gconf-database.c:1078
+#, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
@@ -705,6 +706,52 @@ msgstr ""
 "NFS zastarele ključavnice. Če ste prepričani, da nobenem računalniku, ki "
 "uporablja vaš domač imenik ne teče gconfd, poskusite odstraniti datoteke ~/."
 "gconf/*.lock in ~/.gconfd/lock"
+
+#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:71
+msgid "Help options"
+msgstr "Možnosti pomoči"
+
+#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:408
+#, c-format
+msgid ""
+"Error on option %s: %s.\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"Napaka ob možnosti %s: %s.\n"
+" Poženite '%s --help', če želite videti popoln seznam možnosti ukazne "
+"vrstice.\n"
+
+#: gconf/gconf-sanity-check.c:131
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Za rešitev sledečega problema stopite v stik z administratorjem sistema:\n"
+"Ne morem odpreti ali ustvariti datoteke \"%s\"; to kaže, da je verjetno "
+"problem v vaših nastavitvah, saj veliko programov potrebuje ustvarjanje "
+"datotek v vašem domačem imeniku. Napaka je bila \"%s\" (errno = % d)."
+
+#: gconf/gconf-sanity-check.c:143
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See "
+"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Za rešitev sledečega problema stopite v stik z administratorjem sistema:\n"
+"Nisem mogel zakleniti datoteke \"%s\"; to kaže, da je morda problem z nastavitvami "
+"vašega operacijskega sistema. Če imate domač imenik priklopljen z NFS, "
+"sta lahko ali odjemalec ali strežnik narobe nastavljena. Poglejte "
+"dokumentacijo za rpc.statd in rpc.lockd. Napaka je bila \"%s\" (errno = %d)."
+
+#: gconf/gconf-sanity-check.c:159
+msgid "Can't remove file %s: %s\n"
+msgstr "Ne morem odstraniti datoteke %s: %s\n"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
@@ -1188,7 +1235,9 @@ msgstr "Nek odjemalec se je odstranil z GConf strežnika, čeprav ni bil dodan."
 #. dialog display isn't working out
 #: gconf/gconfd.c:2303
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr "Zgodilo se je več segmentacijskih napak; ne morem prikazati dialoga z napako\n"
+msgstr ""
+"Zgodilo se je več segmentacijskih napak; ne morem prikazati dialoga z "
+"napako\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2312
@@ -1198,10 +1247,6 @@ msgid ""
 msgstr ""
 "Segmentacijska napaka!\n"
 "Ne morem prikazati dialoga z napako\n"
-
-#: gconf/gconftool.c:71
-msgid "Help options"
-msgstr "Možnosti pomoči"
 
 #: gconf/gconftool.c:80
 msgid "Set a key to a value and sync. Use with --type."
@@ -1396,16 +1441,6 @@ msgstr "Odstrani vsako ime sheme ki je uveljavljena na danih ključih"
 #: gconf/gconftool.c:351
 msgid "Get the name of the default source"
 msgstr "Dobi ime prvizetega vira"
-
-#: gconf/gconftool.c:408
-#, c-format
-msgid ""
-"Error on option %s: %s.\n"
-"Run '%s --help' to see a full list of available command line options.\n"
-msgstr ""
-"Napaka ob možnosti %s: %s.\n"
-" Poženite '%s --help', če želite videti popoln seznam možnosti ukazne "
-"vrstice.\n"
 
 #: gconf/gconftool.c:420
 msgid "Can't get and set/unset simultaneously\n"
