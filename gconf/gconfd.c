@@ -2241,16 +2241,24 @@ drop_old_clients (void)
       while (tmp != NULL)
         {
           ConfigListener cl = tmp->data;
+          CORBA_boolean result;
           
           ConfigListener_ping (cl, &ev);
 
+          result = CORBA_Object_non_existent (cl, &ev);
+          
           if (ev._major != CORBA_NO_EXCEPTION)
             {
-              gconf_log (GCL_DEBUG, "Removing stale client");
+              gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_existant(), assuming stale listener");
+              CORBA_exception_free (&ev);
+              result = TRUE;
+            }
+
+          if (result)
+            {
+              gconf_log (GCL_DEBUG, "removing stale listener in drop_old_clients");
               
               remove_client (cl);
-              
-              CORBA_exception_free (&ev);
             }
           
           tmp = g_slist_next (tmp);

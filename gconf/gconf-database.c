@@ -853,22 +853,26 @@ client_alive_predicate (const gchar* location,
 {
   Listener *l = listener_data;
   CORBA_Environment ev;
-
+  CORBA_boolean result;
+  
   CORBA_exception_init (&ev);
   
-  ConfigListener_ping (l->obj, &ev);
+  result = CORBA_Object_non_existent (l->obj, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
-      gconf_log (GCL_DEBUG, "Removing stale listener %u, client not alive",
+      gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_existant(), assuming stale listener %u",
                  cnxn_id);
       
       CORBA_exception_free (&ev);
 
-      return TRUE;
+      result = TRUE;
     }
-  else
-    return FALSE;
+
+  if (result)
+    gconf_log (GCL_DEBUG, "Dropping dead listener %u, appears to be nonexistent", cnxn_id);
+  
+  return !result; /* not nonexistent */
 }
 
 void

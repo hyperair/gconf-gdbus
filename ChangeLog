@@ -1,5 +1,13 @@
 2001-12-11  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconfd.c (drop_old_clients): use
+	CORBA_Object_non_existent() instead of ConfigListener_ping
+
+	* gconf/gconf-database.c (client_alive_predicate): use
+	CORBA_Object_non_existent() instead of ConfigListener_ping
+
+2001-12-11  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconf.c (gconf_engine_get_default): change to not start
 	gconfd immediately, so we can avoid starting it if 
 	we're just going to shut it down, and just generally do 
