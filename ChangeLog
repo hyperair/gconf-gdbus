@@ -1,5 +1,47 @@
 2002-06-02  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconftool.c: add --version argument, #79555, involves a
+	help string but it should be OK if this string isn't translated.
+
+	* gconf/gconf-client.c (gconf_client_get): add some
+	g_return_if_fail, #74984
+	(gconf_client_key_is_writable): handle NULL entry,
+	#75503
+
+	* gconf/gconfd.c (gconf_handle_segv): disable bug-buddy for now,
+	too much recursion danger.
+
+	* gconf/gconf-internals.c, gconf/gconfd.c: replace isspace() with
+	g_ascii_isspace, bug #70945
+
+	* gconf/gconf-value.c (gconf_value_new): init i18n here
+
+	* gconf/gconf.c (gconf_engine_blank): init i18n here
+
+	* gconf/gconftool.c (main): init i18n here, call textdomain
+
+	* gconf/gconfd.c (main): init i18n here, and call setlocale and
+	textdomain
+
+	* gconf/gconf-internals.c (_gconf_init_i18n): function to call
+	from various places
+	(gconf_orb_get): init i18n here
+
+	* configure.in: require ORBit 2.4.0, linc 0.5.0, 
+
+	bump version to 1.1.11
+
+	fix setting of gconflocaledir (there was a typo, 
+	gtklocaledir instead of gconflocaledir)
+
+	check for bind_textdomain_codeset
+
+	* backends/Makefile.am (noinst_LTLIBRARIES): make markup lib
+	noinst for now, until we merge back the gconf-markup-hacking
+	branch post-string-freeze
+
+2002-06-02  Havoc Pennington  <hp@pobox.com>
+
 	* backends/xml-cache.c (cache_sync): avoid zombie directory cruft by 
 	aggressively redoing the resync anytime we delete a subdir, which
 	might enable a parent dir to also be deleted.

@@ -696,7 +696,7 @@ unquote_string(gchar* s)
   gchar* end;
 
   /* Strip whitespace and first quote from front of string */
-  while (*s && (isspace(*s) || (*s == '"')))
+  while (*s && (g_ascii_isspace(*s) || (*s == '"')))
     ++s;
 
   end = s;
@@ -706,7 +706,7 @@ unquote_string(gchar* s)
   --end; /* one back from '\0' */
 
   /* Strip whitespace and last quote from end of string */
-  while ((end > s) && (isspace(*end) || (*end == '"')))
+  while ((end > s) && (g_ascii_isspace(*end) || (*end == '"')))
     {
       *end = '\0';
       --end;
@@ -845,7 +845,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
     {
       gchar* s = buf;
       
-      while (*s && isspace(*s))
+      while (*s && g_ascii_isspace(*s))
         ++s;
 
       if (*s == '#')
@@ -863,7 +863,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
           gchar *varsubst;
           
           s += 7;
-          while (isspace(*s))
+          while (g_ascii_isspace(*s))
             s++;
           unq = unquote_string(s);
 
@@ -2710,6 +2710,8 @@ gconf_orb_get (void)
       CORBA_Environment ev;
       int argc = 1;
       char *argv[] = { "gconf", NULL };
+
+      _gconf_init_i18n ();
       
       CORBA_exception_init (&ev);
       
@@ -2942,7 +2944,17 @@ gconf_CORBA_Object_hash (gconstpointer key)
   return retval;
 }
 
+void
+_gconf_init_i18n (void)
+{
+  static gboolean done = FALSE;
 
-
-
-
+  if (!done)
+    {
+      bindtextdomain (GETTEXT_PACKAGE, GCONF_LOCALE_DIR);
+#ifdef HAVE_BIND_TEXTDOMAIN_CODESET
+      bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+#endif
+      done = TRUE;
+    }
+}

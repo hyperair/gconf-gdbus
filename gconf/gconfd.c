@@ -479,6 +479,10 @@ main(int argc, char** argv)
   char *gconfd_dir;
   int dev_null_fd;
   int write_byte_fd;
+
+  _gconf_init_i18n ();
+  setlocale (LC_ALL, "");
+  textdomain (GETTEXT_PACKAGE);
   
   /* Now this is an argument parser */
   if (argc > 1)
@@ -1411,7 +1415,7 @@ parse_listener_entry (GHashTable *entries,
       return FALSE;
     }
   
-  while (*p && isspace (*p))
+  while (*p && g_ascii_isspace (*p))
     ++p;
 
   errno = 0;
@@ -1434,7 +1438,7 @@ parse_listener_entry (GHashTable *entries,
   
   p = end;
 
-  while (*p && isspace (*p))
+  while (*p && g_ascii_isspace (*p))
     ++p;
 
   err = NULL;
@@ -1454,7 +1458,7 @@ parse_listener_entry (GHashTable *entries,
   address = p;
   p = end;
 
-  while (*p && isspace (*p))
+  while (*p && g_ascii_isspace (*p))
     ++p;
   
   err = NULL;
@@ -1474,7 +1478,7 @@ parse_listener_entry (GHashTable *entries,
   location = p;
   p = end;
 
-  while (*p && isspace (*p))
+  while (*p && g_ascii_isspace (*p))
     ++p;
   
   err = NULL;
@@ -1578,7 +1582,7 @@ parse_client_entry (GHashTable *clients,
       return FALSE;
     }
   
-  while (*p && isspace (*p))
+  while (*p && g_ascii_isspace (*p))
     ++p;
   
   err = NULL;
@@ -2298,7 +2302,9 @@ gconf_handle_segv (int signum)
 {
   static int in_segv = 0;
   pid_t pid;
-	
+
+  return;
+  
   in_segv++;
 
   if (in_segv > 2)

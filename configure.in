@@ -4,7 +4,7 @@ AC_INIT(gconf/gconf.h)
 
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(GConf, 1.1.10)
+AM_INIT_AUTOMAKE(GConf, 1.1.11)
 
 AM_MAINTAINER_MODE
 
@@ -168,7 +168,7 @@ AM_CONDITIONAL(ENABLE_GTK_DOC, test x$enable_gtk_doc = xyes)
 
 
 
-PKGCONFIG_MODULES='gmodule-2.0 >= 2.0.1 gobject-2.0 >= 2.0.1 ORBit-2.0 >= 2.3.106 linc >= 0.1.20'
+PKGCONFIG_MODULES='gmodule-2.0 >= 2.0.1 gobject-2.0 >= 2.0.1 ORBit-2.0 >= 2.4.0 linc >= 0.5.0'
 PKGCONFIG_MODULES_WITH_XML="$PKGCONFIG_MODULES libxml-2.0"
 PKGCONFIG_MODULES_WITH_GTK=" $PKGCONFIG_MODULES gtk+-2.0 >= 2.0.0"
 PKGCONFIG_MODULES_WITH_XML_AND_GTK=" $PKGCONFIG_MODULES gtk+-2.0 libxml-2.0"
@@ -258,6 +258,7 @@ fi
 
 if test "x$BDB_LIBS" = x; then
   AC_MSG_WARN(No db3 library found or bdb not enabled. Not building bdb backend.)
+  AC_MSG_WARN([(Note, this is a good thing because the bdb backend doesn't work anyhow.)])
 fi
 
 AM_CONDITIONAL(BDB, test -n "$BDB_LIBS")
@@ -287,8 +288,10 @@ AM_GLIB_GNU_GETTEXT
 
 # AM_GNU_GETTEXT above substs $DATADIRNAME
 # this is the directory where the *.{mo,gmo} files are installed
-gtklocaledir='${prefix}/${DATADIRNAME}/locale'
+gconflocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gconflocaledir)
+
+AC_CHECK_FUNCS(bind_textdomain_codeset)
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)

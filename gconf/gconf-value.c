@@ -63,8 +63,15 @@ GConfValue*
 gconf_value_new(GConfValueType type)
 {
   GConfValue* value;
-
+  static gboolean initted = FALSE;
+  
   g_return_val_if_fail(GCONF_VALUE_TYPE_VALID(type), NULL);
+
+  if (!initted)
+    {
+      _gconf_init_i18n ();
+      initted = TRUE;
+    }
   
   /* Probably want to use mem chunks here eventually. */
   value = (GConfValue*) g_new0 (GConfRealValue, 1);

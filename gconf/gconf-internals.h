@@ -245,6 +245,8 @@ GConfValue* gconf_schema_steal_default_value (GConfSchema *schema);
 void gconf_value_set_string_nocopy (GConfValue *value,
                                     char       *str);
 
+void _gconf_init_i18n (void);
+
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */

@@ -1105,7 +1105,8 @@ gconf_client_key_is_writable (GConfClient* client,
   GError* error = NULL;
   GConfEntry *entry = NULL;
   gboolean is_writable;
-  
+
+  g_return_val_if_fail (key != NULL, FALSE);
   g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
   trace ("Checking whether key '%s' is writable... \n", key);
@@ -1124,7 +1125,10 @@ gconf_client_key_is_writable (GConfClient* client,
   else
     g_assert (error == NULL);
 
-  is_writable = gconf_entry_get_is_writable (entry);  
+  if (entry == NULL)
+    is_writable = FALSE;
+  else
+    is_writable = gconf_entry_get_is_writable (entry);  
 
   if (entry)
     gconf_entry_free (entry);
@@ -1281,7 +1285,9 @@ GConfValue*
 gconf_client_get             (GConfClient* client,
                               const gchar* key,
                               GError** err)
-{  
+{
+  g_return_val_if_fail (GCONF_IS_CLIENT (client), NULL);
+  g_return_val_if_fail (key != NULL, NULL);
   return gconf_client_get_full (client, key, NULL, TRUE, err);
 }
 
@@ -1290,6 +1296,8 @@ gconf_client_get_without_default  (GConfClient* client,
                                    const gchar* key,
                                    GError** err)
 {
+  g_return_val_if_fail (GCONF_IS_CLIENT (client), NULL);
+  g_return_val_if_fail (key != NULL, NULL);
   return gconf_client_get_full (client, key, NULL, FALSE, err);
 }
 
@@ -1305,7 +1313,8 @@ gconf_client_get_default_from_schema (GConfClient* client,
   g_return_val_if_fail (err == NULL || *err == NULL, NULL);  
   g_return_val_if_fail (client != NULL, NULL);
   g_return_val_if_fail (GCONF_IS_CLIENT(client), NULL);
-
+  g_return_val_if_fail (key != NULL, NULL);
+  
   trace ("Getting default for %s from schema\n", key);
   
   /* Check our client-side cache to see if the default is the same as

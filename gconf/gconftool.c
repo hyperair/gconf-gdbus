@@ -61,6 +61,7 @@ static int associate_schema_mode = FALSE;
 static int dissociate_schema_mode = FALSE;
 static int default_source_mode = FALSE;
 static int recursive_unset_mode = FALSE;
+static int do_version = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -353,6 +354,15 @@ struct poptOption options[] = {
     NULL
   },
   {
+    "version",
+    'v',
+    POPT_ARG_NONE,
+    &do_version,
+    0,
+    N_("Print version"),
+    NULL
+  },
+  {
     NULL,
     '\0',
     0,
@@ -398,6 +408,8 @@ main (int argc, char** argv)
   xmlKeepBlanksDefault(1);
 
   setlocale (LC_ALL, "");
+  _gconf_init_i18n ();
+  textdomain (GETTEXT_PACKAGE);
   
   ctx = poptGetContext("gconftool", argc, (const char **) argv, options, 0);
 
@@ -417,6 +429,12 @@ main (int argc, char** argv)
 
   /* Um, this is a mess. Not using popt right? */
 
+  if (do_version)
+    {
+      g_print ("%s\n", VERSION);
+      return 0;
+    }
+  
   if ((get_mode && set_mode) ||
       (get_mode && unset_mode))
     {

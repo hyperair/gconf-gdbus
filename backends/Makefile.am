@@ -12,7 +12,8 @@ else
 BDBBACKEND=
 endif
 
-backend_LTLIBRARIES = libgconfbackend-xml.la $(BDBBACKEND) libgconfbackend-markup.la
+backend_LTLIBRARIES = libgconfbackend-xml.la $(BDBBACKEND)
+noinst_LTLIBRARIES = libgconfbackend-markup.la
 
 libgconfbackend_xml_la_SOURCES = \
 	xml-cache.h		\

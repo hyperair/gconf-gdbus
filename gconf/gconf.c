@@ -185,6 +185,8 @@ gconf_engine_blank (gboolean remote)
 {
   GConfEngine* conf;
 
+  _gconf_init_i18n ();
+  
   conf = g_new0(GConfEngine, 1);
 
   conf->refcount = 1;
