@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-03-08 19:38+0100\n"
-"PO-Revision-Date: 2002-03-01 14:32+0100\n"
+"POT-Creation-Date: 2002-03-20 20:22+0100\n"
+"PO-Revision-Date: 2002-03-20 20:29+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -749,20 +749,50 @@ msgid ""
 "Could not lock the file \"%s\"; this indicates that there may be a problem "
 "with your operating system configuration. If you have an NFS-mounted home "
 "directory, either the client or the server may be set up incorrectly. See "
-"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+"the rpc.statd and rpc.lockd documentation. A common cause of this error is "
+"that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
+"%d)."
 msgstr ""
 "Skontaktuj się z administratorem systemu, aby rozwiązać następujący "
 "problem:\n"
 "Nie można zablokować pliku \"%s\"; wskazuje to, że może istnieć problem z "
 "konfiguracją systemu operacyjnego. Jeśli katalog domowy jest udostępniany "
 "poprzez NFS, może to być spowodowane niewłaściwymi ustawieniami klienta lub "
-"serwera. Zajrzyj do dokumentacji rpc.statd i rpc.lockd. Błąd, który "
-"wystąpił: \"%s\" (errno = %d)."
+"serwera. Zajrzyj do dokumentacji rpc.statd i rpc.lockd. Częstą przyczyną "
+"tego błędu jest zablokowana usługa \"nfslock\". Błąd, który wystąpił: \"%s\" "
+"(errno = %d)."
 
 #: gconf/gconf-sanity-check.c:1
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Nie można usunąć pliku \"%s\": %s\n"
+
+#: gconf/gconf-sanity-check.c:1
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"No configuration sources in the configuration file \"%s\"; this means that "
+"preferences and other settings can't be saved. %s%s"
+msgstr ""
+"Skontaktuj się z administratorem systemu, aby rozwiązać następujący "
+"problem:\n"
+"W pliku konfiguracyjnym \"%s\" nie ma żadnych źródeł konfiguracji; oznacza "
+"to, że nie jest możliwy zapis preferencji i innych ustawień. %s%s"
+
+#: gconf/gconf-sanity-check.c:1
+msgid "Error reading the file: "
+msgstr "Błąd przy odczycie pliku: "
+
+#: gconf/gconf-sanity-check.c:1
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
+msgstr ""
+"Skontaktuj się z administratorem systemu, aby rozwiązać następujący "
+"problem:\n"
+"Nie można odnaleźć adresu \"%s\", występującego w pliku konfiguracyjnym "
+"\"%s\": %s"
 
 #: gconf/gconf-schema.c:1 gconf/gconf-schema.c:1 gconf/gconf-schema.c:1
 #: gconf/gconf-schema.c:1
@@ -1261,12 +1291,13 @@ msgstr ""
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:1
+#, c-format
 msgid ""
 "Segmentation fault!\n"
-"Cannot display crash dialog\n"
+"Cannot display crash dialog: %s\n"
 msgstr ""
 "Naruszenie segmentacji!\n"
-"Nie można wyświetlić okna z informacją o błędzie\n"
+"Nie można wyświetlić okna z informacją o błędzie: %s\n"
 
 #: gconf/gconftool.c:1
 msgid "Set a key to a value and sync. Use with --type."
