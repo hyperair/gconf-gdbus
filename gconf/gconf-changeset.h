@@ -48,6 +48,12 @@ gboolean        gconf_commit_change_set   (GConfEngine* conf,
                                            gboolean remove_committed,
                                            GConfError** err);
 
+/* Create a change set that would revert the given change set
+   for the given GConfEngine */
+GConfChangeSet* gconf_create_reverse_change_set  (GConfEngine* conf,
+                                                  GConfChangeSet* cs,
+                                                  GConfError** err);
+
 GConfChangeSet* gconf_change_set_new      (void);
 void            gconf_change_set_ref      (GConfChangeSet* cs);
 

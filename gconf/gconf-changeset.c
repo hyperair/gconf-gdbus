@@ -482,3 +482,70 @@ gconf_commit_change_set   (GConfEngine* conf,
       return TRUE;
     }
 }
+
+struct RevertData {
+  GConfEngine* conf;
+  GConfError* error;
+  GConfChangeSet* revert_set;
+};
+
+static void
+revert_foreach (GConfChangeSet* cs,
+                const gchar* key,
+                GConfValue* value,
+                gpointer user_data)
+{
+  struct RevertData* rd = user_data;
+  GConfValue* old_value;
+  GConfError* error = NULL;
+  
+  g_assert(rd != NULL);
+
+  if (rd->error != NULL)
+    return;
+
+  old_value = gconf_get(rd->conf, key, &error);
+
+  if (error != NULL)
+    {
+      /* FIXME */
+      g_warning("error creating revert set: %s", error->str);
+      gconf_error_destroy(error);
+      error = NULL;
+    }
+  
+  if (old_value == NULL &&
+      value == NULL)
+    return; /* this commit will have no effect. */
+
+  if (old_value == NULL)
+    gconf_change_set_unset(rd->revert_set, key);
+  else
+    gconf_change_set_set_nocopy(rd->revert_set, key, old_value);
+}
+
+
+GConfChangeSet*
+gconf_create_reverse_change_set  (GConfEngine* conf,
+                                  GConfChangeSet* cs,
+                                  GConfError** err)
+{
+  struct RevertData rd;
+
+  rd.error = NULL;
+  rd.conf = conf;
+  rd.revert_set = gconf_change_set_new();
+
+  gconf_change_set_foreach(cs, revert_foreach, &rd);
+
+  if (rd.error != NULL)
+    {
+      if (err != NULL)
+        *err = rd.error;
+      else
+        gconf_error_destroy(rd.error);
+    }
+  
+  return rd.revert_set;
+}
+
