@@ -1357,8 +1357,10 @@ struct _ListifyData {
 static void
 listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 {
-  ld->list = g_slist_prepend(ld->list,
-                             g_conf_concat_key_and_dir(ld->name, key));
+  if (e->value)
+    ld->list = g_slist_prepend(ld->list,
+                               g_conf_entry_new(g_strdup(key),
+                                                g_conf_value_copy(e->value)));
 }
 
 static GSList*
@@ -1435,7 +1437,7 @@ dir_all_subdirs (Dir* d)
           continue;
         }
       
-      retval = g_slist_prepend(retval, g_conf_concat_key_and_dir(d->key, dent->d_name));
+      retval = g_slist_prepend(retval, g_strdup(dent->d_name));
     }
 
   /* if this fails, we really can't do a thing about it
