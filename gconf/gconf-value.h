@@ -84,6 +84,11 @@ struct _GConfValue {
 
 GConfValue* gconf_value_new                  (GConfValueType type);
 
+/* doesn't work on complicated types (only string, int, bool, float) */
+GConfValue* gconf_value_new_from_string      (GConfValueType type,
+                                              const gchar* str,
+                                              GError** err);
+
 GConfValue* gconf_value_copy                 (const GConfValue* src);
 void        gconf_value_free                 (GConfValue* value);
 

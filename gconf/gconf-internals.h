@@ -104,10 +104,6 @@ gboolean      gconf_key_check(const gchar* key, GError** err);
  * If these were public they'd be in gconf-value.h
  */
 
-/* doesn't work on complicated types (only string, int, bool, float) */
-GConfValue* gconf_value_new_from_string      (GConfValueType type,
-                                              const gchar* str,
-                                              GError** err);
 /* for the complicated types */
 GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
                                               const gchar* str,
