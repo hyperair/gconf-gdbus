@@ -1953,6 +1953,14 @@ gconf_get_list    (GConfEngine* conf, const gchar* key,
                 }
                 break;
 
+              case GCONF_VALUE_SCHEMA:
+                {
+                  /* and also steal the schema... */
+                  tmp->data = elem->d.schema_data;
+                  elem->d.schema_data = NULL;
+                }
+                break;
+                
               default:
                 g_assert_not_reached();
                 break;
@@ -1994,6 +2002,10 @@ primitive_value(gpointer retloc, GConfValue* val)
       *((gboolean*)retloc) = gconf_value_bool(val);
       break;
 
+    case GCONF_VALUE_SCHEMA:
+      *((GConfSchema**)retloc) = gconf_value_schema(val);
+      break;
+      
     default:
       g_assert_not_reached();
       break;
@@ -2253,6 +2265,10 @@ gconf_set_list    (GConfEngine* conf, const gchar* key,
           gconf_value_set_string(val, tmp->data);
           break;
 
+        case GCONF_VALUE_SCHEMA:
+          gconf_value_set_schema(val, tmp->data);
+          break;
+          
         default:
           g_assert_not_reached();
           break;
@@ -2303,6 +2319,10 @@ from_primitive(GConfValueType type, gconstpointer address)
       gconf_value_set_float(val, *((const gdouble*)address));
       break;
 
+    case GCONF_VALUE_SCHEMA:
+      gconf_value_set_schema(val, *((GConfSchema**)address));
+      break;
+      
     default:
       g_assert_not_reached();
       break;

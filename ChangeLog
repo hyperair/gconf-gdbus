@@ -1,5 +1,19 @@
 1999-11-13  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-value.h (gconf_meta_info_schema): Add const cast to
+	this macro.
+
+	* gconf/gconf.c (gconf_set_list): allow list of schemas
+	(from_primitive): handle schemas
+	(primitive_value): handle schemas
+	(gconf_get_list): handle schemas
+
+	* doc/gconf/tmpl/gconf-value.sgml: docs!
+
+	* doc/gconf/tmpl/gconf.sgml: docs!
+
+	* doc/gconf/gconf-sections.txt: add set/get list/pair
+
 	* gconf/gconf.c (gconf_set_list): Fix dumb bug (assign back to the
 	original list!)
 

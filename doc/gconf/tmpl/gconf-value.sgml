@@ -1,12 +1,29 @@
 <!-- ##### SECTION Title ##### -->
-gconf-value
+GConfValue, GConfEntry, GConfMetaInfo
 
 <!-- ##### SECTION Short_Description ##### -->
 
+A #GConfValue stores a
+dynamically-typed value. A #GConfEntry stores a key-value pair.
+A #GConfMetaInfo stores metainformation about a key.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+#GConfValue stores one of the value types GConf understands; GConf
+uses #GConfValue to pass values around because it doesn't know the
+type of its values at compile time. 
+</para>
 
+<para>
+A #GConfEntry pairs a relative key
+name with a value, for example if the value "10" is stored at the key 
+"/foo/bar/baz", the #GConfEntry will store "baz" and "10".
+</para>
+
+<para>
+A #GConfMetaInfo object holds metainformation about a key, such as 
+its last modification time and the name of the schema associated with
+it. You should rarely if ever need to use #GConfMetaInfo.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -16,110 +33,167 @@ gconf-value
 
 <!-- ##### ENUM GConfValueType ##### -->
 <para>
-
+Used to indicate the type of a #GConfValue.
 </para>
 
-@GCONF_VALUE_INVALID: 
-@GCONF_VALUE_STRING: 
-@GCONF_VALUE_INT: 
-@GCONF_VALUE_FLOAT: 
-@GCONF_VALUE_BOOL: 
-@GCONF_VALUE_SCHEMA: 
-@GCONF_VALUE_LIST: 
-@GCONF_VALUE_PAIR: 
-@GCONF_VALUE_IGNORE_SUBSEQUENT: 
+@GCONF_VALUE_INVALID: Never the type of a #GConfValue obtained from GConf functions; used to indicate errors and the like.
+@GCONF_VALUE_STRING: String value (#gchar*).
+@GCONF_VALUE_INT: Integer value (#gint).
+@GCONF_VALUE_FLOAT: Floating point value (#gdouble).
+@GCONF_VALUE_BOOL: Boolean value (#gboolean).
+@GCONF_VALUE_SCHEMA: Schema value (#GConfSchema).
+@GCONF_VALUE_LIST: List of #GConfValue; #GConfValue elements must have
+a primitive type (i.e. they may not be lists or pairs), and all elements
+of a list must have the same type.
+@GCONF_VALUE_PAIR: Pair of #GConfValue; the first field (car) and the second
+field (cdr) may have different types.
+@GCONF_VALUE_IGNORE_SUBSEQUENT: Used internally, ignore it.
 
 <!-- ##### STRUCT GConfValue ##### -->
 <para>
-
+Represents a dynamically-typed value. The @type field tells you the
+type of the value; the other fields should be accessed with the
+accessor functions and macros.
 </para>
 
-@type: 
+<para>
+<emphasis>A #GConfValue should always
+be initialized before use. That is, you should not use a #GConfValue
+unless you have called one of the functions beginning with
+"gconf_value_set_".</emphasis>. For lists, initialization has two
+steps: first you must set the list element type, then you must set the
+list value.
+</para>
+
+@type: The #GConfValueType of this #GConfValue. The only field of
+#GConfValue you should access directly.
 
 <!-- ##### MACRO gconf_value_string ##### -->
 <para>
-
+Returns a <symbol>const gchar*</symbol> for a #GConfValue with type
+%GCONF_VALUE_STRING. The returned string is <emphasis>not</emphasis> a
+copy, don't try to free it. It is "owned" by the #GConfValue and will
+be destroyed when the #GConfValue is destroyed.
 </para>
 
-@x: 
+<para>
+If the #GConfValue is not initialized (i.e. no one has called
+gconf_value_set_string()) then the string may be
+<symbol>NULL</symbol>, but of course you should not try to use an
+uninitialized #GConfValue.
+</para>
+
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_int ##### -->
 <para>
-
+Returns a #gint for a #GConfValue with type %GCONF_VALUE_INT. 
 </para>
 
-@x: 
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_float ##### -->
 <para>
-
+Returns a #gdouble for a #GConfValue with type %GCONF_VALUE_DOUBLE.
 </para>
 
-@x: 
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_list_type ##### -->
 <para>
-
+Returns the type of the list elements in a #GConfValue with type 
+%GCONF_VALUE_LIST.
 </para>
 
-@x: 
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_list ##### -->
 <para>
-
+Returns a #GSList containing #GConfValue objects. Each #GConfValue in
+the returned list will have the type returned by
+gconf_value_list_type(). Remember that the empty #GSList is equal to
+<symbol>NULL</symbol>.  The list is not a copy; it is "owned" by the
+#GConfValue and will be destroyed when the #GConfValue is destroyed.
 </para>
 
-@x: 
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_car ##### -->
 <para>
-
+Returns the first member (car) of a #GConfValue with type
+%GCONF_VALUE_PAIR. The car is another #GConfValue, with a primitive
+type (bool, int, float, string, schema).
 </para>
 
-@x: 
+<para>
+The returned value is not a copy; it is "owned" by the pair and will
+be destroyed when the pair is destroyed.
+</para>
+
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_cdr ##### -->
 <para>
-
+Returns the second member (cdr) of a #GConfValue with type
+%GCONF_VALUE_PAIR. The cdr is another #GConfValue, with a primitive
+type (bool, int, float, string, schema).
 </para>
 
-@x: 
+<para>
+The returned value is not a copy; it is "owned" by the pair and will
+be destroyed when the pair is destroyed.
+</para>
+
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_bool ##### -->
 <para>
-
+Returns a #gboolean for a #GConfValue with type %GCONF_VALUE_BOOL. 
 </para>
 
-@x: 
+@x: a #GConfValue.
 
 
 <!-- ##### MACRO gconf_value_schema ##### -->
 <para>
-
+Returns a #GConfSchema for a #GConfValue with type
+%GCONF_VALUE_SCHEMA. If the #GConfValue is uninitialized, it 
+may return <symbol>NULL</symbol>; but of course you should have
+initialized the #GConfValue. The GConf library will not return values
+with a <symbol>NULL</symbol> schema.
 </para>
 
-@x: 
+<para>
+The returned value is not a copy; it is "owned" by the #GConfValue and will
+be destroyed when the #GConfValue is destroyed.
+</para>
+
+@x: a #GConfValue.
 
 
 <!-- ##### FUNCTION gconf_value_new ##### -->
 <para>
-
+Creates a new #GConfValue with type @type. The type is immutable after
+creation; values have a fixed type. You <emphasis>must</emphasis>
+initialize the #GConfValue after creation; that is, you must set its 
+value with one of the "setter" functions.
 </para>
 
-@type: 
-@Returns: 
+@type: type of the new #GConfValue.
+@Returns: newly-allocated #GconfValue.
 
 
 <!-- ##### FUNCTION gconf_value_new_from_string ##### -->
 <para>
-
+Tries to parse a string and create a primitive #GConfValue from
+it. This is an internal function for now; don't use it.
 </para>
 
 @type: 
@@ -130,7 +204,7 @@ gconf-value
 
 <!-- ##### FUNCTION gconf_value_new_list_from_string ##### -->
 <para>
-
+This function does not work. Don't use it.
 </para>
 
 @list_type: 
@@ -140,7 +214,7 @@ gconf-value
 
 <!-- ##### FUNCTION gconf_value_new_pair_from_string ##### -->
 <para>
-
+This function does not work. Don't use it.
 </para>
 
 @car_type: 
@@ -151,19 +225,21 @@ gconf-value
 
 <!-- ##### FUNCTION gconf_value_copy ##### -->
 <para>
-
+Copies a #GConfValue. The copy is a deep copy, that is, any allocated
+memory inside the #GConfValue will also be copied.
 </para>
 
-@src: 
-@Returns: 
+@src: a #GConfValue to copy.
+@Returns: a newly-allocated #GConfValue identical to @src.
 
 
 <!-- ##### FUNCTION gconf_value_destroy ##### -->
 <para>
-
+Deallocates a #GConfValue. Also deallocates any allocated memory
+inside the #GConfValue (such as lists, pair members, strings, and schemas).
 </para>
 
-@value: 
+@value: a #GConfValue to destroy.
 
 
 <!-- ##### FUNCTION gconf_value_set_int ##### -->
@@ -306,7 +382,7 @@ gconf-value
 
 </para>
 
-@x: 
+@x:
 
 
 <!-- ##### MACRO gconf_meta_info_mod_user ##### -->
@@ -314,7 +390,7 @@ gconf-value
 
 </para>
 
-@x: 
+@x:
 
 
 <!-- ##### MACRO gconf_meta_info_mod_time ##### -->
@@ -322,7 +398,7 @@ gconf-value
 
 </para>
 
-@x: 
+@x:
 
 
 <!-- ##### FUNCTION gconf_meta_info_new ##### -->

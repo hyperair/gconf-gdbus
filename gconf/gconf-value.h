@@ -140,10 +140,9 @@ struct _GConfMetaInfo {
   gchar* schema;
   gchar* mod_user; /* user owning the daemon that made the last modification */
   GTime  mod_time; /* time of the modification */
-  /* anything else? */
 };
 
-#define gconf_meta_info_schema(x)    ((x)->schema)
+#define gconf_meta_info_schema(x)    ((const gchar*)(x)->schema)
 #define gconf_meta_info_mod_user(x)  ((x)->mod_user)
 #define gconf_meta_info_mod_time(x)  ((x)->mod_time)
 
