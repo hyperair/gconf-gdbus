@@ -2619,6 +2619,16 @@ xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err)
     }
 }
 
+static void
+free_childs(xmlNodePtr node)
+{
+  g_return_if_fail(node != NULL);
+  
+  if (node->childs)
+    xmlFreeNodeList(node->childs);
+  node->childs = NULL;
+  node->last = NULL;
+}
 
 static void
 xentry_set_value(xmlNodePtr node, GConfValue* value)
@@ -2628,20 +2638,26 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
 
   g_return_if_fail(node != NULL);
   g_return_if_fail(value != NULL);
-
+  g_return_if_fail(value->type != GCONF_VALUE_INVALID);
+  
   type = gconf_value_type_to_string(value->type);
+
+  g_assert(type != NULL);
   
   xmlSetProp(node, "type", type);
 
   switch (value->type)
     {
     case GCONF_VALUE_IGNORE_SUBSEQUENT:
+      free_childs(node);
       break;
 
     case GCONF_VALUE_INT:
     case GCONF_VALUE_FLOAT:
     case GCONF_VALUE_BOOL:
     case GCONF_VALUE_STRING:
+      free_childs(node);
+      
       value_str = gconf_value_to_string(value);
   
       xmlSetProp(node, "value", value_str);
@@ -2658,11 +2674,8 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
         xmlSetProp(node, "short_desc", sc->short_desc);
         xmlSetProp(node, "owner", sc->owner);
 
-        if (node->childs)
-          xmlFreeNodeList(node->childs);
-        node->childs = NULL;
-        node->last = NULL;
-
+        free_childs(node);
+        
         if (sc->default_value != NULL)
           {
             xmlNodePtr default_value_node;
@@ -2682,11 +2695,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
       {
         GSList* list;
 
-        /* Nuke any existing nodes */
-        if (node->childs)
-          xmlFreeNodeList(node->childs);
-        node->childs = NULL;
-        node->last = NULL;
+        free_childs(node);
 
         xmlSetProp(node, "ltype",
                    gconf_value_type_to_string(gconf_value_list_type(value)));
@@ -2710,10 +2719,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
       {
         xmlNodePtr car, cdr;
 
-        if (node->childs)
-          xmlFreeNodeList(node->childs);
-        node->childs = NULL;
-        node->last = NULL;
+        free_childs(node);
 
         car = xmlNewChild(node, NULL, "car", NULL);
         cdr = xmlNewChild(node, NULL, "cdr", NULL);

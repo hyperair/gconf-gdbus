@@ -51,6 +51,8 @@ libgconf_la_SOURCES = \
 	gconf-backend.c		\
 	gconf-error.c		\
 	gconf-listeners.c	\
+	gconf-locale.h  	\
+	gconf-locale.c  	\
 	gconf-schema.c		\
 	gconf-value.c		\
 	gconf.c			\

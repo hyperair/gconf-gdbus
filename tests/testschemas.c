@@ -222,11 +222,102 @@ null_safe_strcmp(const char* lhs, const char* rhs)
   else
     return strcmp(lhs, rhs);
 }
-     
+
+void
+check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
+{
+  GConfError* err = NULL;
+  
+  if (!gconf_set_schema(conf, *keyp, schema, &err))
+    {
+      fprintf(stderr, "Failed to set key `%s' to schema: %s\n",
+              *keyp, err->str);
+      gconf_error_destroy(err);
+      err = NULL;
+    }
+  else
+    {
+      GConfSchema* gotten;
+      
+      gotten = gconf_get_schema(conf, *keyp, &err);
+
+      if (err != NULL)
+        {
+          check(gotten == NULL, "NULL not returned though there was an error");
+
+          fprintf(stderr, "Failed to get key `%s': %s\n",
+                  *keyp, err->str);
+          gconf_error_destroy(err);
+          err = NULL;
+        }
+      else
+        {
+          check (gconf_schema_type(schema) == gconf_schema_type(gotten),
+                 "schema set/get pair: type `%s' set, `%s' got",
+                 gconf_value_type_to_string(gconf_schema_type(schema)),
+                 gconf_value_type_to_string(gconf_schema_type(gotten)));
+
+          check (null_safe_strcmp(gconf_schema_locale(schema), gconf_schema_locale(gotten)) == 0,
+                 "schema set/get pair: locale `%s' set, `%s' got",
+                 gconf_schema_locale(schema),
+                 gconf_schema_locale(gotten));
+
+          check (null_safe_strcmp(gconf_schema_short_desc(schema), gconf_schema_short_desc(gotten)) == 0,
+                 "schema set/get pair: short_desc `%s' set, `%s' got",
+                 gconf_schema_short_desc(schema),
+                 gconf_schema_short_desc(gotten));
+
+          check (null_safe_strcmp(gconf_schema_long_desc(schema), gconf_schema_long_desc(gotten)) == 0,
+                 "schema set/get pair: long_desc `%s' set, `%s' got",
+                 gconf_schema_long_desc(schema),
+                 gconf_schema_long_desc(gotten));
+
+          check (null_safe_strcmp(gconf_schema_owner(schema), gconf_schema_owner(gotten)) == 0,
+                 "schema set/get pair: owner `%s' set, `%s' got",
+                 gconf_schema_owner(schema),
+                 gconf_schema_owner(gotten));
+
+          {
+            GConfValue* set_default;
+            GConfValue* got_default;
+
+            set_default = gconf_schema_default_value(schema);
+            got_default = gconf_schema_default_value(gotten);
+
+            if (set_default && got_default)
+              {
+                check(set_default->type == GCONF_VALUE_INT,
+                      "set default type is INT");
+                
+                check(set_default->type == got_default->type,
+                      "schema set/get pair: default value type `%s' set, `%s' got",
+                      gconf_value_type_to_string(set_default->type),
+                      gconf_value_type_to_string(got_default->type));
+                
+                check(set_default->type == got_default->type,
+                      "schema set/get pair: default value type `%s' set, `%s' got",
+                      gconf_value_type_to_string(set_default->type),
+                      gconf_value_type_to_string(got_default->type));
+                
+                check(gconf_value_int(set_default) == gconf_value_int(got_default),
+                      "schema set/get pair: default value (int) `%d' set, `%d' got",
+                      gconf_value_int(set_default), gconf_value_int(got_default));
+              }
+            else
+              {
+                check (set_default == NULL && got_default == NULL,
+                       "set and got default value aren't both NULL");
+              }
+          }
+          
+          gconf_schema_destroy(gotten);
+        }
+    }
+}
+      
 void
 check_schema_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
   const gchar** keyp = NULL;
   guint i; 
   
@@ -240,7 +331,6 @@ check_schema_storage(GConfEngine* conf)
       while (i < n_ints)
         {
           GConfSchema* schema;
-          GConfSchema* gotten;
           gchar* short_desc;
           gchar* long_desc;
           GConfValue* default_value;
@@ -262,90 +352,13 @@ check_schema_storage(GConfEngine* conf)
 
           default_value = gconf_value_new(GCONF_VALUE_INT);
           gconf_value_set_int(default_value, default_value_int);
-          gconf_schema_set_default_value_nocopy(schema, default_value);
           
-          if (!gconf_set_schema(conf, *keyp, schema, &err))
-            {
-              fprintf(stderr, "Failed to set key `%s' to schema: %s\n",
-                      *keyp, err->str);
-              gconf_error_destroy(err);
-              err = NULL;
-            }
-          else
-            {
-              gotten = gconf_get_schema(conf, *keyp, &err);
+          gconf_schema_set_default_value_nocopy(schema, default_value);
 
-              if (err != NULL)
-                {
-                  check(gotten == NULL, "NULL not returned though there was an error");
-
-                  fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
-                  err = NULL;
-                }
-              else
-                {
-                  check (gconf_schema_type(schema) == gconf_schema_type(gotten),
-                         "schema set/get pair: type `%s' set, `%s' got",
-                         gconf_value_type_to_string(gconf_schema_type(schema)),
-                         gconf_value_type_to_string(gconf_schema_type(gotten)));
-
-                  check (null_safe_strcmp(gconf_schema_locale(schema), gconf_schema_locale(gotten)) == 0,
-                         "schema set/get pair: locale `%s' set, `%s' got",
-                         gconf_schema_locale(schema),
-                         gconf_schema_locale(gotten));
-
-                  check (null_safe_strcmp(gconf_schema_short_desc(schema), gconf_schema_short_desc(gotten)) == 0,
-                         "schema set/get pair: short_desc `%s' set, `%s' got",
-                         gconf_schema_short_desc(schema),
-                         gconf_schema_short_desc(gotten));
-
-                  check (null_safe_strcmp(gconf_schema_long_desc(schema), gconf_schema_long_desc(gotten)) == 0,
-                         "schema set/get pair: long_desc `%s' set, `%s' got",
-                         gconf_schema_long_desc(schema),
-                         gconf_schema_long_desc(gotten));
-
-                  check (null_safe_strcmp(gconf_schema_owner(schema), gconf_schema_owner(gotten)) == 0,
-                         "schema set/get pair: owner `%s' set, `%s' got",
-                         gconf_schema_owner(schema),
-                         gconf_schema_owner(gotten));
-
-                  {
-                    GConfValue* set_default;
-                    GConfValue* got_default;
-
-                    set_default = gconf_schema_default_value(schema);
-                    got_default = gconf_schema_default_value(gotten);
-
-                    check(set_default != NULL,
-                          "set default value is non-NULL");
-
-                    check(got_default != NULL,
-                          "gotten default value is non-NULL");
-
-                    check(set_default->type == GCONF_VALUE_INT,
-                          "set default type is INT");
-
-                    check(set_default->type == got_default->type,
-                          "schema set/get pair: default value type `%s' set, `%s' got",
-                          gconf_value_type_to_string(set_default->type),
-                          gconf_value_type_to_string(got_default->type));
-
-                    check(set_default->type == got_default->type,
-                          "schema set/get pair: default value type `%s' set, `%s' got",
-                          gconf_value_type_to_string(set_default->type),
-                          gconf_value_type_to_string(got_default->type));
-
-                    check(gconf_value_int(set_default) == default_value_int,
-                          "Properly stored default int value in the schema");
-                    
-                    check(gconf_value_int(set_default) == gconf_value_int(got_default),
-                          "schema set/get pair: default value (int) `%d' set, `%d' got",
-                          gconf_value_int(set_default), gconf_value_int(got_default));
-                  }
-                }
-            }
+          check(gconf_value_int(gconf_schema_default_value(schema)) == default_value_int,
+                "Properly stored default int value in the schema");
+          
+          check_one_schema(conf, keyp, schema);
 
           gconf_schema_destroy(schema);
           g_free(long_desc);
@@ -356,9 +369,36 @@ check_schema_storage(GConfEngine* conf)
       
       ++keyp;
     }
+
+  /* Check setting/getting "empty" schemas */
+  
+  keyp = keys;
+
+  while (*keyp)
+    {
+      i = 0;
+      while (i < n_ints)
+        {
+          GConfSchema* schema;
           
+          schema = gconf_schema_new();
+
+          gconf_schema_set_type(schema, GCONF_VALUE_INT);
+
+          check_one_schema(conf, keyp, schema);
+
+          gconf_schema_destroy(schema);
+          
+          ++i;
+        }
+      
+      ++keyp;
+    }
+  
   check_unset(conf);
 }
+
+
 
 int 
 main (int argc, char** argv)

@@ -1,3 +1,19 @@
+1999-11-10  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-backend.c (free_childs): function to free children
+	of a node.
+	(xentry_set_value): free_childs() in a couple places we weren't
+
+	* tests/testschemas.c: Add new schema test to check for storing a
+	blank schema
+
+	* gconf/gconf-locale.c, gconf/gconf-locale.h: New module, creates
+	and caches the list of locales to search for given an environment
+	variable value
+
+	* gconf/gconf-internals.c (gconf_current_locale): We want
+	LC_MESSAGES not LC_ALL
+
 1999-11-07  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.c (reinstall_listeners_for_all_engines): Function to
