@@ -1,3 +1,10 @@
+2004-04-16  Colin Walters  <walters@redhat.com>
+
+	* gconf/gconf-internals.c (gconf_activate_server): Move temporary
+	directory creation into daemon code, so that we play better with
+	SELinux.  Patch reviewed by (and several improvements suggested by)
+	Mark McLoughlin <mark@skynet.ie>.
+
 2004-04-13  Mark McLoughlin  <mark@skynet.ie>
 
 	Fix pointed out by Frédéric L. W. Meunier <1@pervalidus.net>.

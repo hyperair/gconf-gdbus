@@ -2914,7 +2914,8 @@ ConfigServer
 gconf_activate_server (gboolean  start_if_not_found,
                        GError  **error)
 {
-  ConfigServer server;
+  ConfigServer server = CORBA_OBJECT_NIL;
+;
   int p[2] = { -1, -1 };
   char buf[1];
   GError *tmp_err;
@@ -2922,48 +2923,57 @@ gconf_activate_server (gboolean  start_if_not_found,
   char *gconfd_dir;
   char *lock_dir;
   GString *failure_log;
+  struct stat statbuf;
   CORBA_Environment ev;
+  gboolean dir_accessible;
 
   failure_log = g_string_new (NULL);
   
   gconfd_dir = gconf_get_daemon_dir ();
   
-  if (mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
-    gconf_log (GCL_WARNING, _("Failed to create %s: %s"),
-               gconfd_dir, g_strerror (errno));
+  dir_accessible = stat (gconfd_dir, &statbuf) >= 0;
+
+  if (!dir_accessible && errno != ENOENT)
+    {
+      server = CORBA_OBJECT_NIL;
+      gconf_log (GCL_WARNING, _("Failed to stat %s: %s"),
+		 gconfd_dir, g_strerror (errno));
+    }
+  else if (dir_accessible)
+    {
+      g_string_append (failure_log, " 1: ");
+      lock_dir = gconf_get_lock_dir ();
+      server = gconf_get_current_lock_holder (lock_dir, failure_log);
+      g_free (lock_dir);
+
+      /* Confirm server exists */
+      CORBA_exception_init (&ev);
+
+      if (!CORBA_Object_is_nil (server, &ev))
+	{
+	  ConfigServer_ping (server, &ev);
+      
+	  if (ev._major != CORBA_NO_EXCEPTION)
+	    {
+	      server = CORBA_OBJECT_NIL;
+
+	      g_string_append_printf (failure_log,
+				      _("Server ping error: %s"),
+				      CORBA_exception_id (&ev));
+	    }
+	}
+
+      CORBA_exception_free (&ev);
+  
+      if (server != CORBA_OBJECT_NIL)
+	{
+	  g_string_free (failure_log, TRUE);
+	  return server;
+	}
+    }
 
   g_free (gconfd_dir);
 
-  g_string_append (failure_log, " 1: ");
-  lock_dir = gconf_get_lock_dir ();
-  server = gconf_get_current_lock_holder (lock_dir, failure_log);
-  g_free (lock_dir);
-
-  /* Confirm server exists */
-  CORBA_exception_init (&ev);
-
-  if (!CORBA_Object_is_nil (server, &ev))
-    {
-      ConfigServer_ping (server, &ev);
-      
-      if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          server = CORBA_OBJECT_NIL;
-
-          g_string_append_printf (failure_log,
-                                  _("Server ping error: %s"),
-                                  CORBA_exception_id (&ev));
-        }
-    }
-
-  CORBA_exception_free (&ev);
-  
-  if (server != CORBA_OBJECT_NIL)
-    {
-      g_string_free (failure_log, TRUE);
-      return server;
-    }
-  
   if (start_if_not_found)
     {
       /* Spawn server */
