@@ -1,5 +1,10 @@
 2002-02-10  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconfd.c (signal_handler): run gnome_segv if DISPLAY is
+	set. Why not. may turn it off for production.
+	
+2002-02-10  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf.c (CHECK_OWNER_USE): put name of function in the
 	warning
 	(gconf_engine_associate_schema): remove warning from this

@@ -3495,4 +3495,3 @@ gconf_enum_to_string (GConfEnumStringPair lookup_table[],
 
   return NULL;
 }
-

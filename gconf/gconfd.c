@@ -107,6 +107,8 @@ static GConfDatabase*       obtain_database (const gchar *address,
 static void                 drop_old_databases (void);
 static gboolean             no_databases_in_use (void);
 
+static void gconf_handle_segv (int signum);
+
 /*
  * Flag indicating that we are shutting down, so return errors
  * on any attempted operation. We do this instead of unregistering with
@@ -358,15 +360,17 @@ signal_handler (int signo)
   
   ++in_fatal;
   
-  switch(signo) {
+  switch (signo) {
     /* Fast cleanup only */
   case SIGSEGV:
   case SIGBUS:
   case SIGILL:
     enter_shutdown ();
-    gconf_log(GCL_ERR,
-              _("Received signal %d, dumping core. Please report a GConf bug."),
-              signo);
+    gconf_log (GCL_ERR,
+               _("Received signal %d, dumping core. Please report a GConf bug."),
+               signo);
+    if (g_getenv ("DISPLAY"))
+      gconf_handle_segv (signo);
     abort ();
     break;
 
@@ -2278,3 +2282,76 @@ client_count (void)
   else
     return g_hash_table_size (client_table);
 }
+
+
+static void
+gconf_handle_segv (int signum)
+{
+  static int in_segv = 0;
+  pid_t pid;
+	
+  in_segv++;
+
+  if (in_segv > 2)
+    {
+      /* The fprintf() was segfaulting, we are just totally hosed */
+      _exit(1);
+    }
+  else if (in_segv > 1)
+    {
+      /* dialog display isn't working out */
+      fprintf (stderr, _("Multiple segmentation faults occurred; can't display error dialog\n"));
+      _exit(1);
+    }
+        
+  pid = fork();
+
+  if (pid < 0)
+    {
+      /* Eeeek! Can't show dialog */
+      fprintf (stderr, _("Segmentation fault!\n"
+                         "Cannot display crash dialog\n"));
+      
+      /* Don't use app attributes here - a lot of things are probably hosed */
+      if (g_getenv ("GNOME_DUMP_CORE"))
+        abort ();
+      
+      _exit (1);
+    }
+  else if (pid > 0)
+    {
+      /* Wait for user to see the dialog, then exit. */
+      /* Why wait at all? Because we want to allow people to attach to the
+         process */
+      int estatus;
+      pid_t eret;
+      
+      eret = waitpid (pid, &estatus, 0);
+      
+      /* Don't use app attributes here - a lot of things are probably hosed */
+      if(g_getenv ("GNOME_DUMP_CORE"))
+        abort ();
+      
+      _exit (1);
+    }
+  else /* pid == 0 */
+    {
+      char buf[32];
+      
+      g_snprintf (buf, sizeof (buf), "%d", signum);
+      
+      /* Child process */
+      execl (GCONF_BINDIR "/gnome_segv2", GCONF_BINDIR "/gnome_segv",
+             GCONFD, buf,
+             VERSION, NULL);
+      
+      execlp ("gnome_segv2", "gnome_segv2",
+              GCONFD, buf,
+              GCONFD, NULL);
+      
+      _exit (99);
+    }
+  
+  in_segv--;
+}
+
