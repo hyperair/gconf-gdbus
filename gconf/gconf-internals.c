@@ -47,6 +47,14 @@
 #define N_(x) x
 #endif
 
+static gboolean gconf_daemon_mode = FALSE;
+
+void
+gconf_set_daemon_mode(gboolean setting)
+{
+  gconf_daemon_mode = setting;
+}
+
 gchar*
 gconf_key_directory  (const gchar* key)
 {
@@ -159,6 +167,8 @@ gconf_value_from_corba_value(const ConfigValue* value)
       return NULL;
     }
 
+  g_assert(GCONF_VALUE_TYPE_VALID(type));
+  
   gval = gconf_value_new(type);
 
   switch (gval->type)
@@ -177,7 +187,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
       break;
     case GCONF_VALUE_SCHEMA:
       gconf_value_set_schema_nocopy(gval, 
-                                     gconf_schema_from_corba_schema(&(value->_u.schema_value)));
+                                    gconf_schema_from_corba_schema(&(value->_u.schema_value)));
       break;
     case GCONF_VALUE_LIST:
       {
@@ -217,8 +227,10 @@ gconf_value_from_corba_value(const ConfigValue* value)
             */
             val = gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[i]);
 
-            if (val->type != gconf_value_list_type(gval))
-              g_warning("Incorrect type for list element in %s", __FUNCTION__);
+            if (val == NULL)
+              gconf_log(GCL_ERR, _("Couldn't interpret CORBA value for list element"));
+            else if (val->type != gconf_value_list_type(gval))
+              gconf_log(GCL_ERR, _("Incorrect type for list element in %s"), __FUNCTION__);
             else
               list = g_slist_prepend(list, val);
 
@@ -235,10 +247,10 @@ gconf_value_from_corba_value(const ConfigValue* value)
         g_return_val_if_fail(value->_u.pair_value._length == 2, gval);
         
         gconf_value_set_car_nocopy(gval,
-                                    gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[0]));
+                                   gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[0]));
 
         gconf_value_set_cdr_nocopy(gval,
-                                    gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[1]));
+                                   gconf_value_from_corba_value((ConfigValue*)&value->_u.list_value.seq._buffer[1]));
       }
       break;
     default:
@@ -977,56 +989,55 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
   va_start (args, fmt);
   msg = g_strdup_vprintf(fmt, args);
   va_end (args);
-  
-  switch (pri)
-    {
-    case GCL_EMERG:
-      syslog_pri = LOG_EMERG;
-      break;
-      
-    case GCL_ALERT:
-      syslog_pri = LOG_ALERT;
-      break;
-      
-    case GCL_CRIT:
-      syslog_pri = LOG_CRIT;
-      break;
-      
-    case GCL_ERR:
-      syslog_pri = LOG_ERR;
-      break;
-      
-    case GCL_WARNING:
-      syslog_pri = LOG_WARNING;
-      break;
-      
-    case GCL_NOTICE:
-      syslog_pri = LOG_NOTICE;
-      break;
-      
-    case GCL_INFO:
-      syslog_pri = LOG_INFO;
-      break;
-      
-    case GCL_DEBUG:
-      syslog_pri = LOG_DEBUG;
-      break;
 
-    default:
-      g_assert_not_reached();
-      break;
-    }
-
-  if (strchr(msg, '%') != NULL)
+  if (gconf_daemon_mode)
     {
-      gchar* quoted = gconf_quote_percents(msg);
+      switch (pri)
+        {
+        case GCL_EMERG:
+          syslog_pri = LOG_EMERG;
+          break;
       
-      g_free(msg);
-      msg = quoted;
+        case GCL_ALERT:
+          syslog_pri = LOG_ALERT;
+          break;
+      
+        case GCL_CRIT:
+          syslog_pri = LOG_CRIT;
+          break;
+      
+        case GCL_ERR:
+          syslog_pri = LOG_ERR;
+          break;
+      
+        case GCL_WARNING:
+          syslog_pri = LOG_WARNING;
+          break;
+      
+        case GCL_NOTICE:
+          syslog_pri = LOG_NOTICE;
+          break;
+      
+        case GCL_INFO:
+          syslog_pri = LOG_INFO;
+          break;
+      
+        case GCL_DEBUG:
+          syslog_pri = LOG_DEBUG;
+          break;
+
+        default:
+          g_assert_not_reached();
+          break;
+        }
+      
+      syslog(syslog_pri, "%s", msg);
+    }
+  else
+    {      
+      printf("%s\n", msg);
     }
   
-  syslog(syslog_pri, msg);
-      
   g_free(msg);
 }
 

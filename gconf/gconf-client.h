@@ -352,6 +352,14 @@ GConfChangeSet* gconf_client_create_reverse_change_set  (GConfClient* client,
                                                          GConfChangeSet* cs,
                                                          GConfError** err);
 
+GConfChangeSet* gconf_client_create_change_set_from_currentv (GConfClient* client,
+                                                              const gchar** keys,
+                                                              GConfError** err);
+
+GConfChangeSet* gconf_client_create_change_set_from_current (GConfClient* client,
+                                                             GConfError** err,
+                                                             const gchar* first_key,
+                                                             ...);
 
 #ifdef __cplusplus
 }

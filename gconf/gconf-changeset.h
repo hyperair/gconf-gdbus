@@ -54,6 +54,18 @@ GConfChangeSet* gconf_create_reverse_change_set  (GConfEngine* conf,
                                                   GConfChangeSet* cs,
                                                   GConfError** err);
 
+/* Create a change set that would restore the current state of all the keys
+   in the NULL-terminated array "keys" */
+GConfChangeSet* gconf_create_change_set_from_currentv (GConfEngine* conf,
+                                                       const gchar** keys,
+                                                       GConfError** err);
+
+GConfChangeSet* gconf_create_change_set_from_current (GConfEngine* conf,
+                                                      GConfError** err,
+                                                      const gchar* first_key,
+                                                      ...);
+
+
 GConfChangeSet* gconf_change_set_new      (void);
 void            gconf_change_set_ref      (GConfChangeSet* cs);
 
@@ -69,6 +81,14 @@ void            gconf_change_set_remove   (GConfChangeSet* cs,
 void            gconf_change_set_foreach  (GConfChangeSet* cs,
                                            GConfChangeSetForeachFunc func,
                                            gpointer user_data);
+
+/* Returns TRUE if the change set contains the given key; if the key
+   is in the set, either NULL (for unset) or a GConfValue is placed in
+   *value_retloc; the value is not a copy and should not be
+   freed. value_retloc can be NULL if you just want to check for a value,
+   and don't care what it is. */
+gboolean     gconf_change_set_check_value   (GConfChangeSet* cs, const gchar* key,
+                                             GConfValue** value_retloc);
 
 void         gconf_change_set_set         (GConfChangeSet* cs, const gchar* key,
                                            GConfValue* value);

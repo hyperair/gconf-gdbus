@@ -1,3 +1,48 @@
+1999-11-29  Havoc Pennington  <hp@pobox.com>
+
+	* wrappers/gtk/gconf-client.c (gconf_client_get): sheesh, this
+	stupid function didn't work at all. fix it
+	(get): properly check whther val is NULL before copying it.
+
+	* gconf/gconf-internals.c (gconf_set_daemon_mode): Function to set
+	daemon mode, for now changes gconf_log behavior
+	(gconf_log): handle daemon vs. non-daemon mode, and with syslog do
+	syslog(pri, "%s", msg) instead of syslog(pri, msg) to avoid
+	unwanted printf magic.	
+	(gconf_value_from_corba_value): more robust for list types, add an assertion
+
+	* gconf/gconfd.c (gconfd_set): return if the conversion from
+	GConfValue doesn't fly
+
+	* gconf/gconf-value.c (gconf_value_new): add a check for valid type
+
+	* gconf/gconf-value.h (GCONF_VALUE_TYPE_VALID): Add macro to check the
+	a value type is valid
+
+	* gconf/gconf-changeset.c (change_set): return if the value being
+	set is the same as the existing value.
+
+	* examples/Makefile.am (EFENCE): add EFENCE var
+
+	* wrappers/gtk/gconf-client.c (gconf_client_commit_change_set):
+	add checks
+
+	* gconf/gconf-changeset.c (gconf_commit_change_set): add checks
+
+	* gconf/gconf-listeners.c (gconf_listeners_remove): Robust against
+	bad notify_id
+
+	* gconf/gconf-changeset.c (gconf_create_change_set_from_current):
+	New function to create a change set which will restore the current
+	values of a list of keys.
+	(gconf_create_change_set_from_currentv): Vector version of the
+	same function.
+	(gconf_change_set_check_value): new function to check for and get 
+	the value of a key in a change set.
+
+	* wrappers/gtk/gconf-client.h: Add client analogues for the above
+	two set-creation functions.
+	
 1999-11-28  Havoc Pennington  <hp@pobox.com>
 
 	* gconf.m4: add the "" around the $4, seems to work - the problem

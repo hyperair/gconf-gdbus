@@ -424,12 +424,18 @@ gconfd_set(PortableServer_Servant servant,
   
   if (value->_d == InvalidVal)
     {
-      gconf_log(GCL_ERR, "Received invalid value in set request");
+      gconf_log(GCL_ERR, _("Received invalid value in set request"));
       return;
     }
 
   val = gconf_value_from_corba_value(value);
 
+  if (val == NULL)
+    {
+      gconf_log(GCL_ERR, _("Couldn't make sense of CORBA value received in set request for key `%s'"), key);
+      return;
+    }
+      
   str = gconf_value_to_string(val);
 
   gconf_log(GCL_DEBUG, "Received request to set key `%s' to `%s'", key, str);
@@ -843,6 +849,8 @@ main(int argc, char** argv)
 
   umask(0);
 
+  gconf_set_daemon_mode(TRUE);
+  
   /* Logs */
   username = g_get_user_name();
   len = strlen(username) + strlen("gconfd") + 5;

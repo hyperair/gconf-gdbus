@@ -53,6 +53,10 @@ typedef enum {
   
 } GConfValueType;
 
+#define GCONF_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) < GCONF_VALUE_IGNORE_SUBSEQUENT))
+/* allows the internal ignore-subsequent value type */
+#define GCONF_INTERNAL_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_IGNORE_SUBSEQUENT))
+
 /* Forward declaration */
 typedef struct _GConfSchema GConfSchema;
 

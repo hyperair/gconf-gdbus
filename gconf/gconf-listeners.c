@@ -130,6 +130,11 @@ gconf_listeners_remove  (GConfListeners* listeners,
   LTable* lt = (LTable*)listeners;
 
   g_return_if_fail(cnxn_id > 0);
+
+  /* This is a programmer error but we want to be robust even with
+     checks turned off */
+  if (cnxn_id == 0)
+    return;
   
   ltable_remove(lt, cnxn_id);
 }
@@ -154,8 +159,7 @@ gconf_listeners_count   (GConfListeners* listeners)
 }
 
 /*
- * LTable impl
- */
+ * LTable impl */
 
 static Listener* 
 listener_new(guint cnxn_id, gpointer listener_data, GFreeFunc destroy_notify)
@@ -325,7 +329,7 @@ ltable_remove(LTable* lt, guint cnxn)
   GNode* node;
 
   g_return_if_fail(cnxn < lt->listeners->len);
-  if (cnxn >= lt->listeners->len)
+  if (cnxn >= lt->listeners->len) /* robust even with checks off */
     return;
   
   /* Remove from the flat table */

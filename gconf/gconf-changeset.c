@@ -196,6 +196,27 @@ gconf_change_set_foreach  (GConfChangeSet* cs,
   gconf_change_set_unref(cs);
 }
 
+gboolean
+gconf_change_set_check_value   (GConfChangeSet* cs, const gchar* key,
+                                GConfValue** value_retloc)
+{
+  Change* c;
+  
+  g_return_val_if_fail(cs != NULL, FALSE);
+
+  c = g_hash_table_lookup(cs->hash, key);
+
+  if (c == NULL)
+    return FALSE;
+  else
+    {
+      if (value_retloc != NULL)
+        *value_retloc = c->value;
+
+      return TRUE;
+    }
+}
+
 void
 gconf_change_set_set_nocopy  (GConfChangeSet* cs, const gchar* key,
                               GConfValue* value)
@@ -382,7 +403,13 @@ change_destroy(Change* c)
 void
 change_set    (Change* c, GConfValue* value)
 {
+  g_return_if_fail(value == NULL ||
+                   GCONF_VALUE_TYPE_VALID(value->type));
+  
   c->type = CHANGE_SET;
+
+  if (value == c->value)
+    return;
   
   if (c->value)
     gconf_value_destroy(c->value);
@@ -446,6 +473,10 @@ gconf_commit_change_set   (GConfEngine* conf,
 {
   struct CommitData cd;
   GSList* tmp;
+
+  g_return_val_if_fail(conf != NULL, FALSE);
+  g_return_val_if_fail(cs != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   cd.conf = conf;
   cd.error = NULL;
@@ -540,6 +571,8 @@ gconf_create_reverse_change_set  (GConfEngine* conf,
 {
   struct RevertData rd;
 
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
   rd.error = NULL;
   rd.conf = conf;
   rd.revert_set = gconf_change_set_new();
@@ -557,3 +590,94 @@ gconf_create_reverse_change_set  (GConfEngine* conf,
   return rd.revert_set;
 }
 
+GConfChangeSet*
+gconf_create_change_set_from_currentv (GConfEngine* conf,
+                                       const gchar** keys,
+                                       GConfError** err)
+{
+  GConfValue* old_value;
+  GConfChangeSet* new_set;
+  const gchar** keyp;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  new_set = gconf_change_set_new();
+  
+  keyp = keys;
+
+  while (*keyp != NULL)
+    {
+      GConfError* error = NULL;
+      const gchar* key = *keyp;
+      
+      old_value = gconf_get(conf, key, &error);
+
+      if (error != NULL)
+        {
+          /* FIXME */
+          g_warning("error creating change set from current keys: %s", error->str);
+          gconf_error_destroy(error);
+          error = NULL;
+        }
+      
+      if (old_value == NULL)
+        gconf_change_set_unset(new_set, key);
+      else
+        gconf_change_set_set_nocopy(new_set, key, old_value);
+
+      ++keyp;
+    }
+
+  return new_set;
+}
+
+GConfChangeSet*
+gconf_create_change_set_from_current (GConfEngine* conf,
+                                      GConfError** err,
+                                      const gchar* first_key,
+                                      ...)
+{
+  GSList* keys = NULL;
+  va_list args;
+  const gchar* arg;
+  const gchar** vec;
+  GConfChangeSet* retval;
+  GSList* tmp;
+  guint i;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  va_start (args, first_key);
+
+  arg = first_key;
+
+  while (arg != NULL)
+    {
+      keys = g_slist_prepend(keys, (/*not-const*/gchar*)arg);
+
+      arg = va_arg (args, const gchar*);
+    }
+  
+  va_end (args);
+
+  vec = g_new0(const gchar*, g_slist_length(keys) + 1);
+
+  i = 0;
+  tmp = keys;
+
+  while (tmp != NULL)
+    {
+      vec[i] = tmp->data;
+      
+      ++i;
+      tmp = g_slist_next(tmp);
+    }
+
+  g_slist_free(keys);
+  
+  retval = gconf_create_change_set_from_currentv(conf, vec, err);
+  
+  g_free(vec);
+
+  return retval;
+}

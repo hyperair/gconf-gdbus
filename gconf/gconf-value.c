@@ -58,6 +58,8 @@ gconf_value_new(GConfValueType type)
 {
   GConfValue* value;
 
+  g_return_val_if_fail(GCONF_INTERNAL_VALUE_TYPE_VALID(type), NULL);
+  
   /* Probably want to use mem chunks here eventually. */
   value = g_new0(GConfValue, 1);
 

@@ -596,29 +596,6 @@ gconf_client_set             (GConfClient* client,
   handle_error(client, error, err);
 }
 
-GConfValue*
-gconf_client_get             (GConfClient* client,
-                              const gchar* key,
-                              GConfError** err)
-{
-  GConfError* error = NULL;
-  GConfValue* val = NULL;
-
-  if (gconf_client_lookup(client, key, &val))
-    return val; /* val may be NULL for unset */
-
-  /* If val was set then it must have been in the cache.
-   * If we got here then val wasn't in the cache.
-   */
-  g_assert(val == NULL);
-  
-  val = gconf_get(client->engine, key, &error);
-      
-  handle_error(client, error, err);
-      
-  return val;
-}
-
 gboolean
 gconf_client_unset          (GConfClient* client,
                              const gchar* key, GConfError** err)
@@ -715,7 +692,7 @@ get(GConfClient* client, const gchar* key, GConfError** error)
   
   /* Check our client-side cache */
   if (gconf_client_lookup(client, key, &val))
-    return gconf_value_copy(val); /* stored in cache, not necessarily set though */
+    return val ? gconf_value_copy(val) : NULL; /* stored in cache, not necessarily set though */
 
   g_assert(val == NULL); /* if it was in the cache we should have returned */
 
@@ -751,6 +728,27 @@ get(GConfClient* client, const gchar* key, GConfError** error)
 
       return val;
     }
+}
+
+
+GConfValue*
+gconf_client_get             (GConfClient* client,
+                              const gchar* key,
+                              GConfError** err)
+{
+  GConfError* error = NULL;
+  GConfValue* val = NULL;
+
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  val = get(client, key, &error);
+
+  if (val == NULL && error != NULL)
+    handle_error(client, error, err);
+  else
+    g_assert(error == NULL);
+  
+  return val;
 }
 
 gdouble
@@ -1397,6 +1395,11 @@ gconf_client_commit_change_set   (GConfClient* client,
 {
   struct CommitData cd;
   GSList* tmp;
+
+  g_return_val_if_fail(client != NULL, FALSE);
+  g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);
+  g_return_val_if_fail(cs != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   cd.client = client;
   cd.error = NULL;
@@ -1438,6 +1441,9 @@ gconf_client_commit_change_set   (GConfClient* client,
     }
   else
     {
+      g_assert((!remove_committed) ||
+               (gconf_change_set_size(cs) == 0));
+      
       return TRUE;
     }
 }
@@ -1517,3 +1523,95 @@ gconf_client_create_reverse_change_set  (GConfClient* client,
   return rd.revert_set;
 }
 
+
+GConfChangeSet*
+gconf_client_create_change_set_from_currentv (GConfClient* client,
+                                              const gchar** keys,
+                                              GConfError** err)
+{
+  GConfValue* old_value;
+  GConfChangeSet* new_set;
+  const gchar** keyp;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  new_set = gconf_change_set_new();
+  
+  keyp = keys;
+
+  while (*keyp != NULL)
+    {
+      GConfError* error = NULL;
+      const gchar* key = *keyp;
+      
+      old_value = gconf_client_get(client, key, &error);
+
+      if (error != NULL)
+        {
+          /* FIXME */
+          g_warning("error creating change set from current keys: %s", error->str);
+          gconf_error_destroy(error);
+          error = NULL;
+        }
+      
+      if (old_value == NULL)
+        gconf_change_set_unset(new_set, key);
+      else
+        gconf_change_set_set_nocopy(new_set, key, old_value);
+
+      ++keyp;
+    }
+
+  return new_set;
+}
+
+GConfChangeSet*
+gconf_client_create_change_set_from_current (GConfClient* client,
+                                             GConfError** err,
+                                             const gchar* first_key,
+                                             ...)
+{
+  GSList* keys = NULL;
+  va_list args;
+  const gchar* arg;
+  const gchar** vec;
+  GConfChangeSet* retval;
+  GSList* tmp;
+  guint i;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  va_start (args, first_key);
+
+  arg = first_key;
+
+  while (arg != NULL)
+    {
+      keys = g_slist_prepend(keys, (/*non-const*/gchar*)arg);
+
+      arg = va_arg (args, const gchar*);
+    }
+  
+  va_end (args);
+
+  vec = g_new0(const gchar*, g_slist_length(keys) + 1);
+
+  i = 0;
+  tmp = keys;
+
+  while (tmp != NULL)
+    {
+      vec[i] = tmp->data;
+      
+      ++i;
+      tmp = g_slist_next(tmp);
+    }
+
+  g_slist_free(keys);
+  
+  retval = gconf_client_create_change_set_from_currentv(client, vec, err);
+  
+  g_free(vec);
+
+  return retval;
+}

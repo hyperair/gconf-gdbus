@@ -139,6 +139,7 @@ gboolean   gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                                           gpointer car_retloc,
                                                           gpointer cdr_retloc,
                                                           GConfError** err);
+void       gconf_set_daemon_mode(gboolean setting);
 
 #endif
 
