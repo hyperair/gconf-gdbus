@@ -1,19 +1,19 @@
 # GConf ja.po.
-# Copyright (C) 2000-2003 Free Software Foundation, Inc.
-# Takeshi Aihana <aihana@gnome.gr.jp>, 2000-2003.
+# Copyright (C) 2000-2004 Free Software Foundation, Inc.
+# Takeshi Aihana <aihana@gnome.gr.jp>, 2000-2004.
 # KAMAGASAKO Masatoshi <emerald@gnome.gr.jp>, 2003
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf HEAD\n"
-"POT-Creation-Date: 2004-02-24 16:00+0000\n"
-"PO-Revision-Date: 2003-10-28 00:16+0900\n"
-"Last-Translator: KAMAGASAKO Masatoshi <emerald@gnome.gr.jp>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-02-27 00:14+0900\n"
+"PO-Revision-Date: 2004-02-27 00:12+0900\n"
+"Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 #: backends/dir-utils.c:108
 #, c-format
@@ -32,19 +32,19 @@ msgstr ""
 "%s ルートディレクトリへの読み取り/書き込みは アドレス '%s' ではできません。"
 
 #: backends/gconf-merge-tree.c:78
-#, fuzzy, c-format
+#, c-format
 msgid "Cannot find directory %s\n"
-msgstr "ディレクトリ '%s' を作成できませんでした: %s"
+msgstr "ディレクトリ %s が見つかりません\n"
 
 #: backends/gconf-merge-tree.c:94
-#, fuzzy, c-format
+#, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
-msgstr "'%s' でスキーマの取得のエラー: %s\n"
+msgstr "'%s' への GConf ツリーの保存エラー: %s\n"
 
 #: backends/gconf-merge-tree.c:120
 #, c-format
 msgid "Usage: %s <dir>\n"
-msgstr ""
+msgstr "用法: %s <ディレクトリ>\n"
 
 #: backends/gconf-merge-tree.c:126
 #, c-format
@@ -57,6 +57,14 @@ msgid ""
 "  to:\n"
 "    dir/%%gconf-tree.xml\n"
 msgstr ""
+"用法: %s <ディレクトリ>\n"
+"  下記のようなマークアップ・バックエンドのファイルシステム階層をマージしま"
+"す:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  マージ後:\n"
+"    dir/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -320,7 +328,8 @@ msgstr "アドレス '%s' は使えません。"
 
 #: gconf/gconf-backend.c:220
 msgid "GConf won't work without dynamic module support (gmodule)"
-msgstr "GConf はダイナミックモジュールサポート(gmodule)無しでは動作しません。"
+msgstr ""
+"GConf はダイナミック・モジュールのサポート (gmodule) 無しでは動作しません。"
 
 #: gconf/gconf-backend.c:230
 #, c-format
@@ -330,11 +339,11 @@ msgstr "モジュール '%s' をロード中にエラー: %s\n"
 #: gconf/gconf-backend.c:262
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
-msgstr "'%s' 用のバックエンドモジュールが特定できません。"
+msgstr "'%s' 用のバックエンド・モジュールを特定できませんでした。"
 
 #: gconf/gconf-backend.c:299
 msgid "Failed to shut down backend"
-msgstr "バックエンドモジュールのシャットダウンに失敗しました。"
+msgstr "バックエンド・モジュールのシャットダウンに失敗しました。"
 
 #: gconf/gconf-client.c:344 gconf/gconf-client.c:362
 #, c-format
@@ -349,7 +358,7 @@ msgstr "GConf から警告: '%s' の中のペアのリスト化に失敗: %s"
 #: gconf/gconf-client.c:1181
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
-msgstr "'%s' を期待されたが、得られたのは '%s'(キーは'%s')です。"
+msgstr "'%s' を期待しましたが得られたのは '%s'(キーは'%s')です。"
 
 #: gconf/gconf-database.c:234
 msgid "Received invalid value in set request"
@@ -378,7 +387,7 @@ msgstr ""
 #: gconf/gconf-database.c:988
 #, c-format
 msgid "Failed to sync one or more sources: %s"
-msgstr "1 つ以上のファイルの同期でエラー: %s"
+msgstr "一つ以上のファイルの同期でエラー: %s"
 
 #: gconf/gconf-database.c:1080
 #, c-format
@@ -606,22 +615,22 @@ msgstr "(キーと値の)ペアを期待されたが、得られたのは %s で
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
-"(%s と %s) のペアを期待されたが、得られたのは一つないし両方の値が無いペアで"
+"ペア (%s と %s) を期待しましたが得られたのは一つないし両方の値が無いペアで"
 "す。"
 
 #: gconf/gconf-internals.c:1522
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr ""
-"(%s と %s)のタイプのペアを期待されたが、得られたのは(%s と %s)のタイプです。"
+"種類 (%s と %s) のペアを期待しましたが、得られたのは種類 (%s と %s) です。"
 
 #: gconf/gconf-internals.c:1638
 msgid "Quoted string doesn't begin with a quotation mark"
-msgstr "引用された文字列はクォーテーション記号(')で始まっていません。"
+msgstr "引用された文字列はクォーテーション記号 (') で始まっていません。"
 
 #: gconf/gconf-internals.c:1700
 msgid "Quoted string doesn't end with a quotation mark"
-msgstr "引用された文字列はクォーテーション記号(')で終わっていません。"
+msgstr "引用された文字列はクォーテーション記号 (') で終わっていません。"
 
 #: gconf/gconf-internals.c:1836
 msgid "Encoded value is not valid UTF-8"
@@ -1080,7 +1089,7 @@ msgstr "スラッシュ '/' で始める必要があります。"
 
 #: gconf/gconf.c:2474
 msgid "Can't have two slashes (/) in a row"
-msgstr "行中に２つのスラッシュ '/' がありません。"
+msgstr "行中にスラッシュ '/' が二つありません。"
 
 #: gconf/gconf.c:2476
 msgid "Can't have a period (.) right after a slash (/)"
@@ -1165,7 +1174,7 @@ msgid ""
 "edit %s"
 msgstr ""
 "ソースパスの中に設定ソースがありません。設定は保存されません; \n"
-"%s を編集してください"
+"%s を編集して下さい。"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1536,7 +1545,7 @@ msgstr "オーナー"
 
 #: gconf/gconftool.c:310
 msgid "Specify a schema file to be installed"
-msgstr "インストールするスキーマファイルを指定してください。"
+msgstr "インストールするスキーマファイルを指定して下さい。"
 
 #: gconf/gconftool.c:311
 msgid "FILENAME"
@@ -1721,7 +1730,7 @@ msgstr "シャットダウンエラー: %s\n"
 
 #: gconf/gconftool.c:1120
 msgid "Must specify one or more directories to recursively list.\n"
-msgstr "再帰的にリスト表示するディレクトリを一つ以上指定してください。\n"
+msgstr "再帰的にリスト表示するディレクトリを一つ以上指定して下さい\n"
 
 #: gconf/gconftool.c:1172
 msgid "Must specify one or more directories to dump.\n"
@@ -1973,8 +1982,7 @@ msgstr "\"%s\" の再帰的な解放中にエラー: %s\n"
 
 #: gconf/gconftool.c:2362
 msgid "Must specify one or more directories to get subdirs from.\n"
-msgstr ""
-"サブディレクトリを取得するためのディレクトリを一つ以上指定してください。\n"
+msgstr "サブディレクトリを取得するためのディレクトリを一つ以上指定して下さい\n"
 
 #: gconf/gconftool.c:2396
 #, c-format
@@ -2241,19 +2249,3 @@ msgstr ""
 "ディレクトリのキーにおかしな値を設定する事によって アプリケーションを終了させ"
 "ようとしています:\n"
 "  %s\n"
-
-#~ msgid ""
-#~ "%u items remain in the cache after cleaning already-synced items older "
-#~ "than %u seconds"
-#~ msgstr ""
-#~ "%u 個のアイテムが %u 秒よりも古い同期したアイテムを削除した後のキャッシュ"
-#~ "に残っています。"
-
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#~ msgid "/path"
-#~ msgstr "/path を編集してください"
-
-#~ msgid "%s must be used by itself.\n"
-#~ msgstr "%s はそれ自身で使われる必要があります。\n"
