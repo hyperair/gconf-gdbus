@@ -30,7 +30,7 @@ extern "C" {
  * The listeners object is used to store listeners who want notification
  * of changes in a namespace section.
  *
- * It's shared between gconfd and the GtkObject convenience wrapper.
+ * It's shared between gconfd and the GObject convenience wrapper.
  * It's also a public API.
  */
 

@@ -449,10 +449,8 @@
       <sect3>
         <title><structname>GConfClient</structname></title>
         <para>
-          <structname>GConfClient</structname> is located in a separate library
-          from GConf itself, because to use it you must link with
-          GTK+. <structname>GConfClient</structname> derives from
-          <structname>GtkObject</structname> and is a wrapper for the
+          <structname>GConfClient</structname> derives from
+          <structname>GObject</structname> and is a wrapper for the
           <structname>GConfEngine</structname> type.  It adds a few nice
           features:
           <itemizedlist>
@@ -481,7 +479,7 @@
             </listitem>
             <listitem>
               <para>
-                It uses the GTK signal system. Instead of using
+                It uses the GObject signal system. Instead of using
                 GConf's custom callback API for notification, you can
                 simply connect to a <literal>"value_changed"</literal>
                 signal. 
@@ -597,11 +595,7 @@
     <para>
       Although the examples use <structname>GConfClient</structname>,
       remember that it's also possible to use
-      <structname>GConfEngine</structname> directly, to avoid linking
-      to GTK. Also, in the next version of GTK and glib the object
-      system will be moved to glib, so
-      <structname>GConfClient</structname> can move to the main GConf
-      library.
+      <structname>GConfEngine</structname> directly.
     </para>
 
     <sect2>

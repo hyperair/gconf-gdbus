@@ -15,7 +15,7 @@ schema names with keys.
 </para>
 
 <para>
-Most of this interface is replicated in the #GtkObject wrapper
+Most of this interface is replicated in the #GObject wrapper
 (#GConfClient object); an alternative to the value-setting functions
 is the #GConfChangeSet interface.
 </para>
@@ -93,7 +93,7 @@ server.  The server will notify the client when any key at or below
 @namespace_section is set or unset. Try to watch the smallest possible part of
 the namespace; otherwise you will slow down the server and your application with
 unnecessary notifications. Note that you should prefer gconf_client_notify_add()
-if you're using the #GtkObject wrapper library, because
+if you're using the #GObject wrapper library, because
 gconf_client_notify_add() does not require a client-server conversation for
 every callback. gconf_engine_notify_add() requests a different server notification for
 every callback. The function returns an ID you can use to remove the

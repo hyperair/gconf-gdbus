@@ -3,7 +3,7 @@ GConfClient
 
 <!-- ##### SECTION Short_Description ##### -->
 
-#GtkObject-based convenience wrapper
+#GObject-based convenience wrapper
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -141,8 +141,8 @@ handling.  #GConfClient can pop up a dialog in the default signal handler for
 "error" or "unreturned_error." You can specify that no errors are handled, only
 unreturned errors are handled, or all errors are handled with this enumeration.
 You can prevent specific errors from being handled automatically by stopping the
-signal emission before the default signal handler is called (see the GTK+
-documentation, gtk_signal_emit_stop_by_name() for example).
+signal emission before the default signal handler is called (see the GLib
+documentation, g_signal_stop_emission_by_name() for example).
 </para>
 
 @GCONF_CLIENT_HANDLE_NONE: never run a default error handler.

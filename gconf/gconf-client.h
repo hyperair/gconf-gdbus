@@ -199,7 +199,7 @@ void         gconf_client_notify (GConfClient* client, const char* key);
 /* 
  * Error handling happens in the default signal handler, so you can
  * selectively override the default handling by connecting to the error
- * signal and calling gtk_signal_emit_stop()
+ * signal and calling g_signal_stop_emission()
  */
 
 void              gconf_client_set_error_handling(GConfClient* client,
