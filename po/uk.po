@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "POT-Creation-Date: 2002-06-05 09:15+0300\n"
-"PO-Revision-Date: 2002-06-05 08:54+0200\n"
+"PO-Revision-Date: 2002-06-05 12:40+0200\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -791,6 +791,10 @@ msgstr "Значення для \"%s\" встановлено в джерелі 
 #, c-format
 msgid "Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file %s/path doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. If you have stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections - put \"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconfd and also lockfiles in individual storage locations such as ~/.gconf"
 msgstr ""
+"Неможливо зберегти значення ключа \"%s\", бо сервер конфіґурації не має баз даних з можливістю запису. Є кілька загальних причин цієї проблеми:\n"
+"1) ваш файл шляху конфіґурації %s/path не містить бази даних чи його не було знайдено;2) було помилково створено два процеси gconfd\n"
+"3) вашу операційну систему неправильно сконфіґуровано, і блокування фалів через NFS не працює в домашньому каталозі\n"
+"4) ваша клієнтська машина NFS зазнала збою і неправильно сповістила сервер на перезавантаженні, що блокування файлів мають бути скинуті.Якщо запущено два просеси gconfd (чи їх було два в момент запуску в момент запуску другого), завершіть роботу, знищіть всі копії gconfd і війдіть назад. Якщо лишились старі блокування, знищіть ~/.gconf*/*lock. Можливо, проблема в спробі використовувати GConf з двох машин одночасно, і ORBit ще в типовій конфіґурації по умлочанию, яка забороняє віддалені з'єднання CORBA – внесіть \"ORBIIOPIPv4=1\" в /etc/orbitrc. Як завжи, перевірте user.* в системному журналі про помилки gconfd. Може бути лише один процес gconfd не домашній каталог, він має володіти блокуванням у  ~/.gconfd і блокуваннями в індивідуальних місцях зберігання, таких як ~/.gconf."
 
 #: gconf/gconf-sources.c:1413
 #, c-format
@@ -840,13 +844,13 @@ msgstr "Не зрозуміло \"%s\" (список має закінчуват
 #: gconf/gconf-value.c:325
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
-msgstr ""
+msgstr "Незрозуміле значення \"%s\" (знайдено зайвий знак \"]\" в списку)"
 
 #: gconf/gconf-value.c:356
 #: gconf/gconf-value.c:517
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
-msgstr ""
+msgstr "Незрозуміле значення \"%s\" (зайві знаки вкінці)"
 
 #: gconf/gconf-value.c:403
 #, c-format
@@ -867,12 +871,12 @@ msgstr "Не зрозуміло \"%s\" (невірна кількість еле
 #: gconf/gconf-value.c:486
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
-msgstr ""
+msgstr "Незрозуміле значення \"%s\" (знайдено зайвий знак \")\" в списку)"
 
 #: gconf/gconf.c:55
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "Ключ \"%s\" – NULL"
 
 #: gconf/gconf.c:62
 #, fuzzy, c-format
@@ -965,14 +969,14 @@ msgstr "gconfd скомпільовано з налагодженням; спр�
 #: gconf/gconfd.c:295
 #, c-format
 msgid "No configuration files found, trying to use the default config source `%s'"
-msgstr ""
+msgstr "Не знайдено конфіґураційних, спроба використовувати типове джерело конфіґурації \"%s\""
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:303
 msgid "No configuration sources in the source path, configuration won't be saved; edit "
-msgstr ""
+msgstr "Немає джерел конфіґурації в шляху джерел, конфіґурацію не було збережено; відредагувати"
 
 #: gconf/gconfd.c:316
 #, c-format
@@ -1011,12 +1015,12 @@ msgstr "запуск (версія %s), процес %u користувача \
 
 #: gconf/gconfd.c:582
 msgid "Failed to get object reference for ConfigServer"
-msgstr ""
+msgstr "Збій на отриманні посилання на об'єкт для ConfigServer"
 
 #: gconf/gconfd.c:620
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
-msgstr ""
+msgstr "Збій на запису байта в канал fd %d, клієнтська програма могла зависнути: %s"
 
 #: gconf/gconfd.c:630
 #, fuzzy, c-format
@@ -1044,12 +1048,12 @@ msgstr "Повертання виключення: %s"
 #: gconf/gconfd.c:1167
 #, c-format
 msgid "Failed to open gconfd logfile; won't be able to restore listeners after gconfd shutdown (%s)"
-msgstr ""
+msgstr "Збій на відритті файла журналу gconfd: буде неможливо відновити прослуховувача після зупинки gconfd (%s)"
 
 #: gconf/gconfd.c:1202
 #, c-format
 msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr ""
+msgstr "Збій на закритті файла журналу gconfd; дані може бути неправильно збережено (%s)"
 
 #: gconf/gconfd.c:1271
 #, c-format
