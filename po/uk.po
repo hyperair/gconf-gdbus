@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "POT-Creation-Date: 2002-06-05 09:15+0300\n"
-"PO-Revision-Date: 2002-06-06 08:58+0200\n"
+"PO-Revision-Date: 2002-06-06 09:27+0200\n"
 "Last-Translator: Yuriy Syrota <yuri@renome.rovno.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -63,9 +63,9 @@ msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Права каталогу чи файла для джерела XML з коренем %s: %o/%o"
 
 #: backends/xml-backend.c:590
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Помилка синхронізації даних конфігурації: %s"
+msgstr "Помилка синхронізації кеша каталогу серверного модуля XML: %s"
 
 #: backends/xml-backend.c:655
 msgid "Remove dir operation is no longer supported, just remove all the values in the directory"
@@ -116,14 +116,14 @@ msgid "Failed to write file `%s': %s"
 msgstr "Не вдалося записати файл \"%s\": %s"
 
 #: backends/xml-dir.c:440
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to set mode on `%s': %s"
-msgstr "Не вдалося відкрити \"%s\": %s\n"
+msgstr "Збій на встановленні режиму на \"%s\": %s"
 
 #: backends/xml-dir.c:450
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write XML data to `%s': %s"
-msgstr "Не вдалося записати файл \"%s\": %s"
+msgstr "Збій на запису даних XML в \"%s\": %s"
 
 #: backends/xml-dir.c:460
 #: backends/xml-dir.c:1236
@@ -169,9 +169,9 @@ msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Входження без назви у файлі XML \"%s\", проіґноровано"
 
 #: backends/xml-dir.c:1139
-#, fuzzy, c-format
+#, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr "Вузол верхнього рівня в файлі XML \"%s\" не <entry>, проіґноровано"
+msgstr "Вузол верхнього рівня у XML-файлі \"%s\"  встановлено в <%s> замість <entry>, проіґноровано"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -179,9 +179,9 @@ msgid "Failed to create file `%s': %s"
 msgstr "Не вдалося створити файл \"%s\": %s"
 
 #: backends/xml-dir.c:1327
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "Не вдалося звільнити заблокований каталог \"%s\": %s"
+msgstr "Збій на аналізі XML-файла \"%s\""
 
 #. There was an error
 #: backends/xml-entry.c:154
@@ -195,9 +195,9 @@ msgid "Ignoring schema name `%s', invalid: %s"
 msgstr "Іґнорування назви схеми \"%s\", помилка: %s"
 
 #: backends/xml-entry.c:380
-#, fuzzy, c-format
+#, c-format
 msgid "Ignoring XML node `%s': %s"
-msgstr "Проіґноровано вузол XML з назвою \"%s\": %s"
+msgstr "Проіґноровано XML-вузол \"%s\": %s"
 
 #: backends/xml-entry.c:732
 #, c-format
@@ -384,14 +384,14 @@ msgid "Error getting default value for `%s': %s"
 msgstr "Помилка отримання типового значення \"%s\": %s"
 
 #: gconf/gconf-database.c:1413
-#, fuzzy, c-format
+#, c-format
 msgid "Error unsetting \"%s\": %s"
-msgstr "Помилка зняття значення \"%s\": %s"
+msgstr "Помилка видалення значення \"%s\": %s"
 
 #: gconf/gconf-database.c:1445
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "Помилка отримання значення \"%s\": %s"
+msgstr "Помилка отримання нового значення для \"%s\": %s"
 
 #: gconf/gconf-database.c:1493
 #, c-format
@@ -483,7 +483,7 @@ msgid "No database available to save your configuration"
 msgstr "Немає доступної бази даних для збереження вашої конфіґурації"
 
 #: gconf/gconf-internals.c:86
-#, fuzzy, c-format
+#, c-format
 msgid "No '/' in key \"%s\""
 msgstr "Немає \"/\" в ключі \"%s\""
 
@@ -587,9 +587,9 @@ msgid "Encoded value is not valid UTF-8"
 msgstr "Закодоване значення не є правильною послідовність UTF-8"
 
 #: gconf/gconf-internals.c:2287
-#, fuzzy, c-format
+#, c-format
 msgid "Could not lock temporary file '%s': %s"
-msgstr "Не вдалося відкрити файл шляху \"%s\": %s\n"
+msgstr "Не вдалося заблокувати тимчасовий файл \"%s\": %s"
 
 #: gconf/gconf-internals.c:2314
 #, c-format
@@ -597,9 +597,9 @@ msgid "Could not create file '%s', probably because it already exists"
 msgstr "Не вдалось створити \"%s\", можливо тому, що він вже існує"
 
 #: gconf/gconf-internals.c:2360
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create or open '%s'"
-msgstr "Не вдалося створити файл \"%s\": %s"
+msgstr "Не вдалося створити чи відкрити \"%s\""
 
 #: gconf/gconf-internals.c:2370
 #, c-format
@@ -617,14 +617,13 @@ msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool чи інший процес (не gconfd) заблокував файл \"%s\""
 
 #: gconf/gconf-internals.c:2446
-#, fuzzy
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "не вдалося з'єднатись з ORB для зондування gconfd"
+msgstr "не вдалось зв'язатись з ORB для розв'язання дійсного посилання на об'єкт"
 
 #: gconf/gconf-internals.c:2456
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr "Не вдалося перетворити об'єкт у IOR"
+msgstr "Збій на перетворенні IOR \"%s\" в посилання на об'єкт"
 
 #: gconf/gconf-internals.c:2506
 #, c-format
@@ -642,35 +641,35 @@ msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Немає блокування на файл \"%s\", а має бути"
 
 #: gconf/gconf-internals.c:2627
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to link '%s' to '%s': %s"
-msgstr "Не вдалося перейменувати \"%s\" в \"%s\": %s"
+msgstr "Не вдалося пов'язати \"%s\" з \"%s\": %s"
 
 #: gconf/gconf-internals.c:2639
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove lock file `%s': %s"
-msgstr "Не вдалося створити файл \"%s\": %s"
+msgstr "Збій на видалені файла блокування \"%s\": %s"
 
 #: gconf/gconf-internals.c:2658
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to clean up file '%s': %s"
-msgstr "Не вдалося закрити файл \"%s\": %s"
+msgstr "Збій на очищені файла \"%s\": %s"
 
 #: gconf/gconf-internals.c:2672
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove lock directory `%s': %s"
-msgstr "Не вдалося звільнити заблокований каталог \"%s\": %s"
+msgstr "Збій на видаленні блокування каталогу \"%s\": %s"
 
 #: gconf/gconf-internals.c:2815
 #: gconf/gconfd.c:595
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create %s: %s"
-msgstr "Не вдалося створити файл \"%s\": %s"
+msgstr "Збій на створенні \"%s\": %s"
 
 #: gconf/gconf-internals.c:2837
-#, fuzzy, c-format
+#, c-format
 msgid "Server ping error: %s"
-msgstr "помилка аналізу OAF: %s"
+msgstr "Помилка перевірки доступності сервера: %s"
 
 #: gconf/gconf-internals.c:2858
 #, c-format
@@ -678,9 +677,9 @@ msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "Збій на створенні каналу для зв'язку з породженим демоном gconfd: %s\n"
 
 #: gconf/gconf-internals.c:2882
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to launch configuration server: %s\n"
-msgstr "Збій доступу до джерела конфіґурації(й): %s\n"
+msgstr "Збій на запуску сервера конфіґурації: %s\n"
 
 #: gconf/gconf-internals.c:2907
 #, c-format
@@ -719,9 +718,9 @@ msgstr "Зв'яжіться з вашим системним адміністр�
 "Не вдалось заблокувати файл \"%s\"; це означає, що, можливо, існує проблема з конфіґураціїю вашої операційної системи. Якщо у вас є змонтований через NFS домашній каталог, можливо, або сервер, або клієнт сконфіґурований неправильно. Подивіться документацію на rpc.statd і rpc.lockd. Загальним випадком цієї помилки може бути те, що сервіс \"nfslock\" було вимкнено. Сталася помилка \"%s\" (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr "Неможливо записати у файл \"%s\": %s"
+msgstr "Неможливо видалити файл \"%s\": %s\n"
 
 #: gconf/gconf-sanity-check.c:195
 #, c-format
@@ -731,9 +730,8 @@ msgstr "Зв'яжіться з вашим системним адміністр�
 "Немає джерел конфіґурації у файлі \"%s\"; це означає, що параметри неможливо зберегти. %s%s"
 
 #: gconf/gconf-sanity-check.c:198
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "Помилка зчитування файлу збереженого стану: %s"
+msgstr "Помилка зчитування файла: "
 
 #: gconf/gconf-sanity-check.c:220
 #, c-format
@@ -750,9 +748,9 @@ msgid "Schema contains invalid UTF-8"
 msgstr "Схема містить неправильну послідовність UTF-8"
 
 #: gconf/gconf-sources.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load source \"%s\": %s"
-msgstr "Помилка завантаження джерела \"%s\": %s"
+msgstr "Збій на завантаженні джерела \"%s\": %s"
 
 #: gconf/gconf-sources.c:346
 #, c-format
@@ -879,7 +877,7 @@ msgid "Key \"%s\" is NULL"
 msgstr "Ключ \"%s\" – NULL"
 
 #: gconf/gconf.c:62
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\": %s"
 msgstr "\"%s\": %s"
 
@@ -893,9 +891,9 @@ msgid "Can't add notifications to a local configuration source"
 msgstr "Неможливо додавати звістки до локального джерела конфіґурації"
 
 #: gconf/gconf.c:2078
-#, fuzzy, c-format
+#, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
-msgstr "Не вдалося додати клієнтський список до серверного, помилка CORBA: %s"
+msgstr "Збій на додаванні клієнта у серверний список, помилка CORBA: %s"
 
 #: gconf/gconf.c:2433
 msgid "Must begin with a slash (/)"
@@ -910,9 +908,9 @@ msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Не може бути крапки після \"/\""
 
 #: gconf/gconf.c:2476
-#, fuzzy, c-format
+#, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
-msgstr "\"%c\" - невірний символ в назві ключів/каталогів"
+msgstr "\"%c\" - неправильний символ в назві ключів"
 
 #: gconf/gconf.c:2486
 #, c-format
@@ -1023,14 +1021,14 @@ msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr "Збій на запису байта в канал fd %d, клієнтська програма могла зависнути: %s"
 
 #: gconf/gconfd.c:630
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
-msgstr "Не вдалося отримати IOR для клієнта: %s"
+msgstr "Збій на отриманні блокування для демона, завершення роботи: %s"
 
 #: gconf/gconfd.c:668
-#, fuzzy, c-format
+#, c-format
 msgid "Error releasing lockfile: %s"
-msgstr "Помилка видалення каталогу \"%s\": %s"
+msgstr "Помилка на звільненні файла блокування: %s"
 
 #: gconf/gconfd.c:676
 msgid "Exiting"
@@ -1117,14 +1115,14 @@ msgid "Failed to get IOR for client: %s"
 msgstr "Не вдалося отримати IOR для клієнта: %s"
 
 #: gconf/gconfd.c:2057
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open saved state file: %s"
-msgstr "Не вдалося відкрити файл збереженого стану \"%s\": %s"
+msgstr "Збій на відкритті файла збереженого стану: %s"
 
 #: gconf/gconfd.c:2070
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write client add to saved state file: %s"
-msgstr "Не вдалося скинути клієнта у файл збережного стану: %s"
+msgstr "Збій на запису додавання клієнта у файл збереженого стану: %s"
 
 #: gconf/gconfd.c:2078
 #, c-format
@@ -1165,9 +1163,8 @@ msgid "Unset the keys on the command line"
 msgstr "Зняти значення ключів в командному рядку"
 
 #: gconf/gconftool.c:119
-#, fuzzy
 msgid "Recursively unset all keys at or below the key/directory names on the command line"
-msgstr "Потрібно вказати ключ або ключі для отримання\n"
+msgstr "Рекурсивно знімає встановлення всіх ключів цього і нижчих ключів і каталогів у командному рядку"
 
 #: gconf/gconftool.c:128
 msgid "Print all key/value pairs in a directory."
@@ -1313,23 +1310,20 @@ msgid "Can't set and get/unset simultaneously\n"
 msgstr "Неможна встановлючати та зчитувати чи знімати значення одночасно\n"
 
 #: gconf/gconftool.c:456
-#, fuzzy
 msgid "Can't use --all-entries with --get or --set\n"
-msgstr "Не можна використати --all-dirs з --get чи --set\n"
+msgstr "Неможливо використовувати параметр --all-entries разом з параметрами --get чи --set\n"
 
 #: gconf/gconftool.c:464
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Не можна використати --all-dirs з --get чи --set\n"
 
 #: gconf/gconftool.c:474
-#, fuzzy
 msgid "--recursive-list should not be used with --get, --set, --unset, --all-entries, or --all-dirs\n"
-msgstr "--recursive-list не можне бути використано з --get, --set, --unset, --all-pairs, or --all-dirs\n"
+msgstr "--recursive-list не можне бути використано з --get, --set, --unset, --all-entries чи --all-dirs\n"
 
 #: gconf/gconftool.c:484
-#, fuzzy
 msgid "--set_schema should not be used with --get, --set, --unset, --all-entries, --all-dirs\n"
-msgstr "--set_schema не можне бути використано з --get, --set, --unset, --all-pairs, --all-dirs\n"
+msgstr "--set_schema не можне бути використано з --get, --set, --unset, --all-entries чи --all-dirs\n"
 
 #: gconf/gconftool.c:490
 msgid "Value type is only relevant when setting a value\n"
@@ -1399,9 +1393,9 @@ msgid "Must specify one or more dirs to recursively list.\n"
 msgstr "Неохідно вказати принаймні один каталог для рекурсивного списку.\n"
 
 #: gconf/gconftool.c:949
-#, fuzzy, c-format
+#, c-format
 msgid "Failure listing entries in `%s': %s\n"
-msgstr "Невдалося отримати список пар в \"%s\": %s"
+msgstr "Збій на перерахуванні записів у \"%s\": %s\n"
 
 #: gconf/gconftool.c:967
 msgid "(no value set)"
@@ -1508,24 +1502,23 @@ msgid "Error: %s\n"
 msgstr "Помилка: %s\n"
 
 #: gconf/gconftool.c:1263
-#, fuzzy, c-format
+#, c-format
 msgid "Error setting value: %s\n"
-msgstr "Помилка встановлення значення: %s"
+msgstr "Помилка встановлення значення: %s\n"
 
 #: gconf/gconftool.c:1281
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing: %s\n"
-msgstr "Помилка синхронізації: %s"
+msgstr "Помилка синхронізації: %s\n"
 
 #: gconf/gconftool.c:1304
-#, fuzzy
 msgid "Must specify a key or keys on the command line\n"
-msgstr "Потрібно вказати ключ або ключі для отримання\n"
+msgstr "Необхідно вказати ключ або ключі в командному рядку\n"
 
 #: gconf/gconftool.c:1324
-#, fuzzy, c-format
+#, c-format
 msgid "No schema known for `%s'\n"
-msgstr "Немає файлу \"%s\"\n"
+msgstr "Невідома схема для \"%s\"\n"
 
 #: gconf/gconftool.c:1357
 #, c-format
@@ -1533,14 +1526,14 @@ msgid "No doc string stored in schema at '%s'\n"
 msgstr "В схемі відсутній опис на \"%s\"\n"
 
 #: gconf/gconftool.c:1362
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting schema at '%s': %s\n"
-msgstr "Омилка отримання схеми для \"%s\": %s"
+msgstr "Помилка отримання схеми на \"%s\": %s\n"
 
 #: gconf/gconftool.c:1369
-#, fuzzy, c-format
+#, c-format
 msgid "No schema stored at '%s'\n"
-msgstr "Немає файлу \"%s\"\n"
+msgstr "Відсутня схема на \"%s\"\n"
 
 #: gconf/gconftool.c:1372
 #, c-format
@@ -1549,19 +1542,18 @@ msgstr "Значення на \"%s\" не є схемою\n"
 
 #: gconf/gconftool.c:1428
 #: gconf/gconftool.c:1453
-#, fuzzy
 msgid "Must specify a schema name followed by the key name to apply it to\n"
-msgstr "Потрібно вказати ключ (назву схеми) як єдиний арґумент\n"
+msgstr "Необхідно вказати назву схеми і ключа, до якого застосувати схему\n"
 
 #: gconf/gconftool.c:1435
-#, fuzzy, c-format
+#, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
-msgstr "УВАГА: не вдалося зв'язати схему \"%s\" з ключем \"%s\": %s\n"
+msgstr "Помилка асоціації назви схеми \"%s\" з назвою ключа \"%s\": %s\n"
 
 #: gconf/gconftool.c:1463
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "Омилка отримання схеми для \"%s\": %s"
+msgstr "Помилка видалення назви схеми з \"%s\": %s\n"
 
 #: gconf/gconftool.c:1488
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1603,14 +1595,13 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Помилка зняття значення \"%s\": %s\n"
 
 #: gconf/gconftool.c:1659
-#, fuzzy
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Потрібно вказати один або більше ключів для зняття значення.\n"
+msgstr "Необхідно вказати один чи більше ключів для рекурсивного видалення.\n"
 
 #: gconf/gconftool.c:1673
-#, fuzzy, c-format
+#, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "Невдалося отримати список пар в \"%s\": %s"
+msgstr "Збій під час рекурсивного видалення \"%s\": %s\n"
 
 #: gconf/gconftool.c:1691
 msgid "Must specify one or more dirs to get subdirs from.\n"
@@ -1695,7 +1686,7 @@ msgstr "УВАГА: вузол <locale> не має атрибуту \"name=\"lo
 #: gconf/gconftool.c:2045
 #, c-format
 msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr ""
+msgstr "УВАГА: кілька вузлів <locale> для локалі \"%s\", проіґноровано всі крім першого\n"
 
 #: gconf/gconftool.c:2126
 #, c-format
@@ -1705,12 +1696,12 @@ msgstr "УВАГА: Невірний вузол <%s> у вузлі <locale>\n"
 #: gconf/gconftool.c:2155
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr ""
+msgstr "УВАГА: збій на встаноленні схеми \"%s\" локалі \"%s\": %s\n"
 
 #: gconf/gconftool.c:2163
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr ""
+msgstr "Встановлено схему \"%s\" для локалі \"%s\"\n"
 
 #: gconf/gconftool.c:2185
 #, c-format
@@ -1776,7 +1767,7 @@ msgstr "\n"
 #: gconf/gconftool.c:2456
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
-msgstr ""
+msgstr "Збій на встановленні ключа переривання %s: %s\n"
 
 #: gconf/gconftool.c:2582
 msgid "Must specify some keys to break\n"
