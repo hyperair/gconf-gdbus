@@ -2399,8 +2399,8 @@ open_empty_locked_file (const gchar *directory,
 }
 
 static ConfigServer
-read_current_server (const gchar *iorfile,
-                     gboolean     warn_if_fail)
+read_current_server_and_set_warning (const gchar *iorfile,
+                                     GString     *warning)
 {
   FILE *fp;
   
@@ -2408,9 +2408,10 @@ read_current_server (const gchar *iorfile,
           
   if (fp == NULL)
     {
-      if (warn_if_fail)
-        gconf_log (GCL_WARNING, _("IOR file '%s' not opened successfully, no gconfd located: %s"),
-                   iorfile, g_strerror (errno));
+      if (warning)
+        g_string_append_printf (warning,
+                                _("IOR file '%s' not opened successfully, no gconfd located: %s"),
+                                iorfile, g_strerror (errno));
 
       return CORBA_OBJECT_NIL;
     }
@@ -2437,10 +2438,10 @@ read_current_server (const gchar *iorfile,
           str[2] == 'n' &&
           str[3] == 'e')
         {
-          if (warn_if_fail)
-            gconf_log (GCL_WARNING,
-                       _("gconftool or other non-gconfd process has the lock file '%s'"),
-                       iorfile);          
+          if (warning)
+            g_string_append_printf (warning,
+                                    _("gconftool or other non-gconfd process has the lock file '%s'"),
+                                    iorfile); 
         }
       else /* file contains daemon IOR */
         {
@@ -2454,9 +2455,9 @@ read_current_server (const gchar *iorfile,
 
           if (orb == NULL)
             {
-              if (warn_if_fail)
-                gconf_log (GCL_WARNING,
-                           _("couldn't contact ORB to resolve existing gconfd object reference"));
+              if (warning)
+                g_string_append_printf (warning,
+                                        _("couldn't contact ORB to resolve existing gconfd object reference"));
               return CORBA_OBJECT_NIL;
             }
                   
@@ -2464,16 +2465,38 @@ read_current_server (const gchar *iorfile,
           CORBA_exception_free (&ev);
 
           if (server == CORBA_OBJECT_NIL &&
-              warn_if_fail)
-            gconf_log (GCL_WARNING,
-                       _("Failed to convert IOR '%s' to an object reference"),
-                       str);
+              warning)
+            g_string_append_printf (warning,
+                                    _("Failed to convert IOR '%s' to an object reference"),
+                                    str);
           
           return server;
         }
 
       return CORBA_OBJECT_NIL;
     }
+}
+
+static ConfigServer
+read_current_server (const gchar *iorfile,
+                     gboolean     warn_if_fail)
+{
+  GString *warning;
+  ConfigServer server;
+  
+  if (warn_if_fail)
+    warning = g_string_new (NULL);
+  else
+    warning = NULL;
+
+  server = read_current_server_and_set_warning (iorfile, warning);
+
+  if (warning->len > 0)
+    gconf_log (GCL_WARNING, "%s", warning->str);
+
+  g_string_free (warning, TRUE);
+
+  return server;
 }
 
 GConfLock*
@@ -2679,13 +2702,14 @@ gconf_release_lock (GConfLock *lock,
  * of the sort; it just reads it. It does do the object_to_string
  */
 ConfigServer
-gconf_get_current_lock_holder  (const gchar *lock_directory)
+gconf_get_current_lock_holder  (const gchar *lock_directory,
+                                GString     *failure_log)
 {
   char *iorfile;
   ConfigServer server;
 
   iorfile = g_strconcat (lock_directory, "/ior", NULL);
-  server = read_current_server (iorfile, FALSE);
+  server = read_current_server_and_set_warning (iorfile, failure_log);
   g_free (iorfile);
   return server;
 }
@@ -2825,7 +2849,10 @@ gconf_activate_server (gboolean  start_if_not_found,
   char *argv[3];
   char *gconfd_dir;
   char *lock_dir;
+  GString *failure_log;
   CORBA_Environment ev;
+
+  failure_log = g_string_new (NULL);
   
   gconfd_dir = gconf_get_daemon_dir ();
   
@@ -2834,9 +2861,10 @@ gconf_activate_server (gboolean  start_if_not_found,
                gconfd_dir, g_strerror (errno));
 
   g_free (gconfd_dir);
-  
+
+  g_string_append (failure_log, " 1: ");
   lock_dir = gconf_get_lock_dir ();
-  server = gconf_get_current_lock_holder (lock_dir);
+  server = gconf_get_current_lock_holder (lock_dir, failure_log);
   g_free (lock_dir);
 
   /* Confirm server exists */
@@ -2847,13 +2875,22 @@ gconf_activate_server (gboolean  start_if_not_found,
       ConfigServer_ping (server, &ev);
       
       if (ev._major != CORBA_NO_EXCEPTION)
-        server = CORBA_OBJECT_NIL;
+        {
+          server = CORBA_OBJECT_NIL;
+
+          g_string_append_printf (failure_log,
+                                  _("Server ping error: %s"),
+                                  CORBA_exception_id (&ev));
+        }
     }
 
   CORBA_exception_free (&ev);
   
   if (server != CORBA_OBJECT_NIL)
-    return server;
+    {
+      g_string_free (failure_log, TRUE);
+      return server;
+    }
   
   if (start_if_not_found)
     {
@@ -2899,8 +2936,9 @@ gconf_activate_server (gboolean  start_if_not_found,
       /* Block until server starts up */
       read (p[0], buf, 1);
 
+      g_string_append (failure_log, " 2: ");
       lock_dir = gconf_get_lock_dir ();
-      server = gconf_get_current_lock_holder (lock_dir);
+      server = gconf_get_current_lock_holder (lock_dir, failure_log);
       g_free (lock_dir);
     }
   
@@ -2911,8 +2949,11 @@ gconf_activate_server (gboolean  start_if_not_found,
     g_set_error (error,
                  GCONF_ERROR,
                  GCONF_ERROR_NO_SERVER,
-                 _("Failed to contact configuration server; some possible causes are:\na) you have an existing configuration server (gconfd) running, but it isn't reachable from here - if you're logged in from two machines at once, you may need to enable TCP networking for ORBit by putting the line \"ORBIIOPIPv4=1\" in /etc/orbitrc\nb) you have stale locks in your NFS-mounted home directory due to a system crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no gconfd processes are running on any machine using your home dir"));
+                 _("Failed to contact configuration server; some possible causes are that you need to enable TCP/IP networking for ORBit, or you have stale NFS locks due to a system crash. See http://www.gnome.org/projects/gconf/ for information. (Details - %s)"),
+                 failure_log->len > 0 ? failure_log->str : _("none"));
 
+  g_string_free (failure_log, TRUE);
+  
   close (p[0]);
   close (p[1]);
   
