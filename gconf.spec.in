@@ -6,6 +6,7 @@
 %define rel      1
 %define prefix   @prefix@
 %define name	 @PACKAGE@
+%define sysconfdir	/etc
 
 Summary: Gnome Config System
 Name: %name
@@ -59,9 +60,9 @@ development using GConf.
 %build
 # Needed for snapshot releases.
 if [ ! -f configure ]; then
-  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh --prefix=%prefix --sysconfdir=$RPM_BUILD_ROOT/etc
+  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh --prefix=%prefix --sysconfdir=%{sysconfdir}
 else
-  CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%prefix --sysconfdir=$RPM_BUILD_ROOT/etc
+  CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%prefix --sysconfdir=%{sysconfdir}
 fi
 
 if [ "$SMP" != "" ]; then
