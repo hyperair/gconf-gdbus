@@ -424,7 +424,7 @@ gconf_corba_value_from_gconf_value (const GConfValue* value)
 }
 
 ConfigValue*  
-gconf_invalid_corba_value ()
+gconf_invalid_corba_value (void)
 {
   ConfigValue* cv;
 

@@ -649,17 +649,17 @@ main(int argc, char** argv)
   act.sa_handler = signal_handler;
   act.sa_mask    = empty_mask;
   act.sa_flags   = 0;
-  sigaction (SIGTERM,  &act, 0);
-  sigaction (SIGILL,  &act, 0);
-  sigaction (SIGBUS,  &act, 0);
-  sigaction (SIGFPE,  &act, 0);
-  sigaction (SIGHUP,  &act, 0);
-  sigaction (SIGSEGV, &act, 0);
-  sigaction (SIGABRT, &act, 0);
-  sigaction (SIGUSR1,  &act, 0);
+  sigaction (SIGTERM,  &act, NULL);
+  sigaction (SIGILL,  &act, NULL);
+  sigaction (SIGBUS,  &act, NULL);
+  sigaction (SIGFPE,  &act, NULL);
+  sigaction (SIGHUP,  &act, NULL);
+  sigaction (SIGSEGV, &act, NULL);
+  sigaction (SIGABRT, &act, NULL);
+  sigaction (SIGUSR1,  &act, NULL);
   
   act.sa_handler = SIG_IGN;
-  sigaction (SIGINT, &act, 0);
+  sigaction (SIGINT, &act, NULL);
 
   CORBA_exception_init(&ev);
 

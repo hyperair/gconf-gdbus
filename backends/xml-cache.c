@@ -326,7 +326,7 @@ void
 cache_clean      (Cache        *cache,
                   GTime         older_than)
 {
-  CleanData cd = { 0, 0, 0 };
+  CleanData cd = { 0, NULL, 0 };
   cd.cache = cache;
   cd.length = older_than;
   

@@ -1,3 +1,12 @@
+2004-08-11  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* backends/xml-cache.c: (cache_clean): Use NULL in place of 0.
+	* configure.in: Added nb to ALL_LINGUAS.
+	* gconf/gconf-internals.c: (gconf_invalid_corba_value): ANSI
+	parameter list warning.
+	* gconf/gconf-sanity-check.c: (ensure_gtk): NULL vs. 0
+	* gconf/gconfd.c: (main): Same. Closes bug #149843.
+
 2004-08-10  Mark McLoughlin  <mark@skynet.ie>
 
 	* gconf/gconftool.c: (main): set the umask for

@@ -413,7 +413,7 @@ ensure_gtk (void)
   
   if (!done_init)
     {
-      ok = gtk_init_check (0, NULL);
+      ok = gtk_init_check (NULL, NULL);
       done_init = TRUE;
     }
   
