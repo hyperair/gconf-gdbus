@@ -356,86 +356,111 @@ modified.
 
 <!-- ##### FUNCTION gconf_client_get ##### -->
 <para>
-
+Gets the value of a configuration key. Just like gconf_engine_get (), but uses
+#GConfClient caching and error-handling features.
 </para>
 
-@client: 
-@key: 
-@err: 
-@Returns: 
+@client: a #GConfClient.
+@key: key to get.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset and no default exists.
 
 
 <!-- ##### FUNCTION gconf_client_get_without_default ##### -->
 <para>
-
+Gets the value of a configuration key. Just like gconf_client_get () but doesn't look for a default value if the key is unset.
 </para>
 
-@client: 
-@key: 
-@err: 
-@Returns: 
+@client: a #GConfClient.
+@key: key to get.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset (even if a default exists).
 
 
 <!-- ##### FUNCTION gconf_client_get_entry ##### -->
 <para>
-
+Obtains the full #GConfEntry for a value. Just like gconf_engine_get_entry (), but uses #GConfClient caching and error-handling features.
 </para>
 
-@client: 
-@key: 
-@locale: 
-@use_schema_default: 
-@err: 
+@client: a #GConfClient.
+@key:  key to get.
+@locale: preferred locale (as in the locale-related environment variables).
+@use_schema_default: indicates whether to look for a default value when the key is unset.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
 <!-- ##### FUNCTION gconf_client_get_default_from_schema ##### -->
 <para>
-
+Returns the default value stored in the key's schema, if the key has a schema
+associated and the schema exists and the schema contains a default value.  Note
+that gconf_client_get (), gconf_engine_client_string(), and so on already return the default value
+if no other value is found, so normally you do not need this function. This
+function is just for convenience; you could also get the #GConfMetaInfo for the
+key, read the schema name from there, then look up the schema by name and
+extract the default value. Just like gconf_engine_get_default_from_schema (), but uses #GConfClient caching and error-handling features.
 </para>
 
-@client: 
-@key: 
-@err: 
-@Returns: 
+@client: a #GConfClient.
+@key: key to get.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if the key has no default value in its schema.
 
 
 <!-- ##### FUNCTION gconf_client_unset ##### -->
 <para>
-
+Unsets the value of @key; if @key is already unset, has no effect.  An
+error of note is %GCONF_OVERRIDDEN, indicating that the system
+administrator has "forced" a value for this key. 
+Just like gconf_engine_unset (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
+@key: key to unset.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_all_entries ##### -->
 <para>
-
+Lists the key-value pairs in @dir. Does not list subdirectories; for
+that use gconf_client_all_dirs(). The returned list contains #GConfEntry
+objects. A #GConfEntry contains an <emphasis>absolute</emphasis> key
+and a value. The list is not recursive, it contains only the immediate
+children of @dir.  To free the returned list, gconf_entry_free()
+each list element, then g_slist_free() the list itself.
+Just like gconf_engine_all_entries (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@dir: 
+@dir: directory to list.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: List of #GConfEntry.
 
 
 <!-- ##### FUNCTION gconf_client_all_dirs ##### -->
 <para>
-
+Lists the subdirectories in @dir. The returned list contains allocated
+strings. Each string is the absolute path of a subdirectory. You should g_free() each string in the list, then g_slist_free() the list itself.
+Just like gconf_engine_all_dirs (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@dir: 
+@dir: directory to get subdirectories from.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: List of allocated subdirectory names.
 
 
 <!-- ##### FUNCTION gconf_client_suggest_sync ##### -->
 <para>
-
+Suggests to <application>gconfd</application> that you've just finished
+a block of changes, and it would be an optimal time to sync to
+permanent storage. This is only a suggestion; and
+<application>gconfd</application> will eventually sync even if you
+don't call gconf_engine_suggest_sync(). This function is just a "hint"
+provided to <application>gconfd</application> to maximize efficiency
+and minimize data loss.
+Just like gconf_engine_suggest_sync ().
 </para>
 
 @client: a #GConfClient.
@@ -444,155 +469,329 @@ modified.
 
 <!-- ##### FUNCTION gconf_client_dir_exists ##### -->
 <para>
-
+Queries whether the directory @dir exists in the GConf
+database. Returns <symbol>TRUE</symbol> or <symbol>FALSE</symbol>.
+Just like gconf_engine_dir_exists (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@dir: 
+@dir: directory to check for
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> or <symbol>FALSE</symbol>.
 
 
 <!-- ##### FUNCTION gconf_client_get_float ##### -->
 <para>
-
+Requests the floating point number (%GCONF_VALUE_FLOAT) stored at
+@key. Automatically performs type-checking, so if a non-float is
+stored at @key, an error is returned. On error, or if @key is unset, 
+0.0 is returned.
+Just like gconf_engine_get_float (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
+@key: key you want the value of.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: the value of @key, or 0.0 if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_client_get_int ##### -->
 <para>
-
+Requests the integer (%GCONF_VALUE_INT) stored at
+@key. Automatically performs type-checking, so if a non-integer is
+stored at @key, an error is returned. On error, or if @key is unset, 
+0 is returned.
+Just like gconf_engine_get_int (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
+@key: key you want the value of.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: the value of @key, or 0 if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_client_get_string ##### -->
 <para>
-
+Requests the string (%GCONF_VALUE_STRING) stored at
+@key. Automatically performs type-checking, so if a non-string is
+stored at @key, an error is returned. On error, or if @key is unset, 
+<symbol>NULL</symbol> is returned.
+Just like gconf_engine_get_string (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
+@key: key you want the value of.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: allocated string (value of @key), or <symbol>NULL</symbol> if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_client_get_bool ##### -->
 <para>
-
+Requests the boolean value (%GCONF_VALUE_BOOL) stored at
+@key. Automatically performs type-checking, so if a non-bool is
+stored at @key, an error is returned. On error, or if @key is unset, 
+<symbol>FALSE</symbol> is returned.
+Just like gconf_engine_get_bool (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
+@key: key you want the value of.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: the value of @key, or <symbol>FALSE</symbol> if no value is obtained.
 
 
 <!-- ##### FUNCTION gconf_client_get_schema ##### -->
 <para>
-
+Requests the schema (%GCONF_VALUE_SCHEMA) stored at @key.
+Automatically performs type-checking, so if a non-schema is stored at
+@key, an error is returned. If no value is set or an error occurs,
+<symbol>NULL</symbol> is returned.
+Just like gconf_engine_get_schema (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
+@key: key you want the value of.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained.
 
 
 <!-- ##### FUNCTION gconf_client_get_list ##### -->
 <para>
+Requests the list (%GCONF_VALUE_LIST) stored at @key.  Automatically
+performs type-checking, so if a non-list is stored at @key, or the
+list does not contain elements of type @list_type, an error is
+returned. If no value is set or an error occurs, <symbol>NULL</symbol>
+is returned. Note that <symbol>NULL</symbol> is also the empty list,
+so if you need to distinguish the empty list from an unset value, you
+must use gconf_client_get () to obtain a raw #GConfValue.
+</para>
 
+<para>
+<emphasis>Remember that GConf lists can only store primitive types:
+%GCONF_VALUE_FLOAT, %GCONF_VALUE_INT, %GCONF_VALUE_BOOL,
+%GCONF_VALUE_STRING, %GCONF_VALUE_SCHEMA.</emphasis> Also remember
+that lists must be uniform, you may not mix types in the same list.
+</para>
+
+<para>
+The type of the list elements depends on @list_type. A #GConfValue
+with type %GCONF_VALUE_LIST normally stores a list of more #GConfValue
+objects. gconf_client_get_list() automatically converts to primitive C
+types. Thus, the list-&gt;data fields in the returned list 
+contain:
+ 
+<informaltable pgwide=1 frame="none">
+<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<tbody>
+
+<row>
+<entry>%GCONF_VALUE_INT</entry>
+<entry>The integer itself, converted with GINT_TO_POINTER()</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_BOOL</entry>
+<entry>The bool itself, converted with GINT_TO_POINTER()</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_FLOAT</entry>
+<entry>A pointer to #gdouble, which should be freed with g_free()</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_STRING</entry>
+<entry>A pointer to #gchar, which should be freed with g_free()</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_SCHEMA</entry>
+<entry>A pointer to #GConfSchema, which should be freed with gconf_schema_free()</entry>
+</row>
+
+</tbody></tgroup></informaltable>
+
+In the %GCONF_VALUE_FLOAT and %GCONF_VALUE_STRING cases, you must
+g_free() each list element. In the %GCONF_VALUE_SCHEMA case you must
+gconf_schema_free() each element. In all cases you must free the
+list itself with g_slist_free().
+
+Just like gconf_engine_get_list (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@list_type: 
+@key: key you want the value of.
+@list_type: type of each list element.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: an allocated list, with elements as described above.
 
 
 <!-- ##### FUNCTION gconf_client_get_pair ##### -->
 <para>
+Requests the pair (%GCONF_VALUE_PAIR) stored at @key.  Automatically
+performs type-checking, so if a non-pair is stored at @key, or the
+pair does not have the right @car_type and @cdr_type, an error is
+returned. Remember that the <firstterm>car</firstterm> of a pair is
+its first value, and the <firstterm>cdr</firstterm> is its second
+value, in the Lisp tradition. 
+</para>
+
+<para>
+<emphasis>Remember that GConf pairs can only store primitive types:
+%GCONF_VALUE_FLOAT, %GCONF_VALUE_INT, %GCONF_VALUE_BOOL,
+%GCONF_VALUE_STRING, %GCONF_VALUE_SCHEMA.</emphasis>
+</para>
+
+<para>
+gconf_client_get_pair() stores the two fields of the pair in the locations
+pointed to by @car_retloc and @cdr_retloc. The type of these pointers
+depends on the corresponding @car_type and @cdr_type:
+ 
+<informaltable pgwide=1 frame="none">
+<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<tbody>
+
+<row>
+<entry>%GCONF_VALUE_INT</entry>
+<entry>pointer to #gint</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_BOOL</entry>
+<entry>pointer to #gboolean</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_FLOAT</entry>
+<entry>pointer to #gdouble</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_STRING</entry>
+<entry>pointer to #gchar*</entry>
+</row>
+
+<row>
+<entry>%GCONF_VALUE_SCHEMA</entry>
+<entry>pointer to #GConfSchema*</entry>
+</row>
+
+</tbody></tgroup></informaltable>
+
+In the %GCONF_VALUE_STRING case, you must g_free() the string(s)
+stored in the return location(s). In the %GCONF_VALUE_SCHEMA case you
+must gconf_schema_free() the returned schema. If there's an error
+or the value is unset, @car_retloc and @cdr_retloc are left unchanged.
+</para>
+
+<para>
+gconf_client_get_pair() returns <symbol>TRUE</symbol> on success.
+</para>
+
+<para>
+An example of gconf_client_get_pair() in action:
+<programlisting>
+gdouble car = 10.0;
+gchar* cdr  = NULL; 
+GError* error = NULL;
+
+if (!gconf_client_get_pair(conf, "/foo", 
+                    GCONF_VALUE_FLOAT,
+                    GCONF_VALUE_STRING, 
+                    &amp;car, &amp;cdr, &amp;error))
+  {
+    /* Note: car/cdr should be untouched, because an error occurred */
+    g_assert(error != NULL);
+    fprintf(stderr, "Error: %s\n", error->message);
+    g_error_free(error);
+    error = NULL;
+  }
+else
+  {
+    /* Note: car/cdr may be untouched even though there was no error, 
+       if no value was set for "/foo"
+     */
+    printf("Found pair (%g,%s)\n", car, cdr);
+    if (cdr != NULL)
+      g_free(cdr);
+  }
+</programlisting>
 
 </para>
 
 @client: a #GConfClient.
-@key: 
-@car_type: 
-@cdr_type: 
-@car_retloc: 
-@cdr_retloc: 
+@key: key you want the value of.
+@car_type: desired type of the pair's first field (car).
+@cdr_type: desired type of the pair's second field (cdr).
+@car_retloc: address of a return location for the car.
+@cdr_retloc: address of a return location for the cdr.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_float ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store a float (GCONF_VALUE_FLOAT), gconf_client_set_float() will fail.
+Just like gconf_engine_set (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_int ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store an integer (GCONF_VALUE_INT), gconf_client_set_int() will fail.
+Just like gconf_engine_set (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_string ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store a string (GCONF_VALUE_STRING), gconf_client_set_string() will fail.
+Just like gconf_engine_set (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_bool ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but but doesn't store a boolean (GCONF_VALUE_BOOL), gconf_client_set_bool() will fail.
+Just like gconf_engine_set (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_schema ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store a schema value (GCONF_VALUE_SCHEMA), gconf_client_set_schema() will fail.
+Just like gconf_engine_set (), but uses #GConfClient caching and error-handling features.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_list ##### -->
@@ -601,11 +800,11 @@ modified.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@list_type: 
-@list: 
+@key: key you want to set the value of.
+@list_type: type of each list element.
+@list: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_set_pair ##### -->
@@ -614,13 +813,13 @@ modified.
 </para>
 
 @client: a #GConfClient.
-@key: 
-@car_type: 
-@cdr_type: 
-@address_of_car: 
-@address_of_cdr: 
+@key: key you want to set the value of.
+@car_type: type of the pair's first field (car).
+@cdr_type: type of the pair's second field (cdr).
+@address_of_car: address of the car.
+@address_of_cdr: address of the cdr.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_client_error ##### -->

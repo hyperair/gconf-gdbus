@@ -251,7 +251,7 @@ schema associations into the database during "make install."
 <para>
 Lists the key-value pairs in @dir. Does not list subdirectories; for
 that use gconf_engine_all_dirs(). The returned list contains #GConfEntry
-objects. A #GConfEntry contains a <emphasis>relative</emphasis> key
+objects. A #GConfEntry contains an <emphasis>absolute</emphasis> key
 and a value. The list is not recursive, it contains only the immediate
 children of @dir.  To free the returned list, gconf_entry_free()
 each list element, then g_slist_free() the list itself.
@@ -266,8 +266,7 @@ each list element, then g_slist_free() the list itself.
 <!-- ##### FUNCTION gconf_engine_all_dirs ##### -->
 <para>
 Lists the subdirectories in @dir. The returned list contains allocated
-strings; you should g_free() each string in the list, then
-g_slist_free() the list itself.
+strings. Each string is the absolute path of a subdirectory. You should g_free() each string in the list, then g_slist_free() the list itself.
 </para>
 
 @conf: a #GConfEngine.
@@ -578,62 +577,62 @@ else
 
 <!-- ##### FUNCTION gconf_engine_set_float ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store a float (GCONF_VALUE_FLOAT), gconf_engine_set_float() will fail.
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_engine_set_int ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store an integer (GCONF_VALUE_INT), gconf_engine_set_int() will fail.
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_engine_set_string ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store a string (GCONF_VALUE_STRING), gconf_engine_set_string() will fail.
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_engine_set_bool ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but but doesn't store a boolean (GCONF_VALUE_BOOL), gconf_engine_set_bool() will fail.
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_engine_set_schema ##### -->
 <para>
-
+Change the value of @key to @val. Automatically creates the @key if it didn't exist before (ie it was unset or it only had a default value). If the key already exists but doesn't store a schema value (GCONF_VALUE_SCHEMA), gconf_engine_set_schema() will fail.
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@val: 
+@key: key you want to set the value of.
+@val: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_engine_set_list ##### -->
@@ -642,11 +641,11 @@ else
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@list_type: 
-@list: 
+@key: key you want to set the value of.
+@list_type: type of each list element.
+@list: new value of @key.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### FUNCTION gconf_engine_set_pair ##### -->
@@ -655,13 +654,13 @@ else
 </para>
 
 @conf: a #GConfEngine.
-@key: 
-@car_type: 
-@cdr_type: 
-@address_of_car: 
-@address_of_cdr: 
+@key: key you want to set the value of.
+@car_type: type of the pair's first field (car).
+@cdr_type: type of the pair's second field (cdr).
+@address_of_car: address of the car.
+@address_of_cdr: address of the cdr.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: 
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
 <!-- ##### STRUCT GConfEnumStringPair ##### -->
