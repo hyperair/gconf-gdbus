@@ -705,7 +705,7 @@ main (int argc, char** argv)
 }
 
 static void 
-recurse_subdir_list(GConf* conf, GSList* subdirs, guint depth)
+recurse_subdir_list(GConf* conf, GSList* subdirs, gchar* parent, guint depth)
 {
   GSList* tmp;
   gchar* whitespace;
@@ -717,14 +717,16 @@ recurse_subdir_list(GConf* conf, GSList* subdirs, guint depth)
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
-
+      gchar* full = g_conf_concat_key_and_dir(parent, s);
+      
       printf("%s%s:\n", whitespace, s);
       
-      list_pairs_in_dir(conf, s, depth);
+      list_pairs_in_dir(conf, full, depth);
 
-      recurse_subdir_list(conf, g_conf_all_dirs(conf, s), depth+1);
+      recurse_subdir_list(conf, g_conf_all_dirs(conf, full), full, depth+1);
 
       g_free(s);
+      g_free(full);
       
       tmp = g_slist_next(tmp);
     }
@@ -744,7 +746,7 @@ do_recursive_list(GConf* conf, gchar** args)
 
       list_pairs_in_dir(conf, *args, 0);
           
-      recurse_subdir_list(conf, subdirs, 1);
+      recurse_subdir_list(conf, subdirs, *args, 1);
  
       ++args;
     }
