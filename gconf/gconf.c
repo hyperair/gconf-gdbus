@@ -2175,6 +2175,8 @@ gconf_is_initialized (void)
 /* Key/dir validity is exactly the same, except that '/' must be a dir, 
    but we are sort of ignoring that for now. */
 
+/* Also, keys can contain only ASCII */
+
 static const gchar invalid_chars[] = " \t\r\n\"$&<>,+=#!()'|{}[]?~`;%\\";
 
 gboolean     
@@ -2226,7 +2228,15 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
           const gchar* inv = invalid_chars;
 
           just_saw_slash = FALSE;
-
+          
+          if (((unsigned char)*s) > 127)
+            {
+              if (why_invalid != NULL)
+                *why_invalid = g_strdup_printf (_("'%c' is not an ASCII character, so isn't allowed in key names"),
+                                                *s);
+              return FALSE;
+            }
+          
           while (*inv)
             {
               if (*inv == *s)
@@ -2252,6 +2262,122 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
   else
     return TRUE;
 }
+
+/**
+ * gconf_escape_key:
+ * @arbitrary_text: some text in any encoding or format
+ * @len: length of @arbitrary_text in bytes, or -1 if @arbitrary_text is nul-terminated
+ * 
+ * Escape @arbitrary_text such that it's a valid key element (i.e. one
+ * part of the key path). The escaped key won't pass gconf_valid_key()
+ * because it isn't a whole key (i.e. it doesn't have a preceding
+ * slash), but prepending a slash to the escaped text should always
+ * result in a valid key.
+ * 
+ * Return value: a nul-terminated valid GConf key
+ **/
+char*
+gconf_escape_key (const char *arbitrary_text,
+                  int         len)
+{
+  const char *p;
+  const char *end;
+  GString *retval;
+
+  g_return_val_if_fail (arbitrary_text != NULL, NULL);
+  
+  /* Nearly all characters we would normally use for escaping aren't allowed in key
+   * names, so we use @ for that.
+   *
+   * Invalid chars and @ itself are escaped as @xxx@ where xxx is the
+   * Latin-1 value in decimal
+   */
+
+  if (len < 0)
+    len = strlen (arbitrary_text);
+
+  retval = g_string_new ("");
+
+  p = arbitrary_text;
+  end = arbitrary_text + len;
+  while (p != end)
+    {
+      if (*p == '/' || *p == '.' || *p == '@' || ((guchar) *p) > 127 ||
+          strchr (invalid_chars, *p))
+        {
+          g_string_append_c (retval, '@');
+          g_string_append_printf (retval, "%u", (unsigned int) *p);
+          g_string_append_c (retval, '@');
+        }
+      else
+        g_string_append_c (retval, *p);
+      
+      ++p;
+    }
+
+  return g_string_free (retval, FALSE);
+}
+
+/**
+ * gconf_unescape_key:
+ * @escaped_key: a key created with gconf_escape_key()
+ * @len: length of @escaped_key in bytes, or -1 if @escaped_key is nul-terminated
+ * 
+ * Converts a string escaped with gconf_escape_key() back into its original
+ * form.
+ * 
+ * Return value: the original string that was escaped to create @escaped_key
+ **/
+char*
+gconf_unescape_key (const char *escaped_key,
+                    int         len)
+{
+  const char *p;
+  const char *end;
+  const char *start_seq;
+  GString *retval;
+
+  g_return_val_if_fail (escaped_key != NULL, NULL);
+  
+  if (len < 0)
+    len = strlen (escaped_key);
+
+  retval = g_string_new ("");
+
+  p = escaped_key;
+  end = escaped_key + len;
+  start_seq = NULL;
+  while (p != end)
+    {
+      if (start_seq)
+        {
+          if (*p == '@')
+            {
+              /* *p is the @ that ends a seq */
+              char *end;
+              guchar val;
+              
+              val = strtoul (start_seq, &end, 10);
+              if (start_seq != end)
+                g_string_append_c (retval, val);
+              
+              start_seq = NULL;
+            }
+        }
+      else
+        {
+          if (*p == '@')
+            start_seq = p + 1;
+          else
+            g_string_append_c (retval, *p);
+        }
+
+      ++p;
+    }
+
+  return g_string_free (retval, FALSE);
+}
+
 
 gboolean
 gconf_key_is_below   (const gchar* above, const gchar* below)

@@ -1,3 +1,16 @@
+2001-10-11  Havoc Pennington  <hp@redhat.com>
+
+	* tests/testgconf.c (check_utils): add test for the key
+	escaper/unescaper thingy
+
+	* gconf/gconf.c (gconf_escape_key): new function
+	(gconf_unescape_key): new function
+
+2001-10-10  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf.c (gconf_valid_key): disallow non-ASCII characters
+	in key names
+
 2001-10-10  Havoc Pennington  <hp@redhat.com>
 
 	* backends/xml-dir.c (dir_sync): fix to reflect bizarre behavior

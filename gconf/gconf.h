@@ -138,6 +138,12 @@ gchar*   gconf_concat_dir_and_key (const gchar  *dir,
    legal gconf key name (a single element of one) */
 gchar*   gconf_unique_key         (void);
 
+/* Escape/unescape a string to create a valid key */
+char*    gconf_escape_key         (const char *arbitrary_text,
+                                   int         len);
+char*    gconf_unescape_key       (const char *escaped_key,
+                                   int         len);
+
 
 /* 
  * Higher-level stuff 

@@ -843,6 +843,52 @@ check_list_storage(GConfEngine* conf)
   check_unset(conf);
 }
 
+static void
+check_utils (void)
+{
+  int i;
+  const char *escape_tests[] = {
+    "Hello",
+    "@@@@@@@@@@@@",
+    "foo\135\224\12\f\n\r@@\128@hello/foo",
+    "bar baz woo/",
+    "//////////",
+    "@128@@129@",
+    "/./././",
+    "",
+    "/",
+    "a",
+    "@"
+  };
+
+  i = 0;
+  while (i < G_N_ELEMENTS (escape_tests))
+    {
+      char *escaped;
+      char *unescaped;
+      char *whole_key;
+      
+      escaped = gconf_escape_key (escape_tests[i], -1);
+
+      /* escaped is a key element, not a key */
+      whole_key = g_strconcat ("/", escaped, NULL);
+      
+      check (gconf_valid_key (whole_key, NULL), "Escaped key '%s' is valid (original '%s')",
+             escaped, escape_tests[i]);
+      g_free (whole_key);
+      
+      unescaped = gconf_unescape_key (escaped, -1);
+      check (strcmp (escape_tests[i], unescaped) == 0,
+             "Unescaped key '%s' same as original '%s' (escaped was '%s'\n",
+             unescaped, escape_tests[i], escaped);
+
+      g_free (escaped);
+      g_free (unescaped);
+      
+      ++i;
+    }  
+}
+
 int 
 main (int argc, char** argv)
 {
@@ -858,6 +904,8 @@ main (int argc, char** argv)
       err = NULL;
       return 1;
     }
+
+  check_utils ();
   
   conf = gconf_engine_get_default();
 
