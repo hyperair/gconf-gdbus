@@ -1,0 +1,7 @@
+#!/bin/sh
+
+/sbin/ldconfig
+GCONF_CONFIG_SOURCE="xml::/etc/gconf/gconf.xml.defaults" /usr/bin/gconftool --makefile-install-rule /etc/gconf/schemas/desktop.schemas >/dev/null
+
+#DEBHELPER#
+
