@@ -1,5 +1,44 @@
 2004-06-21  Mark McLoughlin  <mark@skynet.ie>
 
+	Fix for bug #138498 - turn on "subtree-in-a-file" for the
+	subdirectories of the following directories:
+
+	    /apps/evolution",
+	    /apps/panel/profiles",
+	    /apps
+	    /desktop/gnome
+	    /system
+	    /schemas/apps
+	    /schemas/desktop/gnome
+	    /schemas/system
+	    /schemas
+	    /
+
+	You can turn this of by passing the "nomerge" flag to the
+	backend - e.g. xml:readwrite,nomerge:$(HOME)/.gconf
+	
+	* backends/markup-tree.[ch]:
+	(markup_tree_get): pass in the nomerge path.
+	(markup_dir_build_file_path),
+	(markup_dir_build_dir_path): simple wrappers for build_path().
+	(load_subtree), (load_entries), (load_subdirs),
+	(delete_useless_subdirs): upd. for above change.
+	(recursively_load_subtree): impl. recursively loading the tree
+	below a given dir.
+	(should_save_as_subtree): logic to figure out which dirs should
+	be saved as merged files.
+	(markup_dir_sync): save the dir in a merged file if neccessary.
+	(markup_dir_build_path): allow building a non-filesystem path.
+	(parse_tree), (save_tree): upd.
+	(write_dir): set the "not_in_filesystem" flag.
+	
+	* backends/markup-backend.c:
+	(resolve_address), (ms_new): parse and use the "nomerge" flag.
+	
+	* backends/gconf-merge-tree.c: (merge_tree): upd.
+
+2004-06-21  Mark McLoughlin  <mark@skynet.ie>
+
 	* gconf/gconfd.c: (shutdown_databases): don't free the
 	default database twice. Its on the databases list now
 	so it doesn't need to freed explicitly.

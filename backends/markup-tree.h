@@ -31,7 +31,8 @@ typedef struct _MarkupEntry MarkupEntry;
 
 MarkupTree* markup_tree_get        (const char *root_dir,
                                     guint       dir_mode,
-                                    guint       file_mode);
+                                    guint       file_mode,
+                                    gboolean    try_merge);
 void        markup_tree_unref      (MarkupTree *tree);
 void        markup_tree_rebuild    (MarkupTree *tree);
 MarkupDir*  markup_tree_lookup_dir (MarkupTree *tree,

@@ -39,25 +39,6 @@ _gconf_mode_t_to_mode (mode_t orig)
   return mode;
 }
 
-static void
-recursively_load_entire_tree (MarkupDir *dir)
-{
-  GSList *tmp;
-
-  load_entries (dir);
-  load_subdirs (dir);
-
-  tmp = dir->subdirs;
-  while (tmp != NULL)
-    {
-      MarkupDir *subdir = tmp->data;
-
-      recursively_load_entire_tree (subdir);
-
-      tmp = tmp->next;
-    }
-}
-
 static gboolean
 merge_tree (const char *root_dir)
 {
@@ -80,9 +61,9 @@ merge_tree (const char *root_dir)
 
     }
 
-  tree = markup_tree_get (root_dir, dir_mode, file_mode);
+  tree = markup_tree_get (root_dir, dir_mode, file_mode, FALSE);
 
-  recursively_load_entire_tree (tree->root);
+  recursively_load_subtree (tree->root);
 
   error = NULL;
   save_tree (tree->root, TRUE, file_mode, &error);
@@ -90,7 +71,7 @@ merge_tree (const char *root_dir)
     {
       char *markup_file;
 
-      markup_file = markup_dir_build_path (tree->root, TRUE, TRUE);
+      markup_file = markup_dir_build_file_path (tree->root, TRUE);
       fprintf (stderr, _("Error saving GConf tree to '%s': %s\n"),
 	       markup_file,
 	       error->message);

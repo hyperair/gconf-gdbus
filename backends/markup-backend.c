@@ -65,11 +65,13 @@ typedef struct
   MarkupTree *tree;
   guint dir_mode;
   guint file_mode;
+  guint try_merge : 1;
 } MarkupSource;
 
 static MarkupSource* ms_new     (const char   *root_dir,
                                  guint         dir_mode,
                                  guint         file_mode,
+                                 gboolean      try_merge,
                                  GConfLock    *lock);
 static void          ms_destroy (MarkupSource *source);
 
@@ -262,6 +264,7 @@ resolve_address (const char *address,
   char** address_flags;
   char** iter;
   gboolean force_readonly;
+  gboolean try_merge;
 
   root_dir = get_dir_from_address (address, err);
   if (root_dir == NULL)
@@ -286,6 +289,7 @@ resolve_address (const char *address,
     }
 
   force_readonly = FALSE;
+  try_merge = TRUE;
   
   address_flags = gconf_address_flags (address);  
   if (address_flags)
@@ -296,7 +300,10 @@ resolve_address (const char *address,
           if (strcmp (*iter, "readonly") == 0)
             {
               force_readonly = TRUE;
-              break;
+            }
+          else if (strcmp (*iter, "nomerge") == 0)
+            {
+              try_merge = FALSE;
             }
 
           ++iter;
@@ -386,9 +393,12 @@ resolve_address (const char *address,
       return NULL;
     }
   
+  if (try_merge && !(flags & GCONF_SOURCE_ALL_WRITEABLE))
+    try_merge = FALSE;
+
   /* Create the new source */
 
-  xsource = ms_new (root_dir, dir_mode, file_mode, lock);
+  xsource = ms_new (root_dir, dir_mode, file_mode, try_merge, lock);
 
   gconf_log (GCL_DEBUG,
              _("Directory/file permissions for XML source at root %s are: %o/%o"),
@@ -891,6 +901,7 @@ static MarkupSource*
 ms_new (const char* root_dir,
         guint       dir_mode,
         guint       file_mode,
+        gboolean    try_merge,
         GConfLock  *lock)
 {
   MarkupSource* ms;
@@ -909,8 +920,12 @@ ms_new (const char* root_dir,
 
   ms->dir_mode = dir_mode;
   ms->file_mode = file_mode;
+  ms->try_merge = try_merge;
   
-  ms->tree = markup_tree_get (ms->root_dir, ms->dir_mode, ms->file_mode);
+  ms->tree = markup_tree_get (ms->root_dir,
+                              ms->dir_mode,
+                              ms->file_mode,
+                              ms->try_merge);
   
   return ms;
 }

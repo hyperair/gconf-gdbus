@@ -63,8 +63,9 @@ static void       markup_dir_free                  (MarkupDir  *dir);
 static gboolean   markup_dir_needs_sync            (MarkupDir  *dir);
 static gboolean   markup_dir_sync                  (MarkupDir  *dir);
 static char*      markup_dir_build_path            (MarkupDir  *dir,
-						    gboolean    with_data_file,
-						    gboolean    subtree_data_file);
+                                                    gboolean    filesystem_path,
+                                                    gboolean    with_data_file,
+                                                    gboolean    subtree_data_file);
 static void       markup_dir_set_entries_need_save (MarkupDir  *dir);
 
 static MarkupEntry* markup_entry_new  (MarkupDir   *dir,
@@ -89,14 +90,34 @@ struct _MarkupTree
   MarkupDir *root;
 
   guint refcount;
+
+  guint try_merge : 1;
 };
 
 static GHashTable *trees_by_root_dir = NULL;
 
+/* List of dirs whose subdirs should be saved as a
+ * subtree-in-a-file. The order is important.
+ */
+static const char *save_as_subtree_dirs[] =
+{
+  "/apps/evolution",
+  "/apps/panel/profiles",
+  "/apps",
+  "/desktop/gnome",
+  "/system"
+  "/schemas/apps",
+  "/schemas/desktop/gnome",
+  "/schemas/system",
+  "/schemas",
+  "/"
+};
+
 MarkupTree*
 markup_tree_get (const char *root_dir,
                  guint       dir_mode,
-                 guint       file_mode)
+                 guint       file_mode,
+                 gboolean    try_merge)
 {
   MarkupTree *tree = NULL;
 
@@ -116,6 +137,7 @@ markup_tree_get (const char *root_dir,
   tree->dirname = g_strdup (root_dir);
   tree->dir_mode = dir_mode;
   tree->file_mode = file_mode;
+  tree->try_merge = try_merge != FALSE;
 
   tree->root = markup_dir_new (tree, NULL, "/");  
 
@@ -258,6 +280,20 @@ markup_dir_queue_sync (MarkupDir *dir)
     }
 }
 
+static inline char *
+markup_dir_build_file_path (MarkupDir *dir,
+                            gboolean   subtree_data_file)
+{
+  return markup_dir_build_path (dir, TRUE, TRUE, subtree_data_file);
+}
+
+static inline char *
+markup_dir_build_dir_path (MarkupDir *dir,
+                           gboolean   filesystem_path)
+{
+  return markup_dir_build_path (dir, filesystem_path, FALSE, FALSE);
+}
+
 static MarkupDir*
 markup_tree_get_dir_internal (MarkupTree *tree,
                               const char *full_key,
@@ -361,7 +397,7 @@ load_subtree (MarkupDir *dir)
   GError *tmp_err = NULL;
   char *markup_file;
 
-  markup_file = markup_dir_build_path (dir, TRUE, TRUE);
+  markup_file = markup_dir_build_file_path (dir, TRUE);
   if (!gconf_file_exists (markup_file))
     {
       g_free (markup_file);
@@ -427,7 +463,7 @@ load_entries (MarkupDir *dir)
 	  /* this message is debug-only because it usually happens
 	   * when creating a new directory
 	   */
-	  markup_file = markup_dir_build_path (dir, TRUE, FALSE);
+	  markup_file = markup_dir_build_file_path (dir, FALSE);
 	  gconf_log (GCL_DEBUG,
 		     "Failed to load file \"%s\": %s",
 		     markup_file, tmp_err->message);
@@ -467,7 +503,7 @@ load_subdirs (MarkupDir *dir)
   if (load_subtree (dir))
     return TRUE;
 
-  markup_dir = markup_dir_build_path (dir, FALSE, FALSE);
+  markup_dir = markup_dir_build_dir_path (dir, TRUE);
   
   dp = opendir (markup_dir);
   
@@ -786,8 +822,8 @@ delete_useless_subdirs (MarkupDir *dir)
 	      char *fs_dirname;
 	      char *fs_filename;
           
-	      fs_dirname = markup_dir_build_path (subdir, FALSE, FALSE);
-	      fs_filename = markup_dir_build_path (subdir, TRUE, dir->save_as_subtree);
+	      fs_dirname = markup_dir_build_dir_path (subdir, TRUE);
+	      fs_filename = markup_dir_build_file_path (subdir, dir->save_as_subtree);
 
 	      if (unlink (fs_filename) < 0)
 		{
@@ -887,6 +923,80 @@ delete_useless_entries (MarkupDir *dir)
   return some_deleted;
 }
 
+static void
+recursively_load_subtree (MarkupDir *dir)
+{
+  GSList *tmp;
+
+  load_entries (dir);
+  load_subdirs (dir);
+
+  tmp = dir->subdirs;
+  while (tmp != NULL)
+    {
+      MarkupDir *subdir = tmp->data;
+
+      recursively_load_subtree (subdir);
+
+      tmp = tmp->next;
+    }
+}
+
+static gboolean
+should_save_as_subtree (MarkupDir *dir)
+{
+  gboolean  save_as_subtree = FALSE;
+  char     *dir_path;
+  char     *parent_path;
+  int       pathlen;
+  int       i;
+
+  if (!dir->tree->try_merge)
+    return FALSE;
+
+  /* never merge root */
+  if (!dir->parent)
+    return FALSE;
+
+  dir_path = markup_dir_build_dir_path (dir, FALSE);
+  pathlen  = strlen (dir_path);
+
+  parent_path = markup_dir_build_dir_path (dir->parent, FALSE);
+
+  i = 0;
+  while (i < G_N_ELEMENTS (save_as_subtree_dirs))
+    {
+      const char *match = save_as_subtree_dirs [i];
+
+      /* 2 rules:
+       *  1) If @match is an ancestor of this dir, don't
+       *     consider merging this dir
+       *  2) If @match is this dir's parent, then merge
+       *     this dir
+       *
+       * (1) is so that we don't e.g., with "/apps" and
+       * "/apps/panel/profiles", merge /apps/panel when
+       * we really want to merge /apps/panel/profiles/default
+       */
+
+      if (strncmp (match, dir_path, pathlen) == 0)
+        break;
+
+      if (strcmp (match, parent_path) == 0)
+        {
+          save_as_subtree = TRUE;
+          break;
+        }
+
+      ++i;
+    }
+
+  g_free (dir_path);
+  g_free (parent_path);
+
+  return save_as_subtree;
+}
+
 static gboolean
 markup_dir_sync (MarkupDir *dir)
 {
@@ -918,10 +1028,16 @@ markup_dir_sync (MarkupDir *dir)
       
       tmp = tmp->next;
     }
+
+  if (!dir->save_as_subtree && should_save_as_subtree (dir))
+    {
+      dir->save_as_subtree = TRUE;
+      recursively_load_subtree (dir);
+    }
   
-  fs_dirname = markup_dir_build_path (dir, FALSE, FALSE);
-  fs_filename = markup_dir_build_path (dir, TRUE, FALSE);
-  fs_subtree = markup_dir_build_path (dir, TRUE, TRUE);
+  fs_dirname = markup_dir_build_dir_path (dir, TRUE);
+  fs_filename = markup_dir_build_file_path (dir, FALSE);
+  fs_subtree = markup_dir_build_file_path (dir, TRUE);
 
   /* For a dir to be loaded as a subdir, it must have a
    * %gconf.xml file, even if it has no entries in that
@@ -1051,6 +1167,7 @@ markup_dir_sync (MarkupDir *dir)
 
 static char*
 markup_dir_build_path (MarkupDir  *dir,
+                       gboolean    filesystem_path,
                        gboolean    with_data_file,
 		       gboolean    subtree_data_file)
 {
@@ -1058,6 +1175,8 @@ markup_dir_build_path (MarkupDir  *dir,
   GSList *components;
   GSList *tmp;
   MarkupDir *iter;
+
+  g_assert (filesystem_path || !with_data_file);
 
   components = NULL;
   iter = dir;
@@ -1067,7 +1186,11 @@ markup_dir_build_path (MarkupDir  *dir,
       iter = iter->parent;
     }
 
-  name = g_string_new (dir->tree->dirname);
+  if (filesystem_path)
+    name = g_string_new (dir->tree->dirname);
+  else
+    name = g_string_new (components ? NULL : "/");
+
   tmp = components;
   while (tmp != NULL)
     {
@@ -3072,7 +3195,7 @@ parse_tree (MarkupDir  *root,
   char *text;
   gsize length;
 
-  filename = markup_dir_build_path (root, TRUE, parse_subtree);
+  filename = markup_dir_build_file_path (root, parse_subtree);
   
   parse_info_init (&info, root, parse_subtree);
 
@@ -3570,6 +3693,8 @@ write_dir (MarkupDir *dir,
   gboolean retval = FALSE;
   char *whitespace;
 
+  dir->not_in_filesystem = TRUE;
+
   /* This dir will be deleted from the 
    * MarkupTree after syncing anyway ...
    */
@@ -3639,7 +3764,7 @@ save_tree (MarkupDir  *dir,
   new_fd = -1;
   f = NULL;
 
-  filename = markup_dir_build_path (dir, TRUE, save_as_subtree);
+  filename = markup_dir_build_file_path (dir, save_as_subtree);
   
   new_filename = g_strconcat (filename, ".new", NULL);
   new_fd = open (new_filename, O_WRONLY | O_CREAT, file_mode);
