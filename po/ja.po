@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 0.5\n"
-"POT-Creation-Date: 2000-07-27 19:40-0400\n"
-"PO-Revision-Date: 2000-07-24 17:25+09:00\n"
+"Project-Id-Version: GConf 0.7\n"
+"POT-Creation-Date: 2000-08-02 17:52+0900\n"
+"PO-Revision-Date: 2000-08-02 18:14+09:00\n"
 "Last-Translator: Takeshi Aihana <aihana@muc.biglobe.ne.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,7 @@ msgstr "XML ¾å¤Î¥Ç¥£¥ì¥¯¥È¥ê '%s' ¤Î¥í¥Ã¥¯¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 #: backends/xml-cache.c:134
 msgid "Unsynced directory deletions when shutting down XML backend"
 msgstr ""
+"XML ¥Ð¥Ã¥¯¥¨¥ó¥É¥â¥¸¥å¡¼¥ë¤ò½ªÎ»¤·¤¿¾ì¹ç¡¢Æ±´ü¤·¤¿¥Ç¥£¥ì¥¯¥È¥ê¤òºï½ü¤·¤Þ¤¹¡£"
 
 #: backends/xml-cache.c:243
 #, c-format
@@ -57,6 +58,8 @@ msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
 msgstr ""
+"¥Ç¥£¥¹¥¯¤È¤ÎÆ±´ü¤Ë¼ºÇÔ¤·¤¿¤¿¤á¡¢XML ¥Ð¥Ã¥¯¥¨¥ó¥É¤Î¥­¥ã¥Ã¥·¥å¤«¤é "
+"¥Ç¥£¥ì¥¯¥È¥ê '%s' ¤òºï½ü¤Ç¤­¤Þ¤»¤ó¡£"
 
 #: backends/xml-cache.c:268
 #, c-format
@@ -64,67 +67,72 @@ msgid ""
 "%u items remain in the cache after cleaning already-synced items older than "
 "%u seconds"
 msgstr ""
+"%u ¸Ä¤Î¥¢¥¤¥Æ¥à¤¬ %u ÉÃ¤è¤ê¤â¸Å¤¤Æ±´ü¤·¤¿¥¢¥¤¥Æ¥à¤òºï½ü¤·¤¿¸å¤Î "
+"¥­¥ã¥Ã¥·¥å¤Ë»Ä¤Ã¤Æ¤¤¤Þ¤¹¡£"
 
 #: backends/xml-dir.c:178
-#, fuzzy, c-format
+#, c-format
 msgid "Could not stat `%s': %s"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê '%s' ¤òºîÀ®¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿: %s"
+msgstr "'%s' ¤Î¾õÂÖ¤ò¼èÆÀ¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿: %s"
 
 #: backends/xml-dir.c:188
 #, c-format
 msgid "XML filename `%s' is a directory"
-msgstr ""
+msgstr "XML ¥Õ¥¡¥¤¥ëÌ¾ '%s' ¤Ï¥Ç¥£¥ì¥¯¥È¥ê¤Ç¤¹¡£"
 
 #: backends/xml-dir.c:307 backends/xml-dir.c:314
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to delete `%s': %s"
-msgstr "'%s'¤¬³«¤±¤Þ¤»¤ó¤Ç¤·¤¿: %s\n"
+msgstr "'%s' ¤Îºï½ü¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: backends/xml-dir.c:355
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write file `%s': %s"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤òÊÄ¤¸¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
+msgstr "¥Õ¥¡¥¤¥ë '%s' ¤Ø¤Î½ñ¤­¹þ¤ß¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: backends/xml-dir.c:371 backends/xml-dir.c:381
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to rename `%s' to `%s': %s"
-msgstr "'%s'¤¬³«¤±¤Þ¤»¤ó¤Ç¤·¤¿: %s\n"
+msgstr "Ì¾Á° '%s' ¤«¤é '%s' ¤ÎÊÑ¹¹¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: backends/xml-dir.c:387
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to restore `%s' from `%s': %s"
-msgstr "'%s' ¤ÎÃÍ¤Î¼èÆÀ¤Ë¼ºÇÔ: %s\n"
+msgstr "'%s' ¤«¤é '%s' ¤ÎÉüµ¢¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: backends/xml-dir.c:399
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to delete old file `%s': %s"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤òÊÄ¤¸¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
+msgstr "¸Å¤¤¥Õ¥¡¥¤¥ë '%s' ¤Îºï½ü¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #. These are all fatal errors
 #: backends/xml-dir.c:802
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to stat `%s': %s"
-msgstr "'%s'¤¬³«¤±¤Þ¤»¤ó¤Ç¤·¤¿: %s\n"
+msgstr "'%s' ¤Î¾õÂÖ¤¬¼èÆÀ¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿: %s"
 
 #: backends/xml-dir.c:946
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
-msgstr ""
+msgstr "'%s' ¤¬ '%s' ¤ÎÃæ¤Ç½ÅÊ£¤·¤Æ¤¤¤Þ¤¹¡£Ìµ»ë¤·¤Þ¤¹¡£"
 
 #: backends/xml-dir.c:968
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr ""
+"XML ¥Õ¥¡¥¤¥ë '%s' ¤ÎÃæ¤ËÌ¾Á°¤ÎÌµ¤¤¥¨¥ó¥È¥ê¤¬´Þ¤Þ¤ì¤Æ¤¤¤Þ¤¹¡£Ìµ»ë¤·¤Þ¤¹¡£"
 
 #: backends/xml-dir.c:975
 #, c-format
 msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
 msgstr ""
+"XML ¥Õ¥¡¥¤¥ë '%s' ¤ÎÃæ¤Î¥È¥Ã¥×¥ì¥Ù¥ë¥Î¡¼¥É¤¬ 1 ¤Ä¤Î <entry> ¤Ç¤Ï¤¢¤ê¤Þ¤»¤ó¡£ "
+"Ìµ»ë¤·¤Þ¤¹¡£"
 
 #: backends/xml-dir.c:1063
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create file `%s': %s"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤òÊÄ¤¸¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
+msgstr "¥Õ¥¡¥¤¥ë '%s' ¤ÎºîÀ®¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: backends/xml-dir.c:1071 gconf/gconf-internals.c:2416
 #, c-format
@@ -135,7 +143,7 @@ msgstr "¥Õ¥¡¥¤¥ë '%s' ¤òÊÄ¤¸¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 #: backends/xml-entry.c:162
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr ""
+msgstr "Ì¾Á° '%s' ¤Î XML ¥Î¡¼¥É¤òÌµ»ë¤·¤Þ¤¹: %s"
 
 #: backends/xml-entry.c:213 gconf/gconf-internals.c:2120
 #, c-format
@@ -143,9 +151,9 @@ msgid "%s"
 msgstr "%s"
 
 #: backends/xml-entry.c:340
-#, fuzzy, c-format
+#, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
-msgstr "'%s'ÍÑ¤Î¥¹¥­¡¼¥àÀßÄê¤Ç¥¨¥é¡¼: %s"
+msgstr "¥¹¥­¡¼¥àÌ¾ '%s' ¤òÌµ»ë¤·¤Þ¤¹¡£ÉÔÀµ¤Ê¥¹¥­¡¼¥à: %s"
 
 #. FIXME for nodes with no value stored, but containing a schema name,
 #. * we improperly log an error here
@@ -153,86 +161,88 @@ msgstr "'%s'ÍÑ¤Î¥¹¥­¡¼¥àÀßÄê¤Ç¥¨¥é¡¼: %s"
 #: backends/xml-entry.c:386
 #, c-format
 msgid "Ignoring XML node `%s', except for possible schema name: %s"
-msgstr ""
+msgstr "XML ¥Î¡¼¥É '%s' ¤òÌµ»ë¤·¤Þ¤¹¡£Í­¸ú¤Ê¥¹¥­¡¼¥àÌ¾ '%s' ¤ÏÎã³°¤Ç¤¹¡£"
 
 #: backends/xml-entry.c:688
 msgid "found <local_schema> with no locale setting"
-msgstr ""
+msgstr "¥í¡¼¥±¥ëÀßÄêÌµ¤·¤Î <local_schema> ¤òÈ¯¸«¤·¤Þ¤·¤¿¡£"
 
 #: backends/xml-entry.c:710
-#, fuzzy, c-format
+#, c-format
 msgid "Failed reading default value for schema: %s"
-msgstr "·Ù¹ð: ¥Ç¥Õ¥©¥ë¥ÈÃÍ '%s' ¤Î²òÀÏ¤Ë¼ºÇÔ: (¥¹¥­¡¼¥à¤Ï %s)\n"
+msgstr "¥¹¥­¡¼¥à¤Î¥Ç¥Õ¥©¥ë¥ÈÃÍ¤ÎÆÉ¤ß¹þ¤ß¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: backends/xml-entry.c:892
 #, c-format
 msgid "No \"type\" attribute for <%s> node"
-msgstr ""
+msgstr "<%s> ¥Î¡¼¥É¤Î \"type\" Â°À­¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #: backends/xml-entry.c:906
-#, fuzzy, c-format
+#, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr ""
-"·Ù¹ð: <locale> ¥Î¡¼¥É¤Ë¤Ï Â°À­ 'name = "
-"\"¥í¥±¡¼¥ëÌ¾\"¤¬¤¢¤ê¤Þ¤»¤ó¡£Ìµ»ë¤·¤Þ¤¹¡£\n"
+msgstr "¥Î¡¼¥É¤¬ÉÔÌÀ¤Ê \"type\" Â°À­ '%s' ¤ò»ý¤Ã¤Æ¤¤¤Þ¤¹¡£Ìµ»ë¤·¤Þ¤¹¡£"
 
 #: backends/xml-entry.c:921
 msgid "No \"value\" attribute for node"
-msgstr ""
+msgstr "¥Î¡¼¥É¤Ë \"value\" Â°À­¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #: backends/xml-entry.c:969 backends/xml-entry.c:1045
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
-msgstr ""
+msgstr "XML ¥ê¥¹¥È¥Î¡¼¥É¤ÎÃæ¤Ë¤¢¤ë XML ¥Î¡¼¥É <%s> ¤ò²ò¼á¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£"
 
 #: backends/xml-entry.c:1003
 msgid "Invalid type (list, pair, or unknown) in a list node"
 msgstr ""
+"¥ê¥¹¥È¥Î¡¼¥É¤ÎÃæ¤ËÉÔÀµ¤Ê·¿ (¥ê¥¹¥È¡¢¥­¡¼¤ÈÃÍ¤Î¥Ú¥¢¡¢¤â¤·¤¯¤ÏÉÔÌÀ¤Ê·¿) "
+"¤¬¤¢¤ê¤Þ¤¹¡£"
 
 #: backends/xml-entry.c:1026
 #, c-format
 msgid "Bad XML node: %s"
-msgstr ""
+msgstr "»ÈÍÑ¤Ç¤­¤Ê¤¤ XML ¥Î¡¼¥É: %s"
 
 #: backends/xml-entry.c:1034
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
-msgstr ""
+msgstr "¥ê¥¹¥È¤Ï»ÈÍÑ¤Ç¤­¤Ê¤¤·¿¤Î¥Î¡¼¥É¤ò´Þ¤ó¤Ç¤¤¤Þ¤¹¡£(%s ¤Ï %s ¤Ç¤¢¤ë¤Ù¤­)"
 
 #: backends/xml-entry.c:1086
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
-msgstr ""
+msgstr "XML (¥­¡¼¤ÈÃÍ¤Î)¥Ú¥¢¤«¤é»ÈÍÑ¤Ç¤­¤Ê¤¤ car ¤òÌµ»ë¤·¤Þ¤¹: %s"
 
 #: backends/xml-entry.c:1095 backends/xml-entry.c:1118
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
 msgstr ""
+"XML ¥Õ¥¡¥¤¥ë¤ò²òÀÏÃæ: ¥ê¥¹¥È¤È(¥­¡¼¤ÈÃÍ¤Î)¥Ú¥¢¤Ï(¥­¡¼¤ÈÃÍ¤Î)¥Ú¥¢¤Î "
+"²¼°Ì¥ì¥Ù¥ë¤ËÌµ¤¤¤«¤â¤·¤ì¤Þ¤»¤ó¡£"
 
 #: backends/xml-entry.c:1108
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
-msgstr ""
+msgstr "XML (¥­¡¼¤ÈÃÍ¤Î)¥Ú¥¢¤«¤é»ÈÍÑ¤Ç¤­¤Ê¤¤ cdr ¤òÌµ»ë¤·¤Þ¤¹: %s"
 
 #: backends/xml-entry.c:1127
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML pair node"
-msgstr ""
+msgstr "XML ¥Ú¥¢¥Î¡¼¥É¤Î²¼°Ì¤Ë¤¢¤ë XML ¥Î¡¼¥É <%s> ¤ò²ò¼á¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£"
 
 #: backends/xml-entry.c:1145
 msgid "Didn't find car and cdr for XML pair node"
-msgstr ""
+msgstr "XML ¥Ú¥¢¥Î¡¼¥É¤Î car ¤È cdr ¤ò¸«¤Ä¤±¤é¤ì¤Þ¤»¤ó¤Ç¤·¤¿¡£"
 
 #: backends/xml-entry.c:1151
 msgid "Missing cdr from pair of values in XML file"
-msgstr ""
+msgstr "XML ¥Õ¥¡¥¤¥ë¤ÎÃæ¤Ë¤¢¤ëÃÍ¤Î¥Ú¥¢¤Ë cdr ¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #: backends/xml-entry.c:1158
 msgid "Missing car from pair of values in XML file"
-msgstr ""
+msgstr "XML ¥Õ¥¡¥¤¥ë¤ÎÃæ¤Ë¤¢¤ëÃÍ¤Î¥Ú¥¢¤Ë cdr ¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #: backends/xml-entry.c:1163
 msgid "Missing both car and cdr values from pair in XML file"
-msgstr ""
+msgstr "XML ¥Õ¥¡¥¤¥ë¤ÎÃæ¤Ë¤¢¤ë¥Ú¥¢¤Ë car ¤È cdr ¤ÎÃÍ¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #. -- end debug only
 #: gconf/gconf-backend.c:180
@@ -265,66 +275,63 @@ msgstr "¥Ð¥Ã¥¯¥¨¥ó¥É¥â¥¸¥å¡¼¥ë¤Î¥·¥ã¥Ã¥È¥À¥¦¥ó¤Ë¼ºÇÔ¤·¤Þ¤·¤¿¡£"
 
 #: gconf/gconf-error.c:39
 msgid "Success"
-msgstr ""
+msgstr "À®¸ù"
 
 #: gconf/gconf-error.c:40
 msgid "Failed"
-msgstr ""
+msgstr "¼ºÇÔ"
 
 #: gconf/gconf-error.c:41
 msgid "Configuration server couldn't be contacted"
-msgstr ""
+msgstr "ÀßÄê¥µ¡¼¥Ð¡¼¤ËÀÜÂ³¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£"
 
 #: gconf/gconf-error.c:42
 msgid "Permission denied"
-msgstr ""
+msgstr "¥Ñ¡¼¥ß¥Ã¥·¥ç¥ó¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #: gconf/gconf-error.c:43
-#, fuzzy
 msgid "Couldn't resolve address for configuration source"
-msgstr "ÀßÄê¥Õ¥¡¥¤¥ë¤Î¥¢¥¯¥»¥¹¤Ë¼ºÇÔ: %s\n"
+msgstr "ÀßÄê¥Õ¥¡¥¤¥ë¤Î¥¢¥É¥ì¥¹¤¬²ò·è¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£"
 
 #: gconf/gconf-error.c:44
 msgid "Bad key or directory name"
-msgstr ""
+msgstr "»ÈÍÑ¤Ç¤­¤Ê¤¤¥­¡¼¤Þ¤¿¤Ï¥Ç¥£¥ì¥¯¥È¥êÌ¾"
 
 #: gconf/gconf-error.c:45
-#, fuzzy
 msgid "Parse error"
-msgstr "OAF ²òÀÏ¥¨¥é¡¼: %s"
+msgstr "²òÀÏ¥¨¥é¡¼"
 
 #: gconf/gconf-error.c:46
 msgid "Corrupt data in configuration source database"
-msgstr ""
+msgstr "ÀßÄê¥Õ¥¡¥¤¥ë¥Ç¡¼¥¿¥Ù¡¼¥¹¤ÎÃæ¤ËÉÔÀµ¤Ê¥Ç¡¼¥¿¤¬¤¢¤ê¤Þ¤¹¡£"
 
 #: gconf/gconf-error.c:47
 msgid "Type mismatch"
-msgstr ""
+msgstr "·¿¤¬´Ö°ã¤Ã¤Æ¤¤¤Þ¤¹¡£"
 
 #: gconf/gconf-error.c:48
 msgid "Key operation on directory"
-msgstr ""
+msgstr "¥Ç¥£¥ì¥¯¥È¥ê¾å¤Ç¤Î¥­¡¼Áàºî"
 
 #: gconf/gconf-error.c:49
 msgid "Directory operation on key"
-msgstr ""
+msgstr "¥­¡¼¾å¤Ç¤Î¥Ç¥£¥ì¥¯¥È¥êÁàºî"
 
 #: gconf/gconf-error.c:50
 msgid "Can't overwrite existing read-only value"
-msgstr ""
+msgstr "Â¸ºß¤·¤Æ¤¤¤ëÆÉ¤ß¹þ¤ßÀìÍÑ¤ÎÃÍ¤Ë¤Ï¾å½ñ¤­¤Ç¤­¤Þ¤»¤ó¡£"
 
 #: gconf/gconf-error.c:51
 msgid "Object Activation Framework error"
-msgstr ""
+msgstr "¥ª¥Ö¥¸¥§¥¯¥È³èÀ­²½¥Õ¥ì¡¼¥à¥ï¡¼¥¯¥¨¥é¡¼"
 
 #: gconf/gconf-error.c:52
 msgid "Operation not allowed without configuration server"
-msgstr ""
+msgstr "ÀßÄê¥µ¡¼¥Ð¡¼Ìµ¤·¤Ç¤ÎÁàºî¤Ï¤Ç¤­¤Þ¤»¤ó¡£"
 
 #: gconf/gconf-error.c:53
-#, fuzzy
 msgid "Failed to get a lock"
-msgstr "'%s' ¤ÎÃÍ¤Î¼èÆÀ¤Ë¼ºÇÔ: %s\n"
+msgstr "¥í¥Ã¥¯¤Î¼èÆÀ¤Ë¼ºÇÔ¤·¤Þ¤·¤¿¡£"
 
 #: gconf/gconf-internals.c:100
 #, c-format
@@ -333,7 +340,7 @@ msgstr "¥­¡¼ '%s' ¤ÎÃæ¤Ë '/' ¤¬¤¢¤ê¤Þ¤»¤ó¡£"
 
 #: gconf/gconf-internals.c:264
 msgid "Couldn't interpret CORBA value for list element"
-msgstr "¥ê¥¹¥È¥¢¥¤¥Æ¥àÍÑ¤Î CORBA ÃÍ¤¬²ò¼á¤Ç¤­¤Þ¤»¤ó¡£"
+msgstr "¥ê¥¹¥È¥¢¥¤¥Æ¥àÍÑ¤Î CORBA ¤ÎÃÍ¤¬²ò¼á¤Ç¤­¤Þ¤»¤ó¡£"
 
 #: gconf/gconf-internals.c:266
 #, c-format
@@ -372,7 +379,7 @@ msgstr "%s ¤Î¥ê¥¹¥È¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Î¥ê¥¹¥È¤Ç¤¹¡£"
 #: gconf/gconf-internals.c:1431
 #, c-format
 msgid "Expected pair, got %s"
-msgstr "ÂÐ¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
+msgstr "(¥­¡¼¤ÈÃÍ¤Î)¥Ú¥¢¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
 
 #: gconf/gconf-internals.c:1445
 #, c-format
@@ -490,7 +497,7 @@ msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
 "took our lock"
 msgstr ""
-"¥í¥Ã¥¯¥Õ¥¡¥¤¥ë '%s' ¤¬ºîÀ®¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£ (ºîÀ®¸µPID: %u GConf PID: %u  "
+"¥í¥Ã¥¯¥Õ¥¡¥¤¥ë '%s' ¤¬ºîÀ®¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£ (ºîÀ®¸µPID: %u GConf PID: %u "
 "Ã¯¤«¤¬²æ¡¹¤Î¥í¥Ã¥¯¤ò²ò½ü¤·¤¿¤È²¾Äê¤·¤¿¾ì¹ç)"
 
 #: gconf/gconf-internals.c:2491
@@ -499,40 +506,43 @@ msgid "Failed to release lock directory `%s': %s"
 msgstr "¥í¥Ã¥¯¥Ç¥£¥ì¥¯¥È¥ê '%s' ¤Î²òÊü¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: gconf/gconf-sources.c:334
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load source `%s': %s"
-msgstr "¥Õ¥¡¥¤¥ë '%s' ¤òÊÄ¤¸¤ë¤Î¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
+msgstr "¥Õ¥¡¥¤¥ë '%s' ¤ÎÆÉ¤ß¹þ¤ß¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: gconf/gconf-sources.c:506
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
+"¥¹¥­¡¼¥à '%s' ¤Ï¥¹¥­¡¼¥à¤Ç¤ÏÌµ¤¤ÃÍ '%s' ¤òÊÝÂ¸¤¹¤ë¤¿¤á¤Ë»ØÄê¤µ¤ì¤Þ¤·¤¿¡£"
 
 #: gconf/gconf-sources.c:555
 msgid "The '/' name can only be a directory, not a key"
-msgstr ""
+msgstr "Ì¾Á° '/' ¤Ï¥Ç¥£¥ì¥¯¥È¥ê¤Î¾ì¹ç¤À¤±¤Ç¡¢¥­¡¼¤Ë¤Ï»È¤¨¤Þ¤»¤ó¡£"
 
 #: gconf/gconf-sources.c:584
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path."
-msgstr ""
+msgstr "'%s' ¤ÎÃÍ¤ÏÀßÄê¥Ñ¥¹¤ÎÁ°¤ËÆÉ¤ß¹þ¤ßÀìÍÑ¤Ç¥»¥Ã¥È¤·¤Þ¤¹¡£"
 
 #: gconf/gconf-sources.c:1079
-#, fuzzy, c-format
+#, c-format
 msgid "Error finding metainfo: %s"
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤Î¥ê¥¹¥È²½Ãæ¤Ë¥¨¥é¡¼: %s\n"
+msgstr "¥á¥¿¾ðÊó¤Î¸¡º÷Ãæ¤Ë¥¨¥é¡¼: %s"
 
 #: gconf/gconf-sources.c:1144
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting metainfo: %s"
-msgstr "ÃÍ¤ÎÀßÄê¥¨¥é¡¼: %s"
+msgstr "¥á¥¿¾ðÊó¤Î¼èÆÀÃæ¤Ë¥¨¥é¡¼: %s"
 
 #: gconf/gconf-sources.c:1168
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
+"¥­¡¼ '%s' ¤Ï¥­¡¼ '%s'(¼ÂºÝ¤Ï '%s' ¤Î·¿¤ÇÊÝÂ¸¤µ¤ì¤¿¤â¤Î)ÍÑ¤Ë¥¹¥­¡¼¥à¤È¤·¤Æ "
+"¥ê¥¹¥È¤·¤Þ¤·¤¿¡£"
 
 #: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
 #, c-format
@@ -542,22 +552,22 @@ msgstr "'%s' ¤ÎÃÍ¤Î¼èÆÀ¤Ç¥¨¥é¡¼: %s"
 #: gconf/gconf-value.c:96
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
-msgstr ""
+msgstr "'%s' ¤ò²ò¼á¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£(À°¿ô¤È´üÂÔ¤µ¤ì¤¿)"
 
 #: gconf/gconf-value.c:106
 #, c-format
 msgid "Integer `%s' is too large or small"
-msgstr ""
+msgstr "À°¿ô '%s' ¤ÏÂç¤­¤¹¤®¤ë¤«¡¢¤â¤·¤¯¤Ï¾®¤µ¤¹¤®¤Þ¤¹¡£"
 
 #: gconf/gconf-value.c:127
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
-msgstr ""
+msgstr "'%s' ¤ò²ò¼á¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£(¼Â¿ô¤È´üÂÔ¤µ¤ì¤¿)"
 
 #: gconf/gconf-value.c:160
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
-msgstr ""
+msgstr "'%s' ¤ò²ò¼á¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£(¿¿¤Þ¤¿¤Ïµ¶¤È´üÂÔ¤µ¤ì¤¿)"
 
 #: gconf/gconf.c:69
 #, c-format
@@ -567,7 +577,7 @@ msgstr "'%s' : %s"
 #: gconf/gconf.c:271
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
-msgstr "¥µ¡¼¥Ð¡¼¤¬¥¢¥É¥ì¥¹ '%s' ¤Î²ò·è¤ò¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£"
+msgstr "¥µ¡¼¥Ð¡¼¤Ï¥¢¥É¥ì¥¹ '%s' ¤Î²ò·è¤¬¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£"
 
 #: gconf/gconf.c:408
 msgid "Can't add notifications to a local configuration source"
@@ -585,9 +595,8 @@ msgid ""
 "Please file an OAF bug report."
 msgstr ""
 "ÀßÄê¥µ¡¼¥Ð¡¼¤ÎÀÜÂ³¥¨¥é¡¼: OAF ¤Ï oaf_activate_id()¤«¤é nil "
-"¤òÊÖ¤·¤Æ¤­¤Þ¤·¤¿¡£¤Þ¤¿ "
-"¤½¤ÎÌäÂê¤òÀâÌÀ¤¹¤ëÎã³°¤ò¥»¥Ã¥È¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£¤³¤Î¥Õ¥¡¥¤¥ë¤ò OAF "
-"¥Ð¥°¥ì¥Ý¡¼¥È¤ËÁ÷ÉÕ¤·¤Æ²¼¤µ¤¤¡£"
+"¤òÊÖ¤·¤Æ¤­¤Þ¤·¤¿¡£¹¹¤Ë¤½¤ÎÌäÂê¤òÀâÌÀ¤¹¤ëÎã³°¤ò¥»¥Ã¥È¤·¤Þ¤»¤ó¤Ç¤·¤¿¡£ "
+"¤³¤Î¥Õ¥¡¥¤¥ë¤ò OAF ¥Ð¥°¥ì¥Ý¡¼¥È¤ËÁ÷ÉÕ¤·¤Æ²¼¤µ¤¤¡£"
 
 #: gconf/gconf.c:1677
 msgid "Failed to init GConf, exiting\n"
@@ -622,27 +631,27 @@ msgstr "ÀßÄê¥µ¡¼¥Ð¡¼¤Î¥·¥ã¥Ã¥È¥À¥¦¥ó¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 #: gconf/gconf.c:2176
 #, c-format
 msgid "Expected float, got %s"
-msgstr "'float'·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
+msgstr "'float' ·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
 
 #: gconf/gconf.c:2211
 #, c-format
 msgid "Expected int, got %s"
-msgstr "'int'·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
+msgstr "'int' ·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
 
 #: gconf/gconf.c:2246
 #, c-format
 msgid "Expected string, got %s"
-msgstr "'string'·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
+msgstr "'string' ·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
 
 #: gconf/gconf.c:2283
 #, c-format
 msgid "Expected bool, got %s"
-msgstr "'bool'·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
+msgstr "'bool' ·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
 
 #: gconf/gconf.c:2316
 #, c-format
 msgid "Expected schema, got %s"
-msgstr "'schema'·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
+msgstr "'schema' ·¿¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Ç¤¹¡£"
 
 #: gconf/gconfd.c:511
 msgid "Received invalid value in set request"
@@ -656,7 +665,7 @@ msgstr ""
 
 #: gconf/gconfd.c:789
 msgid "Shutdown request received"
-msgstr "¼õ¤±¼è¤Ã¤¿¥·¥ã¥Ã¥È¥À¥¦¥óÍ×µá"
+msgstr "¥·¥ã¥Ã¥È¥À¥¦¥óÍ×µá¤ò¼õ¤±¼è¤ê¤Þ¤·¤¿¡£"
 
 #: gconf/gconfd.c:802
 msgid "Received request to drop all cached data"
@@ -679,8 +688,8 @@ msgstr ""
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
-"ÀßÄê¥Õ¥¡¥¤¥ë¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó¡£¥Ç¥Õ¥©¥ë¥ÈÀßÄê¥Õ¥¡¥¤¥ë '%s' "
-"¤ò»È¤ª¤¦¤È¤·¤Æ¤¤¤Þ¤¹¡£"
+"ÀßÄê¥Õ¥¡¥¤¥ë¤¬¸«¤Ä¤«¤ê¤Þ¤»¤ó¡£¥Ç¥Õ¥©¥ë¥ÈÀßÄê¥Õ¥¡¥¤¥ë '%s' ¤ò»È¤ª¤¦¤È¤·¤Æ "
+"¤¤¤Þ¤¹¡£"
 
 #: gconf/gconfd.c:888
 msgid ""
@@ -688,26 +697,30 @@ msgid ""
 "edit "
 msgstr "¥½¡¼¥¹¥Ñ¥¹¤ÎÃæ¤ËÀßÄê¥Õ¥¡¥¤¥ë¤¬¤¢¤ê¤Þ¤»¤ó¡£ÀßÄê¤ÏÊÝÂ¸¤µ¤ì¤Þ¤»¤ó¡£;ÊÔ½¸"
 
+#: gconf/gconfd.c:888
+msgid "/path"
+msgstr "/path"
+
 #: gconf/gconfd.c:901
 #, c-format
 msgid "Error loading some config sources: %s"
-msgstr "´ö¤Ä¤«¤ÎÀßÄê¥Õ¥¡¥¤¥ë¤ÎÆÉ¤ß¼è¤ê¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
+msgstr "´ö¤Ä¤«¤ÎÀßÄê¥Õ¥¡¥¤¥ë¤ÎÆÉ¤ß¹þ¤ß¤Ë¼ºÇÔ¤·¤Þ¤·¤¿: %s"
 
 #: gconf/gconfd.c:913
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
 msgstr ""
-"ÀßÄê¥Õ¥¡¥¤¥ë¤Ï¥¢¥É¥ì¥¹¤ò»Ý¤¯²ò·è¤·¤Æ¤¤¤Þ¤»¤ó¡£¥Ç¡¼¥¿¤ÎÆÉ¤ß¹þ¤ß¤Þ¤¿¤ÏÊÝÂ¸¤¬¤Ç¤"
-"­¤Þ¤»¤ó¡£"
+"ÀßÄê¥Õ¥¡¥¤¥ë¤Ï¥¢¥É¥ì¥¹¤ò»Ý¤¯²ò·è¤·¤Æ¤¤¤Þ¤»¤ó¡£¥Ç¡¼¥¿¤ÎÆÉ¤ß¹þ¤ß¤Þ¤¿¤ÏÊÝÂ¸¤¬ "
+"¤Ç¤­¤Þ¤»¤ó¡£"
 
 #: gconf/gconfd.c:930
 msgid ""
 "No writeable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
-"»Ý¤¯²ò·è¤µ¤ì¤¿½ñ¤­¹þ¤ß²ÄÇ½¤ÊÀßÄê¥Õ¥¡¥¤¥ë¤Ï´ö¤Ä¤«¤ÎÀßÄê¤òÊÝÂ¸¤Ç¤­¤ë¤«¤â¤·¤ì¤Þ¤"
-"»¤ó¡£"
+"»Ý¤¯²ò·è¤µ¤ì¤¿½ñ¤­¹þ¤ß²ÄÇ½¤ÊÀßÄê¥Õ¥¡¥¤¥ë¤Ï "
+"´ö¤Ä¤«¤ÎÀßÄê¤òÊÝÂ¸¤Ç¤­¤ë¤«¤â¤·¤ì¤Þ¤»¤ó¡£"
 
 #: gconf/gconfd.c:955 gconf/gconfd.c:967
 #, c-format
@@ -743,8 +756,8 @@ msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
 msgstr ""
-"OAF ¤Ï GConf ¤Î IID ¤Ë¤Ä¤¤¤Æ¤ÏÃÎ¤é¤Ê¤¤¤Ç¤¹¡£; "
-"¥¤¥ó¥¹¥È¡¼¥ë¤¬¼ºÇÔ¤·¤¿¤³¤È¤ò¼¨¤·¤Þ¤¹¡£; ÅÐÏ¿¤Ç¤­¤Þ¤»¤ó¡£; ½ªÎ»¤·¤Þ¤¹¡£\n"
+"OAF ¤Ï GConf ¤Î IID ¤Ë¤Ä¤¤¤Æ¤Ï²ò¤é¤Ê¤¤¤Ç¤¹¡£; ¥¤¥ó¥¹¥È¡¼¥ë¤¬¼ºÇÔ¤·¤¿¤³¤È¤ò "
+"¼¨¤·¤Þ¤¹¡£; ÅÐÏ¿¤Ç¤­¤Þ¤»¤ó¡£; ½ªÎ»¤·¤Þ¤¹¡£\n"
 
 #: gconf/gconfd.c:1079
 msgid "Another gconfd already registered with OAF; exiting\n"
@@ -761,7 +774,7 @@ msgstr "½ªÎ»¤·¤Þ¤¹¡£"
 #: gconf/gconfd.c:1194
 #, c-format
 msgid "Failed to sync one or more sources: %s"
-msgstr "£±¤Ä°Ê¾å¤Î¥½¡¼¥¹¤ÎÆ±´ü¤Ç¥¨¥é¡¼: %s"
+msgstr "1 ¤Ä°Ê¾å¤Î¥Õ¥¡¥¤¥ë¤ÎÆ±´ü¤Ç¥¨¥é¡¼: %s"
 
 #: gconf/gconfd.c:1561
 #, c-format
@@ -849,8 +862,8 @@ msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
 "--type."
 msgstr ""
-"\"--short-desc, --long-desc, --owner, --type\" "
-"¤ò»È¤Ã¤Æ¥¹¥­¡¼¥à¤ò¥»¥Ã¥È¤·¤ÆÆ±´ü¤·¤Þ¤¹¡£"
+"\"--short-desc, --long-desc, --owner, --type\" ¤ò»È¤Ã¤Æ¥¹¥­¡¼¥à¤ò¥»¥Ã¥È¤·¤Æ "
+"Æ±´ü¤·¤Þ¤¹¡£"
 
 #: gconf/gconftool.c:110
 msgid "Unset the keys on the command line"
@@ -870,7 +883,7 @@ msgstr "¥Ç¥£¥ì¥¯¥È¥ê²¼¤Î¥¨¥ó¥È¥ê¤È¥µ¥Ö¥Ç¥£¥ì¥¯¥È¥ê¤ÎÁ´¤Æ¤òºÆµ¯Åª¤ËÉ½¼¨¤¹¤ë¡£"
 
 #: gconf/gconftool.c:146
 msgid "Return 0 if the directory exists, 2 if it does not."
-msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤¬Â¸ºß¤·¤¿¤é0¤òÊÖ¤·¡¢Â¸ºß¤·¤Ê¤±¤ì¤Ð2¤òÊÖ¤·¤Þ¤¹¡£"
+msgstr "¥Ç¥£¥ì¥¯¥È¥ê¤¬Â¸ºß¤·¤¿¤é 0 ¤òÊÖ¤·¡¢Â¸ºß¤·¤Ê¤±¤ì¤Ð 2 ¤òÊÖ¤·¤Þ¤¹¡£"
 
 #: gconf/gconftool.c:155
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
@@ -879,7 +892,7 @@ msgstr ""
 
 #: gconf/gconftool.c:164
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr "¤â¤· gconfd ¤¬µ¯Æ°Ãæ¤Ê¤é¤Ð0¤òÊÖ¤·¡¢¤½¤¦¤Ç¤Ê¤±¤ì¤Ð2¤òÊÖ¤·¤Þ¤¹¡£"
+msgstr "¤â¤· gconfd ¤¬µ¯Æ°Ãæ¤Ê¤é¤Ð 0 ¤òÊÖ¤·¡¢¤½¤¦¤Ç¤Ê¤±¤ì¤Ð 2 ¤òÊÖ¤·¤Þ¤¹¡£"
 
 #: gconf/gconftool.c:173
 msgid ""
@@ -893,8 +906,8 @@ msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
-"¥»¥Ã¥È¤µ¤ì¤Æ¤¤¤ëÃÍ¤Î·¿¤Þ¤¿¤Ï¥¹¥­¡¼¥à¤ÎÃÍ¤Î·¿¤ò»ØÄê¤·¤Æ²¼¤µ¤¤¡£½ÅÊ£¤·¤Ê¤±¤ì¤Ð¾"
-"ÊÎ¬·Á¤âOK¤Ç¤¹¡£"
+"¥»¥Ã¥È¤µ¤ì¤Æ¤¤¤ëÃÍ¤Î·¿¤Þ¤¿¤Ï¥¹¥­¡¼¥à¤ÎÃÍ¤Î·¿¤ò»ØÄê¤·¤Æ²¼¤µ¤¤¡£ "
+"½ÅÊ£¤·¤Ê¤±¤ì¤Ð¾ÊÎ¬·Á¤â OK ¤Ç¤¹¡£"
 
 #: gconf/gconftool.c:183
 msgid "int|bool|float|string"
@@ -941,7 +954,7 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
-"Ä¾ÀÜ¡¢¥Ð¥¤¥Ñ¥¹¤·¤Æ¤¤¤ë¥µ¡¼¥Ð¡¼¤ÎÀßÄê¥Ç¡¼¥¿¥Ù¡¼¥¹¤Ë¥¢¥¯¥»¥¹¤·¤Æ²¼¤µ¤¤¡£gconfd "
+"¥Ð¥¤¥Ñ¥¹¤·¤Æ¤¤¤ë¥µ¡¼¥Ð¡¼¤ÎÀßÄê¥Ç¡¼¥¿¥Ù¡¼¥¹¤ËÄ¾ÀÜ¥¢¥¯¥»¥¹¤·¤Æ²¼¤µ¤¤¡£gconfd "
 "¤¬µ¯Æ°¤·¤Æ¤¤¤Ê¤¤¤³¤È¤¬¾ò·ï¤Ç¤¹¡£"
 
 #: gconf/gconftool.c:245
@@ -950,26 +963,26 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
-"¥³¥Þ¥ó¥É¥é¥¤¥ó¤«¤é¥Ç¡¼¥¿¥Ù¡¼¥¹¤Ë¥¹¥­¡¼¥à¥Õ¥¡¥¤¥ë¤òÀµ¤·¤¯¥¤¥ó¥¹¥È¡¼¥ë¤·¤Æ²¼¤µ¤"
-"¤¡£´Ä¶­ÊÑ¿ô GCONF_CONFIG_SOURCE "
-"¤Ï¥Ç¥Õ¥©¥ë¥È¤Ç¤Ê¤¤ÀßÄê¥½¡¼¥¹¤ËÀßÄê¤µ¤ì¤Æ¤¤¤ë¤«¡¢¤â¤·¤¯¤Ï¥Ç¥Õ¥©¥ë¥È¤È¤·¤Æ¶õ¤ÎÊ"
-"¸»úÎó¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤ëÉ¬Í×¤¬¤¢¤ê¤Þ¤¹¡£"
+"¥³¥Þ¥ó¥É¥é¥¤¥ó¤«¤é¥Ç¡¼¥¿¥Ù¡¼¥¹¤Ë¥¹¥­¡¼¥à¥Õ¥¡¥¤¥ë¤òÀµ¤·¤¯¥¤¥ó¥¹¥È¡¼¥ë¤·¤Æ "
+"²¼¤µ¤¤¡£´Ä¶­ÊÑ¿ô GCONF_CONFIG_SOURCE ¤Ï¥Ç¥Õ¥©¥ë¥È¤Ç¤Ê¤¤ÀßÄê¥½¡¼¥¹¤ËÀßÄê "
+"¤µ¤ì¤Æ¤¤¤ë¤«¡¢¤â¤·¤¯¤Ï¥Ç¥Õ¥©¥ë¥È¤È¤·¤Æ¶õ¤ÎÊ¸»úÎó¤¬ÀßÄê¤µ¤ì¤Æ¤¤¤ëÉ¬Í×¤¬ "
+"¤¢¤ê¤Þ¤¹¡£"
 
 #: gconf/gconftool.c:254
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
-"¥³¥Þ¥ó¥É¥é¥¤¥ó¾å¤Ç¥­¡¼¤Î°Û¤Ê¤ë·¿¤ÎÃÍ¤Î¤Þ¤È¤Þ¤ê¤òÀßÄê/Ì¤ÀßÄê¤¹¤ë»ö¤Ë¤è¤ê¥¢¥×¥ê"
-"¥±¡¼¥·¥ç¥ó¤ò¥Æ¥¹¥È¤Ç¤­¤Þ¤¹¡£"
+"¥³¥Þ¥ó¥É¥é¥¤¥ó¾å¤Ç¥­¡¼¤Î°Û¤Ê¤ë·¿¤ÎÃÍ¤Î¤Þ¤È¤Þ¤ê¤òÀßÄê/Ì¤ÀßÄê¤¹¤ë»ö¤Ë¤è¤ê "
+"¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò¥Æ¥¹¥È¤Ç¤­¤Þ¤¹¡£"
 
 #: gconf/gconftool.c:263
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
-"¥³¥Þ¥ó¥É¥é¥¤¥ó¾å¤Ç¥Ç¥£¥ì¥¯¥È¥êÆâÉô¤Î¥­¡¼¤Î¤Þ¤È¤Þ¤ê¤òÀßÄê/Ì¤ÀßÄê¤Ë¤¹¤ë»ö¤Ë¤è¤ê"
-"¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò¥Æ¥¹¥È¤Ç¤­¤Þ¤¹¡£"
+"¥³¥Þ¥ó¥É¥é¥¤¥ó¾å¤Ç¥Ç¥£¥ì¥¯¥È¥êÆâÉô¤Î¥­¡¼¤Î¤Þ¤È¤Þ¤ê¤òÀßÄê/Ì¤ÀßÄê¤Ë¤¹¤ë "
+"»ö¤Ë¤è¤ê¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò¥Æ¥¹¥È¤Ç¤­¤Þ¤¹¡£"
 
 #: gconf/gconftool.c:310
 #, c-format
@@ -978,8 +991,8 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "¥ª¥×¥·¥ç¥ó %s ¤Ç¥¨¥é¡¼: %s\n"
-"'%s --help' "
-"¤ò¼Â¹Ô¤·¤Æ¡¢Í­¸ú¤Ê¥³¥Þ¥ó¥É¥é¥¤¥ó¡¦¥ª¥×¥·¥ç¥ó¥ê¥¹¥È¤ò»²¾È¤·¤Æ²¼¤µ¤¤¡£\n"
+"'%s --help' ¤ò¼Â¹Ô¤·¤Æ¡¢Í­¸ú¤Ê¥³¥Þ¥ó¥É¥é¥¤¥ó¡¦¥ª¥×¥·¥ç¥ó¥ê¥¹¥È¤ò»²¾È¤·¤Æ "
+"²¼¤µ¤¤¡£\n"
 
 #: gconf/gconftool.c:322
 msgid "Can't get and set/unset simultaneously\n"
@@ -1071,10 +1084,10 @@ msgid ""
 "applications are running\n"
 "(though things theoretically work if apps are running).\n"
 msgstr ""
-"¿·¤·¤¤¥¹¥­¡¼¥à¥Õ¥¡¥¤¥ë¤ò¥¤¥ó¥¹¥È¡¼¥ë¤·¤Æ¤¤¤ëºÇÃæ¤Ë gconfd "
-"¤ò¼Â¹Ô¤·¤Æ¤Ï¤¤¤±¤Þ¤»¤ó¡£\n"
-"²¿¤â¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤¬µ¯Æ°Ãæ¤Ç¤Ê¤¤¾õÂÖ¤Ç¡¢'gconftool --shutdown' ¤Ç gconfd "
-"¥Ç¡¼¥â¥ó¤ò\n"
+"¿·¤·¤¤¥¹¥­¡¼¥à¥Õ¥¡¥¤¥ë¤ò¥¤¥ó¥¹¥È¡¼¥ë¤·¤Æ¤¤¤ëºÇÃæ¤Ë gconfd ¤ò¼Â¹Ô¤·¤Æ¤Ï "
+"¤¤¤±¤Þ¤»¤ó¡£\n"
+"²¿¤â¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤¬µ¯Æ°Ãæ¤Ç¤Ê¤¤¾õÂÖ¤Ç¡¢'gconftool --shutdown' ¤Ç "
+"gconfd¥Ç¡¼¥â¥ó¤ò\n"
 "¥·¥ã¥Ã¥È¥À¥¦¥ó¤·¤Æ¤¯¤À¤µ¤¤¡£(Îã¤¨¥¢¥×¥ê¤¬ÍýÏÀÅª¤ËÆ°¤¤¤Æ¤¤¤¿¤È¤·¤Æ¤â)\n"
 
 #: gconf/gconftool.c:509
@@ -1126,12 +1139,12 @@ msgstr "Ì¤ÀßÄê"
 #: gconf/gconftool.c:866
 #, c-format
 msgid "Short Desc: %s\n"
-msgstr "¥·¥ç¡¼¥È¥Ç¥£¥¹¥¯: %s\n"
+msgstr "¥·¥ç¡¼¥ÈDesc: %s\n"
 
 #: gconf/gconftool.c:867
 #, c-format
 msgid "Long Desc: %s\n"
-msgstr "¥í¥ó¥°¥Ç¥£¥¹¥¯: %s\n"
+msgstr "¥í¥ó¥°Desc: %s\n"
 
 #: gconf/gconftool.c:876
 #, c-format
@@ -1243,8 +1256,8 @@ msgstr "·Ù¹ð: ¥¹¥­¡¼¥à¤Ë»ØÄê¤µ¤ì¤¿¥­¡¼¤Ï¤¢¤ê¤Þ¤»¤ó¡£\n"
 #: gconf/gconftool.c:1372
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
-"·Ù¹ð: <locale> ¥Î¡¼¥É¤Ë¤Ï Â°À­ 'name = "
-"\"¥í¥±¡¼¥ëÌ¾\"¤¬¤¢¤ê¤Þ¤»¤ó¡£Ìµ»ë¤·¤Þ¤¹¡£\n"
+"·Ù¹ð: <locale> ¥Î¡¼¥É¤Ë¤Ï Â°À­ 'name = \"¥í¥±¡¼¥ëÌ¾\"¤¬¤¢¤ê¤Þ¤»¤ó¡£ "
+"Ìµ»ë¤·¤Þ¤¹¡£\n"
 
 #: gconf/gconftool.c:1378
 #, c-format
@@ -1290,7 +1303,7 @@ msgstr "·Ù¹ð: ¥Î¡¼¥É <%s> ¤Ï <schemalist> ¤Ç¤Ï²òÀÏ¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿¡£\n"
 #: gconf/gconftool.c:1638
 #, c-format
 msgid "Failed to open `%s': %s\n"
-msgstr "'%s'¤¬³«¤±¤Þ¤»¤ó¤Ç¤·¤¿: %s\n"
+msgstr "'%s' ¤¬³«¤±¤Þ¤»¤ó¤Ç¤·¤¿: %s\n"
 
 #: gconf/gconftool.c:1645
 #, c-format
@@ -1351,8 +1364,8 @@ msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
-"¥­¡¼¤Ë¤ª¤«¤·¤ÊÃÍ¤òÀßÄê¤¹¤ë»ö¤Ë¤è¤Ã¤Æ¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò½ªÎ»¤µ¤»¤è¤¦¤È¤·¤Æ¤¤¤Þ¤"
-"¹:\n"
+"¥­¡¼¤Ë¤ª¤«¤·¤ÊÃÍ¤òÀßÄê¤¹¤ë»ö¤Ë¤è¤Ã¤Æ¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò½ªÎ»¤µ¤»¤è¤¦¤È¤·¤Æ "
+"¤¤¤Þ¤¹:\n"
 " %s\n"
 
 #: gconf/gconftool.c:1918
@@ -1366,19 +1379,19 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"¥Ç¥£¥ì¥¯¥È¥ê¤Î¥­¡¼¤Ë¤ª¤«¤·¤ÊÃÍ¤òÀßÄê¤¹¤ë»ö¤Ë¤è¤Ã¤Æ¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò½ªÎ»¤µ¤»¤"
-"è¤¦¤È¤·¤Æ¤¤¤Þ¤¹:\n"
+"¥Ç¥£¥ì¥¯¥È¥ê¤Î¥­¡¼¤Ë¤ª¤«¤·¤ÊÃÍ¤òÀßÄê¤¹¤ë»ö¤Ë¤è¤Ã¤Æ¥¢¥×¥ê¥±¡¼¥·¥ç¥ó¤ò "
+"½ªÎ»¤µ¤»¤è¤¦¤È¤·¤Æ¤¤¤Þ¤¹:\n"
 " %s\n"
 
 #: wrappers/gtk/gconf-client.c:812
-#, fuzzy, c-format
+#, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
-msgstr "'%s' ¤Î¥Ú¥¢¤ò¥ê¥¹¥È²½Ãæ¤Ë¥¨¥é¡¼: %s"
+msgstr "GConf ¤«¤é·Ù¹ð: '%s' ¤ÎÃæ¤Î¥Ú¥¢¤Î¥ê¥¹¥È²½¤Ë¼ºÇÔ: %s"
 
 #: wrappers/gtk/gconf-client.c:990
-#, fuzzy, c-format
+#, c-format
 msgid "Expected `%s' got `%s' for key %s"
-msgstr "%s ¤Î¥ê¥¹¥È¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï %s ¤Î¥ê¥¹¥È¤Ç¤¹¡£"
+msgstr "'%s' ¤ò´üÂÔ¤µ¤ì¤¿¤¬¡¢ÆÀ¤é¤ì¤¿¤Î¤Ï '%s'(¥­¡¼¤Ï'%s')¤Ç¤¹¡£"
 
 #~ msgid "Key"
 #~ msgstr "¥­¡¼"
