@@ -358,11 +358,13 @@ gconf_engine_unref        (GConfEngine* conf)
 
                   if (gconf_handle_corba_exception(&ev, &err))
                     {
-                      /* Don't set error because realistically this doesn't matter to 
-                         clients */
+                      /* Don't set error because realistically this
+                         doesn't matter to clients */
+#ifdef GCONF_ENABLE_DEBUG
                       g_warning("Failure removing listener %u from the config server: %s",
                                 (guint)gcnxn->server_id,
                                 err->str);
+#endif
                     }
                 }
 
@@ -1567,8 +1569,10 @@ notify(PortableServer_Servant servant,
 
   if (priv == NULL)
     {
+#ifdef GCONF_ENABLE_DEBUG
       g_warning("Client received notify for unknown context %u",
                 (guint)context);
+#endif
       return;
     }
   
@@ -1576,8 +1580,10 @@ notify(PortableServer_Servant servant,
   
   if (cnxn == NULL)
     {
+#ifdef GCONF_ENABLE_DEBUG
       g_warning("Client received notify for unknown connection ID %u",
                 (guint)server_id);
+#endif
       return;
     }
 

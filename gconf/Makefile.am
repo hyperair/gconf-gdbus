@@ -31,6 +31,7 @@ gconfinclude_HEADERS =     \
 	gconf.h            \
 	gconf-backend.h		\
 	gconf-changeset.h	\
+	gconf-glib-public.h	\
 	gconf-listeners.h  \
 	gconf-schema.h 	   \
 	gconf-value.h	   \
@@ -64,6 +65,8 @@ libgconf_1_la_SOURCES = \
 	gconf-backend.c		\
 	gconf-changeset.c	\
 	gconf-error.c		\
+	gconf-glib.c		\
+	gconf-glib-private.h	\
 	gconf-listeners.c	\
 	gconf-locale.h  	\
 	gconf-locale.c  	\

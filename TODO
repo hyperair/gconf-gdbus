@@ -50,4 +50,13 @@
 
 * Implement the default error handlers in GConfClient
 
+* Fix non-default GConfEngines: this means propagating change
+  notifications from them to other engines with the same 
+  databases. Or maybe instead we should use the mechanism
+  used when the same database is in two gconfds (backend 
+  notifies us of changes). Also, GConfEngine client side
+  needs to store the source list used to create the 
+  context ID, so if gconfd forgets the context, it can 
+  simply be recreated. This will allow gconfd to forget old
+  contexts.
 

@@ -1,3 +1,20 @@
+2000-08-27  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-glib-public.h, 
+	gconf/gconf-glib-private.h,
+	gconf/gconf-glib.c: Place to put cut-and-paste code from 
+	GLib 2.0
+
+	* gconf/gconf.c (notify): Only print warnings on bogus notifies
+	if debugging is enabled; without debugging, silently ignore
+	the notifies, it just means gconfd got confused.
+
+2000-08-26  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-listeners.c (gconf_listeners_foreach): Add a foreach
+	function, will use that to dump the daemon's listener table to
+	a file.
+
 2000-08-26  Havoc Pennington  <hp@pobox.com>
 
 	* TODO: Created a TODO file

@@ -87,6 +87,9 @@ static void    ltable_notify(LTable* ltable,
                              gpointer user_data);
 
 static guint   ltable_next_cnxn(LTable* ltable);
+static void    ltable_foreach  (LTable* ltable,
+                                GConfListenersForeach callback,
+                                gpointer user_data);
 
 #ifdef DEBUG_LISTENERS
 static void    ltable_spew(LTable* ltable);
@@ -171,8 +174,20 @@ gconf_listeners_count   (GConfListeners* listeners)
   return lt->active_listeners;
 }
 
+void
+gconf_listeners_foreach (GConfListeners* listeners,
+                         GConfListenersForeach callback,
+                         gpointer user_data)
+{
+  LTable* lt = (LTable*)listeners;
+  
+  ltable_foreach (lt, callback, user_data);
+}
+
+
 /*
- * LTable impl */
+ * LTable impl
+ */
 
 static Listener* 
 listener_new(guint cnxn_id, gpointer listener_data, GFreeFunc destroy_notify)
@@ -560,6 +575,50 @@ ltable_notify(LTable* lt, const gchar* key,
     }
   
   g_strfreev(dirs);
+}
+
+struct NodeTraverseData
+{
+  GConfListenersForeach func;
+  gpointer user_data;
+};
+
+static gboolean
+node_traverse_func (GNode *node,
+                    gpointer user_data)
+{
+  struct NodeTraverseData *td = user_data;
+  LTableEntry *lte = node->data;
+  GList *tmp;
+
+  tmp = lte->listeners;
+  while (tmp != NULL)
+    {
+      (* td->func) (lte->name,
+                    tmp->data,
+                    td->user_data);
+      
+      tmp = g_list_next (tmp);
+    }
+
+  return FALSE; /* continue traversal */
+}
+
+static void
+ltable_foreach  (LTable* ltable,
+                 GConfListenersForeach callback,
+                 gpointer user_data)
+{
+  struct NodeTraverseData td;
+  td.func = callback;
+  td.user_data = user_data;
+  
+  g_node_traverse (ltable->tree,
+                   G_IN_ORDER,
+                   G_TRAVERSE_ALL,
+                   -1,
+                   node_traverse_func,
+                   &td);
 }
 
 static LTableEntry* 

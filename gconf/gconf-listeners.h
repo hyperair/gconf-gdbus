@@ -42,6 +42,10 @@ typedef void (*GConfListenersCallback)(GConfListeners* listeners,
                                        gpointer listener_data,
                                        gpointer user_data);
 
+typedef void (*GConfListenersForeach) (const gchar* location,
+                                       gpointer listener_data,
+                                       gpointer user_data);
+
 GConfListeners*     gconf_listeners_new     (void);
 
 void                gconf_listeners_destroy (GConfListeners* listeners);
@@ -64,6 +68,10 @@ void                gconf_listeners_notify  (GConfListeners* listeners,
                                              gpointer user_data);
 
 guint               gconf_listeners_count   (GConfListeners* listeners);
+
+void                gconf_listeners_foreach (GConfListeners* listeners,
+                                             GConfListenersForeach callback,
+                                             gpointer user_data);
 
 #ifdef __cplusplus
 }
