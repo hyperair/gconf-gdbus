@@ -1,0 +1,99 @@
+#
+# Note that this is NOT a relocatable package
+# $Id$
+#
+%define ver      @VERSION@
+%define rel      1
+%define prefix   @prefix@
+%define name	 @PACKAGE@
+
+Summary: Gnome Config System
+Name: %name
+Version: %ver
+Release: %rel
+Copyright: LGPL
+Group: System Environment/Base
+Source: ftp://ftp.gnome.org/pub/GNOME/unstable/sources/GConf/GConf-%{ver}.tar.gz
+BuildRoot: /var/tmp/gconf
+Obsoletes: gconf
+Packager: Eskil Heyn Olsen <deity@eazel.com>
+URL: http://www.gnome.org
+Prereq: /sbin/install-info
+Prefix: %{prefix}
+Docdir: %{prefix}/doc
+Requires: glib >= 1.2.0
+Requires: oaf >= 0.2.0
+Requires: gtk+ >= 1.2.0
+Requires: ORBit >= 0.5.0
+Requires: libxml >= 1.8.0
+
+%description
+GConf is the GNOME Configuratoin database system. 
+
+GNOME is the GNU Network Object Model Environment.  That's a fancy
+name but really GNOME is a nice GUI desktop environment.  It makes
+using your computer easy, powerful, and easy to configure.
+
+%package devel
+Summary: Gnome Config System development package
+Group: Development/Libraries
+Requires: %name = %{ver}
+Requires: ORBit-devel
+Requires: glib-devel
+Requires: oaf-devel
+Requires: gtk+-devel
+PreReq: /sbin/install-info
+
+%description devel
+GConf development package. Contains files needed for doing
+development using GConf.
+
+%changelog
+
+* Sun Jun 11 2000  Eskil Heyn Olsen <deity@eazel.com>
+
+- Created the .spec file
+
+%prep
+%setup
+
+%build
+# Needed for snapshot releases.
+if [ ! -f configure ]; then
+  CFLAGS="$RPM_OPT_FLAGS" ./autogen.sh --prefix=%prefix --sysconfdir=$RPM_BUILD_ROOT/etc
+else
+  CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%prefix --sysconfdir=$RPM_BUILD_ROOT/etc
+fi
+
+if [ "$SMP" != "" ]; then
+  (make "MAKE=make -k -j $SMP"; exit 0)
+  make
+else
+  make
+fi
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-, root, root)
+%doc AUTHORS COPYING ChangeLog NEWS README
+%{prefix}/bin
+%{prefix}/lib/*
+%{prefix}/lib/gconf/*
+%{prefix}/share/aclocal/*
+%{prefix}/share/gconf/*
+%{prefix}/share/oaf/*
+%config /etc/gconf/*
+
+%files devel
+%defattr(-, root, root)
+%{prefix}/include/gconf/*
