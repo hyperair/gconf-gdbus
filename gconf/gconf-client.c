@@ -1244,6 +1244,7 @@ gconf_client_get_full        (GConfClient* client,
 {
   GError* error = NULL;
   GConfEntry *entry;
+  GConfValue *retval;
   
   g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
@@ -1258,9 +1259,15 @@ gconf_client_get_full        (GConfClient* client,
   else
     g_assert (error == NULL);
 
-  return entry ? (gconf_entry_get_value (entry) ?
-    gconf_value_copy (gconf_entry_get_value (entry)) :
-    NULL) : NULL;
+  retval = NULL;
+  
+  if (entry && gconf_entry_get_value (entry))
+    retval = gconf_value_copy (gconf_entry_get_value (entry));
+
+  if (entry != NULL)
+    gconf_entry_free (entry);
+
+  return retval;
 }
 
 GConfEntry*
