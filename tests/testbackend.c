@@ -59,8 +59,8 @@ foreach_recursive (GConfSource     *source,
   GError *error;  
 
   error = NULL;
-  entries = (* source->backend->vtable->all_entries) (source, dir_key,
-                                                      locales, &error);
+  entries = (* source->backend->vtable.all_entries) (source, dir_key,
+						     locales, &error);
   exit_if_error (error);
 
   tmp = entries;
@@ -90,8 +90,8 @@ foreach_recursive (GConfSource     *source,
   g_slist_free (entries);
 
   error = NULL;
-  subdirs = (* source->backend->vtable->all_subdirs) (source, dir_key,
-                                                      &error);
+  subdirs = (* source->backend->vtable.all_subdirs) (source, dir_key,
+						     &error);
   exit_if_error (error);
 
   tmp = subdirs;
@@ -140,7 +140,7 @@ sync_and_clear (GConfSource *source)
     return;
   
   err = NULL;
-  if (!(* source->backend->vtable->sync_all) (source, &err))
+  if (!(* source->backend->vtable.sync_all) (source, &err))
     {
       g_printerr ("Failed to sync: %s\n", err->message);
       g_error_free (err);
@@ -148,7 +148,7 @@ sync_and_clear (GConfSource *source)
       exit (1);
     }
 
-  (* source->backend->vtable->clear_cache) (source);
+  (* source->backend->vtable.clear_cache) (source);
 }
 
 static void
@@ -283,10 +283,10 @@ check_unset (GConfSource *source)
 
   while (*keyp)
     {
-      (* source->backend->vtable->unset_value) (source,
-                                                *keyp,
-                                                NULL,
-                                                &err);
+      (* source->backend->vtable.unset_value) (source,
+					       *keyp,
+					       NULL,
+					       &err);
 
       if (err != NULL)
         {
@@ -301,11 +301,11 @@ check_unset (GConfSource *source)
 
           sync_and_clear (source);
           
-          val = (* source->backend->vtable->query_value) (source,
-                                                          *keyp,
-                                                          locales,
-                                                          NULL,
-                                                          &err);
+          val = (* source->backend->vtable.query_value) (source,
+							 *keyp,
+							 locales,
+							 NULL,
+							 &err);
 
           if (val)
             valstr = gconf_value_to_string (val);
@@ -330,7 +330,7 @@ set_value (GConfSource *source,
   GError *tmp_err;
 
   tmp_err = NULL;
-  (* source->backend->vtable->set_value) (source, key, value, &tmp_err);
+  (* source->backend->vtable.set_value) (source, key, value, &tmp_err);
   if (tmp_err)
     g_propagate_error (err, tmp_err);
 
@@ -437,7 +437,7 @@ get_value (GConfSource *source,
            const char  *key,
            GError     **err)
 {
-  return (* source->backend->vtable->query_value) (source, key, locales, NULL, err);
+  return (* source->backend->vtable.query_value) (source, key, locales, NULL, err);
 }
 
 static char*
