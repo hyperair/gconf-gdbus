@@ -65,6 +65,8 @@ union ConfigValue switch (ConfigValueType) {
 interface ConfigDatabase;
 
 interface ConfigListener {
+  typedef sequence<string> KeyList;
+  
   oneway void notify (in ConfigDatabase database,
                       in unsigned long cnxn,
                       in string key,
@@ -83,10 +85,10 @@ interface ConfigListener {
                                in unsigned long old_cnxn,
                                in string where,
                                in unsigned long new_cnxn);
-
-  oneway void invalidate_cached_value (in ConfigDatabase database,
-                                       in string key);
-
+  
+  oneway void invalidate_cached_values (in ConfigDatabase database,
+                                        in KeyList keys);
+  
   // Called when a new daemon starts up, and we need to drop caches
   // in case the new daemon has a different default database
   oneway void drop_all_caches ();

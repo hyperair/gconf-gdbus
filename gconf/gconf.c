@@ -1802,9 +1802,9 @@ static void update_listener         (PortableServer_Servant     _servant,
                                      const CORBA_char          *key,
                                      const CORBA_unsigned_long  new_cnxn,
                                      CORBA_Environment         *ev);
-static void invalidate_cached_value (PortableServer_Servant     _servant,
+static void invalidate_cached_values(PortableServer_Servant     _servant,
                                      ConfigDatabase             database,
-                                     const CORBA_char          *key,
+                                     const ConfigListener_KeyList *keys,
                                      CORBA_Environment         *ev);
 static void drop_all_caches         (PortableServer_Servant     _servant,
                                      CORBA_Environment         *ev);
@@ -1822,7 +1822,7 @@ static POA_ConfigListener__epv listener_epv = {
   notify,
   ping,
   update_listener,
-  invalidate_cached_value,
+  invalidate_cached_values,
   drop_all_caches
 };
 
@@ -1939,10 +1939,10 @@ update_listener (PortableServer_Servant _servant,
 }
 
 static void
-invalidate_cached_value (PortableServer_Servant     _servant,
-                         ConfigDatabase             database,
-                         const CORBA_char          *key,
-                         CORBA_Environment         *ev)
+invalidate_cached_values (PortableServer_Servant     _servant,
+                          ConfigDatabase             database,
+                          const ConfigListener_KeyList *keys,
+                          CORBA_Environment         *ev)
 {
 
 
