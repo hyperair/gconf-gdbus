@@ -808,9 +808,9 @@ gconf_load_source_path(const gchar* filename, GError** err)
     {
       if (err)
         *err = gconf_error_new(GCONF_ERROR_FAILED,
-                                _("Couldn't open path file `%s': %s\n"), 
-                                filename, 
-                                strerror(errno));
+                               _("Couldn't open path file `%s': %s\n"), 
+                               filename, 
+                               strerror(errno));
       return NULL;
     }
 
@@ -833,17 +833,19 @@ gconf_load_source_path(const gchar* filename, GError** err)
         {
           gchar* unq;
           GSList* included;
-
+          gchar *varsubst;
+          
           s += 7;
-          while (isspace(*s)) s++;
+          while (isspace(*s))
+            s++;
           unq = unquote_string(s);
 
-          included = gconf_load_source_path(unq, NULL);
-
+          varsubst = subst_variables (unq);
+          included = gconf_load_source_path (varsubst, NULL);
+          g_free (varsubst);
+          
           if (included != NULL)
-            {
-              g_slist_concat(l, included);
-            }
+            g_slist_concat (l, included);
         }
       else 
         {
@@ -867,9 +869,9 @@ gconf_load_source_path(const gchar* filename, GError** err)
       /* This should basically never happen */
       if (err)
         *err = gconf_error_new(GCONF_ERROR_FAILED,
-                                _("Read error on file `%s': %s\n"), 
-                                filename,
-                                strerror(errno));
+                               _("Read error on file `%s': %s\n"), 
+                               filename,
+                               strerror(errno));
       /* don't return, we want to go ahead and return any 
          addresses we already loaded. */
     }

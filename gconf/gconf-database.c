@@ -1089,17 +1089,17 @@ notify_listeners_cb(GConfListeners* listeners,
   
   if(closure->ev._major != CORBA_NO_EXCEPTION) 
     {
-      gconf_log(GCL_DEBUG, "Failed to notify listener %u, removing: %s", 
-                cnxn_id, CORBA_exception_id(&closure->ev));
-      CORBA_exception_free(&closure->ev);
+      gconf_log (GCL_DEBUG, "Failed to notify listener %u, removing: %s", 
+                 cnxn_id, CORBA_exception_id (&closure->ev));
+      CORBA_exception_free (&closure->ev);
       
       /* Dead listeners need to be forgotten */
       closure->dead = g_slist_prepend(closure->dead, GUINT_TO_POINTER(cnxn_id));
     }
   else
     {
-      gconf_log(GCL_DEBUG, "Notified listener %u of change to key `%s'",
-                cnxn_id, all_above_key);
+      gconf_log (GCL_DEBUG, "Notified listener %u of change to key `%s'",
+                 cnxn_id, all_above_key);
     }
 }
 

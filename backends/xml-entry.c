@@ -368,11 +368,13 @@ entry_fill_from_node(Entry* e)
     }
   else if (error != NULL)
     {
-      /* FIXME for nodes with no value stored, but containing a schema name,
-       * we improperly log an error here
+      /* Ignore errors from node_extract_value() if we got a schema name,
+       * since the node's only purpose may be to store the schema name.
        */
-      gconf_log(GCL_WARNING, _("Ignoring XML node `%s', except for possible schema name: %s"),
-                e->name, error->message);
+      if (e->schema_name == NULL)
+        gconf_log (GCL_WARNING,
+                   _("Ignoring XML node `%s': %s"),
+                   e->name, error->message);
       g_error_free(error);
     }
 }

@@ -1,3 +1,17 @@
+2001-08-13  Havoc Pennington  <hp@redhat.com>
+
+        Merge from stable.
+	
+	* gconf/gconf-internals.c (gconf_load_source_path): patch from
+	Adam Spiers to honor variables in include lines
+
+	* gconf/gconf-database.c (notify_listeners_cb):
+	indentation/whitespace changes
+
+	* backends/xml-entry.c (entry_fill_from_node): Only print a
+	warning if there's no schema name. Avoids spurious warnings 
+	on nodes that only have a schema name.
+
 2001-08-13  Michael Meeks  <michael@ximian.com>
 
 	* gconf/gconf-internals.c: remove nano_sleep; it's unused.
