@@ -30,24 +30,24 @@ extern "C" {
 
 /* Sync with ConfigErrorType in GConf.idl */
 typedef enum {
-  GCONF_SUCCESS = 0,
-  GCONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
-                               so there's no point having a more specific errno */
+  GCONF_ERROR_SUCCESS = 0,
+  GCONF_ERROR_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
+                                    so there's no point having a more specific errno */
 
-  GCONF_NO_SERVER = 2,     /* Server can't be launched/contacted */
-  GCONF_NO_PERMISSION = 3, /* don't have permission for that */
-  GCONF_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
-  GCONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
-                               characters, or malformed slash arrangement) */
-  GCONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
-  GCONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
-  GCONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
-  GCONF_IS_DIR = 9,        /* Requested key operation on a dir */
-  GCONF_IS_KEY = 10,       /* Requested dir operation on a key */
-  GCONF_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
-  GCONF_OAF_ERROR = 12,    /* liboaf error */
-  GCONF_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
-  GCONF_LOCK_FAILED = 14   /* Failed to get a lockfile */
+  GCONF_ERROR_NO_SERVER = 2,     /* Server can't be launched/contacted */
+  GCONF_ERROR_NO_PERMISSION = 3, /* don't have permission for that */
+  GCONF_ERROR_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
+  GCONF_ERROR_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
+                                    characters, or malformed slash arrangement) */
+  GCONF_ERROR_PARSE_ERROR = 6,   /* Syntax error when parsing */
+  GCONF_ERROR_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
+  GCONF_ERROR_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
+  GCONF_ERROR_IS_DIR = 9,        /* Requested key operation on a dir */
+  GCONF_ERROR_IS_KEY = 10,       /* Requested dir operation on a key */
+  GCONF_ERROR_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
+  GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
+  GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
+  GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
 } GConfErrNo;
 
 /* Error Object */

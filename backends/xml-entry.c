@@ -868,7 +868,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
 
   if (type_str == NULL)
     {
-      gconf_set_error(err, GCONF_PARSE_ERROR,
+      gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
                       _("No \"type\" attribute for <%s> node"),
                       (node->name ? (char*)node->name : "(nil)"));
       return NULL;
@@ -882,7 +882,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
     {
     case GCONF_VALUE_INVALID:
       {
-        gconf_set_error(err, GCONF_PARSE_ERROR,
+        gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
                         _("A node has unknown \"type\" attribute `%s', ignoring"), type_str);
         return NULL;
       }
@@ -898,7 +898,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
         
         if (value_str == NULL)
           {
-            gconf_set_error(err, GCONF_PARSE_ERROR,
+            gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
                             _("No \"value\" attribute for node"));
             return NULL;
           }
@@ -939,7 +939,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
           case GCONF_VALUE_INVALID:
           case GCONF_VALUE_LIST:
           case GCONF_VALUE_PAIR:
-            gconf_set_error(err, GCONF_PARSE_ERROR,
+            gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
                             _("Invalid type (list, pair, or unknown) in a list node"));
               
             return NULL;

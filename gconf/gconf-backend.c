@@ -158,7 +158,7 @@ gconf_get_backend(const gchar* address, GConfError** err)
       
   if (name == NULL)
     {
-      gconf_set_error(err, GCONF_BAD_ADDRESS, _("Bad address `%s'"), address);
+      gconf_set_error(err, GCONF_ERROR_BAD_ADDRESS, _("Bad address `%s'"), address);
       return NULL;
     }
 
@@ -192,7 +192,7 @@ gconf_get_backend(const gchar* address, GConfError** err)
             {
               gchar* error = g_module_error();
               gconf_set_error(err,
-                              GCONF_FAILED, _("Error opening module `%s': %s\n"),
+                              GCONF_ERROR_FAILED, _("Error opening module `%s': %s\n"),
                               name, error);
               g_free(name);
               return NULL;
@@ -223,7 +223,7 @@ gconf_get_backend(const gchar* address, GConfError** err)
         }
       else
         {
-          gconf_set_error(err, GCONF_FAILED,
+          gconf_set_error(err, GCONF_ERROR_FAILED,
                           _("Couldn't locate backend module for `%s'"), address);
           return NULL;
         }

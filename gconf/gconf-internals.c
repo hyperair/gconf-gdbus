@@ -784,7 +784,7 @@ gconf_load_source_path(const gchar* filename, GConfError** err)
   if (f == NULL)
     {
       if (err)
-        *err = gconf_error_new(GCONF_FAILED,
+        *err = gconf_error_new(GCONF_ERROR_FAILED,
                                 _("Couldn't open path file `%s': %s\n"), 
                                 filename, 
                                 strerror(errno));
@@ -851,7 +851,7 @@ gconf_load_source_path(const gchar* filename, GConfError** err)
     {
       /* This should basically never happen */
       if (err)
-        *err = gconf_error_new(GCONF_FAILED,
+        *err = gconf_error_new(GCONF_ERROR_FAILED,
                                 _("Read error on file `%s': %s\n"), 
                                 filename,
                                 strerror(errno));
@@ -1250,7 +1250,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
   if (val->type != GCONF_VALUE_LIST)
     {
       if (err)
-        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+        *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected list, got %s"),
                                gconf_value_type_to_string(val->type));
       gconf_value_destroy(val);
@@ -1260,7 +1260,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
   if (gconf_value_list_type(val) != list_type)
     {
       if (err)
-        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+        *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected list of %s, got list of %s"),
                                gconf_value_type_to_string(list_type),
                                gconf_value_type_to_string(val->type));
@@ -1399,7 +1399,7 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
   if (val->type != GCONF_VALUE_PAIR)
     {
       if (err)
-        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+        *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected pair, got %s"),
                                gconf_value_type_to_string(val->type));
       gconf_value_destroy(val);
@@ -1413,7 +1413,7 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
       cdr == NULL)
     {
       if (err)
-        *err = gconf_error_new(GCONF_TYPE_MISMATCH, 
+        *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, 
                                _("Expected (%s,%s) pair, got a pair with one or both values missing"),
                                gconf_value_type_to_string(car_type),
                                gconf_value_type_to_string(cdr_type));
@@ -1429,7 +1429,7 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
       cdr->type != cdr_type)
     {
       if (err)
-        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+        *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected pair of type (%s,%s) got type (%s,%s)"),
                                gconf_value_type_to_string(car_type),
                                gconf_value_type_to_string(cdr_type),
@@ -1545,7 +1545,7 @@ gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err)
   if (*s != '"')
     {
       if (err)
-        *err = gconf_error_new(GCONF_PARSE_ERROR,
+        *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                                _("Quoted string doesn't begin with a quotation mark"));
       *end = str;
       return;
@@ -1607,7 +1607,7 @@ gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err)
   *dest = '\0';
   
   if (err)
-    *err = gconf_error_new(GCONF_PARSE_ERROR,
+    *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                            _("Quoted string doesn't end with a quotation mark"));
   *end = s;
   return;
@@ -2074,7 +2074,7 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err)
       break;
     case CORBA_SYSTEM_EXCEPTION:
       if (err)
-        *err = gconf_error_new(GCONF_NO_SERVER, _("CORBA error: %s"),
+        *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("CORBA error: %s"),
                                CORBA_exception_id(ev));
       CORBA_exception_free(ev);
       return TRUE;
@@ -2089,29 +2089,29 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err)
             OAF_GeneralError* ge = CORBA_exception_value(ev);
 
             if (err)
-              *err = gconf_error_new(GCONF_OAF_ERROR, _("%s"), ge->description);
+              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("%s"), ge->description);
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/NotListed:1.0" ) == 0)
           {
             if (err)
-              *err = gconf_error_new(GCONF_OAF_ERROR, _("attempt to remove not-listed OAF object directory"));
+              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("attempt to remove not-listed OAF object directory"));
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/AlreadyListed:1.0" ) == 0)
           {
             if (err)
-              *err = gconf_error_new(GCONF_OAF_ERROR, _("attempt to add already-listed OAF directory")); 
+              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("attempt to add already-listed OAF directory")); 
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/ParseFailed:1.0") == 0)
           {
             OAF_ActivationContext_ParseFailed* pe = CORBA_exception_value(ev);
             
             if (err)
-              *err = gconf_error_new(GCONF_OAF_ERROR, _("OAF parse error: %s"), pe->description);
+              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("OAF parse error: %s"), pe->description);
           }
         else
           {
             if (err)
-              *err = gconf_error_new(GCONF_OAF_ERROR, _("Unknown OAF error"));
+              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("Unknown OAF error"));
           }
         
         CORBA_exception_free(ev);
@@ -2235,7 +2235,7 @@ gconf_get_lock(const gchar* lock_directory,
                     {
                       error_occurred = TRUE;
                       gconf_set_error(err,
-                                      GCONF_LOCK_FAILED,
+                                      GCONF_ERROR_LOCK_FAILED,
                                       _("Another program has lock `%s'"),
                                       lock->lock_directory);
                       goto out;
@@ -2255,7 +2255,7 @@ gconf_get_lock(const gchar* lock_directory,
                     {
                       error_occurred = TRUE;
                       gconf_set_error(err,
-                                      GCONF_LOCK_FAILED,
+                                      GCONF_ERROR_LOCK_FAILED,
                                       _("couldn't contact ORB to ping existing gconfd"));
                       goto out;
                     }
@@ -2289,7 +2289,7 @@ gconf_get_lock(const gchar* lock_directory,
                         {
                           error_occurred = TRUE;
                           gconf_set_error(err,
-                                          GCONF_LOCK_FAILED,
+                                          GCONF_ERROR_LOCK_FAILED,
                                           _("GConf configuration daemon (gconfd) has lock `%s'"),
                                           lock->lock_directory);
                           goto out;
@@ -2303,7 +2303,7 @@ gconf_get_lock(const gchar* lock_directory,
           /* give up */
           error_occurred = TRUE;
           gconf_set_error(err,
-                          GCONF_LOCK_FAILED,
+                          GCONF_ERROR_LOCK_FAILED,
                           _("couldn't create directory `%s': %s"),
                           lock->lock_directory, strerror(errno));
           goto out;
@@ -2338,7 +2338,7 @@ gconf_get_lock(const gchar* lock_directory,
     if (fd < 0)
       {
         gconf_set_error(err,
-                        GCONF_LOCK_FAILED,
+                        GCONF_ERROR_LOCK_FAILED,
                         _("Can't create lock `%s': %s"),
                         iorfile, strerror(errno));
         g_free(iorfile);
@@ -2372,7 +2372,7 @@ gconf_get_lock(const gchar* lock_directory,
         if (retval < 0)
           {
             gconf_set_error(err,
-                            GCONF_LOCK_FAILED,
+                            GCONF_ERROR_LOCK_FAILED,
                             _("Can't write to file `%s': %s"),
                             iorfile, strerror(errno));
             close(fd);
@@ -2384,7 +2384,7 @@ gconf_get_lock(const gchar* lock_directory,
         if (close(fd) < 0)
           {
             gconf_set_error(err,
-                            GCONF_LOCK_FAILED,
+                            GCONF_ERROR_LOCK_FAILED,
                             _("Failed to close file `%s': %s"),
                             iorfile, strerror(errno));
             g_free(iorfile);
@@ -2415,7 +2415,7 @@ gconf_release_lock(GConfLock* lock,
   if (fp == NULL)
     {
       gconf_set_error(err,
-                      GCONF_FAILED,
+                      GCONF_ERROR_FAILED,
                       _("Can't open lock file `%s'; assuming it isn't ours: %s"),
                       iorfile, strerror(errno));
       g_free(iorfile);
@@ -2442,7 +2442,7 @@ gconf_release_lock(GConfLock* lock,
       if (pid != getpid())
         {
           gconf_set_error(err,
-                          GCONF_FAILED,
+                          GCONF_ERROR_FAILED,
                           _("Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone took our lock"),
                           iorfile, (guint)pid, (guint)getpid());
           g_free(iorfile);
@@ -2459,7 +2459,7 @@ gconf_release_lock(GConfLock* lock,
   if (rmdir(lock->lock_directory) < 0)
     {
       gconf_set_error(err,
-                      GCONF_FAILED,
+                      GCONF_ERROR_FAILED,
                       _("Failed to release lock directory `%s': %s"),
                       lock->lock_directory,
                       strerror(errno));

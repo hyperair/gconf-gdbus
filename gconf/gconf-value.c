@@ -92,7 +92,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
         if (endptr == value_str)
           {
             if (err)
-              *err = gconf_error_new(GCONF_PARSE_ERROR,
+              *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                                       _("Didn't understand `%s' (expected integer)"),
                                       value_str);
             
@@ -102,7 +102,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
         else if (errno == ERANGE)
           {
             if (err)
-              *err = gconf_error_new(GCONF_PARSE_ERROR,
+              *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                                       _("Integer `%s' is too large or small"),
                                       value_str);
             gconf_value_destroy(value);
@@ -124,7 +124,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
         else
           {
             if (err)
-              *err = gconf_error_new(GCONF_PARSE_ERROR,
+              *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                                       _("Didn't understand `%s' (expected real number)"),
                                       value_str);
             
@@ -157,9 +157,9 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
           
         default:
           if (err)
-            *err = gconf_error_new(GCONF_PARSE_ERROR,
-                                    _("Didn't understand `%s' (expected true or false)"),
-                                    value_str);
+            *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
+                                   _("Didn't understand `%s' (expected true or false)"),
+                                   value_str);
           
           gconf_value_destroy(value);
           value = NULL;

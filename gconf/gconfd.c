@@ -1860,7 +1860,7 @@ lookup_context(ConfigServer_Context ctx, GConfError** err)
 
   if (ctx >= context_list->len || ctx == ConfigServer_invalid_context)
     {
-      gconf_set_error(err, GCONF_FAILED,
+      gconf_set_error(err, GCONF_ERROR_FAILED,
                       _("Attempt to use invalid context ID %lu"),
                       (gulong)ctx);
       return NULL;
@@ -1870,7 +1870,7 @@ lookup_context(ConfigServer_Context ctx, GConfError** err)
 
   if (gcc == NULL)
     {
-      gconf_set_error(err, GCONF_FAILED,
+      gconf_set_error(err, GCONF_ERROR_FAILED,
                       _("Attempt to use already-unregistered context ID %lu"),
                       (gulong)ctx);
       return NULL;
@@ -1975,63 +1975,63 @@ gconf_set_exception(GConfError** error, CORBA_Environment* ev)
   
   en = (*error)->num;
 
-  if (en == GCONF_SUCCESS)
-    return FALSE;
-  else
-    {
-      ConfigException* ce;
+  /* success is not supposed to get set */
+  g_return_val_if_fail(en != GCONF_ERROR_SUCCESS, FALSE);
+  
+  {
+    ConfigException* ce;
 
-      ce = ConfigException__alloc();
-      g_assert(error != NULL);
-      g_assert(*error != NULL);
-      g_assert((*error)->str != NULL);
-      ce->message = CORBA_string_dup((gchar*)(*error)->str); /* cast const */
+    ce = ConfigException__alloc();
+    g_assert(error != NULL);
+    g_assert(*error != NULL);
+    g_assert((*error)->str != NULL);
+    ce->message = CORBA_string_dup((gchar*)(*error)->str); /* cast const */
       
-      switch (en)
-        {
-        case GCONF_FAILED:
-          ce->err_no = ConfigFailed;
-          break;
-        case GCONF_NO_PERMISSION:
-          ce->err_no = ConfigNoPermission;
-          break;
-        case GCONF_BAD_ADDRESS:
-          ce->err_no = ConfigBadAddress;
-          break;
-        case GCONF_BAD_KEY:
-          ce->err_no = ConfigBadKey;
-          break;
-        case GCONF_PARSE_ERROR:
-          ce->err_no = ConfigParseError;
-          break;
-        case GCONF_CORRUPT:
-          ce->err_no = ConfigCorrupt;
-          break;
-        case GCONF_TYPE_MISMATCH:
-          ce->err_no = ConfigTypeMismatch;
-          break;
-        case GCONF_IS_DIR:
-          ce->err_no = ConfigIsDir;
-          break;
-        case GCONF_IS_KEY:
-          ce->err_no = ConfigIsKey;
-          break;
-        case GCONF_NO_SERVER:
-        case GCONF_SUCCESS:
-        default:
-          g_assert_not_reached();
-        }
+    switch (en)
+      {
+      case GCONF_ERROR_FAILED:
+        ce->err_no = ConfigFailed;
+        break;
+      case GCONF_ERROR_NO_PERMISSION:
+        ce->err_no = ConfigNoPermission;
+        break;
+      case GCONF_ERROR_BAD_ADDRESS:
+        ce->err_no = ConfigBadAddress;
+        break;
+      case GCONF_ERROR_BAD_KEY:
+        ce->err_no = ConfigBadKey;
+        break;
+      case GCONF_ERROR_PARSE_ERROR:
+        ce->err_no = ConfigParseError;
+        break;
+      case GCONF_ERROR_CORRUPT:
+        ce->err_no = ConfigCorrupt;
+        break;
+      case GCONF_ERROR_TYPE_MISMATCH:
+        ce->err_no = ConfigTypeMismatch;
+        break;
+      case GCONF_ERROR_IS_DIR:
+        ce->err_no = ConfigIsDir;
+        break;
+      case GCONF_ERROR_IS_KEY:
+        ce->err_no = ConfigIsKey;
+        break;
+      case GCONF_ERROR_NO_SERVER:
+      case GCONF_ERROR_SUCCESS:
+      default:
+        g_assert_not_reached();
+      }
 
-      CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
-                          ex_ConfigException, ce);
+    CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
+                        ex_ConfigException, ce);
 
-      gconf_log(GCL_ERR, _("Returning exception: %s"), (*error)->str);
+    gconf_log(GCL_ERR, _("Returning exception: %s"), (*error)->str);
       
-      gconf_error_destroy(*error);
-      *error = NULL;
+    gconf_error_destroy(*error);
+    *error = NULL;
       
-      return TRUE;
-    }
+    return TRUE;
+  }
 }
 
 /*

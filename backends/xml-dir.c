@@ -162,7 +162,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
       {
         if (errno != ENOENT)
           {
-            gconf_set_error(err, GCONF_FAILED,
+            gconf_set_error(err, GCONF_ERROR_FAILED,
                             _("Could not stat `%s': %s"),
                             xml_filename, strerror(errno));
             error = TRUE;
@@ -170,7 +170,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
       }
     else if (S_ISDIR(s.st_mode))
       {
-        gconf_set_error(err, GCONF_FAILED,
+        gconf_set_error(err, GCONF_ERROR_FAILED,
                          _("XML filename `%s' is a directory"),
                          xml_filename);
         error = TRUE;
@@ -267,14 +267,14 @@ dir_sync        (Dir* d, GConfError** err)
     {
       if (unlink(d->xml_filename) != 0)
         {
-          gconf_set_error(err, GCONF_FAILED, _("Failed to delete `%s': %s"),
+          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to delete `%s': %s"),
                           d->xml_filename, strerror(errno));
           return FALSE;
         }
 
       if (rmdir(d->fs_dirname) != 0)
         {
-          gconf_set_error(err, GCONF_FAILED, _("Failed to delete `%s': %s"),
+          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to delete `%s': %s"),
                           d->fs_dirname, strerror(errno));
           return FALSE;
         }
@@ -312,7 +312,7 @@ dir_sync        (Dir* d, GConfError** err)
                  try. Don't set error if it's already set by some
                  earlier failure. */
               if (err && *err == NULL)
-                gconf_set_error(err, GCONF_FAILED, _("Failed to write file `%s': %s"), 
+                gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to write file `%s': %s"), 
                                 tmp_filename, strerror(errno));
               
               retval = FALSE;
@@ -327,7 +327,7 @@ dir_sync        (Dir* d, GConfError** err)
         {
           if (rename(d->xml_filename, old_filename) < 0)
             {
-              gconf_set_error(err, GCONF_FAILED, 
+              gconf_set_error(err, GCONF_ERROR_FAILED, 
                               _("Failed to rename `%s' to `%s': %s"),
                               d->xml_filename, old_filename, strerror(errno));
 
@@ -338,13 +338,13 @@ dir_sync        (Dir* d, GConfError** err)
 
       if (rename(tmp_filename, d->xml_filename) < 0)
         {
-          gconf_set_error(err, GCONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
+          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to rename `%s' to `%s': %s"),
                           tmp_filename, d->xml_filename, strerror(errno));
 
           /* Put the original file back, so this isn't a total disaster. */
           if (rename(old_filename, d->xml_filename) < 0)
             {
-              gconf_set_error(err, GCONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
+              gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to restore `%s' from `%s': %s"),
                               d->xml_filename, old_filename, strerror(errno));
             }
 
@@ -625,7 +625,7 @@ dir_all_subdirs (Dir* d, GConfError** err)
 
   if (dp == NULL)
     {
-      gconf_set_error(err, GCONF_FAILED, _("Failed to open directory `%s': %s"),
+      gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to open directory `%s': %s"),
                       d->fs_dirname, strerror(errno));
       return NULL;
     }
@@ -763,7 +763,7 @@ dir_load_doc(Dir* d, GConfError** err)
         case ENAMETOOLONG:
         default:
           /* These are all fatal errors */
-          gconf_set_error(err, GCONF_FAILED, _("Failed to stat `%s': %s"),
+          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to stat `%s': %s"),
                           d->xml_filename, strerror(errno));
           return;
           break;
@@ -985,7 +985,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
     {
       if (errno != EEXIST)
         {
-          gconf_set_error(err, GCONF_FAILED,
+          gconf_set_error(err, GCONF_ERROR_FAILED,
                           _("Could not make directory `%s': %s"),
                           (gchar*)dir, strerror(errno));
           return FALSE;
@@ -1000,7 +1000,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
       
       if (fd < 0)
         {
-          gconf_set_error(err, GCONF_FAILED, _("Failed to create file `%s': %s"),
+          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to create file `%s': %s"),
                           xml_filename, strerror(errno));
           
           return FALSE;
@@ -1008,7 +1008,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
       
       if (close(fd) < 0)
         {
-          gconf_set_error(err, GCONF_FAILED, _("Failed to close file `%s': %s"),
+          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to close file `%s': %s"),
                           xml_filename, strerror(errno));
           
           return FALSE;

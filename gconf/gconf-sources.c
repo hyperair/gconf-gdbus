@@ -476,7 +476,8 @@ gconf_sources_query_value (GConfSources* sources,
       else if (val != NULL &&
                val->type != GCONF_VALUE_SCHEMA)
         {
-          gconf_set_error(err, GCONF_FAILED, _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
+          gconf_set_error(err, GCONF_ERROR_FAILED,
+                          _("Schema `%s' specified for `%s' stores a non-schema value"), schema_name, key);
                 
           g_free(schema_name);
 
@@ -524,7 +525,8 @@ gconf_sources_set_value   (GConfSources* sources,
   
   if (key[1] == '\0')
     {
-      gconf_set_error(err, GCONF_IS_DIR, _("The '/' name can only be a directory, not a key"));
+      gconf_set_error(err, GCONF_ERROR_IS_DIR,
+                      _("The '/' name can only be a directory, not a key"));
       return;
     }
   
@@ -552,7 +554,7 @@ gconf_sources_set_value   (GConfSources* sources,
           if (val != NULL)
             {
               gconf_value_destroy(val);
-              gconf_set_error(err, GCONF_OVERRIDDEN,
+              gconf_set_error(err, GCONF_ERROR_OVERRIDDEN,
                               _("Value for `%s' set in a read-only source at the front of your configuration path."), key);
               return;
             }

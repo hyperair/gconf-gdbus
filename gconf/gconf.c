@@ -66,7 +66,7 @@ gconf_key_check(const gchar* key, GConfError** err)
   if (!gconf_valid_key(key, &why))
     {
       if (err)
-        *err = gconf_error_new(GCONF_BAD_KEY, _("`%s': %s"),
+        *err = gconf_error_new(GCONF_ERROR_BAD_KEY, _("`%s': %s"),
                                key, why);
       g_free(why);
       return FALSE;
@@ -257,7 +257,7 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
   if (ctx == ConfigServer_invalid_context)
     {
       if (err)
-        *err = gconf_error_new(GCONF_BAD_ADDRESS,
+        *err = gconf_error_new(GCONF_ERROR_BAD_ADDRESS,
                                 _("Server couldn't resolve the address `%s'"),
                                 address);
 
@@ -387,7 +387,7 @@ gconf_notify_add(GConfEngine* conf,
   if (gconf_engine_is_local(conf))
     {
       if (err)
-        *err = gconf_error_new(GCONF_LOCAL_ENGINE,
+        *err = gconf_error_new(GCONF_ERROR_LOCAL_ENGINE,
                                _("Can't add notifications to a local configuration source"));
 
       return 0;
@@ -1088,7 +1088,7 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(((err == NULL) || (*err && ((*err)->num == GCONF_NO_SERVER))), NULL);
+      g_return_val_if_fail(((err == NULL) || (*err && ((*err)->num == GCONF_ERROR_NO_SERVER))), NULL);
 
       return NULL;
     }
@@ -1296,7 +1296,7 @@ gconf_cnxn_notify(GConfCnxn* cnxn,
 
 static ConfigServer   server = CORBA_OBJECT_NIL;
 
-/* errors in here should be GCONF_NO_SERVER */
+/* errors in here should be GCONF_ERROR_NO_SERVER */
 static ConfigServer
 try_to_contact_server(gboolean start_if_not_found, GConfError** err)
 {
@@ -1320,7 +1320,7 @@ try_to_contact_server(gboolean start_if_not_found, GConfError** err)
 	{
 	  server = CORBA_OBJECT_NIL;
 	  if (err)
-	    *err = gconf_error_new(GCONF_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
+	    *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
 				   CORBA_exception_id(&ev));
 
           CORBA_exception_free(&ev);
@@ -1332,9 +1332,9 @@ try_to_contact_server(gboolean start_if_not_found, GConfError** err)
         {
           /* Make the errno more specific */
           if (err && *err)
-            (*err)->num = GCONF_NO_SERVER;
+            (*err)->num = GCONF_ERROR_NO_SERVER;
           else if (err && !*err)
-            *err = gconf_error_new(GCONF_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
+            *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
         }
     }
 
@@ -1348,7 +1348,7 @@ try_to_contact_server(gboolean start_if_not_found, GConfError** err)
   return server;
 }
 
-/* All errors set in here should be GCONF_NO_SERVER; should
+/* All errors set in here should be GCONF_ERROR_NO_SERVER; should
    only set errors if start_if_not_found is TRUE */
 static ConfigServer
 gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
@@ -1911,7 +1911,7 @@ ctable_reinstall_everything(CnxnTable* ct, ConfigServer_Context context,
          notifications may be re-installed, some may not.  Those that
          were not now have the invalid server id 0.  However, if there
          was an error, it was probably due to a crashed server
-         (GCONF_NO_SERVER), so we should re-install everything.
+         (GCONF_ERROR_NO_SERVER), so we should re-install everything.
       */
       return FALSE;
     }
@@ -1950,7 +1950,7 @@ gconf_shutdown_daemon(GConfError** err)
   if (ev._major != CORBA_NO_EXCEPTION)
     {
       if (err)
-        *err = gconf_error_new(GCONF_FAILED, _("Failure shutting down config server: %s"),
+        *err = gconf_error_new(GCONF_ERROR_FAILED, _("Failure shutting down config server: %s"),
                                CORBA_exception_id(&ev));
 
       CORBA_exception_free(&ev);
@@ -2011,7 +2011,7 @@ gconf_get_float (GConfEngine* conf, const gchar* key,
       if (val->type != GCONF_VALUE_FLOAT)
         {
           if (err)
-            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected float, got %s"),
+            *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected float, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt;
@@ -2046,7 +2046,7 @@ gconf_get_int   (GConfEngine* conf, const gchar* key,
       if (val->type != GCONF_VALUE_INT)
         {
           if (err)
-            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected int, got %s"),
+            *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected int, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt;
@@ -2081,7 +2081,7 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
       if (val->type != GCONF_VALUE_STRING)
         {
           if (err)
-            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected string, got %s"),
+            *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected string, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt ? g_strdup(deflt) : NULL;
@@ -2118,7 +2118,7 @@ gconf_get_bool  (GConfEngine* conf, const gchar* key,
       if (val->type != GCONF_VALUE_BOOL)
         {
           if (err)
-            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected bool, got %s"),
+            *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected bool, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return deflt;
@@ -2151,7 +2151,7 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err)
       if (val->type != GCONF_VALUE_SCHEMA)
         {
           if (err)
-            *err = gconf_error_new(GCONF_TYPE_MISMATCH, _("Expected schema, got %s"),
+            *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected schema, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_destroy(val);
           return NULL;
@@ -2414,41 +2414,41 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
   switch (corba_err)
     {
     case ConfigFailed:
-      return GCONF_FAILED;
+      return GCONF_ERROR_FAILED;
       break;
     case ConfigNoPermission:
-      return GCONF_NO_PERMISSION;
+      return GCONF_ERROR_NO_PERMISSION;
       break;
     case ConfigBadAddress:
-      return GCONF_BAD_ADDRESS;
+      return GCONF_ERROR_BAD_ADDRESS;
       break;
     case ConfigBadKey:
-      return GCONF_BAD_KEY;
+      return GCONF_ERROR_BAD_KEY;
       break;
     case ConfigParseError:
-      return GCONF_PARSE_ERROR;
+      return GCONF_ERROR_PARSE_ERROR;
       break;
     case ConfigCorrupt:
-      return GCONF_CORRUPT;
+      return GCONF_ERROR_CORRUPT;
       break;
     case ConfigTypeMismatch:
-      return GCONF_TYPE_MISMATCH;
+      return GCONF_ERROR_TYPE_MISMATCH;
       break;
     case ConfigIsDir:
-      return GCONF_IS_DIR;
+      return GCONF_ERROR_IS_DIR;
       break;
     case ConfigIsKey:
-      return GCONF_IS_KEY;
+      return GCONF_ERROR_IS_KEY;
       break;
     case ConfigOverridden:
-      return GCONF_OVERRIDDEN;
+      return GCONF_ERROR_OVERRIDDEN;
       break;
     case ConfigLockFailed:
-      return GCONF_LOCK_FAILED;
+      return GCONF_ERROR_LOCK_FAILED;
       break;
     default:
       g_assert_not_reached();
-      return GCONF_SUCCESS; /* warnings */
+      return GCONF_ERROR_SUCCESS; /* warnings */
       break;
     }
 }
@@ -2478,7 +2478,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err)
       break;
     case CORBA_SYSTEM_EXCEPTION:
       if (err)
-        *err = gconf_error_new(GCONF_NO_SERVER, _("CORBA error: %s"),
+        *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("CORBA error: %s"),
                                CORBA_exception_id(ev));
       CORBA_exception_free(ev);
       return TRUE;

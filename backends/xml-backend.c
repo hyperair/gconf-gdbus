@@ -287,7 +287,7 @@ resolve_address (const gchar* address, GConfError** err)
 
   if (root_dir == NULL)
     {
-      gconf_set_error(err, GCONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address `%s'"), address);
+      gconf_set_error(err, GCONF_ERROR_BAD_ADDRESS, _("Couldn't find the XML root directory in the address `%s'"), address);
       return NULL;
     }
 
@@ -301,7 +301,7 @@ resolve_address (const gchar* address, GConfError** err)
     {
       if (errno != EEXIST)
         {
-          gconf_set_error(err, GCONF_FAILED,
+          gconf_set_error(err, GCONF_ERROR_FAILED,
                           _("Could not make directory `%s': %s"),
                           (gchar*)root_dir, strerror(errno));
           return NULL;
@@ -375,7 +375,7 @@ resolve_address (const gchar* address, GConfError** err)
   if (!(flags & GCONF_SOURCE_ALL_READABLE) &&
       !(flags & GCONF_SOURCE_ALL_WRITEABLE))
     {
-      gconf_set_error(err, GCONF_BAD_ADDRESS, _("Can't read from or write to the XML root directory in the address `%s'"), address);
+      gconf_set_error(err, GCONF_ERROR_BAD_ADDRESS, _("Can't read from or write to the XML root directory in the address `%s'"), address);
       g_free(root_dir);
       return NULL;
     }  

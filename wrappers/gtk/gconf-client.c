@@ -810,7 +810,7 @@ check_type(GConfValue* val, GConfValueType t, GConfError** err)
 {
   if (val->type != t)
     {
-      gconf_set_error(err, GCONF_TYPE_MISMATCH,
+      gconf_set_error(err, GCONF_ERROR_TYPE_MISMATCH,
                       _("Expected `%s' got `%s'"),
                       gconf_value_type_to_string(t),
                       gconf_value_type_to_string(val->type));

@@ -182,7 +182,7 @@ gconf_compose_errors (GConfError* err1, GConfError* err2)
       if (err1->num == err2->num)
         priv->num = err1->num;
       else
-        priv->num = GCONF_FAILED;
+        priv->num = GCONF_ERROR_FAILED;
 
       priv->str = g_strconcat(err1->str, "\n", err2->str, NULL);
 
