@@ -1,14 +1,16 @@
 # Lithuanian translation of gconf
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # Tomas Kuliavas <tokul@users.sourceforge.net>, 2003.
-#
+# Tomas Kuliavas <tokul@users.sourceforge.net>, 2003.
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-10-07 14:35+0300\n"
-"Last-Translator: Tomas Kuliavas <tokul@users.sourceforge.net>\n"
+"POT-Creation-Date: 2003-12-31 10:32+0200\n"
+"PO-Revision-Date: 2003-12-31 10:32+0200\n"
+"Last-Translator: Žygimantas Beručka <uid0@tuxfamily.org>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,19 +19,53 @@ msgstr ""
 #: backends/dir-utils.c:108
 #, c-format
 msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "Nepavyko rasti %s pagrindinio katalogo adresu `%s'"
+msgstr "Nepavyko rasti %s pagrindinio katalogo adresu „%s“"
 
 #: backends/dir-utils.c:124 backends/xml-backend.c:332
 #, c-format
 msgid "Could not make directory `%s': %s"
-msgstr "Nepavyko sukurti katalogo `%s': %s"
+msgstr "Nepavyko sukurti katalogo „%s“: %s"
 
 #: backends/dir-utils.c:212
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
-"Nepavyko perskaityti iš ar įrašyti į adresu `%2$s' esantį %1$s pagrindinį "
+"Nepavyko perskaityti iš ar įrašyti į adresu „%2$s“ esantį %1$s pagrindinį "
 "katalogą"
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Nepavyko rasti katalogo: %s\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Klaida saugant GConf medį į „%s“: %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Naudojimas: %s <dir>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Naudojimas: %s <dir>\n"
+"  Sujungia pažymėto backend'o bylų sitemos hierarchiją kaip:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  į:\n"
+"    dir/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -38,7 +74,7 @@ msgstr "Iškeliamas XML posistemės modulis"
 #: backends/xml-backend.c:285
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Adresu `%s' nepavyko rasti pagrindinio XML katalogo"
+msgstr "Adresu „%s“ nepavyko rasti pagrindinio XML katalogo"
 
 #: backends/xml-backend.c:443
 #, c-format
@@ -46,7 +82,7 @@ msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
 "Nepavyko perskaityti iš arva įrašyti į pagrindinį XML katalogą, esantį "
-"adresu \"%s\""
+"adresu „%s“"
 
 #: backends/xml-backend.c:453
 #, c-format
@@ -60,13 +96,12 @@ msgid "Error syncing the XML backend directory cache: %s"
 msgstr "Nepavyko sulyginti XML posistemės katalogo podėlio: %s"
 
 #: backends/xml-backend.c:684
-#, fuzzy
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
 msgstr ""
-"Remove dir operacija yra nebepalaikoma, paprasčiausiai pašalinkite visus "
-"elementus saugomus tame kataloge"
+"Katalogo pašalinimo operacija yra nebepalaikoma, paprasčiausiai pašalinkite "
+"visus elementus saugomus tame kataloge"
 
 #: backends/xml-backend.c:770
 #, c-format
@@ -85,9 +120,9 @@ msgid "Initializing XML backend module"
 msgstr "Paleidžiamas XML posistemės modulis"
 
 #: backends/xml-backend.c:877
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
-msgstr "Nepavyko atšaukti XML katalogo \"%s\" rezervavimo: %s"
+msgstr "Nepavyko atšaukti XML katalogo „%s“ rezervavimo: %s"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -99,111 +134,111 @@ msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
 msgstr ""
-"Iš XML posistemės podėlio negalima pašalinti katalogo `%s', nes jo nepavyko "
+"Iš XML posistemės podėlio negalima pašalinti katalogo „%s“, nes jo nepavyko "
 "patalpinti į diską"
 
 #: backends/xml-dir.c:171
 #, c-format
 msgid "Could not stat `%s': %s"
-msgstr "Nepavyko pasiekti `%s': %s"
+msgstr "Nepavyko pasiekti „%s“: %s"
 
 #: backends/xml-dir.c:181
 #, c-format
 msgid "XML filename `%s' is a directory"
-msgstr "XML byla `%s' yra katalogas"
+msgstr "XML byla „%s“ yra katalogas"
 
 #: backends/xml-dir.c:416 backends/xml-dir.c:425
 #, c-format
 msgid "Failed to delete \"%s\": %s"
-msgstr "Nepavyko ištrinti \"%s\": %s"
+msgstr "Nepavyko ištrinti „%s“: %s"
 
 #: backends/xml-dir.c:471
 #, c-format
 msgid "Failed to write file `%s': %s"
-msgstr "Nepavyko įrašyti bylos `%s': %s"
+msgstr "Nepavyko įrašyti bylos „%s“: %s"
 
 #: backends/xml-dir.c:484
 #, c-format
 msgid "Failed to set mode on `%s': %s"
-msgstr "Nepavyko nustatyti bylos `%s' teisių: %s"
+msgstr "Nepavyko nustatyti bylos „%s“ teisių: %s"
 
 #: backends/xml-dir.c:494
 #, c-format
 msgid "Failed to write XML data to `%s': %s"
-msgstr "Nepavyko įrašyti XML duomenų į `%s': %s"
+msgstr "Nepavyko įrašyti XML duomenų į „%s“: %s"
 
 #: backends/xml-dir.c:504 backends/xml-dir.c:1279
 #, c-format
 msgid "Failed to close file `%s': %s"
-msgstr "Nepavyko uždaryti bylos `%s': %s"
+msgstr "Nepavyko uždaryti bylos „%s“: %s"
 
 #: backends/xml-dir.c:520 backends/xml-dir.c:530
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
-msgstr "Nepavyko pervadinti `%s' į `%s': %s"
+msgstr "Nepavyko pervadinti „%s“ į „%s“: %s"
 
 #: backends/xml-dir.c:536
 #, c-format
 msgid "Failed to restore `%s' from `%s': %s"
-msgstr "Nepavyko atstatyti `%s' iš `%s': %s"
+msgstr "Nepavyko atstatyti „%s“ iš „%s“: %s"
 
 #: backends/xml-dir.c:548
 #, c-format
 msgid "Failed to delete old file `%s': %s"
-msgstr "Nepavyko ištrinti senos bylos `%s': %s"
+msgstr "Nepavyko ištrinti senos bylos „%s“: %s"
 
 #. These are all fatal errors
 #: backends/xml-dir.c:978
 #, c-format
 msgid "Failed to stat `%s': %s"
-msgstr "Nepavyko pasiekti `%s': %s"
+msgstr "Nepavyko pasiekti „%s“: %s"
 
 #: backends/xml-dir.c:1152
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
-msgstr "Sutampantis įrašas `%s' tarp `%s', ignoruojama"
+msgstr "Sutampantis įrašas „%s“ tarp „%s“, ignoruojama"
 
 #: backends/xml-dir.c:1174
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
-msgstr "Bevardis įrašas XML byloje `%s', ignoruojama"
+msgstr "Bevardis įrašas XML byloje „%s“, ignoruojama"
 
 #: backends/xml-dir.c:1182
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
-"Pagrindinis elementas XML byloje `%s' yra <%s>, o ne <entry>, ignoruojama"
+"Pagrindinis elementas XML byloje „%s“ yra <%s>, o ne <entry>, ignoruojama"
 
 #: backends/xml-dir.c:1255
 #, c-format
 msgid "Could not make directory \"%s\": %s"
-msgstr "Nepavyko sukurti katalogo \"%s\": %s"
+msgstr "Nepavyko sukurti katalogo „%s“: %s"
 
 #: backends/xml-dir.c:1271
 #, c-format
 msgid "Failed to create file `%s': %s"
-msgstr "Nepavyko sukurti bylos `%s': %s"
+msgstr "Nepavyko sukurti bylos „%s“: %s"
 
 #: backends/xml-dir.c:1370
 #, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "Nepavyko apdoroti XML bylos \"%s\""
+msgstr "Nepavyko apdoroti XML bylos „%s“"
 
 #. There was an error
 #: backends/xml-entry.c:154
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr "Ignoruojamas XML elementas turintys vardą `%s': %s"
+msgstr "Ignoruojamas XML elementas turintys vardą „%s“: %s"
 
 #: backends/xml-entry.c:332
 #, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
-msgstr "Ignoruojamas schemos vardu `%s', klaida: %s"
+msgstr "Ignoruojamas schemos vardu „%s“, klaida: %s"
 
 #: backends/xml-entry.c:380
 #, c-format
 msgid "Ignoring XML node `%s': %s"
-msgstr "Ignoruojamas XML elementas `%s': %s"
+msgstr "Ignoruojamas XML elementas „%s“: %s"
 
 #: backends/xml-entry.c:732
 #, c-format
@@ -213,16 +248,16 @@ msgstr "Nepavyko perskaityti standartinės schemos reikšmės: %s"
 #: backends/xml-entry.c:952
 #, c-format
 msgid "No \"type\" attribute for <%s> node"
-msgstr "Elemente <%s> trūksta \"type\" požymio"
+msgstr "Elemente <%s> trūksta „type“ požymio"
 
 #: backends/xml-entry.c:966
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr "Elementas turi nežinomą \"type\" požymį `%s', ignoruojama"
+msgstr "Elementas turi nežinomą „type“ požymį „%s“, ignoruojama"
 
 #: backends/xml-entry.c:981
 msgid "No \"value\" attribute for node"
-msgstr "Elementas neturi \"value\" požymio"
+msgstr "Elementas neturi „value“ požymio"
 
 #: backends/xml-entry.c:1029 backends/xml-entry.c:1105
 #, c-format
@@ -282,12 +317,12 @@ msgstr "XML byloje tarp poros elementų trūksta tiek car, tiek cdr punktų"
 #: gconf/gconf-backend.c:167
 #, c-format
 msgid "No such file `%s'\n"
-msgstr "Byla `%s' nerasta\n"
+msgstr "Byla „%s“ nerasta\n"
 
 #: gconf/gconf-backend.c:195
 #, c-format
 msgid "Bad address `%s'"
-msgstr "Klaidingas adresas `%s'"
+msgstr "Klaidingas adresas „%s“"
 
 #: gconf/gconf-backend.c:220
 msgid "GConf won't work without dynamic module support (gmodule)"
@@ -296,12 +331,12 @@ msgstr "GConf neveikia be dinaminių modulių palaikymo (gmodule)"
 #: gconf/gconf-backend.c:230
 #, c-format
 msgid "Error opening module `%s': %s\n"
-msgstr "Įvyko klaida paleidžiant modulį `%s': %s\n"
+msgstr "Įvyko klaida paleidžiant modulį „%s“: %s\n"
 
 #: gconf/gconf-backend.c:262
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
-msgstr "Nepavyko aptikti posistemės modulio skirto `%s'"
+msgstr "Nepavyko aptikti posistemės modulio skirto „%s“"
 
 #: gconf/gconf-backend.c:299
 msgid "Failed to shut down backend"
@@ -315,12 +350,12 @@ msgstr "GConf klaida: %s\n"
 #: gconf/gconf-client.c:896
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
-msgstr "GConf perspėjimas: įvyko klaida peržiūrint sekų poras tarp `%s': %s"
+msgstr "GConf perspėjimas: įvyko klaida peržiūrint sekų poras tarp „%s“: %s"
 
 #: gconf/gconf-client.c:1181
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
-msgstr "Tikėtasi `%s', tačiau sulaukta `%s' raktui %s"
+msgstr "Tikėtasi „%s“, tačiau sulaukta „%s“ raktui %s"
 
 #: gconf/gconf-database.c:234
 msgid "Received invalid value in set request"
@@ -330,7 +365,7 @@ msgstr "Gauta klaidinga reikšmė nustatymo užklausoje"
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
-"Nusiuntus nustatymo užklausą raktui `%s' sulaukta nesuprantamo CORBA atsakymo"
+"Nusiuntus nustatymo užklausą raktui „%s“ sulaukta nesuprantamo CORBA atsakymo"
 
 #: gconf/gconf-database.c:524
 msgid "Received request to drop all cached data"
@@ -379,57 +414,57 @@ msgstr ""
 #: gconf/gconf-database.c:1246 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
-msgstr "Nepavyko gauti `%s' reikšmių: %s"
+msgstr "Nepavyko gauti „%s“ reikšmių: %s"
 
 #: gconf/gconf-database.c:1293
 #, c-format
 msgid "Error setting value for `%s': %s"
-msgstr "Nepavyko nustatyti `%s' reikšmės: %s"
+msgstr "Nepavyko nustatyti „%s“ reikšmės: %s"
 
 #: gconf/gconf-database.c:1336
 #, c-format
 msgid "Error unsetting `%s': %s"
-msgstr "Nepavyko atšaukti `%s': %s"
+msgstr "Nepavyko atšaukti „%s“: %s"
 
 #: gconf/gconf-database.c:1365
 #, c-format
 msgid "Error getting default value for `%s': %s"
-msgstr "Nepavyko gauti standartinės `%s' reikšmės: %s"
+msgstr "Nepavyko gauti standartinės „%s“ reikšmės: %s"
 
 #: gconf/gconf-database.c:1416
 #, c-format
 msgid "Error unsetting \"%s\": %s"
-msgstr "Nepavyko atšaukti \"%s\": %s"
+msgstr "Nepavyko atšaukti „%s“: %s"
 
 #: gconf/gconf-database.c:1448
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "Nepavyko gauti naujos \"%s\" reikšmės: %s"
+msgstr "Nepavyko gauti naujos „%s“ reikšmės: %s"
 
 #: gconf/gconf-database.c:1496
 #, c-format
 msgid "Error checking existence of `%s': %s"
-msgstr "Nepavyko patikrinti `%s' egzistavimo: %s"
+msgstr "Nepavyko patikrinti „%s“ egzistavimo: %s"
 
 #: gconf/gconf-database.c:1520
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing directory \"%s\": %s"
-msgstr "Nepavyko pašalinti katalogo `%s': %s"
+msgstr "Įvyko klaida šalinant katalogą „%s“: %s"
 
 #: gconf/gconf-database.c:1547
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
-msgstr "Nepavyko gauti visų `%s' įrašų: %s"
+msgstr "Nepavyko gauti visų „%s“ įrašų: %s"
 
 #: gconf/gconf-database.c:1573
 #, c-format
 msgid "Error listing dirs in `%s': %s"
-msgstr "Įvyko klaida gaunant katalogų sąrašą tarp `%s': %s"
+msgstr "Įvyko klaida gaunant katalogų sąrašą tarp „%s“: %s"
 
 #: gconf/gconf-database.c:1594
 #, c-format
 msgid "Error setting schema for `%s': %s"
-msgstr "Įvyko klaida nustatant schemą, skirtą `%s': %s"
+msgstr "Įvyko klaida nustatant schemą, skirtą „%s“: %s"
 
 #: gconf/gconf-error.c:25
 msgid "Success"
@@ -498,12 +533,12 @@ msgstr "Neprieinama jokia duomenų bazė Jūsų nustatymų išsaugojimui"
 #: gconf/gconf-internals.c:86
 #, c-format
 msgid "No '/' in key \"%s\""
-msgstr "Rakte \"%s\" nėra '/' "
+msgstr "Rakte „%s“ nėra „/“ "
 
 #: gconf/gconf-internals.c:199
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
-msgstr "Netinkama UTF-8 simbolių seka tarp '%s'"
+msgstr "Netinkama UTF-8 simbolių seka tarp „%s“"
 
 #: gconf/gconf-internals.c:258
 msgid "Couldn't interpret CORBA value for list element"
@@ -541,17 +576,17 @@ msgstr "Klaidingas UTF-8 schemos savininko aprašyme"
 #: gconf/gconf-internals.c:838
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
-msgstr "Nepavyko atidaryti bylos `%s' kelio: %s\n"
+msgstr "Nepavyko atidaryti bylos „%s“ kelio: %s\n"
 
 #: gconf/gconf-internals.c:887
 #, c-format
 msgid "Adding source `%s'\n"
-msgstr "Nepavyko pridėti pradinio dokumento `%s'\n"
+msgstr "Nepavyko pridėti pradinio dokumento „%s“\n"
 
 #: gconf/gconf-internals.c:899
 #, c-format
 msgid "Read error on file `%s': %s\n"
-msgstr "Klaida skaitant bylą `%s': %s\n"
+msgstr "Klaida skaitant bylą „%s“: %s\n"
 
 #: gconf/gconf-internals.c:1203 gconf/gconf-internals.c:1269
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
@@ -601,17 +636,17 @@ msgstr "Įrašyta reikšmė neatitinka UTF-8"
 #: gconf/gconf-internals.c:2295
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
-msgstr "Nepavyko rezervuoti laikinos bylos '%s': %s"
+msgstr "Nepavyko rezervuoti laikinos bylos „%s“: %s"
 
 #: gconf/gconf-internals.c:2322
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
-msgstr "Nepavyko sukurti bylos '%s', greičiausiai tokia byla jau yra sukurta"
+msgstr "Nepavyko sukurti bylos „%s“, greičiausiai tokia byla jau yra sukurta"
 
 #: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Failed to create or open '%s'"
-msgstr "Nepavyko sukurti arba atidaryti '%s'"
+msgstr "Nepavyko sukurti arba atidaryti „%s“"
 
 #: gconf/gconf-internals.c:2378
 #, c-format
@@ -619,18 +654,18 @@ msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
-"Nepavyko rezervuoti '%s': greičiausiai kitas procesas rezervavo resursą arba "
+"Nepavyko rezervuoti „%s“: greičiausiai kitas procesas rezervavo resursą arba "
 "yra klaida Jūsų operacinės sistemos NFS bylų rezervavimo nustatymuose (%s)"
 
 #: gconf/gconf-internals.c:2408
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
-msgstr "Nepavyko atidaryti IOR bylos '%s', gconfd nerastas: %s"
+msgstr "Nepavyko atidaryti IOR bylos „%s“, gconfd nerastas: %s"
 
 #: gconf/gconf-internals.c:2438
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr "gconftool ar kitas ne gconfd tipo procesas rezervavo bylą '%s'"
+msgstr "gconftool ar kitas ne gconfd tipo procesas rezervavo bylą „%s“"
 
 #: gconf/gconf-internals.c:2455
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -640,42 +675,42 @@ msgstr ""
 #: gconf/gconf-internals.c:2465
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr "Nepavyko paversti IOR '%s' į objekto aprašymą"
+msgstr "Nepavyko paversti IOR „%s“ į objekto aprašymą"
 
 #: gconf/gconf-internals.c:2515
 #, c-format
 msgid "couldn't create directory `%s': %s"
-msgstr "nepavyko sukurti katalogo `%s': %s"
+msgstr "nepavyko sukurti katalogo „%s“: %s"
 
 #: gconf/gconf-internals.c:2574
 #, c-format
 msgid "Can't write to file `%s': %s"
-msgstr "Nepavyko įrašyti į bylą `%s': %s"
+msgstr "Nepavyko įrašyti į bylą „%s“: %s"
 
 #: gconf/gconf-internals.c:2615
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
-msgstr "Sistema nerezervavo bylos `%s', tačiau tai turėtų būti padaryti"
+msgstr "Sistema nerezervavo bylos „%s“, tačiau tai turėtų būti padaryti"
 
 #: gconf/gconf-internals.c:2636
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
-msgstr "Nepavyko susieti '%s' su '%s': %s"
+msgstr "Nepavyko susieti „%s“ su „%s“: %s"
 
 #: gconf/gconf-internals.c:2648
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
-msgstr "Nepavyko pašalinti rezervavimo bylos `%s': %s"
+msgstr "Nepavyko pašalinti rezervavimo bylos „%s“: %s"
 
 #: gconf/gconf-internals.c:2667
 #, c-format
 msgid "Failed to clean up file '%s': %s"
-msgstr "Nepavyko išvalyti bylos '%s': %s"
+msgstr "Nepavyko išvalyti bylos „%s“: %s"
 
 #: gconf/gconf-internals.c:2681
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
-msgstr "Nepavyko pašalinti rezervavimo katalogo `%s': %s"
+msgstr "Nepavyko pašalinti rezervavimo katalogo „%s“: %s"
 
 #: gconf/gconf-internals.c:2723
 #, c-format
@@ -732,7 +767,7 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Parametro %s klaida: %s.\n"
-"Paleiskite '%s --help' norėdami pamatyti visus galimus komandinės eilutės "
+"Paleiskite „%s --help“ norėdami pamatyti visus galimus komandinės eilutės "
 "raktus.\n"
 
 #: gconf/gconf-sanity-check.c:141 gconf/gconf-sanity-check.c:166
@@ -745,9 +780,9 @@ msgid ""
 msgstr ""
 "Susisiekite su Jūsų sistemos administratoriumi, kad išspręsti žemiau "
 "įvardintą problemą:\n"
-"Nepavyko atidaryti ar sukurti bylos \"%s\"; tai rodo problemą Jūsų sistemos "
+"Nepavyko atidaryti ar sukurti bylos „%s“; tai rodo problemą Jūsų sistemos "
 "konfiguracijoje, kadangi daliai programų reikia galimybės rašyti į Jūsų "
-"naminį katalogą. Klaidos pranešimas teigė \"%s\" (errno = %d)."
+"naminį katalogą. Klaidos pranešimas teigė „%s“ (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:180
 #, c-format
@@ -762,12 +797,12 @@ msgid ""
 msgstr ""
 "Susisiekite su Jūsų sistemos administratoriumi, kad išspręsti žemiau "
 "įvardintą problemą:\n"
-"Nepavyko rezervuoti bylos \"%s\"; tai nurodo Jūsų sistemos nustatymų "
-"problemą. Jei Jūs naudojate naminį katalogą prijungtą per NFS, serveris arba "
-"klientinė sistemą gali būti neteisingai nustatyti. Daugiau informacijos "
-"galima rasti tarp rpc.statd ir rpc.lockd dokumentacijos. Dažniausiai "
-"pasitaikanti priežastis - atjungta \"nfslock\" paslauga.Klaidos pranešimas "
-"teigė \"%s\" (errno = %d)."
+"Nepavyko rezervuoti bylos „%s“; tai nurodo Jūsų sistemos nustatymų problemą. "
+"Jei Jūs naudojate naminį katalogą prijungtą per NFS, serveris arba klientinė "
+"sistemą gali būti neteisingai nustatyti. Daugiau informacijos galima rasti "
+"tarp rpc.statd ir rpc.lockd dokumentacijos. Dažniausiai pasitaikanti "
+"priežastis - atjungta „nfslock“ paslauga. Klaidos pranešimas teigė „%"
+"s“ (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:197
 #, c-format
@@ -783,8 +818,8 @@ msgid ""
 msgstr ""
 "Susisiekite su Jūsų sistemos administratoriumi, kad išspręsti žemiau "
 "įvardintą problemą:\n"
-"Nerasti pradiniai nustatymų šaltiniai nustatymų byloje \"%s\"; tai nurodo, "
-"kad nepavyks išsaugoti nustatymų ir kitų pakeitimų. %s%s"
+"Nerasti pradiniai nustatymų šaltiniai nustatymų byloje „%s“; tai nurodo, kad "
+"nepavyks išsaugoti nustatymų ir kitų pakeitimų. %s%s"
 
 #: gconf/gconf-sanity-check.c:236
 msgid "Error reading the file: "
@@ -798,7 +833,7 @@ msgid ""
 msgstr ""
 "Susisiekite su Jūsų sistemos administratoriumi, kad išspręsti žemiau "
 "įvardintą problemą:\n"
-"Nepavyko atpažinti adreso \"%s\" esančio nustatymų byloje \"%s\": %s"
+"Nepavyko atpažinti adreso „%s“ esančio nustatymų byloje „%s“: %s"
 
 #: gconf/gconf-sanity-check.c:320
 msgid ""
@@ -854,27 +889,26 @@ msgstr "Schema aprašo poros tipą, tačiau ji neaprašo car/cdr elementų tipo"
 #: gconf/gconf-sources.c:319
 #, c-format
 msgid "Failed to load source \"%s\": %s"
-msgstr "Nepavyko paleisti pradinės bylos \"%s\": %s"
+msgstr "Nepavyko paleisti pradinės bylos „%s“: %s"
 
 #: gconf/gconf-sources.c:346
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
 msgstr ""
-"Atpažintas adresas \"%s\" skirtas rašomam nustatymų šaltiniui pozicijoje %d"
+"Atpažintas adresas „%s“ skirtas rašomam nustatymų šaltiniui pozicijoje %d"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
 msgstr ""
-"Atpažintas adresas \"%s\" skirtas nekeičiamam nustatymų šaltiniui pozicijoje "
-"%d"
+"Atpažintas adresas „%s“ skirtas nekeičiamam nustatymų šaltiniui pozicijoje %d"
 
 #: gconf/gconf-sources.c:359
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
-"Atpažintas adresas \"%s\" skirtas dalinai rašomam nustatymų šaltiniui "
+"Atpažintas adresas „%s“ skirtas dalinai rašomam nustatymų šaltiniui "
 "pozicijoje %d"
 
 #: gconf/gconf-sources.c:368
@@ -888,11 +922,11 @@ msgstr ""
 #: gconf/gconf-sources.c:584
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
-msgstr "Schema `%s' skirta `%s' saugo schemai nepriimtinas reikšmes"
+msgstr "Schema „%s“ skirta „%s“ saugo schemai nepriimtinas reikšmes"
 
 #: gconf/gconf-sources.c:642
 msgid "The '/' name can only be a directory, not a key"
-msgstr "Ženklas '/' gali būti tik katalogo varde, jis netinka raktui"
+msgstr "Ženklas „/“ gali būti tik katalogo varde, jis netinka raktui"
 
 #: gconf/gconf-sources.c:680
 #, c-format
@@ -900,7 +934,7 @@ msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr ""
-"`%s' reikšmė yra nustatyta nekeičiamame šaltinyje Jūsų nustatymo kelio "
+"„%s“ reikšmė yra nustatyta nekeičiamame šaltinyje Jūsų nustatymo kelio "
 "pradžioje"
 
 #: gconf/gconf-sources.c:692
@@ -923,7 +957,7 @@ msgid ""
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
 msgstr ""
-"Nepavyko išsaugoti rakto '%s' reikšmės, nes nustatymų serveris neturi "
+"Nepavyko išsaugoti rakto „%s“ reikšmės, nes nustatymų serveris neturi "
 "keičiamų duomenų bazių. Dažniausiai pasitaikančios problemos priežastys: 1) "
 "Jūsų nustatymų kelio byla %s/path nesaugo jokių duomenų bazių arba ji "
 "rerasta 2) kažkaip netyčia buvo sukurti du gconfd procesai 3) Jūsų sistema "
@@ -936,12 +970,12 @@ msgstr ""
 "rezervavimo bylas, pašalinkite ~/.gconf*/*lock. Gal problema atsirado dėl "
 "to, kad Jūs bandėte pasinaudoti GConf iš dviejų kompiuterių vienu metu ir "
 "ORBit dar išsaugojo standartinius nustatymus draudžiančius nutolusias CORBA "
-"jungtis - įveskite \"ORBIIOPIPv4=1\" į /etc/orbitrc. Dėl viso pikto, "
+"jungtis - įveskite „ORBIIOPIPv4=1“ į /etc/orbitrc. Dėl viso pikto, "
 "patikrinkite user.* sisteminį žurnalą, kuriame turėtų būti detalesnė "
 "informacija apie gconfd sutiktas problema. Kiekviename naminiame kataloge "
 "gali būti tik vienas gconfd procesas ir jis turi kontroliuoti rezervavimo "
 "bylą, esančią tarp ~/.gconfd bei kitas rezervavimo bylas nepriklausomų "
-"saugyklų saugojimo vietose (pvzš tarp ~/.gconf)"
+"saugyklų saugojimo vietose (pvz. tarp ~/.gconf)"
 
 #: gconf/gconf-sources.c:1414
 #, c-format
@@ -956,88 +990,88 @@ msgstr "Nepavyko gauti meta informacijos: %s"
 #: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-msgstr "Raštas `%s', pažymėtas kaip rakto `%s' schema, realiai saugo `%s' tipą"
+msgstr "Raštas „%s“, pažymėtas kaip rakto „%s“ schema, realiai saugo „%s“ tipą"
 
 #: gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
-msgstr "Nesuprantama `%s' reikšmė (tikėtasi sveiko skaičiaus)"
+msgstr "Nesuprantama „%s“ reikšmė (laukta sveiko skaičiaus)"
 
 #: gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
-msgstr "Sveikas skaičius `%s' yra per didelis arba per mažas"
+msgstr "Sveikas skaičius „%s“ yra per didelis arba per mažas"
 
 #: gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
-msgstr "Nesuprantama `%s' reikšmė (laukta realaus skaičiaus)"
+msgstr "Nesuprantama „%s“ reikšmė (laukta realaus skaičiaus)"
 
 #: gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
-msgstr "Nesuprantama `%s' reikšmė (laukta loginės reikšmės)"
+msgstr "Nesuprantama „%s“ reikšmė (laukta loginės reikšmės)"
 
 #: gconf/gconf-value.c:261
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
-msgstr "Nesuprantama `%s' reikšmė (sąrašas turi prasidėti '[' simboliu)"
+msgstr "Nesuprantama „%s“ reikšmė (sąrašas turi prasidėti „[“ simboliu)"
 
 #: gconf/gconf-value.c:274
 #, c-format
 msgid "Didn't understand `%s' (list must end with a ']')"
-msgstr "Nesuprantama `%s' reikšmė (sąrašas turi baigtis ']' simboliu)"
+msgstr "Nesuprantama „%s“ reikšmė (sąrašas turi baigtis „]“ simboliu)"
 
 #: gconf/gconf-value.c:325
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
 msgstr ""
-"Nesuprantama `%s' reikšmė (papildomi neapsaugoti ']' simboliai rasti sąrašo "
+"Nesuprantama „%s“ reikšmė (papildomi neapsaugoti „]“ simboliai rasti sąrašo "
 "viduje)"
 
 #: gconf/gconf-value.c:356 gconf/gconf-value.c:517
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
 msgstr ""
-"Nesuprantama `%s' reikšmė (papildomi simboliai po numanomos reikšmos "
+"Nesuprantama „%s“ reikšmė (papildomi simboliai po numanomos reikšmos "
 "pabaigos)"
 
 #: gconf/gconf-value.c:403
 #, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
-msgstr "Nesuprantama `%s' reikšmė (pora turi prasidėti '(' simboliu)"
+msgstr "Nesuprantama „%s“ reikšmė (pora turi prasidėti „(“ simboliu)"
 
 #: gconf/gconf-value.c:416
 #, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
-msgstr "Nesuprantama `%s' reikšmė (pora turi baigtis ')' simboliu)"
+msgstr "Nesuprantama „%s“ reikšmė (pora turi baigtis „)“ simboliu)"
 
 #: gconf/gconf-value.c:446 gconf/gconf-value.c:532
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
-msgstr "Nesuprantama `%s' reikšmė (klaidingas elementų skaičius)"
+msgstr "Nesuprantama „%s“ reikšmė (klaidingas elementų skaičius)"
 
 #: gconf/gconf-value.c:486
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr ""
-"Nesuprantama `%s' reikšmė (papildomi neapsaugoti ')' simboliai rasti poros "
+"Nesuprantama „%s“ reikšmė (papildomi neapsaugoti „)“ simboliai rasti poros "
 "viduje)"
 
 #: gconf/gconf.c:55
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr "Raktas \"%s\" yra tuščias"
+msgstr "Raktas „%s“ yra tuščias"
 
 #: gconf/gconf.c:62
 #, c-format
 msgid "\"%s\": %s"
-msgstr "\"%s\": %s"
+msgstr "„%s“: %s"
 
 #: gconf/gconf.c:345
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
-msgstr "Serverui nepavyko atpažinti adreso `%s'"
+msgstr "Serverui nepavyko atpažinti adreso „%s“"
 
 #: gconf/gconf.c:634
 msgid "Can't add notifications to a local configuration source"
@@ -1063,12 +1097,12 @@ msgstr "Negalima vesti tašto (.) tuo po įkypojo brūkšnio (/)"
 #: gconf/gconf.c:2495
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
-msgstr "'%c' nėra ASCII simbolis ir neleistinas tarp raktų vardų"
+msgstr "„%c“ nėra ASCII simbolis ir neleistinas tarp raktų vardų"
 
 #: gconf/gconf.c:2505
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
-msgstr "`%c' simbolis yra netinkamas raktų arba katalogų varduose"
+msgstr "„%c“ simbolis yra netinkamas raktų arba katalogų varduose"
 
 #: gconf/gconf.c:2519
 msgid "Key/directory may not end with a slash (/)"
@@ -1127,19 +1161,19 @@ msgid ""
 "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
 "Nerastos jokios nustatymų bylos, bandome panaudoti standartinius nustatymų "
-"šaltinius `%s'"
+"šaltinius „%s“"
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit %s"
 msgstr ""
-"Nustatymų pradinės bylos nerastos nurodytame kelyje, nustatymai nebus "
-"išsaugoti; taisykite"
+"Nustatymų pradinės bylos nerastos nurodytame kelyje. Nustatymai nebus "
+"išsaugoti. Taisykite %s"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1198,16 +1232,16 @@ msgid "Owner of %s is not the current user"
 msgstr "%s savininkas nėra dabartinis naudotojas"
 
 #: gconf/gconfd.c:504
-#, fuzzy, c-format
+#, c-format
 msgid "Bad permissions %lo on directory %s"
-msgstr "Netinkami teisių nustatymai %o kataloge %s"
+msgstr "Netinkami teisių nustatymai %lo kataloge %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
 #: gconf/gconfd.c:586
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr "paleidžiama (versija %s), pid %u vartotojas '%s'"
+msgstr "paleidžiama (versija %s), pid %u vartotojas „%s“"
 
 #: gconf/gconfd.c:626
 msgid "Failed to get object reference for ConfigServer"
@@ -1268,22 +1302,22 @@ msgstr ""
 #: gconf/gconfd.c:1327
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
-msgstr "Nepavyko rašymui atidaryti išsaugotos būsenos bylos '%s': %s"
+msgstr "Nepavyko rašymui atidaryti išsaugotos būsenos bylos „%s“: %s"
 
 #: gconf/gconfd.c:1341
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
-msgstr "Nepavyko rašyti į išsaugotą būsenos bylą '%s', kurios rodyklė %d: %s"
+msgstr "Nepavyko rašyti į išsaugotą būsenos bylą „%s“, kurios rodyklė %d: %s"
 
 #: gconf/gconfd.c:1350
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
-msgstr "Nepavyko uždaryti naujos išsaugotos būsenos bylos '%s': %s"
+msgstr "Nepavyko uždaryti naujos išsaugotos būsenos bylos „%s“: %s"
 
 #: gconf/gconfd.c:1364
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
-msgstr "Nepavyko patraukti į šalį senos išsaugotos būsenos bylos '%s': %s"
+msgstr "Nepavyko patraukti į šalį senos išsaugotos būsenos bylos „%s“: %s"
 
 #: gconf/gconfd.c:1374
 #, c-format
@@ -1295,15 +1329,15 @@ msgstr "Nepavyko perkelti naujos išsaugomos būsenos bylos į vietą: %s"
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
-"Nepavyko atstatyti senosios išsaugotos būsenos bylos, kuri buvo perkelta į '%"
-"s': %s"
+"Nepavyko atstatyti senosios išsaugotos būsenos bylos, kuri buvo perkelta į „%"
+"s“: %s"
 
 #: gconf/gconfd.c:1854
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
-"Nepavyko atstatyti nesiklausančios programos adresu '%s', nepavyko atpažinti "
+"Nepavyko atstatyti nesiklausančios programos adresu „%s“, nepavyko atpažinti "
 "duomenų bazės adreso"
 
 #: gconf/gconfd.c:1900
@@ -1314,7 +1348,7 @@ msgstr "Įvyko klaida skaitant išsaugotos būsenos bylą: %s"
 #: gconf/gconfd.c:1954
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
-msgstr "Nepavyko atidaryti išsaugotos būsenos bylos '%s': %s"
+msgstr "Nepavyko atidaryti išsaugotos būsenos bylos „%s“: %s"
 
 #: gconf/gconfd.c:2073
 #, c-format
@@ -1700,19 +1734,17 @@ msgid "Shutdown error: %s\n"
 msgstr "Darbo pabaigos klaida: %s\n"
 
 #: gconf/gconftool.c:1120
-#, fuzzy
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Turite nurodyti vieną ar kelius katalogus rekursiniam išvedimui.\n"
 
 #: gconf/gconftool.c:1172
-#, fuzzy
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Turite nurodyti išvedamą katalogą ar katalogus.\n"
 
 #: gconf/gconftool.c:1214 gconf/gconftool.c:1479
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
-msgstr "Nepavyko išvesti įrašų saugomų tarp `%s': %s\n"
+msgstr "Nepavyko išvesti įrašų saugomų tarp „%s“: %s\n"
 
 #: gconf/gconftool.c:1232
 msgid "(no value set)"
@@ -1776,18 +1808,18 @@ msgstr "Ilgas aprašas: %s\n"
 #: gconf/gconftool.c:1910 gconf/gconftool.c:2055
 #, c-format
 msgid "No value set for `%s'\n"
-msgstr "`%s' reikšmė nenustatyta\n"
+msgstr "„%s“ reikšmė nenustatyta\n"
 
 #: gconf/gconftool.c:1611 gconf/gconftool.c:1835 gconf/gconftool.c:1869
 #: gconf/gconftool.c:1914 gconf/gconftool.c:2059
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
-msgstr "Nepavyko gauti `%s' reikšmės: %s\n"
+msgstr "Nepavyko gauti „%s“ reikšmės: %s\n"
 
 #: gconf/gconftool.c:1654 gconf/gconftool.c:1666
 #, c-format
 msgid "Don't understand type `%s'\n"
-msgstr "Nesuprantamas `%s' tipas\n"
+msgstr "Nesuprantamas „%s“ tipas\n"
 
 #: gconf/gconftool.c:1678
 msgid "Must specify alternating keys/values as arguments\n"
@@ -1796,7 +1828,7 @@ msgstr "Parametruose turite nurodyti alternativias raktų/reikšmių vertes\n"
 #: gconf/gconftool.c:1698
 #, c-format
 msgid "No value to set for key: `%s'\n"
-msgstr "Nenustatyta rakto `%s' reikšmė\n"
+msgstr "Nenustatyta rakto „%s“ reikšmė\n"
 
 #: gconf/gconftool.c:1726
 msgid "Cannot set schema as value\n"
@@ -1862,27 +1894,27 @@ msgstr "Komandinėje eilutėje turi nurodyti raktą ar raktus\n"
 #: gconf/gconftool.c:1993
 #, c-format
 msgid "No schema known for `%s'\n"
-msgstr "Nežinoma `%s' schema\n"
+msgstr "Nežinoma „%s“ schema\n"
 
 #: gconf/gconftool.c:2026
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
-msgstr "Schemoje nesaugoja aprašymo seka susieta su `%s'\n"
+msgstr "Schemoje nesaugoja aprašymo seka susieta su „%s“\n"
 
 #: gconf/gconftool.c:2031
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
-msgstr "Klaida gaunat schemą skirtą `%s': %s\n"
+msgstr "Klaida gaunat schemą skirtą „%s“: %s\n"
 
 #: gconf/gconftool.c:2038
 #, c-format
 msgid "No schema stored at '%s'\n"
-msgstr "Schema nesaugoma tarp `%s'\n"
+msgstr "Schema nesaugoma tarp „%s“\n"
 
 #: gconf/gconftool.c:2041
 #, c-format
 msgid "Value at '%s' is not a schema\n"
-msgstr "'%s' reikšmė nėra schema\n"
+msgstr "„%s“ reikšmė nėra schema\n"
 
 #: gconf/gconftool.c:2097
 msgid "Must specify a schema name followed by the key name to apply it to\n"
@@ -1891,7 +1923,7 @@ msgstr "Turite nurodyti schemą ir nustatomo rakto vardą\n"
 #: gconf/gconftool.c:2104
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
-msgstr "Įvyko klaida susiejant schemos vardą '%s' su rakto vardu '%s': %s\n"
+msgstr "Įvyko klaida susiejant schemos vardą „%s“ su rakto vardu „%s“: %s\n"
 
 #: gconf/gconftool.c:2122
 msgid "Must specify keys to unapply schema from\n"
@@ -1900,7 +1932,7 @@ msgstr "Turite nurodyti raktus, kuriems reikia atšaukti schemos nustatymus\n"
 #: gconf/gconftool.c:2132
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "Įvyko klaida šalinant schemos vardą iš '%s': %s\n"
+msgstr "Įvyko klaida šalinant schemos vardą iš „%s“: %s\n"
 
 #: gconf/gconftool.c:2157
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1932,10 +1964,9 @@ msgid "Error syncing: %s"
 msgstr "Įvyko klaida sinchronizuojant: %s"
 
 #: gconf/gconftool.c:2283
-#, fuzzy
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
-"Turite nurodyti vieną ar kelis katalogus, iš kurių reiki agauti raktų/"
+"Turite nurodyti vieną ar kelis katalogus, iš kurių reikia gauti raktų/"
 "reikšmių poras.\n"
 
 #: gconf/gconftool.c:2297
@@ -1945,7 +1976,7 @@ msgstr "Turite nurodyti viena ar kelis raktus, kuriuos reikia atšaukti.\n"
 #: gconf/gconftool.c:2308
 #, c-format
 msgid "Error unsetting `%s': %s\n"
-msgstr "Klaida atšaukiant `%s': %s\n"
+msgstr "Klaida atšaukiant „%s“: %s\n"
 
 #: gconf/gconftool.c:2328
 msgid "Must specify one or more keys to recursively unset.\n"
@@ -1954,10 +1985,9 @@ msgstr "Turite nurodyti vieną ar kelis raktus, rekursyviam atšaukimui.\n"
 #: gconf/gconftool.c:2342
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "Nesekmė rekursyvaus \"%s\" atšaukimo metu: %s\n"
+msgstr "Nesekmė rekursyvaus „%s“ atšaukimo metu: %s\n"
 
 #: gconf/gconftool.c:2362
-#, fuzzy
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Turite nurodyti vieną ar kelis katalogus, iš kurių reikia gauti žemesnių "
@@ -1989,27 +2019,27 @@ msgstr "DĖMESIO: elementas <%s> neatpažintas\n"
 #: gconf/gconftool.c:2616
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
-msgstr "DĖMESIO: Nepavyko apdoroti sveiko skaičiaus reikšmės `%s'\n"
+msgstr "DĖMESIO: Nepavyko apdoroti sveiko skaičiaus reikšmės „%s“\n"
 
 #: gconf/gconftool.c:2637
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
-msgstr "DĖMESIO: Nepavyko apdoroti slankaus kablelio reikšmės `%s'\n"
+msgstr "DĖMESIO: Nepavyko apdoroti slankaus kablelio reikšmės „%s“\n"
 
 #: gconf/gconftool.c:2659
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
-msgstr "DĖMESIO: Nepavyko apdoroti sekos reikšmės `%s'\n"
+msgstr "DĖMESIO: Nepavyko apdoroti sekos reikšmės „%s“\n"
 
 #: gconf/gconftool.c:2680
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
-msgstr "DĖMESIO: Nepavyko apdoroti loginės reikšmės `%s'\n"
+msgstr "DĖMESIO: Nepavyko apdoroti loginės reikšmės „%s“\n"
 
 #: gconf/gconftool.c:2796 gconf/gconftool.c:3332
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
-msgstr "DĖMESIO: Nepavyko susieti schemos `%s' su raktu `%s': %s\n"
+msgstr "DĖMESIO: Nepavyko susieti schemos „%s“ su raktu „%s“: %s\n"
 
 #: gconf/gconftool.c:2901
 #, c-format
@@ -2024,7 +2054,7 @@ msgstr "DĖMESIO: klaidingas arba trūkstamas schemos sąrašo tipas (%s)\n"
 #: gconf/gconftool.c:2921 gconf/gconftool.c:2951 gconf/gconftool.c:2980
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "DĖMESIO: Nepavyko apdoroti standartinės reikšmės `%s' schemoje (%s)\n"
+msgstr "DĖMESIO: Nepavyko apdoroti standartinės reikšmės „%s“ schemoje (%s)\n"
 
 #: gconf/gconftool.c:2939
 #, c-format
@@ -2043,26 +2073,26 @@ msgstr "DĖMESIO: gconftool vidinė klaida, nežinomas GConfValueType\n"
 #: gconf/gconftool.c:3104
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
-msgstr "DĖMESIO: nepavyko apdoroti tipo vardu `%s'\n"
+msgstr "DĖMESIO: nepavyko apdoroti tipo vardu „%s“\n"
 
 #: gconf/gconftool.c:3058
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"DĖMESIO: sąrašo tipas gali būti tik int, float, string ar bool, o ne `%s'\n"
+"DĖMESIO: sąrašo tipas gali būti tik int, float, string ar bool, o ne „%s“\n"
 
 #: gconf/gconftool.c:3079
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"DĖMESIO: car_type gali būti tik int, float, string arba bool, o ne `%s'\n"
+"DĖMESIO: car_type gali būti tik int, float, string arba bool, o ne „%s“\n"
 
 #: gconf/gconftool.c:3100
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"DĖMESIO: cdr_type gali būti tik int, float, string arba bool, o ne `%s'\n"
+"DĖMESIO: cdr_type gali būti tik int, float, string arba bool, o ne „%s“\n"
 
 #: gconf/gconftool.c:3140
 msgid "WARNING: empty <applyto> node"
@@ -2088,14 +2118,14 @@ msgstr "DĖMESIO: nenurodytas schemos poros tipas <cdr_type>\n"
 #: gconf/gconftool.c:3195
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
-"DĖMESIO: <locale> elementas neturi `name=\"locale\"' požymio, ignoruojama\n"
+"DĖMESIO: <locale> elementas neturi „name=„locale““ požymio, ignoruojama\n"
 
 #: gconf/gconftool.c:3201
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
-"DĖMESIO: keli lokalės `%s' <locale> elementai, ignoruojami visi, išskyrus "
+"DĖMESIO: keli lokalės „%s“ <locale> elementai, ignoruojami visi, išskyrus "
 "pirmąjį\n"
 
 #: gconf/gconftool.c:3299
@@ -2106,7 +2136,7 @@ msgstr "DĖMESIO: Klaidingas elementas <%s> tarp <locale> elemento\n"
 #: gconf/gconftool.c:3340
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
-msgstr "Prie rakto `%2$s' prijungta schema `%1$s'\n"
+msgstr "Prie rakto „%2$s“ prijungta schema „%1$s“\n"
 
 #: gconf/gconftool.c:3414
 msgid "You must have at least one <locale> entry in a <schema>\n"
@@ -2115,22 +2145,22 @@ msgstr "Tarp <schema> elemento turi būti bent vienas <locale> įrašas\n"
 #: gconf/gconftool.c:3446
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr "DĖMESIO: įvyko klaida įdiegiant schemą `%s', skirtą localei `%s': %s\n"
+msgstr "DĖMESIO: įvyko klaida įdiegiant schemą „%s“, skirtą localei „%s“: %s\n"
 
 #: gconf/gconftool.c:3454
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr "Įdiegta schema `%s', skirta lokalei `%s'\n"
+msgstr "Įdiegta schema „%s“, skirta lokalei „%s“\n"
 
 #: gconf/gconftool.c:3478
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
-msgstr "DĖMESIO: nepavyko pašalinti schemos `%s', skirtos localei `%s': %s\n"
+msgstr "DĖMESIO: nepavyko pašalinti schemos „%s“, skirtos localei „%s“: %s\n"
 
 #: gconf/gconftool.c:3486
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
-msgstr "Pašalinta schema `%s', skirta lokalei `%s'\n"
+msgstr "Pašalinta schema „%s“, skirta lokalei „%s“\n"
 
 #: gconf/gconftool.c:3524
 msgid "WARNING: no key specified for schema\n"
@@ -2144,24 +2174,24 @@ msgstr "DĖMESIO: elementas <%s> nesuprantamas žemiau <%s> elemento\n"
 #: gconf/gconftool.c:3596
 #, c-format
 msgid "Failed to open `%s': %s\n"
-msgstr "Nepavyko atidaryti `%s': %s\n"
+msgstr "Nepavyko atidaryti „%s“: %s\n"
 
 #: gconf/gconftool.c:3603
 #, c-format
 msgid "Document `%s' is empty?\n"
-msgstr "Dokumentas `%s' yra tuščias?\n"
+msgstr "Dokumentas „%s“ yra tuščias?\n"
 
 #: gconf/gconftool.c:3615
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
-"Dokumentas `%s' turi klaidingą šaktinio elemento tipą (<%s>, nors turėtų "
+"Dokumentas „%s“ turi klaidingą šaktinio elemento tipą (<%s>, nors turėtų "
 "būti <%s>)\n"
 
 #: gconf/gconftool.c:3628
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
-msgstr "Dokumentas `%s' neturi pagrindinio elemento <%s>\n"
+msgstr "Dokumentas „%s“ neturi pagrindinio elemento <%s>\n"
 
 #: gconf/gconftool.c:3642
 #, c-format
@@ -2222,16 +2252,3 @@ msgstr ""
 "Bandoma sugadinti jūsų programą nustatant netinkamas raktų reikšmes "
 "kataloge:\n"
 "  %s\n"
-
-#~ msgid ""
-#~ "%u items remain in the cache after cleaning already-synced items older "
-#~ "than %u seconds"
-#~ msgstr ""
-#~ "%u elementų liko podėlyje po to kai buvo išvalyti išsaugoti elementai "
-#~ "senesni nei %u sekundžių"
-
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#~ msgid "/path"
-#~ msgstr "/kelias"
