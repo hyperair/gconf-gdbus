@@ -38,6 +38,17 @@
 #define N_(x) x
 #endif
 
+/*
+ * Error handler override
+ */
+
+static GConfClientErrorHandlerFunc global_error_handler = NULL;
+
+void
+gconf_client_set_global_default_error_handler(GConfClientErrorHandlerFunc func)
+{
+  global_error_handler = func;
+}
 
 /*
  * CacheEntry
@@ -269,17 +280,31 @@ gconf_client_finalize (GtkObject* object)
 static void
 gconf_client_real_unreturned_error (GConfClient* client, GConfError* error)
 {
-  /* FIXME use dialogs in an idle function, depending on the error mode */
-
-  g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+  if (global_error_handler != NULL)
+    {
+      (*global_error_handler) (client, client->error_mode, client->parent_func, client->parent_user_data,
+                               error);
+      
+    }
+  else
+    {
+      g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+    }
 }
 
 static void
 gconf_client_real_error            (GConfClient* client, GConfError* error)
 {
-  /* FIXME use dialogs in an idle function, depending on the error mode */
-
-  g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+  if (global_error_handler != NULL)
+    {
+      (*global_error_handler) (client, client->error_mode, client->parent_func, client->parent_user_data,
+                               error);
+      
+    }
+  else
+    {
+      g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+    }
 }
 
 /* Emit the proper signals for the error, and fill in err */

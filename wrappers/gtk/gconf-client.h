@@ -83,6 +83,7 @@ typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const 
 
 typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
 
+typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client, GConfClientErrorHandlingMode mode, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GConfError* error);
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
 #define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
@@ -201,6 +202,9 @@ void              gconf_client_set_error_handling(GConfClient* client,
                                                   GConfClientParentWindowFunc func,
                                                   gpointer user_data);
 
+
+/* Intended for use by gnome-libs */
+void              gconf_client_set_global_default_error_handler(GConfClientErrorHandlerFunc func);
 
 /*
  * If you know you're done reading values for a while,
