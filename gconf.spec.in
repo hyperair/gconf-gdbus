@@ -15,9 +15,9 @@ Release: %rel
 Copyright: LGPL
 Group: System Environment/Base
 Source: ftp://ftp.gnome.org/pub/GNOME/unstable/sources/GConf/GConf-%{ver}.tar.gz
-BuildRoot: /var/tmp/gconf
+BuildRoot: /var/tmp/gconf-root
 Packager: Eskil Heyn Olsen <eskil@eazel.com>
-URL: http://www.gnome.org
+URL: http://www.gnome.org/
 Prereq: /sbin/install-info
 Prefix: %{prefix}
 Docdir: %{prefix}/doc
@@ -50,8 +50,10 @@ development using GConf.
 
 %changelog
 
-* Sun Jun 11 2000  Eskil Heyn Olsen <deity@eazel.com>
+* Sat Oct 13 2001 Ross Golder <ross@golder.org>
+- Updated to reflect installation path changes
 
+* Sun Jun 11 2000  Eskil Heyn Olsen <deity@eazel.com>
 - Created the .spec file
 
 %prep
@@ -86,21 +88,18 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 %doc AUTHORS COPYING ChangeLog NEWS README
-%config %{sysconfdir}/gconf/1/path
-%config %{sysconfdir}/gconf/schemas/*.schemas
+%config(noreplace) %{sysconfdir}/gconf/2/path
+%config(noreplace) %{sysconfdir}/gconf/schemas/*.schemas
 %dir	%{sysconfdir}/gconf/gconf.xml.defaults
 %dir	%{sysconfdir}/gconf/gconf.xml.mandatory
-%{prefix}/bin/gconf-config
-%{prefix}/bin/gconf-config-1
-%{prefix}/bin/gconfd-1
+%{prefix}/bin/gconfd-2
 %{prefix}/bin/gconftool
-%{prefix}/bin/gconftool-1
-%{prefix}/lib/*.0
-%{prefix}/lib/*.1
-%{prefix}/lib/*.so
-%{prefix}/lib/GConf/1/*.so
+%{prefix}/bin/gconftool-2
+%{prefix}/lib/lib*.so.*
+%{prefix}/lib/GConf/2/*.so
+%{prefix}/lib/pkgconfig/*.pc
 %{prefix}/share/locale/*/LC_MESSAGES/*.mo
-%{prefix}/share/oaf/*.oafinfo
+%{prefix}/share/gconf/2
 
 
 ## /etc/gconf/schemas/desktop.schemas is notably missing;
@@ -112,7 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root)
 %{prefix}/lib/*.a
 %{prefix}/lib/*.la
-%{prefix}/lib/GConf/1/*.a
-%{prefix}/lib/GConf/1/*.la
-%{prefix}/include/gconf/1/gconf/*.h
+%{prefix}/lib/*.so
+%{prefix}/lib/GConf/2/*.a
+%{prefix}/lib/GConf/2/*.la
+%{prefix}/include/gconf/2/gconf/*.h
 %{prefix}/share/aclocal/*.m4
