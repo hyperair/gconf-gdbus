@@ -47,6 +47,19 @@ struct _GConfChangeSet {
   GDestroyNotify dnotify;
 };
 
+GType
+gconf_change_set_get_type (void)
+{
+  static GType our_type = 0;
+
+  if (our_type == 0)
+    our_type = g_boxed_type_register_static ("GConfChangeSet",
+					     (GBoxedCopyFunc) gconf_change_set_ref,
+					     (GBoxedFreeFunc) gconf_change_set_unref);
+
+  return our_type;
+}
+
 GConfChangeSet*
 gconf_change_set_new      (void)
 {

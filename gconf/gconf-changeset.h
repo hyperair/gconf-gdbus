@@ -34,6 +34,8 @@ extern "C" {
  * the GConf database.
  */
 
+#define GCONF_TYPE_CHANGE_SET                  (gconf_change_set_get_type ())
+
 typedef struct _GConfChangeSet GConfChangeSet;
 
 typedef void (* GConfChangeSetForeachFunc) (GConfChangeSet* cs,
@@ -68,6 +70,7 @@ GConfChangeSet* gconf_engine_change_set_from_current (GConfEngine* conf,
                                                       ...);
 
 
+GType           gconf_change_set_get_type (void);
 GConfChangeSet* gconf_change_set_new      (void);
 void            gconf_change_set_ref      (GConfChangeSet* cs);
 
