@@ -1,0 +1,722 @@
+<!-- ##### SECTION Title ##### -->
+GConfClient
+
+<!-- ##### SECTION Short_Description ##### -->
+
+#GtkObject-based convenience wrapper
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+#GConfClient adds the following features to plain GConf:
+<itemizedlist>
+<listitem>
+<para>
+A client-side cache for a specified list of directories you're interested in.
+You can "preload" entire directories into the cache, speeding things up even more.
+</para>
+</listitem>
+<listitem>
+<para>
+Some automatic error handling, if you request it.
+</para>
+</listitem>
+<listitem>
+<para>
+Signals when a value changes or an error occurs.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<warning>
+<para>
+If you use #GConfClient, you should not use the underlying #GConfEngine
+directly, or you'll break things. This is why there's no
+gconf_client_get_engine() function; in fact, if you create the #GConfClient with
+gconf_client_new(), there is no (legitimate) way to obtain a pointer to the
+underlying #GConfEngine. If you create a #GConfClient from an existing engine,
+you'll have to be disciplined enough to avoid using that engine directly.
+<footnote>
+<para>
+This is all a white lie; <emphasis>some</emphasis> direct #GConfEngine
+operations are safe. But it's complicated to know which, and if an operation
+isn't safe the resulting bugs will mangle the cache and cause weird bugs at an
+indeterminate time in the future; you don't want to risk this situation.
+</para>
+</footnote>
+</para>
+</warning>
+
+<para>
+A #GConfClient has a list of directories that it "watches." These directories
+are optionally pre-loaded into the cache, and monitored in order to emit the
+#value_changed signal. The #GConfClient can also be used to access directories
+not in the list, but those directories won't be preloaded and the "value_changed"
+signal won't be emitted for them.
+</para>
+
+<para>
+There are two error-related signals in #GConfClient. The first is plain "error";
+it's emitted anytime an error occurs. The second is "unreturned_error"; this
+signal is emitted if you pass <symbol>NULL</symbol> as the #GConfError** to any
+#GConfClient function. The idea is that you can have a global error handler
+attached to the "unreturned_error" signal; if you want to use this handler, you
+don't need to use the normal GConf error handling mechanism. However, if you
+ever need to handle errors for a specific function call, you can override the
+global handler by passing a non-<symbol>NULL</symbol> #GConfError** to the
+function.  If you want an error handler that's <emphasis>always</emphasis>
+invoked, use the "error" signal.
+</para>
+
+<para>
+The "value_changed" signal is emitted whenever the server notifies your client
+program that a value has changed in the GConf database. There's one problem with
+this signal: the signal handler has to use strcmp() to determine whether the
+changed value is the one it was interested in. If you are interested in lots of
+values, then every time a value changes you'll be making lots of calls to
+strcmp() and getting O(n) performance. gconf_client_notify_add() is a superior
+interface in most cases for this reason. Note that calling gconf_client_set()
+and its relatives will cause "value_changed" to be emitted, but "value_changed"
+is also emitted if another process changes the value.
+</para>
+
+<para>
+Most of the #GConfClient interface mirrors the functions you'd use to manipulate
+a #GConfEngine (gconf_get() and gconf_client_get(), for example). These should
+all work just like the #GConfEngine versions, except that they use the cache
+from #GConfClient and emit the #GConfClient signals.
+</para>
+
+<para>
+As always with GConf, applications based on #GConfClient should use a
+model-controller-view architecture. Typically, this means that areas of your
+application affected by a setting will monitor the relevant key and update
+themselves when necessary. The preferences dialog will simply change keys,
+allowing GConf to notify the rest of the application that changes have occurred.
+Here the application proper is the "view," GConf is the "model", and the
+preferences dialog is the "controller." In no case should you do this:
+<programlisting>
+ gconf_client_set(client, key, value);
+ application_update_to_reflect_setting();
+</programlisting>
+This breaks if a setting is changed <emphasis>outside</emphasis> your
+application&mdash;or even from a different part of your application.
+The correct way (in pseudo-code) is:
+<programlisting>
+ /* At application startup */
+ gconf_client_notify_add(client, key, application_update_to_reflect_setting, data);
+
+ /* From preferences dialog */
+ gconf_client_set(client, key, value);
+</programlisting>
+See the example programs that come with GConf for more details.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### ENUM GConfClientPreloadType ##### -->
+<para>
+The #GConfClientPreloadType is used to tell #GConfClient how to preload one of
+its directories. As a rule of thumb, if you plan to get the value of almost all the
+keys in a directory, preloading that directory will probably enhance
+performance. If you plan to use only half the keys, preloading is likely a bad
+idea. @GCONF_CLIENT_PRELOAD_NONE specifies that no preload occurs,
+@GCONF_CLIENT_PRELOAD_ONELEVEL loads the immediate children of the directory,
+@GCONF_CLIENT_PRELOAD_RECURSIVE loads <emphasis>all</emphasis> children of the
+directory and its subdirectories, recursively.
+</para>
+
+@GCONF_CLIENT_PRELOAD_NONE: preload nothing.
+@GCONF_CLIENT_PRELOAD_ONELEVEL: preload immediate children of the directory.
+@GCONF_CLIENT_PRELOAD_RECURSIVE: recursively preload everything in and below the directory.
+
+<!-- ##### ENUM GConfClientErrorHandlingMode ##### -->
+<para>
+#GConfClientErrorHandlingMode is used to control #GConfClient's default error
+handling.  #GConfClient can pop up a dialog in the default signal handler for
+"error" or "unreturned_error." You can specify that no errors are handled, only
+unreturned errors are handled, or all errors are handled with this enumeration.
+You can prevent specific errors from being handled automatically by stopping the
+signal emission before the default signal handler is called (see the GTK+
+documentation, gtk_signal_emit_stop_by_name() for example).
+</para>
+
+@GCONF_CLIENT_HANDLE_NONE: never run a default error handler.
+@GCONF_CLIENT_HANDLE_UNRETURNED: run a default error handler for unreturned errors ("unreturned_error" signal).
+@GCONF_CLIENT_HANDLE_ALL: run a default error handler for all errors ("error" signal).
+
+<!-- ##### USER_FUNCTION GConfClientNotifyFunc ##### -->
+<para>
+This is the signature of a user function added with gconf_client_notify_add().
+The notify function is invoked when the value of a key changes. The @value
+argument is the new value, or <symbol>NULL</symbol> if the key was unset.  The
+@value argument should not be modified, and should be copied if you want to keep
+it around (the #GConfClient will destroy it sometime after your notify function
+is called).
+</para>
+
+@client: the #GConfClient notifying us.
+@cnxn_id: connection ID from gconf_client_notify_add().
+@key: key that has changed.
+@value: new value, or <symbol>NULL</symbol> for unset.
+@is_default: 
+@user_data: user data from gconf_client_notify_add().
+
+
+<!-- ##### USER_FUNCTION GConfClientParentWindowFunc ##### -->
+<para>
+If you're using the default #GConfClient error handlers, they can call this
+function to set the parent of any dialogs they create. See
+gnome_dialog_set_parent() in the GNOME documentation for details. The function
+should return a pointer to a #GtkWindow.
+</para>
+
+@client: a #GConfClient.
+@user_data: user data passed to gconf_client_set_error_handling().
+@Returns: the parent window for #GConfClient's error dialogs.
+
+
+<!-- ##### MACRO GCONF_CLIENT ##### -->
+<para>
+Casts a pointer to a #GConfClient*.
+</para>
+
+@obj: a #GConfClient.
+
+
+<!-- ##### FUNCTION gconf_client_new ##### -->
+<para>
+Creates a new #GConfClient using the default #GConfEngine. Normally this is the
+engine you want.
+</para>
+
+@Returns: a new #GConfClient.
+
+
+<!-- ##### FUNCTION gconf_client_new_with_engine ##### -->
+<para>
+Creates a new #GConfClient with a specific #GConfEngine. Only specialized
+configuration-related programs should need to call this function.  The
+#GConfClient increases the refcount on the #GConfEngine, so you should unref it.
+Remember to avoid using the #GConfEngine directly once you have a #GConfClient
+wrapper.
+</para>
+
+@engine: the #GConfEngine to use.
+@Returns: a new #GConfClient.
+
+
+<!-- ##### FUNCTION gconf_client_add_dir ##### -->
+<para>
+Add a directory to the list of directories the #GConfClient will watch. Any
+changes to keys below this directory will cause the "value_changed" signal to be
+emitted.  When you add the directory, you can request that the #GConfClient
+preload its contents; see #GConfClientPreloadType for details.
+</para>
+
+<para>
+Added directories may not overlap. That is, if you add "/foo", you may not add
+"/foo/bar". However you can add "/foo" and "/bar".
+</para>
+
+@client: a #GConfClient.
+@dir: directory to add to the list.
+@preload: degree of preload.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+
+
+<!-- ##### FUNCTION gconf_client_remove_dir ##### -->
+<para>
+Remove a directory from the list created with gconf_client_add_dir().
+If any notifications have been added below this directory with gconf_client_notify_add(), 
+those notifications will be disabled until you re-add the removed directory.
+</para>
+
+@client: a #GConfClient.
+@dir: directory to remove.
+
+
+<!-- ##### FUNCTION gconf_client_notify_add ##### -->
+<para>
+Request notification of changes to @namespace_section. This includes the key
+@namespace_section itself, and any keys below it (the behavior is identical to
+gconf_notify_add(), but while gconf_notify_add() places a notification request
+on the server for every notify function, #GConfClient requests server
+notification for directories added with gconf_client_add_dir() and keeps the
+list of #GConfClientNotifyFunc on the client side). 
+</para>
+
+<para>
+For the notification to happen, @namespace_section must be equal to or below one
+of the directories added with gconf_client_add_dir(). You can still call
+gconf_client_notify_add() for other directories, but no notification will be
+received until you add a directory above or equal to @namespace_section.  One
+implication of this is that gconf_client_remove_dir() temporarily disables
+notifications that were below the removed directory.
+</para>
+
+<para>
+The function returns a connection ID you can use to call
+gconf_client_notify_remove().
+</para>
+
+<para>
+See the description of #GConfClientNotifyFunc for details on how the
+notification function is called.
+</para>
+
+@client: a #GConfClient.
+@namespace_section: where to listen for changes.
+@func: function to call when changes occur.
+@user_data: user data to pass to @func.
+@destroy_notify: function to call on @user_data when the notify is removed or the #GConfClient is destroyed, or <symbol>NULL</symbol> for none.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: a connection ID for removing the notification.
+
+
+<!-- ##### FUNCTION gconf_client_notify_remove ##### -->
+<para>
+Remove a notification using the ID returned from
+gconf_client_notify_add(). Invokes the destroy notify function on the
+notification's user data, if appropriate.
+</para>
+
+@client: a #GConfClient.
+@cnxn: connection ID.
+
+
+<!-- ##### FUNCTION gconf_client_set_error_handling ##### -->
+<para>
+Controls the default error handling for #GConfClient. See
+#GConfClientErrorHandlingMode and #GConfClientParentWindowFunc for details on this.
+</para>
+
+@client: a #GConfClient.
+@mode: error handling mode.
+@func: function to retrieve the parent window for error dialogs.
+@user_data: user data to pass to @func.
+
+
+<!-- ##### FUNCTION gconf_client_clear_cache ##### -->
+<para>
+Dumps everything out of the #GConfClient client-side cache. If you know you're
+done using the #GConfClient for a while, you can call this function to save some
+memory.
+</para>
+
+@client: a #GConfClient.
+
+
+<!-- ##### FUNCTION gconf_client_preload ##### -->
+<para>
+Preloads a directory. Normally you do this when you call gconf_client_add_dir(),
+but if you've called gconf_client_clear_cache() there may be a reason to do it
+again.
+</para>
+
+@client: a #GConfClient.
+@dirname: directory to preload.
+@type: degree of preload.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+
+
+<!-- ##### FUNCTION gconf_client_set ##### -->
+<para>
+Sets the value of a configuration key. Just like gconf_set(), but uses
+#GConfClient caching and error-handling features. The @val argument will not be
+modified.
+</para>
+
+@client: a #GConfClient.
+@key: key to set.
+@val: new value.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+
+
+<!-- ##### FUNCTION gconf_client_get ##### -->
+<para>
+Gets the value of a configuration key. Just like gconf_get(), but uses
+#GConfClient caching and error-handling features. Return value must be freed
+with gconf_value_destroy().
+</para>
+
+@client: a #GConfClient.
+@key: key to get.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: value of @key, or <symbol>NULL</symbol> if unset or an error occurs.
+
+
+<!-- ##### FUNCTION gconf_client_get_without_default ##### -->
+<para>
+
+</para>
+
+@client: 
+@key: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_full ##### -->
+<para>
+
+</para>
+
+@client: 
+@key: 
+@locale: 
+@use_schema_default: 
+@value_is_default: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_default_from_schema ##### -->
+<para>
+
+</para>
+
+@client: 
+@key: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_unset ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_all_entries ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@dir: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_all_dirs ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@dir: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_suggest_sync ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+
+
+<!-- ##### FUNCTION gconf_client_dir_exists ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@dir: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_float ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_int ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_string ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_bool ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_schema ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_list ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@list_type: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_get_pair ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@car_type: 
+@cdr_type: 
+@car_retloc: 
+@cdr_retloc: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_float ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@val: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_int ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@val: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_string ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@val: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_bool ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@val: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_schema ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@val: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_list ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@list_type: 
+@list: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_set_pair ##### -->
+<para>
+
+</para>
+
+@client: a #GConfClient.
+@key: 
+@car_type: 
+@cdr_type: 
+@address_of_car: 
+@address_of_cdr: 
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_client_error ##### -->
+<para>
+Emits the "error" signal. Rarely useful.
+</para>
+
+@client: a #GConfClient.
+@error: error to pass to signal handlers.
+
+
+<!-- ##### FUNCTION gconf_client_unreturned_error ##### -->
+<para>
+Emits the "unreturned_error" signal. Rarely useful.
+</para>
+
+@client: a #GConfClient.
+@error: error to pass to signal handlers.
+
+
+<!-- ##### FUNCTION gconf_client_value_changed ##### -->
+<para>
+Emits the "value_changed" signal. Rarely useful.
+</para>
+
+@client: a #GConfClient.
+@key: key to pass to signal handlers.
+@value: value of @key to pass to signal handlers.
+
+
+<!-- ##### FUNCTION gconf_client_create_reverse_change_set ##### -->
+<para>
+Creates a change set that would reverse @cs. That is, for each change in @cs,
+save the current state of that key in the returned change set.
+</para>
+
+@client: a #GConfClient.
+@cs: change set to create the reverse of.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: a new change set that would restore the current state of each key in @cs.
+
+
+<!-- ##### FUNCTION gconf_client_create_change_set_from_currentv ##### -->
+<para>
+Creates a change set that will change the keys in
+<symbol>NULL</symbol>-terminated array @keys to their current state. Use this to
+save the current state of a collection of keys; then you can later revert to the
+current state by committing the returned change set.
+</para>
+
+@client: a #GConfClient.
+@keys: <symbol>NULL</symbol>-terminated array of key names.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: new change set that changes all the @keys to their current state.
+
+
+<!-- ##### FUNCTION gconf_client_create_change_set_from_current ##### -->
+<para>
+Convenient varargs version of gconf_client_create_change_set_from_currentv().
+</para>
+
+@client: a #GConfClient.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@first_key: first key to save the current state of.
+@Varargs: <symbol>NULL</symbol>-terminated list of additional keys.
+@Returns: new change set that changes all the keys to their current state.
+
+
+<!-- ##### FUNCTION gconf_client_commit_change_set ##### -->
+<para>
+
+</para>
+
+@client: 
+@cs: 
+@remove_committed: 
+@err: 
+@Returns: 
+
+
+<!-- ##### SIGNAL GConfClient::value-changed ##### -->
+<para>
+Emitted when a key below one of the directories added with
+gconf_client_add_dir() receives a new value or is unset. Because your signal
+handler will have to use strcmp() to decide whether it cares about the
+particular value that changed, it can be much more efficient to use
+gconf_client_notify_add().
+</para>
+
+@gconfclient: the object which received the signal.
+@arg1: a const #gchar* representing the changed key name
+@arg2: a #GConfValue* representing the new value, or <symbol>NULL</symbol> for unset.
+
+<!-- ##### SIGNAL GConfClient::unreturned-error ##### -->
+<para>
+Emitted when you pass <symbol>NULL</symbol> for the #GConfError** argument to
+any #GConfClient function, and an error occurs. Depending on the
+#GConfClientErrorHandlingMode, the default handler for this signal may or may
+not display an error dialog.
+</para>
+
+@gconfclient: the object which received the signal.
+@arg1: a #GConfError* (the unhandled error).
+
+<!-- ##### SIGNAL GConfClient::error ##### -->
+<para>
+Emitted whenever an error occurs inside a #GConfClient function. Depending on
+the #GConfClientErrorHandlingMode, the default handler for this signal may or
+may not display an error dialog.
+</para>
+
+@gconfclient: the object which received the signal.
+@arg1: a #GConfError* (the error).
+
