@@ -1,3 +1,21 @@
+2000-10-16  Havoc Pennington  <hp@pobox.com>
+
+	* wrappers/gtk/gconf-client.c
+	(gconf_client_real_unreturned_error): implement default error
+	handler that prints to stderr
+	(gconf_client_key_is_writable): hmm, this function didn't compile
+	very cleanly
+
+	* wrappers/gtk/gconf-client.h: Remove the ParentWindowFunc
+	concept. Two reasons: a) it was really hard for users to implement
+	such a thing, and if they did then implementing an error dialog
+	function was pretty trivial also b) decided to make the default
+	error handler use fprintf(stderr) since GConfClient is going to
+	move into the main GConf library and thus not depend on GTK.
+
+	So, this is mild API breakage (but hopefully no one was using the
+	feature anyway).
+	
 2000-10-10  Christophe Merlet  <christophe@merlet.net>
 
 	* backends/Makefile.am: Added README.bdb in EXTRA_DIST.

@@ -129,6 +129,14 @@ static void gconf_client_real_remove_dir    (GConfClient* client,
                                              Dir* d,
 					     GError** err);
 
+static GConfValue* get_nocopy (GConfClient  *client,
+                               const gchar  *key,
+                               gboolean      use_default,
+                               gboolean     *is_default_retloc,
+                               gboolean     *is_writable_retloc,
+                               GError      **error);
+
+
 static guint client_signals[LAST_SIGNAL] = { 0 };
 static GtkObjectClass* parent_class = NULL;
 
@@ -272,13 +280,12 @@ gconf_client_real_unreturned_error (GConfClient* client, GError* error)
     {
       if (global_error_handler != NULL)
         {
-          (*global_error_handler) (client, client->parent_func, client->parent_user_data,
-                                   error);
-          
+          (*global_error_handler) (client, error);
         }
       else
         {
-          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->message);
+          fprintf (stderr, _("GConf Error: %s\n"),
+                   error->message);
         }
     }
 }
@@ -290,13 +297,12 @@ gconf_client_real_error            (GConfClient* client, GError* error)
     {
       if (global_error_handler != NULL)
         {
-          (*global_error_handler) (client, client->parent_func, client->parent_user_data,
-                                   error);
-      
+          (*global_error_handler) (client, error);
         }
       else
         {
-          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->message);
+          fprintf (stderr, _("GConf Error: %s\n"),
+                   error->message);
         }
     }
 }
@@ -718,17 +724,12 @@ gconf_client_notify_remove  (GConfClient* client,
 
 void
 gconf_client_set_error_handling(GConfClient* client,
-                                GConfClientErrorHandlingMode mode,
-                                /* func can be NULL for none or N/A */
-                                GConfClientParentWindowFunc func,
-                                gpointer user_data)
+                                GConfClientErrorHandlingMode mode)
 {
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
 
   client->error_mode = mode;
-  client->parent_func = func;
-  client->parent_user_data = user_data;
 }
 
 static gboolean
@@ -968,7 +969,7 @@ gconf_client_key_is_writable(GConfClient* client,
   GConfValue* val = NULL;
   gboolean is_writable = TRUE;
   
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   val = get_nocopy (client, key, TRUE,
                     NULL, &is_writable, &error);

@@ -79,17 +79,8 @@ typedef void (*GConfClientNotifyFunc)(GConfClient* client,
                                       GConfEntry *entry,
                                       gpointer user_data);
 
-/*
- * Return the parent window error dialogs should be associated with,
- * or NULL for none.
- */
-
-typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client,
-                                                   gpointer user_data);
-
 typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client,
-                                             GConfClientParentWindowFunc parent_func,
-                                             gpointer parent_user_data, GError* error);
+                                             GError* error);
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
 #define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
@@ -105,8 +96,6 @@ struct _GConfClient
 
   GConfEngine* engine;
   GConfClientErrorHandlingMode error_mode;
-  GConfClientParentWindowFunc parent_func;
-  gpointer parent_user_data;
   GHashTable* dir_hash;
   GHashTable* cache_hash;
   GConfListeners* listeners;
@@ -204,10 +193,7 @@ void         gconf_client_notify_remove  (GConfClient* client,
  */
 
 void              gconf_client_set_error_handling(GConfClient* client,
-                                                  GConfClientErrorHandlingMode mode,
-                                                  /* func can be NULL for none or N/A */
-                                                  GConfClientParentWindowFunc func,
-                                                  gpointer user_data);
+                                                  GConfClientErrorHandlingMode mode);
 
 
 /* Intended for use by gnome-libs */
