@@ -367,6 +367,9 @@ g_conf_source_set_value        (GConfSource* source,
                                 const gchar* key,
                                 GConfValue* value)
 {
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(key != NULL);
+
   if (!g_conf_valid_key(key))
     {
       g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);

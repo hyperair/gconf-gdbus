@@ -1,0 +1,2 @@
+SUBDIRS = cxx python gtk
+

@@ -145,7 +145,15 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  * If a key/directory doesn't exist, we create a cache entry anyway
  * so we can rapidly re-determine that it doesn't exist.
  * We also need to save "dirty" nonexistent entries, so we can delete
- * the stuff off disk.  */
+ * the stuff off disk.  
+ * 
+ * Stupid stuff
+ * 
+ * CacheEntry should be an opaque datatype which hides the existence of 
+ * the KeyCacheEntry and TreeCacheEntry structures, and there should be a 
+ * nice Cache abstraction separate from the loading/saving mess.
+ * blah. bad design, bad design.
+ */
 
 typedef struct _XMLSource XMLSource;
 
@@ -155,11 +163,14 @@ struct _XMLSource {
   GHashTable* cache;
 };
 
+typedef struct _CacheEntry CacheEntry;
+
 typedef struct _KeyCacheEntry KeyCacheEntry;
 
 struct _KeyCacheEntry {
   GConfValue* value;  /* NULL if the key is unset */
   xmlNodePtr node;    /* NULL if the key has no value */
+  struct _CacheEntry* parent; /* CacheEntry with the parent tree */
 };
 
 typedef struct _TreeCacheEntry TreeCacheEntry;
@@ -183,8 +194,6 @@ typedef enum {
   NONEXISTENT_ENTRY  /* Nothing */
 } CacheEntryType;
 
-typedef struct _CacheEntry CacheEntry;
-
 struct _CacheEntry {
   CacheEntryType type;
   gchar* key;       /* This string is used in multiple places, saving RAM, but 
@@ -196,15 +205,21 @@ struct _CacheEntry {
   } d;
 };
 
-CacheEntry* cache_entry_new    (CacheEntryType type, const gchar* key);
-void        cache_entry_destroy(CacheEntry* ce);
+static CacheEntry* cache_entry_new    (CacheEntryType type, const gchar* key);
+static void        cache_entry_destroy(CacheEntry* ce);
+static void        cache_entry_add_child(CacheEntry* entry,
+                                         CacheEntry* child);
+static void        cache_entry_remove_child(CacheEntry* entry,
+                                            CacheEntry* child);
 
 static TreeCacheEntry* tree_cache_entry_new(xmlDocPtr tree);
 static void            tree_cache_entry_destroy(TreeCacheEntry* entry);
 static void            tree_cache_entry_make_dirs(TreeCacheEntry* entry);
 
-static KeyCacheEntry* key_cache_entry_new(GConfValue* value, xmlNodePtr node);
-static KeyCacheEntry* key_cache_entry_new_nocopy(GConfValue* value, xmlNodePtr node);
+static KeyCacheEntry* key_cache_entry_new(GConfValue* value, 
+                                          xmlNodePtr node);
+static KeyCacheEntry* key_cache_entry_new_nocopy(GConfValue* value, 
+                                                 xmlNodePtr node);
 static void key_cache_entry_destroy(KeyCacheEntry* entry);
 
 static XMLSource*  xs_new(const gchar* root_dir);
@@ -367,6 +382,8 @@ static void
 set_value (GConfSource* source, const gchar* key, GConfValue* value)
 {
   XMLSource* xsource = (XMLSource*)source;
+
+  g_return_if_fail(value != NULL);
 
   xs_set_value(xsource, key, value);
 }
@@ -606,10 +623,14 @@ xs_new_dir_entry(XMLSource* source, const gchar* dir)
 }
 
 static CacheEntry*
-xs_new_key_entry(XMLSource* source, xmlNodePtr enode, const gchar* key)
+xs_new_key_entry(XMLSource* source, CacheEntry* tree_entry,
+                 xmlNodePtr enode, const gchar* key)
 {
   CacheEntry* entry;
   GConfValue* value;
+
+  g_return_val_if_fail(tree_entry != NULL, NULL);
+  g_return_val_if_fail(tree_entry->type == TREE_ENTRY, NULL);
               
   value = xentry_extract_value(enode);
 
@@ -620,6 +641,8 @@ xs_new_key_entry(XMLSource* source, xmlNodePtr enode, const gchar* key)
       entry = cache_entry_new(KEY_ENTRY, key);
                   
       entry->d.key_entry = key_cache_entry_new_nocopy(value, enode);
+
+      cache_entry_add_child(tree_entry, entry);
     }
 
   return entry;
@@ -784,7 +807,7 @@ xs_slurp_dir(XMLSource* source, const gchar* dir)
 
                   if (child_ce == NULL)
                     {
-                      child_ce = xs_new_key_entry(source, node, child);
+                      child_ce = xs_new_key_entry(source, ce, node, child);
                       safe_g_hash_table_insert(source->cache, 
                                                child_ce->key,
                                                child_ce);
@@ -852,7 +875,7 @@ xs_cache_key(XMLSource* source, const gchar* key)
           
           if (enode != NULL)
             {
-              entry = xs_new_key_entry(source, enode, key);
+              entry = xs_new_key_entry(source, parent_entry, enode, key);
             }
           else
             {
@@ -1058,13 +1081,15 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
   g_assert(key_entry != NULL);
   g_assert(tree_entry != NULL);
 
-  tree_entry->d.tree_entry->dirty = TRUE;
-
   /* Handle the fastest, simplest case first:
      key entry already exists, we just change its value 
   */
   if (key_entry->type == KEY_ENTRY)
     {
+      g_assert(tree_entry->type == TREE_ENTRY);
+
+      tree_entry->d.tree_entry->dirty = TRUE;
+
       if (key_entry->d.key_entry->node == NULL)
         {
           xmlDocPtr tree = xs_entry_tree(source, tree_entry);
@@ -1129,6 +1154,8 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
     }
 
   g_assert(tree_entry->type == TREE_ENTRY);
+
+  tree_entry->d.tree_entry->dirty = TRUE;
 
   /* Add the key/value to the XML tree, update it in the key cache,
      and return. 
@@ -1733,6 +1760,47 @@ cache_entry_destroy(CacheEntry* ce)
   }
 
   g_free(ce->key);
+}
+
+static void
+cache_entry_add_child(CacheEntry* entry,
+                      CacheEntry* child)
+{
+  g_return_if_fail(entry->type == TREE_ENTRY);
+  g_return_if_fail(child->type == KEY_ENTRY);
+  g_return_if_fail(child->d.key_entry->node != NULL);
+  /* since we have a node */
+  g_return_if_fail(entry->d.tree_entry->tree != NULL);
+  g_return_if_fail(child->d.key_entry->node->doc == entry->d.tree_entry->tree);
+  g_return_if_fail(child->d.key_entry->parent == NULL);
+
+  entry->d.tree_entry->cached_keys = 
+    g_slist_prepend(entry->d.tree_entry->cached_keys, child);
+
+  child->d.key_entry->parent = entry;
+}
+
+static void
+cache_entry_remove_child(CacheEntry* entry,
+                         CacheEntry* child)
+{
+  g_return_if_fail(entry->type == TREE_ENTRY);
+  g_return_if_fail(child->type == KEY_ENTRY);
+  g_return_if_fail(child->d.key_entry->node != NULL);
+  g_return_if_fail(entry->d.tree_entry->tree != NULL); /* since we have a node */
+  g_return_if_fail(child->d.key_entry->node->doc == entry->d.tree_entry->tree);
+  g_return_if_fail(child->d.key_entry->parent != NULL);
+  g_return_if_fail(child->d.key_entry->parent == entry);
+
+  entry->d.tree_entry->cached_keys = 
+    g_slist_remove(entry->d.tree_entry->cached_keys, child);
+  
+  child->d.key_entry->parent = NULL;
+
+  /* Can't keep this reference; in effect this means that the 
+     key entry is now useless, and should be nuked
+  */
+  child->d.key_entry->node = NULL;
 }
 
 /* 
