@@ -142,7 +142,7 @@ static ConfigDatabase gconf_engine_get_database (GConfEngine     *conf,
 
 #define CHECK_OWNER_USE(engine)   \
   do { if ((engine)->owner && (engine)->owner_use_count == 0) \
-     g_warning ("You can't use a GConfEngine that has an active GConfClient wrapper object. Use GConfClient API instead.");  \
+     g_warning ("%s: You can't use a GConfEngine that has an active GConfClient wrapper object. Use GConfClient API instead.", G_GNUC_FUNCTION);  \
   } while (0)
 
 static void         register_engine           (GConfEngine    *conf);
@@ -1332,8 +1332,6 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail (conf != NULL, FALSE);
   g_return_val_if_fail (key != NULL, FALSE);
   g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
-
-  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check (key, err))
     return FALSE;
