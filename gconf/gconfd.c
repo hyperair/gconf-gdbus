@@ -1949,6 +1949,8 @@ logfile_read (void)
   g_slist_free (lines);
   
  finished:
+  if (f != NULL)
+    fclose (f);
   
   g_free (logfile);
   g_free (logdir);
