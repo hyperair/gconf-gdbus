@@ -19,8 +19,6 @@ libgconfbackend_xml_la_SOURCES = \
 libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
 libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS)
 
-libgconfbackend_bdb_la_SOURCES = bdb.c bdb.h bdb-backend.c val-encode.c val-encode.h dir-utils.c dir-utils.h
-
 libgconfbackend_markup_la_SOURCES = 	\
 	markup-backend.c		\
 	markup-tree.h			\

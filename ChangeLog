@@ -1,3 +1,26 @@
+2002-07-16  Mark McLoughlin  <mark@skynet.ie>
+
+	Use the same cache for multiple sources with the same
+	root directory.
+
+	* backends/xml-cache.[ch]:
+	(cache_get): rename from cache_new and return and existing
+	cache for this root dir if one exists. Also use g_free
+	as a key destroy handler for the nonexistant hash instead
+	of doing it manually.
+	(cache_unref): rename from cache_destroy and only destroy
+	when refcount drops to zero.
+	(cache_set_nonexistent), (cache_destroy_nonexistant_foreach):
+	don't free the key here.
+
+	* backends/xml-backend.c:
+	(xs_new): s/cache_new/cache_get/
+	(xs_destroy): s/cache_destroy/cache_unref/.
+
+2003-03-14  Mark McLoughlin  <mark@skynet.ie>
+
+	* backends/Makefile.am: kill unused bdb SOURCES.
+
 2003-03-13  Mark McLoughlin  <mark@skynet.ie>
 
 	Implement --load and --dump options for gconftool. e.g.:

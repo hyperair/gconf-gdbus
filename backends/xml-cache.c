@@ -60,30 +60,48 @@ static void     cache_remove_from_parent (Cache *cache,
 static void     cache_add_to_parent      (Cache *cache,
                                           Dir   *d);
 
+static GHashTable *caches_by_root_dir = NULL;
+
 struct _Cache {
   gchar* root_dir;
   GHashTable* cache;
   GHashTable* nonexistent_cache;
   guint dir_mode;
   guint file_mode;
+  guint refcount;
 };
 
 Cache*
-cache_new (const gchar  *root_dir,
+cache_get (const gchar  *root_dir,
            guint dir_mode,
            guint file_mode)
 {
-  Cache* cache;
+  Cache* cache = NULL;
+
+  if (caches_by_root_dir == NULL)
+    caches_by_root_dir = g_hash_table_new (g_str_hash, g_str_equal);
+  else
+    cache = g_hash_table_lookup (caches_by_root_dir, root_dir);
+
+  if (cache != NULL)
+    {
+      cache->refcount += 1;
+      return cache;
+    }
 
   cache = g_new(Cache, 1);
 
   cache->root_dir = g_strdup(root_dir);
 
   cache->cache = g_hash_table_new(g_str_hash, g_str_equal);
-  cache->nonexistent_cache = g_hash_table_new(g_str_hash, g_str_equal);
+  cache->nonexistent_cache = g_hash_table_new_full(g_str_hash, g_str_equal,
+                                                   g_free, NULL);
 
   cache->dir_mode = dir_mode;
   cache->file_mode = file_mode;
+  cache->refcount = 1;
+
+  safe_g_hash_table_insert (caches_by_root_dir, cache->root_dir, cache);
   
   return cache;
 }
@@ -91,19 +109,27 @@ cache_new (const gchar  *root_dir,
 static void cache_destroy_foreach(const gchar* key,
                                   Dir* dir, gpointer data);
 
-static void cache_destroy_nonexistent_foreach(gchar* key,
-                                              gpointer val,
-                                              gpointer data);
-
 void
-cache_destroy (Cache        *cache)
+cache_unref (Cache *cache)
 {
+  g_return_if_fail (cache != NULL);
+  g_return_if_fail (cache->refcount > 0);
+
+  if (cache->refcount > 1)
+    {
+      cache->refcount -= 1;
+      return;
+    }
+
+  g_hash_table_remove (caches_by_root_dir, cache->root_dir);
+  if (g_hash_table_size (caches_by_root_dir) == 0)
+    {
+      g_hash_table_destroy (caches_by_root_dir);
+      caches_by_root_dir = NULL;
+    }
   
   g_free(cache->root_dir);
   g_hash_table_foreach(cache->cache, (GHFunc)cache_destroy_foreach,
-                       NULL);
-  g_hash_table_foreach(cache->nonexistent_cache,
-                       (GHFunc)cache_destroy_nonexistent_foreach,
                        NULL);
   g_hash_table_destroy(cache->cache);
   g_hash_table_destroy(cache->nonexistent_cache);
@@ -434,19 +460,7 @@ cache_set_nonexistent   (Cache* cache,
                           GINT_TO_POINTER(TRUE));
     }
   else
-    {
-      gpointer origkey;
-      gpointer origval;
-
-      if (g_hash_table_lookup_extended(cache->nonexistent_cache,
-                                       key,
-                                       &origkey, &origval))
-        {
-          g_hash_table_remove(cache->nonexistent_cache,
-                              key);
-          g_free(origkey);
-        }
-    }
+    g_hash_table_remove(cache->nonexistent_cache, key);
 }
 
 static void
@@ -490,14 +504,6 @@ cache_destroy_foreach(const gchar* key,
               dir_get_name (dir));
 #endif
   dir_destroy (dir);
-}
-
-static void
-cache_destroy_nonexistent_foreach(gchar* key,
-                                  gpointer val,
-                                  gpointer data)
-{
-  g_free(key);
 }
 
 static void
