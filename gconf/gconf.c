@@ -227,6 +227,8 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
   ConfigServer_Context ctx;
   int tries = 0;
 
+  g_warning("Non-default GConfEngine's are basically broken, best not to use them right now.");
+  
   CORBA_exception_init(&ev);
   
  RETRY:
