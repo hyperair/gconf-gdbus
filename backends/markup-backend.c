@@ -151,7 +151,9 @@ static GConfBackendVTable markup_vtable = {
   sync_all,
   destroy_source,
   clear_cache,
-  blow_away_locks
+  blow_away_locks,
+  NULL, /* add_listener */
+  NULL /* remove_listener */
 };
 
 static void          

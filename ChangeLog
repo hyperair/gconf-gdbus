@@ -1,3 +1,32 @@
+2004-03-25  Mark McLoughlin  <mark@skynet.ie>
+
+	Allow backends to notify the daemon of changes to entries.
+	Based on a patch from Cyrille Moureaux <Cyrille.Moureaux@Sun.COM>
+	in bug #07692.
+
+	* gconf/gconf-backend.h: add add_listener() and
+	remove_listener() members to the vtable.
+	
+	* gconf/gconf-database.c:
+	(source_notify_cb): re-compute the value and notify
+	listeners when the backend reports the key has changed.
+	(gconf_database_readd_listener),
+	(gconf_database_remove_listener): add/remove backend
+	listeners.
+	
+	* gconf/gconf-sources.[c]:
+	(gconf_source_add_listener),
+	(gconf_source_remove_listener),
+	(gconf_sources_add_listener),
+	(gconf_sources_remove_listener): impl. the glue.
+	
+	* doc/gconf/tmpl/gconf-backend.sgml: update the backend
+	documentation.
+	
+	* backends/markup-backend.c,
+	  backends/xml-backend.c: set the add_listener() and
+	remove_listener() members to NULL.
+	
 2004-03-24  Mark McLoughlin  <mark@skynet.ie>
 	
 	* gconf/gconf-backend.h: add a vtable_size member to

@@ -288,6 +288,39 @@ gconf_source_sync_all         (GConfSource* source, GError** err)
   return (*source->backend->vtable.sync_all)(source, err);
 }
 
+static void
+gconf_source_add_listener (GConfSource           *source,
+			   guint                  id,
+			   const gchar           *namespace_section,
+			   GConfSourceNotifyFunc  notify_func,
+			   gpointer               user_data)
+{
+  g_return_if_fail (source != NULL);
+  g_return_if_fail (id > 0);
+
+  if (source->backend->vtable.add_listener)
+    {
+      (*source->backend->vtable.add_listener) (source,
+					       id,
+					       namespace_section,
+					       notify_func,
+					       user_data);
+    }
+}
+
+static void
+gconf_source_remove_listener (GConfSource *source,
+			      guint        id)
+{
+  g_return_if_fail (source != NULL);
+  g_return_if_fail (id > 0);
+
+  if (source->backend->vtable.remove_listener)
+    {
+      (*source->backend->vtable.remove_listener) (source, id);
+    }
+}
+
 /*
  *   Source stacks
  */
@@ -1548,5 +1581,49 @@ gconf_sources_query_default_value(GConfSources* sources,
       gconf_meta_info_free(mi);
       
       return NULL;
+    }
+}
+
+void
+gconf_sources_add_listener (GConfSources          *sources,
+			    guint                  id,
+			    const gchar           *namespace_section,
+			    GConfSourceNotifyFunc  notify_func,
+			    gpointer               user_data)
+{
+  GList *tmp;
+
+  tmp = sources->sources;
+
+  while (sources != NULL)
+    {
+      GConfSource *source = tmp->data;
+
+      gconf_source_add_listener (source,
+				 id,
+				 namespace_section,
+				 notify_func,
+				 user_data);
+
+
+      tmp = tmp->next;
+    }
+}
+
+void
+gconf_sources_remove_listener (GConfSources *sources,
+			       guint         id)
+{
+  GList *tmp;
+
+  tmp = sources->sources;
+
+  while (sources != NULL)
+    {
+      GConfSource *source = tmp->data;
+
+      gconf_source_remove_listener (source, id);
+
+      tmp = tmp->next;
     }
 }

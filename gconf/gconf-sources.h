@@ -24,6 +24,7 @@
 #include <glib.h>
 #include "gconf-error.h"
 #include "gconf-value.h"
+#include "gconf-listeners.h"
 
 /* Sources are not interchangeable; different backend engines will return 
  * GConfSource with different private elements.
@@ -49,6 +50,10 @@ typedef enum {
   GCONF_SOURCE_NEVER_WRITEABLE = 1 << 2, 
   GCONF_SOURCE_ALL_FLAGS = ((1 << 0) | (1 << 1))
 } GConfSourceFlags;
+
+typedef void (* GConfSourceNotifyFunc) (GConfSource *source,
+					const gchar *location,
+					gpointer     user_data);
 
 GConfSource*  gconf_resolve_address         (const gchar* address,
                                              GError** err);
@@ -124,11 +129,12 @@ GConfValue*   gconf_sources_query_default_value(GConfSources* sources,
                                                 gboolean* is_writable,
                                                 GError** err);
 
+void          gconf_sources_add_listener       (GConfSources          *sources,
+						guint                  id,
+					        const gchar           *location,
+					        GConfSourceNotifyFunc  notify_func,
+					        gpointer               user_data);
+void          gconf_sources_remove_listener    (GConfSources          *sources,
+						guint                  id);
+
 #endif
-
-
-
-
-
-
-

@@ -1027,6 +1027,60 @@ gconf_database_schedule_sync(GConfDatabase* db)
     }
 }
 
+static void
+source_notify_cb (GConfSource   *source,
+		  const gchar   *location,
+		  GConfDatabase *db)
+{
+  GConfValue  *value;
+  ConfigValue *cvalue;
+  GError      *error;
+  gchar       *schema_name;
+  gboolean     is_default;
+  gboolean     is_writable;
+
+  g_return_if_fail (source != NULL);
+  g_return_if_fail (location != NULL);
+  g_return_if_fail (db != NULL);
+
+  error = NULL;
+  schema_name = NULL;
+  is_default = is_writable = FALSE;
+
+  /* FIXME: only notify if this location isn't already set
+   *        in a source above this one.
+   */
+
+  value = gconf_database_query_value (db,
+				      location,
+				      NULL,
+				      TRUE,
+				      &schema_name,
+				      &is_default,
+				      &is_writable,
+				      &error);
+  if (error != NULL)
+    {
+      gconf_log (GCL_WARNING,
+		 _("Error obtaining new value for `%s' after change notification from backend `%s': %s"),
+		 location,
+		 source->address,
+		 error->message);
+      g_error_free (error);
+      return;
+    }
+
+  cvalue = gconf_corba_value_from_gconf_value (value);
+  gconf_database_notify_listeners (db,
+				   location,
+				   cvalue,
+				   is_default,
+				   is_writable);
+
+  CORBA_free (cvalue);
+  gconf_value_free (value);
+}
+
 CORBA_unsigned_long
 gconf_database_readd_listener   (GConfDatabase       *db,
                                  ConfigListener       who,
@@ -1046,6 +1100,12 @@ gconf_database_readd_listener   (GConfDatabase       *db,
 
   cnxn = gconf_listeners_add (db->listeners, where, l,
                               (GFreeFunc)listener_destroy);
+
+  gconf_sources_add_listener (db->sources,
+			      cnxn,
+			      where,
+			      (GConfSourceNotifyFunc) source_notify_cb,
+			      db);
 
   if (l->name == NULL)
     l->name = g_strdup_printf ("%u", cnxn);
@@ -1130,6 +1190,8 @@ gconf_database_remove_listener (GConfDatabase       *db,
       g_error_free (err);
     }
   
+  gconf_sources_remove_listener (db->sources, cnxn);
+
   /* calls destroy notify */
   gconf_listeners_remove (db->listeners, cnxn);
 }

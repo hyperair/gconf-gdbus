@@ -23,12 +23,22 @@ called gconf_backend_get_vtable() that returns a pointer to a
 </para>
 
 <para>
-Here are the methods the backend must implement, and their specification:
+Here is the specification of the vtable members:
 
 <informaltable pgwide="1" frame="none">
 <tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
 <tbody>
 
+<row>
+<entry>@vtable_size</entry> 
+<entry>
+The size of the vtable structure. This is used by the daemon to ensure that
+a mismatch between the version of GConf the backend was compiled against and
+the version the daemon was compiled against can be handled gracefully. Set
+this field to sizeof (GConfBackendVtable).
+</entry>
+</row>
+ 
 <row>
 <entry>@shutdown</entry> 
 <entry>Called prior to unloading the dynamic
@@ -227,7 +237,67 @@ Should destroy a source obtained with @resolve_address.
 
 </row>
  
+<row>
+<entry>@clear_cache</entry>
 
+<entry>
+Discard any cached data after saving the data to permanent storage.
+</entry>
+
+</row>
+ 
+<row>
+<entry>@blow_away_locks</entry>
+
+<entry>
+Unconditionally discard any locks whether they are stale or otherwise in
+order to force the backend to be able to obtain access to its data store.
+</entry>
+
+</row>
+ 
+<row>
+<entry>@add_listener</entry>
+
+<entry>
+If it is possible for entries to be changed concurrently by another
+daemon, the backend may support notifying the daemon (and any listening
+clients) of such changes. This function should add a listener to a
+section of the tree and when any of the following events occur, the
+backend should invoke the notify function with the key that has changed:
+ <itemizedlist mark="bullet">
+  <listitem>
+    <para>If the entry is set or unset</para>
+  </listitem>
+  <listitem>
+    <para>If the entry's value changes</para>
+  </listitem>
+  <listitem>
+    <para>If the entry's schema name changes</para>
+  </listitem>
+  <listitem>
+    <para>
+      If the entry is a schema and its value in <emphasis>any</emphasis>
+      locale changes
+    </para>
+  </listitem>
+ </itemizedlist>
+Note, the backend should <emphasis>not</emphasis> notify the daemon of
+any changes that originated from the daemon itself.
+</entry>
+
+</row>
+
+<row>
+<entry>@remove_listener</entry>
+
+<entry>
+Remove a listener added with @add_listener. The listener is identified
+by the integer supplied.
+</entry>
+
+</row>
+ 
 </tbody></tgroup></informaltable>
 </para>
 
@@ -251,6 +321,8 @@ Should destroy a source obtained with @resolve_address.
 @destroy_source: 
 @clear_cache: 
 @blow_away_locks: 
+@add_listener: 
+@remove_listener: 
 
 <!-- ##### STRUCT GConfBackend ##### -->
 <para>
