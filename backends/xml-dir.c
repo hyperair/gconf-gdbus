@@ -186,7 +186,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
     else
       {
         dir_mode = mode_t_to_mode(s.st_mode);
-        file_mode &= ~0111; /* turn off search bits */
+        file_mode = dir_mode & ~0111; /* turn off search bits */
       }
   }
 

@@ -295,7 +295,6 @@ GConfSources*
 gconf_sources_new_from_addresses(const gchar** addresses, GError** err)
 {
   GConfSources* sources;
-  gboolean errors_occurred = FALSE;
 
   g_return_val_if_fail( (err == NULL) || (*err == NULL), NULL);
   

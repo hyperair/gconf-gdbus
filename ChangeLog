@@ -1,3 +1,13 @@
+2000-09-14  Darin Adler  <darin@eazel.com>
+
+	* backends/xml-dir.c: (dir_load): Fixed code that set up file mode
+	to always be 0600 to instead inherit from parent directory as
+	intended.
+	
+	* gconf/gconf-sources.c: (gconf_sources_new_from_addresses):
+	Removed unused variable.
+	* tests/.cvsignore: Added some generated files.
+
 2000-09-13  Havoc Pennington  <hp@redhat.com>
 
 	* More renaming:
@@ -1020,7 +1030,6 @@ Tue Apr 18 01:37:51 2000  George Lebl <jirka@5z.com>
 	* gconf/gconf-internals.c: If LC_MESSAGE doesn't exist, use value of
 	LC_CTYPE (is this correct?)
 		
->>>>>>> 1.102
 1999-12-31  Yuri Syrota  <rasta@renome.rovno.ua>
 
 	* configure.in: Added "uk" to ALL_LINGUAS
