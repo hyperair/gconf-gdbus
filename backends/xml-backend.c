@@ -313,6 +313,7 @@ get_lock_dir_from_root_dir (const char *root_dir)
 static GConfSource*  
 resolve_address (const gchar* address, GError** err)
 {
+  struct stat statbuf;
   gchar* root_dir;
   XMLSource* xsource;
   GConfSource* source;
@@ -328,27 +329,22 @@ resolve_address (const gchar* address, GError** err)
   if (root_dir == NULL)
     return NULL;
 
-  if (mkdir(root_dir, dir_mode) < 0)
+  if (stat (root_dir, &statbuf) == 0)
     {
-      if (errno != EEXIST)
-        {
-          gconf_set_error(err, GCONF_ERROR_FAILED,
-                          _("Could not make directory `%s': %s"),
-                          (gchar*)root_dir, strerror(errno));
-          g_free(root_dir);
-          return NULL;
-        }
-      else
-        {
-          /* Already exists, base our dir_mode on it */
-          struct stat statbuf;
-          if (stat(root_dir, &statbuf) == 0)
-            {
-              dir_mode = _gconf_mode_t_to_mode (statbuf.st_mode);
-              /* dir_mode without search bits */
-              file_mode = dir_mode & (~0111); 
-            }
-        }
+      /* Already exists, base our dir_mode on it */
+      dir_mode = _gconf_mode_t_to_mode (statbuf.st_mode);
+
+      /* dir_mode without search bits */
+      file_mode = dir_mode & (~0111); 
+    }
+  else if (mkdir (root_dir, dir_mode) < 0)
+    {
+      /* Error out even on EEXIST - shouldn't happen anyway */
+      gconf_set_error (err, GCONF_ERROR_FAILED,
+		       _("Could not make directory `%s': %s"),
+		      (gchar *)root_dir, g_strerror (errno));
+      g_free (root_dir);
+      return NULL;
     }
 
   force_readonly = FALSE;
