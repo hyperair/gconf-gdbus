@@ -1785,24 +1785,31 @@ gconf_detach_config_server(void)
 }
 
 ConfigListener listener = CORBA_OBJECT_NIL;
+static void notify                  (PortableServer_Servant     servant,
+                                     ConfigDatabase             db,
+                                     CORBA_unsigned_long        cnxn,
+                                     const CORBA_char          *key,
+                                     const ConfigValue         *value,
+                                     CORBA_boolean              is_default,
+                                     CORBA_boolean              is_writable,
+                                     CORBA_Environment         *ev);
+static void ping                    (PortableServer_Servant     _servant,
+                                     CORBA_Environment         *ev);
+static void update_listener         (PortableServer_Servant     _servant,
+                                     ConfigDatabase             db,
+                                     const CORBA_char          *address,
+                                     const CORBA_unsigned_long  old_cnxn,
+                                     const CORBA_char          *key,
+                                     const CORBA_unsigned_long  new_cnxn,
+                                     CORBA_Environment         *ev);
+static void invalidate_cached_value (PortableServer_Servant     _servant,
+                                     ConfigDatabase             database,
+                                     const CORBA_char          *key,
+                                     CORBA_Environment         *ev);
+static void drop_all_caches         (PortableServer_Servant     _servant,
+                                     CORBA_Environment         *ev);
 
-static void notify          (PortableServer_Servant     servant,
-                             ConfigDatabase             db,
-                             CORBA_unsigned_long        cnxn,
-                             const CORBA_char          *key,
-                             const ConfigValue         *value,
-                             CORBA_boolean              is_default,
-                             CORBA_boolean              is_writable,
-                             CORBA_Environment         *ev);
-static void ping            (PortableServer_Servant     _servant,
-                             CORBA_Environment         *ev);
-static void update_listener (PortableServer_Servant     _servant,
-                             ConfigDatabase             db,
-                             const CORBA_char          *address,
-                             const CORBA_unsigned_long  old_cnxn,
-                             const CORBA_char          *key,
-                             const CORBA_unsigned_long  new_cnxn,
-                             CORBA_Environment         *ev);
+
 
 static PortableServer_ServantBase__epv base_epv = {
   NULL,
@@ -1810,7 +1817,15 @@ static PortableServer_ServantBase__epv base_epv = {
   NULL
 };
 
-static POA_ConfigListener__epv listener_epv = { NULL, notify, ping, update_listener };
+static POA_ConfigListener__epv listener_epv = {
+  NULL,
+  notify,
+  ping,
+  update_listener,
+  invalidate_cached_value,
+  drop_all_caches
+};
+
 static POA_ConfigListener__vepv poa_listener_vepv = { &base_epv, &listener_epv };
 static POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 
@@ -1921,6 +1936,24 @@ update_listener (PortableServer_Servant _servant,
     }
   
   ctable_reinstall (conf->ctable, cnxn, old_cnxn_id, new_cnxn_id);
+}
+
+static void
+invalidate_cached_value (PortableServer_Servant     _servant,
+                         ConfigDatabase             database,
+                         const CORBA_char          *key,
+                         CORBA_Environment         *ev)
+{
+
+
+}
+
+static void
+drop_all_caches (PortableServer_Servant     _servant,
+                 CORBA_Environment         *ev)
+{
+
+
 }
 
 static ConfigListener 

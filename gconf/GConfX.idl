@@ -83,6 +83,13 @@ interface ConfigListener {
                                in unsigned long old_cnxn,
                                in string where,
                                in unsigned long new_cnxn);
+
+  oneway void invalidate_cached_value (in ConfigDatabase database,
+                                       in string key);
+
+  // Called when a new daemon starts up, and we need to drop caches
+  // in case the new daemon has a different default database
+  oneway void drop_all_caches ();
 };
 
 // Sync this with GConfErrNo in gconf.h, when it makes sense (e.g. G_CONF_NO_SERVER doesn't
@@ -130,6 +137,14 @@ interface ConfigDatabase {
   ConfigValue lookup_default_value(in string key,
                                    in string locale)
     raises (ConfigException);
+
+  // Grab lots of values at once
+  void batch_lookup (in KeyList keys,
+                     in string locale,
+                     out ValueList values,
+                     out IsDefaultList is_defaults,
+                     out IsWritableList is_writables)
+    raises (ConfigException);
   
   void set(in string key, in ConfigValue value)
     raises (ConfigException);
@@ -138,6 +153,12 @@ interface ConfigDatabase {
     raises (ConfigException);
 
   void unset_with_locale(in string key, in string locale)
+    raises (ConfigException);
+
+  // Setting to InvalidVal does an unset
+  void batch_change(in string locale, // only used for unsets 
+                    in KeyList keys,
+                    in ValueList values)
     raises (ConfigException);
   
   boolean dir_exists(in string dir)
@@ -157,7 +178,7 @@ interface ConfigDatabase {
   void all_dirs(in string dir,
                 out KeyList subdirs)
     raises (ConfigException);
-
+  
   // if first arg is a key, second arg should be a key pointing
   //  to a schema. 
   // if first arg is a dir, second arg should be a key pointing 

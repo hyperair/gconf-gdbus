@@ -1,3 +1,15 @@
+2000-09-17  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-database.c: Add new methods on ConfigDatabase
+
+	* gconf/gconf.c: Add new methods on ConfigListener, but they
+	do nothing at the moment
+
+	* gconf/GConf.idl: Add some methods to ConfigListener to tell
+	clients when they need to drop cached values Add batch_lookup()
+	and batch_change() methods to ConfigDatabase so we can implement 
+	them later
+
 2000-09-16  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.c (gconf_engine_key_is_writable): And actually 
@@ -27,8 +39,7 @@
 	writability
 
 	* wrappers/gtk/gconf-client.c (gconf_client_finalize): Move all
-	cleanup to finalize, remove destroy handler
-	
+	cleanup to finalize, remove destroy handler	
 
 2000-09-16  Havoc Pennington  <hp@pobox.com>
 

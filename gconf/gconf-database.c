@@ -185,6 +185,20 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
 }
 
 static void
+impl_ConfigDatabase_batch_lookup(PortableServer_Servant servant,
+				 const ConfigDatabase_KeyList * keys,
+				 const CORBA_char * locale,
+				 ConfigDatabase_ValueList ** values,
+				 ConfigDatabase_IsDefaultList ** is_defaults,
+				 ConfigDatabase_IsWritableList ** is_writables,
+                                 CORBA_Environment * ev)
+{
+
+
+
+}
+
+static void
 impl_ConfigDatabase_set(PortableServer_Servant servant,
 			const CORBA_char * key,
 			const ConfigValue * value,
@@ -244,6 +258,18 @@ impl_ConfigDatabase_unset(PortableServer_Servant servant,
 {
   /* This is a cheat, since const CORBA_char* isn't normally NULL */
   impl_ConfigDatabase_unset_with_locale (servant, key, NULL, ev);
+}
+
+static void
+impl_ConfigDatabase_batch_change(PortableServer_Servant servant,
+                                 const CORBA_char * locale,
+                                 const ConfigDatabase_KeyList * keys,
+                                 const ConfigDatabase_ValueList * values,
+                                 CORBA_Environment * ev)
+{
+
+
+
 }
 
 static CORBA_boolean
@@ -462,9 +488,11 @@ static POA_ConfigDatabase__epv server_epv = {
   impl_ConfigDatabase_lookup,
   impl_ConfigDatabase_lookup_with_locale,
   impl_ConfigDatabase_lookup_default_value,
+  impl_ConfigDatabase_batch_lookup,
   impl_ConfigDatabase_set,
   impl_ConfigDatabase_unset,
   impl_ConfigDatabase_unset_with_locale,
+  impl_ConfigDatabase_batch_change,
   impl_ConfigDatabase_dir_exists,
   impl_ConfigDatabase_remove_dir,
   impl_ConfigDatabase_all_entries,
