@@ -96,7 +96,7 @@ source_is_writable(GConfSource* source, const gchar* key, GError** err)
     return FALSE;
   else if ((source->flags & GCONF_SOURCE_ALL_WRITEABLE) != 0)
     return TRUE;
-  else if (source->backend->vtable->writable != NULL &&
+  else if ((source->backend->vtable->writable != NULL) &&
            (*source->backend->vtable->writable)(source, key, err))
     return TRUE;
   else
@@ -294,7 +294,7 @@ gconf_source_sync_all         (GConfSource* source, GError** err)
  */
 
 GConfSources* 
-gconf_sources_new_from_addresses(const gchar** addresses, GError** err)
+gconf_sources_new_from_addresses(GSList * addresses, GError** err)
 {
   GConfSources* sources;
 
@@ -302,12 +302,12 @@ gconf_sources_new_from_addresses(const gchar** addresses, GError** err)
   
   sources = g_new0(GConfSources, 1);
 
-  while (*addresses != NULL)
+  while (addresses != NULL)
     {
       GConfSource* source;
       GError* error = NULL;
       
-      source = gconf_resolve_address(*addresses, &error);
+      source = gconf_resolve_address((const gchar*)addresses->data, &error);
 
       if (source != NULL)
         {
@@ -318,12 +318,12 @@ gconf_sources_new_from_addresses(const gchar** addresses, GError** err)
         {
           g_assert(error != NULL);
           gconf_log(GCL_WARNING, _("Failed to load source `%s': %s"),
-                    *addresses, error->message);
+                    (const gchar*)addresses->data, error->message);
           
           g_error_free(error);
         }
           
-      ++addresses;
+      addresses = g_slist_next(addresses);
     }
 
   sources->sources = g_list_reverse(sources->sources);

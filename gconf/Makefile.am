@@ -87,7 +87,7 @@ libgconf_1_la_LIBADD = $(INTLLIBS) $(OAF_LIBS) $(GLIB_LIBS)
 EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in
 
 install-exec-local:
-	(cd $(DESTDIR)$(bindir) && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
+	(cd $(DESTDIR)$(bindir) && $(RM) gconftool && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
 
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)

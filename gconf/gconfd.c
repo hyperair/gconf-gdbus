@@ -258,7 +258,7 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 static void
 gconf_server_load_sources(void)
 {
-  gchar** addresses;
+  GSList* addresses;
   GList* tmp;
   gboolean have_writable = FALSE;
   gchar* conffile;
@@ -288,12 +288,8 @@ gconf_server_load_sources(void)
   if (addresses == NULL)
     {      
       /* Try using the default address xml:readwrite:$(HOME)/.gconf */
-      addresses = g_new0(gchar*, 2);
+      g_slist_append(addresses, g_strconcat("xml:readwrite:", g_get_home_dir(), "/.gconf", NULL));
 
-      addresses[0] = g_strconcat("xml:readwrite:", g_get_home_dir(), "/.gconf", NULL);
-
-      addresses[1] = NULL;
-      
       gconf_log(GCL_INFO, _("No configuration files found, trying to use the default config source `%s'"), addresses[0]);
     }
   
@@ -302,18 +298,16 @@ gconf_server_load_sources(void)
       /* We want to stay alive but do nothing, because otherwise every
          request would result in another failed gconfd being spawned.  
       */
-      const gchar* empty_addr[] = { NULL };
       gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_CONFDIR"/path"));
       /* don't request error since there aren't any addresses */
-      sources = gconf_sources_new_from_addresses(empty_addr, NULL);
+      sources = gconf_sources_new_from_addresses(NULL, NULL);
 
       /* Install the sources as the default database */
       set_default_database (gconf_database_new(sources));
     }
   else
     {
-      sources = gconf_sources_new_from_addresses((const gchar**)addresses,
-                                                 &error);
+      sources = gconf_sources_new_from_addresses(addresses, &error);
 
       if (error != NULL)
         {
@@ -324,7 +318,7 @@ gconf_server_load_sources(void)
           error = NULL;
         }
       
-      g_free(addresses);
+      g_slist_free(addresses);
 
       g_assert(sources != NULL);
 
@@ -725,11 +719,11 @@ obtain_database (const gchar *address,
 {
   
   GConfSources* sources;
-  const gchar* addresses[] = { NULL, NULL };
+  GSList* addresses = NULL;
   GError* error = NULL;
   GConfDatabase *db;
 
-  addresses[0] = address;
+  g_slist_append(addresses, g_strdup(address));
   db = lookup_database (address);
 
   if (db)

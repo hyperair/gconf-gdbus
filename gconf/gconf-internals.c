@@ -792,14 +792,12 @@ subst_variables(const gchar* src)
   return retval;
 }
 
-gchar**       
+GSList *
 gconf_load_source_path(const gchar* filename, GError** err)
 {
   FILE* f;
-  GSList* l = NULL;
-  gchar** addresses;
+  GSList *l = NULL;
   gchar buf[512];
-  GSList* tmp;
   guint n;
 
   f = fopen(filename, "r");
@@ -832,25 +830,17 @@ gconf_load_source_path(const gchar* filename, GError** err)
       else if (strncmp("include", s, 7) == 0)
         {
           gchar* unq;
-          gchar** included;
+          GSList* included;
 
           s += 7;
-
+          while (isspace(*s)) s++;
           unq = unquote_string(s);
 
           included = gconf_load_source_path(unq, NULL);
 
           if (included != NULL)
             {
-              gchar** iter = included;
-
-              while (*iter)
-                {
-                  l = g_slist_prepend(l, *iter); /* Note that we won't free *included */
-                  ++iter;
-                }
-
-              g_free(included); /* Only the array, not the contained strings */
+              g_slist_concat(l, included);
             }
         }
       else 
@@ -892,27 +882,8 @@ gconf_load_source_path(const gchar* filename, GError** err)
     return NULL;
 
   n = g_slist_length(l);
-
   g_assert(n > 0);
-  
-  addresses = g_malloc0(sizeof(gchar*) * (n+1));
-
-  addresses[n] = NULL;
-
-  --n;
-  tmp = l;
-
-  while (tmp != NULL)
-    {
-      addresses[n] = tmp->data;
-
-      tmp = g_slist_next(tmp);
-      --n;
-    }
-  
-  g_assert(addresses[0] != NULL); /* since we used malloc0 this detects bad logic */
-
-  return addresses;
+  return l;
 }
 
 /* This should also support concatting filesystem dirs and keys, 
@@ -2552,5 +2523,3 @@ gconf_release_lock(GConfLock* lock,
   gconf_lock_destroy(lock);
   return TRUE;
 }
-
-

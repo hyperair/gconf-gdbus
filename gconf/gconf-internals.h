@@ -64,7 +64,7 @@ const gchar*   gconf_value_type_to_string   (GConfValueType  type);
 GConfValueType gconf_value_type_from_string (const gchar    *str);
 
 
-gchar**       gconf_load_source_path (const gchar* filename, GError** err);
+GSList*       gconf_load_source_path (const gchar* filename, GError** err);
 
 /* shouldn't be used in applications (although implemented in gconf.c) */
 
