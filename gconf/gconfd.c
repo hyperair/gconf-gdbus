@@ -475,15 +475,28 @@ main(int argc, char** argv)
   char *lock_dir;
   char *gconfd_dir;
   ConfigServer other_server;
+  int          dev_null_fd;
   
-  chdir ("/");
-
   /* This is so we don't prevent unmounting of devices. We divert
    * all messages to syslog
    */
-  close (0);
-  close (1);
-  close (2);
+  if (chdir ("/") < 0)
+    {
+       fprintf (stderr, "Could not change to root directory: %s\n",
+		g_strerror (errno));
+       exit (1);
+    }
+
+  if (!g_getenv ("GCONF_DEBUG_OUTPUT"))
+    {
+      dev_null_fd = open ("/dev/null", O_RDWR);
+      if (dev_null_fd >= 0)
+        {
+	  dup2 (dev_null_fd, 0);
+	  dup2 (dev_null_fd, 1);
+	  dup2 (dev_null_fd, 2);
+	}
+    }
   
   umask (022);
   
