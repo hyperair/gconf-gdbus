@@ -705,7 +705,8 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
     }
   else
     {
-      gconf_log(GCL_DEBUG, "found <local_schema> with no locale setting");
+      gconf_log(GCL_DEBUG, "found <%s> with no locale setting",
+                node->name ? node->name : (unsigned char*) "null");
     }
   
   if (node->xmlChildrenNode != NULL)
@@ -839,16 +840,18 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
       type = gconf_value_type_from_string(cdr_type_str);
       gconf_schema_set_cdr_type(sc, type);
       xmlFree(cdr_type_str);
-    }
-
-  if (locales != NULL)
+    }  
+  
+  if (locales != NULL && locales[0])
     {
       /* count the number of possible locales */
-      i = 0;
-      while (locales[i])
-        ++i;
+      int n_locales;
       
-      localized_nodes = g_new0(xmlNodePtr, i+2);
+      n_locales = 0;
+      while (locales[n_locales])
+        ++n_locales;
+      
+      localized_nodes = g_new0(xmlNodePtr, n_locales);
       
       /* Find the node for each possible locale */
       iter = node->xmlChildrenNode;
@@ -891,7 +894,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
       
       i = 0;
       best = localized_nodes[i];
-      while (best == NULL && localized_nodes[i])
+      while (best == NULL && i < n_locales)
         {
           best = localized_nodes[i];
           ++i;
@@ -907,11 +910,15 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
     best = find_schema_subnode_by_locale (node, NULL);
 
   if (best == NULL)
-    best = node->xmlChildrenNode;
+    {
+      best = node->xmlChildrenNode;
+      while (best && best->type != XML_ELEMENT_NODE)
+        best = best->next;
+    }
   
   /* Extract info from the best locale node */
   if (best != NULL)
-    schema_subnode_extract_data(best, sc);  
+    schema_subnode_extract_data(best, sc); 
   
   /* Create a GConfValue with this schema and return it */
   value = gconf_value_new(GCONF_VALUE_SCHEMA);

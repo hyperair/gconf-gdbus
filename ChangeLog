@@ -1,5 +1,15 @@
 2002-03-21  Havoc Pennington  <hp@redhat.com>
 
+	* backends/xml-entry.c (schema_node_extract_value): be sure 
+	we use only NODE elements as a fallback, and that we 
+	always use a NODE if possible
+	(schema_node_extract_value): fix bug that would fail to fall back
+	to a less-well-matched locale value if a better matched locale had
+	no value. Should fix Galeon. And the world rejoiced! Assuming 
+	it actually fixes it. ;-)
+
+2002-03-21  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconf-schema.c: move schema accessors to be functions not
 	macros.
 
