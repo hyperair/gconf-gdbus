@@ -646,7 +646,7 @@ main(int argc, char** argv)
       gconf_release_lock (daemon_lock, &err);
       if (err != NULL)
         {
-          gconf_log (GCL_WARNING, _("Failed to release lockfile: %s"),
+          gconf_log (GCL_WARNING, _("Error releasing lockfile: %s"),
                      err->message);
           g_error_free (err);
         }

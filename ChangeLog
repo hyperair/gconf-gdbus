@@ -1,5 +1,11 @@
 2001-10-04  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconf-internals.c (gconf_release_lock): do wack-ass juju
+	to avoid .nfs23344534543 files appearing in the lock directory 
+	and causing warnings.
+
+2001-10-04  Havoc Pennington  <hp@redhat.com>
+
 	* backends/xml-dir.c (dir_fill_cache_from_doc): remove an 
 	extra warning
 
