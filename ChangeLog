@@ -1,3 +1,13 @@
+2005-04-04  Mark McLoughlin  <mark@skynet.ie>
+
+	Patch from Stepan Kasal  <kasal@ucw.cz>
+
+	* gconf-2.m4.in (AM_GCONF_SOURCE_2): Use "--enable-schemas-install",
+	not "--disable-schemas-install", in the error message; one has to
+	give "--enable-schemas-install=foo" to get here, the form
+	"--disable-schemas-install=*" is refused immediately by the init
+	code of the configure script.
+
 2005-03-30  Steve Murphy  <murf@e-tools.com>
 
         * configure.in: Added "rw" to ALL_LINGUAS.
