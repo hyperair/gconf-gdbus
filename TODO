@@ -102,3 +102,9 @@ Future
 
 * Use a real DTD and a nicer structure for the XML backend format
 
+* The design of the client-server architecture is horked, overcomplicating 
+  GConf.idl; the client should remember all its state (listeners, etc.), 
+  and when the server disappears (we lose the connection to it), the 
+  client resends its state; thus eliminating the saved state file 
+  and making things more robust.
+  

@@ -62,6 +62,12 @@ union ConfigValue switch (ConfigValueType) {
    BasicValueList pair_value;
 };
 
+struct ConfigStringProperty
+{
+  string key;
+  string value;
+};
+
 interface ConfigDatabase;
 
 interface ConfigListener {
@@ -223,6 +229,19 @@ interface ConfigDatabase2 : ConfigDatabase {
     raises (ConfigException);  
 };
 
+interface ConfigDatabase3 : ConfigDatabase2 {
+
+  typedef sequence<ConfigStringProperty> PropList;
+
+  unsigned long add_listener_with_properties (in string where,
+                                              in ConfigListener who,
+                                              in PropList properties)
+    raises (ConfigException); /* plain add_listener doesn't have this, sadly */
+  
+  void recursive_unset (in string key)
+    raises (ConfigException);
+};
+
 interface ConfigServer {
 
   ConfigDatabase get_default_database ();
@@ -238,3 +257,4 @@ interface ConfigServer {
 
   void shutdown();
 };
+

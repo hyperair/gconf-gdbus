@@ -38,7 +38,7 @@ struct _GConfDatabase
 {
   /* "inherit" from the servant,
      must be first in struct */
-  POA_ConfigDatabase2 servant;
+  POA_ConfigDatabase3 servant;
 
   ConfigDatabase objref;
   
@@ -59,12 +59,14 @@ void                gconf_database_drop_dead_listeners (GConfDatabase *db);
 
 CORBA_unsigned_long gconf_database_add_listener     (GConfDatabase       *db,
                                                      ConfigListener       who,
+                                                     const char          *name,
                                                      const gchar         *where);
 void                gconf_database_remove_listener  (GConfDatabase       *db,
                                                      CORBA_unsigned_long  cnxn);
 
 CORBA_unsigned_long gconf_database_readd_listener   (GConfDatabase       *db,
                                                      ConfigListener       who,
+                                                     const char          *name,
                                                      const gchar         *where);
 
 void                gconf_database_notify_listeners (GConfDatabase       *db,

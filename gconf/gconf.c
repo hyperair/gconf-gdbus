@@ -601,7 +601,10 @@ gconf_engine_notify_add(GConfEngine* conf,
   CORBA_Environment ev;
   GConfCnxn* cnxn;
   gint tries = 0;
-
+  ConfigDatabase3_PropList properties;
+#define NUM_PROPERTIES 1
+  ConfigStringProperty properties_buffer[1];
+  
   g_return_val_if_fail(!gconf_engine_is_local(conf), 0);
 
   CHECK_OWNER_USE (conf);
@@ -614,6 +617,16 @@ gconf_engine_notify_add(GConfEngine* conf,
 
       return 0;
     }
+
+  properties._buffer = properties_buffer;
+  properties._length = NUM_PROPERTIES;
+  properties._maximum = NUM_PROPERTIES;
+  properties._release = CORBA_FALSE; /* don't free static buffer */
+
+  properties._buffer[0].key = "name";
+  properties._buffer[0].value = g_get_prgname ();
+  if (properties._buffer[0].value == NULL)
+    properties._buffer[0].value = "unknown";
   
   CORBA_exception_init(&ev);
 
@@ -628,10 +641,24 @@ gconf_engine_notify_add(GConfEngine* conf,
   
   /* Should have aborted the program in this case probably */
   g_return_val_if_fail(cl != CORBA_OBJECT_NIL, 0);
-
-  id = ConfigDatabase_add_listener(db,
-                                   (gchar*)namespace_section, 
-                                   cl, &ev);
+  
+  id = ConfigDatabase3_add_listener_with_properties (db,
+                                                     (gchar*)namespace_section, 
+                                                     cl,
+                                                     &properties,
+                                                     &ev);
+  
+  if (ev._major == CORBA_SYSTEM_EXCEPTION &&
+      CORBA_exception_id (&ev) &&
+      strcmp (CORBA_exception_id (&ev), "IDL:CORBA/BAD_OPERATION:1.0") == 0)
+    {
+      CORBA_exception_free (&ev);
+      CORBA_exception_init (&ev);      
+  
+      id = ConfigDatabase_add_listener(db,
+                                       (gchar*)namespace_section, 
+                                       cl, &ev);
+    }
   
   if (gconf_server_broken(&ev))
     {

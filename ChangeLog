@@ -1,5 +1,19 @@
 2002-01-04  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-database.c: support storing names of clients
+	and new ConfigDatabase3
+	(client_alive_predicate): fix backward predicate; we were removing
+	all live clients, and keeping all dead clients. Doh! Doh! Doh!
+
+	* gconf/gconf.c (gconf_engine_notify_add): use
+	add_listener_with_properties if available to send name of client
+	to the server
+
+	* gconf/GConf.idl: put in ConfigDatabase3 with a couple of new
+	methods, just to make this file more horrible
+	
+2002-01-04  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconfd.c (main): if GCONF_DEBUG_OUTPUT is set, 
 	enable gconf_log_debug_messages
 

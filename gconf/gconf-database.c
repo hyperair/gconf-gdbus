@@ -58,10 +58,12 @@ typedef struct _Listener Listener;
 
 struct _Listener {
   ConfigListener obj;
+  char *name;
 };
 
-static Listener* listener_new(ConfigListener obj);
-static void      listener_destroy(Listener* l);
+static Listener* listener_new (ConfigListener obj,
+                               const char    *name);
+static void      listener_destroy (Listener* l);
 
 /*
  * CORBA implementation of ConfigDatabase
@@ -78,7 +80,7 @@ impl_ConfigDatabase_add_listener(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return 0;
   
-  return gconf_database_add_listener (db, who, where);
+  return gconf_database_add_listener (db, who, NULL, where);
 }
 
 static void
@@ -701,6 +703,43 @@ impl_ConfigDatabase2_all_entries_with_schema_name(PortableServer_Servant servant
   g_slist_free(pairs);
 }
 
+static CORBA_unsigned_long
+impl_ConfigDatabase3_add_listener_with_properties (PortableServer_Servant servant,
+                                                   const CORBA_char *where,
+                                                   const ConfigListener who,
+                                                   const ConfigDatabase3_PropList *properties,
+                                                   CORBA_Environment *ev)
+{
+  GConfDatabase *db = (GConfDatabase*) servant;
+  const char *name;
+  int i;
+  
+  if (gconfd_check_in_shutdown (ev))
+    return;
+
+  i = 0;
+  while (i < (int) properties->_length)
+    {
+      if (strcmp (properties->_buffer[i].key, "name") == 0)
+        name = properties->_buffer[i].value;
+
+      ++i;
+    }
+  
+  return gconf_database_add_listener (db, who, name, where);
+}
+
+static void
+impl_ConfigDatabase3_recursive_unset (PortableServer_Servant servant,
+                                      const CORBA_char *key,
+                                      CORBA_Environment *ev)
+{
+  if (gconfd_check_in_shutdown (ev))
+    return;
+
+  /* FIXME not implemented yet */
+}
+
 static PortableServer_ServantBase__epv base_epv = {
   NULL,
   NULL,
@@ -735,7 +774,13 @@ static POA_ConfigDatabase2__epv server2_epv = {
   impl_ConfigDatabase2_all_entries_with_schema_name
 };
 
-static POA_ConfigDatabase2__vepv poa_server_vepv = { &base_epv, &server_epv, &server2_epv };
+static POA_ConfigDatabase3__epv server3_epv = { 
+  NULL,
+  impl_ConfigDatabase3_add_listener_with_properties,
+  impl_ConfigDatabase3_recursive_unset
+};
+
+static POA_ConfigDatabase3__vepv poa_server_vepv = { &base_epv, &server_epv, &server2_epv, &server3_epv };
 
 static void gconf_database_really_sync(GConfDatabase* db);
 
@@ -753,16 +798,16 @@ gconf_database_new (GConfSources  *sources)
 
   CORBA_exception_init (&ev);
   
-  POA_ConfigDatabase2__init (&db->servant, &ev);
+  POA_ConfigDatabase3__init (&db->servant, &ev);
 
   objid =
-    PortableServer_POA_activate_object(gconf_get_poa (),
-                                       &db->servant,
-                                       &ev);
+    PortableServer_POA_activate_object (gconf_get_poa (),
+                                        &db->servant,
+                                        &ev);
   
-  db->objref = PortableServer_POA_servant_to_reference(gconf_get_poa (),
-                                                       &db->servant,
-                                                       &ev);
+  db->objref = PortableServer_POA_servant_to_reference (gconf_get_poa (),
+                                                        &db->servant,
+                                                        &ev);
   if (CORBA_Object_is_nil(db->objref, &ev))
     {
       gconf_log(GCL_ERR,
@@ -807,7 +852,7 @@ gconf_database_free (GConfDatabase *db)
 
   CORBA_exception_free (&ev);
   
-  POA_ConfigDatabase2__fini (&db->servant, &ev);
+  POA_ConfigDatabase3__fini (&db->servant, &ev);
 
   CORBA_free (oid);
 
@@ -870,9 +915,9 @@ client_alive_predicate (const gchar* location,
     }
 
   if (result)
-    gconf_log (GCL_DEBUG, "Dropping dead listener %u, appears to be nonexistent", cnxn_id);
+    gconf_log (GCL_DEBUG, "Dropping dead listener %s (%u), appears to be nonexistent", l->name, cnxn_id);
   
-  return !result; /* not nonexistent */
+  return result;
 }
 
 void
@@ -892,7 +937,8 @@ gconf_database_sync_idle (GConfDatabase* db)
   db->sync_idle = 0;
 
   /* could have been added before reaching the
-     idle */
+   * idle
+   */
   if (db->sync_timeout != 0)
     {
       g_source_remove (db->sync_timeout);
@@ -974,23 +1020,27 @@ gconf_database_schedule_sync(GConfDatabase* db)
 CORBA_unsigned_long
 gconf_database_readd_listener   (GConfDatabase       *db,
                                  ConfigListener       who,
+                                 const char          *name,
                                  const gchar         *where)
 {
   Listener* l;
   guint cnxn;
-
+  
   gconfd_need_log_cleanup ();
   
   g_assert(db->listeners != NULL);
 
   db->last_access = time(NULL);
   
-  l = listener_new(who);
+  l = listener_new (who, name);
 
   cnxn = gconf_listeners_add (db->listeners, where, l,
                               (GFreeFunc)listener_destroy);
 
-  gconf_log (GCL_DEBUG, "Added listener %u", cnxn);
+  if (l->name == NULL)
+    l->name = g_strdup_printf ("%u", cnxn);
+  
+  gconf_log (GCL_DEBUG, "Added listener %s (%u)", l->name, cnxn);
   
   return cnxn;
 }
@@ -998,14 +1048,15 @@ gconf_database_readd_listener   (GConfDatabase       *db,
 CORBA_unsigned_long
 gconf_database_add_listener    (GConfDatabase       *db,
                                 ConfigListener       who,
+                                const char          *name,
                                 const gchar         *where)
 {
   GError *err;
-  CORBA_unsigned_long cnxn;
-
+  CORBA_unsigned_long cnxn;  
+  
   gconfd_need_log_cleanup ();
   
-  cnxn = gconf_database_readd_listener (db, who, where);
+  cnxn = gconf_database_readd_listener (db, who, name, where);
   
   err = NULL;
   if (!gconfd_logfile_change_listener (db, TRUE, cnxn,
@@ -1015,7 +1066,7 @@ gconf_database_add_listener    (GConfDatabase       *db,
        * Because it's likely the right thing for the client
        * app to simply continue.
        */
-      gconf_log (GCL_WARNING, _("Failed to log addition of listener (%s); will not be able to restore this listener on gconfd restart, resulting in unreliable notification of configuration changes."), err->message);
+      gconf_log (GCL_WARNING, _("Failed to log addition of listener %s (%s); will not be able to restore this listener on gconfd restart, resulting in unreliable notification of configuration changes."), err->message);
       g_error_free (err);
     }
   
@@ -1046,6 +1097,11 @@ gconf_database_remove_listener (GConfDatabase       *db,
                  (gulong) cnxn);
       return;
     }
+  else
+    {
+      gconf_log (GCL_DEBUG, "Name of listener %u is %s",
+                 (guint) cnxn, l->name);
+    }
   
   err = NULL;
   if (!gconfd_logfile_change_listener (db, FALSE, cnxn,
@@ -1057,7 +1113,7 @@ gconf_database_remove_listener (GConfDatabase       *db,
     }
   
   /* calls destroy notify */
-  gconf_listeners_remove(db->listeners, cnxn);
+  gconf_listeners_remove (db->listeners, cnxn);
 }
 
 typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
@@ -1092,8 +1148,8 @@ notify_listeners_cb(GConfListeners* listeners,
   
   if(closure->ev._major != CORBA_NO_EXCEPTION) 
     {
-      gconf_log (GCL_DEBUG, "Failed to notify listener %u, removing: %s", 
-                 cnxn_id, CORBA_exception_id (&closure->ev));
+      gconf_log (GCL_DEBUG, "Failed to notify listener %s (%u), removing: %s", 
+                 l->name, cnxn_id, CORBA_exception_id (&closure->ev));
       CORBA_exception_free (&closure->ev);
       
       /* Dead listeners need to be forgotten */
@@ -1101,8 +1157,8 @@ notify_listeners_cb(GConfListeners* listeners,
     }
   else
     {
-      gconf_log (GCL_DEBUG, "Notified listener %u of change to key `%s'",
-                 cnxn_id, all_above_key);
+      gconf_log (GCL_DEBUG, "Notified listener %s (%u) of change to key `%s'",
+                 l->name, cnxn_id, all_above_key);
     }
 }
 
@@ -1509,6 +1565,9 @@ listener_save_foreach (const gchar* location,
   CORBA_Environment ev;
   gchar *ior;
   gchar *s;
+
+  gconf_log (GCL_DEBUG, "Saving listener %s (%u) to log file", l->name,
+             (guint) cnxn_id);
   
   s = g_strdup_printf ("ADD %u %s ", cnxn_id, fd->db_name);
 
@@ -1606,27 +1665,32 @@ gconfd_locale_cache_drop(void)
  */
 
 static Listener* 
-listener_new(ConfigListener obj)
+listener_new (ConfigListener obj,
+              const char    *name)
 {
   Listener* l;
   CORBA_Environment ev;
 
-  CORBA_exception_init(&ev);
+  CORBA_exception_init (&ev);
 
-  l = g_new0(Listener, 1);
+  l = g_new0 (Listener, 1);
 
-  l->obj = CORBA_Object_duplicate(obj, &ev);
-
+  l->obj = CORBA_Object_duplicate (obj, &ev);
+  l->name = g_strdup (name);
+  
   return l;
 }
 
 static void      
-listener_destroy(Listener* l)
-
+listener_destroy (Listener* l)
 {  
   CORBA_Environment ev;
 
-  CORBA_exception_init(&ev);
-  CORBA_Object_release(l->obj, &ev);
-  g_free(l);
+  CORBA_exception_init (&ev);
+  CORBA_Object_release (l->obj, &ev);
+  g_free (l->name);
+  g_free (l);
 }
+
+
+

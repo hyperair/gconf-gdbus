@@ -1721,11 +1721,11 @@ restore_listener (GConfDatabase* db,
                  "Failed to cancel previous daemon's listener in saved state file: %s",
                  err->message);
       g_error_free (err);
-    }  
+    }
+  
+  new_cnxn = gconf_database_readd_listener (db, cl, "from-saved-state", lle->location);
 
-  new_cnxn = gconf_database_readd_listener (db, cl, lle->location);
-
-  gconf_log (GCL_DEBUG, "Attempting to update listener from saved state file, old connection %u, new connectin %u", (guint) lle->connection_id, (guint) new_cnxn);
+  gconf_log (GCL_DEBUG, "Attempting to update listener from saved state file, old connection %u, new connection %u", (guint) lle->connection_id, (guint) new_cnxn);
   
   ConfigListener_update_listener (cl,
                                   db->objref,
@@ -2251,7 +2251,7 @@ drop_old_clients (void)
           
           if (ev._major != CORBA_NO_EXCEPTION)
             {
-              gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_exist3nt(), assuming stale listener");
+              gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_existent(), assuming stale listener");
               CORBA_exception_free (&ev);
               CORBA_exception_init (&ev);
               result = TRUE;
@@ -2259,7 +2259,7 @@ drop_old_clients (void)
 
           if (result)
             {
-              gconf_log (GCL_DEBUG, "removing stale listener in drop_old_clients");
+              gconf_log (GCL_DEBUG, "removing stale client in drop_old_clients");
               
               remove_client (cl);
             }
