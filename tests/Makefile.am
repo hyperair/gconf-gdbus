@@ -8,9 +8,9 @@ noinst_PROGRAMS=testgconf testlisteners
 
 testgconf_SOURCES=testgconf.c
 
-testgconf_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf-client.la  $(EFENCE)
+testgconf_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
 
 testlisteners_SOURCES=testlisteners.c
 
-testlisteners_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf-client.la  $(EFENCE)
+testlisteners_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
 

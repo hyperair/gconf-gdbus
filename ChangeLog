@@ -1,3 +1,15 @@
+1999-10-28  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c: Rework the sync code; now, any change queues a
+	sync in 1 minute. If a client calls suggest_sync(), we sync in an
+	idle (as soon as the event loop quiets down). Also, we now sync 
+	on shutdown.
+
+	* tests/testgconf.c: Fix to compile
+
+	* tests/Makefile.am (testgconf_LDADD): Fix Makefile.am to use new
+	library name
+
 1999-10-27  Havoc Pennington  <hp@pobox.com>
 
 	* configure.in: Add --enable-debug option to G_DISABLE_CHECKS as needed

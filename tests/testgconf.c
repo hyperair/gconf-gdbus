@@ -751,10 +751,10 @@ check_list_storage(GConfEngine* conf)
   GConfError* err = NULL;
   const gchar** keyp = NULL;
   guint i;
-  GConfValueType list_types[] = { GCONF_VALUE_INT, G_CONF_VALUE_INT,
-                                  GCONF_VALUE_STRING, G_CONF_VALUE_STRING,
-                                  GCONF_VALUE_FLOAT, G_CONF_VALUE_FLOAT,
-                                  GCONF_VALUE_BOOL, G_CONF_VALUE_BOOL };
+  GConfValueType list_types[] = { GCONF_VALUE_INT, GCONF_VALUE_INT,
+                                  GCONF_VALUE_STRING, GCONF_VALUE_STRING,
+                                  GCONF_VALUE_FLOAT, GCONF_VALUE_FLOAT,
+                                  GCONF_VALUE_BOOL, GCONF_VALUE_BOOL };
   GSList* lists[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
   const guint n_lists = sizeof(lists)/sizeof(lists[0]);
 

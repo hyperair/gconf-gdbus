@@ -113,6 +113,7 @@ struct _GConfContext {
                         */
   GTime last_access;
   guint sync_idle;
+  guint sync_timeout;
 };
 
 static GConfContext* context_new(GConfSources* sources);
@@ -1138,6 +1139,25 @@ static void      listener_destroy(Listener* l);
  * Contexts
  */
 
+static void
+context_really_sync(GConfContext* ctx)
+{
+  GConfError* error = NULL;
+  
+  if (!gconf_sources_sync_all(ctx->sources, &error))
+    {
+      g_return_if_fail(error != NULL);
+
+      gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
+                error->str);
+      gconf_error_destroy(error);
+    }
+  else
+    {
+      gconf_log(GCL_DEBUG, "Sync completed without errors");
+    }
+}
+
 static GConfContext*
 context_new(GConfSources* sources)
 {
@@ -1152,6 +1172,7 @@ context_new(GConfSources* sources)
   ctx->last_access = time(NULL);
 
   ctx->sync_idle = 0;
+  ctx->sync_timeout = 0;
   
   return ctx;
 }
@@ -1161,6 +1182,8 @@ context_destroy(GConfContext* ctx)
 {
   if (ctx->listeners != NULL)
     {
+      gboolean need_sync = FALSE;
+      
       g_assert(ctx->sources != NULL);
       g_assert(ctx->saved_address == NULL);
 
@@ -1168,7 +1191,18 @@ context_destroy(GConfContext* ctx)
         {
           g_source_remove(ctx->sync_idle);
           ctx->sync_idle = 0;
+          need_sync = TRUE;
         }
+
+      if (ctx->sync_timeout != 0)
+        {
+          g_source_remove(ctx->sync_timeout);
+          ctx->sync_timeout = 0;
+          need_sync = TRUE;
+        }
+
+      if (need_sync)
+        context_really_sync(ctx);
       
       gconf_listeners_destroy(ctx->listeners);
       gconf_sources_destroy(ctx->sources);
@@ -1177,6 +1211,7 @@ context_destroy(GConfContext* ctx)
     {
       g_assert(ctx->saved_address != NULL);
       g_assert(ctx->sync_idle == 0);
+      g_assert(ctx->sync_timeout == 0);
       
       g_free(ctx->saved_address);
     }
@@ -1190,6 +1225,7 @@ context_hibernate(GConfContext* ctx)
   g_return_if_fail(ctx->listeners != NULL);
   g_return_if_fail(gconf_listeners_count(ctx->listeners) == 0);
   g_return_if_fail(ctx->sync_idle == 0);
+  g_return_if_fail(ctx->sync_timeout == 0);
       
   gconf_listeners_destroy(ctx->listeners);
   ctx->listeners = NULL;
@@ -1220,6 +1256,74 @@ context_awaken(GConfContext* ctx, GConfError** err)
 
   ctx->saved_address = NULL;
 }
+
+
+static gint
+context_sync_idle(GConfContext* ctx)
+{
+  ctx->sync_idle = 0;
+
+  /* could have been added before reaching the
+     idle */
+  if (ctx->sync_timeout != 0)
+    {
+      g_source_remove(ctx->sync_timeout);
+      ctx->sync_timeout = 0;
+    }
+  
+  context_really_sync(ctx);
+  
+  /* Remove the idle function by returning FALSE */
+  return FALSE; 
+}
+
+static gint
+context_sync_timeout(GConfContext* ctx)
+{
+  ctx->sync_timeout = 0;
+  
+  /* Install the sync idle */
+  if (ctx->sync_idle == 0)
+    ctx->sync_idle = g_idle_add((GSourceFunc)context_sync_idle, ctx);
+
+  gconf_log(GCL_DEBUG, "Sync queued one minute after changes occurred");
+  
+  /* Remove the timeout function by returning FALSE */
+  return FALSE;
+}
+
+static void
+context_sync_nowish(GConfContext* ctx)
+{
+  /* Go ahead and sync as soon as the event loop quiets down */
+
+  /* remove the scheduled sync */
+  if (ctx->sync_timeout != 0)
+    {
+      g_source_remove(ctx->sync_timeout);
+      ctx->sync_timeout = 0;
+    }
+
+  /* Schedule immediate post-quietdown sync */
+  if (ctx->sync_idle == 0)
+    ctx->sync_idle = g_idle_add((GSourceFunc)context_sync_idle, ctx);
+}
+
+static void
+context_schedule_sync(GConfContext* ctx)
+{
+  /* Plan to sync within a minute or so */
+  if (ctx->sync_idle != 0)
+    return;
+  else if (ctx->sync_timeout != 0)
+    return;
+  else
+    {
+      /* 1 minute timeout */
+      ctx->sync_timeout = g_timeout_add(60000, (GSourceFunc)context_sync_timeout, ctx);
+    }
+}
+
 
 static CORBA_unsigned_long
 context_add_listener(GConfContext* ctx,
@@ -1362,7 +1466,10 @@ context_set(GConfContext* ctx,
                  key, (*err)->str);
     }
   else
-    context_notify_listeners(ctx, key, value);
+    {
+      context_schedule_sync(ctx);
+      context_notify_listeners(ctx, key, value);
+    }
 }
 
 static void
@@ -1390,6 +1497,7 @@ context_unset(GConfContext* ctx,
     {
       val = invalid_corba_value();
 
+      context_schedule_sync(ctx);
       context_notify_listeners(ctx, key, val);
       
       CORBA_free(val);
@@ -1440,6 +1548,10 @@ context_remove_dir(GConfContext* ctx,
     {
       gconf_log(GCL_ERR, _("Error removing dir `%s': %s"),
                  dir, (*err)->str);
+    }
+  else
+    {
+      context_schedule_sync(ctx);
     }
 }
 
@@ -1505,25 +1617,10 @@ context_set_schema(GConfContext* ctx, const gchar* key,
       gconf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
                 key, (*err)->str);
     }
-}
-
-static gint
-context_sync_idle(GConfContext* ctx)
-{
-  GConfError* error = NULL;
-
-  ctx->sync_idle = 0;
-  
-  if (!gconf_sources_sync_all(ctx->sources, &error))
+  else
     {
-      g_return_val_if_fail(error != NULL, FALSE);
-
-      gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
-                error->str);
+      context_schedule_sync(ctx);
     }
-  
-  /* Remove the idle function by returning FALSE */
-  return FALSE; 
 }
 
 static void
@@ -1535,8 +1632,7 @@ context_sync(GConfContext* ctx, GConfError** err)
   
   gconf_log(GCL_DEBUG, "Received suggestion to sync all config data");
 
-  if (ctx->sync_idle != 0)
-    ctx->sync_idle = g_idle_add((GSourceFunc)context_sync_idle, ctx);
+  context_sync_nowish(ctx);
 }
 
 /*
