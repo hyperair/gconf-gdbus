@@ -341,8 +341,8 @@ create_main_window (GConfClient *client)
  */
 
 /* Commit changes to the GConf database. */
-static void
-config_entry_commit (GtkWidget *entry)
+static gboolean
+config_entry_commit (GtkWidget *entry, GdkEvent *event, gpointer callback_data)
 {
   gchar *text;
   const gchar *key;
@@ -361,6 +361,8 @@ config_entry_commit (GtkWidget *entry)
     gconf_client_unset (client, key, NULL);
   
   g_free (text);
+
+  return FALSE;
 }
 
 /* Create an entry used to edit the given config key */
