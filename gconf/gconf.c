@@ -3467,7 +3467,7 @@ gconf_string_to_enum (GConfEnumStringPair lookup_table[],
   
   while (lookup_table[i].str != NULL)
     {
-      if (g_strcasecmp(lookup_table[i].str, str) == 0)
+      if (g_ascii_strcasecmp (lookup_table[i].str, str) == 0)
         {
           *enum_value_retloc = lookup_table[i].enum_value;
           return TRUE;

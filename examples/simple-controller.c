@@ -63,9 +63,9 @@ main(int argc, char** argv)
                        NULL);
 
 
-  gtk_signal_connect(GTK_OBJECT(entry), "activate",
-                     GTK_SIGNAL_FUNC(entry_activated_callback),
-                     client);
+  g_signal_connect (G_OBJECT (entry), "activate",
+                    G_CALLBACK (entry_activated_callback),
+                    client);
 
   /* If key isn't writable, then set insensitive */
   gtk_widget_set_sensitive (entry,

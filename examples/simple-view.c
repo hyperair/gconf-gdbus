@@ -35,18 +35,18 @@ key_changed_callback(GConfClient* client,
 
   if (entry->value == NULL)
     {
-      gtk_label_set(GTK_LABEL(label), "<unset>");
+      gtk_label_set_text (GTK_LABEL (label), "<unset>");
     }
   else
     {
       if (entry->value->type == GCONF_VALUE_STRING)
         {
-          gtk_label_set(GTK_LABEL(label),
-                        gconf_value_get_string(entry->value));
+          gtk_label_set_text (GTK_LABEL (label),
+                              gconf_value_get_string (entry->value));
         }
       else
         {
-          gtk_label_set(GTK_LABEL(label), "<wrong type>");
+          gtk_label_set_text (GTK_LABEL (label), "<wrong type>");
         }
     }
 }

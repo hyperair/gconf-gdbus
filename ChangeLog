@@ -1,3 +1,14 @@
+2002-02-14  Dave Camp  <dave@ximian.com>
+
+	* gconf/gconf.c: (gconf_string_to_enum): Use g_ascii_strcasecmp
+	instead of g_strcasecmp.
+	* gconf/gconfd.c: (gconf_main), (gconf_main_quit): Replace
+	g_main_* with g_main_loop_*.
+	* examples/simple-controller.c: (main): Use g_signal_connect
+	instead of gtk_signal_connect.
+	* examples/simple-view.c: (key_changed_callback): Use
+	gtk_label_set_text instead of gtk_label_set.
+
 2002-02-12  Havoc Pennington  <hp@pobox.com>
 
 	* configure.in: version 1.1.8

@@ -724,7 +724,7 @@ gconf_main(void)
 {
   GMainLoop* loop;
 
-  loop = g_main_new(TRUE);
+  loop = g_main_loop_new (NULL, TRUE);
 
   if (main_loops == NULL)
     {
@@ -743,7 +743,7 @@ gconf_main(void)
   
   main_loops = g_slist_prepend(main_loops, loop);
 
-  g_main_run(loop);
+  g_main_loop_run (loop);
 
   main_loops = g_slist_remove(main_loops, loop);
 
@@ -754,7 +754,7 @@ gconf_main(void)
       timeout_id = 0;
     }
   
-  g_main_destroy(loop);
+  g_main_loop_unref (loop);
 }
 
 static void 
@@ -762,7 +762,7 @@ gconf_main_quit(void)
 {
   g_return_if_fail(main_loops != NULL);
 
-  g_main_quit(main_loops->data);
+  g_main_loop_quit (main_loops->data);
 }
 
 static gboolean
