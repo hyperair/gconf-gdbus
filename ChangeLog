@@ -1,5 +1,12 @@
 2000-09-29  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf.c (drop_all_caches): don't spew warnings here for
+	now.
+	(invalidate_cached_values): no spew
+	(update_listener): remove more spew
+
+2000-09-29  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf.c (ctable_reinstall): we were overwriting the hash
 	key before trying to remove the old server ID from the hash, so
 	the removal failed, leading to an assertion failure later (this

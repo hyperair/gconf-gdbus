@@ -1892,10 +1892,10 @@ static void
 update_listener (PortableServer_Servant _servant,
                  ConfigDatabase             db,
                  const CORBA_char          *address,
-                 const CORBA_unsigned_long old_cnxn_id,
-                 const CORBA_char * key,
-                 const CORBA_unsigned_long new_cnxn_id,
-                 CORBA_Environment * ev_ignored)
+                 const CORBA_unsigned_long  old_cnxn_id,
+                 const CORBA_char          *key,
+                 const CORBA_unsigned_long  new_cnxn_id,
+                 CORBA_Environment         *ev_ignored)
 {
   GConfCnxn* cnxn;
   GConfEngine* conf;
@@ -1922,7 +1922,8 @@ update_listener (PortableServer_Servant _servant,
   if (conf == NULL)
     {
 #ifdef GCONF_ENABLE_DEBUG
-      g_warning("Client received listener update for unknown database");
+      g_warning("Client received listener update for unknown database "
+                "(this is not a big deal, this warning only appears if GConf is compiled with debugging)");
 #endif
       return;
     }
@@ -1932,7 +1933,8 @@ update_listener (PortableServer_Servant _servant,
   if (cnxn == NULL)
     {
 #ifdef GCONF_ENABLE_DEBUG
-      g_warning("Client received listener update for unknown listener ID %u",
+      g_warning("Client received listener update for unknown listener ID %u "
+                "(this is not a big deal, this warning only appears if GConf is compiled with debugging)",
                 (guint)old_cnxn_id);
 #endif
       return;
@@ -1947,14 +1949,18 @@ invalidate_cached_values (PortableServer_Servant     _servant,
                           const ConfigListener_KeyList *keys,
                           CORBA_Environment         *ev)
 {
+#if 0
   g_warning ("FIXME process %d received request to invalidate some cached GConf values from the server, but right now we don't know how to do that (not implemented).", (int) getpid());
+#endif
 }
 
 static void
 drop_all_caches (PortableServer_Servant     _servant,
                  CORBA_Environment         *ev)
 {
+#if 0
   g_warning ("FIXME process %d received request to invalidate all cached GConf values from the server, but right now we don't know how to do that (not implemented).", (int) getpid());
+#endif
 }
 
 static ConfigListener 
@@ -2359,9 +2365,10 @@ ctable_reinstall (CnxnTable* ct,
 {
   g_return_if_fail (cnxn->server_id == old_server_id);
 
+  g_hash_table_remove (ct->server_ids, &old_server_id);
+  
   cnxn->server_id = new_server_id;
 
-  g_hash_table_remove (ct->server_ids, &old_server_id);
   g_hash_table_insert (ct->server_ids, &cnxn->server_id, cnxn);
 }
 
