@@ -168,7 +168,6 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
       break;
     case GCONF_VALUE_LIST:
     case GCONF_VALUE_PAIR:
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
     default:
       g_assert_not_reached();
       break;
@@ -323,9 +322,6 @@ gconf_value_to_string(GConfValue* value)
                                  type, locale ? locale : "(null)");
       }
       break;
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
-      retval = g_strdup("Ignore Subsequent");
-      break;
     default:
       g_assert_not_reached();
       break;
@@ -402,9 +398,6 @@ gconf_value_copy(GConfValue* src)
       else
         dest->d.pair_data.cdr = NULL;
 
-      break;
-
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
       break;
       
     default:

@@ -59,7 +59,7 @@ main(int argc, char** argv)
 }
 
 static void
-entry_notify_func(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data)
+entry_notify_func(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data)
 {
   GtkWidget* entry = user_data;
   

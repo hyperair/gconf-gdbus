@@ -20,7 +20,7 @@
 #ifndef GCONF_GCONF_CHANGESET_H
 #define GCONF_GCONF_CHANGESET_H
 
-#include "gconf.h"
+#include <gconf/gconf.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -1,5 +1,80 @@
 1999-12-02  Havoc Pennington  <hp@pobox.com>
 
+	* examples/basic-gconf-app.c (create_configurable_widget): use
+	gconf_client_get_string() instead of gconf_client_get()
+	(update_entry): Check for the default value if we have an unset
+	value in the change set.	
+
+	* wrappers/gtk/gconf-client.c
+	(gconf_client_create_change_set_from_currentv): use without_default
+	(revert_foreach): use without_default
+
+	* gconf/gconf-changeset.c (gconf_create_change_set_from_currentv):
+	use gconf_get_without_default()
+	(revert_foreach): use gconf_get_without_default()
+
+	* wrappers/gtk/testgconfclient.c (entry_notify_func): fix to compile
+
+	* examples/basic-gconf-app.c (configurable_widget_config_notify):
+	fix to compile
+
+	* wrappers/gtk/gconf-client.c
+	(gconf_client_get_default_from_schema): New function
+
+	* gconf/gconf.c (gconf_get_without_default): renamed from
+	gconf_get_no_default(), so that gconf_get_default_from_schema()
+	won't be as confusing maybe.
+	(gconf_get_default_from_schema): new function to read the default
+	setting in the schema
+
+	* backends/xml-backend.c (xentry_extract_value): remove ignore_subsequent
+	(xentry_set_value): ditto
+
+	* gconf/gconf-sources.c (gconf_sources_query_value): Remove ignore
+	subsequent
+
+	* gconf/gconf-value.c (gconf_value_new_from_string): remove
+	ignore_subsequent
+	(gconf_value_to_string): remove ignore_subsequent
+	(gconf_value_copy): Remove ignore_subsequent
+
+	* gconf/gconfd.c (context_unset): add is_default to notification
+	(context_set): add is_default to notification
+
+	* gconf/gconf-internals.c (gconf_value_type_to_string): Remove
+	ignore_subsequent. 
+
+	* gconf/gconf.c (gconf_cnxn_notify): add is_default
+	(notify) add is_default
+
+	* gconf/gconf-value.h: Remove GCONF_VALUE_IGNORE_SUBSEQUENT
+
+	* gconf/gconf-sources.c (gconf_sources_unset_value): don't do that
+	weird IGNORE_SUBSEQUENT goo
+
+	* wrappers/gtk/Makefile.am (INCLUDES): add top_builddir to include
+	search to get the built sources
+
+	* gconf/gconf-engine.h: fix includes
+
+	* gconf/gconf-changeset.h: fix includes
+
+	* gconf/Makefile.am (gconfd_SOURCES): add gconf-sources.h here
+	instead of installing it.
+
+	* wrappers/gtk/Makefile.am (INCLUDES): remove -I$(top_builddir)/gconf
+
+	* wrappers/gtk/gconf-client.c (gconf_client_get_full): Add this,
+	etc.
+
+	* gconf/gconf-sources.c (gconf_sources_query_value): Set a flag
+	indicating whether the retrieved value was the default or not.
+
+	* gconf/GConf.idl: add value_is_default out flag to
+	lookup_with_locale()
+
+1999-12-02  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-error.c: Was missing an element in the err_msgs
 	array and the array had the wrong size.
 	

@@ -74,6 +74,7 @@ GConfValue*   gconf_sources_query_value (GConfSources* sources,
                                          const gchar* key,
                                          const gchar** locales,
                                          gboolean use_schema_default,
+                                         gboolean* value_is_default,
                                          GConfError** err);
 
 void          gconf_sources_set_value   (GConfSources* sources,
@@ -110,6 +111,10 @@ void          gconf_sources_set_schema  (GConfSources* sources,
 
 gboolean      gconf_sources_sync_all    (GConfSources* sources,
                                          GConfError** err);
+
+GConfMetaInfo*gconf_sources_query_metainfo (GConfSources* sources,
+                                            const gchar* key,
+                                            GConfError** err);
 
 #endif
 

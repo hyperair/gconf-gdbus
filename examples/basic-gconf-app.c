@@ -122,6 +122,7 @@ configurable_widget_config_notify(GConfClient* client,
                                   guint cnxn_id,
                                   const gchar* key,
                                   GConfValue* value,
+                                  gboolean is_default,
                                   gpointer user_data)
 {
   GtkWidget* label = user_data;
@@ -152,8 +153,8 @@ create_configurable_widget(GConfClient* client, const gchar* config_key)
 {
   GtkWidget* frame;
   GtkWidget* label;
-  GConfValue* initial;
   guint notify_id;
+  gchar* str;
   
   frame = gtk_frame_new(config_key);
 
@@ -161,12 +162,12 @@ create_configurable_widget(GConfClient* client, const gchar* config_key)
 
   gtk_container_add(GTK_CONTAINER(frame), label);
   
-  initial = gconf_client_get(client, config_key, NULL);
+  str = gconf_client_get_string(client, config_key, NULL);
 
-  if (initial != NULL && initial->type == GCONF_VALUE_STRING)
+  if (str != NULL)
     {
-      const gchar* str = gconf_value_string(initial);
       gtk_label_set_text(GTK_LABEL(label), str);
+      g_free(str);
     }
 
   notify_id = gconf_client_notify_add(client,
@@ -360,6 +361,9 @@ static void
 update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
 {
   GConfValue* value = NULL;
+  GConfClient* client;
+
+  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
   
   if (gconf_change_set_check_value(cs, config_key,
                                    &value))
@@ -372,7 +376,27 @@ update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
       
       if (value == NULL)
         {
-          gtk_entry_set_text(GTK_ENTRY(entry), "");
+          /* We need to check for a default value,
+             since the revert set will unset the user setting */
+          GConfValue* def;
+
+          def = gconf_client_get_default_from_schema(client,
+                                                   config_key,
+                                                   NULL);
+
+          if (def)
+            {
+              if (def->type == GCONF_VALUE_STRING)
+                {
+                  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(def));
+                }
+              else
+                g_warning("Wrong type for default value of %s", config_key);
+
+              gconf_value_destroy(def);
+            }
+          else
+            gtk_entry_set_text(GTK_ENTRY(entry), "");
         }
       else if (value->type == GCONF_VALUE_STRING)
         {

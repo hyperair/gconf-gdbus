@@ -26,13 +26,13 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include "gconf-schema.h"
-#include "gconf-engine.h"
-#include "gconf-error.h"
-  
+#include <gconf/gconf-schema.h>
+#include <gconf/gconf-engine.h>
+#include <gconf/gconf-error.h>
+
 gboolean     gconf_is_initialized  (void);
 
-typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
+typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data);
   
 /* Returns ID of the notification */
 /* returns 0 on error, 0 is an invalid ID */
@@ -49,15 +49,28 @@ void         gconf_notify_remove  (GConfEngine* conf,
 /* Low-level interfaces */
 GConfValue*  gconf_get            (GConfEngine* conf, const gchar* key, GConfError** err);
 
-GConfValue*  gconf_get_no_default (GConfEngine* conf,
-                                   const gchar* key,
+GConfValue*  gconf_get_without_default (GConfEngine* conf,
+                                        const gchar* key,
+                                        GConfError** err);
+
+GConfValue*  gconf_get_full       (GConfEngine* conf,
+                                   const gchar* key, const gchar* locale,
+                                   gboolean use_schema_default,
+                                   gboolean* value_is_default,
                                    GConfError** err);
 
 /* Locale only matters if you are expecting to get a schema, or if you
    don't know what you are expecting and it might be a schema. Note
    that gconf_get() automatically uses the current locale, which is
    normally what you want. */
-GConfValue*  gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale, GConfError** err);
+GConfValue*  gconf_get_with_locale(GConfEngine* conf,
+                                   const gchar* key, const gchar* locale,
+                                   GConfError** err);
+
+/* Get the default value stored in the schema associated with this key */
+GConfValue*  gconf_get_default_from_schema (GConfEngine* conf,
+                                            const gchar* key,
+                                            GConfError** err);
 
 gboolean     gconf_set            (GConfEngine* conf, const gchar* key,
                                    GConfValue* value, GConfError** err);

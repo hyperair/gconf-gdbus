@@ -21,7 +21,7 @@
 #define GCONF_GCONF_ENGINE_H
 
 #include <glib.h>
-#include "gconf-error.h"
+#include <gconf/gconf-error.h>
 
 #ifdef __cplusplus
 extern "C" {

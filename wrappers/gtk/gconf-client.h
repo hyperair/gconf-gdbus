@@ -74,7 +74,7 @@ typedef struct _GConfClient       GConfClient;
 typedef struct _GConfClientClass  GConfClientClass;
 
 
-typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
+typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data);
 
 /*
  * Return the parent window error dialogs should be associated with, or NULL for
@@ -234,6 +234,21 @@ void              gconf_client_set             (GConfClient* client,
 GConfValue*       gconf_client_get             (GConfClient* client,
                                                 const gchar* key,
                                                 GConfError** err);
+
+GConfValue*       gconf_client_get_without_default  (GConfClient* client,
+                                                     const gchar* key,
+                                                     GConfError** err);
+
+/* Try not to use this function, it makes me nervous. */
+GConfValue*       gconf_client_get_full        (GConfClient* client,
+                                                const gchar* key, const gchar* locale,
+                                                gboolean use_schema_default,
+                                                gboolean* value_is_default,
+                                                GConfError** err);
+
+GConfValue*       gconf_client_get_default_from_schema (GConfClient* client,
+                                                        const gchar* key,
+                                                        GConfError** err);
 
 gboolean     gconf_client_unset          (GConfClient* client,
                                           const gchar* key, GConfError** err);

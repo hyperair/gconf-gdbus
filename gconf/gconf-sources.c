@@ -130,6 +130,27 @@ gconf_source_query_value      (GConfSource* source,
     return NULL;
 }
 
+static GConfMetaInfo*
+gconf_source_query_metainfo      (GConfSource* source,
+                                  const gchar* key,
+                                  GConfError** err)
+{
+  g_return_val_if_fail(source != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  /* note that key validity is unchecked */
+
+  if ( SOURCE_READABLE(source, key, err) )
+    {
+      g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+      return (*source->backend->vtable->query_metainfo)(source, key, err);
+    }
+  else
+    return NULL;
+}
+
+
 /* return value indicates whether the key was writeable */
 static gboolean
 gconf_source_set_value        (GConfSource* source,
@@ -344,6 +365,7 @@ gconf_sources_query_value (GConfSources* sources,
                            const gchar* key,
                            const gchar** locales,
                            gboolean use_schema_default,
+                           gboolean* value_is_default,
                            GConfError** err)
 {
   GList* tmp;
@@ -353,9 +375,12 @@ gconf_sources_query_value (GConfSources* sources,
   g_return_val_if_fail(sources != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   g_return_val_if_fail((err == NULL) || (*err == NULL), NULL);
-
+  
   if (!gconf_key_check(key, err))
     return NULL;
+
+  if (value_is_default)
+    *value_is_default = FALSE;
   
   tmp = sources->sources;
 
@@ -395,12 +420,6 @@ gconf_sources_query_value (GConfSources* sources,
         {
           ; /* keep going, try more sources */
         }
-      else if (val->type == GCONF_VALUE_IGNORE_SUBSEQUENT)
-        {
-          /* Bail now, instead of looking for the standard values */
-          gconf_value_destroy(val);
-          return NULL;
-        }
       else
         return val;
 
@@ -413,13 +432,24 @@ gconf_sources_query_value (GConfSources* sources,
      schema for this key if we have one, and use the default
      value.
   */
-
+  
   if (schema_name != NULL)
     {
       GConfValue* val;
 
+      /* Note that if the value isn't found, then it's always the default
+         value - even if there is no default value, NULL is the default.
+         This makes things more sane (I think) because is_default
+         basically means "was set by user" - however we also want to say
+         that if use_schema_default is FALSE then value_is_default will be FALSE
+         so we put this inside the schema_name != NULL conditional
+      */
+      if (value_is_default)
+        *value_is_default = TRUE;
+      
       /* We do look for a schema describing the schema, just for funnies */
-      val = gconf_sources_query_value(sources, schema_name, locales, TRUE, &error);
+      val = gconf_sources_query_value(sources, schema_name, locales,
+                                      TRUE, NULL, &error);
 
       if (error != NULL)
         {
@@ -447,7 +477,7 @@ gconf_sources_query_value (GConfSources* sources,
           gconf_value_schema(val)->default_value = NULL;
           gconf_value_destroy(val);
 
-          g_free(schema_name);      
+          g_free(schema_name);
           
           return retval;
         }
@@ -528,7 +558,6 @@ gconf_sources_unset_value   (GConfSources* sources,
 {
   /* We unset in every layer we can write to... */
   GList* tmp;
-  gboolean first_writeable_reached = FALSE;
   GConfError* error = NULL;
   
   tmp = sources->sources;
@@ -556,23 +585,6 @@ gconf_sources_unset_value   (GConfSources* sources,
                   return;
                 }
             }
-          
-          if (!first_writeable_reached)
-            {
-              /* this is the first writeable layer */
-              /* FIXME set an IGNORE_SUBSEQUENT value if a read-only
-                 source below us has set the value. */
-              
-              first_writeable_reached = TRUE;
-            }
-        }
-      else
-        {
-          /* a non-writeable source; if the key is set and we haven't
-             yet reached a writeable source, we need to throw an
-             error. */
-
-          /* FIXME */
         }
       
       tmp = g_list_next(tmp);
@@ -954,4 +966,69 @@ gconf_sources_sync_all    (GConfSources* sources, GConfError** err)
     }
   
   return !failed;
+}
+
+GConfMetaInfo*
+gconf_sources_query_metainfo (GConfSources* sources,
+                              const gchar* key,
+                              GConfError** err)
+{
+  GList* tmp;
+  GConfMetaInfo* mi = NULL;
+  
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+      GConfError* error = NULL;
+      GConfMetaInfo* this_mi;
+
+      this_mi = gconf_source_query_metainfo(src, key, &error);
+      
+      /* On error, just keep going, log the error maybe. */
+      if (error != NULL)
+        {
+          g_assert(this_mi == NULL);
+          gconf_log(GCL_ERR, _("Error finding metainfo: %s"), error->str);
+          gconf_error_destroy(error);
+          error = NULL;
+        }
+
+      if (this_mi != NULL)
+        {
+          if (mi == NULL)
+            mi = this_mi;
+          else
+            {
+              /* Fill in any missing fields of "mi" found in "this_mi",
+                 and pick the most recent mod time */
+              if (gconf_meta_info_schema(mi) == NULL &&
+                  gconf_meta_info_schema(this_mi) != NULL)
+                {
+                  gconf_meta_info_set_schema(mi,
+                                             gconf_meta_info_schema(mi));
+                }
+
+              if (gconf_meta_info_mod_user(mi) == NULL &&
+                  gconf_meta_info_mod_user(this_mi) != NULL)
+                {
+                  gconf_meta_info_set_mod_user(mi,
+                                               gconf_meta_info_mod_user(this_mi));
+                }
+              
+              if (gconf_meta_info_mod_time(mi) < gconf_meta_info_mod_time(this_mi))
+                {
+                  gconf_meta_info_set_mod_time(mi,
+                                               gconf_meta_info_mod_time(this_mi));
+                }
+
+              gconf_meta_info_destroy(this_mi);
+            }
+        }
+      
+      tmp = g_list_next(tmp);
+    }
+
+  return mi;
 }

@@ -62,7 +62,8 @@ union ConfigValue switch (ConfigValueType) {
 interface ConfigListener {
   oneway void notify (in unsigned long server_context, // ConfigServer::Context
                       in unsigned long cnxn,
-                      in string key, in ConfigValue value);
+                      in string key, in ConfigValue value,
+                      in boolean is_default);
 
 };
 
@@ -105,7 +106,14 @@ interface ConfigServer {
 
   // separate from lookup for efficiency
   ConfigValue lookup_with_locale(in Context ctx, in string key,
-                                 in string locale, in boolean use_schema_default)
+                                 in string locale, in boolean use_schema_default,
+                                 out boolean value_is_default)
+    raises (ConfigException);
+
+  // syntactic sugar, semi-hack: should maybe use a get_metainfo()
+  // function (which we should have anyway)
+  ConfigValue lookup_default_value(in Context ctx, in string key,
+                                   in string locale)
     raises (ConfigException);
   
   void set(in Context ctx, in string key, in ConfigValue value)

@@ -567,9 +567,6 @@ gconf_value_type_to_string(GConfValueType type)
     case GCONF_VALUE_PAIR:
       return "pair";
       break;
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
-      return "ignore_subseq";
-      break;
     case GCONF_VALUE_INVALID:
       return "*invalid*";
       break;
@@ -597,8 +594,6 @@ gconf_value_type_from_string(const gchar* type_str)
     return GCONF_VALUE_LIST;
   else if (strcmp(type_str, "pair") == 0)
     return GCONF_VALUE_PAIR;
-  else if (strcmp(type_str, "ignore_subseq") == 0)
-    return GCONF_VALUE_IGNORE_SUBSEQUENT;
   else
     return GCONF_VALUE_INVALID;
 }

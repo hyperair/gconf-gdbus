@@ -32,6 +32,7 @@
 #include "gconf-sources.h"
 #include "gconf-listeners.h"
 #include "gconf-locale.h"
+#include "gconf-schema.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -134,7 +135,13 @@ static GConfValue*   context_query_value(GConfContext* ctx,
                                          const gchar* key,
                                          const gchar** locales,
                                          gboolean use_schema_default,
+                                         gboolean* value_is_default,
                                          GConfError** err);
+
+static GConfValue*   context_query_default_value(GConfContext* ctx,
+                                                 const gchar* key,
+                                                 const gchar** locales,
+                                                 GConfError** err);
 
 static void          context_set(GConfContext* ctx, const gchar* key,
                                  GConfValue* value, ConfigValue* cvalue,
@@ -197,7 +204,15 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
                           CORBA_char * key,
                           CORBA_char * locale,
                           CORBA_boolean use_schema_default,
+                          CORBA_boolean * is_default,
                           CORBA_Environment *ev);
+
+static ConfigValue* 
+gconfd_lookup_default_value(PortableServer_Servant servant,
+                            ConfigServer_Context ctx,
+                            CORBA_char * key,
+                            CORBA_char * locale,
+                            CORBA_Environment *ev);
 
 static void
 gconfd_set(PortableServer_Servant servant, ConfigServer_Context ctx,
@@ -272,7 +287,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_add_listener, 
   gconfd_remove_listener, 
   gconfd_lookup,
-  gconfd_lookup_with_locale, 
+  gconfd_lookup_with_locale,
+  gconfd_lookup_default_value,
   gconfd_set,
   gconfd_unset,
   gconfd_unset_with_locale,
@@ -370,7 +386,7 @@ gconfd_lookup(PortableServer_Servant servant,
               CORBA_Environment *ev)
 {
   /* CORBA_char* normally can't be NULL but we cheat here */
-  return gconfd_lookup_with_locale(servant, ctx, key, NULL, TRUE, ev);
+  return gconfd_lookup_with_locale(servant, ctx, key, NULL, TRUE, NULL, ev);
 }
 
 static ConfigValue* 
@@ -378,7 +394,53 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
                           CORBA_char * key,
                           CORBA_char * locale,
                           CORBA_boolean use_schema_default,
+                          CORBA_boolean * value_is_default,
                           CORBA_Environment *ev)
+{
+  GConfValue* val;
+  GConfContext* gcc;
+  GConfError* error = NULL;
+  GConfLocaleList* locale_list;
+  gboolean is_default = FALSE;
+  
+  gcc = lookup_context(ctx, &error);
+
+  if (gconf_set_exception(&error, ev))
+    return invalid_corba_value();
+
+  locale_list = locale_cache_lookup(locale);
+  
+  val = context_query_value(gcc, key, locale_list->list,
+                            use_schema_default, &is_default, &error);
+
+  *value_is_default = is_default;
+  
+  gconf_locale_list_unref(locale_list);
+  
+  if (val != NULL)
+    {
+      ConfigValue* cval = corba_value_from_gconf_value(val);
+
+      gconf_value_destroy(val);
+
+      g_return_val_if_fail(error == NULL, cval);
+      
+      return cval;
+    }
+  else
+    {
+      gconf_set_exception(&error, ev);
+
+      return invalid_corba_value();
+    }
+}
+
+static ConfigValue* 
+gconfd_lookup_default_value(PortableServer_Servant servant,
+                            ConfigServer_Context ctx,
+                            CORBA_char * key,
+                            CORBA_char * locale,
+                            CORBA_Environment *ev)
 {
   GConfValue* val;
   GConfContext* gcc;
@@ -392,8 +454,8 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
 
   locale_list = locale_cache_lookup(locale);
   
-  val = context_query_value(gcc, key, locale_list->list,
-                            use_schema_default, &error);
+  val = context_query_default_value(gcc, key, locale_list->list,
+                                    &error);
 
   gconf_locale_list_unref(locale_list);
   
@@ -847,7 +909,6 @@ main(int argc, char** argv)
   gchar* logname;
   const gchar* username;
   guint len;
-  GConfError* err = NULL;
   
   chdir ("/");
 
@@ -1233,6 +1294,7 @@ typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
 struct _ListenerNotifyClosure {
   ConfigServer_Context context;
   ConfigValue* value;
+  gboolean is_default;
   GSList* dead;
   CORBA_Environment ev;
 };
@@ -1251,6 +1313,7 @@ notify_listeners_cb(GConfListeners* listeners,
   
   ConfigListener_notify(l->obj, closure->context, cnxn_id, 
                         (gchar*)all_above_key, closure->value,
+                        closure->is_default,
                         &closure->ev);
   
   if(closure->ev._major != CORBA_NO_EXCEPTION) 
@@ -1271,7 +1334,8 @@ notify_listeners_cb(GConfListeners* listeners,
 
 static void
 context_notify_listeners(GConfContext* ctx,
-                         const gchar* key, ConfigValue* value)
+                         const gchar* key, ConfigValue* value,
+                         gboolean is_default)
 {
   ListenerNotifyClosure closure;
   GSList* tmp;
@@ -1280,6 +1344,7 @@ context_notify_listeners(GConfContext* ctx,
   g_return_if_fail(ctx->context != ConfigServer_invalid_context);
   
   closure.value = value;
+  closure.is_default = is_default;
   closure.dead = NULL;
   closure.context = ctx->context;
   
@@ -1305,6 +1370,7 @@ context_query_value(GConfContext* ctx,
                     const gchar* key,
                     const gchar** locales,
                     gboolean use_schema_default,
+                    gboolean* value_is_default,
                     GConfError** err)
 {
   GConfValue* val;
@@ -1315,7 +1381,8 @@ context_query_value(GConfContext* ctx,
   ctx->last_access = time(NULL);
   
   val = gconf_sources_query_value(ctx->sources, key, locales,
-                                  use_schema_default, err);
+                                  use_schema_default,
+                                  value_is_default, err);
 
   if (err && *err != NULL)
     {
@@ -1325,6 +1392,78 @@ context_query_value(GConfContext* ctx,
   
   return val;
 }
+
+static GConfValue*
+context_query_default_value(GConfContext* ctx,
+                            const gchar* key,
+                            const gchar** locales,
+                            GConfError** err)
+{
+  GConfValue* val;
+  GConfMetaInfo* mi;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_assert(ctx->listeners != NULL);
+  
+  ctx->last_access = time(NULL);
+  
+  mi = gconf_sources_query_metainfo(ctx->sources, key,
+                                    err);
+  if (mi == NULL)
+    {
+      if (err && *err != NULL)
+        {
+          gconf_log(GCL_ERR, _("Error getting default value for `%s': %s"),
+                    key, (*err)->str);
+        }
+      return NULL;
+    }
+
+  if (gconf_meta_info_schema(mi) == NULL)
+    return NULL;
+
+  val = gconf_sources_query_value(ctx->sources,
+                                  gconf_meta_info_schema(mi), locales,
+                                  TRUE, NULL, err);
+  
+  if (val != NULL)
+    {
+      GConfSchema* schema;
+
+      if (val->type != GCONF_VALUE_SCHEMA)
+        {
+          gconf_log(GCL_WARNING, _("Key `%s' listed as schema for key `%s' actually stores type `%s'"), gconf_meta_info_schema(mi), key, gconf_value_type_to_string(val->type));
+          gconf_meta_info_destroy(mi);
+          return NULL;
+        }
+
+      gconf_meta_info_destroy(mi);
+
+      schema = gconf_value_schema(val);
+      val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
+      
+      gconf_value_destroy(val); /* schema not destroyed due to our cheat */
+      
+      if (schema != NULL)
+        {
+          GConfValue* retval;
+          /* Cheat, steal value from schema */
+          retval = schema->default_value;
+          schema->default_value = NULL;
+
+          gconf_schema_destroy(schema);
+          
+          return retval;
+        }
+      return NULL;
+    }
+  else
+    {
+      gconf_meta_info_destroy(mi);
+      return NULL;
+    }
+}
+
 
 static void
 context_set(GConfContext* ctx,
@@ -1348,7 +1487,8 @@ context_set(GConfContext* ctx,
   else
     {
       context_schedule_sync(ctx);
-      context_notify_listeners(ctx, key, value);
+      context_notify_listeners(ctx, key, value,
+                               FALSE); /* Can't possibly be the default, since we just set it */
     }
 }
 
@@ -1359,6 +1499,8 @@ context_unset(GConfContext* ctx,
               GConfError** err)
 {
   ConfigValue* val;
+  GConfError* error = NULL;
+  
   g_return_if_fail(err == NULL || *err == NULL);
   
   g_assert(ctx->listeners != NULL);
@@ -1367,19 +1509,46 @@ context_unset(GConfContext* ctx,
   
   gconf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
 
-  gconf_sources_unset_value(ctx->sources, key, locale, err);
+  gconf_sources_unset_value(ctx->sources, key, locale, &error);
 
-  if (err && *err != NULL)
+  if (error != NULL)
     {
       gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
-                 key, (*err)->str);
+                 key, error->str);
+
+      if (err)
+        *err = error;
+      else
+        gconf_error_destroy(error);
+
+      error = NULL;
     }
   else
     {
-      val = invalid_corba_value();
+      GConfValue* def_value;
+      const gchar* locale_list[] = { locale, NULL };
 
+      def_value = context_query_default_value(ctx,
+                                              key,
+                                              locale_list,
+                                              err);
+
+      if (err && *err)
+        gconf_log(GCL_ERR, _("Error getting default value for `%s': %s"),
+                  key, (*err)->str);
+
+      if (def_value != NULL)
+        {
+          val = corba_value_from_gconf_value(def_value);
+          gconf_value_destroy(def_value);
+        }
+      else
+        {
+          val = invalid_corba_value();
+        }
+          
       context_schedule_sync(ctx);
-      context_notify_listeners(ctx, key, val);
+      context_notify_listeners(ctx, key, val, TRUE);
       
       CORBA_free(val);
     }

@@ -17,11 +17,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gconf.h>
+#include <gconf/gconf.h>
+#include <gconf/gconf-internals.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
-#include <gconf-internals.h>
 
 static void
 check(gboolean condition, const gchar* fmt, ...)

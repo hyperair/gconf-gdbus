@@ -1598,13 +1598,11 @@ dir_get_value   (Dir* d,
 
       val = entry_value(e, locales);
 
-      /* Fill schema name if this is the last lookup that will happen
-         due to an IGNORE_SUBSEQUENT or if value is NULL */
+      /* Fill schema name if value is NULL because we might be
+         interested in the default value of the key in that case. */
       if (schema_name &&
           e->schema_name &&
-          ((val && 
-            val->type == GCONF_VALUE_IGNORE_SUBSEQUENT) ||
-           (val == NULL)))
+          val == NULL)
         *schema_name = g_strdup(e->schema_name);
 
       /* return copy of the value */
@@ -2761,12 +2759,6 @@ xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
         return value;
       }
       break;
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
-      {
-        value = gconf_value_new(type);
-        return value;
-      }
-      break;
     case GCONF_VALUE_SCHEMA:
       return schema_node_extract_value(node, locales);
       break;
@@ -3049,10 +3041,6 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
 
   switch (value->type)
     {
-    case GCONF_VALUE_IGNORE_SUBSEQUENT:
-      free_childs(node);
-      break;
-
     case GCONF_VALUE_INT:
     case GCONF_VALUE_FLOAT:
     case GCONF_VALUE_BOOL:

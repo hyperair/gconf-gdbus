@@ -112,7 +112,7 @@ struct _GConfCnxn {
 
 static GConfCnxn* gconf_cnxn_new(GConfEngine* conf, const gchar* namespace_section, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data);
 static void       gconf_cnxn_destroy(GConfCnxn* cnxn);
-static void       gconf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfValue* value);
+static void       gconf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfValue* value, gboolean is_default);
 
 static ConfigServer gconf_get_config_server(gboolean start_if_not_found, GConfError** err);
 /* Forget our current server object reference, so the next call to
@@ -484,8 +484,10 @@ gconf_notify_remove(GConfEngine* conf,
 }
 
 GConfValue*
-gconf_get_full(GConfEngine* conf, const gchar* key, const gchar* locale,
+gconf_get_full(GConfEngine* conf,
+               const gchar* key, const gchar* locale,
                gboolean use_schema_default,
+               gboolean* value_is_default,
                GConfError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
@@ -494,6 +496,7 @@ gconf_get_full(GConfEngine* conf, const gchar* key, const gchar* locale,
   CORBA_Environment ev;
   ConfigServer cs;
   gint tries = 0;
+  CORBA_boolean is_default = FALSE;
 
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
@@ -519,8 +522,11 @@ gconf_get_full(GConfEngine* conf, const gchar* key, const gchar* locale,
                                        (gchar*)key, (gchar*)
                                        (locale ? locale : gconf_current_locale()),
                                        use_schema_default,
+                                       &is_default,
                                        &ev);
 
+  if (value_is_default)
+    *value_is_default = !!is_default; /* canonicalize */
 
   if (gconf_server_broken(&ev))
     {
@@ -557,13 +563,75 @@ GConfValue*
 gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
                       GConfError** err)
 {
-  return gconf_get_full(conf, key, locale, TRUE, err);
+  return gconf_get_full(conf, key, locale, TRUE, NULL, err);
 }
 
 GConfValue*
-gconf_get_no_default(GConfEngine* conf, const gchar* key, GConfError** err)
+gconf_get_without_default(GConfEngine* conf, const gchar* key, GConfError** err)
 {
-  return gconf_get_full(conf, key, NULL, FALSE, err);
+  return gconf_get_full(conf, key, NULL, FALSE, NULL, err);
+}
+
+GConfValue*
+gconf_get_default_from_schema (GConfEngine* conf,
+                               const gchar* key,
+                               GConfError** err)
+{
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
+  GConfValue* val;
+  ConfigValue* cv;
+  CORBA_Environment ev;
+  ConfigServer cs;
+  gint tries = 0;
+
+  g_return_val_if_fail(conf != NULL, NULL);
+  g_return_val_if_fail(key != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  if (!gconf_key_check(key, err))
+    return NULL;
+  
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
+  cs = gconf_get_config_server(TRUE, err);
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_return_val_if_fail(err == NULL || *err != NULL, NULL);
+
+      return NULL;
+    }
+
+  cv = ConfigServer_lookup_default_value(cs, priv->context,
+                                         (gchar*)key,
+                                         (gchar*)gconf_current_locale(),
+                                         &ev);
+  
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
+    }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    {
+      /* NOTE: don't free cv since we got an exception! */
+      return NULL;
+    }
+  else
+    {
+      val = gconf_value_from_corba_value(cv);
+      CORBA_free(cv);
+
+      return val;
+    }
 }
 
 gboolean
@@ -1003,9 +1071,9 @@ gconf_cnxn_destroy(GConfCnxn* cnxn)
 
 static void       
 gconf_cnxn_notify(GConfCnxn* cnxn,
-                   const gchar* key, GConfValue* value)
+                  const gchar* key, GConfValue* value, gboolean is_default)
 {
-  (*cnxn->func)(cnxn->conf, cnxn->client_id, key, value, cnxn->user_data);
+  (*cnxn->func)(cnxn->conf, cnxn->client_id, key, value, is_default, cnxn->user_data);
 }
 
 /*
@@ -1112,6 +1180,7 @@ notify(PortableServer_Servant servant,
        CORBA_unsigned_long cnxn,
        CORBA_char* key, 
        ConfigValue* value,
+       CORBA_boolean is_default,
        CORBA_Environment *ev);
 
 static PortableServer_ServantBase__epv base_epv = {
@@ -1130,6 +1199,7 @@ notify(PortableServer_Servant servant,
        CORBA_unsigned_long server_id,
        CORBA_char* key,
        ConfigValue* value,
+       CORBA_boolean is_default,
        CORBA_Environment *ev)
 {
   GConfCnxn* cnxn;
@@ -1156,7 +1226,7 @@ notify(PortableServer_Servant servant,
 
   gvalue = gconf_value_from_corba_value(value);
 
-  gconf_cnxn_notify(cnxn, key, gvalue);
+  gconf_cnxn_notify(cnxn, key, gvalue, is_default);
 
   if (gvalue != NULL)
     gconf_value_destroy(gvalue);

@@ -17,8 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <gconf.h>
-#include <gconf-changeset.h>
+#include <gconf/gconf.h>
+#include <gconf/gconf-changeset.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>

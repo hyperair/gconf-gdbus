@@ -42,20 +42,13 @@ typedef enum {
      moronic like mix types in a list or treat pair<string,int> and
      pair<float,bool> as the same type. */
   GCONF_VALUE_LIST,
-  GCONF_VALUE_PAIR,
-
-  /* This is special magic used internally only */
-  /* It indicates that the search for a value should end with this
-     source, not progressing further to later sources in the path.
-     If there's a default value in the schema, that will be used.
-  */
-  GCONF_VALUE_IGNORE_SUBSEQUENT
+  GCONF_VALUE_PAIR
   
 } GConfValueType;
 
-#define GCONF_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) < GCONF_VALUE_IGNORE_SUBSEQUENT))
-/* allows the internal ignore-subsequent value type */
-#define GCONF_INTERNAL_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_IGNORE_SUBSEQUENT))
+#define GCONF_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_PAIR))
+/* allows the internal ignore-subsequent value type (which no longer exists) */
+#define GCONF_INTERNAL_VALUE_TYPE_VALID(x) (((x) > GCONF_VALUE_INVALID) && ((x) <= GCONF_VALUE_PAIR))
 
 /* Forward declaration */
 typedef struct _GConfSchema GConfSchema;

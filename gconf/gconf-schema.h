@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-#include "gconf-value.h"
+#include <gconf/gconf-value.h>
 
 /* 
  *  A "schema" is a value that describes a key-value pair.

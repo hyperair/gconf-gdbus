@@ -543,7 +543,7 @@ revert_foreach (GConfChangeSet* cs,
   if (rd->error != NULL)
     return;
 
-  old_value = gconf_get(rd->conf, key, &error);
+  old_value = gconf_get_without_default(rd->conf, key, &error);
 
   if (error != NULL)
     {
@@ -610,7 +610,7 @@ gconf_create_change_set_from_currentv (GConfEngine* conf,
       GConfError* error = NULL;
       const gchar* key = *keyp;
       
-      old_value = gconf_get(conf, key, &error);
+      old_value = gconf_get_without_default(conf, key, &error);
 
       if (error != NULL)
         {
