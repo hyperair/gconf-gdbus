@@ -1,3 +1,10 @@
+2002-01-03  Havoc Pennington  <hp@pobox.com>
+
+	* gconf.m4: Add quotes to
+	GCONF_SCHEMA_FILE_DIR='$(sysconfdir)/gconf/schemas' so that "make
+	install sysconfdir=/foo" will work. May break some conceivable 
+	usage of this variable.
+
 2001-12-22  Duarte Loreto <happyguy_pt@hotmail.com>
 
         * configure.in: Added portuguese (pt) to ALL_LINGUAS
