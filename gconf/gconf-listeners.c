@@ -25,6 +25,15 @@
 #include <stdio.h>
 #endif
 
+/* 24 bits are the array index; 8 bits are just to reduce the
+   chance of duplicate connection IDs. If CnxnID was just an
+   array index, recycling the IDs would make it likely that
+   a broken client would remove another client's connections.
+   The unique-izing 8 bits make this much less likely.
+   Yeah just using a hash table instead of an array would work too since
+   we wouldn't need to fool with recycling indices to avoid sparseness */
+#define CNXN_ID_INDEX(cid) (cid & 0xFFFFFF)
+
 typedef struct _Listener Listener;
 
 struct _Listener {
@@ -47,9 +56,8 @@ struct _LTable {
   /* 0 is an error value */
   guint next_cnxn;
   
-  /* Connection numbers to be recycled - somewhat dangerous due to the nature
-     of CORBA... */
-  GSList* removed_cnxns;
+  /* Connection array indexes to be recycled */
+  GSList* removed_indices;
 };
 
 typedef struct _LTableEntry LTableEntry;
@@ -197,7 +205,7 @@ ltable_new(void)
   
   lt->active_listeners = 0;
 
-  lt->removed_cnxns = NULL;
+  lt->removed_indices = NULL;
 
   lt->next_cnxn = 1; /* 0 is invalid */
   
@@ -207,18 +215,33 @@ ltable_new(void)
 static guint
 ltable_next_cnxn(LTable* lt)
 {
-  if (lt->removed_cnxns != NULL)
+  static guchar uniqueness = 0;
+  guint uniqueness_shifted;
+  
+  /* this overflows and starts over occasionally */
+  ++uniqueness;
+
+  uniqueness_shifted = uniqueness;
+  uniqueness_shifted = uniqueness_shifted << 24;
+  
+  if (lt->removed_indices != NULL)
     {
-      guint retval = GPOINTER_TO_UINT(lt->removed_cnxns->data);
+      guint retval = GPOINTER_TO_UINT(lt->removed_indices->data);
 
-      lt->removed_cnxns = g_slist_remove(lt->removed_cnxns, lt->removed_cnxns->data);
+      lt->removed_indices = g_slist_remove(lt->removed_indices, lt->removed_indices->data);
 
+      /* set the uniqueness bits */
+      retval |= uniqueness_shifted;
+      
       return retval;
     }
   else
     {
+      /* make sure we fit in 24 bits */
+      g_assert(lt->next_cnxn <= 0xFFFFFF);
+
       lt->next_cnxn += 1;
-      return lt->next_cnxn - 1;
+      return (lt->next_cnxn - 1) | uniqueness_shifted;
     }
 }
 
@@ -309,8 +332,8 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   g_strfreev(dirnames);
 
   /* Add tree node to the flat table */
-  g_ptr_array_set_size(lt->listeners, MAX(lt->next_cnxn, l->cnxn));
-  g_ptr_array_index(lt->listeners, l->cnxn) = cur;
+  g_ptr_array_set_size(lt->listeners, MAX(CNXN_ID_INDEX(lt->next_cnxn), CNXN_ID_INDEX(l->cnxn)));
+  g_ptr_array_index(lt->listeners, CNXN_ID_INDEX(l->cnxn)) = cur;
 
   lt->active_listeners += 1;
 
@@ -327,14 +350,15 @@ ltable_remove(LTable* lt, guint cnxn)
   LTableEntry* lte;
   GList* tmp;
   GNode* node;
-
-  g_return_if_fail(cnxn < lt->listeners->len);
-  if (cnxn >= lt->listeners->len) /* robust even with checks off */
+  guint index = CNXN_ID_INDEX(cnxn);
+  
+  g_return_if_fail(index < lt->listeners->len);
+  if (index >= lt->listeners->len) /* robust even with checks off */
     return;
   
   /* Remove from the flat table */
-  node = g_ptr_array_index(lt->listeners, cnxn);
-  g_ptr_array_index(lt->listeners, cnxn) = NULL;
+  node = g_ptr_array_index(lt->listeners, index);
+  g_ptr_array_index(lt->listeners, index) = NULL;
 
   g_return_if_fail(node != NULL);
   if (node == NULL)
@@ -369,8 +393,8 @@ ltable_remove(LTable* lt, guint cnxn)
             }
           g_list_free_1(tmp);
 
-          lt->removed_cnxns = g_slist_prepend(lt->removed_cnxns,
-                                              GUINT_TO_POINTER(l->cnxn));
+          lt->removed_indices = g_slist_prepend(lt->removed_indices,
+                                                GUINT_TO_POINTER(index));
           
           listener_destroy(l);
 
@@ -448,7 +472,7 @@ ltable_destroy(LTable* ltable)
       
   g_ptr_array_free(ltable->listeners, TRUE);
 
-  g_slist_free(ltable->removed_cnxns);
+  g_slist_free(ltable->removed_indices);
   
   g_free(ltable);
 }

@@ -193,8 +193,11 @@ check_immediate_remove_after_add(GConfListeners* listeners)
       check(ids[i] != 0, "invalid connection ID returned for added listener");
 
       if (i > 0)
-        check(ids[i] == ids[i-1], "connection ID was not properly recycled");
-
+        {
+          check((ids[i] & 0xFFFFFF) == (ids[i-1] & 0xFFFFFF), "connection ID was not properly recycled");
+          check(ids[i] != ids[i-1], "connection ID was not properly uniqueized");
+        }
+          
       check(gconf_listeners_count(listeners) == 1,
             "didn't have 1 listener as expected");
       

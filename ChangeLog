@@ -1,5 +1,16 @@
 2000-01-15  Havoc Pennington  <hp@pobox.com>
 
+	* tests/testlisteners.c (check_immediate_remove_after_add): update 
+	to match change to gconf-listeners.c
+
+	* gconf/gconf-listeners.c: Use only 24 bits for the array index,
+	and put a variable value in the top 8 bits, so recycling array
+	indices doesn't create the possibility of clients clashing with
+	each other (i.e. to clients it doesn't appear that indexes are
+	being recycled).	
+
+2000-01-15  Havoc Pennington  <hp@pobox.com>
+
 	* backends/xml-dir.c (dir_unset_value): check entries for 
 	uselessness on unset, even if they are unchanged by the unset.
 	Allows us to delete useless crap we loaded from disk.
