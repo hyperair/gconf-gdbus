@@ -160,6 +160,10 @@ gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir,
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev);
 
 static void 
+gconfd_set_schema (PortableServer_Servant servant, CORBA_char * key,
+                   CORBA_char* schema_key, CORBA_Environment * ev);
+
+static void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 
 static CORBA_long
@@ -185,6 +189,7 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_nuke_dir,
   gconfd_all_entries,
   gconfd_all_dirs,
+  gconfd_set_schema,
   gconfd_sync,
   gconfd_ping,
   gconfd_shutdown
@@ -482,6 +487,21 @@ gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir,
   g_assert(i == n);
 
   g_slist_free(subdirs);
+}
+
+static void 
+gconfd_set_schema (PortableServer_Servant servant, CORBA_char * key,
+                   CORBA_char* schema_key, CORBA_Environment * ev)
+{
+  g_conf_clear_error();
+
+  g_conf_sources_set_schema(sources, key, schema_key);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error setting schema for `%s': %s"),
+             key, g_conf_error());
+    }
 }
 
 static void 

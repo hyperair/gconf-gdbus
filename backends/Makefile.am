@@ -1,4 +1,4 @@
-INCLUDES= -I$(top_srcdir) $(GLIB_CFLAGS)
+INCLUDES= -I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS)
 
 lib_LTLIBRARIES = libgconfbackend-xml.la
 

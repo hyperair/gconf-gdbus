@@ -60,6 +60,13 @@ interface ConfigServer {
   void all_dirs(in string dir,
                 out KeyList subdirs);
 
+  // if first arg is a key, second arg should be a key pointing
+  //  to a schema. 
+  // if first arg is a dir, second arg should be a key pointing 
+  //  to a dir full of schemas.
+  void set_schema(in string key,
+                  in string schema_key);
+
   void sync();
 
   // Internal use

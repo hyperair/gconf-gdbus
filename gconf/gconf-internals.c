@@ -372,6 +372,15 @@ g_conf_source_set_value        (GConfSource* source,
       g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
       return;
     }
+
+  g_assert(*key != '\0');
+
+  if (key[1] == '\0')
+    {
+      g_conf_set_error(G_CONF_IS_DIR, _("The '/' name can only be a directory, not a key"));
+      return;
+    }
+
   (*source->backend->vtable->set_value)(source, key, value);
 }
 
@@ -436,6 +445,24 @@ g_conf_source_nuke_dir        (GConfSource* source,
   return (*source->backend->vtable->nuke_dir)(source, dir);
 }
 
+void         
+g_conf_source_set_schema        (GConfSource* source,
+                                 const gchar* key,
+                                 const gchar* schema_key)
+{
+  if (!g_conf_valid_key(key))
+    {
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
+      return;
+    }
+  if (!g_conf_valid_key(schema_key))
+    {
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
+      return;
+    }
+  
+  return (*source->backend->vtable->set_schema)(source, key, schema_key);
+}
 
 gboolean
 g_conf_source_sync_all         (GConfSource* source)
@@ -845,6 +872,23 @@ g_conf_value_type_to_string(GConfValueType type)
     }
 }
 
+GConfValueType 
+g_conf_value_type_from_string(const gchar* type_str)
+{
+  if (strcmp(type_str, "int") == 0)
+    return G_CONF_VALUE_INT;
+  else if (strcmp(type_str, "float") == 0)
+    return G_CONF_VALUE_FLOAT;
+  else if (strcmp(type_str, "string") == 0)
+    return G_CONF_VALUE_STRING;
+  else if (strcmp(type_str, "bool") == 0)
+    return G_CONF_VALUE_BOOL;
+  else if (strcmp(type_str, "schema") == 0)
+    return G_CONF_VALUE_SCHEMA;
+  else
+    return G_CONF_VALUE_INVALID;
+}
+
 /*
  *   gconfsources
  */
@@ -1026,6 +1070,30 @@ g_conf_sources_nuke_dir (GConfSources* sources,
     }
 }
 
+
+void         
+g_conf_sources_set_schema        (GConfSources* sources,
+                                  const gchar* key,
+                                  const gchar* schema_key)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+
+      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+        {
+          /* may set error, we just leave its setting */
+          g_conf_source_set_schema(src, key, schema_key);
+          return;
+        }
+
+      tmp = g_list_next(tmp);
+    }
+}
 
 /* God, this is depressingly inefficient. Maybe there's a nicer way to
    implement it... */

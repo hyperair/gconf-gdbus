@@ -55,7 +55,7 @@
 static gchar* last_details = NULL;
 static GConfErrNo last_errno = G_CONF_SUCCESS;
 
-static const gchar* err_msgs[8] = {
+static const gchar* err_msgs[9] = {
   N_("Success"),
   N_("Failed"),
   N_("Configuration server couldn't be contacted"),
@@ -63,7 +63,9 @@ static const gchar* err_msgs[8] = {
   N_("Couldn't resolve address for configuration source"),
   N_("Bad key or directory name"),
   N_("Parse error"),
-  N_("Type mismatch")
+  N_("Type mismatch"),
+  N_("Key operation on directory"),
+  N_("Directory operation on key")
 };
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);

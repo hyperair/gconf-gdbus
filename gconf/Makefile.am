@@ -5,7 +5,7 @@ INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) \
 
 lib_LTLIBRARIES = libgconf-client.la
 
-bin_PROGRAMS = gconfd gconf-testclient gconftool
+bin_PROGRAMS = gconfd gconftool
 
 CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
@@ -18,10 +18,10 @@ gconfd_SOURCES = \
 
 gconfd_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
-gconf_testclient_SOURCES = \
-	testclient.c
+# gconf_testclient_SOURCES = \
+# 	testclient.c
 
-gconf_testclient_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) libgconf-client.la
+# gconf_testclient_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
 gconftool_SOURCES = \
 	gconftool.c
@@ -43,6 +43,8 @@ libgconf_client_la_SOURCES = \
 	gconf.h			\
 	gconf.c			\
 	$(CORBA_SOURCES)
+
+libgconf_client_la_LIBADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS)
 
 ## This is totally broken, I just don't feel like doing the configure.in work to 
 ## detect Gnome, etc. Depends on the non-GUI testclient to suck in its dependencies.

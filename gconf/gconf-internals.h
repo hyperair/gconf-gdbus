@@ -55,6 +55,11 @@ GSList*      g_conf_source_all_entries         (GConfSource* source,
                                                 const gchar* dir);
 GSList*      g_conf_source_all_dirs          (GConfSource* source,
                                               const gchar* dir);
+
+void         g_conf_source_set_schema        (GConfSource* source,
+                                              const gchar* key,
+                                              const gchar* schema_key);
+
 void         g_conf_source_remove_dir        (GConfSource* source,
                                               const gchar* dir);
 void          g_conf_source_nuke_dir        (GConfSource* source,
@@ -93,6 +98,7 @@ ConfigSchema* corba_schema_from_g_conf_schema(GConfSchema* sc);
 GConfSchema*  g_conf_schema_from_corba_schema(const ConfigSchema* cs);
 
 const gchar* g_conf_value_type_to_string(GConfValueType type);
+GConfValueType g_conf_value_type_from_string(const gchar* str);
 
 /* This is the actual thing we want to talk to, the stack of sources */
 typedef struct _GConfSources GConfSources;
@@ -119,6 +125,10 @@ void          g_conf_sources_remove_dir (GConfSources* sources,
 
 void          g_conf_sources_nuke_dir (GConfSources* sources,
                                        const gchar* dir);
+
+void         g_conf_sources_set_schema        (GConfSources* sources,
+                                               const gchar* key,
+                                               const gchar* schema_key);
 
 gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 

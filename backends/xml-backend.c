@@ -50,6 +50,27 @@
 #define N_(x) x
 #endif
 
+/* This makes hash table safer when debugging */
+#if 0
+#define safe_g_hash_table_insert g_hash_table_insert
+#else
+static void
+safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
+{
+  gpointer oldkey = NULL, oldval = NULL;
+
+  if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
+    {
+      g_warning("Hash key `%s' is already in the table!",
+                (gchar*)key);
+      return;
+    }
+  else
+    {
+      g_hash_table_insert(ht, key, value);
+    }
+}
+#endif
 
 /*
  * Overview
@@ -131,77 +152,90 @@ typedef struct _XMLSource XMLSource;
 struct _XMLSource {
   GConfSource source;
   gchar* root_dir;
-  GHashTable* trees;
-  GHashTable* keys;
+  GHashTable* cache;
 };
 
 typedef struct _KeyCacheEntry KeyCacheEntry;
 
 struct _KeyCacheEntry {
-  gchar* key;   /* This string is used in multiple places, saving RAM, but 
-                   the KeyCacheEntry owns it */
   GConfValue* value;  /* NULL if the key is unset */
   xmlNodePtr node;    /* NULL if the key has no value */
-  GTime last_access;
 };
 
 typedef struct _TreeCacheEntry TreeCacheEntry;
 
 struct _TreeCacheEntry {
-  xmlDocPtr tree;      /* NULL if the dir doesn't exist */
+  xmlDocPtr tree;      /* NULL if the tree hasn't been loaded yet,
+                          we have just found this subdir in the 
+                          parent dir */
   xmlNodePtr dirs;     /* Node holding list of child dirs; can be NULL */
-  GSList* cached_keys; /* list of KeyCacheEntry for keys belonging to this tree */
-  GTime last_access;
+  GSList* cached_keys; /* list of CacheEntry for keys holding an xmlNodePtr
+                          into this tree; may not include cache entries for
+                          nonexistent keys lacking an xmlNodePtr 
+                       */
   guint dirty : 1;     /* Do we need to save? */
 };
 
-static KeyCacheEntry*
-xs_lookup_key(XMLSource* source, const gchar* key);
+typedef enum {
+  TREE_ENTRY,       /* Directory */
+  KEY_ENTRY,        /* Key-value pair */
+  DELETED_TREE_ENTRY,/* Directory that should be removed from disk */
+  NONEXISTENT_ENTRY  /* Nothing */
+} CacheEntryType;
 
-static TreeCacheEntry* 
-xs_lookup_dir(XMLSource* source, const gchar* dir);
+typedef struct _CacheEntry CacheEntry;
 
-static void
-xs_lookup_key_and_dir(XMLSource* source, const gchar* key,
-                      TreeCacheEntry** tree_entry_p, 
-                      KeyCacheEntry** key_entry_p);
+struct _CacheEntry {
+  CacheEntryType type;
+  gchar* key;       /* This string is used in multiple places, saving RAM, but 
+                       the CacheEntry owns it */
+  GTime last_access;
+  union {
+    KeyCacheEntry* key_entry;
+    TreeCacheEntry* tree_entry;
+  } d;
+};
 
-static XMLSource* 
-xs_new(const gchar* root_dir);
+CacheEntry* cache_entry_new    (CacheEntryType type, const gchar* key);
+void        cache_entry_destroy(CacheEntry* ce);
 
-static void
-xs_destroy(XMLSource* source);
+static TreeCacheEntry* tree_cache_entry_new(xmlDocPtr tree);
+static void            tree_cache_entry_destroy(TreeCacheEntry* entry);
+static void            tree_cache_entry_make_dirs(TreeCacheEntry* entry);
 
-static void
-xs_set_value(XMLSource* source, const gchar* key, GConfValue* value);
+static KeyCacheEntry* key_cache_entry_new(GConfValue* value, xmlNodePtr node);
+static KeyCacheEntry* key_cache_entry_new_nocopy(GConfValue* value, xmlNodePtr node);
+static void key_cache_entry_destroy(KeyCacheEntry* entry);
 
-static void
-xs_unset_value(XMLSource* source, const gchar* key);
+static XMLSource*  xs_new(const gchar* root_dir);
+static void        xs_destroy(XMLSource* source);
+static gboolean xs_check_cache(XMLSource* source, const gchar* dir, const gchar* key, CacheEntry** dir_entry, CacheEntry** key_entry);
+static void xs_lookup_key_and_dir(XMLSource* source, const gchar* key, CacheEntry** dir_entry, CacheEntry** key_entry);
+static CacheEntry* xs_lookup(XMLSource* source, const gchar* key);
+static void        xs_slurp_dir(XMLSource* source, const gchar* dir);
+static xmlDocPtr   xs_load_dir (XMLSource* source, const gchar* dir);
+static xmlDocPtr   xs_entry_tree (XMLSource* source, CacheEntry* entry);
+static CacheEntry* xs_cache_key(XMLSource* source, const gchar* key);
+static CacheEntry* xs_new_dir_entry(XMLSource* source, const gchar* dir);
+static void        xs_set_value(XMLSource* source, const gchar* key, GConfValue* value);
+static void        xs_unset_value(XMLSource* source, const gchar* key);
+static gboolean    xs_sync_all(XMLSource* source);
+static GSList*     xs_pairs_in_dir(XMLSource* source, const gchar* dir);
+static GSList*     xs_dirs_in_dir(XMLSource* source, const gchar* dir);
+static void        xs_create_new_dir(XMLSource* source, CacheEntry* entry);
 
-static xmlDocPtr
-xs_load_dir(XMLSource* source, const gchar* dir);
 
-static void
-xs_create_new_dir(XMLSource* xsource, const gchar* dir, TreeCacheEntry* entry);
+static xmlNodePtr  xdoc_find_entry(xmlDocPtr doc, const gchar* key);
+static xmlNodePtr  xdoc_find_dirs(xmlDocPtr doc);
+static xmlNodePtr  xdoc_add_entry(xmlDocPtr doc, const gchar* full_key, GConfValue* value);
+static GConfValue* xentry_extract_value(xmlNodePtr node);
+static void        xentry_set_value(xmlNodePtr node, GConfValue* value);
+static xmlNodePtr  xdirs_find_dir(xmlNodePtr dirs, const gchar* key);
+static xmlNodePtr  xdirs_add_child_dir(xmlNodePtr node, const gchar* relative_child_dir);
 
-static gboolean
-xs_sync_all(XMLSource* source);
 
-static GSList* 
-xs_pairs_in_dir(XMLSource* source, const gchar* dir);
+static gchar* parent_dir(const gchar* dir);
 
-static GSList*
-xs_dirs_in_dir(XMLSource* source, const gchar* dir);
-
-/* Prune the cache */
-static void
-xs_prune(XMLSource* source, const gchar* dir);
-
-static void
-xs_remove_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry);
-
-static gboolean
-xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry);
 
 /*
  * Dyna-load implementation
@@ -230,6 +264,10 @@ static void          remove_dir      (GConfSource* source,
 static void          nuke_dir        (GConfSource* source,
                                       const gchar* dir);
 
+static void          set_schema      (GConfSource* source,
+                                      const gchar* key,
+                                      const gchar* schema_key);
+
 static gboolean      sync_all        (GConfSource* source);
 
 static void          destroy_source  (GConfSource* source);
@@ -244,6 +282,7 @@ static GConfBackendVTable xml_vtable = {
   unset_value,
   remove_dir,
   nuke_dir,
+  set_schema,
   sync_all,
   destroy_source
 };
@@ -296,13 +335,32 @@ static GConfValue*
 query_value (GConfSource* source, const gchar* key)
 {
   XMLSource* xsource = (XMLSource*)source;
-  KeyCacheEntry* entry;
+  CacheEntry* entry;
 
-  entry = xs_lookup_key(xsource, key);
+  entry = xs_lookup(xsource, key);
 
   g_assert(entry != NULL);
   
-  return entry->value ? g_conf_value_copy(entry->value) : NULL;
+  switch (entry->type)
+    {
+    case KEY_ENTRY:
+      return entry->d.key_entry->value ? 
+        g_conf_value_copy(entry->d.key_entry->value) : NULL;
+      break;
+    case TREE_ENTRY:
+      g_conf_set_error(G_CONF_IS_DIR, _("`%s' is a directory"),
+                       key);
+      return NULL;
+      break;
+    case DELETED_TREE_ENTRY: /* fall thru */
+    case NONEXISTENT_ENTRY:
+      return NULL;
+      break;
+    default:
+      g_assert_not_reached();
+      return NULL;
+      break;
+    }
 }
 
 static void          
@@ -349,12 +407,7 @@ remove_dir      (GConfSource* source,
   XMLSource* xsource = (XMLSource*)source;
   TreeCacheEntry* entry;
 
-  entry = xs_lookup_dir(xsource, dir);
-
-  g_assert(entry != NULL);
-
-  if (!xs_remove_dir_if_empty(xsource, dir, entry))
-    g_warning("Directory `%s' wasn't empty, not removed", dir);
+  g_warning("Not implemented");
 }
 
 static void          
@@ -362,9 +415,9 @@ nuke_dir      (GConfSource* source,
                const gchar* dir)
 {
   XMLSource* xsource = (XMLSource*)source;
-  TreeCacheEntry* entry;
+  CacheEntry* entry;
 
-  entry = xs_lookup_dir(xsource, dir);
+  entry = xs_lookup(xsource, dir);
 
   g_assert(entry != NULL);
 
@@ -373,6 +426,16 @@ nuke_dir      (GConfSource* source,
   /* FIXME */
 }
 
+static void          
+set_schema      (GConfSource* source,
+                 const gchar* key,
+                 const gchar* schema_key)
+{
+  XMLSource* xsource = (XMLSource*)source;
+
+  
+  
+}
 
 static gboolean      
 sync_all        (GConfSource* source)
@@ -405,57 +468,162 @@ g_conf_backend_get_vtable(void)
 }
 
 /* 
- * XML node/doc manipulators
+ * XMLSource implementations
  */
 
-static xmlNodePtr 
-xdoc_add_entry(xmlDocPtr doc, const gchar* key, GConfValue* value);
+static XMLSource*  
+xs_new(const gchar* root_dir)
+{
+  XMLSource* xs;
 
-static xmlNodePtr
-xdoc_find_entry(xmlDocPtr doc, const gchar* key);
+  g_return_val_if_fail(root_dir != NULL, NULL);
 
-static xmlNodePtr
-xdoc_find_dirs(xmlDocPtr doc);
+  xs = g_new0(XMLSource, 1);
 
-static xmlNodePtr
-xdirs_add_child_dir(xmlNodePtr node, const gchar* relative_child_dir);
+  xs->root_dir = g_strdup(root_dir);
+
+  xs->cache = g_hash_table_new(g_str_hash, g_str_equal);
+
+  return xs;
+}
+
 
 static void
-xdirs_remove_child_dir(xmlNodePtr dirs, const gchar* relative_child_dir);
+cache_foreach_destroy(gchar* key, CacheEntry* entry, gpointer user_data)
+{
+  /* Key is stored in the entry, and destroyed with it */
+  cache_entry_destroy(entry);
+}
 
 static void
-xentry_set_value(xmlNodePtr node, GConfValue* value);
+xs_destroy(XMLSource* source)
+{
+  g_return_if_fail(source != NULL);
 
-static GConfValue*
-xentry_extract_value(xmlNodePtr node);
+  g_hash_table_foreach(source->cache, (GHFunc)cache_foreach_destroy, NULL);
+    
+  g_hash_table_destroy(source->cache);
 
-/*
- * Cache entry functions
- */
+  g_free(source->root_dir);
 
-static KeyCacheEntry*
-key_cache_entry_new(const gchar* key, GConfValue* value, xmlNodePtr node);
+  g_free(source);
+}
+
+static gboolean
+xs_check_cache(XMLSource* source,  
+               const gchar* dir, 
+               const gchar* key, 
+               CacheEntry** dir_entry,
+               CacheEntry** key_entry)
+{
+  if (*key_entry == NULL)
+    *key_entry = g_hash_table_lookup(source->cache, key);
+
+  if (dir != NULL && *dir_entry == NULL)
+    *dir_entry = g_hash_table_lookup(source->cache, dir);
+  
+  if (*key_entry && *dir_entry)
+    {
+      (*key_entry)->last_access = (*dir_entry)->last_access = time(NULL);
+      return TRUE;
+    }
+  else if (*key_entry && (dir == NULL))
+    {
+      (*key_entry)->last_access = time(NULL);
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
 
 static void
-key_cache_entry_destroy(KeyCacheEntry* entry);
+xs_lookup_key_and_dir(XMLSource* source, const gchar* key, 
+                      CacheEntry** dir_entry,
+                      CacheEntry** key_entry)
+{
+  CacheEntry* entry = NULL;
+  gchar* dir;
 
+  g_return_if_fail(source != NULL);
+  g_return_if_fail(key != NULL);
 
-static TreeCacheEntry* 
-tree_cache_entry_new(xmlDocPtr tree);
+  *key_entry = NULL;
+  *dir_entry = NULL;
 
-static void
-tree_cache_entry_destroy(TreeCacheEntry* entry);
+  dir = parent_dir(key);
 
-static void
-tree_cache_entry_make_dirs(TreeCacheEntry* entry);
+  if (xs_check_cache(source, dir, key, 
+                     dir_entry, key_entry))
+    return;
+      
+  /* We don't know if the key is a directory or 
+     an entry in a directory. So we load the 
+     parent directory and its contents, then check 
+     whether the key is a dir or not.
+  */
 
-static GSList*
-tree_cache_entry_list_dirs(TreeCacheEntry* entry, const gchar* dir);
+  /* Load all entries in the parent dir and place them
+     in the cache */
+  
+  if (dir != NULL)
+    xs_slurp_dir(source, dir);
 
-/*
- * XML source implementation
- */
+  if (xs_check_cache(source, dir, key, 
+                     dir_entry, key_entry))
+    return;
+  
+  if (*dir_entry == NULL)
+    {
+      *dir_entry = cache_entry_new(NONEXISTENT_ENTRY, dir);
+      safe_g_hash_table_insert(source->cache, (*dir_entry)->key, *dir_entry);
+    }
 
+  g_assert(*key_entry == NULL);
+  *key_entry = cache_entry_new(NONEXISTENT_ENTRY, key);
+  safe_g_hash_table_insert(source->cache, (*key_entry)->key, *key_entry);
+}
+
+static CacheEntry* 
+xs_lookup(XMLSource* source, const gchar* key)
+{
+  CacheEntry* key_entry = NULL;
+  CacheEntry* dir_entry = NULL;
+
+  xs_lookup_key_and_dir(source, key, &dir_entry, &key_entry);
+
+  return key_entry;
+}
+
+static CacheEntry* 
+xs_new_dir_entry(XMLSource* source, const gchar* dir)
+{
+  CacheEntry* ce;
+
+  ce = cache_entry_new(TREE_ENTRY, dir);
+  ce->d.tree_entry = tree_cache_entry_new(NULL);
+
+  return ce;
+}
+
+static CacheEntry*
+xs_new_key_entry(XMLSource* source, xmlNodePtr enode, const gchar* key)
+{
+  CacheEntry* entry;
+  GConfValue* value;
+              
+  value = xentry_extract_value(enode);
+
+  if (value == NULL)
+    entry = cache_entry_new(NONEXISTENT_ENTRY, key);
+  else
+    {
+      entry = cache_entry_new(KEY_ENTRY, key);
+                  
+      entry->d.key_entry = key_cache_entry_new_nocopy(value, enode);
+    }
+
+  return entry;
+}
 
 static xmlDocPtr
 xs_load_dir(XMLSource* source, const gchar* dir)
@@ -492,616 +660,243 @@ xs_load_dir(XMLSource* source, const gchar* dir)
   return doc;
 }
 
-static KeyCacheEntry*
-xs_lookup_key_given_dir(XMLSource* source,
-                        TreeCacheEntry* tree_entry,
-                        const gchar* key,
-                        /* ugliness for efficiency when making a list of all entries */
-                        xmlNodePtr key_node)
+static xmlDocPtr   
+xs_entry_tree (XMLSource* source, CacheEntry* entry)
 {
-  KeyCacheEntry* key_entry;
+  xmlDocPtr doc;
 
-  g_return_val_if_fail(tree_entry != NULL, NULL);
-  
-  key_entry = g_hash_table_lookup(source->keys, key);
-      
-  if (key_entry != NULL)
+  if (entry->d.tree_entry->tree != NULL)
+    return entry->d.tree_entry->tree;
+
+  g_assert(entry->d.tree_entry->tree == NULL);
+
+  entry->d.tree_entry->tree = xs_load_dir(source, entry->key);
+
+  if (entry->d.tree_entry->tree == NULL)
     {
-      tree_entry->last_access = key_entry->last_access = time(NULL);
-
-      if (key_node && (key_entry->node != key_node))
-        g_warning("Scanned key entry node doesn't match cached node!");
-
-      return key_entry;
-    }
-  else 
-    {
-      /* Need to scan the tree, unless we were supplied with 
-         a key_node 
+      /* OK, loading failed for some reason. So, we create 
+         the tree in memory to try to sync it later.
       */
+      doc = xmlNewDoc("1.0");
+      
+      doc->root = xmlNewDocNode(doc, NULL, "gconf", NULL);
+      
+      entry->d.tree_entry->tree = doc;
+    }
+
+  g_assert(entry->d.tree_entry->tree != NULL);
+
+  return entry->d.tree_entry->tree;
+}
+
+/* slurp a dir and its entries into the cache,
+   non-recursively */
+static void        
+xs_slurp_dir(XMLSource* source, const gchar* dir)
+{
+  xmlDocPtr doc;
+  CacheEntry* ce;
+
+  ce = xs_cache_key(source, dir);
+  
+  g_assert(ce != NULL);
+
+  if (ce->type != TREE_ENTRY)
+    return;
+
+  g_assert(ce->type == TREE_ENTRY);
+
+  /* Iterate over subdirs */
+
+  if (ce->d.tree_entry->dirs != NULL &&
+      ce->d.tree_entry->dirs->childs != NULL)
+    {
       xmlNodePtr node;
-      GConfValue* value;
 
-      if (key_node == NULL)
-        node = xdoc_find_entry(tree_entry->tree, key);
-      else 
-        node = key_node;
-     
-      if (node != NULL)
-        value = xentry_extract_value(node);
-      else
-        value = NULL;
+      node = ce->d.tree_entry->dirs->childs;
 
-      if (node != NULL && value == NULL)
+      while (node != NULL)
         {
-          /* Node was corrupt; no value set. */
-          g_warning("Node for key `%s' has no value?", key);
-          node = NULL;
-        }
-
-      /* Add key to key cache, then return the new entry. */
-      key_entry = key_cache_entry_new(key, value, node); /* not that value/node are NULL if nonexistent key */
-      
-      /* Very important to use key_entry->key as the hash key */
-      g_hash_table_insert(source->keys, key_entry->key, key_entry);
-      
-      /* Tree entries track associated keys,
-         because the key entries hold a pointer into the XML 
-         tree 
-      */
-      tree_entry->cached_keys = g_slist_prepend(tree_entry->cached_keys,
-                                                key_entry);
-      
-      return key_entry;
-    }
-}
-
-static void
-xs_lookup_key_and_dir(XMLSource* source, const gchar* key,
-                      TreeCacheEntry** tree_entry_p, 
-                      KeyCacheEntry** key_entry_p)
-{
-  TreeCacheEntry* tree_entry;
-  gchar* dir;
-  KeyCacheEntry* key_entry;
-
-  g_return_if_fail(tree_entry_p != NULL);
-  g_return_if_fail(key_entry_p != NULL);
-
-  *tree_entry_p = NULL;
-  *key_entry_p = NULL;
-
-  g_return_if_fail(source != NULL);
-  g_return_if_fail(key != NULL);
-
-  /* See if we have the directory cached in the tree cache */
-  
-  dir = g_conf_key_directory(key);
-
-  g_return_if_fail(dir != NULL);
-
-  tree_entry = xs_lookup_dir(source, dir);
- 
-  g_assert(tree_entry != NULL);
- 
-  *tree_entry_p = tree_entry;
-  
-  key_entry = xs_lookup_key_given_dir(source, tree_entry, key, NULL);
-
-  g_assert(key_entry != NULL);
-  
-  *key_entry_p = key_entry;
-
-  g_free(dir);
-}
-
-
-static KeyCacheEntry*
-xs_lookup_key(XMLSource* source, const gchar* key)
-{
-  KeyCacheEntry* key_entry;
-  TreeCacheEntry* tree_entry;
-  xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
-
-  return key_entry;
-}
-
-static TreeCacheEntry* 
-xs_lookup_dir(XMLSource* source, const gchar* dir)
-{
-  TreeCacheEntry* tree_entry;
-  xmlDocPtr doc;
-
-  g_return_val_if_fail(source != NULL, NULL);
-  g_return_val_if_fail(dir != NULL, NULL);
-
-  tree_entry = g_hash_table_lookup(source->trees, dir);
-
-  if (tree_entry != NULL)
-    {
-      tree_entry->last_access = time(NULL);
-      return tree_entry;
-    }
-
-  /* Try to load it off of disk and place in cache */
-  
-  doc = xs_load_dir(source, dir);
-
-  /* doc MAY BE NULL if the dir doesn't exist */
-  
-  tree_entry = tree_cache_entry_new(doc);
-
-  g_hash_table_insert(source->trees, g_strdup(dir), tree_entry);
-
-  return tree_entry;
-}
-
-static GSList* 
-xs_pairs_in_dir(XMLSource* source, const gchar* dir)
-{
-  /* Our goal is to create a GConfPair for each entry in this dir */
-  GSList* retval = NULL;
-  TreeCacheEntry* entry;
-  xmlNodePtr node;
-  xmlDocPtr doc;
-
-  entry = xs_lookup_dir(source, dir);
-
-  if (entry == NULL)
-    return retval;
-
-  doc = entry->tree;
-
-  if (doc == NULL ||
-      doc->root == NULL ||
-      doc->root->childs == NULL)
-    {
-      /* Empty document - just return. */
-      return NULL;
-    }
-
-  if (strcmp(doc->root->name, "gconf") != 0)
-    {
-      g_conf_set_error(G_CONF_CORRUPT, _("Document root isn't a <gconf> tag"));
-      return NULL;
-    }
-
-  node = doc->root->childs;
-
-  while (node != NULL)
-    {
-      if (node->type == XML_ELEMENT_NODE && 
-          (strcmp(node->name, "entry") == 0))
-        {
-          gchar* attr = xmlGetProp(node, "name");
-          
-          if (attr != NULL)
+          if (node->type == XML_ELEMENT_NODE && 
+              (strcmp(node->name, "dir") == 0))
             {
-              gchar* key = g_conf_concat_key_and_dir(dir, attr);
-              KeyCacheEntry* key_entry;
-              GConfPair* pair;
-
-              key_entry = xs_lookup_key_given_dir(source, entry, key, node);
-
-              g_assert(key_entry != NULL);
-
-              pair = g_conf_pair_new(key, g_conf_value_copy(key_entry->value));
-
-              g_assert(pair->key != NULL);
-              g_assert(pair->value != NULL);
-
-              retval = g_slist_prepend(retval, pair);
+              gchar* attr = xmlGetProp(node, "name");
               
-              free(attr);
-              /* don't free key, because the GConfPair now owns it */
+              if (attr != NULL)
+                {
+                  /* Found one */
+                  gchar* child;
+                  CacheEntry* child_ce;
+                  
+                  child = g_conf_concat_key_and_dir(dir, attr);
+                  
+                  /* check cache */
+                  
+                  child_ce = g_hash_table_lookup(source->cache, child);
+                  
+                  /* Load if not in cache */
+                  if (child_ce == NULL)
+                    {
+                      child_ce = xs_new_dir_entry(source, child);
+                      safe_g_hash_table_insert(source->cache,
+                                               child_ce->key,
+                                               child_ce);
+                    }
+
+                  g_free(child);
+                  free(attr); /* free, it's from libxml */
+                }
+              else
+                {
+                  g_warning("Non-dir node in the dirs node!");
+                }
+            }
+          
+          node = node->next;
+        }
+    }
+
+  /* Iterate over subentries */
+  
+  if (xs_entry_tree(source, ce) &&
+      ce->d.tree_entry->tree->root && 
+      ce->d.tree_entry->tree->root->childs)
+    {
+      xmlNodePtr node = ce->d.tree_entry->tree->root->childs;
+
+      while (node != NULL)
+        {
+          if (node->type == XML_ELEMENT_NODE && 
+              (strcmp(node->name, "entry") == 0))
+            {
+              gchar* attr = xmlGetProp(node, "name");
+              
+              if (attr != NULL)
+                {
+                  /* Found one */
+                  gchar* child;
+                  CacheEntry* child_ce;
+
+                  child = g_conf_concat_key_and_dir(dir, attr);
+
+                  child_ce = g_hash_table_lookup(source->cache,
+                                                 child);
+
+                  if (child_ce == NULL)
+                    {
+                      child_ce = xs_new_key_entry(source, node, child);
+                      safe_g_hash_table_insert(source->cache, 
+                                               child_ce->key,
+                                               child_ce);
+                    }
+
+                  free(attr);
+                }
+              else
+                {
+                  g_warning("Entry with no name!");
+                }
+            }
+          
+          node = node->next;
+        }
+    }
+}
+
+/* Place the key and all its parent directories in the 
+   cache, loading each one if necessary. Return
+   the cache entry we just stored.
+*/
+static CacheEntry* 
+xs_cache_key(XMLSource* source, const gchar* key)
+{
+  gchar* parent = NULL;
+  CacheEntry* parent_entry = NULL;
+  CacheEntry* entry = NULL;
+
+  parent = parent_dir(key);
+
+  if (parent != NULL)
+    parent_entry = xs_cache_key(source, parent);
+
+  g_free(parent);
+  
+  entry = g_hash_table_lookup(source->cache, key);
+
+  if (entry != NULL)
+    return entry;
+
+  if (parent_entry != NULL)
+    {
+      /* We had a parent */
+      if (parent_entry->type != TREE_ENTRY)
+        {
+          /* We can't possibly exist; can't be inside a non-directory. */
+          entry = cache_entry_new(NONEXISTENT_ENTRY, key);
+        }
+      else
+        {
+          TreeCacheEntry* tce = NULL;
+          xmlNodePtr enode = NULL;
+          xmlNodePtr dnode = NULL;
+          xmlDocPtr tree = NULL;
+
+          g_assert(parent_entry->type == TREE_ENTRY);
+          
+          tce = parent_entry->d.tree_entry;
+
+          tree = xs_entry_tree(source, parent_entry);
+          g_assert(tree != NULL);          
+
+          enode = xdoc_find_entry(tree, key);
+          
+          if (enode != NULL)
+            {
+              entry = xs_new_key_entry(source, enode, key);
             }
           else
-            g_warning("Entry with no name???");
+            {
+              if (tce->dirs != NULL)
+                dnode = xdirs_find_dir(tce->dirs, key);
+
+              if (dnode != NULL)
+                {
+                  entry = xs_new_dir_entry(source, key);
+                }
+              else
+                {
+                  entry = cache_entry_new(NONEXISTENT_ENTRY, key);
+                }
+            }
         }
-
-      node = node->next;
     }
+  else
+    {
+      /* We are "/" - no parent entry */
+      g_assert(key[0] == '/' && key[1] == '\0');
 
-  return retval;
-}
-
-static GSList*
-xs_dirs_in_dir(XMLSource* source, const gchar* dir)
-{
-  TreeCacheEntry* entry;
-
-  entry = xs_lookup_dir(source, dir);
+      entry = xs_new_dir_entry(source, key);
+    }
 
   g_assert(entry != NULL);
 
-  return tree_cache_entry_list_dirs(entry, dir);
-}
+  safe_g_hash_table_insert(source->cache, entry->key, entry);
 
-static XMLSource* 
-xs_new(const gchar* root_dir)
-{
-  XMLSource* xs;
-
-  g_return_val_if_fail(root_dir != NULL, NULL);
-
-  xs = g_new0(XMLSource, 1);
-
-  xs->root_dir = g_strdup(root_dir);
-
-  xs->trees = g_hash_table_new(g_str_hash, g_str_equal);
-
-  xs->keys = g_hash_table_new(g_str_hash, g_str_equal);
-
-  return xs;
-}
-
-static gchar* 
-parent_dir(const gchar* dir)
-{
-  /* We assume the dir doesn't have a trailing slash, since that's our
-     standard canonicalization in GConf */
-  gchar* parent;
-  gchar* last_slash;
-
-  g_return_val_if_fail(*dir != '\0', NULL);
-
-  if (dir[1] == '\0')
-    {
-      g_assert(dir[0] == '/');
-      return NULL;
-    }
-
-  parent = g_strdup(dir);
-
-  last_slash = strrchr(parent, '/');
-
-  /* dir must have had at least the root slash in it */
-  g_assert(last_slash != NULL);
-  
-  if (last_slash != parent)
-    *last_slash = '\0';
-  else 
-    {
-      ++last_slash;
-      *last_slash = '\0';
-    }
-
-  return parent;
+  return entry;
 }
 
 static void
-xs_uncache_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry)
+xs_create_new_dir_assuming_parent_exists(XMLSource* source,
+                                         CacheEntry* pce, 
+                                         CacheEntry* ce)
 {
-  GSList* tmp = tree_entry->cached_keys;
-
-  g_return_if_fail(!tree_entry->dirty);
-
-  while (tmp != NULL)
-    {
-      KeyCacheEntry* key_entry = tmp->data;
-
-      g_hash_table_remove(source->keys, key_entry->key);
-      key_cache_entry_destroy(key_entry);
-      
-      tmp = g_slist_next(tmp);
-    }
-
-  g_slist_free(tree_entry->cached_keys);
-  tree_entry->cached_keys = NULL;
-
-  g_hash_table_remove(source->trees, dir);
-  tree_cache_entry_destroy(tree_entry);
-}
-
-static void
-xs_remove_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
-{
-  gchar* parent;
-
-  g_return_if_fail(entry->dirs == NULL);
-
-  parent = parent_dir(dir);
-  
-  if (parent != NULL)
-    {  
-      TreeCacheEntry* parent_entry;
-      gchar* key;
-
-      parent_entry = xs_lookup_dir(source, parent);
-
-      if (parent_entry == NULL ||
-          parent_entry->dirs == NULL)
-        {
-          g_warning("Bug! No entry for parent dir? No subdirs in parent? Failed to load it?");
-          g_free(parent);
-          return;
-        }
-
-      key = g_conf_key_key(dir);
-      
-      xdirs_remove_child_dir(parent_entry->dirs, key);
-
-      g_free(key);
-
-      parent_entry->dirty = TRUE;
-
-      g_free(parent);
-    }
-  else 
-    g_assert(dir[1] == '\0'); /* "/" directory */
-}
-
-static void
-xs_prune(XMLSource* source, const gchar* dir)
-{
-  TreeCacheEntry* tree_entry;
-  GSList* subdirs;
-  GSList* tmp;
-  GTime cutoff;
-
-  /* Don't want to use the lookup functions, we don't want to update
-     access times or load currently-uncached stuff here.  */
-  tree_entry = g_hash_table_lookup(source->trees, dir);
-
-  if (tree_entry == NULL)
-    return;
-
-  cutoff = time(NULL) - (60*10); /* 10 minutes */
-
-  if (tree_entry->tree == NULL || 
-      tree_entry->tree->root == NULL)
-    {
-      if (!tree_entry->dirty && 
-          tree_entry->last_access < cutoff)
-        {
-          xs_uncache_dir(source, dir, tree_entry);
-        }
-      return;
-    }
-  
-  g_assert(tree_entry->tree != NULL);
-  g_assert(tree_entry->tree->root != NULL);
-
-  if (tree_entry->dirs != NULL)
-    {
-      /* We have a subtree, so recurse it if it contains subdirs */
-      if (tree_entry->dirs->childs == NULL)
-        {
-          /* Remove empty <dirs> tag */
-          xmlUnlinkNode(tree_entry->dirs);
-          xmlFreeNode(tree_entry->dirs);
-          tree_entry->dirs = NULL;
-
-          tree_entry->dirty = TRUE;
-        }
-      else
-        {
-          subdirs = tree_cache_entry_list_dirs(tree_entry, dir);
-          
-          tmp = subdirs;
-          
-          while (tmp != NULL)
-            {
-              gchar* s = tmp->data;
-              
-              xs_prune(source, s);
-              
-              g_free(s);
-              
-              tmp = g_slist_next(tmp);
-            }
-          
-          g_slist_free(subdirs);
-        }
-    }
-
-  if (tree_entry->tree->root->childs == NULL)
-    {
-      /* this document is completely empty, mark it to go away.
-         Strictly speaking this isn't a cache prune, rather a disk
-         prune... */
-      xmlFreeDoc(tree_entry->tree);
-      tree_entry->tree = NULL;
-      tree_entry->dirty = TRUE;
-    }
-
-  if (tree_entry->dirty)
-    return; /* need to save our emptiness */
-  else if (tree_entry->tree == NULL && 
-           tree_entry->last_access < cutoff)
-    {
-      xs_uncache_dir(source, dir, tree_entry);
-    }
-}
-
-static void
-key_cache_foreach_destroy(gchar* key, KeyCacheEntry* entry, gpointer user_data)
-{
-  /* Key is stored in the entry, and destroyed with it */
-  key_cache_entry_destroy(entry);
-}
-
-static void
-tree_cache_foreach_destroy(gchar* key, TreeCacheEntry* entry, gpointer user_data)
-{
-  g_free(key);
-  tree_cache_entry_destroy(entry);
-}
-
-static void
-xs_destroy(XMLSource* source)
-{
-  g_return_if_fail(source != NULL);
-
-  g_hash_table_foreach(source->keys, (GHFunc)key_cache_foreach_destroy, NULL);
-    
-  g_hash_table_destroy(source->keys);
-
-  g_hash_table_foreach(source->trees, (GHFunc)tree_cache_foreach_destroy, NULL);
-
-  g_hash_table_destroy(source->trees);
-
-  g_free(source->root_dir);
-
-  g_free(source);
-}
-
-static void
-xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
-{
-  KeyCacheEntry* key_entry;
-  TreeCacheEntry* tree_entry;
-
-  xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
-
-  g_assert(tree_entry != NULL);
-  g_assert(key_entry != NULL);
-
-  tree_entry->dirty = TRUE;
-
-  if (key_entry->node != NULL)
-    {
-      g_return_if_fail(tree_entry != NULL);
-
-      xentry_set_value(key_entry->node, value);
-
-      g_assert(key_entry->value != NULL); /* should have a value if we have a node */
-
-      g_conf_value_destroy(key_entry->value);
-
-      key_entry->value = g_conf_value_copy(value);
-
-      /* last_access is set by the lookup function above. */
-
-      return;
-    }
-
-  if (tree_entry->tree == NULL)
-    {
-      /* Directory doesn't exist; we need to create it then stick it in 
-       * the cache. 
-       */
-      gchar* dir = g_conf_key_directory(key);
-
-      g_return_if_fail(dir != NULL);
-
-      xs_create_new_dir(source, dir, tree_entry);
-
-      g_assert(tree_entry->tree != NULL);
-
-      g_free(dir);  
-    }
-  
-  g_assert(tree_entry->tree != NULL);
-
-  /* Add the key/value to the XML tree, update it in the key cache,
-     and return. 
-  */
-
-  g_assert(key_entry->node == NULL);
-  g_assert(key_entry->value == NULL);
-
-  key_entry->node = xdoc_add_entry(tree_entry->tree, key, value);
-  
-  key_entry->value = g_conf_value_copy(value);
-
-  g_assert(key_entry->node != NULL);
-  g_assert(key_entry->value != NULL);
-  g_assert(tree_entry->dirty);
-}
-
-static gboolean
-xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry)
-{
-  if (tree_entry->dirs != NULL)
-    {
-      if (tree_entry->dirs->childs == NULL)
-        {
-          /* Remove empty <dirs> tag */
-          xmlUnlinkNode(tree_entry->dirs);
-          xmlFreeNode(tree_entry->dirs);
-          tree_entry->dirs = NULL;
-
-          tree_entry->dirty = TRUE;
-        }
-    }
-
-  if (tree_entry->tree->root->childs == NULL)
-    {
-      /* this document is completely empty */
-      xmlFreeDoc(tree_entry->tree);
-      tree_entry->tree = NULL;
-      tree_entry->dirty = TRUE;
-    }
-
-
-  if (tree_entry->tree == NULL)
-    {
-      /* Remove from parent */
-      xs_remove_dir(source, dir, tree_entry);
-      return TRUE;
-    }
-  else
-    return FALSE; /* not removed */
-}
-
-static void
-xs_unset_value(XMLSource* source, const gchar* key)
-{
-  KeyCacheEntry* key_entry;
-  TreeCacheEntry* tree_entry;
-
-  xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
-
-  g_assert(tree_entry != NULL);
-  g_assert(key_entry != NULL);
-  
-  if (key_entry->node == NULL)
-    return; /* wasn't set to begin with */
-
-  tree_entry->dirty = TRUE;
-
-  g_assert(tree_entry->tree != NULL); /* If we have a key node it has to be in a tree */
-  
-  g_assert(key_entry->node != NULL);
-  g_assert(key_entry->value != NULL);
-
-  xmlUnlinkNode(key_entry->node);
-  xmlFreeNode(key_entry->node);
-
-  key_entry->node = NULL;
-
-  g_conf_value_destroy(key_entry->value);
-  
-  key_entry->value = NULL;
-}
-
-static void
-xs_create_new_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
-{
-  xmlDocPtr doc = NULL;
-  TreeCacheEntry* parent_entry = NULL;
+  xmlDocPtr doc;
   gchar* absolute;
-  gchar* parent;
 
-  absolute = g_conf_concat_key_and_dir(source->root_dir, dir);
+  g_return_if_fail(ce->type == NONEXISTENT_ENTRY ||
+                   ce->type == DELETED_TREE_ENTRY);
 
-  parent = parent_dir(dir);
-
-  if (parent != NULL)
-    {
-      parent_entry = xs_lookup_dir(source, parent);
-
-      if (parent_entry->tree == NULL)
-        {
-          /* Recursively create parents */
-          xs_create_new_dir(source, parent, parent_entry);
-        }
-
-      g_assert(parent_entry->tree != NULL);
-
-      g_free(parent);
-    }
+  absolute = g_conf_concat_key_and_dir(source->root_dir, ce->key);
 
   if (mkdir(absolute, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
     {
@@ -1112,7 +907,7 @@ xs_create_new_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
         }
       else
         g_conf_set_error(G_CONF_FAILED, _("Could not make directory `%s': %s"),
-                         (gchar*)absolute, strerror(errno));
+                         (gchar*)absolute, strerror(errno));       
     }
 
   g_free(absolute);
@@ -1124,37 +919,297 @@ xs_create_new_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
 
   doc->root = xmlNewDocNode(doc, NULL, "gconf", NULL);
 
-  entry->tree = doc;
+  ce->type = TREE_ENTRY;
+  
+  ce->d.tree_entry = tree_cache_entry_new(doc);
 
-  entry->dirty = TRUE;
-
-  g_hash_table_insert(source->trees, g_strdup(dir), entry);
+  ce->d.tree_entry->dirty = TRUE;
   
   /* Add ourselves to the parent's directory list, unless this is the
-     root directory (in which case parent_entry should be NULL) */
+     root directory (in which case parent entry should be NULL) */
 
-  if (parent_entry != NULL)
+  if (pce != NULL)
     {
       gchar* relative_dir;
 
-      if (parent_entry->dirs == NULL)
-        tree_cache_entry_make_dirs(parent_entry);
+      if (pce->d.tree_entry->dirs == NULL)
+        tree_cache_entry_make_dirs(pce->d.tree_entry);
 
-      g_assert(parent_entry->dirs != NULL);
+      g_assert(pce->d.tree_entry->dirs != NULL);
 
-      relative_dir = strrchr(dir, '/');
+      relative_dir = strrchr(ce->key, '/');
 
       g_assert(relative_dir != NULL);
       ++relative_dir;
-      g_assert(*relative_dir != '\0'); /* would happen if the dir was '/' which it shouldn't be. */
+      g_assert(*relative_dir != '\0'); /* would happen if the dir was
+                                          '/' which it shouldn't be
+                                          since this is the child dir */
 
-      xdirs_add_child_dir(parent_entry->dirs, relative_dir);
+      xdirs_add_child_dir(pce->d.tree_entry->dirs, relative_dir);
 
       /* Mark parent to be saved */
-      parent_entry->dirty = TRUE;
+      pce->d.tree_entry->dirty = TRUE;
+    }
+}
+
+static void
+xs_create_new_dir(XMLSource* source, CacheEntry* entry)
+{
+  xmlDocPtr doc = NULL;
+  CacheEntry* parent_entry = NULL;
+  CacheEntry* next = NULL;
+  gchar* parent;
+  GSList* dir_stack = NULL;
+  GSList* iter = NULL;
+
+  g_return_if_fail(entry->type == NONEXISTENT_ENTRY ||
+                   entry->type == DELETED_TREE_ENTRY);
+
+  /* Put the dir itself and all parents in the cache */
+  xs_cache_key(source, entry->key);
+
+  /* Now build a list from top to bottom of the directories
+     we need to have created 
+  */
+  parent = g_strdup(entry->key);
+  next = entry;
+  g_assert(next != NULL); /* Because of the xs_cache_key */
+
+  while (next != NULL)
+    {
+      gchar* tmp;
+
+      dir_stack = g_slist_prepend(dir_stack, next);
+
+      tmp = parent;
+      parent = parent_dir(parent);
+      g_free(tmp);
+
+      if (parent != NULL)
+        {
+          next = g_hash_table_lookup(source->cache, parent);
+          g_assert(next != NULL);
+        }
+      else
+        {
+          g_assert(parent == NULL);
+          next = NULL;
+        }
+    }
+  
+  /* Iterate over the list and be sure each 
+     directory exists 
+  */
+  parent_entry = NULL; /* starting with root dir */
+  iter = dir_stack;
+  while (iter != NULL)
+    {
+      CacheEntry* ce;
+
+      ce = iter->data;
+      
+      switch (ce->type)
+        {
+        case KEY_ENTRY:
+          g_conf_set_error(G_CONF_IS_KEY, 
+                           _("Attempt to use key `%s' as a directory"),
+                           ce->key);
+          goto error;      
+          break;
+        case NONEXISTENT_ENTRY:
+        case DELETED_TREE_ENTRY:
+          /* (re)create the entry */
+
+          xs_create_new_dir_assuming_parent_exists(source, parent_entry, ce);
+          break;
+        case TREE_ENTRY:
+          break;
+        default:
+          g_assert_not_reached();
+          break;
+        }
+
+      iter = g_slist_next(iter);
     }
 
+  /* We jump these assertions if there's an error */
+  g_assert(entry->type == TREE_ENTRY);
+  g_assert(entry->d.tree_entry != NULL);
+
+ error:
+
+  g_slist_free(dir_stack);
+  dir_stack = NULL;
+
   return;
+}
+
+
+static void        
+xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
+{
+  CacheEntry* key_entry;
+  CacheEntry* tree_entry;
+
+  g_assert(*key);
+
+  xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
+
+  g_assert(key_entry != NULL);
+  g_assert(tree_entry != NULL);
+
+  tree_entry->d.tree_entry->dirty = TRUE;
+
+  /* Handle the fastest, simplest case first:
+     key entry already exists, we just change its value 
+  */
+  if (key_entry->type == KEY_ENTRY)
+    {
+      if (key_entry->d.key_entry->node == NULL)
+        {
+          xmlDocPtr tree = xs_entry_tree(source, tree_entry);
+          g_assert(tree != NULL);
+          
+          key_entry->d.key_entry->node = 
+            xdoc_add_entry(tree, key_entry->key, value);
+        }
+      else
+        {
+          xentry_set_value(key_entry->d.key_entry->node, value);
+        }
+
+      g_assert(key_entry->d.key_entry->value != NULL);
+      g_assert(key_entry->d.key_entry->node != NULL);
+
+      g_conf_value_destroy(key_entry->d.key_entry->value);
+
+      key_entry->d.key_entry->value = g_conf_value_copy(value);
+
+      /* last_access is set by the lookup function above. */
+
+      return;
+    }  
+  else if (key_entry->type == TREE_ENTRY)
+    {
+      g_conf_set_error(G_CONF_IS_DIR, _("setting key value for directory `%s'"),
+                       key);
+      return;
+    }
+  
+  g_assert(key_entry->type == NONEXISTENT_ENTRY || 
+           key_entry->type == DELETED_TREE_ENTRY);
+  
+
+  /* Key entry doesn't exist at all; so first make sure the directory
+     exists */
+
+  switch (tree_entry->type)
+    {
+    case KEY_ENTRY:
+      g_conf_set_error(G_CONF_IS_KEY, _("parent of `%s' is already a key"),
+                       key);
+      return;
+      break;
+    case TREE_ENTRY:
+      break;
+    case DELETED_TREE_ENTRY:
+    case NONEXISTENT_ENTRY:
+      {
+        /* Bring it into existence */
+        gchar* dir;
+
+        dir = parent_dir(key);
+
+        xs_create_new_dir(source, tree_entry);
+      }
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  g_assert(tree_entry->type == TREE_ENTRY);
+
+  /* Add the key/value to the XML tree, update it in the key cache,
+     and return. 
+  */
+
+  {
+    xmlDocPtr tree;
+
+    g_assert(key_entry->type == NONEXISTENT_ENTRY || 
+             key_entry->type == DELETED_TREE_ENTRY);
+    
+    tree = xs_entry_tree(source, tree_entry);
+    g_assert(tree != NULL);
+
+    key_entry->type = KEY_ENTRY;
+    key_entry->d.key_entry = 
+      key_cache_entry_new(value, 
+                          xdoc_add_entry(tree, 
+                                         key_entry->key,
+                                         value));
+  }
+
+  g_assert(key_entry->type == KEY_ENTRY);
+  g_assert(key_entry->d.key_entry->node != NULL);
+  g_assert(key_entry->d.key_entry->value != NULL);
+
+  g_assert(tree_entry->d.tree_entry->dirty);
+  
+  return;
+}
+
+static void        
+xs_unset_value(XMLSource* source, const gchar* key)
+{
+  CacheEntry* key_entry;
+  CacheEntry* tree_entry;
+
+  g_assert(*key);
+
+  xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
+
+  g_assert(key_entry != NULL);
+  g_assert(tree_entry != NULL);
+
+  switch (key_entry->type)
+    {
+    case NONEXISTENT_ENTRY:
+    case DELETED_TREE_ENTRY:
+      return; /* wasn't set */
+      break;
+    case TREE_ENTRY:
+      g_conf_set_error(G_CONF_IS_DIR, _("Can't unset key `%s' because it's a directory"), key);
+      return;
+      break;
+    case KEY_ENTRY:
+      {
+        if (key_entry->d.key_entry->value == NULL)
+          return; /* already unset */
+        else
+          {
+            xmlUnlinkNode(key_entry->d.key_entry->node);
+            xmlFreeNode(key_entry->d.key_entry->node);
+            
+            key_entry->d.key_entry->node = NULL;
+            
+            g_conf_value_destroy(key_entry->d.key_entry->value);
+            
+            key_entry->d.key_entry->value = NULL;
+            
+            tree_entry->d.tree_entry->dirty = TRUE;
+            
+            return;
+          }
+        return;
+      }
+      break;
+    default:
+      g_assert_not_reached();
+      return;
+      break;
+    }
 }
 
 static gboolean
@@ -1194,7 +1249,7 @@ struct SyncData {
 };
 
 static void
-tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data)
+cache_foreach_sync(const gchar* key, CacheEntry* entry, struct SyncData* data)
 {
   gchar* filename;
   gchar* tmp_filename;
@@ -1204,10 +1259,15 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
 
   /*  printf("Dir `%s' being synced; %sdirty\n", dir, entry->dirty ? "" : "not "); */
 
-  if (!entry->dirty)
+  if (entry->type == KEY_ENTRY ||
+      entry->type == NONEXISTENT_ENTRY)
     return;
 
-  relative_dir = g_conf_concat_key_and_dir(data->source->root_dir, dir);
+  if (entry->type == TREE_ENTRY && 
+      !entry->d.tree_entry->dirty)
+    return;
+
+  relative_dir = g_conf_concat_key_and_dir(data->source->root_dir, key);
 
   if (!create_fs_dir(relative_dir))
     {
@@ -1219,7 +1279,7 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
   filename = g_strconcat(relative_dir, "/.gconf.xml", NULL);
   old_filename = g_strconcat(relative_dir, "/.gconf.xml.old", NULL);
 
-  if (entry->tree == NULL)
+  if (entry->type == DELETED_TREE_ENTRY)
     {
       /* We don't check errors here because the file may not exist to 
          delete, or the directory may not be empty, and neither of those
@@ -1229,17 +1289,22 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
 
       /* FIXME broken because we need to delete child dirs 
          before parents, so each sync will only manage
-         to delete the tree fringes. 
+         to delete the tree fringes, oops.
       */
 
       unlink(filename);
       unlink(relative_dir);
 
+      /* No longer a deleted tree, just an absent key */
+      entry->type = NONEXISTENT_ENTRY;
+
       goto successful_end_of_sync;
     }
   else 
     {
-      if (xmlSaveFile(tmp_filename, entry->tree) < 0)
+      g_assert(entry->type == TREE_ENTRY);
+
+      if (xmlSaveFile(tmp_filename, entry->d.tree_entry->tree) < 0)
         {
           /* I think libxml may mangle errno, but we might as well 
              try. */
@@ -1296,7 +1361,7 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
  successful_end_of_sync:
   
   /* All successful, mark it not-dirty-anymore */
-  entry->dirty = FALSE;
+  entry->d.tree_entry->dirty = FALSE;
 
  failed_end_of_sync:
 
@@ -1305,23 +1370,34 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
   g_free(filename);
 }
 
-static gboolean
+static gboolean    
 xs_sync_all(XMLSource* source)
 {
-  struct SyncData data = { FALSE, source };
+  struct SyncData data = { FALSE, source };  
 
-  /* May as well do this on sync */
-  xs_prune(source, "/");
-
-  g_hash_table_foreach(source->trees, (GHFunc)tree_cache_foreach_sync, &data);
+  g_hash_table_foreach(source->cache, (GHFunc)cache_foreach_sync, &data);
 
   return !data.failed;
 }
 
-/* 
- * XML node/doc manipulators implementation
- */
+static GSList*     
+xs_pairs_in_dir(XMLSource* source, const gchar* dir)
+{
 
+  return NULL;
+}
+
+static GSList*     
+xs_dirs_in_dir(XMLSource* source, const gchar* dir)
+{
+
+  return NULL;
+}
+
+
+/*
+ * XML document foolishness 
+ */
 
 static xmlNodePtr 
 xdoc_add_entry(xmlDocPtr doc, const gchar* full_key, GConfValue* value)
@@ -1421,7 +1497,6 @@ xdoc_find_dirs(xmlDocPtr doc)
       g_conf_set_error(G_CONF_FAILED, _("Document root isn't a <gconf> tag"));
       return NULL;
     }
-
   
   node = doc->root->childs;
 
@@ -1440,6 +1515,55 @@ xdoc_find_dirs(xmlDocPtr doc)
 }
 
 static xmlNodePtr
+xdirs_find_dir(xmlNodePtr dirs, const gchar* full_key)
+{
+  gchar* key;
+  xmlNodePtr node;
+
+  if (dirs == NULL ||
+      dirs->childs == NULL)
+    return NULL;
+
+  key = g_conf_key_key(full_key);
+  
+  node = dirs->childs;
+
+  while (node != NULL)
+    {
+      if (node->type == XML_ELEMENT_NODE && 
+          (strcmp(node->name, "dir") == 0))
+        {
+          gchar* attr = xmlGetProp(node, "name");
+
+          if (attr != NULL)
+            {
+              if (strcmp(attr, key) == 0)
+                {
+                  /* Found it! */
+                  free(attr); /* free, it's from libxml */
+                  g_free(key);
+                  return node;
+                }
+              else
+                {
+                  free(attr);
+                }
+            }
+          else
+            {
+              g_warning("Non-dir node in the dirs node!");
+            }
+        }
+
+      node = node->next;
+    }
+
+  g_free(key);
+
+  return NULL;
+}
+
+static xmlNodePtr
 xdirs_add_child_dir(xmlNodePtr dirnode, const gchar* relative_child_dir)
 {
   xmlNodePtr node;
@@ -1451,91 +1575,6 @@ xdirs_add_child_dir(xmlNodePtr dirnode, const gchar* relative_child_dir)
   return node;
 }
 
-static void
-xdirs_remove_child_dir(xmlNodePtr dirs, const gchar* relative_child_dir)
-{
-  xmlNodePtr node = dirs->childs;
-
-  while (node != NULL)
-    {
-      gchar* attr;
-
-      attr = xmlGetProp(node, "name");
-
-      if (attr != NULL)
-        {
-          if (strcmp(attr, relative_child_dir) == 0)
-            {
-              xmlUnlinkNode(node);
-              xmlFreeNode(node);
-              free(attr);
-              return;
-            }
-          else
-            free(attr);
-        }
-      else
-        g_warning("Child dir node with no name!");
-
-      node = node->next;
-    }
-}
-
-static GConfValueType
-string_to_valuetype(const gchar* type_str)
-{ 
-  if (strcmp(type_str, "int") == 0)
-    return G_CONF_VALUE_INT;
-  else if (strcmp(type_str, "float") == 0)
-    return G_CONF_VALUE_FLOAT;
-  else if (strcmp(type_str, "string") == 0)
-    return G_CONF_VALUE_STRING;
-  else if (strcmp(type_str, "bool") == 0)
-    return G_CONF_VALUE_BOOL;
-  else if (strcmp(type_str, "schema") == 0)
-    return G_CONF_VALUE_SCHEMA;
-  else
-    {
-      g_warning("Unknown type `%s'", type_str);
- 
-      return G_CONF_VALUE_INVALID;
-    }
-}
-
-static void
-xentry_set_value(xmlNodePtr node, GConfValue* value)
-{
-  const gchar* type;
-  gchar* value_str;
-
-  g_return_if_fail(node != NULL);
-  g_return_if_fail(value != NULL);
-
-  type = g_conf_value_type_to_string(value->type);
-  
-  xmlSetProp(node, "type", type);
-
-  if (value->type != G_CONF_VALUE_SCHEMA)
-    {
-      value_str = g_conf_value_to_string(value);
-  
-      xmlSetProp(node, "value", value_str);
-
-      g_free(value_str);
-    }
-  else
-    {
-      GConfSchema* sc = g_conf_value_schema(value);
-
-      xmlSetProp(node, "value", NULL);
-      xmlSetProp(node, "stype", g_conf_value_type_to_string(sc->type));
-      /* OK if these are set to NULL, since that unsets the property */
-      xmlSetProp(node, "short_desc", sc->short_desc);
-      xmlSetProp(node, "owner", sc->owner);
-      xmlNodeSetContent(node, sc->long_desc);
-    }
-}
-
 static GConfValue*
 xentry_extract_value(xmlNodePtr node)
 {
@@ -1545,7 +1584,7 @@ xentry_extract_value(xmlNodePtr node)
 
   type_str = xmlGetProp(node, "type");
 
-  type = string_to_valuetype(type_str);
+  type = g_conf_value_type_from_string(type_str);
 
   if (type == G_CONF_VALUE_INVALID)
     {
@@ -1612,7 +1651,7 @@ xentry_extract_value(xmlNodePtr node)
       if (stype_str)
         {
           GConfValueType stype;
-          stype = string_to_valuetype(stype_str);
+          stype = g_conf_value_type_from_string(stype_str);
           g_conf_schema_set_type(sc, stype);
           free(stype_str);
         }
@@ -1625,46 +1664,80 @@ xentry_extract_value(xmlNodePtr node)
     }
 }
 
+static void
+xentry_set_value(xmlNodePtr node, GConfValue* value)
+{
+  const gchar* type;
+  gchar* value_str;
+
+  g_return_if_fail(node != NULL);
+  g_return_if_fail(value != NULL);
+
+  type = g_conf_value_type_to_string(value->type);
+  
+  xmlSetProp(node, "type", type);
+
+  if (value->type != G_CONF_VALUE_SCHEMA)
+    {
+      value_str = g_conf_value_to_string(value);
+  
+      xmlSetProp(node, "value", value_str);
+
+      g_free(value_str);
+    }
+  else
+    {
+      GConfSchema* sc = g_conf_value_schema(value);
+
+      xmlSetProp(node, "value", NULL);
+      xmlSetProp(node, "stype", g_conf_value_type_to_string(sc->type));
+      /* OK if these are set to NULL, since that unsets the property */
+      xmlSetProp(node, "short_desc", sc->short_desc);
+      xmlSetProp(node, "owner", sc->owner);
+      xmlNodeSetContent(node, sc->long_desc);
+    }
+}
+
 /*
- * Cache entry implementations
+ * Cache entry implementation 
  */
 
-static KeyCacheEntry*
-key_cache_entry_new(const gchar* key, GConfValue* value, xmlNodePtr node)
+CacheEntry* 
+cache_entry_new    (CacheEntryType type, const gchar* key)
 {
-  GConfValue* stored_val;
-  KeyCacheEntry* entry;
+  CacheEntry* ce;
 
-  g_assert((node && value) || (!node && !value));
-
-  if (value)
-    stored_val = g_conf_value_copy(value);
-  else
-    stored_val = NULL;
-
-  /* Prime candidate for mem chunks */
-  entry = g_new0(KeyCacheEntry, 1);
+  ce = g_new0(CacheEntry, 1);
   
-  entry->key = g_strdup(key);
-  entry->node = node;
-  entry->value = stored_val;
-  entry->last_access = time(NULL);
+  ce->type = type;
+  ce->key = g_strdup(key);
+  ce->last_access = time(NULL);
 
-  return entry;
+  return ce;
 }
 
-static void
-key_cache_entry_destroy(KeyCacheEntry* entry)
+void        
+cache_entry_destroy(CacheEntry* ce)
 {
-  g_return_if_fail(entry != NULL);
+  switch (ce->type) {
+  case TREE_ENTRY:
+    g_assert(ce->d.tree_entry != NULL);
+    tree_cache_entry_destroy(ce->d.tree_entry);
+    break;
+  case KEY_ENTRY:
+    g_assert(ce->d.key_entry != NULL);
+    key_cache_entry_destroy(ce->d.key_entry);
+    break;
+  default:
+    break;
+  }
 
-  g_free(entry->key);
-
-  if (entry->value)
-    g_conf_value_destroy(entry->value);
-  
-  g_free(entry);
+  g_free(ce->key);
 }
+
+/* 
+ * Tree entry impl
+ */
 
 static TreeCacheEntry* 
 tree_cache_entry_new(xmlDocPtr tree)
@@ -1677,7 +1750,6 @@ tree_cache_entry_new(xmlDocPtr tree)
   entry->tree = tree;
   entry->dirs = tree ? xdoc_find_dirs(tree) : NULL;
   entry->cached_keys = NULL;
-  entry->last_access = time(NULL);
   entry->dirty = FALSE;
 
   return entry;
@@ -1694,46 +1766,98 @@ tree_cache_entry_destroy(TreeCacheEntry* entry)
   g_free(entry);
 }
 
+
 static void
 tree_cache_entry_make_dirs(TreeCacheEntry* entry)
 {
   g_return_if_fail(entry->dirs == NULL);
+  g_return_if_fail(entry->tree != NULL);
+  g_return_if_fail(entry->tree->root != NULL);
 
   entry->dirs = xmlNewChild(entry->tree->root, NULL, "dirs", NULL);
 }
 
-static GSList*
-tree_cache_entry_list_dirs(TreeCacheEntry* entry, const gchar* dir)
+/* 
+ * Key entry impl
+ */
+
+static KeyCacheEntry* 
+key_cache_entry_new_nocopy(GConfValue* value, xmlNodePtr node)
 {
-  GSList* retval = NULL;
-  xmlNodePtr node;
+  KeyCacheEntry* entry;
+
+  g_assert((node && value) || (!node && !value));
+
+  /* Prime candidate for mem chunks */
+  entry = g_new0(KeyCacheEntry, 1);
   
-  if (entry->dirs == NULL)
+  entry->node = node;
+  entry->value = value;
+
+  return entry;
+}
+
+static KeyCacheEntry* 
+key_cache_entry_new(GConfValue* value, xmlNodePtr node)
+{
+  GConfValue* stored_val;
+
+  g_assert((node && value) || (!node && !value));
+
+  if (value)
+    stored_val = g_conf_value_copy(value);
+  else
+    stored_val = NULL;
+  
+  return key_cache_entry_new_nocopy(stored_val, node);
+}
+
+static void 
+key_cache_entry_destroy(KeyCacheEntry* entry)
+{
+  g_return_if_fail(entry != NULL);
+
+  if (entry->value)
+    g_conf_value_destroy(entry->value);
+  
+  g_free(entry);
+}
+
+
+/*
+ * Cruft
+ */
+
+static gchar* 
+parent_dir(const gchar* dir)
+{
+  /* We assume the dir doesn't have a trailing slash, since that's our
+     standard canonicalization in GConf */
+  gchar* parent;
+  gchar* last_slash;
+
+  g_return_val_if_fail(*dir != '\0', NULL);
+
+  if (dir[1] == '\0')
     {
+      g_assert(dir[0] == '/');
       return NULL;
     }
 
-  node = entry->dirs->childs;
+  parent = g_strdup(dir);
 
-  while (node != NULL)
+  last_slash = strrchr(parent, '/');
+
+  /* dir must have had at least the root slash in it */
+  g_assert(last_slash != NULL);
+  
+  if (last_slash != parent)
+    *last_slash = '\0';
+  else 
     {
-      gchar* attr = xmlGetProp(node, "name");      
-
-      if (attr != NULL)
-        {
-          gchar* s;
-          
-          s = g_conf_concat_key_and_dir(dir, attr);
-
-          free(attr);
-
-          retval = g_slist_prepend(retval, s);
-        }
-      else 
-        g_warning("Dir with no name???");
-
-      node = node->next;
+      ++last_slash;
+      *last_slash = '\0';
     }
 
-  return retval;
+  return parent;
 }

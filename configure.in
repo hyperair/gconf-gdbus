@@ -1,3 +1,5 @@
+AC_DEFUN([AC_FYI], [echo "FYI: " $1])
+
 AC_INIT(gconf/gconf.h)
 
 AM_CONFIG_HEADER(config.h)
@@ -29,6 +31,7 @@ ORBIT_LIBS=`orbit-config --libs server`
 ORBIT_CFLAGS=`orbit-config --cflags server`
 AC_SUBST(ORBIT_LIBS)
 AC_SUBST(ORBIT_CFLAGS)
+AC_FYI("Orbit libs are: "$ORBIT_LIBS)
 
 ALL_LINGUAS=""
 AM_GNU_GETTEXT

@@ -39,7 +39,9 @@ typedef enum {
                                characters, or malformed slash arrangement) */
   G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
   G_CONF_CORRUPT = 7,       /* Error parsing/loading information inside the backend */
-  G_CONF_TYPE_MISMATCH = 8  /* Type requested doesn't match type found */
+  G_CONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
+  G_CONF_IS_DIR = 9,        /* Requested key operation on a dir */
+  G_CONF_IS_KEY = 10        /* Requested dir operation on a key */
 } GConfErrNo;
 
 const gchar* g_conf_error          (void); /* returns strerror of current errno,
@@ -99,6 +101,10 @@ void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
 void        g_conf_value_set_bool(GConfValue* value, gboolean the_bool);
 void        g_conf_value_set_schema(GConfValue* value, GConfSchema* sc);
 void        g_conf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc);
+void        g_conf_value_set_car(GConfValue* value, GConfValue* car);
+void        g_conf_value_set_car_nocopy(GConfValue* value, GConfValue* car);
+void        g_conf_value_set_cdr(GConfValue* value, GConfValue* cdr);
+void        g_conf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 
@@ -180,6 +186,8 @@ gboolean     g_conf_get_bool  (GConf* conf, const gchar* key,
    sense; it returns NULL as a default, to indicate unset or error */
 /* free the retval */
 GConfSchema* g_conf_get_schema  (GConf* conf, const gchar* key);
+
+
 
 
 #endif
