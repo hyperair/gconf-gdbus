@@ -4,14 +4,23 @@ INCLUDES=-I$(top_srcdir) -I$(top_srcdir)/gconf -I$(top_builddir)/gconf  -I$(top_
 EFENCE=
 
 if GTK
-GTK_EXAMPLES=basic-gconf-app
+GTK_EXAMPLES=basic-gconf-app simple-view simple-controller
 else
 GTK_EXAMPLES=
 endif
 
 noinst_PROGRAMS=$(GTK_EXAMPLES)
 
+GTK_EXAMPLES_LINK= $(EFENCE) $(ORBIT_LIBS) $(GTK_LIBS) $(top_builddir)/gconf/libgconf.la $(top_builddir)/wrappers/gtk/libgconf-gtk.la $(EFENCE)
+
 basic_gconf_app_SOURCES = basic-gconf-app.c
 
-basic_gconf_app_LDADD = $(EFENCE) $(ORBIT_LIBS) $(GTK_LIBS) $(top_builddir)/gconf/libgconf.la $(top_builddir)/wrappers/gtk/libgconf-gtk.la $(EFENCE)
+basic_gconf_app_LDADD = $(GTK_EXAMPLES_LINK)
 
+simple_view_SOURCES = simple-view.c
+
+simple_view_LDADD = $(GTK_EXAMPLES_LINK)
+
+simple_controller_SOURCES = simple-controller.c
+
+simple_controller_LDADD = $(GTK_EXAMPLES_LINK)
