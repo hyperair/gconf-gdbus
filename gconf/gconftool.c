@@ -134,7 +134,7 @@ struct poptOption options[] = {
     POPT_ARG_STRING,
     &dir_exists,
     0,
-    N_("Determine if a directory exists in the database."),
+    N_("Return 0 if the directory exists, 2 if it does not."),
     NULL
   },
   { 
@@ -306,9 +306,17 @@ main (int argc, char** argv)
 
   if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
-                      spawn_gconfd))
+                      spawn_gconfd || dir_exists))
     {
       fprintf(stderr, _("Ping option must be used by itself.\n"));
+      return 1;
+    }
+
+  if (dir_exists && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
+                     all_subdirs_mode || all_entries_mode || recursive_list || 
+                     spawn_gconfd))
+    {
+      fprintf(stderr, _("dir-exists option must be used by itself.\n"));
       return 1;
     }
 
@@ -335,6 +343,14 @@ main (int argc, char** argv)
       if (g_conf_ping_daemon())
         return 0;
       else 
+        return 2;
+    }
+
+  if (dir_exists != NULL) 
+    {
+      if (g_conf_dir_exists(conf, dir_exists)) 
+        return 0;
+      else
         return 2;
     }
 
@@ -693,14 +709,6 @@ main (int argc, char** argv)
         }
 
       do_recursive_list(conf, args);
-    }
-
-  if (dir_exists != NULL) 
-    {
-      gchar *format = 
-        g_conf_dir_exists(conf, dir_exists) ? N_("%s: Exists.\n") : 
-                                              N_("%s: Does not exist.\n");
-      printf(format, dir_exists);
     }
 
   poptFreeContext(ctx);
