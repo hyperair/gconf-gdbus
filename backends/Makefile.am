@@ -6,5 +6,5 @@ libgconfbackend_xml_la_SOURCES = \
 	xml-backend.c
 
 
-libgconfbackend_xml_la_LDFLAGS = -avoid-version
+libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
 libgconfbackend_xml_la_LIBADD  = $(GLIB_CFLAGS)

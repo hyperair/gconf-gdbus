@@ -22,33 +22,47 @@
 #define GCONF_GCONFBACKEND_H
 
 #include <gconf/gconf-internals.h>
+#include <gmodule.h>
 
 typedef struct _GConfBackendVTable GConfBackendVTable;
 
 struct _GConfBackendVTable {
-  GConfBackend* (* init)            (void);
-  void          (* shutdown)        (GConfBackend* backend);
+  void                (* shutdown)        (void);
 
-  GConfSource*  (* resolve_address) (GConfBackend* backend, const gchar* address);
+  GConfSource*        (* resolve_address) (const gchar* address);
 
-  GConfValue*   (* query_value)     (GConfSource* source, const gchar* key);
+  GConfValue*         (* query_value)     (GConfSource* source, const gchar* key);
+
+  void                (* destroy_source)  (GConfSource* source);
 };
 
 struct _GConfBackend {
+  const gchar* name;
   guint refcount;
   GConfBackendVTable* vtable;
+  GModule* module;
 };
 
+/* Address utility stuff */
+
+/* Get the backend name */
+gchar* g_conf_address_backend(const gchar* address);
+/* Get the resource name understood only by the backend */
+gchar* g_conf_address_resource(const gchar* address);
+
+const gchar* g_conf_backend_dir(void);
+gchar*       g_conf_backend_file(const gchar* address);
+
 /* Obtain the GConfBackend for this address, based on the first part of the 
- * address.
+ * address. The refcount is always incremented, and you must unref() later
  */
 GConfBackend* g_conf_get_backend(const gchar* address);
 
-/* Backends start with a refcount of 0, which is a bit weird for Gtk programmers
- * but essential since you don't know from g_conf_backend_get() if you're the first
- * to obtain the backend or if you got an already-cached backend.
- */
 void          g_conf_backend_ref(GConfBackend* backend);
 void          g_conf_backend_unref(GConfBackend* backend);
 
+GConfSource*  g_conf_backend_resolve_address (GConfBackend* backend, 
+                                              const gchar* address);
+
 #endif
+

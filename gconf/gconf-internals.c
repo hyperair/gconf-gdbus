@@ -18,6 +18,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "gconf-internals.h"
+#include "gconf-backend.h"
+
 GConfValue* 
 g_conf_value_new(GConfValueType type)
 {
@@ -26,6 +29,8 @@ g_conf_value_new(GConfValueType type)
   value = g_new0(GConfValue, 1);
 
   value->type = type;
+
+  return value;
 }
 
 void 
@@ -65,4 +70,48 @@ g_conf_value_set_float(GConfValue* value, gdouble the_float)
   g_return_if_fail(value->type == G_CONF_VALUE_FLOAT);
 
   value->d.float_data = the_float;
+}
+
+
+/* 
+ *  Sources
+ */
+
+GConfSource* 
+g_conf_resolve_address(const gchar* address)
+{
+  GConfBackend* backend;
+
+  backend = g_conf_get_backend(address);
+
+  if (backend == NULL)
+    return NULL;
+  else
+    {
+      GConfSource* retval;
+
+      retval = g_conf_backend_resolve_address(backend, address);
+      
+      /* Leave a ref on the backend, now held by the GConfSource */
+      
+      return retval;
+    }
+}
+
+GConfValue*   
+g_conf_source_query_value      (GConfSource* source,
+                                const gchar* key)
+{
+  return (*source->backend->vtable->query_value)(source, key);
+}
+
+void         
+g_conf_source_destroy (GConfSource* source)
+{
+  GConfBackend* backend = source->backend;
+
+  (*source->backend->vtable->destroy_source)(source);
+
+  /* Remove ref held by the source. */
+  g_conf_backend_unref(backend);
 }

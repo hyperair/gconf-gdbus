@@ -76,6 +76,9 @@ struct _GConfSource {
 };
 
 GConfSource* g_conf_resolve_address(const gchar* address);
+GConfValue*   g_conf_source_query_value      (GConfSource* source,
+                                              const gchar* key);
+void         g_conf_source_destroy (GConfSource* source);
 
 const gchar* g_conf_error          (void);
 gboolean     g_conf_error_pending  (void);

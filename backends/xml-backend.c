@@ -21,44 +21,62 @@
 
 #include <gconf/gconf-backend.h>
 
-GConfBackend* init            (void);
-void          shutdown        (GConfBackend* backend);
+static void          shutdown        (GConfBackend* backend);
 
-GConfSource*  resolve_address (GConfBackend* backend, const gchar* address);
+static GConfSource*  resolve_address (GConfBackend* backend, const gchar* address);
 
-GConfValue*   query_value     (GConfSource* source, const gchar* key);
+static GConfValue*   query_value     (GConfSource* source, const gchar* key);
+
+static void          destroy_source  (GConfSource* source);
 
 static GConfBackendVTable xml_vtable = {
-  init, 
   shutdown,
   resolve_address,
-  query_value
+  query_value,
+  destroy_source
 };
 
-
-
-GConfBackend* 
-init (void)
-{
-
-
-}
-
-void          
+static void          
 shutdown (GConfBackend* backend)
 {
 
 }
 
-GConfSource*  
+static GConfSource*  
 resolve_address (GConfBackend* backend, const gchar* address)
 {
 
 }
 
-GConfValue* 
+static GConfValue* 
 query_value (GConfSource* source, const gchar* key)
+{
+  
+
+}
+
+static void          
+destroy_source  (GConfSource* source)
 {
 
 
 }
+
+/* Initializer */
+
+G_MODULE_EXPORT const gchar*
+g_module_check_init (GModule *module)
+{
+  g_print("Init XML module\n");
+
+  return NULL;
+}
+
+G_MODULE_EXPORT GConfBackendVTable* 
+g_conf_backend_get_vtable(void)
+{
+  return &xml_vtable;
+}
+
+
+
