@@ -2102,12 +2102,12 @@ key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
         return FALSE;
 
       gconf_engine_set_pair(conf, key, GCONF_VALUE_INT, GCONF_VALUE_BOOL,
-                     &an_int, &a_bool, &error);
+                            &an_int, &a_bool, &error);
       if (check_err(&error))
         return FALSE;
 
       gconf_engine_set_pair(conf, key, GCONF_VALUE_FLOAT, GCONF_VALUE_STRING,
-                     &a_float, &a_string, &error);
+                            &a_float, &a_string, &error);
       if (check_err(&error))
         return FALSE;
 

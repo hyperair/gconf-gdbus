@@ -1,3 +1,14 @@
+2000-10-10  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-value.c (gconf_value_to_string): fix segfault when 
+	pair contains unset car or cdr
+	(gconf_value_set_car): allow setting car or cdr of a pair to
+	NULL. I'm not sure if this is the normal thing in the code
+	right now, but, hmm.
+
+	* gconf/gconf-sources.c (gconf_sources_all_entries): fix
+	cut-and-paste error resulting in NULL pointer dereference.
+
 2000-10-08  Havoc Pennington  <hp@pobox.com>
 
         gconfd should now exit when not in use.

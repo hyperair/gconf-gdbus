@@ -586,10 +586,17 @@ gconf_value_to_string(GConfValue* value)
         gchar* car;
         gchar* cdr;
 
-        tmp = gconf_value_to_string(gconf_value_get_car(value));
+        if (gconf_value_get_car (value))
+          tmp = gconf_value_to_string(gconf_value_get_car(value));
+        else
+          tmp = g_strdup ("nil");
 	car = escape_string(tmp, ",)");
 	g_free(tmp);
-        tmp = gconf_value_to_string(gconf_value_get_cdr(value));
+
+        if (gconf_value_get_cdr (value))
+          tmp = gconf_value_to_string(gconf_value_get_cdr(value));
+        else
+          tmp = g_strdup ("nil");
 	cdr = escape_string(tmp, ",)");
 	g_free(tmp);
         retval = g_strdup_printf("(%s,%s)", car, cdr);
@@ -822,8 +829,6 @@ gconf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
 void
 gconf_value_set_car(GConfValue* value, GConfValue* car)
 {
-  g_return_if_fail(car != NULL);
-
   gconf_value_set_car_nocopy(value, gconf_value_copy(car));
 }
 
@@ -832,7 +837,6 @@ gconf_value_set_car_nocopy(GConfValue* value, GConfValue* car)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_PAIR);
-  g_return_if_fail(car != NULL);
   
   if (value->d.pair_data.car != NULL)
     gconf_value_free(value->d.pair_data.car);
@@ -843,8 +847,6 @@ gconf_value_set_car_nocopy(GConfValue* value, GConfValue* car)
 void
 gconf_value_set_cdr(GConfValue* value, GConfValue* cdr)
 {
-  g_return_if_fail(cdr != NULL);
-
   gconf_value_set_cdr_nocopy(value, gconf_value_copy(cdr));
 }
 
@@ -853,7 +855,6 @@ gconf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_PAIR);
-  g_return_if_fail(cdr != NULL);
   
   if (value->d.pair_data.cdr != NULL)
     gconf_value_free(value->d.pair_data.cdr);

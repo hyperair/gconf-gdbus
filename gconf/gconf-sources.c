@@ -914,14 +914,14 @@ gconf_sources_all_entries   (GConfSources* sources,
           
           if (previous != NULL)
             {
-              if (gconf_entry_get_value(previous) != NULL)
+              if (gconf_entry_get_value (previous) != NULL)
                 /* Discard this latest one */
                 ;
               else
                 {
                   /* Save the new value, previously we had an entry but no value */
-                  gconf_entry_set_value_nocopy(previous,
-                                               gconf_entry_steal_value(pair));
+                  gconf_entry_set_value_nocopy (previous,
+                                                gconf_entry_steal_value(pair));
 
                   /* As an efficiency hack, remember that
                    * entry->key is relative not absolute on the
@@ -950,10 +950,10 @@ gconf_sources_all_entries   (GConfSources* sources,
                */
               full = gconf_concat_dir_and_key (dir, pair->key);
               
-              previous->is_writable = key_is_writable (sources,
-                                                       src,
-                                                       full,
-                                                       NULL);
+              pair->is_writable = key_is_writable (sources,
+                                                   src,
+                                                   full,
+                                                   NULL);
               
               g_free (full);
             }
