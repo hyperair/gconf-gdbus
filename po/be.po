@@ -5,14 +5,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-05 14:29+0100\n"
+"POT-Creation-Date: 2004-02-24 16:00+0000\n"
 "PO-Revision-Date: 2003-12-11 08:46EET\n"
 "Last-Translator: Ales Nyakhaychyk <nab@mail.by>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 0.9.5\n"
 
 # backends/dir-utils.c:108
@@ -33,6 +33,35 @@ msgstr "Немагчыма стварыць тэчку \"%s\": %s"
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "Немагчыма чытаць ці пісаць у каранёвую тэчку %s у адрэсе \"%s\""
 
+# backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1176
+#: backends/gconf-merge-tree.c:78
+#, fuzzy, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Немагчыма стварыць тэчку \"%s\": %s"
+
+# gconf/gconftool.c:1341
+#: backends/gconf-merge-tree.c:94
+#, fuzzy, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Памылка атрыманьня схемы па \"%s\": %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr ""
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+
 # backends/xml-backend.c:233
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -47,7 +76,8 @@ msgstr "Неатрымалася адшукаць каранёвы каталё�
 # backends/xml-backend.c:414
 #: backends/xml-backend.c:443
 #, c-format
-msgid "Can't read from or write to the XML root directory in the address \"%s\""
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "Немагчыма чытаць ці пісаць у каранёвы каталёг XML на адрэсе \"%s\""
 
 # backends/xml-backend.c:424
@@ -68,8 +98,8 @@ msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
 msgstr ""
-"Выдаленьня тэчкі больш не падтрымліваецца, проста выдаліце ўсе "
-"значэньні з тэчкі"
+"Выдаленьня тэчкі больш не падтрымліваецца, проста выдаліце ўсе значэньні з "
+"тэчкі"
 
 # backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1176
 #: backends/xml-backend.c:770
@@ -829,7 +859,8 @@ msgstr "Памылка праверкі даступнасьці паслужн�
 #: gconf/gconf-internals.c:2899
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "Збой пад час стварэньня канала для сувязі з народжаным дэманам gconfd: %s\n"
+msgstr ""
+"Збой пад час стварэньня канала для сувязі з народжаным дэманам gconfd: %s\n"
 
 # gconf/gconf-internals.c:2899
 #: gconf/gconf-internals.c:2923
@@ -893,13 +924,13 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
-"Калі ласка, зьвяжыцеся са сваім сыстэмным адміністратарам для вырашэньня наступнае "
-"праблемы:\n"
-"Немагчыма замкнуць файл \"%s\"; гэта азначае, што магчыма існуе "
-"праблема з наладкамі вашае апэрацыйнае сыстэмы. Калі ў вас ёсьць "
-"замантаваная праз NFS свойская тэчка, магчыма, альбо паслужнік, альбо кліент "
-"наладжаны ня так, як патрэбна. Паглядзіце дакумэнтацыю на rpc.statd і rpc.lockd. "
-"Агульным выпадкам гэтае памылкі можа быць тое, што паслуга \"nfslock\" была "
+"Калі ласка, зьвяжыцеся са сваім сыстэмным адміністратарам для вырашэньня "
+"наступнае праблемы:\n"
+"Немагчыма замкнуць файл \"%s\"; гэта азначае, што магчыма існуе праблема з "
+"наладкамі вашае апэрацыйнае сыстэмы. Калі ў вас ёсьць замантаваная праз NFS "
+"свойская тэчка, магчыма, альбо паслужнік, альбо кліент наладжаны ня так, як "
+"патрэбна. Паглядзіце дакумэнтацыю на rpc.statd і rpc.lockd. Агульным "
+"выпадкам гэтае памылкі можа быць тое, што паслуга \"nfslock\" была "
 "адключана. Адбылася памылка - \"%s\" (errno = %d)."
 
 # gconf/gconf-internals.c:2569
@@ -978,7 +1009,8 @@ msgid "Schema contains invalid UTF-8"
 msgstr "Схема ўтрымлівае несапраўдную пасьлядоўнасьць UTF-8"
 
 #: gconf/gconf-schema.c:254
-msgid "Schema specifies type list but doesn't specify the type of the list elements"
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
 msgstr "Тыма вызначаецца тыпам сьпіса але ня вызначаны тып элемэнтаў"
 
 #: gconf/gconf-schema.c:264
@@ -997,7 +1029,8 @@ msgstr "Неатрымалася загрузіць крыніцу \"%s\": %s"
 #: gconf/gconf-sources.c:346
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
-msgstr "Вырашаная адрэса \"%s\" да крыніцы, у якую вядзецца запіс наладак у месцы %d"
+msgstr ""
+"Вырашаная адрэса \"%s\" да крыніцы, у якую вядзецца запіс наладак у месцы %d"
 
 # gconf/gconf-sources.c:352
 #: gconf/gconf-sources.c:352
@@ -1010,7 +1043,8 @@ msgstr ""
 # gconf/gconf-sources.c:359
 #: gconf/gconf-sources.c:359
 #, c-format
-msgid "Resolved address \"%s\" to a partially writable config source at position %d"
+msgid ""
+"Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
 "Вырашаная адрэса \"%s\" да крыніцы канфігурацыі, якая запісваецца часткова, "
 "у пазыцыі %d"
@@ -1298,7 +1332,8 @@ msgstr ""
 # gconf/gconfd.c:292
 #: gconf/gconfd.c:296
 #, c-format
-msgid "No configuration files found, trying to use the default config source `%s'"
+msgid ""
+"No configuration files found, trying to use the default config source `%s'"
 msgstr ""
 "Файлы наладак ня адшуканы, спроба выкарыстоўваць дапомную крыніцу наладак  "
 "\"%s\""
@@ -1351,7 +1386,8 @@ msgstr ""
 # gconf/gconfd.c:384
 #: gconf/gconfd.c:390
 #, c-format
-msgid "Received signal %d, shutting down abnormally. Please file a GConf bug report."
+msgid ""
+"Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Атрыманы сыгнал %d, ненармальнае выключэньне. Калі ласка, паведаміце пра "
 "памылку ў GConf."
@@ -1414,7 +1450,8 @@ msgstr ""
 #: gconf/gconfd.c:685
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
-msgstr "Збой пад час атрыманьня блякаваньня для паслужніка, завяршэньне працы: %s"
+msgstr ""
+"Збой пад час атрыманьня блякаваньня для паслужніка, завяршэньне працы: %s"
 
 # gconf/gconfd.c:656
 #: gconf/gconfd.c:723
@@ -1451,7 +1488,8 @@ msgstr ""
 # gconf/gconfd.c:1194
 #: gconf/gconfd.c:1258
 #, c-format
-msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
+msgid ""
+"Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Збой пад час закрыцьця файла часопіса gconfd; даньні могуць быць памылкова "
 "захаваныя (%s)"
@@ -1484,12 +1522,14 @@ msgstr "Неатрымалася перамясьціць стары файл з
 #: gconf/gconfd.c:1374
 #, c-format
 msgid "Failed to move new save state file into place: %s"
-msgstr "Неатрымалася перамясьціць новы файл захаванага стану на новае меёсца: %s"
+msgstr ""
+"Неатрымалася перамясьціць новы файл захаванага стану на новае меёсца: %s"
 
 # gconf/gconfd.c:1319
 #: gconf/gconfd.c:1383
 #, c-format
-msgid "Failed to restore original saved state file that had been moved to '%s': %s"
+msgid ""
+"Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "Неатрымалася аднавіць зыходны файл захаванага стану, які быў перанесены ў \"%"
 "s\": %s"
@@ -1497,8 +1537,10 @@ msgstr ""
 # gconf/gconfd.c:1790
 #: gconf/gconfd.c:1854
 #, c-format
-msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr "Немагчыма аднавіць слухача на адрэсе \"%s\", немагчыма дазволіць базу даньняў"
+msgid ""
+"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgstr ""
+"Немагчыма аднавіць слухача на адрэсе \"%s\", немагчыма дазволіць базу даньняў"
 
 # gconf/gconfd.c:1836
 #: gconf/gconfd.c:1900
@@ -1558,8 +1600,10 @@ msgstr "Збой пад час скіданьня даданьня кліент�
 
 # gconf/gconfd.c:2160
 #: gconf/gconfd.c:2236
-msgid "Some client removed itself from the GConf server when it hadn't been added."
-msgstr "Пэўны кліент выдаліў сябе з паслужніка GConf, але ня бу раней даданы да яго!"
+msgid ""
+"Some client removed itself from the GConf server when it hadn't been added."
+msgstr ""
+"Пэўны кліент выдаліў сябе з паслужніка GConf, але ня бу раней даданы да яго!"
 
 # gconf/gconftool.c:80
 #: gconf/gconftool.c:93
@@ -1906,7 +1950,8 @@ msgstr "выбар %s мусіць выкарыстоўваць сам сябе.
 
 # gconf/gconftool.c:546
 #: gconf/gconftool.c:702
-msgid "You must specify a config source with --config-source when using --direct\n"
+msgid ""
+"You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "Неабходна указаць крыніцу канфігурацыі з дапамогай парамэтра --config-"
 "source, калі выкарыстоўваецца парамэтар --direct\n"
@@ -1933,7 +1978,8 @@ msgstr ""
 
 # gconf/gconftool.c:587
 #: gconf/gconftool.c:750
-msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
+msgid ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "Пераменая асяродьдзя GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL усталявана, схема "
 "не выдаляецца\n"
@@ -2065,7 +2111,8 @@ msgstr "Нязразуметы тып '%s'\n"
 # gconf/gconftool.c:1142
 #: gconf/gconftool.c:1678
 msgid "Must specify alternating keys/values as arguments\n"
-msgstr "Патрабуецца указываць альтэрнатыўныя ключы/значэньні ў якасьці аргумэнтаў\n"
+msgstr ""
+"Патрабуецца указываць альтэрнатыўныя ключы/значэньні ў якасьці аргумэнтаў\n"
 
 # gconf/gconftool.c:1162
 #: gconf/gconftool.c:1698
@@ -2085,8 +2132,10 @@ msgstr "Патрабуецца указываць просты тып сьпіс
 
 # gconf/gconftool.c:1214
 #: gconf/gconftool.c:1750
-msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "Патрабуецца указываць простыя тыпы ключа й значэньня пад час усталёўкі пары\n"
+msgid ""
+"When setting a pair you must specify a primitive car-type and cdr-type\n"
+msgstr ""
+"Патрабуецца указываць простыя тыпы ключа й значэньня пад час усталёўкі пары\n"
 
 # gconf/gconftool.c:1229
 #: gconf/gconftool.c:1765
@@ -2238,7 +2287,8 @@ msgstr "Памылка сынхранізацыі: %s"
 # gconf/gconftool.c:1593
 #: gconf/gconftool.c:2283
 msgid "Must specify one or more directories to get key/value pairs from.\n"
-msgstr "Неабходна задаць адну ці болей тэчак для атрыманьня пар ключ/значэньне.\n"
+msgstr ""
+"Неабходна задаць адну ці болей тэчак для атрыманьня пар ключ/значэньне.\n"
 
 # gconf/gconftool.c:1607
 #: gconf/gconftool.c:2297
@@ -2254,7 +2304,8 @@ msgstr "Памылка выдаленьня значэньня \"%s\": %s\n"
 # gconf/gconftool.c:1638
 #: gconf/gconftool.c:2328
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Патрабуецца указываць адзін ці болей ключоў для рэкурсыўнага выдаленьня.\n"
+msgstr ""
+"Патрабуецца указываць адзін ці болей ключоў для рэкурсыўнага выдаленьня.\n"
 
 # gconf/gconftool.c:1652
 #: gconf/gconftool.c:2342
@@ -2265,9 +2316,7 @@ msgstr "Збой пад час рэкурсыўнага выдаленьня \"%
 # gconf/gconftool.c:1670
 #: gconf/gconftool.c:2362
 msgid "Must specify one or more directories to get subdirs from.\n"
-msgstr ""
-"Неабходна задаць адну ці болей тэчак для атрыманьня з іх "
-"падтэчак.\n"
+msgstr "Неабходна задаць адну ці болей тэчак для атрыманьня з іх падтэчак.\n"
 
 # gconf/gconftool.c:1704
 #: gconf/gconftool.c:2396
@@ -2345,13 +2394,15 @@ msgstr "УВАГА: недапушчальны ці памылковы тып с
 #: gconf/gconftool.c:2921 gconf/gconftool.c:2951 gconf/gconftool.c:2980
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "УВАГА: ня атрымалася разабраць зыходнае значэньне '%s' для схемы (%s)\n"
+msgstr ""
+"УВАГА: ня атрымалася разабраць зыходнае значэньне '%s' для схемы (%s)\n"
 
 # gconf/gconftool.c:1784
 #: gconf/gconftool.c:2939
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr "УВАГА: недапушчальны ці памылковы тып ключа ці значэньня для схемы (%s)\n"
+msgstr ""
+"УВАГА: недапушчальны ці памылковы тып ключа ці значэньня для схемы (%s)\n"
 
 # gconf/gconftool.c:1809
 #: gconf/gconftool.c:2964
@@ -2374,7 +2425,8 @@ msgstr "УВАГА: збой пад час разбору назвы тыпа \"
 # gconf/gconftool.c:1902
 #: gconf/gconftool.c:3058
 #, c-format
-msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+msgid ""
+"WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "УВАГА: тып сьпіса можа быць толькі цэлым, з пл.пунктам, радком ці лягічным "
 "значэньнем і ня можа быць \"%s\"\n"
@@ -2429,7 +2481,8 @@ msgstr "УВАГА: вузел <locale> ня мае довада `name=\"locale\
 # gconf/gconftool.c:2024
 #: gconf/gconftool.c:3201
 #, c-format
-msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
+msgid ""
+"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "УВАГА: некалькі вузлоў <locale> для мясцовасьці \"%s\", незаўважаюцца ўсе "
 "пасьля першага\n"
@@ -2582,4 +2635,3 @@ msgstr ""
 "Спроба перарваць вашае дастасаваньне усталяваньнем памылковых значэньняў для "
 "ключоў у каталёзе:\n"
 "  %s\n"
-
