@@ -257,6 +257,23 @@ order to force the backend to be able to obtain access to its data store.
 </row>
  
 <row>
+<entry>@set_notify_func</entry>
+
+<entry>
+If the backend wishes to notify the daemon of changes in the value of
+keys it must implement this method. In order to notify the daemon
+of a change, the backend should invoke the supplied @notify_func with
+@user_data. Backends must not notify the daemon of changes which the
+daemon has not expressed interest in by adding a listener with
+@add_listener. Also, the backend must make every effort to minimise the
+number of notifications it emits. For example, if the daemon has added
+a listener for /apps and another for /apps/foo and the value of
+/apps/foo/bar changes, the backend should only emit a single notification.
+</entry>
+
+</row>
+ 
+<row>
 <entry>@add_listener</entry>
 
 <entry>
