@@ -55,14 +55,15 @@
 static gchar* last_details = NULL;
 static GConfErrNo last_errno = G_CONF_SUCCESS;
 
-static const gchar* err_msgs[7] = {
+static const gchar* err_msgs[8] = {
   N_("Success"),
   N_("Failed"),
   N_("Configuration server couldn't be contacted"),
   N_("Permission denied"),
   N_("Couldn't resolve address for configuration source"),
   N_("Bad key or directory name"),
-  N_("Parse error")
+  N_("Parse error"),
+  N_("Type mismatch")
 };
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);
@@ -1177,4 +1178,163 @@ g_conf_spawn_daemon(void)
     return FALSE; /* Failed to spawn, error should be set */
   else
     return TRUE;
+}
+
+/*
+ * Sugar functions 
+ */
+
+gdouble      
+g_conf_get_float (GConf* conf, const gchar* key,
+                  gdouble deflt)
+{
+  GConfValue* val;
+
+  val = g_conf_get(conf, key);
+
+  if (val == NULL)
+    return deflt;
+  else
+    {
+      gdouble retval;
+      
+      if (val->type != G_CONF_VALUE_FLOAT)
+        {
+          g_conf_set_error(G_CONF_TYPE_MISMATCH, _("Expected float, got %s"),
+                           g_conf_value_type_to_string(val->type));
+          g_conf_value_destroy(val);
+          return deflt;
+        }
+
+      retval = g_conf_value_float(val);
+
+      g_conf_value_destroy(val);
+
+      return retval;
+    }
+}
+
+gint         
+g_conf_get_int   (GConf* conf, const gchar* key,
+                  gint deflt)
+{
+  GConfValue* val;
+
+  val = g_conf_get(conf, key);
+
+  if (val == NULL)
+    return deflt;
+  else
+    {
+      gint retval;
+
+      if (val->type != G_CONF_VALUE_INT)
+        {
+          g_conf_set_error(G_CONF_TYPE_MISMATCH, _("Expected int, got %s"),
+                           g_conf_value_type_to_string(val->type));
+          g_conf_value_destroy(val);
+          return deflt;
+        }
+
+      retval = g_conf_value_int(val);
+
+      g_conf_value_destroy(val);
+
+      return retval;
+    }
+}
+
+gchar*       
+g_conf_get_string(GConf* conf, const gchar* key,
+                  const gchar* deflt)
+{
+  GConfValue* val;
+
+  val = g_conf_get(conf, key);
+
+  if (val == NULL)
+    return deflt ? g_strdup(deflt) : NULL;
+  else
+    {
+      gchar* retval;
+
+      if (val->type != G_CONF_VALUE_STRING)
+        {
+          g_conf_set_error(G_CONF_TYPE_MISMATCH, _("Expected string, got %s"),
+                           g_conf_value_type_to_string(val->type));
+          g_conf_value_destroy(val);
+          return deflt ? g_strdup(deflt) : NULL;
+        }
+
+      retval = g_conf_value_string(val);
+
+      /* This is a cheat; don't copy */
+      val->d.string_data = NULL; /* don't delete the string */
+
+      g_conf_value_destroy(val);
+
+      return retval;
+    }
+}
+
+gboolean     
+g_conf_get_bool  (GConf* conf, const gchar* key,
+                  gboolean deflt)
+{
+  GConfValue* val;
+
+  val = g_conf_get(conf, key);
+
+  if (val == NULL)
+    return deflt;
+  else
+    {
+      gboolean retval;
+
+      if (val->type != G_CONF_VALUE_BOOL)
+        {
+          g_conf_set_error(G_CONF_TYPE_MISMATCH, _("Expected bool, got %s"),
+                           g_conf_value_type_to_string(val->type));
+          g_conf_value_destroy(val);
+          return deflt;
+        }
+
+      retval = g_conf_value_bool(val);
+
+      g_conf_value_destroy(val);
+
+      return retval;
+    }
+}
+
+GConfSchema* 
+g_conf_get_schema  (GConf* conf, const gchar* key)
+{
+  GConfValue* val;
+
+  val = g_conf_get(conf, key);
+
+  if (val == NULL)
+    return NULL;
+  else
+    {
+      GConfSchema* retval;
+
+      if (val->type != G_CONF_VALUE_SCHEMA)
+        {
+          g_conf_set_error(G_CONF_TYPE_MISMATCH, _("Expected schema, got %s"),
+                           g_conf_value_type_to_string(val->type));
+          g_conf_value_destroy(val);
+          return NULL;
+        }
+
+      retval = g_conf_value_schema(val);
+
+      /* This is a cheat; don't copy */
+      val->d.schema_data = NULL; /* don't delete the schema */
+
+      g_conf_value_destroy(val);
+
+      return retval;
+    }
 }

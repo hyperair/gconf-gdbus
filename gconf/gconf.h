@@ -36,7 +36,8 @@ typedef enum {
   G_CONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
                                characters, or malformed slash arrangement) */
   G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
-  G_CONF_CORRUPT = 7        /* Error parsing/loading information inside the backend */
+  G_CONF_CORRUPT = 7,       /* Error parsing/loading information inside the backend */
+  G_CONF_TYPE_MISMATCH = 8  /* Type requested doesn't match type found */
 } GConfErrNo;
 
 /* 
@@ -125,10 +126,9 @@ void         g_conf_notify_remove(GConf* conf,
                                   guint cnxn);
 
 
-/* We'll have higher-level versions that return a double or string instead of a GConfValue */
+/* Low-level interfaces */
 GConfValue*  g_conf_get(GConf* conf, const gchar* key);
 
-/* ditto, higher-level version planned. */
 void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
 void         g_conf_unset(GConf* conf, const gchar* key);
@@ -140,6 +140,34 @@ GSList*      g_conf_all_dirs(GConf* conf, const gchar* dir);
 void         g_conf_sync(GConf* conf);
 
 gboolean     g_conf_valid_key      (const gchar* key);
+
+/* 
+ * Higher-level stuff 
+ */
+
+/* 'def' (default) is used if the key is not set or if there's an error. */
+
+gdouble      g_conf_get_float (GConf* conf, const gchar* key,
+                               gdouble def);
+
+gint         g_conf_get_int   (GConf* conf, const gchar* key,
+                               gint def);
+
+/* free the retval */
+gchar*       g_conf_get_string(GConf* conf, const gchar* key,
+                               const gchar* def); /* def is copied when returned, 
+                                                   * and can be NULL to return 
+                                                   * NULL 
+                                                   */
+
+gboolean     g_conf_get_bool  (GConf* conf, const gchar* key,
+                               gboolean def);
+
+/* this one has no default since it would be expensive and make little
+   sense; it returns NULL as a default, to indicate unset or error */
+/* free the retval */
+GConfSchema* g_conf_get_schema  (GConf* conf, const gchar* key);
+
 
 #endif
 
