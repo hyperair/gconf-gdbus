@@ -67,7 +67,7 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
-for coin in `find $srcdir -name configure.in -print`
+for coin in `find . -name configure.in -print`
 do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then
@@ -123,6 +123,8 @@ do
 done
 
 conf_flags="--enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
+
+cd "$ORIGDIR"
 
 if test x$NOCONFIGURE = x; then
   echo Running $srcdir/configure $conf_flags "$@" ...

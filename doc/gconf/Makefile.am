@@ -36,9 +36,9 @@ maintainer-clean-local: clean
 
 install-data-local:
 	install -d -m 0755 $(TARGET_DIR)
-	install -m 0644 html/*.html $(TARGET_DIR)
-	install -m 0644 html/index.sgml $(TARGET_DIR)
-	gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(HTML_DIR)
+	-install -m 0644 $(srcdir)/html/*.html $(TARGET_DIR)
+	-install -m 0644 $(srcdir)/html/index.sgml $(TARGET_DIR)
+	-gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(HTML_DIR)
 
 EXTRA_DIST = \
 	$(DOC_MAIN_SGML_FILE) \
