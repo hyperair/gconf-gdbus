@@ -100,10 +100,12 @@ GConfValue* gconf_value_new_from_string      (GConfValueType type, const gchar* 
                                               GConfError** err);
 /* for the complicated types */
 GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
-                                              const gchar* str);
+                                              const gchar* str,
+					      GConfError** err);
 GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
                                               GConfValueType cdr_type,
-                                              const gchar* str);
+                                              const gchar* str,
+					      GConfError** err);
 
 /* These are a hack to encode values into strings and ship them over CORBA,
  * necessary for obscure reasons (ORBit doesn't like recursive datatypes yet)

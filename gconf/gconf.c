@@ -521,7 +521,7 @@ gconf_get_full(GConfEngine* conf,
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-  
+
   if (!gconf_key_check(key, err))
     return NULL;
 
@@ -540,7 +540,7 @@ gconf_get_full(GConfEngine* conf,
 
       if (locale_list != NULL)
         g_strfreev(locale_list);
-      
+
       return val;
     }
 
@@ -1842,7 +1842,7 @@ gconf_unique_key (void)
                         r,
                         /* Duplicate keys must result from running
                            this function at the same stack location */
-                        (guint)&key);
+                        GPOINTER_TO_UINT(&key));
 
   ++serial;
   

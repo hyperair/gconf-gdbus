@@ -9,6 +9,9 @@ enum ConfigValueType { InvalidVal, IntVal, StringVal, FloatVal, BoolVal, SchemaV
 
 struct ConfigSchema {
   ConfigValueType value_type;
+  ConfigValueType value_list_type;
+  ConfigValueType value_car_type;
+  ConfigValueType value_cdr_type;
   string locale;
   string short_desc;
   string long_desc;

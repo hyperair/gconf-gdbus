@@ -28,6 +28,9 @@ gconf_schema_new(void)
   sc = g_new0(GConfSchema, 1);
 
   sc->type = GCONF_VALUE_INVALID;
+  sc->list_type = GCONF_VALUE_INVALID;
+  sc->car_type = GCONF_VALUE_INVALID;
+  sc->cdr_type = GCONF_VALUE_INVALID;
 
   return sc;
 }
@@ -61,6 +64,9 @@ gconf_schema_copy(GConfSchema* sc)
   dest = gconf_schema_new();
 
   dest->type = sc->type;
+  dest->list_type = sc->list_type;
+  dest->car_type = sc->car_type;
+  dest->cdr_type = sc->cdr_type;
 
   dest->locale = sc->locale ? g_strdup(sc->locale) : NULL;
   
@@ -79,6 +85,24 @@ void
 gconf_schema_set_type(GConfSchema* sc, GConfValueType type)
 {
   sc->type = type;
+}
+
+void          
+gconf_schema_set_list_type(GConfSchema* sc, GConfValueType type)
+{
+  sc->list_type = type;
+}
+
+void          
+gconf_schema_set_car_type(GConfSchema* sc, GConfValueType type)
+{
+  sc->car_type = type;
+}
+
+void          
+gconf_schema_set_cdr_type(GConfSchema* sc, GConfValueType type)
+{
+  sc->cdr_type = type;
 }
 
 void

@@ -448,9 +448,30 @@ node_set_schema_value(xmlNodePtr node,
 {
   GConfSchema* sc;
   const gchar* locale;
+  const gchar* type;
   xmlNodePtr found = NULL;
 
   sc = gconf_value_schema(value);
+
+  /* Set the types */
+  if (sc->list_type != GCONF_VALUE_INVALID)
+    {
+      type = gconf_value_type_to_string(sc->list_type);
+      g_assert(type != NULL);
+      my_xmlSetProp(node, "list_type", type);
+    }
+  if (sc->car_type != GCONF_VALUE_INVALID)
+    {
+      type = gconf_value_type_to_string(sc->car_type);
+      g_assert(type != NULL);
+      my_xmlSetProp(node, "car_type", type);
+    }
+  if (sc->cdr_type != GCONF_VALUE_INVALID)
+    {
+      type = gconf_value_type_to_string(sc->cdr_type);
+      g_assert(type != NULL);
+      my_xmlSetProp(node, "cdr_type", type);
+    }
   
   /* unset this in case the node was previously a different type */
   my_xmlSetProp(node, "value", NULL);
@@ -636,6 +657,10 @@ node_unset_value(xmlNodePtr node)
   my_xmlSetProp(node, "type", NULL);
   my_xmlSetProp(node, "stype", NULL);
   my_xmlSetProp(node, "ltype", NULL);
+  my_xmlSetProp(node, "owner", NULL);
+  my_xmlSetProp(node, "list_type", NULL);
+  my_xmlSetProp(node, "car_type", NULL);
+  my_xmlSetProp(node, "cdr_type", NULL);
 }
 
 static void
@@ -765,6 +790,9 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
   GConfValue* value = NULL;
   gchar* owner_str;
   gchar* stype_str;
+  gchar* list_type_str;
+  gchar* car_type_str;
+  gchar* cdr_type_str;
   GConfSchema* sc;
   xmlNodePtr iter;
   guint i;
@@ -777,6 +805,9 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
 
   owner_str = my_xmlGetProp(node, "owner");
   stype_str = my_xmlGetProp(node, "stype");
+  list_type_str = my_xmlGetProp(node, "list_type");
+  car_type_str = my_xmlGetProp(node, "car_type");
+  cdr_type_str = my_xmlGetProp(node, "cdr_type");
 
   sc = gconf_schema_new();
 
@@ -791,6 +822,27 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
       stype = gconf_value_type_from_string(stype_str);
       gconf_schema_set_type(sc, stype);
       free(stype_str);
+    }
+  if (list_type_str)
+    {
+      GConfValueType type;
+      type = gconf_value_type_from_string(list_type_str);
+      gconf_schema_set_list_type(sc, type);
+      free(list_type_str);
+    }
+  if (car_type_str)
+    {
+      GConfValueType type;
+      type = gconf_value_type_from_string(car_type_str);
+      gconf_schema_set_car_type(sc, type);
+      free(car_type_str);
+    }
+  if (cdr_type_str)
+    {
+      GConfValueType type;
+      type = gconf_value_type_from_string(cdr_type_str);
+      gconf_schema_set_cdr_type(sc, type);
+      free(cdr_type_str);
     }
 
   if (locales != NULL)

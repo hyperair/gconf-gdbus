@@ -50,6 +50,9 @@ static char* dir_exists = NULL;
 static int recursive_list = FALSE;
 static int set_schema_mode = FALSE;
 static char* value_type = NULL;
+static char* value_list_type = NULL;
+static char* value_car_type = NULL;
+static char* value_cdr_type = NULL;
 static int shutdown_gconfd = FALSE;
 static int ping_gconfd = FALSE;
 static int spawn_gconfd = FALSE;
@@ -180,6 +183,33 @@ struct poptOption options[] = {
     &value_type,
     0,
     N_("Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string|list|pair")
+  },  
+  { 
+    "list-type",
+    '\0',
+    POPT_ARG_STRING,
+    &value_list_type,
+    0,
+    N_("Specify the type of the list value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string")
+  },  
+  { 
+    "car-type",
+    '\0',
+    POPT_ARG_STRING,
+    &value_car_type,
+    0,
+    N_("Specify the type of the car pair value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string")
+  },  
+  { 
+    "cdr-type",
+    '\0',
+    POPT_ARG_STRING,
+    &value_cdr_type,
+    0,
+    N_("Specify the type of the cdr pair value being set, or the type of the value a schema describes. Unique abbreviations OK."),
     N_("int|bool|float|string")
   },  
   { 
@@ -857,11 +887,17 @@ do_get(GConfEngine* conf, const gchar** args)
             {
               GConfSchema* sc = gconf_value_schema(value);
               GConfValueType stype = gconf_schema_type(sc);
+              GConfValueType slist_type = gconf_schema_list_type(sc);
+              GConfValueType scar_type = gconf_schema_car_type(sc);
+              GConfValueType scdr_type = gconf_schema_cdr_type(sc);
               const gchar* long_desc = gconf_schema_long_desc(sc);
               const gchar* short_desc = gconf_schema_short_desc(sc);
               const gchar* owner = gconf_schema_owner(sc);
 
               printf(_("Type: %s\n"), gconf_value_type_to_string(stype));
+              printf(_("List Type: %s\n"), gconf_value_type_to_string(slist_type));
+              printf(_("Car Type: %s\n"), gconf_value_type_to_string(scar_type));
+              printf(_("Cdr Type: %s\n"), gconf_value_type_to_string(scdr_type));
               printf(_("Owner: %s\n"), owner ? owner : _("Unset"));
               printf(_("Short Desc: %s\n"), short_desc ? short_desc : _("Unset"));
               printf(_("Long Desc: %s\n"), long_desc ? long_desc : _("Unset"));
@@ -889,6 +925,54 @@ do_get(GConfEngine* conf, const gchar** args)
   return 0;
 }
 
+static GConfValueType
+read_value_type(const char *string)
+{
+  GConfValueType type = GCONF_VALUE_INVALID;
+  switch (*string)
+    {
+    case 'i':
+    case 'I':
+      type = GCONF_VALUE_INT;
+      break;
+    case 'f':
+    case 'F':
+      type = GCONF_VALUE_FLOAT;
+      break;
+    case 'b':
+    case 'B':
+      type = GCONF_VALUE_BOOL;
+      break;
+    case 's':
+    case 'S':
+      switch (value_type[1])
+	{
+	case 't':
+	case 'T':
+	  type = GCONF_VALUE_STRING;
+	  break;
+	case 'c':
+	case 'C':
+	  type = GCONF_VALUE_SCHEMA;
+	  break;
+	default:
+	  fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+	}
+      break;
+    case 'l':
+    case 'L':
+      type = GCONF_VALUE_LIST;
+      break;
+    case 'p':
+    case 'P':
+      type = GCONF_VALUE_PAIR;
+      break;
+    default:
+      fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+    }
+  return type;
+}
+
 static int
 do_set(GConfEngine* conf, const gchar** args)
 {
@@ -905,6 +989,9 @@ do_set(GConfEngine* conf, const gchar** args)
       const gchar* key;
       const gchar* value;
       GConfValueType type = GCONF_VALUE_INVALID;
+      GConfValueType list_type = GCONF_VALUE_INVALID;
+      GConfValueType car_type = GCONF_VALUE_INVALID;
+      GConfValueType cdr_type = GCONF_VALUE_INVALID;
       GConfValue* gval;
 
       key = *args;
@@ -917,33 +1004,66 @@ do_set(GConfEngine* conf, const gchar** args)
           return 1;
         }
 
-      switch (*value_type)
+      type = read_value_type(value_type);
+      if (type == GCONF_VALUE_INVALID)
+        return 1;
+      if (value_list_type != NULL)
         {
-        case 'i':
-        case 'I':
-          type = GCONF_VALUE_INT;
-          break;
-        case 'f':
-        case 'F':
-          type = GCONF_VALUE_FLOAT;
-          break;
-        case 'b':
-        case 'B':
-          type = GCONF_VALUE_BOOL;
-          break;
-        case 's':
-        case 'S':
-          type = GCONF_VALUE_STRING;
-          break;
-        default:
-          fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+          list_type = read_value_type(value_list_type);
+          if (list_type == GCONF_VALUE_INVALID)
+            return 1;
+	}
+      if (value_car_type != NULL)
+        {
+          car_type = read_value_type(value_car_type);
+          if (car_type == GCONF_VALUE_INVALID)
+            return 1;
+	}
+      if (value_cdr_type != NULL)
+        {
+          cdr_type = read_value_type(value_cdr_type);
+          if (cdr_type == GCONF_VALUE_INVALID)
+            return 1;
+	}
+
+      if (type == GCONF_VALUE_SCHEMA)
+        {
+          fprintf(stderr, _("Cannot set schema as value\n"));
           return 1;
-          break;
-        }
-          
+	}
+
+      if (type == GCONF_VALUE_LIST &&
+          list_type != GCONF_VALUE_STRING &&
+          list_type != GCONF_VALUE_INT &&
+          list_type != GCONF_VALUE_FLOAT &&
+          list_type != GCONF_VALUE_BOOL)
+        {
+          fprintf(stderr, _("When setting a list you must specify a primitive list-type\n"));
+          return 1;
+	}
+
+      if (type == GCONF_VALUE_PAIR &&
+          ((car_type != GCONF_VALUE_STRING &&
+            car_type != GCONF_VALUE_INT &&
+            car_type != GCONF_VALUE_FLOAT &&
+            car_type != GCONF_VALUE_BOOL) ||
+           (cdr_type != GCONF_VALUE_STRING &&
+            cdr_type != GCONF_VALUE_INT &&
+            cdr_type != GCONF_VALUE_FLOAT &&
+            cdr_type != GCONF_VALUE_BOOL)))
+        {
+          fprintf(stderr, _("When setting a pair you must specify a primitive car-type and cdr-type\n"));
+          return 1;
+	}
+
       err = NULL;
 
-      gval = gconf_value_new_from_string(type, value, &err);
+      if (type == GCONF_VALUE_LIST)
+	gval = gconf_value_new_list_from_string(list_type, value, &err);
+      else if (type == GCONF_VALUE_PAIR)
+	gval = gconf_value_new_pair_from_string(car_type, cdr_type, value, &err);
+      else
+        gval = gconf_value_new_from_string(type, value, &err);
 
       if (gval == NULL)
         {
@@ -1021,43 +1141,70 @@ do_set_schema(GConfEngine* conf, const gchar** args)
     {
       GConfValueType type = GCONF_VALUE_INVALID;
 
-      switch (*value_type)
-        {
-        case 'i':
-        case 'I':
-          type = GCONF_VALUE_INT;
-          break;
-        case 'f':
-        case 'F':
-          type = GCONF_VALUE_FLOAT;
-          break;
-        case 'b':
-        case 'B':
-          type = GCONF_VALUE_BOOL;
-          break;
-        case 's':
-        case 'S':
-          switch (value_type[1])
-            {
-            case 't':
-            case 'T':
-              type = GCONF_VALUE_STRING;
-              break;
-            case 'c':
-            case 'C':
-              type = GCONF_VALUE_SCHEMA;
-              break;
-            default:
-              fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
-            }
-          break;
-        default:
-          fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
-          break;
-        }
+      type = read_value_type(value_type);
 
       if (type != GCONF_VALUE_INVALID)
         gconf_schema_set_type(sc, type);
+    }
+
+  if (value_list_type)
+    {
+      GConfValueType type = GCONF_VALUE_INVALID;
+
+      type = read_value_type(value_list_type);
+
+      if (type != GCONF_VALUE_STRING &&
+          type != GCONF_VALUE_INT &&
+          type != GCONF_VALUE_FLOAT &&
+          type != GCONF_VALUE_BOOL)
+	{
+          fprintf(stderr, _("List type must be a primitive type: string, int, float or bool\n"));
+          return 1;
+
+	}
+
+      if (type != GCONF_VALUE_INVALID)
+        gconf_schema_set_list_type(sc, type);
+    }
+
+  if (value_car_type)
+    {
+      GConfValueType type = GCONF_VALUE_INVALID;
+
+      type = read_value_type(value_car_type);
+
+      if (type != GCONF_VALUE_STRING &&
+          type != GCONF_VALUE_INT &&
+          type != GCONF_VALUE_FLOAT &&
+          type != GCONF_VALUE_BOOL)
+	{
+          fprintf(stderr, _("Pair car type must be a primitive type: string, int, float or bool\n"));
+          return 1;
+
+	}
+
+      if (type != GCONF_VALUE_INVALID)
+        gconf_schema_set_car_type(sc, type);
+    }
+
+  if (value_cdr_type)
+    {
+      GConfValueType type = GCONF_VALUE_INVALID;
+
+      type = read_value_type(value_cdr_type);
+
+      if (type != GCONF_VALUE_STRING &&
+          type != GCONF_VALUE_INT &&
+          type != GCONF_VALUE_FLOAT &&
+          type != GCONF_VALUE_BOOL)
+	{
+          fprintf(stderr, _("Pair cdr type must be a primitive type: string, int, float or bool\n"));
+          return 1;
+
+	}
+
+      if (type != GCONF_VALUE_INVALID)
+        gconf_schema_set_cdr_type(sc, type);
     }
 
   err = NULL;
@@ -1201,6 +1348,9 @@ struct _SchemaInfo {
   gchar* owner;
   GSList* apply_to;
   GConfValueType type;
+  GConfValueType list_type;
+  GConfValueType car_type;
+  GConfValueType cdr_type;
   GConfValue* global_default;
   GHashTable* hash;
   GConfEngine* conf;
@@ -1221,9 +1371,65 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
       break;
 
     case GCONF_VALUE_LIST:
+      {
+        GConfError* error = NULL;
+        if (info->list_type == GCONF_VALUE_INVALID)
+	  {
+            fprintf(stderr, _("WARNING: invalid or missing list_type for schema (%s)\n"),
+                    info->key);
+            break;
+	  }
+        *retloc = gconf_value_new_list_from_string(info->list_type,
+						   default_value,
+						   &error);
+        if (*retloc == NULL)
+          {
+            g_assert(error != NULL);
+
+            fprintf(stderr, _("WARNING: Failed to parse default value `%s' for schema (%s)\n"), default_value, info->key);
+
+            gconf_error_destroy(error);
+            error = NULL;
+          }
+        else
+          {
+            g_assert(error == NULL);
+          }
+      }
+      break;
+
     case GCONF_VALUE_PAIR:
+      {
+        GConfError* error = NULL;
+        if (info->car_type == GCONF_VALUE_INVALID ||
+	    info->cdr_type == GCONF_VALUE_INVALID)
+	  {
+            fprintf(stderr, _("WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"),
+                    info->key);
+            break;
+	  }
+        *retloc = gconf_value_new_pair_from_string(info->car_type,
+						   info->cdr_type,
+						   default_value,
+						   &error);
+        if (*retloc == NULL)
+          {
+            g_assert(error != NULL);
+
+            fprintf(stderr, _("WARNING: Failed to parse default value `%s' for schema (%s)\n"), default_value, info->key);
+
+            gconf_error_destroy(error);
+            error = NULL;
+          }
+        else
+          {
+            g_assert(error == NULL);
+          }
+      }
+      break;
+
     case GCONF_VALUE_SCHEMA:
-      fprintf(stderr, _("WARNING: For now gconftool only knows how to install default values for simple types (int, string, bool, float)\n"));
+      fprintf(stderr, _("WARNING: You cannot set a default value for a schema\n"));
       break;
 
     case GCONF_VALUE_STRING:
@@ -1304,6 +1510,69 @@ extract_global_info(xmlNodePtr node,
                             tmp);
                 }
             }
+          else if (strcmp(iter->name, "list_type") == 0)
+            {
+              tmp = xmlNodeGetContent(iter);
+              if (tmp)
+                {
+                  info->list_type = gconf_value_type_from_string(tmp);
+                  free(tmp);
+                  if (info->list_type != GCONF_VALUE_INT &&
+		      info->list_type != GCONF_VALUE_FLOAT &&
+		      info->list_type != GCONF_VALUE_STRING &&
+		      info->list_type != GCONF_VALUE_BOOL)
+		    {
+		      info->list_type = GCONF_VALUE_INVALID;
+                      fprintf(stderr, _("WARNING: list_type can only be int, float, string or bool and not `%s'\n"),
+                              tmp);
+		    }
+                  else if (info->list_type == GCONF_VALUE_INVALID)
+                    fprintf(stderr, _("WARNING: failed to parse type name `%s'\n"),
+                            tmp);
+                }
+            }
+          else if (strcmp(iter->name, "car_type") == 0)
+            {
+              tmp = xmlNodeGetContent(iter);
+              if (tmp)
+                {
+                  info->car_type = gconf_value_type_from_string(tmp);
+                  free(tmp);
+                  if (info->car_type != GCONF_VALUE_INT &&
+		      info->car_type != GCONF_VALUE_FLOAT &&
+		      info->car_type != GCONF_VALUE_STRING &&
+		      info->car_type != GCONF_VALUE_BOOL)
+		    {
+		      info->car_type = GCONF_VALUE_INVALID;
+                      fprintf(stderr, _("WARNING: car_type can only be int, float, string or bool and not `%s'\n"),
+                              tmp);
+		    }
+                  else if (info->car_type == GCONF_VALUE_INVALID)
+                    fprintf(stderr, _("WARNING: failed to parse type name `%s'\n"),
+                            tmp);
+                }
+            }
+          else if (strcmp(iter->name, "cdr_type") == 0)
+            {
+              tmp = xmlNodeGetContent(iter);
+              if (tmp)
+                {
+                  info->cdr_type = gconf_value_type_from_string(tmp);
+                  free(tmp);
+                  if (info->cdr_type != GCONF_VALUE_INT &&
+		      info->cdr_type != GCONF_VALUE_FLOAT &&
+		      info->cdr_type != GCONF_VALUE_STRING &&
+		      info->cdr_type != GCONF_VALUE_BOOL)
+		    {
+		      info->cdr_type = GCONF_VALUE_INVALID;
+                      fprintf(stderr, _("WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"),
+                              tmp);
+		    }
+                  else if (info->cdr_type == GCONF_VALUE_INVALID)
+                    fprintf(stderr, _("WARNING: failed to parse type name `%s'\n"),
+                            tmp);
+                }
+            }
           else if (strcmp(iter->name, "default") == 0)
             {
               default_value = xmlNodeGetContent(iter);
@@ -1350,7 +1619,7 @@ extract_global_info(xmlNodePtr node,
   if (default_value != NULL)
     {
       fill_default_from_string(info, default_value, &info->global_default);
-      
+
       free(default_value);
       default_value = NULL;
     }
@@ -1393,6 +1662,15 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
       
   if (info->type != GCONF_VALUE_INVALID)
     gconf_schema_set_type(schema, info->type);
+
+  if (info->list_type != GCONF_VALUE_INVALID)
+    gconf_schema_set_list_type(schema, info->list_type);
+
+  if (info->car_type != GCONF_VALUE_INVALID)
+    gconf_schema_set_car_type(schema, info->car_type);
+
+  if (info->cdr_type != GCONF_VALUE_INVALID)
+    gconf_schema_set_cdr_type(schema, info->cdr_type);
 
   if (info->owner != NULL)
     gconf_schema_set_owner(schema, info->owner);
@@ -1532,6 +1810,9 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
 
   info.key = NULL;
   info.type = GCONF_VALUE_INVALID;
+  info.list_type = GCONF_VALUE_INVALID;
+  info.car_type = GCONF_VALUE_INVALID;
+  info.cdr_type = GCONF_VALUE_INVALID;
   info.apply_to = NULL;
   info.owner = NULL;
   info.global_default = NULL;
@@ -1561,6 +1842,12 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
           else if (strcmp(iter->name, "owner") == 0)
             ;  /* nothing */
           else if (strcmp(iter->name, "type") == 0)
+            ;  /* nothing */
+          else if (strcmp(iter->name, "list_type") == 0)
+            ;  /* nothing */
+          else if (strcmp(iter->name, "car_type") == 0)
+            ;  /* nothing */
+          else if (strcmp(iter->name, "cdr_type") == 0)
             ;  /* nothing */
           else if (strcmp(iter->name, "default") == 0)
             ;  /* nothing */

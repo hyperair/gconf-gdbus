@@ -1,3 +1,49 @@
+Wed Aug 02 18:11:37 2000  George Lebl <jirka@5z.com>
+
+	* backends/xml-entry.c (node_set_schema_value) (node_unset_value)
+	  (schema_node_extract_value):  Set the list_type and car_type and
+	  cdr_type from the schema.  Unset these on clear.  Also get these
+	  on extraction.
+
+	* gconf/GConf.idl:  Add value_list_type, value_car_type,
+	  value_cdr_type to the ConfigSchema struct
+
+	* gconf/gconf-internals.c (fill_corba_schema_from_gconf_schema)
+	  (gconf_schema_from_corba_schema) (corba_type_from_gconf_type)
+	  (gconf_type_from_corba_type) (gconf_string_to_double)
+	  (gconf_double_to_string) (gconf_unquote_string_inplace)
+	  (gconf_value_decode) (gconf_value_encode):  When passing schema
+	  to/from corba, pass the list_type and car/cdr_type fields as well.
+	  When converting to/from doubles guard the printf/scanf with
+	  setlocale(LC_NUMERIC, "C").  When encoding/decoding the lists
+	  encode their type, for schemas encode/decode the list/car/cdr_type
+
+	* gconf/gconf-internals.h:  For gconf_value_new_list_from_string
+	  and gconf_value_new_pair_from_string add an GConfError field
+
+	* gconf/gconf-schema.[ch] (gconf_schema_new) (gconf_schema_copy):
+	  Add the list/car/cdr_type fields to the schema structure and
+	  support it when creating and copying.  Also add accessors for
+	  these fields.
+
+	* gconf/gconf-value.c (escape_string)
+	  (gconf_value_new_list_from_string)
+	  (gconf_value_new_pair_from_string)
+	  (gconf_value_to_string):  Implement the list and pair_from_string
+	  functions.  In to_string escape the characters that would cause
+	  problems.
+
+	* gconf/gconf.c (gconf_unique_key): use GPOINTER_TO_UINT to
+	  avoid warning on alpha
+
+	* gconf/gconftool.c (do_get) (do_set) (do_set_schema)
+	  (fill_default_from_string) (extract_global_info)
+	  (process_locale_info) (process_schema):  Add support for
+	  setting lists and pairs by supporting the list/car/cdr_type.
+	  Add these to setting schemas as well.  Also add support for
+	  these in reading/setting schemas from .schema files and support
+	  defaults of lists/pairs using this information.
+
 2000-07-27  Havoc Pennington  <hp@redhat.com>
 
 	* backends/Makefile.am (backenddir): backenddir is
