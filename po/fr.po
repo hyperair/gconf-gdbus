@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 1.1.9\n"
-"POT-Creation-Date: 2002-04-29 01:37-0400\n"
-"PO-Revision-Date: 2002-04-28 23:02+0200\n"
+"Project-Id-Version: GConf 1.1.10\n"
+"POT-Creation-Date: 2002-05-01 18:13+0200\n"
+"PO-Revision-Date: 2002-05-01 18:13+0200\n"
 "Last-Translator: Christophe Merlet (RedFox) <christophe@merlet.net>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,6 +74,8 @@ msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
 msgstr ""
+"L'opération de suppression de répertoire n'est plus supportée, enlevez juste "
+"toutes les valeurs dans le répertoire"
 
 #: backends/xml-backend.c:722
 msgid "Initializing XML backend module"
@@ -86,7 +88,7 @@ msgstr "Échec pour donner le verrou sur le répertoire XML « %s » : %s"
 
 #: backends/xml-cache.c:243
 msgid "Failed to sync XML cache contents to disk"
-msgstr ""
+msgstr "Échec de synchronisation du contenu du cache XML sur le disque"
 
 #: backends/xml-cache.c:273
 #, c-format
@@ -366,13 +368,13 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "Impossible de synchroniser une ou plusieurs sources : %s"
 
 #: gconf/gconf-database.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Impossible de noter l'addition de l'écouteur (%s); ne sera pas capable de "
+"Impossible de noter l'addition de l'écouteur %s (%s); ne sera pas capable de "
 "restorer cet écouteur au redémarrage de gconfd, résultant en une "
 "notification non sûr de changements de configuration."
 
@@ -412,7 +414,7 @@ msgid "Error getting default value for `%s': %s"
 msgstr "Erreur durant l'obtention de la valeur par défaut de « %s » : %s"
 
 #: gconf/gconf-database.c:1413
-#, fuzzy, c-format
+#, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Erreur durant l'annulation de « %s » : %s"
 
@@ -518,7 +520,7 @@ msgstr "Pas de « / » dans la clé « %s »"
 #: gconf/gconf-internals.c:199
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
-msgstr ""
+msgstr "UTF-8 non valide dans la valeur de la chaine « %s »"
 
 #: gconf/gconf-internals.c:258
 msgid "Couldn't interpret CORBA value for list element"
@@ -539,19 +541,19 @@ msgstr "Impossible de convertir l'objet vers IOR"
 
 #: gconf/gconf-internals.c:591
 msgid "Invalid UTF-8 in locale for schema"
-msgstr ""
+msgstr "UTF-8 non valide dans la locale du schema"
 
 #: gconf/gconf-internals.c:599
 msgid "Invalid UTF-8 in short description for schema"
-msgstr ""
+msgstr "UTF-8 non valide dans la courte description du schema"
 
 #: gconf/gconf-internals.c:607
 msgid "Invalid UTF-8 in long description for schema"
-msgstr ""
+msgstr "UTF-8 non valide dans la longue description du schema"
 
 #: gconf/gconf-internals.c:615
 msgid "Invalid UTF-8 in owner for schema"
-msgstr ""
+msgstr "UTF-8 non valide dans le propriètaire du schema"
 
 #: gconf/gconf-internals.c:838
 #, c-format
@@ -572,7 +574,7 @@ msgstr "Erreur lu dans le fichier « %s » : %s\n"
 #: gconf/gconf-value.c:147 gconf/gconf-value.c:246 gconf/gconf-value.c:388
 #: gconf/gconf-value.c:1665
 msgid "Text contains invalid UTF-8"
-msgstr ""
+msgstr "Le texte contient de l'UTF-8 non valide"
 
 #: gconf/gconf-internals.c:1346
 #, c-format
@@ -610,7 +612,7 @@ msgstr "La chaîne guillemetée ne se finit pas avec une marque de citation"
 
 #: gconf/gconf-internals.c:1828
 msgid "Encoded value is not valid UTF-8"
-msgstr ""
+msgstr "La valeur codée n'est pas de l'UTF-8 valide"
 
 #: gconf/gconf-internals.c:2287
 #, c-format
@@ -628,11 +630,14 @@ msgid "Failed to create or open '%s'"
 msgstr "Impossible de créer ou d'ouvrir « %s »"
 
 #: gconf/gconf-internals.c:2370
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
-msgstr "Impossible de verrouiller « %s » : un autre process a le verrou (%s)"
+msgstr ""
+"Impossible de verrouiller « %s » : un autre process a probablement le "
+"verrou, ou votre système d'exploitation a le verrouillage de fichier NFS mal "
+"configuré (%s)"
 
 #: gconf/gconf-internals.c:2399
 #, c-format
@@ -699,7 +704,7 @@ msgstr "Impossible de créer %s : %s"
 #: gconf/gconf-internals.c:2835
 #, c-format
 msgid "Server ping error: %s"
-msgstr ""
+msgstr "Erreur de ping du serveur : %s"
 
 #: gconf/gconf-internals.c:2856
 #, c-format
@@ -721,10 +726,14 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"Échec du contact du serveur de configuration; des causes possibles sont que "
+"vous n'avez pas activé le réseau TCP/IP pour ORBit, ou que vous avez des "
+"verrous NFS résultants d'un plantage du système. Voir http://www.gnome.org/"
+"projects/gconf/ pour plus d'informations. (Détails - %s)"
 
 #: gconf/gconf-internals.c:2906
 msgid "none"
-msgstr ""
+msgstr "aucun"
 
 #: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:72
 msgid "Help options"
@@ -748,6 +757,12 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
+"Veuillez contacter votre administrateur système pour résoudre le problème "
+"suivant :\n"
+"Ne peut ouvrir ou créer le fichier « %s »; ceci indique qu'il y a peut-etre "
+"un problème avec votre configuration, comme beaucoup de programmes auront "
+"besoin de créer des fichiers dans votre répertoire personnel. L'erreur est « "
+"%s » (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
@@ -760,11 +775,19 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
+"Veuillez contacter votre administrateur système pour résoudre le problème "
+"suivant :\n"
+"Ne peut verrouiller le fichier « %s »; ceci indique qu'il y a peut-etre un "
+"problème avec la configuration de votre système d'exploitation. Si vous avez "
+"votre répertoire personnel monté via NFS, soit le client ou le serveur est "
+"configuré incorectement. Voir la documentation de rpc.statd et rpc.lockd. "
+"Une cause commune de cette erreur est que le service « nfslock » a été "
+"désactivé. L'erreur est « %s » (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr "Impossible d'écrire vers le fichier « %s » : %s"
+msgstr "Impossible de supprimer le fichier %s : %s\n"
 
 #: gconf/gconf-sanity-check.c:195
 #, c-format
@@ -773,11 +796,15 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
+"Veuillez contacter votre administrateur système pour résoudre le problème "
+"suivant :\n"
+"Aucune source de configuration dans le fichier de configuration « %s »; cela "
+"signifie que les préférences et les autres réglages ne pourront etre "
+"enregistrées. %s%s"
 
 #: gconf/gconf-sanity-check.c:198
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "Erreur de lecture du fichier d'état enregistré : %s"
+msgstr "Erreur de lecture du fichier : "
 
 #: gconf/gconf-sanity-check.c:220
 #, c-format
@@ -785,14 +812,18 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
+"Veuillez contacter votre administrateur système pour résoudre le problème "
+"suivant :\n"
+"Ne peut résoudre l'adresse « %s » dans le fichier de configuration « %s » : %"
+"s"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
-msgstr ""
+msgstr "Le schema contient de l'UTF-8 non valide"
 
 #: gconf/gconf-sources.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "Impossible de charger la source « %s » : %s"
 
@@ -800,23 +831,31 @@ msgstr "Impossible de charger la source « %s » : %s"
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
 msgstr ""
+"Adresse « %s » résolue dans une source de configuration inscriptible à la "
+"position %d"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
 msgstr ""
+"Adresse « %s » résolue dans une source de configuration en lecture seule à "
+"la position %d"
 
 #: gconf/gconf-sources.c:359
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
+"Adresse « %s » résolue dans une source de configuration partiellement "
+"inscriptible à la position %d"
 
 #: gconf/gconf-sources.c:368
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
 msgstr ""
+"Aucunes des adresses résolues sont inscriptible: l'enregistrement des "
+"réglages de configuration ne sera pas possible"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -829,16 +868,16 @@ msgid "The '/' name can only be a directory, not a key"
 msgstr "Le nom « / » peut seulement être un répertoire, pas une clé"
 
 #: gconf/gconf-sources.c:680
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr ""
-"La valeur pour « %s » est défini dans une source en lecture seulement en "
-"premier dans votre chemin d'accès de configuration."
+"La valeur pour « %s » est défini dans une source en lecture seule en premier "
+"dans votre chemin d'accès de configuration."
 
 #: gconf/gconf-sources.c:692
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writable databases. There are some common causes of this problem: 1) your "
@@ -858,16 +897,25 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 "Incapable de stocker une valeur à la clé « %s », car le serveur de "
-"configuration n'a pas de base de données accessible en écriture. Il y a deux "
-"causes courantes à ce problème : 1) votre fichier de configuration de chemin "
-"ne contient aucune base de donnée ou n'a pas été trouvé. Ou 2) OAF a créé 2 "
-"processus gconfd. Si vous avez 2 processus gconfd (ou 2 au moment ou le "
-"second a été lancé), déconnectez vous, tuez toutes les copies de gconfd et "
-"reconnectez vous. Cela peut vous aider. Peut-être que le problème provient "
-"du fait que vous essayez d'utiliser GConf depuis 2 machines à la fois et "
-"qu'ORBit a toujours sa configuration par défaut qui lui interdit les "
-"connexions distantes CORBA ? Comme toujours, vérifiez le journal user.* pour "
-"les détails sur les problèmes que gconfd a rencontrés."
+"configuration n'a pas de base de données accessible en écriture. Il y a "
+"plusieurs causes communes à ce problème : 1) votre fichier de configuration "
+"de chemin %s/path ne contient aucune base de donnée ou n'a pas été trouvé. "
+"2) quelqu'un a créé par erreur deux processus gconfd. 3) votre système "
+"d'exploitation est malconfiguré etle verrouillage de fichier NFS ne "
+"fonctionne pas dans votre répertoire personnel. Ou 4) Votre machine cliente "
+"NFS a planté et n'a pas proprement notifié au serveur au redémarrage de "
+"supprimer les verrous de fichier. Si vous avez 2 processus gconfd (ou 2 au "
+"moment ou le second a été lancé), déconnectez vous, tuez toutes les copies "
+"de gconfd et reconnectez vous. Cela peut vous aider. Si vous avez des "
+"verrous persistents, supprimer ~/.gconf*/*lock. Peut-être que le problème "
+"provient du fait que vous essayez d'utiliser GConf depuis 2 machines à la "
+"fois et qu'ORBit a toujours sa configuration par défaut qui lui interdit les "
+"connexions distantes CORBA - mettez \"ORBIIOPIPv4=1\" in /etc/orbitrc. Comme "
+"toujours, vérifiez le journal user.* pour les détails sur les problèmes que "
+"gconfd a rencontrés. Il ne peut y avoir qu'un gconfd par répertoire "
+"personnel, et il doit posséder un fichier de verrouillage dans ~/.gconfd et "
+"aussi des fichiers de verrouillage dans les emplacements de stockage "
+"individuel tel que ~/.gconf"
 
 #: gconf/gconf-sources.c:1413
 #, c-format
@@ -955,10 +1003,10 @@ msgstr ""
 #: gconf/gconf.c:55
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "La clé « %s » est NULL"
 
 #: gconf/gconf.c:62
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\": %s"
 msgstr "« %s » : %s"
 
@@ -1279,6 +1327,8 @@ msgstr ""
 #: gconf/gconfd.c:2312
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 msgstr ""
+"Plusieurs erreurs de segmentation ont survenues; ne peut affiché le dialogue "
+"d'erreur\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2321
@@ -1287,6 +1337,8 @@ msgid ""
 "Segmentation fault!\n"
 "Cannot display crash dialog: %s\n"
 msgstr ""
+"Erreur de segmentation !\n"
+"Ne peut afficher le dialogue de plantage : %s\n"
 
 #: gconf/gconftool.c:81
 msgid "Set a key to a value and sync. Use with --type."
@@ -1309,11 +1361,12 @@ msgid "Unset the keys on the command line"
 msgstr "Annule les clés présentes sur la ligne de commande."
 
 #: gconf/gconftool.c:118
-#, fuzzy
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
-msgstr "Vous devez spécifier une ou plusieurs clés à la ligne de commande\n"
+msgstr ""
+"Annule récursivement toutes les clés à ou sous les noms de clés de la ligne "
+"de commande"
 
 #: gconf/gconftool.c:127
 msgid "Print all key/value pairs in a directory."
@@ -1480,9 +1533,8 @@ msgstr ""
 "Spécifier le nom du schéma suivi par la clé pour y appliquer le nom du schéma"
 
 #: gconf/gconftool.c:343
-#, fuzzy
 msgid "Remove any schema name applied to the given keys"
-msgstr "Obtient le nom du schéma appliqué à cette clé"
+msgstr "Enlève tous les schema appliqué à la clé donnée"
 
 #: gconf/gconftool.c:352
 msgid "Get the name of the default source"
@@ -1563,6 +1615,8 @@ msgstr ""
 #: gconf/gconftool.c:555
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr ""
+"Vous devez utiliser --direct quand vous utilisez une source de configuration "
+"supplémentaire\n"
 
 #: gconf/gconftool.c:561
 #, c-format
@@ -1572,6 +1626,8 @@ msgstr "Echec à l'initialisation de GConf : %s\n"
 #: gconf/gconftool.c:590
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL est défini, n'installe pas les "
+"schemas\n"
 
 #: gconf/gconftool.c:603
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1751,9 +1807,9 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Erreur d'association du nom de schéma « %s » avec la clé « %s » : %s\n"
 
 #: gconf/gconftool.c:1445
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "Erreur durant l'obtention du schema à « %s » : %s\n"
+msgstr "Erreur durant l'enlèvement du nom du schema depuis « %s » : %s\n"
 
 #: gconf/gconftool.c:1470
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1802,15 +1858,13 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Erreur d'annulation de « %s » : %s\n"
 
 #: gconf/gconftool.c:1641
-#, fuzzy
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr ""
-"Vous devez spécifier un ou plusieurs répertoires à lister récursivement.\n"
+msgstr "Vous devez spécifier un ou plusieurs clés à annuler récursivement.\n"
 
 #: gconf/gconftool.c:1655
-#, fuzzy, c-format
+#, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "Échec lors du listage des entrées dans « %s » : %s\n"
+msgstr "Échec lors de l'annulation récursive dans « %s » : %s\n"
 
 #: gconf/gconftool.c:1673
 msgid "Must specify one or more dirs to get subdirs from.\n"
