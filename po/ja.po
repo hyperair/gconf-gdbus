@@ -6,19 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf HEAD\n"
-"POT-Creation-Date: 2004-02-24 16:00+0000\n"
-"PO-Revision-Date: 2004-02-27 00:12+0900\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-03-23 19:57+0900\n"
+"PO-Revision-Date: 2004-03-23 19:53+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 #: backends/dir-utils.c:108
 #, c-format
 msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "%s ルートディレクトリはアドレス '%s' 中に見つかりませんでした。"
+msgstr "%s ルートディレクトリがアドレス '%s' 中に見つかりませんでした。"
 
 #: backends/dir-utils.c:124 backends/xml-backend.c:332
 #, c-format
@@ -1397,87 +1397,89 @@ msgstr ""
 
 #: gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
-msgstr "\"--type\" を使って、値に対するキーをセットし同期します。"
+msgstr "キーを値にセットして同期する ('--type' と一緒に使用すること)"
 
 #: gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
-msgstr "標準出力にキーの値を表示します。"
+msgstr "キーの値を標準出力に表示する"
 
 #: gconf/gconftool.c:111
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
-"\"--short-desc, --long-desc, --owner, --type\" を使ってスキーマをセットして同"
-"期します。"
+"スキーマをセットし同期する ('--short-desc', '--long-desc', '--owner', '--"
+"type' と一緒に使用すること)"
 
 #: gconf/gconftool.c:121
 msgid "Unset the keys on the command line"
-msgstr "コマンドラインでキーを無効にします。"
+msgstr "指定したキーを無効にする"
 
 #: gconf/gconftool.c:130
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr ""
-"全てのキー、または以下のコマンドライン上のキー/ディレクトリ名を再帰的に解放し"
-"て下さい。"
+"指定した場所または指定した \"キー/ディレクトリ\" 名の下にある全てのキーを再帰"
+"的に無効にする"
 
 #: gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
-msgstr "ディレクトリ中の全てのキーと値のペアを表示します。"
+msgstr "指定したディレクトリ中の全てのキー/値のペアを表示する"
 
 #: gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
-msgstr "ディレクトリ中の全てのサブディレクトリを表示します。"
+msgstr "指定したディレクトリ中の全てのサブディレクトリを表示する"
 
 #: gconf/gconftool.c:157
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
 msgstr ""
-"ディレクトリ下の全エントリの XML ディスクリプションを標準出力に再帰的に表示し"
-"ます。"
+"指定してディレクトリの下にある全てのエントリの XML ディスクリプションを再帰的"
+"に標準出力へ表示する"
 
 #: gconf/gconftool.c:166
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
 msgstr ""
-"指定したファイルから値の XML ディスクリプションを読み込んで、関連するディレク"
-"トリにセットします。"
+"指定したファイルから値の XML ディスクリプションを読み込み関連するディレクトリ"
+"にセットする"
 
 #: gconf/gconftool.c:175
 msgid "Print all subdirectories and entries under a dir, recursively."
-msgstr "ディレクトリ下のエントリとサブディレクトリの全てを再起的に表示する。"
+msgstr ""
+"指定したディレクトリの下にある全てのサブディレクトリとエントリを再帰的に表示"
+"する"
 
 #: gconf/gconftool.c:184
 msgid "Return 0 if the directory exists, 2 if it does not."
-msgstr "ディレクトリが存在したら 0 を返し、存在しなければ 2 を返します。"
+msgstr "指定したディレクトリが存在したら 0を返し、存在しなければ 2を返す"
 
 #: gconf/gconftool.c:193
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr ""
-"gconfd をシャットダウンします。理由無しにこのオプションを使用しないこと!!"
+"gconfd をシャットダウンする (**正当な理由無しにこのオプションを使用しないこと"
+"**)"
 
 #: gconf/gconftool.c:202
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr "もし gconfd が起動中ならば 0 を返し、そうでなければ 2 を返します。"
+msgstr "gconfd が起動中ならば 0を返し、起動していなければ 2を返す"
 
 #: gconf/gconftool.c:211
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
-msgstr ""
-"gcnofd 設定サーバーを立ち上げます。(普通は必要に応じて自動的に起動します。)"
+msgstr "gcnofd 設定サーバを起動する (通常は必要に応じて自動的に起動する)"
 
 #: gconf/gconftool.c:220
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
-"セットする値の型またはスキーマの型を指定して下さい。 重複しなければ省略形も "
-"OK です。"
+"セットする値の型または記述するスキーマの型を指定する (重複しなければ省略形も"
+"可)"
 
 #: gconf/gconftool.c:221
 msgid "int|bool|float|string|list|pair"
@@ -1485,23 +1487,23 @@ msgstr "int|bool|float|string|list|pair"
 
 #: gconf/gconftool.c:229
 msgid "Print the data type of a key to standard output."
-msgstr "標準出力にキーのデータ型を表示します。"
+msgstr "キーのデータ型を標準出力に表示する"
 
 #: gconf/gconftool.c:238
 msgid "Get the number of elements in a list key."
-msgstr "リスト・キーの中にある要素の数を取得します。"
+msgstr "リスト・キーの中にある要素の数を取得する"
 
 #: gconf/gconftool.c:247
 msgid "Get a specific element from a list key, numerically indexed."
-msgstr "数値が付与されたリスト・キーから指定した要素を取得します。"
+msgstr "リスト・キーから指定した (番号が付与された) 要素を取得する"
 
 #: gconf/gconftool.c:256
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"セットするリストの型または記述するスキーマの型を指定して下さい。 重複しなけれ"
-"ば省略形も OK です。"
+"セットするリストの型または記述するスキーマの型を指定する (重複しなければ省略"
+"形も可)"
 
 #: gconf/gconftool.c:257 gconf/gconftool.c:266 gconf/gconftool.c:275
 msgid "int|bool|float|string"
@@ -1512,20 +1514,20 @@ msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"セットする car ペアの型または記述するスキーマの型を指定して下さい。重複しなけ"
-"れば省略形も OK です。"
+"セットする car ペアの型または記述するスキーマの型を指定する (重複しなければ省"
+"略形も可)"
 
 #: gconf/gconftool.c:274
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"セットする cdr ペアの型またはスキーマの型を指定して下さい。重複しなければ省略"
-"形も OK です。"
+"セットする cdr ペアの型または記述するスキーマの型を指定する (重複しなければ省"
+"略形も可)"
 
 #: gconf/gconftool.c:283
 msgid "Specify a short half-line description to go in a schema."
-msgstr "スキーマの中で先に進むための半線の説明を指定して下さい。"
+msgstr "スキーマの短い説明を指定する"
 
 #: gconf/gconftool.c:284 gconf/gconftool.c:293
 msgid "DESCRIPTION"
@@ -1533,19 +1535,19 @@ msgstr "説明"
 
 #: gconf/gconftool.c:292
 msgid "Specify a several-line description to go in a schema."
-msgstr "スキーマの中で先委進むための点線の説明を指定して下さい。"
+msgstr "スキーマの詳細な説明を指定する"
 
 #: gconf/gconftool.c:301
 msgid "Specify the owner of a schema"
-msgstr "スキーマのオーナーを指定して下さい。"
+msgstr "スキーマの所有者を指定する"
 
 #: gconf/gconftool.c:302
 msgid "OWNER"
-msgstr "オーナー"
+msgstr "所有者"
 
 #: gconf/gconftool.c:310
 msgid "Specify a schema file to be installed"
-msgstr "インストールするスキーマファイルを指定して下さい。"
+msgstr "インストールするスキーマ・ファイルを指定する"
 
 #: gconf/gconftool.c:311
 msgid "FILENAME"
@@ -1553,7 +1555,7 @@ msgstr "ファイル名"
 
 #: gconf/gconftool.c:319
 msgid "Specify a configuration source to use rather than the default path"
-msgstr "デフォルトパスよりもむしろ使用するための設定ソースを指定して下さい。"
+msgstr "デフォルト・パス以外の設定ソースを指定する"
 
 #: gconf/gconftool.c:320
 msgid "SOURCE"
@@ -1564,8 +1566,8 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
-"バイパスしているサーバーの設定データベースに直接アクセスして下さい。gconfd が"
-"起動していないことが条件です。"
+"サーバを経由して設定データベースに直接アクセスする (gconfd が起動していないこ"
+"とが条件)"
 
 #: gconf/gconftool.c:337
 msgid ""
@@ -1573,9 +1575,9 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
-"コマンドラインからデータベースにスキーマファイルを正しくインストールして下さ"
-"い。環境変数 GCONF_CONFIG_SOURCE はデフォルトでない設定ソースに設定されている"
-"か、もしくはデフォルトとして空の文字列が設定されている必要があります。"
+"指定したスキーマ・ファイルをデータベースにインストールする (環境変数 "
+"GCONF_CONFIG_SOURCE にはデフォルトではない設定ソースをセットしておくか、デ"
+"フォルト値を使用するために空をセットしておくこと)"
 
 #: gconf/gconftool.c:346
 msgid ""
@@ -1583,53 +1585,53 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
-"コマンドラインからデータベースのスキーマファイルを正しくアンインストールして"
-"下さい。環境変数 GCONF_CONFIG_SOURCE はデフォルトでない設定ソースに設定されて"
-"いるか、もしくはデフォルトとして空の文字列が設定されている必要があります。"
+"指定したスキーマ・ファイルをデータベースにアン・インストールする (環境変数 "
+"GCONF_CONFIG_SOURCE にはデフォルトではない設定ソースをセットしておくか、デ"
+"フォルト値を使用するために空をセットしておくこと)"
 
 #: gconf/gconftool.c:355
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
-"コマンドライン上でキーの異なる型の値のまとまりを設定/未設定する事によりアプリ"
-"ケーションをテストできます。"
+"指定した複数のキーの型をセット/セットしないにすることでアプリケーションの負荷"
+"テストを行う"
 
 #: gconf/gconftool.c:364
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
-"コマンドライン上でディレクトリ内部のキーのまとまりを設定/未設定にする事により"
-"アプリケーションをテストできます。"
+"指定したディレクトリ内部にある複数のキーをセット/セットしないにすることでアプ"
+"リケーションのテストを行う"
 
 #: gconf/gconftool.c:373
 msgid "Get the short doc string for a key"
-msgstr "キーに対する短い doc 文字列の取得"
+msgstr "キーに対する短い doc 文字列を取得する"
 
 #: gconf/gconftool.c:382
 msgid "Get the long doc string for a key"
-msgstr "キーに対する長い doc 文字列の取得"
+msgstr "キーに対する長い doc 文字列を取得する"
 
 #: gconf/gconftool.c:391
 msgid "Get the name of the schema applied to this key"
-msgstr "このキーに適用されたスキーマ名の取得"
+msgstr "指定したキーに対応するスキーマ名を取得する"
 
 #: gconf/gconftool.c:400
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr "スキーマ名を適用するためにキーに従うスキーマ名を指定して下さい。"
+msgstr "キーに指定したスキーマ名を適用する"
 
 #: gconf/gconftool.c:409
 msgid "Remove any schema name applied to the given keys"
-msgstr "指定されたキーに適用されるスキーマ名の削除"
+msgstr "指定したキーのスキーマ名を削除する"
 
 #: gconf/gconftool.c:418
 msgid "Get the name of the default source"
-msgstr "デフォルトソースの名前の取得"
+msgstr "デフォルトの設定ソースの名前を取得する"
 
 #: gconf/gconftool.c:427
 msgid "Print version"
-msgstr "印刷バージョン"
+msgstr "バージョンを表示する"
 
 #: gconf/gconftool.c:524
 msgid "Can't get and set/unset simultaneously\n"
