@@ -49,7 +49,7 @@ main(int argc, char** argv)
   
   gtk_main();
 
-  gtk_object_unref(GTK_OBJECT(client));
+  g_object_unref(G_OBJECT(client));
   
   return 0;
 }
@@ -149,7 +149,7 @@ destroy_callback(GtkWidget* win, gpointer data)
 {
   GConfClient* client = data;
 
-  gtk_object_unref(GTK_OBJECT(client));
+  g_object_unref(G_OBJECT(client));
 }
 
 static void
@@ -257,7 +257,7 @@ create_controls(GConfClient* client)
   
   /* Reference held by the window */
 
-  gtk_object_ref(GTK_OBJECT(client));
+  g_object_ref(G_OBJECT(client));
 
   win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   
