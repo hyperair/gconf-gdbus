@@ -58,17 +58,25 @@ main(int argc, char** argv)
   GtkWidget* window;
   GtkWidget* label;
   GConfClient* client;
-
+  gchar* str;
+  
   gtk_init(&argc, &argv);
   if (!gconf_init(argc, argv, NULL))
     g_error("Failed to init gconf");
-  
-  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  label = gtk_label_new("");
-
-  gtk_container_add(GTK_CONTAINER(window), label);  
 
   client = gconf_client_new();
+  
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+  str = gconf_client_get_string(client, "/extra/test/directory/key",
+                                NULL);
+  
+  label = gtk_label_new(str ? str : "<unset>");
+
+  if (str)
+    g_free(str);
+  
+  gtk_container_add(GTK_CONTAINER(window), label);
 
   gconf_client_add_dir(client,
                        "/extra/test/directory",

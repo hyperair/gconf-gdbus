@@ -373,17 +373,18 @@
       </para>
 
       <para>
-        With a simple configuration file, typically you have a global
-        data structure which stores all your preferences, and you load
-        and save it as a single unit. To add a setting, you have to
-        modify the global structure. Whenever you load settings, you
-        have to add code to the global preferences code that knows
-        about all the interested parts of the program and notifies
-        them (via some ad-hoc mechanism). It's kind of unpleasant and
-        leads to poor modularity in a single process; but once
-        multiple processes are involved, coming up with a suitable
-        ad-hoc mechanism for setting change notification becomes a
-        really significant problem.
+        In contrast, with a simple configuration file, typically you
+        have a global data structure which stores all your
+        preferences, and you load and save it as a single unit. To add
+        a setting, you have to modify the global structure. Whenever
+        you load settings, you have to add code to the global
+        preferences code that knows about all the interested parts of
+        the program and notifies them (via some ad-hoc
+        mechanism). It's kind of unpleasant and leads to poor
+        modularity in a single process; but once multiple processes
+        are involved, coming up with a suitable ad-hoc mechanism for
+        setting change notification becomes a really significant
+        problem.
       </para>
 
     </sect2>
@@ -541,6 +542,85 @@
 
   </sect1>
 
+  <sect1 id="example">
+    <title>Coding Example</title>
+
+    <para>
+      This section contains two simple example programs; one displays
+      the value of a key (and updates the displayed value when the key
+      changes), and the other allows you to change the value of the
+      same key. These examples should make the MVC architecture more
+      concrete, and give you a general idea how the GConf API works.
+    </para>
+
+    <para>
+      Although the examples use <structname>GConfClient</structname>,
+      remember that it's also possible to use
+      <structname>GConfEngine</structname> directly, to avoid linking
+      to GTK. Also, in the next version of GTK and glib the object
+      system will be moved to glib, so
+      <structname>GConfClient</structname> can move to the main GConf
+      library.
+    </para>
+
+    <sect2>
+      <title>A Simple View</title>
+
+      <para>
+        This program creates a <structname>GtkLabel</structname> that
+        displays the current value of the key
+        <literal>/extra/test/directory/key</literal>. (By the way,
+        directories do have conventional names, described in the GConf
+        documentation; in this case, the directory
+        <literal>/extra</literal> is similar to the
+        <literal>X-</literal> prefix used in mail headers and MIME
+        types, that is, it's for nonstandard extensions to the
+        standard. Here our "nonstandard extension" is a trivial little
+        test program.)
+      </para>
+
+      <para>
+        I won't explain all the details of this program, since this
+        article is just a general overview of GConf rather than a 
+        full tutorial; the GConf documentation goes into detail 
+        about the functions and data types you see here.
+      </para>
+
+      <para>
+        <programlisting>
+
+        </programlisting>
+      </para>
+
+    </sect2>
+    
+    <sect2>
+      <title>A Simple Controller</title>
+
+      <para>
+        This controller pops up a window with an entry box; if you
+        type in the entry box and press return, the box contents will
+        become the new value of the key
+        <literal>/extra/test/directory/key</literal>. If you have the
+        view program running, then its label should update to reflect 
+        the new value.
+      </para>
+
+      <para>
+        Again, see the GConf documentation for full details.
+      </para>
+
+
+      <para>
+        <programlisting>
+
+        </programlisting>
+      </para>
+
+    </sect2>
+
+  </sect1>
+
   <appendix id="links">
     <title>Other Resources</title>
     <para>
@@ -560,3 +640,5 @@
   </appendix>
   
 </article>
+
+
