@@ -27,7 +27,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 #include "gconf-error.h"
-#include "GConf.h"
+#include "GConfX.h"
 #include "gconf-database.h"
 
 PortableServer_POA gconf_get_poa ();

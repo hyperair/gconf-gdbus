@@ -37,7 +37,7 @@
 #include "gconf-value.h"
 #include "gconf-engine.h"
 #include "gconf-sources.h"
-#include "GConf.h"
+#include "GConfX.h"
 
 gchar*       gconf_key_directory  (const gchar* key);
 const gchar* gconf_key_key        (const gchar* key);

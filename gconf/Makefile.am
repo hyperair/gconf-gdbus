@@ -33,7 +33,7 @@ lib_LTLIBRARIES = libgconf-2.la
 bin_PROGRAMS = gconftool-2 
 libexec_PROGRAMS = gconfd-2 $(SANITY_CHECK)
 
-CORBA_SOURCECODE = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
+CORBA_SOURCECODE = GConfX-common.c GConfX-skels.c GConfX-stubs.c GConfX.h
 
 ## not BUILT_SOURCES which seems to make a mess. fix with automake 1.5?
 built_sourcecode = 			\
@@ -94,8 +94,8 @@ gconf_sanity_check_2_SOURCES = \
 
 gconf_sanity_check_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
 
-$(CORBA_SOURCECODE): $(srcdir)/GConf.idl $(ORBIT_IDL)
-	$(ORBIT_IDL) $(srcdir)/GConf.idl
+$(CORBA_SOURCECODE): $(srcdir)/GConfX.idl $(ORBIT_IDL)
+	$(ORBIT_IDL) $(srcdir)/GConfX.idl
 
 libgconf_2_la_SOURCES = \
 	gconf-internals.c	\
@@ -119,7 +119,7 @@ libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
-EXTRA_DIST=GConf.idl default.path.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
+EXTRA_DIST=GConfX.idl default.path.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
 
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)

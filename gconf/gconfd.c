@@ -37,7 +37,7 @@
 #include "gconf-database.h"
 #include <orbit/orbit.h>
 
-#include "GConf.h"
+#include "GConfX.h"
 
 #include <sys/types.h>
 #include <stdio.h>

@@ -18,7 +18,7 @@
  */
 
 #include <popt.h>
-#include "GConf.h"
+#include "GConfX.h"
 #include "gconf.h"
 #include "gconf-internals.h"
 #include "gconf-sources.h"
