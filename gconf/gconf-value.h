@@ -24,6 +24,10 @@
 #include <glib.h>
 #include "gconf-error.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* 
  * A GConfValue is used to pass configuration values around
  */
@@ -160,7 +164,13 @@ GConfEntry* gconf_entry_new              (const gchar *key,
                                           const GConfValue  *val);
 GConfEntry* gconf_entry_new_nocopy       (gchar       *key,
                                           GConfValue  *val);
+
+GConfEntry* gconf_entry_copy             (const GConfEntry *src);
+#ifndef GCONF_DISABLE_DEPRECATED
 void        gconf_entry_free             (GConfEntry  *entry);
+#endif
+void        gconf_entry_ref   (GConfEntry *entry);
+void        gconf_entry_unref (GConfEntry *entry);
 
 /* Transfer ownership of value to the caller. */
 GConfValue* gconf_entry_steal_value      (GConfEntry  *entry);
@@ -174,6 +184,10 @@ void        gconf_entry_set_is_default   (GConfEntry  *entry,
                                           gboolean     is_default);
 void        gconf_entry_set_is_writable  (GConfEntry  *entry,
                                           gboolean     is_writable);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif
 

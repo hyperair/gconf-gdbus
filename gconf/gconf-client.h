@@ -86,6 +86,7 @@ typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client,
 #define GCONF_CLIENT_CLASS(klass)          (G_TYPE_CHECK_CLASS_CAST ((klass), GCONF_TYPE_CLIENT, GConfClientClass))
 #define GCONF_IS_CLIENT(obj)               (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCONF_TYPE_CLIENT))
 #define GCONF_IS_CLIENT_CLASS(klass)       (G_TYPE_CHECK_CLASS_TYPE ((klass), GCONF_TYPE_CLIENT))
+#define GCONF_CLIENT_GET_CLASS(obj)        (G_TYPE_INSTANCE_GET_CLASS ((obj), GCONF_TYPE_CLIENT, GConfClientClass))
 
 struct _GConfClient
 {

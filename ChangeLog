@@ -1,3 +1,28 @@
+2003-03-27  Ross Burton  <ross@burtonini.com>
+
+	* gconf/gconftool.c:
+	Added --get-type, --get-list-size and --get-list-element. Patch
+	from TODO, closing #91349.
+	(do_dump_values): Return an int as the prototype says we do.
+
+	Applied patch from Jeff Franks <jcf@tpg.com.au> with a extensions,
+	closing #97205.
+	* gconf/gconf-schema.h:
+	* gconf/gconf-value.h: Wrapped both header files in an extern "C"
+	for C+compilation.
+	
+	* gconf/gconf-internals.h:
+	* gconf/gconf-value.h: Exported gconf_entry_copy(), _ref and
+	_unref. Moved declaration from gconf-internals.h to
+	gconf-value.h. Also deprecated gconf_entry_free().
+
+	* doc/gconf/tmpl/gconf-value.sgml: Fixed typo, GCONF_VALUE_DOUBLE,
+	in the description for gconf_value_get_float(). Changed the value
+	type to GCONF_VALUE_FLOAT.
+	
+	* gconf/gconf-client.h: Added missing GCONF_CLIENT_GET_CLASS
+	macro.
+
 2003-03-26  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-internals.c (gconf_get_daemon_dir): we need
