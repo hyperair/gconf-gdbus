@@ -1,3 +1,21 @@
+2001-12-08  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-value.c (gconf_value_validate): take const arg
+
+	* gconf/gconf.c: add internal API to check that GConfEngine isn't
+	being used "underneath" its owning GConfClient, thus causing 
+	cache inconsistencies. Bad hack, yay.
+
+	* gconf/gconf-client.c: Use new internal GConfEngine "exclusive
+	owner" API
+	(gconf_client_real_unreturned_error):
+	silently ignore GCONF_ERROR_OVERRIDDEN, because if the system 
+	is "locked down" most apps will probably call gconf_client_set 
+	anyway.
+
+	* gconf/gconf-client.h: fix comment to be accurate about how 
+	overlaps are handled
+
 2001-12-06  Havoc Pennington  <hp@pobox.com>
 
 	* autogen.sh: fix up check for gettext to do glib-gettext instead

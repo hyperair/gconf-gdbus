@@ -146,7 +146,7 @@ GConfClient*      gconf_client_get_for_engine (GConfEngine* engine);
 /* Add a directory to monitor and emit the value_changed signal and
    key notifications for.  Optionally pre-load the contents of this
    directory, much faster if you plan to access most of the directory
-   contents. You can't add overlapping directories.
+   contents.
 */
 
 void              gconf_client_add_dir     (GConfClient* client,

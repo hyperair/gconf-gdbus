@@ -41,7 +41,8 @@ you'll have to be disciplined enough to avoid using that engine directly.
 This is all a white lie; <emphasis>some</emphasis> direct #GConfEngine
 operations are safe. But it's complicated to know which, and if an operation
 isn't safe the resulting bugs will mangle the cache and cause weird bugs at an
-indeterminate time in the future; you don't want to risk this situation.
+indeterminate time in the future; you don't want to risk this
+situation.
 </para>
 </footnote>
 </para>
@@ -191,17 +192,19 @@ Casts a pointer to a #GConfClient*.
 <!-- ##### FUNCTION gconf_client_get_default ##### -->
 <para>
 Creates a new #GConfClient using the default #GConfEngine. Normally this is the
-engine you want.
+engine you want. If someone else is already using the default
+#GConfClient, this function returns the same one they're using, but 
+with the reference count incremented. So you have to unref either way.
 </para>
 
-@Returns: a new #GConfClient.
+@Returns: a new #GConfClient. g_object_unref() when you're done.
 
 
 <!-- ##### FUNCTION gconf_client_get_for_engine ##### -->
 <para>
 Creates a new #GConfClient with a specific #GConfEngine. Only specialized
-configuration-related programs should need to call this function.  The
-#GConfClient increases the refcount on the #GConfEngine, so you should unref it.
+configuration-related programs should need to call this function. The
+returned #GConfClient should be unref'd when you're done with g_object_unref().
 Remember to avoid using the #GConfEngine directly once you have a #GConfClient
 wrapper.
 </para>

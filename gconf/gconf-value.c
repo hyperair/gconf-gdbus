@@ -1070,8 +1070,8 @@ gconf_entry_set_is_writable (GConfEntry  *entry,
 
 
 gboolean
-gconf_value_validate (GConfValue *value,
-                      GError    **err)
+gconf_value_validate (const GConfValue *value,
+                      GError          **err)
 {
   switch (value->type)
     {

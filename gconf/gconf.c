@@ -78,6 +78,9 @@ struct _GConfEngine {
 
   gpointer user_data;
   GDestroyNotify dnotify;
+
+  gpointer owner;
+  int owner_use_count;
   
   guint is_default : 1;
 
@@ -129,6 +132,11 @@ static ConfigDatabase gconf_engine_get_database (GConfEngine     *conf,
                                                  GError         **err);
 
 
+#define CHECK_OWNER_USE(engine)   \
+  do { if ((engine)->owner && (engine)->owner_use_count == 0) \
+     g_warning ("You can't use a GConfEngine that has an active GConfClient wrapper object. Use GConfClient API instead.");  \
+  } while (0)
+
 static void         register_engine           (GConfEngine    *conf);
 static void         unregister_engine         (GConfEngine    *conf);
 static GConfEngine *lookup_engine             (const gchar    *address);
@@ -173,6 +181,9 @@ gconf_engine_blank (gboolean remote)
 
   conf->refcount = 1;
   
+  conf->owner = NULL;
+  conf->owner_use_count = 0;
+  
   if (remote)
     {
       conf->database = CORBA_OBJECT_NIL;
@@ -189,8 +200,36 @@ gconf_engine_blank (gboolean remote)
       conf->is_local = TRUE;
       conf->is_default = FALSE;
     }
-    
+  
   return conf;
+}
+
+void
+gconf_engine_set_owner (GConfEngine *engine,
+                        gpointer     client)
+{
+  g_return_if_fail (engine->owner_use_count == 0);
+  
+  engine->owner = client;
+}
+
+void
+gconf_engine_push_owner_usage (GConfEngine *engine,
+                               gpointer     client)
+{
+  g_return_if_fail (engine->owner == client);
+
+  engine->owner_use_count += 1;
+}
+
+void
+gconf_engine_pop_owner_usage  (GConfEngine *engine,
+                               gpointer     client)
+{
+  g_return_if_fail (engine->owner == client);
+  g_return_if_fail (engine->owner_use_count > 0);
+
+  engine->owner_use_count -= 1;
 }
 
 static GHashTable *engines_by_db = NULL;
@@ -563,6 +602,8 @@ gconf_engine_notify_add(GConfEngine* conf,
   gint tries = 0;
 
   g_return_val_if_fail(!gconf_engine_is_local(conf), 0);
+
+  CHECK_OWNER_USE (conf);
   
   if (gconf_engine_is_local(conf))
     {
@@ -614,13 +655,15 @@ gconf_engine_notify_add(GConfEngine* conf,
 
 void         
 gconf_engine_notify_remove(GConfEngine* conf,
-                    guint client_id)
+                           guint client_id)
 {
   GConfCnxn* gcnxn;
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
 
+  CHECK_OWNER_USE (conf);
+  
   if (gconf_engine_is_local(conf))
     return;
   
@@ -688,6 +731,8 @@ gconf_engine_get_fuller (GConfEngine *conf,
   g_return_val_if_fail(key != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
 
+  CHECK_OWNER_USE (conf);
+  
   if (!gconf_key_check(key, err))
     return NULL;
 
@@ -845,6 +890,8 @@ gconf_engine_get_entry(GConfEngine* conf,
   GConfEntry *entry;
   gchar *schema_name;
 
+  CHECK_OWNER_USE (conf);
+  
   schema_name = NULL;
   error = NULL;
   val = gconf_engine_get_fuller (conf, key, locale, use_schema_default,
@@ -902,6 +949,8 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(key, err))
     return NULL;
@@ -987,6 +1036,8 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail( (value->type != GCONF_VALUE_LIST) ||
                         (gconf_value_get_list_type(value) != GCONF_VALUE_INVALID), FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -1066,6 +1117,8 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
   g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -1140,6 +1193,8 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(schema_key != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(key, err))
     return FALSE;
@@ -1242,6 +1297,8 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(dir != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(dir, err))
     return NULL;
@@ -1389,6 +1446,8 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(dir != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(dir, err))
     return NULL;
@@ -1483,6 +1542,8 @@ gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
   g_return_if_fail(conf != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
 
+  CHECK_OWNER_USE (conf);
+  
   if (gconf_engine_is_local(conf))
     {
       GError* error = NULL;
@@ -1546,6 +1607,11 @@ gconf_clear_cache(GConfEngine* conf, GError** err)
   g_return_if_fail(conf != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
 
+  /* don't disallow non-owner use here since you can't do this
+   * via GConfClient API and calling this function won't break
+   * GConfClient anyway
+   */
+  
   if (gconf_engine_is_local(conf))
     {
       GError* error = NULL;
@@ -1671,6 +1737,8 @@ gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
   g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(dir != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(dir, err))
     return FALSE;
@@ -1730,6 +1798,8 @@ gconf_engine_remove_dir (GConfEngine* conf,
   g_return_if_fail(conf != NULL);
   g_return_if_fail(dir != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
+
+  CHECK_OWNER_USE (conf);
   
   if (!gconf_key_check(dir, err))
     return;
@@ -1777,6 +1847,8 @@ gconf_engine_key_is_writable  (GConfEngine *conf,
   gboolean is_writable = TRUE;
   GConfValue *val;
 
+  CHECK_OWNER_USE (conf);
+  
   /* FIXME implement IDL to allow getting only writability
    * (not that urgent since GConfClient caches this crap
    * anyway)

@@ -521,7 +521,12 @@
       <para>
         <structname>GConfClient</structname> should be used instead of 
         <structname>GConfEngine</structname> in most applications.
-        See <xref linkend="gconf-client">.
+        See <xref linkend="gconf-client">. Because libgnome uses
+        <structname>GConfClient</structname>, apps using libgnome 
+        <emphasis>MUST</emphasis> use
+        <structname>GConfClient</structname>.
+        <structname>GConfClient</structname> gets confused if you poke 
+        at the <structname>GConfEngine</structname> it "wraps."
       </para>
 
       <para>

@@ -29,6 +29,7 @@
 #include <glib.h>
 #include "gconf-error.h"
 #include "gconf-value.h"
+#include "gconf-engine.h"
 #include "GConf.h"
 
 gchar*       gconf_key_directory  (const gchar* key);
@@ -198,8 +199,16 @@ char*     gconf_get_daemon_dir (void);
 
 gboolean gconf_schema_validate (const GConfSchema  *sc,
                                 GError            **err);
-gboolean gconf_value_validate  (GConfValue         *value,
+gboolean gconf_value_validate  (const GConfValue   *value,
                                 GError            **err);
+
+
+void gconf_engine_set_owner        (GConfEngine *engine,
+                                    gpointer     client);
+void gconf_engine_push_owner_usage (GConfEngine *engine,
+                                    gpointer     client);
+void gconf_engine_pop_owner_usage  (GConfEngine *engine,
+                                    gpointer     client);
 
 
 

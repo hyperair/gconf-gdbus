@@ -97,6 +97,8 @@ static void listener_destroy(Listener* l);
  * GConfClient proper
  */
 
+#define PUSH_USE_ENGINE(client) gconf_engine_push_owner_usage ((client)->engine, client)
+#define POP_USE_ENGINE(client) gconf_engine_pop_owner_usage ((client)->engine, client)
 
 enum {
   VALUE_CHANGED,
@@ -235,7 +237,12 @@ destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
   /* remove notify for this dir */
   
   if(d->notify_id != 0)
+    {
+      PUSH_USE_ENGINE (client);
 	  gconf_engine_notify_remove(client->engine, d->notify_id);
+      POP_USE_ENGINE (client);
+    }
+  
   d->notify_id = 0;
 
   dir_destroy(value);
@@ -266,12 +273,8 @@ gconf_client_finalize (GObject* object)
   client->cache_hash = NULL;
 
   unregister_client (client);
-  
-  if (client->engine != NULL)
-    {
-      gconf_engine_unref(client->engine);
-      client->engine = NULL;
-    }
+
+  set_engine (client, NULL);
 
   if (G_OBJECT_CLASS (parent_class)->finalize)
     (* G_OBJECT_CLASS (parent_class)->finalize) (object);
@@ -292,6 +295,12 @@ gconf_client_real_unreturned_error (GConfClient* client, GError* error)
         }
       else
         {
+          /* We silently ignore this, since it probably isn't
+           * really an error per se
+           */
+          if (error->code == GCONF_ERROR_OVERRIDDEN)
+            return;
+          
           fprintf (stderr, _("GConf Error: %s\n"),
                    error->message);
         }
@@ -409,6 +418,30 @@ notify_from_server_callback(GConfEngine* conf, guint cnxn_id,
  * Public API
  */
 
+static void
+set_engine (GConfClient *client,
+            GConfEngine *engine)
+{
+  if (engine == client->engine)
+    return;
+  
+  if (engine)
+    {
+      gconf_engine_ref (engine);
+
+      gconf_engine_set_owner (engine, client);
+    }
+  
+  if (client->engine)
+    {
+      gconf_engine_set_owner (client->engine, NULL);
+      
+      gconf_engine_unref (client->engine);
+    }
+  
+  client->engine = engine;  
+}
+
 GConfClient*
 gconf_client_get_default (void)
 {
@@ -431,7 +464,8 @@ gconf_client_get_default (void)
     {
       client = g_object_new (gconf_client_get_type (), NULL);
 
-      client->engine = engine;
+      set_engine (client, engine);      
+
       register_client (client);
     }
   
@@ -456,9 +490,7 @@ gconf_client_get_for_engine (GConfEngine* engine)
     {
       client = g_object_new (gconf_client_get_type (), NULL);
 
-      client->engine = engine;
-
-      gconf_engine_ref(client->engine);
+      set_engine (client, engine);
 
       register_client (client);
     }
@@ -504,7 +536,9 @@ foreach_setup_overlap(gpointer key, gpointer value, gpointer user_data)
   else if (dir->notify_id != 0 &&
            gconf_key_is_below (od->dirname, dir->name))
     {
+      PUSH_USE_ENGINE (client);
       gconf_engine_notify_remove (client->engine, dir->notify_id);
+      POP_USE_ENGINE (client);
       dir->notify_id = 0;
     }
 }
@@ -548,13 +582,14 @@ gconf_client_add_dir     (GConfClient* client,
        */
       if (overlap_dir == NULL)
         {
-
+          PUSH_USE_ENGINE (client);
           notify_id = gconf_engine_notify_add (client->engine,
                                                dirname,
                                                notify_from_server_callback,
                                                client,
                                                &error);
-      
+          POP_USE_ENGINE (client);
+          
           /* We got a notify ID or we got an error, not both */
           g_return_if_fail( (notify_id != 0 && error == NULL) ||
                             (notify_id == 0 && error != NULL) );
@@ -610,15 +645,17 @@ foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
        * already add a notify */
       if (overlap_dir == NULL)
         {
+          PUSH_USE_ENGINE (client);
           dir->notify_id = gconf_engine_notify_add(client->engine,
-					    dir->name,
-					    notify_from_server_callback,
-					    client,
-					    &ad->error);
-
+                                                   dir->name,
+                                                   notify_from_server_callback,
+                                                   client,
+                                                   &ad->error);
+          POP_USE_ENGINE (client);
+          
           /* We got a notify ID or we got an error, not both */
           g_return_if_fail( (dir->notify_id != 0 && ad->error == NULL) ||
-		            (dir->notify_id == 0 && ad->error != NULL) );
+                            (dir->notify_id == 0 && ad->error != NULL) );
 
           /* if error is returned, then we'll just ignore
            * things until the end */
@@ -641,8 +678,12 @@ gconf_client_real_remove_dir    (GConfClient* client,
   /* remove notify for this dir */
   
   if (d->notify_id != 0)
-    gconf_engine_notify_remove(client->engine, d->notify_id);
-  d->notify_id = 0;
+    {
+      PUSH_USE_ENGINE (client);
+      gconf_engine_notify_remove(client->engine, d->notify_id);
+      POP_USE_ENGINE (client);
+      d->notify_id = 0;
+    }
   
   dir_destroy(d);
 
@@ -770,7 +811,11 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
       
       cache_pairs_in_dir(client, full);
 
-      recurse_subdir_list(client, gconf_engine_all_dirs(client->engine, full, NULL), full);
+      PUSH_USE_ENGINE (client);
+      recurse_subdir_list(client,
+                          gconf_engine_all_dirs (client->engine, full, NULL),
+                          full);
+      POP_USE_ENGINE (client);
 
       g_free(s);
       g_free(full);
@@ -788,8 +833,10 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
   GSList* tmp;
   GError* error = NULL;
 
+  PUSH_USE_ENGINE (client);
   pairs = gconf_engine_all_entries(client->engine, dir, &error);
-          
+  POP_USE_ENGINE (client);
+  
   if (error != NULL)
     {
       fprintf(stderr, _("GConf warning: failure listing pairs in `%s': %s"),
@@ -849,18 +896,22 @@ gconf_client_preload    (GConfClient* client,
     case GCONF_CLIENT_PRELOAD_ONELEVEL:
       {
         GSList* subdirs;
+
+        PUSH_USE_ENGINE (client);
+        subdirs = gconf_engine_all_dirs (client->engine, dirname, NULL);
+        POP_USE_ENGINE (client);
         
-        subdirs = gconf_engine_all_dirs(client->engine, dirname, NULL);
-        
-        cache_pairs_in_dir(client, dirname);
+        cache_pairs_in_dir (client, dirname);
       }
       break;
 
     case GCONF_CLIENT_PRELOAD_RECURSIVE:
       {
         GSList* subdirs;
-        
+
+        PUSH_USE_ENGINE (client);
         subdirs = gconf_engine_all_dirs(client->engine, dirname, NULL);
+        POP_USE_ENGINE (client);
         
         cache_pairs_in_dir(client, dirname);
           
@@ -885,9 +936,11 @@ gconf_client_set             (GConfClient* client,
                               GError** err)
 {
   GError* error = NULL;
-  
-  gconf_engine_set (client->engine, key, val, &error);
 
+  PUSH_USE_ENGINE (client);
+  gconf_engine_set (client->engine, key, val, &error);
+  POP_USE_ENGINE (client);
+  
   handle_error(client, error, err);
 }
 
@@ -896,9 +949,11 @@ gconf_client_unset          (GConfClient* client,
                              const gchar* key, GError** err)
 {
   GError* error = NULL;
-  
-  gconf_engine_unset(client->engine, key, &error);
 
+  PUSH_USE_ENGINE (client);
+  gconf_engine_unset(client->engine, key, &error);
+  POP_USE_ENGINE (client);
+  
   handle_error(client, error, err);
 
   if (error != NULL)
@@ -913,9 +968,11 @@ gconf_client_all_entries    (GConfClient* client,
 {
   GError* error = NULL;
   GSList* retval;
-  
-  retval = gconf_engine_all_entries(client->engine, dir, &error);
 
+  PUSH_USE_ENGINE (client);
+  retval = gconf_engine_all_entries(client->engine, dir, &error);
+  POP_USE_ENGINE (client);
+  
   handle_error(client, error, err);
 
   return retval;
@@ -928,8 +985,10 @@ gconf_client_all_dirs       (GConfClient* client,
   GError* error = NULL;
   GSList* retval;
   
+  PUSH_USE_ENGINE (client);
   retval = gconf_engine_all_dirs(client->engine, dir, &error);
-
+  POP_USE_ENGINE (client);
+  
   handle_error(client, error, err);
 
   return retval;
@@ -940,9 +999,11 @@ gconf_client_suggest_sync   (GConfClient* client,
                              GError** err)
 {
   GError* error = NULL;
-  
-  gconf_engine_suggest_sync(client->engine, &error);
 
+  PUSH_USE_ENGINE (client);
+  gconf_engine_suggest_sync(client->engine, &error);
+  POP_USE_ENGINE (client);
+  
   handle_error(client, error, err);
 }
 
@@ -952,9 +1013,11 @@ gconf_client_dir_exists     (GConfClient* client,
 {
   GError* error = NULL;
   gboolean retval;
-  
-  retval = gconf_engine_dir_exists(client->engine, dir, &error);
 
+  PUSH_USE_ENGINE (client);
+  retval = gconf_engine_dir_exists(client->engine, dir, &error);
+  POP_USE_ENGINE (client);
+  
   handle_error(client, error, err);
 
   return retval;
@@ -1040,10 +1103,12 @@ get (GConfClient *client,
   g_assert(val == NULL); /* if it was in the cache we should have returned */
 
   /* Check the GConfEngine */
-  val = gconf_engine_get_full(client->engine, key,
-                              gconf_current_locale(),
-                              use_default, &is_default, &is_writable,
-                              error);
+  PUSH_USE_ENGINE (client);
+  val = gconf_engine_get_full (client->engine, key,
+                               gconf_current_locale(),
+                               use_default, &is_default, &is_writable,
+                               error);
+  POP_USE_ENGINE (client);
 
   if (is_default_retloc)
     *is_default_retloc = is_default;
@@ -1201,8 +1266,10 @@ gconf_client_get_default_from_schema (GConfClient* client,
     }
 
   /* Check the GConfEngine */
-  val = gconf_engine_get_default_from_schema(client->engine, key,
-                                             &error);
+  PUSH_USE_ENGINE (client);
+  val = gconf_engine_get_default_from_schema (client->engine, key,
+                                              &error);
+  POP_USE_ENGINE (client);
   
   if (error != NULL)
     {
@@ -1497,9 +1564,6 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
  * Problem with with regular update: get() before the notify
  *  is out of sync with the listening parts of the application
  * 
- * It is somewhat academic now anyway because the _set() call
- * won't return until all the notifications have happened, so the
- * notify signal will be emitted inside the set() call.
  */
 
 gboolean
@@ -1507,12 +1571,17 @@ gconf_client_set_float   (GConfClient* client, const gchar* key,
                           gdouble val, GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
-  
-  if (gconf_engine_set_float(client->engine, key, val, &error))
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_float (client->engine, key, val, &error);
+  POP_USE_ENGINE (client);
+
+  if (result)
     return TRUE;
   else
     {
@@ -1526,12 +1595,17 @@ gconf_client_set_int     (GConfClient* client, const gchar* key,
                           gint val, GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_int (client->engine, key, val, &error);
+  POP_USE_ENGINE (client);
   
-  if (gconf_engine_set_int(client->engine, key, val, &error))
+  if (result)
     return TRUE;
   else
     {
@@ -1545,13 +1619,18 @@ gconf_client_set_string  (GConfClient* client, const gchar* key,
                           const gchar* val, GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_string(client->engine, key, val, &error);
+  POP_USE_ENGINE (client);
   
-  if (gconf_engine_set_string(client->engine, key, val, &error))
+  if (result)
     return TRUE;
   else
     {
@@ -1565,12 +1644,17 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
                           gboolean val, GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
-  
-  if (gconf_engine_set_bool(client->engine, key, val, &error))
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_bool (client->engine, key, val, &error);
+  POP_USE_ENGINE (client);
+
+  if (result)
     return TRUE;
   else
     {
@@ -1584,13 +1668,18 @@ gconf_client_set_schema  (GConfClient* client, const gchar* key,
                           const GConfSchema* val, GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_schema(client->engine, key, val, &error);
+  POP_USE_ENGINE (client);
   
-  if (gconf_engine_set_schema(client->engine, key, val, &error))
+  if (result)
     return TRUE;
   else
     {
@@ -1606,12 +1695,17 @@ gconf_client_set_list    (GConfClient* client, const gchar* key,
                           GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
-  
-  if (gconf_engine_set_list(client->engine, key, list_type, list, &error))
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_list(client->engine, key, list_type, list, &error);
+  POP_USE_ENGINE (client);
+
+  if (result)
     return TRUE;
   else
     {
@@ -1628,13 +1722,18 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
                           GError** err)
 {
   GError* error = NULL;
+  gboolean result;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
-  
-  if (gconf_engine_set_pair(client->engine, key, car_type, cdr_type,
-                     address_of_car, address_of_cdr, &error))
+
+  PUSH_USE_ENGINE (client);
+  result = gconf_engine_set_pair (client->engine, key, car_type, cdr_type,
+                                  address_of_car, address_of_cdr, &error);
+  POP_USE_ENGINE (client);
+
+  if (result)
     return TRUE;
   else
     {
@@ -1654,8 +1753,8 @@ gconf_client_error                  (GConfClient* client, GError* error)
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
   
-  g_signal_emit(G_OBJECT(client), client_signals[ERROR], 0,
-                error);
+  g_signal_emit (G_OBJECT(client), client_signals[ERROR], 0,
+                 error);
 }
 
 void
@@ -1664,8 +1763,8 @@ gconf_client_unreturned_error       (GConfClient* client, GError* error)
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
 
-  g_signal_emit(G_OBJECT(client), client_signals[UNRETURNED_ERROR], 0,
-                error);
+  g_signal_emit (G_OBJECT(client), client_signals[UNRETURNED_ERROR], 0,
+                 error);
 }
 
 void
