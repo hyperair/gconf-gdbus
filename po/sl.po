@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2001-10-31 23:14-0500\n"
+"POT-Creation-Date: 2001-11-02 01:07+0100\n"
 "PO-Revision-Date: 2001-02-12 20:02+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -119,7 +119,7 @@ msgstr "Nisem uspel nastaviti naèina `%s': %s"
 #: backends/xml-dir.c:367
 #, fuzzy, c-format
 msgid "Failed to write XML data to `%s': %s"
-msgstr "Nisem uspel zapisati datoteke `%s' %s"
+msgstr "Nisem uspel zapisati podatkov XML v `%s': %s"
 
 #: backends/xml-dir.c:377 backends/xml-dir.c:1099
 #, c-format
@@ -160,7 +160,7 @@ msgstr "Vnos brez imena v datoteki XML  `%s', prezrto"
 #: backends/xml-dir.c:1002
 #, fuzzy, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr "Vrhnje vozli¹èe v datoteki XML  `%s' ni <entry>, prezrto"
+msgstr "Vrhnje vozli¹èe v datoteki XML `%s' je <%s>, namesto <entry>, prezrto"
 
 #: backends/xml-dir.c:1091
 #, c-format
@@ -556,44 +556,40 @@ msgid "Encoded value is not valid UTF-8"
 msgstr ""
 
 #: gconf/gconf-internals.c:2314
-#, fuzzy, c-format
 msgid "Could not lock temporary file '%s': %s"
-msgstr "Nisem mogel odpreti datoteke poti `%s': %s\n"
+msgstr "Nisem mogel zakleniti zaèasne datoteke '%s': %s"
 
 #: gconf/gconf-internals.c:2341
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
-msgstr ""
+msgstr "Nisem mogel ustvariti datoteke '%s', ker verjetno ¾e obstaja"
 
 #: gconf/gconf-internals.c:2387
-#, fuzzy, c-format
 msgid "Failed to create or open '%s'"
-msgstr "Nisem uspel ustvariti %s: %s"
+msgstr "Nisem uspel ustvariti ali odpreti '%s'"
 
 #: gconf/gconf-internals.c:2397
 #, c-format
 msgid "Failed to lock '%s': another process has the lock (%s)"
-msgstr ""
+msgstr "Nisem uspel zakleniti '%s': kljuèavnico ima drug proces (%s)"
 
 #: gconf/gconf-internals.c:2425
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
-msgstr ""
+msgstr "Datoteka IOR '%s' ni bila uspe¹no odprta, gconfd ni bil najden: %s"
 
 #: gconf/gconf-internals.c:2455
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr ""
+msgstr "gconftool ali drug proces, ki ni gconfd, ima kljuèavnico nad datoteko '%s'"
 
 #: gconf/gconf-internals.c:2472
-#, fuzzy
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "nisem uspel dostopati do ORB-a za ping obstojeèega gconfd-ja"
+msgstr "nisem uspel dostopati do ORB-a za razvozlanje obstojeèe reference predmeta gconfd"
 
 #: gconf/gconf-internals.c:2482
-#, fuzzy, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr "Nisem uspel preoblikovati predmeta v IOR"
+msgstr "Nisem uspel pretvoriti IOR '%s' v referenco predmeta"
 
 #: gconf/gconf-internals.c:2510
 #, c-format
@@ -608,27 +604,23 @@ msgstr "Ne morem pisati v datoteko `%s': %s"
 #: gconf/gconf-internals.c:2610
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
-msgstr ""
+msgstr "Nismo imeli kljuèavnice na datoteki `%s', a bi jo morali imeti"
 
 #: gconf/gconf-internals.c:2631
-#, fuzzy, c-format
 msgid "Failed to link '%s' to '%s': %s"
-msgstr "Nisem uspel preimenovati `%s' v `%s': %s"
+msgstr "Nisem uspel pvezati '%s' na '%s': %s"
 
 #: gconf/gconf-internals.c:2643
-#, fuzzy, c-format
 msgid "Failed to remove lock file `%s': %s"
-msgstr "Nisem uspel ustvariti datoteke `%s': %s"
+msgstr "Nisem uspel odstraniti kljuèavniène datoteke `%s': %s"
 
 #: gconf/gconf-internals.c:2662
-#, fuzzy, c-format
 msgid "Failed to clean up file '%s': %s"
-msgstr "Nisem uspel zapreti datoteke  `%s': %s"
+msgstr "Nisem uspel poèistiti datoteke %s': %s"
 
 #: gconf/gconf-internals.c:2676
-#, fuzzy, c-format
 msgid "Failed to remove lock directory `%s': %s"
-msgstr "Nisem uspel sprostiti kljuèavniènega imenika `%s': %s"
+msgstr "Nisem uspel odstraniti kljuèavniènega imenika `%s': %s"
 
 #: gconf/gconf-internals.c:2841 gconf/gconfd.c:576
 #, c-format
@@ -638,12 +630,11 @@ msgstr "Nisem uspel ustvariti %s: %s"
 #: gconf/gconf-internals.c:2874
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr ""
+msgstr "Nisem uspel ustvariti pipe za komunikacijo z odcepljenim daemonom gconf: %s\n"
 
 #: gconf/gconf-internals.c:2898
-#, fuzzy, c-format
 msgid "Failed to launch configuration server: %s\n"
-msgstr "Nisem uspel dostopati do vira(ov) nastavitev: %s\n"
+msgstr "Nisem uspel pognati stre¾nika nastavitev: %s\n"
 
 #: gconf/gconf-internals.c:2922
 msgid ""
