@@ -74,14 +74,9 @@ gconf_key_check(const gchar* key, GError** err)
   return TRUE;
 }
 
-/* 
- * GConfPrivate
- */
-
-typedef struct _GConfEnginePrivate GConfEnginePrivate;
 typedef struct _CnxnTable CnxnTable;
 
-struct _GConfEnginePrivate {
+struct _GConfEngine {
   guint refcount;
 
   ConfigDatabase database;
@@ -116,7 +111,7 @@ struct _GConfCnxn {
   gpointer user_data;
 };
 
-static GConfEnginePrivate *default_engine = NULL;
+static GConfEngine *default_engine = NULL;
 
 static GConfCnxn* gconf_cnxn_new     (GConfEngine         *conf,
                                       const gchar         *namespace_section,
@@ -138,21 +133,22 @@ static ConfigServer   gconf_get_config_server    (gboolean     start_if_not_foun
 static void           gconf_detach_config_server (void);
 static ConfigListener gconf_get_config_listener  (void);
 
+static void           gconf_engine_detach       (GConfEngine     *conf);
+static gboolean       gconf_engine_connect      (GConfEngine     *conf,
+                                                 gboolean         start_if_not_found,
+                                                 GError         **err);
+static void           gconf_engine_set_database (GConfEngine     *conf,
+                                                 ConfigDatabase   db);
+static ConfigDatabase gconf_engine_get_database (GConfEngine     *conf,
+                                                 gboolean         start_if_not_found,
+                                                 GError         **err);
 
-static void           gconf_engine_detach (GConfEnginePrivate *priv);
-static gboolean       gconf_engine_connect (GConfEnginePrivate *priv,
-                                            gboolean start_if_not_found,
-                                            GError **err);
-static void           gconf_engine_set_database (GConfEnginePrivate *priv,
-                                                 ConfigDatabase db);
-static ConfigDatabase gconf_engine_get_database (GConfEnginePrivate *priv,
-                                                 gboolean start_if_not_found,
-                                                 GError **err);
 
-static void                register_engine (GConfEnginePrivate *priv);
-static void                unregister_engine (GConfEnginePrivate *priv);
-static GConfEnginePrivate *lookup_engine (const gchar *address);
-static GConfEnginePrivate *lookup_engine_by_database (ConfigDatabase db);
+static void         register_engine           (GConfEngine    *conf);
+static void         unregister_engine         (GConfEngine    *conf);
+static GConfEngine *lookup_engine             (const gchar    *address);
+static GConfEngine *lookup_engine_by_database (ConfigDatabase  db);
+
 
 /* We'll use client-specific connection numbers to return to library
    users, so if gconfd dies we can transparently re-register all our
@@ -165,51 +161,58 @@ struct _CnxnTable {
   GHashTable* client_ids;
 };
 
-static CnxnTable* ctable_new(void);
-static void       ctable_destroy(CnxnTable* ct);
-static void       ctable_insert(CnxnTable* ct, GConfCnxn* cnxn);
-static void       ctable_remove(CnxnTable* ct, GConfCnxn* cnxn);
-static void       ctable_remove_by_client_id(CnxnTable* ct, guint client_id);
-static GSList*    ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf);
-static GConfCnxn* ctable_lookup_by_client_id(CnxnTable* ct, guint client_id);
-static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id);
-static void       ctable_reinstall (CnxnTable* ct,
-                                    GConfCnxn* cnxn,
-                                    guint old_server_id,
-                                    guint new_server_id);
+static CnxnTable* ctable_new                 (void);
+static void       ctable_destroy             (CnxnTable           *ct);
+static void       ctable_insert              (CnxnTable           *ct,
+                                              GConfCnxn           *cnxn);
+static void       ctable_remove              (CnxnTable           *ct,
+                                              GConfCnxn           *cnxn);
+static void       ctable_remove_by_client_id (CnxnTable           *ct,
+                                              guint                client_id);
+static GSList*    ctable_remove_by_conf      (CnxnTable           *ct,
+                                              GConfEngine         *conf);
+static GConfCnxn* ctable_lookup_by_client_id (CnxnTable           *ct,
+                                              guint                client_id);
+static GConfCnxn* ctable_lookup_by_server_id (CnxnTable           *ct,
+                                              CORBA_unsigned_long  server_id);
+static void       ctable_reinstall           (CnxnTable           *ct,
+                                              GConfCnxn           *cnxn,
+                                              guint                old_server_id,
+                                              guint                new_server_id);
 
-static GConfEnginePrivate*
+
+static GConfEngine*
 gconf_engine_blank (gboolean remote)
 {
-  GConfEnginePrivate* priv;
+  GConfEngine* conf;
 
-  priv = g_new0(GConfEnginePrivate, 1);
+  conf = g_new0(GConfEngine, 1);
 
-  priv->refcount = 1;
+  conf->refcount = 1;
   
   if (remote)
     {
-      priv->database = CORBA_OBJECT_NIL;
-      priv->ctable = ctable_new();
-      priv->local_sources = NULL;
-      priv->is_local = FALSE;
-      priv->is_default = TRUE;
+      conf->database = CORBA_OBJECT_NIL;
+      conf->ctable = ctable_new();
+      conf->local_sources = NULL;
+      conf->is_local = FALSE;
+      conf->is_default = TRUE;
     }
   else
     {
-      priv->database = CORBA_OBJECT_NIL;
-      priv->ctable = NULL;
-      priv->local_sources = NULL;
-      priv->is_local = TRUE;
-      priv->is_default = FALSE;
+      conf->database = CORBA_OBJECT_NIL;
+      conf->ctable = NULL;
+      conf->local_sources = NULL;
+      conf->is_local = TRUE;
+      conf->is_default = FALSE;
     }
     
-  return priv;
+  return conf;
 }
 
 static GHashTable *engines_by_db = NULL;
 
-static GConfEnginePrivate *
+static GConfEngine *
 lookup_engine_by_database (ConfigDatabase db)
 {
   if (engines_by_db)
@@ -220,38 +223,38 @@ lookup_engine_by_database (ConfigDatabase db)
 
 /* This takes ownership of the ConfigDatabase */
 static void
-gconf_engine_set_database (GConfEnginePrivate *priv,
+gconf_engine_set_database (GConfEngine *conf,
                            ConfigDatabase db)
 {
-  gconf_engine_detach (priv);
+  gconf_engine_detach (conf);
 
-  priv->database = db;
+  conf->database = db;
 
   if (engines_by_db == NULL)
     engines_by_db = g_hash_table_new ((GHashFunc) g_CORBA_Object_hash,
                                       (GCompareFunc) g_CORBA_Object_equal);
   
-  g_hash_table_insert (engines_by_db, priv->database, priv);  
+  g_hash_table_insert (engines_by_db, conf->database, conf);  
 }
 
 static void
-gconf_engine_detach (GConfEnginePrivate *priv)
+gconf_engine_detach (GConfEngine *conf)
 {
   CORBA_Environment ev;
 
   CORBA_exception_init (&ev);
   
-  if (!CORBA_Object_is_nil (priv->database, &ev))
+  if (!CORBA_Object_is_nil (conf->database, &ev))
     {
-      g_hash_table_remove (engines_by_db, priv->database);
+      g_hash_table_remove (engines_by_db, conf->database);
       
-      CORBA_Object_release (priv->database, &ev);
-      priv->database = CORBA_OBJECT_NIL;
+      CORBA_Object_release (conf->database, &ev);
+      conf->database = CORBA_OBJECT_NIL;
     }
 }
 
 static gboolean
-gconf_engine_connect (GConfEnginePrivate *priv,
+gconf_engine_connect (GConfEngine *conf,
                       gboolean start_if_not_found,
                       GError **err)
 {
@@ -260,11 +263,11 @@ gconf_engine_connect (GConfEnginePrivate *priv,
   int tries = 0;
   CORBA_Environment ev;
   
-  g_return_val_if_fail (!priv->is_local, TRUE);
+  g_return_val_if_fail (!conf->is_local, TRUE);
   
   CORBA_exception_init(&ev);
 
-  if (!CORBA_Object_is_nil (priv->database, &ev))
+  if (!CORBA_Object_is_nil (conf->database, &ev))
     return TRUE;
   
  RETRY:
@@ -274,10 +277,10 @@ gconf_engine_connect (GConfEnginePrivate *priv,
   if (cs == CORBA_OBJECT_NIL)
     return FALSE; /* Error should already be set */
 
-  if (priv->is_default)
+  if (conf->is_default)
     db = ConfigServer_get_default_database (cs, &ev);      
   else
-    db = ConfigServer_get_database (cs, priv->address, &ev);
+    db = ConfigServer_get_database (cs, conf->address, &ev);
   
   if (gconf_server_broken(&ev))
     {
@@ -298,55 +301,53 @@ gconf_engine_connect (GConfEnginePrivate *priv,
       if (err)
         *err = gconf_error_new(GCONF_ERROR_BAD_ADDRESS,
                                _("Server couldn't resolve the address `%s'"),
-                               priv->address);
+                               conf->address);
           
       return FALSE;
     }
 
-  gconf_engine_set_database (priv, db);
+  gconf_engine_set_database (conf, db);
   
   return TRUE;
 }
 
 static ConfigDatabase
-gconf_engine_get_database (GConfEnginePrivate *priv,
+gconf_engine_get_database (GConfEngine *conf,
                            gboolean start_if_not_found,
                            GError **err)
 {
-  if (!gconf_engine_connect (priv, start_if_not_found, err))
+  if (!gconf_engine_connect (conf, start_if_not_found, err))
     return CORBA_OBJECT_NIL;
   else
-    return priv->database;
+    return conf->database;
 }
 
 static gboolean
 gconf_engine_is_local(GConfEngine* conf)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
-
-  return priv->is_local;
+  return conf->is_local;
 }
 
 static GHashTable *engines_by_address = NULL;
 
 static void
-register_engine (GConfEnginePrivate *priv)
+register_engine (GConfEngine *conf)
 {
-  g_return_if_fail (priv->address != NULL);
+  g_return_if_fail (conf->address != NULL);
 
   if (engines_by_address == NULL)
     engines_by_address = g_hash_table_new (g_str_hash, g_str_equal);
 
-  g_hash_table_insert (engines_by_address, priv->address, priv);
+  g_hash_table_insert (engines_by_address, conf->address, conf);
 }
 
 static void
-unregister_engine (GConfEnginePrivate *priv)
+unregister_engine (GConfEngine *conf)
 {
-  g_return_if_fail (priv->address != NULL);
+  g_return_if_fail (conf->address != NULL);
   g_return_if_fail (engines_by_address != NULL);
   
-  g_hash_table_remove (engines_by_address, priv->address);
+  g_hash_table_remove (engines_by_address, conf->address);
 
   if (g_hash_table_size (engines_by_address) == 0)
     {
@@ -356,7 +357,7 @@ unregister_engine (GConfEnginePrivate *priv)
     }
 }
 
-static GConfEnginePrivate *
+static GConfEngine *
 lookup_engine (const gchar *address)
 {
   return g_hash_table_lookup (engines_by_address, address);
@@ -371,7 +372,7 @@ GConfEngine*
 gconf_engine_get_local      (const gchar* address,
                              GError** err)
 {
-  GConfEnginePrivate* priv;
+  GConfEngine* conf;
   GConfSource* source;
 
   g_return_val_if_fail(address != NULL, NULL);
@@ -382,99 +383,95 @@ gconf_engine_get_local      (const gchar* address,
   if (source == NULL)
     return NULL;
   
-  priv = gconf_engine_blank(FALSE);
+  conf = gconf_engine_blank(FALSE);
 
-  priv->local_sources = gconf_sources_new_from_source(source);
+  conf->local_sources = gconf_sources_new_from_source(source);
 
-  g_assert (gconf_engine_is_local ((GConfEngine*)priv));
+  g_assert (gconf_engine_is_local (conf));
   
-  return (GConfEngine*)priv;
+  return conf;
 }
 
 GConfEngine*
 gconf_engine_get_default (void)
 {
-  GConfEnginePrivate* priv = NULL;
+  GConfEngine* conf = NULL;
   
   if (default_engine)
-    priv = (GConfEnginePrivate*) default_engine;
+    conf = default_engine;
 
-  if (priv == NULL)
+  if (conf == NULL)
     {
-      priv = gconf_engine_blank(TRUE);
+      conf = gconf_engine_blank(TRUE);
 
-      priv->is_default = TRUE;
+      conf->is_default = TRUE;
 
-      default_engine = priv;
+      default_engine = conf;
       
       /* Ignore errors, we never return a NULL
        * default database
        */
-      gconf_engine_connect (priv, TRUE, NULL);
+      gconf_engine_connect (conf, TRUE, NULL);
     }
   else
-    priv->refcount += 1;
+    conf->refcount += 1;
   
-  return (GConfEngine*)priv;
+  return conf;
 }
 
 GConfEngine*
 gconf_engine_get_for_address (const gchar* address, GError** err)
 {
-  GConfEnginePrivate* priv;
+  GConfEngine* conf;
 
   g_warning("Non-default GConfEngine's are basically broken, best not to use them right now.");
 
-  priv = lookup_engine (address);
+  conf = lookup_engine (address);
 
-  if (priv == NULL)
+  if (conf == NULL)
     {
-      priv = gconf_engine_blank(TRUE);
+      conf = gconf_engine_blank(TRUE);
 
-      priv->is_default = FALSE;
-      priv->address = g_strdup (address);
+      conf->is_default = FALSE;
+      conf->address = g_strdup (address);
 
-      if (!gconf_engine_connect (priv, TRUE, err))
+      if (!gconf_engine_connect (conf, TRUE, err))
         {
-          gconf_engine_unref ((GConfEngine*)priv);
+          gconf_engine_unref (conf);
           return NULL;
         }
 
-      register_engine (priv);
+      register_engine (conf);
     }
   else
-    priv->refcount += 1;
+    conf->refcount += 1;
   
-  return (GConfEngine*) priv;
+  return conf;
 }
 
 void
 gconf_engine_ref             (GConfEngine* conf)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
+  g_return_if_fail(conf != NULL);
+  g_return_if_fail(conf->refcount > 0);
 
-  g_return_if_fail(priv != NULL);
-  g_return_if_fail(priv->refcount > 0);
-
-  priv->refcount += 1;
+  conf->refcount += 1;
 }
 
 void         
 gconf_engine_unref        (GConfEngine* conf)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
-  
-  g_return_if_fail(priv != NULL);
-  g_return_if_fail(priv->refcount > 0);
+  g_return_if_fail(conf != NULL);
+  g_return_if_fail(conf->refcount > 0);
 
-  priv->refcount -= 1;
+  conf->refcount -= 1;
   
-  if (priv->refcount == 0)
+  if (conf->refcount == 0)
     {
       if (gconf_engine_is_local(conf))
         {
-          if (priv->local_sources != NULL)
-            gconf_sources_destroy(priv->local_sources);
+          if (conf->local_sources != NULL)
+            gconf_sources_destroy(conf->local_sources);
         }
       else
         {
@@ -488,18 +485,18 @@ gconf_engine_unref        (GConfEngine* conf)
           /* FIXME CnxnTable only has entries for this GConfEngine now,
            * it used to be global and shared among GConfEngine objects.
            */
-          removed = ctable_remove_by_conf (priv->ctable, conf);
+          removed = ctable_remove_by_conf (conf->ctable, conf);
   
           tmp = removed;
           while (tmp != NULL)
             {
               GConfCnxn* gcnxn = tmp->data;
 
-              if (!CORBA_Object_is_nil (priv->database, &ev))
+              if (!CORBA_Object_is_nil (conf->database, &ev))
                 {
                   GError* err = NULL;
               
-                  ConfigDatabase_remove_listener(priv->database,
+                  ConfigDatabase_remove_listener(conf->database,
                                                  gcnxn->server_id,
                                                  &ev);
 
@@ -524,16 +521,16 @@ gconf_engine_unref        (GConfEngine* conf)
 
           /* do this after removing the notifications,
              to avoid funky race conditions */
-          if (priv->address)
-            unregister_engine (priv);
+          if (conf->address)
+            unregister_engine (conf);
 
           /* Release the ConfigDatabase */
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           
-          ctable_destroy (priv->ctable);
+          ctable_destroy (conf->ctable);
         }
       
-      g_free(priv);
+      g_free(conf);
     }
 }
 
@@ -544,7 +541,6 @@ gconf_engine_notify_add(GConfEngine* conf,
                  gpointer user_data,
                  GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   ConfigDatabase db;
   ConfigListener cl;
   gulong id;
@@ -567,7 +563,7 @@ gconf_engine_notify_add(GConfEngine* conf,
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     return 0;
@@ -587,7 +583,7 @@ gconf_engine_notify_add(GConfEngine* conf,
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -597,7 +593,7 @@ gconf_engine_notify_add(GConfEngine* conf,
 
   cnxn = gconf_cnxn_new(conf, namespace_section, id, func, user_data);
 
-  ctable_insert(priv->ctable, cnxn);
+  ctable_insert(conf->ctable, cnxn);
 
   return cnxn->client_id;
 }
@@ -606,7 +602,6 @@ void
 gconf_engine_notify_remove(GConfEngine* conf,
                     guint client_id)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfCnxn* gcnxn;
   CORBA_Environment ev;
   ConfigDatabase db;
@@ -619,12 +614,12 @@ gconf_engine_notify_remove(GConfEngine* conf,
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, NULL);
+  db = gconf_engine_get_database (conf, TRUE, NULL);
 
   if (db == CORBA_OBJECT_NIL)
     return;
 
-  gcnxn = ctable_lookup_by_client_id(priv->ctable, client_id);
+  gcnxn = ctable_lookup_by_client_id(conf->ctable, client_id);
 
   g_return_if_fail(gcnxn != NULL);
 
@@ -638,7 +633,7 @@ gconf_engine_notify_remove(GConfEngine* conf,
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -651,7 +646,7 @@ gconf_engine_notify_remove(GConfEngine* conf,
 
   /* We want to do this even if the CORBA fails, so if we restart gconfd and 
      reinstall listeners we don't reinstall this one. */
-  ctable_remove(priv->ctable, gcnxn);
+  ctable_remove(conf->ctable, gcnxn);
 
   gconf_cnxn_destroy(gcnxn);
 }
@@ -663,7 +658,6 @@ gconf_engine_get_full(GConfEngine* conf,
                gboolean* value_is_default,
                GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfValue* val;
   ConfigValue* cv;
   CORBA_Environment ev;
@@ -684,7 +678,7 @@ gconf_engine_get_full(GConfEngine* conf,
 
       locale_list = gconf_split_locale(locale);
       
-      val = gconf_sources_query_value(priv->local_sources,
+      val = gconf_sources_query_value(conf->local_sources,
                                       key,
                                       (const gchar**)locale_list,
                                       use_schema_default,
@@ -703,7 +697,7 @@ gconf_engine_get_full(GConfEngine* conf,
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -728,7 +722,7 @@ gconf_engine_get_full(GConfEngine* conf,
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -771,7 +765,6 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
                                const gchar* key,
                                GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfValue* val;
   ConfigValue* cv;
   CORBA_Environment ev;
@@ -791,7 +784,7 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
 
       locale_list = gconf_split_locale(gconf_current_locale());
       
-      val = gconf_sources_query_default_value(priv->local_sources,
+      val = gconf_sources_query_default_value(conf->local_sources,
                                               key,
                                               (const gchar**)locale_list,
                                               err);
@@ -808,7 +801,7 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -828,7 +821,7 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -848,9 +841,9 @@ gconf_engine_get_default_from_schema (GConfEngine* conf,
 }
 
 gboolean
-gconf_engine_set (GConfEngine* conf, const gchar* key, GConfValue* value, GError** err)
+gconf_engine_set (GConfEngine* conf, const gchar* key,
+                  GConfValue* value, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   ConfigValue* cv;
   CORBA_Environment ev;
   ConfigDatabase db;
@@ -873,7 +866,7 @@ gconf_engine_set (GConfEngine* conf, const gchar* key, GConfValue* value, GError
     {
       GError* error = NULL;
       
-      gconf_sources_set_value(priv->local_sources, key, value, &error);
+      gconf_sources_set_value(conf->local_sources, key, value, &error);
 
       if (error != NULL)
         {
@@ -895,7 +888,7 @@ gconf_engine_set (GConfEngine* conf, const gchar* key, GConfValue* value, GError
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -918,7 +911,7 @@ gconf_engine_set (GConfEngine* conf, const gchar* key, GConfValue* value, GError
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -934,7 +927,6 @@ gconf_engine_set (GConfEngine* conf, const gchar* key, GConfValue* value, GError
 gboolean
 gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
@@ -950,7 +942,7 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
     {
       GError* error = NULL;
       
-      gconf_sources_unset_value(priv->local_sources, key, NULL, &error);
+      gconf_sources_unset_value(conf->local_sources, key, NULL, &error);
 
       if (error != NULL)
         {
@@ -972,7 +964,7 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -991,7 +983,7 @@ gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach(priv);
+          gconf_engine_detach(conf);
           goto RETRY;
         }
     }
@@ -1008,7 +1000,6 @@ gboolean
 gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
                          const gchar* schema_key, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
@@ -1028,7 +1019,7 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
     {
       GError* error = NULL;
       
-      gconf_sources_set_schema(priv->local_sources, key, schema_key, &error);
+      gconf_sources_set_schema(conf->local_sources, key, schema_key, &error);
 
       if (error != NULL)
         {
@@ -1050,7 +1041,7 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
 
  RETRY:
   
-  db = gconf_engine_get_database(priv, TRUE, err);
+  db = gconf_engine_get_database(conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1070,7 +1061,7 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1086,7 +1077,6 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
 GSList*      
 gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GSList* pairs = NULL;
   ConfigDatabase_ValueList* values;
   ConfigDatabase_KeyList* keys;
@@ -1112,7 +1102,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
       
       locale_list = gconf_split_locale(gconf_current_locale());
       
-      retval = gconf_sources_all_entries(priv->local_sources,
+      retval = gconf_sources_all_entries(conf->local_sources,
                                          dir,
                                          (const gchar**)locale_list,
                                          &error);
@@ -1143,7 +1133,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1164,7 +1154,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1207,7 +1197,6 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 GSList*      
 gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GSList* subdirs = NULL;
   ConfigDatabase_KeyList* keys;
   CORBA_Environment ev;
@@ -1227,7 +1216,7 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
       GError* error = NULL;
       GSList* retval;
       
-      retval = gconf_sources_all_dirs(priv->local_sources,
+      retval = gconf_sources_all_dirs(conf->local_sources,
                                       dir,
                                       &error);
       
@@ -1254,7 +1243,7 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
   
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1274,7 +1263,7 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1303,7 +1292,6 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
 void 
 gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
@@ -1315,7 +1303,7 @@ gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
     {
       GError* error = NULL;
       
-      gconf_sources_sync_all(priv->local_sources,
+      gconf_sources_sync_all(conf->local_sources,
                              &error);
       
       if (error != NULL)
@@ -1338,7 +1326,7 @@ gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1355,7 +1343,7 @@ gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1367,7 +1355,6 @@ gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
 void 
 gconf_clear_cache(GConfEngine* conf, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
@@ -1379,7 +1366,7 @@ gconf_clear_cache(GConfEngine* conf, GError** err)
     {
       GError* error = NULL;
       
-      gconf_sources_clear_cache(priv->local_sources);
+      gconf_sources_clear_cache(conf->local_sources);
       
       if (error != NULL)
         {
@@ -1401,7 +1388,7 @@ gconf_clear_cache(GConfEngine* conf, GError** err)
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1418,7 +1405,7 @@ gconf_clear_cache(GConfEngine* conf, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1430,7 +1417,6 @@ gconf_clear_cache(GConfEngine* conf, GError** err)
 void 
 gconf_synchronous_sync(GConfEngine* conf, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigDatabase db;
   gint tries = 0;
@@ -1442,7 +1428,7 @@ gconf_synchronous_sync(GConfEngine* conf, GError** err)
     {
       GError* error = NULL;
       
-      gconf_sources_sync_all(priv->local_sources, &error);
+      gconf_sources_sync_all(conf->local_sources, &error);
       
       if (error != NULL)
         {
@@ -1464,7 +1450,7 @@ gconf_synchronous_sync(GConfEngine* conf, GError** err)
 
  RETRY:
   
-  db = gconf_engine_get_database (priv, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1481,7 +1467,7 @@ gconf_synchronous_sync(GConfEngine* conf, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1493,7 +1479,6 @@ gconf_synchronous_sync(GConfEngine* conf, GError** err)
 gboolean
 gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
 {
-  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigDatabase db;
   CORBA_boolean server_ret;
@@ -1508,7 +1493,7 @@ gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
   
   if (gconf_engine_is_local(conf))
     {
-      return gconf_sources_dir_exists(priv->local_sources,
+      return gconf_sources_dir_exists(conf->local_sources,
                                       dir,
                                       err);
     }
@@ -1519,7 +1504,7 @@ gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
   
  RETRY:
   
-  db = gconf_engine_get_database(priv, TRUE, err);
+  db = gconf_engine_get_database(conf, TRUE, err);
   
   if (db == CORBA_OBJECT_NIL)
     {
@@ -1538,7 +1523,7 @@ gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
         {
           ++tries;
           CORBA_exception_free(&ev);
-          gconf_engine_detach (priv);
+          gconf_engine_detach (conf);
           goto RETRY;
         }
     }
@@ -1590,7 +1575,8 @@ gconf_cnxn_notify(GConfCnxn* cnxn,
                   GConfValue* value,
                   gboolean is_default)
 {
-  (*cnxn->func)(cnxn->conf, cnxn->client_id, key, value, is_default, cnxn->user_data);
+  (*cnxn->func)(cnxn->conf, cnxn->client_id, key, value,
+                is_default, cnxn->user_data);
 }
 
 /*
@@ -1729,11 +1715,11 @@ notify(PortableServer_Servant servant,
 {
   GConfCnxn* cnxn;
   GConfValue* gvalue;
-  GConfEnginePrivate* priv;
+  GConfEngine* conf;
 
-  priv = lookup_engine_by_database (db);
+  conf = lookup_engine_by_database (db);
 
-  if (priv == NULL)
+  if (conf == NULL)
     {
 #ifdef GCONF_ENABLE_DEBUG
       g_warning ("Client received notify for unknown database object");
@@ -1741,7 +1727,7 @@ notify(PortableServer_Servant servant,
       return;
     }
   
-  cnxn = ctable_lookup_by_server_id(priv->ctable, server_id);
+  cnxn = ctable_lookup_by_server_id(conf->ctable, server_id);
   
   if (cnxn == NULL)
     {
@@ -1778,28 +1764,28 @@ update_listener (PortableServer_Servant _servant,
                  CORBA_Environment * ev_ignored)
 {
   GConfCnxn* cnxn;
-  GConfEnginePrivate* priv;
+  GConfEngine* conf;
   CORBA_Environment ev;
   
-  priv = lookup_engine_by_database (db);
+  conf = lookup_engine_by_database (db);
 
   /* See if we have an old engine with a now-invalid object
      reference, and update its reference. */
-  if (priv == NULL)
+  if (conf == NULL)
     {
       CORBA_exception_init (&ev);
       
       if (strcmp (address, "def") == 0)
-        priv = default_engine;
+        conf = default_engine;
       else
-        priv = lookup_engine (address);
+        conf = lookup_engine (address);
 
-      if (priv)
-        gconf_engine_set_database (priv,
+      if (conf)
+        gconf_engine_set_database (conf,
                                    CORBA_Object_duplicate (db, &ev));
     }
   
-  if (priv == NULL)
+  if (conf == NULL)
     {
 #ifdef GCONF_ENABLE_DEBUG
       g_warning("Client received listener update for unknown database");
@@ -1807,7 +1793,7 @@ update_listener (PortableServer_Servant _servant,
       return;
     }
   
-  cnxn = ctable_lookup_by_server_id (priv->ctable, old_cnxn_id);
+  cnxn = ctable_lookup_by_server_id (conf->ctable, old_cnxn_id);
   
   if (cnxn == NULL)
     {
@@ -1818,7 +1804,7 @@ update_listener (PortableServer_Servant _servant,
       return;
     }
   
-  ctable_reinstall (priv->ctable, cnxn, old_cnxn_id, new_cnxn_id);
+  ctable_reinstall (conf->ctable, cnxn, old_cnxn_id, new_cnxn_id);
 }
 
 static ConfigListener 

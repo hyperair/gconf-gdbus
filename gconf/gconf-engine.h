@@ -31,10 +31,6 @@ extern "C" {
  * just one of these on the system.  
  */
 typedef struct _GConfEngine GConfEngine;
-
-struct _GConfEngine {
-  gpointer dummy;
-};
   
 GConfEngine* gconf_engine_get_default     (void);
 /* returns NULL on error; requests single specified source */

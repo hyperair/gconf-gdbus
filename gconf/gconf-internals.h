@@ -45,37 +45,41 @@ enum {
 gboolean gconf_file_test   (const gchar* filename, int test);
 gboolean gconf_file_exists (const gchar* filename);
 
-GConfValue* gconf_value_from_corba_value(const ConfigValue* value);
-ConfigValue*  corba_value_from_gconf_value(GConfValue* value);
-void          fill_corba_value_from_gconf_value(GConfValue* value, 
-                                                 ConfigValue* dest);
-ConfigValue*  invalid_corba_value();
+GConfValue*  gconf_value_from_corba_value      (const ConfigValue *value);
+ConfigValue* corba_value_from_gconf_value      (GConfValue        *value);
+void         fill_corba_value_from_gconf_value (GConfValue        *value,
+                                                ConfigValue       *dest);
+ConfigValue* invalid_corba_value               (void);
+
 
 gchar* gconf_object_to_string (CORBA_Object obj,
                                GError **err);
 
-void          fill_corba_schema_from_gconf_schema(GConfSchema* sc, 
-                                                   ConfigSchema* dest);
-ConfigSchema* corba_schema_from_gconf_schema(GConfSchema* sc);
-GConfSchema*  gconf_schema_from_corba_schema(const ConfigSchema* cs);
+void          fill_corba_schema_from_gconf_schema (GConfSchema        *sc,
+                                                   ConfigSchema       *dest);
+ConfigSchema* corba_schema_from_gconf_schema      (GConfSchema        *sc);
+GConfSchema*  gconf_schema_from_corba_schema      (const ConfigSchema *cs);
 
-const gchar* gconf_value_type_to_string(GConfValueType type);
-GConfValueType gconf_value_type_from_string(const gchar* str);
+const gchar*   gconf_value_type_to_string   (GConfValueType  type);
+GConfValueType gconf_value_type_from_string (const gchar    *str);
 
-gchar**       gconf_load_source_path(const gchar* filename, GError** err);
+
+gchar**       gconf_load_source_path (const gchar* filename, GError** err);
 
 /* shouldn't be used in applications (although implemented in gconf.c) */
-void          gconf_shutdown_daemon(GError** err);
-gboolean      gconf_ping_daemon(void);
-gboolean      gconf_spawn_daemon(GError** err);
+
+void     gconf_shutdown_daemon (GError **err);
+gboolean gconf_ping_daemon     (void);
+gboolean gconf_spawn_daemon    (GError **err);
+
 
 /* Returns 0 on failure (or if the string is "0" of course) */
-gulong        gconf_string_to_gulong(const gchar* str);
+gulong       gconf_string_to_gulong (const gchar *str);
+gboolean     gconf_string_to_double (const gchar *str,
+                                     gdouble     *val);
+gchar*       gconf_double_to_string (gdouble      val);
+const gchar* gconf_current_locale   (void);
 
-gboolean      gconf_string_to_double(const gchar* str, gdouble* val);
-gchar*        gconf_double_to_string(gdouble val);
-
-const gchar*  gconf_current_locale(void);
 
 /* Log wrapper; we might want to not use syslog someday */
 typedef enum {
@@ -99,7 +103,8 @@ gboolean      gconf_key_check(const gchar* key, GError** err);
  */
 
 /* doesn't work on complicated types (only string, int, bool, float) */
-GConfValue* gconf_value_new_from_string      (GConfValueType type, const gchar* str,
+GConfValue* gconf_value_new_from_string      (GConfValueType type,
+                                              const gchar* str,
                                               GError** err);
 /* for the complicated types */
 GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
@@ -115,54 +120,74 @@ GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
  */
 
 /* string quoting is only public for the benefit of the test suite */
-gchar*     gconf_quote_string   (const gchar* str);
-gchar*     gconf_unquote_string (const gchar* str, const gchar** end, GError** err);
-void       gconf_unquote_string_inplace (gchar* str, gchar** end, GError** err);
 
-GConfValue* gconf_value_decode (const gchar* encoded);
-gchar*      gconf_value_encode (GConfValue* val);
+gchar* gconf_quote_string           (const gchar  *str);
+gchar* gconf_unquote_string         (const gchar  *str,
+                                     const gchar **end,
+                                     GError      **err);
+void   gconf_unquote_string_inplace (gchar        *str,
+                                     gchar       **end,
+                                     GError      **err);
 
-gchar* gconf_quote_percents(const gchar* src);
+GConfValue* gconf_value_decode (const gchar *encoded);
+gchar*      gconf_value_encode (GConfValue  *val);
+
+/* FIXME is this used? */
+gchar* gconf_quote_percents (const gchar* src);
 
 /*
  * List/pair conversion stuff
  */
 
-GConfValue* gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list);
+GConfValue* gconf_value_list_from_primitive_list (GConfValueType  list_type,
+                                                  GSList         *list);
+GConfValue* gconf_value_pair_from_primitive_pair (GConfValueType  car_type,
+                                                  GConfValueType  cdr_type,
+                                                  gconstpointer   address_of_car,
+                                                  gconstpointer   address_of_cdr);
 
-GConfValue* gconf_value_pair_from_primitive_pair(GConfValueType car_type,
-                                                 GConfValueType cdr_type,
-                                                 gconstpointer address_of_car,
-                                                 gconstpointer address_of_cdr);
+
+GSList*  gconf_value_list_to_primitive_list_destructive (GConfValue      *val,
+                                                         GConfValueType   list_type,
+                                                         GError         **err);
+gboolean gconf_value_pair_to_primitive_pair_destructive (GConfValue      *val,
+                                                         GConfValueType   car_type,
+                                                         GConfValueType   cdr_type,
+                                                         gpointer         car_retloc,
+                                                         gpointer         cdr_retloc,
+                                                         GError         **err);
 
 
-GSList*    gconf_value_list_to_primitive_list_destructive(GConfValue* val,
-                                                          GConfValueType list_type,
-                                                          GError** err);
-
-gboolean   gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
-                                                          GConfValueType car_type,
-                                                          GConfValueType cdr_type,
-                                                          gpointer car_retloc,
-                                                          gpointer cdr_retloc,
-                                                          GError** err);
-void       gconf_set_daemon_mode(gboolean setting);
-gboolean   gconf_in_daemon_mode(void);
-void       gconf_set_daemon_ior(const gchar* ior);
-const gchar*gconf_get_daemon_ior(void);
+void         gconf_set_daemon_mode (gboolean     setting);
+gboolean     gconf_in_daemon_mode  (void);
+void         gconf_set_daemon_ior  (const gchar *ior);
+const gchar* gconf_get_daemon_ior  (void);
 
 /* Returns TRUE if there was an error, frees exception, sets err */
-gboolean gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err);
+gboolean gconf_handle_oaf_exception (CORBA_Environment* ev, GError** err);
 
-void gconf_nanosleep(gulong useconds);
+void gconf_nanosleep (gulong useconds);
 
 typedef struct _GConfLock GConfLock;
 
-GConfLock* gconf_get_lock(const gchar* lock_directory,                          
-                          GError** err);
+GConfLock* gconf_get_lock     (const gchar  *lock_directory,
+                               GError      **err);
+gboolean   gconf_release_lock (GConfLock    *lock,
+                               GError      **err);
 
-gboolean       gconf_release_lock(GConfLock* lock,
-                                  GError** err);
+
+
+
+GError*  gconf_error_new  (GConfError en,
+                           const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+
+void     gconf_set_error  (GError** err,
+                           GConfError en,
+                           const gchar* format, ...) G_GNUC_PRINTF (3, 4);
+
+/* merge two errors into a single message */
+GError*  gconf_compose_errors (GError* err1, GError* err2);
+
 
 #endif /* GCONF_ENABLE_INTERNALS */
 

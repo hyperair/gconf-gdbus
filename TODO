@@ -34,6 +34,8 @@ workstation config files.
 
 * Remove goofy "dummy" thing in GConfEngine
 
+* Implement batch gets
+
 Maybe 1.4
 ===
 
@@ -53,6 +55,11 @@ Maybe 1.4
   some candidates).
 
 * "Laptop mode" where GConf avoids touching the disk much
+
+* Implement server-side search (Kind of hard to actually implement 
+  on the server, at least in any sort of fast way, and 
+  all other gconf-using apps will block while the server is searching,
+  without some tricks to let the main loop run sometimes, so, dunno.)
 
 Future
 ===
@@ -108,6 +115,3 @@ Future
 
 * Use a real DTD and a nicer structure for the XML backend format
 
-* Implement server-side search
-
-* Implement batch gets

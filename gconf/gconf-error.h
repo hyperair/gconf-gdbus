@@ -56,16 +56,6 @@ typedef enum {
 
 GQuark gconf_error_quark (void);
 
-GError*  gconf_error_new  (GConfError en,
-                           const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-
-void     gconf_set_error  (GError** err,
-                           GConfError en,
-                           const gchar* format, ...) G_GNUC_PRINTF (3, 4);
-
-/* merge two errors into a single message */
-GError*  gconf_compose_errors (GError* err1, GError* err2);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
