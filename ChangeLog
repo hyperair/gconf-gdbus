@@ -1,5 +1,22 @@
 1999-12-01  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf.c: Add local "direct mode" engine; mildly bad hack.
+	This file could use some modularization. Still have to make
+	all the methods support the local version.
+	
+	* gconf/Makefile.am (libgconf_la_SOURCES): move gconf-sources.c to
+	the library instead of gconfd (again).
+
+	* gconf/gconf-internals.c (gconf_handle_oaf_exception): set the
+	GCONF_OAF_ERROR errno
+	
+	* gconf/gconf-error.c: add strerror stuff for those errors.
+
+	* gconf/gconf-error.h: add oaf error and "this is not a gconfd
+	engine" error.
+
+1999-12-01  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf.c (try_to_contact_server): handle OAF exceptions
 
 	* gconf/gconf-internals.c (gconf_handle_oaf_exception): new

@@ -46,7 +46,9 @@ static const gchar* err_msgs[11] = {
   N_("Type mismatch"),
   N_("Key operation on directory"),
   N_("Directory operation on key"),
-  N_("Can't overwrite existing read-only value")
+  N_("Can't overwrite existing read-only value"),
+  N_("Object Activation Framework error"),
+  N_("Operation not allowed without configuration server")
 };
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);

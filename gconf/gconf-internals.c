@@ -21,6 +21,7 @@
 #include "gconf-internals.h"
 #include "gconf-backend.h"
 #include "gconf-schema.h"
+#include <liboaf/oaf.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -2034,29 +2035,29 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err)
             OAF_GeneralError* ge = CORBA_exception_value(ev);
 
             if (err)
-              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework error: %s"), ge->description);
+              *err = gconf_error_new(GCONF_OAF_ERROR, _("%s"), ge->description);
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/NotListed:1.0" ) == 0)
           {
             if (err)
-              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework error: attempt to remove not-listed object directory"));
+              *err = gconf_error_new(GCONF_OAF_ERROR, _("attempt to remove not-listed OAF object directory"));
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/AlreadyListed:1.0" ) == 0)
           {
             if (err)
-              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework error: attempt to add already-listed directory")); 
+              *err = gconf_error_new(GCONF_OAF_ERROR, _("attempt to add already-listed OAF directory")); 
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/ParseFailed:1.0") == 0)
           {
             OAF_ActivationContext_ParseFailed* pe = CORBA_exception_value(ev);
             
             if (err)
-              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework parse error: %s"), pe->description);
+              *err = gconf_error_new(GCONF_OAF_ERROR, _("OAF parse error: %s"), pe->description);
           }
         else
           {
             if (err)
-              *err = gconf_error_new(GCONF_FAILED, _("Unknown error in Object Activation Framework"));
+              *err = gconf_error_new(GCONF_OAF_ERROR, _("Unknown OAF error"));
           }
         
         CORBA_exception_free(ev);

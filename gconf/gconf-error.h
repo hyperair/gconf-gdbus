@@ -43,7 +43,9 @@ typedef enum {
   GCONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
   GCONF_IS_DIR = 9,        /* Requested key operation on a dir */
   GCONF_IS_KEY = 10,       /* Requested dir operation on a key */
-  GCONF_OVERRIDDEN = 11    /* Read-only source at front of path has set the value */
+  GCONF_OVERRIDDEN = 11,   /* Read-only source at front of path has set the value */
+  GCONF_OAF_ERROR = 12,    /* liboaf error */
+  GCONF_LOCAL_ENGINE = 13  /* Tried to use remote operations on a local engine */
 } GConfErrNo;
 
 /* Error Object */

@@ -29,8 +29,7 @@ gconfinclude_HEADERS =     \
 gconfd_SOURCES = \
 	gconf-locale.h  	\
 	gconf-locale.c  	\
-	gconfd.c	\
-	gconf-sources.c
+	gconfd.c
 
 gconfd_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf.la
 
@@ -55,6 +54,7 @@ libgconf_la_SOURCES = \
 	gconf-error.c		\
 	gconf-listeners.c	\
 	gconf-schema.c		\
+	gconf-sources.c		\
 	gconf-value.c		\
 	gconf.c			\
 	$(CORBA_SOURCES)

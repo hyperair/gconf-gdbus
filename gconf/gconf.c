@@ -21,6 +21,7 @@
 #include "GConf.h"
 #include "gconf.h"
 #include "gconf-internals.h"
+#include "gconf-sources.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,9 +81,15 @@ typedef struct _GConfEnginePrivate GConfEnginePrivate;
 typedef struct _CnxnTable CnxnTable;
 
 struct _GConfEnginePrivate {
-  ConfigServer_Context context;
   guint refcount;
+  /* If this is ConfigServer_invalid_context then this
+     is a local engine and not registered remotely, and has
+     no ctable */
+  ConfigServer_Context context;
   CnxnTable* ctable;
+  /* If non-NULL, this is a local engine;
+     local engines don't do notification! */
+  GConfSource* local_source;
 };
 
 static void register_engine(GConfEnginePrivate* priv);
@@ -138,22 +145,63 @@ static gboolean   ctable_reinstall_everything(CnxnTable* ct,
                                               ConfigServer cs,
                                               GConfError** err);
 
-/*
- *  Public Interface
- */
-
 static GConfEnginePrivate*
-gconf_engine_blank (void)
+gconf_engine_blank (gboolean remote)
 {
   GConfEnginePrivate* priv;
 
   priv = g_new0(GConfEnginePrivate, 1);
 
-  priv->context = ConfigServer_default_context;
   priv->refcount = 1;
-  priv->ctable = ctable_new();
   
+  if (remote)
+    {
+      priv->context = ConfigServer_default_context;
+      priv->ctable = ctable_new();
+      priv->local_source = NULL;
+    }
+  else
+    {
+      priv->context = ConfigServer_invalid_context;
+      priv->ctable = NULL;
+      priv->local_source = NULL;
+    }
+    
   return priv;
+}
+
+static gboolean
+gconf_engine_is_local(GConfEngine* conf)
+{
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
+
+  return (priv->context == ConfigServer_invalid_context);
+}
+
+/*
+ *  Public Interface
+ */
+
+GConfEngine*
+gconf_engine_new_local      (const gchar* address,
+                             GConfError** err)
+{
+  GConfEnginePrivate* priv;
+  GConfSource* source;
+
+  g_return_val_if_fail(address != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  source = gconf_resolve_address(address, err);
+
+  if (source == NULL)
+    return NULL;
+  
+  priv = gconf_engine_blank(FALSE);
+  
+  priv->local_source = source;
+
+  return (GConfEngine*)priv;
 }
 
 GConfEngine*
@@ -161,7 +209,7 @@ gconf_engine_new            (void)
 {
   GConfEnginePrivate* priv;
 
-  priv = gconf_engine_blank();
+  priv = gconf_engine_blank(TRUE);
 
   register_engine(priv);
 
@@ -213,7 +261,7 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
       return NULL;
     }
   
-  priv = gconf_engine_blank();
+  priv = gconf_engine_blank(TRUE);
   
   gconf = (GConfEngine*)priv;
 
@@ -247,63 +295,71 @@ gconf_engine_unref        (GConfEngine* conf)
   
   if (priv->refcount == 0)
     {
-      /* Remove all connections associated with this GConf */
-      GSList* removed;
-      GSList* tmp;
-      CORBA_Environment ev;
-      ConfigServer cs;
+      if (gconf_engine_is_local(conf))
+        {
+          if (priv->local_source != NULL)
+            gconf_source_destroy(priv->local_source);
+        }
+      else
+        {
+          /* Remove all connections associated with this GConf */
+          GSList* removed;
+          GSList* tmp;
+          CORBA_Environment ev;
+          ConfigServer cs;
 
-      cs = gconf_get_config_server(FALSE, NULL); /* don't restart it
-                                                     if down, since
-                                                     the new one won't
-                                                     have the
-                                                     connections to
-                                                     remove */
+          cs = gconf_get_config_server(FALSE, NULL); /* don't restart it
+                                                        if down, since
+                                                        the new one won't
+                                                        have the
+                                                        connections to
+                                                        remove */
       
-      CORBA_exception_init(&ev);
+          CORBA_exception_init(&ev);
 
-      /* FIXME CnxnTable only has entries for this GConfEngine now,
+          /* FIXME CnxnTable only has entries for this GConfEngine now,
        * it used to be global and shared among GConfEngine objects.
        */
-      removed = ctable_remove_by_conf(priv->ctable, conf);
+          removed = ctable_remove_by_conf(priv->ctable, conf);
   
-      tmp = removed;
-      while (tmp != NULL)
-        {
-          GConfCnxn* gcnxn = tmp->data;
-
-          if (cs != CORBA_OBJECT_NIL)
+          tmp = removed;
+          while (tmp != NULL)
             {
-              GConfError* err = NULL;
-              
-              ConfigServer_remove_listener(cs,
-                                           priv->context,
-                                           gcnxn->server_id,
-                                           &ev);
+              GConfCnxn* gcnxn = tmp->data;
 
-              if (gconf_handle_corba_exception(&ev, &err))
+              if (cs != CORBA_OBJECT_NIL)
                 {
-                  /* Don't set error because realistically this doesn't matter to 
-                     clients */
-                  g_warning("Failure removing listener %u from the config server: %s",
-                            (guint)gcnxn->server_id,
-                            err->str);
+                  GConfError* err = NULL;
+              
+                  ConfigServer_remove_listener(cs,
+                                               priv->context,
+                                               gcnxn->server_id,
+                                               &ev);
+
+                  if (gconf_handle_corba_exception(&ev, &err))
+                    {
+                      /* Don't set error because realistically this doesn't matter to 
+                         clients */
+                      g_warning("Failure removing listener %u from the config server: %s",
+                                (guint)gcnxn->server_id,
+                                err->str);
+                    }
                 }
+
+              gconf_cnxn_destroy(gcnxn);
+
+              tmp = g_slist_next(tmp);
             }
 
-          gconf_cnxn_destroy(gcnxn);
-
-          tmp = g_slist_next(tmp);
-        }
-
-      g_slist_free(removed);
+          g_slist_free(removed);
 
       /* do this after removing the notifications,
          to avoid funky race conditions */
-      unregister_engine(priv);
+          unregister_engine(priv);
       
-      ctable_destroy(priv->ctable);
-
+          ctable_destroy(priv->ctable);
+        }
+      
       g_free(priv);
     }
 }
@@ -323,6 +379,17 @@ gconf_notify_add(GConfEngine* conf,
   GConfCnxn* cnxn;
   gint tries = 0;
 
+  g_return_val_if_fail(gconf_engine_is_local(conf), 0);
+  
+  if (gconf_engine_is_local(conf))
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_LOCAL_ENGINE,
+                               _("Can't add notifications to a local configuration source"));
+
+      return 0;
+    }
+  
   CORBA_exception_init(&ev);
 
  RETRY:
@@ -371,6 +438,9 @@ gconf_notify_remove(GConfEngine* conf,
   CORBA_Environment ev;
   ConfigServer cs;
   gint tries = 0;
+
+  if (gconf_engine_is_local(conf))
+    return;
   
   CORBA_exception_init(&ev);
 
@@ -436,7 +506,7 @@ gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
   
   if (!gconf_key_check(key, err))
     return NULL;
-
+  
   CORBA_exception_init(&ev);
 
  RETRY:
