@@ -87,6 +87,9 @@ AM_CONDITIONAL(GUILE, test -n "$GUILE_LIBS")
 AC_SUBST(GUILE_LIBS)
 AC_SUBST(GUILE_CFLAGS)
 
+AC_CHECK_HEADER(pthread.h, have_pthreads=yes)
+AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
+
 ALL_LINGUAS="no"
 AM_GNU_GETTEXT
 

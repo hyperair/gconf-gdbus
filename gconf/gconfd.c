@@ -1899,7 +1899,7 @@ ltable_notify_listeners(LTable* lt, const gchar* key, ConfigValue* value)
           if (strcmp(lte->name, dirs[i]) == 0)
             {
               g_conf_log(GCL_DEBUG, "Notifying listeners attached to `%s'",
-                     lte->name);
+                         lte->name);
               notify_listener_list(lte->listeners, key, value, &dead);
               break;
             }
