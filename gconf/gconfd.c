@@ -105,6 +105,7 @@ static void fast_cleanup(void);
 typedef struct _GConfContext GConfContext;
 
 struct _GConfContext {
+  ConfigServer_Context context;
   GConfListeners* listeners;
   GConfSources* sources;
   gchar* saved_address; /* if sources and listeners are NULL, then this is a
@@ -1184,6 +1185,8 @@ context_new(GConfSources* sources)
 
   ctx = g_new0(GConfContext, 1);
 
+  ctx->context = ConfigServer_invalid_context;
+  
   ctx->listeners = gconf_listeners_new();
 
   ctx->sources = sources;
@@ -1381,6 +1384,7 @@ context_remove_listener(GConfContext* ctx,
 typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
 
 struct _ListenerNotifyClosure {
+  ConfigServer_Context context;
   ConfigValue* value;
   GSList* dead;
   CORBA_Environment ev;
@@ -1396,7 +1400,7 @@ notify_listeners_cb(GConfListeners* listeners,
   Listener* l = listener_data;
   ListenerNotifyClosure* closure = user_data;
   
-  ConfigListener_notify(l->obj, cnxn_id, 
+  ConfigListener_notify(l->obj, closure->context, cnxn_id, 
                         (gchar*)all_above_key, closure->value,
                         &closure->ev);
   
@@ -1417,14 +1421,16 @@ notify_listeners_cb(GConfListeners* listeners,
 }
 
 static void
-context_notify_listeners(GConfContext* ctx, const gchar* key, ConfigValue* value)
+context_notify_listeners(GConfContext* ctx,
+                         const gchar* key, ConfigValue* value)
 {
   ListenerNotifyClosure closure;
   GSList* tmp;
   
   closure.value = value;
   closure.dead = NULL;
-
+  closure.context = ctx->context;
+  
   CORBA_exception_init(&closure.ev);
   
   gconf_listeners_notify(ctx->listeners, key, notify_listeners_cb, &closure);
@@ -1769,6 +1775,8 @@ register_context(GConfContext* ctx)
                            ((GConfSource*)ctx->sources->sources->data)->address,
                            GUINT_TO_POINTER(next_id));
 
+  ctx->context = next_id;
+  
   return next_id;
 }
 

@@ -6,10 +6,15 @@ TESTS='testgconf testlisteners testschemas'
 
 echo "Logging to $LOGFILE"
 
+echo "Log file for GConf test programs." > $LOGFILE
+echo "" >> $LOGFILE
+
 for I in $TESTS
 do
     echo -n "Running test program \"$I\", please wait:"
-    if ./$I >$LOGFILE 2>&1; then
+    echo "" >> $LOGFILE
+    echo "Output of $I:" >> $LOGFILE
+    if ./$I >>$LOGFILE 2>&1; then
         echo " passed"
     else
         echo

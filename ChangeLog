@@ -1,5 +1,55 @@
 1999-11-07  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf.c (reinstall_listeners_for_all_engines): Function to
+	iterate over all engines and do the context
+	reinstallation. However, it's not used yet because we also need 
+	to regenerate the context IDs.
+
+	* gconf/gconfd.c: Add a ConfigServer_Context field to GConfContext
+	(register_context): fill in the ConfigServer_Context field
+	(context_new): init context field to invalid context
+
+	* gconf/gconf.c (register_engine): Keep a hash from context ID's 
+	to GConfEngine, because we no longer have the global connection 
+	table (that table was broken anyway).
+	(gconf_engine_blank): new function shared by the GConfEngine
+	constructors (contains previous contents of gconf_engine_new, 
+	separate function required by registration stuff)
+	(gconf_engine_new): Create blank engine, then register it
+	(gconf_engine_new_from_address): register the engine
+	(gconf_engine_unref): unregister the engine
+
+	* gconf/GConf.idl: Add a context ID to the argument
+	list of the notification.
+
+	* gconf/gconf.c (gconf_server_broken): New predicate, asks if an
+	exception is set indicating that our server is hosed.
+	(gconf_detach_config_server): Function to release the server
+	object reference and set it to nil
+	(gconf_engine_new_from_address): Detach server and retry if
+	appropriate.
+	(gconf_notify_add): Detach and respawn if needed
+	(gconf_notify_remove): ditto
+	(gconf_set): ditto
+	(gconf_associate_schema): ditto
+	(gconf_unset): ditto
+	(gconf_all_entries): ditto
+	(gconf_all_dirs): ditto
+	(gconf_suggest_sync): ditto
+	(gconf_notify_add): remove debugging spew
+	(gconf_cnxn_new): Add namespace_section to GConfCnxn struct
+	(gconf_cnxn_destroy): free namespace_section
+	(GConfEnginePrivate): Put the connection table in here, it is
+	per-context (and thus per-GConfEngine), should not be global.
+	(gconf_init): don't create CnxnTable here, create it for each engine.
+	(gconf_engine_new_from_address): remove redundant refcount
+	initialization
+	(gconf_engine_unref): Destroy CnxnTable, and free the engine
+	struct itself.
+	(notify): remove debug spew, reflect new signature of notify function
+
+1999-11-07  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-internals.c: #include <locale.h>, oops
 
 1999-11-07  Havoc Pennington  <hp@pobox.com>

@@ -58,7 +58,9 @@ union ConfigValue switch (ConfigValueType) {
 };
 
 interface ConfigListener {
-  oneway void notify (in unsigned long cnxn, in string key, in ConfigValue value);
+  oneway void notify (in unsigned long server_context, // ConfigServer::Context
+                      in unsigned long cnxn,
+                      in string key, in ConfigValue value);
 
 };
 

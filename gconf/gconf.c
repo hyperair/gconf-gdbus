@@ -46,8 +46,14 @@
 #define N_(x) x
 #endif
 
-/* Returns TRUE if there was an error */
+/* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err);
+/* just returns TRUE if there's an exception indicating the server is
+   probably hosed; no side effects */
+static gboolean gconf_server_broken(CORBA_Environment* ev);
+
+/* Maximum number of times to try re-spawning the server if it's down. */
+#define MAX_RETRIES 1
 
 gboolean
 gconf_key_check(const gchar* key, GConfError** err)
@@ -58,7 +64,7 @@ gconf_key_check(const gchar* key, GConfError** err)
     {
       if (err)
         *err = gconf_error_new(GCONF_BAD_KEY, _("`%s': %s"),
-                                key, why);
+                               key, why);
       g_free(why);
       return FALSE;
     }
@@ -70,15 +76,25 @@ gconf_key_check(const gchar* key, GConfError** err)
  */
 
 typedef struct _GConfEnginePrivate GConfEnginePrivate;
+typedef struct _CnxnTable CnxnTable;
 
 struct _GConfEnginePrivate {
   ConfigServer_Context context;
   guint refcount;
+  CnxnTable* ctable;
 };
+
+static void register_engine(GConfEnginePrivate* priv);
+static GConfEnginePrivate* lookup_engine(ConfigServer_Context context);
+static void unregister_engine(GConfEnginePrivate* priv);
+static gboolean reinstall_listeners_for_all_engines(ConfigServer cs,
+                                                    GConfError** err);
+
 
 typedef struct _GConfCnxn GConfCnxn;
 
 struct _GConfCnxn {
+  gchar* namespace_section;
   guint client_id;
   CORBA_unsigned_long server_id; /* id returned from server */
   GConfEngine* conf;     /* conf we're associated with */
@@ -86,18 +102,19 @@ struct _GConfCnxn {
   gpointer user_data;
 };
 
-static GConfCnxn* gconf_cnxn_new(GConfEngine* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data);
+static GConfCnxn* gconf_cnxn_new(GConfEngine* conf, const gchar* namespace_section, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data);
 static void       gconf_cnxn_destroy(GConfCnxn* cnxn);
 static void       gconf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfValue* value);
 
 static ConfigServer gconf_get_config_server(gboolean start_if_not_found, GConfError** err);
+/* Forget our current server object reference, so the next call to
+   gconf_get_config_server will have to try to respawn the server */
+static void         gconf_detach_config_server(void);
 static ConfigListener gconf_get_config_listener(void);
 
 /* We'll use client-specific connection numbers to return to library
    users, so if gconfd dies we can transparently re-register all our
    listener functions.  */
-
-typedef struct _CnxnTable CnxnTable;
 
 struct _CnxnTable {
   /* Hash from server-returned connection ID to GConfCnxn */
@@ -106,23 +123,26 @@ struct _CnxnTable {
   GHashTable* client_ids;
 };
 
-static CnxnTable* ctable = NULL;
-
 static CnxnTable* ctable_new(void);
+static void       ctable_destroy(CnxnTable* ct);
 static void       ctable_insert(CnxnTable* ct, GConfCnxn* cnxn);
 static void       ctable_remove(CnxnTable* ct, GConfCnxn* cnxn);
 static void       ctable_remove_by_client_id(CnxnTable* ct, guint client_id);
 static GSList*    ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf);
 static GConfCnxn* ctable_lookup_by_client_id(CnxnTable* ct, guint client_id);
 static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id);
-
+/* used after server re-spawn */
+static gboolean   ctable_reinstall_everything(CnxnTable* ct,
+                                              ConfigServer_Context context,
+                                              ConfigServer cs,
+                                              GConfError** err);
 
 /*
  *  Public Interface
  */
 
-GConfEngine*
-gconf_engine_new            (void)
+static GConfEnginePrivate*
+gconf_engine_blank (void)
 {
   GConfEnginePrivate* priv;
 
@@ -130,8 +150,21 @@ gconf_engine_new            (void)
 
   priv->context = ConfigServer_default_context;
   priv->refcount = 1;
+  priv->ctable = ctable_new();
   
-  return (GConfEngine*) priv;
+  return priv;
+}
+
+GConfEngine*
+gconf_engine_new            (void)
+{
+  GConfEnginePrivate* priv;
+
+  priv = gconf_engine_blank();
+
+  register_engine(priv);
+
+  return (GConfEngine*)priv;
 }
 
 GConfEngine*
@@ -142,21 +175,32 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
   CORBA_Environment ev;
   ConfigServer cs;
   ConfigServer_Context ctx;
+  int tries = 0;
+
+  CORBA_exception_init(&ev);
+  
+ RETRY:
   
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
     return NULL; /* Error should already be set */
-
-  CORBA_exception_init(&ev);
   
   ctx = ConfigServer_get_context(cs, (gchar*)address, &ev);
 
-  if (gconf_handle_corba_exception(&ev, err))
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-      return NULL;
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    return NULL;
   
   if (ctx == ConfigServer_invalid_context)
     {
@@ -168,12 +212,13 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
       return NULL;
     }
   
-  gconf = gconf_engine_new();
+  priv = gconf_engine_blank();
   
-  priv = (GConfEnginePrivate*)gconf;
+  gconf = (GConfEngine*)priv;
 
   priv->context = ctx;
-  priv->refcount = 1;
+
+  register_engine(priv);
   
   return gconf;
 }
@@ -206,8 +251,7 @@ gconf_engine_unref        (GConfEngine* conf)
       GSList* tmp;
       CORBA_Environment ev;
       ConfigServer cs;
-
-
+      
       cs = gconf_get_config_server(FALSE, NULL); /* don't restart it
                                                      if down, since
                                                      the new one won't
@@ -217,7 +261,10 @@ gconf_engine_unref        (GConfEngine* conf)
       
       CORBA_exception_init(&ev);
 
-      removed = ctable_remove_by_conf(ctable, conf);
+      /* FIXME CnxnTable only has entries for this GConfEngine now,
+       * it used to be global and shared among GConfEngine objects.
+       */
+      removed = ctable_remove_by_conf(priv->ctable, conf);
   
       tmp = removed;
       while (tmp != NULL)
@@ -249,6 +296,14 @@ gconf_engine_unref        (GConfEngine* conf)
         }
 
       g_slist_free(removed);
+
+      /* do this after removing the notifications,
+         to avoid funky race conditions */
+      unregister_engine(priv);
+      
+      ctable_destroy(priv->ctable);
+
+      g_free(priv);
     }
 }
 
@@ -265,13 +320,16 @@ gconf_notify_add(GConfEngine* conf,
   gulong id;
   CORBA_Environment ev;
   GConfCnxn* cnxn;
+  gint tries = 0;
 
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
     return 0;
-  
-  CORBA_exception_init(&ev);
 
   cl = gconf_get_config_listener();
   
@@ -281,40 +339,48 @@ gconf_notify_add(GConfEngine* conf,
   id = ConfigServer_add_listener(cs, priv->context,
                                  (gchar*)namespace_section, 
                                  cl, &ev);
-
-  if (gconf_handle_corba_exception(&ev, err))
-    {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-      return 0;
-    }
-
-  cnxn = gconf_cnxn_new(conf, id, func, user_data);
-
-  ctable_insert(ctable, cnxn);
-
-  printf("Received ID %u from server, and mapped to client ID %u\n",
-         (guint)id, cnxn->client_id);
   
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
+    }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    return 0;
+
+  cnxn = gconf_cnxn_new(conf, namespace_section, id, func, user_data);
+
+  ctable_insert(priv->ctable, cnxn);
+
   return cnxn->client_id;
 }
 
 void         
 gconf_notify_remove(GConfEngine* conf,
-                     guint client_id)
+                    guint client_id)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfCnxn* gcnxn;
   CORBA_Environment ev;
   ConfigServer cs;
+  gint tries = 0;
+  
+  CORBA_exception_init(&ev);
 
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, NULL);
 
   if (cs == CORBA_OBJECT_NIL)
     return;
 
-  CORBA_exception_init(&ev);
-
-  gcnxn = ctable_lookup_by_client_id(ctable, client_id);
+  gcnxn = ctable_lookup_by_client_id(priv->ctable, client_id);
 
   g_return_if_fail(gcnxn != NULL);
 
@@ -322,15 +388,26 @@ gconf_notify_remove(GConfEngine* conf,
                                gcnxn->server_id,
                                &ev);
 
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
+    }
+  
   if (gconf_handle_corba_exception(&ev, NULL))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
+      ; /* do nothing */
     }
   
 
   /* We want to do this even if the CORBA fails, so if we restart gconfd and 
      reinstall listeners we don't reinstall this one. */
-  ctable_remove(ctable, gcnxn);
+  ctable_remove(priv->ctable, gcnxn);
 
   gconf_cnxn_destroy(gcnxn);
 }
@@ -350,10 +427,15 @@ gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
   ConfigValue* cv;
   CORBA_Environment ev;
   ConfigServer cs;
-
+  gint tries = 0;
+  
   if (!gconf_key_check(key, err))
     return NULL;
 
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
@@ -363,18 +445,26 @@ gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
       return NULL;
     }
 
-  CORBA_exception_init(&ev);
-
   if (locale == NULL)
     cv = ConfigServer_lookup(cs, priv->context, (gchar*)key, &ev);
   else
     cv = ConfigServer_lookup_with_locale(cs, priv->context,
                                          (gchar*)key, (gchar*)locale, &ev);
+
+
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
+    }
   
   if (gconf_handle_corba_exception(&ev, err))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-
       /* NOTE: don't free cvs since we got an exception! */
       return NULL;
     }
@@ -394,12 +484,17 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
   ConfigValue* cv;
   CORBA_Environment ev;
   ConfigServer cs;
-
+  gint tries = 0;
+  
   g_return_val_if_fail(value->type != GCONF_VALUE_INVALID, FALSE);
 
   if (!gconf_key_check(key, err))
     return FALSE;
 
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
@@ -411,19 +506,25 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** e
 
   cv = corba_value_from_gconf_value(value);
 
-  CORBA_exception_init(&ev);
-
   ConfigServer_set(cs, priv->context,
                    (gchar*)key, cv,
                    &ev);
 
   CORBA_free(cv);
 
-  if (gconf_handle_corba_exception(&ev, err))
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-      return FALSE;
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    return FALSE;
 
   g_return_val_if_fail(*err == NULL, FALSE);
   
@@ -436,10 +537,15 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
-
+  gint tries = 0;
+  
   if (!gconf_key_check(key, err))
     return FALSE;
 
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
@@ -449,17 +555,23 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
       return FALSE;
     }
 
-  CORBA_exception_init(&ev);
-
   ConfigServer_unset(cs, priv->context,
                      (gchar*)key,
                      &ev);
 
-  if (gconf_handle_corba_exception(&ev, err))
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-      return FALSE;
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    return FALSE;
 
   g_return_val_if_fail(*err == NULL, FALSE);
   
@@ -473,12 +585,17 @@ gconf_associate_schema  (GConfEngine* conf, const gchar* key,
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
-
+  gint tries = 0;
+  
   if (!gconf_key_check(key, err))
     return FALSE;
 
   if (!gconf_key_check(schema_key, err))
     return FALSE;
+
+  CORBA_exception_init(&ev);
+
+ RETRY:
   
   cs = gconf_get_config_server(TRUE, err);
 
@@ -489,18 +606,24 @@ gconf_associate_schema  (GConfEngine* conf, const gchar* key,
       return FALSE;
     }
 
-  CORBA_exception_init(&ev);
-
   ConfigServer_set_schema(cs, priv->context,
                           (gchar*)key,
                           (gchar*)schema_key,
                           &ev);
 
-  if (gconf_handle_corba_exception(&ev, err))
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-      return FALSE;
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    return FALSE;
 
   g_return_val_if_fail(*err == NULL, FALSE);
   
@@ -517,10 +640,15 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
   CORBA_Environment ev;
   ConfigServer cs;
   guint i;
-
+  gint tries = 0;
+  
   if (!gconf_key_check(dir, err))
     return NULL;
 
+  CORBA_exception_init(&ev);
+  
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
@@ -529,20 +657,25 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
 
       return NULL;
     }
-
-  CORBA_exception_init(&ev);
   
   ConfigServer_all_entries(cs, priv->context,
                            (gchar*)dir, 
                            &keys, &values,
                            &ev);
 
-  if (gconf_handle_corba_exception(&ev, err))
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-
-      return NULL;
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))
+    return NULL;
   
   if (keys->_length != values->_length)
     {
@@ -580,10 +713,15 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
   CORBA_Environment ev;
   ConfigServer cs;
   guint i;
-
+  gint tries = 0;
+  
   if (!gconf_key_check(dir, err))
     return NULL;
-
+  
+  CORBA_exception_init(&ev);
+  
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
@@ -592,21 +730,25 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
 
       return NULL;
     }
-
-  CORBA_exception_init(&ev);
   
   ConfigServer_all_dirs(cs, priv->context,
                         (gchar*)dir, 
                         &keys,
                         &ev);
 
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
+    }
 
   if (gconf_handle_corba_exception(&ev, err))
-    {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
-
-      return NULL;
-    }
+    return NULL;
   
   i = 0;
   while (i < keys->_length)
@@ -631,7 +773,12 @@ gconf_suggest_sync(GConfEngine* conf, GConfError** err)
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
+  gint tries = 0;
 
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
   cs = gconf_get_config_server(TRUE, err);
 
   if (cs == CORBA_OBJECT_NIL)
@@ -641,14 +788,21 @@ gconf_suggest_sync(GConfEngine* conf, GConfError** err)
       return;
     }
 
-  CORBA_exception_init(&ev);
-
   ConfigServer_sync(cs, priv->context, &ev);
 
-  if (gconf_handle_corba_exception(&ev, err))  
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))  
+    ; /* nothing additional */
 }
 
 gboolean
@@ -658,11 +812,16 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
   CORBA_Environment ev;
   ConfigServer cs;
   CORBA_boolean server_ret;
-
+  gint tries = 0;
+  
   g_return_val_if_fail(dir != NULL, FALSE);
   
   if (!gconf_key_check(dir, err))
     return FALSE;
+
+  CORBA_exception_init(&ev);
+  
+ RETRY:
   
   cs = gconf_get_config_server(TRUE, err);
   
@@ -673,15 +832,22 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
       return FALSE;
     }
   
-  CORBA_exception_init(&ev);
-  
   server_ret = ConfigServer_dir_exists(cs, priv->context,
                                        (gchar*)dir, &ev);
   
-  if (gconf_handle_corba_exception(&ev, err))  
+  if (gconf_server_broken(&ev))
     {
-      /* FIXME we could do better here... maybe respawn the server if needed... */
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
     }
+  
+  if (gconf_handle_corba_exception(&ev, err))  
+    ; /* nothing */
 
   return (server_ret == CORBA_TRUE);
 }
@@ -691,13 +857,14 @@ gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
  */
 
 static GConfCnxn* 
-gconf_cnxn_new(GConfEngine* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data)
+gconf_cnxn_new(GConfEngine* conf, const gchar* namespace_section, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data)
 {
   GConfCnxn* cnxn;
   static guint next_id = 1;
   
   cnxn = g_new0(GConfCnxn, 1);
 
+  cnxn->namespace_section = g_strdup(namespace_section);
   cnxn->conf = conf;
   cnxn->server_id = server_id;
   cnxn->client_id = next_id;
@@ -712,6 +879,7 @@ gconf_cnxn_new(GConfEngine* conf, CORBA_unsigned_long server_id, GConfNotifyFunc
 static void      
 gconf_cnxn_destroy(GConfCnxn* cnxn)
 {
+  g_free(cnxn->namespace_section);
   g_free(cnxn);
 }
 
@@ -907,11 +1075,33 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
   return server;
 }
 
+static void
+gconf_detach_config_server(void)
+{  
+  if (server != CORBA_OBJECT_NIL)
+    {
+      CORBA_Environment ev;
+      
+      CORBA_exception_init(&ev);
+
+      CORBA_Object_release(server, &ev);
+
+      if (ev._major != CORBA_NO_EXCEPTION)
+        {
+          g_warning("Exception releasing gconfd server object: %s",
+                    CORBA_exception_id(&ev));
+          CORBA_exception_free(&ev);
+        }
+          
+      server = CORBA_OBJECT_NIL;
+    }
+}
 
 ConfigListener listener = CORBA_OBJECT_NIL;
 
 static void 
-notify(PortableServer_Servant servant, 
+notify(PortableServer_Servant servant,
+       CORBA_unsigned_long context,
        CORBA_unsigned_long cnxn,
        CORBA_char* key, 
        ConfigValue* value,
@@ -928,19 +1118,27 @@ static POA_ConfigListener__vepv poa_listener_vepv = { &base_epv, &listener_epv }
 static POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 
 static void 
-notify(PortableServer_Servant servant, 
+notify(PortableServer_Servant servant,
+       CORBA_unsigned_long context,
        CORBA_unsigned_long server_id,
-       CORBA_char* key, 
+       CORBA_char* key,
        ConfigValue* value,
        CORBA_Environment *ev)
 {
   GConfCnxn* cnxn;
   GConfValue* gvalue;
+  GConfEnginePrivate* priv;
 
-  printf("Client GConf library received notify for ID %u key `%s'\n", 
-         (guint)server_id, key);
+  priv = lookup_engine(context);
 
-  cnxn = ctable_lookup_by_server_id(ctable, server_id);
+  if (priv == NULL)
+    {
+      g_warning("Client received notify for unknown context %u",
+                (guint)context);
+      return;
+    }
+  
+  cnxn = ctable_lookup_by_server_id(priv->ctable, server_id);
   
   if (cnxn == NULL)
     {
@@ -1048,8 +1246,6 @@ gconf_init           (GConfError** err)
           return FALSE;
         }
     }
-
-  ctable = ctable_new();
 
   have_initted = TRUE;
   
@@ -1187,6 +1383,14 @@ ctable_new(void)
   return ct;
 }
 
+static void
+ctable_destroy(CnxnTable* ct)
+{
+  g_hash_table_destroy(ct->server_ids);
+  g_hash_table_destroy(ct->client_ids);
+  g_free(ct);
+}
+
 static void       
 ctable_insert(CnxnTable* ct, GConfCnxn* cnxn)
 {
@@ -1210,7 +1414,7 @@ ctable_remove_by_client_id(CnxnTable* ct, guint client_id)
 
   g_return_if_fail(cnxn != NULL);
 
-  ctable_remove(ctable, cnxn);
+  ctable_remove(ct, cnxn);
 }
 
 struct RemoveData {
@@ -1235,6 +1439,11 @@ remove_by_conf(gpointer key, gpointer value, gpointer user_data)
   else 
     return FALSE; /* or not */
 }
+
+/* FIXME this no longer makes any sense, because a CnxnTable
+   belongs to a GConfEngine and all entries have the same
+   GConfEngine.
+*/
 
 /* We return a list of the removed GConfCnxn */
 static GSList*      
@@ -1263,15 +1472,124 @@ ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf)
 static GConfCnxn* 
 ctable_lookup_by_client_id(CnxnTable* ct, guint client_id)
 {
-  return g_hash_table_lookup(ctable->client_ids, &client_id);
+  return g_hash_table_lookup(ct->client_ids, &client_id);
 }
 
 static GConfCnxn* 
 ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id)
 {
-  return g_hash_table_lookup(ctable->server_ids, &server_id);
+  return g_hash_table_lookup(ct->server_ids, &server_id);
 }
 
+struct ReinstallData {
+  CORBA_Environment ev;
+  ConfigListener cl;
+  ConfigServer cs;
+  GConfError* error;
+  ConfigServer_Context context;
+};
+
+static void
+reinstall_foreach(gpointer key, gpointer value, gpointer user_data)
+{
+  GConfCnxn* cnxn;
+  struct ReinstallData* rd;
+
+  rd = user_data;
+  cnxn = value;
+
+  g_assert(rd != NULL);
+  g_assert(cnxn != NULL);
+
+  /* invalidate the server id, but take no
+     further action - something is badly screwed.
+  */
+  if (rd->error != NULL)
+    {
+      cnxn->server_id = 0;
+      return;
+    }
+    
+  cnxn->server_id = ConfigServer_add_listener(rd->cs, rd->context,
+                                              cnxn->namespace_section, 
+                                              rd->cl, &(rd->ev));
+  
+  if (gconf_handle_corba_exception(&(rd->ev), &(rd->error)))
+    ; /* just let error get set */
+}
+
+static void
+insert_in_server_ids_foreach(gpointer key, gpointer value, gpointer user_data)
+{
+  GHashTable* server_ids;
+  GConfCnxn* cnxn;
+
+  cnxn = value;
+  server_ids = user_data;
+
+  g_assert(cnxn != NULL);
+  g_assert(server_ids != NULL);
+
+  /* ensure we have a valid server id */
+  g_return_if_fail(cnxn->server_id != 0);
+  
+  g_hash_table_insert(server_ids, &cnxn->server_id, cnxn);
+}
+
+static gboolean
+ctable_reinstall_everything(CnxnTable* ct, ConfigServer_Context context,
+                            ConfigServer cs, GConfError** err)
+{
+  ConfigListener cl;
+  CORBA_Environment ev;
+  GConfCnxn* cnxn;
+  struct ReinstallData rd;
+
+  g_return_val_if_fail(cs != CORBA_OBJECT_NIL, FALSE);
+  
+  cl = gconf_get_config_listener();
+
+  /* Should have aborted the program in this case probably */
+  g_return_val_if_fail(cl != CORBA_OBJECT_NIL, FALSE);
+
+  /* First we re-install everything in the client-id-to-cnxn hash,
+     then blow away the server-id-to-cnxn hash and re-insert everything
+     from the client-id-to-cnxn hash.
+  */
+
+  CORBA_exception_init(&rd.ev);
+  rd.cl = cl;
+  rd.cs = cs;
+  rd.error = NULL;
+  rd.context = context;
+
+  g_hash_table_foreach(ct->client_ids, reinstall_foreach, &rd);
+
+  if (rd.error != NULL)
+    {
+      if (err != NULL)
+        *err = rd.error;
+      else
+        {
+          gconf_error_destroy(rd.error);
+        }
+      /* Note that the table is now in an inconsistent state; some
+         notifications may be re-installed, some may not.  Those that
+         were not now have the invalid server id 0.  However, if there
+         was an error, it was probably due to a crashed server
+         (GCONF_NO_SERVER), so we should re-install everything.
+      */
+      return FALSE;
+    }
+
+  g_hash_table_destroy(ct->server_ids);
+
+  ct->server_ids = g_hash_table_new(corba_unsigned_long_hash, corba_unsigned_long_equal);
+
+  g_hash_table_foreach(ct->client_ids, insert_in_server_ids_foreach, ct->server_ids);
+
+  return TRUE;
+}
 
 /*
  * Daemon control
@@ -1300,8 +1618,8 @@ gconf_shutdown_daemon(GConfError** err)
     {
       if (err)
         *err = gconf_error_new(GCONF_FAILED, _("Failure shutting down config server: %s"),
-                                CORBA_exception_id(&ev));
-      /* FIXME we could do better here... maybe respawn the server if needed... */
+                               CORBA_exception_id(&ev));
+
       CORBA_exception_free(&ev);
     }
 }
@@ -1635,6 +1953,20 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
 }
 
 static gboolean
+gconf_server_broken(CORBA_Environment* ev)
+{
+  switch (ev->_major)
+    {
+    case CORBA_SYSTEM_EXCEPTION:
+      return TRUE;
+      break;
+    default:
+      return FALSE;
+      break;
+    }
+}
+
+static gboolean
 gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err)
 {
   switch (ev->_major)
@@ -1646,7 +1978,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err)
     case CORBA_SYSTEM_EXCEPTION:
       if (err)
         *err = gconf_error_new(GCONF_NO_SERVER, _("CORBA error: %s"),
-                                CORBA_exception_id(ev));
+                               CORBA_exception_id(ev));
       CORBA_exception_free(ev);
       return TRUE;
       break;
@@ -1668,4 +2000,100 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err)
       return TRUE;
       break;
     }
+}
+
+/*
+ * context-to-engine map
+ */
+
+/* So we can find an engine from a context */
+static GHashTable* context_to_engine_hash = NULL;
+
+static void
+register_engine(GConfEnginePrivate* priv)
+{
+  if (context_to_engine_hash == NULL)
+    {
+      context_to_engine_hash = g_hash_table_new(corba_unsigned_long_hash, corba_unsigned_long_equal);
+    }
+  
+  g_hash_table_insert(context_to_engine_hash, &(priv->context), priv);
+}
+
+static GConfEnginePrivate*
+lookup_engine(ConfigServer_Context context)
+{
+  g_return_val_if_fail(context_to_engine_hash != NULL, NULL);
+
+  return g_hash_table_lookup(context_to_engine_hash, &context);
+}
+
+static void
+unregister_engine(GConfEnginePrivate* priv)
+{
+  g_return_if_fail(context_to_engine_hash != NULL);
+  
+  g_hash_table_remove(context_to_engine_hash, &(priv->context));
+
+  if (g_hash_table_size(context_to_engine_hash) == 0)
+    {
+      g_hash_table_destroy(context_to_engine_hash);
+      context_to_engine_hash = NULL;
+    }
+}
+
+struct EngineReinstallData {
+  ConfigServer cs;
+  GConfError* error;
+};
+
+static void
+engine_reinstall_foreach(gpointer key, gpointer value, gpointer user_data)
+{
+  struct EngineReinstallData* erd;
+  GConfEnginePrivate* priv;
+
+  erd = user_data;
+  priv = value;
+
+  g_assert(erd != NULL);
+  g_assert(priv != NULL);
+
+  /* Bail if any errors have occurred */
+  if (erd->error != NULL)
+    return;
+  
+  ctable_reinstall_everything(priv->ctable, priv->context, erd->cs, &(erd->error));
+}
+
+static gboolean
+reinstall_listeners_for_all_engines(ConfigServer cs,
+                                    GConfError** err)
+{
+  struct EngineReinstallData erd;
+
+  /* FIXME if the server died, our contexts our now invalid;
+     so we need the auto-restore-contexts arrangement to handle
+     that. In other words for now this function won't work.
+  */
+  
+  erd.cs = cs;
+  erd.error = NULL;
+
+  g_hash_table_foreach(context_to_engine_hash, engine_reinstall_foreach, &erd);
+
+  if (erd.error != NULL)
+    {
+      if (err != NULL)
+        {
+          *err = erd.error;
+        }
+      else
+        {
+          gconf_error_destroy(erd.error);
+        }
+      return FALSE;
+    }
+
+  return TRUE;
 }
