@@ -439,9 +439,8 @@ gconf_client_get_default (void)
   else
     {
       client = g_object_new (gconf_client_get_type (), NULL);
-
+      g_object_ref (G_OBJECT (client));      
       set_engine (client, engine);      
-
       register_client (client);
     }
   

@@ -260,6 +260,7 @@ gboolean     gconf_string_to_enum (GConfEnumStringPair  lookup_table[],
 const gchar* gconf_enum_to_string (GConfEnumStringPair  lookup_table[],
                                    gint                 enum_value);
 
+int gconf_debug_shutdown (void);
 
 #ifndef GCONF_DISABLE_DEPRECATED
 gboolean     gconf_init           (int argc, char **argv, GError** err);
@@ -292,7 +293,6 @@ extern struct poptOption gconf_options[];
 
 void gconf_clear_cache(GConfEngine* conf, GError** err);
 void gconf_synchronous_sync(GConfEngine* conf, GError** err);
-int  gconf_debug_shutdown(void);
 
 GConfValue * gconf_engine_get_full (GConfEngine *conf,
                                     const gchar *key,

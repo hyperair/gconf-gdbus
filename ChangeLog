@@ -1,3 +1,11 @@
+2002-02-05  Michael Meeks  <michael@ximian.com>
+
+	* gconf/gconf.h: move (gconf_debug_shutdown) out of
+	the internals guard - doh.
+
+	* gconf/gconf-client.c (gconf_client_get_default):
+	ensure we still own the reference we keep around.
+
 2002-02-04  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/Makefile.am (regenerate-built-sources): give up and check
