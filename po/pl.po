@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-03-01 10:57+0100\n"
-"PO-Revision-Date: 2002-03-01 10:55+0100\n"
+"POT-Creation-Date: 2002-03-01 14:32+0100\n"
+"PO-Revision-Date: 2002-03-01 14:32+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -48,18 +48,19 @@ msgstr ""
 
 #: backends/xml-backend.c:1
 msgid "Unloading XML backend module."
-msgstr "Usunięcie pracującego w tle modułu XML."
+msgstr "Usuwanie z pamięci modułu XML."
 
 #: backends/xml-backend.c:1
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Nie można znaleźć katalogu głównego XML pod adresem `%s'"
+msgstr "Nie można znaleźć katalogu głównego XML pod adresem \"%s\""
 
 #: backends/xml-backend.c:1
 #, c-format
 msgid "Can't read from or write to the XML root directory in the address `%s'"
 msgstr ""
-"Nie można odczytać lub zapisywać do katalogu głównego XML-a pod adresem `%s'"
+"Nie można odczytać lub zapisywać do katalogu głównego XML-a pod adresem "
+"\"%s\""
 
 #: backends/xml-backend.c:1
 #, c-format
@@ -81,12 +82,12 @@ msgstr ""
 
 #: backends/xml-backend.c:1
 msgid "Initializing XML backend module"
-msgstr "Inicjacja pracującego w tle modułu XML"
+msgstr "Inicjowanie modułu XML"
 
 #: backends/xml-backend.c:1
 #, c-format
 msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr "Nie udana próba usunięcia blokady na katalog XML `%s': %s"
+msgstr "Nieudana próba usunięcia blokady na katalog XML \"%s\": %s"
 
 #: backends/xml-cache.c:1
 msgid "Failed to sync XML cache contents to disk"
@@ -114,12 +115,12 @@ msgstr ""
 #: backends/xml-dir.c:1
 #, c-format
 msgid "Could not stat `%s': %s"
-msgstr "Nie można odczytać `%s': %s"
+msgstr "Nie można odczytać \"%s\": %s"
 
 #: backends/xml-dir.c:1
 #, c-format
 msgid "XML filename `%s' is a directory"
-msgstr "Plik XML `%s' jest katalogiem"
+msgstr "Plik XML \"%s\" jest katalogiem"
 
 #: backends/xml-dir.c:1 backends/xml-dir.c:1
 #, c-format
@@ -170,18 +171,18 @@ msgstr "Nie można uzyskać informacji o \"%s\" : %s"
 #: backends/xml-dir.c:1
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
-msgstr "Zduplikowane wpisy \"%s\" w \"%s\":, ignorowanie"
+msgstr "Zduplikowane wpisy \"%s\" w \"%s\", zignorowano"
 
 #: backends/xml-dir.c:1
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
-msgstr "Wpis bez nazwy w pliku XML \"%s\", ignorowanie"
+msgstr "Wpis bez nazwy w pliku XML \"%s\", zignorowano"
 
 #: backends/xml-dir.c:1
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
-"Głównym węzłem w pliku XML \"%s\" jest <%s> zamiast <entry>, ignorowanie"
+"Głównym węzłem w pliku XML \"%s\" jest <%s> zamiast <entry>, zignorowano"
 
 #: backends/xml-dir.c:1
 #, c-format
@@ -192,12 +193,12 @@ msgstr "Nie można stworzyć pliku \"%s\": %s"
 #: backends/xml-entry.c:1
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr "Ignorowanie węzła XML o nazwie \"%s\": %s"
+msgstr "Zignorowano węzeł XML o nazwie \"%s\": %s"
 
 #: backends/xml-entry.c:1
 #, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
-msgstr "Ignorowanie nazwy schematu `%s', niewłaściwy: %s"
+msgstr "Zignorowano nazwę schematu \"%s\", niewłaściwy: %s"
 
 #: backends/xml-entry.c:1
 #, c-format
@@ -217,7 +218,7 @@ msgstr "Brak atrybutu \"type\" dla węzła <%s>"
 #: backends/xml-entry.c:1
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr "Węzeł posiada nieznany \"typ\" atrybutu `%s', ignorowanie"
+msgstr "Węzeł posiada nieznany atrybut \"type\" \"%s\", zignorowano"
 
 #: backends/xml-entry.c:1
 msgid "No \"value\" attribute for node"
@@ -301,11 +302,11 @@ msgstr "Błąd przy otwieraniu modułu \"%s\": %s\n"
 #: gconf/gconf-backend.c:1
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
-msgstr "Nie można znaleźć modułów pracujących w tle dla `%s'"
+msgstr "Nie można odnaleźć modułu obsługującego \"%s\""
 
 #: gconf/gconf-backend.c:1
 msgid "Failed to shut down backend"
-msgstr "Błąd zamykania procesów tła"
+msgstr "Błąd przy zamykaniu modułu przechowującego"
 
 #: gconf/gconf-client.c:1 gconf/gconf-client.c:1
 #, c-format
@@ -706,7 +707,7 @@ msgid ""
 msgstr ""
 "Nie można nawiązać połączenia z serwerem konfiguracji. Możliwe przyczyny: a) "
 "serwer (gconfd) został uruchomiony, lecz nie jest dostępny z tego miejsca, "
-"co może się zdarzyć przy zalogowaniu z dwóch maszyn jednocześnie - konieczne "
+"co może się zdarzyć przy zalogowaniu z dwóch maszyn jednocześnie. Konieczne "
 "może być uaktywnienie obsługi TCP w serwerze ORBit poprzez umieszczenie w "
 "pliku /etc/orbitrc wiersza \"ORBIIOPIPv4=1\"; b) z powodu padnięcia systemu "
 "w katalogu domowym zamontowanym poprzez NFS pozostały nieużywane blokady; "
@@ -807,7 +808,7 @@ msgstr ""
 "być uaktywnienie obsługi TCP w serwerze ORBit poprzez umieszczenie w pliku "
 "/etc/orbitrc wiersza \"ORBIIOPIPv4=1\". Aby poznać szczegóły na temat "
 "powstałego problemu, przejrzyj user.* w syslogu. Z każdym katalogiem domowym "
-"może być związany tylko jeden proces gconfd i musi od posiadać blokadę w "
+"może być związany tylko jeden proces gconfd i musi on posiadać blokadę w "
 "~/.gconfd oraz pliki blokad powiązane z miejscami przechowywania "
 "konfiguracji, np. ~/.gconf."
 
@@ -1042,7 +1043,7 @@ msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Otrzymano sygnał %d, przeprowadzono awaryjne zakończenie. Powiadom o błędzie "
-"o GConfie."
+"w GConfie."
 
 #: gconf/gconfd.c:1
 #, c-format
@@ -1125,12 +1126,12 @@ msgstr "Nie można zamknąć nowego pliku \"%s\" z zapisem stanu: %s"
 #: gconf/gconfd.c:1
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
-msgstr "Nie można przenieść starego pliku \"%s\" z sapisem stanu: %s"
+msgstr "Nie można przenieść starego pliku \"%s\" z zapisem stanu: %s"
 
 #: gconf/gconfd.c:1
 #, c-format
 msgid "Failed to move new save state file into place: %s"
-msgstr "Nie można przenieść nowego pliku z sapisem stanu: %s"
+msgstr "Nie można przenieść nowego pliku z zapisem stanu: %s"
 
 #: gconf/gconfd.c:1
 #, c-format
@@ -1223,7 +1224,7 @@ msgstr "Opcje pomocy"
 
 #: gconf/gconftool.c:1
 msgid "Set a key to a value and sync. Use with --type."
-msgstr "Ustawia klucz na wartość i synchronizuje. Używane z --type."
+msgstr "Ustawia klucz na wartość i synchronizuje. Użycie z parametrem --type."
 
 #: gconf/gconftool.c:1
 msgid "Print the value of a key to standard output."
@@ -1234,8 +1235,8 @@ msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
 "--type."
 msgstr ""
-"Ustawia schemat i synchronizuje. Używane z --short-desc, --long-desc, "
-"--owner oraz --type."
+"Ustawia schemat i synchronizuje. Używane z parametrami --short-desc, "
+"--long-desc, --owner oraz --type."
 
 #: gconf/gconftool.c:1
 msgid "Unset the keys on the command line"
@@ -1357,7 +1358,7 @@ msgstr "Określa źródło konfiguracji wykorzystywane zamiast domyślnej ście�
 
 #: gconf/gconftool.c:1
 msgid "SOURCE"
-msgstr "ŚRÓDŁO"
+msgstr "ŹRÓDŁO"
 
 #: gconf/gconftool.c:1
 msgid ""
