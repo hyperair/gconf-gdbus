@@ -1222,7 +1222,7 @@ key and their effect on the application.
 
 &lt;!ELEMENT schemalist (schema)*&gt;
 
-&lt;!ELEMENT schema  (key,applyto*,owner?,type,default?,locale*)&gt;
+&lt;!ELEMENT schema  (key,applyto*,owner?,type,(list_type|car_type|cdr_type)?,default?,locale*)&gt;
 
 &lt;!ELEMENT key     (#PCDATA)&gt;
 
@@ -1231,6 +1231,12 @@ key and their effect on the application.
 &lt;!ELEMENT owner   (#PCDATA)&gt;
 
 &lt;!ELEMENT type    (#PCDATA)&gt;
+
+&lt;!ELEMENT list_type (#PCDATA)&gt;
+
+&lt;!ELEMENT car_type (#PCDATA)&gt;
+
+&lt;!ELEMENT cdr_type (#PCDATA)&gt;
 
 &lt;!ELEMENT default (#PCDATA)&gt;
 

@@ -2,7 +2,7 @@
 
 <!ELEMENT schemalist (schema)*>
 
-<!ELEMENT schema  (key,applyto*,owner?,type,default?,locale*)>
+<!ELEMENT schema  (key,applyto*,owner?,type,(list_type|car_type|cdr_type)?,default?,locale*)>
 
 <!ELEMENT key     (#PCDATA)>
 
@@ -11,6 +11,12 @@
 <!ELEMENT owner   (#PCDATA)>
 
 <!ELEMENT type    (#PCDATA)>
+
+<!ELEMENT list_type (#PCDATA)>
+
+<!ELEMENT car_type (#PCDATA)>
+
+<!ELEMENT cdr_type (#PCDATA)>
 
 <!ELEMENT default (#PCDATA)>
 
