@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-02-28 02:37+0100\n"
-"PO-Revision-Date: 2002-02-28 02:44+0100\n"
+"POT-Creation-Date: 2002-02-28 12:26+0100\n"
+"PO-Revision-Date: 2002-02-28 12:31+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -355,9 +355,8 @@ msgid ""
 "configuration changes."
 msgstr ""
 "Misslyckades med att logga tilläggningen av lyssnare %s (%s); kommer inte "
-"att kunna återställa den här lyssnaren vid omstart av gconfd, vilket "
-"kommer att resultera i otillförlitliga meddelanden om "
-"konfigurationsändringar."
+"att kunna återställa den här lyssnaren vid omstart av gconfd, vilket kommer "
+"att resultera i otillförlitliga meddelanden om konfigurationsändringar."
 
 #: gconf/gconf-database.c:1109
 #, c-format
@@ -1194,8 +1193,7 @@ msgstr "Misslyckades med att tömma klienttillägg till tillståndsfilen: %s"
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
-"Någon klient tog bort sig själv från GConf-servern när den inte var "
-"tillagd."
+"Någon klient tog bort sig själv från GConf-servern när den inte var tillagd."
 
 #. dialog display isn't working out
 #: gconf/gconfd.c:2303
@@ -1211,7 +1209,7 @@ msgstr ""
 "Segmenteringsfel!\n"
 "Kan inte visa kraschdialogen!\n"
 
-#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:71
+#: gconf/gconftool.c:71
 msgid "Help options"
 msgstr "Hjälpalternativ"
 
@@ -1228,8 +1226,8 @@ msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
-"Sätter ett schema och synkroniserar. Används med --short-desc, --long-desc, "
-"--owner, och --type."
+"Sätter ett schema och synkroniserar. Används med --short-desc, "
+"--long-desc, --owner, och --type."
 
 #: gconf/gconftool.c:108
 msgid "Unset the keys on the command line"
@@ -1240,12 +1238,12 @@ msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr ""
-"Nollställ alla nycklar rekursivt på eller under nyckelnamnet/katalognamnet "
-"på kommandoraden"
+"Nollställ alla nycklar rekursivt på eller under "
+"nyckelnamnet/katalognamnet på kommandoraden"
 
 #: gconf/gconftool.c:126
 msgid "Print all key/value pairs in a directory."
-msgstr "Skriv ut alla nyckel/värde par i en katalog."
+msgstr "Skriv ut alla nyckel-/värdepar i en katalog."
 
 #: gconf/gconftool.c:135
 msgid "Print all subdirectories in a directory."
@@ -1253,11 +1251,12 @@ msgstr "Skriv ut alla underkataloger i en katalog."
 
 #: gconf/gconftool.c:144
 msgid "Print all subdirectories and entries under a dir, recursively."
-msgstr "Skriv ut alla underkataloger och poster under en katalog, rekursivt."
+msgstr ""
+"Skriv ut alla underkataloger och poster under en katalog, rekursivt."
 
 #: gconf/gconftool.c:153
 msgid "Return 0 if the directory exists, 2 if it does not."
-msgstr "Retunera 0 om katalogen finns, 2 om den inte finns."
+msgstr "Returnera 0 om katalogen finns, 2 om den inte finns."
 
 #: gconf/gconftool.c:162
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
@@ -1413,7 +1412,7 @@ msgstr "Ta bort alla schemanamn tillämpade på de angivna nycklarna"
 msgid "Get the name of the default source"
 msgstr "Hämta namnet på standardkällan"
 
-#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:408
+#: gconf/gconftool.c:408
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1444,16 +1443,16 @@ msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
 msgstr ""
-"--recursive-list kan inte användas med --get, --set, --unset, "
-"--all-entries, eller --all-dirs\n"
+"--recursive-list kan inte användas med --get, --set, --unset, --all-entries, "
+"eller --all-dirs\n"
 
 #: gconf/gconftool.c:463
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 msgstr ""
-"--set_schema kan inte användas med --get, --set, --unset, --all-entries, "
-"--all-dirs\n"
+"--set_schema kan inte användas med --get, --set, --unset, --all-entries, --"
+"all-dirs\n"
 
 #: gconf/gconftool.c:469
 msgid "Value type is only relevant when setting a value\n"
@@ -1498,7 +1497,7 @@ msgstr ""
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr "Du bör använda --direct när en icke-tom konfigurationskälla används\n"
 
-#: gconf-editor/gconf-editor.c:69 gconf/gconftool.c:558
+#: gconf/gconftool.c:558
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Misslyckades med att initiera GConf: %s\n"
@@ -1542,7 +1541,7 @@ msgstr "Misslyckades med att starta konfigurationsservern (gconfd): %s\n"
 
 #: gconf/gconftool.c:1015
 msgid "Must specify a key or keys to get\n"
-msgstr "Måste ange en nyckel eller flera att få\n"
+msgstr "Måste ange en nyckel eller flera att hämta\n"
 
 #: gconf/gconftool.c:1050
 #, c-format
@@ -1658,7 +1657,7 @@ msgstr "Ingen dokumentationssträng är lagrad i schema på \"%s\"\n"
 #: gconf/gconftool.c:1341
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
-msgstr "Fel vid hämtning ac schema på \"%s\": %s\n"
+msgstr "Fel vid hämtning av schema på \"%s\": %s\n"
 
 #: gconf/gconftool.c:1348
 #, c-format
@@ -1944,94 +1943,76 @@ msgstr ""
 "katalogen:\n"
 "  %s\n"
 
-#: gconf-editor/app.c:53
-msgid "Key"
-msgstr "Nyckel"
+#~ msgid "Key"
+#~ msgstr "Nyckel"
 
-#: gconf-editor/app.c:54
-msgid "Value"
-msgstr "Värde"
+#~ msgid "Value"
+#~ msgstr "Värde"
 
-#. gnome_pixmap_file("gnome-hello-logo.png");
-#: gconf-editor/app.c:57 gconf-editor/menus.c:149
-msgid "Configuration Editor"
-msgstr "Konfigurationsredigerare"
+#~ msgid "Configuration Editor"
+#~ msgstr "Konfigurationsredigerare"
 
-#: gconf-editor/app.c:117
-msgid "Could not parse geometry string"
-msgstr "Kunde inte tolka geometristräng"
+#~ msgid "Could not parse geometry string"
+#~ msgstr "Kunde inte tolka geometristräng"
 
-#: gconf-editor/gconf-editor.c:41
-msgid "Specify the geometry of the main window"
-msgstr "Ange geometrin på huvudfönstret"
+#~ msgid "Specify the geometry of the main window"
+#~ msgstr "Ange geometrin på huvudfönstret"
 
-#: gconf-editor/gconf-editor.c:42
-msgid "GEOMETRY"
-msgstr "GEOMETRI"
+#~ msgid "GEOMETRY"
+#~ msgstr "GEOMETRI"
 
-#: gconf-editor/menus.c:32
-msgid "_New Editor"
-msgstr "_Ny redigerare"
+#~ msgid "_New Editor"
+#~ msgstr "_Ny redigerare"
 
-#: gconf-editor/menus.c:33
-msgid "Edit a different configuration source"
-msgstr "Redigera en annan konfigurationskälla"
+#~ msgid "Edit a different configuration source"
+#~ msgstr "Redigera en annan konfigurationskälla"
 
-#: gconf-editor/menus.c:72
-msgid "Cut"
-msgstr "Klipp ut"
+#~ msgid "Cut"
+#~ msgstr "Klipp ut"
 
-#: gconf-editor/menus.c:72
-msgid "Cut some text to the clipboard"
-msgstr "Klipp ut en del text till urklipp"
+#~ msgid "Cut some text to the clipboard"
+#~ msgstr "Klipp ut en del text till urklipp"
 
-#: gconf-editor/menus.c:95
-msgid "This feature isn't implemented yet! We're working on it."
-msgstr "Denna funktion är inte implementerad än! Vi arbetar på det."
+#~ msgid "This feature isn't implemented yet! We're working on it."
+#~ msgstr "Denna funktion är inte implementerad än! Vi arbetar på det."
 
-#: gconf-editor/menus.c:152
-msgid "Used to edit values in the configuration database."
-msgstr "Används för att redigera värden i konfigurationsdatabasen."
+#~ msgid "Used to edit values in the configuration database."
+#~ msgstr "Används för att redigera värden i konfigurationsdatabasen."
 
-#: gconf/gconf-sanity-check.c:131
-#, c-format
-msgid ""
-"Please contact your system administrator to resolve the following problem:\n"
-"Could not open or create the file \"%s\"; this indicates that there may be a "
-"problem with your configuration, as many programs will need to create files "
-"in your home directory. The error was \"%s\" (errno = %d)."
-msgstr ""
-"Kontakta din systemadministratör för att lösa följande problem:\n"
-"Kunde inte öppna eller skapa filen \"%s\"; detta indikerar att det kan "
-"finnas ett problem med din konfiguration, eftersom många program kommer "
-"att behöva skapa filer i din hemkatalog. Felet var \"%s\" "
-"(felnummer = %d)."
+#~ msgid ""
+#~ "Please contact your system administrator to resolve the following "
+#~ "problem:\n"
+#~ "Could not open or create the file \"%s\"; this indicates that there may "
+#~ "be a problem with your configuration, as many programs will need to "
+#~ "create files in your home directory. The error was \"%s\" (errno = %d)."
+#~ msgstr ""
+#~ "Kontakta din systemadministratör för att lösa följande problem:\n"
+#~ "Kunde inte öppna eller skapa filen \"%s\"; detta indikerar att det kan "
+#~ "finnas ett problem med din konfiguration, eftersom många program kommer "
+#~ "att behöva skapa filer i din hemkatalog. Felet var \"%s\" (felnummer = %"
+#~ "d)."
 
-#: gconf/gconf-sanity-check.c:143
-#, c-format
-msgid ""
-"Please contact your system administrator to resolve the following problem:\n"
-"Could not lock the file \"%s\"; this indicates that there may be a problem "
-"with your operating system configuration. If you have an NFS-mounted home "
-"directory, either the client or the server may be set up incorrectly. See "
-"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
-msgstr ""
-"Kontakta din systemadministratör för att lösa följande problem:\n"
-"Kunde inte låsa filen \"%s\"; detta indikerar att det kan finnas ett "
-"problem med din operativsystemskonfiguration. Om du har en NFS-monterad "
-"hemkatalog kan antingen klienten eller servern vara felaktigt "
-"konfigurerad. Se dokumentationen för rpc.statd och rpc.lockd. Felet var "
-"\"%s\" (felnummer = %d)."
+#~ msgid ""
+#~ "Please contact your system administrator to resolve the following "
+#~ "problem:\n"
+#~ "Could not lock the file \"%s\"; this indicates that there may be a "
+#~ "problem with your operating system configuration. If you have an NFS-"
+#~ "mounted home directory, either the client or the server may be set up "
+#~ "incorrectly. See the rpc.statd and rpc.lockd documentation. The error was "
+#~ "\"%s\" (errno = %d)."
+#~ msgstr ""
+#~ "Kontakta din systemadministratör för att lösa följande problem:\n"
+#~ "Kunde inte låsa filen \"%s\"; detta indikerar att det kan finnas ett "
+#~ "problem med din operativsystemskonfiguration. Om du har en NFS-monterad "
+#~ "hemkatalog kan antingen klienten eller servern vara felaktigt "
+#~ "konfigurerad. Se dokumentationen för rpc.statd och rpc.lockd. Felet var "
+#~ "\"%s\" (felnummer = %d)."
 
-#: gconf/gconf-sanity-check.c:159
-#, c-format
-msgid "Can't remove file %s: %s\n"
-msgstr "Kan inte ta bort filen %s: %s\n"
+#~ msgid "Can't remove file %s: %s\n"
+#~ msgstr "Kan inte ta bort filen %s: %s\n"
 
-#: wrappers/guile/gconf-guile.c:49
-#, c-format
-msgid "Failed to init gconf: %s\n"
-msgstr "Misslyckades med att initiera gconf: %s\n"
+#~ msgid "Failed to init gconf: %s\n"
+#~ msgstr "Misslyckades med att initiera gconf: %s\n"
 
 #~ msgid "Unsynced directory deletions when shutting down XML backend"
 #~ msgstr ""
