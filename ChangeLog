@@ -1,4 +1,26 @@
 1999-10-12  Havoc Pennington  <hp@pobox.com>
+	
+	* gconf/gconf-listeners.c (ltable_insert): Was failing to init 
+	the node in the flat array of nodes if the listener location 
+	was NULL. 
+	(gconf_listeners_count): new function reports number of listeners
+	(ltable_new): init next_cnxn to 1 instead of 0 
+	(ltable_remove): Do a better job of cleaning up dead 
+	tree nodes (go up looking for empty parent nodes)
+	(ltable_destroy): type error, was calling listener_destroy() 
+	on the GNodes. Oops. fixed, now use g_node_traverse() to 
+	destroy the node contents.
+	(ltable_new): don't create the root node until it's needed
+	(ltable_insert): add root node here if needed
+	(ltable_remove): zero lt->tree if we destroy it
+	
+	* tests/testlisteners.c: New test program for GConfListeners, 
+	fairly comprehensive
+
+	* tests/Makefile.am: add testlisteners, put EFENCE at the end of 
+	the link line
+
+1999-10-12  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/Makefile.am: Fixes - remove some public headers from
 	libgconf_client_SOURCES, look for GConf.idl in $(srcdir) (bug from

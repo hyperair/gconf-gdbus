@@ -41,6 +41,7 @@ struct _GConfListeners {
 };
 
 typedef void (*GConfListenersCallback)(GConfListeners* listeners,
+                                       const gchar* all_above_key,
                                        guint cnxn_id,
                                        gpointer listener_data,
                                        gpointer user_data);
@@ -62,9 +63,11 @@ void                gconf_listeners_remove  (GConfListeners* listeners,
                                              guint cnxn_id);
 
 void                gconf_listeners_notify  (GConfListeners* listeners,
-                                             const gchar* all_below,
+                                             const gchar* all_above,
                                              GConfListenersCallback callback,
                                              gpointer user_data);
+
+guint               gconf_listeners_count   (GConfListeners* listeners);
 
 #ifdef __cplusplus
 }

@@ -18,6 +18,12 @@
  */
 
 #include "gconf-listeners.h"
+#include "gconf.h"
+
+/* #define DEBUG_LISTENERS 1 */
+#ifdef DEBUG_LISTENERS
+#include <stdio.h>
+#endif
 
 typedef struct _Listener Listener;
 
@@ -68,7 +74,7 @@ static void    ltable_notify(LTable* ltable,
 
 static guint   ltable_next_cnxn(LTable* ltable);
 
-#if 0
+#ifdef DEBUG_LISTENERS
 static void    ltable_spew(LTable* ltable);
 #endif
 
@@ -122,18 +128,28 @@ gconf_listeners_remove  (GConfListeners* listeners,
 {
   LTable* lt = (LTable*)listeners;
 
+  g_return_if_fail(cnxn_id > 0);
+  
   ltable_remove(lt, cnxn_id);
 }
 
 void
 gconf_listeners_notify  (GConfListeners* listeners,
-                         const gchar* all_below,
+                         const gchar* all_above,
                          GConfListenersCallback callback,
                          gpointer user_data)
 {
   LTable* lt = (LTable*)listeners;
 
-  ltable_notify(lt, all_below, callback, user_data);
+  ltable_notify(lt, all_above, callback, user_data);
+}
+
+guint
+gconf_listeners_count   (GConfListeners* listeners)
+{
+  LTable* lt = (LTable*)listeners;
+
+  return lt->active_listeners;
 }
 
 /*
@@ -165,23 +181,20 @@ static LTable*
 ltable_new(void)
 {
   LTable* lt;
-  LTableEntry* lte;
 
   lt = g_new0(LTable, 1);
 
   lt->listeners = g_ptr_array_new();
 
-  /* Set initial size and init error value (0) to NULL */
+  /* Set initial size; note that GPtrArray's are initialized
+     to 0-filled */
   g_ptr_array_set_size(lt->listeners, 5);
-  g_ptr_array_index(lt->listeners, 0) = NULL;
-
-  lte = ltable_entry_new("/");
-
-  lt->tree = g_node_new(lte);
-
+  
   lt->active_listeners = 0;
 
   lt->removed_cnxns = NULL;
+
+  lt->next_cnxn = 1; /* 0 is invalid */
   
   return lt;
 }
@@ -214,6 +227,17 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   LTableEntry* lte;
   const gchar* noroot_where = where + 1;
 
+  g_return_if_fail(gconf_valid_key(where, NULL));
+
+  if (lt->tree == NULL)
+    {
+      lte = ltable_entry_new("/");
+      
+      lt->tree = g_node_new(lte);
+
+      lte = NULL; /* paranoia */
+    }
+  
   /* Add to the tree */
   dirnames = g_strsplit(noroot_where, "/", -1);
   
@@ -280,10 +304,16 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   g_strfreev(dirnames);
 
   /* Add tree node to the flat table */
-  g_ptr_array_set_size(lt->listeners, lt->next_cnxn);
-  g_ptr_array_index(lt->listeners, l->cnxn) = found;
+  g_ptr_array_set_size(lt->listeners, MAX(lt->next_cnxn, l->cnxn));
+  g_ptr_array_index(lt->listeners, l->cnxn) = cur;
 
   lt->active_listeners += 1;
+
+#ifdef DEBUG_LISTENERS
+  printf("Added %u at %s, spewing:\n",
+         l->cnxn, where);
+  ltable_spew(lt);
+#endif
 }
 
 static void    
@@ -305,6 +335,8 @@ ltable_remove(LTable* lt, guint cnxn)
   if (node == NULL)
     return;
 
+  g_assert(lt->tree != NULL);
+  
   lte = node->data;
   
   tmp = lte->listeners;
@@ -342,40 +374,74 @@ ltable_remove(LTable* lt, guint cnxn)
 
       tmp = g_list_next(tmp);
     }
-  
+
+  /* note that tmp is invalid, but should be nonzero */
   g_return_if_fail(tmp != NULL);
 
   /* Remove from the tree if this node is now pointless */
-  if (lte->listeners == NULL && node->children == NULL)
     {
-      ltable_entry_destroy(lte);
-      g_node_destroy(node);
+      GNode* cur = node;
+      while (cur != NULL)
+        {
+          GNode* parent = cur->parent;
+          lte = cur->data;
+          if (lte->listeners == NULL && cur->children == NULL)
+            {
+              if (cur == lt->tree)
+                lt->tree = NULL;
+              
+              ltable_entry_destroy(lte);
+              g_node_destroy(cur);
+            }
+          else
+            break; /* don't delete more parents since this node exists */
+          
+          cur = parent;
+        }
     }
 
   lt->active_listeners -= 1;
+
+#ifdef DEBUG_LISTENERS
+  printf("Removed %u, spewing:\n", cnxn);
+  ltable_spew(lt);
+#endif
+}
+
+static gboolean
+destroy_func(GNode* node, gpointer data)
+{
+  LTableEntry* lte = node->data;  
+  GList* tmp;
+
+  tmp = lte->listeners;
+  while (tmp != NULL)
+    {
+      Listener* l = tmp->data;
+      
+      listener_destroy(l);
+
+      tmp = g_list_next(tmp);
+    }
+  g_list_free(lte->listeners);
+  lte->listeners = NULL;
+  
+  ltable_entry_destroy(lte);
+  
+  return FALSE;
 }
 
 static void    
 ltable_destroy(LTable* ltable)
 {
-  guint i;
-
-  i = ltable->listeners->len - 1;
-
-  while (i > 0) /* 0 position in array is invalid */
+  if (ltable->tree != NULL)
     {
-      if (g_ptr_array_index(ltable->listeners, i) != NULL)
-        {
-          listener_destroy(g_ptr_array_index(ltable->listeners, i));
-          g_ptr_array_index(ltable->listeners, i) = NULL;
-        }
-      
-      --i;
+      g_node_traverse(ltable->tree, G_POST_ORDER, G_TRAVERSE_ALL, -1,
+                      destroy_func, NULL);  
+      g_node_destroy(ltable->tree);
     }
-  
+      
   g_ptr_array_free(ltable->listeners, TRUE);
-
-  g_node_destroy(ltable->tree);
 
   g_slist_free(ltable->removed_cnxns);
   
@@ -392,7 +458,7 @@ notify_listener_list(GConfListeners* listeners, GList* list, const gchar* key, G
     {
       Listener* l = tmp->data;
 
-      (*callback)(listeners, l->cnxn, l->listener_data, user_data);
+      (*callback)(listeners, key, l->cnxn, l->listener_data, user_data);
 
       tmp = g_list_next(tmp);
     }
@@ -410,6 +476,10 @@ ltable_notify(LTable* lt, const gchar* key,
   noroot_key = key + 1;
 
   g_return_if_fail(*key == '/');
+  g_return_if_fail(gconf_valid_key(key, NULL));
+
+  if (lt->tree == NULL)
+    return; /* no one to notify */
   
   /* Notify "/" listeners */
   notify_listener_list((GConfListeners*)lt,
@@ -470,32 +540,51 @@ ltable_entry_destroy(LTableEntry* lte)
   g_free(lte);
 }
 
-#if 0
+#ifdef DEBUG_LISTENERS
 /* Debug */
 gboolean
 spew_func(GNode* node, gpointer data)
 {
   LTableEntry* lte = node->data;  
   GList* tmp;
+  gchar spaces[256];
+  memset(spaces, ' ', 256);
+  spaces[g_node_depth(node)] = '\0';
 
-  gconf_log(GCL_DEBUG, " Spewing node `%s'", lte->name);
+  
+  printf(" %sSpewing node `%s' (%p): ", spaces, lte->name, node);
 
   tmp = lte->listeners;
   while (tmp != NULL)
     {
       Listener* l = tmp->data;
-
-      gconf_log(GCL_DEBUG, "   listener %u is here", (guint)l->cnxn);
+      
+      printf("  %slistener %u is here\n", spaces, (guint)l->cnxn);
 
       tmp = g_list_next(tmp);
     }
 
+  if (lte->listeners == NULL)
+    printf("\n");
+  
   return FALSE;
 }
 
 static void    
 ltable_spew(LTable* lt)
 {
-  g_node_traverse(lt->tree, G_LEVEL_ORDER, G_TRAVERSE_ALL, -1, spew_func, NULL);
+  guint i;
+  printf("Flat table:\n");
+  i = 0;
+  while (i < lt->listeners->len)
+    {
+      GNode* node = g_ptr_array_index(lt->listeners, i);
+      LTableEntry* lte = node ? node->data : NULL;
+      printf("%u `%s' %p\n", i, lte ? lte->name : "", node);
+      
+      ++i;
+    }
+  
+  g_node_traverse(lt->tree, G_PRE_ORDER, G_TRAVERSE_ALL, -1, spew_func, NULL);
 }
 #endif
