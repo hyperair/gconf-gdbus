@@ -1038,7 +1038,7 @@ unescape_text (const gchar *text,
               {
                 set_error (text, i, length, error,
                            G_MARKUP_ERROR_PARSE,
-                           _("Documented ended just after an '&', '&' should begin an entity or character reference."));
+                           _("Document ended just after an '&', '&' should begin an entity or character reference."));
                 
                 g_string_free (str, TRUE);
 
