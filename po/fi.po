@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 1.1.6\n"
-"POT-Creation-Date: 2002-06-03 14:23+0300\n"
+"POT-Creation-Date: 2002-06-02 22:33-0400\n"
 "PO-Revision-Date: 2002-06-03 19:43+0300\n"
 "Last-Translator: Pauli Virtanen <pauli.virtanen@hut.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -82,8 +82,8 @@ msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
 msgstr ""
-"Hakemiston poistotoiminto ei ole enää tuettu: poista vain kaikki "
-"hakemiston sisältämät avaimet"
+"Hakemiston poistotoiminto ei ole enää tuettu: poista vain kaikki hakemiston "
+"sisältämät avaimet"
 
 #: backends/xml-backend.c:722
 msgid "Initializing XML backend module"
@@ -110,8 +110,8 @@ msgstr ""
 #: backends/xml-cache.c:314
 #, c-format
 msgid ""
-"%u items remain in the cache after cleaning already-synced items older than "
-"%u seconds"
+"%u items remain in the cache after cleaning already-synced items older than %"
+"u seconds"
 msgstr ""
 "%u kohdetta on jäljellä välimuistissa %u sekuntia vanhempien jo "
 "synkronoitujen kohteiden poiston jälkeen"
@@ -256,8 +256,7 @@ msgstr "Virheellinen XML-solmu: %s"
 #: backends/xml-entry.c:1094
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
-msgstr ""
-"Luettelo sisältää väärin kirjoitetun solmun (%s, kun pitäisi olla %s)"
+msgstr "Luettelo sisältää väärin kirjoitetun solmun (%s, kun pitäisi olla %s)"
 
 #: backends/xml-entry.c:1146
 #, c-format
@@ -345,8 +344,7 @@ msgstr "Vastaanotti asetuspyynnössä virheellisen arvon"
 
 #: gconf/gconf-database.c:242
 #, c-format
-msgid ""
-"Couldn't make sense of CORBA value received in set request for key `%s'"
+msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr "Avaimen '%s' asetuspyynnöstä saatu CORBA-arvo ei ole järkevä"
 
 #: gconf/gconf-database.c:524
@@ -373,9 +371,9 @@ msgid ""
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Kuuntelijan %s lisäyksen kirjaaminen epäonnistui (%s). Tätä kuuntelijaa "
-"ei voi palauttaa gconfd:n käynnistyessä uudestaan, mikä johtaa "
-"epäluotettavaan asetusten muutosten ilmoittamiseen."
+"Kuuntelijan %s lisäyksen kirjaaminen epäonnistui (%s). Tätä kuuntelijaa ei "
+"voi palauttaa gconfd:n käynnistyessä uudestaan, mikä johtaa epäluotettavaan "
+"asetusten muutosten ilmoittamiseen."
 
 #: gconf/gconf-database.c:1111
 #, c-format
@@ -636,8 +634,7 @@ msgid ""
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
 "Tiedoston \"%s\" lukitus epäonnistui: luultavasti toinen prosessi omistaa "
-"lukituksen, tai käyttöjärjestelmäsi NFS-lukitus on väärin asetettu "
-"(%s)"
+"lukituksen, tai käyttöjärjestelmäsi NFS-lukitus on väärin asetettu (%s)"
 
 #: gconf/gconf-internals.c:2399
 #, c-format
@@ -648,8 +645,8 @@ msgstr "IOR-tiedoston \"%s\" avaaminen epäonnistui: gconfd:tä ei löydy: %s"
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
-"gconftool tai muu prosessi, joka ei ole gconfd, omistaa lukitustiedoston "
-"\"%s\""
+"gconftool tai muu prosessi, joka ei ole gconfd, omistaa lukitustiedoston \"%s"
+"\""
 
 #: gconf/gconf-internals.c:2446
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -709,8 +706,7 @@ msgstr "Palvelimen ping-virhe: %s"
 
 #: gconf/gconf-internals.c:2858
 #, c-format
-msgid ""
-"Failed to create pipe for communicating with spawned gconf daemon: %s\n"
+msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Putken luonti käynnistyneen gconfd-daemonin kanssa viestimiseksi "
 "epäonnistui: %s\n"
@@ -728,10 +724,10 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
-"Ei saanut yhteyttä asetuspalvelimeen. Syynä voi olla, että ORBitin "
-"TCP/IP-verkkotuki pitäisi kytkeä päälle, tai että on jäänyt "
-"vanhentuneita NFS-lukituksia järjestelmän kaaduttua. Katso lisää "
-"osoitteesta http://www.gnome.org/projects/gconf/. (Lisätiedot - %s)"
+"Ei saanut yhteyttä asetuspalvelimeen. Syynä voi olla, että ORBitin TCP/IP-"
+"verkkotuki pitäisi kytkeä päälle, tai että on jäänyt vanhentuneita NFS-"
+"lukituksia järjestelmän kaaduttua. Katso lisää osoitteesta http://www.gnome."
+"org/projects/gconf/. (Lisätiedot - %s)"
 
 #: gconf/gconf-internals.c:2908
 msgid "none"
@@ -754,24 +750,33 @@ msgstr ""
 #: gconf/gconf-sanity-check.c:131
 #, c-format
 msgid ""
-"Please contact your system administrator to resolve the following "
-"problem:\n"
-"Could not open or create the file \"%s\"; this indicates that there may be a problem with your configuration, as many programs will need to create files in your home directory. The error was \"%s\" (errno = %d)."
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
-"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman "
-"ratkaisemiseksi:\n"
-"Ei voinut avata tai luoda tiedostoa \"%s\", mikä merkitsee, että asetuksissasi voi olla vikaa. Monet ohjelmat luovat yleensä tiedostoja kotihakemistoosi. Virhe oli \"%s\" (errno = %d)."
+"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman ratkaisemiseksi:\n"
+"Ei voinut avata tai luoda tiedostoa \"%s\", mikä merkitsee, että "
+"asetuksissasi voi olla vikaa. Monet ohjelmat luovat yleensä tiedostoja "
+"kotihakemistoosi. Virhe oli \"%s\" (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
 msgid ""
-"Please contact your system administrator to resolve the following "
-"problem:\n"
-"Could not lock the file \"%s\"; this indicates that there may be a problem with your operating system configuration. If you have an NFS-mounted home directory, either the client or the server may be set up incorrectly. See the rpc.statd and rpc.lockd documentation. A common cause of this error is that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = %d)."
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See "
+"the rpc.statd and rpc.lockd documentation. A common cause of this error is "
+"that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
+"%d)."
 msgstr ""
-"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman "
-"ratkaisemiseksi:\n"
-"Ei voinut lukita tiedostoa \"%s\", mikä merkitsee että järjestelmän asetuksissa voi olla vikaa. Jos sinulla on NFS-liitetty kotihakemisto, niin joko asiakkan tai palvelimen on asetuksissa on vikaa. Katso lisätietoja rpc.statd:n ja rpc.lockd:n ohjeista. Yleinen tämän virheen syy on, että \"nfslock\"-palvelu ei ole käytössä. Virhe oli \"%s\" (errno = %d)."
+"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman ratkaisemiseksi:\n"
+"Ei voinut lukita tiedostoa \"%s\", mikä merkitsee että järjestelmän "
+"asetuksissa voi olla vikaa. Jos sinulla on NFS-liitetty kotihakemisto, niin "
+"joko asiakkan tai palvelimen on asetuksissa on vikaa. Katso lisätietoja rpc."
+"statd:n ja rpc.lockd:n ohjeista. Yleinen tämän virheen syy on, että \"nfslock"
+"\"-palvelu ei ole käytössä. Virhe oli \"%s\" (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:160
 #, c-format
@@ -781,13 +786,13 @@ msgstr "Ei voi poistaa tiedostoa %s: %s\n"
 #: gconf/gconf-sanity-check.c:195
 #, c-format
 msgid ""
-"Please contact your system administrator to resolve the following "
-"problem:\n"
-"No configuration sources in the configuration file \"%s\"; this means that preferences and other settings can't be saved. %s%s"
+"Please contact your system administrator to resolve the following problem:\n"
+"No configuration sources in the configuration file \"%s\"; this means that "
+"preferences and other settings can't be saved. %s%s"
 msgstr ""
-"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman "
-"ratkaisemiseksi:\n"
-"Asetustiedostossa \"%s\" ei ollut asetuslähteitä, mikä merkitsee ettei asetuksia ja muita valintoja voi tallentaa. %s%s"
+"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman ratkaisemiseksi:\n"
+"Asetustiedostossa \"%s\" ei ollut asetuslähteitä, mikä merkitsee ettei "
+"asetuksia ja muita valintoja voi tallentaa. %s%s"
 
 #: gconf/gconf-sanity-check.c:198
 msgid "Error reading the file: "
@@ -796,12 +801,10 @@ msgstr "Virhe lukiessa tiedostoa: "
 #: gconf/gconf-sanity-check.c:220
 #, c-format
 msgid ""
-"Please contact your system administrator to resolve the following "
-"problem:\n"
+"Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
-"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman "
-"ratkaisemiseksi:\n"
+"Ota yhteyttä järjestelmäsi ylläpitäjään seuraavan ongelman ratkaisemiseksi:\n"
 "Ei voinut selvittää osoitetta \"%s\" asetustiedostossa \"%s\": %s"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
@@ -827,11 +830,9 @@ msgstr "Selvitti vain luettavan asetuslähteen osoitteen \"%s\" kohdassa %d"
 #: gconf/gconf-sources.c:359
 #, c-format
 msgid ""
-"Resolved address \"%s\" to a partially writable config source at position "
-"%d"
+"Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
-"Selvitti osittain kirjoitettavan asetuslähteen osoitteen \"%s\" kohdassa "
-"%d"
+"Selvitti osittain kirjoitettavan asetuslähteen osoitteen \"%s\" kohdassa %d"
 
 #: gconf/gconf-sources.c:368
 msgid ""
@@ -845,8 +846,8 @@ msgstr ""
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
-"Kaavain '%s', joka on määritelty arvolle '%s' sisältää arvon, joka ei "
-"ole kaavain."
+"Kaavain '%s', joka on määritelty arvolle '%s' sisältää arvon, joka ei ole "
+"kaavain."
 
 #: gconf/gconf-sources.c:642
 msgid "The '/' name can only be a directory, not a key"
@@ -858,8 +859,7 @@ msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr ""
-"Avaimen \"%s\" arvo on asetettu vain-luku-lähteessä asetuspolkusi "
-"alussa."
+"Avaimen \"%s\" arvo on asetettu vain-luku-lähteessä asetuspolkusi alussa."
 
 #: gconf/gconf-sources.c:692
 #, c-format
@@ -882,23 +882,22 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 "Ei voi tallentaa arvoa avaimelle \"%s\", koska asetuspalvelimella ei ole "
-"tietokantoja, joihin voisi kirjoittaa. Tähän ongelmaan on muutamia "
-"yleisiä syitä: 1) asetuspolkusitiedostosi %s/path ei sisällä "
-"tietokantoja tai sitä ei ole, 2) loimme vahingossa jotenkin kaksi "
-"gconfd-prosessia, 3) käyttöjärjestelmäsi asetukset ovat pielessä niin, "
-"ettei NFS-lukitus toimi kotihakemistossasi tai 4) NFS-asiakaskoneesi kaatui, "
-"eikä ilmoittanut käynnistyessään uudelleen palvelimelle, että "
-"tiedostolukitukset pitäisi vapauttaa. Jos sinulla on kaksi gconfd-prosessia "
-"(tai oli kaksi kun toinen käynnistyi), niin ulos kirjautuminen, kaikkien "
-"gconfd-prosessien sulkeminen ja takaisin kirjautuminen saattaa auttaa. Jos "
-"vanhentuneita lukituksia on olemassa, yritä poistaa tiedostot "
-"~/.gconf*/*lock. Ehkäpä vikana on, että yritit käyttää GConfia "
-"kahdelta eri koneelta samaan aikaan, ja ORBitin oletusasetus, joka estää "
-"CORBA-etäyhteydet, on vielä päällä? Jos näin on, lisää rivi "
-"\\\"ORBIIOPIPv4=1\\\" tiedostoon /etc/orbitrc. Kuten yleensä, tarkista, jos "
-"user.*-syslogeihin olisi tullut tietoja gconfd:n ongelmista. Vain yksi "
-"gconfd voi olla käynnissä kotihakemistoa kohden, ja sen pitää omistaa "
-"~/.gconfd'ssa oleva lukitustiedosto sekä yksittäisen tietojen "
+"tietokantoja, joihin voisi kirjoittaa. Tähän ongelmaan on muutamia yleisiä "
+"syitä: 1) asetuspolkusitiedostosi %s/path ei sisällä tietokantoja tai sitä "
+"ei ole, 2) loimme vahingossa jotenkin kaksi gconfd-prosessia, 3) "
+"käyttöjärjestelmäsi asetukset ovat pielessä niin, ettei NFS-lukitus toimi "
+"kotihakemistossasi tai 4) NFS-asiakaskoneesi kaatui, eikä ilmoittanut "
+"käynnistyessään uudelleen palvelimelle, että tiedostolukitukset pitäisi "
+"vapauttaa. Jos sinulla on kaksi gconfd-prosessia (tai oli kaksi kun toinen "
+"käynnistyi), niin ulos kirjautuminen, kaikkien gconfd-prosessien sulkeminen "
+"ja takaisin kirjautuminen saattaa auttaa. Jos vanhentuneita lukituksia on "
+"olemassa, yritä poistaa tiedostot ~/.gconf*/*lock. Ehkäpä vikana on, että "
+"yritit käyttää GConfia kahdelta eri koneelta samaan aikaan, ja ORBitin "
+"oletusasetus, joka estää CORBA-etäyhteydet, on vielä päällä? Jos näin on, "
+"lisää rivi \\\"ORBIIOPIPv4=1\\\" tiedostoon /etc/orbitrc. Kuten yleensä, "
+"tarkista, jos user.*-syslogeihin olisi tullut tietoja gconfd:n ongelmista. "
+"Vain yksi gconfd voi olla käynnissä kotihakemistoa kohden, ja sen pitää "
+"omistaa ~/.gconfd'ssa oleva lukitustiedosto sekä yksittäisen tietojen "
 "lukitustiedostot ~/.gconf'ssa."
 
 #: gconf/gconf-sources.c:1413
@@ -915,8 +914,8 @@ msgstr "Virhe metainfoa saadessa: %s"
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
-"Avain '%s', joka on merkitty avaimen '%s' kaavaimeksi, sisältää itse "
-"asiassa tyypin '%s'"
+"Avain '%s', joka on merkitty avaimen '%s' kaavaimeksi, sisältää itse asiassa "
+"tyypin '%s'"
 
 #: gconf/gconf-value.c:110
 #, c-format
@@ -951,7 +950,8 @@ msgstr "Ei ymmärtänyt arvoa '%s' (luettelon pitää loppua merkkiin ']')"
 #: gconf/gconf-value.c:325
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
-msgstr "Ei ymmärtänyt arvoa '%s' (ylimääräinen lainaamaton ']' luettelon sisällä)"
+msgstr ""
+"Ei ymmärtänyt arvoa '%s' (ylimääräinen lainaamaton ']' luettelon sisällä)"
 
 #: gconf/gconf-value.c:356 gconf/gconf-value.c:517
 #, c-format
@@ -1018,8 +1018,7 @@ msgstr "Pistettä (.) ei voi olla heti kauttaviivan (/) jälkeen"
 #: gconf/gconf.c:2476
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
-msgstr ""
-"'%c' ei ole ASCII-merkki, joten se ei ole mahdollinen avaimien nimissä"
+msgstr "'%c' ei ole ASCII-merkki, joten se ei ole mahdollinen avaimien nimissä"
 
 #: gconf/gconf.c:2486
 #, c-format
@@ -1082,8 +1081,7 @@ msgstr ""
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
-"Asetustiedostoja ei löytynyt: yritetään käyttää oletusasetuslähdettä "
-"'%s'"
+"Asetustiedostoja ei löytynyt: yritetään käyttää oletusasetuslähdettä '%s'"
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
@@ -1092,8 +1090,7 @@ msgstr ""
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
-msgstr ""
-"Ei asetuslähteitä lähdehakemistossa: asetuksia ei tallenneta. Muokkaa "
+msgstr "Ei asetuslähteitä lähdehakemistossa: asetuksia ei tallenneta. Muokkaa "
 
 #: gconf/gconfd.c:303
 msgid "/path"
@@ -1117,8 +1114,8 @@ msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
-"Kirjoitettavissa olevia asetuslähteitä ei saatu selville: joitakin "
-"asetusten muutoksia ei välttämättä voi tallentaa "
+"Kirjoitettavissa olevia asetuslähteitä ei saatu selville: joitakin asetusten "
+"muutoksia ei välttämättä voi tallentaa "
 
 #: gconf/gconfd.c:371
 #, c-format
@@ -1130,8 +1127,7 @@ msgstr ""
 #: gconf/gconfd.c:389
 #, c-format
 msgid ""
-"Received signal %d, shutting down abnormally. Please file a GConf bug "
-"report."
+"Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Vastaanotti signaalin %d: sammuu epänormaalisti. Tee ilmoitus GConfin "
 "virheestä."
@@ -1188,16 +1184,16 @@ msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr ""
-"gconfd:n lokitiedoston avaaminen epäonnistui: kuuntelijoita ei voi "
-"palauttaa gconfd:n sammutuksen jälkeen (%s)"
+"gconfd:n lokitiedoston avaaminen epäonnistui: kuuntelijoita ei voi palauttaa "
+"gconfd:n sammutuksen jälkeen (%s)"
 
 #: gconf/gconfd.c:1202
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
-"gconfd:n lokitiedoston sulkeminen epäonnistui: tietoja saattaa olla "
-"hävinnyt (%s)"
+"gconfd:n lokitiedoston sulkeminen epäonnistui: tietoja saattaa olla hävinnyt "
+"(%s)"
 
 #: gconf/gconfd.c:1271
 #, c-format
@@ -1227,8 +1223,7 @@ msgstr "Uuden tilatiedoston siirtäminen paikalleen epäonnistui: %s"
 #: gconf/gconfd.c:1327
 #, c-format
 msgid ""
-"Failed to restore original saved state file that had been moved to '%s': "
-"%s"
+"Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "Alkuperäisen tilatiedoston, joka on nimetty tiedostoksi '%s', palauttaminen "
 "epäonnistui: %s"
@@ -1254,17 +1249,17 @@ msgstr "Tilatiedoston '%s' avaaminen ei onnistu: %s"
 #: gconf/gconfd.c:2014
 #, c-format
 msgid ""
-"Failed to log addition of listener to gconfd logfile; won't be able to "
-"re-add the listener if gconfd exits or shuts down (%s)"
+"Failed to log addition of listener to gconfd logfile; won't be able to re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
-"Kuuntelijan lisäämisen kirjaaminen gconfd:n lokitiedostoon epäonnistui: "
-"sitä ei voi lisätä uudestaan, kun gconfd lopetetaan tai sammuu (%s)"
+"Kuuntelijan lisäämisen kirjaaminen gconfd:n lokitiedostoon epäonnistui: sitä "
+"ei voi lisätä uudestaan, kun gconfd lopetetaan tai sammuu (%s)"
 
 #: gconf/gconfd.c:2019
 #, c-format
 msgid ""
-"Failed to log removal of listener to gconfd logfile; might erroneously "
-"re-add the listener if gconfd exits or shuts down (%s)"
+"Failed to log removal of listener to gconfd logfile; might erroneously re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 "Kuuntelijan poiston kirjaaminen gconfd:n lokitiedostoon epäonnistui; se "
 "saattaa virheellisesti tulla lisätyksi uudestaan, kun gconfd lopetetaan tai "
@@ -1292,11 +1287,9 @@ msgstr "Asiakkaan lisäämisen fflush() tilatiedostoon epäonnistui: '%s'"
 
 #: gconf/gconfd.c:2177
 msgid ""
-"Some client removed itself from the GConf server when it hadn't been "
-"added."
+"Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
-"Jokin asiakas poisti itsensä GConf-palvelimesta, kun sitä ei oltu "
-"lisätty."
+"Jokin asiakas poisti itsensä GConf-palvelimesta, kun sitä ei oltu lisätty."
 
 #. dialog display isn't working out
 #: gconf/gconfd.c:2318
@@ -1324,11 +1317,11 @@ msgstr "Tulosta avaimen arvo stdout:iin"
 
 #: gconf/gconftool.c:100
 msgid ""
-"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
-"--type."
+"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
+"type."
 msgstr ""
-"Aseta kaavain ja synkronoi. Käytä asetusten --short-desc, --long-desc, "
-"--owner ja --type kanssa."
+"Aseta kaavain ja synkronoi. Käytä asetusten --short-desc, --long-desc, --"
+"owner ja --type kanssa."
 
 #: gconf/gconftool.c:110
 msgid "Unset the keys on the command line"
@@ -1455,8 +1448,8 @@ msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
-"Käytä asetustietokantaa suoraan, ei palvelimen kautta. Tämä vaatii, "
-"että gconfd ei ole käynnissä."
+"Käytä asetustietokantaa suoraan, ei palvelimen kautta. Tämä vaatii, että "
+"gconfd ei ole käynnissä."
 
 #: gconf/gconftool.c:281
 msgid ""
@@ -1466,8 +1459,8 @@ msgid ""
 msgstr ""
 "Asentaa komentorivillä määritellyt kaavaintiedostot tietokantaan "
 "kunnollisesti. GCONF_CONFIG_SOURCE ympäristömuuttuja pitäisi asettaa "
-"osoittamaan ei-oletusasetuslähteeseen, tai, jos halutaan käyttää "
-"oletusta, tyhjäksi."
+"osoittamaan ei-oletusasetuslähteeseen, tai, jos halutaan käyttää oletusta, "
+"tyhjäksi."
 
 #: gconf/gconftool.c:290
 msgid ""
@@ -1498,11 +1491,9 @@ msgid "Get the name of the schema applied to this key"
 msgstr "Hae tähän avaimeen sovelletun kaavaimen nimi"
 
 #: gconf/gconftool.c:335
-msgid ""
-"Specify the schema name followed by the key to apply the schema name to"
+msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
-"Anna kaavaimen ja sen jälkeen sen avaimen nimi, johon kaavain "
-"sovelletaan"
+"Anna kaavaimen ja sen jälkeen sen avaimen nimi, johon kaavain sovelletaan"
 
 #: gconf/gconftool.c:344
 msgid "Remove any schema name applied to the given keys"
@@ -1533,25 +1524,23 @@ msgstr ""
 #: gconf/gconftool.c:464
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr ""
-"--all-dirs -valitsinta ei voi käyttää --get tai --set -valitsinten "
-"kanssa\n"
+"--all-dirs -valitsinta ei voi käyttää --get tai --set -valitsinten kanssa\n"
 
 #: gconf/gconftool.c:474
 msgid ""
-"--recursive-list should not be used with --get, --set, --unset, "
-"--all-entries, or --all-dirs\n"
+"--recursive-list should not be used with --get, --set, --unset, --all-"
+"entries, or --all-dirs\n"
 msgstr ""
-"--recursive-list valitsinta ei pitäisi käyttää --get, --set, "
-"--unset,\n"
+"--recursive-list valitsinta ei pitäisi käyttää --get, --set, --unset,\n"
 "--all-entries tai --all-dirs valitsinten kanssa\n"
 
 #: gconf/gconftool.c:484
 msgid ""
-"--set_schema should not be used with --get, --set, --unset, --all-entries, "
-"--all-dirs\n"
+"--set_schema should not be used with --get, --set, --unset, --all-entries, --"
+"all-dirs\n"
 msgstr ""
-"--set_schema asetusta ei pitäisi käyttää --get, --set, --unset, "
-"--all-entries\n"
+"--set_schema asetusta ei pitäisi käyttää --get, --set, --unset, --all-"
+"entries\n"
 "tai --all-dirs asetusten kanssa\n"
 
 #: gconf/gconftool.c:490
@@ -1573,14 +1562,12 @@ msgstr "Valitsimen --dir-exist kanssa ei voi käyttää muita valitsimia.\n"
 #: gconf/gconftool.c:526
 msgid "--install-schema-file must be used by itself.\n"
 msgstr ""
-"Valitsimen --install-schema-file kanssa ei voi käyttää muita "
-"valitsimia.\n"
+"Valitsimen --install-schema-file kanssa ei voi käyttää muita valitsimia.\n"
 
 #: gconf/gconftool.c:537
 msgid "--makefile-install-rule must be used by itself.\n"
 msgstr ""
-"Valitsimen --makefile-install-rule kanssa ei voi käyttää muita "
-"valitsimia.\n"
+"Valitsimen --makefile-install-rule kanssa ei voi käyttää muita valitsimia.\n"
 
 #: gconf/gconftool.c:548
 msgid "--break-key must be used by itself.\n"
@@ -1588,23 +1575,19 @@ msgstr "Valitsimen --break-key kanssa ei voi käyttää muita valitsimia.\n"
 
 #: gconf/gconftool.c:559
 msgid "--break-directory must be used by itself.\n"
-msgstr ""
-"Valitsimen --break-directory kanssa ei voi käyttää muita valitsimia.\n"
+msgstr "Valitsimen --break-directory kanssa ei voi käyttää muita valitsimia.\n"
 
 #: gconf/gconftool.c:567
 msgid ""
-"You must specify a config source with --config-source when using "
-"--direct\n"
+"You must specify a config source with --config-source when using --direct\n"
 msgstr ""
-"Valitsinta --direct käytettäessä täytyy määritellä asetuslähde "
-"valitsimella --config-source\n"
+"Valitsinta --direct käytettäessä täytyy määritellä asetuslähde valitsimella "
+"--config-source\n"
 
 #: gconf/gconftool.c:573
-msgid ""
-"You should use --direct when using a non-default configuration source\n"
+msgid "You should use --direct when using a non-default configuration source\n"
 msgstr ""
-"Valitsinta --direct pitäisi käyttää, kun asetuslähde ei ole "
-"oletuslähde\n"
+"Valitsinta --direct pitäisi käyttää, kun asetuslähde ei ole oletuslähde\n"
 
 #: gconf/gconftool.c:579
 #, c-format
@@ -1730,8 +1713,7 @@ msgstr "Kaavainta ei voi asettaa arvoksi\n"
 #: gconf/gconftool.c:1221
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr ""
-"Luetteloa asettaessasi täytyy sinun määritellä luettelo "
-"perustyyppiseksi.\n"
+"Luetteloa asettaessasi täytyy sinun määritellä luettelo perustyyppiseksi.\n"
 
 #: gconf/gconftool.c:1235
 msgid ""
@@ -1786,8 +1768,7 @@ msgstr "Arvo kohdassa '%s' ei ole kaavain\n"
 
 #: gconf/gconftool.c:1428 gconf/gconftool.c:1453
 msgid "Must specify a schema name followed by the key name to apply it to\n"
-msgstr ""
-"Kaavaimen ja sen jälkeen sitä soveltavan avaimen nimi täytyy antaa\n"
+msgstr "Kaavaimen ja sen jälkeen sitä soveltavan avaimen nimi täytyy antaa\n"
 
 #: gconf/gconftool.c:1435
 #, c-format
@@ -1895,19 +1876,16 @@ msgstr "VAROITUS: tyypin '%s' nimen jäsennys epäonnistui\n"
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr ""
-"VAROITUS: list_type voi olla int, float, string tai bool eikä \"%s\"\n"
+msgstr "VAROITUS: list_type voi olla int, float, string tai bool eikä \"%s\"\n"
 
 #: gconf/gconftool.c:1944
 #, c-format
-msgid ""
-"WARNING: car_type can only be int, float, string or bool and not `%s'\n"
+msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr "VAROITUS: car_type voi olla int, float, string tai bool eikä \"%s\"\n"
 
 #: gconf/gconftool.c:1965
 #, c-format
-msgid ""
-"WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
+msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr "VAROITUS: cdr_type voi olla int, float, string tai bool eikä \"%s\"\n"
 
 #: gconf/gconftool.c:1993
@@ -1932,8 +1910,7 @@ msgstr ""
 #: gconf/gconftool.c:2045
 #, c-format
 msgid ""
-"WARNING: multiple <locale> nodes for locale `%s', ignoring all past "
-"first\n"
+"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "VAROITUS: useita <locale> solmuja localelle '%s': vain ensimmäinen otetaan "
 "huomioon\n"
@@ -1965,9 +1942,7 @@ msgstr "Kaavain '%s' kytkeytyi avaimeen '%s'\n"
 
 #: gconf/gconftool.c:2272
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr ""
-"Jokaisessa <schema>:ssa täytyy olla vähintään yksi "
-"<locale>-merkintä\n"
+msgstr "Jokaisessa <schema>:ssa täytyy olla vähintään yksi <locale>-merkintä\n"
 
 #: gconf/gconftool.c:2303
 #, c-format
@@ -2055,4 +2030,3 @@ msgstr ""
 "Yritetään rikkoa sovellus asettamalla virheellisiä arvoja avaimille "
 "hakemistossa:\n"
 "  %s\n"
-
