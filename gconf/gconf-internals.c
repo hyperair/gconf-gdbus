@@ -60,6 +60,9 @@ g_conf_value_new(GConfValueType type)
 
   value->type = type;
 
+  /* the g_new0() is important: sets list type to invalid, NULLs all
+     pointers */
+  
   return value;
 }
 
@@ -167,11 +170,18 @@ g_conf_value_to_string(GConfValue* value)
     case G_CONF_VALUE_BOOL:
       retval = g_conf_value_bool(value) ? g_strdup("true") : g_strdup("false");
       break;
+      /* These remaining 4 shouldn't really be used... */
     case G_CONF_VALUE_INVALID:
       retval = g_strdup("Invalid");
       break;
     case G_CONF_VALUE_SCHEMA:
       retval = g_strdup("Schema");
+      break;
+    case G_CONF_VALUE_LIST:
+      retval = g_strdup("List");
+      break;
+    case G_CONF_VALUE_PAIR:
+      retval = g_strdup("Pair");
       break;
     default:
       g_assert_not_reached();
@@ -210,6 +220,40 @@ g_conf_value_copy(GConfValue* src)
       else
         dest->d.schema_data = NULL;
       break;
+      
+    case G_CONF_VALUE_LIST:
+      {
+        GSList* copy = NULL;
+        GSList* tmp = src->d.list_data.list;
+
+        while (tmp != NULL)
+          {
+            copy = g_slist_prepend(copy, g_conf_value_copy(tmp->data));
+
+            tmp = g_slist_next(tmp);
+          }
+        
+        copy = g_slist_reverse(copy);
+
+        dest->d.list_data.list = copy;
+        dest->d.list_data.type = src->d.list_data.type;
+      }
+      break;
+      
+    case G_CONF_VALUE_PAIR:
+
+      if (src->d.pair_data.car)
+        dest->d.pair_data.car = g_conf_value_copy(src->d.pair_data.car);
+      else
+        dest->d.pair_data.car = NULL;
+
+      if (src->d.pair_data.cdr)
+        dest->d.pair_data.cdr = g_conf_value_copy(src->d.pair_data.cdr);
+      else
+        dest->d.pair_data.cdr = NULL;
+
+      break;
+
     default:
       g_assert_not_reached();
     }
@@ -217,19 +261,55 @@ g_conf_value_copy(GConfValue* src)
   return dest;
 }
 
+static void
+g_conf_value_free_list(GConfValue* value)
+{
+  GSList* tmp;
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type != G_CONF_VALUE_LIST);
+  
+  tmp = value->d.list_data.list;
+
+  while (tmp != NULL)
+    {
+      g_conf_value_destroy(tmp->data);
+      
+      tmp = g_slist_next(tmp);
+    }
+  g_slist_free(value->d.list_data.list);
+
+  value->d.list_data.list = NULL;
+}
+
 void 
 g_conf_value_destroy(GConfValue* value)
 {
   g_return_if_fail(value != NULL);
 
-  if (value->type == G_CONF_VALUE_STRING && 
-      value->d.string_data != NULL)
-    g_free(value->d.string_data);
+  switch (value->type)
+    {
+    case G_CONF_VALUE_STRING:
+      if (value->d.string_data != NULL)
+        g_free(value->d.string_data);
+      break;
+    case G_CONF_VALUE_SCHEMA:
+      if (value->d.schema_data != NULL)
+        g_conf_schema_destroy(value->d.schema_data);
+      break;
+    case G_CONF_VALUE_LIST:
+      g_conf_value_free_list(value);
+      break;
+    case G_CONF_VALUE_PAIR:
+      if (value->d.pair_data.car != NULL)
+        g_conf_value_destroy(value->d.pair_data.car);
 
-  if (value->type == G_CONF_VALUE_SCHEMA && 
-      value->d.schema_data != NULL)
-    g_conf_schema_destroy(value->d.schema_data);
-
+      if (value->d.pair_data.cdr != NULL)
+        g_conf_value_destroy(value->d.pair_data.cdr);
+      break;
+    default:
+      break;
+    }
+  
   g_free(value);
 }
 
@@ -286,11 +366,84 @@ g_conf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == G_CONF_VALUE_SCHEMA);
-
+  g_return_if_fail(sc != NULL);
+  
   if (value->d.schema_data != NULL)
     g_conf_schema_destroy(value->d.schema_data);
 
   value->d.schema_data = sc;
+}
+
+void
+g_conf_value_set_car(GConfValue* value, GConfValue* car)
+{
+  g_return_if_fail(car != NULL);
+
+  g_conf_value_set_car_nocopy(value, g_conf_value_copy(car));
+}
+
+void
+g_conf_value_set_car_nocopy(GConfValue* value, GConfValue* car)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_PAIR);
+  g_return_if_fail(car != NULL);
+  
+  if (value->d.pair_data.car != NULL)
+    g_conf_value_destroy(value->d.pair_data.car);
+
+  value->d.pair_data.car = car;
+}
+
+void
+g_conf_value_set_cdr(GConfValue* value, GConfValue* cdr)
+{
+  g_return_if_fail(cdr != NULL);
+
+  g_conf_value_set_cdr_nocopy(value, g_conf_value_copy(cdr));
+}
+
+void
+g_conf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_PAIR);
+  g_return_if_fail(cdr != NULL);
+  
+  if (value->d.pair_data.cdr != NULL)
+    g_conf_value_destroy(value->d.pair_data.cdr);
+
+  value->d.pair_data.cdr = cdr;
+}
+
+void
+g_conf_value_set_list_type(GConfValue* value,
+                           GConfValueType type)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_LIST);
+  g_return_if_fail(type != G_CONF_VALUE_LIST);
+  g_return_if_fail(type != G_CONF_VALUE_PAIR);
+  /* If the list is non-NULL either we already have the right
+     type, or we shouldn't be changing it without deleting
+     the list first. */
+  g_return_if_fail(value->d.list_data.list == NULL);
+
+  value->d.list_data.type = type;
+}
+
+void
+g_conf_value_set_list_nocopy(GConfValue* value,
+                             GSList* list)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_LIST);
+  g_return_if_fail(value->d.list_data.type != G_CONF_VALUE_INVALID);
+  
+  if (value->d.list_data.list)
+    g_conf_value_free_list(value);
+
+  value->d.list_data.list = list;
 }
 
 
@@ -786,6 +939,12 @@ fill_corba_schema_from_g_conf_schema(GConfSchema* sc,
     case G_CONF_VALUE_SCHEMA:
       cs->value_type = SchemaVal;
       break;
+    case G_CONF_VALUE_LIST:
+      cs->value_type = ListVal;
+      break;
+    case G_CONF_VALUE_PAIR:
+      cs->value_type = PairVal;
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -833,6 +992,12 @@ g_conf_schema_from_corba_schema(const ConfigSchema* cs)
     case BoolVal:
       type = G_CONF_VALUE_BOOL;
       break;
+    case ListVal:
+      type = G_CONF_VALUE_LIST;
+      break;
+    case PairVal:
+      type = G_CONF_VALUE_PAIR;
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -869,6 +1034,12 @@ g_conf_value_type_to_string(GConfValueType type)
     case G_CONF_VALUE_SCHEMA:
       return "schema";
       break;
+    case G_CONF_VALUE_LIST:
+      return "list";
+      break;
+    case G_CONF_VALUE_PAIR:
+      return "pair";
+      break;
     default:
       g_assert_not_reached();
       return NULL; /* for warnings */
@@ -889,6 +1060,10 @@ g_conf_value_type_from_string(const gchar* type_str)
     return G_CONF_VALUE_BOOL;
   else if (strcmp(type_str, "schema") == 0)
     return G_CONF_VALUE_SCHEMA;
+  else if (strcmp(type_str, "list") == 0)
+    return G_CONF_VALUE_LIST;
+  else if (strcmp(type_str, "pair") == 0)
+    return G_CONF_VALUE_PAIR;
   else
     return G_CONF_VALUE_INVALID;
 }

@@ -105,6 +105,11 @@ void        g_conf_value_set_car(GConfValue* value, GConfValue* car);
 void        g_conf_value_set_car_nocopy(GConfValue* value, GConfValue* car);
 void        g_conf_value_set_cdr(GConfValue* value, GConfValue* cdr);
 void        g_conf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr);
+/* Set a list of GConfValue, NOT lists or pairs */
+void        g_conf_value_set_list_type(GConfValue* value,
+                                       GConfValueType type);
+void        g_conf_value_set_list_nocopy(GConfValue* value,
+                                         GSList* list);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 

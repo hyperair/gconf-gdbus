@@ -50,7 +50,7 @@ typedef enum {
 typedef struct _GConfSchema GConfSchema;
 
 struct _GConfSchema {
-  GConfValueType type; /* Type of the described pair */
+  GConfValueType type; /* Type of the described entry */
   gchar* short_desc;   /* 40 char or less description, no newlines */
   gchar* long_desc;    /* could be a paragraph or so */
   gchar* owner;        /* Name of creating application */
