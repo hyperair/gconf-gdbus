@@ -34,7 +34,7 @@ main (int argc, char** argv)
   guint cnxn;
   GConfValue* val;
 
-  if (!g_conf_init())
+  if (!g_conf_init(&argc, argv))
     {
       g_warning("Failed to init GConf");
       return 1;

@@ -31,6 +31,7 @@
 #include <config.h>
 
 #include "gconf-internals.h"
+#include "gconf-orbit.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -107,51 +108,6 @@ static void    ltable_spew(LTable* ltable);
 
 static LTableEntry* ltable_entry_new(const gchar* name);
 static void         ltable_entry_destroy(LTableEntry* entry);
-
-/*
- * ORB event loop integration
- */
-
-static gboolean
-orb_handle_connection(GIOChannel *source, GIOCondition cond,
-		      GIOPConnection *cnx)
-{
-  /* The best way to know about an fd exception is if select()/poll()
-   * tells you about it, so we just relay that information on to ORBit
-   * if possible
-   */
-	
-  if(cond & (G_IO_HUP|G_IO_NVAL|G_IO_ERR))
-    giop_main_handle_connection_exception(cnx);
-  else
-    giop_main_handle_connection(cnx);
-
-  return TRUE;
-}
-
-static void
-orb_add_connection(GIOPConnection *cnx)
-{
-  int tag;
-  GIOChannel *channel;
-
-  channel = g_io_channel_unix_new(GIOP_CONNECTION_GET_FD(cnx));
-  tag = g_io_add_watch_full   (channel, G_PRIORITY_DEFAULT,
-			       G_IO_IN|G_IO_ERR|G_IO_HUP|G_IO_NVAL, 
-			       (GIOFunc)orb_handle_connection,
-			       cnx, NULL);
-  g_io_channel_unref (channel);
-
-  cnx->user_data = GUINT_TO_POINTER (tag);
-}
-
-static void
-orb_remove_connection(GIOPConnection *cnx)
-{
-  g_source_remove(GPOINTER_TO_UINT (cnx->user_data));
-  cnx->user_data = GINT_TO_POINTER (-1);
-}
-
 
 /* 
  * CORBA goo
@@ -544,11 +500,15 @@ main(int argc, char** argv)
 
   ltable = ltable_new();
 
-  IIOPAddConnectionHandler = orb_add_connection;
-  IIOPRemoveConnectionHandler = orb_remove_connection;
-
   CORBA_exception_init(&ev);
-  orb = CORBA_ORB_init(&argc, argv, "orbit-local-orb", &ev);
+
+  if (!g_conf_init_orb(&argc, argv))
+    {
+      syslog(LOG_ERR, "Failed to init ORB");
+      exit(1);
+    }
+
+  orb = g_conf_get_orb();
 
   if (orb == CORBA_OBJECT_NIL)
     {

@@ -77,7 +77,7 @@ struct _GConf {
 
 typedef void (*GConfNotifyFunc)(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
-gboolean     g_conf_init           (void);
+gboolean     g_conf_init           (int* argc, char** argv);
 
 GConf*       g_conf_new            (void);
 void         g_conf_destroy        (GConf* conf);

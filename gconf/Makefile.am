@@ -9,6 +9,8 @@ BUILT_SOURCES = $(CORBA_SOURCES)
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
 gconfd_SOURCES = \
+	gconf-orbit.c		\
+	gconf-orbit.h		\
 	gconf-internals.c	\
 	gconf-internals.h	\
 	gconf-backend.h		\
@@ -20,6 +22,8 @@ gconfd_SOURCES = \
 gconfd_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS)
 
 gconf_testclient_SOURCES = \
+	gconf-orbit.c		\
+	gconf-orbit.h		\
 	gconf-internals.c	\
 	gconf-internals.h	\
 	gconf-backend.h		\

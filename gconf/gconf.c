@@ -21,6 +21,7 @@
 #include "GConf.h"
 #include "gconf.h"
 #include "gconf-internals.h"
+#include "gconf-orbit.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -86,8 +87,6 @@ static void       g_conf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfVal
 
 static ConfigServer g_conf_get_config_server(void);
 static ConfigListener g_conf_get_config_listener(void);
-static CORBA_ORB g_conf_get_orb(void);
-
 
 /* We'll use client-specific connection numbers to return to library
    users, so if gconfd dies we can transparently re-register all our
@@ -445,58 +444,31 @@ notify(PortableServer_Servant servant,
   g_conf_value_destroy(gvalue);
 }
 
-/* Broken as hell, need an init function, bleh */
 static ConfigListener 
 g_conf_get_config_listener(void)
 {
   return listener;
 }
 
-/* Broken, we should have an init function, and let the user pass this
-   in anyway because they might already have the ORB from Gnome, plus
-   this function will retry forever, etc., anyway, it's hosed.  */
-static CORBA_ORB orb = CORBA_OBJECT_NIL;
-
-static CORBA_ORB 
-g_conf_get_orb(void)
-{
-  return orb;
-}
-
 static gboolean have_initted = FALSE;
 
 gboolean     
-g_conf_init           (void)
+g_conf_init           (int* argc, char** argv)
 {
+  static CORBA_ORB orb = CORBA_OBJECT_NIL;
+
   if (have_initted)
     {
       g_warning("Attempt to init GConf a second time");
       return FALSE;
     }
 
+  orb = g_conf_init_orb(argc, argv);
+
   if (orb == CORBA_OBJECT_NIL)
     {
-      CORBA_Environment ev;
-      gchar* fake_argv[] = { "gconf", NULL };
-      int fake_argc = 1;
-
-      CORBA_exception_init(&ev);
-      
-      orb = CORBA_ORB_init(&fake_argc, fake_argv, "orbit-local-orb", &ev);
-
-      if (ev._major != CORBA_NO_EXCEPTION)
-        {
-          g_warning("Failed to init orb: %s",
-                    CORBA_exception_id(&ev));
-        }
-
-      if (orb == CORBA_OBJECT_NIL)
-        {
-          g_warning("Failed to get orb");
-          return FALSE;
-        }
-          
-      CORBA_exception_free(&ev);
+      g_warning("Failed to get orb");
+      return FALSE;
     }
 
   if (listener == CORBA_OBJECT_NIL)
@@ -534,7 +506,7 @@ g_conf_init           (void)
 
 static gint
 corba_unsigned_long_equal (gconstpointer v1,
-                  gconstpointer v2)
+                           gconstpointer v2)
 {
   return *((const CORBA_unsigned_long*) v1) == *((const CORBA_unsigned_long*) v2);
 }
