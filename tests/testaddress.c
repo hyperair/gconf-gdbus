@@ -108,7 +108,7 @@ main (int argc, char** argv)
       gchar*  protocol;
       gchar*  resource;
       
-      flat_flags = g_strjoinv(",", iter->flags);
+      flat_flags = g_strjoinv (",", iter->flags);
 
       address = g_strconcat(iter->protocol, ":", flat_flags, ":", iter->resource, NULL);
 

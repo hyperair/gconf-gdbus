@@ -55,6 +55,7 @@ typedef struct _GConfValue GConfValue;
 
 struct _GConfValue {
   GConfValueType type;
+  /* this is all PRIVATE dangit */      
   union {
     gchar* string_data;
     gint int_data;
@@ -161,9 +162,9 @@ void           gconf_meta_info_set_mod_time (GConfMetaInfo *gcmi,
 typedef struct _GConfEntry GConfEntry;
 
 struct _GConfEntry {
-  gchar* key;
-  GConfValue* value;
-  gchar* schema_name;
+  char *key;
+  GConfValue *value;
+  char *schema_name;
   int pad1;
   gpointer pad2;
   gpointer pad3;

@@ -1362,13 +1362,9 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
 
   g_assert(gconf_value_get_list_type(val) == list_type);
       
-  retval = gconf_value_get_list(val);
-
-  /* Cheating the API to avoid a list copy; set this to NULL to
-         avoid destroying the list */
-  val->d.list_data.list = NULL;
+  retval = gconf_value_steal_list (val);
       
-  gconf_value_free(val);
+  gconf_value_free (val);
   val = NULL;
       
   {
@@ -1403,19 +1399,11 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
             break;
 
           case GCONF_VALUE_STRING:
-            {
-              /* Cheat again, and steal the string from the value */
-              tmp->data = elem->d.string_data;
-              elem->d.string_data = NULL;
-            }
+            tmp->data = gconf_value_steal_string (elem);
             break;
 
           case GCONF_VALUE_SCHEMA:
-            {
-              /* and also steal the schema... */
-              tmp->data = elem->d.schema_data;
-              elem->d.schema_data = NULL;
-            }
+            tmp->data = gconf_value_steal_schema (elem);
             break;
                 
           default:
@@ -1449,9 +1437,7 @@ primitive_value(gpointer retloc, GConfValue* val)
 
     case GCONF_VALUE_STRING:
       {
-        *((gchar**)retloc) = val->d.string_data;
-        /* cheat and steal the string to avoid a copy */
-        val->d.string_data = NULL;
+        *((gchar**)retloc) = gconf_value_steal_string (val);
       }
       break;
 
@@ -1460,7 +1446,7 @@ primitive_value(gpointer retloc, GConfValue* val)
       break;
 
     case GCONF_VALUE_SCHEMA:
-      *((GConfSchema**)retloc) = gconf_value_get_schema(val);
+      *((GConfSchema**)retloc) = gconf_value_steal_schema(val);
       break;
       
     default:

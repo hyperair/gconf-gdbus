@@ -29,7 +29,7 @@
 /*
  *
  *
- * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples/*
+ * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples
  *
  *
  *
@@ -44,11 +44,13 @@
 
 
 #include <gconf/gconf.h>
+#include <gconf/gconf-internals.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
 #include <locale.h>
-#include <gconf/gconf-internals.h>
+#include <stdlib.h>
+#include <string.h>
 
 static void
 check(gboolean condition, const gchar* fmt, ...)

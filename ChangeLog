@@ -1,3 +1,20 @@
+2002-03-29  Havoc Pennington  <hp@pobox.com>
+
+	* configure.in: 1.1.9
+
+	* gconf/gconf-client.c (gconf_client_get_string): clean up some
+	weird cruft
+
+	* gconf/gconf-internals.c (primitive_value): steal the schema,
+	avoids a copy.
+
+	* gconf/gconf-value.h, gconf/gconf-value.c: Hide private fields,
+	suggested by Michael. But then make them public again 
+	for now due to libgnome/eel being broken.
+
+	* configure.in (PKGCONFIG_MODULES): require the right versions of 
+	various things
+
 2002-03-24  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-internals.c (gconf_activate_server): save a bit more

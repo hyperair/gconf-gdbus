@@ -121,6 +121,10 @@ GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
                                               const gchar* str,
 					      GError** err);
 
+GSList*      gconf_value_steal_list   (GConfValue *value);
+GConfSchema* gconf_value_steal_schema (GConfValue *value);
+char*        gconf_value_steal_string (GConfValue *value);
+
 /* These are a hack to encode values into strings and ship them over CORBA,
  * necessary for obscure reasons (ORBit doesn't like recursive datatypes yet)
  */

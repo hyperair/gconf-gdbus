@@ -1511,10 +1511,8 @@ gconf_sources_query_default_value(GConfSources* sources,
 
       gconf_meta_info_free(mi);
 
-      schema = gconf_value_get_schema(val);
-      val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
-      
-      gconf_value_free(val); /* schema not destroyed due to our cheat */
+      schema = gconf_value_steal_schema (val);
+      gconf_value_free (val);
       
       if (schema != NULL)
         {

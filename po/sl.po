@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-03-08 02:42+0100\n"
+"POT-Creation-Date: 2002-01-28 21:35-0500\n"
 "PO-Revision-Date: 2001-02-12 20:02+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -304,48 +304,52 @@ msgstr "Nisem uspel ustaviti ozadnega modula"
 msgid "GConf Error: %s\n"
 msgstr "Napaka gconf %s\n"
 
-#: gconf/gconf-client.c:897
+#: gconf/gconf-client.c:899
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Opozorilo GConf: napaka ob izpisovanju praov v `%s': %s"
 
-#: gconf/gconf-client.c:1162
+#: gconf/gconf-client.c:1165
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Za ključ %s pričakoval `%s' dobil `%s'"
 
-#: gconf/gconf-database.c:234
+#: gconf/gconf-database.c:233
 msgid "Received invalid value in set request"
 msgstr "Prejel sem neveljavno vrednost v zahtevku \"set\""
 
-#: gconf/gconf-database.c:242
+#: gconf/gconf-database.c:241
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
 "Nisem mogel najti smisla vredosti CORBA prejete v zahtevku \"set\" za ključ `"
 "%s'"
 
-#: gconf/gconf-database.c:523
+#: gconf/gconf-database.c:522
 msgid "Received request to drop all cached data"
 msgstr "Prejel zahtevek za opustitev vseh predpomnjenih podatkov"
 
-#: gconf/gconf-database.c:540
+#: gconf/gconf-database.c:539
 msgid "Received request to sync synchronously"
 msgstr "Prejel zahtevek za usklajeno (sinhrono) uskladitev"
 
-#: gconf/gconf-database.c:824
+#: gconf/gconf-database.c:823
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr "Usodna napaka: nisem uspel dobiti sklica predmeta za ConfigDatabase"
 
-#: gconf/gconf-database.c:986
+#: gconf/gconf-database.c:985
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Nisem uspel uskladiti enega ali več virov: %s"
 
-#: gconf/gconf-database.c:1078
-#, c-format
+#. This error is not fatal; we basically ignore it.
+#. * Because it's likely the right thing for the client
+#. * app to simply continue.
+#.
+#: gconf/gconf-database.c:1076
+#, fuzzy, c-format
 msgid ""
-"Failed to log addition of listener %s (%s);will not be able to restore this "
+"Failed to log addition of listener %s (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
@@ -353,12 +357,12 @@ msgstr ""
 "gconfd-ja poslušalca ne bom mogel obnoviti, kar bo povzročilo nezanesljivo "
 "obveščanje o spremembah nastavitev."
 
-#: gconf/gconf-database.c:1109
+#: gconf/gconf-database.c:1103
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Poslušalec z ID %lu ne obstaja"
 
-#: gconf/gconf-database.c:1123
+#: gconf/gconf-database.c:1117
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -367,57 +371,57 @@ msgstr ""
 "V dnevnik nisem uspel zapisati odstranitve poslušalca (verjetno ni "
 "škodljivo, lahko pa povzroči ponavljanje obvestil): %s"
 
-#: gconf/gconf-database.c:1241 gconf/gconf-sources.c:1540
+#: gconf/gconf-database.c:1235 gconf/gconf-sources.c:1540
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Napaka ob branju vrednosti za `%s': %s"
 
-#: gconf/gconf-database.c:1288
+#: gconf/gconf-database.c:1282
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Napaka ob nastavljanju vrednosti za `%s': %s"
 
-#: gconf/gconf-database.c:1331
+#: gconf/gconf-database.c:1325
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Napaka ob odnastavljanju `%s': %s"
 
-#: gconf/gconf-database.c:1360
+#: gconf/gconf-database.c:1354
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Napaka ob branju privzete vrednosti za `%s': %s"
 
-#: gconf/gconf-database.c:1411
+#: gconf/gconf-database.c:1405
 #, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Napaka ob odnastavljanju \"%s\": %s"
 
-#: gconf/gconf-database.c:1443
+#: gconf/gconf-database.c:1437
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "Napaka ob branju nove vrednosti za \"%s\": %s"
 
-#: gconf/gconf-database.c:1491
+#: gconf/gconf-database.c:1485
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Napaka ob preverjanju obstoja `%s': %s"
 
-#: gconf/gconf-database.c:1515
+#: gconf/gconf-database.c:1509
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Napaka ob odstranjevanju imenika `%s': %s"
 
-#: gconf/gconf-database.c:1542
+#: gconf/gconf-database.c:1536
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Nisem uspel prebrati vseh vnosov v %s': %s"
 
-#: gconf/gconf-database.c:1568
+#: gconf/gconf-database.c:1562
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Napaka ob izpisu seznama imenikov v %s': %s"
 
-#: gconf/gconf-database.c:1589
+#: gconf/gconf-database.c:1583
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Napaka ob nastavljanju sheme za %s': %s"
@@ -546,7 +550,7 @@ msgstr "Napaka ob branju datoteke `%s': %s\n"
 
 #: gconf/gconf-internals.c:1211 gconf/gconf-internals.c:1277
 #: gconf/gconf-value.c:125 gconf/gconf-value.c:224 gconf/gconf-value.c:366
-#: gconf/gconf-value.c:1363
+#: gconf/gconf-value.c:1341
 msgid "Text contains invalid UTF-8"
 msgstr "Besedilo vsebuje neveljaven UTF-8"
 
@@ -670,23 +674,23 @@ msgstr "Nisem uspel počistiti datoteke %s': %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Nisem uspel odstraniti ključavničnega imenika `%s': %s"
 
-#: gconf/gconf-internals.c:2846 gconf/gconfd.c:587
+#: gconf/gconf-internals.c:2842 gconf/gconfd.c:583
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Nisem uspel ustvariti %s: %s"
 
-#: gconf/gconf-internals.c:2879
+#: gconf/gconf-internals.c:2875
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Nisem uspel ustvariti pipe za komunikacijo z odcepljenim daemonom gconf: %s\n"
 
-#: gconf/gconf-internals.c:2903
+#: gconf/gconf-internals.c:2899
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Nisem uspel pognati strežnika nastavitev: %s\n"
 
-#: gconf/gconf-internals.c:2927
+#: gconf/gconf-internals.c:2923
 msgid ""
 "Failed to contact configuration server; some possible causes are:\n"
 "a) you have an existing configuration server (gconfd) running, but it isn't "
@@ -706,52 +710,6 @@ msgstr ""
 "NFS zastarele ključavnice. Če ste prepričani, da nobenem računalniku, ki "
 "uporablja vaš domač imenik ne teče gconfd, poskusite odstraniti datoteke ~/."
 "gconf/*.lock in ~/.gconfd/lock"
-
-#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:71
-msgid "Help options"
-msgstr "Možnosti pomoči"
-
-#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:408
-#, c-format
-msgid ""
-"Error on option %s: %s.\n"
-"Run '%s --help' to see a full list of available command line options.\n"
-msgstr ""
-"Napaka ob možnosti %s: %s.\n"
-" Poženite '%s --help', če želite videti popoln seznam možnosti ukazne "
-"vrstice.\n"
-
-#: gconf/gconf-sanity-check.c:131
-#, c-format
-msgid ""
-"Please contact your system administrator to resolve the following problem:\n"
-"Could not open or create the file \"%s\"; this indicates that there may be a "
-"problem with your configuration, as many programs will need to create files "
-"in your home directory. The error was \"%s\" (errno = %d)."
-msgstr ""
-"Za rešitev sledečega problema stopite v stik z administratorjem sistema:\n"
-"Ne morem odpreti ali ustvariti datoteke \"%s\"; to kaže, da je verjetno "
-"problem v vaših nastavitvah, saj veliko programov potrebuje ustvarjanje "
-"datotek v vašem domačem imeniku. Napaka je bila \"%s\" (errno = % d)."
-
-#: gconf/gconf-sanity-check.c:143
-#, c-format
-msgid ""
-"Please contact your system administrator to resolve the following problem:\n"
-"Could not lock the file \"%s\"; this indicates that there may be a problem "
-"with your operating system configuration. If you have an NFS-mounted home "
-"directory, either the client or the server may be set up incorrectly. See "
-"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
-msgstr ""
-"Za rešitev sledečega problema stopite v stik z administratorjem sistema:\n"
-"Nisem mogel zakleniti datoteke \"%s\"; to kaže, da je morda problem z nastavitvami "
-"vašega operacijskega sistema. Če imate domač imenik priklopljen z NFS, "
-"sta lahko ali odjemalec ali strežnik narobe nastavljena. Poglejte "
-"dokumentacijo za rpc.statd in rpc.lockd. Napaka je bila \"%s\" (errno = %d)."
-
-#: gconf/gconf-sanity-check.c:159
-msgid "Can't remove file %s: %s\n"
-msgstr "Ne morem odstraniti datoteke %s: %s\n"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
@@ -918,96 +876,96 @@ msgstr "Nisem razumel `%s' (napačno število elementov)"
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr "Nisem razumel `%s' (dodaten neubežen ')' najden znotraj para)"
 
-#: gconf/gconf.c:55
+#: gconf/gconf.c:54
 #, c-format
 msgid "Key \"%s\" is NULL"
 msgstr "Ključ \"%s\" je NULL"
 
-#: gconf/gconf.c:62
+#: gconf/gconf.c:61
 #, c-format
 msgid "\"%s\": %s"
 msgstr "\"%s\": %s"
 
-#: gconf/gconf.c:343
+#: gconf/gconf.c:333
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Strežnik ni mogel razvozlati naslova `%s'"
 
-#: gconf/gconf.c:634
+#: gconf/gconf.c:624
 msgid "Can't add notifications to a local configuration source"
 msgstr "Krajevnemu viru nastavitev ne  morem dodati obveščanj"
 
-#: gconf/gconf.c:2079
+#: gconf/gconf.c:2072
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Dodajanje odjemalca v seznam strežnika ni uspelo, napaka CORBA: %s"
 
-#: gconf/gconf.c:2434
+#: gconf/gconf.c:2393
 msgid "Must begin with a slash (/)"
 msgstr "Mora se začeti s poševnico (/)"
 
-#: gconf/gconf.c:2456
+#: gconf/gconf.c:2415
 msgid "Can't have two slashes (/) in a row"
 msgstr "Ne more imeti dveh poševnic (/) zapored"
 
-#: gconf/gconf.c:2458
+#: gconf/gconf.c:2417
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Ne more imeti pike (.) takoj za poševnico (/)"
 
-#: gconf/gconf.c:2477
+#: gconf/gconf.c:2436
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "znak '%c' je neveljaven ASCII znak, zato ni dovoljen v imenih ključev"
 
-#: gconf/gconf.c:2487
+#: gconf/gconf.c:2446
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "znak '%c' je neveljaven v imenu ključev/imenikov"
 
-#: gconf/gconf.c:2501
+#: gconf/gconf.c:2460
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Ključ/imenik se ne sme končati s poševnico (/)"
 
-#: gconf/gconf.c:2870
+#: gconf/gconf.c:2829
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Napaka ob ustavljanju strežnika nastavitev: %s"
 
-#: gconf/gconf.c:2931
+#: gconf/gconf.c:2890
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Pričakoval število s plavajočo vejico, dobil %s"
 
-#: gconf/gconf.c:2966
+#: gconf/gconf.c:2925
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Pričakoval celo število, dobil %s"
 
-#: gconf/gconf.c:3001
+#: gconf/gconf.c:2960
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Pričakoval niz, dobil %s"
 
-#: gconf/gconf.c:3038
+#: gconf/gconf.c:2997
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Pričakoval booleanovo vrednost, dobil %s"
 
-#: gconf/gconf.c:3071
+#: gconf/gconf.c:3030
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Pričakoval shemo, dobil %s"
 
-#: gconf/gconf.c:3432
+#: gconf/gconf.c:3391
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Napaka CORBA: %s"
 
-#: gconf/gconfd.c:248
+#: gconf/gconfd.c:246
 msgid "Shutdown request received"
 msgstr "Prejet je bil zahtevek za ustavitev"
 
-#: gconf/gconfd.c:280
+#: gconf/gconfd.c:278
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1015,7 +973,7 @@ msgstr ""
 "gconfd preveden z razhroščvenjem; poskušam naložiti gconf.path iz imenika z "
 "izvorno kodo"
 
-#: gconf/gconfd.c:294
+#: gconf/gconfd.c:292
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1026,23 +984,23 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:302
+#: gconf/gconfd.c:300
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
 msgstr ""
 "Ni virov nastavitev v poti virov, nastavitve ne bodo shranjene; uredite "
 
-#: gconf/gconfd.c:302
+#: gconf/gconfd.c:300
 msgid "/path"
 msgstr "/pot"
 
-#: gconf/gconfd.c:315
+#: gconf/gconfd.c:313
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Napaka ob nalaganju nekaterih virov nastavitev: %s"
 
-#: gconf/gconfd.c:327
+#: gconf/gconfd.c:325
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1050,7 +1008,7 @@ msgstr ""
 "Noben naslov virov nastavitev ni bil usptešno razvozlan, ne morem nalagati "
 "ali shranjevati podatkov o nastavitvah"
 
-#: gconf/gconfd.c:344
+#: gconf/gconfd.c:342
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1058,13 +1016,13 @@ msgstr ""
 "Noben pisljiv naslov virov nastavitev ni bil usptešno razvozlan, ne morem "
 "shranjevati podatkov o nastavitvah"
 
-#: gconf/gconfd.c:370
+#: gconf/gconfd.c:368
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr ""
 "Prejel signal %d, izpisujem pomnilnik. Prosimo poročajte o hrošču v GConf."
 
-#: gconf/gconfd.c:388
+#: gconf/gconfd.c:384
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
@@ -1072,53 +1030,53 @@ msgstr ""
 "Prejel singal %d, neobičajno se ustavljam. Prosimo poročajte o hrošču v "
 "GConf."
 
-#: gconf/gconfd.c:405
+#: gconf/gconfd.c:401
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Prejel signal %d, ustavljam se po pravilih"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:535
+#: gconf/gconfd.c:531
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "pričenjam (različica %s), pid %u uporabnik '%s'"
 
-#: gconf/gconfd.c:574
+#: gconf/gconfd.c:570
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Nisem uspel dobiti sklica predmeta za ConfigServer"
 
-#: gconf/gconfd.c:612
+#: gconf/gconfd.c:608
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Nisem uspel vpisati bajta v pipo fd %d, morda se je odjemalski program "
 "obesil: %s"
 
-#: gconf/gconfd.c:622
+#: gconf/gconfd.c:618
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Nisem uspel dobiti ključavnice za daemona: %s"
 
-#: gconf/gconfd.c:660
+#: gconf/gconfd.c:656
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Nisem uspel sprostiti ključavnične datoteke: %s"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:664
 msgid "Exiting"
 msgstr "Končujem"
 
-#: gconf/gconfd.c:694
+#: gconf/gconfd.c:690
 msgid "GConf server is not in use, shutting down."
 msgstr "Strežnik GConf ni v uporabi, končujem."
 
-#: gconf/gconfd.c:1063
+#: gconf/gconfd.c:1059
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Vračam izjemo: %s"
 
-#: gconf/gconfd.c:1163
+#: gconf/gconfd.c:1159
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1127,7 +1085,7 @@ msgstr ""
 "Nisem uspel odpreti dnevniške datoteke gconf; poslušalci ne bodo bili "
 "obnovljeni po ustavitvi gconfd-ja (%s)"
 
-#: gconf/gconfd.c:1198
+#: gconf/gconfd.c:1194
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1135,33 +1093,33 @@ msgstr ""
 "Nisem uspel zapreti dnevniške datoteke gconfd-ja; podatki morda niso "
 "pravilno shranjeni (%s)"
 
-#: gconf/gconfd.c:1267
+#: gconf/gconfd.c:1263
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Za pisanje nisem uspel odpreti datoteke s shranjenim stanjem '%s': %s"
 
-#: gconf/gconfd.c:1281
+#: gconf/gconfd.c:1277
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Nisem mogel zapisati datoteke shranjenega stanja '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1290
+#: gconf/gconfd.c:1286
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Nisem uspel zapreti nove datoteke shranjenega stanja '%s': %s"
 
-#: gconf/gconfd.c:1304
+#: gconf/gconfd.c:1300
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Nisem mogel odmakniti stare datoteke shranjenega stanja '%s': %s"
 
-#: gconf/gconfd.c:1314
+#: gconf/gconfd.c:1310
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr ""
 "Nisem uspel premakniti nove datoteke shranjenega stanja na ustrezno mesto: %s"
 
-#: gconf/gconfd.c:1323
+#: gconf/gconfd.c:1319
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1169,7 +1127,7 @@ msgstr ""
 "Nisem uspel obnoviti izvorne datoteke shranjenega stanja, ki je bila "
 "premaknjena v '%s': %s"
 
-#: gconf/gconfd.c:1794
+#: gconf/gconfd.c:1790
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1177,17 +1135,17 @@ msgstr ""
 "Nisem mogel obnoviti poslušalca na naslovu '%s', nisem mogel razvozlati "
 "zbirke podatkov"
 
-#: gconf/gconfd.c:1840
+#: gconf/gconfd.c:1836
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Napaka ob branju datoteke s shranjenim stanjem: %s"
 
-#: gconf/gconfd.c:1893
+#: gconf/gconfd.c:1889
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Ne morem odpreti datoteke s shranjenim stanjem '%s': %s"
 
-#: gconf/gconfd.c:2010
+#: gconf/gconfd.c:2006
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1196,7 +1154,7 @@ msgstr ""
 "V dnevnik nisem uspel zapisati dodajanja poslušalca; ob novem zagonu gconfd-"
 "ja poslušalca poslušalca ne bo možno dodati (%s)"
 
-#: gconf/gconfd.c:2015
+#: gconf/gconfd.c:2011
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1205,48 +1163,36 @@ msgstr ""
 "V dnevnik nisem uspel zapisati odstranitve poslušalca; lahko se napačno doda "
 "poslušalca ob novem zagonu gconfd-ja: (%s)"
 
-#: gconf/gconfd.c:2038 gconf/gconfd.c:2203
+#: gconf/gconfd.c:2034 gconf/gconfd.c:2199
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Nisem uspel dobiti IOR za odjemalca: %s"
 
-#: gconf/gconfd.c:2053
+#: gconf/gconfd.c:2049
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Nisem uspel odpreti datoteke s shranjenim stanjem: %s"
 
-#: gconf/gconfd.c:2066
+#: gconf/gconfd.c:2062
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Nisem uspel zapisati dodajanja odjemalca v datoteko s shranjenim stanjem: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2070
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Nisem uspel zapisati dodajanja odjemalca v datoteko s shranjenim stanjem: %s"
 
-#: gconf/gconfd.c:2164
+#: gconf/gconfd.c:2160
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "Nek odjemalec se je odstranil z GConf strežnika, čeprav ni bil dodan."
 
-#. dialog display isn't working out
-#: gconf/gconfd.c:2303
-msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr ""
-"Zgodilo se je več segmentacijskih napak; ne morem prikazati dialoga z "
-"napako\n"
-
-#. Eeeek! Can't show dialog
-#: gconf/gconfd.c:2312
-msgid ""
-"Segmentation fault!\n"
-"Cannot display crash dialog\n"
-msgstr ""
-"Segmentacijska napaka!\n"
-"Ne morem prikazati dialoga z napako\n"
+#: gconf/gconftool.c:71
+msgid "Help options"
+msgstr "Možnosti pomoči"
 
 #: gconf/gconftool.c:80
 msgid "Set a key to a value and sync. Use with --type."
@@ -1441,6 +1387,16 @@ msgstr "Odstrani vsako ime sheme ki je uveljavljena na danih ključih"
 #: gconf/gconftool.c:351
 msgid "Get the name of the default source"
 msgstr "Dobi ime prvizetega vira"
+
+#: gconf/gconftool.c:408
+#, c-format
+msgid ""
+"Error on option %s: %s.\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"Napaka ob možnosti %s: %s.\n"
+" Poženite '%s --help', če želite videti popoln seznam možnosti ukazne "
+"vrstice.\n"
 
 #: gconf/gconftool.c:420
 msgid "Can't get and set/unset simultaneously\n"
@@ -1960,6 +1916,49 @@ msgstr ""
 "Poskušam zlomiti vaš program z nastavljanjem slabih vrednosti za ključe v "
 "imeniku:\n"
 "  %s\n"
+
+#~ msgid ""
+#~ "Please contact your system administrator to resolve the following "
+#~ "problem:\n"
+#~ "Could not open or create the file \"%s\"; this indicates that there may "
+#~ "be a problem with your configuration, as many programs will need to "
+#~ "create files in your home directory. The error was \"%s\" (errno = %d)."
+#~ msgstr ""
+#~ "Za rešitev sledečega problema stopite v stik z administratorjem sistema:\n"
+#~ "Ne morem odpreti ali ustvariti datoteke \"%s\"; to kaže, da je verjetno "
+#~ "problem v vaših nastavitvah, saj veliko programov potrebuje ustvarjanje "
+#~ "datotek v vašem domačem imeniku. Napaka je bila \"%s\" (errno = % d)."
+
+#~ msgid ""
+#~ "Please contact your system administrator to resolve the following "
+#~ "problem:\n"
+#~ "Could not lock the file \"%s\"; this indicates that there may be a "
+#~ "problem with your operating system configuration. If you have an NFS-"
+#~ "mounted home directory, either the client or the server may be set up "
+#~ "incorrectly. See the rpc.statd and rpc.lockd documentation. The error was "
+#~ "\"%s\" (errno = %d)."
+#~ msgstr ""
+#~ "Za rešitev sledečega problema stopite v stik z administratorjem sistema:\n"
+#~ "Nisem mogel zakleniti datoteke \"%s\"; to kaže, da je morda problem z "
+#~ "nastavitvami vašega operacijskega sistema. Če imate domač imenik "
+#~ "priklopljen z NFS, sta lahko ali odjemalec ali strežnik narobe "
+#~ "nastavljena. Poglejte dokumentacijo za rpc.statd in rpc.lockd. Napaka je "
+#~ "bila \"%s\" (errno = %d)."
+
+#~ msgid "Can't remove file %s: %s\n"
+#~ msgstr "Ne morem odstraniti datoteke %s: %s\n"
+
+#~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"
+#~ msgstr ""
+#~ "Zgodilo se je več segmentacijskih napak; ne morem prikazati dialoga z "
+#~ "napako\n"
+
+#~ msgid ""
+#~ "Segmentation fault!\n"
+#~ "Cannot display crash dialog\n"
+#~ msgstr ""
+#~ "Segmentacijska napaka!\n"
+#~ "Ne morem prikazati dialoga z napako\n"
 
 #~ msgid "Unsynced directory deletions when shutting down XML backend"
 #~ msgstr "Neskladna brisanja imenikov ob zapiranju modula XML"

@@ -25,6 +25,27 @@
 #include <string.h>
 #include <stdlib.h>
 
+typedef struct {
+  GConfValueType type;
+  union {
+    gchar* string_data;
+    gint int_data;
+    gboolean bool_data;
+    gdouble float_data;
+    GConfSchema* schema_data;
+    struct {
+      GConfValueType type;
+      GSList* list;
+    } list_data;
+    struct {
+      GConfValue* car;
+      GConfValue* cdr;
+    } pair_data;
+  } d;
+} GConfRealValue;
+
+#define REAL_VALUE(x) ((GConfRealValue*)(x))
+
 static void
 set_string(gchar** dest, const gchar* src)
 {
@@ -46,12 +67,13 @@ gconf_value_new(GConfValueType type)
   g_return_val_if_fail(GCONF_VALUE_TYPE_VALID(type), NULL);
   
   /* Probably want to use mem chunks here eventually. */
-  value = g_new0(GConfValue, 1);
+  value = (GConfValue*) g_new0 (GConfRealValue, 1);
 
   value->type = type;
 
   /* the g_new0() is important: sets list type to invalid, NULLs all
-     pointers */
+   * pointers
+   */
   
   return value;
 }
@@ -681,28 +703,30 @@ copy_value_list(GSList* list)
 }
 
 GConfValue* 
-gconf_value_copy(const GConfValue* src)
+gconf_value_copy (const GConfValue* src)
 {
-  GConfValue* dest;
-
+  GConfRealValue *dest;
+  GConfRealValue *real;
+  
   g_return_val_if_fail(src != NULL, NULL);
 
-  dest = gconf_value_new(src->type);
+  real = REAL_VALUE (src);
+  dest = REAL_VALUE (gconf_value_new (src->type));
 
-  switch (src->type)
+  switch (real->type)
     {
     case GCONF_VALUE_INT:
     case GCONF_VALUE_FLOAT:
     case GCONF_VALUE_BOOL:
     case GCONF_VALUE_INVALID:
-      dest->d = src->d;
+      dest->d = real->d;
       break;
     case GCONF_VALUE_STRING:
-      set_string(&dest->d.string_data, src->d.string_data);
+      set_string(&dest->d.string_data, real->d.string_data);
       break;
     case GCONF_VALUE_SCHEMA:
-      if (src->d.schema_data)
-        dest->d.schema_data = gconf_schema_copy(src->d.schema_data);
+      if (real->d.schema_data)
+        dest->d.schema_data = gconf_schema_copy(real->d.schema_data);
       else
         dest->d.schema_data = NULL;
       break;
@@ -711,22 +735,22 @@ gconf_value_copy(const GConfValue* src)
       {
         GSList* copy;
 
-        copy = copy_value_list(src->d.list_data.list);
+        copy = copy_value_list(real->d.list_data.list);
 
         dest->d.list_data.list = copy;
-        dest->d.list_data.type = src->d.list_data.type;
+        dest->d.list_data.type = real->d.list_data.type;
       }
       break;
       
     case GCONF_VALUE_PAIR:
 
-      if (src->d.pair_data.car)
-        dest->d.pair_data.car = gconf_value_copy(src->d.pair_data.car);
+      if (real->d.pair_data.car)
+        dest->d.pair_data.car = gconf_value_copy(real->d.pair_data.car);
       else
         dest->d.pair_data.car = NULL;
 
-      if (src->d.pair_data.cdr)
-        dest->d.pair_data.cdr = gconf_value_copy(src->d.pair_data.cdr);
+      if (real->d.pair_data.cdr)
+        dest->d.pair_data.cdr = gconf_value_copy(real->d.pair_data.cdr);
       else
         dest->d.pair_data.cdr = NULL;
 
@@ -736,17 +760,21 @@ gconf_value_copy(const GConfValue* src)
       g_assert_not_reached();
     }
   
-  return dest;
+  return (GConfValue*) dest;
 }
 
 static void
 gconf_value_free_list(GConfValue* value)
 {
   GSList* tmp;
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_LIST);
+
+  real = REAL_VALUE (value);
   
-  tmp = value->d.list_data.list;
+  tmp = real->d.list_data.list;
 
   while (tmp != NULL)
     {
@@ -754,35 +782,39 @@ gconf_value_free_list(GConfValue* value)
       
       tmp = g_slist_next(tmp);
     }
-  g_slist_free(value->d.list_data.list);
+  g_slist_free(real->d.list_data.list);
 
-  value->d.list_data.list = NULL;
+  real->d.list_data.list = NULL;
 }
 
 void 
 gconf_value_free(GConfValue* value)
 {
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
 
-  switch (value->type)
+  real = REAL_VALUE (value);
+  
+  switch (real->type)
     {
     case GCONF_VALUE_STRING:
-      if (value->d.string_data != NULL)
-        g_free(value->d.string_data);
+      if (real->d.string_data != NULL)
+        g_free(real->d.string_data);
       break;
     case GCONF_VALUE_SCHEMA:
-      if (value->d.schema_data != NULL)
-        gconf_schema_free(value->d.schema_data);
+      if (real->d.schema_data != NULL)
+        gconf_schema_free(real->d.schema_data);
       break;
     case GCONF_VALUE_LIST:
       gconf_value_free_list(value);
       break;
     case GCONF_VALUE_PAIR:
-      if (value->d.pair_data.car != NULL)
-        gconf_value_free(value->d.pair_data.car);
+      if (real->d.pair_data.car != NULL)
+        gconf_value_free(real->d.pair_data.car);
 
-      if (value->d.pair_data.cdr != NULL)
-        gconf_value_free(value->d.pair_data.cdr);
+      if (real->d.pair_data.cdr != NULL)
+        gconf_value_free(real->d.pair_data.cdr);
       break;
     default:
       break;
@@ -797,7 +829,24 @@ gconf_value_get_string (const GConfValue *value)
   g_return_val_if_fail (value != NULL, NULL);
   g_return_val_if_fail (value->type == GCONF_VALUE_STRING, NULL);
   
-  return value->d.string_data;
+  return REAL_VALUE (value)->d.string_data;
+}
+
+char*
+gconf_value_steal_string (GConfValue *value)
+{
+  char *string;
+  GConfRealValue *real;
+  
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_STRING, NULL);
+
+  real = REAL_VALUE (value);
+
+  string = real->d.string_data;
+  real->d.string_data = NULL;
+
+  return string;
 }
 
 int
@@ -806,7 +855,7 @@ gconf_value_get_int (const GConfValue *value)
   g_return_val_if_fail (value != NULL, 0);
   g_return_val_if_fail (value->type == GCONF_VALUE_INT, 0);
   
-  return value->d.int_data;
+  return REAL_VALUE (value)->d.int_data;
 }
 
 double
@@ -815,7 +864,7 @@ gconf_value_get_float (const GConfValue *value)
   g_return_val_if_fail (value != NULL, 0.0);
   g_return_val_if_fail (value->type == GCONF_VALUE_FLOAT, 0.0);
   
-  return value->d.float_data;
+  return REAL_VALUE (value)->d.float_data;
 }
 
 GConfValueType
@@ -824,7 +873,7 @@ gconf_value_get_list_type (const GConfValue *value)
   g_return_val_if_fail (value != NULL, GCONF_VALUE_INVALID);
   g_return_val_if_fail (value->type == GCONF_VALUE_LIST, GCONF_VALUE_INVALID);
   
-  return value->d.list_data.type;
+  return REAL_VALUE (value)->d.list_data.type;
 }
 
 GSList*
@@ -833,9 +882,24 @@ gconf_value_get_list (const GConfValue *value)
   g_return_val_if_fail (value != NULL, NULL);
   g_return_val_if_fail (value->type == GCONF_VALUE_LIST, NULL);
 
-  return value->d.list_data.list;
+  return REAL_VALUE (value)->d.list_data.list;
 }
 
+GSList*
+gconf_value_steal_list (GConfValue *value)
+{
+  GSList *list;
+  GConfRealValue *real;
+  
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_LIST, NULL);
+
+  real = REAL_VALUE (value);
+
+  list = real->d.list_data.list;
+  real->d.list_data.list = NULL;
+  return list;
+}
 
 GConfValue*
 gconf_value_get_car (const GConfValue *value)
@@ -843,7 +907,7 @@ gconf_value_get_car (const GConfValue *value)
   g_return_val_if_fail (value != NULL, NULL);
   g_return_val_if_fail (value->type == GCONF_VALUE_PAIR, NULL);
   
-  return value->d.pair_data.car;
+  return REAL_VALUE (value)->d.pair_data.car;
 }
 
 GConfValue*
@@ -852,7 +916,7 @@ gconf_value_get_cdr (const GConfValue *value)
   g_return_val_if_fail (value != NULL, NULL);
   g_return_val_if_fail (value->type == GCONF_VALUE_PAIR, NULL);
   
-  return value->d.pair_data.cdr;
+  return REAL_VALUE (value)->d.pair_data.cdr;
 }
 
 
@@ -862,7 +926,7 @@ gconf_value_get_bool (const GConfValue *value)
   g_return_val_if_fail (value != NULL, FALSE);
   g_return_val_if_fail (value->type == GCONF_VALUE_BOOL, FALSE);
   
-  return value->d.bool_data;
+  return REAL_VALUE (value)->d.bool_data;
 }
 
 GConfSchema*
@@ -871,7 +935,24 @@ gconf_value_get_schema (const GConfValue *value)
   g_return_val_if_fail (value != NULL, NULL);
   g_return_val_if_fail (value->type == GCONF_VALUE_SCHEMA, NULL);
   
-  return value->d.schema_data;
+  return REAL_VALUE (value)->d.schema_data;
+}
+
+GConfSchema*
+gconf_value_steal_schema (GConfValue *value)
+{
+  GConfSchema *schema;
+  GConfRealValue *real;
+  
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_SCHEMA, NULL);
+
+  real = REAL_VALUE (value);
+
+  schema = real->d.schema_data;
+  real->d.schema_data = NULL;
+
+  return schema;
 }
 
 void        
@@ -880,16 +961,20 @@ gconf_value_set_int(GConfValue* value, gint the_int)
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_INT);
 
-  value->d.int_data = the_int;
+  REAL_VALUE (value)->d.int_data = the_int;
 }
 
 void        
 gconf_value_set_string(GConfValue* value, const gchar* the_str)
 {
+  GConfRealValue *real;
+
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_STRING);
 
-  set_string(&value->d.string_data, the_str);
+  real = REAL_VALUE (value);
+  
+  set_string(&real->d.string_data, the_str);
 }
 
 void        
@@ -898,7 +983,7 @@ gconf_value_set_float(GConfValue* value, gdouble the_float)
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_FLOAT);
 
-  value->d.float_data = the_float;
+  REAL_VALUE (value)->d.float_data = the_float;
 }
 
 void        
@@ -907,32 +992,40 @@ gconf_value_set_bool(GConfValue* value, gboolean the_bool)
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_BOOL);
 
-  value->d.bool_data = the_bool;
+  REAL_VALUE (value)->d.bool_data = the_bool;
 }
 
 void       
 gconf_value_set_schema(GConfValue* value, const GConfSchema* sc)
 {
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_SCHEMA);
-  
-  if (value->d.schema_data != NULL)
-    gconf_schema_free(value->d.schema_data);
 
-  value->d.schema_data = gconf_schema_copy(sc);
+  real = REAL_VALUE (value);
+  
+  if (real->d.schema_data != NULL)
+    gconf_schema_free (real->d.schema_data);
+
+  real->d.schema_data = gconf_schema_copy (sc);
 }
 
 void        
 gconf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
 {
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_SCHEMA);
   g_return_if_fail(sc != NULL);
-  
-  if (value->d.schema_data != NULL)
-    gconf_schema_free(value->d.schema_data);
 
-  value->d.schema_data = sc;
+  real = REAL_VALUE (value);
+  
+  if (real->d.schema_data != NULL)
+    gconf_schema_free (real->d.schema_data);
+
+  real->d.schema_data = sc;
 }
 
 void
@@ -944,13 +1037,17 @@ gconf_value_set_car(GConfValue* value, const GConfValue* car)
 void
 gconf_value_set_car_nocopy(GConfValue* value, GConfValue* car)
 {
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_PAIR);
-  
-  if (value->d.pair_data.car != NULL)
-    gconf_value_free(value->d.pair_data.car);
 
-  value->d.pair_data.car = car;
+  real = REAL_VALUE (value);
+  
+  if (real->d.pair_data.car != NULL)
+    gconf_value_free (real->d.pair_data.car);
+
+  real->d.pair_data.car = car;
 }
 
 void
@@ -962,65 +1059,86 @@ gconf_value_set_cdr(GConfValue* value, const GConfValue* cdr)
 void
 gconf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr)
 {
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_PAIR);
-  
-  if (value->d.pair_data.cdr != NULL)
-    gconf_value_free(value->d.pair_data.cdr);
 
-  value->d.pair_data.cdr = cdr;
+  real = REAL_VALUE (value);
+  
+  if (real->d.pair_data.cdr != NULL)
+    gconf_value_free (real->d.pair_data.cdr);
+
+  real->d.pair_data.cdr = cdr;
 }
 
 void
-gconf_value_set_list_type(GConfValue* value,
+gconf_value_set_list_type (GConfValue    *value,
                            GConfValueType type)
 {
+  GConfRealValue *real;
+  
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_LIST);
   g_return_if_fail(type != GCONF_VALUE_LIST);
   g_return_if_fail(type != GCONF_VALUE_PAIR);
-  /* If the list is non-NULL either we already have the right
-     type, or we shouldn't be changing it without deleting
-     the list first. */
-  g_return_if_fail(value->d.list_data.list == NULL);
 
-  value->d.list_data.type = type;
+  real = REAL_VALUE (value);
+  
+  /* If the list is non-NULL either we already have the right
+   * type, or we shouldn't be changing it without deleting
+   * the list first.
+   */
+  g_return_if_fail (real->d.list_data.list == NULL);
+
+  real->d.list_data.type = type;
 }
 
 void
-gconf_value_set_list_nocopy(GConfValue* value,
+gconf_value_set_list_nocopy (GConfValue* value,
                              GSList* list)
 {
-  g_return_if_fail(value != NULL);
-  g_return_if_fail(value->type == GCONF_VALUE_LIST);
-  g_return_if_fail(value->d.list_data.type != GCONF_VALUE_INVALID);
+  GConfRealValue *real;
   
-  if (value->d.list_data.list)
-    gconf_value_free_list(value);
+  g_return_if_fail (value != NULL);
+  g_return_if_fail (value->type == GCONF_VALUE_LIST);
 
-  value->d.list_data.list = list;
+  real = REAL_VALUE (value);
+  
+  g_return_if_fail (real->d.list_data.type != GCONF_VALUE_INVALID);
+  
+  if (real->d.list_data.list)
+    gconf_value_free_list (value);
+
+  real->d.list_data.list = list;
 }
 
 void
 gconf_value_set_list       (GConfValue* value,
                             GSList* list)
 {
-  g_return_if_fail(value != NULL);
-  g_return_if_fail(value->type == GCONF_VALUE_LIST);
-  g_return_if_fail(value->d.list_data.type != GCONF_VALUE_INVALID);
-  g_return_if_fail((list == NULL) ||
-                   ((list->data != NULL) &&
-                    (((GConfValue*)list->data)->type == value->d.list_data.type)));
+  GConfRealValue *real;
   
-  if (value->d.list_data.list)
-    gconf_value_free_list(value);
+  g_return_if_fail (value != NULL);
+  g_return_if_fail (value->type == GCONF_VALUE_LIST);
 
-  value->d.list_data.list = copy_value_list(list);
+  real = REAL_VALUE (value);
+
+  g_return_if_fail (real->d.list_data.type != GCONF_VALUE_INVALID);
+  g_return_if_fail ((list == NULL) ||
+                    ((list->data != NULL) &&
+                     (((GConfValue*)list->data)->type == real->d.list_data.type)));
+  
+  if (real->d.list_data.list)
+    gconf_value_free_list (value);
+
+  real->d.list_data.list = copy_value_list (list);
 }
 
 
 static int
-null_safe_strcmp(const char* lhs, const char* rhs)
+null_safe_strcmp (const char *lhs,
+                  const char *rhs)
 {
   if (lhs == NULL && rhs == NULL)
     return 0;
@@ -1500,11 +1618,15 @@ gboolean
 gconf_value_validate (const GConfValue *value,
                       GError          **err)
 {
+  GConfRealValue *real;
+
+  real = REAL_VALUE (value);
+  
   switch (value->type)
     {
     case GCONF_VALUE_STRING:
-      if (value->d.string_data &&
-          !g_utf8_validate (value->d.string_data, -1, NULL))
+      if (real->d.string_data &&
+          !g_utf8_validate (real->d.string_data, -1, NULL))
         {
           g_set_error (err, GCONF_ERROR,
                        GCONF_ERROR_FAILED,
@@ -1514,8 +1636,8 @@ gconf_value_validate (const GConfValue *value,
       break;
 
     case GCONF_VALUE_SCHEMA:
-      if (value->d.schema_data)
-        return gconf_schema_validate (value->d.schema_data,
+      if (real->d.schema_data)
+        return gconf_schema_validate (real->d.schema_data,
                                       err);
       break;
 

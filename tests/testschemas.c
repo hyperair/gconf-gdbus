@@ -299,7 +299,7 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
 
       if (err != NULL)
         {
-          check (gotten == NULL, "NULL not returned though there was an error");
+          check (val == NULL, "NULL not returned though there was an error");
 
           fprintf (stderr, "Failed to get key `%s': %s\n",
                    *keyp, err->message);

@@ -29,7 +29,7 @@
 /*
  *
  *
- * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples/*
+ * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples
  *
  *
  *
@@ -49,6 +49,8 @@
 #include <locale.h>
 #include <unistd.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 static void
 check(gboolean condition, const gchar* fmt, ...)

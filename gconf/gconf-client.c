@@ -1421,7 +1421,6 @@ gchar*
 gconf_client_get_string(GConfClient* client, const gchar* key,
                         GError** err)
 {
-  static const gchar* def = NULL;
   GError* error = NULL;
   GConfValue* val;
 
@@ -1436,16 +1435,9 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type (key, val, GCONF_VALUE_STRING, &error))
-        /* we cheat here (look below) so we have to cast this */
-        retval = (gchar *)gconf_value_get_string (val);
+        retval = gconf_value_steal_string (val);
       else
         handle_error (client, error, err);
-
-      /* This is a cheat; don't copy */
-      if (retval != NULL)
-        val->d.string_data = NULL; /* don't delete the string we are returning */
-      else
-        retval = def ? g_strdup (def) : NULL;
       
       gconf_value_free (val);
 
@@ -1455,7 +1447,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
     {
       if (error != NULL)
         handle_error (client, error, err);
-      return def ? g_strdup (def) : NULL;
+      return NULL;
     }
 }
 
@@ -1513,13 +1505,9 @@ gconf_client_get_schema  (GConfClient* client,
       g_assert(error == NULL);
       
       if (check_type (key, val, GCONF_VALUE_SCHEMA, &error))
-        retval = gconf_value_get_schema (val);
+        retval = gconf_value_steal_schema (val);
       else
         handle_error (client, error, err);
-
-      /* This is a cheat; don't copy */
-      if (retval != NULL)
-        val->d.schema_data = NULL; /* don't delete the schema */
       
       gconf_value_free (val);
 

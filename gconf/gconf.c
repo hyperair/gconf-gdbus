@@ -3004,11 +3004,8 @@ gconf_engine_get_string(GConfEngine* conf, const gchar* key,
           return deflt ? g_strdup(deflt) : NULL;
         }
 
-      retval = val->d.string_data;
-      /* This is a cheat; don't copy */
-      val->d.string_data = NULL; /* don't delete the string */
-
-      gconf_value_free(val);
+      retval = gconf_value_steal_string (val);
+      gconf_value_free (val);
 
       return retval;
     }
@@ -3074,12 +3071,8 @@ gconf_engine_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
           return NULL;
         }
 
-      retval = gconf_value_get_schema(val);
-
-      /* This is a cheat; don't copy */
-      val->d.schema_data = NULL; /* don't delete the schema */
-
-      gconf_value_free(val);
+      retval = gconf_value_steal_schema (val);
+      gconf_value_free (val);
 
       return retval;
     }
