@@ -1,5 +1,46 @@
-* Move to a cut-and-pasted version of GError from GLib unstable branch, 
-  replacing GConfError.
+GNOME 1.4 release (must freeze VERY soon)
+===
+
+The release with 1.4 is not going to be super-useful for large-scale
+installation administration; it's mostly just going to be a
+process-transparent way to store settings, limited to single
+workstation config files.
+
+* Fix spelling of "writable" throughout, or at least
+  in public API (s/writeable/writable/g)
+
+* Maintain documentation
+
+* API so clients can find out if they can write to a given key
+  (gconf_key_is_writable() or the like)
+
+* Implement the default error handlers in GConfClient
+
+
+* Change _() to actually call gettext or dgettext
+
+Maybe 1.4
+===
+
+* Implement dump/slurp functionality (define XML DTD to represent 
+  modifications to the database; augment gconftool to be able to 
+  write out the current state of the database in this format, 
+  and also apply the changes given in the format)
+
+* Make it so that once the first notification of a change in a GConfChangeSet
+  is delivered, the other values will be retrieved by gconf_get() and 
+  gconf_client_get(), which means a way to invalidate GConfClient
+  cached stuff, and doing the setting of all values in the changeset
+  before the notifications.
+
+* Allow various currently-hardcoded items to be set from environment variables
+  or a config file ("home" directory to use, timeout lengths, etc. are 
+  some candidates).
+
+* "Laptop mode" where GConf avoids touching the disk much
+
+Future
+===
 
 * Berkeley DB backend (note: consider issues surrounding various incompatible 
   versions of DB and historical problems with the upgrade path, cf. 
@@ -15,9 +56,6 @@
   at the moment, maybe eventually the "database map" will 
   specify which it writes to)
 
-* Fix spelling of "writable" throughout, or at least
-  in public API (s/writeable/writable/g)
-
 * Implement a way for backends to notify gconfd of changes they detect
 
 * Implement a "database map"; this would be a tree structure (similar
@@ -31,6 +69,10 @@
   the idea is a database path per key/directory, instead of a 
   global database path, giving administrators more flexibility.)
 
+  Also, aliases for paths, and way for apps to install a suggested
+  default database alias ("per_display" "per_homedir" etc.)
+  (See gconf-list post)
+
   Details to be figured out.
 
 * GUI admin tool, and GUI user tool (are these the same?)
@@ -38,16 +80,6 @@
 * Thread support for scalability; may require ORBit thread safety?
   Or a protocol with oneway CORBA methods (client requests a value,
   gconfd calls back when it has the value)
-
-* Life cycle management for gconfd (exit if no clients are alive, 
-  maybe ping clients periodically)
-
-* Maintain documentation
-
-* API so clients can find out if they can write to a given key
-  (gconf_key_is_writable() or the like)
-
-* Implement the default error handlers in GConfClient
 
 * Fix non-default GConfEngines: this means propagating change
   notifications from them to other engines with the same 
@@ -59,30 +91,4 @@
   this is the only way to get sane behavior if _some_ notification
   comes from the backend. Hmm.
 
-* Change _() to actually call gettext or dgettext
-
-* Implement dump/slurp functionality (define XML DTD to represent 
-  modifications to the database; augment gconftool to be able to 
-  write out the current state of the database in this format, 
-  and also apply the changes given in the format)
-
 * Use a real DTD and a nicer structure for the XML backend format
-
-* Logfile is currently implemented in a stupid way, I thought of a better
-  way: append each listener add/remove to the file as we perform the add/
-  remove (so the file is something like "ADD 1234234
-  IOR:235442534\nREMOVE 1234234 IOR:235442534\n") then we can efficiently 
-  "replay" this by first stripping all obvious pairs out of the file.
-  Periodically "compress" the file by stripping pairs.
-
-* Make it so that once the first notification of a change in a GConfChangeSet
-  is delivered, the other values will be retrieved by gconf_get() and 
-  gconf_client_get(), which means a way to invalidate GConfClient
-  cached stuff, and doing the setting of all values in the changeset
-  before the notifications.
-
-* Allow various currently-hardcoded items to be set from environment variables
-  or a config file ("home" directory to use, timeout lengths, etc. are 
-  some candidates).
-
-* "Laptop mode" where GConf avoids touching the disk much
