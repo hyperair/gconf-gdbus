@@ -147,9 +147,6 @@ void   gconf_unquote_string_inplace (gchar        *str,
 GConfValue* gconf_value_decode (const gchar *encoded);
 gchar*      gconf_value_encode (GConfValue  *val);
 
-/* FIXME is this used? */
-gchar* gconf_quote_percents (const gchar* src);
-
 /*
  * List/pair conversion stuff
  */

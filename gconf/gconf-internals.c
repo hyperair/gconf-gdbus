@@ -1093,50 +1093,6 @@ gconf_current_locale(void)
  * Log
  */
 
-gchar*
-gconf_quote_percents(const gchar* src)
-{
-  gchar* dest;
-  const gchar* s;
-  gchar* d;
-
-  g_return_val_if_fail(src != NULL, NULL);
-  
-  /* waste memory! woo-hoo! */
-  dest = g_malloc0(strlen(src)*2+4);
-  
-  d = dest;
-  
-  s = src;
-  while (*s)
-    {
-      switch (*s)
-        {
-        case '%':
-          {
-            *d = '%';
-            ++d;
-            *d = '%';
-            ++d;
-          }
-          break;
-          
-        default:
-          {
-            *d = *s;
-            ++d;
-          }
-          break;
-        }
-      ++s;
-    }
-
-  /* End with NULL */
-  *d = '\0';
-  
-  return dest;
-}
-
 #include <syslog.h>
 
 void
