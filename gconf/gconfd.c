@@ -32,6 +32,7 @@
 #include "gconf-orbit.h"
 #include "gconfd-error.h"
 #include "gconf-sources.h"
+#include "gconf-listeners.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -102,13 +103,12 @@ static void gconf_main_quit(void);
 */
 static void fast_cleanup(void);
 
-typedef struct _LTable LTable;
 typedef struct _GConfContext GConfContext;
 
 struct _GConfContext {
-  struct _LTable* ltable;
+  GConfListeners* listeners;
   GConfSources* sources;
-  gchar* saved_address; /* if sources and ltable are NULL, then this is a
+  gchar* saved_address; /* if sources and listeners are NULL, then this is a
                            "dormant" context removed from the cache
                            and has to be re-instated.
                         */
@@ -1046,48 +1046,17 @@ gconf_main_quit(void)
 }
 
 /*
- * Declarations for listener handling
+ * Listeners
  */
-
 
 typedef struct _Listener Listener;
 
 struct _Listener {
-  ConfigListener obj; /* The CORBA object reference */
-  guint cnxn;
+  ConfigListener obj;
 };
 
-static Listener* listener_new(const ConfigListener obj);
+static Listener* listener_new(ConfigListener obj);
 static void      listener_destroy(Listener* l);
-
-/* Data structure to store the listeners */
-
-struct _LTable {
-  GNode* tree; /* Represents the config "filesystem" namespace. 
-                *  Kept sorted. 
-                */
-  GPtrArray* listeners; /* Listeners are also kept in a flat array here, indexed by connection number */
-  guint active_listeners; /* count of "alive" listeners */  
-};
-
-typedef struct _LTableEntry LTableEntry;
-
-struct _LTableEntry {
-  gchar* name; /* The name of this "directory" */
-  GList* listeners; /* Each listener listening *exactly* here. You probably 
-                        want to notify all listeners *below* this node as well. 
-                     */
-};
-
-static LTable* ltable_new(void);
-static void    ltable_insert(LTable* ltable, const gchar* where, Listener* listener);
-static void    ltable_remove(LTable* ltable, guint cnxn);
-static void    ltable_destroy(LTable* ltable);
-static void    ltable_notify_listeners(LTable* ltable, const gchar* key, ConfigValue* value);
-static void    ltable_spew(LTable* ltable);
-
-static LTableEntry* ltable_entry_new(const gchar* name);
-static void         ltable_entry_destroy(LTableEntry* entry);
 
 /*
  * Contexts
@@ -1100,7 +1069,7 @@ context_new(GConfSources* sources)
 
   ctx = g_new0(GConfContext, 1);
 
-  ctx->ltable = ltable_new();
+  ctx->listeners = gconf_listeners_new();
 
   ctx->sources = sources;
 
@@ -1112,12 +1081,12 @@ context_new(GConfSources* sources)
 static void
 context_destroy(GConfContext* ctx)
 {
-  if (ctx->ltable != NULL)
+  if (ctx->listeners != NULL)
     {
       g_assert(ctx->sources != NULL);
       g_assert(ctx->saved_address == NULL);
-      
-      ltable_destroy(ctx->ltable);
+
+      gconf_listeners_destroy(ctx->listeners);
       gconf_sources_destroy(ctx->sources);
     }
   else
@@ -1133,11 +1102,11 @@ context_destroy(GConfContext* ctx)
 static void
 context_hibernate(GConfContext* ctx)
 {
-  g_return_if_fail(ctx->ltable != NULL);
-  g_return_if_fail(ctx->ltable->active_listeners == 0);
+  g_return_if_fail(ctx->listeners != NULL);
+  g_return_if_fail(gconf_listeners_count(ctx->listeners) == 0);
   
-  ltable_destroy(ctx->ltable);
-  ctx->ltable = NULL;
+  gconf_listeners_destroy(ctx->listeners);
+  ctx->listeners = NULL;
 
   ctx->saved_address = g_strdup(((GConfSource*)ctx->sources->sources->data)->address);
   
@@ -1150,7 +1119,7 @@ context_awaken(GConfContext* ctx)
 {
   gchar* addresses[2];
 
-  g_return_if_fail(ctx->ltable == NULL);
+  g_return_if_fail(ctx->listeners == NULL);
   g_return_if_fail(ctx->sources == NULL);
   g_return_if_fail(ctx->saved_address != NULL);
 
@@ -1166,7 +1135,7 @@ context_awaken(GConfContext* ctx)
       return;
     }
 
-  ctx->ltable = ltable_new();
+  ctx->listeners = gconf_listeners_new();
 
   g_free(ctx->saved_address);
 
@@ -1179,30 +1148,97 @@ context_add_listener(GConfContext* ctx,
                      const gchar* where)
 {
   Listener* l;
-
-  g_assert(ctx->ltable != NULL);
+  guint cnxn;
+  
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
   l = listener_new(who);
 
-  ltable_insert(ctx->ltable, where, l);
+  cnxn = gconf_listeners_add(ctx->listeners, where, l,
+                             (GFreeFunc)listener_destroy);
 
-  gconf_log(GCL_DEBUG, "Added listener %u", (guint)l->cnxn);
+  gconf_log(GCL_DEBUG, "Added listener %u", cnxn);
 
-  return l->cnxn;  
+  return cnxn;  
 }
 
 static void
 context_remove_listener(GConfContext* ctx,
                         CORBA_unsigned_long cnxn)
 {
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   gconf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
-  ltable_remove(ctx->ltable, cnxn);
+  /* calls destroy notify */
+  gconf_listeners_remove(ctx->listeners, cnxn);
 }
+
+typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
+
+struct _ListenerNotifyClosure {
+  ConfigValue* value;
+  GSList* dead;
+  CORBA_Environment ev;
+};
+
+static void
+notify_listeners_cb(GConfListeners* listeners,
+                    const gchar* all_above_key,
+                    guint cnxn_id,
+                    gpointer listener_data,
+                    gpointer user_data)
+{
+  Listener* l = listener_data;
+  ListenerNotifyClosure* closure = user_data;
+  
+  ConfigListener_notify(l->obj, cnxn_id, 
+                        (gchar*)all_above_key, closure->value,
+                        &closure->ev);
+  
+  if(closure->ev._major != CORBA_NO_EXCEPTION) 
+    {
+      gconf_log(GCL_WARNING, "Failed to notify listener %u: %s", 
+                cnxn_id, CORBA_exception_id(&closure->ev));
+      CORBA_exception_free(&closure->ev);
+      
+      /* Dead listeners need to be forgotten */
+      closure->dead = g_slist_prepend(closure->dead, GUINT_TO_POINTER(cnxn_id));
+    }
+  else
+    {
+      gconf_log(GCL_DEBUG, "Notified listener %u of change to key `%s'",
+                cnxn_id, all_above_key);
+    }
+}
+
+static void
+context_notify_listeners(GConfContext* ctx, const gchar* key, ConfigValue* value)
+{
+  ListenerNotifyClosure closure;
+  GSList* tmp;
+  
+  closure.value = value;
+  closure.dead = NULL;
+
+  CORBA_exception_init(&closure.ev);
+  
+  gconf_listeners_notify(ctx->listeners, key, notify_listeners_cb, &closure);
+
+  tmp = closure.dead;
+
+  while (tmp != NULL)
+    {
+      guint dead = GPOINTER_TO_UINT(tmp->data);
+
+      gconf_listeners_remove(ctx->listeners, dead);
+
+      tmp = g_slist_next(tmp);
+    }
+}
+
 
 static GConfValue*
 context_lookup_value(GConfContext* ctx,
@@ -1210,7 +1246,7 @@ context_lookup_value(GConfContext* ctx,
 {
   GConfValue* val;
 
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1225,7 +1261,7 @@ context_set(GConfContext* ctx,
             GConfValue* val,
             ConfigValue* value)
 {
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   gconf_clear_error();
@@ -1237,7 +1273,7 @@ context_set(GConfContext* ctx,
                  key, gconf_error());
     }
   else
-    ltable_notify_listeners(ctx->ltable, key, value);
+    context_notify_listeners(ctx, key, value);
 }
 
 static void
@@ -1246,7 +1282,7 @@ context_unset(GConfContext* ctx,
 {
   ConfigValue* val;
 
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1264,8 +1300,8 @@ context_unset(GConfContext* ctx,
   else
     {
       val = invalid_corba_value();
-      
-      ltable_notify_listeners(ctx->ltable, key, val);
+
+      context_notify_listeners(ctx, key, val);
       
       CORBA_free(val);
     }
@@ -1277,7 +1313,7 @@ context_dir_exists(GConfContext* ctx,
 {
   gboolean ret;
 
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1301,7 +1337,7 @@ static void
 context_remove_dir(GConfContext* ctx,
                    const gchar* dir)
 {
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1323,7 +1359,7 @@ context_all_entries(GConfContext* ctx, const gchar* dir)
 {
   GSList* entries;
 
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1345,7 +1381,7 @@ context_all_dirs(GConfContext* ctx, const gchar* dir)
 {
   GSList* subdirs;
 
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
     
@@ -1367,7 +1403,7 @@ static void
 context_set_schema(GConfContext* ctx, const gchar* key,
                    const gchar* schema_key)
 {
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1385,7 +1421,7 @@ context_set_schema(GConfContext* ctx, const gchar* key,
 static void
 context_sync(GConfContext* ctx)
 {
-  g_assert(ctx->ltable != NULL);
+  g_assert(ctx->listeners != NULL);
   
   ctx->last_access = time(NULL);
   
@@ -1454,8 +1490,8 @@ sleep_old_contexts(void)
     {
       GConfContext* c = context_list->pdata[i];
 
-      if (c->ltable &&                        /* not already hibernating */
-          c->ltable->active_listeners == 0 && /* Can hibernate */
+      if (c->listeners &&                             /* not already hibernating */
+          gconf_listeners_count(c->listeners) == 0 && /* Can hibernate */
           (now - c->last_access) > (60*45))   /* 45 minutes without access */
         {
           context_hibernate(c);
@@ -1579,10 +1615,10 @@ lookup_context(ConfigServer_Context ctx)
       return NULL;
     }
 
-  if (gcc->ltable == NULL)
+  if (gcc->listeners == NULL)
     {
       context_awaken(gcc);       /* Wake up hibernating contexts */
-      if (gcc->ltable == NULL)
+      if (gcc->listeners == NULL)
         {
           /* Failed, error is now set. */
           return NULL;
@@ -1614,11 +1650,8 @@ lookup_context_id_from_address(const gchar* address)
 }
 
 /*
- * The listener table
+ * The listener object
  */
-
-/* 0 is an error value */
-static guint next_cnxn = 1;
 
 static Listener* 
 listener_new(ConfigListener obj)
@@ -1631,8 +1664,6 @@ listener_new(ConfigListener obj)
   l = g_new0(Listener, 1);
 
   l->obj = CORBA_Object_duplicate(obj, &ev);
-  l->cnxn = next_cnxn;
-  ++next_cnxn;
 
   return l;
 }
@@ -1646,365 +1677,6 @@ listener_destroy(Listener* l)
   CORBA_exception_init(&ev);
   CORBA_Object_release(l->obj, &ev);
   g_free(l);
-}
-
-static LTable* 
-ltable_new(void)
-{
-  LTable* lt;
-  LTableEntry* lte;
-
-  lt = g_new0(LTable, 1);
-
-  lt->listeners = g_ptr_array_new();
-
-  /* Set initial size and init error value (0) to NULL */
-  g_ptr_array_set_size(lt->listeners, 5);
-  g_ptr_array_index(lt->listeners, 0) = NULL;
-
-  lte = ltable_entry_new("/");
-
-  lt->tree = g_node_new(lte);
-
-  lt->active_listeners = 0;
-  
-  return lt;
-}
-
-static void    
-ltable_insert(LTable* lt, const gchar* where, Listener* l)
-{
-  gchar** dirnames;
-  guint i;
-  GNode* cur;
-  GNode* found = NULL;
-  LTableEntry* lte;
-  const gchar* noroot_where = where + 1;
-
-  /* Add to the tree */
-  dirnames = g_strsplit(noroot_where, "/", -1);
-  
-  cur = lt->tree;
-  i = 0;
-  while (dirnames[i])
-    {
-      LTableEntry* ne;
-      GNode* across;
-
-      /* Find this dirname on this level, or add it. */
-      g_assert (cur != NULL);        
-
-      found = NULL;
-
-      across = cur->children;
-
-      while (across != NULL)
-        {
-          LTableEntry* lte = across->data;
-          int cmp;
-
-          cmp = strcmp(lte->name, dirnames[i]);
-
-          if (cmp == 0)
-            {
-              found = across;
-              break;
-            }
-          else if (cmp > 0)
-            {
-              /* Past it */
-              break;
-            }
-          else 
-            {
-              across = g_node_next_sibling(across);
-            }
-        }
-
-      if (found == NULL)
-        {
-          ne = ltable_entry_new(dirnames[i]);
-              
-          if (across != NULL) /* Across is at the one past */
-            found = g_node_insert_data_before(cur, across, ne);
-          else                /* Never went past, append - could speed this up by saving last visited */
-            found = g_node_append_data(cur, ne);
-        }
-
-      g_assert(found != NULL);
-
-      cur = found;
-
-      ++i;
-    }
-
-  /* cur is still the root node ("/") if where was "/" since nothing
-     was returned from g_strsplit */
-  lte = cur->data;
-
-  lte->listeners = g_list_prepend(lte->listeners, l);
-
-  g_strfreev(dirnames);
-
-  /* Add tree node to the flat table */
-  g_ptr_array_set_size(lt->listeners, next_cnxn);
-  g_ptr_array_index(lt->listeners, l->cnxn) = found;
-
-  lt->active_listeners += 1;
-  
-  ltable_spew(lt);
-}
-
-static void    
-ltable_remove(LTable* lt, guint cnxn)
-{
-  LTableEntry* lte;
-  GList* tmp;
-  GNode* node;
-
-  if (cnxn >= lt->listeners->len)
-    {
-      gconf_log(GCL_WARNING, _("Attempt to remove nonexistent connection"));
-      return;
-    }
-
-  /* Remove from the flat table */
-  node = g_ptr_array_index(lt->listeners, cnxn);
-  g_ptr_array_index(lt->listeners, cnxn) = NULL;
-
-  if (node == NULL)
-    {
-      gconf_log(GCL_WARNING, _("Attempt to remove nonexistent connection"));
-      return;
-    }
-
-  lte = node->data;
-  
-  tmp = lte->listeners;
-
-  g_return_if_fail(tmp != NULL);
-
-  while (tmp != NULL)
-    {
-      Listener* l = tmp->data;
-
-      if (l->cnxn == cnxn)
-        {
-          if (tmp->prev)
-            {
-              tmp->prev->next = tmp->next;
-            }
-          else
-            {
-              /* tmp was the first (and maybe last) node */
-              lte->listeners = tmp->next;
-            }
-          if (tmp->next)
-            {
-              tmp->next->prev = tmp->prev;
-            }
-          g_list_free_1(tmp);
-
-          listener_destroy(l);
-
-          break;
-        }
-
-      tmp = g_list_next(tmp);
-    }
-  
-  g_return_if_fail(tmp != NULL);
-
-  /* Remove from the tree if this node is now pointless */
-  if (lte->listeners == NULL && node->children == NULL)
-    {
-      ltable_entry_destroy(lte);
-      g_node_destroy(node);
-    }
-
-  lt->active_listeners -= 1;
-}
-
-static void    
-ltable_destroy(LTable* ltable)
-{
-  guint i;
-
-  i = ltable->listeners->len - 1;
-
-  while (i > 0) /* 0 position in array is invalid */
-    {
-      if (g_ptr_array_index(ltable->listeners, i) != NULL)
-        {
-          listener_destroy(g_ptr_array_index(ltable->listeners, i));
-          g_ptr_array_index(ltable->listeners, i) = NULL;
-        }
-      
-      --i;
-    }
-  
-  g_ptr_array_free(ltable->listeners, TRUE);
-
-  g_node_destroy(ltable->tree);
-
-  g_free(ltable);
-}
-
-static void
-notify_listener_list(GList* list, const gchar* key, ConfigValue* value, GList** dead)
-{
-  CORBA_Environment ev;
-  GList* tmp;
-
-  CORBA_exception_init(&ev);
-
-  gconf_log(GCL_DEBUG, "%u listeners to notify", g_list_length(list));
-
-  tmp = list;
-  while (tmp != NULL)
-    {
-      Listener* l = tmp->data;
-
-      ConfigListener_notify(l->obj, l->cnxn, 
-                            (gchar*)key, value, &ev);
-      
-      if(ev._major != CORBA_NO_EXCEPTION) 
-        {
-          gconf_log(GCL_WARNING, "Failed to notify listener %u: %s", 
-                 (guint)l->cnxn, CORBA_exception_id(&ev));
-          CORBA_exception_free(&ev);
-
-          /* Dead listeners need to be forgotten */
-          *dead = g_list_prepend(*dead, GUINT_TO_POINTER(l->cnxn));
-        }
-      else
-        {
-          gconf_log(GCL_DEBUG, "Notified listener %u of change to key `%s'",
-                 (guint)l->cnxn, key);
-        }
-
-
-      tmp = g_list_next(tmp);
-    }
-}
-
-static void    
-ltable_notify_listeners(LTable* lt, const gchar* key, ConfigValue* value)
-{
-  gchar** dirs;
-  guint i;
-  const gchar* noroot_key = key + 1;
-  GNode* cur;
-  GList* dead = NULL;
-
-  /* Notify "/" listeners */
-  notify_listener_list(((LTableEntry*)lt->tree->data)->listeners, 
-                       (gchar*)key, value, &dead);
-
-  dirs = g_strsplit(noroot_key, "/", -1);
-
-  cur = lt->tree;
-  i = 0;
-  while (dirs[i] && cur)
-    {
-      GNode* child = cur->children;
-
-      gconf_log(GCL_DEBUG, "scanning for %s", dirs[i]);
-
-      while (child != NULL)
-        {
-          LTableEntry* lte = child->data;
-
-          gconf_log(GCL_DEBUG, "Looking at %s", lte->name);
-
-          if (strcmp(lte->name, dirs[i]) == 0)
-            {
-              gconf_log(GCL_DEBUG, "Notifying listeners attached to `%s'",
-                         lte->name);
-              notify_listener_list(lte->listeners, key, value, &dead);
-              break;
-            }
-
-          child = g_node_next_sibling(child);
-        }
-
-      if (child != NULL) /* we found a child, scan below it */
-        cur = child;
-      else               /* end of the line */
-        cur = NULL;
-
-      ++i;
-    }
-  
-  g_strfreev(dirs);
-
-  /* Clear the dead listeners */
-  {
-    GList* tmp;
-
-    tmp = dead;
-    
-    while (tmp != NULL)
-      {
-        guint cnxn = GPOINTER_TO_UINT(tmp->data);
-
-        gconf_log(GCL_DEBUG, "Removing dead listener %u", cnxn);
-
-        ltable_remove(lt, cnxn);
-
-        tmp = g_list_next(tmp);
-      }
-
-    g_list_free(dead);
-  }
-}
-
-static LTableEntry* 
-ltable_entry_new(const gchar* name)
-{
-  LTableEntry* lte;
-
-  lte = g_new0(LTableEntry, 1);
-
-  lte->name = g_strdup(name);
-
-  return lte;
-}
-
-static void         
-ltable_entry_destroy(LTableEntry* lte)
-{
-  g_return_if_fail(lte->listeners == NULL); /* should destroy all listeners first. */
-  g_free(lte->name);
-  g_free(lte);
-}
-
-/* Debug */
-gboolean
-spew_func(GNode* node, gpointer data)
-{
-  LTableEntry* lte = node->data;  
-  GList* tmp;
-
-  gconf_log(GCL_DEBUG, " Spewing node `%s'", lte->name);
-
-  tmp = lte->listeners;
-  while (tmp != NULL)
-    {
-      Listener* l = tmp->data;
-
-      gconf_log(GCL_DEBUG, "   listener %u is here", (guint)l->cnxn);
-
-      tmp = g_list_next(tmp);
-    }
-
-  return FALSE;
-}
-
-static void    
-ltable_spew(LTable* lt)
-{
-  g_node_traverse(lt->tree, G_LEVEL_ORDER, G_TRAVERSE_ALL, -1, spew_func, NULL);
 }
 
 /*
