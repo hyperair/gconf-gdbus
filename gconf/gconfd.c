@@ -85,6 +85,8 @@ static void gconf_main_quit(void);
 
 static void logfile_save (void);
 static void logfile_read (void);
+static void log_client_add (const ConfigListener client);
+static void log_client_remove (const ConfigListener client);
 
 static void add_client (const ConfigListener client);
 static void remove_client (const ConfigListener client);
@@ -194,9 +196,7 @@ gconfd_add_client (PortableServer_Servant servant,
                    const ConfigListener client,
                    CORBA_Environment *ev)
 {
-  
-
-
+  add_client (client);
 }
 
 static void
@@ -204,9 +204,7 @@ gconfd_remove_client (PortableServer_Servant servant,
                       const ConfigListener client,
                       CORBA_Environment *ev)
 {
-
-
-
+  remove_client (client);
 }
 
 static CORBA_long
@@ -1465,7 +1463,7 @@ gconfd_logfile_change_listener (GConfDatabase *db,
                                 const gchar *where,
                                 GError **err)
 {
-  gchar *ior;
+  gchar *ior = NULL;
   gchar *quoted_db_name;
   gchar *quoted_where;
   gchar *quoted_ior;
@@ -1480,6 +1478,7 @@ gconfd_logfile_change_listener (GConfDatabase *db,
 
   quoted_ior = gconf_quote_string (ior);
   g_free (ior);
+  ior = NULL;
   
   if (db == default_db)
     quoted_db_name = gconf_quote_string ("def");
@@ -1526,6 +1525,71 @@ gconfd_logfile_change_listener (GConfDatabase *db,
   g_free (quoted_where);
 
   return FALSE;
+}
+
+static void
+log_client_add (const ConfigListener client)
+{
+  gchar *ior = NULL;
+  gchar *quoted_ior = NULL;
+  GError *err;
+  
+  err = NULL;
+  ior = gconf_object_to_string (client, &err);
+
+  if (err != NULL)
+    {
+      gconf_log (GCL_WARNING, _("Failed to get IOR for client: %s"),
+                 err->message);
+      g_error_free (err);
+      return;
+    }
+      
+  if (ior == NULL)
+    return;
+
+  quoted_ior = gconf_quote_string (ior);
+  g_free (ior);
+  ior = NULL;
+  
+  if (!open_append_handle (&err))
+    {
+      gconf_log (GCL_WARNING, _("Failed to open saved state file: %s"),
+                 err->message);
+
+      g_error_free (err);
+      
+      goto error;
+    }
+
+  if (fprintf (append_handle, "CLIENTADD %s\n", quoted_ior) < 0)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to write client add to saved state file: %s"),
+                 strerror (errno));
+      goto error;
+    }
+
+  if (fflush (append_handle) < 0)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to flush client add to saved state file: %s"),
+                 strerror (errno));
+      goto error;
+    }
+
+  
+
+ error:
+  g_free (ior);
+  g_free (quoted_ior);
+}
+
+static void
+log_client_remove (const ConfigListener client)
+{
+
+
 }
 
 /*
