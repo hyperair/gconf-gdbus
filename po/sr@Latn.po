@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-06 19:56+0200\n"
-"PO-Revision-Date: 2004-08-06 19:58+0200\n"
+"POT-Creation-Date: 2004-08-07 11:16+0200\n"
+"PO-Revision-Date: 2004-08-07 11:17+0200\n"
 "Last-Translator: Danilo Šegan <danilo@prevod.org>\n"
 "Language-Team: Serbian (sr) <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
@@ -177,12 +177,12 @@ msgstr "Nepoznata vrednost „%s“ za atribut „%s“ elementa <%s>"
 msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "Neispravan ltype „%s“ za <%s>"
 
-# bug: kakve ovo ima veze sa Lisp-om, listama, car i cdr-om?
 #: backends/markup-tree.c:2342
 #, c-format
-msgid "Invalid car_type \"%s\" on <%s>"
-msgstr "Neispravan car_type „%s“ za <%s>"
+msgid "Invalid first-element type \"%s\" on <%s>"
+msgstr "Neispravan tip prvog elementa „%s“ za <%s>"
 
+# bug: more lisp terminology?
 #: backends/markup-tree.c:2356
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
@@ -1070,18 +1070,18 @@ msgstr "Shema navodi par za tip, ali ne navodi tip prvog i drugog člana para"
 msgid "Failed to load source \"%s\": %s"
 msgstr "Nije uspeo da učita izvor „%s“: %s"
 
-# bug: config -> configuration
 #: gconf/gconf-sources.c:408
 #, c-format
-msgid "Resolved address \"%s\" to a writable config source at position %d"
+msgid ""
+"Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr ""
 "Adresa „%s“ pokazuje na izvor podešavanja u koji je moguće upisivati, na "
 "poziciji %d"
 
-# bug: config -> configuration
 #: gconf/gconf-sources.c:414
 #, c-format
-msgid "Resolved address \"%s\" to a read-only config source at position %d"
+msgid ""
+"Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr ""
 "Adresa „%s“ pokazuje na izvor podešavanja koji se može samo čitati, na "
 "poziciji %d"
@@ -1406,10 +1406,11 @@ msgstr "Ne može da obrazuje %s: %s"
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Direktorijum %s ima problema, gconfd ne može da ga koristi"
 
-# bug: fd -> file descriptor
 #: gconf/gconfd.c:729
 #, c-format
-msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
+msgid ""
+"Failed to write byte to pipe file descriptor %d so client program may hang: %"
+"s"
 msgstr ""
 "Nije uspeo da upiše bajt u cev sa oznakom %d, pa program može da zakoči: %s"
 
@@ -1598,10 +1599,9 @@ msgstr "Ispiši sve parove ključ/vrednost iz kategorije."
 msgid "Print all subdirectories in a directory."
 msgstr "Ispiši sve podkategorije u kategoriji."
 
-# bug: dir -> directory
 #: gconf/gconftool.c:159
 msgid ""
-"Dump to standard out an XML description of all entries under a dir, "
+"Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr ""
 "Ispiši XML opis svih podkategorija i svih stavki u kategoriji, rekurzivno."
@@ -1609,7 +1609,7 @@ msgstr ""
 #: gconf/gconftool.c:168
 msgid ""
 "Load from the specified file an XML description of values and set them "
-"relative to a dir."
+"relative to a directory."
 msgstr ""
 "Učitaj iz navedene datoteke XML opis vrednosti i postavi ih u odnosu na "
 "kategoriju."
@@ -1618,9 +1618,8 @@ msgstr ""
 msgid "Unload a set of values described in an XML file."
 msgstr "Izbaci skup vrednosti iz XML datoteke iz memorije."
 
-# bug: dir -> directory
 #: gconf/gconftool.c:186
-msgid "Print all subdirectories and entries under a dir, recursively."
+msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "Ispiši sve podkategorije i stavke u kategoriji, rekurzivno."
 
 #: gconf/gconftool.c:195
@@ -2432,6 +2431,10 @@ msgstr ""
 "Pokušava  da pokvari vaš program postavljanjem neispravnih vrednosti ključeva u "
 "kategoriji:\n"
 "  %s\n"
+
+# bug: kakve ovo ima veze sa Lisp-om, listama, car i cdr-om?
+#~ msgid "Invalid car_type \"%s\" on <%s>"
+#~ msgstr "Neispravan car_type „%s“ za <%s>"
 
 #~ msgid "Must specify some schema files to uninstall\n"
 #~ msgstr "Obavezno je navesti neke datoteke shema za uklanjanje\n"
