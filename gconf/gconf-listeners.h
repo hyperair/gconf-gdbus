@@ -49,7 +49,7 @@ typedef void (*GConfListenersForeach) (const gchar* location,
 
 GConfListeners*     gconf_listeners_new     (void);
 
-void                gconf_listeners_destroy (GConfListeners* listeners);
+void                gconf_listeners_free    (GConfListeners* listeners);
 
 guint               gconf_listeners_add     (GConfListeners* listeners,
                                              const gchar* listen_point,
@@ -60,24 +60,22 @@ guint               gconf_listeners_add     (GConfListeners* listeners,
 /* Safe on nonexistent listeners, for robustness against broken
  * clients
  */
-void                gconf_listeners_remove  (GConfListeners* listeners,
-                                             guint cnxn_id);
 
-void                gconf_listeners_notify  (GConfListeners* listeners,
-                                             const gchar* all_above,
-                                             GConfListenersCallback callback,
-                                             gpointer user_data);
+void     gconf_listeners_remove   (GConfListeners          *listeners,
+                                   guint                    cnxn_id);
+void     gconf_listeners_notify   (GConfListeners          *listeners,
+                                   const gchar             *all_above,
+                                   GConfListenersCallback   callback,
+                                   gpointer                 user_data);
+guint    gconf_listeners_count    (GConfListeners          *listeners);
+void     gconf_listeners_foreach  (GConfListeners          *listeners,
+                                   GConfListenersForeach    callback,
+                                   gpointer                 user_data);
+gboolean gconf_listeners_get_data (GConfListeners          *listeners,
+                                   guint                    cnxn_id,
+                                   gpointer                *listener_data_p,
+                                   const gchar            **location_p);
 
-guint               gconf_listeners_count   (GConfListeners* listeners);
-
-void                gconf_listeners_foreach (GConfListeners* listeners,
-                                             GConfListenersForeach callback,
-                                             gpointer user_data);
-
-gboolean            gconf_listeners_get_data (GConfListeners* listeners,
-                                              guint           cnxn_id,
-                                              gpointer       *listener_data_p,
-                                              const gchar   **location_p);
 
 #ifdef __cplusplus
 }

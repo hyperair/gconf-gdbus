@@ -156,7 +156,7 @@ check_unset(GConfEngine* conf)
 
   while (*keyp)
     {
-      gconf_unset(conf, *keyp, &err);
+      gconf_engine_unset(conf, *keyp, &err);
 
       if (err != NULL)
         {
@@ -171,7 +171,7 @@ check_unset(GConfEngine* conf)
 
           sync_and_clear(conf);
           
-          val = gconf_get(conf, *keyp, &err);
+          val = gconf_engine_get (conf, *keyp, &err);
 
 
           if (val)
@@ -207,7 +207,7 @@ check_string_storage(GConfEngine* conf)
         {
           gchar* gotten;
           
-          if (!gconf_set_string(conf, *keyp, *valp, &err))
+          if (!gconf_engine_set_string(conf, *keyp, *valp, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%s': %s\n",
                       *keyp, *valp, err->message);
@@ -254,7 +254,7 @@ check_string_storage(GConfEngine* conf)
         {
           gchar* gotten;
           
-          if (!gconf_set_string(conf, *keyp, *valp, &err))
+          if (!gconf_engine_set_string(conf, *keyp, *valp, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%s': %s\n",
                       *keyp, *valp, err->message);
@@ -310,7 +310,7 @@ check_bool_storage(GConfEngine* conf)
         {
           gboolean gotten;
           
-          if (!gconf_set_bool(conf, *keyp, bools[i], &err))
+          if (!gconf_engine_set_bool(conf, *keyp, bools[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, bools[i], err->message);
@@ -321,7 +321,7 @@ check_bool_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_bool(conf, *keyp, &err);
+              gotten = gconf_engine_get_bool(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -358,7 +358,7 @@ check_bool_storage(GConfEngine* conf)
         {
           gboolean gotten;
           
-          if (!gconf_set_bool(conf, *keyp, bools[i], &err))
+          if (!gconf_engine_set_bool(conf, *keyp, bools[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, bools[i], err->message);
@@ -369,7 +369,7 @@ check_bool_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_bool(conf, *keyp, &err);
+              gotten = gconf_engine_get_bool(conf, *keyp, &err);
               
               if (err != NULL)
                 {
@@ -416,7 +416,7 @@ check_float_storage(GConfEngine* conf)
         {
           gdouble gotten;
           
-          if (!gconf_set_float(conf, *keyp, floats[i], &err))
+          if (!gconf_engine_set_float(conf, *keyp, floats[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%g': %s\n",
                       *keyp, floats[i], err->message);
@@ -427,7 +427,7 @@ check_float_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_float(conf, *keyp, &err);
+              gotten = gconf_engine_get_float(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -465,7 +465,7 @@ check_float_storage(GConfEngine* conf)
         {
           gdouble gotten;
           
-          if (!gconf_set_float(conf, *keyp, floats[i], &err))
+          if (!gconf_engine_set_float(conf, *keyp, floats[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%g': %s\n",
                       *keyp, floats[i], err->message);
@@ -476,7 +476,7 @@ check_float_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_float(conf, *keyp, &err);
+              gotten = gconf_engine_get_float(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -524,7 +524,7 @@ check_int_storage(GConfEngine* conf)
         {
           gint gotten;
           
-          if (!gconf_set_int(conf, *keyp, ints[i], &err))
+          if (!gconf_engine_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, ints[i], err->message);
@@ -535,7 +535,7 @@ check_int_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_int(conf, *keyp, &err);
+              gotten = gconf_engine_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -573,7 +573,7 @@ check_int_storage(GConfEngine* conf)
         {
           gint gotten;
           
-          if (!gconf_set_int(conf, *keyp, ints[i], &err))
+          if (!gconf_engine_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, ints[i], err->message);
@@ -584,7 +584,7 @@ check_int_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_int(conf, *keyp, &err);
+              gotten = gconf_engine_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -800,7 +800,7 @@ check_list_storage(GConfEngine* conf)
         {
           GSList* gotten = NULL;
           
-          if (!gconf_set_list(conf, *keyp, list_types[i], lists[i], &err))
+          if (!gconf_engine_set_list(conf, *keyp, list_types[i], lists[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to list: %s\n",
                       *keyp, err->message);
@@ -811,7 +811,7 @@ check_list_storage(GConfEngine* conf)
             {
               sync_and_clear(conf);
               
-              gotten = gconf_get_list(conf, *keyp, list_types[i], &err);
+              gotten = gconf_engine_get_list(conf, *keyp, list_types[i], &err);
 
               if (err != NULL)
                 {

@@ -524,22 +524,22 @@ GConfChangeSet* cs,
                                             gpointer user_data
 </USER_FUNCTION>
 <FUNCTION>
-<NAME>gconf_commit_change_set</NAME>
+<NAME>gconf_engine_commit_change_set</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_create_reverse_change_set</NAME>
+<NAME>gconf_engine_reverse_change_set</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
 GConfEngine* conf,GConfChangeSet* cs,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_create_change_set_from_currentv</NAME>
+<NAME>gconf_engine_change_set_from_currentv</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
 GConfEngine* conf,const gchar** keys,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_create_change_set_from_current</NAME>
+<NAME>gconf_engine_change_set_from_current</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
 GConfEngine* conf,GError** err,const gchar* first_key,...
 </FUNCTION>
@@ -976,7 +976,7 @@ const gchar* location,
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_listeners_destroy</NAME>
+<NAME>gconf_listeners_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfListeners* listeners
 </FUNCTION>
@@ -1072,7 +1072,7 @@ struct GConfSchema {
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_schema_destroy</NAME>
+<NAME>gconf_schema_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfSchema* sc
 </FUNCTION>
@@ -1391,7 +1391,7 @@ GConfValueType type
 GConfValue* src
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_value_destroy</NAME>
+<NAME>gconf_value_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfValue* value
 </FUNCTION>
@@ -1547,7 +1547,7 @@ struct GConfEntry {
 gchar       *key,GConfValue  *val
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_entry_destroy</NAME>
+<NAME>gconf_entry_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfEntry  *entry
 </FUNCTION>
@@ -1582,12 +1582,12 @@ void
 GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gboolean is_default, gpointer user_data
 </USER_FUNCTION>
 <FUNCTION>
-<NAME>gconf_notify_add</NAME>
+<NAME>gconf_engine_notify_add</NAME>
 <RETURNS>guint  </RETURNS>
 GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GError      **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_notify_remove</NAME>
+<NAME>gconf_engine_notify_remove</NAME>
 <RETURNS>void  </RETURNS>
 GConfEngine      *conf,guint             cnxn
 </FUNCTION>
@@ -1597,22 +1597,22 @@ GConfEngine      *conf,guint             cnxn
 GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_without_default</NAME>
+<NAME>gconf_engine_get_without_default</NAME>
 <RETURNS>GConfValue *</RETURNS>
 GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_full</NAME>
+<NAME>gconf_engine_get_full</NAME>
 <RETURNS>GConfValue *</RETURNS>
 GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,gboolean     *value_is_default,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_with_locale</NAME>
+<NAME>gconf_engine_get_with_locale</NAME>
 <RETURNS>GConfValue *</RETURNS>
 GConfEngine  *conf,const gchar  *key,const gchar  *locale,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_default_from_schema</NAME>
+<NAME>gconf_engine_get_default_from_schema</NAME>
 <RETURNS>GConfValue *</RETURNS>
 GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
@@ -1622,32 +1622,32 @@ GConfEngine  *conf,const gchar  *key,GError  **err
 GConfEngine  *conf,const gchar  *key,GConfValue   *value,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_unset</NAME>
+<NAME>gconf_engine_unset</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_associate_schema</NAME>
+<NAME>gconf_engine_associate_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_all_entries</NAME>
+<NAME>gconf_engine_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
 GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_all_dirs</NAME>
+<NAME>gconf_engine_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
 GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_suggest_sync</NAME>
+<NAME>gconf_engine_suggest_sync</NAME>
 <RETURNS>void  </RETURNS>
 GConfEngine  *conf,GError  **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_dir_exists</NAME>
+<NAME>gconf_engine_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
@@ -1672,12 +1672,12 @@ const gchar  *dir,const gchar  *key
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_float</NAME>
+<NAME>gconf_engine_get_float</NAME>
 <RETURNS>gdouble  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_int</NAME>
+<NAME>gconf_engine_get_int</NAME>
 <RETURNS>gint  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
@@ -1687,57 +1687,57 @@ GConfEngine     *conf,const gchar     *key,GError     **err
 GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_bool</NAME>
+<NAME>gconf_engine_get_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_schema</NAME>
+<NAME>gconf_engine_get_schema</NAME>
 <RETURNS>GConfSchema *</RETURNS>
 GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_list</NAME>
+<NAME>gconf_engine_get_list</NAME>
 <RETURNS>GSList *</RETURNS>
 GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_get_pair</NAME>
+<NAME>gconf_engine_get_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_float</NAME>
+<NAME>gconf_engine_set_float</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,gdouble          val,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_int</NAME>
+<NAME>gconf_engine_set_int</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,gint             val,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_string</NAME>
+<NAME>gconf_engine_set_string</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,const gchar     *val,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_bool</NAME>
+<NAME>gconf_engine_set_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,gboolean         val,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_schema</NAME>
+<NAME>gconf_engine_set_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_list</NAME>
+<NAME>gconf_engine_set_list</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GError     **err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_set_pair</NAME>
+<NAME>gconf_engine_set_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
 GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GError     **err
 </FUNCTION>
@@ -3964,17 +3964,17 @@ GConfClient* client,const gchar* key,GConfValue* value
 GConfClient* client,GConfChangeSet* cs,gboolean remove_committed,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_client_create_reverse_change_set</NAME>
+<NAME>gconf_client_reverse_change_set</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
 GConfClient* client,GConfChangeSet* cs,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_client_create_change_set_from_currentv</NAME>
+<NAME>gconf_client_change_set_from_currentv</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
 GConfClient* client,const gchar** keys,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_client_create_change_set_from_current</NAME>
+<NAME>gconf_client_change_set_from_current</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
 GConfClient* client,GError** err,const gchar* first_key,...
 </FUNCTION>

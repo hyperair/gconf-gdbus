@@ -1334,7 +1334,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
         *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected list, got %s"),
                                gconf_value_type_to_string(val->type));
-      gconf_value_destroy(val);
+      gconf_value_free(val);
       return NULL;
     }
 
@@ -1345,7 +1345,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
                                _("Expected list of %s, got list of %s"),
                                gconf_value_type_to_string(list_type),
                                gconf_value_type_to_string(val->type));
-      gconf_value_destroy(val);
+      gconf_value_free(val);
       return NULL;
     }
 
@@ -1357,7 +1357,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
          avoid destroying the list */
   val->d.list_data.list = NULL;
       
-  gconf_value_destroy(val);
+  gconf_value_free(val);
   val = NULL;
       
   {
@@ -1410,7 +1410,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
           }
 
         /* Clean up the value */
-        gconf_value_destroy(elem);
+        gconf_value_free(elem);
             
         tmp = g_slist_next(tmp);
       }
@@ -1483,7 +1483,7 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
         *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected pair, got %s"),
                                gconf_value_type_to_string(val->type));
-      gconf_value_destroy(val);
+      gconf_value_free(val);
       return FALSE;
     }
 
@@ -1499,7 +1499,7 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                gconf_value_type_to_string(car_type),
                                gconf_value_type_to_string(cdr_type));
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
       return FALSE;
     }
 
@@ -1516,14 +1516,14 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                gconf_value_type_to_string(cdr_type),
                                gconf_value_type_to_string(car->type),
                                gconf_value_type_to_string(cdr->type));
-      gconf_value_destroy(val);
+      gconf_value_free(val);
       return FALSE;
     }
 
   primitive_value(car_retloc, car);
   primitive_value(cdr_retloc, cdr);
 
-  gconf_value_destroy(val);
+  gconf_value_free(val);
 
   return TRUE;
 }

@@ -133,7 +133,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
     {
       ConfigValue* cval = corba_value_from_gconf_value(val);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       g_return_val_if_fail(error == NULL, cval);
       
@@ -179,7 +179,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
     {
       ConfigValue* cval = corba_value_from_gconf_value(val);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       g_return_val_if_fail(error == NULL, cval);
       
@@ -229,7 +229,7 @@ impl_ConfigDatabase_set(PortableServer_Servant servant,
 
   gconf_set_exception(&error, ev);
 
-  gconf_value_destroy(val);
+  gconf_value_free(val);
 }
 
 static void
@@ -339,7 +339,7 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
       fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
       (*is_defaults)->_buffer[i] = gconf_entry_is_default(p);
       
-      gconf_entry_destroy(p);
+      gconf_entry_free(p);
 
       ++i;
       tmp = g_slist_next(tmp);
@@ -578,7 +578,7 @@ gconf_database_destroy (GConfDatabase *db)
       if (need_sync)
         gconf_database_really_sync(db);
       
-      gconf_listeners_destroy(db->listeners);
+      gconf_listeners_free(db->listeners);
       gconf_sources_destroy(db->sources);
     }
 
@@ -950,7 +950,7 @@ gconf_database_unset (GConfDatabase      *db,
       if (def_value != NULL)
         {
           val = corba_value_from_gconf_value(def_value);
-          gconf_value_destroy(def_value);
+          gconf_value_free(def_value);
         }
       else
         {

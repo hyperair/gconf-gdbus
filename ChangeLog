@@ -1,5 +1,63 @@
 2000-09-09  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/Makefile.am (libgconf_1_la_SOURCES): Move gconf-backend.h
+	here, I don't see why it was in the public headers
+
+
+	Throughout, rename a bunch of stuff:
+
+	#!/usr/bin/perl -pi.bak
+
+	s/gconf_notify_add/gconf_engine_notify_add/g;
+	s/gconf_notify_remove/gconf_engine_notify_remove/g;
+	s/gconf_get_without_default/gconf_engine_get_without_default/g;
+	s/gconf_get_full/gconf_engine_get_full/g;
+	s/gconf_get_with_locale/gconf_engine_get_with_locale/g;
+	s/gconf_get_default_from_schema/gconf_engine_get_default_from_schema/g;
+	s/gconf_unset/gconf_engine_unset/g;
+	s/gconf_associate_schema/gconf_engine_associate_schema/g;
+	s/gconf_all_entries/gconf_engine_all_entries/g;
+	s/gconf_all_dirs/gconf_engine_all_dirs/g;
+	s/gconf_suggest_sync/gconf_engine_suggest_sync/g;
+	s/gconf_dir_exists/gconf_engine_dir_exists/g;
+	s/gconf_get_float/gconf_engine_get_float/g;
+	s/gconf_get_int/gconf_engine_get_int/g;
+	s/gconf_get_bool/gconf_engine_get_bool/g;
+	s/gconf_get_schema/gconf_engine_get_schema/g;
+	s/gconf_get_list/gconf_engine_get_list/g;
+	s/gconf_get_pair/gconf_engine_get_pair/g;
+	s/gconf_set_float/gconf_engine_set_float/g;
+	s/gconf_set_int/gconf_engine_set_int/g;
+	s/gconf_set_string/gconf_engine_set_string/g;
+	s/gconf_set_bool/gconf_engine_set_bool/g;
+	s/gconf_set_schema/gconf_engine_set_schema/g;
+	s/gconf_set_list/gconf_engine_set_list/g;
+	s/gconf_set_pair/gconf_engine_set_pair/g;
+
+	s/gconf_commit_change_set/gconf_engine_commit_change_set/g;
+	s/gconf_create_reverse_change_set/gconf_engine_reverse_change_set/g;
+	s/gconf_create_change_set_from_currentv/gconf_engine_change_set_from_currentv/g;
+	s/gconf_create_change_set_from_current/gconf_engine_change_set_from_current/g;
+
+	s/gconf_schema_destroy/gconf_schema_free/g;
+	s/gconf_value_destroy/gconf_value_free/g;
+	s/gconf_listeners_destroy/gconf_listeners_free/g;
+	s/gconf_entry_destroy/gconf_entry_free/g;
+
+	s/gconf_client_create_change_set_from_current/gconf_client_change_set_from_current/g;
+	s/gconf_client_create_change_set_from_currentv/gconf_client_change_set_from_currentv/g;
+	s/gconf_client_create_reverse_change_set/gconf_client_reverse_change_set/g;
+
+	## These require some care, since they can be the prefix for unrelated stuff.
+	s/gconf_get /gconf_engine_get /g;
+	s/gconf_set /gconf_engine_set /g;
+
+	s/gconf_get\(/gconf_engine_get (/g;
+	s/gconf_set\(/gconf_engine_set (/g;
+
+	
+2000-09-09  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-database.c (gconf_database_add_listener)
 	(gconf_database_remove_listener): immediately log the addition
 	or removal to the saved state file, which is now in a streaming
@@ -12,9 +70,9 @@
 	* gconf/gconf-listeners.c (gconf_listeners_get_data):
 	new function to get listener data for a connection ID
 
-	* gconf/gconfd.c (one_hour_timeout): save the logfile 
-	in the timeout, to compress it since we have just been appending
-	over the last hour
+	* gconf/gconfd.c (one_hour_timeout): save the logfile in the
+	timeout, to compress it since we have just been appending over the
+	last hour
 	(logfile_read, logfile_save): rewrite to use new format, not the
 	GMarkup format
 

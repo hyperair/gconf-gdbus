@@ -230,7 +230,7 @@ destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
   /* remove notify for this dir */
   
   if(d->notify_id != 0)
-	  gconf_notify_remove(client->engine, d->notify_id);
+	  gconf_engine_notify_remove(client->engine, d->notify_id);
   d->notify_id = 0;
 
   dir_destroy(value);
@@ -259,7 +259,7 @@ gconf_client_finalize (GtkObject* object)
   
   if (client->listeners != NULL)
     {
-      gconf_listeners_destroy(client->listeners);
+      gconf_listeners_free(client->listeners);
       client->listeners = NULL;
     }
 
@@ -517,7 +517,7 @@ foreach_setup_overlap(gpointer key, gpointer value, gpointer user_data)
   else if (dir->notify_id != 0 &&
 	   gconf_key_is_below(od->dirname, dir->name))
     {
-      gconf_notify_remove(client->engine, dir->notify_id);
+      gconf_engine_notify_remove(client->engine, dir->notify_id);
       dir->notify_id = 0;
     }
 }
@@ -561,7 +561,7 @@ gconf_client_add_dir     (GConfClient* client,
       if (overlap_dir == NULL)
         {
 
-          notify_id = gconf_notify_add(client->engine,
+          notify_id = gconf_engine_notify_add(client->engine,
                                        dirname,
                                        notify_from_server_callback,
                                        client,
@@ -622,7 +622,7 @@ foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
        * already add a notify */
       if (overlap_dir == NULL)
         {
-          dir->notify_id = gconf_notify_add(client->engine,
+          dir->notify_id = gconf_engine_notify_add(client->engine,
 					    dir->name,
 					    notify_from_server_callback,
 					    client,
@@ -653,7 +653,7 @@ gconf_client_real_remove_dir    (GConfClient* client,
   /* remove notify for this dir */
   
   if(d->notify_id != 0)
-	  gconf_notify_remove(client->engine, d->notify_id);
+	  gconf_engine_notify_remove(client->engine, d->notify_id);
   d->notify_id = 0;
   
   dir_destroy(d);
@@ -729,7 +729,7 @@ gconf_client_notify_remove  (GConfClient* client,
   
   if (gconf_listeners_count(client->listeners) == 0)
     {
-      gconf_listeners_destroy(client->listeners);
+      gconf_listeners_free(client->listeners);
       client->listeners = NULL;
     }
 }
@@ -787,7 +787,7 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
       
       cache_pairs_in_dir(client, full);
 
-      recurse_subdir_list(client, gconf_all_dirs(client->engine, full, NULL), full);
+      recurse_subdir_list(client, gconf_engine_all_dirs(client->engine, full, NULL), full);
 
       g_free(s);
       g_free(full);
@@ -805,7 +805,7 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
   GSList* tmp;
   GError* error = NULL;
 
-  pairs = gconf_all_entries(client->engine, dir, &error);
+  pairs = gconf_engine_all_entries(client->engine, dir, &error);
           
   if (error != NULL)
     {
@@ -833,7 +833,7 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
 
           g_free(full_key);
           
-          gconf_entry_destroy(pair);
+          gconf_entry_free(pair);
 
           tmp = g_slist_next(tmp);
         }
@@ -871,7 +871,7 @@ gconf_client_preload    (GConfClient* client,
       {
         GSList* subdirs;
         
-        subdirs = gconf_all_dirs(client->engine, dirname, NULL);
+        subdirs = gconf_engine_all_dirs(client->engine, dirname, NULL);
         
         cache_pairs_in_dir(client, dirname);
       }
@@ -881,7 +881,7 @@ gconf_client_preload    (GConfClient* client,
       {
         GSList* subdirs;
         
-        subdirs = gconf_all_dirs(client->engine, dirname, NULL);
+        subdirs = gconf_engine_all_dirs(client->engine, dirname, NULL);
         
         cache_pairs_in_dir(client, dirname);
           
@@ -907,7 +907,7 @@ gconf_client_set             (GConfClient* client,
 {
   GError* error = NULL;
   
-  gconf_set(client->engine, key, val, &error);
+  gconf_engine_set (client->engine, key, val, &error);
 
   handle_error(client, error, err);
 }
@@ -918,7 +918,7 @@ gconf_client_unset          (GConfClient* client,
 {
   GError* error = NULL;
   
-  gconf_unset(client->engine, key, &error);
+  gconf_engine_unset(client->engine, key, &error);
 
   handle_error(client, error, err);
 
@@ -935,7 +935,7 @@ gconf_client_all_entries    (GConfClient* client,
   GError* error = NULL;
   GSList* retval;
   
-  retval = gconf_all_entries(client->engine, dir, &error);
+  retval = gconf_engine_all_entries(client->engine, dir, &error);
 
   handle_error(client, error, err);
 
@@ -949,7 +949,7 @@ gconf_client_all_dirs       (GConfClient* client,
   GError* error = NULL;
   GSList* retval;
   
-  retval = gconf_all_dirs(client->engine, dir, &error);
+  retval = gconf_engine_all_dirs(client->engine, dir, &error);
 
   handle_error(client, error, err);
 
@@ -962,7 +962,7 @@ gconf_client_suggest_sync   (GConfClient* client,
 {
   GError* error = NULL;
   
-  gconf_suggest_sync(client->engine, &error);
+  gconf_engine_suggest_sync(client->engine, &error);
 
   handle_error(client, error, err);
 }
@@ -974,7 +974,7 @@ gconf_client_dir_exists     (GConfClient* client,
   GError* error = NULL;
   gboolean retval;
   
-  retval = gconf_dir_exists(client->engine, dir, &error);
+  retval = gconf_engine_dir_exists(client->engine, dir, &error);
 
   handle_error(client, error, err);
 
@@ -1023,7 +1023,7 @@ get(GConfClient* client, const gchar* key,
   g_assert(val == NULL); /* if it was in the cache we should have returned */
 
   /* Check the GConfEngine */
-  val = gconf_get_full(client->engine, key, gconf_current_locale(),
+  val = gconf_engine_get_full(client->engine, key, gconf_current_locale(),
                        use_default, &is_default, error);
 
   if (is_default_retloc)
@@ -1128,7 +1128,7 @@ gconf_client_get_default_from_schema (GConfClient* client,
     }
 
   /* Check the GConfEngine */
-  val = gconf_get_default_from_schema(client->engine, key,
+  val = gconf_engine_get_default_from_schema(client->engine, key,
                                       &error);
   
   if (error != NULL)
@@ -1168,7 +1168,7 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
       else
         handle_error(client, error, err);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
@@ -1203,7 +1203,7 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
       else
         handle_error(client, error, err);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
@@ -1245,7 +1245,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
       else
         retval = def ? g_strdup(def) : NULL;
       
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
@@ -1281,7 +1281,7 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
       else
         handle_error(client, error, err);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
@@ -1319,7 +1319,7 @@ gconf_client_get_schema  (GConfClient* client,
       if (retval != NULL)
         val->d.schema_data = NULL; /* don't delete the schema */
       
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
@@ -1439,7 +1439,7 @@ gconf_client_set_float   (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   
-  if (gconf_set_float(client->engine, key, val, &error))
+  if (gconf_engine_set_float(client->engine, key, val, &error))
     return TRUE;
   else
     {
@@ -1458,7 +1458,7 @@ gconf_client_set_int     (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   
-  if (gconf_set_int(client->engine, key, val, &error))
+  if (gconf_engine_set_int(client->engine, key, val, &error))
     return TRUE;
   else
     {
@@ -1478,7 +1478,7 @@ gconf_client_set_string  (GConfClient* client, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
   
-  if (gconf_set_string(client->engine, key, val, &error))
+  if (gconf_engine_set_string(client->engine, key, val, &error))
     return TRUE;
   else
     {
@@ -1497,7 +1497,7 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   
-  if (gconf_set_bool(client->engine, key, val, &error))
+  if (gconf_engine_set_bool(client->engine, key, val, &error))
     return TRUE;
   else
     {
@@ -1517,7 +1517,7 @@ gconf_client_set_schema  (GConfClient* client, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
   
-  if (gconf_set_schema(client->engine, key, val, &error))
+  if (gconf_engine_set_schema(client->engine, key, val, &error))
     return TRUE;
   else
     {
@@ -1538,7 +1538,7 @@ gconf_client_set_list    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   
-  if (gconf_set_list(client->engine, key, list_type, list, &error))
+  if (gconf_engine_set_list(client->engine, key, list_type, list, &error))
     return TRUE;
   else
     {
@@ -1560,7 +1560,7 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
   
-  if (gconf_set_pair(client->engine, key, car_type, cdr_type,
+  if (gconf_engine_set_pair(client->engine, key, car_type, cdr_type,
                      address_of_car, address_of_cdr, &error))
     return TRUE;
   else
@@ -1628,7 +1628,7 @@ gconf_client_cache (GConfClient* client,
       g_assert(ce != NULL);
 
       if (ce->value != NULL)
-        gconf_value_destroy(ce->value);
+        gconf_value_free(ce->value);
 
       ce->value = value;
       ce->is_default = is_default;
@@ -1704,7 +1704,7 @@ cache_entry_destroy(CacheEntry* ce)
   g_return_if_fail(ce != NULL);
   
   if (ce->value != NULL)
-    gconf_value_destroy(ce->value);
+    gconf_value_free(ce->value);
 
   g_free(ce);
 }
@@ -1910,7 +1910,7 @@ revert_foreach (GConfChangeSet* cs,
 
 
 GConfChangeSet*
-gconf_client_create_reverse_change_set  (GConfClient* client,
+gconf_client_reverse_change_set  (GConfClient* client,
                                          GConfChangeSet* cs,
                                          GError** err)
 {
@@ -1944,7 +1944,7 @@ gconf_client_create_reverse_change_set  (GConfClient* client,
 
 
 GConfChangeSet*
-gconf_client_create_change_set_from_currentv (GConfClient* client,
+gconf_client_change_set_from_currentv (GConfClient* client,
                                               const gchar** keys,
                                               GError** err)
 {
@@ -1985,7 +1985,7 @@ gconf_client_create_change_set_from_currentv (GConfClient* client,
 }
 
 GConfChangeSet*
-gconf_client_create_change_set_from_current (GConfClient* client,
+gconf_client_change_set_from_current (GConfClient* client,
                                              GError** err,
                                              const gchar* first_key,
                                              ...)
@@ -2028,7 +2028,7 @@ gconf_client_create_change_set_from_current (GConfClient* client,
 
   g_slist_free(keys);
   
-  retval = gconf_client_create_change_set_from_currentv(client, vec, err);
+  retval = gconf_client_change_set_from_currentv(client, vec, err);
   
   g_free(vec);
 

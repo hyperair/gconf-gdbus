@@ -395,7 +395,7 @@ change_destroy(Change* c)
   g_free(c->key);
 
   if (c->value)
-    gconf_value_destroy(c->value);
+    gconf_value_free(c->value);
 
   g_free(c);
 }
@@ -412,7 +412,7 @@ change_set    (Change* c, GConfValue* value)
     return;
   
   if (c->value)
-    gconf_value_destroy(c->value);
+    gconf_value_free(c->value);
 
   c->value = value;
 }
@@ -423,7 +423,7 @@ change_unset  (Change* c)
   c->type = CHANGE_UNSET;
 
   if (c->value)
-    gconf_value_destroy(c->value);
+    gconf_value_free(c->value);
 
   c->value = NULL;
 }
@@ -453,9 +453,9 @@ commit_foreach (GConfChangeSet* cs,
     return;
   
   if (value)
-    gconf_set   (cd->conf, key, value, &cd->error);
+    gconf_engine_set   (cd->conf, key, value, &cd->error);
   else
-    gconf_unset (cd->conf, key, &cd->error);
+    gconf_engine_unset (cd->conf, key, &cd->error);
 
   if (cd->error == NULL && cd->remove_committed)
     {
@@ -466,7 +466,7 @@ commit_foreach (GConfChangeSet* cs,
 }
 
 gboolean
-gconf_commit_change_set   (GConfEngine* conf,
+gconf_engine_commit_change_set   (GConfEngine* conf,
                            GConfChangeSet* cs,
                            gboolean remove_committed,
                            GError** err)
@@ -543,7 +543,7 @@ revert_foreach (GConfChangeSet* cs,
   if (rd->error != NULL)
     return;
 
-  old_value = gconf_get_without_default(rd->conf, key, &error);
+  old_value = gconf_engine_get_without_default(rd->conf, key, &error);
 
   if (error != NULL)
     {
@@ -565,7 +565,7 @@ revert_foreach (GConfChangeSet* cs,
 
 
 GConfChangeSet*
-gconf_create_reverse_change_set  (GConfEngine* conf,
+gconf_engine_reverse_change_set  (GConfEngine* conf,
                                   GConfChangeSet* cs,
                                   GError** err)
 {
@@ -591,7 +591,7 @@ gconf_create_reverse_change_set  (GConfEngine* conf,
 }
 
 GConfChangeSet*
-gconf_create_change_set_from_currentv (GConfEngine* conf,
+gconf_engine_change_set_from_currentv (GConfEngine* conf,
                                        const gchar** keys,
                                        GError** err)
 {
@@ -610,7 +610,7 @@ gconf_create_change_set_from_currentv (GConfEngine* conf,
       GError* error = NULL;
       const gchar* key = *keyp;
       
-      old_value = gconf_get_without_default(conf, key, &error);
+      old_value = gconf_engine_get_without_default(conf, key, &error);
 
       if (error != NULL)
         {
@@ -632,7 +632,7 @@ gconf_create_change_set_from_currentv (GConfEngine* conf,
 }
 
 GConfChangeSet*
-gconf_create_change_set_from_current (GConfEngine* conf,
+gconf_engine_change_set_from_current (GConfEngine* conf,
                                       GError** err,
                                       const gchar* first_key,
                                       ...)
@@ -675,7 +675,7 @@ gconf_create_change_set_from_current (GConfEngine* conf,
 
   g_slist_free(keys);
   
-  retval = gconf_create_change_set_from_currentv(conf, vec, err);
+  retval = gconf_engine_change_set_from_currentv(conf, vec, err);
   
   g_free(vec);
 

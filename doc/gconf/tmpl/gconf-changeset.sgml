@@ -20,7 +20,7 @@ have to send the settings the user changed.
 <para>
 In the future, GConf may also have optimizations so that
 changing a group of values with #GConfChangeSet is faster than calling 
-gconf_set() for each value. In the future, #GConfChangeSet may also
+gconf_engine_set () for each value. In the future, #GConfChangeSet may also
 represent an atomic transaction, where all or none of the values are
 set; however, for now the operation is <emphasis>not</emphasis>
 atomic.
@@ -53,7 +53,7 @@ user data passed to gconf_change_set_foreach().
 @user_data: user data passed to gconf_change_set_foreach().
 
 
-<!-- ##### FUNCTION gconf_commit_change_set ##### -->
+<!-- ##### FUNCTION gconf_engine_commit_change_set ##### -->
 <para>
 Applies the changes in the change set to the #GConfEngine passed as
 the first argument. If @remove_committed is <symbol>TRUE</symbol>,
@@ -150,7 +150,7 @@ confuse the internal data structures and cause memory corruption.
 <!-- ##### FUNCTION gconf_change_set_set ##### -->
 <para>
 Adds a "set" operation to a change set. This function is similar to
-gconf_set(), except that no errors can occur (errors occur later, when
+gconf_engine_set (), except that no errors can occur (errors occur later, when
 you try to commit the change set).
 </para>
 
@@ -175,7 +175,7 @@ the change is modified, or the #GConfChangeSet is destroyed.
 <!-- ##### FUNCTION gconf_change_set_unset ##### -->
 <para>
 Adds an "unset" operation to a #GConfChangeSet. This function
-schedules a gconf_unset().
+schedules a gconf_engine_unset().
 </para>
 
 @cs: a #GConfChangeSet.
@@ -273,7 +273,7 @@ unmodified.
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_create_change_set_from_currentv ##### -->
+<!-- ##### FUNCTION gconf_engine_change_set_from_currentv ##### -->
 <para>
 
 </para>
@@ -284,7 +284,7 @@ unmodified.
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_create_change_set_from_current ##### -->
+<!-- ##### FUNCTION gconf_engine_change_set_from_current ##### -->
 <para>
 
 </para>
@@ -296,7 +296,7 @@ unmodified.
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_create_reverse_change_set ##### -->
+<!-- ##### FUNCTION gconf_engine_reverse_change_set ##### -->
 <para>
 
 </para>

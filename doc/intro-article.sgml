@@ -506,13 +506,13 @@
           retrieved from or to be stored in the database, it uses a
           type-tagged union called
           <structname>GConfValue</structname>.  For example, the
-          <function>gconf_get()</function> function takes a
+          <function>gconf_engine_get ()</function> function takes a
           <structname>GConfEngine</structname> and a key name as
           arguments and returns a
           <structname>GConfValue</structname>. There are also
           convenience wrappers such as
           <function>gconf_get_string()</function> and
-          <function>gconf_get_int()</function> that allow you to avoid
+          <function>gconf_engine_get_int()</function> that allow you to avoid
           the pesky <structname>GConfValue</structname> union.
         </para>
       </sect3>

@@ -85,7 +85,7 @@ check_unset(GConfEngine* conf)
 
   while (*keyp)
     {
-      gconf_unset(conf, *keyp, &err);
+      gconf_engine_unset(conf, *keyp, &err);
 
       if (err != NULL)
         {
@@ -98,7 +98,7 @@ check_unset(GConfEngine* conf)
           GConfValue* val;
           gchar* valstr;
           
-          val = gconf_get(conf, *keyp, &err);
+          val = gconf_engine_get (conf, *keyp, &err);
 
 
           if (val)
@@ -133,7 +133,7 @@ check_int_storage(GConfEngine* conf)
         {
           gint gotten;
           
-          if (!gconf_set_int(conf, *keyp, ints[i], &err))
+          if (!gconf_engine_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, ints[i], err->message);
@@ -142,7 +142,7 @@ check_int_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_int(conf, *keyp, &err);
+              gotten = gconf_engine_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -180,7 +180,7 @@ check_int_storage(GConfEngine* conf)
         {
           gint gotten;
           
-          if (!gconf_set_int(conf, *keyp, ints[i], &err))
+          if (!gconf_engine_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
                       *keyp, ints[i], err->message);
@@ -189,7 +189,7 @@ check_int_storage(GConfEngine* conf)
             }
           else
             {
-              gotten = gconf_get_int(conf, *keyp, &err);
+              gotten = gconf_engine_get_int(conf, *keyp, &err);
 
               if (err != NULL)
                 {
@@ -237,7 +237,7 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
 {
   GError* err = NULL;
   
-  if (!gconf_set_schema(conf, *keyp, schema, &err))
+  if (!gconf_engine_set_schema(conf, *keyp, schema, &err))
     {
       fprintf(stderr, "Failed to set key `%s' to schema: %s\n",
               *keyp, err->message);
@@ -248,7 +248,7 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
     {
       GConfSchema* gotten;
       
-      gotten = gconf_get_schema(conf, *keyp, &err);
+      gotten = gconf_engine_get_schema(conf, *keyp, &err);
 
       if (err != NULL)
         {
@@ -327,7 +327,7 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
               }
           }
           
-          gconf_schema_destroy(gotten);
+          gconf_schema_free(gotten);
         }
     }
 }
@@ -382,7 +382,7 @@ check_schema_storage(GConfEngine* conf)
           
           check_one_schema(conf, keyp, schema);
 
-          gconf_schema_destroy(schema);
+          gconf_schema_free(schema);
           g_free(long_desc);
           g_free(short_desc);
           
@@ -413,7 +413,7 @@ check_schema_storage(GConfEngine* conf)
 
           check_one_schema(conf, keyp, schema);
 
-          gconf_schema_destroy(schema);
+          gconf_schema_free(schema);
           
           ++i;
         }

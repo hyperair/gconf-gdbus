@@ -68,24 +68,24 @@ Asks whether the library has been initialized.
 <!-- ##### USER_FUNCTION GConfNotifyFunc ##### -->
 <para>
 A callback function invoked when a key's value changes. The @cnxn_id parameter
-will be the connection ID returned from gconf_notify_add(). @key will be the
+will be the connection ID returned from gconf_engine_notify_add(). @key will be the
 full path of the changed key, @value will be the new value if the key is set.
 If the key is unset, @value will be the default value if one exists, or
 <symbol>NULL</symbol> otherwise. @is_default indicates whether a value is a
 default setting or a user setting. If @value is <symbol>NULL</symbol>,
 @is_default will be <symbol>TRUE</symbol>. @user_data is the data passed to
-gconf_notify_add().
+gconf_engine_notify_add().
 </para>
 
-@conf: the #GConfEngine passed to gconf_notify_add().
-@cnxn_id: the ID returned from gconf_notify_add().
+@conf: the #GConfEngine passed to gconf_engine_notify_add().
+@cnxn_id: the ID returned from gconf_engine_notify_add().
 @key: the full path of the changed key.
 @value: the new value, or <symbol>NULL</symbol> if the key was unset.
 @is_default: if <symbol>TRUE</symbol>, the key is unset but this is the default value for it.
-@user_data: the user data passed to gconf_notify_add().
+@user_data: the user data passed to gconf_engine_notify_add().
 
 
-<!-- ##### FUNCTION gconf_notify_add ##### -->
+<!-- ##### FUNCTION gconf_engine_notify_add ##### -->
 <para>
 Registers a notification request with the <application>gconfd</application>
 server.  The server will notify the client when any key at or below
@@ -94,7 +94,7 @@ the namespace; otherwise you will slow down the server and your application with
 unnecessary notifications. Note that you should prefer gconf_client_notify_add()
 if you're using the #GtkObject wrapper library, because
 gconf_client_notify_add() does not require a client-server conversation for
-every callback. gconf_notify_add() requests a different server notification for
+every callback. gconf_engine_notify_add() requests a different server notification for
 every callback. The function returns an ID you can use to remove the
 notification request; 0 is an invalid ID, and is returned if an error occurs.
 </para>
@@ -107,21 +107,21 @@ notification request; 0 is an invalid ID, and is returned if an error occurs.
 @Returns: an ID for the notification request, or 0 on error.
 
 
-<!-- ##### FUNCTION gconf_notify_remove ##### -->
+<!-- ##### FUNCTION gconf_engine_notify_remove ##### -->
 <para>
 Removes a notification request.
 </para>
 
 @conf: the #GConfEngine you were monitoring for changes.
-@cnxn: The ID returned by gconf_notify_add().
+@cnxn: The ID returned by gconf_engine_notify_add().
 
 
-<!-- ##### FUNCTION gconf_get ##### -->
+<!-- ##### FUNCTION gconf_engine_get ##### -->
 <para>
 Returns the #GConfValue stored at @key, or <symbol>NULL</symbol> if no value is
-set. You must call gconf_value_destroy() to free the returned value. If you know
+set. You must call gconf_value_free() to free the returned value. If you know
 the expected type of the value, you probably want to use the type-specific
-convenience wrappers (gconf_get_int(), etc.)  because they will do the
+convenience wrappers (gconf_engine_get_int(), etc.)  because they will do the
 type-checking for you and return the appropriate type. Automatically returns the
 default value for a key, if the key is unset and a default exists.
 </para>
@@ -132,15 +132,15 @@ default value for a key, if the key is unset and a default exists.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset and no default exists.
 
 
-<!-- ##### FUNCTION gconf_get_with_locale ##### -->
+<!-- ##### FUNCTION gconf_engine_get_with_locale ##### -->
 <para>
 Requests the value appropriate for a particular locale. Right now,
 only values of type %GCONF_VALUE_SCHEMA are localized; the locale is
-meaningless for other value types. Also, gconf_get() automatically
+meaningless for other value types. Also, gconf_engine_get () automatically
 requests the value in the user's current locale. So this function is
 only useful if you want a schema for some locale other than the user's
 current locale. Except for the additional argument, this function is
-identical to gconf_get() in all respects.
+identical to gconf_engine_get () in all respects.
 </para>
 
 @conf: a #GConfEngine to get the value from.
@@ -150,10 +150,10 @@ identical to gconf_get() in all respects.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
-<!-- ##### FUNCTION gconf_get_without_default ##### -->
+<!-- ##### FUNCTION gconf_engine_get_without_default ##### -->
 <para>
-Identical to gconf_get(), except that it will return <symbol>NULL</symbol> in
-place of the default value if the key is unset. Note that gconf_get() can also
+Identical to gconf_engine_get (), except that it will return <symbol>NULL</symbol> in
+place of the default value if the key is unset. Note that gconf_engine_get () can also
 return <symbol>NULL</symbol> if no default exists or an error occurs.
 </para>
 
@@ -163,7 +163,7 @@ return <symbol>NULL</symbol> if no default exists or an error occurs.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
-<!-- ##### FUNCTION gconf_get_full ##### -->
+<!-- ##### FUNCTION gconf_engine_get_full ##### -->
 <para>
 This function is basically for internal use.
 </para>
@@ -177,11 +177,11 @@ This function is basically for internal use.
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_get_default_from_schema ##### -->
+<!-- ##### FUNCTION gconf_engine_get_default_from_schema ##### -->
 <para>
 Returns the default value stored in the key's schema, if the key has a schema
 associated and the schema exists and the schema contains a default value.  Note
-that gconf_get(), gconf_get_string(), and so on already return the default value
+that gconf_engine_get (), gconf_get_string(), and so on already return the default value
 if no other value is found, so normally you do not need this function. This
 function is just for convenience; you could also get the #GConfMetaInfo for the
 key, read the schema name from there, then look up the schema by name and
@@ -194,11 +194,11 @@ extract the default value.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
-<!-- ##### FUNCTION gconf_set ##### -->
+<!-- ##### FUNCTION gconf_engine_set ##### -->
 <para>
 Sets the value of @key to @value. Does not modify the passed-in
 #GConfValue, you must free it yourself. You may prefer a type-specific
-convenience wrapper, such as gconf_set_int().
+convenience wrapper, such as gconf_engine_set_int().
 </para>
 
 <para>
@@ -216,7 +216,7 @@ setup without a constant barrage of error messages.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
-<!-- ##### FUNCTION gconf_unset ##### -->
+<!-- ##### FUNCTION gconf_engine_unset ##### -->
 <para>
 Unsets the value of @key; if @key is already unset, has no effect.  An
 error of note is %GCONF_OVERRIDDEN, indicating that the system
@@ -229,7 +229,7 @@ administrator has "forced" a value for this key.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
-<!-- ##### FUNCTION gconf_associate_schema ##### -->
+<!-- ##### FUNCTION gconf_engine_associate_schema ##### -->
 <para>
 Directs GConf to find the schema for @key at location
 @schema_key. That is, the value stored at @schema_key should have type
@@ -246,13 +246,13 @@ schema associations into the database during "make install."
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
-<!-- ##### FUNCTION gconf_all_entries ##### -->
+<!-- ##### FUNCTION gconf_engine_all_entries ##### -->
 <para>
 Lists the key-value pairs in @dir. Does not list subdirectories; for
-that use gconf_all_dirs(). The returned list contains #GConfEntry
+that use gconf_engine_all_dirs(). The returned list contains #GConfEntry
 objects. A #GConfEntry contains a <emphasis>relative</emphasis> key
 and a value. The list is not recursive, it contains only the immediate
-children of @dir.  To free the returned list, gconf_entry_destroy()
+children of @dir.  To free the returned list, gconf_entry_free()
 each list element, then g_slist_free() the list itself.
 </para>
 
@@ -262,7 +262,7 @@ each list element, then g_slist_free() the list itself.
 @Returns: List of #GConfEntry.
 
 
-<!-- ##### FUNCTION gconf_all_dirs ##### -->
+<!-- ##### FUNCTION gconf_engine_all_dirs ##### -->
 <para>
 Lists the subdirectories in @dir. The returned list contains allocated
 strings; you should g_free() each string in the list, then
@@ -275,13 +275,13 @@ g_slist_free() the list itself.
 @Returns: List of allocated subdirectory names.
 
 
-<!-- ##### FUNCTION gconf_suggest_sync ##### -->
+<!-- ##### FUNCTION gconf_engine_suggest_sync ##### -->
 <para>
 Suggests to <application>gconfd</application> that you've just finished
 a block of changes, and it would be an optimal time to sync to
 permanent storage. This is only a suggestion; and
 <application>gconfd</application> will eventually sync even if you
-don't call gconf_suggest_sync(). This function is just a "hint"
+don't call gconf_engine_suggest_sync(). This function is just a "hint"
 provided to <application>gconfd</application> to maximize efficiency
 and minimize data loss.
 </para>
@@ -290,7 +290,7 @@ and minimize data loss.
 @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 
 
-<!-- ##### FUNCTION gconf_dir_exists ##### -->
+<!-- ##### FUNCTION gconf_engine_dir_exists ##### -->
 <para>
 Queries whether the directory @dir exists in the GConf
 database. Returns <symbol>TRUE</symbol> or <symbol>FALSE</symbol>.
@@ -334,7 +334,7 @@ it internally so here it is if you need it.
 @Returns: <symbol>TRUE</symbol> or <symbol>FALSE</symbol>.
 
 
-<!-- ##### FUNCTION gconf_get_float ##### -->
+<!-- ##### FUNCTION gconf_engine_get_float ##### -->
 <para>
 Requests the floating point number (%GCONF_VALUE_FLOAT) stored at
 @key. Automatically performs type-checking, so if a non-float is
@@ -348,7 +348,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @Returns: the value of @key, or 0.0 if no value is obtained.
 
 
-<!-- ##### FUNCTION gconf_get_int ##### -->
+<!-- ##### FUNCTION gconf_engine_get_int ##### -->
 <para>
 Requests the integer (%GCONF_VALUE_INT) stored at
 @key. Automatically performs type-checking, so if a non-integer is
@@ -376,7 +376,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @Returns: allocated string (value of @key), or <symbol>NULL</symbol> if no value is obtained.
 
 
-<!-- ##### FUNCTION gconf_get_bool ##### -->
+<!-- ##### FUNCTION gconf_engine_get_bool ##### -->
 <para>
 Requests the boolean value (%GCONF_VALUE_BOOL) stored at
 @key. Automatically performs type-checking, so if a non-bool is
@@ -390,7 +390,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @Returns: the value of @key, or <symbol>FALSE</symbol> if no value is obtained.
 
 
-<!-- ##### FUNCTION gconf_get_schema ##### -->
+<!-- ##### FUNCTION gconf_engine_get_schema ##### -->
 <para>
 Requests the schema (%GCONF_VALUE_SCHEMA) stored at @key.
 Automatically performs type-checking, so if a non-schema is stored at
@@ -404,7 +404,7 @@ Automatically performs type-checking, so if a non-schema is stored at
 @Returns: the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained.
 
 
-<!-- ##### FUNCTION gconf_get_list ##### -->
+<!-- ##### FUNCTION gconf_engine_get_list ##### -->
 <para>
 Requests the list (%GCONF_VALUE_LIST) stored at @key.  Automatically
 performs type-checking, so if a non-list is stored at @key, or the
@@ -412,7 +412,7 @@ list does not contain elements of type @list_type, an error is
 returned. If no value is set or an error occurs, <symbol>NULL</symbol>
 is returned. Note that <symbol>NULL</symbol> is also the empty list,
 so if you need to distinguish the empty list from an unset value, you
-must use gconf_get() to obtain a raw #GConfValue.
+must use gconf_engine_get () to obtain a raw #GConfValue.
 </para>
 
 <para>
@@ -425,7 +425,7 @@ that lists must be uniform, you may not mix types in the same list.
 <para>
 The type of the list elements depends on @list_type. A #GConfValue
 with type %GCONF_VALUE_LIST normally stores a list of more #GConfValue
-objects. gconf_get_list() automatically converts to primitive C
+objects. gconf_engine_get_list() automatically converts to primitive C
 types. Thus, the list-&gt;data fields in the returned list 
 contain:
  
@@ -455,14 +455,14 @@ contain:
 
 <row>
 <entry>%GCONF_VALUE_SCHEMA</entry>
-<entry>A pointer to #GConfSchema, which should be freed with gconf_schema_destroy()</entry>
+<entry>A pointer to #GConfSchema, which should be freed with gconf_schema_free()</entry>
 </row>
 
 </tbody></tgroup></informaltable>
 
 In the %GCONF_VALUE_FLOAT and %GCONF_VALUE_STRING cases, you must
 g_free() each list element. In the %GCONF_VALUE_SCHEMA case you must
-gconf_schema_destroy() each element. In all cases you must free the
+gconf_schema_free() each element. In all cases you must free the
 list itself with g_slist_free().
 </para>
 
@@ -473,7 +473,7 @@ list itself with g_slist_free().
 @Returns: an allocated list, with elements as described above.
 
 
-<!-- ##### FUNCTION gconf_get_pair ##### -->
+<!-- ##### FUNCTION gconf_engine_get_pair ##### -->
 <para>
 Requests the pair (%GCONF_VALUE_PAIR) stored at @key.  Automatically
 performs type-checking, so if a non-pair is stored at @key, or the
@@ -490,7 +490,7 @@ value, in the Lisp tradition.
 </para>
 
 <para>
-gconf_get_pair() stores the two fields of the pair in the locations
+gconf_engine_get_pair() stores the two fields of the pair in the locations
 pointed to by @car_retloc and @cdr_retloc. The type of these pointers
 depends on the corresponding @car_type and @cdr_type:
  
@@ -527,22 +527,22 @@ depends on the corresponding @car_type and @cdr_type:
 
 In the %GCONF_VALUE_STRING case, you must g_free() the string(s)
 stored in the return location(s). In the %GCONF_VALUE_SCHEMA case you
-must gconf_schema_destroy() the returned schema. If there's an error
+must gconf_schema_free() the returned schema. If there's an error
 or the value is unset, @car_retloc and @cdr_retloc are left unchanged.
 </para>
 
 <para>
-gconf_get_pair() returns <symbol>TRUE</symbol> on success.
+gconf_engine_get_pair() returns <symbol>TRUE</symbol> on success.
 </para>
 
 <para>
-An example of gconf_get_pair() in action:
+An example of gconf_engine_get_pair() in action:
 <programlisting>
 gdouble car = 10.0;
 gchar* cdr  = NULL; 
 GError* error = NULL;
 
-if (!gconf_get_pair(conf, "/foo", 
+if (!gconf_engine_get_pair(conf, "/foo", 
                     GCONF_VALUE_FLOAT,
                     GCONF_VALUE_STRING, 
                     &amp;car, &amp;cdr, &amp;error))
@@ -575,7 +575,7 @@ else
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
-<!-- ##### FUNCTION gconf_set_float ##### -->
+<!-- ##### FUNCTION gconf_engine_set_float ##### -->
 <para>
 
 </para>
@@ -587,7 +587,7 @@ else
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_set_int ##### -->
+<!-- ##### FUNCTION gconf_engine_set_int ##### -->
 <para>
 
 </para>
@@ -599,7 +599,7 @@ else
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_set_string ##### -->
+<!-- ##### FUNCTION gconf_engine_set_string ##### -->
 <para>
 
 </para>
@@ -611,7 +611,7 @@ else
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_set_bool ##### -->
+<!-- ##### FUNCTION gconf_engine_set_bool ##### -->
 <para>
 
 </para>
@@ -623,7 +623,7 @@ else
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_set_schema ##### -->
+<!-- ##### FUNCTION gconf_engine_set_schema ##### -->
 <para>
 
 </para>
@@ -635,7 +635,7 @@ else
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_set_list ##### -->
+<!-- ##### FUNCTION gconf_engine_set_list ##### -->
 <para>
 
 </para>
@@ -648,7 +648,7 @@ else
 @Returns: 
 
 
-<!-- ##### FUNCTION gconf_set_pair ##### -->
+<!-- ##### FUNCTION gconf_engine_set_pair ##### -->
 <para>
 
 </para>

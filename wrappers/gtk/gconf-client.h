@@ -41,7 +41,7 @@ extern "C" {
  *
  *  - It allows you to register per-key callbacks within these directories,
  *    without having to register multiple server-side callbacks
- *    (gconf_notify_add() adds a request-for-notify to the server,
+ *    (gconf_engine_notify_add() adds a request-for-notify to the server,
  *    this wrapper adds a notify to the server for the whole directory
  *    and keeps your per-key notify requests on the client side).
  *
@@ -362,15 +362,15 @@ gboolean        gconf_client_commit_change_set   (GConfClient* client,
 
 /* Create a change set that would revert the given change set
    for the given GConfClient */
-GConfChangeSet* gconf_client_create_reverse_change_set  (GConfClient* client,
+GConfChangeSet* gconf_client_reverse_change_set  (GConfClient* client,
                                                          GConfChangeSet* cs,
                                                          GError** err);
 
-GConfChangeSet* gconf_client_create_change_set_from_currentv (GConfClient* client,
+GConfChangeSet* gconf_client_change_set_from_currentv (GConfClient* client,
                                                               const gchar** keys,
                                                               GError** err);
 
-GConfChangeSet* gconf_client_create_change_set_from_current (GConfClient* client,
+GConfChangeSet* gconf_client_change_set_from_current (GConfClient* client,
                                                              GError** err,
                                                              const gchar* first_key,
                                                              ...);

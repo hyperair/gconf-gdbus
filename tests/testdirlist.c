@@ -83,7 +83,7 @@ check_dir_listing(GConfEngine* conf)
       full_key = gconf_concat_key_and_dir("/testing/foo", tmp);
       g_free(tmp);
       
-      gconf_set_int(conf, full_key, 10, &error);
+      gconf_engine_set_int(conf, full_key, 10, &error);
 
       check (error == NULL, "Error setting key %s: %s",
              full_key, error ? error->message : "");
@@ -94,7 +94,7 @@ check_dir_listing(GConfEngine* conf)
     }
 
   /* Check that "testing" comes back in a list of / */
-  entries = gconf_all_dirs(conf, "/", &error);
+  entries = gconf_engine_all_dirs(conf, "/", &error);
 
   check (error == NULL, "Error getting list of dirs in /: %s",
          error ? error->message : "");
@@ -114,7 +114,7 @@ check_dir_listing(GConfEngine* conf)
   check(got_it, "Did not get 'testing' in listing of / after setting keys such as /testing/foo/bar/woo");
   
   /* Check that "foo" comes back in a list of /testing */
-  entries = gconf_all_dirs(conf, "/testing", &error);
+  entries = gconf_engine_all_dirs(conf, "/testing", &error);
 
   check (error == NULL, "Error getting list of dirs in /testing: %s",
          error ? error->message : "");
@@ -135,7 +135,7 @@ check_dir_listing(GConfEngine* conf)
   
   /* Check that /testing/foo/ subdirs come back in a listing of /testing/foo */
   
-  entries = gconf_all_dirs(conf, "/testing/foo", &error);
+  entries = gconf_engine_all_dirs(conf, "/testing/foo", &error);
 
   check (error == NULL, "Error getting list of dirs in /testing/foo: %s",
          error ? error->message : "");
@@ -181,7 +181,7 @@ check_dir_listing(GConfEngine* conf)
       full_key = gconf_concat_key_and_dir("/testing/foo", tmp);
       g_free(tmp);
       
-      gconf_unset(conf, full_key, &error);
+      gconf_engine_unset(conf, full_key, &error);
 
       check (error == NULL, "Error unsetting key %s: %s",
              full_key, error ? error->message : "");

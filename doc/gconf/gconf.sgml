@@ -525,7 +525,7 @@
               <para>
                 Some routines in the GConf libraries impose type
                 constraints; if these are violated you get this error.
-                For example, <function>gconf_get_int()</function>
+                For example, <function>gconf_engine_get_int()</function>
                 returns this error if the value found is actually a 
                 string.
               </para>
@@ -777,7 +777,7 @@ print_value(GConfValue* value)
         <title>Creating/destroying a <structname>GConfValue</structname></title>
         <para>
           Often you obtain a <structname>GConfValue</structname> from 
-          a GConf routine such as <function>gconf_get()</function>,
+          a GConf routine such as <function>gconf_engine_get ()</function>,
           but you can also create them yourself with
           <function>gconf_value_new()</function>.
           <function>gconf_value_new()</function> takes a single
@@ -806,7 +806,7 @@ print_value(GConfValue* value)
 
         <para>
           You can destroy a <structname>GConfValue</structname> with 
-          <function>gconf_value_destroy()</function>, and copy one
+          <function>gconf_value_free()</function>, and copy one
           with <function>gconf_value_copy()</function>. The copy is a
           deep copy, that is, child values contained in lists or 
           pairs are also copied.
@@ -817,7 +817,7 @@ print_value(GConfValue* value)
             </funcdef>
             <paramdef>GConfValue* <parameter>src</parameter></paramdef>
             <funcdef>void
-              <function>gconf_value_destroy</function>
+              <function>gconf_value_free</function>
             </funcdef>
             <paramdef>GConfValue* <parameter>value</parameter></paramdef>
           </funcsynopsis>
@@ -834,8 +834,8 @@ print_value(GConfValue* value)
         <title>Reading</title>
         <para>
           The "raw" function for obtaining the value stored at a given key in the
-          configuration database is <function>gconf_get()</function>.
-          <function>gconf_get()</function> returns a
+          configuration database is <function>gconf_engine_get ()</function>.
+          <function>gconf_engine_get ()</function> returns a
           <structname>GConfValue</structname> if the key was set, or
           <symbol>NULL</symbol> if the key was unset or an error occurred. If an
           error occurred a <structname>GError</structname> is returned in the
@@ -845,8 +845,8 @@ print_value(GConfValue* value)
         <para>
           There are also convenience functions that automatically convert
           <structname>GConfValue</structname> to primitive C types. These include
-          <function>gconf_get_int()</function>,
-          <function>gconf_get_bool()</function>, and so on.
+          <function>gconf_engine_get_int()</function>,
+          <function>gconf_engine_get_bool()</function>, and so on.
         </para>
 
       </sect2>

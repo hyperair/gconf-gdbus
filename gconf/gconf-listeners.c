@@ -125,7 +125,7 @@ gconf_listeners_new     (void)
 }
 
 void
-gconf_listeners_destroy (GConfListeners* listeners)
+gconf_listeners_free (GConfListeners* listeners)
 {
   LTable* lt = (LTable*)listeners;
 

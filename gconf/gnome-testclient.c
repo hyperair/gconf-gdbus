@@ -52,7 +52,7 @@ changed_cb(GtkWidget* entry, gpointer data)
 
   gconf_value_set_string(value, txt);
 
-  gconf_set(conf, "/gnome/gconf-testclient/entry_contents", value);
+  gconf_engine_set (conf, "/gnome/gconf-testclient/entry_contents", value);
 }
 
 int 
@@ -96,12 +96,12 @@ main(int argc, char* argv[])
 
   entry = gtk_entry_new();
   
-  val = gconf_get(conf, "/gnome/gconf-testclient/entry_contents");
+  val = gconf_engine_get (conf, "/gnome/gconf-testclient/entry_contents");
 
   if (val != NULL)
     {
       gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(val));
-      gconf_value_destroy(val);
+      gconf_value_free(val);
       val = NULL;
     }
 
@@ -117,7 +117,7 @@ main(int argc, char* argv[])
                      GTK_SIGNAL_FUNC(gtk_main_quit),
                      NULL);
 
-  cnxn = gconf_notify_add(conf, "/gnome/gconf-testclient/entry_contents", notify_func, entry);
+  cnxn = gconf_engine_notify_add(conf, "/gnome/gconf-testclient/entry_contents", notify_func, entry);
 
   if (cnxn != 0)
     printf("Connection %u added\n", cnxn);

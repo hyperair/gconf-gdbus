@@ -158,7 +158,7 @@ check_unset(GConfEngine* conf)
     }
 
   
-  gconf_commit_change_set(conf, cs, TRUE, &err);
+  gconf_engine_commit_change_set(conf, cs, TRUE, &err);
   
   if (err != NULL)
     {
@@ -176,7 +176,7 @@ check_unset(GConfEngine* conf)
       GConfValue* val;
       gchar* valstr;
       
-      val = gconf_get(conf, *keyp, &err);
+      val = gconf_engine_get (conf, *keyp, &err);
       
       if (val)
         valstr = gconf_value_to_string(val);
@@ -212,7 +212,7 @@ check_string_storage(GConfEngine* conf)
       ++keyp;
     }
 
-  gconf_commit_change_set(conf, cs, TRUE, &err);
+  gconf_engine_commit_change_set(conf, cs, TRUE, &err);
   
   if (err != NULL)
     {

@@ -45,7 +45,7 @@ struct _GConfSchema {
 };
 
 GConfSchema*  gconf_schema_new(void);
-void          gconf_schema_destroy(GConfSchema* sc);
+void          gconf_schema_free(GConfSchema* sc);
 GConfSchema*  gconf_schema_copy(GConfSchema* sc);
 
 void          gconf_schema_set_type(GConfSchema* sc, GConfValueType type);

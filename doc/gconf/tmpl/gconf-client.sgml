@@ -82,7 +82,7 @@ is also emitted if another process changes the value.
 
 <para>
 Most of the #GConfClient interface mirrors the functions you'd use to manipulate
-a #GConfEngine (gconf_get() and gconf_client_get(), for example). These should
+a #GConfEngine (gconf_engine_get () and gconf_client_get(), for example). These should
 all work just like the #GConfEngine versions, except that they use the cache
 from #GConfClient and emit the #GConfClient signals.
 </para>
@@ -259,7 +259,7 @@ you must remove it the same number of times before the remove takes effect.
 <para>
 Request notification of changes to @namespace_section. This includes the key
 @namespace_section itself, and any keys below it (the behavior is identical to
-gconf_notify_add(), but while gconf_notify_add() places a notification request
+gconf_engine_notify_add(), but while gconf_engine_notify_add() places a notification request
 on the server for every notify function, #GConfClient requests server
 notification for directories added with gconf_client_add_dir() and keeps the
 list of #GConfClientNotifyFunc on the client side). 
@@ -349,7 +349,7 @@ again.
 
 <!-- ##### FUNCTION gconf_client_set ##### -->
 <para>
-Sets the value of a configuration key. Just like gconf_set(), but uses
+Sets the value of a configuration key. Just like gconf_engine_set (), but uses
 #GConfClient caching and error-handling features. The @val argument will not be
 modified.
 </para>
@@ -658,7 +658,7 @@ Emits the "value_changed" signal. Rarely useful.
 @value: value of @key to pass to signal handlers.
 
 
-<!-- ##### FUNCTION gconf_client_create_reverse_change_set ##### -->
+<!-- ##### FUNCTION gconf_client_reverse_change_set ##### -->
 <para>
 Creates a change set that would reverse @cs. That is, for each change in @cs,
 save the current state of that key in the returned change set.
@@ -670,7 +670,7 @@ save the current state of that key in the returned change set.
 @Returns: a new change set that would restore the current state of each key in @cs.
 
 
-<!-- ##### FUNCTION gconf_client_create_change_set_from_currentv ##### -->
+<!-- ##### FUNCTION gconf_client_change_set_from_currentv ##### -->
 <para>
 Creates a change set that will change the keys in
 <symbol>NULL</symbol>-terminated array @keys to their current state. Use this to
@@ -684,9 +684,9 @@ current state by committing the returned change set.
 @Returns: new change set that changes all the @keys to their current state.
 
 
-<!-- ##### FUNCTION gconf_client_create_change_set_from_current ##### -->
+<!-- ##### FUNCTION gconf_client_change_set_from_current ##### -->
 <para>
-Convenient varargs version of gconf_client_create_change_set_from_currentv().
+Convenient varargs version of gconf_client_change_set_from_currentv().
 </para>
 
 @client: a #GConfClient.

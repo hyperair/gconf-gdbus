@@ -538,7 +538,7 @@ gconf_engine_unref        (GConfEngine* conf)
 }
 
 guint
-gconf_notify_add(GConfEngine* conf,
+gconf_engine_notify_add(GConfEngine* conf,
                  const gchar* namespace_section, /* dir or key to listen to */
                  GConfNotifyFunc func,
                  gpointer user_data,
@@ -603,7 +603,7 @@ gconf_notify_add(GConfEngine* conf,
 }
 
 void         
-gconf_notify_remove(GConfEngine* conf,
+gconf_engine_notify_remove(GConfEngine* conf,
                     guint client_id)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
@@ -657,7 +657,7 @@ gconf_notify_remove(GConfEngine* conf,
 }
 
 GConfValue*
-gconf_get_full(GConfEngine* conf,
+gconf_engine_get_full(GConfEngine* conf,
                const gchar* key, const gchar* locale,
                gboolean use_schema_default,
                gboolean* value_is_default,
@@ -748,26 +748,26 @@ gconf_get_full(GConfEngine* conf,
 }
      
 GConfValue*  
-gconf_get(GConfEngine* conf, const gchar* key, GError** err)
+gconf_engine_get (GConfEngine* conf, const gchar* key, GError** err)
 {
-  return gconf_get_with_locale(conf, key, NULL, err);
+  return gconf_engine_get_with_locale(conf, key, NULL, err);
 }
 
 GConfValue*
-gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
+gconf_engine_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
                       GError** err)
 {
-  return gconf_get_full(conf, key, locale, TRUE, NULL, err);
+  return gconf_engine_get_full(conf, key, locale, TRUE, NULL, err);
 }
 
 GConfValue*
-gconf_get_without_default(GConfEngine* conf, const gchar* key, GError** err)
+gconf_engine_get_without_default(GConfEngine* conf, const gchar* key, GError** err)
 {
-  return gconf_get_full(conf, key, NULL, FALSE, NULL, err);
+  return gconf_engine_get_full(conf, key, NULL, FALSE, NULL, err);
 }
 
 GConfValue*
-gconf_get_default_from_schema (GConfEngine* conf,
+gconf_engine_get_default_from_schema (GConfEngine* conf,
                                const gchar* key,
                                GError** err)
 {
@@ -848,7 +848,7 @@ gconf_get_default_from_schema (GConfEngine* conf,
 }
 
 gboolean
-gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GError** err)
+gconf_engine_set (GConfEngine* conf, const gchar* key, GConfValue* value, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   ConfigValue* cv;
@@ -932,7 +932,7 @@ gconf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GError** err)
 }
 
 gboolean
-gconf_unset(GConfEngine* conf, const gchar* key, GError** err)
+gconf_engine_unset(GConfEngine* conf, const gchar* key, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
@@ -1005,7 +1005,7 @@ gconf_unset(GConfEngine* conf, const gchar* key, GError** err)
 }
 
 gboolean
-gconf_associate_schema  (GConfEngine* conf, const gchar* key,
+gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
                          const gchar* schema_key, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
@@ -1084,7 +1084,7 @@ gconf_associate_schema  (GConfEngine* conf, const gchar* key,
 }
 
 GSList*      
-gconf_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
+gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GSList* pairs = NULL;
@@ -1205,7 +1205,7 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 }
 
 GSList*      
-gconf_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
+gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GSList* subdirs = NULL;
@@ -1301,7 +1301,7 @@ gconf_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
 
 /* annoyingly, this is REQUIRED for local sources */
 void 
-gconf_suggest_sync(GConfEngine* conf, GError** err)
+gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
@@ -1491,7 +1491,7 @@ gconf_synchronous_sync(GConfEngine* conf, GError** err)
 }
 
 gboolean
-gconf_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
+gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
@@ -1757,7 +1757,7 @@ notify(PortableServer_Servant servant,
   gconf_cnxn_notify(cnxn, key, gvalue, is_default);
 
   if (gvalue != NULL)
-    gconf_value_destroy(gvalue);
+    gconf_value_free(gvalue);
 }
 
 static void
@@ -2290,7 +2290,7 @@ gconf_spawn_daemon(GError** err)
  */
 
 gdouble      
-gconf_get_float (GConfEngine* conf, const gchar* key,
+gconf_engine_get_float (GConfEngine* conf, const gchar* key,
                  GError** err)
 {
   GConfValue* val;
@@ -2299,7 +2299,7 @@ gconf_get_float (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(conf != NULL, 0.0);
   g_return_val_if_fail(key != NULL, 0.0);
   
-  val = gconf_get(conf, key, err);
+  val = gconf_engine_get (conf, key, err);
 
   if (val == NULL)
     return deflt;
@@ -2312,20 +2312,20 @@ gconf_get_float (GConfEngine* conf, const gchar* key,
           if (err)
             *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected float, got %s"),
                                     gconf_value_type_to_string(val->type));
-          gconf_value_destroy(val);
+          gconf_value_free(val);
           return deflt;
         }
 
       retval = gconf_value_float(val);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
 }
 
 gint         
-gconf_get_int   (GConfEngine* conf, const gchar* key,
+gconf_engine_get_int   (GConfEngine* conf, const gchar* key,
                  GError** err)
 {
   GConfValue* val;
@@ -2334,7 +2334,7 @@ gconf_get_int   (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(conf != NULL, 0);
   g_return_val_if_fail(key != NULL, 0);
   
-  val = gconf_get(conf, key, err);
+  val = gconf_engine_get (conf, key, err);
 
   if (val == NULL)
     return deflt;
@@ -2347,13 +2347,13 @@ gconf_get_int   (GConfEngine* conf, const gchar* key,
           if (err)
             *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected int, got %s"),
                                     gconf_value_type_to_string(val->type));
-          gconf_value_destroy(val);
+          gconf_value_free(val);
           return deflt;
         }
 
       retval = gconf_value_int(val);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
@@ -2369,7 +2369,7 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   
-  val = gconf_get(conf, key, err);
+  val = gconf_engine_get (conf, key, err);
 
   if (val == NULL)
     return deflt ? g_strdup(deflt) : NULL;
@@ -2382,7 +2382,7 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
           if (err)
             *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected string, got %s"),
                                     gconf_value_type_to_string(val->type));
-          gconf_value_destroy(val);
+          gconf_value_free(val);
           return deflt ? g_strdup(deflt) : NULL;
         }
 
@@ -2390,14 +2390,14 @@ gconf_get_string(GConfEngine* conf, const gchar* key,
       /* This is a cheat; don't copy */
       val->d.string_data = NULL; /* don't delete the string */
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
 }
 
 gboolean     
-gconf_get_bool  (GConfEngine* conf, const gchar* key,
+gconf_engine_get_bool  (GConfEngine* conf, const gchar* key,
                  GError** err)
 {
   GConfValue* val;
@@ -2406,7 +2406,7 @@ gconf_get_bool  (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(key != NULL, FALSE);
   
-  val = gconf_get(conf, key, err);
+  val = gconf_engine_get (conf, key, err);
 
   if (val == NULL)
     return deflt;
@@ -2419,27 +2419,27 @@ gconf_get_bool  (GConfEngine* conf, const gchar* key,
           if (err)
             *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected bool, got %s"),
                                     gconf_value_type_to_string(val->type));
-          gconf_value_destroy(val);
+          gconf_value_free(val);
           return deflt;
         }
 
       retval = gconf_value_bool(val);
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
 }
 
 GConfSchema* 
-gconf_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
+gconf_engine_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
 {
   GConfValue* val;
 
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
   
-  val = gconf_get_with_locale(conf, key, gconf_current_locale(), err);
+  val = gconf_engine_get_with_locale(conf, key, gconf_current_locale(), err);
 
   if (val == NULL)
     return NULL;
@@ -2452,7 +2452,7 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
           if (err)
             *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected schema, got %s"),
                                     gconf_value_type_to_string(val->type));
-          gconf_value_destroy(val);
+          gconf_value_free(val);
           return NULL;
         }
 
@@ -2461,14 +2461,14 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
       /* This is a cheat; don't copy */
       val->d.schema_data = NULL; /* don't delete the schema */
 
-      gconf_value_destroy(val);
+      gconf_value_free(val);
 
       return retval;
     }
 }
 
 GSList*
-gconf_get_list    (GConfEngine* conf, const gchar* key,
+gconf_engine_get_list    (GConfEngine* conf, const gchar* key,
                    GConfValueType list_type, GError** err)
 {
   GConfValue* val;
@@ -2480,7 +2480,7 @@ gconf_get_list    (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   
-  val = gconf_get_with_locale(conf, key, gconf_current_locale(), err);
+  val = gconf_engine_get_with_locale(conf, key, gconf_current_locale(), err);
 
   if (val == NULL)
     return NULL;
@@ -2492,7 +2492,7 @@ gconf_get_list    (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_get_pair    (GConfEngine* conf, const gchar* key,
+gconf_engine_get_pair    (GConfEngine* conf, const gchar* key,
                    GConfValueType car_type, GConfValueType cdr_type,
                    gpointer car_retloc, gpointer cdr_retloc,
                    GError** err)
@@ -2512,7 +2512,7 @@ gconf_get_pair    (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(cdr_retloc != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);  
   
-  val = gconf_get_with_locale(conf, key, gconf_current_locale(), &error);
+  val = gconf_engine_get_with_locale(conf, key, gconf_current_locale(), &error);
 
   if (error != NULL)
     {
@@ -2550,9 +2550,9 @@ error_checked_set(GConfEngine* conf, const gchar* key,
 {
   GError* my_err = NULL;
   
-  gconf_set(conf, key, gval, &my_err);
+  gconf_engine_set (conf, key, gval, &my_err);
 
-  gconf_value_destroy(gval);
+  gconf_value_free(gval);
   
   if (my_err != NULL)
     {
@@ -2567,7 +2567,7 @@ error_checked_set(GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_float   (GConfEngine* conf, const gchar* key,
+gconf_engine_set_float   (GConfEngine* conf, const gchar* key,
                    gdouble val, GError** err)
 {
   GConfValue* gval;
@@ -2584,7 +2584,7 @@ gconf_set_float   (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_int     (GConfEngine* conf, const gchar* key,
+gconf_engine_set_int     (GConfEngine* conf, const gchar* key,
                    gint val, GError** err)
 {
   GConfValue* gval;
@@ -2601,7 +2601,7 @@ gconf_set_int     (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_string  (GConfEngine* conf, const gchar* key,
+gconf_engine_set_string  (GConfEngine* conf, const gchar* key,
                     const gchar* val, GError** err)
 {
   GConfValue* gval;
@@ -2619,7 +2619,7 @@ gconf_set_string  (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_bool    (GConfEngine* conf, const gchar* key,
+gconf_engine_set_bool    (GConfEngine* conf, const gchar* key,
                    gboolean val, GError** err)
 {
   GConfValue* gval;
@@ -2636,7 +2636,7 @@ gconf_set_bool    (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_schema  (GConfEngine* conf, const gchar* key,
+gconf_engine_set_schema  (GConfEngine* conf, const gchar* key,
                     GConfSchema* val, GError** err)
 {
   GConfValue* gval;
@@ -2654,7 +2654,7 @@ gconf_set_schema  (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_list    (GConfEngine* conf, const gchar* key,
+gconf_engine_set_list    (GConfEngine* conf, const gchar* key,
                    GConfValueType list_type,
                    GSList* list,
                    GError** err)
@@ -2676,7 +2676,7 @@ gconf_set_list    (GConfEngine* conf, const gchar* key,
 }
 
 gboolean
-gconf_set_pair    (GConfEngine* conf, const gchar* key,
+gconf_engine_set_pair    (GConfEngine* conf, const gchar* key,
                    GConfValueType car_type, GConfValueType cdr_type,
                    gconstpointer address_of_car,
                    gconstpointer address_of_cdr,

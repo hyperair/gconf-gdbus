@@ -80,7 +80,7 @@ entry_destroy (Entry* e)
     g_free(e->name);
 
   if (e->cached_value)
-    gconf_value_destroy(e->cached_value);
+    gconf_value_free(e->cached_value);
 
   if (e->mod_user)
     g_free(e->mod_user);
@@ -152,7 +152,7 @@ entry_get_value(Entry* e, const gchar** locales, GError** err)
       if (newval != NULL)
         {
           /* We found a schema with an acceptable locale */
-          gconf_value_destroy(e->cached_value);
+          gconf_value_free(e->cached_value);
           e->cached_value = newval;
           g_return_val_if_fail(error == NULL, e->cached_value);
         }
@@ -179,7 +179,7 @@ entry_set_value(Entry* e, GConfValue* value)
   entry_sync_if_needed(e, value);
   
   if (e->cached_value)
-    gconf_value_destroy(e->cached_value);
+    gconf_value_free(e->cached_value);
       
   e->cached_value = gconf_value_copy(value);
 
@@ -205,7 +205,7 @@ entry_unset_value     (Entry        *e,
           /* e->cached_value is always non-NULL if some value is
              available; in the schema case there may be leftover
              values */
-          gconf_value_destroy(e->cached_value);
+          gconf_value_free(e->cached_value);
           e->cached_value = node_extract_value(e->node, NULL, &error);
 
           if (error != NULL)
@@ -219,12 +219,12 @@ entry_unset_value     (Entry        *e,
         {
           /* if locale == NULL nuke all the locales */
           if (e->cached_value)
-            gconf_value_destroy(e->cached_value);
+            gconf_value_free(e->cached_value);
           e->cached_value = NULL;
         }
       else
         {
-          gconf_value_destroy(e->cached_value);
+          gconf_value_free(e->cached_value);
           e->cached_value = NULL;
         }
 
@@ -368,7 +368,7 @@ entry_fill_from_node(Entry* e)
   entry_sync_if_needed(e, NULL);
   
   if (e->cached_value != NULL)
-    gconf_value_destroy(e->cached_value);
+    gconf_value_free(e->cached_value);
   
   e->cached_value = node_extract_value(e->node, NULL, /* FIXME current locale as a guess */
                                        &error);
@@ -1086,7 +1086,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
                         gconf_log(GCL_WARNING, _("List contains a badly-typed node (%s, should be %s)"),
                                   gconf_value_type_to_string(v->type),
                                   gconf_value_type_to_string(list_type));
-                        gconf_value_destroy(v);
+                        gconf_value_free(v);
                         v = NULL;
                       }
                   }
@@ -1145,7 +1145,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
                              car->type == GCONF_VALUE_PAIR)
                       {
                         gconf_log(GCL_WARNING, _("parsing XML file: lists and pairs may not be placed inside a pair"));
-                        gconf_value_destroy(car);
+                        gconf_value_free(car);
                         car = NULL;
                       }
                   }
@@ -1168,7 +1168,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
                       {
                         gconf_log(GCL_WARNING,
                                   _("parsing XML file: lists and pairs may not be placed inside a pair"));
-                        gconf_value_destroy(cdr);
+                        gconf_value_free(cdr);
                         cdr = NULL;
                       }
                   }
@@ -1198,14 +1198,14 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
             if (car)
               {
                 g_assert(cdr == NULL);
-                gconf_value_destroy(car);
+                gconf_value_free(car);
                 gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
                                 _("Missing cdr from pair of values in XML file"));
               }
             else if (cdr)
               {
                 g_assert(car == NULL);
-                gconf_value_destroy(cdr);
+                gconf_value_free(cdr);
                 gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
                                 _("Missing car from pair of values in XML file"));
               }

@@ -29,7 +29,6 @@ BUILT_SOURCES = $(CORBA_SOURCES)
 gconfincludedir = $(includedir)/gconf/$(MAJOR_VERSION)/gconf
 gconfinclude_HEADERS =     \
 	gconf.h            \
-	gconf-backend.h		\
 	gconf-changeset.h	\
 	gconf-glib-public.h	\
 	gconf-listeners.h  \
@@ -65,6 +64,7 @@ $(CORBA_SOURCES): $(srcdir)/GConf.idl
 libgconf_1_la_SOURCES = \
 	gconf-internals.c	\
 	gconf-internals.h	\
+	gconf-backend.h		\
 	gconf-backend.c		\
 	gconf-changeset.c	\
 	gconf-error.c		\

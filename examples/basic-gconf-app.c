@@ -336,7 +336,7 @@ prefs_dialog_apply(GtkWidget* dialog)
 
   if (revert_cs == NULL)
     {
-      revert_cs = gconf_client_create_change_set_from_current(client,
+      revert_cs = gconf_client_change_set_from_current(client,
                                                               NULL,
                                                               "/apps/basic-gconf-app/foo",
                                                               "/apps/basic-gconf-app/bar",
@@ -396,7 +396,7 @@ update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
               else
                 g_warning("Wrong type for default value of %s", config_key);
 
-              gconf_value_destroy(def);
+              gconf_value_free(def);
             }
           else
             gtk_entry_set_text(GTK_ENTRY(entry), "");
@@ -506,7 +506,7 @@ create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* c
     }
 
   if (initial)
-    gconf_value_destroy(initial);
+    gconf_value_free(initial);
   
   gtk_object_set_data(GTK_OBJECT(entry), "client", client);
   gtk_object_set_data(GTK_OBJECT(entry), "key", g_strdup(config_key));

@@ -104,7 +104,7 @@ memory inside the #GConfValue will also be copied.
 @Returns: a newly-allocated #GConfValue identical to @src.
 
 
-<!-- ##### FUNCTION gconf_value_destroy ##### -->
+<!-- ##### FUNCTION gconf_value_free ##### -->
 <para>
 Deallocates a #GConfValue. Also deallocates any allocated memory
 inside the #GConfValue (such as lists, pair members, strings, and schemas).
@@ -490,7 +490,7 @@ with a GLib function, not malloc().
 @Returns: a new #GConfentry.
 
 
-<!-- ##### FUNCTION gconf_entry_destroy ##### -->
+<!-- ##### FUNCTION gconf_entry_free ##### -->
 <para>
 Destroys a #GConfEntry, freeing the key, the value, and the entry itself.
 </para>

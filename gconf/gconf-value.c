@@ -96,7 +96,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
                                       _("Didn't understand `%s' (expected integer)"),
                                       value_str);
             
-            gconf_value_destroy(value);
+            gconf_value_free(value);
             value = NULL;
           }
         else if (errno == ERANGE)
@@ -105,7 +105,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
               *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                                       _("Integer `%s' is too large or small"),
                                       value_str);
-            gconf_value_destroy(value);
+            gconf_value_free(value);
             value = NULL;
           }
         else
@@ -127,7 +127,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
                                       _("Didn't understand `%s' (expected real number)"),
                                      value_str);
             
-            gconf_value_destroy(value);
+            gconf_value_free(value);
             value = NULL;
           }
       }
@@ -160,7 +160,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
                                    _("Didn't understand `%s' (expected true or false)"),
                                    value_str);
           
-          gconf_value_destroy(value);
+          gconf_value_free(value);
           value = NULL;
           break;
         }
@@ -268,7 +268,7 @@ gconf_value_new_list_from_string(GConfValueType list_type,
 	  if (err && *err != NULL)
 	    {
 	      /* Free values so far */
-	      g_slist_foreach(list, (GFunc)gconf_value_destroy, NULL);
+	      g_slist_foreach(list, (GFunc)gconf_value_free, NULL);
 	      g_slist_free(list);
 
 	      g_string_free(string, TRUE);
@@ -282,7 +282,7 @@ gconf_value_new_list_from_string(GConfValueType list_type,
 	      i != len-1)
 	    {
 	      /* Free values so far */
-	      g_slist_foreach(list, (GFunc)gconf_value_destroy, NULL);
+	      g_slist_foreach(list, (GFunc)gconf_value_free, NULL);
 	      g_slist_free(list);
 
 	      g_string_free(string, TRUE);
@@ -313,7 +313,7 @@ gconf_value_new_list_from_string(GConfValueType list_type,
   if (pending_chars)
     {
       /* Free values so far */
-      g_slist_foreach(list, (GFunc)gconf_value_destroy, NULL);
+      g_slist_foreach(list, (GFunc)gconf_value_free, NULL);
       g_slist_free(list);
 
       g_string_free(string, TRUE);
@@ -394,9 +394,9 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
 	    {
 	      /* Free values so far */
 	      if (car)
-	        gconf_value_destroy(car);
+	        gconf_value_free(car);
 	      if (cdr)
-	        gconf_value_destroy(cdr);
+	        gconf_value_free(cdr);
 
 	      g_string_free(string, TRUE);
 
@@ -418,9 +418,9 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
 	    {
 	      /* Free values so far */
 	      if (car)
-	        gconf_value_destroy(car);
+	        gconf_value_free(car);
 	      if (cdr)
-	        gconf_value_destroy(cdr);
+	        gconf_value_free(cdr);
 
 	      g_string_free(string, TRUE);
 
@@ -434,9 +434,9 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
 	    {
 	      /* Free values so far */
 	      if (car)
-	        gconf_value_destroy(car);
+	        gconf_value_free(car);
 	      if (cdr)
-	        gconf_value_destroy(cdr);
+	        gconf_value_free(cdr);
 
 	      g_string_free(string, TRUE);
 
@@ -467,9 +467,9 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
     {
       /* Free values so far */
       if (car)
-	gconf_value_destroy(car);
+	gconf_value_free(car);
       if (cdr)
-	gconf_value_destroy(cdr);
+	gconf_value_free(cdr);
 
       if (err)
 	*err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
@@ -482,9 +482,9 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
     {
       /* Free values so far */
       if (car)
-	gconf_value_destroy(car);
+	gconf_value_free(car);
       if (cdr)
-	gconf_value_destroy(cdr);
+	gconf_value_free(cdr);
 
       if (err)
 	*err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
@@ -731,7 +731,7 @@ gconf_value_free_list(GConfValue* value)
 
   while (tmp != NULL)
     {
-      gconf_value_destroy(tmp->data);
+      gconf_value_free(tmp->data);
       
       tmp = g_slist_next(tmp);
     }
@@ -741,7 +741,7 @@ gconf_value_free_list(GConfValue* value)
 }
 
 void 
-gconf_value_destroy(GConfValue* value)
+gconf_value_free(GConfValue* value)
 {
   g_return_if_fail(value != NULL);
 
@@ -753,17 +753,17 @@ gconf_value_destroy(GConfValue* value)
       break;
     case GCONF_VALUE_SCHEMA:
       if (value->d.schema_data != NULL)
-        gconf_schema_destroy(value->d.schema_data);
+        gconf_schema_free(value->d.schema_data);
       break;
     case GCONF_VALUE_LIST:
       gconf_value_free_list(value);
       break;
     case GCONF_VALUE_PAIR:
       if (value->d.pair_data.car != NULL)
-        gconf_value_destroy(value->d.pair_data.car);
+        gconf_value_free(value->d.pair_data.car);
 
       if (value->d.pair_data.cdr != NULL)
-        gconf_value_destroy(value->d.pair_data.cdr);
+        gconf_value_free(value->d.pair_data.cdr);
       break;
     default:
       break;
@@ -815,7 +815,7 @@ gconf_value_set_schema(GConfValue* value, GConfSchema* sc)
   g_return_if_fail(value->type == GCONF_VALUE_SCHEMA);
   
   if (value->d.schema_data != NULL)
-    gconf_schema_destroy(value->d.schema_data);
+    gconf_schema_free(value->d.schema_data);
 
   value->d.schema_data = gconf_schema_copy(sc);
 }
@@ -828,7 +828,7 @@ gconf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
   g_return_if_fail(sc != NULL);
   
   if (value->d.schema_data != NULL)
-    gconf_schema_destroy(value->d.schema_data);
+    gconf_schema_free(value->d.schema_data);
 
   value->d.schema_data = sc;
 }
@@ -849,7 +849,7 @@ gconf_value_set_car_nocopy(GConfValue* value, GConfValue* car)
   g_return_if_fail(car != NULL);
   
   if (value->d.pair_data.car != NULL)
-    gconf_value_destroy(value->d.pair_data.car);
+    gconf_value_free(value->d.pair_data.car);
 
   value->d.pair_data.car = car;
 }
@@ -870,7 +870,7 @@ gconf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr)
   g_return_if_fail(cdr != NULL);
   
   if (value->d.pair_data.cdr != NULL)
-    gconf_value_destroy(value->d.pair_data.cdr);
+    gconf_value_free(value->d.pair_data.cdr);
 
   value->d.pair_data.cdr = cdr;
 }
@@ -985,11 +985,11 @@ gconf_entry_new_nocopy(gchar* key, GConfValue* val)
 }
 
 void
-gconf_entry_destroy(GConfEntry* pair)
+gconf_entry_free(GConfEntry* pair)
 {
   g_free(pair->key);
   if (pair->value)
-    gconf_value_destroy(pair->value);
+    gconf_value_free(pair->value);
   g_free(pair);
 }
 
@@ -1006,7 +1006,7 @@ gconf_entry_set_value_nocopy(GConfEntry* entry,
                              GConfValue* val)
 {
   if (entry->value)
-    gconf_value_destroy(entry->value);
+    gconf_value_free(entry->value);
 
   entry->value = val;
 }

@@ -87,7 +87,7 @@ struct _GConfValue {
 GConfValue* gconf_value_new                  (GConfValueType type);
 
 GConfValue* gconf_value_copy                 (GConfValue* src);
-void        gconf_value_destroy              (GConfValue* value);
+void        gconf_value_free                 (GConfValue* value);
 
 void        gconf_value_set_int              (GConfValue* value,
                                               gint the_int);
@@ -166,7 +166,7 @@ struct _GConfEntry {
 /* Pair takes memory ownership of both key and value */
 GConfEntry* gconf_entry_new_nocopy       (gchar       *key,
                                           GConfValue  *val);
-void        gconf_entry_destroy          (GConfEntry  *entry);
+void        gconf_entry_free             (GConfEntry  *entry);
 
 /* Transfer ownership of value to the caller. */
 GConfValue* gconf_entry_steal_value      (GConfEntry  *entry);

@@ -49,7 +49,7 @@ main (int argc, char** argv)
 
   conf = gconf_new();
 
-  cnxn = gconf_notify_add(conf, "/hello/world", notify_func, NULL);
+  cnxn = gconf_engine_notify_add(conf, "/hello/world", notify_func, NULL);
 
   if (cnxn != 0)
     printf("Connection %u added\n", cnxn);
@@ -63,7 +63,7 @@ main (int argc, char** argv)
 
   gconf_value_set_int(val, 100);
  
-  gconf_set(conf, "/hello/world/whoo", val);
+  gconf_engine_set (conf, "/hello/world/whoo", val);
  
   testclient_main();
 

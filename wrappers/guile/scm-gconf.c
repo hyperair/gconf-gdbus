@@ -183,7 +183,7 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
   
   str = gh_scm2newstr(keyname, NULL);
   
-  val = gconf_get(SCM_TO_GCONF(obj), str, &err);
+  val = gconf_engine_get (SCM_TO_GCONF(obj), str, &err);
 
   free(str);
 
@@ -201,7 +201,7 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
       retval = gconf_value_to_scm(val);
       
       if (val)
-        gconf_value_destroy(val);
+        gconf_value_free(val);
     }
       
   gh_allow_ints();

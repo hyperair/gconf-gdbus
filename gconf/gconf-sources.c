@@ -514,7 +514,7 @@ gconf_sources_query_value (GConfSources* sources,
           GConfValue* retval = gconf_value_schema(val)->default_value;
           /* cheat, "unparent" the value to avoid a copy */
           gconf_value_schema(val)->default_value = NULL;
-          gconf_value_destroy(val);
+          gconf_value_free(val);
 
           g_free(schema_name);
           
@@ -579,7 +579,7 @@ gconf_sources_set_value   (GConfSources* sources,
           
           if (val != NULL)
             {
-              gconf_value_destroy(val);
+              gconf_value_free(val);
               gconf_set_error(err, GCONF_ERROR_OVERRIDDEN,
                               _("Value for `%s' set in a read-only source at the front of your configuration path."), key);
               return;
@@ -748,7 +748,7 @@ hash_destroy_entries_func(gpointer key, gpointer value, gpointer user_data)
 
   entry = value;
 
-  gconf_entry_destroy(entry);
+  gconf_entry_free(entry);
 }
 
 static void
@@ -796,7 +796,7 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
             }
 
           if (val)
-            gconf_value_destroy(val);
+            gconf_value_free(val);
         }
     }
 }
@@ -878,7 +878,7 @@ gconf_sources_all_entries   (GConfSources* sources,
                 gconf_entry_set_value_nocopy(previous,
                                              gconf_entry_steal_value(pair));
               
-              gconf_entry_destroy(pair);
+              gconf_entry_free(pair);
             }
           else
             {
@@ -1179,7 +1179,7 @@ gconf_sources_query_default_value(GConfSources* sources,
       schema = gconf_value_schema(val);
       val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
       
-      gconf_value_destroy(val); /* schema not destroyed due to our cheat */
+      gconf_value_free(val); /* schema not destroyed due to our cheat */
       
       if (schema != NULL)
         {
@@ -1188,7 +1188,7 @@ gconf_sources_query_default_value(GConfSources* sources,
           retval = schema->default_value;
           schema->default_value = NULL;
 
-          gconf_schema_destroy(schema);
+          gconf_schema_free(schema);
           
           return retval;
         }

@@ -724,7 +724,7 @@ recurse_subdir_list(GConfEngine* conf, GSList* subdirs, const gchar* parent, gui
       
       list_pairs_in_dir(conf, full, depth);
 
-      recurse_subdir_list(conf, gconf_all_dirs(conf, full, NULL), full, depth+1);
+      recurse_subdir_list(conf, gconf_engine_all_dirs(conf, full, NULL), full, depth+1);
 
       g_free(s);
       g_free(full);
@@ -749,7 +749,7 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
     {
       GSList* subdirs;
 
-      subdirs = gconf_all_dirs(conf, *args, NULL);
+      subdirs = gconf_engine_all_dirs(conf, *args, NULL);
 
       list_pairs_in_dir(conf, *args, 0);
           
@@ -771,7 +771,7 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
   
   whitespace = g_strnfill(depth, ' ');
 
-  pairs = gconf_all_entries(conf, dir, &err);
+  pairs = gconf_engine_all_entries(conf, dir, &err);
           
   if (err != NULL)
     {
@@ -799,7 +799,7 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
 
           g_free(s);
                   
-          gconf_entry_destroy(pair);
+          gconf_entry_free(pair);
 
           tmp = g_slist_next(tmp);
         }
@@ -827,7 +827,7 @@ do_dir_exists(GConfEngine* conf, const gchar* dir)
   GError* err = NULL;
   gboolean exists = FALSE;
   
-  exists = gconf_dir_exists(conf, dir_exists, &err);
+  exists = gconf_engine_dir_exists(conf, dir_exists, &err);
   
   if (err != NULL)
     {
@@ -871,7 +871,7 @@ do_get(GConfEngine* conf, const gchar** args)
 
       err = NULL;
 
-      value = gconf_get(conf, *args, &err);
+      value = gconf_engine_get (conf, *args, &err);
          
       if (value != NULL)
         {
@@ -903,7 +903,7 @@ do_get(GConfEngine* conf, const gchar** args)
               printf(_("Long Desc: %s\n"), long_desc ? long_desc : _("Unset"));
             }
 
-          gconf_value_destroy(value);
+          gconf_value_free(value);
         }
       else
         {
@@ -1076,7 +1076,7 @@ do_set(GConfEngine* conf, const gchar** args)
 
       err = NULL;
           
-      gconf_set(conf, key, gval, &err);
+      gconf_engine_set (conf, key, gval, &err);
 
       if (err != NULL)
         {
@@ -1087,14 +1087,14 @@ do_set(GConfEngine* conf, const gchar** args)
           return 1;
         }
 
-      gconf_value_destroy(gval);
+      gconf_value_free(gval);
 
       ++args;
     }
 
   err = NULL;
 
-  gconf_suggest_sync(conf, &err);
+  gconf_engine_suggest_sync(conf, &err);
 
   if (err != NULL)
     {
@@ -1209,7 +1209,7 @@ do_set_schema(GConfEngine* conf, const gchar** args)
 
   err = NULL;
       
-  gconf_set(conf, key, val, &err);
+  gconf_engine_set (conf, key, val, &err);
       
   if (err != NULL)
     {
@@ -1220,10 +1220,10 @@ do_set_schema(GConfEngine* conf, const gchar** args)
       return 1;
     }
       
-  gconf_value_destroy(val);
+  gconf_value_free(val);
 
   err = NULL;
-  gconf_suggest_sync(conf, &err);
+  gconf_engine_suggest_sync(conf, &err);
       
   if (err != NULL)
     {
@@ -1263,7 +1263,7 @@ do_unset(GConfEngine* conf, const gchar** args)
   while (*args)
     {
       err = NULL;
-      gconf_unset(conf, *args, &err);
+      gconf_engine_unset(conf, *args, &err);
 
       if (err != NULL)
         {
@@ -1277,7 +1277,7 @@ do_unset(GConfEngine* conf, const gchar** args)
     }
 
   err = NULL;
-  gconf_suggest_sync(conf, NULL); /* ignore errors */
+  gconf_engine_suggest_sync(conf, NULL); /* ignore errors */
 
   return 0;
 }
@@ -1301,7 +1301,7 @@ do_all_subdirs(GConfEngine* conf, const gchar** args)
 
       err = NULL;
 
-      subdirs = gconf_all_dirs(conf, *args, &err);
+      subdirs = gconf_engine_all_dirs(conf, *args, &err);
           
       if (subdirs != NULL)
         {
@@ -1750,7 +1750,7 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
   info = user_data;
   schema = value;
   
-  if (!gconf_set_schema(info->conf, info->key, schema, &error))
+  if (!gconf_engine_set_schema(info->conf, info->key, schema, &error))
     {
       g_assert(error != NULL);
 
@@ -1766,7 +1766,7 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
              info->key, gconf_schema_locale(schema));
     }
       
-  gconf_schema_destroy(schema);
+  gconf_schema_free(schema);
 }
 
 
@@ -1780,7 +1780,7 @@ process_key_list(GConfEngine* conf, const gchar* schema_name, GSList* keylist)
 
   while (tmp != NULL)
     {
-      if (!gconf_associate_schema(conf, tmp->data, schema_name,  &error))
+      if (!gconf_engine_associate_schema(conf, tmp->data, schema_name,  &error))
         {
           g_assert(error != NULL);
           
@@ -1826,7 +1826,7 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
       g_free(info.owner);
 
       if (info.global_default)
-        gconf_value_destroy(info.global_default);
+        gconf_value_free(info.global_default);
 
       return 1;
     }
@@ -1883,7 +1883,7 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
   g_free(info.key);
   g_free(info.owner);
   if (info.global_default)
-    gconf_value_destroy(info.global_default);
+    gconf_value_free(info.global_default);
   
   return 0;
 }
@@ -1975,7 +1975,7 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
       iter = iter->next;
     }
 
-  gconf_suggest_sync(conf, &err);
+  gconf_engine_suggest_sync(conf, &err);
 
   if (err != NULL)
     {
@@ -2007,7 +2007,7 @@ do_makefile_install(GConfEngine* conf, const gchar** args)
       ++args;
     }
 
-  gconf_suggest_sync(conf, &err);
+  gconf_engine_suggest_sync(conf, &err);
 
   if (err != NULL)
     {
@@ -2049,7 +2049,7 @@ key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
   
   if (phase == BreakageCleanup)
     {
-      gconf_unset(conf, key, &error);
+      gconf_engine_unset(conf, key, &error);
       if (error != NULL)
         {
           fprintf(stderr, _("Failed to unset breakage key %s: %s\n"),
@@ -2069,75 +2069,75 @@ key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
       
       printf("  +");
       
-      gconf_set_string(conf, key, "", &error);
+      gconf_engine_set_string(conf, key, "", &error);
       if (check_err(&error))
         return FALSE;
       
-      gconf_set_string(conf, key, "blah blah blah 93475028934670 @%^%$&%$&^%", &error);
+      gconf_engine_set_string(conf, key, "blah blah blah 93475028934670 @%^%$&%$&^%", &error);
       if (check_err(&error))
         return FALSE;
       
-      gconf_set_bool(conf, key, TRUE, &error);
+      gconf_engine_set_bool(conf, key, TRUE, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_bool(conf, key, FALSE, &error);
+      gconf_engine_set_bool(conf, key, FALSE, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_float(conf, key, 100.0, &error);
+      gconf_engine_set_float(conf, key, 100.0, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_float(conf, key, -100.0, &error);
+      gconf_engine_set_float(conf, key, -100.0, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_float(conf, key, 0.0, &error);
+      gconf_engine_set_float(conf, key, 0.0, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_int(conf, key, 0, &error);
+      gconf_engine_set_int(conf, key, 0, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_int(conf, key, 5384750, &error);
+      gconf_engine_set_int(conf, key, 5384750, &error);
       if (check_err(&error))
         return FALSE;
       
-      gconf_set_int(conf, key, -11, &error);
+      gconf_engine_set_int(conf, key, -11, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_list(conf, key, GCONF_VALUE_BOOL, list, &error);
+      gconf_engine_set_list(conf, key, GCONF_VALUE_BOOL, list, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_pair(conf, key, GCONF_VALUE_INT, GCONF_VALUE_BOOL,
+      gconf_engine_set_pair(conf, key, GCONF_VALUE_INT, GCONF_VALUE_BOOL,
                      &an_int, &a_bool, &error);
       if (check_err(&error))
         return FALSE;
 
-      gconf_set_pair(conf, key, GCONF_VALUE_FLOAT, GCONF_VALUE_STRING,
+      gconf_engine_set_pair(conf, key, GCONF_VALUE_FLOAT, GCONF_VALUE_STRING,
                      &a_float, &a_string, &error);
       if (check_err(&error))
         return FALSE;
 
       /* empty pair */
       val = gconf_value_new(GCONF_VALUE_PAIR);
-      gconf_set(conf, key, val, &error);
-      gconf_value_destroy(val);
+      gconf_engine_set (conf, key, val, &error);
+      gconf_value_free(val);
       if (check_err(&error))
         return FALSE;
 
       list = NULL;
-      gconf_set_list(conf, key, GCONF_VALUE_STRING, list, &error);
+      gconf_engine_set_list(conf, key, GCONF_VALUE_STRING, list, &error);
       if (check_err(&error))
         return FALSE;
-      gconf_set_list(conf, key, GCONF_VALUE_INT, list, &error);
+      gconf_engine_set_list(conf, key, GCONF_VALUE_INT, list, &error);
       if (check_err(&error))
         return FALSE;
-      gconf_set_list(conf, key, GCONF_VALUE_BOOL, list, &error);
+      gconf_engine_set_list(conf, key, GCONF_VALUE_BOOL, list, &error);
       if (check_err(&error))
         return FALSE;
 
@@ -2146,7 +2146,7 @@ key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
       list = g_slist_prepend(list, GINT_TO_POINTER(-93));
       list = g_slist_prepend(list, GINT_TO_POINTER(1000000));
       list = g_slist_prepend(list, GINT_TO_POINTER(32));
-      gconf_set_list(conf, key, GCONF_VALUE_INT, list, &error);
+      gconf_engine_set_list(conf, key, GCONF_VALUE_INT, list, &error);
       if (check_err(&error))
         return FALSE;
 
@@ -2158,7 +2158,7 @@ key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
       list = g_slist_prepend(list, "");
       list = g_slist_prepend(list, "\n\t\r\n     \n");
       list = g_slist_prepend(list, "woo fooo s^%*^%&@^$@%&@%$");
-      gconf_set_list(conf, key, GCONF_VALUE_STRING, list, &error);
+      gconf_engine_set_list(conf, key, GCONF_VALUE_STRING, list, &error);
       if (check_err(&error))
         return FALSE;
 

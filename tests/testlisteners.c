@@ -524,7 +524,7 @@ check_destroy(void)
   check(gconf_listeners_count(listeners) == i,
         "number of listeners added (%u) don't now exist in the GConfListeners (%u exist)", i, gconf_listeners_count(listeners));
 
-  gconf_listeners_destroy(listeners);
+  gconf_listeners_free(listeners);
 
   check(destroy_count == i,
         "number of listeners added (%u) doesn't match number destroyed (%u) on GConfListeners destruction", i, destroy_count);
@@ -553,7 +553,7 @@ main (int argc, char** argv)
 
   g_assert(gconf_listeners_count(listeners) == 0);
   
-  gconf_listeners_destroy(listeners);
+  gconf_listeners_free(listeners);
 
   check_destroy();
   
