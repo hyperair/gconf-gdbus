@@ -369,7 +369,7 @@ gconf_split_locale               (const gchar* locale)
   g_free (orig_category_memory);
   
   if (!c_locale_defined)
-    list = g_slist_append (list, "C");
+    list = g_slist_append (list, g_strdup ("C"));
 
   {
     /* Convert list to a string vector */

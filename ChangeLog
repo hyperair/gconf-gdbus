@@ -1,3 +1,8 @@
+Fri Dec 01 00:54:33 2000  George Lebl <jirka@5z.com>
+
+	* gconf/gconf-locale.c (gconf_split_locale):  When inserting "C"
+	  into a list, dup it first to avoid a possible crash later.
+
 2000-11-30  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf.c (gconf_engine_unset): Fix dereference of NULL GError**
