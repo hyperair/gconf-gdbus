@@ -139,6 +139,10 @@ gconfd_set(PortableServer_Servant servant, CORBA_char * key,
            ConfigValue* value, CORBA_Environment *ev);
 
 void 
+gconfd_unset(PortableServer_Servant servant, CORBA_char * key, 
+             CORBA_Environment *ev);
+
+void 
 gconfd_all_pairs (PortableServer_Servant servant, CORBA_char * dir, 
                   ConfigServer_KeyList ** keys, 
                   ConfigServer_ValueList ** values, CORBA_Environment * ev);
@@ -167,7 +171,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_add_listener, 
   gconfd_remove_listener, 
   gconfd_lookup, 
-  gconfd_set, 
+  gconfd_set,
+  gconfd_unset,
   gconfd_all_pairs,
   gconfd_all_dirs,
   gconfd_sync,
@@ -257,6 +262,29 @@ gconfd_set(PortableServer_Servant servant, CORBA_char * key,
   g_conf_sources_set_value(sources, key, val);
 
   ltable_notify_listeners(ltable, key, value);
+}
+
+void 
+gconfd_unset(PortableServer_Servant servant, CORBA_char * key, 
+             CORBA_Environment *ev)
+{
+  ConfigValue* val;
+
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received unset request before initializing sources list; bug?");
+      return;
+    } 
+  
+  syslog(LOG_DEBUG, "Received request to unset key `%s'", key);
+
+  g_conf_sources_unset_value(sources, key);
+
+  val = invalid_corba_value();
+
+  ltable_notify_listeners(ltable, key, val);
+
+  CORBA_free(val);
 }
 
 void 

@@ -38,6 +38,10 @@
 /*
  * Overview
  * 
+ * FIXME I think it might simplify this file quite a bit to rewrite it
+ * with a tree instead of or in addition to a hash for the cache, so
+ * you can walk the tree more easily.
+ *
  * Basically we have a directory tree underneath an arbitrary root
  * directory.  The directory tree reflects the configuration
  * namespace. Each directory contains an XML file which lists the
@@ -104,8 +108,7 @@
  * If a key/directory doesn't exist, we create a cache entry anyway
  * so we can rapidly re-determine that it doesn't exist.
  * We also need to save "dirty" nonexistent entries, so we can delete
- * the stuff off disk. 
- */
+ * the stuff off disk.  */
 
 typedef struct _XMLSource XMLSource;
 
@@ -156,6 +159,9 @@ xs_destroy(XMLSource* source);
 static void
 xs_set_value(XMLSource* source, const gchar* key, GConfValue* value);
 
+static void
+xs_unset_value(XMLSource* source, const gchar* key);
+
 static xmlDocPtr
 xs_load_dir(XMLSource* source, const gchar* dir);
 
@@ -170,6 +176,16 @@ xs_pairs_in_dir(XMLSource* source, const gchar* dir);
 
 static GSList*
 xs_dirs_in_dir(XMLSource* source, const gchar* dir);
+
+/* Prune the cache */
+static void
+xs_prune(XMLSource* source, const gchar* dir);
+
+static void
+xs_remove_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry);
+
+static void
+xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry);
 
 /*
  * Dyna-load implementation
@@ -189,6 +205,8 @@ static GSList*       all_entries    (GConfSource* source,
 static GSList*       all_subdirs     (GConfSource* source,
                                      const gchar* dir);
 
+static void          unset_value     (GConfSource* source,
+                                      const gchar* key);
 
 static gboolean      sync_all        (GConfSource* source);
 
@@ -201,6 +219,7 @@ static GConfBackendVTable xml_vtable = {
   set_value,
   all_entries,
   all_subdirs,
+  unset_value,
   sync_all,
   destroy_source
 };
@@ -290,6 +309,15 @@ all_subdirs     (GConfSource* source,
   return xs_dirs_in_dir(xsource, dir);
 }
 
+static void          
+unset_value     (GConfSource* source,
+                 const gchar* key)
+{
+  XMLSource* xsource = (XMLSource*)source;
+
+  xs_unset_value(xsource, key);
+}
+
 static gboolean      
 sync_all        (GConfSource* source)
 {
@@ -337,6 +365,9 @@ static xmlNodePtr
 xdirs_add_child_dir(xmlNodePtr node, const gchar* relative_child_dir);
 
 static void
+xdirs_remove_child_dir(xmlNodePtr dirs, const gchar* relative_child_dir);
+
+static void
 xentry_set_value(xmlNodePtr node, GConfValue* value);
 
 static GConfValue*
@@ -361,6 +392,9 @@ tree_cache_entry_destroy(TreeCacheEntry* entry);
 
 static void
 tree_cache_entry_make_dirs(TreeCacheEntry* entry);
+
+static GSList*
+tree_cache_entry_list_dirs(TreeCacheEntry* entry, const gchar* dir);
 
 /*
  * XML source implementation
@@ -621,43 +655,15 @@ xs_pairs_in_dir(XMLSource* source, const gchar* dir)
 static GSList*
 xs_dirs_in_dir(XMLSource* source, const gchar* dir)
 {
-  GSList* retval = NULL;
   TreeCacheEntry* entry;
-  xmlNodePtr node;
 
   printf("Listing all dirs in `%s'\n", dir);
 
   entry = xs_lookup_dir(source, dir);
-  
-  if (entry->dirs == NULL)
-    {
-      printf("No subdirectories in the dir entry\n");
-      return NULL;
-    }
 
-  node = entry->dirs->childs;
+  g_assert(entry != NULL);
 
-  while (node != NULL)
-    {
-      gchar* attr = xmlGetProp(node, "name");      
-
-      if (attr != NULL)
-        {
-          gchar* s;
-          
-          s = g_conf_concat_key_and_dir(dir, attr);
-
-          free(attr);
-
-          retval = g_slist_prepend(retval, s);
-        }
-      else 
-        g_warning("Dir with no name???");
-
-      node = node->next;
-    }
-
-  return retval;
+  return tree_cache_entry_list_dirs(entry, dir);
 }
 
 static XMLSource* 
@@ -676,6 +682,188 @@ xs_new(const gchar* root_dir)
   xs->keys = g_hash_table_new(g_str_hash, g_str_equal);
 
   return xs;
+}
+
+static gchar* 
+parent_dir(const gchar* dir)
+{
+  /* We assume the dir doesn't have a trailing slash, since that's our
+     standard canonicalization in GConf */
+  gchar* parent;
+  gchar* last_slash;
+
+  g_return_val_if_fail(*dir != '\0', NULL);
+
+  if (dir[1] == '\0')
+    {
+      g_assert(dir[0] == '/');
+      return NULL;
+    }
+
+  parent = g_strdup(dir);
+
+  last_slash = strrchr(parent, '/');
+
+  /* dir must have had at least the root slash in it */
+  g_assert(last_slash != NULL);
+  
+  if (last_slash != parent)
+    *last_slash = '\0';
+  else 
+    {
+      ++last_slash;
+      *last_slash = '\0';
+    }
+
+  return parent;
+}
+
+static void
+xs_uncache_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry)
+{
+  GSList* tmp = tree_entry->cached_keys;
+
+  g_return_if_fail(!tree_entry->dirty);
+
+  while (tmp != NULL)
+    {
+      KeyCacheEntry* key_entry = tmp->data;
+
+      g_hash_table_remove(source->keys, key_entry->key);
+      key_cache_entry_destroy(key_entry);
+      
+      tmp = g_slist_next(tmp);
+    }
+
+  g_slist_free(tree_entry->cached_keys);
+  tree_entry->cached_keys = NULL;
+
+  g_hash_table_remove(source->trees, dir);
+  tree_cache_entry_destroy(tree_entry);
+}
+
+static void
+xs_remove_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
+{
+  gchar* parent;
+
+  g_return_if_fail(entry->dirs == NULL);
+
+  parent = parent_dir(dir);
+  
+  if (parent != NULL)
+    {  
+      TreeCacheEntry* parent_entry;
+      gchar* key;
+
+      parent_entry = xs_lookup_dir(source, parent);
+
+      if (parent_entry == NULL ||
+          parent_entry->dirs == NULL)
+        {
+          g_warning("Bug! No entry for parent dir? No subdirs in parent? Failed to load it?");
+          g_free(parent);
+          return;
+        }
+
+      key = g_conf_key_key(dir);
+      
+      xdirs_remove_child_dir(parent_entry->dirs, key);
+
+      g_free(key);
+
+      parent_entry->dirty = TRUE;
+
+      /* Remove the parent if it just became empty */
+      xs_remove_dir_if_empty(source, parent, parent_entry);
+
+      g_free(parent);
+    }
+  else 
+    g_assert(dir[1] == '\0'); /* "/" directory */
+}
+
+static void
+xs_prune(XMLSource* source, const gchar* dir)
+{
+  TreeCacheEntry* tree_entry;
+  GSList* subdirs;
+  GSList* tmp;
+  GTime cutoff;
+
+  /* Don't want to use the lookup functions, we don't want to update
+     access times or load currently-uncached stuff here.  */
+  tree_entry = g_hash_table_lookup(source->trees, dir);
+
+  if (tree_entry == NULL)
+    return;
+
+  cutoff = time(NULL) - (60*10); /* 10 minutes */
+
+  if (tree_entry->tree == NULL || 
+      tree_entry->tree->root == NULL)
+    {
+      if (!tree_entry->dirty && 
+          tree_entry->last_access < cutoff)
+        {
+          xs_uncache_dir(source, dir, tree_entry);
+        }
+      return;
+    }
+  
+  g_assert(tree_entry->tree != NULL);
+  g_assert(tree_entry->tree->root != NULL);
+
+  if (tree_entry->dirs != NULL)
+    {
+      /* We have a subtree, so recurse it if it contains subdirs */
+      if (tree_entry->dirs->childs == NULL)
+        {
+          /* Remove empty <dirs> tag */
+          xmlUnlinkNode(tree_entry->dirs);
+          xmlFreeNode(tree_entry->dirs);
+          tree_entry->dirs = NULL;
+
+          tree_entry->dirty = TRUE;
+        }
+      else
+        {
+          subdirs = tree_cache_entry_list_dirs(tree_entry, dir);
+          
+          tmp = subdirs;
+          
+          while (tmp != NULL)
+            {
+              gchar* s = tmp->data;
+              
+              xs_prune(source, s);
+              
+              g_free(s);
+              
+              tmp = g_slist_next(tmp);
+            }
+          
+          g_slist_free(subdirs);
+        }
+    }
+
+  if (tree_entry->tree->root->childs == NULL)
+    {
+      /* this document is completely empty, mark it to go away.
+         Strictly speaking this isn't a cache prune, rather a disk
+         prune... */
+      xmlFreeDoc(tree_entry->tree);
+      tree_entry->tree = NULL;
+      tree_entry->dirty = TRUE;
+    }
+
+  if (tree_entry->dirty)
+    return; /* need to save our emptiness */
+  else if (tree_entry->tree == NULL && 
+           tree_entry->last_access < cutoff)
+    {
+      xs_uncache_dir(source, dir, tree_entry);
+    }
 }
 
 static void
@@ -721,11 +909,11 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
   g_assert(tree_entry != NULL);
   g_assert(key_entry != NULL);
 
+  tree_entry->dirty = TRUE;
+
   if (key_entry->node != NULL)
     {
       g_return_if_fail(tree_entry != NULL);
-
-      tree_entry->dirty = TRUE;
 
       xentry_set_value(key_entry->node, value);
 
@@ -771,40 +959,74 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
 
   g_assert(key_entry->node != NULL);
   g_assert(key_entry->value != NULL);
+  g_assert(tree_entry->dirty);
 }
 
-static gchar* 
-parent_dir(const gchar* dir)
+static void
+xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry)
 {
-  /* We assume the dir doesn't have a trailing slash, since that's our
-     standard canonicalization in GConf */
+  if (tree_entry->dirs != NULL)
+    {
+      if (tree_entry->dirs->childs == NULL)
+        {
+          /* Remove empty <dirs> tag */
+          xmlUnlinkNode(tree_entry->dirs);
+          xmlFreeNode(tree_entry->dirs);
+          tree_entry->dirs = NULL;
+
+          tree_entry->dirty = TRUE;
+        }
+    }
+
+  if (tree_entry->tree->root->childs == NULL)
+    {
+      /* this document is completely empty */
+      xmlFreeDoc(tree_entry->tree);
+      tree_entry->tree = NULL;
+      tree_entry->dirty = TRUE;
+    }
+
+  /* Remove from parent */
+  if (tree_entry->tree == NULL)
+    xs_remove_dir(source, dir, tree_entry);
+}
+
+static void
+xs_unset_value(XMLSource* source, const gchar* key)
+{
+  KeyCacheEntry* key_entry;
+  TreeCacheEntry* tree_entry;
   gchar* parent;
-  gchar* last_slash;
 
-  g_return_val_if_fail(*dir != '\0', NULL);
+  xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
 
-  if (dir[1] == '\0')
-    {
-      g_assert(dir[0] == '/');
-      return NULL;
-    }
-
-  parent = g_strdup(dir);
-
-  last_slash = strrchr(parent, '/');
-
-  /* dir must have had at least the root slash in it */
-  g_assert(last_slash != NULL);
+  g_assert(tree_entry != NULL);
+  g_assert(key_entry != NULL);
   
-  if (last_slash != parent)
-    *last_slash = '\0';
-  else 
-    {
-      ++last_slash;
-      *last_slash = '\0';
-    }
+  if (key_entry->node == NULL)
+    return; /* wasn't set to begin with */
 
-  return parent;
+  tree_entry->dirty = TRUE;
+
+  g_assert(tree_entry->tree != NULL); /* If we have a key node it has to be in a tree */
+  
+  g_assert(key_entry->node != NULL);
+  g_assert(key_entry->value != NULL);
+
+  xmlUnlinkNode(key_entry->node);
+  xmlFreeNode(key_entry->node);
+
+  key_entry->node = NULL;
+
+  g_conf_value_destroy(key_entry->value);
+  
+  key_entry->value = NULL;
+
+  parent = parent_dir(key);
+
+  xs_remove_dir_if_empty(source, parent, tree_entry);
+  
+  g_free(parent);
 }
 
 static void
@@ -957,8 +1179,15 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
          are really bad things per se. The right thing is probably to 
          switch on errno, so FIXME sometime in the future.
       */
+
+      /* FIXME broken because we need to delete child dirs 
+         before parents, so each sync will only manage
+         to delete the tree fringes. 
+      */
+
       unlink(filename);
       unlink(relative_dir);
+
       goto successful_end_of_sync;
     }
   else 
@@ -1032,6 +1261,9 @@ static gboolean
 xs_sync_all(XMLSource* source)
 {
   struct SyncData data = { FALSE, source };
+
+  /* May as well do this on sync */
+  xs_prune(source, "/");
 
   g_hash_table_foreach(source->trees, (GHFunc)tree_cache_foreach_sync, &data);
 
@@ -1169,6 +1401,36 @@ xdirs_add_child_dir(xmlNodePtr dirnode, const gchar* relative_child_dir)
   xmlSetProp(node, "name", relative_child_dir);
 
   return node;
+}
+
+static void
+xdirs_remove_child_dir(xmlNodePtr dirs, const gchar* relative_child_dir)
+{
+  xmlNodePtr node = dirs->childs;
+
+  while (node != NULL)
+    {
+      gchar* attr;
+
+      attr = xmlGetProp(node, "name");
+
+      if (attr != NULL)
+        {
+          if (strcmp(attr, relative_child_dir) == 0)
+            {
+              xmlUnlinkNode(node);
+              xmlFreeNode(node);
+              free(attr);
+              return;
+            }
+          else
+            free(attr);
+        }
+      else
+        g_warning("Child dir node with no name!");
+
+      node = node->next;
+    }
 }
 
 static void
@@ -1330,3 +1592,38 @@ tree_cache_entry_make_dirs(TreeCacheEntry* entry)
   entry->dirs = xmlNewChild(entry->tree->root, NULL, "dirs", NULL);
 }
 
+static GSList*
+tree_cache_entry_list_dirs(TreeCacheEntry* entry, const gchar* dir)
+{
+  GSList* retval = NULL;
+  xmlNodePtr node;
+  
+  if (entry->dirs == NULL)
+    {
+      return NULL;
+    }
+
+  node = entry->dirs->childs;
+
+  while (node != NULL)
+    {
+      gchar* attr = xmlGetProp(node, "name");      
+
+      if (attr != NULL)
+        {
+          gchar* s;
+          
+          s = g_conf_concat_key_and_dir(dir, attr);
+
+          free(attr);
+
+          retval = g_slist_prepend(retval, s);
+        }
+      else 
+        g_warning("Dir with no name???");
+
+      node = node->next;
+    }
+
+  return retval;
+}

@@ -49,6 +49,8 @@ GConfValue*   g_conf_source_query_value      (GConfSource* source,
 void          g_conf_source_set_value        (GConfSource* source,
                                               const gchar* key,
                                               GConfValue* value);
+void          g_conf_source_unset_value      (GConfSource* source,
+                                              const gchar* key);
 GSList*      g_conf_source_all_pairs         (GConfSource* source,
                                               const gchar* dir);
 GSList*      g_conf_source_all_dirs          (GConfSource* source,
@@ -94,6 +96,8 @@ GConfValue*   g_conf_sources_query_value (GConfSources* sources,
 void          g_conf_sources_set_value   (GConfSources* sources,
                                           const gchar* key,
                                           GConfValue* value);
+void          g_conf_sources_unset_value (GConfSources* sources,
+                                          const gchar* key);
 GSList*       g_conf_sources_all_pairs   (GConfSources* sources,
                                           const gchar* dir);
 GSList*       g_conf_sources_all_dirs   (GConfSources* sources,

@@ -37,6 +37,8 @@ interface ConfigServer {
 
   void set(in string key, in ConfigValue value);
 
+  void unset(in string key);
+
   void all_pairs(in string dir, 
                  out KeyList keys,
                  out ValueList values);

@@ -303,6 +303,17 @@ g_conf_source_set_value        (GConfSource* source,
   (*source->backend->vtable->set_value)(source, key, value);
 }
 
+void          
+g_conf_source_unset_value      (GConfSource* source,
+                                const gchar* key)
+{
+  if (!g_conf_valid_key(key))
+    {
+      g_warning("Invalid key `%s'", key);
+    }
+  (*source->backend->vtable->unset_value)(source, key);
+}
+
 GSList*      
 g_conf_source_all_pairs         (GConfSource* source,
                                  const gchar* dir)
@@ -686,6 +697,25 @@ g_conf_sources_set_value   (GConfSources* sources,
     }
 }
 
+void
+g_conf_sources_unset_value   (GConfSources* sources,
+                              const gchar* key)
+{
+  /* We unset in every layer we can write to... */
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+
+      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+        g_conf_source_unset_value(src, key);
+      
+      tmp = g_list_next(tmp);
+    }
+}
 
 /* God, this is depressingly inefficient. Maybe there's a nicer way to
    implement it... */
@@ -782,12 +812,15 @@ GSList*
 g_conf_sources_all_dirs   (GConfSources* sources,
                            const gchar* dir)
 {
-  GList* tmp;
-  GHashTable* hash;
-  GSList* flattened;
+  GList* tmp = NULL;
+  GHashTable* hash = NULL;
+  GSList* flattened = NULL;
   gboolean first_pass = TRUE; /* as an optimization, don't bother
                                  doing hash lookups on first source
                               */
+
+  g_return_val_if_fail(sources != NULL, NULL);
+  g_return_val_if_fail(dir != NULL, NULL);
 
   /* As another optimization, skip the whole 
      hash thing if there's only zero or one sources

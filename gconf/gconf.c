@@ -350,6 +350,41 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
     }
 }
 
+void         
+g_conf_unset(GConf* conf, const gchar* key)
+{
+  CORBA_Environment ev;
+  ConfigServer cs;
+
+  if (!g_conf_valid_key(key))
+    {
+      g_warning("Invalid key `%s'", key);
+      return;
+    }
+
+  cs = g_conf_get_config_server(TRUE);
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return;
+    }
+
+  CORBA_exception_init(&ev);
+
+  ConfigServer_unset(cs,
+                   (gchar*)key,
+                   &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure sending unset request to config server: %s",
+                CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+    }
+}
+
 GSList*      
 g_conf_all_pairs(GConf* conf, const gchar* dir)
 {
@@ -723,7 +758,8 @@ notify(PortableServer_Servant servant,
 
   g_conf_cnxn_notify(cnxn, key, gvalue);
 
-  g_conf_value_destroy(gvalue);
+  if (gvalue != NULL)
+    g_conf_value_destroy(gvalue);
 }
 
 static ConfigListener 

@@ -38,15 +38,16 @@
 #define N_(x) x
 #endif
 
-int set_mode = FALSE;
-int get_mode = FALSE;
-int all_pairs_mode = FALSE;
-int all_subdirs_mode = FALSE;
-int recursive_list = FALSE;
-char* value_type = NULL;
-int shutdown_gconfd = FALSE;
-int ping_gconfd = FALSE;
-int spawn_gconfd = FALSE;
+static int set_mode = FALSE;
+static int get_mode = FALSE;
+static int unset_mode = FALSE;
+static int all_pairs_mode = FALSE;
+static int all_subdirs_mode = FALSE;
+static int recursive_list = FALSE;
+static char* value_type = NULL;
+static int shutdown_gconfd = FALSE;
+static int ping_gconfd = FALSE;
+static int spawn_gconfd = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -74,6 +75,16 @@ struct poptOption options[] = {
     &get_mode,
     0,
     N_("Print the value of a key to standard out."),
+    NULL
+  },
+  {
+
+    "unset",
+    'u',
+    POPT_ARG_NONE,
+    &unset_mode,
+    0, 
+    N_("Unset the keys on the command line"),
     NULL
   },
   { 
@@ -156,6 +167,7 @@ static void do_all_pairs(GConf* conf, gchar** args);
 static void list_pairs_in_dir(GConf* conf, gchar* dir, guint depth);
 
 /* FIXME um, break this function up... */
+/* FIXME do a single sync on exit */
 int 
 main (int argc, char** argv)
 {
@@ -179,21 +191,33 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if (get_mode && set_mode)
+  /* Um, this is a mess. Not using popt right? */
+
+  if ((get_mode && set_mode) ||
+      (get_mode && unset_mode))
     {
-      fprintf(stderr, _("Can't get and set simultaneously\n"));
+      fprintf(stderr, _("Can't get and set/unset simultaneously\n"));
+      return 1;
+    }
+
+  if ((set_mode && get_mode) ||
+      (set_mode && unset_mode))
+    {
+      fprintf(stderr, _("Can't set and get/unset simultaneously\n"));
       return 1;
     }
 
   if ((all_pairs_mode && get_mode) ||
-      (all_pairs_mode && set_mode))
+      (all_pairs_mode && set_mode) ||
+      (all_pairs_mode && unset_mode))
     {
       fprintf(stderr, _("Can't use --all-pairs with --get or --set\n"));
       return 1;
     }
 
   if ((all_subdirs_mode && get_mode) ||
-      (all_subdirs_mode && set_mode))
+      (all_subdirs_mode && set_mode) ||
+      (all_subdirs_mode && unset_mode))
     {
       fprintf(stderr, _("Can't use --all-dirs with --get or --set\n"));
       return 1;
@@ -201,10 +225,11 @@ main (int argc, char** argv)
 
   if ((recursive_list && get_mode) ||
       (recursive_list && set_mode) ||
+      (recursive_list && unset_mode) ||
       (recursive_list && all_pairs_mode) ||
       (recursive_list && all_subdirs_mode))
     {
-      fprintf(stderr, _("--recursive-list should not be used with --get, --set, --all-pairs, or --all-dirs\n"));
+      fprintf(stderr, _("--recursive-list should not be used with --get, --set, --unset, --all-pairs, or --all-dirs\n"));
       return 1;
     }
 
@@ -221,7 +246,9 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || spawn_gconfd))
+  if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
+                      all_subdirs_mode || all_pairs_mode || recursive_list || 
+                      spawn_gconfd))
     {
       fprintf(stderr, _("Ping option must be used by itself.\n"));
       return 1;
@@ -385,6 +412,24 @@ main (int argc, char** argv)
       do_all_pairs(conf, args);
     }
 
+  if (unset_mode)
+    {
+      gchar** args = poptGetArgs(ctx);
+
+      if (args == NULL)
+        {
+          fprintf(stderr, _("Must specify one or more keys to unset.\n"));
+          return 1;
+        }
+
+      while (*args)
+        {
+          g_conf_unset(conf, *args);
+          ++args;
+        }
+
+      g_conf_sync(conf);
+    }
 
   if (all_subdirs_mode)
     {
@@ -485,8 +530,10 @@ do_recursive_list(GConf* conf, gchar** args)
       GSList* subdirs;
 
       subdirs = g_conf_all_dirs(conf, *args);
+
+      list_pairs_in_dir(conf, *args, 0);
           
-      recurse_subdir_list(conf, subdirs, 0);
+      recurse_subdir_list(conf, subdirs, 1);
  
       ++args;
     }

@@ -118,6 +118,8 @@ GConfValue*  g_conf_get(GConf* conf, const gchar* key);
 /* ditto, higher-level version planned. */
 void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
+void         g_conf_unset(GConf* conf, const gchar* key);
+
 GSList*      g_conf_all_pairs(GConf* conf, const gchar* dir);
 
 GSList*      g_conf_all_dirs(GConf* conf, const gchar* dir);

@@ -46,6 +46,9 @@ struct _GConfBackendVTable {
   GSList*             (* all_subdirs)     (GConfSource* source,
                                            const gchar* dir);
 
+  void                (* unset_value)     (GConfSource* source,
+                                           const gchar* key);
+
   gboolean            (* sync_all)        (GConfSource* source);
 
   void                (* destroy_source)  (GConfSource* source);
