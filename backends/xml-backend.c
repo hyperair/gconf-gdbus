@@ -2309,7 +2309,7 @@ entry_unset   (Entry* e, const gchar* locale)
 {
   if (e->cached_value != NULL)
     {
-      if (e->cached_value->type == GCONF_VALUE_SCHEMA)
+      if (locale && e->cached_value->type == GCONF_VALUE_SCHEMA)
         {
           GConfError* error = NULL;
           
@@ -2329,6 +2329,13 @@ entry_unset   (Entry* e, const gchar* locale)
               gconf_error_destroy(error);
               error = NULL;
             }
+        }
+      else if (e->cached_value->type == GCONF_VALUE_SCHEMA)
+        {
+          /* if locale == NULL nuke all the locales */
+          if (e->cached_value)
+            gconf_value_destroy(e->cached_value);
+          e->cached_value = NULL;
         }
       else
         {
@@ -2364,7 +2371,7 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
         {
           char* this_locale = my_xmlGetProp(iter, "locale");
           
-          if (this_locale &&
+          if (locale && this_locale &&
               strcmp(locale, this_locale) == 0)
             {
               found = iter;
@@ -2392,9 +2399,10 @@ xentry_unset_by_locale(xmlNodePtr node, const gchar* locale)
   xmlNodePtr found;
 
   g_return_if_fail(node != NULL);
-  
-  found = find_schema_subnode_by_locale(node, locale);
+  g_return_if_fail(locale != NULL);
 
+  found = find_schema_subnode_by_locale(node, locale);
+  
   if (found != NULL)
     {
       xmlUnlinkNode(found);

@@ -13,6 +13,8 @@ struct ConfigSchema {
   string short_desc;
   string long_desc;
   string owner;
+  // Work around lack of recursive data types
+  string encoded_default_value;
 };
 
 union ConfigBasicValue switch (ConfigBasicValueType) {

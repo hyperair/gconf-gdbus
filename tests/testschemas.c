@@ -63,6 +63,15 @@ keys[] = {
   NULL
 };
 
+static const gchar*
+locales[] = {
+  "C",
+  "es",
+  "es:en:C",
+  "en:es",
+  NULL
+};
+
 static gint ints[] = { -1, -2, -3, 0, 1, 2, 3, 4000, 0xfffff, -0xfffff, G_MININT, G_MAXINT, 0, 0, 57, 83, 95 };
 static const guint n_ints = sizeof(ints)/sizeof(ints[0]);
 
@@ -256,12 +265,14 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
                  "schema set/get pair: type `%s' set, `%s' got",
                  gconf_value_type_to_string(gconf_schema_type(schema)),
                  gconf_value_type_to_string(gconf_schema_type(gotten)));
-
+#if 0
+          /* This is wrong, the locale doesn't have to be the same */
           check (null_safe_strcmp(gconf_schema_locale(schema), gconf_schema_locale(gotten)) == 0,
                  "schema set/get pair: locale `%s' set, `%s' got",
                  gconf_schema_locale(schema),
                  gconf_schema_locale(gotten));
-
+#endif
+          
           check (null_safe_strcmp(gconf_schema_short_desc(schema), gconf_schema_short_desc(gotten)) == 0,
                  "schema set/get pair: short_desc `%s' set, `%s' got",
                  gconf_schema_short_desc(schema),
@@ -323,10 +334,12 @@ check_schema_storage(GConfEngine* conf)
 {
   const gchar** keyp = NULL;
   guint i; 
+  const gchar** localep = NULL;
   
   /* Loop over keys, storing all values at each then retrieving them */
   
   keyp = keys;
+  localep = locales;
 
   while (*keyp)
     {
@@ -338,11 +351,14 @@ check_schema_storage(GConfEngine* conf)
           gchar* long_desc;
           GConfValue* default_value;
           const int default_value_int = 97992;
+
+          if (*localep == NULL)
+            localep = locales;
           
           schema = gconf_schema_new();
 
           gconf_schema_set_type(schema, GCONF_VALUE_INT);
-          gconf_schema_set_locale(schema, "C");
+          gconf_schema_set_locale(schema, *localep);
           short_desc = g_strdup_printf("Schema for key `%s' storing value %d",
                                        *keyp, ints[i]);
           gconf_schema_set_short_desc(schema, short_desc);
@@ -371,6 +387,7 @@ check_schema_storage(GConfEngine* conf)
         }
       
       ++keyp;
+      ++localep;
     }
 
   /* Check setting/getting "empty" schemas */
@@ -386,6 +403,9 @@ check_schema_storage(GConfEngine* conf)
           
           schema = gconf_schema_new();
 
+          /* this isn't guaranteed to be the same on get/set */
+          gconf_schema_set_locale(schema, "C");
+          
           gconf_schema_set_type(schema, GCONF_VALUE_INT);
 
           check_one_schema(conf, keyp, schema);

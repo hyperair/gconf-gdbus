@@ -2046,8 +2046,6 @@ gconf_set_schema  (GConfEngine* conf, const gchar* key,
 
   gconf_value_set_schema(gval, val);
 
-  printf("Setting schema `%s'", gconf_value_to_string(gval)); /* memleak FIXME */
-  
   return error_checked_set(conf, key, gval, err);
 }
 

@@ -216,12 +216,10 @@ gconf_value_to_string(GConfValue* value)
   switch (value->type)
     {
     case GCONF_VALUE_INT:
-      retval = g_malloc(64);
-      g_snprintf(retval, 64, "%d", gconf_value_int(value));
+      retval = g_strdup_printf("%d", gconf_value_int(value));
       break;
     case GCONF_VALUE_FLOAT:
-      retval = g_malloc(64);
-      g_snprintf(retval, 64, "%g", gconf_value_float(value));
+      retval = g_strdup_printf("%g", gconf_value_float(value));
       break;
     case GCONF_VALUE_STRING:
       retval = g_strdup(gconf_value_string(value));

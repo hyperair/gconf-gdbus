@@ -347,7 +347,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
       break;
     case GCONF_VALUE_STRING:
       cv->_d = StringVal;
-      cv->_u.string_value = CORBA_string_dup(gconf_value_string(value));
+      cv->_u.string_value = CORBA_string_dup((char*)gconf_value_string(value));
       break;
     case GCONF_VALUE_FLOAT:
       cv->_d = FloatVal;
@@ -510,6 +510,26 @@ fill_corba_schema_from_gconf_schema(GConfSchema* sc,
   cs->short_desc = CORBA_string_dup(sc->short_desc ? sc->short_desc : "");
   cs->long_desc = CORBA_string_dup(sc->long_desc ? sc->long_desc : "");
   cs->owner = CORBA_string_dup(sc->owner ? sc->owner : "");
+
+  {
+    gchar* encoded;
+    GConfValue* default_val;
+
+    default_val = gconf_schema_default_value(sc);
+
+    if (default_val)
+      {
+        encoded = gconf_value_encode(default_val);
+
+        g_assert(encoded != NULL);
+
+        cs->encoded_default_value = CORBA_string_dup(encoded);
+
+        g_free(encoded);
+      }
+    else
+      cs->encoded_default_value = CORBA_string_dup("");
+  }
 }
 
 ConfigSchema* 
@@ -564,11 +584,27 @@ gconf_schema_from_corba_schema(const ConfigSchema* cs)
 
   gconf_schema_set_type(sc, type);
 
-  gconf_schema_set_locale(sc, cs->locale);
-  gconf_schema_set_short_desc(sc, cs->short_desc);
-  gconf_schema_set_long_desc(sc, cs->long_desc);
-  gconf_schema_set_owner(sc, cs->owner);
+  if (*cs->locale != '\0')
+    gconf_schema_set_locale(sc, cs->locale);
 
+  if (*cs->short_desc != '\0')
+    gconf_schema_set_short_desc(sc, cs->short_desc);
+
+  if (*cs->long_desc != '\0')
+    gconf_schema_set_long_desc(sc, cs->long_desc);
+
+  if (*cs->owner != '\0')
+    gconf_schema_set_owner(sc, cs->owner);
+
+  {
+    GConfValue* val;
+
+    val = gconf_value_decode(cs->encoded_default_value);
+
+    if (val)
+      gconf_schema_set_default_value_nocopy(sc, val);
+  }
+  
   return sc;
 }
 
@@ -1540,17 +1576,452 @@ gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err)
   return;
 }
 
+/* The encoding format
+
+   The first byte of the encoded string is the type of the value:
+
+    i  int
+    b  bool
+    f  float
+    s  string
+    c  schema
+    p  pair
+    l  list
+    v  invalid
+
+    For int, the rest of the encoded value is the integer to be parsed with atoi()
+    For bool, the rest is 't' or 'f'
+    For float, the rest is a float to parse with g_strtod()
+    For string, the rest is the string (not quoted)
+    For schema, the encoding is complicated; see below.
+    For pair, the rest is two primitive encodings (ibcfs), quoted, separated by a comma,
+              car before cdr
+    For list, the rest is primitive encodings, quoted, separated by commas
+
+    Schema:
+
+    After the 'c' indicating schema, the second character is a byte indicating
+    the type the schema expects. Then a comma, and the quoted locale, or "" for none.
+    comma, and quoted short description; comma, quoted long description; comma, default
+    value in the encoded format given above, quoted.
+*/
+
+static gchar type_byte(GConfValueType type)
+{
+  switch (type)
+    {
+    case GCONF_VALUE_INT:
+      return 'i';
+      break;
+        
+    case GCONF_VALUE_BOOL:
+      return 'b';
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      return 'f';
+      break;
+
+    case GCONF_VALUE_STRING:
+      return 's';
+      break;
+
+    case GCONF_VALUE_SCHEMA:
+      return 'c';
+      break;
+
+    case GCONF_VALUE_LIST:
+      return 'l';
+      break;
+
+    case GCONF_VALUE_PAIR:
+      return 'p';
+      break;
+
+    case GCONF_VALUE_INVALID:
+      return 'v';
+      break;
+      
+    default:
+      g_assert_not_reached();
+      return '\0';
+      break;
+    }
+}
+
+GConfValueType
+byte_type(gchar byte)
+{
+  switch (byte)
+    {
+    case 'i':
+      return GCONF_VALUE_INT;
+      break;
+
+    case 'b':
+      return GCONF_VALUE_BOOL;
+      break;
+
+    case 's':
+      return GCONF_VALUE_STRING;
+      break;
+
+    case 'c':
+      return GCONF_VALUE_SCHEMA;
+      break;
+
+    case 'f':
+      return GCONF_VALUE_FLOAT;
+      break;
+
+    case 'l':
+      return GCONF_VALUE_LIST;
+      break;
+
+    case 'p':
+      return GCONF_VALUE_PAIR;
+      break;
+      
+    case 'v':
+      return GCONF_VALUE_INVALID;
+      break;
+
+    default:
+      return GCONF_VALUE_INVALID;
+      break;
+    }
+}
+
 GConfValue*
 gconf_value_decode (const gchar* encoded)
 {
+  GConfValueType type;
+  GConfValue* val;
+  const gchar* s;
   
-  return NULL;
+  type = byte_type(*encoded);
+
+  if (type == GCONF_VALUE_INVALID)
+    return NULL;
+
+  val = gconf_value_new(type);
+
+  s = encoded + 1;
+  
+  switch (val->type)
+    {
+    case GCONF_VALUE_INT:
+      gconf_value_set_int(val, atoi(s));
+      break;
+        
+    case GCONF_VALUE_BOOL:
+      gconf_value_set_bool(val, *s == 't' ? TRUE : FALSE);
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      {
+        double d;
+        gchar* endptr = NULL;
+        
+        d = g_strtod(s, &endptr);
+        if (endptr == s)
+          g_warning("Failure converting string to double in %s", __FUNCTION__);
+        gconf_value_set_float(val, d);
+      }
+      break;
+
+    case GCONF_VALUE_STRING:
+      {
+        gconf_value_set_string(val, s);
+      }
+      break;
+
+    case GCONF_VALUE_SCHEMA:
+      {
+        GConfSchema* sc = gconf_schema_new();
+        const gchar* end = NULL;
+        gchar* unquoted;
+        
+        gconf_value_set_schema(val, sc);
+
+        gconf_schema_set_type(sc, byte_type(*s));
+        ++s;
+
+        /* locale */
+        unquoted = gconf_unquote_string(s, &end, NULL);
+
+        gconf_schema_set_locale(sc, unquoted);
+
+        g_free(unquoted);
+        
+        if (*end != ',')
+          g_warning("no comma after locale in schema");
+
+        ++end;
+        s = end;
+
+        /* short */
+        unquoted = gconf_unquote_string(s, &end, NULL);
+
+        gconf_schema_set_short_desc(sc, unquoted);
+
+        g_free(unquoted);
+        
+        if (*end != ',')
+          g_warning("no comma after short desc in schema");
+
+        ++end;
+        s = end;
+
+
+        /* long */
+        unquoted = gconf_unquote_string(s, &end, NULL);
+
+        gconf_schema_set_long_desc(sc, unquoted);
+
+        g_free(unquoted);
+        
+        if (*end != ',')
+          g_warning("no comma after long desc in schema");
+
+        ++end;
+        s = end;
+        
+        
+        /* default value */
+        unquoted = gconf_unquote_string(s, &end, NULL);
+
+        gconf_schema_set_default_value_nocopy(sc, gconf_value_decode(unquoted));
+
+        g_free(unquoted);
+        
+        if (*end != '\0')
+          g_warning("trailing junk after encoded schema");
+      }
+      break;
+
+    case GCONF_VALUE_LIST:
+      {
+        GSList* value_list = NULL;
+
+        while (*s)
+          {
+            gchar* unquoted;
+            const gchar* end;
+            
+            GConfValue* elem;
+            
+            unquoted = gconf_unquote_string(s, &end, NULL);            
+
+            elem = gconf_value_decode(unquoted);
+
+            g_free(unquoted);
+            
+            if (elem)
+              value_list = g_slist_prepend(value_list, elem);
+            
+            s = end;
+            if (*s == ',')
+              ++s;
+            else if (*s != '\0')
+              {
+                g_warning("weird character in encoded list");
+                break; /* error */
+              }
+          }
+
+        value_list = g_slist_reverse(value_list);
+
+        gconf_value_set_list_nocopy(val, value_list);
+      }
+      break;
+
+    case GCONF_VALUE_PAIR:
+      {
+        gchar* unquoted;
+        const gchar* end;
+        
+        GConfValue* car;
+        GConfValue* cdr;
+        
+        unquoted = gconf_unquote_string(s, &end, NULL);            
+        
+        car = gconf_value_decode(unquoted);
+
+        g_free(unquoted);
+        
+        s = end;
+        if (*s == ',')
+          ++s;
+        else
+          {
+            g_warning("weird character in encoded pair");
+          }
+        
+        unquoted = gconf_unquote_string(s, &end, NULL);
+        
+        cdr = gconf_value_decode(unquoted);
+        g_free(unquoted);
+
+
+        gconf_value_set_car_nocopy(val, car);
+        gconf_value_set_cdr_nocopy(val, cdr);
+      }
+      break;
+
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  return val;
 }
 
 gchar*
 gconf_value_encode (GConfValue* val)
 {
+  gchar* retval = NULL;
   
+  g_return_val_if_fail(val != NULL, NULL);
 
-  return NULL;
+  switch (val->type)
+    {
+    case GCONF_VALUE_INT:
+      retval = g_strdup_printf("i%d", gconf_value_int(val));
+      break;
+        
+    case GCONF_VALUE_BOOL:
+      retval = g_strdup_printf("b%c", gconf_value_bool(val) ? 't' : 'f');
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      retval = g_strdup_printf("f%g", gconf_value_float(val));
+      break;
+
+    case GCONF_VALUE_STRING:
+      retval = g_strdup_printf("s%s", gconf_value_string(val));
+      break;
+
+    case GCONF_VALUE_SCHEMA:
+      {
+        gchar* tmp;
+        gchar* retval;
+        gchar* quoted;
+        gchar* encoded;
+        GConfSchema* sc;
+
+        sc = gconf_value_schema(val);
+        
+        tmp = g_strdup_printf("c%c,", type_byte(gconf_schema_type(sc)));
+
+        quoted = gconf_quote_string(gconf_schema_locale(sc) ?
+                                    gconf_schema_locale(sc) : "");
+        retval = g_strconcat(tmp, quoted, ",", NULL);
+
+        g_free(tmp);
+        g_free(quoted);
+
+        tmp = retval;
+        quoted = gconf_quote_string(gconf_schema_short_desc(sc) ?
+                                    gconf_schema_short_desc(sc) : "");
+
+        retval = g_strconcat(tmp, quoted, ",", NULL);
+
+        g_free(tmp);
+        g_free(quoted);
+
+
+        tmp = retval;
+        quoted = gconf_quote_string(gconf_schema_long_desc(sc) ?
+                                    gconf_schema_long_desc(sc) : "");
+
+        retval = g_strconcat(tmp, quoted, ",", NULL);
+
+        g_free(tmp);
+        g_free(quoted);
+        
+
+        if (gconf_schema_default_value(sc) != NULL)
+          encoded = gconf_value_encode(gconf_schema_default_value(sc));
+        else
+          encoded = g_strdup("");
+
+        tmp = retval;
+          
+        quoted = gconf_quote_string(encoded);
+
+        retval = g_strconcat(tmp, quoted, NULL);
+
+        g_free(tmp);
+        g_free(quoted);
+        g_free(encoded);
+      }
+      break;
+
+    case GCONF_VALUE_LIST:
+      {
+        GSList* tmp;
+
+        retval = g_strdup("l");
+        
+        tmp = gconf_value_list(val);
+
+        while (tmp != NULL)
+          {
+            GConfValue* elem = tmp->data;
+            gchar* encoded;
+            gchar* quoted;
+            
+            g_assert(elem != NULL);
+
+            encoded = gconf_value_encode(elem);
+
+            quoted = gconf_quote_string(encoded);
+
+            g_free(encoded);
+
+            {
+              gchar* free_me;
+              free_me = retval;
+              
+              retval = g_strconcat(retval, ",", quoted, NULL);
+              
+              g_free(quoted);
+              g_free(free_me);
+            }
+            
+            tmp = g_slist_next(tmp);
+          }
+      }
+      break;
+
+    case GCONF_VALUE_PAIR:
+      {
+        gchar* car_encoded;
+        gchar* cdr_encoded;
+        gchar* car_quoted;
+        gchar* cdr_quoted;
+
+        car_encoded = gconf_value_encode(gconf_value_car(val));
+        cdr_encoded = gconf_value_encode(gconf_value_cdr(val));
+
+        car_quoted = gconf_quote_string(car_encoded);
+        cdr_quoted = gconf_quote_string(cdr_encoded);
+
+        retval = g_strconcat("p", car_quoted, ",", cdr_quoted, NULL);
+
+        g_free(car_encoded);
+        g_free(cdr_encoded);
+        g_free(car_quoted);
+        g_free(cdr_quoted);
+      }
+      break;
+
+    default:
+      g_assert_not_reached();
+      break;
+      
+    }
+
+  return retval;
 }

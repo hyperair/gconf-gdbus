@@ -1,3 +1,28 @@
+1999-11-18  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-backend.c (find_schema_subnode_by_locale): Check
+	that locale && this_locale before strcmp()'ing them
+	(entry_unset): take a NULL locale in unset to mean "unset all locales"
+
+	* tests/testschemas.c (check_one_schema): fix the locale-related tests
+
+	* gconf/gconf.c (gconf_set_schema): remove debug spew
+
+	* gconf/gconf-internals.c (gconf_schema_from_corba_schema): parse
+	the encoded default value
+	(fill_corba_schema_from_gconf_schema): encode the default value to
+	ship to the server.
+
+	* gconf/GConf.idl: Add encoded default value string to
+	ConfigSchema struct
+
+	* gconf/gconf-internals.c (gconf_value_decode): implement
+	(gconf_value_encode): implement
+
+	* gconf/gconf-value.c (gconf_value_to_string): Use
+	g_strdup_printf() to create int/float strings, rather than
+	guessing at the needed string size.
+
 1999-11-17  Havoc Pennington  <hp@pobox.com>
 
 	* tests/testencode.c: new test for string quoting
