@@ -30,6 +30,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
+#include <locale.h>
 
 
 /* Quick hack so I can mark strings */
