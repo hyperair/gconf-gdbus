@@ -1,5 +1,13 @@
 1999-12-01  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf.c (try_to_contact_server): handle OAF exceptions
+
+	* gconf/gconf-internals.c (gconf_handle_oaf_exception): new
+	function to handle OAF CORBA exceptions, now I have to find all
+	the places that I need to use this function...
+
+1999-12-01  Havoc Pennington  <hp@pobox.com>
+
 	* doc/gconf/gconf-sections.txt: Add new create_change_set
 	functions for GConfClient and GConfEngine
 

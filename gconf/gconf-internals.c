@@ -2007,3 +2007,65 @@ gconf_value_encode (GConfValue* val)
 
   return retval;
 }
+
+gboolean
+gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err)
+{
+  switch (ev->_major)
+    {
+    case CORBA_NO_EXCEPTION:
+      CORBA_exception_free(ev);
+      return FALSE;
+      break;
+    case CORBA_SYSTEM_EXCEPTION:
+      if (err)
+        *err = gconf_error_new(GCONF_NO_SERVER, _("CORBA error: %s"),
+                               CORBA_exception_id(ev));
+      CORBA_exception_free(ev);
+      return TRUE;
+      break;
+
+    case CORBA_USER_EXCEPTION:
+      {
+        const gchar* id = CORBA_exception_id(ev);
+
+        if (strcmp(id, "IDL:OAF/GeneralError:1.0") == 0)
+          {
+            OAF_GeneralError* ge = CORBA_exception_value(ev);
+
+            if (err)
+              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework error: %s"), ge->description);
+          }
+        else if (strcmp(id,"IDL:OAF/ActivationContext/NotListed:1.0" ) == 0)
+          {
+            if (err)
+              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework error: attempt to remove not-listed object directory"));
+          }
+        else if (strcmp(id,"IDL:OAF/ActivationContext/AlreadyListed:1.0" ) == 0)
+          {
+            if (err)
+              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework error: attempt to add already-listed directory")); 
+          }
+        else if (strcmp(id,"IDL:OAF/ActivationContext/ParseFailed:1.0") == 0)
+          {
+            OAF_ActivationContext_ParseFailed* pe = CORBA_exception_value(ev);
+            
+            if (err)
+              *err = gconf_error_new(GCONF_FAILED, _("Object Activation Framework parse error: %s"), pe->description);
+          }
+        else
+          {
+            if (err)
+              *err = gconf_error_new(GCONF_FAILED, _("Unknown error in Object Activation Framework"));
+          }
+        
+        CORBA_exception_free(ev);
+        return TRUE;
+      }
+      break;
+    default:
+      g_assert_not_reached();
+      return TRUE;
+      break;
+    }
+}

@@ -141,6 +141,9 @@ gboolean   gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                                           GConfError** err);
 void       gconf_set_daemon_mode(gboolean setting);
 
+/* Returns TRUE if there was an error, frees exception, sets err */
+gboolean gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err);
+
 #endif
 
 

@@ -950,15 +950,18 @@ try_to_contact_server(GConfError** err)
 	  if (err)
 	    *err = gconf_error_new(GCONF_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
 				   CORBA_exception_id(&ev));
+
+          CORBA_exception_free(&ev);
 	}
     }
   else
     {
-      if (err)
-	*err = gconf_error_new(GCONF_NO_SERVER, _("Failed to activate server"));
-    }
+      gconf_handle_oaf_exception(&ev, err);
 
-  CORBA_exception_free(&ev);
+      /* Make the errno more specific */
+      if (err && *err)
+	(*err)->num = GCONF_NO_SERVER;
+    }
       
   return server;
 }
@@ -2056,7 +2059,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GConfError** err)
 
         if (err)
           *err = gconf_error_new(corba_errno_to_gconf_errno(ce->err_no),
-                                  ce->message);
+                                 ce->message);
         CORBA_exception_free(ev);
         return TRUE;
       }
