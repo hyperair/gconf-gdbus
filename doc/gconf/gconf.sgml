@@ -1239,16 +1239,18 @@ key and their effect on the application.
           <listitem>
             <para>
               The schemas should be installed into a GConf
-              configuration source; either the default source, or a
-              source specified by the user with a
-              <filename>configure</filename> option called
-              <literal>--enable-gconf-source</literal>. 
+              configuration source; either the default source (see below), 
+              or a source specified by the user with the 
+              <literal>--with-gconf-source</literal>
+              <filename>configure</filename> option. 
             </para>
           </listitem>
           <listitem>
             <para>
-              The schema files should be installed to
-              <filename>$(sysconfdir)/gconf/schemas/</filename>,
+              The schema files should be installed in the default 
+              schemas directory or in a directory specified by the user 
+              with the <literal>--with-gconf-schema-dir</literal> 
+              <filename>configure</filename> option
               making it easy for sysadmins to browse them or 
               bulk-reinstall them into a new configuration source.
             </para>
@@ -1257,30 +1259,47 @@ key and their effect on the application.
       </para>
 
       <para>
-	The <symbol>AM_GCONF_SOURCE_2</symbol> 
-	macro will get the default location to install
-	the schema. It will also add a 
-	<literal>--enable-gconf-source</literal>
-	option and it will look in 
-	<filename>$(sysconfdir)/gconf/schema-install-source</filename> 
-	for a path.
-	The <symbol>GCONF_SCHEMA_CONFIG_SOURCE</symbol> variable 
-	will be defined.
+        The <symbol>AM_GCONF_SOURCE</symbol> macro you can use in your
+        <filename>configure.in</filename> will provide both 
+        <literal>--with-gconf-source</literal> and 
+        <literal>--with-gconf-schema-dir</literal>.
       </para>
       <para>
-	To get schemas installed properly add the macro to 
-	<filename>configure.in</filename>
-	<programlisting>
-	  AM_GCONF_SOURCE
-	</programlisting>  
+        After getting the user specified options, if any, the macro
+        will define the following two variables:
+        <itemizedlist>
+          <listitem>
+            <symbol>GCONF_SCHEMA_CONFIG_SOURCE</symbol>  which will
+            contain one of the following with this order of priority: 
+            the user specified install source,  
+            the source specified in the file 
+            <filename>/etc/gconf/schema-install-source</filename>, 
+            or the default install source
+            <literal>xml:readonly:/etc/gconf/gconf.xml.defaults</literal> .
+          </listitem>
+          <listitem>
+            <symbol>GCONF_SCHEMA_FILE_DIR</symbol>  which will 
+            contain the schema file directory specified by the user 
+            or the default schema file directory
+            <filename>/etc/gconf/schemas/</filename> .
+          </listitem>
+        </itemizedlist>
       </para>
       <para>
-	And put something like this in <filename>Makefile.am</filename>
-	<programlisting>
-	  install-schemas:
-	      GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
-	      gconftool --makefile-install-rule my.schemas
-	</programlisting>
+        So to do a correct schema installation you should use the macro 
+        in <filename>configure.in</filename>
+        <programlisting>
+  AM_GCONF_SOURCE
+        </programlisting>
+        and put something like this in your <filename>Makefile.am</filename>
+        <programlisting>
+  schemadir = $(GCONF_SCHEMA_FILE_DIR)
+  schema_DATA = &lt;your schema file&gt;
+
+  install-local-data:
+  GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) \
+    gconftool --makefile-install-rule &lt;your schema file&gt;
+        </programlisting>
       </para>
     </sect1>
 
