@@ -1299,7 +1299,7 @@ my_xml_parse_file (const char *filename,
                    GError    **err)
 {
   char *text;
-  int length;
+  gsize length;
   xmlDocPtr doc;
   
   text = NULL;
