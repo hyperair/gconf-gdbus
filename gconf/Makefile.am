@@ -9,8 +9,8 @@ INCLUDES=								\
 	-DG_LOG_DOMAIN=\"GConf\"					\
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"			\
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\"			\
-	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\"	\
-	-DGCONF_ETCDIR=\""$(sysconfdir)/gconf"\"			\
+	-DGCONF_CONFDIR=\""$(sysgconfdir)/$(MAJOR_VERSION)"\"		\
+	-DGCONF_ETCDIR=\""$(sysgconfdir)"\"				\
 	-DGCONF_BINDIR=\""$(bindir)"\"					\
 	-DGCONF_SERVERDIR=\""$(libexecdir)"\"           \
 	-DGCONF_BUILDDIR=\""$(top_builddir)"\"				\
@@ -122,8 +122,8 @@ libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 EXTRA_DIST=GConfX.idl default.path.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
 
 install-data-local:
-	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)
-	$(INSTALL_DATA) default.path $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)/path
+	-mkdir -p $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)
+	$(INSTALL_DATA) default.path $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)/path
 
 gconfmarshal.h: @REBUILD@ stamp-gconfmarshal.h
 	@true

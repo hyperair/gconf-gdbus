@@ -4,7 +4,7 @@
 ## NOTE this file will be in multiple stable releases of GConf, 
 ## which means it should probably go in a separate RPM
 
-schemadir=$(sysconfdir)/gconf/schemas
+schemadir=$(sysgconfdir)/schemas
 schema_DATA=desktop.schemas
 
 EXTRA_DIST=$(schema_DATA)

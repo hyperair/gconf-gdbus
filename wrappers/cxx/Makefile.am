@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS)\
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysgconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
 
 lib_LTLIBRARIES = libgconf-cxxclient.la
 

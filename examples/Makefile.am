@@ -1,6 +1,6 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir) \
 	$(DEPENDENT_WITH_GTK_CFLAGS) \
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\"
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysgconfdir)"\"
 
 EFENCE=
 

@@ -1,3 +1,20 @@
+2004-07-04  Mark McLoughlin  <mark@skynet.ie>
+
+	Patch from Julio M. Merino Vidal <jmmv@menta.net> in bug #134517
+	to add a --sysconfsubdir configure argument which allows the
+	sub-directory GConf uses under $sysconfdir to be change.
+
+	* configure.in: add --sysconfsubdir argument and subst $sysgconfdir
+	which contains the full sysconf path GConf uses.
+	
+	* Makefile.am,
+	  examples/Makefile.am,
+	  gconf/Makefile.am,
+	  gconf/default.path.in,
+	  gconf/gconftool.c,
+	  standard-schemas/Makefile.am,
+	  wrappers/cxx/Makefile.am: use $sysgconfdir.
+
 2004-07-02  Mark McLoughlin  <mark@skynet.ie>
 
 	Fixup some bugs with the merge files support which was

@@ -4014,7 +4014,7 @@ do_get_default_source (const gchar** args)
   gchar buf[512];
   FILE *f;
 
-  /* Try with $sysconfdir/gconf/schema-install-source */
+  /* Try with $sysgconfdir/schema-install-source */
   f = fopen(GCONF_ETCDIR"/schema-install-source", "r");
 
   if (f != NULL)
