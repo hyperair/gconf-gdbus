@@ -428,6 +428,14 @@ main(int argc, char** argv)
   act.sa_handler = SIG_IGN;
   sigaction (SIGINT, &act, 0);
 
+  CORBA_exception_init(&ev);
+
+  if (!g_conf_init_orb(&argc, argv)) /* must do before our own arg parsing */
+    {
+      syslog(LOG_ERR, "Failed to init ORB");
+      exit(1);
+    }
+
   if (argc > 2)
     {
       syslog(LOG_ERR, "Invalid command line arguments");
@@ -454,14 +462,6 @@ main(int argc, char** argv)
     }
 
   ltable = ltable_new();
-
-  CORBA_exception_init(&ev);
-
-  if (!g_conf_init_orb(&argc, argv))
-    {
-      syslog(LOG_ERR, "Failed to init ORB");
-      exit(1);
-    }
 
   orb = g_conf_get_orb();
 
