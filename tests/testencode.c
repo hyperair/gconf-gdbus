@@ -20,6 +20,8 @@
 #include <gconf/gconf.h>
 #include <gconf/gconf-internals.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
 

@@ -30,7 +30,7 @@
 /*
  *
  *
- * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples/*
+ * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples
  *
  *
  *
@@ -46,6 +46,8 @@
 
 #include <gconf/gconf.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
 #include <gconf/gconf-internals.h>

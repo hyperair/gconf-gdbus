@@ -1,3 +1,46 @@
+2002-01-28  Michael Meeks  <michael@ximian.com>
+
+	* gconf/gconf-database.c: warning cleans.
+	(impl_ConfigDatabase3_add_listener_with_properties):
+	init name.
+	(gconf_database_add_listener): right args for format.
+
+	* gconf/gconf-client.c: warning cleans.
+
+	* gconf/gconf-internals.c (gconf_orb_release):
+	return shutdown status.
+
+	* gconf/gconf.c (gconf_detach_config_server):
+	privatize again, and split out ORB shutdown into
+	(gconf_debug_shutdown): here.
+
+2002-01-25  Michael Meeks  <michael@ximian.com>
+
+	* gconf/gconf.c (try_to_contact_server): release the
+	server reference, if it's to a duff object.
+	(gconf_get_config_listener): strip local 'listener',
+	since we have a static module global for that.
+	(gconf_detach_config_server): release the listener.
+	(gconf_get_config_listener): release the poa & manager
+	references.
+
+	* tests/testgconf.c (main): add
+	gconf_detach_config_server
+
+	* gconf/gconf-internals.c
+	(gconf_orb_get): remove bonobo activation
+	worries, kill bogus fiddling with the default
+	context.
+	(gconf_orb_release): impl.
+
+	* gconf/gconf.c (gconf_detach_config_server):
+	publicise & destroy engines_by_cb.
+	(database_rec_release): impl.
+	(gconf_engine_set_database): use g_hash_table_new_full
+	(gconf_engine_detach): just remove from the hash.
+	(try_to_contact_server): release the server reference,
+	if it's to a duff object.
+
 2002-01-28  Ross Golder  <ross@golder.org>
 
 	* configure.in: Updated popt URL.

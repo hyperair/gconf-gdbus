@@ -38,6 +38,7 @@ static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err
 /* just returns TRUE if there's an exception indicating the server is
    probably hosed; no side effects */
 static gboolean gconf_server_broken(CORBA_Environment* ev);
+static void gconf_detach_config_server(void);
 
 /* Maximum number of times to try re-spawning the server if it's down. */
 #define MAX_RETRIES 1
@@ -126,7 +127,6 @@ static ConfigServer   gconf_get_config_server    (gboolean     start_if_not_foun
 
 /* Forget our current server object reference, so the next call to
    gconf_get_config_server will have to try to respawn the server */
-static void           gconf_detach_config_server (void);
 static ConfigListener gconf_get_config_listener  (void);
 
 static void           gconf_engine_detach       (GConfEngine     *conf);
@@ -251,6 +251,20 @@ lookup_engine_by_database (ConfigDatabase db)
     return NULL;
 }
 
+static void
+database_rec_release (gpointer rec)
+{
+  GConfEngine *conf = rec;
+  CORBA_Environment ev;
+
+  CORBA_exception_init (&ev);
+
+  CORBA_Object_release (conf->database, &ev);
+  conf->database = CORBA_OBJECT_NIL;
+  
+  CORBA_exception_free (&ev);
+}
+
 /* This takes ownership of the ConfigDatabase */
 static void
 gconf_engine_set_database (GConfEngine *conf,
@@ -261,8 +275,11 @@ gconf_engine_set_database (GConfEngine *conf,
   conf->database = db;
 
   if (engines_by_db == NULL)
-    engines_by_db = g_hash_table_new ((GHashFunc) gconf_CORBA_Object_hash,
-                                      (GCompareFunc) gconf_CORBA_Object_equal);
+    engines_by_db = g_hash_table_new_full (
+	    (GHashFunc) gconf_CORBA_Object_hash,
+	    (GCompareFunc) gconf_CORBA_Object_equal,
+	    NULL,
+	    database_rec_release);
   
   g_hash_table_insert (engines_by_db, conf->database, conf);  
 }
@@ -270,16 +287,9 @@ gconf_engine_set_database (GConfEngine *conf,
 static void
 gconf_engine_detach (GConfEngine *conf)
 {
-  CORBA_Environment ev;
-
-  CORBA_exception_init (&ev);
-  
-  if (!CORBA_Object_is_nil (conf->database, &ev))
+  if (conf->database != CORBA_OBJECT_NIL)
     {
       g_hash_table_remove (engines_by_db, conf->database);
-      
-      CORBA_Object_release (conf->database, &ev);
-      conf->database = CORBA_OBJECT_NIL;
     }
 }
 
@@ -311,7 +321,7 @@ gconf_engine_connect (GConfEngine *conf,
     db = ConfigServer_get_default_database (cs, &ev);      
   else
     db = ConfigServer_get_database (cs, conf->address, &ev);
-  
+
   if (gconf_server_broken(&ev))
     {
       if (tries < MAX_RETRIES)
@@ -484,7 +494,7 @@ gconf_engine_get_for_address (const gchar* address, GError** err)
 }
 
 void
-gconf_engine_ref             (GConfEngine* conf)
+gconf_engine_ref(GConfEngine* conf)
 {
   g_return_if_fail(conf != NULL);
   g_return_if_fail(conf->refcount > 0);
@@ -493,7 +503,7 @@ gconf_engine_ref             (GConfEngine* conf)
 }
 
 void         
-gconf_engine_unref        (GConfEngine* conf)
+gconf_engine_unref(GConfEngine* conf)
 {
   g_return_if_fail(conf != NULL);
   g_return_if_fail(conf->refcount > 0);
@@ -2065,13 +2075,14 @@ try_to_contact_server (gboolean start_if_not_found,
       
       if (ev._major != CORBA_NO_EXCEPTION)
 	{
-	  server = CORBA_OBJECT_NIL;
           g_set_error (err,
                        GCONF_ERROR,
                        GCONF_ERROR_NO_SERVER,
                        _("Adding client to server's list failed, CORBA error: %s"),
                        CORBA_exception_id (&ev));
 
+	  CORBA_Object_release (server, &ev);
+	  server = CORBA_OBJECT_NIL;
           CORBA_exception_free(&ev);
 	}
     }
@@ -2099,29 +2110,58 @@ gconf_get_config_server(gboolean start_if_not_found, GError** err)
   return server; /* return what we have, NIL or not */
 }
 
-static void
+ConfigListener listener = CORBA_OBJECT_NIL;
+
+void
 gconf_detach_config_server(void)
 {  
+  CORBA_Environment ev;
+
+  CORBA_exception_init(&ev);
+
+  if (listener != CORBA_OBJECT_NIL)
+    {
+      CORBA_Object_release(listener, &ev);
+      listener = CORBA_OBJECT_NIL;
+    }
+
   if (server != CORBA_OBJECT_NIL)
     {
-      CORBA_Environment ev;
-      
-      CORBA_exception_init(&ev);
-
       CORBA_Object_release(server, &ev);
 
       if (ev._major != CORBA_NO_EXCEPTION)
         {
           g_warning("Exception releasing gconfd server object: %s",
                     CORBA_exception_id(&ev));
-          CORBA_exception_free(&ev);
         }
 
       server = CORBA_OBJECT_NIL;
     }
+
+  CORBA_exception_free(&ev);
+
+  if (engines_by_db != NULL)
+    {
+      g_hash_table_destroy (engines_by_db);
+      engines_by_db = NULL;
+    }
 }
 
-ConfigListener listener = CORBA_OBJECT_NIL;
+/**
+ * gconf_debug_shutdown:
+ * @void: 
+ * 
+ * Detach from the config server and release
+ * all related resources
+ **/
+int
+gconf_debug_shutdown (void)
+{
+  gconf_detach_config_server ();
+
+  return gconf_orb_release ();
+}
+
 static void notify                  (PortableServer_Servant     servant,
                                      ConfigDatabase             db,
                                      CORBA_unsigned_long        cnxn,
@@ -2299,13 +2339,12 @@ drop_all_caches (PortableServer_Servant     _servant,
 
 static ConfigListener 
 gconf_get_config_listener(void)
-{
-  static ConfigListener listener = CORBA_OBJECT_NIL;
-  
+{  
   if (listener == CORBA_OBJECT_NIL)
     {
       CORBA_Environment ev;
       PortableServer_POA poa;
+      PortableServer_POAManager poa_mgr;
 
       CORBA_exception_init (&ev);
       POA_ConfigListener__init (&poa_listener_servant, &ev);
@@ -2318,13 +2357,17 @@ gconf_get_config_listener(void)
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
+      poa_mgr = PortableServer_POA__get_the_POAManager (poa, &ev);
+      PortableServer_POAManager_activate (poa_mgr, &ev);
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
       listener = PortableServer_POA_servant_to_reference(poa,
                                                          &poa_listener_servant,
                                                          &ev);
+
+      CORBA_Object_release ((CORBA_Object) poa_mgr, &ev);
+      CORBA_Object_release ((CORBA_Object) poa, &ev);
 
       g_assert (listener != CORBA_OBJECT_NIL);
       g_assert (ev._major == CORBA_NO_EXCEPTION);

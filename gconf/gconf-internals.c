@@ -2736,49 +2736,53 @@ get_hostname (void)
 	return hostname;
 }
 
+static CORBA_ORB gconf_orb = CORBA_OBJECT_NIL;      
+
 CORBA_ORB
 gconf_orb_get (void)
 {
-  if (TRUE || gconf_in_daemon_mode ())
+  if (gconf_orb == CORBA_OBJECT_NIL)
     {
-      static CORBA_ORB gconf_orb = CORBA_OBJECT_NIL;      
+      CORBA_Environment ev;
+      int argc = 1;
+      char *argv[] = { "gconf", NULL };
+      
+      CORBA_exception_init (&ev);
+      
+      gconf_orb = CORBA_ORB_init (&argc, argv, "orbit-local-orb", &ev);
+      g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      if (gconf_orb == CORBA_OBJECT_NIL)
+      CORBA_exception_free (&ev);
+    }
+
+  return gconf_orb;
+}
+
+int
+gconf_orb_release (void)
+{
+  int ret = 0;
+
+  if (gconf_orb != CORBA_OBJECT_NIL)
+    {
+      CORBA_ORB orb = gconf_orb;
+      CORBA_Environment ev;
+
+      gconf_orb = CORBA_OBJECT_NIL;
+
+      CORBA_exception_init (&ev);
+
+      CORBA_ORB_destroy (orb, &ev);
+      CORBA_Object_release ((CORBA_Object)orb, &ev);
+
+      if (ev._major != CORBA_NO_EXCEPTION)
         {
-          CORBA_Environment ev;
-          int argc = 1;
-          char *argv[] = { "gconf", NULL };
-          CORBA_Context context;
-          const char *hostname;
-      
-          CORBA_exception_init (&ev);
-      
-          gconf_orb = CORBA_ORB_init (&argc, argv, "orbit-local-orb", &ev);
-          g_assert (ev._major == CORBA_NO_EXCEPTION);
-
-          /* Set values in default context */
-          CORBA_ORB_get_default_context (gconf_orb, &context, &ev);
-          g_assert (ev._major == CORBA_NO_EXCEPTION);
-          
-          hostname = get_hostname ();
-          CORBA_Context_set_one_value (context, "hostname",
-                                       (char *) hostname, &ev);
-          CORBA_Context_set_one_value (context, "domain", "user", &ev);
-          CORBA_Context_set_one_value (context, "username",
-                                       g_get_user_name (), &ev);
-          
-          CORBA_exception_free (&ev);
+          ret = 1;
         }
-      
-      return gconf_orb;
+      CORBA_exception_free (&ev);
     }
-  else
-    {
-      /* FIXME do we have to do this if an app is using bonobo activation? */
-#if 0
-      return bonobo_activation_orb_get ();
-#endif
-    }
+
+  return ret;
 }
 
 char*

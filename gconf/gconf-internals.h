@@ -79,7 +79,7 @@ GSList*       gconf_load_source_path (const gchar* filename, GError** err);
 void     gconf_shutdown_daemon (GError **err);
 gboolean gconf_ping_daemon     (void);
 gboolean gconf_spawn_daemon    (GError **err);
-
+int      gconf_orb_release     (void);
 
 /* Returns 0 on failure (or if the string is "0" of course) */
 gulong       gconf_string_to_gulong (const gchar *str);

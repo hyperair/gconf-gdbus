@@ -292,6 +292,7 @@ extern struct poptOption gconf_options[];
 
 void gconf_clear_cache(GConfEngine* conf, GError** err);
 void gconf_synchronous_sync(GConfEngine* conf, GError** err);
+int  gconf_debug_shutdown(void);
 
 GConfValue * gconf_engine_get_full (GConfEngine *conf,
                                     const gchar *key,
@@ -308,6 +309,3 @@ GConfValue * gconf_engine_get_full (GConfEngine *conf,
 #endif /* __cplusplus */
 
 #endif
-
-
-

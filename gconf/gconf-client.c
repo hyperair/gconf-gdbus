@@ -885,7 +885,6 @@ static void
 cache_pairs_in_dir(GConfClient* client, const gchar* dir)
 {
   GSList* pairs;
-  GSList* tmp;
   GError* error = NULL;
 
   trace ("Caching values in '%s'\n", dir);
@@ -1034,7 +1033,6 @@ gconf_client_all_entries    (GConfClient* client,
 {
   GError *error = NULL;
   GSList *retval;
-  GSList *copy;
   
   trace ("Getting all values in '%s'\n", dir);
 
@@ -1094,8 +1092,8 @@ gconf_client_suggest_sync   (GConfClient* client,
 }
 
 gboolean
-gconf_client_dir_exists     (GConfClient* client,
-                             const gchar* dir, GError** err)
+gconf_client_dir_exists(GConfClient* client,
+                        const gchar* dir, GError** err)
 {
   GError* error = NULL;
   gboolean retval;

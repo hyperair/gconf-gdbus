@@ -30,7 +30,7 @@
 /*
  *
  *
- * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples/*
+ * DO NOT USE THESE CRAPPY TESTS AS EXAMPLE CODE. USE THE DOCS AND examples
  *
  *
  *
@@ -46,6 +46,8 @@
 
 #include <gconf/gconf.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
 #include <gconf/gconf-internals.h>
@@ -969,10 +971,12 @@ main (int argc, char** argv)
   printf("\nChecking bool storage:");
   
   check_bool_storage(conf);
-  
+
+  gconf_engine_set_bool(conf, "/foo", TRUE, &err);
+
   gconf_engine_unref(conf);
 
   printf("\n\n");
   
-  return 0;
+  return gconf_debug_shutdown ();
 }

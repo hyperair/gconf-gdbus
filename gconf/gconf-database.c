@@ -22,6 +22,7 @@
 #include "gconf-sources.h"
 #include "gconf-locale.h"
 #include "gconfd.h"
+#include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <stdlib.h>
@@ -714,11 +715,11 @@ impl_ConfigDatabase3_add_listener_with_properties (PortableServer_Servant servan
                                                    CORBA_Environment *ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  const char *name;
+  const char *name = NULL;
   int i;
   
   if (gconfd_check_in_shutdown (ev))
-    return;
+    return 0;
 
   i = 0;
   while (i < (int) properties->_length)
@@ -1073,7 +1074,12 @@ gconf_database_add_listener    (GConfDatabase       *db,
        * Because it's likely the right thing for the client
        * app to simply continue.
        */
-      gconf_log (GCL_WARNING, _("Failed to log addition of listener %s (%s); will not be able to restore this listener on gconfd restart, resulting in unreliable notification of configuration changes."), err->message);
+      gconf_log (GCL_WARNING,
+		 _("Failed to log addition of listener %s (%s);"
+		   "will not be able to restore this listener on "
+		   "gconfd restart, resulting in unreliable "
+		   "notification of configuration changes."),
+		 name, err->message);
       g_error_free (err);
     }
   
