@@ -646,6 +646,9 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
+"Installerar schemafiler korrekt på kommando-raden till databasen. "
+"Miljövariabeln GCONF_CONFIG_SOURCE bör vara satt till en ice-standard "
+"konfigurationskälla eller sätt den till en tom sträng för att använda standarden."
 
 #: gconf/gconftool.c:254
 msgid ""
@@ -737,6 +740,7 @@ msgstr "--break-directory måste användas av sig själv.\n"
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
+"Du måste ange en konfigurationskälla med --config-source vid användning av --direct\n"
 
 #: gconf-editor/gconf-editor.c:69 gconf/gconftool.c:447
 #, c-format
@@ -745,7 +749,7 @@ msgstr "Misslyckades med att initiera GConf: %s\n"
 
 #: gconf/gconftool.c:472
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
-msgstr ""
+msgstr "Måste sätta miljövariabeln GCONF_CONFIG_SOURCE\n"
 
 #. Eventually you should be able to run gconfd as long as
 #. you're installing to a different database from the one
@@ -757,6 +761,10 @@ msgid ""
 "applications are running\n"
 "(though things theoretically work if apps are running).\n"
 msgstr ""
+"Borde inte köra gconfd vid installering av schemafiler.\n"
+"Använd gconftool --shutdown för att stänga demonen, oftast säkert medans inga "
+"applikationer körs\n"
+"(fast teoretiskt fungerar saker om applikationerna körs).\n"
 
 #: gconf/gconftool.c:510
 #, c-format
@@ -960,7 +968,7 @@ msgstr "Kopplade ihop schemat `%s' med nyckeln `%s'\n"
 
 #: gconf/gconftool.c:1588
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr ""
+msgstr "Du måste ha minst en <locale> post i en <schema>\n"
 
 #: gconf/gconftool.c:1617
 #, c-format
@@ -988,7 +996,7 @@ msgstr ""
 #: gconf/gconftool.c:1671
 #, fuzzy, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
-msgstr "Dokumentet`%s' har ingen  top level <gconfschemafil> nod\n"
+msgstr "Dokumentet`%s' har ingen top level <gconfschemafil> nod\n"
 
 #: gconf/gconftool.c:1685
 #, c-format
