@@ -3275,7 +3275,9 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
 
   gconf_schema_set_locale(schema, name);
 
-  xmlFree(name);
+  /* Only set the global default on the C locale */
+  if (strcmp(name, "C") == 0 && info->global_default != NULL)
+    gconf_schema_set_default_value(schema, info->global_default);
 
   /* Fill in the global info */
   if (info->type != GCONF_VALUE_INVALID)
@@ -3293,6 +3295,7 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
   if (info->owner != NULL)
     gconf_schema_set_owner(schema, info->owner);
 
+  xmlFree(name);
 
   /* Locale-specific info */
   iter = node->xmlChildrenNode;
