@@ -73,7 +73,29 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
   switch (type)
     {
     case G_CONF_VALUE_INT:
-      g_conf_value_set_int(value, atoi(value_str));
+      {
+        gchar* s = value_str;
+        gboolean not_digit = FALSE;
+
+        while (*s)
+          {
+            if (!isdigit(*s)) 
+              not_digit = TRUE;
+            ++s;
+          }
+
+        if (not_digit)
+          {
+            g_conf_set_error(G_CONF_PARSE_ERROR,
+                             _("Didn't understand `%s' (expected integer)"),
+                             value_str);
+            
+            g_conf_value_destroy(value);
+            value = NULL;
+          }
+        else
+          g_conf_value_set_int(value, atoi(value_str));
+      }
       break;
     case G_CONF_VALUE_FLOAT:
       {
@@ -86,8 +108,9 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
           }
         else
           {
-            g_warning("Didn't understand `%s' (expected real number)",
-                      value_str);
+            g_conf_set_error(G_CONF_PARSE_ERROR,
+                             _("Didn't understand `%s' (expected real number)"),
+                             value_str);
             
             g_conf_value_destroy(value);
             value = NULL;
@@ -104,7 +127,10 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
         g_conf_value_set_bool(value, FALSE);
       else
         {
-          g_warning("Didn't understand `%s' (expected true or false)", value_str);
+          g_conf_set_error(G_CONF_PARSE_ERROR,
+                           _("Didn't understand `%s' (expected true or false)"),
+                           value_str);
+
           g_conf_value_destroy(value);
           value = NULL;
         }
@@ -138,6 +164,9 @@ g_conf_value_to_string(GConfValue* value)
     case G_CONF_VALUE_BOOL:
       retval = g_conf_value_bool(value) ? g_strdup("true") : g_strdup("false");
       break;
+    case G_CONF_VALUE_INVALID:
+      retval = g_strdup("Invalid");
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -160,6 +189,7 @@ g_conf_value_copy(GConfValue* src)
     case G_CONF_VALUE_INT:
     case G_CONF_VALUE_FLOAT:
     case G_CONF_VALUE_BOOL:
+    case G_CONF_VALUE_INVALID:
       dest->d = src->d;
       break;
     case G_CONF_VALUE_STRING:
@@ -285,7 +315,7 @@ g_conf_source_query_value      (GConfSource* source,
 {
   if (!g_conf_valid_key(key))
     {
-      g_warning("Invalid key `%s'", key);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
       return NULL;
     }
   return (*source->backend->vtable->query_value)(source, key);
@@ -298,7 +328,8 @@ g_conf_source_set_value        (GConfSource* source,
 {
   if (!g_conf_valid_key(key))
     {
-      g_warning("Invalid key `%s'", key);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
+      return;
     }
   (*source->backend->vtable->set_value)(source, key, value);
 }
@@ -309,7 +340,8 @@ g_conf_source_unset_value      (GConfSource* source,
 {
   if (!g_conf_valid_key(key))
     {
-      g_warning("Invalid key `%s'", key);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
+      return;
     }
   (*source->backend->vtable->unset_value)(source, key);
 }
@@ -320,7 +352,8 @@ g_conf_source_all_pairs         (GConfSource* source,
 {
   if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
     {
-      g_warning("Invalid directory `%s'", dir);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
+      return NULL;
     }
   return (*source->backend->vtable->all_entries)(source, dir);
 }
@@ -331,7 +364,8 @@ g_conf_source_all_dirs          (GConfSource* source,
 {
   if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
     {
-      g_warning("Invalid directory `%s'", dir);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
+      return NULL;
     }
   return (*source->backend->vtable->all_subdirs)(source, dir);
 }
@@ -342,7 +376,8 @@ g_conf_source_remove_dir        (GConfSource* source,
 {
   if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
     {
-      g_warning("Invalid directory `%s'", dir);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
+      return;
     }
   return (*source->backend->vtable->remove_dir)(source, dir);
 }
@@ -353,7 +388,8 @@ g_conf_source_nuke_dir        (GConfSource* source,
 {
   if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
     {
-      g_warning("Invalid directory `%s'", dir);
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
+      return;
     }
 
   return (*source->backend->vtable->nuke_dir)(source, dir);
@@ -407,8 +443,6 @@ g_conf_key_directory  (const gchar* key)
       
       retval[len-1] = '\0';
     }
-
-  printf("dir is `%s'\n", retval);
 
   return retval;
 }
@@ -505,7 +539,7 @@ g_conf_read_server_ior(void)
 
   if (fd < 0)
     {
-      g_warning("info file open failed: %s", strerror(errno));
+      g_conf_set_error(G_CONF_FAILED, _("info file open failed: %s"), strerror(errno));
       return NULL;
     }
   else
@@ -519,7 +553,7 @@ g_conf_read_server_ior(void)
 
       if (bytes_read < 0)
         {
-          g_warning("IOR read failed: %s", strerror(errno));
+          g_conf_set_error(G_CONF_FAILED, _("IOR read failed: %s"), strerror(errno));
           return NULL;
         }
       else
@@ -652,6 +686,7 @@ GConfSources*
 g_conf_sources_new(gchar** addresses)
 {
   GConfSources* sources;
+  GSList* failed = NULL;
 
   sources = g_new0(GConfSources, 1);
 
@@ -664,12 +699,36 @@ g_conf_sources_new(gchar** addresses)
       if (source != NULL)
         sources->sources = g_list_prepend(sources->sources, source);
       else
-        g_warning("Didn't resolve `%s'", *addresses); /* FIXME, better error reporting */
+        failed = g_slist_prepend(failed, *addresses);
 
       ++addresses;
     }
 
   sources->sources = g_list_reverse(sources->sources);
+
+  if (failed != NULL)
+    {
+      GSList* tmp;
+      gchar* all = g_strdup("");
+
+      tmp = failed;
+
+      while (tmp != NULL)
+        {
+          gchar* old = all;
+
+          all = g_strconcat(old, tmp->data, NULL);
+
+          g_free(old);
+
+          tmp = g_slist_next(tmp);
+        }
+      
+      g_conf_set_error(G_CONF_BAD_ADDRESS, 
+                       _("The following config source addresses were not resolved:\n%s"),
+                       all);
+      g_free(all);
+    }
 
   return sources;
 }
@@ -686,9 +745,26 @@ g_conf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
 
+      g_conf_clear_error();
+
       val = g_conf_source_query_value(tmp->data, key);
 
-      if (val != NULL)
+      if (val == NULL)
+        {
+          switch (g_conf_errno())
+            {
+            case G_CONF_BAD_KEY:
+              /* this isn't getting any better, so bail */
+              return NULL;
+              break;
+            case G_CONF_SUCCESS:
+              break;
+            default:
+              /* weird error, try some other sources */
+              break;
+            }
+        }
+      else
         return val;
 
       tmp = g_list_next(tmp);
@@ -713,6 +789,7 @@ g_conf_sources_set_value   (GConfSources* sources,
 
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
         {
+          /* may set error, we just leave its setting */
           g_conf_source_set_value(src, key, value);
           return;
         }
@@ -735,7 +812,7 @@ g_conf_sources_unset_value   (GConfSources* sources,
       GConfSource* src = tmp->data;
 
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
-        g_conf_source_unset_value(src, key);
+        g_conf_source_unset_value(src, key);    /* we might pile up errors here */
       
       tmp = g_list_next(tmp);
     }
@@ -755,7 +832,7 @@ g_conf_sources_remove_dir (GConfSources* sources,
       GConfSource* src = tmp->data;
 
       if (src->flags & G_CONF_SOURCE_WRITEABLE)
-        g_conf_source_remove_dir(src, dir);
+        g_conf_source_remove_dir(src, dir);    /* might pile up errors */
       
       tmp = g_list_next(tmp);
     }
@@ -1016,9 +1093,10 @@ g_conf_load_source_path(const gchar* filename)
 
   if (f == NULL)
     {
-      fprintf(stderr, 
-              "Didn't open file `%s': %s\n", filename, strerror(errno));
-      /* FIXME better error */
+      g_conf_set_error(G_CONF_FAILED,
+                       _("Couldn't open path file `%s': %s\n"), 
+                         filename, 
+                         strerror(errno));
       return NULL;
     }
 
@@ -1075,6 +1153,17 @@ g_conf_load_source_path(const gchar* filename)
               l = g_slist_prepend(l, g_strdup(unq));
             }
         }
+    }
+
+  if (ferror(f))
+    {
+      /* This should basically never happen */
+      g_conf_set_error(G_CONF_FAILED,
+                       _("Read error on file `%s': %s\n"), 
+                       filename, 
+                       strerror(errno));
+      /* don't return, we want to go ahead and return any 
+         addresses we already loaded. */
     }
 
   fclose(f);  

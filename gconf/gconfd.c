@@ -228,6 +228,8 @@ gconfd_lookup(PortableServer_Servant servant, CORBA_char * key,
       return invalid_corba_value();
     }
 
+  g_conf_clear_error();
+
   val = g_conf_sources_query_value(sources, key);
 
   if (val != NULL)
@@ -239,7 +241,14 @@ gconfd_lookup(PortableServer_Servant servant, CORBA_char * key,
       return cval;
     }
   else
-    return invalid_corba_value();
+    {
+      if (g_conf_errno() != G_CONF_SUCCESS)
+        {
+          syslog(LOG_ERR, _("Error looking up `%s': %s"),
+                 key, g_conf_error());
+        }
+      return invalid_corba_value();
+    }
 }
 
 static void
@@ -269,7 +278,15 @@ gconfd_set(PortableServer_Servant servant, CORBA_char * key,
 
   g_free(str);
 
+  g_conf_clear_error();
+
   g_conf_sources_set_value(sources, key, val);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error setting value for `%s': %s"),
+             key, g_conf_error());
+    }
 
   ltable_notify_listeners(ltable, key, value);
 }
@@ -288,7 +305,15 @@ gconfd_unset(PortableServer_Servant servant, CORBA_char * key,
   
   syslog(LOG_DEBUG, "Received request to unset key `%s'", key);
 
+  g_conf_clear_error();
+
   g_conf_sources_unset_value(sources, key);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error unsetting `%s': %s"),
+             key, g_conf_error());
+    }
 
   val = invalid_corba_value();
 
@@ -309,7 +334,15 @@ gconfd_remove_dir(PortableServer_Servant servant, CORBA_char * dir,
   
   syslog(LOG_DEBUG, "Received request to remove dir `%s'", dir);
 
+  g_conf_clear_error();
+  
   g_conf_sources_remove_dir(sources, dir);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error removing dir `%s': %s"),
+             dir, g_conf_error());
+    }
 }
 
 static void 
@@ -350,7 +383,16 @@ gconfd_all_pairs (PortableServer_Servant servant,
       return;
     } 
 
+  g_conf_clear_error();
+
   pairs = g_conf_sources_all_pairs(sources, dir);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Failed to get all entries in `%s': %s"),
+             dir, g_conf_error());
+    }
+
   n = g_slist_length(pairs);
 
   *keys= ConfigServer_KeyList__alloc();
@@ -405,7 +447,16 @@ gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir,
 
   syslog(LOG_DEBUG, "Received request to list all subdirs in `%s'", dir);
 
+  g_conf_clear_error();
+
   subdirs = g_conf_sources_all_dirs(sources, dir);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error listing dirs in `%s': %s"),
+             dir, g_conf_error());
+    }
+
   n = g_slist_length(subdirs);
 
   *keys= ConfigServer_KeyList__alloc();
@@ -446,7 +497,8 @@ gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
 
   if (!g_conf_sources_sync_all(sources))
     {
-      syslog(LOG_ERR, "Failed to sync one or more sources");
+      syslog(LOG_ERR, _("Failed to sync one or more sources: %s"), 
+             g_conf_error());
       return;
     }
 }

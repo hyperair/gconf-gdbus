@@ -256,13 +256,13 @@ main (int argc, char** argv)
 
   if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
     {
-      fprintf(stderr, _("Failed to init orb\n"));
+      fprintf(stderr, _("Failed to init orb: %s\n"), g_conf_error());
       return 1;
     }
 
   if (!g_conf_init())
     {
-      fprintf(stderr, _("Failed to init GConf\n"));
+      fprintf(stderr, _("Failed to init GConf: %s\n"), g_conf_error());
       return 1;
     }
 
@@ -283,7 +283,8 @@ main (int argc, char** argv)
   if (spawn_gconfd)
     {
       if (!g_conf_spawn_daemon())
-        fprintf(stderr, _("Failed to spawn the config server (gconfd)\n"));
+        fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
+                g_conf_error());
       /* don't exit, it's OK to have this along with other options
          (however, it's probably pointless) */
     }
@@ -303,13 +304,15 @@ main (int argc, char** argv)
           GConfValue* value;
           gchar* s;
 
+          g_conf_clear_error();
+
           value = g_conf_get(conf, *args);
          
           if (value != NULL)
             {
               s = g_conf_value_to_string(value);
 
-              fputs(s, stdout); /* in case the string contains printf formats */
+              fputs(s, stdout); /* in case the gstring contains printf formats */
               fputs("\n", stdout);
 
               g_free(s);
@@ -317,7 +320,13 @@ main (int argc, char** argv)
             }
           else
             {
-              fprintf(stderr, "No value set for `%s'\n", *args); 
+              if (g_conf_errno() == G_CONF_SUCCESS)
+                {
+                  fprintf(stderr, _("No value set for `%s'\n"), *args); 
+                }
+              else
+                fprintf(stderr, _("Failed to get value for `%s': %s\n"),
+                        *args, g_conf_error());
             }
  
           ++args;
@@ -344,12 +353,6 @@ main (int argc, char** argv)
           key = *args;
           ++args;
           value = *args;
-
-          if (!g_conf_valid_key(key))
-            {
-              fprintf(stderr, _("Invalid key: `%s'\n"), key);
-              return 1;
-            }
 
           if (value == NULL)
             {
@@ -381,11 +384,14 @@ main (int argc, char** argv)
               break;
             }
           
+          g_conf_clear_error();
+
           gval = g_conf_value_new_from_string(type, value);
 
           if (gval == NULL)
             {
-              fprintf(stderr, _("Didn't understand value `%s'\n"), value);
+              fprintf(stderr, _("Error: %s\n"),
+                      g_conf_error());
               return 1;
             }
 
@@ -424,7 +430,15 @@ main (int argc, char** argv)
 
       while (*args)
         {
+          g_conf_clear_error();
           g_conf_unset(conf, *args);
+
+          if (g_conf_errno() != G_CONF_SUCCESS)
+            {
+              fprintf(stderr, _("Error unsetting `%s': %s\n"),
+                      *args, g_conf_error());
+            }
+
           ++args;
         }
 
@@ -446,6 +460,8 @@ main (int argc, char** argv)
           GSList* subdirs;
           GSList* tmp;
 
+          g_conf_clear_error();
+
           subdirs = g_conf_all_dirs(conf, *args);
           
           if (subdirs != NULL)
@@ -464,6 +480,12 @@ main (int argc, char** argv)
                 }
 
               g_slist_free(subdirs);
+            }
+          else
+            {
+              if (g_conf_errno() != G_CONF_SUCCESS)
+                fprintf(stderr, _("Error listing dirs: %s\n"),
+                        g_conf_error());
             }
  
           ++args;
@@ -484,11 +506,19 @@ main (int argc, char** argv)
     }
 
   poptFreeContext(ctx);
+
+  g_conf_clear_error();
   
   g_conf_destroy(conf);
 
   if (shutdown_gconfd)
     g_conf_shutdown_daemon();
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      fprintf(stderr, _("Shutdown error: %s\n"),
+              g_conf_error());
+    }
 
   return 0;
 }
@@ -548,8 +578,16 @@ list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
 
   whitespace = g_strnfill(depth, ' ');
 
+  g_conf_clear_error();
+  
   pairs = g_conf_all_pairs(conf, dir);
           
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      fprintf(stderr, _("Failure listing pairs in `%s': %s"),
+              dir, g_conf_error());
+    }
+
   if (pairs != NULL)
     {
       tmp = pairs;

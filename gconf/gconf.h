@@ -24,6 +24,20 @@
 #include <glib.h>
 
 typedef enum {
+  G_CONF_SUCCESS = 0,
+  G_CONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
+                               so there's no point having a more specific errno */
+
+  G_CONF_NO_SERVER = 2,     /* Server can't be launched/contacted */
+  G_CONF_NO_PERMISSION = 3, /* don't have permission for that */
+  G_CONF_BAD_ADDRESS = 4,   /* Address couldn't be resolved */
+  G_CONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
+                               characters, or malformed slash arrangement) */
+  G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
+  G_CONF_CORRUPT = 7        /* Error parsing/loading information inside the backend */
+} GConfErrNo;
+
+typedef enum {
   G_CONF_VALUE_INVALID,
   G_CONF_VALUE_STRING,
   G_CONF_VALUE_INT,
@@ -97,9 +111,14 @@ gboolean     g_conf_init           ();
 GConf*       g_conf_new            (void);
 void         g_conf_destroy        (GConf* conf);
 
-const gchar* g_conf_error          (void);
-gboolean     g_conf_error_pending  (void);
-void         g_conf_set_error      (const gchar* str);
+const gchar* g_conf_error          (void); /* returns strerror of current errno,
+                                              combined with additional details 
+                                              that may exist 
+                                           */
+const gchar* g_conf_strerror       (GConfErrNo en);
+GConfErrNo   g_conf_errno          (void);
+void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void         g_conf_clear_error    (void); /* like setting errno to 0 */
 
 
 /* Returns ID of the notification */

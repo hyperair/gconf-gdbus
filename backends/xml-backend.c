@@ -35,6 +35,22 @@
 #include <unistd.h>
 #include <errno.h>
 
+
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
+
 /*
  * Overview
  * 
@@ -250,7 +266,7 @@ resolve_address (const gchar* address)
 
   if (root_dir == NULL)
     {
-      g_warning("Bad address");
+      g_conf_set_error(G_CONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address"));
       return NULL;
     }
 
@@ -452,7 +468,6 @@ xs_load_dir(XMLSource* source, const gchar* dir)
 
   if (!g_conf_file_test(relative, G_CONF_FILE_ISDIR))
     {
-      printf("Didn't find directory `%s'\n", relative);
       g_free(relative);
       return NULL;
     }
@@ -469,7 +484,7 @@ xs_load_dir(XMLSource* source, const gchar* dir)
   doc = xmlParseFile(xmlfile);
 
   if (doc == NULL)
-    g_warning("Failed to parse/load `%s'", xmlfile);
+    g_conf_set_error(G_CONF_FAILED, _("Failed to parse/load `%s'"), xmlfile);
   
   g_free(relative);
   g_free(xmlfile);
@@ -612,8 +627,6 @@ xs_lookup_dir(XMLSource* source, const gchar* dir)
   
   doc = xs_load_dir(source, dir);
 
-  printf("Loaded dir `%s', doc is %p\n", dir, doc);
-
   /* doc MAY BE NULL if the dir doesn't exist */
   
   tree_entry = tree_cache_entry_new(doc);
@@ -649,7 +662,7 @@ xs_pairs_in_dir(XMLSource* source, const gchar* dir)
 
   if (strcmp(doc->root->name, "gconf") != 0)
     {
-      g_warning("Document root isn't a <gconf> tag");
+      g_conf_set_error(G_CONF_CORRUPT, _("Document root isn't a <gconf> tag"));
       return NULL;
     }
 
@@ -696,8 +709,6 @@ static GSList*
 xs_dirs_in_dir(XMLSource* source, const gchar* dir)
 {
   TreeCacheEntry* entry;
-
-  printf("Listing all dirs in `%s'\n", dir);
 
   entry = xs_lookup_dir(source, dir);
 
@@ -1100,8 +1111,8 @@ xs_create_new_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
             /* nothing, no problem */;
         }
       else
-        g_warning("Could not make directory `%s': %s",
-                  (gchar*)absolute, strerror(errno));
+        g_conf_set_error(G_CONF_FAILED, _("Could not make directory `%s': %s"),
+                         (gchar*)absolute, strerror(errno));
     }
 
   g_free(absolute);
@@ -1169,8 +1180,8 @@ create_fs_dir(const gchar* dir)
   
   if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
     {
-      g_warning("Could not make directory `%s': %s",
-                (gchar*)dir, strerror(errno));
+      g_conf_set_error(G_CONF_FAILED, _("Could not make directory `%s': %s"),
+                       (gchar*)dir, strerror(errno));
       return FALSE;
     }
   else
@@ -1232,8 +1243,8 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
         {
           /* I think libxml may mangle errno, but we might as well 
              try. */
-          g_warning("Failed to write file `%s': %s", 
-                    tmp_filename, strerror(errno));
+          g_conf_set_error(G_CONF_FAILED, _("Failed to write file `%s': %s"), 
+                           tmp_filename, strerror(errno));
 
           data->failed = TRUE;
 
@@ -1246,8 +1257,9 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
         {
           if (rename(filename, old_filename) < 0)
             {
-              g_warning("Failed to rename `%s' to `%s': %s",
-                        filename, old_filename, strerror(errno));
+              g_conf_set_error(G_CONF_FAILED, 
+                               _("Failed to rename `%s' to `%s': %s"),
+                               filename, old_filename, strerror(errno));
 
               data->failed = TRUE;
               goto failed_end_of_sync;
@@ -1256,14 +1268,14 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
 
       if (rename(tmp_filename, filename) < 0)
         {
-          g_warning("Failed to rename `%s' to `%s': %s",
-                    tmp_filename, filename, strerror(errno));
+          g_conf_set_error(G_CONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
+                           tmp_filename, filename, strerror(errno));
 
           /* Put the original file back, so this isn't a total disaster. */
           if (rename(old_filename, filename) < 0)
             {
-              g_warning("Failed to restore `%s' from `%s': %s",
-                        filename, old_filename, strerror(errno));
+              g_conf_set_error(G_CONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
+                               filename, old_filename, strerror(errno));
             }
 
           data->failed = TRUE;
@@ -1347,7 +1359,7 @@ xdoc_find_entry(xmlDocPtr doc, const gchar* full_key)
 
   if (strcmp(doc->root->name, "gconf") != 0)
     {
-      g_warning("Document root isn't a <gconf> tag");
+      g_conf_set_error(G_CONF_FAILED, _("Document root isn't a <gconf> tag"));
       return NULL;
     }
 
@@ -1406,7 +1418,7 @@ xdoc_find_dirs(xmlDocPtr doc)
 
   if (strcmp(doc->root->name, "gconf") != 0)
     {
-      g_warning("Document root isn't a <gconf> tag");
+      g_conf_set_error(G_CONF_FAILED, _("Document root isn't a <gconf> tag"));
       return NULL;
     }
 
