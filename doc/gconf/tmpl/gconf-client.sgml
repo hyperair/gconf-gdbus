@@ -580,8 +580,8 @@ objects. gconf_client_get_list() automatically converts to primitive C
 types. Thus, the list-&gt;data fields in the returned list 
 contain:
  
-<informaltable pgwide=1 frame="none">
-<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
 <tbody>
 
 <row>
@@ -647,8 +647,8 @@ gconf_client_get_pair() stores the two fields of the pair in the locations
 pointed to by @car_retloc and @cdr_retloc. The type of these pointers
 depends on the corresponding @car_type and @cdr_type:
  
-<informaltable pgwide=1 frame="none">
-<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
 <tbody>
 
 <row>
@@ -899,38 +899,4 @@ Convenient varargs version of gconf_client_change_set_from_currentv().
 @err: 
 @Returns: 
 
-
-<!-- ##### SIGNAL GConfClient::error ##### -->
-<para>
-Emitted whenever an error occurs inside a #GConfClient function. Depending on
-the #GConfClientErrorHandlingMode, the default handler for this signal may or
-may not display an error dialog.
-</para>
-
-@gconfclient: the object which received the signal.
-@arg1: a #GError* (the error).
-
-<!-- ##### SIGNAL GConfClient::unreturned-error ##### -->
-<para>
-Emitted when you pass <symbol>NULL</symbol> for the #GError** argument to
-any #GConfClient function, and an error occurs. Depending on the
-#GConfClientErrorHandlingMode, the default handler for this signal may or may
-not display an error dialog.
-</para>
-
-@gconfclient: the object which received the signal.
-@arg1: a #GError* (the unhandled error).
-
-<!-- ##### SIGNAL GConfClient::value-changed ##### -->
-<para>
-Emitted when a key below one of the directories added with
-gconf_client_add_dir() receives a new value or is unset. Because your signal
-handler will have to use strcmp() to decide whether it cares about the
-particular value that changed, it can be much more efficient to use
-gconf_client_notify_add().
-</para>
-
-@gconfclient: the object which received the signal.
-@arg1: a const #gchar* representing the changed key name
-@arg2: a #GConfValue* representing the new value, or <symbol>NULL</symbol> for unset.
 

@@ -1,16 +1,18 @@
-<!DOCTYPE BOOK PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
-<!entity GConfClient SYSTEM "sgml/gconf-client.sgml">
-<!entity gconf-gconf-backend SYSTEM "sgml/gconf-backend.sgml">
-<!entity gconf-gconf-engine SYSTEM "sgml/gconf-engine.sgml">
-<!entity gconf-gconf-error SYSTEM "sgml/gconf-error.sgml">
-<!entity gconf-gconf-internals SYSTEM "sgml/gconf-internals.sgml">
-<!entity gconf-gconf-listeners SYSTEM "sgml/gconf-listeners.sgml">
-<!entity gconf-gconf-schema SYSTEM "sgml/gconf-schema.sgml">
-<!entity gconf-gconf-sources SYSTEM "sgml/gconf-sources.sgml">
-<!entity gconf-gconf-value SYSTEM "sgml/gconf-value.sgml">
-<!entity gconf-gconf SYSTEM "sgml/gconf.sgml">
-<!entity gconf-gconf-locale SYSTEM "sgml/gconf-locale.sgml">
-<!entity gconf-gconf-changeset SYSTEM "sgml/gconf-changeset.sgml">
+<?xml version="1.0"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY GConfClient SYSTEM "xml/gconf-client.xml">
+<!ENTITY gconf-gconf-backend SYSTEM "xml/gconf-backend.xml">
+<!ENTITY gconf-gconf-engine SYSTEM "xml/gconf-engine.xml">
+<!ENTITY gconf-gconf-error SYSTEM "xml/gconf-error.xml">
+<!ENTITY gconf-gconf-internals SYSTEM "xml/gconf-internals.xml">
+<!ENTITY gconf-gconf-listeners SYSTEM "xml/gconf-listeners.xml">
+<!ENTITY gconf-gconf-schema SYSTEM "xml/gconf-schema.xml">
+<!ENTITY gconf-gconf-sources SYSTEM "xml/gconf-sources.xml">
+<!ENTITY gconf-gconf-value SYSTEM "xml/gconf-value.xml">
+<!ENTITY gconf-gconf SYSTEM "xml/gconf.xml">
+<!ENTITY gconf-gconf-locale SYSTEM "xml/gconf-locale.xml">
+<!ENTITY gconf-gconf-changeset SYSTEM "xml/gconf-changeset.xml">
 ]>
 <book id="index">
   <bookinfo>
@@ -68,7 +70,7 @@
       This chapter introduces GConf, including the basic terms and
       concepts. After reading it, if you're a GNOME programmer looking
       to dive in quickly, you might skip to <xref
-      linkend="gconfclient-example">. If you want to have
+      linkend="gconfclient-example"/>. If you want to have
       comprehensive knowledge of GConf, you might want to read the
       whole manual.
     </para>
@@ -160,7 +162,7 @@
           <firstterm>key</firstterm>.  Characters in a path should be
           alphanumeric or underscore. Path components may not start with a
           period. You should follow the conventions outlined in 
-         <xref linkend="conventions"> when choosing what names to use
+         <xref linkend="conventions"/> when choosing what names to use
           for your keys.
         </para>
       </sect2>
@@ -362,7 +364,7 @@
     <para>
       Note that this is only a brief tutorial-style introduction to
       the client library; have a look at <xref
-      linkend="gconf-reference"> for a complete reference.
+      linkend="gconf-reference"/> for a complete reference.
     </para>
 
     <!-- Error Handling -->
@@ -514,7 +516,7 @@
       <para>
         <structname>GConfClient</structname> should be used instead of 
         <structname>GConfEngine</structname> in most applications.
-        See <xref linkend="gconf-client">. Because libgnome uses
+        See <xref linkend="gconf-client"/>. Because libgnome uses
         <structname>GConfClient</structname>, apps using libgnome 
         <emphasis>MUST</emphasis> use
         <structname>GConfClient</structname>.
@@ -552,7 +554,7 @@
           <funcdef>GConfEngine*
             <function>gconf_engine_get_default</function>
           </funcdef>
-          <void>
+          <void/>
         </funcsynopsis>        
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
@@ -933,10 +935,10 @@ print_value(GConfValue* value)
       This chapter covers the mechanics of writing and installing the
       GConf schema files. Schema files describe your configuration
       data and provide default values for it. See <xref
-      linkend="concepts-schemas"> for an explanation of schemas.  The
+      linkend="concepts-schemas"/> for an explanation of schemas.  The
       schema file is not understood by the GConf client library;
       rather, <application>gconftool</application> (see <xref
-      linkend="gconftool">) knows how to parse it, and then uses the GConf
+      linkend="gconftool"/>) knows how to parse it, and then uses the GConf
       client library to install the information in the GConf database.
     </para>
 
@@ -1031,14 +1033,14 @@ print_value(GConfValue* value)
         Here are the fields of the <literal>&lt;schema&gt;</literal>
         element:
 
-<informaltable pgwide=1 frame="none">
-<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
 <tbody>
 
 <row>
 <entry>&lt;key&gt;</entry>
 <entry>The key <emphasis>where the schema will be stored</emphasis>;
-                  see <xref linkend="conventions"> for naming
+                  see <xref linkend="conventions"/> for naming
                   conventions. There may be only one key per schema.
 </entry>
 
@@ -1049,7 +1051,7 @@ print_value(GConfValue* value)
 
 <entry>A key <emphasis>the schema will be applied to</emphasis>; that
                   is, this schema <emphasis>describes</emphasis> this
-                  key.  See <xref linkend="conventions"> for naming
+                  key.  See <xref linkend="conventions"/> for naming
                   conventions. There may be multiple &lt;applyto&gt;
                   elements.</entry>
 
@@ -1120,8 +1122,8 @@ element, if the default should be localized. It simply contains the
         A <literal>&lt;locale&gt;</literal> element can contain 
 a locale-specific <literal>&lt;default&gt;</literal>, and may also 
 contain short and long descriptions as follows:
-<informaltable pgwide=1 frame="none">
-<tgroup cols="2"><colspec colwidth="2*"><colspec colwidth="8*">
+<informaltable pgwide="1" frame="none">
+<tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
 <tbody>
 
 <row>
