@@ -2,7 +2,7 @@
 SUBDIRS=gconf
 
 SchemasDTD_DATA = gconf-1.0.dtd
-SchemasDTDdir = $(pkgdatadir)/xml/gconf/
+SchemasDTDdir = $(datadir)/sgml/gconf
 
 EXTRA_DIST = \
 	$(SchemasDTD_DATA)
