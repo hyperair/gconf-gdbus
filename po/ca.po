@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gconf 1.1.11\n"
-"POT-Creation-Date: 2002-08-04 14:20-0400\n"
-"PO-Revision-Date: 2002-06-04 16:02+0200\n"
+"Project-Id-Version: gconf 2.1.0\n"
+"POT-Creation-Date: 2002-12-01 19:21+0100\n"
+"PO-Revision-Date: 2002-12-01 19:32+0100\n"
 "Last-Translator: Gisela Carbonell <gcarbonell@arrakis.es>\n"
 "Language-Team: Catalan <gnome@softcatala.net>\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "S'està inicialitzant el mòdul de rerefons del BDB"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "No s'ha pogut trobar el directori arrel %s a l'adreça '%s'"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "No s'ha pogut crear el directori '%s': %s"
@@ -50,21 +50,19 @@ msgstr "S'està descarregant el mòdul de rerefons de l'XML"
 
 #: backends/xml-backend.c:289
 #, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "No s'ha pogut trobar el directori arrel de l'XML a l'adreça '%s'"
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "No s'ha pogut trobar el directori arrel a l'adreça «%s»"
 
 #: backends/xml-backend.c:414
 #, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
-msgstr ""
-"No es pot llegir des de/escriure al directori arrel de l'XML a l'adreça '%s'"
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
+msgstr "No es pot llegir des de/escriure al directori arrel de l'XML a l'adreça «%s»"
 
 #: backends/xml-backend.c:424
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
-msgstr ""
-"Els permisos del directori o fitxer per a la font de l'XML a l'arrel %s són: "
-"%o/%o"
+msgstr "Els permisos del directori o fitxer per a la font de l'XML a l'arrel %s són: %o/%o"
 
 #: backends/xml-backend.c:590
 #, c-format
@@ -87,15 +85,12 @@ msgstr "S'està inicialitzant el mòdul de rerefons de l'XML"
 
 #: backends/xml-backend.c:790
 #, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr ""
-"És impossible d'abandonar el blocatge en el directori de l'XML '%s': %s"
+msgid "Failed to give up lock on XML dir \"%s\": %s"
+msgstr "No s'ha pogut abandonar el blocatge en el directori de l'XML «%s»: %s"
 
 #: backends/xml-cache.c:257
 msgid "Failed to sync XML cache contents to disk"
-msgstr ""
-"És impossible de sincronitzar el contingut de la memòria cau de l'XML amb el "
-"disc"
+msgstr "No s'ha pogut sincronitzar el contingut de la memòria cau de l'XML amb el disc"
 
 #: backends/xml-cache.c:287
 #, c-format
@@ -192,6 +187,11 @@ msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
 "Un node de nivell superior al fitxer XML '%s' és <%s> i no pas <entry>, s'ha "
 "ignorat"
+
+#: backends/xml-dir.c:1212
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "No s'ha pogut crear el directori «%s»: %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -830,6 +830,17 @@ msgstr ""
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "L'esquema conté un UTF-8 no vàlid"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr "L'esquema especifica el tipus llista però no especifica el tipus dels elements de la llista"
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr "L'esquema especifica el tipus parella però no especifica el tipus dels elements car/cdr"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -1887,167 +1898,160 @@ msgstr "S'ha produït un error en llistar directoris: %s\n"
 #: gconf/gconftool.c:1767
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
-msgstr "ADVERTÈNCIA: el tipus d'esquema no és vàlid o manca (%s)\n"
+msgstr "AVÍS: el tipus d'esquema no és vàlid o manca (%s)\n"
 
 #: gconf/gconftool.c:1776
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
-msgstr ""
-"ADVERTÈNCIA: el tipus de llista per a l'esquema no és vàlid o manca (%s)\n"
+msgstr "AVÍS: el tipus de llista per a l'esquema no és vàlid o manca (%s)\n"
 
 #: gconf/gconftool.c:1787 gconf/gconftool.c:1817 gconf/gconftool.c:1846
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr ""
-"ADVERTÈNCIA: És impossible de processar el valor per defecte '%s' per a "
-"l'esquema (%s)\n"
+msgstr "AVÍS: És impossible de processar el valor per defecte '%s' per a l'esquema (%s)\n"
 
 #: gconf/gconftool.c:1805
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr ""
-"ADVERTÈNCIA: el tipus de car o el tipus de cdr per a l'esquema no és vàlid o "
-"manca (%s)\n"
+msgstr "AVÍS: el tipus de car o el tipus de cdr per a l'esquema no és vàlid o manca (%s)\n"
 
 #
 #: gconf/gconftool.c:1830
 msgid "WARNING: You cannot set a default value for a schema\n"
-msgstr "ADVERTÈNCIA: No podeu definir un valor per defecte per a un esquema\n"
+msgstr "AVÍS: No podeu definir un valor per defecte per a un esquema\n"
 
 #: gconf/gconftool.c:1859
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
-msgstr ""
-"ADVERTÈNCIA: error intern del gconftool, el GconfValueType és desconegut\n"
+msgstr "AVÍS: error intern del gconftool, el GconfValueType és desconegut\n"
 
 #: gconf/gconftool.c:1906 gconf/gconftool.c:1927 gconf/gconftool.c:1948
 #: gconf/gconftool.c:1969
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
-msgstr "ADVERTÈNCIA: és impossible de processar el nom del tipus '%s'\n"
+msgstr "AVÍS: és impossible de processar el nom del tipus '%s'\n"
 
 #: gconf/gconftool.c:1923
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr ""
-"ADVERTÈNCIA: el tipus de llista (list_type) només pot ser enter, coma "
-"flotant, cadena o boleà i no pas '%s'\n"
+msgstr "AVÍS: el tipus de llista (list_type) només pot ser enter, coma flotant, cadena o boleà i no pas '%s'\n"
 
 #: gconf/gconftool.c:1944
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr ""
-"ADVERTÈNCIA: el tipus de car (car_type) només pot ser enter, coma flotant, "
-"cadena o boleà, i no pas '%s'\n"
+msgstr "AVÍS: el tipus de car (car_type) només pot ser enter, coma flotant, cadena o boleà, i no pas '%s'\n"
 
 #: gconf/gconftool.c:1965
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr ""
-"ADVERTÈNCIA: el tipus de cdr (cdr_type) només pot ser enter, coma flotant, "
-"cadena o boleà, i no pas '%s'\n"
+msgstr "AVÍS: el tipus de cdr (cdr_type) només pot ser enter, coma flotant, cadena o boleà, i no pas '%s'\n"
 
 #: gconf/gconftool.c:1993
 msgid "WARNING: empty <applyto> node"
-msgstr "ADVERTÈNCIA: node <applyto> buit"
+msgstr "AVÍS: node <applyto> buit"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
-msgstr "ADVERTÈNCIA: no es comprèn el node <%s> sota <schema>\n"
+msgstr "AVÍS: no es comprèn el node <%s> sota <schema>\n"
 
 #: gconf/gconftool.c:2006
 msgid "WARNING: no key specified for schema\n"
-msgstr "ADVERTÈNCIA: no s'ha especificat cap clau per a l'esquema\n"
+msgstr "AVÍS: no s'ha especificat cap clau per a l'esquema\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "AVÍS: no s'ha especificat un <list_type> per a l'esquema de tipus list\n"
+
+#: gconf/gconftool.c:2024
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "AVÍS: no s'ha especificat un <car_type> per a l'esquema de tipus parella\n"
+
+#: gconf/gconftool.c:2030
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "AVÍS: no s'ha especificat un <cdr_type> per a l'esquema de tipus parella\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr ""
-"ADVERTÈNCIA: el node <locale> no té l'atribut 'name=\"locale\"', s'ignora\n"
+msgstr "AVÍS: el node <locale> no té l'atribut «name=\"locale\"», s'ignorarà\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr ""
-"ADVERTÈNCIA: Hi ha múltiples nodes <locale> per a '%s' local, s'ignoren tots "
-"els següents al primer\n"
+msgstr "AVÍS: Hi ha múltiples nodes <locale> per a «%s» local, s'ignoran tots els següents al primer\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
-msgstr "ADVERTÈNCIA: Node <%s> no vàlid en un node <locale>\n"
+msgstr "AVÍS: Node <%s> no vàlid en un node <locale>\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr ""
-"ADVERTÈNCIA: és impossible d'instal·lar l'esquema '%s' local '%s': %s\n"
+msgstr "AVÍS: és impossible d'instal·lar l'esquema «%s» local «%s»: %s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr "S'ha instal·lat l'esquema '%s' per al local '%s'\n"
+msgstr "S'ha instal·lat l'esquema «%s» per al local «%s»\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
-msgstr ""
-"ADVERTÈNCIA: és impossible d'associar l'esquema '%s' amb la clau '%s': %s\n"
+msgstr "AVÍS: és impossible d'associar l'esquema «%s» amb la clau «%s»: %s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
-msgstr "S'ha adjuntat l'esquema '%s' a la clau '%s'\n"
+msgstr "S'ha adjuntat l'esquema «%s» a la clau «%s»\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Heu de tenir com a mínim una entrada <locale> en un <schema>\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
-msgstr "ADVERTÈNCIA: no es comprèn el node <%s> sota <schemalist>\n"
-
-#: gconf/gconftool.c:2326
-#, c-format
-msgid "Failed to open `%s': %s\n"
-msgstr "És impossible d'obrir '%s': %s\n"
-
-#: gconf/gconftool.c:2333
-#, c-format
-msgid "Document `%s' is empty?\n"
-msgstr "El document '%s' està buit?\n"
+msgstr "AVÍS: no es comprèn el node <%s> sota <schemalist>\n"
 
 #: gconf/gconftool.c:2345
+#, c-format
+msgid "Failed to open `%s': %s\n"
+msgstr "No s'ha pogut obrir «%s»: %s\n"
+
+#: gconf/gconftool.c:2352
+#, c-format
+msgid "Document `%s' is empty?\n"
+msgstr "El document «%s» està buit?\n"
+
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
-msgstr ""
-"El document '%s' té un tipus incorrecte de node arrel (<%s>, hauria de ser "
-"<gconfschemafile>)\n"
+msgstr "El document «%s» té un tipus incorrecte de node arrel (<%s>, hauria de ser <gconfschemafile>)\n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
-msgstr "El document '%s' no té node <gconfschemafile> de nivell superior\n"
+msgstr "El document «%s» no té node <gconfschemafile> de nivell superior\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "ADVERTÈNCIA: el node <%s> sota <gconfschemafile> no es comprèn\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "S'ha produït un error en sincronitzar dades de configuració: %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "Cal especificar alguns fitxers d'esquema per instal·lar\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -2056,16 +2060,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "És impossible d'esborrar el valor de la clau de pausa %s: %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "Cal especificar algunes claus per pausar\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2075,11 +2079,11 @@ msgstr ""
 "a la clau:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "Cal especificar alguns directoris per pausar\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2089,6 +2093,9 @@ msgstr ""
 "S'està intentant pausar la vostra aplicació definint valors incorrectes per "
 "a claus al directori:\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "No s'ha pogut trobar el directori arrel de l'XML a l'adreça '%s'"
 
 #~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 #~ msgstr ""
