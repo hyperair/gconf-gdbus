@@ -30,6 +30,7 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <liboaf/liboaf.h>
 
 
 /* Quick hack so I can mark strings */
@@ -1080,27 +1081,27 @@ gconf_postinit(gpointer app, gpointer mod_info)
       CORBA_exception_init(&ev);
       POA_ConfigListener__init(&poa_listener_servant, &ev);
       
-      g_assert (ev._major == CORBA_NO_EXCEPTION)
+      g_assert (ev._major == CORBA_NO_EXCEPTION);
 
       poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(oaf_orb_get(), "RootPOA", &ev);
 
-      g_assert (ev._major == CORBA_NO_EXCEPTION)
+      g_assert (ev._major == CORBA_NO_EXCEPTION);
 
       PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
 
-      g_assert (ev._major == CORBA_NO_EXCEPTION)
+      g_assert (ev._major == CORBA_NO_EXCEPTION);
 
       PortableServer_POA_activate_object_with_id(poa,
                                                  &objid, &poa_listener_servant, &ev);
 
-      g_assert (ev._major == CORBA_NO_EXCEPTION)
+      g_assert (ev._major == CORBA_NO_EXCEPTION);
       
       listener = PortableServer_POA_servant_to_reference(poa,
                                                          &poa_listener_servant,
                                                          &ev);
 
       g_assert (listener != CORBA_OBJECT_NIL);
-      g_assert (ev._major == CORBA_NO_EXCEPTION)
+      g_assert (ev._major == CORBA_NO_EXCEPTION);
     }
 
   have_initted = TRUE;

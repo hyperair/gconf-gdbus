@@ -48,6 +48,7 @@
 #include <ctype.h>
 #include <syslog.h>
 #include <time.h>
+#include <liboaf/liboaf.h>
 
 
 /* Quick hack so I can mark strings */
@@ -733,7 +734,7 @@ gconf_server_load_sources(void)
          request would result in another failed gconfd being spawned.  
       */
       gchar* empty_addr[] = { NULL };
-      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit /etc/gconf/path"));
+      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_SYSCONFDIR"/gconf/path"));
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(empty_addr, NULL);
       return;
