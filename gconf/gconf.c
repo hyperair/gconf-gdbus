@@ -1302,8 +1302,15 @@ gconf_init           (int argc, char **argv, GConfError** err)
 
   gconf_preinit(NULL, NULL);
 
-  orb = oaf_init(argc, argv);
-
+  if (!oaf_is_initialized())
+    {
+      orb = oaf_init(argc, argv);
+    }
+  else
+    {
+      orb = oaf_orb_get();
+    }
+      
   gconf_postinit(NULL, NULL);
 
   if(!have_initted)
