@@ -781,7 +781,7 @@ gconf_sources_unset_value   (GConfSources* sources,
 
 	  if (modified_sources)
 	    {
-	      if (*modified_sources)
+	      if (*modified_sources == NULL)
 		{
 		  *modified_sources = gconf_sources_new_from_source (src);
 		}
@@ -803,6 +803,9 @@ prepend_unset_notify (GSList       *notifies,
 		      char         *key)
 {
   GConfUnsetNotify *notify;
+
+  g_assert (modified_sources != NULL);
+  g_assert (key != NULL);
 
   notify = g_new0 (GConfUnsetNotify, 1);
 
@@ -905,6 +908,7 @@ recursive_unset_helper (GConfSources   *sources,
           if (notifies)
 	    {
 	      *notifies = prepend_unset_notify (*notifies, modified_sources, full);
+	      modified_sources = NULL;
 	      freeme = NULL;
 	    }
 
@@ -953,6 +957,7 @@ recursive_unset_helper (GConfSources   *sources,
       *notifies = prepend_unset_notify (*notifies,
 					modified_sources,
 					g_strdup (key));
+      modified_sources = NULL;
     }
   
   if (err != NULL)

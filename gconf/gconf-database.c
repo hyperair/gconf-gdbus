@@ -1510,12 +1510,13 @@ gconf_database_recursive_unset (GConfDatabase      *db,
                                               &is_default,
                                               &is_writable,
                                               &error);
-
       if (error)
-        gconf_log (GCL_ERR, _("Error getting new value for \"%s\": %s"),
-                   notify->key, error->message);
-      g_propagate_error (err, error);
-      error = NULL;
+	{
+	  gconf_log (GCL_ERR, _("Error getting new value for \"%s\": %s"),
+		     notify->key, error->message);
+	  g_propagate_error (err, error);
+	  error = NULL;
+	}
       
       if (new_value != NULL)
         {

@@ -1,3 +1,19 @@
+2004-03-31  Mark McLoughlin  <mark@skynet.ie>
+
+	Fix last remaining obvious issue I'm seeing with the previous
+	patches. gconfd was crashing when removing objects from the
+	panel.
+
+	* gconf/gconf-database.c: (gconf_database_recursive_unset):
+	Don't try and propogate a NULL error.
+	
+	* gconf/gconf-sources.c:
+	(gconf_sources_unset_value): create modified_sources when
+	they it doesn't exist.
+	(prepend_unset_notify): add a couple of assertions.
+	(recursive_unset_helper): unset modified_sources between
+	unsets so that we don't append to the same source list.
+
 2004-03-30  Mark McLoughlin  <mark@skynet.ie>
 
 	* gconf/gconf-backend.c: (gconf_backend_verify_vtable):
