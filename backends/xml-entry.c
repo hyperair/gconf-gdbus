@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libxml/entities.h>
-#include <libxml/xmlmemory.h>
+#include <libxml/globals.h>
 
 static void
 entry_sync_if_needed(Entry* e);

@@ -1,3 +1,9 @@
+2002-02-10  Jody Goldberg <jody@gnome.org>
+
+	* gconf/gconftool.c : Include libxml/globals to get xmlFree
+	  Without it we call a NULL function pointer.
+	* backends/xml-entry.c : ditto.
+
 2002-02-10  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconfd.c (signal_handler): run gnome_segv if DISPLAY is

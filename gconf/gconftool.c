@@ -25,7 +25,7 @@
 #include <popt.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
-#include <libxml/xmlmemory.h>
+#include <libxml/globals.h>
 #include <stdlib.h>
 #include <errno.h>
 
