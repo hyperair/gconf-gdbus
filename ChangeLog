@@ -1,5 +1,12 @@
 1999-11-11  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-backend.c: Throughout, use accessor functions to 
+	access the "value" field in the cache entries; we're going to 
+	have to update the value field to match the proper locale
+	before supplying it via the entry_value() accessor.
+
+1999-11-11  Havoc Pennington  <hp@pobox.com>
+
 	* tests/runtests.sh: Enhance to detect missing tests.
 
 	* gconf/gconf-internals.c (gconf_log): don't log DEBUG level stuff 

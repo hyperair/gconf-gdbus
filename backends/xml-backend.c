@@ -1104,7 +1104,7 @@ typedef struct _Entry Entry;
 struct _Entry {
   gchar* name; /* a relative key */
   gchar* schema_name;
-  GConfValue* value;
+  GConfValue* cached_value;
   xmlNodePtr node;
   gchar* mod_user;
   GTime mod_time;
@@ -1118,10 +1118,12 @@ static void   entry_sync    (Entry* e);
  /* syncs Entry from node */
 static void   entry_fill    (Entry* e, const gchar* name);
 static GConfValue* entry_value (Entry* e, const gchar** locales);
+static void   entry_set     (Entry* e, GConfValue* val);
+static gboolean entry_unset   (Entry* e, const gchar* locale);
 
 /* xml manipulation */
 
-static GConfValue* xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err);
+static GConfValue* xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err);
 static void        xentry_set_value(xmlNodePtr node, GConfValue* value);
 
 /* private dir func decls */
@@ -1455,10 +1457,7 @@ dir_set_value   (Dir* d, const gchar* relative_key,
   if (e == NULL)
     e = dir_make_new_entry(d, relative_key);
 
-  if (e->value)
-    gconf_value_destroy(e->value);
-
-  e->value = gconf_value_copy(value);
+  entry_set(e, value);
 
   d->last_access = time(NULL);
   e->mod_time = d->last_access;
@@ -1492,9 +1491,10 @@ dir_get_value   (Dir* d,
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   d->last_access = time(NULL);
-  
-  if (e == NULL || e->value == NULL)
+
+  if (e == NULL)
     {
+      /* No entry; fill schema name if requested, and return */
       if (schema_name && e && e->schema_name)
         *schema_name = g_strdup(e->schema_name);
       return NULL;
@@ -1502,16 +1502,23 @@ dir_get_value   (Dir* d,
   else
     {
       GConfValue* val;
-      
-      if (schema_name &&
-          e->value->type == GCONF_VALUE_IGNORE_SUBSEQUENT &&
-          e->schema_name)
-        *schema_name = g_strdup(e->schema_name);
+
+      g_assert(e != NULL);
 
       val = entry_value(e, locales);
 
+      /* Fill schema name if this is the last lookup that will happen
+         due to an IGNORE_SUBSEQUENT or if value is NULL */
+      if (schema_name &&
+          e->schema_name &&
+          ((val && 
+            val->type == GCONF_VALUE_IGNORE_SUBSEQUENT) ||
+           (val == NULL)))
+        *schema_name = g_strdup(e->schema_name);
+
+      /* return copy of the value */
       if (val != NULL)
-        return gconf_value_copy(val);      
+        return gconf_value_copy(val);
       else
         return NULL;
     }
@@ -1572,30 +1579,31 @@ dir_unset_value (Dir* d, const gchar* relative_key,
   
   e = g_hash_table_lookup(d->entry_cache, relative_key);
   
-  if (e == NULL ||
-      e->value == NULL) /* nothing to change */
+  if (e == NULL)     /* nothing to change */
     return;
 
-  d->dirty = TRUE;
-
-  g_assert(e->value != NULL);
-  gconf_value_destroy(e->value);
-  e->value = NULL;
-  
-  if (dir_forget_entry_if_useless(d, e))
+  if (entry_unset(e, locale))
     {
-      /* entry is destroyed */
-      return;
-    }
-  else
-    {
-      e->mod_time = d->last_access;
+      /* If entry_unset() returns TRUE then
+         the entry was changed (not already unset) */
       
-      if (e->mod_user)
-        g_free(e->mod_user);
-      e->mod_user = g_strdup(g_get_user_name());
-
-      e->dirty = TRUE;
+      d->dirty = TRUE;
+      
+      if (dir_forget_entry_if_useless(d, e))
+        {
+          /* entry is destroyed */
+          return;
+        }
+      else
+        {
+          e->mod_time = d->last_access;
+          
+          if (e->mod_user)
+            g_free(e->mod_user);
+          e->mod_user = g_strdup(g_get_user_name());
+          
+          e->dirty = TRUE;
+        }
     }
 }
 
@@ -1604,15 +1612,20 @@ typedef struct _ListifyData ListifyData;
 struct _ListifyData {
   GSList* list;
   const gchar* name;
+  const gchar** locales;
 };
 
 static void
 listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 {
-  if (e->value)
+  GConfValue* val;
+
+  val = entry_value(e, ld->locales);
+  
+  if (val != NULL)
     ld->list = g_slist_prepend(ld->list,
                                gconf_entry_new(g_strdup(key),
-                                                gconf_value_copy(e->value)));
+                                                gconf_value_copy(val)));
 }
 
 static GSList*
@@ -1631,6 +1644,7 @@ dir_all_entries (Dir* d, const gchar** locales, GConfError** err)
   
   ld.list = NULL;
   ld.name = d->key;
+  ld.locales = locales;
 
   g_hash_table_foreach(d->entry_cache, (GHFunc)listify_foreach,
                        &ld);
@@ -1932,8 +1946,14 @@ dir_make_new_entry(Dir* d, const gchar* relative_key)
 static gboolean
 dir_forget_entry_if_useless(Dir* d, Entry* e)
 {
-  if (e->schema_name ||
-      e->value)
+  GConfValue* val;
+
+  if (e->schema_name != NULL)
+    return FALSE;
+  
+  val = entry_value(e, NULL);
+  
+  if (val != NULL)
     return FALSE; /* not useless */
 
   if (e->node != NULL)
@@ -2057,8 +2077,8 @@ entry_destroy (Entry* e)
   if (e->name)
     g_free(e->name);
 
-  if (e->value)
-    gconf_value_destroy(e->value);
+  if (e->cached_value)
+    gconf_value_destroy(e->cached_value);
 
   if (e->mod_user)
     g_free(e->mod_user);
@@ -2096,7 +2116,7 @@ entry_sync    (Entry* e)
   /* OK if mod_user is NULL, since it unsets */
   xmlSetProp(e->node, "muser", e->mod_user);
   
-  xentry_set_value(e->node, e->value);
+  xentry_set_value(e->node, e->cached_value);
 
   e->dirty = FALSE;
 }
@@ -2170,13 +2190,13 @@ entry_fill    (Entry* e, const gchar* name)
   else
     e->mod_user = NULL;
   
-  if (e->value != NULL)
-    gconf_value_destroy(e->value);
+  if (e->cached_value != NULL)
+    gconf_value_destroy(e->cached_value);
   
-  e->value = xentry_extract_value(e->node, NULL, /* FIXME current locale as a guess */
-                                  &error);
+  e->cached_value = xentry_extract_value(e->node, NULL, /* FIXME current locale as a guess */
+                                         &error);
 
-  if (e->value)
+  if (e->cached_value)
     {
       g_return_if_fail(error == NULL);
       return;
@@ -2196,7 +2216,7 @@ entry_value (Entry* e, const gchar** locales)
   
   g_return_val_if_fail(e != NULL, NULL);
   
-  if (e->value == NULL)
+  if (e->cached_value == NULL)
     return NULL;
 
 #if 0
@@ -2219,7 +2239,7 @@ entry_value (Entry* e, const gchar** locales)
       GConfValue* newval;
       GConfError* error = NULL;
       
-      newval = xentry_extract_value(e->node, locale, &error);
+      newval = xentry_extract_value(e->node, locales, &error);
       if (newval != NULL)
         {
           /* We found a schema with the right locale */
@@ -2237,8 +2257,34 @@ entry_value (Entry* e, const gchar** locales)
       /* else fall back to the currently-loaded schema */
     }
 #endif
-  return e->value;
+  return e->cached_value;
 }
+
+static void
+entry_set     (Entry* e, GConfValue* val)
+{
+  /* FIXME locale */
+  
+  if (e->cached_value)
+    gconf_value_destroy(e->cached_value);
+
+  e->cached_value = gconf_value_copy(val);
+}
+
+static gboolean
+entry_unset   (Entry* e, const gchar* locale)
+{
+  /* FIXME locale */
+  if (e->cached_value != NULL)
+    {
+      gconf_value_destroy(e->cached_value);
+      e->cached_value = NULL;
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
 
 /*
  * XML manipulation
@@ -2362,7 +2408,7 @@ schema_node_extract_value(xmlNodePtr node)
    <default> node
 */
 static GConfValue*
-xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err)
+xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
 {
   GConfValue* value = NULL;
   gchar* type_str;
@@ -2466,7 +2512,7 @@ xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err)
                 if (strcmp(iter->name, "li") == 0)
                   {
                     
-                    v = xentry_extract_value(iter, locale, err);
+                    v = xentry_extract_value(iter, locales, err);
                     if (v == NULL)
                       {
                         if (err && *err)
@@ -2540,7 +2586,7 @@ xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err)
               {
                 if (car == NULL && strcmp(iter->name, "car") == 0)
                   {
-                    car = xentry_extract_value(iter, locale, err);
+                    car = xentry_extract_value(iter, locales, err);
                     if (car == NULL)
                       {
                         if (err && *err)
@@ -2563,7 +2609,7 @@ xentry_extract_value(xmlNodePtr node, const gchar* locale, GConfError** err)
                   }
                 else if (cdr == NULL && strcmp(iter->name, "cdr") == 0)
                   {
-                    cdr = xentry_extract_value(iter, locale, err);
+                    cdr = xentry_extract_value(iter, locales, err);
                     if (cdr == NULL)
                       {
                         if (err && *err)
