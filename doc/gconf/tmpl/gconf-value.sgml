@@ -107,7 +107,7 @@ inside the #GConfValue (such as lists, pair members, strings, and schemas).
 @value: a #GConfValue to destroy.
 
 
-<!-- ##### MACRO gconf_value_get_string ##### -->
+<!-- ##### FUNCTION gconf_value_get_string ##### -->
 <para>
 Returns a <symbol>const gchar*</symbol> for a #GConfValue with type
 %GCONF_VALUE_STRING. The returned string is <emphasis>not</emphasis> a
@@ -122,35 +122,47 @@ gconf_value_set_string()) then the string may be
 uninitialized #GConfValue.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_int ##### -->
+<!-- ##### FUNCTION gconf_value_get_int ##### -->
 <para>
 Returns a #gint for a #GConfValue with type %GCONF_VALUE_INT. 
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_float ##### -->
+<!-- ##### FUNCTION gconf_value_get_float ##### -->
 <para>
 Returns a #gdouble for a #GConfValue with type %GCONF_VALUE_DOUBLE.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_list_type ##### -->
+<!-- ##### FUNCTION gconf_value_get_list_type ##### -->
 <para>
 Returns the type of the list elements in a #GConfValue with type 
 %GCONF_VALUE_LIST.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_list ##### -->
+<!-- ##### FUNCTION gconf_value_get_list ##### -->
 <para>
 Returns a #GSList containing #GConfValue objects. Each #GConfValue in
 the returned list will have the type returned by
@@ -159,10 +171,13 @@ gconf_value_get_list_type(). Remember that the empty #GSList is equal to
 #GConfValue and will be destroyed when the #GConfValue is destroyed.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_car ##### -->
+<!-- ##### FUNCTION gconf_value_get_car ##### -->
 <para>
 Returns the first member (car) of a #GConfValue with type
 %GCONF_VALUE_PAIR. The car is another #GConfValue, with a primitive
@@ -174,10 +189,13 @@ The returned value is not a copy; it is "owned" by the pair and will
 be destroyed when the pair is destroyed.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_cdr ##### -->
+<!-- ##### FUNCTION gconf_value_get_cdr ##### -->
 <para>
 Returns the second member (cdr) of a #GConfValue with type
 %GCONF_VALUE_PAIR. The cdr is another #GConfValue, with a primitive
@@ -189,18 +207,24 @@ The returned value is not a copy; it is "owned" by the pair and will
 be destroyed when the pair is destroyed.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_bool ##### -->
+<!-- ##### FUNCTION gconf_value_get_bool ##### -->
 <para>
 Returns a #gboolean for a #GConfValue with type %GCONF_VALUE_BOOL. 
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
-<!-- ##### MACRO gconf_value_get_schema ##### -->
+<!-- ##### FUNCTION gconf_value_get_schema ##### -->
 <para>
 Returns a #GConfSchema for a #GConfValue with type
 %GCONF_VALUE_SCHEMA. If the #GConfValue is uninitialized, it 
@@ -214,6 +238,9 @@ The returned value is not a copy; it is "owned" by the #GConfValue and will
 be destroyed when the #GConfValue is destroyed.
 </para>
 
+@value: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfValue.
 
 
@@ -406,27 +433,36 @@ with g_free().
 @gcmi: 
 
 
-<!-- ##### MACRO gconf_meta_info_get_schema ##### -->
+<!-- ##### FUNCTION gconf_meta_info_get_schema ##### -->
 <para>
 
 </para>
 
+@gcmi: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: 
 
 
-<!-- ##### MACRO gconf_meta_info_get_mod_user ##### -->
+<!-- ##### FUNCTION gconf_meta_info_get_mod_user ##### -->
 <para>
 
 </para>
 
+@gcmi: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: 
 
 
-<!-- ##### MACRO gconf_meta_info_mod_time ##### -->
+<!-- ##### FUNCTION gconf_meta_info_mod_time ##### -->
 <para>
 
 </para>
 
+@gcmi: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: 
 
 
@@ -506,16 +542,19 @@ Destroys a #GConfEntry, freeing the key, the value, and the entry itself.
 @entry: a #GConfEntry to free.
 
 
-<!-- ##### MACRO gconf_entry_get_key ##### -->
+<!-- ##### FUNCTION gconf_entry_get_key ##### -->
 <para>
 Accesses the @key field of a #GConfEntry. The returned key is not a
 copy, and should not be freed or modified.
 </para>
 
+@entry: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfEntry.
 
 
-<!-- ##### MACRO gconf_entry_get_value ##### -->
+<!-- ##### FUNCTION gconf_entry_get_value ##### -->
 <para>
 Accesses the @value field of a #GConfEntry. The returned value is not
 a copy, and should not be freed or modified. If you have called
@@ -523,6 +562,9 @@ gconf_entry_steal_value(), the returned value will be
 <symbol>NULL</symbol>.
 </para>
 
+@entry: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: a #GConfEntry.
 
 
@@ -538,19 +580,25 @@ gconf_entry_steal_value() assumes ownership of it.
 @Returns: a #GConfValue that the caller must free.
 
 
-<!-- ##### MACRO gconf_entry_get_is_default ##### -->
+<!-- ##### FUNCTION gconf_entry_get_is_default ##### -->
 <para>
 
 </para>
 
+@entry: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: 
 
 
-<!-- ##### MACRO gconf_entry_get_schema_name ##### -->
+<!-- ##### FUNCTION gconf_entry_get_schema_name ##### -->
 <para>
 
 </para>
 
+@entry: 
+@Returns: 
+<!-- # Unused Parameters # -->
 @x: 
 
 

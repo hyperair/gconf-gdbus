@@ -2310,7 +2310,9 @@ gconf_handle_segv (int signum)
     {
       /* Eeeek! Can't show dialog */
       fprintf (stderr, _("Segmentation fault!\n"
-                         "Cannot display crash dialog\n"));
+                         "Cannot display crash dialog: %s\n"),
+               strerror (errno));
+      fflush (stderr);
       
       /* Don't use app attributes here - a lot of things are probably hosed */
       if (g_getenv ("GNOME_DUMP_CORE"))
@@ -2341,7 +2343,7 @@ gconf_handle_segv (int signum)
       g_snprintf (buf, sizeof (buf), "%d", signum);
       
       /* Child process */
-      execl (GCONF_BINDIR "/gnome_segv2", GCONF_BINDIR "/gnome_segv",
+      execl (GCONF_BINDIR "/gnome_segv2", GCONF_BINDIR "/gnome_segv2",
              GCONFD, buf,
              VERSION, NULL);
       

@@ -791,6 +791,89 @@ gconf_value_free(GConfValue* value)
   g_free(value);
 }
 
+const char*
+gconf_value_get_string (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_STRING, NULL);
+  
+  return value->d.string_data;
+}
+
+int
+gconf_value_get_int (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, 0);
+  g_return_val_if_fail (value->type == GCONF_VALUE_INT, 0);
+  
+  return value->d.int_data;
+}
+
+double
+gconf_value_get_float (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, 0.0);
+  g_return_val_if_fail (value->type == GCONF_VALUE_FLOAT, 0.0);
+  
+  return value->d.float_data;
+}
+
+GConfValueType
+gconf_value_get_list_type (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, GCONF_VALUE_INVALID);
+  g_return_val_if_fail (value->type == GCONF_VALUE_LIST, GCONF_VALUE_INVALID);
+  
+  return value->d.list_data.type;
+}
+
+GSList*
+gconf_value_get_list (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_LIST, NULL);
+
+  return value->d.list_data.list;
+}
+
+
+GConfValue*
+gconf_value_get_car (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_PAIR, NULL);
+  
+  return value->d.pair_data.car;
+}
+
+GConfValue*
+gconf_value_get_cdr (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_PAIR, NULL);
+  
+  return value->d.pair_data.cdr;
+}
+
+
+gboolean
+gconf_value_get_bool (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, FALSE);
+  g_return_val_if_fail (value->type == GCONF_VALUE_BOOL, FALSE);
+  
+  return value->d.bool_data;
+}
+
+GConfSchema*
+gconf_value_get_schema (const GConfValue *value)
+{
+  g_return_val_if_fail (value != NULL, NULL);
+  g_return_val_if_fail (value->type == GCONF_VALUE_SCHEMA, NULL);
+  
+  return value->d.schema_data;
+}
+
 void        
 gconf_value_set_int(GConfValue* value, gint the_int)
 {
@@ -1168,6 +1251,30 @@ gconf_meta_info_free(GConfMetaInfo* gcmi)
   g_free(gcmi);
 }
 
+const char*
+gconf_meta_info_get_schema (GConfMetaInfo *gcmi)
+{
+  g_return_val_if_fail (gcmi != NULL, NULL);
+
+  return gcmi->schema;
+}
+
+const char*
+gconf_meta_info_get_mod_user (GConfMetaInfo *gcmi)
+{
+  g_return_val_if_fail (gcmi != NULL, NULL);
+
+  return gcmi->mod_user;
+}
+
+GTime
+gconf_meta_info_mod_time (GConfMetaInfo *gcmi)
+{
+  g_return_val_if_fail (gcmi != NULL, 0);
+  
+  return gcmi->mod_time;
+}
+
 void
 gconf_meta_info_set_schema  (GConfMetaInfo* gcmi,
                               const gchar* schema_name)
@@ -1304,6 +1411,47 @@ gconf_entry_steal_value (GConfEntry* entry)
   entry->value = NULL;
   return val;
 }
+
+const char*
+gconf_entry_get_key (const GConfEntry *entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->key;
+}
+
+GConfValue*
+gconf_entry_get_value (const GConfEntry *entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->value;
+}
+
+const char*
+gconf_entry_get_schema_name (const GConfEntry *entry)
+{
+  g_return_val_if_fail (entry != NULL, NULL);
+
+  return entry->schema_name;
+}
+
+gboolean
+gconf_entry_get_is_default  (const GConfEntry *entry)
+{
+  g_return_val_if_fail (entry != NULL, FALSE);
+
+  return entry->is_default;
+}
+
+gboolean
+gconf_entry_get_is_writable (const GConfEntry *entry)
+{
+  g_return_val_if_fail (entry != NULL, FALSE);
+
+  return entry->is_writable;
+}
+
 
 void
 gconf_entry_set_value (GConfEntry  *entry,

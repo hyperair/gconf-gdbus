@@ -259,7 +259,7 @@ show_fatal_error_dialog (const char *format,
 
   if (!ensure_gtk ())
     {
-      g_printerr ("%s", str);
+      g_printerr ("%s\n", str);
       return;
     }
   
