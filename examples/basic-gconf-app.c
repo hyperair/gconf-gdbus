@@ -55,7 +55,9 @@ main(int argc, char** argv)
   GtkWidget* main_window;
   
   gtk_init(&argc, &argv);
-  
+
+  /* If you pass NULL for error, then gconf_init() will simply print
+     to stderr and exit if an error occurs. */
   if (!gconf_init(argc, argv, &error))
     {
       g_assert(error != NULL);

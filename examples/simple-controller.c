@@ -49,8 +49,7 @@ main(int argc, char** argv)
   GConfClient* client;
 
   gtk_init(&argc, &argv);
-  if (!gconf_init(argc, argv, NULL))
-    g_error("Failed to init gconf");
+  gconf_init(argc, argv, NULL);
   
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   entry = gtk_entry_new();

@@ -62,8 +62,7 @@ main(int argc, char** argv)
   gchar* str;
   
   gtk_init(&argc, &argv);
-  if (!gconf_init(argc, argv, NULL))
-    g_error("Failed to init gconf");
+  gconf_init(argc, argv, NULL);
 
   client = gconf_client_new();
   
@@ -95,5 +94,7 @@ main(int argc, char** argv)
 
   return 0;
 }
+
+
 
 

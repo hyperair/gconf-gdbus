@@ -38,7 +38,7 @@
       GConf is a configuration data storage mechanism scheduled to
       ship with GNOME 2.0. GConf does work without GNOME however; it
       can be used with plain GTK+, Xlib, KDE, or even text mode
-      applications as well. As of February 2000, there is no stable
+      applications as well. As of March 2000, there is no stable
       release of GConf yet, but the library is feature-complete.
     </para>
     
@@ -86,48 +86,56 @@
       <itemizedlist>
 	<listitem>
 	  <para>
-            Replaceable backend architecture. GConf currently has a
-            single backend that stores configuration data in
-            XML-format text files; however, the architecture allows a
-            Registry-like binary database backend, an LDAP backend, or
-            even a full-blown SQL database backend.  The backend used
-            will be configurable by the system administrator. This is
-            a valuable feature IS deparatments managing large numbers
-            of computers.
+            Replaceable backend architecture. GConf currently has a single
+            backend that stores configuration data in XML-format text files;
+            however, the architecture allows a Registry-like binary database
+            backend, an LDAP backend, or even a full-blown SQL database backend.
+            The backend used is configurable by the system administrator. This
+            is a valuable feature for IS deparatments managing large numbers of
+            computers.
 	  </para>
 	</listitem>
 
 	<listitem>
 	  <para>
             Configuration key documentation. Applications can install
-            brief documentation along with their configuration data,
-            explaining the possible settings and the effect of each
-            configuration key.  A regedit-style tool could display
-            this documentation, making it much easier to customize
-            applications without breaking them. The GConf database
-            also stores information such as the application that owns
-            a key, when the key was last changed, who changed it, etc.
+            documentation along with their configuration data, explaining the
+            possible settings and the effect of each configuration key.  A
+            regedit-style tool can display this documentation, making it much
+            easier to customize applications without breaking them. The GConf
+            database also stores useful meta-information such as the application
+            that owns a key, when the key was last changed, etc.
 	  </para>
 	</listitem>
 
 	<listitem>
 	  <para>
             Data change notification service. If configuration data is 
-            changed, all interested applications are notified. This
-            means that programs built from components (where each
-            component may be in a separate process) are much easier 
-            to write, because if one component changes a setting the 
-            others can discover the change and update themselves. It's
-            also useful if multiple application instances are running.
+            changed, all interested applications are notified. 
             The notification service works across the network,
-            affecting all login sessions for a single user.            
+            affecting all login sessions for a single user.  
           </para>
+
           <para>
-            GNOME 2.0 uses this feature to let user interface
-            configuration take effect on-the-fly without restarting 
-            any applications; if you turn off toolbar icons, for
-            example, toolbar icons will immediately disappear in all 
-            running apps.
+            This means that programs built from components (where each component
+            may be in a separate process) are much easier to write, because if
+            one component changes a setting the others can discover the change
+            and update themselves. For example, GNOME's new Nautilus file
+            manager is actually a collection of applications, including an
+            embedded web browser, and various navigation components. The
+            components communicate via CORBA. However, you want a single
+            preferences dialog located in the top-level "shell" component.
+            Without GConf, a custom protocol would have to be invented for 
+            each preferences setting, to notify embedded components of changes
+            to user preferences.
+          </para>
+
+          <para>
+            Notification is also useful if multiple application instances are
+            running.  GNOME 2.0 uses this feature to let user interface
+            configuration take effect on-the-fly without restarting any
+            applications; if you turn off toolbar icons, for example, toolbar
+            icons will immediately disappear in all running apps.
 	  </para>
 	</listitem>
 
@@ -162,8 +170,36 @@
       <para>
         GConf is not a full-blown database by any means. It stores
         simple key-value pairs. This keeps the implementation simple
-        and efficient. Applications that require more sophisticated
-        features should use LDAP or a full-scale database.
+        and efficient. In particular, the following database features
+        are not currently implemented:
+
+        <itemizedlist>
+
+          <listitem>
+            <para>
+              Queries
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              Efficient storage of large chunks of data (such as entire documents)
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              Transactions
+            </para>
+          </listitem>
+
+        </itemizedlist>
+        
+        Applications that require these sophisticated features should use LDAP
+        or a full-scale database. Transactions may be added eventually, and are
+        currently in the API in the form of the
+        <structname>GConfChangeSet</structname> object, but for now change sets
+        are not stored atomically.
       </para>
 
       <para>
@@ -179,12 +215,12 @@
       </para>
 
       <para>
-        Values have types; the primitive types are integers, booleans,
-        strings, and floating point numbers. Also, lists and pairs of 
-        primitive types are possible. Recursive types (list of list)
-        are not permitted. Types have no size restriction; strings
-        can be as long as you like, though at some point performance
-        will be degraded.
+        Values have types; the primitive types are integers, booleans, strings,
+        and floating point numbers. Also, lists and pairs of primitive types are
+        possible. Recursive types (list of list) are not permitted. Types have
+        no size restriction; strings can be as long as you like, though
+        unreasonably large strings (such as an entire XML document) will cause 
+        performance problems.
       </para>
 
     </sect2>
@@ -241,15 +277,14 @@
       <title>Schemas</title>
 
       <para>
-        In addition to the primitive types mentioned earlier (integer,
-        string, etc.) the GConf database can store a
-        <firstterm>schema</firstterm>. A schema is a description of a
-        key; it includes a short description of the key, a longer
-        documentation paragraph, the type of the key, and the name of
-        the application owning the key. Schemas are primarily intended
-        for use by an eventual regedit-style tool; such a tool could
-        display the documentation, and validate the type of any values
-        you enter for the key.
+        In addition to the primitive types mentioned earlier (integer, string,
+        etc.) the GConf database can store a <firstterm>schema</firstterm>. A
+        schema is a description of a key; it includes a short description of the
+        key, a longer documentation paragraph, the type of the key, a default
+        value for the key, and the name of the application owning the
+        key. Schemas are primarily intended for use by a regedit-style tool;
+        such a tool can display the documentation for a key, and validate the
+        type of any values you enter for the key.
       </para>
 
       <para>
@@ -259,16 +294,15 @@
       </para>
 
       <para>
-        Applications should come with a special <firstterm>schema
-        file</firstterm> which encodes the schema information 
-        in a human-editable text format. When the application is
-        installed, the <application>gconftool</application> program 
-        shipped with GConf can be used to insert the schema
-        information into the GConf database. Also, all applications 
-        should install their schema file to a system-wide directory
+        Applications come with a special <firstterm>schema file</firstterm>
+        which encodes the schema information in a human-editable text
+        format. When the application is installed, the
+        <application>gconftool</application> program shipped with GConf is used
+        to insert the schema information into the GConf database. Also, all
+        applications should install their schema file to a system-wide directory
         (specified in the GConf documentation). This allows system
-        administrators to re-install all schemas into a different
-        GConf backend with a single command (something like <literal>gconftool
+        administrators to re-install all schemas into a different GConf backend
+        with a single command (something like <literal>gconftool
         --install-schema-file /etc/gconf/schemas/*</literal>).
       </para>
 
@@ -290,11 +324,10 @@
     <sect2 id="mvc">
       <title>Model-View-Controller Architecture</title>
       <para>
-        Applications using GConf effectively should be structured
-        according to the famous
-        <firstterm>Model-View-Controller</firstterm> (MVC) design
-        pattern. In this pattern, your application contains three
-        separate objects:
+        Applications using GConf effectively should structure their preferences
+        and configuration code according to the famous
+        <firstterm>Model-View-Controller</firstterm> (MVC) design pattern. In
+        this pattern, your application contains three separate objects:
 
         <orderedlist>
           <listitem>
@@ -383,7 +416,7 @@
         mechanism). It's kind of unpleasant and leads to poor
         modularity in a single process; but once multiple processes
         are involved, coming up with a suitable ad-hoc mechanism for
-        setting change notification becomes a really significant
+        change notification becomes a really significant
         problem.
       </para>
 
@@ -416,13 +449,12 @@
       <sect3>
         <title><structname>GConfClient</structname></title>
         <para>
-          <structname>GConfClient</structname> is located in a small 
-          auxiliary library that comes with GConf, because to use it 
-          you must link with
-          GTK+. <structname>GConfClient</structname>
-          derives from <structname>GtkObject</structname> and is a
-          wrapper for the <structname>GConfEngine</structname> type.
-          It adds a few nice features:
+          <structname>GConfClient</structname> is located in a separate library
+          from GConf itself, because to use it you must link with
+          GTK+. <structname>GConfClient</structname> derives from
+          <structname>GtkObject</structname> and is a wrapper for the
+          <structname>GConfEngine</structname> type.  It adds a few nice
+          features:
           <itemizedlist>
             <listitem>
               <para>
@@ -434,20 +466,17 @@
             </listitem>
             <listitem>
               <para>
-                It can do client-side notification request
-                dispatching. This means that if you want to monitor
-                the keys <literal>/foo/bar</literal> and
-                <literal>/foo/baz</literal>,
-                <structname>GConfClient</structname> can register a
-                single notification request with
-                <application>gconfd</application>; when the
-                notification comes from
+                It can do client-side notification request dispatching. This
+                means that if you want to monitor the keys
+                <literal>/foo/bar</literal> and <literal>/foo/baz</literal>,
+                <structname>GConfClient</structname> registers a single
+                notification request with <application>gconfd</application>;
+                when the notification comes from
                 <application>gconfd</application>,
-                <structname>GConfClient</structname> decides which key
-                has changed and dispatches to the proper application
-                callback. With <structname>GConfEngine</structname>,
-                each callback involves registering a request with
-                <application>gconfd</application>.
+                <structname>GConfClient</structname> decides which key has
+                changed and dispatches to the proper application callback. With
+                <structname>GConfEngine</structname>, each callback involves
+                registering a request with <application>gconfd</application>.
               </para>
             </listitem>
             <listitem>
@@ -489,6 +518,20 @@
       </sect3>
 
       <sect3>
+        <title><structname>GConfChangeSet</structname></title>
+        <para>
+          Modifications to the GConf database can be grouped into 
+          <firstterm>change sets</firstterm>, or collections of changes.
+          A change is a new value for a key, or a directive to unset a key's 
+          current value. For now, the <structname>GConfChangeSet</structname>
+          is primarily a convenience mechanism for managing the set of 
+          changes a user has made via a preferences dialog. However, in the 
+          future committing a change set may be an atomic operation (that is,
+          GConf could be extended to support transactions).
+        </para>
+      </sect3>
+
+      <sect3>
         <title><structname>GConfError</structname></title>
         <para>
           If you explicitly handle errors, rather than allowing the 
@@ -519,9 +562,7 @@
           </listitem>
           <listitem>
             <para>
-              The default error handling for
-              <structname>GConfClient</structname> automatically uses
-              GNOME dialogs.
+              Automatically uses GNOME dialogs for default error handling.
             </para>
           </listitem>
           <listitem>

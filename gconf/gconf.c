@@ -1654,7 +1654,14 @@ gconf_init           (int argc, char **argv, GConfError** err)
   gconf_postinit(NULL, NULL);
 
   if(!have_initted)
-    return FALSE;
+    {
+      if (err == NULL)
+        {
+          fprintf(stderr, _("Failed to init GConf, exiting\n"));
+          exit (1);
+        }
+      return FALSE;
+    }
   
   return TRUE;
 }
