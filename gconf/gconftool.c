@@ -2764,7 +2764,6 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
 {
   GSList* tmp;
   gchar* full_key;
-  gchar* full_schema_key;
  
   if (base_dir)
     full_key = gconf_concat_dir_and_key(base_dir, key);
@@ -2773,23 +2772,17 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
 
   if (schema_key)
     {
+      gchar* full_schema_key;
+
       if (base_dir && *schema_key != '/')
         full_schema_key = gconf_concat_dir_and_key(base_dir, schema_key);
       else
         full_schema_key = g_strdup(schema_key);
-    }
-  else
-    full_schema_key = NULL;
-
-  tmp = values;
-  while (tmp)
-    {
-      GConfValue* value = tmp->data;
-      GError* error;
 
       if (full_schema_key)
         {
-          error = NULL;
+	  GError* error = NULL;
+	  
           if (!gconf_engine_associate_schema(conf, full_key, full_schema_key,  &error))
             {
               g_assert(error != NULL);
@@ -2798,7 +2791,16 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
 			  full_schema_key, full_key, error->message);
               g_error_free(error);
             }
-        }
+
+	  g_free(full_schema_key);
+	}
+    }
+
+  tmp = values;
+  while (tmp)
+    {
+      GConfValue* value = tmp->data;
+      GError* error;
 
       error = NULL;
       gconf_engine_set(conf, full_key, value, &error);
@@ -2812,7 +2814,6 @@ set_values(GConfEngine* conf, const gchar* base_dir, const gchar* key, const cha
       tmp = tmp->next;
     }
 
-  g_free(full_schema_key);
   g_free(full_key);
 }
 
@@ -2841,7 +2842,7 @@ process_entry(GConfEngine* conf, xmlNodePtr node, const gchar** base_dirs, const
       iter = iter->next;
     }
 
-  if (key && values)
+  if (key && (values || schema_key))
     {
       if (!base_dirs)
         set_values(conf, orig_base, key, schema_key, values);
