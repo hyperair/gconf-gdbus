@@ -120,6 +120,12 @@ static void gconf_handle_segv (int signum);
 
 static gboolean in_shutdown = FALSE;
 
+/*
+ * Flag indicating we received a SIGHUP and we should reaload
+ * all sources during the next periodic_cleanup()
+ */
+static gboolean need_db_reload = FALSE;
+
 /* 
  * CORBA goo
  */
@@ -439,7 +445,6 @@ signal_handler (int signo)
     break;
 
   case SIGTERM:
-  case SIGHUP:
     enter_shutdown ();
 
     /* let the fatal signals interrupt us */
@@ -450,6 +455,13 @@ signal_handler (int signo)
 
     if (gconf_main_is_running ())
       gconf_main_quit ();
+    break;
+
+  case SIGHUP:
+    --in_fatal;
+
+    /* reload sources during next periodic_cleanup() */
+    need_db_reload = TRUE;
     break;
 
   case SIGUSR1:
@@ -789,6 +801,16 @@ static gboolean need_log_cleanup = FALSE;
 static gboolean
 periodic_cleanup_timeout(gpointer data)
 {  
+  if (need_db_reload)
+    {
+      gconf_log (GCL_INFO, _("SIGHUP received, reloading all databases"));
+
+      need_db_reload = FALSE;
+      shutdown_databases ();
+      init_databases ();
+      gconf_server_load_sources ();		  
+    }
+  
   gconf_log (GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
   
   drop_old_clients ();
