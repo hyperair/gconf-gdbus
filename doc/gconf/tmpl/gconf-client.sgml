@@ -168,28 +168,16 @@ is called).
 @is_default: 
 
 
-<!-- ##### USER_FUNCTION GConfClientParentWindowFunc ##### -->
-<para>
-If you're using the default #GConfClient error handlers, they can call this
-function to set the parent of any dialogs they create. See
-gnome_dialog_set_parent() in the GNOME documentation for details. The function
-should return a pointer to a #GtkWindow.
-</para>
-
-@client: a #GConfClient.
-@user_data: user data passed to gconf_client_set_error_handling().
-@Returns: the parent window for #GConfClient's error dialogs.
-
-
 <!-- ##### USER_FUNCTION GConfClientErrorHandlerFunc ##### -->
 <para>
 
 </para>
 
 @client: 
+@error: 
+<!-- # Unused Parameters # -->
 @parent_func: 
 @parent_user_data: 
-@error: 
 
 
 <!-- ##### MACRO GCONF_CLIENT ##### -->
@@ -314,6 +302,7 @@ Controls the default error handling for #GConfClient. See
 
 @client: a #GConfClient.
 @mode: error handling mode.
+<!-- # Unused Parameters # -->
 @func: function to retrieve the parent window for error dialogs.
 @user_data: user data to pass to @func.
 
