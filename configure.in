@@ -116,7 +116,7 @@ if test x$XML_CONFIG = xno; then
 fi
 XML_LIBS=`$XML_CONFIG --libs`
 XML_CFLAGS=`$XML_CONFIG --cflags`
-if test x$XML_LIBS = x; then
+if test "x$XML_LIBS" = x; then
   AC_MSG_ERROR(Failed to get link flags for libxml)
 fi
 AC_SUBST(XML_LIBS)
