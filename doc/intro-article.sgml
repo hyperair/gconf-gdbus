@@ -1,0 +1,271 @@
+<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.0//EN"[
+]>
+
+<article lang="en" id="index">
+  <artheader>
+    <date>2000-2-20</date>
+    <authorgroup>
+      <author>
+	<surname>Pennington</surname>
+	<firstname>Havoc</firstname> 
+	<affiliation>
+	  <address>
+	    <email>hp@redhat.com</email>
+	  </address>
+	</affiliation>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2000</year>
+      <holder>Havoc Pennington</holder>
+    </copyright>
+    <title>Introduction to the GConf library 
+    </title> 
+    <titleabbrev>GConf introduction</titleabbrev>
+    <abstract>
+      <para>
+        This article introduces the concepts behind the GConf
+        configuration library scheduled to ship with the next major
+        revision of the GNOME development environment.
+      </para>
+    </abstract>
+  </artheader>
+  
+  <sect1 id="whatis">
+    <title>Introduction: What is GConf?</title>
+
+    <para>
+      GConf is a configuration data storage mechanism scheduled to
+      ship with GNOME 2.0. GConf does work without GNOME however; it
+      can be used with plain GTK+, Xlib, KDE, or even text mode
+      applications as well.
+    </para>
+    
+    <para>
+      The GNOME desktop is currently in the Windows 3.1 era with
+      respect to application configuration data; applications store 
+      their configuration in flat .INI-style files. Windows later
+      introduced a more sophisticated solution, the Registry. However, 
+      the Registry still has a number of shortcomings:
+      <itemizedlist>
+        <listitem>
+          <para>It's very difficult to manage a large number of
+          computers; system administrators can't install defaults,
+          or push changes out to multiple user computers. Proprietary 
+            add-on tools exist that try to resolve this problem in 
+            various (rather frightening) ways.
+          </para>
+          </listitem>
+        <listitem>
+          <para>
+            The registry contains lots of undocumented,
+            cryptically-formatted data, and regedit is therefore
+            dangerous and difficult to use.
+          </para>
+          </listitem>
+        <listitem>
+          <para>
+            The registry becomes corrupted, and this tends to destroy
+            the whole operating system installation.
+          </para>
+          </listitem>
+    </para>
+    
+    <para>
+      GConf attempts to leapfrog the registry concept. It's a
+      <emphasis>library</emphasis> which provides a simple
+      configuration data storage interface to applications, and also
+      an <emphasis>architecture</emphasis> that tries to make things
+      easy for system administrators.
+    </para>
+
+    <para>
+      Here are some of the features of GConf:
+      <itemizedlist>
+	<listitem>
+	  <para>
+            Replaceable backend architecture. GConf currently has a
+            single backend that stores configuration data in
+            XML-format text files; however, the architecture allows a
+            Registry-like binary database backend, an LDAP backend, or
+            even a full-blown SQL database backend.  The backend used
+            will be configurable by the system administrator. This is
+            a valuable feature IS deparatments managing large numbers
+            of computers.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+            Configuration key documentation. Applications can install
+            brief documentation along with their configuration data,
+            explaining the possible settings and the effect of each
+            configuration key.  A regedit-style tool could display
+            this documentation, making it much easier to customize
+            applications without breaking them. The GConf database
+            also stores information such as the application that owns
+            a key, when the key was last changed, who changed it, etc.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+            Data change notification service. If configuration data is 
+            changed, all interested applications are notified. This
+            means that programs built from components (where each
+            component may be in a separate process) are much easier 
+            to write, because if one component changes a setting the 
+            others can discover the change and update themselves. It's
+            also useful if multiple application instances are running.
+            The notification service works across the network,
+            affecting all login sessions for a single user.            
+          </para>
+          <para>
+            GNOME 2.0 uses this feature to let user interface
+            configuration take effect on-the-fly without restarting 
+            any applications; if you turn off toolbar icons, for
+            example, toolbar icons will immediately disappear in all 
+            running apps.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+            The client API is very abstract, which allows us to change
+            its implementation at a later time without a big headache.
+            Because a good implementation is a complex problem, this
+            is important. I also like to think the API is simple to
+            use.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+            GConf does proper locking so that the configuration data 
+            doesn't get corrupted when multiple applications try to
+            use it.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    
+  </sect1>
+
+  <sect1 id="impl">
+    <title>Implementation Overview</title>
+    <para>
+    </para>
+    <sect2 id="keysvalues">
+      <title>Keys and Values</title>
+      <para>
+        
+      </para>
+    </sect2>
+  </sect1>
+
+
+  <sect1 id="api">
+    <title>Application Programming</title>
+
+    <para>
+      GConf makes it as simple as possible for application programmers
+      to store and retrieve their configuration data. However, the 
+      general structure of configuration data storage and retrieval
+      is somewhat different from the one you might use with
+      configuration files.      
+    </para>
+
+    <sect2 id="mvc">
+      <title>Model-View-Controller Architecture</title>
+      <para>
+        Applications using GConf effectively should be structured
+        according to the famous
+        <firstterm>Model-View-Controller</firstterm> (MVC) design
+        pattern. In this pattern, your application contains three
+        separate objects:
+
+        <numberedlist>
+          <listitem>
+            <para>
+              The <firstterm>model</firstterm> traditionally models 
+              a real-world object; but more generally, it is the 
+              data you are planning to present to the user and allow 
+              the user to edit. In the GConf case, the model is 
+              the configuration database (in the big picture) and a
+              particular configuration key (from a smaller-scale point
+              of view). For example, the configuration key <filename>
+                /desktop/gnome/menus/show-icons</filename> can be 
+              thought of as a model; it stores a boolean value
+              indicating whether to show icons next to menu items
+              in GNOME menus.
+              </para>
+            </listitem>
+          <listitem>
+            <para>
+              The <firstterm>view</firstterm> somehow displays or
+              represents your model. It receives some sort of
+              notification when the model changes, and updates 
+              itself accordingly. For example, the GNOME menu item
+              widgets listen for changes to the  <filename>
+                /desktop/gnome/menus/show-icons</filename>
+              configuration key, and show or hide icons accordingly. 
+              An important point about views is that there can be more
+              than one of them; you can have many menu items, 
+              without changing the model.
+            </para>
+            </listitem>
+          <listitem>
+            <para>
+              The <firstterm>controller</firstterm> modifies the
+              model. In the menu icons example, a GNOME control panel
+              might be the controller; users use it to set the
+              <filename>/desktop/gnome/menus/show-icons</filename> key
+              to true or false.
+            </para>
+            </listitem>
+
+          </numberedlist>              
+      </para>
+      
+      <para>
+        An MVC architecture has a number of advantages. Most notably,
+        it encourages code reuse and modularity; you can have any
+        number of views, and different types of views, without
+        changing the model or the controller; you can have any number
+        of controllers, and different types of controller, without
+        changing the model or the view. The main controller may be the
+        GNOME control panel, but if the key is changed by some other
+        application, that will also work properly. The primary view
+        may be the GNOME menu item code, but if some different menu
+        item code wanted to monitor and honor this setting, it could
+        certainly do so.
+      </para>
+
+      <para>
+        GConf implements an exciting enhancement to the basic MVC
+        pattern: the model is process-transparent. That is, the view
+        and controller have no knowledge of which process contains the
+        model; if you set a configuration key, then all views in all
+        interested processes will be notified of the change.  In a
+        world of component technology, this is extremely useful.
+      </para>
+
+    </sect2>
+
+
+  </sect1>
+
+  <appendix id="links">
+    <title>Other Resources</title>
+    <para>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <ulink url="http://developer.gnome.org">GNOME Developer Site</ulink>
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </appendix>
+  
+</article>
