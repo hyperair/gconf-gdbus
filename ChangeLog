@@ -1,3 +1,9 @@
+2001-10-10  Havoc Pennington  <hp@redhat.com>
+
+	* backends/xml-dir.c (dir_sync): fix to reflect bizarre behavior
+	of xmlSaveFile() (it tries to unescape the filename as a URI,
+	resulting in mangling my filename!)
+
 2001-10-04  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf-internals.c (gconf_release_lock): do wack-ass juju

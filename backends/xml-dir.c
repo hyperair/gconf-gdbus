@@ -312,6 +312,7 @@ dir_sync        (Dir* d, GError** err)
       gboolean old_existed = FALSE;
       gchar* tmp_filename;
       gchar* old_filename;
+      FILE* outfile;
       
       /* First make sure entry values are synced to their
          XML nodes */
@@ -320,10 +321,10 @@ dir_sync        (Dir* d, GError** err)
       tmp_filename = g_strconcat(d->fs_dirname, "/%gconf.xml.tmp", NULL);
       old_filename = g_strconcat(d->fs_dirname, "/%gconf.xml.old", NULL);
 
-      if (xmlSaveFile(tmp_filename, d->doc) < 0)
+      outfile = fopen (tmp_filename, "w");
+
+      if (outfile == NULL)
         {
-          gboolean recovered = FALSE;
-          
           /* Try to solve the problem by creating the FS dir */
           if (!gconf_file_exists(d->fs_dirname))
             {
@@ -331,17 +332,14 @@ dir_sync        (Dir* d, GError** err)
                                 d->root_dir_len,
                                 d->dir_mode, d->file_mode,
                                 err))
-                {
-                  if (xmlSaveFile(tmp_filename, d->doc) >= 0)
-                    recovered = TRUE;
-                }
+                outfile = fopen (tmp_filename, "w");
             }
 
-          if (!recovered)
+          if (outfile == NULL)
             {
-              /* I think libxml may mangle errno, but we might as well 
-                 try. Don't set error if it's already set by some
-                 earlier failure. */
+              /* Don't set error if it's already set by some
+               * earlier failure.
+               */
               if (err && *err == NULL)
                 gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to write file `%s': %s"), 
                                 tmp_filename, strerror(errno));
@@ -353,7 +351,7 @@ dir_sync        (Dir* d, GError** err)
         }
 
       /* Set permissions on the new file */
-      if (chmod (tmp_filename, d->file_mode) != 0)
+      if (fchmod (fileno (outfile), d->file_mode) != 0)
         {
           gconf_set_error(err, GCONF_ERROR_FAILED, 
                           _("Failed to set mode on `%s': %s"),
@@ -361,9 +359,31 @@ dir_sync        (Dir* d, GError** err)
           
           retval = FALSE;
           goto failed_end_of_sync;
+        }     
+
+      if (xmlDocDump (outfile, d->doc) < 0)
+        {
+          gconf_set_error (err, GCONF_ERROR_FAILED, 
+                           _("Failed to write XML data to `%s': %s"),
+                           tmp_filename, strerror (errno));
+          
+          retval = FALSE;
+          goto failed_end_of_sync;
         }
+
+      if (fclose (outfile) < 0)
+        {
+          gconf_set_error (err, GCONF_ERROR_FAILED, 
+                           _("Failed to close file `%s': %s"),
+                           tmp_filename, strerror (errno));
+          
+          retval = FALSE;
+          goto failed_end_of_sync;
+        }
+
+      outfile = NULL;
       
-      old_existed = gconf_file_exists(d->xml_filename);
+      old_existed = gconf_file_exists (d->xml_filename);
 
       if (old_existed)
         {
@@ -408,6 +428,8 @@ dir_sync        (Dir* d, GError** err)
       
       g_free(old_filename);
       g_free(tmp_filename);
+      if (outfile)
+        fclose (outfile);
     }
 
   if (retval)
