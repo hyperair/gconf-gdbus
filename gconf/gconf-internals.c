@@ -1488,6 +1488,8 @@ g_conf_sources_set_value   (GConfSources* sources,
 
   tmp = sources->sources;
 
+  g_conf_clear_error();
+  
   while (tmp != NULL)
     {
       GConfSource* src = tmp->data;
@@ -1498,6 +1500,24 @@ g_conf_sources_set_value   (GConfSources* sources,
           g_conf_source_set_value(src, key, value);
           return;
         }
+      else
+        {
+          /* check whether the value is set; if it is, then
+             we return an error since setting an overridden value
+             would have no effect
+          */
+          GConfValue* val;
+
+          val = g_conf_source_query_value(tmp->data, key, NULL);
+          
+          if (val != NULL)
+            {
+              g_conf_value_destroy(val);
+              g_conf_set_error(G_CONF_OVERRIDDEN,
+                               _("Value for `%s' set in a read-only source at the front of your configuration path."), key);
+              return;
+            }
+        } 
 
       tmp = g_list_next(tmp);
     }

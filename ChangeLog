@@ -1,3 +1,16 @@
+1999-09-19  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.h: Add G_CONF_OVERRIDDEN error if you try to 
+	set a value which will have no effect due to a read-only
+	setting earlier in the path.
+
+	* gconf/gconf.c: Add G_CONF_OVERRIDDEN to strerror, etc.
+
+	* gconf/GConf.idl: add ConfigOverridden to pass it across the
+	CORBA link
+
+	* doc/gconf.sgml: Add more stuff to docs
+	
 1999-09-17  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-internals.c (subst_variables): Add a new function to

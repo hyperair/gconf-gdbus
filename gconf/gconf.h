@@ -45,7 +45,8 @@ typedef enum {
   G_CONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
   G_CONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
   G_CONF_IS_DIR = 9,        /* Requested key operation on a dir */
-  G_CONF_IS_KEY = 10        /* Requested dir operation on a key */
+  G_CONF_IS_KEY = 10,       /* Requested dir operation on a key */
+  G_CONF_OVERRIDDEN = 11    /* Read-only source at front of path has set the value */
 } GConfErrNo;
 
 const gchar* g_conf_error          (void); /* returns strerror of current errno,

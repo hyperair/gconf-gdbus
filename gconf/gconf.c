@@ -67,7 +67,8 @@ static const gchar* err_msgs[10] = {
   N_("Parse error"),
   N_("Type mismatch"),
   N_("Key operation on directory"),
-  N_("Directory operation on key")
+  N_("Directory operation on key"),
+  N_("Can't overwrite existing read-only value")
 };
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);
@@ -1566,6 +1567,9 @@ corba_errno_to_g_conf_errno(ConfigErrorType corba_err)
       break;
     case ConfigIsKey:
       return G_CONF_IS_KEY;
+      break;
+    case ConfigOverridden:
+      return G_CONF_OVERRIDDEN;
       break;
     default:
       g_assert_not_reached();
