@@ -489,6 +489,12 @@ main (int argc, char** argv)
 
   poptReadDefaultConfig(ctx, TRUE);
 
+  if (argc < 2) 
+    {
+      poptPrintUsage (ctx, stdout, 0);
+      return 1;
+    } 
+
   while((nextopt = poptGetNextOpt(ctx)) > 0)
     /*nothing*/;
 
