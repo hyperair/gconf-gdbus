@@ -126,7 +126,6 @@ g_conf_errno          (void)
 typedef struct _GConfPrivate GConfPrivate;
 
 struct _GConfPrivate {
-  /* This object may be pointless... */
   gpointer dummy;
 
 };

@@ -36,11 +36,15 @@ typedef enum {
   G_CONF_VALUE_INT,
   G_CONF_VALUE_FLOAT,
   G_CONF_VALUE_BOOL,
-  G_CONF_VALUE_LIST_OF_STRING,
-  G_CONF_VALUE_LIST_OF_INT,
-  G_CONF_VALUE_LIST_OF_FLOAT,
-  G_CONF_VALUE_LIST_OF_BOOL,
-  G_CONF_VALUE_SCHEMA
+  G_CONF_VALUE_SCHEMA,
+
+  /* unfortunately these aren't really types; we want list_of_string,
+     list_of_int, etc.  but it's just too complicated to implement.
+     instead we'll complain in various places if you do something
+     moronic like mix types in a list or treat pair<string,int> and
+     pair<float,bool> as the same type. */
+  G_CONF_VALUE_LIST,
+  G_CONF_VALUE_PAIR 
 } GConfValueType;
 
 typedef struct _GConfSchema GConfSchema;

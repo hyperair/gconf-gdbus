@@ -25,6 +25,8 @@
 
 #include "gconf-schema.h"
 
+/* Errors */
+
 typedef enum {
   G_CONF_SUCCESS = 0,
   G_CONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
@@ -40,6 +42,16 @@ typedef enum {
   G_CONF_TYPE_MISMATCH = 8  /* Type requested doesn't match type found */
 } GConfErrNo;
 
+const gchar* g_conf_error          (void); /* returns strerror of current errno,
+                                              combined with additional details 
+                                              that may exist 
+                                           */
+const gchar* g_conf_strerror       (GConfErrNo en);
+GConfErrNo   g_conf_errno          (void);
+void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void         g_conf_clear_error    (void); /* like setting errno to 0 */
+
+
 /* 
  * A GConfValue is used to pass configuration values around
  */
@@ -53,19 +65,30 @@ struct _GConfValue {
     gint int_data;
     gboolean bool_data;
     gdouble float_data;
-    GSList* list_data;
     GConfSchema* schema_data;
+    struct {
+      GConfValueType type;
+      GSList* list;
+    } list_data;
+    struct {
+      GConfValue* car;
+      GConfValue* cdr;
+    } pair_data;
   } d;
 };
 
-#define g_conf_value_string(x) ((x)->d.string_data)
-#define g_conf_value_int(x)    ((x)->d.int_data)
-#define g_conf_value_float(x)  ((x)->d.float_data)
-#define g_conf_value_list(x)   ((x)->d.list_data)
-#define g_conf_value_bool(x)   ((x)->d.bool_data)
-#define g_conf_value_schema(x) ((x)->d.schema_data)
+#define g_conf_value_string(x)    ((x)->d.string_data)
+#define g_conf_value_int(x)       ((x)->d.int_data)
+#define g_conf_value_float(x)     ((x)->d.float_data)
+#define g_conf_value_list_type(x) ((x)->d.list_data.type)
+#define g_conf_value_list(x)      ((x)->d.list_data.list)
+#define g_conf_value_car(x)       ((x)->d.pair_data.car)
+#define g_conf_value_cdr(x)       ((x)->d.pair_data.cdr)
+#define g_conf_value_bool(x)      ((x)->d.bool_data)
+#define g_conf_value_schema(x)    ((x)->d.schema_data)
 
 GConfValue* g_conf_value_new(GConfValueType type);
+/* doesn't work on complicated types (only string, int, bool, float) */
 GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
 GConfValue* g_conf_value_copy(GConfValue* src);
 void        g_conf_value_destroy(GConfValue* value);
@@ -105,16 +128,6 @@ gboolean     g_conf_init           ();
 
 GConf*       g_conf_new            (void);
 void         g_conf_destroy        (GConf* conf);
-
-const gchar* g_conf_error          (void); /* returns strerror of current errno,
-                                              combined with additional details 
-                                              that may exist 
-                                           */
-const gchar* g_conf_strerror       (GConfErrNo en);
-GConfErrNo   g_conf_errno          (void);
-void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-void         g_conf_clear_error    (void); /* like setting errno to 0 */
-
 
 /* Returns ID of the notification */
 guint        g_conf_notify_add(GConf* conf,
@@ -170,5 +183,6 @@ GConfSchema* g_conf_get_schema  (GConf* conf, const gchar* key);
 
 
 #endif
+
 
 
