@@ -1,4 +1,3 @@
-
 /* GConf
  * Copyright (C) 1999 Red Hat Inc.
  *
@@ -24,6 +23,7 @@
 #include <glib.h>
 
 #include "gconf-schema.h"
+#include "gconf-orbit.h"
 
 /* Errors */
 

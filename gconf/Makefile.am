@@ -1,4 +1,4 @@
-INCLUDES=-I$(top_srcdir) `gnome-config --cflags gnome` $(GLIB_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) \
+INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
 
 lib_LTLIBRARIES = libgconf-client.la
@@ -10,9 +10,11 @@ CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 BUILT_SOURCES = $(CORBA_SOURCES)
 
 gconfincludedir = $(includedir)/gconf
-gconfinclude_HEADERS = \
-	gconf.h \
-	gconf-schema.h
+gconfinclude_HEADERS =     \
+        GConf.h            \
+	gconf.h            \
+	gconf-orbit.h      \
+	gconf-schema.h 
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
