@@ -188,9 +188,8 @@ msgid "Failed to create file `%s': %s"
 msgstr "Error al crear el archivo `%s': %s"
 
 #: backends/xml-dir.c:1324
-#, fuzzy, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "Error al escribir el archivo `%s': %s"
+msgstr "Error al analizar el archivo XML \"%s\""
 
 #. There was an error
 #: backends/xml-entry.c:154
@@ -354,13 +353,12 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "Error al sincronizar uno o más recursos: %s"
 
 #: gconf/gconf-database.c:1080
-#, fuzzy, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Fallo al registrar la adición del control %s (%s); no seré capaz de "
+"Fallé al registrar la adición del control %s (%s); no seré capaz de "
 "restaurar este control al reiniciar gconfd, resultando en una mala "
 "notificación de los cambios de configuración."
 
@@ -689,9 +687,8 @@ msgid "Failed to create %s: %s"
 msgstr "Error al crear %s: %s"
 
 #: gconf/gconf-internals.c:2835
-#, fuzzy, c-format
 msgid "Server ping error: %s"
-msgstr "Error de sintaxis en OAF: %s"
+msgstr "Error al hacer ping al servidor: %s"
 
 #: gconf/gconf-internals.c:2856
 #, c-format
@@ -711,10 +708,14 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"Error al contactar con el servidor de configuraciones; algunas de las "
+"posibles causas son que necesite habilitar el TCP/IP en ORBit, o que tiene "
+"locks de NFS de una caida de sistema. Vea http://www.gnome.org/projects/gconf/"
+"(Detalles - %s)"
 
 #: gconf/gconf-internals.c:2906
 msgid "none"
-msgstr ""
+msgstr "ninguna"
 
 #: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:72
 msgid "Help options"
@@ -737,6 +738,12 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
+"Por favor contacte con su administrador de sistemas para resolver los "
+"siguientes problemas:\n"
+"No pude abrir o crear el archivo \"%s\". Esto indica que debe haber un "
+"problema con su configuración, dado que muchos programas necesitarán crear "
+"archivos en su directorio. El error era \"%s\" (errno = %d)."
+
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
@@ -749,11 +756,18 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
+"Por favor contacte con su administrador de sistemas para resolver los "
+"siguientes problemas:\n"
+"No pude crear un lock del archivo \"%s\". Esto indica que debe haber un "
+"problema con la configuración de su sistema operativo. Si su directorio está "
+"montado por NFS, el cliente o el servidor deben estar mal configurados. Vea "
+"la documentación de rpc.statd y rpc.lockd. Una causa bastante común de este "
+"error es que el servicio \"nfslock\" ha sido desactivado. El error era \"%s\" "
+"(errno = %d)."
 
 #: gconf/gconf-sanity-check.c:160
-#, fuzzy, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr "No pude escribir al archivo `%s': %s"
+msgstr "No pude eliminar al archivo %s: %s\n"
 
 #: gconf/gconf-sanity-check.c:195
 #, c-format
@@ -762,11 +776,14 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
+"Por favor contacte con su administrador de sistemas para resolver el "
+"siguiente problema:\nNo hay fuentes de configuración en el archivo de "
+"configuración \"%s\"; esto significa que las preferencias y otras "
+"configuraciones no podrán ser guardadas. %s%s"
 
 #: gconf/gconf-sanity-check.c:198
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "Error leyendo el archivo de estado: %s"
+msgstr "Error leyendo el archivo: "
 
 #: gconf/gconf-sanity-check.c:220
 #, c-format
@@ -774,6 +791,9 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
+"Por favor contacte con su administrador de sistemas para resolver el siguiente"
+" problema:\n"
+"No pude resolver la dirección \"%s\" en el archivo de configuración \"%s\": %s"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
@@ -1248,7 +1268,7 @@ msgstr ""
 #: gconf/gconfd.c:2074
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
-msgstr "Error al escribir la adición del cliente al archivo de estado: %s"
+msgstr "Error al volcar los datos del cliente al archivo de estado: %s"
 
 #: gconf/gconfd.c:2173
 msgid ""
@@ -1260,6 +1280,8 @@ msgstr ""
 #: gconf/gconfd.c:2312
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 msgstr ""
+"Han ocurrido multiples errores de segmentación; no puedo mostrar el diálogo "
+"de error\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2321
@@ -1268,6 +1290,8 @@ msgid ""
 "Segmentation fault!\n"
 "Cannot display crash dialog: %s\n"
 msgstr ""
+"¡Error de segmentación!\n"
+"No puedo mostrar el diálogo de error: %s\n"
 
 #: gconf/gconftool.c:81
 msgid "Set a key to a value and sync. Use with --type."
