@@ -1092,7 +1092,10 @@ void
 gconf_database_remove_listener (GConfDatabase       *db,
                                 CORBA_unsigned_long  cnxn)
 {
-  Listener *l = NULL;
+  union {
+      Listener *l;
+      gpointer l_ptr;
+  } l = { NULL };
   GError *err;
   const gchar *location = NULL;
 
@@ -1105,7 +1108,7 @@ gconf_database_remove_listener (GConfDatabase       *db,
   gconf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
 
   if (!gconf_listeners_get_data (db->listeners, cnxn,
-                                 (gpointer*)&l,
+                                 &(l.l_ptr),
                                  &location))
     {
       gconf_log (GCL_WARNING, _("Listener ID %lu doesn't exist"),
@@ -1115,12 +1118,12 @@ gconf_database_remove_listener (GConfDatabase       *db,
   else
     {
       gconf_log (GCL_DEBUG, "Name of listener %u is %s",
-                 (guint) cnxn, l->name);
+                 (guint) cnxn, l.l->name);
     }
   
   err = NULL;
   if (!gconfd_logfile_change_listener (db, FALSE, cnxn,
-                                       l->obj, location, &err))
+                                       l.l->obj, location, &err))
     {
       gconf_log (GCL_WARNING, _("Failed to log removal of listener to logfile (most likely harmless, may result in a notification weirdly reappearing): %s"),
                  err->message);
