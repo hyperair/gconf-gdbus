@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-03-22 16:10+0100\n"
-"PO-Revision-Date: 2002-03-22 16:15+0100\n"
+"POT-Creation-Date: 2002-03-28 20:05+0100\n"
+"PO-Revision-Date: 2002-03-28 20:16+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -695,6 +695,11 @@ msgstr "Nie można stworzyć %s: %s"
 
 #: gconf/gconf-internals.c:1
 #, c-format
+msgid "Server ping error: %s"
+msgstr "Brak odpowiedzi serwera przy sprawdzeniu aktywności: %s"
+
+#: gconf/gconf-internals.c:1
+#, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Nie można stworzyć potoku do komunikacji z uruchomionym demonem gconf: %s\n"
@@ -705,24 +710,22 @@ msgid "Failed to launch configuration server: %s\n"
 msgstr "Nie można uruchomić serwera konfiguracji: %s\n"
 
 #: gconf/gconf-internals.c:1
+#, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are:\n"
-"a) you have an existing configuration server (gconfd) running, but it isn't "
-"reachable from here - if you're logged in from two machines at once, you may "
-"need to enable TCP networking for ORBit by putting the line "
-"\"ORBIIOPIPv4=1\" in /etc/orbitrc\n"
-"b) you have stale locks in your NFS-mounted home directory due to a system "
-"crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no "
-"gconfd processes are running on any machine using your home dir"
+"Failed to contact configuration server; some possible causes are that you "
+"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
+"to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
+"(Details - %s)"
 msgstr ""
-"Nie można nawiązać połączenia z serwerem konfiguracji. Możliwe przyczyny: a) "
-"serwer (gconfd) został uruchomiony, lecz nie jest dostępny z tego miejsca, "
-"co może się zdarzyć przy zalogowaniu z dwóch maszyn jednocześnie. Konieczne "
-"może być uaktywnienie obsługi TCP w serwerze ORBit poprzez umieszczenie w "
-"pliku /etc/orbitrc wiersza \"ORBIIOPIPv4=1\"; b) z powodu padnięcia systemu "
-"w katalogu domowym zamontowanym poprzez NFS pozostały nieużywane blokady; "
-"jeśli masz pewność, że nie działają żadne procesy gconfd, korzystające z "
-"katalogu domowego, spróbuj usunąć ~/.gconf/*.lock i ~/.gconfd/lock."
+"Nie można nawiązać połączenia z serwerem konfiguracji. Możliwe, że konieczne "
+"będzie uaktywnienie obsługi TCP/IP w konfiguracji ORBita. Może to też być "
+"spowodowane blokadami pozostałymi po awarii systemu. Aby uzyskać więcej "
+"informacji, odwiedź stronę http://www.gnome.org/projects/gconf/ (szczegóły - "
+"%s)."
+
+#: gconf/gconf-internals.c:1
+msgid "none"
+msgstr "brak"
 
 #: gconf/gconf-sanity-check.c:1 gconf/gconftool.c:1
 msgid "Help options"
