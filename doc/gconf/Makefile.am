@@ -39,9 +39,9 @@ extra_files =
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
 # if $(DOC_MODULE).types is non-empty.
-GTKDOC_CFLAGS = -I$(top_srcdir) $(DEPENDENT_CFLAGS)
+GTKDOC_CFLAGS = -I$(top_srcdir) $(CFLAGS) $(DEPENDENT_CFLAGS)
 
-GTKDOC_LIBS = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
+GTKDOC_LIBS = $(LDFLAGS) $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
 GTKDOC_CC=$(LIBTOOL) --mode=compile $(CC)
 GTKDOC_LD=$(LIBTOOL) --mode=link $(CC)
