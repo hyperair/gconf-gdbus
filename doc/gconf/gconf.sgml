@@ -1,8 +1,19 @@
-<!DOCTYPE ARTICLE PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!DOCTYPE BOOK PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!entity gconf-gconf-backend SYSTEM "sgml/gconf-backend.sgml">
+<!entity gconf-gconf-engine SYSTEM "sgml/gconf-engine.sgml">
+<!entity gconf-gconf-error SYSTEM "sgml/gconf-error.sgml">
+<!entity gconf-gconf-internals SYSTEM "sgml/gconf-internals.sgml">
+<!entity gconf-gconf-listeners SYSTEM "sgml/gconf-listeners.sgml">
+<!entity gconf-gconf-orbit SYSTEM "sgml/gconf-orbit.sgml">
+<!entity gconf-gconf-schema SYSTEM "sgml/gconf-schema.sgml">
+<!entity gconf-gconf-sources SYSTEM "sgml/gconf-sources.sgml">
+<!entity gconf-gconf-value SYSTEM "sgml/gconf-value.sgml">
+<!entity gconf-gconf SYSTEM "sgml/gconf.sgml">
+<!entity gconf-gconf-locale SYSTEM "sgml/gconf-locale.sgml">
+<!entity gconf-gconf-changeset SYSTEM "sgml/gconf-changeset.sgml">
 ]>
-
-<article id="index">
-  <artheader>
+<book id="index">
+  <bookinfo>
     <authorgroup>
       <author>
 	<firstname>Havoc</firstname>
@@ -18,23 +29,23 @@
     <title>GConf</title>
     <abstract>
       <para>
-      GConf is a system for storing configuration information, that
-      is, key-value pairs. GConf provides a notification service
-      so applications can be notified when a key's value is changed.
-      GConf also allows for pluggable storage mechanisms (text files,
-      databases, etc.) and allows administrators to install default 
-      values.
+        GConf is a system for storing configuration information, that is,
+        key-value pairs. GConf provides a notification service so applications
+        can be notified when a key's value is changed.  GConf also allows for
+        pluggable storage mechanisms (text files, databases, etc.); allows
+        administrators to install default values; and allows application authors
+        to document their configuration keys for the benefit of administrators.
       </para>
       
     </abstract>
-  </artheader>
+  </bookinfo>
   
   <!-- Introduction to GConf -->
-  <sect1>
+  <chapter>
     <title>Introduction to GConf</title>
     
     <!-- Motivation -->
-    <sect2>
+    <sect1>
       <title>Motivation</title>
       
       <para>   
@@ -97,17 +108,17 @@
         the ACAP specification.
       </para>
 
-    </sect2>
+    </sect1>
 
     <!-- Terms and Concepts -->
-    <sect2>
+    <sect1>
       <title>Terms and Concepts</title>
 
       <para>
         This section introduces the basic GConf structure and terminology.
       </para>
 
-      <sect3>
+      <sect2>
         <title>Namespace</title>          
         <para>
           The GConf namespace is almost exactly like the UNIX filesystem; that
@@ -119,10 +130,10 @@
           alphanumeric or underscore. Path components may not start with a
           period.
         </para>
-      </sect3>
+      </sect2>
 
       <!-- Data Types -->
-      <sect3>
+      <sect2>
         <title>GConf Data Types</title>
 
         <para>
@@ -200,16 +211,16 @@
           </variablelist>
         </para>
 
-      </sect3>
+      </sect2>
       
       <!-- Sources -->
-      <sect3>
+      <sect2>
         <title>Configuration Sources</title>
 
         <para> 
           Users can specify <firstterm>configuration sources</firstterm>
-          which will be used by the <command>gconfd</command> per-user
-          configuration server.  <command>gconfd</command> loads the file
+          which will be used by the <application>gconfd</application> per-user
+          configuration server.  <application>gconfd</application> loads the file
           <filename>/etc/gconf/path</filename> on startup; this file contains a
           list of <firstterm>configuration source addresses</firstterm>.  A
           source address is similar to a URL; it contains a "protocol" name (in
@@ -266,14 +277,20 @@
           </programlisting>
         </para>
 
-      </sect3>
+        <para>
+          Note that particular backend modules may have their own special
+          configuration. For example, you may need to configure the details of
+          an LDAP backend.
+        </para>
 
-    </sect2>
+      </sect2>
 
-  </sect1>
+    </sect1>
+
+  </chapter>
 
   <!-- Client Library -->
-  <sect1>
+  <chapter>
     <title>C Language Client Library</title>
     
     <para>
@@ -290,8 +307,13 @@
       see <xref linkend="gtk-wrapper">.
     </para>
 
+    <para>
+      Note that this is only a tutorial-style introduction to the client library;
+      have a look at <xref linkend="gconf-reference"> for a complete reference.
+    </para>
+
     <!-- Error Handling -->
-    <sect2>
+    <sect1>
       <title>Error Handling</title>
       
       <para>
@@ -345,14 +367,19 @@
               err = NULL;
             }
         </programlisting>
-        Note that <function>gconf_init()</function> returns <symbol>TRUE</symbol> 
-        on success and <symbol>FALSE</symbol> on failure, other functions may have
-        different ways of indicating success/failure.
+        Note that <function>gconf_init()</function> returns
+        <symbol>TRUE</symbol> on success and <symbol>FALSE</symbol> on failure,
+        other functions may have different ways of indicating
+        success/failure. Also note that the <symbol>err</symbol> variable is
+        initialized to <symbol>NULL</symbol>; this is
+        <emphasis>required</emphasis>.
       </para>
 
       <para>
-        Error checking is slightly inconvenient to use because we have to be thread-safe; 
-        GConf originally had a system similar to <symbol>errno</symbol>.
+        Error checking is slightly inconvenient to use because we have to be
+        thread-safe; GConf originally had a system similar to
+        <symbol>errno</symbol>, but that doesn't work with threads.  GConf still
+        isn't thread-safe, but the API isn't inherently unsafe.
       </para>
 
       <para>
@@ -378,11 +405,11 @@
           <varlistentry><term>GCONF_NO_SERVER</term>
             <listitem>
               <para>
-                The <command>gconfd</command> configuration server
+                The <application>gconfd</application> configuration server
                 could not be contacted, and we couldn't or didn't
                 respawn it for whatever reason. The error message 
                 may give more details. This probably means either a
-                bug in <command>gconfd</command> or a hosed local
+                bug in <application>gconfd</application> or a hosed local
                 configuration.
               </para>
             </listitem>
@@ -496,11 +523,11 @@
         </funcsynopsis>
       </para>
 
-    </sect2>
+    </sect1>
 
 
     <!-- Initialization -->
-    <sect2>
+    <sect1>
       <title>Initialization</title>
       
       <para>
@@ -535,7 +562,7 @@
           authenticated via <filename>libgnorba</filename>. If you let
           GConf set up the ORB, connections are authenticated in a
           GConf-specific way. Your authentication mechanism must match
-          the one used by the <command>gconfd</command> per-user
+          the one used by the <application>gconfd</application> per-user
           configuration daemon, which is never the GNOME way for
           now. This will obviously change before GConf goes into
           production in a GNOME environment, but it works great 
@@ -548,10 +575,10 @@
         <function>gconf_initialized()</function>.
       </para>
 
-    </sect2>
+    </sect1>
 
     <!-- GConfEngine object -->
-    <sect2>
+    <sect1>
       <title>The <structname>GConfEngine</structname> object</title>
       <para>
         A <structname>GConfEngine</structname> object represents your
@@ -608,10 +635,10 @@
         </funcsynopsis>
       </para>
 
-    </sect2>
+    </sect1>
 
     <!-- GConfValue -->
-    <sect2>
+    <sect1>
       <title>The <structname>GConfValue</structname> Datatype</title>
       
       <para>
@@ -629,7 +656,7 @@
         GConf fixes it with <structname>GConfValue</structname>.        
       </para>
 
-      <sect3>
+      <sect2>
         <title>Accessing <structname>GConfValue</structname></title>
         <para>
           To read a <structname>GConfValue</structname>, you first 
@@ -700,26 +727,15 @@ print_value(GConfValue* value)
         </para>
 
         <para>
-          For convenience, here's a summary of the accessor macros:
-          <programlisting>
-#define gconf_value_string(x)    ((x)->d.string_data)
-#define gconf_value_int(x)       ((x)->d.int_data)
-#define gconf_value_float(x)     ((x)->d.float_data)
-#define gconf_value_list_type(x) ((x)->d.list_data.type)
-#define gconf_value_list(x)      ((x)->d.list_data.list)
-#define gconf_value_car(x)       ((x)->d.pair_data.car)
-#define gconf_value_cdr(x)       ((x)->d.pair_data.cdr)
-#define gconf_value_bool(x)      ((x)->d.bool_data)
-#define gconf_value_schema(x)    ((x)->d.schema_data)
-          </programlisting>
-          Note the <function>gconf_value_list_type()</function>
-          macro, which returns the type of the elements in a list.
-          Lists must have a uniform type.
+          A special note about values of type <symbol>GCONF_VALUE_LIST</symbol>:
+          the list contains <structname>GConfValue</structname> objects, and all
+          objects in the list must have the same type. You can get the type of
+          the list with the <function>gconf_value_list_type()</function> macro.
         </para>
 
-      </sect3>
+      </sect2>
 
-      <sect3>
+      <sect2>
         <title>Creating/destroying a <structname>GConfValue</structname></title>
         <para>
           Often you obtain a <structname>GConfValue</structname> from 
@@ -727,7 +743,7 @@ print_value(GConfValue* value)
           but you can also create them yourself with
           <function>gconf_value_new()</function>.
           <function>gconf_value_new()</function> takes a single
-          argument, the type of the newly-created values. Value types
+          argument, the type of the newly-created value. Value types
           can't be changed after creating the value.
           <funcsynopsis>
             <funcsynopsisinfo>#include &lt;gconf/gconf-value.h&gt;</funcsynopsisinfo>
@@ -742,9 +758,11 @@ print_value(GConfValue* value)
 
         <warning><title>You must initialize your values</title>
           <para>
-            Newly-constructed values are invalid; if you use the 
-            accessor macros before you set the contents of the 
-            value, the results are undefined.
+            Newly-constructed values are invalid; if you use the accessor macros
+            before you set the contents of the value, the results are
+            undefined. Use <function>gconf_value_set_int()</function>,
+            <function>gconf_value_set_string()</function>, and so on to
+            initialize the value.
           </para>
         </warning>
 
@@ -760,47 +778,93 @@ print_value(GConfValue* value)
               <function>gconf_value_copy</function>
             </funcdef>
             <paramdef>GConfValue* <parameter>src</parameter></paramdef>
-          </funcsynopsis>
-          <funcsynopsis>
-            <funcsynopsisinfo>#include &lt;gconf/gconf-value.h&gt;</funcsynopsisinfo>
             <funcdef>void
               <function>gconf_value_destroy</function>
             </funcdef>
             <paramdef>GConfValue* <parameter>value</parameter></paramdef>
           </funcsynopsis>
         </para>
-      </sect3>
+      </sect2>
 
-    </sect2>
+    </sect1>
 
     <!-- Reading configuration values -->
-    <sect2>
-      <title>Reading Configuration Values</title>
+    <sect1>
+      <title>Reading/Writing Configuration Values</title>
 
-      <para>
-        The "raw" function for obtaining the value stored at a given key in the
-        configuration database is <function>gconf_get()</function>.
-        <function>gconf_get()</function> returns a
-        <structname>GConfValue</structname> if the key was set, or
-        <symbol>NULL</symbol> if the key was unset or an error occurred. If an
-        error occurred a <structname>GConfError</structname> is returned in the
-        location given as the final argument.
-      </para>
+      <sect2>
+        <title>Reading</title>
+        <para>
+          The "raw" function for obtaining the value stored at a given key in the
+          configuration database is <function>gconf_get()</function>.
+          <function>gconf_get()</function> returns a
+          <structname>GConfValue</structname> if the key was set, or
+          <symbol>NULL</symbol> if the key was unset or an error occurred. If an
+          error occurred a <structname>GConfError</structname> is returned in the
+          location given as the final argument.
+        </para>
+        
+        <para>
+          There are also convenience functions that automatically convert
+          <structname>GConfValue</structname> to primitive C types. These include
+          <function>gconf_get_int()</function>,
+          <function>gconf_get_bool()</function>, and so on. There are no
+          convenience functions for the container types (lists and pairs) because
+          too many permutations and combinations are possible
+          (<function>gconf_get_list_of_int()</function>,
+          <function>gconf_get_pair_of_int_string()</function>,
+          <function>gconf_get_pair_of_string_int()</function>, ...).
+        </para>
 
-    </sect2>
-  </sect1>
+      </sect2>
+
+      <sect2>
+        <title>Writing</title>
+        <para>
+          
+        </para>
+      </sect2>
+
+    </sect1>
+  </chapter>
 
   <!-- GTK Object wrapper -->
-  <sect1 id="gtk-wrapper">
-    <title>GTK+ Object Convenience Wrapper</title>
+  <chapter id="gtk-wrapper">
+    <title><structname>GtkObject</structname> Convenience Wrapper</title>
     
     <para>
       
     </para>
 
-  </sect1>
+  </chapter>
 
-</article>
+  <!-- GConf reference -->
+  <chapter id="gconf-reference">
+    <title>GConf Reference Documentation</title>
+
+    &gconf-gconf-engine;
+    &gconf-gconf;
+    &gconf-gconf-error;
+    &gconf-gconf-orbit;
+    &gconf-gconf-value;
+    &gconf-gconf-schema;
+    &gconf-gconf-changeset;
+
+  </chapter>
+
+  <!-- GConf Internals Reference -->
+  <chapter id="gconf-internals-reference">
+    <title>GConf Internal Reference</title>
+
+    &gconf-gconf-backend;
+    &gconf-gconf-internals;
+    &gconf-gconf-listeners;
+    &gconf-gconf-locale;
+    &gconf-gconf-sources;
+    
+  </chapter>
+
+</book>
 <!-- Keep this comment at the end of the file
 Local variables:
 sgml-omittag:t
