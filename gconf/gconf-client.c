@@ -824,7 +824,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type(val, GCONF_VALUE_STRING, &error))
-        retval = gconf_value_string(val);
+        retval = g_strdup(gconf_value_string(val));
       else
         handle_error(client, error, err);
 
@@ -965,7 +965,7 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
   GConfError* error = NULL;
   GConfValue* val;
 
-  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   val = get(client, key, &error);
 

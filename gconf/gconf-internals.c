@@ -965,6 +965,11 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
   gchar* msg;
   va_list args;
   int syslog_pri = LOG_DEBUG;
+
+#ifndef GCONF_ENABLE_DEBUG
+  if (pri == GCL_DEBUG)
+    return;
+#endif
   
   va_start (args, fmt);
   msg = g_strdup_vprintf(fmt, args);
@@ -1009,14 +1014,8 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
       break;
     }
 
-#ifndef GCONF_ENABLE_DEBUG
-  if (pri != GCL_DEBUG)
-    {
-#endif
-      syslog(syslog_pri, msg);
-#ifndef GCONF_ENABLE_DEBUG
-    }
-#endif
+
+  syslog(syslog_pri, msg);
       
   g_free(msg);
 }

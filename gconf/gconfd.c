@@ -2069,7 +2069,8 @@ locale_cache_lookup(const gchar* locale)
   locale_list = gconf_locale_cache_get_list(locale_cache, locale);
 
   g_assert(locale_list != NULL);
-
+  g_assert(locale_list->list != NULL);
+  
   return locale_list;
 }
 

@@ -1,5 +1,33 @@
 1999-11-15  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-backend.c (entry_fill): handle locale by syncing
+	cached value if necessary 
+	
+	* wrappers/gtk/gconf-client.c (gconf_client_get_string):
+	g_strdup() the retval if necessary
+	(gconf_client_get_pair): fix one of the checks
+
+	* backends/xml-backend.c (xentry_extract_value): use "C" locale if
+	none is given.
+
+	* gconf/gconftool.c (do_load_schema_file): check type of nodes
+	(process_key_list): check node type
+	(process_schema): check node type
+	(process_locale_info): check node type
+	(extract_global_info): check node type
+
+	* backends/xml-backend.c (entry_unset): deal with locales
+	(entry_set): deal with locales
+	(entry_value): locales
+	(schema_node_extract_value): handle locales
+
+	* gconf/gconf-internals.c (gconf_log): move the check for debug
+	messages to the top of the function, before g_strdup_vprintf(),
+	and if GCONF_ENABLE_DEBUG isn't defined return immediately (ignore
+	the GCL_DEBUG messages).
+
+1999-11-15  Havoc Pennington  <hp@pobox.com>
+
 	* doc/gconf/tmpl/gconf-client.sgml: write GConfClient docs.
 
 	* wrappers/gtk/gconf-client.c (gconf_client_new_with_engine):

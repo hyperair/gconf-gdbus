@@ -1125,6 +1125,7 @@ static gboolean entry_unset   (Entry* e, const gchar* locale);
 
 static GConfValue* xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err);
 static void        xentry_set_value(xmlNodePtr node, GConfValue* value);
+static void        xentry_unset_by_locale(xmlNodePtr node, const gchar* locale);
 
 /* private dir func decls */
 
@@ -2121,6 +2122,40 @@ entry_sync    (Entry* e)
   e->dirty = FALSE;
 }
 
+
+static void
+entry_sync_if_needed(Entry* e, GConfValue* val)
+{
+  if (e->cached_value &&
+      e->cached_value->type == GCONF_VALUE_SCHEMA)
+    {
+      /* We need to sync to the XML parse tree if the new value is
+         also a schema and its locale is different, because unsaved info
+         may be in the cached schema. If the locales are the same or it's
+         not a schema, we want to just replace the old value with the
+         new without saving.
+
+         We also need to sync if the new value is NULL
+      */
+      if (val == NULL || (val && val->type == GCONF_VALUE_SCHEMA))
+        {
+          const gchar* old_locale =
+            gconf_schema_locale(gconf_value_schema(e->cached_value));
+          const gchar* new_locale = val ? 
+            gconf_schema_locale(gconf_value_schema(val)) : NULL;
+
+          if ((old_locale == NULL && new_locale == NULL) ||
+              (old_locale && new_locale &&
+               strcmp(old_locale, new_locale) == 0))
+            ; /* nothing */
+          else
+            {
+              entry_sync(e);
+            }
+        }
+    }
+}
+
 static void
 entry_fill    (Entry* e, const gchar* name)
 {
@@ -2189,6 +2224,8 @@ entry_fill    (Entry* e, const gchar* name)
     }
   else
     e->mod_user = NULL;
+
+  entry_sync_if_needed(e, NULL);
   
   if (e->cached_value != NULL)
     gconf_value_destroy(e->cached_value);
@@ -2219,20 +2256,21 @@ entry_value (Entry* e, const gchar** locales)
   if (e->cached_value == NULL)
     return NULL;
 
-#if 0
-  /* only schemas have locales */
-  if (e->value->type != GCONF_VALUE_SCHEMA)
-    return e->value;
+  /* only schemas have locales for now anyway */
+  if (e->cached_value->type != GCONF_VALUE_SCHEMA)
+    return e->cached_value;
 
-  g_assert(e->value->type == GCONF_VALUE_SCHEMA);
+  g_assert(e->cached_value->type == GCONF_VALUE_SCHEMA);
 
-  sl = gconf_schema_locale(gconf_value_schema(e->value));
+  sl = gconf_schema_locale(gconf_value_schema(e->cached_value));
 
-  if (sl == NULL && locale == NULL)
-    return e->value;
-  else if (sl && locale &&
-           strcmp(sl, locale) == 0)
-    return e->value;
+  /* optimize most common cases first */
+  if (sl == NULL && (locales == NULL ||
+                     *locales == NULL))
+    return e->cached_value;
+  else if (sl && locales && *locales &&
+           strcmp(sl, *locales) == 0)
+    return e->cached_value;  
   else
     {
       /* We want a locale other than the currently-loaded one */
@@ -2242,10 +2280,10 @@ entry_value (Entry* e, const gchar** locales)
       newval = xentry_extract_value(e->node, locales, &error);
       if (newval != NULL)
         {
-          /* We found a schema with the right locale */
-          gconf_value_destroy(e->value);
-          e->value = newval;
-          g_return_val_if_fail(error == NULL, e->value);
+          /* We found a schema with an acceptable locale */
+          gconf_value_destroy(e->cached_value);
+          e->cached_value = newval;
+          g_return_val_if_fail(error == NULL, e->cached_value);
         }
       else if (error != NULL)
         {
@@ -2256,27 +2294,33 @@ entry_value (Entry* e, const gchar** locales)
         }
       /* else fall back to the currently-loaded schema */
     }
-#endif
+
   return e->cached_value;
 }
 
 static void
 entry_set     (Entry* e, GConfValue* val)
 {
-  /* FIXME locale */
+  entry_sync_if_needed(e, val);
   
   if (e->cached_value)
     gconf_value_destroy(e->cached_value);
-
+      
   e->cached_value = gconf_value_copy(val);
 }
 
 static gboolean
 entry_unset   (Entry* e, const gchar* locale)
 {
-  /* FIXME locale */
   if (e->cached_value != NULL)
     {
+      if (e->cached_value->type == GCONF_VALUE_SCHEMA)
+        {
+          /* Remove the localized node from the XML tree */
+          g_assert(e->node != NULL);
+          xentry_unset_by_locale(e->node, locale);
+        }
+      
       gconf_value_destroy(e->cached_value);
       e->cached_value = NULL;
       return TRUE;
@@ -2290,38 +2334,79 @@ entry_unset   (Entry* e, const gchar* locale)
  * XML manipulation
  */
 
-static GConfValue*
-schema_node_extract_value(xmlNodePtr node)
+static xmlNodePtr
+find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
 {
-  GConfValue* value = NULL;
+  xmlNodePtr iter;
+  xmlNodePtr found = NULL;
+    
+  iter = node->childs;
+      
+  while (iter != NULL)
+    {
+      if (iter->type == XML_ELEMENT_NODE &&
+          strcmp(iter->name, "local_schema") == 0)
+        {
+          char* this_locale = xmlGetProp(iter, "locale");
+          
+          if (this_locale &&
+              strcmp(locale, this_locale) == 0)
+            {
+              found = iter;
+              free(this_locale);
+              break;
+            }
+          else if (this_locale == NULL &&
+                   locale == NULL)
+            {
+              found = iter;
+              break;
+            }
+          else if (this_locale != NULL)
+            free(this_locale);
+        }
+      iter = iter->next;
+    }
+
+  return found;
+}
+
+static void
+xentry_unset_by_locale(xmlNodePtr node, const gchar* locale)
+{
+  xmlNodePtr found;
+
+  g_return_if_fail(node != NULL);
+  
+  found = find_schema_subnode_by_locale(node, locale);
+
+  if (found != NULL)
+    {
+      xmlUnlinkNode(found);
+      xmlFreeNode(found);
+    }
+}
+
+static void
+schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
+{
   gchar* sd_str;
-  gchar* owner_str;
-  gchar* stype_str;
-  GConfSchema* sc;
+  gchar* locale_str;
   GConfError* error = NULL;
   
   sd_str = xmlGetProp(node, "short_desc");
-  owner_str = xmlGetProp(node, "owner");
-  stype_str = xmlGetProp(node, "stype");
-
-  sc = gconf_schema_new();
-
+  locale_str = xmlGetProp(node, "locale");
+  
   if (sd_str)
     {
       gconf_schema_set_short_desc(sc, sd_str);
       free(sd_str);
     }
-  if (owner_str)
+
+  if (locale_str)
     {
-      gconf_schema_set_owner(sc, owner_str);
-      free(owner_str);
-    }
-  if (stype_str)
-    {
-      GConfValueType stype;
-      stype = gconf_value_type_from_string(stype_str);
-      gconf_schema_set_type(sc, stype);
-      free(stype_str);
+      gconf_schema_set_locale(sc, locale_str);
+      free(locale_str);
     }
 
   if (node->childs != NULL)
@@ -2394,7 +2479,105 @@ schema_node_extract_value(xmlNodePtr node)
           free(ld_str);
         }
     }
+}
+
+static GConfValue*
+schema_node_extract_value(xmlNodePtr node, const gchar** locales)
+{
+  GConfValue* value = NULL;
+  gchar* owner_str;
+  gchar* stype_str;
+  GConfSchema* sc;
+  xmlNodePtr iter;
+  guint i;
+  xmlNodePtr* localized_nodes;
+  xmlNodePtr best;
   
+  /* owner, type are for all locales;
+     default value, descriptions are per-locale
+  */
+
+  owner_str = xmlGetProp(node, "owner");
+  stype_str = xmlGetProp(node, "stype");
+
+  sc = gconf_schema_new();
+
+  if (owner_str)
+    {
+      gconf_schema_set_owner(sc, owner_str);
+      free(owner_str);
+    }
+  if (stype_str)
+    {
+      GConfValueType stype;
+      stype = gconf_value_type_from_string(stype_str);
+      gconf_schema_set_type(sc, stype);
+      free(stype_str);
+    }
+
+  if (locales != NULL)
+    {
+      /* count the number of possible locales */
+      i = 0;
+      while (locales[i])
+        ++i;
+      
+      localized_nodes = g_new0(xmlNodePtr, i+2);
+      
+      /* Find the node for each possible locale */
+      iter = node->childs;
+      
+      while (iter != NULL)
+        {
+          if (iter->type == XML_ELEMENT_NODE &&
+              strcmp(iter->name, "local_schema") == 0)
+            {
+              char* locale_name;
+              
+              locale_name = xmlGetProp(iter, "locale");
+              
+              if (locale_name != NULL)
+                {
+                  i = 0;
+                  while (locales[i])
+                    {
+                      if (strcmp(locales[i], locale_name) == 0)
+                        {
+                          localized_nodes[i] = iter;
+                          break;
+                        }
+                      ++i;
+                    }
+                  
+                  /* Quit as soon as we have the best possible locale */
+                  if (localized_nodes[0] != NULL)
+                    break;
+                  
+                  free(locale_name);
+                }
+            }
+          
+          iter = iter->next;
+        }
+
+      /* See which is the best locale we managed to load */
+      
+      i = 0;
+      best = localized_nodes[i];
+      while (best == NULL && localized_nodes[i])
+        {
+          best = localized_nodes[i];
+          ++i;
+        }
+      
+      g_free(localized_nodes);
+
+      /* Extract info from the best locale node */
+      if (best != NULL)
+        schema_subnode_extract_data(best, sc);
+    }
+      
+  /* Create a GConfValue with this schema and return it */
   value = gconf_value_new(GCONF_VALUE_SCHEMA);
       
   gconf_value_set_schema_nocopy(value, sc);
@@ -2413,13 +2596,18 @@ xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
   GConfValue* value = NULL;
   gchar* type_str;
   GConfValueType type = GCONF_VALUE_INVALID;
+  const gchar* default_locales[] = { "C", NULL };
 
+  if (locales == NULL)
+    locales = default_locales;
+  
   type_str = xmlGetProp(node, "type");
 
   if (type_str == NULL)
     {
       gconf_set_error(err, GCONF_PARSE_ERROR,
-                      _("No \"type\" attribute for node"));
+                      _("No \"type\" attribute for <%s> node"),
+                      (node->name ? (char*)node->name : "(nil)"));
       return NULL;
     }
       
@@ -2470,7 +2658,7 @@ xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
       }
       break;
     case GCONF_VALUE_SCHEMA:
-      return schema_node_extract_value(node);
+      return schema_node_extract_value(node, locales);
       break;
     case GCONF_VALUE_LIST:
       {
@@ -2684,6 +2872,51 @@ free_childs(xmlNodePtr node)
 }
 
 static void
+xentry_set_schema_value(xmlNodePtr node,
+                        GConfValue* value)
+{
+  GConfSchema* sc;
+  const gchar* locale;
+  xmlNodePtr found = NULL;
+  
+  /* unset this in case the node was previously a different type */
+  xmlSetProp(node, "value", NULL);
+  
+  sc = gconf_value_schema(value);
+
+  locale = gconf_schema_locale(sc);
+
+  /* Find the node for this locale */
+
+  found = find_schema_subnode_by_locale(node, locale);
+  
+  if (found == NULL)
+    found = xmlNewChild(node, NULL, "local_schema", NULL);
+  
+  xmlSetProp(found, "stype", gconf_value_type_to_string(sc->type));
+  /* OK if these are set to NULL, since that unsets the property */
+  xmlSetProp(found, "locale", sc->locale);
+  xmlSetProp(found, "short_desc", sc->short_desc);
+  xmlSetProp(found, "owner", sc->owner);
+
+  free_childs(found);
+  
+  if (sc->default_value != NULL)
+    {
+      xmlNodePtr default_value_node;
+      default_value_node = xmlNewChild(found, NULL, "default", NULL);
+      xentry_set_value(default_value_node, sc->default_value);
+    }
+  
+  if (sc->long_desc)
+    {
+      xmlNodePtr ld_node;
+      
+      ld_node = xmlNewChild(found, NULL, "longdesc", sc->long_desc);
+    }
+}
+
+static void
 xentry_set_value(xmlNodePtr node, GConfValue* value)
 {
   const gchar* type;
@@ -2719,29 +2952,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
       break;
     case GCONF_VALUE_SCHEMA:
       {
-        GConfSchema* sc = gconf_value_schema(value);
-        
-        xmlSetProp(node, "value", NULL);
-        xmlSetProp(node, "stype", gconf_value_type_to_string(sc->type));
-        /* OK if these are set to NULL, since that unsets the property */
-        xmlSetProp(node, "short_desc", sc->short_desc);
-        xmlSetProp(node, "owner", sc->owner);
-
-        free_childs(node);
-        
-        if (sc->default_value != NULL)
-          {
-            xmlNodePtr default_value_node;
-            default_value_node = xmlNewChild(node, NULL, "default", NULL);
-            xentry_set_value(default_value_node, sc->default_value);
-          }
-
-        if (sc->long_desc)
-          {
-            xmlNodePtr ld_node;
-
-            ld_node = xmlNewChild(node, NULL, "longdesc", sc->long_desc);
-          }
+        xentry_set_schema_value(node, value);
       }
       break;
     case GCONF_VALUE_LIST:

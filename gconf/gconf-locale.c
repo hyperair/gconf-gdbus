@@ -369,6 +369,8 @@ gconf_locale_list_new (const gchar* locale)
     
     n = g_slist_length(list);
 
+    g_assert(n > 0);
+    
     priv->list = g_new0(gchar*, n + 1);
 
     i = 0;

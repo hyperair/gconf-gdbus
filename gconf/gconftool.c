@@ -1092,51 +1092,54 @@ extract_global_info(xmlNodePtr node,
 
   while (iter != NULL)
     {
-      char* tmp;
+      if (iter->type == XML_ELEMENT_NODE)
+        {
+          char* tmp;
       
-      if (strcmp(iter->name, "key") == 0)
-        {
-          tmp = xmlNodeGetContent(iter);
-          if (tmp)
+          if (strcmp(iter->name, "key") == 0)
             {
-              info->key = g_strdup(tmp);
-              free(tmp);
+              tmp = xmlNodeGetContent(iter);
+              if (tmp)
+                {
+                  info->key = g_strdup(tmp);
+                  free(tmp);
+                }
             }
-        }
-      else if (strcmp(iter->name, "owner") == 0)
-        {
-          tmp = xmlNodeGetContent(iter);
-          if (tmp)
+          else if (strcmp(iter->name, "owner") == 0)
             {
-              info->owner = g_strdup(tmp);
-              free(tmp);
+              tmp = xmlNodeGetContent(iter);
+              if (tmp)
+                {
+                  info->owner = g_strdup(tmp);
+                  free(tmp);
+                }
             }
-        }
-      else if (strcmp(iter->name, "type") == 0)
-        {
-          tmp = xmlNodeGetContent(iter);
-          if (tmp)
+          else if (strcmp(iter->name, "type") == 0)
             {
-              info->type = gconf_value_type_from_string(tmp);
-              free(tmp);
-              if (info->type == GCONF_VALUE_INVALID)
-                fprintf(stderr, _("WARNING: failed to parse type name `%s'\n"),
-                        tmp);
+              tmp = xmlNodeGetContent(iter);
+              if (tmp)
+                {
+                  info->type = gconf_value_type_from_string(tmp);
+                  free(tmp);
+                  if (info->type == GCONF_VALUE_INVALID)
+                    fprintf(stderr, _("WARNING: failed to parse type name `%s'\n"),
+                            tmp);
+                }
             }
-        }
-      else if (strcmp(iter->name, "default") == 0)
-        {
-          default_value = xmlNodeGetContent(iter);
-        }
-      else if (strcmp(iter->name, "locale") == 0)
-        {
-          ; /* ignore, this is parsed later after we have the global info */
-        }
-      else
-        fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
-                iter->name);
+          else if (strcmp(iter->name, "default") == 0)
+            {
+              default_value = xmlNodeGetContent(iter);
+            }
+          else if (strcmp(iter->name, "locale") == 0)
+            {
+              ; /* ignore, this is parsed later after we have the global info */
+            }
+          else
+            fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
+                    iter->name);
 
-
+        }
+      
       iter = iter->next;
     }
 
@@ -1207,52 +1210,55 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
   
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "default") == 0)
+      if (iter->type == XML_ELEMENT_NODE)
         {
-          GConfValue* val = NULL;
-          char* tmp;
-
-          tmp = xmlNodeGetContent(iter);
-
-          if (tmp != NULL)
+          if (strcmp(iter->name, "default") == 0)
             {
-              fill_default_from_string(info, tmp, &val);
-              if (val != NULL)
-                gconf_schema_set_default_value_nocopy(schema, val);
+              GConfValue* val = NULL;
+              char* tmp;
 
-              free(tmp);
+              tmp = xmlNodeGetContent(iter);
+
+              if (tmp != NULL)
+                {
+                  fill_default_from_string(info, tmp, &val);
+                  if (val != NULL)
+                    gconf_schema_set_default_value_nocopy(schema, val);
+
+                  free(tmp);
+                }
+            }
+          else if (strcmp(iter->name, "short") == 0)
+            {
+              char* tmp;
+
+              tmp = xmlNodeGetContent(iter);
+
+              if (tmp != NULL)
+                {
+                  gconf_schema_set_short_desc(schema, tmp);
+                  free(tmp);
+                }
+            }
+          else if (strcmp(iter->name, "long") == 0)
+            {
+              char* tmp;
+
+              tmp = xmlNodeGetContent(iter);
+
+              if (tmp != NULL)
+                {
+                  gconf_schema_set_long_desc(schema, tmp);
+                  free(tmp);
+                }
+            }
+          else
+            {
+              fprintf(stderr, _("WARNING: Invalid node <%s> in a <locale> node\n"),
+                      iter->name);
             }
         }
-      else if (strcmp(iter->name, "short") == 0)
-        {
-          char* tmp;
-
-          tmp = xmlNodeGetContent(iter);
-
-          if (tmp != NULL)
-            {
-              gconf_schema_set_short_desc(schema, tmp);
-              free(tmp);
-            }
-        }
-      else if (strcmp(iter->name, "long") == 0)
-        {
-          char* tmp;
-
-          tmp = xmlNodeGetContent(iter);
-
-          if (tmp != NULL)
-            {
-              gconf_schema_set_long_desc(schema, tmp);
-              free(tmp);
-            }
-        }
-      else
-        {
-          fprintf(stderr, _("WARNING: Invalid node <%s> in a <locale> node\n"),
-                  iter->name);
-        }
-
+      
       iter = iter->next;
     }
 
@@ -1317,22 +1323,25 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
 
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "key") == 0)
-        ; /* nothing */
-      else if (strcmp(iter->name, "owner") == 0)
-       ;  /* nothing */
-      else if (strcmp(iter->name, "type") == 0)
-        ;  /* nothing */
-      else if (strcmp(iter->name, "default") == 0)
-        ;  /* nothing */
-      else if (strcmp(iter->name, "locale") == 0)
+      if (iter->type == XML_ELEMENT_NODE)
         {
-          process_locale_info(iter, &info);
+          if (strcmp(iter->name, "key") == 0)
+            ; /* nothing */
+          else if (strcmp(iter->name, "owner") == 0)
+            ;  /* nothing */
+          else if (strcmp(iter->name, "type") == 0)
+            ;  /* nothing */
+          else if (strcmp(iter->name, "default") == 0)
+            ;  /* nothing */
+          else if (strcmp(iter->name, "locale") == 0)
+            {
+              process_locale_info(iter, &info);
+            }
+          else
+            fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
+                    iter->name);
         }
-      else
-        fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
-                iter->name);
-
+          
       iter = iter->next;
     }
 
@@ -1380,41 +1389,44 @@ process_key_list(GConfEngine* conf, xmlNodePtr node)
 
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "key") == 0)
+      if (iter->type == XML_ELEMENT_NODE)
         {
-          char* name = NULL;
-          char* schema = NULL;
-
-          name = xmlGetProp(iter, "name");
-          schema = xmlGetProp(iter, "schema");
-
-          if (name && schema)
+          if (strcmp(iter->name, "key") == 0)
             {
-              if (!gconf_associate_schema(conf, name, schema,  &error))
-                {
-                  g_assert(error != NULL);
+              char* name = NULL;
+              char* schema = NULL;
 
-                  fprintf(stderr, _("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
-                          schema, name, error->str);
-                  gconf_error_destroy(error);
-                  error = NULL;
+              name = xmlGetProp(iter, "name");
+              schema = xmlGetProp(iter, "schema");
+
+              if (name && schema)
+                {
+                  if (!gconf_associate_schema(conf, name, schema,  &error))
+                    {
+                      g_assert(error != NULL);
+
+                      fprintf(stderr, _("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
+                              schema, name, error->str);
+                      gconf_error_destroy(error);
+                      error = NULL;
+                    }
+                  else
+                    g_assert(error == NULL);
                 }
               else
-                g_assert(error == NULL);
+                fprintf(stderr, _("WARNING: <key> node must have `name' and `schema' attributes\n"));
+          
+              if (name)
+                free(name);
+          
+              if (schema)
+                free(schema);
             }
           else
-            fprintf(stderr, _("WARNING: <key> node must have `name' and `schema' attributes\n"));
-          
-          if (name)
-            free(name);
-          
-          if (schema)
-            free(schema);
+            fprintf(stderr, _("WARNING: node <%s> not understood below <keylist>\n"),
+                    iter->name);
         }
-      else
-        fprintf(stderr, _("WARNING: node <%s> not understood below <keylist>\n"),
-                iter->name);
-
+      
       iter = iter->next;
     }
 
@@ -1457,14 +1469,17 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
 
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "schemalist") == 0)
-        process_schema_list(conf, iter);
-      else if (strcmp(iter->name, "keylist") == 0)
-        process_key_list(conf, iter);
-      else
-        fprintf(stderr, _("WARNING: node <%s> below <gconfschemafile> not understood\n"),
-                iter->name);
-
+      if (iter->type == XML_ELEMENT_NODE)
+        {
+          if (strcmp(iter->name, "schemalist") == 0)
+            process_schema_list(conf, iter);
+          else if (strcmp(iter->name, "keylist") == 0)
+            process_key_list(conf, iter);
+          else
+            fprintf(stderr, _("WARNING: node <%s> below <gconfschemafile> not understood\n"),
+                    iter->name);
+        }
+          
       iter = iter->next;
     }
 
