@@ -68,6 +68,15 @@ interface ConfigListener {
                       in string key, in ConfigValue value,
                       in boolean is_default);
 
+  oneway void ping ();
+
+  /// This should conceivably not be oneway
+
+  oneway void update_listener (in unsigned long old_server_context,
+                               in unsigned long old_cnxn,
+                               in string key,
+                               in unsigned long new_server_context,
+                               in unsigned long new_cnxn);
 };
 
 // Sync this with GConfErrNo in gconf.h, when it makes sense (e.g. G_CONF_NO_SERVER doesn't

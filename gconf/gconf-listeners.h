@@ -43,6 +43,7 @@ typedef void (*GConfListenersCallback)(GConfListeners* listeners,
                                        gpointer user_data);
 
 typedef void (*GConfListenersForeach) (const gchar* location,
+                                       guint cnxn_id,
                                        gpointer listener_data,
                                        gpointer user_data);
 

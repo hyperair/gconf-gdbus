@@ -20,6 +20,8 @@
 #include "gconf-listeners.h"
 #include "gconf.h"
 
+#include <string.h>
+
 /* #define DEBUG_LISTENERS 1 */
 #ifdef DEBUG_LISTENERS
 #include <stdio.h>
@@ -72,6 +74,7 @@ struct _LTableEntry {
   GList* listeners; /* Each listener listening *exactly* here. You probably 
                         want to notify all listeners *below* this node as well. 
                      */
+  gchar *full_name; /* fully-qualified name */
 };
 
 static LTable* ltable_new(void);
@@ -95,7 +98,8 @@ static void    ltable_foreach  (LTable* ltable,
 static void    ltable_spew(LTable* ltable);
 #endif
 
-static LTableEntry* ltable_entry_new(const gchar* name);
+static LTableEntry* ltable_entry_new(const gchar* name,
+                                     const gchar* full_name);
 static void         ltable_entry_destroy(LTableEntry* entry);
 
 static Listener* listener_new(guint cnxn_id, gpointer listener_data, GFreeFunc destroy_notify);
@@ -132,7 +136,9 @@ gconf_listeners_add     (GConfListeners* listeners,
   LTable* lt = (LTable*)listeners;
   Listener* l;
 
-  l = listener_new(ltable_next_cnxn(lt), listener_data, destroy_notify);
+  l = listener_new(ltable_next_cnxn(lt),
+                   listener_data,
+                   destroy_notify);
   
   ltable_insert(lt, listen_point, l);
 
@@ -279,7 +285,7 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
 
   if (lt->tree == NULL)
     {
-      lte = ltable_entry_new("/");
+      lte = ltable_entry_new("/", "/");
       
       lt->tree = g_node_new(lte);
 
@@ -328,7 +334,7 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
 
       if (found == NULL)
         {
-          ne = ltable_entry_new(dirnames[i]);
+          ne = ltable_entry_new(dirnames[i], where);
               
           if (across != NULL) /* Across is at the one past */
             found = g_node_insert_data_before(cur, across, ne);
@@ -506,7 +512,11 @@ ltable_destroy(LTable* ltable)
 }
 
 static void
-notify_listener_list(GConfListeners* listeners, GList* list, const gchar* key, GConfListenersCallback callback, gpointer user_data)
+notify_listener_list(GConfListeners* listeners,
+                     GList* list,
+                     const gchar* key,
+                     GConfListenersCallback callback,
+                     gpointer user_data)
 {
   GList* tmp;
 
@@ -594,8 +604,11 @@ node_traverse_func (GNode *node,
   tmp = lte->listeners;
   while (tmp != NULL)
     {
-      (* td->func) (lte->name,
-                    tmp->data,
+      Listener *l = tmp->data;
+      
+      (* td->func) (lte->full_name,
+                    l->cnxn,
+                    l->listener_data,
                     td->user_data);
       
       tmp = g_list_next (tmp);
@@ -612,6 +625,9 @@ ltable_foreach  (LTable* ltable,
   struct NodeTraverseData td;
   td.func = callback;
   td.user_data = user_data;
+
+  if (ltable->tree == NULL)
+    return;
   
   g_node_traverse (ltable->tree,
                    G_IN_ORDER,
@@ -622,14 +638,16 @@ ltable_foreach  (LTable* ltable,
 }
 
 static LTableEntry* 
-ltable_entry_new(const gchar* name)
+ltable_entry_new(const gchar* name,
+                 const gchar *full_name)
 {
   LTableEntry* lte;
 
   lte = g_new0(LTableEntry, 1);
 
   lte->name = g_strdup(name);
-
+  lte->full_name = g_strdup (full_name);
+  
   return lte;
 }
 
@@ -638,6 +656,7 @@ ltable_entry_destroy(LTableEntry* lte)
 {
   g_return_if_fail(lte->listeners == NULL); /* should destroy all listeners first. */
   g_free(lte->name);
+  g_free(lte->full_name);
   g_free(lte);
 }
 

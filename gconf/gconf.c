@@ -96,9 +96,8 @@ struct _GConfEnginePrivate {
 static void register_engine(GConfEnginePrivate* priv);
 static GConfEnginePrivate* lookup_engine(ConfigServer_Context context);
 static void unregister_engine(GConfEnginePrivate* priv);
-static gboolean reinstall_listeners_for_all_engines(ConfigServer cs,
-                                                    GConfError** err);
-
+static void change_engine_context(GConfEnginePrivate *priv,
+                                  ConfigServer_Context new_context);
 
 typedef struct _GConfCnxn GConfCnxn;
 
@@ -140,11 +139,10 @@ static void       ctable_remove_by_client_id(CnxnTable* ct, guint client_id);
 static GSList*    ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf);
 static GConfCnxn* ctable_lookup_by_client_id(CnxnTable* ct, guint client_id);
 static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id);
-/* used after server re-spawn */
-static gboolean   ctable_reinstall_everything(CnxnTable* ct,
-                                              ConfigServer_Context context,
-                                              ConfigServer cs,
-                                              GConfError** err);
+static void       ctable_reinstall (CnxnTable* ct,
+                                    GConfCnxn* cnxn,
+                                    guint old_server_id,
+                                    guint new_server_id);
 
 static GConfEnginePrivate*
 gconf_engine_blank (gboolean remote)
@@ -1533,14 +1531,22 @@ gconf_detach_config_server(void)
 
 ConfigListener listener = CORBA_OBJECT_NIL;
 
-static void 
-notify(PortableServer_Servant servant,
-       CORBA_unsigned_long context,
-       CORBA_unsigned_long cnxn,
-       const CORBA_char* key, 
-       const ConfigValue* value,
-       CORBA_boolean is_default,
-       CORBA_Environment *ev);
+static void notify          (PortableServer_Servant     servant,
+                             CORBA_unsigned_long        context,
+                             CORBA_unsigned_long        cnxn,
+                             const CORBA_char          *key,
+                             const ConfigValue         *value,
+                             CORBA_boolean              is_default,
+                             CORBA_Environment         *ev);
+static void ping            (PortableServer_Servant     _servant,
+                             CORBA_Environment         *ev);
+static void update_listener (PortableServer_Servant     _servant,
+                             const CORBA_unsigned_long  old_server_context,
+                             const CORBA_unsigned_long  old_cnxn,
+                             const CORBA_char          *key,
+                             const CORBA_unsigned_long  new_server_context,
+                             const CORBA_unsigned_long  new_cnxn,
+                             CORBA_Environment         *ev);
 
 static PortableServer_ServantBase__epv base_epv = {
   NULL,
@@ -1548,7 +1554,7 @@ static PortableServer_ServantBase__epv base_epv = {
   NULL
 };
 
-static POA_ConfigListener__epv listener_epv = { NULL, notify };
+static POA_ConfigListener__epv listener_epv = { NULL, notify, ping, update_listener };
 static POA_ConfigListener__vepv poa_listener_vepv = { &base_epv, &listener_epv };
 static POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 
@@ -1593,6 +1599,70 @@ notify(PortableServer_Servant servant,
 
   if (gvalue != NULL)
     gconf_value_destroy(gvalue);
+}
+
+static void
+ping (PortableServer_Servant _servant, CORBA_Environment * ev)
+{
+  /* This one is easy :-) */
+  
+  return;
+}
+
+static void
+update_listener (PortableServer_Servant _servant,
+                 const CORBA_unsigned_long old_server_context,
+                 const CORBA_unsigned_long old_cnxn_id,
+                 const CORBA_char * key,
+                 const CORBA_unsigned_long new_server_context,
+                 const CORBA_unsigned_long new_cnxn_id,
+                 CORBA_Environment * ev)
+{
+  GConfCnxn* cnxn;
+  GConfValue* gvalue;
+  GConfEnginePrivate* priv;
+  
+  priv = lookup_engine(old_server_context);
+
+  if (priv == NULL && old_server_context != new_server_context)
+    {
+      /* See if we already updated this.
+         We need uniqueness bits on the contexts IDs...
+         this is broken now. FIXME
+      */
+      priv = lookup_engine (new_server_context);
+    }
+  
+  if (priv == NULL)
+    {
+#ifdef GCONF_ENABLE_DEBUG
+      g_warning("Client received listener update for unknown context %u",
+                (guint)old_server_context);
+#endif
+      return;
+    }
+
+  if (priv->context != new_server_context)
+    change_engine_context (priv, new_server_context);
+
+  /* FIXME hack for safety in the short-term, since
+   * we currently don't have unique enough context IDs
+   */
+  if (priv->context != new_server_context)
+    return;
+  
+  cnxn = ctable_lookup_by_server_id (priv->ctable, old_cnxn_id);
+  
+  if (cnxn == NULL)
+    {
+#ifdef GCONF_ENABLE_DEBUG
+      g_warning("Client received listener update for unknown listener ID %u",
+                (guint)old_cnxn_id);
+#endif
+      return;
+    }
+  
+  ctable_reinstall (priv->ctable, cnxn, old_cnxn_id, new_cnxn_id);
 }
 
 static ConfigListener 
@@ -1984,113 +2054,18 @@ ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id)
   return g_hash_table_lookup(ct->server_ids, &server_id);
 }
 
-struct ReinstallData {
-  CORBA_Environment ev;
-  ConfigListener cl;
-  ConfigServer cs;
-  GConfError* error;
-  ConfigServer_Context context;
-};
-
 static void
-reinstall_foreach(gpointer key, gpointer value, gpointer user_data)
+ctable_reinstall (CnxnTable* ct,
+                  GConfCnxn *cnxn,
+                  guint old_server_id,
+                  guint new_server_id)
 {
-  GConfCnxn* cnxn;
-  struct ReinstallData* rd;
+  g_return_if_fail (cnxn->server_id == old_server_id);
 
-  rd = user_data;
-  cnxn = value;
+  cnxn->server_id = new_server_id;
 
-  g_assert(rd != NULL);
-  g_assert(cnxn != NULL);
-
-  /* invalidate the server id, but take no
-     further action - something is badly screwed.
-  */
-  if (rd->error != NULL)
-    {
-      cnxn->server_id = 0;
-      return;
-    }
-    
-  cnxn->server_id = ConfigServer_add_listener(rd->cs, rd->context,
-                                              cnxn->namespace_section, 
-                                              rd->cl, &(rd->ev));
-  
-  if (gconf_handle_corba_exception(&(rd->ev), &(rd->error)))
-    ; /* just let error get set */
-}
-
-static void
-insert_in_server_ids_foreach(gpointer key, gpointer value, gpointer user_data)
-{
-  GHashTable* server_ids;
-  GConfCnxn* cnxn;
-
-  cnxn = value;
-  server_ids = user_data;
-
-  g_assert(cnxn != NULL);
-  g_assert(server_ids != NULL);
-
-  /* ensure we have a valid server id */
-  g_return_if_fail(cnxn->server_id != 0);
-  
-  g_hash_table_insert(server_ids, &cnxn->server_id, cnxn);
-}
-
-static gboolean
-ctable_reinstall_everything(CnxnTable* ct, ConfigServer_Context context,
-                            ConfigServer cs, GConfError** err)
-{
-  ConfigListener cl;
-  GConfCnxn* cnxn;
-  struct ReinstallData rd;
-
-  g_return_val_if_fail(cs != CORBA_OBJECT_NIL, FALSE);
-  
-  cl = gconf_get_config_listener();
-
-  /* Should have aborted the program in this case probably */
-  g_return_val_if_fail(cl != CORBA_OBJECT_NIL, FALSE);
-
-  /* First we re-install everything in the client-id-to-cnxn hash,
-     then blow away the server-id-to-cnxn hash and re-insert everything
-     from the client-id-to-cnxn hash.
-  */
-
-  CORBA_exception_init(&rd.ev);
-  rd.cl = cl;
-  rd.cs = cs;
-  rd.error = NULL;
-  rd.context = context;
-
-  g_hash_table_foreach(ct->client_ids, reinstall_foreach, &rd);
-
-  if (rd.error != NULL)
-    {
-      if (err != NULL)
-        *err = rd.error;
-      else
-        {
-          gconf_error_destroy(rd.error);
-        }
-      /* Note that the table is now in an inconsistent state; some
-         notifications may be re-installed, some may not.  Those that
-         were not now have the invalid server id 0.  However, if there
-         was an error, it was probably due to a crashed server
-         (GCONF_ERROR_NO_SERVER), so we should re-install everything.
-      */
-      return FALSE;
-    }
-
-  g_hash_table_destroy(ct->server_ids);
-
-  ct->server_ids = g_hash_table_new(corba_unsigned_long_hash, corba_unsigned_long_equal);
-
-  g_hash_table_foreach(ct->client_ids, insert_in_server_ids_foreach, ct->server_ids);
-
-  return TRUE;
+  g_hash_table_remove (ct->server_ids, &old_server_id);
+  g_hash_table_insert (ct->server_ids, &cnxn->server_id, cnxn);
 }
 
 /*
@@ -2712,60 +2687,22 @@ unregister_engine(GConfEnginePrivate* priv)
     }
 }
 
-struct EngineReinstallData {
-  ConfigServer cs;
-  GConfError* error;
-};
-
 static void
-engine_reinstall_foreach(gpointer key, gpointer value, gpointer user_data)
+change_engine_context(GConfEnginePrivate *priv,
+                      ConfigServer_Context new_context)
 {
-  struct EngineReinstallData* erd;
-  GConfEnginePrivate* priv;
+  g_return_if_fail(context_to_engine_hash != NULL);
 
-  erd = user_data;
-  priv = value;
-
-  g_assert(erd != NULL);
-  g_assert(priv != NULL);
-
-  /* Bail if any errors have occurred */
-  if (erd->error != NULL)
-    return;
-  
-  ctable_reinstall_everything(priv->ctable, priv->context, erd->cs, &(erd->error));
-}
-
-static gboolean
-reinstall_listeners_for_all_engines(ConfigServer cs,
-                                    GConfError** err)
-{
-  struct EngineReinstallData erd;
-
-  /* FIXME if the server died, our contexts our now invalid;
-     so we need the auto-restore-contexts arrangement to handle
-     that. In other words for now this function won't work.
-  */
-  
-  erd.cs = cs;
-  erd.error = NULL;
-
-  g_hash_table_foreach(context_to_engine_hash, engine_reinstall_foreach, &erd);
-
-  if (erd.error != NULL)
+  if (g_hash_table_lookup (context_to_engine_hash, &new_context) != NULL)
     {
-      if (err != NULL)
-        {
-          *err = erd.error;
-        }
-      else
-        {
-          gconf_error_destroy(erd.error);
-        }
-      return FALSE;
-    }
+      g_warning ("FIXME context ID collision, should not happen, GConf bug");
 
-  return TRUE;
+      return;
+    }
+  
+  g_hash_table_remove (context_to_engine_hash, &priv->context);
+  priv->context = new_context;
+  g_hash_table_insert (context_to_engine_hash, &priv->context, priv);
 }
 
 /*

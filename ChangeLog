@@ -1,3 +1,27 @@
+2000-08-29  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconfd.c: Add logfile load/save; not really working 
+	yet.
+
+	* gconf/gconf.c: Remove reinstall-listeners stuff and implement
+	update_listeners() from the server. Most of this is about to get
+	removed again when I fix context ID's to be object references
+	instead.
+
+	* gconf/gconf-listeners.c: #include <string.h>, 
+	store full key name on tree nodes, add connection ID to 
+	foreach callback
+
+	* gconf/GConf.idl: Add update_listener method on ConfigListener,
+	so the daemon can tell a client that a listener's ID has changed
+
+	* gconf/gconf-glib-public.h, 
+	gconf/gconf-glib-private.h,
+	gconf/gconf-glib.c: Put in gmarkup.[hc], gunicode stuff, 
+	and gerror.[hc] from GLib 2.0. The Unicode char tables are
+	causing big bloat; may be able to get rid of them 
+	before GNOME 1.4 if we are lucky.
+
 2000-08-27  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-glib-public.h, 

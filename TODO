@@ -54,9 +54,11 @@
   notifications from them to other engines with the same 
   databases. Or maybe instead we should use the mechanism
   used when the same database is in two gconfds (backend 
-  notifies us of changes). Also, GConfEngine client side
-  needs to store the source list used to create the 
-  context ID, so if gconfd forgets the context, it can 
-  simply be recreated. This will allow gconfd to forget old
-  contexts.
+  notifies us of changes).
+
+  Suspect that all notification has to come from the backend,
+  this is the only way to get sane behavior if _some_ notification
+  comes from the backend. Hmm.
+
+* Change _() to actually call gettext or dgettext
 

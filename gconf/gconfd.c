@@ -33,6 +33,8 @@
 #include "gconf-listeners.h"
 #include "gconf-locale.h"
 #include "gconf-schema.h"
+#include "gconf-glib-private.h"
+#include "gconf.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -102,6 +104,10 @@ static void gconf_main_quit(void);
 static GConfLocaleList* locale_cache_lookup(const gchar* locale);
 static void             locale_cache_expire(void);
 static void             locale_cache_drop  (void);
+
+static void logfile_save (void);
+static void logfile_read (void);
+static void logfile_queue_save (void);
 
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
@@ -1010,8 +1016,12 @@ main(int argc, char** argv)
   /* openlog() does not copy logname - what total brokenness.
      So we free it at the end of main() */
   
-  gconf_log(GCL_INFO, _("starting, pid %u user `%s'"), 
-            (guint)getpid(), g_get_user_name());
+  gconf_log (GCL_INFO, _("starting (version %s), pid %u user '%s'"), 
+             VERSION, (guint)getpid(), g_get_user_name());
+
+#ifdef GCONF_ENABLE_DEBUG
+  gconf_log (GCL_DEBUG, _("GConf was built with debugging features enabled"));
+#endif
   
   /* Session setup */
   sigemptyset (&empty_mask);
@@ -1088,9 +1098,14 @@ main(int argc, char** argv)
       shutdown_contexts();
       return 1;
     }
+
+  /* Read saved log file, if any */
+  logfile_read ();
   
   gconf_main();
-      
+
+  logfile_save ();
+  
   fast_cleanup();
 
   shutdown_contexts();
@@ -1408,6 +1423,8 @@ context_add_listener(GConfContext* ctx,
 
   gconf_log(GCL_DEBUG, "Added listener %u", cnxn);
 
+  logfile_queue_save ();
+  
   return cnxn;  
 }
 
@@ -1421,6 +1438,8 @@ context_remove_listener(GConfContext* ctx,
   gconf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
   /* calls destroy notify */
   gconf_listeners_remove(ctx->listeners, cnxn);
+
+  logfile_queue_save ();
 }
 
 typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
@@ -2165,5 +2184,400 @@ locale_cache_drop(void)
     {
       gconf_locale_cache_destroy(locale_cache);
       locale_cache = NULL;
+    }
+}
+
+/*
+ * Logging
+ */
+
+static void
+listener_save_foreach (const gchar* location,
+                       guint cnxn_id,
+                       gpointer listener_data,
+                       gpointer user_data)
+{
+  Listener* l = listener_data;
+  CORBA_ORB orb;
+  CORBA_Environment ev;
+  GMarkupNodeElement *node;
+  GMarkupNodeElement *parent;
+  gchar *ior;
+  gchar *s;
+  
+  parent = user_data;
+  
+  node = g_markup_node_new_element ("listener");
+  
+  orb = oaf_orb_get ();
+
+  CORBA_exception_init (&ev);
+  
+  ior = CORBA_ORB_object_to_string(orb, l->obj, &ev);
+
+  g_markup_node_set_attribute (node, "ior", ior);
+  
+  CORBA_free(ior);
+
+  g_markup_node_set_attribute (node, "location", location);
+
+  s = g_strdup_printf ("%u", cnxn_id);
+  g_markup_node_set_attribute (node, "connection", s);
+  g_free (s);
+  
+  parent->children = g_list_prepend (parent->children, node);
+}
+
+static GMarkupNode*
+context_to_node (GConfContext *c, gint id)
+{
+  GMarkupNodeElement *node;
+  gchar *id_str;
+  
+  node = g_markup_node_new_element ("context");
+
+  if (id != ConfigServer_default_context)
+    {
+      gchar *address;
+
+      if (c->saved_address)
+        address = c->saved_address;
+      else
+        address = ((GConfSource*)c->sources->sources->data)->address;
+
+      g_markup_node_set_attribute (node, "address", address);
+    }
+  
+  id_str = g_strdup_printf ("%d", id);
+  g_markup_node_set_attribute (node, "id", id_str);
+  g_free (id_str);
+
+  gconf_listeners_foreach (c->listeners,
+                           listener_save_foreach, node);
+
+  return (GMarkupNode*) node;
+}
+
+static void
+logfile_save (void)
+{
+  guint i;
+  GMarkupNodeElement *root_node;
+  gchar *str;
+  int fd = -1;
+  gchar *logfile;
+  gchar *logdir;
+  
+  g_return_if_fail (context_list != NULL);
+
+  root_node = g_markup_node_new_element ("gconfd_logfile");
+  
+  i = context_list->len - 1;
+
+  while (i > 0)
+    {
+      if (context_list->pdata[i] != NULL)
+        {
+          GConfContext* c = context_list->pdata[i];          
+          GMarkupNode* node;
+
+          node = context_to_node (c, i);
+
+          root_node->children = g_list_prepend (root_node->children,
+                                                node);
+        }
+      
+      --i;
+    }
+
+  str = g_markup_node_to_string ((GMarkupNode*)root_node, 0);
+
+  logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
+  logfile = gconf_concat_key_and_dir (logdir, "saved_state");
+
+  mkdir (logdir, 0700); /* ignore failure, we'll catch failures
+                         * that matter on open() below
+                         */
+  
+  fd = open (logfile, O_WRONLY | O_CREAT | O_TRUNC, 0700);
+
+  if (fd < 0)
+    {
+      gconf_log (GCL_ERR, _("Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"), strerror (errno));
+      
+      goto finished;
+    }
+
+  if (write (fd, str, strlen (str)) < 0)
+    {
+      gconf_log (GCL_ERR, _("Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"), strerror (errno));
+      
+      goto finished;
+    }
+  
+ finished:
+
+  g_free (logfile);
+  g_free (logdir);
+  
+  g_free (str);
+
+  g_markup_node_free ((GMarkupNode*)root_node);
+}
+
+static void
+restore_listener (ConfigServer_Context old_context_id,
+                  GConfContext* gcc,
+                  GMarkupNodeElement *node)
+{
+  gchar *ior;
+  gchar *location;
+  gchar *cnxn;
+  ConfigListener cl;
+  CORBA_Environment ev;
+  guint new_cnxn;
+  
+  if (strcmp (node->name, "listener") != 0)
+    {
+      gconf_log (GCL_WARNING, _("Didn't understand element '%s' in saved state file"), node->name);
+
+      return;
+    }
+
+  location = g_markup_node_get_attribute (node, "location");
+  ior = g_markup_node_get_attribute (node, "ior");
+  cnxn = g_markup_node_get_attribute (node, "connection");
+  
+  if (location == NULL)
+    {
+      gconf_log (GCL_WARNING, _("No location attribute on listener element in saved state file"));
+
+      goto finished;
+    }
+
+  if (ior == NULL)
+    {
+      gconf_log (GCL_WARNING, _("No IOR attribute on listener element in saved state file"));
+
+      goto finished;
+    }
+  
+  if (cnxn == NULL)
+    {
+      gconf_log (GCL_WARNING, _("No connection ID attribute on listener element in saved state file"));
+
+      goto finished;
+    }
+
+  CORBA_exception_init (&ev);
+  
+  cl = CORBA_ORB_string_to_object (oaf_orb_get (),
+                                   ior,
+                                   &ev);
+
+  CORBA_exception_free (&ev);
+  
+  if (CORBA_Object_is_nil (cl, &ev))
+    {
+      CORBA_exception_free (&ev);
+
+      gconf_log (GCL_DEBUG, "Client in saved state file no longer exists, not updating its listener connections");
+      
+      goto finished;
+    }
+  
+  new_cnxn = context_add_listener(gcc, cl, location);
+
+  ConfigListener_update_listener (cl,
+                                  old_context_id,
+                                  atoi (cnxn),
+                                  location,
+                                  gcc->context,
+                                  new_cnxn,
+                                  &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      gconf_log (GCL_DEBUG, "Failed to update client in saved state file, probably the client no longer exists");
+
+      /* listener will get removed next time we try to notify */
+      
+      goto finished;
+    }
+
+  CORBA_Object_release (cl, &ev);
+
+  CORBA_exception_free (&ev);
+  
+ finished:
+  
+  g_free (ior);
+  g_free (cnxn);
+  g_free (location);
+}
+
+static void
+restore_context (GMarkupNodeElement *node)
+{
+  gchar *attr;
+  gint id;
+  GList *tmp_list;
+  GConfContext *gcc;
+  GConfError *err;
+  
+  if (strcmp (node->name, "context") != 0)
+    {
+      gconf_log (GCL_WARNING, _("Didn't understand element '%s' in saved state file"), node->name);
+
+      return;
+    }
+  
+  attr = g_markup_node_get_attribute (node, "id");
+
+  if (attr == NULL)
+    {
+      gconf_log (GCL_WARNING, _("Context node in saved state file has no 'id' attribute"));
+
+      return;
+    }
+  
+  id = atoi (attr);
+
+  g_free (attr);
+  
+  if (id != ConfigServer_default_context)
+    {
+      /* FIXME */
+      
+      gconf_log (GCL_WARNING, "Don't support restoring non-default contexts yet");
+      return;
+    }
+
+  err = NULL;
+  gcc = lookup_context (id, &err);
+  if (gcc == NULL)
+    {
+      gconf_log (GCL_DEBUG, "Didn't find a context with id %u while loading saved state file (%s). Should not happen...", id, err->str);
+      gconf_error_destroy (err);
+      return;
+    }
+  
+  tmp_list = node->children;
+  while (tmp_list != NULL)
+    {
+      GMarkupNode *n = tmp_list->data;
+
+      if (n->type != G_MARKUP_NODE_ELEMENT)
+        {
+          gconf_log (GCL_WARNING, _("Strange non-element node in default state file"));
+        }
+      else
+        {
+          restore_listener (id, gcc, (GMarkupNodeElement*)n);
+        }
+
+      tmp_list = g_list_next (tmp_list);
+    }
+}
+
+static void
+logfile_read (void)
+{
+  GMarkupNode *root_node;
+  GMarkupNodeElement *root_element;
+  gchar *str;
+  gchar *logfile;
+  gchar *logdir;
+  GError *error;
+  GList *tmp_list;
+  
+  logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
+  logfile = gconf_concat_key_and_dir (logdir, "saved_state");
+
+  error = NULL;
+  str = g_file_get_contents (logfile, &error);
+  if (str == NULL)
+    {
+      gconf_log (GCL_ERR, _("Unable to open saved state file '%s': %s"),
+                 logfile, error->message);
+
+
+      g_error_free (error);
+
+      goto finished;
+    }
+
+  error = NULL;
+  root_node = g_markup_node_from_string (str, -1, 0, &error);
+  if (error != NULL)
+    {
+      gconf_log (GCL_ERR, _("Failed to restore saved state from file '%s': %s"),
+                 logfile, error->message);
+      g_error_free (error);
+
+      goto finished;
+    }
+
+  if (root_node->type != G_MARKUP_NODE_ELEMENT)
+    {
+      gconf_log (GCL_ERR, _("Root node of saved state file should be an element"));
+      
+      goto finished;
+    }
+
+  root_element = (GMarkupNodeElement*) root_node;
+
+  if (strcmp (root_element->name, "gconfd_logfile") != 0)
+    {
+      gconf_log (GCL_ERR,
+                 _("Root node of saved state file should be 'gconfd_logfile', not '%s'"),
+                 root_element->name);
+
+      goto finished;
+    }
+
+  tmp_list = root_element->children;
+  while (tmp_list != NULL)
+    {
+      GMarkupNode *node = tmp_list->data;      
+
+      if (node->type != G_MARKUP_NODE_ELEMENT)
+        {
+          gconf_log (GCL_WARNING, _("Funny non-element node under <gconfd_logfile> in saved state file"));
+
+        }
+      else
+        {
+          restore_context ((GMarkupNodeElement*)node);
+        }
+      
+      tmp_list = g_list_next (tmp_list);
+    }
+  
+ finished:
+  
+  g_free (logfile);
+  g_free (logdir);
+}
+
+static guint logfile_save_timeout_id = 0;
+
+static gint
+logfile_save_timeout (gpointer user_data)
+{
+  logfile_save ();
+  logfile_save_timeout_id = 0;
+
+  return FALSE;
+}
+
+static void
+logfile_queue_save (void)
+{
+  if (logfile_save_timeout_id == 0)
+    {
+      logfile_save_timeout_id =
+        g_timeout_add (1000 /* 1000 * 60 * 5*/, /* 1 sec * sec/min * 5 min */
+                       logfile_save_timeout, NULL);
     }
 }
