@@ -1391,13 +1391,15 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
   /* Fill in the global info */
   if (info->global_default != NULL)
     gconf_schema_set_default_value(schema, info->global_default);
-
+      
   if (info->type != GCONF_VALUE_INVALID)
     gconf_schema_set_type(schema, info->type);
 
   if (info->owner != NULL)
     gconf_schema_set_owner(schema, info->owner);
 
+
+  /* Locale-specific info */
   iter = node->childs;
   
   while (iter != NULL)
@@ -1580,7 +1582,13 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
   /* Attach schema to keys */
 
   process_key_list(conf, info.key, info.apply_to);
-  
+
+  if (g_hash_table_size(info.hash) == 0)
+    {
+      fprintf(stderr, _("You must have at least one <locale> entry in a <schema>\n"));
+      return 1;
+    }
+      
   /* Now install each schema in the hash into the GConfEngine */
   g_hash_table_foreach(info.hash, hash_foreach, &info);
 
@@ -1639,16 +1647,33 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
               file);
       return 1;
     }
-  
-  if (strcmp(doc->root->name, "gconfschemafile") != 0)
+
+  iter = doc->root;
+  while (iter != NULL) 
     {
-      fprintf(stderr, _("Document `%s' has the wrong type of root node (<%s>, should be <gconfschemafile>)\n"),
-              file, doc->root->name);
-      return 1;
+      if (iter->type == XML_ELEMENT_NODE)
+        { 
+          if (strcmp(iter->name, "gconfschemafile") != 0)
+            {
+              fprintf(stderr, _("Document `%s' has the wrong type of root node (<%s>, should be <gconfschemafile>)\n"),
+                      file, iter->name);
+              return 1;
+            }
+          else
+            break;
+        }         
+
+      iter = iter->next;
     }
   
+  if (iter == NULL)
+    {
+      fprintf(stderr, _("Document `%s' has no top level <gconfschemafile> node\n"),
+              file);
+      return 1;
+    }
 
-  iter = doc->root->childs;
+  iter = iter->childs;
 
   while (iter != NULL)
     {
