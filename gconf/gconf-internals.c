@@ -601,6 +601,9 @@ gconf_value_type_to_string(GConfValueType type)
     case GCONF_VALUE_IGNORE_SUBSEQUENT:
       return "ignore_subseq";
       break;
+    case GCONF_VALUE_INVALID:
+      return "*invalid*";
+      break;
     default:
       g_assert_not_reached();
       return NULL; /* for warnings */

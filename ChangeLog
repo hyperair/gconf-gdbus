@@ -1,3 +1,27 @@
+1999-11-16  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-value.c (gconf_value_to_string): print more info
+	about schemas
+
+	* backends/xml-backend.c (xentry_set_schema_value): Set the schema
+	type on the toplevel node, not the localized node.
+	(xentry_set_schema_value): Set the owner on the toplevel node
+	(schema_node_extract_value): Do better at falling back to any
+	schema if the locale we want isn't found.
+	(my_xmlSetProp): Replace xmlSetProp with this, deletes the prop
+	if setting to NULL or ""
+	(my_xmlGetProp): Replace xmlGetProp with this, returns NULL if the 
+	prop has an empty value.
+
+	* gconf/gconf-internals.c (gconf_value_type_to_string): Add case
+	for GCONF_VALUE_INVALID
+
+	* backends/xml-backend.c (entry_unset): refill cached_value if
+	other locale values still exist. Also, mark the Entry dirty.
+	(entry_value): add a sync_if_needed here
+	(entry_sync_if_needed): just always sync if it's a schema; this
+	code is so broken we may as well not try to be clever.	
+
 1999-11-15  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-backend.c (entry_fill): handle locale by syncing

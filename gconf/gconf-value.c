@@ -21,6 +21,7 @@
 #include "gconf-value.h"
 #include "gconf-error.h"
 #include "gconf-schema.h"
+#include "gconf-internals.h"
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
@@ -311,7 +312,16 @@ gconf_value_to_string(GConfValue* value)
       retval = g_strdup("Invalid");
       break;
     case GCONF_VALUE_SCHEMA:
-      retval = g_strdup("Schema");
+      {
+        const gchar* locale;
+        const gchar* type;
+        
+        locale = gconf_schema_locale(gconf_value_schema(value));
+        type = gconf_value_type_to_string(gconf_schema_type(gconf_value_schema(value)));
+        
+        retval = g_strdup_printf("Schema (type: `%s' locale: `%s')",
+                                 type, locale ? locale : "(null)");
+      }
       break;
     case GCONF_VALUE_IGNORE_SUBSEQUENT:
       retval = g_strdup("Ignore Subsequent");

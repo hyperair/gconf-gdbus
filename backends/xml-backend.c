@@ -260,6 +260,17 @@ static XMLSource* xs_new       (const gchar* root_dir);
 static void       xs_destroy   (XMLSource* source);
 
 /*
+ * enhanced libxml functions
+ */
+
+void my_xmlSetProp(xmlNodePtr node,
+                   const gchar* name,
+                   const gchar* str);
+
+char* my_xmlGetProp(xmlNodePtr node,
+                    const gchar* name);
+
+/*
  * VTable functions
  */
 
@@ -1992,7 +2003,7 @@ dir_fill_cache_from_doc(Dir* d)
       if (node->type == XML_ELEMENT_NODE && 
           (strcmp(node->name, "entry") == 0))
         {
-          gchar* attr = xmlGetProp(node, "name");
+          gchar* attr = my_xmlGetProp(node, "name");
 
           if (attr != NULL)
             {
@@ -2100,22 +2111,22 @@ entry_sync    (Entry* e)
     xmlFreePropList(e->node->properties);
   e->node->properties = NULL;
   
-  xmlSetProp(e->node, "name", e->name);
+  my_xmlSetProp(e->node, "name", e->name);
 
   if (e->mod_time != 0)
     {
       gchar* str = g_strdup_printf("%u", (guint)e->mod_time);
-      xmlSetProp(e->node, "mtime", str);
+      my_xmlSetProp(e->node, "mtime", str);
       g_free(str);
     }
   else
-    xmlSetProp(e->node, "mtime", NULL); /* Unset */
+    my_xmlSetProp(e->node, "mtime", NULL); /* Unset */
 
   /* OK if schema_name is NULL, then we unset */
-  xmlSetProp(e->node, "schema", e->schema_name);
+  my_xmlSetProp(e->node, "schema", e->schema_name);
 
   /* OK if mod_user is NULL, since it unsets */
-  xmlSetProp(e->node, "muser", e->mod_user);
+  my_xmlSetProp(e->node, "muser", e->mod_user);
   
   xentry_set_value(e->node, e->cached_value);
 
@@ -2126,33 +2137,13 @@ entry_sync    (Entry* e)
 static void
 entry_sync_if_needed(Entry* e, GConfValue* val)
 {
+  if (!e->dirty)
+    return;
+  
   if (e->cached_value &&
       e->cached_value->type == GCONF_VALUE_SCHEMA)
     {
-      /* We need to sync to the XML parse tree if the new value is
-         also a schema and its locale is different, because unsaved info
-         may be in the cached schema. If the locales are the same or it's
-         not a schema, we want to just replace the old value with the
-         new without saving.
-
-         We also need to sync if the new value is NULL
-      */
-      if (val == NULL || (val && val->type == GCONF_VALUE_SCHEMA))
-        {
-          const gchar* old_locale =
-            gconf_schema_locale(gconf_value_schema(e->cached_value));
-          const gchar* new_locale = val ? 
-            gconf_schema_locale(gconf_value_schema(val)) : NULL;
-
-          if ((old_locale == NULL && new_locale == NULL) ||
-              (old_locale && new_locale &&
-               strcmp(old_locale, new_locale) == 0))
-            ; /* nothing */
-          else
-            {
-              entry_sync(e);
-            }
-        }
+      entry_sync(e);
     }
 }
 
@@ -2172,7 +2163,7 @@ entry_fill    (Entry* e, const gchar* name)
   
   if (name == NULL)
     {
-      tmp = xmlGetProp(e->node, "name");
+      tmp = my_xmlGetProp(e->node, "name");
       
       if (tmp != NULL)
         {
@@ -2183,7 +2174,7 @@ entry_fill    (Entry* e, const gchar* name)
   else
     e->name = g_strdup(name);
   
-  tmp = xmlGetProp(e->node, "schema");
+  tmp = my_xmlGetProp(e->node, "schema");
   
   if (tmp != NULL)
     {
@@ -2205,7 +2196,7 @@ entry_fill    (Entry* e, const gchar* name)
       free(tmp);
     }
       
-  tmp = xmlGetProp(e->node, "mtime");
+  tmp = my_xmlGetProp(e->node, "mtime");
 
   if (tmp != NULL)
     {
@@ -2215,7 +2206,7 @@ entry_fill    (Entry* e, const gchar* name)
   else
     e->mod_time = 0;
 
-  tmp = xmlGetProp(e->node, "muser");
+  tmp = my_xmlGetProp(e->node, "muser");
 
   if (tmp != NULL)
     {
@@ -2270,12 +2261,14 @@ entry_value (Entry* e, const gchar** locales)
     return e->cached_value;
   else if (sl && locales && *locales &&
            strcmp(sl, *locales) == 0)
-    return e->cached_value;  
+    return e->cached_value;
   else
     {
       /* We want a locale other than the currently-loaded one */
       GConfValue* newval;
       GConfError* error = NULL;
+
+      entry_sync_if_needed(e, NULL);
       
       newval = xentry_extract_value(e->node, locales, &error);
       if (newval != NULL)
@@ -2307,6 +2300,8 @@ entry_set     (Entry* e, GConfValue* val)
     gconf_value_destroy(e->cached_value);
       
   e->cached_value = gconf_value_copy(val);
+
+  e->dirty = TRUE;
 }
 
 static gboolean
@@ -2316,13 +2311,33 @@ entry_unset   (Entry* e, const gchar* locale)
     {
       if (e->cached_value->type == GCONF_VALUE_SCHEMA)
         {
+          GConfError* error = NULL;
+          
           /* Remove the localized node from the XML tree */
           g_assert(e->node != NULL);
           xentry_unset_by_locale(e->node, locale);
+
+          /* e->cached_value is always non-NULL if some value is
+             available; in the schema case there may be leftover
+             values */
+          gconf_value_destroy(e->cached_value);
+          e->cached_value = xentry_extract_value(e->node, NULL, &error);
+
+          if (error != NULL)
+            {
+              gconf_log(GCL_WARNING, _("%s"), error->str);
+              gconf_error_destroy(error);
+              error = NULL;
+            }
         }
+      else
+        {
+          gconf_value_destroy(e->cached_value);
+          e->cached_value = NULL;
+        }
+
+      e->dirty = TRUE;
       
-      gconf_value_destroy(e->cached_value);
-      e->cached_value = NULL;
       return TRUE;
     }
   else
@@ -2347,7 +2362,7 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
       if (iter->type == XML_ELEMENT_NODE &&
           strcmp(iter->name, "local_schema") == 0)
         {
-          char* this_locale = xmlGetProp(iter, "locale");
+          char* this_locale = my_xmlGetProp(iter, "locale");
           
           if (this_locale &&
               strcmp(locale, this_locale) == 0)
@@ -2394,8 +2409,8 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
   gchar* locale_str;
   GConfError* error = NULL;
   
-  sd_str = xmlGetProp(node, "short_desc");
-  locale_str = xmlGetProp(node, "locale");
+  sd_str = my_xmlGetProp(node, "short_desc");
+  locale_str = my_xmlGetProp(node, "locale");
   
   if (sd_str)
     {
@@ -2405,10 +2420,13 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
 
   if (locale_str)
     {
+      gconf_log(GCL_DEBUG, "found locale `%s'", locale_str);
       gconf_schema_set_locale(sc, locale_str);
       free(locale_str);
     }
-
+  else
+    gconf_log(GCL_WARNING, "found <local_schema> with no locale setting");
+  
   if (node->childs != NULL)
     {
       GConfValue* default_value = NULL;
@@ -2491,14 +2509,14 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
   xmlNodePtr iter;
   guint i;
   xmlNodePtr* localized_nodes;
-  xmlNodePtr best;
+  xmlNodePtr best = NULL;
   
   /* owner, type are for all locales;
      default value, descriptions are per-locale
   */
 
-  owner_str = xmlGetProp(node, "owner");
-  stype_str = xmlGetProp(node, "stype");
+  owner_str = my_xmlGetProp(node, "owner");
+  stype_str = my_xmlGetProp(node, "stype");
 
   sc = gconf_schema_new();
 
@@ -2534,7 +2552,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
             {
               char* locale_name;
               
-              locale_name = xmlGetProp(iter, "locale");
+              locale_name = my_xmlGetProp(iter, "locale");
               
               if (locale_name != NULL)
                 {
@@ -2560,7 +2578,8 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
           iter = iter->next;
         }
 
-      /* See which is the best locale we managed to load */
+      /* See which is the best locale we managed to load, they are in
+         order of preference. */
       
       i = 0;
       best = localized_nodes[i];
@@ -2571,12 +2590,16 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
         }
       
       g_free(localized_nodes);
-
-      /* Extract info from the best locale node */
-      if (best != NULL)
-        schema_subnode_extract_data(best, sc);
     }
-      
+
+  /* If no locale matched, try picking the first node */
+  if (best == NULL)
+    best = node->childs;
+  
+  /* Extract info from the best locale node */
+  if (best != NULL)
+    schema_subnode_extract_data(best, sc);  
+  
   /* Create a GConfValue with this schema and return it */
   value = gconf_value_new(GCONF_VALUE_SCHEMA);
       
@@ -2597,11 +2620,11 @@ xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
   gchar* type_str;
   GConfValueType type = GCONF_VALUE_INVALID;
   const gchar* default_locales[] = { "C", NULL };
-
+  
   if (locales == NULL)
     locales = default_locales;
   
-  type_str = xmlGetProp(node, "type");
+  type_str = my_xmlGetProp(node, "type");
 
   if (type_str == NULL)
     {
@@ -2630,7 +2653,7 @@ xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
       {
         gchar* value_str;
         
-        value_str = xmlGetProp(node, "value");
+        value_str = my_xmlGetProp(node, "value");
         
         if (value_str == NULL)
           {
@@ -2669,7 +2692,7 @@ xentry_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
 
         {
           gchar* s;
-          s = xmlGetProp(node, "ltype");
+          s = my_xmlGetProp(node, "ltype");
           if (s != NULL)
             {
               list_type = gconf_value_type_from_string(s);
@@ -2878,14 +2901,21 @@ xentry_set_schema_value(xmlNodePtr node,
   GConfSchema* sc;
   const gchar* locale;
   xmlNodePtr found = NULL;
+
+  sc = gconf_value_schema(value);
   
   /* unset this in case the node was previously a different type */
-  xmlSetProp(node, "value", NULL);
-  
-  sc = gconf_value_schema(value);
+  my_xmlSetProp(node, "value", NULL);
+
+  /* set the cross-locale attributes */
+  my_xmlSetProp(node, "stype", gconf_value_type_to_string(sc->type));
+  my_xmlSetProp(node, "owner", sc->owner);
 
   locale = gconf_schema_locale(sc);
 
+  gconf_log(GCL_DEBUG, "Setting XML node to schema with locale `%s'",
+            locale);
+  
   /* Find the node for this locale */
 
   found = find_schema_subnode_by_locale(node, locale);
@@ -2893,11 +2923,9 @@ xentry_set_schema_value(xmlNodePtr node,
   if (found == NULL)
     found = xmlNewChild(node, NULL, "local_schema", NULL);
   
-  xmlSetProp(found, "stype", gconf_value_type_to_string(sc->type));
   /* OK if these are set to NULL, since that unsets the property */
-  xmlSetProp(found, "locale", sc->locale);
-  xmlSetProp(found, "short_desc", sc->short_desc);
-  xmlSetProp(found, "owner", sc->owner);
+  my_xmlSetProp(found, "locale", sc->locale);
+  my_xmlSetProp(found, "short_desc", sc->short_desc);
 
   free_childs(found);
   
@@ -2930,7 +2958,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
 
   g_assert(type != NULL);
   
-  xmlSetProp(node, "type", type);
+  my_xmlSetProp(node, "type", type);
 
   switch (value->type)
     {
@@ -2946,7 +2974,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
       
       value_str = gconf_value_to_string(value);
   
-      xmlSetProp(node, "value", value_str);
+      my_xmlSetProp(node, "value", value_str);
 
       g_free(value_str);
       break;
@@ -2961,7 +2989,7 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
 
         free_childs(node);
 
-        xmlSetProp(node, "ltype",
+        my_xmlSetProp(node, "ltype",
                    gconf_value_type_to_string(gconf_value_list_type(value)));
         
         /* Add a new child for each node */
@@ -3035,4 +3063,62 @@ parent_dir(const gchar* dir)
     }
 
   return parent;
+}
+
+/*
+ * Enhanced libxml
+ */
+
+/* makes setting to NULL or empty string equal to unset */
+void
+my_xmlSetProp(xmlNodePtr node,
+              const gchar* name,
+              const gchar* str)
+{
+  xmlAttrPtr prop;
+
+  prop = xmlSetProp(node, name, str);
+
+  if (str == NULL || *str == '\0')
+    {
+      xmlAttrPtr iter;
+      xmlAttrPtr prev;
+
+      prev = NULL;
+      iter = node->properties;
+      while (iter != NULL)
+        {
+          if (iter == prop)
+            break;
+          prev = iter;
+          iter = iter->next;
+        }
+
+      g_assert(iter == prop);
+      
+      if (prev)
+        prev->next = iter->next;
+      else
+        node->properties = iter->next; /* we were the first node */
+
+      xmlFreeProp(iter);
+    }
+}
+
+/* Makes empty strings equal to "unset" */
+char*
+my_xmlGetProp(xmlNodePtr node,
+              const gchar* name)
+{
+  char* prop;
+
+  prop = xmlGetProp(node, name);
+
+  if (prop && *prop == '\0')
+    {
+      free(prop);
+      return NULL;
+    }
+  else
+    return prop;
 }

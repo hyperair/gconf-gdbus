@@ -43,9 +43,10 @@ struct _LTable {
                 */
   GPtrArray* listeners; /* Listeners are also kept in a flat array here, indexed by connection number */
   guint active_listeners; /* count of "alive" listeners */
+
   /* 0 is an error value */
   guint next_cnxn;
-
+  
   /* Connection numbers to be recycled - somewhat dangerous due to the nature
      of CORBA... */
   GSList* removed_cnxns;
