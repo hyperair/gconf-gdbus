@@ -28,12 +28,33 @@ is the #GConfChangeSet interface.
 
 <!-- ##### FUNCTION gconf_init ##### -->
 <para>
-Initializes the GConf library. Creates a connection to a CORBA ORB unless 
-you have previously called gconf_set_orb().
+Initializes the GConf library. Creates a connection to a CORBA ORB, and
+initializes OAF (the object activation framework) if it isn't already
+initialized.
 </para>
 
+@argc: 
+@argv: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> otherwise.
+
+
+<!-- ##### FUNCTION gconf_preinit ##### -->
+<para>
+
+</para>
+
+@app: 
+@mod_info: 
+
+
+<!-- ##### FUNCTION gconf_postinit ##### -->
+<para>
+
+</para>
+
+@app: 
+@mod_info: 
 
 
 <!-- ##### FUNCTION gconf_is_initialized ##### -->

@@ -1,6 +1,68 @@
+1999-11-19  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (gconf_server_broken): don't need to set the
+	server to NIL here, it gets set in gconf_detach_config_server()
+
+	* doc/gconf/gconf-sections.txt: Add preinit, postinit
+
+	* doc/gconf/gconf.sgml: Remove gconf-orbit entity
+
+	* doc/gconf/gconf-sections.txt: Remove gconf-orbit stuff
+
+        * tests/*.c: Fix to not include gconf-orbit.h, call gconf_init()
+	properly
+	
+	* gconf-editor/gconf-editor.c: don't include gconf-orbit.h
+
+	* wrappers/gtk/testgconfclient.c (main): remove "orb" variable
+
+	* gconf/gconftool.c: don't include gconf-orbit.h
+
+	* gconf/gconfd.c: don't include gconf-orbit.h
+
+	* gconf/gconf.c: don't include gconf-orbit.h
+
+	* gconf/gconf.h: don't include gconf-orbit.h
+
+	* gconf/Makefile.am (gconfinclude_HEADERS): remove gconf-orbit.h
+	(libgconf_la_SOURCES): remove gconf-orbit.c
+
+	* gconf/gconfd.c (main): fix error message if oaf_init() returns FALSE
+
+	* gconf/gconf.c (try_to_contact_server): Use the IID macro
+	(gconf_postinit): Change all the error checks to assertions; if
+	these errors can really happen they need to be reported as before
+	(not sure how to do this with the pre/post init setup), if they
+	can't happen then they should be asserted, not error-checked.
+
+	* gconf/gconfd.c (fast_cleanup): Unregister with OAF in order to
+	clean up.
+
+	* gconf/Makefile.am: add -DIID to INCLUDES
+
+	* gconf/gconfd.c (main): Use a macro for the IID
+
+	* gconf/gconf-internals.c: Remove gconf_read_server_ior(),
+	gconf_info_dir(), gconf_info_file(), etc. since we use OAF instead.
+
+	* gconf/gconfd.c (main): Remove "nodaemon" flag since we don't run
+	as a daemon anymore.
+	(main): After oaf_init(), don't try to use "err" since oaf_init()
+	won't set it.
+
+        * gconf/gconf-orbit.h, gconf/gconf-orbit.c: Delete these, we 
+	are using OAF now.
+	
+	* gconf/gconf.c (gconf_get_config_server): Change this to only
+	call try_to_contact_server() if start_if_not_found is TRUE, 
+	since with OAF any attempt to contact the server will 
+	automatically restart it. Now we keep the server variable 
+	up-to-date locally (set it to NULL on any system exception).
+
 1999-11-19  Elliot Lee  <sopwith@redhat.com>
 
-	* Make it all use OAF, and redo the initialization routine(s) to fit better into the GnomeModuleInfo system.
+	* Make it all use OAF, and redo the initialization routine(s) to
+	fit better into the GnomeModuleInfo system.
 
 1999-11-18  Elliot Lee  <sopwith@redhat.com>
 

@@ -33,7 +33,6 @@ int
 main(int argc, char** argv)
 {
   CORBA_Environment ev;
-  CORBA_ORB orb;
   GConfError* error = NULL;
   GConfClient* client = NULL;
   

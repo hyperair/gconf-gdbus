@@ -1,6 +1,6 @@
 INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) $(OAF_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" \
-	-DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\" -DVERSION=\""$(VERSION)"\"
+	-DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\" -DVERSION=\""$(VERSION)"\" -DIID=\""OAFIID:gconfd:19991118"\"
 
 EFENCE=
 
@@ -18,7 +18,6 @@ gconfinclude_HEADERS =     \
 	gconf-backend.h		\
 	gconf-changeset.h	\
 	gconf-listeners.h  \
-	gconf-orbit.h      \
 	gconf-schema.h 	   \
 	gconf-value.h	   \
 	gconf-error.h	   \
@@ -49,7 +48,6 @@ $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
 
 libgconf_la_SOURCES = \
-	gconf-orbit.c		\
 	gconf-internals.c	\
 	gconf-internals.h	\
 	gconf-backend.c		\

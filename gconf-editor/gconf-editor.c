@@ -20,7 +20,6 @@
 #include <config.h>
 #include <gnome.h>
 #include "app.h"
-#include <gconf-orbit.h>
 #include <gconf.h>
 
 static gint session_die(GnomeClient* client, gpointer client_data);

@@ -21,7 +21,6 @@
 #include "GConf.h"
 #include "gconf.h"
 #include "gconf-internals.h"
-#include "gconf-orbit.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -937,7 +936,7 @@ try_to_contact_server(GConfError** err)
 
   CORBA_exception_init(&ev);
 
-  server = oaf_activate_from_id("OAFAID:[OAFIID:gconf:19991118]", 0, NULL, &ev);
+  server = oaf_activate_from_id("OAFAID:["IID"]", 0, NULL, &ev);
 
   /* So try to ping server */
   if (!CORBA_Object_is_nil(server, &ev))
@@ -971,9 +970,9 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
   if (server != CORBA_OBJECT_NIL)
     return server;
 
-  if(start_if_not_found)
+  if (start_if_not_found)
     server = try_to_contact_server(err);
-
+  
   return server; /* return what we have, NIL or not */
 }
 
@@ -1081,35 +1080,28 @@ gconf_postinit(gpointer app, gpointer mod_info)
       CORBA_exception_init(&ev);
       POA_ConfigListener__init(&poa_listener_servant, &ev);
       
-      if (ev._major != CORBA_NO_EXCEPTION)
-	return;
+      g_assert (ev._major == CORBA_NO_EXCEPTION)
 
       poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(oaf_orb_get(), "RootPOA", &ev);
 
-      if (ev._major != CORBA_NO_EXCEPTION)
-	return;
-
+      g_assert (ev._major == CORBA_NO_EXCEPTION)
 
       PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(poa, &ev), &ev);
 
-      if (ev._major != CORBA_NO_EXCEPTION)
-	return;
+      g_assert (ev._major == CORBA_NO_EXCEPTION)
 
       PortableServer_POA_activate_object_with_id(poa,
                                                  &objid, &poa_listener_servant, &ev);
 
-      if (ev._major != CORBA_NO_EXCEPTION)
-	return;
-
+      g_assert (ev._major == CORBA_NO_EXCEPTION)
       
       listener = PortableServer_POA_servant_to_reference(poa,
                                                          &poa_listener_servant,
                                                          &ev);
 
-      if (listener == CORBA_OBJECT_NIL || ev._major != CORBA_NO_EXCEPTION)
-	return;
+      g_assert (listener != CORBA_OBJECT_NIL);
+      g_assert (ev._major == CORBA_NO_EXCEPTION)
     }
-
 
   have_initted = TRUE;
 }
@@ -2010,7 +2002,6 @@ gconf_server_broken(CORBA_Environment* ev)
     {
     case CORBA_SYSTEM_EXCEPTION:
       CORBA_Object_release(server, ev);
-      server = CORBA_OBJECT_NIL;
       return TRUE;
       break;
     default:

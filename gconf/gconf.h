@@ -27,7 +27,6 @@ extern "C" {
 #endif /* __cplusplus */
 
 #include "gconf-schema.h"
-#include "gconf-orbit.h"
 #include "gconf-engine.h"
 #include "gconf-error.h"
   

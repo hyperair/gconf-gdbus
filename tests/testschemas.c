@@ -18,7 +18,6 @@
  */
 
 #include <gconf.h>
-#include <gconf-orbit.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
@@ -428,16 +427,8 @@ main (int argc, char** argv)
 {
   GConfEngine* conf;
   GConfError* err = NULL;
-
-  if (gconf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
-    {
-      fprintf(stderr, "Failed to init orb: %s\n", err->str);
-      gconf_error_destroy(err);
-      err = NULL;
-      return 1;
-    }
-
-  if (!gconf_init(&err))
+  
+  if (!gconf_init(argc, argv, &err))
     {
       fprintf(stderr, "Failed to init GConf: %s\n", err->str);
       gconf_error_destroy(err);

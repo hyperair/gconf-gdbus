@@ -18,7 +18,6 @@
  */
 
 #include "gconf.h"
-#include "gconf-orbit.h"
 #include "gconf-internals.h"
 #include <stdio.h>
 #include <unistd.h>

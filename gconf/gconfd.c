@@ -29,7 +29,6 @@
 #include <config.h>
 
 #include "gconf-internals.h"
-#include "gconf-orbit.h"
 #include "gconf-sources.h"
 #include "gconf-listeners.h"
 #include "gconf-locale.h"
@@ -699,10 +698,8 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
  * Main code
  */
 
-/* This is called after we get the info file lock
-   but before we write the info file, to avoid 
-   client requests prior to source loading. 
-*/
+/* This needs to be called before we register with OAF
+ */
 static void
 gconf_server_load_sources(void)
 {
@@ -781,145 +778,6 @@ gconf_server_load_sources(void)
   set_default_context(context_new(sources));
 }
 
-/* From Stevens */
-int
-lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len)
-{
-  struct flock lock;
-  lock.l_type = type;
-  lock.l_start = offset;
-  lock.l_whence = whence;
-  lock.l_len = len;
-
-  return fcntl(fd, cmd, &lock);
-}
-
-#define write_lock(fd, offset, whence, len) \
-  lock_reg(fd, F_SETLK, F_WRLCK, offset, whence, len)
-
-gboolean
-gconf_server_write_info_file(const gchar* ior)
-{
-  /* This writing-IOR-to-file crap is a temporary hack. */
-  gchar* fn;
-  int fd;
-
-  fn = gconf_server_info_file();
-
-  if (!gconf_file_exists(fn))
-    {
-      gchar* dir = gconf_server_info_dir();
-
-      if (!gconf_file_test(dir, GCONF_FILE_ISDIR))
-        {
-          if (mkdir(dir, S_IRUSR | S_IWUSR | S_IXUSR) < 0)
-            {
-              g_free(dir);
-              return FALSE;
-            }
-        }
-      
-      g_free(dir);
-    }
-
-  /* Can't O_TRUNC until we have the silly lock */
-  fd = open(fn, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
-
-  g_free(fn);
-
-  if (fd < 0)
-    {
-      gconf_log(GCL_ERR, _("Failed to open info file: %s"), strerror(errno));
-      return FALSE;
-    }
-
-
-  if (write_lock(fd, 0, SEEK_SET, 0) < 0)
-    {
-      if (errno == EACCES || errno == EAGAIN)
-        {
-          gconf_log(GCL_ERR, _("Lock on info file is held by another process."));
-          return FALSE;
-        }
-      else
-        {
-          gconf_log(GCL_ERR, _("Couldn't get lock on the info file: %s"),
-                     strerror(errno));
-          return FALSE;
-        }
-    }
-
-  if (ftruncate(fd, 0) < 0)
-    {
-      gconf_log(GCL_ERR, _("Couldn't truncate info file: %s"),
-                 strerror(errno));
-      return FALSE;
-    }
-
-  /* IMPORTANT this must be done here, after the lock, 
-     but before writing the file contents, so no one
-     tries to contact gconfd before we have sources 
-  */
-  gconf_server_load_sources();
-
-  /* This block writes the file contents */
-  {
-    gint len = strlen(ior);
-    gint written = 0;
-    gboolean done = FALSE;
-
-    while (!done)
-      {
-        written = write(fd, ior, len);
-         
-        if (written == len)
-          done = TRUE;
-        else if (written < 0)
-          {
-            if (errno != EINTR)
-              {
-                gconf_log(GCL_ERR, _("Failed to write info file: %s"), strerror(errno));
-                return FALSE;
-              }
-            else
-              continue;
-          }
-        else
-          {
-            g_assert(written < len);
-            ior += written;
-            len -= written;
-            g_assert(len == strlen(ior));
-          }
-      }
-  }
-      
-  /* Make the FD close-on-exec */
-  {
-    int val;
-
-    val = fcntl(fd, F_GETFD, 0);
-
-    if (val < 0)
-      {
-        gconf_log(GCL_ERR, _("fcntl() F_GETFD failed for info file: %s"), strerror(errno));
-        return FALSE;
-      }
-
-    val |= FD_CLOEXEC;
-
-    if (fcntl(fd, F_SETFD, val) < 0)
-      {
-        gconf_log(GCL_ERR, _("fcntl() F_SETFD failed for info file: %s"), strerror(errno));
-        return FALSE;
-      }
-  }
-
-  /* Don't close the file until we exit and implicitly kill the lock. */
-
-  return TRUE;
-}
-
 static void
 signal_handler (int signo)
 {
@@ -959,7 +817,6 @@ main(int argc, char** argv)
   const gchar* username;
   guint len;
   GConfError* err = NULL;
-  gboolean nodaemon = TRUE;
   
   chdir ("/");
 
@@ -976,10 +833,7 @@ main(int argc, char** argv)
      So we free it at the end of main() */
   
   gconf_log(GCL_INFO, _("starting, pid %u user `%s'"), 
-             (guint)getpid(), g_get_user_name());
-
-  if (nodaemon)
-    gconf_log(GCL_INFO, _("starting in debug (no daemon) mode"));
+            (guint)getpid(), g_get_user_name());
   
   /* Session setup */
   sigemptyset (&empty_mask);
@@ -999,7 +853,7 @@ main(int argc, char** argv)
 
   if (!oaf_init(argc, argv))
     {
-      gconf_log(GCL_ERR, _("Failed to init ORB: %s"), err->str);
+      gconf_log(GCL_ERR, _("Failed to init Object Activation Framework: please mail bug report to OAF maintainers"));
       exit(1);
     }
 
@@ -1023,7 +877,10 @@ main(int argc, char** argv)
       return 1;
     }
 
-  oaf_active_server_register("OAFIID:gconfd:19991118" /* matches OAFIID in gconfd.oafinfo */, server);
+  /* Needs to be done right before registration */
+  gconf_server_load_sources();
+  
+  oaf_active_server_register(IID, server);
 
   gconf_main();
 
@@ -1873,23 +1730,18 @@ listener_destroy(Listener* l)
  * Cleanup
  */
 
-/* fast_cleanup() does the important parts,
-   and is theoretically re-entrant.
+/* fast_cleanup() does the important parts, and is theoretically
+   re-entrant. I don't think it is anymore with OAF, so we should fix
+   that.
 */
 static void 
 fast_cleanup(void)
 {
   /* The goal of this function is to remove the 
-     stale server info file
+     stale server registration. 
   */
-  gchar* fn;
-
-  fn = gconf_server_info_file();
-
-  /* Nothing we can do if it fails */
-  unlink(fn);
-
-  g_free(fn);
+  if (server != CORBA_OBJECT_NIL)
+    oaf_active_server_unregister("", server);
 }
 
 
