@@ -19,8 +19,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.0.4\n"
-"POT-Creation-Date: 2002-02-23 13:52+0100\n"
-"PO-Revision-Date: 2002-02-23 13:56+0100\n"
+"POT-Creation-Date: 2002-03-08 21:19+0100\n"
+"PO-Revision-Date: 2002-03-08 21:23+0100\n"
 "Last-Translator: Ole Laursen <olau@hardworking.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -559,7 +559,7 @@ msgstr "Læsefejl på fil '%s': %s\n"
 
 #: gconf/gconf-internals.c:1211 gconf/gconf-internals.c:1277
 #: gconf/gconf-value.c:125 gconf/gconf-value.c:224 gconf/gconf-value.c:366
-#: gconf/gconf-value.c:1341
+#: gconf/gconf-value.c:1363
 msgid "Text contains invalid UTF-8"
 msgstr "Tekst indeholder ugyldig UTF-8"
 
@@ -715,6 +715,47 @@ msgstr ""
 "systemnedbrud - prøv at fjerne ~/.gconf/*.lock og ~/.gconfd/lock hvis du er "
 "sikker på at ingen gconfd-processer kører på enhver maskine der måtte bruge "
 "din hjemmemappe"
+
+#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:71
+msgid "Help options"
+msgstr "Hjælpetilvalg"
+
+#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:408
+#, c-format
+msgid ""
+"Error on option %s: %s.\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"Fejl ved tilvalg %s: %s.\n"
+"Kør '%s --help' for at se en komplet liste over tilvalg.\n"
+
+#: gconf/gconf-sanity-check.c:131
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Kontakt venligst systemadministratoren for at løse det følgende problem:\n"
+"Kunne ikke åbne eller oprette filen \"%s\"; dette indikerer at der kan være et problem med konfigurationen eftersom mange programmer har brug for at oprette filer i din hjemmemappe. Fejlen var \"%s\" (fejlkode = %d)."
+
+#: gconf/gconf-sanity-check.c:143
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See "
+"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Kontakt venligst systemadministratoren for at løse det følgende problem:\n"
+"Kunne ikke skaffe en lås til filen \"%s\"; dette indikerer at der kan være et problem med konfigurationen af styresystemet. Hvis du har en NFS-monteret hjemmemappe, kan enten klienten eller serveren være sat forkert op. Se dokumentation til rpc.statd og rpc.lockd. Fejlen var \"%s\" (fejlkode = %d)."
+
+#: gconf/gconf-sanity-check.c:159
+#, c-format
+msgid "Can't remove file %s: %s\n"
+msgstr "Kan slette filen '%s': %s\n"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
@@ -1208,10 +1249,6 @@ msgstr ""
 "Hukommelsesfejl!\n"
 "Kan ikke vise nedbrudsvindet\n"
 
-#: gconf/gconftool.c:71
-msgid "Help options"
-msgstr "Hjælpetilvalg"
-
 #: gconf/gconftool.c:80
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "Sæt en nøgle til en værdi og synkronisér. Benyttes med --type."
@@ -1409,15 +1446,6 @@ msgstr "Fjern ethvert skemanavn som anvendes med de givne nøgler"
 #: gconf/gconftool.c:351
 msgid "Get the name of the default source"
 msgstr "Hent navnet på standardkilden"
-
-#: gconf/gconftool.c:408
-#, c-format
-msgid ""
-"Error on option %s: %s.\n"
-"Run '%s --help' to see a full list of available command line options.\n"
-msgstr ""
-"Fejl ved tilvalg %s: %s.\n"
-"Kør '%s --help' for at se en komplet liste over tilvalg.\n"
 
 #: gconf/gconftool.c:420
 msgid "Can't get and set/unset simultaneously\n"
