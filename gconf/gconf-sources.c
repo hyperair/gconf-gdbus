@@ -532,7 +532,8 @@ gconf_sources_unset_value   (GConfSources* sources,
           if (!first_writeable_reached)
             {
               /* this is the first writeable layer */
-              /* FIXME set an IGNORE_SUBSEQUENT value */
+              /* FIXME set an IGNORE_SUBSEQUENT value if a read-only
+                 source below us has set the value. */
               
               first_writeable_reached = TRUE;
             }

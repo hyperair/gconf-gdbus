@@ -87,38 +87,48 @@ struct _GConfValue {
 #define gconf_value_bool(x)      ((x)->d.bool_data)
 #define gconf_value_schema(x)    ((x)->d.schema_data)
 
-GConfValue* gconf_value_new(GConfValueType type);
+GConfValue* gconf_value_new                  (GConfValueType type);
 /* doesn't work on complicated types (only string, int, bool, float) */
-GConfValue* gconf_value_new_from_string(GConfValueType type, const gchar* str,
-                                         GConfError** err);
+GConfValue* gconf_value_new_from_string      (GConfValueType type, const gchar* str,
+                                              GConfError** err);
 /* for the complicated types */
-GConfValue* gconf_value_new_list_from_string(GConfValueType list_type,
+GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
                                               const gchar* str);
-GConfValue* gconf_value_new_pair_from_string(GConfValueType car_type,
+GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
                                               GConfValueType cdr_type,
                                               const gchar* str);
-GConfValue* gconf_value_copy(GConfValue* src);
-void        gconf_value_destroy(GConfValue* value);
+GConfValue* gconf_value_copy                 (GConfValue* src);
+void        gconf_value_destroy              (GConfValue* value);
 
-void        gconf_value_set_int(GConfValue* value, gint the_int);
-void        gconf_value_set_string(GConfValue* value, const gchar* the_str);
-void        gconf_value_set_float(GConfValue* value, gdouble the_float);
-void        gconf_value_set_bool(GConfValue* value, gboolean the_bool);
-void        gconf_value_set_schema(GConfValue* value, GConfSchema* sc);
-void        gconf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc);
-void        gconf_value_set_car(GConfValue* value, GConfValue* car);
-void        gconf_value_set_car_nocopy(GConfValue* value, GConfValue* car);
-void        gconf_value_set_cdr(GConfValue* value, GConfValue* cdr);
-void        gconf_value_set_cdr_nocopy(GConfValue* value, GConfValue* cdr);
+void        gconf_value_set_int              (GConfValue* value,
+                                              gint the_int);
+void        gconf_value_set_string           (GConfValue* value,
+                                              const gchar* the_str);
+void        gconf_value_set_float            (GConfValue* value,
+                                              gdouble the_float);
+void        gconf_value_set_bool             (GConfValue* value,
+                                              gboolean the_bool);
+void        gconf_value_set_schema           (GConfValue* value,
+                                              GConfSchema* sc);
+void        gconf_value_set_schema_nocopy    (GConfValue* value,
+                                              GConfSchema* sc);
+void        gconf_value_set_car              (GConfValue* value,
+                                              GConfValue* car);
+void        gconf_value_set_car_nocopy       (GConfValue* value,
+                                              GConfValue* car);
+void        gconf_value_set_cdr              (GConfValue* value,
+                                              GConfValue* cdr);
+void        gconf_value_set_cdr_nocopy       (GConfValue* value,
+                                              GConfValue* cdr);
 /* Set a list of GConfValue, NOT lists or pairs */
-void        gconf_value_set_list_type(GConfValue* value,
-                                       GConfValueType type);
-void        gconf_value_set_list_nocopy(GConfValue* value,
-                                         GSList* list);
-void        gconf_value_set_list       (GConfValue* value,
-                                         GSList* list);
+void        gconf_value_set_list_type        (GConfValue* value,
+                                              GConfValueType type);
+void        gconf_value_set_list_nocopy      (GConfValue* value,
+                                              GSList* list);
+void        gconf_value_set_list             (GConfValue* value,
+                                              GSList* list);
 
-gchar*      gconf_value_to_string(GConfValue* value);
+gchar*      gconf_value_to_string            (GConfValue* value);
 
 /* Meta-information about a key. Not the same as a schema; a schema
  * is normative, this is descriptive.

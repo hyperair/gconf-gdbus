@@ -97,6 +97,7 @@ struct _GConfClient
   gpointer parent_user_data;
   GSList* dir_list;
   GHashTable* cache_hash;
+  GConfListeners* listeners;
 };
 
 struct _GConfClientClass
@@ -110,7 +111,7 @@ struct _GConfClientClass
   */
 
   void (* value_changed) (GConfClient* client,
-                          const gchar* relative_key,
+                          const gchar* key,
                           GConfValue* value);
 
   /* General note about error handling: AVOID DIALOG DELUGES.
@@ -173,6 +174,7 @@ guint        gconf_client_notify_add(GConfClient* client,
                                      const gchar* namespace_section, /* dir or key to listen to */
                                      GConfClientNotifyFunc func,
                                      gpointer user_data,
+                                     GFreeFunc destroy_notify,
                                      GConfError** err);
 
 void         gconf_client_notify_remove  (GConfClient* client,
@@ -195,6 +197,25 @@ void              gconf_client_set_error_handling(GConfClient* client,
                                                   GConfClientParentWindowFunc func,
                                                   gpointer user_data);
 
+
+/*
+ * If you know you're done reading values for a while,
+ * you can blow away the cache. Note that this nullifies the effect of
+ * any preloading you may have done. However it frees some memory.
+ */
+void              gconf_client_clear_cache(GConfClient* client);
+
+/*
+ * Preload a directory; the directory must have been added already.
+ * This is only useful as an optimization if you clear the cache,
+ * then later want to do a lot of reads again. It's not useful
+ * unless you clear the cache, because you can preload when you
+ * call gconf_client_add_dir()
+ */
+void              gconf_client_preload    (GConfClient* client,
+                                           const gchar* dirname,
+                                           GConfClientPreloadType type,
+                                           GConfError** err);
 
 /*
  * Basic key-manipulation facilities
