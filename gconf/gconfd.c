@@ -726,7 +726,7 @@ main(int argc, char** argv)
       char buf[1] = { 'g' };
       if (write (write_byte_fd, buf, 1) != 1)
         {
-          gconf_log (GCL_ERR, _("Failed to write byte to pipe fd %d so client program may hang: %s"), write_byte_fd, g_strerror (errno));
+          gconf_log (GCL_ERR, _("Failed to write byte to pipe file descriptor %d so client program may hang: %s"), write_byte_fd, g_strerror (errno));
         }
 
       close (write_byte_fd);

@@ -156,7 +156,7 @@ struct poptOption options[] = {
     POPT_ARG_NONE,
     &dump_values,
     0,
-    N_("Dump to standard out an XML description of all entries under a dir, recursively."),
+    N_("Dump to standard output an XML description of all entries under a directory, recursively."),
     NULL
   },
   {
@@ -165,7 +165,7 @@ struct poptOption options[] = {
     POPT_ARG_STRING,
     &entry_file,
     0,
-    N_("Load from the specified file an XML description of values and set them relative to a dir."),
+    N_("Load from the specified file an XML description of values and set them relative to a directory."),
     NULL
   },
   {
@@ -183,7 +183,7 @@ struct poptOption options[] = {
     POPT_ARG_NONE,
     &recursive_list,
     0,
-    N_("Print all subdirectories and entries under a dir, recursively."),
+    N_("Print all subdirectories and entries under a directory, recursively."),
     NULL
   },
   { 

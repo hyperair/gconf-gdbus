@@ -405,13 +405,13 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
           {
             some_writable = TRUE;
             gconf_log (GCL_INFO,
-                       _("Resolved address \"%s\" to a writable config source at position %d"),
+                       _("Resolved address \"%s\" to a writable configuration source at position %d"),
                        source->address, i);
           }
         else if (source->flags & GCONF_SOURCE_NEVER_WRITEABLE)
           {
             gconf_log (GCL_INFO,
-                       _("Resolved address \"%s\" to a read-only config source at position %d"),
+                       _("Resolved address \"%s\" to a read-only configuration source at position %d"),
                        source->address, i);
           }
         else

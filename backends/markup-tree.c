@@ -2339,7 +2339,7 @@ parse_value_element (GMarkupParseContext  *context,
               case GCONF_VALUE_PAIR:
               case GCONF_VALUE_SCHEMA:
                 set_error (error, context, GCONF_ERROR_PARSE_ERROR,
-                           _("Invalid car_type \"%s\" on <%s>"),
+                           _("Invalid first-element type \"%s\" on <%s>"),
                            car_type, element_name);
                 return;
                 break;
