@@ -125,7 +125,8 @@ static void gconf_client_finalize              (GObject* object);
 
 static gboolean gconf_client_cache          (GConfClient *client,
                                              gboolean     take_ownership,
-                                             GConfEntry  *entry);
+                                             GConfEntry  *entry,
+                                             gboolean    preserve_schema_name);
 
 static gboolean gconf_client_lookup         (GConfClient *client,
                                              const char  *key,
@@ -406,7 +407,7 @@ notify_from_server_callback (GConfEngine* conf, guint cnxn_id,
    * listeners or functions connected to value_changed.
    * We know this key is under a directory in our dir list.
    */
-  changed = gconf_client_cache (client, FALSE, entry);                                
+  changed = gconf_client_cache (client, FALSE, entry, TRUE);
 
   if (!changed)
     return; /* don't do the notify */
@@ -870,7 +871,7 @@ cache_entry_list_destructively (GConfClient *client,
     {
       GConfEntry* entry = tmp->data;
       
-      gconf_client_cache (client, TRUE, entry);
+      gconf_client_cache (client, TRUE, entry, FALSE);
       
       tmp = g_slist_next (tmp);
     }
@@ -1238,7 +1239,7 @@ get (GConfClient *client,
       if (key_being_monitored (client, key))
         {
           /* cache a copy of val */
-          gconf_client_cache (client, FALSE, entry);
+          gconf_client_cache (client, FALSE, entry, FALSE);
         }
 
       /* We don't own the entry, we're returning this copy belonging
@@ -1881,7 +1882,8 @@ gconf_client_value_changed          (GConfClient* client,
 static gboolean
 gconf_client_cache (GConfClient *client,
                     gboolean     take_ownership,
-                    GConfEntry  *new_entry)
+                    GConfEntry  *new_entry,
+                    gboolean     preserve_schema_name)
 {
   gpointer oldkey = NULL, oldval = NULL;
 
@@ -1903,6 +1905,10 @@ gconf_client_cache (GConfClient *client,
           if (!take_ownership)
             new_entry = gconf_entry_copy (new_entry);
           
+          if (preserve_schema_name)
+            gconf_entry_set_schema_name (new_entry, 
+                                         gconf_entry_get_schema_name (entry));
+
           g_hash_table_replace (client->cache_hash,
                                 new_entry->key,
                                 new_entry);
