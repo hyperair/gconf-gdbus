@@ -35,7 +35,7 @@ built_sourcecode = 			\
 	gconfmarshal.h			\
 	gconfmarshal.c
 
-## $(OBJECTS) $(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
+$(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
 
 CLEANFILES = \
 	$(built_sourcecode)	\
