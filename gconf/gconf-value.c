@@ -114,10 +114,9 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
       break;
     case GCONF_VALUE_FLOAT:
       {
-        gchar* endptr = 0;
         double num;
-        num = g_strtod(value_str, &endptr);
-        if (value_str != endptr)
+
+        if (gconf_string_to_double(value_str, &num))
           {
             gconf_value_set_float(value, num);
           }
@@ -126,7 +125,7 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
             if (err)
               *err = gconf_error_new(GCONF_ERROR_PARSE_ERROR,
                                       _("Didn't understand `%s' (expected real number)"),
-                                      value_str);
+                                     value_str);
             
             gconf_value_destroy(value);
             value = NULL;
@@ -220,7 +219,7 @@ gconf_value_to_string(GConfValue* value)
       retval = g_strdup_printf("%d", gconf_value_int(value));
       break;
     case GCONF_VALUE_FLOAT:
-      retval = g_strdup_printf("%g", gconf_value_float(value));
+      retval = gconf_double_to_string(gconf_value_float(value));
       break;
     case GCONF_VALUE_STRING:
       retval = g_strdup(gconf_value_string(value));

@@ -1,5 +1,26 @@
 2000-01-21  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-value.c (gconf_value_new_from_string): use new
+	double conversion
+	(gconf_value_to_string): use new conversion
+
+	* gconf/gconf-internals.c (gconf_double_to_string) 
+	(gconf_string_to_double): new functions to go from string
+	to double, we had precision problems with this and maybe 
+	still do, these functions encapsulate it. For now
+	copied code from gnumeric/src/xml-io.c
+
+	* gconf/gconftool.c (main): improve gconfd-is-running error
+	message
+
+	* gconf/gconf.c (gconf_synchronous_sync): internal-only API 
+	for the synchronous sync
+
+	* gconf/gconfd.c (gconfd_synchronous_sync): implement a way to
+	force _immediate_ sync for testing purposes
+
+2000-01-21  Havoc Pennington  <hp@pobox.com>
+
 	* tests/Makefile.am (testpersistence_SOURCES): add new test
 
 	* tests/testpersistence.c: New test, clears the cache after every

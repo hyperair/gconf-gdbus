@@ -163,6 +163,8 @@ static void          context_set_schema(GConfContext* ctx, const gchar* key,
                                         GConfError** err);
 static void          context_sync(GConfContext* ctx,
                                   GConfError** err);
+static gboolean      context_synchronous_sync(GConfContext* ctx,
+                                              GConfError** err);
 static void          context_clear_cache(GConfContext* ctx,
                                          GConfError** err);
 static void          context_hibernate(GConfContext* ctx);
@@ -278,6 +280,10 @@ gconfd_clear_cache(PortableServer_Servant servant,
                    ConfigServer_Context ctx,
                    CORBA_Environment *ev);
 
+static void 
+gconfd_synchronous_sync(PortableServer_Servant servant,
+                        ConfigServer_Context ctx,
+                        CORBA_Environment *ev);
 
 static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
@@ -310,7 +316,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_sync,
   gconfd_ping,
   gconfd_shutdown,
-  gconfd_clear_cache
+  gconfd_clear_cache,
+  gconfd_synchronous_sync
 };
 
 static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
@@ -804,6 +811,25 @@ gconfd_clear_cache(PortableServer_Servant servant,
   gconf_set_exception(&error, ev);
 }
 
+static void 
+gconfd_synchronous_sync(PortableServer_Servant servant,
+                        ConfigServer_Context ctx,
+                        CORBA_Environment *ev)
+{
+  GConfContext* gcc;
+  GConfError* error = NULL;
+
+  gconf_log(GCL_INFO, _("Received request to sync synchronously"));
+  
+  gcc = lookup_context(ctx, &error);
+
+  if (gconf_set_exception(&error, ev))
+    return;
+  
+  context_synchronous_sync(gcc, &error);
+
+  gconf_set_exception(&error, ev);
+}
 
 /*
  * Main code
@@ -1160,7 +1186,7 @@ context_really_sync(GConfContext* ctx)
 {
   GConfError* error = NULL;
   
-  if (!gconf_sources_sync_all(ctx->sources, &error))
+  if (!context_synchronous_sync(ctx, &error))
     {
       g_return_if_fail(error != NULL);
 
@@ -1342,6 +1368,12 @@ context_schedule_sync(GConfContext* ctx)
     }
 }
 
+static gboolean
+context_synchronous_sync(GConfContext* ctx,
+                         GConfError** err)
+{
+  return gconf_sources_sync_all(ctx->sources, err);
+}
 
 static CORBA_unsigned_long
 context_add_listener(GConfContext* ctx,

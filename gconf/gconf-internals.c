@@ -35,6 +35,7 @@
 #include <ctype.h>
 #include <locale.h>
 #include <time.h>
+#include <math.h>
 
 
 /* Quick hack so I can mark strings */
@@ -948,6 +949,33 @@ gconf_string_to_gulong(const gchar* str)
     retval = 0;
 
   return retval;
+}
+
+gboolean
+gconf_string_to_double(const gchar* str, gdouble* retloc)
+{
+  int res;
+
+  *retloc = 0.0;
+  res = sscanf (str, "%lf", retloc);
+
+  if (res == 1)
+    return TRUE;
+  else
+    return FALSE;
+}
+
+gchar*
+gconf_double_to_string(gdouble val)
+{
+  char str[101 + DBL_DIG];
+  
+  if (fabs (val) < 1e9 && fabs (val) > 1e-5)
+    snprintf (str, 100 + DBL_DIG, "%.*g", DBL_DIG, val);
+  else
+    snprintf (str, 100 + DBL_DIG, "%f", val);
+  
+  return g_strdup(str);
 }
 
 const gchar*

@@ -66,8 +66,11 @@ void          gconf_shutdown_daemon(GConfError** err);
 gboolean      gconf_ping_daemon(void);
 gboolean      gconf_spawn_daemon(GConfError** err);
 
-/* Returns 0 on failure */
+/* Returns 0 on failure (or if the string is "0" of course) */
 gulong        gconf_string_to_gulong(const gchar* str);
+
+gboolean      gconf_string_to_double(const gchar* str, gdouble* val);
+gchar*        gconf_double_to_string(gdouble val);
 
 const gchar*  gconf_current_locale(void);
 

@@ -26,11 +26,7 @@
 static void
 sync_and_clear(GConfEngine* conf)
 {
-  gconf_suggest_sync(conf, NULL);
-  /* The sync is asynchronous; we need to wait long enough to make
-     sure it's begun, at which point our clear_cache request won't be
-     allowed through until it completes */
-  gconf_nanosleep(100);
+  gconf_synchronous_sync(conf, NULL);
   gconf_clear_cache(conf, NULL);
 }
 
