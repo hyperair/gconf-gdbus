@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-09-19 19:23+0200\n"
-"PO-Revision-Date: 2000-09-19 19:35+0200\n"
+"POT-Creation-Date: 2000-09-25 02:13+0200\n"
+"PO-Revision-Date: 2000-09-25 02:17+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1009,11 +1009,11 @@ msgstr "Förväntade boolean, fick %s"
 msgid "Expected schema, got %s"
 msgstr "Förväntade schema, fick %s"
 
-#: gconf/gconfd.c:185
+#: gconf/gconfd.c:219
 msgid "Shutdown request received"
 msgstr "Avstängningsbegäran mottagen"
 
-#: gconf/gconfd.c:217
+#: gconf/gconfd.c:251
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1021,7 +1021,7 @@ msgstr ""
 "gconfd kompilerades med avbuggning; försök att ladda gconf.path från "
 "källkatalogen"
 
-#: gconf/gconfd.c:235
+#: gconf/gconfd.c:269
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1029,7 +1029,7 @@ msgstr ""
 "Kunde inte hitta några konfigurationsfiler, försöker använda standard "
 "konfigurationskällan \"%s\""
 
-#: gconf/gconfd.c:244
+#: gconf/gconfd.c:278
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -1037,12 +1037,12 @@ msgstr ""
 "Inga konfigurationskällor i källsökvägen, konfigurationen kommer ej sparas; "
 "redigera "
 
-#: gconf/gconfd.c:258
+#: gconf/gconfd.c:292
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fel vid laddning av vissa konfigurationskällor: %s"
 
-#: gconf/gconfd.c:270
+#: gconf/gconfd.c:304
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1050,7 +1050,7 @@ msgstr ""
 "Inga konfigurationskällor kunde lösas, kan inte ladda eller spara "
 "konfigurationsdata"
 
-#: gconf/gconfd.c:287
+#: gconf/gconfd.c:321
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1058,28 +1058,28 @@ msgstr ""
 "Inga skrivbara konfigurationskällor löstes lyckat, kommer kanske inte att "
 "kunna spara vissa konfigurationsändringar"
 
-#: gconf/gconfd.c:312 gconf/gconfd.c:324
+#: gconf/gconfd.c:346 gconf/gconfd.c:358
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Mottog signal %d, stänger ner."
 
-#: gconf/gconfd.c:329
+#: gconf/gconfd.c:363
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Mottog signal %d, stänger ner snyggt"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:376
+#: gconf/gconfd.c:410
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "startar (version %s), pid %u användare \"%s\""
 
-#: gconf/gconfd.c:380
+#: gconf/gconfd.c:414
 msgid "GConf was built with debugging features enabled"
 msgstr "GConf byggdes med felsökningsalternativ påslagna"
 
-#: gconf/gconfd.c:403
+#: gconf/gconfd.c:437
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to OAF "
 "maintainers"
@@ -1087,11 +1087,11 @@ msgstr ""
 "Misslyckades med att initiera Object Activation Framework: var god och "
 "skicka en buggrapport till OAF:s underhållare"
 
-#: gconf/gconfd.c:423
+#: gconf/gconfd.c:457
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Misslyckades med att få objektreferensen för konfigurationsservern"
 
-#: gconf/gconfd.c:443
+#: gconf/gconfd.c:477
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
@@ -1099,24 +1099,24 @@ msgstr ""
 "OAF vet inget om vår IID; verkar som en trasig installation; kan inte "
 "registrera; avslutar\n"
 
-#: gconf/gconfd.c:447
+#: gconf/gconfd.c:481
 msgid "Another gconfd already registered with OAF; exiting\n"
 msgstr "En annan gconfd är redan registrerad hos OAF; avslutar\n"
 
-#: gconf/gconfd.c:452
+#: gconf/gconfd.c:486
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Okänt fel vid registrering av gconfd hos OAF; avslutar\n"
 
-#: gconf/gconfd.c:476
+#: gconf/gconfd.c:510
 msgid "Exiting"
 msgstr "Avslutar"
 
-#: gconf/gconfd.c:822
+#: gconf/gconfd.c:856
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerar undantag: %s"
 
-#: gconf/gconfd.c:889
+#: gconf/gconfd.c:923
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1125,7 +1125,7 @@ msgstr ""
 "Misslyckades med att öppna gconfd-loggfilen; kommer inte att kunna "
 "återställa lyssnare efter avslutning av gconfd (%s)"
 
-#: gconf/gconfd.c:912
+#: gconf/gconfd.c:946
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1133,32 +1133,32 @@ msgstr ""
 "Misslyckades med att stänga gconfd-loggfilen; data kanske inte har sparats "
 "korrekt (%s)"
 
-#: gconf/gconfd.c:970
+#: gconf/gconfd.c:1004
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunde inte öppna tillståndsfilen \"%s\" för skrivning: %s"
 
-#: gconf/gconfd.c:984
+#: gconf/gconfd.c:1018
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Kunde inte skriva fildeskriptorn för tillståndsfilen \"%s\": %d: %s"
 
-#: gconf/gconfd.c:993
+#: gconf/gconfd.c:1027
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Misslyckades med att stänga den nya tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1007
+#: gconf/gconfd.c:1041
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunde inte flytta undan den gamla tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1017
+#: gconf/gconfd.c:1051
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Misslyckades med att flytta den nya tillståndsfilen på plats: %s"
 
-#: gconf/gconfd.c:1026
+#: gconf/gconfd.c:1060
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1166,33 +1166,33 @@ msgstr ""
 "Misslyckades med att återskapa den ursprungliga tillståndsfilen som hade "
 "flyttats till \"%s\": %s"
 
-#: gconf/gconfd.c:1114
+#: gconf/gconfd.c:1148
 #, c-format
 msgid "Didn't understand line in saved state file: '%s'"
 msgstr "Förstod inte rad i tillståndsfilen: \"%s\""
 
-#: gconf/gconfd.c:1129
+#: gconf/gconfd.c:1163
 msgid "Failed to parse connection ID in saved state file"
 msgstr "Misslyckades med att tolka anslutnings-ID i tillståndsfilen"
 
-#: gconf/gconfd.c:1144
+#: gconf/gconfd.c:1178
 #, c-format
 msgid "Failed to unquote config source address from saved state file: %s"
 msgstr ""
 "Misslyckades med att avcitera källadressen för konfigurationen ifrån "
 "tillståndsfilen: %s"
 
-#: gconf/gconfd.c:1164
+#: gconf/gconfd.c:1198
 #, c-format
 msgid "Failed to unquote listener location from saved state file: %s"
 msgstr "Misslyckades med att avcitera lyssnarplatsen från tillståndsfilen: %s"
 
-#: gconf/gconfd.c:1184
+#: gconf/gconfd.c:1218
 #, c-format
 msgid "Failed to unquote IOR from saved state file: %s"
 msgstr "Misslyckades med att avcitera IOR från tillståndsfilen: %s"
 
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1242
 msgid ""
 "Saved state file records the same listener added twice; ignoring the second "
 "instance"
@@ -1200,7 +1200,7 @@ msgstr ""
 "Tillståndsfilen har hittat att samma lyssnare har lagts till två gånger; "
 "ignorerar den andra instansen"
 
-#: gconf/gconfd.c:1229
+#: gconf/gconfd.c:1263
 msgid ""
 "Saved state file had a removal of a listener that wasn't added; ignoring the "
 "removal."
@@ -1208,19 +1208,19 @@ msgstr ""
 "Tillståndsfilen hade en borttagning av en lyssnare som inte hade lagts till; "
 "ignorerar borttagningen."
 
-#: gconf/gconfd.c:1350
+#: gconf/gconfd.c:1384
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Kunde inte återställa lyssnaren på adress \"%s\", kunde inte tolka databasen"
 
-#: gconf/gconfd.c:1381
+#: gconf/gconfd.c:1415
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Misslyckades med att öppna tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1480
+#: gconf/gconfd.c:1515
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to "
@@ -1230,7 +1230,7 @@ msgstr ""
 "kommer inte att kunna lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs av (%s)"
 
-#: gconf/gconfd.c:1485
+#: gconf/gconfd.c:1520
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously "
@@ -1239,6 +1239,36 @@ msgstr ""
 "Misslyckades med att logga borttagningen av en lyssnare i gconfd-loggfilen; "
 "kan komma att felaktigt lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs ner (%s)"
+
+#: gconf/gconfd.c:1542
+#, c-format
+msgid "Failed to get IOR for client: %s"
+msgstr "Misslyckades med att få IOR för klienten: %s"
+
+#: gconf/gconfd.c:1557
+#, c-format
+msgid "Failed to open saved state file: %s"
+msgstr "Misslyckades med att öppna tillståndsfilen: %s"
+
+#: gconf/gconfd.c:1568
+#, c-format
+msgid "Failed to write client add to saved state file: %s"
+msgstr "Misslyckades med att skriva klienttillägg till tillståndsfilen: %s"
+
+#: gconf/gconfd.c:1576
+#, c-format
+msgid "Failed to flush client add to saved state file: %s"
+msgstr "Misslyckades med att tömma klienttillägg till tillståndsfilen: %s"
+
+#: gconf/gconfd.c:1610
+msgid "Some client added itself to the GConf server twice."
+msgstr "Någon klient la till sig själv till GConf-servern två gånger."
+
+#: gconf/gconfd.c:1650
+msgid ""
+"Some client removed itself from the GConf server when it hadn't been added."
+msgstr ""
+"Någon klient tog bort sig själv från GConf-servern när den inte var tillagd."
 
 #: gconf/gconftool.c:62
 msgid "Help options"
