@@ -33,12 +33,12 @@ echo "" >> $LOGFILE
 
 for I in $TESTS
 do
-    echo -n "Running test program \"$I\", please wait:"
+    echo "Running test program \"$I\", please wait:"
     echo "" >> $LOGFILE
-    echo "Output of $I:" >> $LOGFILE
     LOCALES="C en_US ja_JP ja_JP:en_US:C"
     for L in $LOCALES
     do
+        echo "Output of LANG=$L $I:" >> $LOGFILE
         if LANG=$L ./$I >>$LOGFILE 2>&1; then
             echo " passed in $L locale"
         else

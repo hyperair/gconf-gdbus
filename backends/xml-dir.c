@@ -59,6 +59,9 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 }
 #endif
 
+static xmlDocPtr my_xml_parse_file (const char *filename,
+                                    GError    **err);
+
 static gboolean dir_rescan_subdirs (Dir* d, GError** err);
 
 struct _Dir {
@@ -939,22 +942,52 @@ dir_load_doc(Dir* d, GError** err)
     }
 
   if (xml_already_exists)
-    d->doc = xmlParseFile(d->xml_filename);
+    {
+      GError *tmp_err;
+      gboolean error_was_fatal;
 
-  /* We recover from these errors instead of passing them up */
+      error_was_fatal = FALSE;
+      tmp_err = NULL;
+      d->doc = my_xml_parse_file (d->xml_filename, &tmp_err);
+
+      if (tmp_err != NULL)
+        {
+          gconf_log (GCL_WARNING,
+                     _("%s"), tmp_err->message);
+
+          /* file errors are assumed to be some kind of
+           * blowup, like out of file descriptors, so
+           * we play it safe and don't touch anything
+           */
+          if (tmp_err->domain == G_FILE_ERROR)
+            error_was_fatal = TRUE;
+          
+          g_error_free (tmp_err);
+        }
+
+      if (error_was_fatal)
+        return;
+    }
+  
+  /* We recover from parse errors instead of passing them up */
 
   /* This has the potential to just blow away an entire corrupted
-     config file; but I think that is better than the alternatives
-     (disabling config for a directory because the document is mangled)
-  */  
+   * config file; but I think that is better than the alternatives
+   * (disabling config for a directory because the document is mangled).
+   *
+   * Parse errors really should not happen from an XML file we created
+   * ourselves anyway...
+   */  
 
   /* Also we create empty %gconf.xml files when we create a new dir,
-     and those return a parse error */
+   * and those return a parse error, though they should be trapped
+   * by the statbuf.st_size == 0 check above.
+   */
   
   if (d->doc == NULL)
     {
       if (xml_already_exists)
-        need_backup = TRUE; /* we want to save whatever broken stuff was in the file */
+        need_backup = TRUE; /* rather uselessly save whatever broken stuff was in the file */
           
       /* Create a new doc */
       
@@ -1260,6 +1293,42 @@ _gconf_mode_t_to_mode(mode_t orig)
 
   return mode;
 }
+
+static xmlDocPtr
+my_xml_parse_file (const char *filename,
+                   GError    **err)
+{
+  char *text;
+  int length;
+  xmlDocPtr doc;
+  
+  text = NULL;
+  length = 0;
+  
+  if (!g_file_get_contents (filename,
+                            &text,
+                            &length,
+                            err))
+    return NULL;
+
+
+  doc = xmlParseMemory (text, length);
+
+  g_free (text);
+
+  if (doc == NULL)
+    {
+      g_set_error (err,
+                   GCONF_ERROR,
+                   GCONF_ERROR_PARSE_ERROR,
+                   _("Failed to parse XML file \"%s\""),
+                   filename);
+      return NULL;
+    }
+  
+  return doc;
+}
+
 
 void
 xml_test_dir (void)

@@ -1,5 +1,18 @@
 2002-03-20  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconf-internals.c
+	(gconf_value_list_to_primitive_list_destructive): don't call
+	gconf_value_get_int on a bool. WTF.
+
+	* gconf/gconfd.c (main): enable the signal handler for USR1
+
+	* backends/xml-dir.c (dir_load_doc): do our own file reading, only
+	use libxml to parse, so we can return an error on I/O problems
+	(as opposed to the current behavior, nuking the file contents,
+	which only makes sense for corrupt files)
+
+2002-03-20  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconf-value.c: change all the "getters" to be functions
 	not macros, so we can add g_return_if_fail and be typesafe and
 	generally suck less. Suggested most recently by Jody.

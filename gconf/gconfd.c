@@ -409,6 +409,8 @@ signal_handler (int signo)
     break;
 
   case SIGUSR1:
+    --in_fatal;
+    
     /* it'd be nice to log a message here but it's not very safe, so */
     gconf_log_debug_messages = !gconf_log_debug_messages;
     break;
@@ -551,7 +553,8 @@ main(int argc, char** argv)
   sigaction (SIGHUP,  &act, 0);
   sigaction (SIGSEGV, &act, 0);
   sigaction (SIGABRT, &act, 0);
-
+  sigaction (SIGUSR1,  &act, 0);
+  
   act.sa_handler = SIG_IGN;
   sigaction (SIGINT, &act, 0);
 

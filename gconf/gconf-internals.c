@@ -1403,8 +1403,11 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
         switch (list_type)
           {
           case GCONF_VALUE_INT:
-          case GCONF_VALUE_BOOL:
             tmp->data = GINT_TO_POINTER(gconf_value_get_int(elem));
+            break;
+
+          case GCONF_VALUE_BOOL:
+            tmp->data = GINT_TO_POINTER(gconf_value_get_bool(elem));
             break;
                 
           case GCONF_VALUE_FLOAT:

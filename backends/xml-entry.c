@@ -121,6 +121,10 @@ entry_get_value(Entry* e, const gchar** locales, GError** err)
 
   sl = gconf_schema_get_locale(gconf_value_get_schema(e->cached_value));
 
+  gconf_log (GCL_DEBUG, "Cached schema value has locale \"%s\", looking for %s",
+             sl ? sl : "null",
+             locales ? locales[0] : "null");
+  
   /* optimize most common cases first */
   if (sl == NULL && (locales == NULL ||
                      *locales == NULL))
