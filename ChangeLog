@@ -1,3 +1,11 @@
+2004-08-30  Mark McLoughlin  <mark@skynet.ie>
+
+	Patch from Josselin Mouette <joss@debian.org> in bug #148028
+
+	* gconf/gconfd.c: (periodic_cleanup_timeout): save and reload
+	~/.gconfd/saved_state so we don't drop listeners when reloading
+	the database.
+
 2004-08-27  Mark McLoughlin  <mark@skynet.ie>
 
 	* gconf/gconftool.c: (process_locale_info): don't explicitly

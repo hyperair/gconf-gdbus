@@ -806,9 +806,11 @@ periodic_cleanup_timeout(gpointer data)
       gconf_log (GCL_INFO, _("SIGHUP received, reloading all databases"));
 
       need_db_reload = FALSE;
+      logfile_save ();
       shutdown_databases ();
       init_databases ();
-      gconf_server_load_sources ();		  
+      gconf_server_load_sources ();
+      logfile_read ();
     }
   
   gconf_log (GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
