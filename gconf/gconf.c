@@ -252,7 +252,7 @@ gconf_engine_unref        (GConfEngine* conf)
       GSList* tmp;
       CORBA_Environment ev;
       ConfigServer cs;
-      
+
       cs = gconf_get_config_server(FALSE, NULL); /* don't restart it
                                                      if down, since
                                                      the new one won't
@@ -970,8 +970,9 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
 {
   if (server != CORBA_OBJECT_NIL)
     return server;
-  
-  server = try_to_contact_server(err);
+
+  if(start_if_not_found)
+    server = try_to_contact_server(err);
 
   return server; /* return what we have, NIL or not */
 }
@@ -2008,6 +2009,8 @@ gconf_server_broken(CORBA_Environment* ev)
   switch (ev->_major)
     {
     case CORBA_SYSTEM_EXCEPTION:
+      CORBA_Object_release(server, ev);
+      server = CORBA_OBJECT_NIL;
       return TRUE;
       break;
     default:
