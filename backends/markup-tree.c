@@ -1522,24 +1522,22 @@ markup_entry_get_value (MarkupEntry *entry,
        * fall back to C locale if we can
        */
 
-      g_assert (best != NULL);
-
-      if (best->locale)
+      if (best && best->locale)
 	gconf_schema_set_locale (schema, best->locale);
       else
 	gconf_schema_set_locale (schema, "C");
 
-      if (best->default_value)
+      if (best && best->default_value)
         gconf_schema_set_default_value (schema, best->default_value);
       else if (c_local_schema && c_local_schema->default_value)
         gconf_schema_set_default_value (schema, c_local_schema->default_value);
 
-      if (best->short_desc)
+      if (best && best->short_desc)
         gconf_schema_set_short_desc (schema, best->short_desc);
       else if (c_local_schema && c_local_schema->short_desc)
         gconf_schema_set_short_desc (schema, c_local_schema->short_desc);
 
-      if (best->long_desc)
+      if (best && best->long_desc)
         gconf_schema_set_long_desc (schema, best->long_desc);
       else if (c_local_schema && c_local_schema->long_desc)
         gconf_schema_set_long_desc (schema, c_local_schema->long_desc);
