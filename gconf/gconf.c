@@ -20,6 +20,7 @@
 #include <popt.h>
 #include "GConfX.h"
 #include "gconf.h"
+#include "gconf-dbus.h"
 #include "gconf-internals.h"
 #include "gconf-sources.h"
 #include "gconf-locale.h"
@@ -35,9 +36,11 @@
 
 /* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err);
+static gboolean gconf_handle_dbus_exception (DBusMessage *message, GError** err);
+
 /* just returns TRUE if there's an exception indicating the server is
    probably hosed; no side effects */
-static gboolean gconf_server_broken(CORBA_Environment* ev);
+static gboolean gconf_server_broken(DBusMessage *message);
 static void gconf_detach_config_server(void);
 
 /* Maximum number of times to try re-spawning the server if it's down. */
@@ -72,7 +75,7 @@ typedef struct _CnxnTable CnxnTable;
 struct _GConfEngine {
   guint refcount;
 
-  ConfigDatabase database;
+  int database;
 
   CnxnTable* ctable;
 
@@ -110,6 +113,7 @@ struct _GConfCnxn {
   gpointer user_data;
 };
 
+static DBusConnection *dbus_conn = NULL;
 static GConfEngine *default_engine = NULL;
 
 static GConfCnxn* gconf_cnxn_new     (GConfEngine         *conf,
@@ -129,15 +133,15 @@ static ConfigServer   gconf_get_config_server    (gboolean     start_if_not_foun
    gconf_get_config_server will have to try to respawn the server */
 static ConfigListener gconf_get_config_listener  (void);
 
-static void           gconf_engine_detach       (GConfEngine     *conf);
-static gboolean       gconf_engine_connect      (GConfEngine     *conf,
-                                                 gboolean         start_if_not_found,
-                                                 GError         **err);
-static void           gconf_engine_set_database (GConfEngine     *conf,
-                                                 ConfigDatabase   db);
-static ConfigDatabase gconf_engine_get_database (GConfEngine     *conf,
-                                                 gboolean         start_if_not_found,
-                                                 GError         **err);
+static void     gconf_engine_detach       (GConfEngine  *conf);
+static gboolean gconf_engine_connect      (GConfEngine  *conf,
+					   gboolean      start_if_not_found,
+					   GError      **err);
+static void     gconf_engine_set_database (GConfEngine  *conf,
+					   int           id);
+static int      gconf_engine_get_database (GConfEngine  *conf,
+					   gboolean      start_if_not_found,
+					   GError      **err);
 
 
 #define CHECK_OWNER_USE(engine)   \
@@ -196,7 +200,7 @@ gconf_engine_blank (gboolean remote)
   
   if (remote)
     {
-      conf->database = CORBA_OBJECT_NIL;
+      conf->database = -1;
       conf->ctable = ctable_new();
       conf->local_sources = NULL;
       conf->is_local = FALSE;
@@ -204,7 +208,7 @@ gconf_engine_blank (gboolean remote)
     }
   else
     {
-      conf->database = CORBA_OBJECT_NIL;
+      conf->database = -1;
       conf->ctable = NULL;
       conf->local_sources = NULL;
       conf->is_local = TRUE;
@@ -253,45 +257,28 @@ lookup_engine_by_database (ConfigDatabase db)
     return NULL;
 }
 
-static void
-database_rec_release (gpointer rec)
-{
-  GConfEngine *conf = rec;
-  CORBA_Environment ev;
-
-  CORBA_exception_init (&ev);
-
-  CORBA_Object_release (conf->database, &ev);
-  conf->database = CORBA_OBJECT_NIL;
-  
-  CORBA_exception_free (&ev);
-}
-
 /* This takes ownership of the ConfigDatabase */
 static void
 gconf_engine_set_database (GConfEngine *conf,
-                           ConfigDatabase db)
+                           int          id)
 {
   gconf_engine_detach (conf);
 
-  conf->database = db;
+  conf->database = id;
 
   if (engines_by_db == NULL)
-    engines_by_db = g_hash_table_new_full (
-	    (GHashFunc) gconf_CORBA_Object_hash,
-	    (GCompareFunc) gconf_CORBA_Object_equal,
-	    NULL,
-	    database_rec_release);
+    engines_by_db = g_hash_table_new_full (g_int_hash, g_int_equal,
+					   NULL, NULL);
   
-  g_hash_table_insert (engines_by_db, conf->database, conf);  
+  g_hash_table_insert (engines_by_db, GINT_TO_POINTER (conf->database), conf);  
 }
 
 static void
 gconf_engine_detach (GConfEngine *conf)
 {
-  if (conf->database != CORBA_OBJECT_NIL)
+  if (conf->database != -1)
     {
-      g_hash_table_remove (engines_by_db, conf->database);
+      g_hash_table_remove (engines_by_db, GINT_TO_POINTER (conf->database));
     }
 }
 
@@ -309,7 +296,7 @@ gconf_engine_connect (GConfEngine *conf,
   
   CORBA_exception_init(&ev);
 
-  if (!CORBA_Object_is_nil (conf->database, &ev))
+  if (conf->database != -1)
     return TRUE;
   
  RETRY:
@@ -353,13 +340,16 @@ gconf_engine_connect (GConfEngine *conf,
   return TRUE;
 }
 
-static ConfigDatabase
+static int
 gconf_engine_get_database (GConfEngine *conf,
                            gboolean start_if_not_found,
                            GError **err)
 {
+  /* FIXME: */
+  return 0;
+  
   if (!gconf_engine_connect (conf, start_if_not_found, err))
-    return CORBA_OBJECT_NIL;
+    return -1;
   else
     return conf->database;
 }
@@ -519,6 +509,7 @@ gconf_engine_unref(GConfEngine* conf)
         }
       else
         {
+#if GCONF_CORBA_BROKEN
           /* Remove all connections associated with this GConf */
           GSList* removed;
           GSList* tmp;
@@ -577,6 +568,7 @@ gconf_engine_unref(GConfEngine* conf)
           gconf_engine_detach (conf);
           
           ctable_destroy (conf->ctable);
+#endif
         }
 
       if (conf == default_engine)
@@ -767,11 +759,12 @@ gconf_engine_get_fuller (GConfEngine *conf,
   GConfValue* val;
   ConfigValue* cv;
   CORBA_Environment ev;
-  ConfigDatabase db;
+  int db_id;
   gint tries = 0;
-  CORBA_boolean is_default = FALSE;
-  CORBA_boolean is_writable = TRUE;
-  CORBA_char *corba_schema_name = NULL;
+  gboolean is_default = FALSE;
+  gboolean is_writable = TRUE;
+  char *schema_name = NULL;
+  DBusMessage *message, *reply;
   
   g_return_val_if_fail(conf != NULL, NULL);
   g_return_val_if_fail(key != NULL, NULL);
@@ -818,14 +811,12 @@ gconf_engine_get_fuller (GConfEngine *conf,
     }
 
   g_assert(!gconf_engine_is_local(conf));
-  
-  CORBA_exception_init(&ev);
 
  RETRY:
-  
-  db = gconf_engine_get_database (conf, TRUE, err);
 
-  if (db == CORBA_OBJECT_NIL)
+  db_id = gconf_engine_get_database (conf, TRUE, err);
+
+  if (db_id == -1)
     {
       g_return_val_if_fail(err == NULL || *err != NULL, NULL);
 
@@ -835,74 +826,69 @@ gconf_engine_get_fuller (GConfEngine *conf,
   if (schema_name_p)
     *schema_name_p = NULL;
 
+  message = dbus_message_new (GCONF_DBUS_CONFIG_SERVER, GCONF_DBUS_CONFIG_DATABASE_LOOKUP);
 
-  corba_schema_name = NULL;
-  cv = ConfigDatabase2_lookup_with_schema_name (db,
-                                                (gchar*)key, (gchar*)
-                                                (locale ? locale : gconf_current_locale()),
-                                                use_schema_default,
-                                                &corba_schema_name,
-                                                &is_default,
-                                                &is_writable,
-                                                &ev);
+  dbus_message_append_args (message,
+			    DBUS_TYPE_UINT32, db_id,
+			    DBUS_TYPE_STRING, key,
+			    DBUS_TYPE_STRING, (locale ? locale : gconf_current_locale()),
+			    DBUS_TYPE_BOOLEAN, use_schema_default,
+			    0);
 
-  if (ev._major == CORBA_SYSTEM_EXCEPTION &&
-      CORBA_exception_id (&ev) &&
-      strcmp (CORBA_exception_id (&ev), "IDL:CORBA/BAD_OPERATION:1.0") == 0)
-    {
-      CORBA_exception_free (&ev);
-      CORBA_exception_init (&ev);
-      
-      cv = ConfigDatabase_lookup_with_locale(db,
-                                             (gchar*)key, (gchar*)
-                                             (locale ? locale : gconf_current_locale()),
-                                             use_schema_default,
-                                             &is_default,
-                                             &is_writable,
-                                             &ev);
-    }
+  reply = dbus_connection_send_message_with_reply_and_block (dbus_conn, message, -1, NULL);
+  dbus_message_unref (message);
   
-  if (gconf_server_broken(&ev))
+  if (gconf_server_broken (reply))
+    if (tries < MAX_RETRIES)
+      {
+	++tries;
+	dbus_message_unref (reply);
+	gconf_engine_detach (conf);
+	goto RETRY;
+      }
+
+  if (gconf_handle_dbus_exception(reply, err))
     {
-      if (tries < MAX_RETRIES)
-        {
-          ++tries;
-          CORBA_exception_free(&ev);
-          gconf_engine_detach (conf);
-          goto RETRY;
-        }
-    }
-  
-  if (gconf_handle_corba_exception(&ev, err))
-    {
-      /* NOTE: don't free cv since we got an exception! */
+      dbus_message_unref (reply);
       return NULL;
     }
   else
     {
-      val = gconf_value_from_corba_value(cv);
-      CORBA_free(cv);
+      DBusMessageIter *iter;
 
+      iter = dbus_message_get_args_iter (reply);
+
+      val = gconf_dbus_create_gconf_value_from_message (iter);
+      dbus_message_iter_next (iter);
+
+      schema_name = dbus_message_iter_get_string (iter);
+      dbus_message_iter_next (iter);
+
+      is_default = dbus_message_iter_get_boolean (iter);
+      dbus_message_iter_next (iter);
+
+      is_writable = dbus_message_iter_get_boolean (iter);
+      
       if (is_default_p)
-        *is_default_p = !!is_default;
+	*is_default_p = !!is_default;
+
       if (is_writable_p)
         *is_writable_p = !!is_writable;
 
-      /* we can't get a null pointer through corba
-       * so the server sent us an empty string
-       */
-      if (corba_schema_name && corba_schema_name[0] != '/')
-        {
-          CORBA_free (corba_schema_name);
-          corba_schema_name = NULL;
-        }
+      if (schema_name && schema_name[0] != '/')
+	{
+	  dbus_free (schema_name);
+	  schema_name = NULL;
+	}
 
       if (schema_name_p)
-        *schema_name_p = g_strdup (corba_schema_name);
+	*schema_name_p = g_strdup (schema_name);
 
-      if (corba_schema_name)
-        CORBA_free (corba_schema_name);
-      
+      dbus_free (schema_name);
+
+      dbus_message_iter_unref (iter);
+      dbus_message_unref (reply);
+
       return val;
     }
 }
@@ -2372,7 +2358,17 @@ gconf_get_config_listener(void)
   
   return listener;
 }
-     
+
+gboolean
+gconf_init_dbus (DBusConnection *connection)
+{
+  if (dbus_conn)
+    return FALSE;
+
+  dbus_conn = connection;
+  return TRUE;
+}
+
 void
 gconf_preinit (gpointer app, gpointer mod_info)
 {
@@ -3386,8 +3382,9 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
 }
 
 static gboolean
-gconf_server_broken(CORBA_Environment* ev)
+gconf_server_broken(DBusMessage *message)
 {
+#ifdef GCONF_CORBA_BROKEN
   switch (ev->_major)
     {
     case CORBA_SYSTEM_EXCEPTION:
@@ -3408,6 +3405,17 @@ gconf_server_broken(CORBA_Environment* ev)
       return FALSE;
       break;
     }
+#endif
+  return FALSE;
+}
+
+static gboolean
+gconf_handle_dbus_exception (DBusMessage *message, GError** err)
+{
+  if (dbus_message_get_is_error (message))
+    g_warning ("Implement me\n");
+
+  return FALSE;
 }
 
 static gboolean
