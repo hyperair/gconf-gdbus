@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf 2.5.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-03 15:04+0100\n"
-"PO-Revision-Date: 2004-07-26 22:56+0900\n"
+"POT-Creation-Date: 2004-08-08 20:35+0900\n"
+"PO-Revision-Date: 2004-08-08 21:31+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: GNOME Korea <gnome-kr-hackers@lists.kldp.net>\n"
 "MIME-Version: 1.0\n"
@@ -172,22 +172,22 @@ msgstr "<%3$s> 원소의 \"%2$s\" 속성에 알 수 없는 값 \"%1$s\"이(가) 
 #: backends/markup-tree.c:2262
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
-msgstr "<%2$s>에 ltype이 잘못되었습니다 (\"%1$s\")"
+msgstr "<%2$s>에 ltype(\"%1$s\")이 잘못되었습니다"
 
 #: backends/markup-tree.c:2342
 #, c-format
-msgid "Invalid car_type \"%s\" on <%s>"
-msgstr "<%2$s>에 car_type이 잘못되었습니다 (\"%1$s\")"
+msgid "Invalid first-element type \"%s\" on <%s>"
+msgstr "<%2$s>에 first-element type(\"%1$s\")이 잘못되었습니다"
 
 #: backends/markup-tree.c:2356
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
-msgstr "<%2$s>에 cdr_type이 잘못되었습니다 (\"%1$s\")"
+msgstr "<%2$s>에 cdr_type(\"%1$s\")이 잘못되었습니다"
 
 #: backends/markup-tree.c:2392
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
-msgstr "<%2$s>에 list_type이 잘못되었습니다 (\"%1$s\")"
+msgstr "<%2$s>에 list_type(\"%1$s\")이 잘못되었습니다"
 
 #: backends/markup-tree.c:2673
 msgid "Two <default> elements below a <local_schema>"
@@ -1069,12 +1069,14 @@ msgstr "source \"%s\"을(를) 불러들이는 데 실패했습니다: %s"
 
 #: gconf/gconf-sources.c:408
 #, c-format
-msgid "Resolved address \"%s\" to a writable config source at position %d"
+msgid ""
+"Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr "주소 \"%s\"을(를) 위치 %d에 있는 쓰기 가능한 설정 소스로 확인했습니다"
 
 #: gconf/gconf-sources.c:414
 #, c-format
-msgid "Resolved address \"%s\" to a read-only config source at position %d"
+msgid ""
+"Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr "주소 \"%s\"을(를) 위치 %d에 있는 읽기 전용 설정 소스로 확인했습니다"
 
 #: gconf/gconf-sources.c:421
@@ -1396,7 +1398,9 @@ msgstr "%s 디렉토리에 문제가 있습니다.  gconfd가 사용할 수 없�
 
 #: gconf/gconfd.c:729
 #, c-format
-msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
+msgid ""
+"Failed to write byte to pipe file descriptor %d so client program may hang: %"
+"s"
 msgstr ""
 "바이트를 파이프 fd %d에 쓰는 데 실패하여 클라이언트 프로그램이 이상 종료할 "
 "수 있습니다: %s"
@@ -1580,15 +1584,15 @@ msgstr "디렉토리 내의 모든 하위 디렉토리를 표시합니다."
 
 #: gconf/gconftool.c:159
 msgid ""
-"Dump to standard out an XML description of all entries under a dir, "
+"Dump to standard output an XML description of all entries under a directory, "
 "recursively."
-msgstr "디렉토리 아래의 모든 항목에 대한 XML 표현을 표준 출력으로 덤프합니다."
+msgstr "디렉토리 아래의 모든 항목에 대한 XML 표현을 재귀적으로 표준 출력에 덤프합니다."
 
 # FIXME: set them relative 의미는?
 #: gconf/gconftool.c:168
 msgid ""
 "Load from the specified file an XML description of values and set them "
-"relative to a dir."
+"relative to a directory."
 msgstr ""
 "지정한 파일에서 XML 표현을 읽어들여서, 어떤 디렉토리에 대해 상대적인 값으로 "
 "만듭니다."
@@ -1598,7 +1602,7 @@ msgid "Unload a set of values described in an XML file."
 msgstr "XML 파일에 기술된 값들을 지웁니다."
 
 #: gconf/gconftool.c:186
-msgid "Print all subdirectories and entries under a dir, recursively."
+msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "디렉토리 아래의 모든 하위 디렉토리와 항목들을 재귀적으로 표시합니다."
 
 #: gconf/gconftool.c:195
