@@ -2710,7 +2710,8 @@ const char *
 get_hostname (void)
 {
 	static char *hostname = NULL;
-	char hn_tmp[65], ha_tmp[4];
+	char hn_tmp[65];
+	ulong_t ha_tmp;
 	struct hostent *hent;
 
 	if (!hostname) {
@@ -2718,8 +2719,8 @@ get_hostname (void)
 
 		hent = gethostbyname (hn_tmp);
 		if (hent) {
-			memcpy (ha_tmp, hent->h_addr, 4);
-			hent = gethostbyaddr (ha_tmp, 4, AF_INET);
+			memcpy (&ha_tmp, hent->h_addr, 4);
+			hent = gethostbyaddr ((char *)&ha_tmp, 4, AF_INET);
 			if (hent)
 				hostname = g_strdup (hent->h_name);
 			else
@@ -2727,7 +2728,7 @@ get_hostname (void)
 					g_strdup (inet_ntoa
 						  (*
 						   ((struct in_addr *)
-						    ha_tmp)));
+						    &ha_tmp)));
 		} else
 			hostname = g_strdup (hn_tmp);
 	}
