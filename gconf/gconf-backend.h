@@ -38,7 +38,7 @@ struct _GConfBackendVTable {
                                            const gchar* key, 
                                            GConfValue* value);
 
-  /* Returns list of GConfPair */
+  /* Returns list of GConfEntry */
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir);
 

@@ -53,9 +53,9 @@ interface ConfigServer {
 
   void nuke_dir(in string dir);
 
-  void all_pairs(in string dir, 
-                 out KeyList keys,
-                 out ValueList values);
+  void all_entries(in string dir, 
+                   out KeyList keys,
+                   out ValueList values);
 
   void all_dirs(in string dir,
                 out KeyList subdirs);

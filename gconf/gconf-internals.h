@@ -51,8 +51,8 @@ void          g_conf_source_set_value        (GConfSource* source,
                                               GConfValue* value);
 void          g_conf_source_unset_value      (GConfSource* source,
                                               const gchar* key);
-GSList*      g_conf_source_all_pairs         (GConfSource* source,
-                                              const gchar* dir);
+GSList*      g_conf_source_all_entries         (GConfSource* source,
+                                                const gchar* dir);
 GSList*      g_conf_source_all_dirs          (GConfSource* source,
                                               const gchar* dir);
 void         g_conf_source_remove_dir        (GConfSource* source,
@@ -110,8 +110,8 @@ void          g_conf_sources_set_value   (GConfSources* sources,
                                           GConfValue* value);
 void          g_conf_sources_unset_value (GConfSources* sources,
                                           const gchar* key);
-GSList*       g_conf_sources_all_pairs   (GConfSources* sources,
-                                          const gchar* dir);
+GSList*       g_conf_sources_all_entries   (GConfSources* sources,
+                                            const gchar* dir);
 GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
                                          const gchar* dir);
 void          g_conf_sources_remove_dir (GConfSources* sources,

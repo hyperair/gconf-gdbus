@@ -102,16 +102,16 @@ void        g_conf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 
-typedef struct _GConfPair GConfPair;
+typedef struct _GConfEntry GConfEntry;
 
-struct _GConfPair {
+struct _GConfEntry {
   gchar* key;
   GConfValue* value;
 };
 
 /* Pair takes memory ownership of both key and value */
-GConfPair* g_conf_pair_new(gchar* key, GConfValue* val);
-void       g_conf_pair_destroy(GConfPair* pair);
+GConfEntry* g_conf_entry_new    (gchar* key, GConfValue* val);
+void        g_conf_entry_destroy(GConfEntry* pair);
 
 /* A configuration engine (stack of config sources); normally there's
  * just one of these on the system.  
@@ -146,7 +146,7 @@ void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
 void         g_conf_unset(GConf* conf, const gchar* key);
 
-GSList*      g_conf_all_pairs(GConf* conf, const gchar* dir);
+GSList*      g_conf_all_entries(GConf* conf, const gchar* dir);
 
 GSList*      g_conf_all_dirs(GConf* conf, const gchar* dir);
 

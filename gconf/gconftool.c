@@ -761,7 +761,7 @@ list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
 
   g_conf_clear_error();
   
-  pairs = g_conf_all_pairs(conf, dir);
+  pairs = g_conf_all_entries(conf, dir);
           
   if (g_conf_errno() != G_CONF_SUCCESS)
     {
@@ -775,7 +775,7 @@ list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
 
       while (tmp != NULL)
         {
-          GConfPair* pair = tmp->data;
+          GConfEntry* pair = tmp->data;
           gchar* s;
 
           s = g_conf_value_to_string(pair->value);
@@ -784,7 +784,7 @@ list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
 
           g_free(s);
                   
-          g_conf_pair_destroy(pair);
+          g_conf_entry_destroy(pair);
 
           tmp = g_slist_next(tmp);
         }

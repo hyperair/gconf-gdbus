@@ -151,9 +151,9 @@ gconfd_nuke_dir(PortableServer_Servant servant, CORBA_char * dir,
                 CORBA_Environment *ev);
 
 static void 
-gconfd_all_pairs (PortableServer_Servant servant, CORBA_char * dir, 
-                  ConfigServer_KeyList ** keys, 
-                  ConfigServer_ValueList ** values, CORBA_Environment * ev);
+gconfd_all_entries (PortableServer_Servant servant, CORBA_char * dir, 
+                    ConfigServer_KeyList ** keys, 
+                    ConfigServer_ValueList ** values, CORBA_Environment * ev);
 
 static void 
 gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
@@ -183,7 +183,7 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_unset,
   gconfd_remove_dir,
   gconfd_nuke_dir,
-  gconfd_all_pairs,
+  gconfd_all_entries,
   gconfd_all_dirs,
   gconfd_sync,
   gconfd_ping,
@@ -366,11 +366,11 @@ gconfd_nuke_dir(PortableServer_Servant servant, CORBA_char * dir,
 }
 
 static void 
-gconfd_all_pairs (PortableServer_Servant servant, 
-                  CORBA_char * dir, 
-                  ConfigServer_KeyList ** keys, 
-                  ConfigServer_ValueList ** values,
-                  CORBA_Environment * ev)
+gconfd_all_entries (PortableServer_Servant servant, 
+                    CORBA_char * dir, 
+                    ConfigServer_KeyList ** keys, 
+                    ConfigServer_ValueList ** values,
+                    CORBA_Environment * ev)
 {
   GSList* pairs;
   guint n;
@@ -385,7 +385,7 @@ gconfd_all_pairs (PortableServer_Servant servant,
 
   g_conf_clear_error();
 
-  pairs = g_conf_sources_all_pairs(sources, dir);
+  pairs = g_conf_sources_all_entries(sources, dir);
 
   if (g_conf_errno() != G_CONF_SUCCESS)
     {
@@ -410,7 +410,7 @@ gconfd_all_pairs (PortableServer_Servant servant,
 
   while (tmp != NULL)
     {
-      GConfPair* p = tmp->data;
+      GConfEntry* p = tmp->data;
 
       g_assert(p != NULL);
       g_assert(p->key != NULL);
@@ -419,7 +419,7 @@ gconfd_all_pairs (PortableServer_Servant servant,
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_g_conf_value(p->value, &((*values)->_buffer[i]));
 
-      g_conf_pair_destroy(p);
+      g_conf_entry_destroy(p);
 
       ++i;
       tmp = g_slist_next(tmp);

@@ -447,7 +447,7 @@ g_conf_unset(GConf* conf, const gchar* key)
 }
 
 GSList*      
-g_conf_all_pairs(GConf* conf, const gchar* dir)
+g_conf_all_entries(GConf* conf, const gchar* dir)
 {
   GSList* pairs = NULL;
   ConfigServer_ValueList* values;
@@ -472,9 +472,9 @@ g_conf_all_pairs(GConf* conf, const gchar* dir)
 
   CORBA_exception_init(&ev);
   
-  ConfigServer_all_pairs(cs, (gchar*)dir, 
-                         &keys, &values,
-                         &ev);
+  ConfigServer_all_entries(cs, (gchar*)dir, 
+                           &keys, &values,
+                           &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
@@ -496,10 +496,10 @@ g_conf_all_pairs(GConf* conf, const gchar* dir)
   i = 0;
   while (i < keys->_length)
     {
-      GConfPair* pair;
+      GConfEntry* pair;
 
       pair = 
-        g_conf_pair_new(g_strdup(keys->_buffer[i]),
+        g_conf_entry_new(g_strdup(keys->_buffer[i]),
                         g_conf_value_from_corba_value(&(values->_buffer[i])));
       
       pairs = g_slist_prepend(pairs, pair);

@@ -294,12 +294,12 @@ g_conf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
 }
 
 
-GConfPair* 
-g_conf_pair_new(gchar* key, GConfValue* val)
+GConfEntry* 
+g_conf_entry_new(gchar* key, GConfValue* val)
 {
-  GConfPair* pair;
+  GConfEntry* pair;
 
-  pair = g_new(GConfPair, 1);
+  pair = g_new(GConfEntry, 1);
 
   pair->key   = key;
   pair->value = val;
@@ -308,7 +308,7 @@ g_conf_pair_new(gchar* key, GConfValue* val)
 }
 
 void
-g_conf_pair_destroy(GConfPair* pair)
+g_conf_entry_destroy(GConfEntry* pair)
 {
   g_free(pair->key);
   g_conf_value_destroy(pair->value);
@@ -388,7 +388,7 @@ g_conf_source_unset_value      (GConfSource* source,
 }
 
 GSList*      
-g_conf_source_all_pairs         (GConfSource* source,
+g_conf_source_all_entries         (GConfSource* source,
                                  const gchar* dir)
 {
   if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
@@ -1044,8 +1044,8 @@ hash_listify_func(gpointer key, gpointer value, gpointer user_data)
 }
 
 GSList*       
-g_conf_sources_all_pairs   (GConfSources* sources,
-                            const gchar* dir)
+g_conf_sources_all_entries   (GConfSources* sources,
+                              const gchar* dir)
 {
   GList* tmp;
   GHashTable* hash;
@@ -1062,7 +1062,7 @@ g_conf_sources_all_pairs   (GConfSources* sources,
 
   if (sources->sources->next == NULL)
     {
-      return g_conf_source_all_pairs(sources->sources->data, dir);
+      return g_conf_source_all_entries(sources->sources->data, dir);
     }
 
   g_assert(g_list_length(sources->sources) > 1);
@@ -1074,13 +1074,13 @@ g_conf_sources_all_pairs   (GConfSources* sources,
   while (tmp != NULL)
     {
       GConfSource* src = tmp->data;
-      GSList* pairs = g_conf_source_all_pairs(src, dir);
+      GSList* pairs = g_conf_source_all_entries(src, dir);
       GSList* iter = pairs;
 
       while (iter != NULL)
         {
-          GConfPair* pair = iter->data;
-          GConfPair* previous;
+          GConfEntry* pair = iter->data;
+          GConfEntry* previous;
           
           if (first_pass)
             previous = NULL; /* Can't possibly be there. */
@@ -1090,7 +1090,7 @@ g_conf_sources_all_pairs   (GConfSources* sources,
           if (previous != NULL)
             {
               /* Discard */
-              g_conf_pair_destroy(pair);
+              g_conf_entry_destroy(pair);
             }
           else
             {
