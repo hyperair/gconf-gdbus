@@ -89,6 +89,9 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  * Declarations
  */
 
+/* return TRUE if the exception was set */
+static gboolean g_conf_set_exception(CORBA_Environment* ev);
+
 static void g_conf_main(void);
 static void g_conf_main_quit(void);
 
@@ -188,12 +191,6 @@ gconfd_remove_dir(PortableServer_Servant servant,
                   CORBA_Environment *ev);
 
 static void 
-gconfd_nuke_dir(PortableServer_Servant servant,
-                ConfigServer_Context ctx,
-                CORBA_char * dir, 
-                CORBA_Environment *ev);
-
-static void 
 gconfd_all_entries (PortableServer_Servant servant,
                     ConfigServer_Context ctx,
                     CORBA_char * dir, 
@@ -239,7 +236,6 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_unset,
   gconfd_dir_exists,
   gconfd_remove_dir,
-  gconfd_nuke_dir,
   gconfd_all_entries,
   gconfd_all_dirs,
   gconfd_set_schema,
@@ -304,7 +300,7 @@ gconfd_lookup(PortableServer_Servant servant,
   gcc = lookup_context(ctx);
   
   g_conf_clear_error();
-
+  
   val = context_lookup_value(gcc, key);
 
   if (val != NULL)
@@ -317,11 +313,8 @@ gconfd_lookup(PortableServer_Servant servant,
     }
   else
     {
-      if (g_conf_errno() != G_CONF_SUCCESS)
-        {
-          syslog(LOG_ERR, _("Error looking up `%s': %s"),
-                 key, g_conf_error());
-        }
+      g_conf_set_exception(ev);
+
       return invalid_corba_value();
     }
 }
@@ -353,6 +346,8 @@ gconfd_set(PortableServer_Servant servant,
   gcc = lookup_context(ctx);
   
   context_set(gcc, key, val, value);
+
+  g_conf_set_exception(ev);
 }
 
 static void 
@@ -366,6 +361,8 @@ gconfd_unset(PortableServer_Servant servant,
   gcc = lookup_context(ctx);
 
   context_unset(gcc, key);
+
+  g_conf_set_exception(ev);
 }
 
 static CORBA_boolean
@@ -375,10 +372,15 @@ gconfd_dir_exists(PortableServer_Servant servant,
                   CORBA_Environment *ev)
 {
   GConfContext *gcc;
+  CORBA_boolean retval;
   
   gcc = lookup_context(ctx);
   
-  return context_dir_exists(gcc, dir) ? CORBA_TRUE : CORBA_FALSE;
+  retval = context_dir_exists(gcc, dir) ? CORBA_TRUE : CORBA_FALSE;
+
+  g_conf_set_exception(ev);
+
+  return retval;
 }
 
 
@@ -392,20 +394,9 @@ gconfd_remove_dir(PortableServer_Servant servant,
 
   gcc = lookup_context(ctx);
 
-  context_remove_dir(gcc, dir);  
-}
+  context_remove_dir(gcc, dir);
 
-static void 
-gconfd_nuke_dir(PortableServer_Servant servant,
-                ConfigServer_Context ctx,
-                CORBA_char * dir, 
-                CORBA_Environment *ev)
-{  
-  syslog(LOG_DEBUG, "Received request to nuke dir `%s'", dir);
-
-  syslog(LOG_ERR, "Nuke dir isn't implemented");
-
-  return;
+  g_conf_set_exception(ev);
 }
 
 static void 
@@ -464,6 +455,8 @@ gconfd_all_entries (PortableServer_Servant servant,
   g_assert(i == n);
 
   g_slist_free(pairs);
+
+  g_conf_set_exception(ev);
 }
 
 static void 
@@ -510,6 +503,8 @@ gconfd_all_dirs (PortableServer_Servant servant,
   g_assert(i == n);
 
   g_slist_free(subdirs);
+
+  g_conf_set_exception(ev);
 }
 
 static void 
@@ -522,7 +517,9 @@ gconfd_set_schema (PortableServer_Servant servant,
 
   gcc = lookup_context(ctx);
 
-  context_set_schema(gcc, key, schema_key); 
+  context_set_schema(gcc, key, schema_key);
+
+  g_conf_set_exception(ev);
 }
 
 static void 
@@ -534,7 +531,9 @@ gconfd_sync(PortableServer_Servant servant,
 
   gcc = lookup_context(ctx);
 
-  context_sync(gcc); 
+  context_sync(gcc);
+
+  g_conf_set_exception(ev);
 }
 
 static CORBA_long
@@ -546,7 +545,7 @@ gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
 static void
 gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 {
-  syslog(LOG_INFO, "Shutdown request received; exiting.");
+  syslog(LOG_INFO, _("Shutdown request received; exiting."));
 
   g_conf_main_quit();
 }
@@ -1143,8 +1142,8 @@ context_set(GConfContext* ctx,
       syslog(LOG_ERR, _("Error setting value for `%s': %s"),
              key, g_conf_error());
     }
-
-  ltable_notify_listeners(ctx->ltable, key, value);
+  else
+    ltable_notify_listeners(ctx->ltable, key, value);
 }
 
 static void
@@ -1164,12 +1163,14 @@ context_unset(GConfContext* ctx,
       syslog(LOG_ERR, _("Error unsetting `%s': %s"),
              key, g_conf_error());
     }
-
-  val = invalid_corba_value();
-
-  ltable_notify_listeners(ctx->ltable, key, val);
-
-  CORBA_free(val);
+  else
+    {
+      val = invalid_corba_value();
+      
+      ltable_notify_listeners(ctx->ltable, key, val);
+      
+      CORBA_free(val);
+    }
 }
 
 static gboolean
@@ -1881,3 +1882,61 @@ fast_cleanup(void)
   g_free(fn);
 }
 
+
+/* Exceptions */
+
+static gboolean
+g_conf_set_exception(CORBA_Environment* ev)
+{
+  GConfErrNo en = g_conf_errno();
+
+  if (en == G_CONF_SUCCESS)
+    return FALSE;
+  else
+    {
+      ConfigException* ce;
+
+      ce = ConfigException__alloc();
+      ce->message = CORBA_string_dup((gchar*)g_conf_error()); /* cast const */
+      
+      switch (en)
+        {
+        case G_CONF_FAILED:
+          ce->err_no = ConfigFailed;
+          break;
+        case G_CONF_NO_PERMISSION:
+          ce->err_no = ConfigNoPermission;
+          break;
+        case G_CONF_BAD_ADDRESS:
+          ce->err_no = ConfigBadAddress;
+          break;
+        case G_CONF_BAD_KEY:
+          ce->err_no = ConfigBadKey;
+          break;
+        case G_CONF_PARSE_ERROR:
+          ce->err_no = ConfigParseError;
+          break;
+        case G_CONF_CORRUPT:
+          ce->err_no = ConfigCorrupt;
+          break;
+        case G_CONF_TYPE_MISMATCH:
+          ce->err_no = ConfigTypeMismatch;
+          break;
+        case G_CONF_IS_DIR:
+          ce->err_no = ConfigIsDir;
+          break;
+        case G_CONF_IS_KEY:
+          ce->err_no = ConfigIsKey;
+          break;
+        case G_CONF_NO_SERVER:
+        case G_CONF_SUCCESS:
+        default:
+          g_assert_not_reached();
+        }
+
+      CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
+                          ex_ConfigException, ce);
+
+      return TRUE;
+    }
+}

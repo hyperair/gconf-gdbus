@@ -47,10 +47,12 @@
 #define N_(x) x
 #endif
 
-
 /*
  * Error handling
  */
+
+/* Returns TRUE if there was an error */
+static gboolean g_conf_handle_corba_exception(CORBA_Environment* ev);
 
 static gchar* last_details = NULL;
 static GConfErrNo last_errno = G_CONF_SUCCESS;
@@ -208,13 +210,9 @@ g_conf_new_from_address(const gchar* address)
   
   ctx = ConfigServer_get_context(cs, (gchar*)address, &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
-      CORBA_exception_free(&ev);
-
       return NULL;
     }
   
@@ -289,15 +287,14 @@ g_conf_unref        (GConf* conf)
                                            priv->context,
                                            gcnxn->server_id,
                                            &ev);
-          
-              if (ev._major != CORBA_NO_EXCEPTION)
+
+              if (g_conf_handle_corba_exception(&ev))
                 {
                   /* Don't set error because realistically this doesn't matter to 
                      clients */
                   g_warning("Failure removing listener %u from the config server: %s",
                             (guint)gcnxn->server_id,
-                            CORBA_exception_id(&ev));
-                  CORBA_exception_free(&ev);
+                            g_conf_error());
                 }
             }
 
@@ -339,13 +336,9 @@ g_conf_notify_add(GConf* conf,
                                  (gchar*)namespace_section, 
                                  cl, &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
-      CORBA_exception_free(&ev);
-
       return 0;
     }
 
@@ -383,12 +376,9 @@ g_conf_notify_remove(GConf* conf,
                                gcnxn->server_id,
                                &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
     }
   
 
@@ -427,15 +417,11 @@ g_conf_get(GConf* conf, const gchar* key)
   
   cv = ConfigServer_lookup(cs, priv->context, (gchar*)key, &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
 
-      CORBA_free(cv);
-
+      /* NOTE: don't free cvs since we got an exception! */
       return NULL;
     }
   else
@@ -481,12 +467,9 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 
   CORBA_free(cv);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
     }
 }
 
@@ -517,12 +500,9 @@ g_conf_unset(GConf* conf, const gchar* key)
                      (gchar*)key,
                      &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
     }
 }
 
@@ -558,12 +538,9 @@ g_conf_all_entries(GConf* conf, const gchar* dir)
                            &keys, &values,
                            &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
 
       return NULL;
     }
@@ -626,12 +603,10 @@ g_conf_all_dirs(GConf* conf, const gchar* dir)
                         &keys,
                         &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
-    {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
 
+  if (g_conf_handle_corba_exception(&ev))
+    {
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
 
       return NULL;
     }
@@ -672,12 +647,9 @@ g_conf_sync(GConf* conf)
 
   ConfigServer_sync(cs, priv->context, &ev);
 
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))  
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
     }
 }
 
@@ -710,12 +682,9 @@ g_conf_dir_exists(GConf *conf, const gchar *dir)
   server_ret = ConfigServer_dir_exists(cs, priv->context,
                                        (gchar*)dir, &ev);
   
-  if (ev._major != CORBA_NO_EXCEPTION)
+  if (g_conf_handle_corba_exception(&ev))  
     {
-      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
-      
       /* FIXME we could do better here... maybe respawn the server if needed... */
-      CORBA_exception_free(&ev);
     }
 
   return (server_ret == CORBA_TRUE);
@@ -1564,4 +1533,81 @@ g_conf_set_schema  (GConf* conf, const gchar* key,
   g_conf_value_set_schema(gval, val);
 
   return error_checked_set(conf, key, gval);
+}
+
+/* CORBA Util */
+
+/* Set GConfErrNo from an exception, free exception, etc. */
+
+static GConfErrNo
+corba_errno_to_g_conf_errno(ConfigErrorType corba_err)
+{
+  switch (corba_err)
+    {
+    case ConfigFailed:
+      return G_CONF_FAILED;
+      break;
+    case ConfigNoPermission:
+      return G_CONF_NO_PERMISSION;
+      break;
+    case ConfigBadAddress:
+      return G_CONF_BAD_ADDRESS;
+      break;
+    case ConfigBadKey:
+      return G_CONF_BAD_KEY;
+      break;
+    case ConfigParseError:
+      return G_CONF_PARSE_ERROR;
+      break;
+    case ConfigCorrupt:
+      return G_CONF_CORRUPT;
+      break;
+    case ConfigTypeMismatch:
+      return G_CONF_TYPE_MISMATCH;
+      break;
+    case ConfigIsDir:
+      return G_CONF_IS_DIR;
+      break;
+    case ConfigIsKey:
+      return G_CONF_IS_KEY;
+      break;
+    default:
+      g_assert_not_reached();
+      return G_CONF_SUCCESS; /* warnings */
+      break;
+    }
+}
+
+static gboolean
+g_conf_handle_corba_exception(CORBA_Environment* ev)
+{
+  switch (ev->_major)
+    {
+    case CORBA_NO_EXCEPTION:
+      CORBA_exception_free(ev);
+      return FALSE;
+      break;
+    case CORBA_SYSTEM_EXCEPTION:
+      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"),
+                       CORBA_exception_id(ev));
+      CORBA_exception_free(ev);
+      return TRUE;
+      break;
+    case CORBA_USER_EXCEPTION:
+      {
+        ConfigException* ce;
+
+        ce = CORBA_exception_value(ev);
+
+        g_conf_set_error(corba_errno_to_g_conf_errno(ce->err_no),
+                         ce->message);
+        CORBA_exception_free(ev);
+        return TRUE;
+      }
+      break;
+    default:
+      g_assert_not_reached();
+      return TRUE;
+      break;
+    }
 }

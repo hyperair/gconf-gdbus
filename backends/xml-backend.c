@@ -1304,7 +1304,7 @@ dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name)
   
   if (e == NULL || e->value == NULL)
     {
-      if (schema_name && e->schema_name)
+      if (schema_name && e && e->schema_name)
         *schema_name = g_strdup(e->schema_name);
       return NULL;
     }

@@ -56,6 +56,20 @@ interface ConfigListener {
 
 };
 
+// Sync this with GConfErrNo in gconf.h, when it makes sense (e.g. G_CONF_NO_SERVER doesn't
+// make sense here)
+enum ConfigErrorType {
+  ConfigFailed, ConfigNoPermission,
+  ConfigBadAddress, ConfigBadKey,
+  ConfigParseError, ConfigCorrupt,
+  ConfigTypeMismatch, ConfigIsDir, ConfigIsKey
+};
+
+exception ConfigException {
+  ConfigErrorType err_no;
+  string message;
+};
+
 interface ConfigServer {
   typedef sequence<string> KeyList;
   typedef sequence<ConfigValue> ValueList;
@@ -75,26 +89,31 @@ interface ConfigServer {
 
   void remove_listener(in Context ctx, in unsigned long cnxn);
   
-  ConfigValue lookup(in Context ctx, in string key);
+  ConfigValue lookup(in Context ctx, in string key)
+    raises (ConfigException);
 
-  void set(in Context ctx, in string key, in ConfigValue value);
+  void set(in Context ctx, in string key, in ConfigValue value)
+    raises (ConfigException);
 
-  void unset(in Context ctx, in string key);
+  void unset(in Context ctx, in string key)
+    raises (ConfigException);
 
-  boolean dir_exists(in Context ctx, in string dir);
+  boolean dir_exists(in Context ctx, in string dir)
+    raises (ConfigException);
 
-  void remove_dir(in Context ctx, in string dir);
-
-  void nuke_dir(in Context ctx, in string dir);
+  void remove_dir(in Context ctx, in string dir)
+    raises (ConfigException);
 
   void all_entries(in Context ctx,
                    in string dir, 
                    out KeyList keys,
-                   out ValueList values);
+                   out ValueList values)
+    raises (ConfigException);
 
   void all_dirs(in Context ctx,
                 in string dir,
-                out KeyList subdirs);
+                out KeyList subdirs)
+    raises (ConfigException);
 
   // if first arg is a key, second arg should be a key pointing
   //  to a schema. 
@@ -102,9 +121,11 @@ interface ConfigServer {
   //  to a dir full of schemas.
   void set_schema(in Context ctx,
                   in string key,
-                  in string schema_key);
+                  in string schema_key)
+    raises (ConfigException);
 
-  void sync(in Context ctx);
+  void sync(in Context ctx)
+    raises (ConfigException);
 
   // Internal use
   long ping();

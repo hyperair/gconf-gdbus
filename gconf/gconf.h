@@ -42,7 +42,7 @@ typedef enum {
   G_CONF_BAD_KEY = 5,       /* directory or key isn't valid (contains bad
                                characters, or malformed slash arrangement) */
   G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
-  G_CONF_CORRUPT = 7,       /* Error parsing/loading information inside the backend */
+  G_CONF_CORRUPT = 7,       /* Fatal error parsing/loading information inside the backend */
   G_CONF_TYPE_MISMATCH = 8, /* Type requested doesn't match type found */
   G_CONF_IS_DIR = 9,        /* Requested key operation on a dir */
   G_CONF_IS_KEY = 10        /* Requested dir operation on a key */

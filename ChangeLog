@@ -1,5 +1,25 @@
 1999-09-01  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-backend.c (dir_get_value): Fix a segfault, check
+	that an Entry != NULL before dereferencing it
+
+	* GConf.idl: Add ConfigException and ConfigErrorType to pass
+	errors from server to client
+
+	* gconf.c (g_conf_handle_corba_exception): set the GConf error
+	based on CORBA error, if any, and free the exception. 
+	Use throughout the file to receive server errors. 
+
+	* gconfd.c (g_conf_set_exception): set the CORBA exception based
+	on the GConf error, if any. Use this function throughout the file
+	to send errors to clients. 
+	(g_conf_nuke_dir): Remove this obsolete function
+	(context_set): don't notify listeners of a change if an error
+	occurred
+	
+
+1999-09-01  Havoc Pennington  <hp@pobox.com>
+
 	* configure.in: add gmodule check to AM_PATH_GLIB, add an error if
 	glib isn't found, use detected $XML_CONFIG to instead of
 	xml-config, AC_PATH_PROG orbit-config, check for C++ compiler
