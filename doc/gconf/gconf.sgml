@@ -74,6 +74,15 @@
               locking a non-issue and allows aggressive caching.
             </para>
           </listitem>
+          <listitem>
+            <para>
+              The client API is simple and very abstract, which allows us to
+              change its implementation at a later time without a big headache.
+              Because a good implementation is a complex problem, this is
+              important.
+            </para>
+          </listitem>
+
         </itemizedlist>
       </para>
 
@@ -270,15 +279,58 @@
       </para>
 
       <para>
-        Errors are returned in two forms. The first is an
-        <symbol>errno</symbol>-style enumerated value with type
-        <symbol>GConfErrNo</symbol>, useful for switching on an error
-        and taking different actions depending on the exact error that
-        occurred. The second is human-readable text; human-readable
-        errors automatically consist of both a
-        <function>strerror()</function>-style string and a more
-        detailed message. For any error, both of these forms will be
-        available to you.
+        Errors are returned in a <structname>GConfError</structname> object.
+        <structname>GConfError</structname> has two public fields:
+        <structfield>str</structfield> is an error message, and
+        <structfield>num</structfield> is an <symbol>errno</symbol>-style
+        enumerated value with type <symbol>GConfErrNo</symbol>, useful for
+        switching on an error and taking different actions depending on the
+        exact error that occurred.
+      </para>
+
+      <para>
+        GConf functions that potentially fail accept a
+        <symbol>GConfError**</symbol> argument, where they store a
+        <structname>GConfError</structname> object if the operation fails. If no
+        error occurs, the location pointed to by the
+        <symbol>GConfError**</symbol> is left unchanged. In all cases, you can pass 
+        <symbol>NULL</symbol> as the <symbol>GConfError**</symbol>, to ignore any errors.
+        Needless to say, normally you should report errors instead of ignoring
+        them.
+      </para>
+
+      <para>
+        If an error is returned, you must free it with
+        <function>g_conf_error_destroy()</function>:
+        <funcsynopsis>
+          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
+          <funcdef>void
+            <function>g_conf_error_destroy</function>
+          </funcdef>
+          <paramdef>GConfError* <parameter>error</parameter></paramdef>          
+        </funcsynopsis>
+      </para>
+
+      <para>
+        Thus, a complete error-checking sequence might work like this:
+        <programlisting>
+          GConfError* err = NULL;
+
+          if (!g_conf_init(&amp;err))
+            {
+              fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
+              g_conf_error_destroy(err); 
+              err = NULL;
+            }
+        </programlisting>
+        Note that <function>g_conf_init()</function> returns <symbol>TRUE</symbol> 
+        on success and <symbol>FALSE</symbol> on failure, other functions may have
+        different ways of indicating success/failure.
+      </para>
+
+      <para>
+        Error checking is slightly inconvenient to use because we have to be thread-safe; 
+        GConf originally had a system similar to <symbol>errno</symbol>.
       </para>
 
       <para>
@@ -404,71 +456,16 @@
       </para>
 
       <para>
-        To obtain the current <symbol>GConfErrNo</symbol>, call the 
-        <function>g_conf_errno()</function> function.
-        <funcsynopsis>
-          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>GConfErrNo
-            <function>g_conf_errno</function>
-          </funcdef>
-          <void>
-        </funcsynopsis>
-      </para>
-
-      <para>
-        To clear the current <symbol>GConfErrNo</symbol> (setting it
-        to <symbol>G_CONF_SUCCESS</symbol>, call
-        <function>g_conf_clear_error()</function> which is equivalent
-        to setting the UNIX <symbol>errno</symbol> to 0:
-
-        <funcsynopsis>
-          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>void
-            <function>g_conf_clear_error</function>
-          </funcdef>
-          <void>
-        </funcsynopsis>
-      </para>
-
-      <para>
-        To obtain the current error message, call
-        <function>g_conf_error()</function>. This message will include
-        the results of <function>g_conf_strerror()</function> plus
-        possible additional details about the problem.        
-        <funcsynopsis>
-          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>const gchar* 
-            <function>g_conf_error</function>
-          </funcdef>
-          <void>
-        </funcsynopsis>
-      </para>
-
-      <para>
-        <function>g_conf_strerror()</function> is not that useful,
-        because you should use <function>g_conf_error()</function>
-        instead to get additional details. However it's exported 
-        publically in case you think of a use for it.
-        <funcsynopsis>
-          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>const gchar* 
-            <function>g_conf_strerror</function>
-          </funcdef>
-          <void>
-        </funcsynopsis>
-      </para>
-
-      <para>
-        <function>g_conf_set_error()</function> is used inside the
+        <function>g_conf_error_new()</function> is used inside the
         library and inside the library backends. It is typically not
-        useful to clients. It simply sets the current error, from a
+        useful to clients. It simply creates a new error, from a
         <symbol>GConfErrNo</symbol> and a
         <function>printf()</function>-style format and variable
         argument list.
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_set_error</function>
+            <function>g_conf_error_new</function>
           </funcdef>
           <paramdef>GConfErrNo <parameter>en</parameter></paramdef>
           <paramdef>const gchar*
@@ -476,15 +473,6 @@
           <paramdef><parameter>...</parameter></paramdef>
         </funcsynopsis>
       </para>
-
-      <warning>
-        <title>GConf FIXME: thread safety for error system</title>
-        <para>
-          Clearly this has the same thread-safety problems as <symbol>errno</symbol>,
-          I'm not sure what a good API to fix it would be however. Suggestions 
-          welcome.
-        </para>
-      </warning>
 
     </sect2>
 
@@ -494,23 +482,27 @@
       <title>Initialization</title>
       
       <para>
-        The GConf client library must be initialized before use. 
-        Initialization establishes a connection to the ORB (because
-        CORBA is currently used to implement GConf, though clients
-        never have to see this) and sets up some global data
-        structures. <function>g_conf_init()</function> has no 
-        arguments. (Well, right now it does have one, the name of your
-        app, but I'm removing it soon.)
+        The GConf client library must be initialized before use.  Initialization
+        establishes a connection to the ORB (because CORBA is currently used to
+        implement GConf, though clients never have to see this) and sets up some
+        global data structures. The only argument to
+        <function>g_conf_init()</function> is a location to place any error that
+        occurs. <function>g_conf_init()</function> returns <symbol>TRUE</symbol>
+        on success.
       </para>
 
       <para>
-        Before initializing GConf, you can specify the ORB object
-        reference to use when connecting to the configuration
-        database; call <function>g_conf_set_orb()</function>. You
-        would normally use this if you are writing a GNOME
-        application, and you want to use
-        <function>gnome_CORBA_init()</function> to obtain your ORB
-        reference.
+        Before initializing GConf, you can specify the ORB object reference to
+        use when connecting to the configuration database; call
+        <function>g_conf_set_orb()</function>. You would normally use this if
+        you are writing a GNOME application, and you want to use
+        <function>gnome_CORBA_init()</function> to obtain your ORB reference. If
+        you specify an ORB reference you must also initialize all CORBA-related
+        stuff, such as the event loop integration and authentication. If you
+        don't call <function>g_conf_set_orb()</function>, GConf will set up
+        these things for you. Note that GConf's default CORBA setup requires the
+        glib main loop to be running, which happens automatically in GTK+
+        programs.
       </para>
 
       <warning>
@@ -536,17 +528,17 @@
 
     </sect2>
 
-    <!-- GConf object -->
+    <!-- GConfEngine object -->
     <sect2>
-      <title>The <structname>GConf</structname> object</title>
+      <title>The <structname>GConfEngine</structname> object</title>
       <para>
-        A <structname>GConf</structname> object represents your
+        A <structname>GConfEngine</structname> object represents your
         connection to a configuration database. Normally the database
         you're connecting to is the user's default database, defined
         by all the sources in their configuration source
-        path. <function>g_conf_new()</function> returns a handle to
+        path. <function>g_conf_engine_new()</function> returns a handle to
         this default
-        database. <function>g_conf_new_with_address()</function>
+        database. <function>g_conf_engine_new_with_address()</function>
         returns a handle to a single configuration source; normally,
         applications will not use this function&mdash;it's intended
         for system configuration tools and the like.        
@@ -554,43 +546,43 @@
       <para>
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>GConf*
-            <function>g_conf_new</function>
+          <funcdef>GConfEngine*
+            <function>g_conf_engine_new</function>
           </funcdef>
           <void>
         </funcsynopsis>        
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>GConf*
-            <function>g_conf_new_with_address</function>
+          <funcdef>GConfEngine*
+            <function>g_conf_engine_new_with_address</function>
           </funcdef>
           <paramdef>const gchar* <parameter>address</parameter></paramdef>
         </funcsynopsis>
       </para>
 
       <para>
-        The <structname>GConf</structname> object is reference
+        The <structname>GConfEngine</structname> object is reference
         counted; it begins with a count of 1, and is destroyed when
         the count reaches 0. In other words, the creator of the
-        <structname>GConf</structname> "owns" a reference to the 
-        <structname>GConf</structname> as soon as it's created, and
-        should call <function>g_conf_unref()</function> to make it 
-        go away. <function>g_conf_ref()</function> creates a new
-        reference to the <structname>GConf</structname>.
+        <structname>GConfEngine</structname> "owns" a reference to the 
+        <structname>GConfEngine</structname> as soon as it's created, and
+        should call <function>g_conf_engine_unref()</function> to make it 
+        go away. <function>g_conf_engine_ref()</function> creates a new
+        reference to the <structname>GConfEngine</structname>.
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_ref</function>
+            <function>g_conf_engine_ref</function>
           </funcdef>
-          <paramdef>GConf* <parameter>conf</parameter></paramdef>
+          <paramdef>GConfEngine* <parameter>conf</parameter></paramdef>
         </funcsynopsis>
 
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>g_conf_unref</function>
+            <function>g_conf_engine_unref</function>
           </funcdef>
-          <paramdef>GConf* <parameter>conf</parameter></paramdef>
+          <paramdef>GConfEngine* <parameter>conf</parameter></paramdef>
         </funcsynopsis>
       </para>
 
@@ -764,13 +756,13 @@ print_value(GConfValue* value)
       <title>Reading Configuration Values</title>
 
       <para>
-        The "raw" function for obtaining the value stored at a given
-        key in the configuration database is
-        <function>g_conf_get()</function>.
+        The "raw" function for obtaining the value stored at a given key in the
+        configuration database is <function>g_conf_get()</function>.
         <function>g_conf_get()</function> returns a
         <structname>GConfValue</structname> if the key was set, or
-        <symbol>NULL</symbol> if the key was unset or an error
-        occurred.
+        <symbol>NULL</symbol> if the key was unset or an error occurred. If an
+        error occurred a <structname>GConfError</structname> is returned in the
+        location given as the final argument.
       </para>
 
     </sect2>
