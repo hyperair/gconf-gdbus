@@ -213,8 +213,8 @@ fi
 if test "@includedir@" != /usr/include ; then
   includes="-I@includedir@"
 fi
-af_cflags="$af_cflags $includes $cflags"
-af_libs="-L@libdir@ $af_libs -lgconf"
+af_cflags="$af_cflags $includes $cflags `@OAF_CONFIG@ --cflags`"
+af_libs="-L@libdir@ $af_libs -lgconf `@OAF_CONFIG@ --libs`"
 
 if test "X$af_lib_gconf_gtk" = "Xyes"; then
     af_libs="$af_libs -lgconf-gtk $af_libs @GTK_LIBS@"
