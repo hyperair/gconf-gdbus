@@ -1033,4 +1033,11 @@ gconf_entry_set_is_default (GConfEntry* entry,
   entry->is_default = is_default;
 }
 
+void
+gconf_entry_set_is_writable (GConfEntry  *entry,
+                             gboolean     is_writable)
+{
+  entry->is_writable = is_writable;
+}
+
 

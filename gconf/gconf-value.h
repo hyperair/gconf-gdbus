@@ -180,7 +180,8 @@ void        gconf_entry_set_schema_name  (GConfEntry  *entry,
                                           const gchar *name);
 void        gconf_entry_set_is_default   (GConfEntry  *entry,
                                           gboolean     is_default);
-
+void        gconf_entry_set_is_writable  (GConfEntry  *entry,
+                                          gboolean     is_writable);
 
 #endif
 
