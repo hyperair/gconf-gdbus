@@ -335,37 +335,59 @@ gconf_source_remove_listener (GConfSource *source,
 GConfSources* 
 gconf_sources_new_from_addresses(GSList * addresses, GError** err)
 {
-  GConfSources* sources;
+  GConfSources *sources;
+  GList        *sources_list;
 
   g_return_val_if_fail( (err == NULL) || (*err == NULL), NULL);
-  
-  sources = g_new0(GConfSources, 1);
 
-  while (addresses != NULL)
+  sources_list = NULL;
+  if (addresses != NULL)
     {
-      GConfSource* source;
-      GError* error = NULL;
-      
-      source = gconf_resolve_address((const gchar*)addresses->data, &error);
+      GError *last_error = NULL;
 
-      if (source != NULL)
-        {
-          sources->sources = g_list_prepend(sources->sources, source);          
-          g_return_val_if_fail(error == NULL, NULL);
-        }
-      else
-        {
-          g_assert(error != NULL);
-          gconf_log(GCL_WARNING, _("Failed to load source \"%s\": %s"),
-                    (const gchar*)addresses->data, error->message);
+      while (addresses != NULL)
+	{
+	  GConfSource* source;
+
+	  if (last_error)
+	    {
+	      g_error_free (last_error);
+	      last_error = NULL;
+	    }
+      
+	  source = gconf_resolve_address ((const gchar*)addresses->data, &last_error);
+
+	  if (source != NULL)
+	    {
+	      sources_list = g_list_prepend(sources_list, source);          
+	      g_return_val_if_fail(last_error == NULL, NULL);
+	    }
+	  else
+	    {
+	      g_assert(last_error != NULL);
+	      gconf_log(GCL_WARNING, _("Failed to load source \"%s\": %s"),
+			(const gchar*)addresses->data, last_error->message);
+	    }
           
-          g_error_free(error);
-        }
-          
-      addresses = g_slist_next(addresses);
+	  addresses = g_slist_next(addresses);
+	}
+
+      if (sources_list == NULL)
+	{
+	  g_assert (last_error != NULL);
+	  g_propagate_error (err, last_error);
+	  return NULL;
+	}
+
+      if (last_error)
+	{
+	  g_error_free(last_error);
+	  last_error = NULL;
+	}
     }
 
-  sources->sources = g_list_reverse(sources->sources);
+  sources          = g_new0 (GConfSources, 1);
+  sources->sources = g_list_reverse (sources_list);
 
   {
     GList *tmp;
