@@ -22,9 +22,6 @@
 #include <string.h>
 
 #include "gconf-client.h"
-#include <gobject/gobject.h>
-#include <gobject/gsignal.h>
-#include <gobject/gvaluetypes.h>
 #include <gconf/gconf-internals.h>
 
 #include "gconfmarshal.h"
