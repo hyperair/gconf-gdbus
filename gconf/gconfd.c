@@ -51,7 +51,7 @@
 #include <ctype.h>
 #include <syslog.h>
 #include <time.h>
-#include <liboaf/liboaf.h>
+#include <bonobo-activation/bonobo-activation.h>
 
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG
@@ -290,7 +290,7 @@ gconf_server_load_sources(void)
       /* Try using the default address xml:readwrite:$(HOME)/.gconf */
       addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", g_get_home_dir(), "/.gconf", NULL));
 
-      gconf_log(GCL_INFO, _("No configuration files found, trying to use the default config source `%s'"), addresses[0]);
+      gconf_log(GCL_INFO, _("No configuration files found, trying to use the default config source `%s'"), (char *)addresses->data);
     }
   
   if (addresses == NULL)
@@ -469,7 +469,7 @@ main(int argc, char** argv)
   const gchar* username;
   guint len;
   gchar* ior;
-  OAF_RegistrationResult result;
+  Bonobo_RegistrationResult result;
   int exit_code = 0;
   GError *err;
   char *lock_dir;
@@ -528,15 +528,15 @@ main(int argc, char** argv)
 
   CORBA_exception_init(&ev);
 
-  if (!oaf_init(argc, argv))
+  if (!bonobo_activation_init(argc, argv))
     {
-      gconf_log(GCL_ERR, _("Failed to init Object Activation Framework: please mail bug report to OAF maintainers"));
+      gconf_log(GCL_ERR, _("Failed to init Object Activation Framework: please mail bug report to bonobo-activation maintainers"));
       exit(1);
     }
 
   init_databases ();
 
-  orb = oaf_orb_get();
+  orb = bonobo_activation_orb_get();
   
   POA_ConfigServer__init(&poa_server_servant, &ev);
   
@@ -575,8 +575,8 @@ main(int argc, char** argv)
     {
       g_assert (err);
       
-      /* Bad hack alert - register the current lockholder with oafd,
-       * since oafd seems to have forgotten about us.
+      /* Bad hack alert - register the current lockholder with bonobo-activation-server,
+       * since bonobo-activation-server seems to have forgotten about us.
        */
       gconf_log (GCL_WARNING, _("Failed to get lock for daemon: %s"),
                  err->message);
@@ -584,23 +584,23 @@ main(int argc, char** argv)
 
       if (other_server != CORBA_OBJECT_NIL)
         {
-          gconf_log (GCL_WARNING, _("Registering existing server with oafd, since OAF appears to have leaked it"));
+          gconf_log (GCL_WARNING, _("Registering existing server with bonobo-activation-server, since we seem to have been leaked"));
           
-          result = oaf_active_server_register (IID, other_server);
+          result = bonobo_activation_active_server_register (IID, other_server);
           
-          if (result != OAF_REG_SUCCESS)
+          if (result != Bonobo_ACTIVATION_REG_SUCCESS)
             {
               switch (result)
                 {
-                case OAF_REG_NOT_LISTED:
+                case Bonobo_ACTIVATION_REG_NOT_LISTED:
                   gconf_log(GCL_ERR, _("OAF doesn't know about our IID; indicates broken installation; can't register existing server."));
                   break;
                   
-                case OAF_REG_ALREADY_ACTIVE:
+                case Bonobo_ACTIVATION_REG_ALREADY_ACTIVE:
                   gconf_log(GCL_ERR, _("Another gconfd already registered with OAF, so we can't register the existing server"));
                   break;
                   
-                case OAF_REG_ERROR:
+                case Bonobo_ACTIVATION_REG_ERROR:
                 default:
                   gconf_log(GCL_ERR, _("Unknown error registering existing gconfd with OAF; exiting"));
                   break;
@@ -622,23 +622,23 @@ main(int argc, char** argv)
      after setting up the POA etc. */
   gconf_server_load_sources();
   
-  result = oaf_active_server_register(IID, server);
+  result = bonobo_activation_active_server_register(IID, server);
 
-  if (result != OAF_REG_SUCCESS)
+  if (result != Bonobo_ACTIVATION_REG_SUCCESS)
     {
       switch (result)
         {
-        case OAF_REG_NOT_LISTED:
-          gconf_log(GCL_ERR, _("OAF doesn't know about our IID; indicates broken installation; can't register; exiting\n"));
+        case Bonobo_ACTIVATION_REG_NOT_LISTED:
+          gconf_log(GCL_ERR, _("bonobo-activation doesn't know about our IID; indicates broken installation; can't register; exiting\n"));
           break;
           
-        case OAF_REG_ALREADY_ACTIVE:
-          gconf_log(GCL_ERR, _("Another gconfd already registered with OAF; exiting\n"));
+        case Bonobo_ACTIVATION_REG_ALREADY_ACTIVE:
+          gconf_log(GCL_ERR, _("Another gconfd already registered with bonobo-activation; exiting\n"));
           break;
 
-        case OAF_REG_ERROR:
+        case Bonobo_ACTIVATION_REG_ERROR:
         default:
-          gconf_log(GCL_ERR, _("Unknown error registering gconfd with OAF; exiting\n"));
+          gconf_log(GCL_ERR, _("Unknown error registering gconfd with bonobo-activation; exiting\n"));
           break;
         }
       enter_shutdown ();
@@ -668,11 +668,11 @@ main(int argc, char** argv)
 
   gconfd_locale_cache_drop ();
 
-  /* Now we can unregister with OAF, after everything is fixed up. */  
+  /* Now we can unregister with bonobo-activation everything is fixed up. */  
 
   if (server != CORBA_OBJECT_NIL)
     {
-      oaf_active_server_unregister ("", server);
+      bonobo_activation_active_server_unregister ("", server);
       server = CORBA_OBJECT_NIL;
     }
 
@@ -1658,9 +1658,8 @@ restore_client (const gchar *ior)
   
   CORBA_exception_init (&ev);
   
-  cl = CORBA_ORB_string_to_object (oaf_orb_get (),
-                                   (gchar*)ior,
-                                   &ev);
+  cl = CORBA_ORB_string_to_object (
+	  bonobo_activation_orb_get (), (gchar*)ior, &ev);
 
   CORBA_exception_free (&ev);
   
@@ -1707,9 +1706,8 @@ restore_listener (GConfDatabase* db,
   
   CORBA_exception_init (&ev);
   
-  cl = CORBA_ORB_string_to_object (oaf_orb_get (),
-                                   lle->ior,
-                                   &ev);
+  cl = CORBA_ORB_string_to_object (
+	  bonobo_activation_orb_get (), lle->ior, &ev);
 
   CORBA_exception_free (&ev);
   

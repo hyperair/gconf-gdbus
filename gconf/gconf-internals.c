@@ -22,8 +22,7 @@
 #include "gconf-internals.h"
 #include "gconf-backend.h"
 #include "gconf-schema.h"
-#include <orbit/orbit.h>
-#include <liboaf/liboaf.h>
+#include <bonobo-activation/bonobo-activation.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -438,7 +437,8 @@ gconf_object_to_string (CORBA_Object obj,
   
   CORBA_exception_init (&ev);
 
-  ior = CORBA_ORB_object_to_string (oaf_orb_get (), obj, &ev);
+  ior = CORBA_ORB_object_to_string (
+	  bonobo_activation_orb_get (), obj, &ev);
 
   if (ior == NULL)
     {
@@ -2137,28 +2137,28 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err)
       {
         const gchar* id = CORBA_exception_id(ev);
 
-        if (strcmp(id, "IDL:OAF/GeneralError:1.0") == 0)
+        if (strcmp(id, "IDL:Bonobo/GeneralError:1.0") == 0)
           {
-            OAF_GeneralError* ge = CORBA_exception_value(ev);
+            Bonobo_GeneralError* ge = CORBA_exception_value(ev);
 
             if (err)
               *err = gconf_error_new (GCONF_ERROR_OAF_ERROR,
-                                      _("OAF problem description: '%s'"),
+                                      _("bonobo-activation problem description: '%s'"),
                                       ge->description);
           }
-        else if (strcmp (id,"IDL:OAF/ActivationContext/NotListed:1.0" ) == 0)
+        else if (strcmp (id,"IDL:Bonobo/ActivationContext/NotListed:1.0" ) == 0)
           {
             if (err)
               *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("attempt to remove not-listed OAF object directory"));
           }
-        else if (strcmp (id,"IDL:OAF/ActivationContext/AlreadyListed:1.0" ) == 0)
+        else if (strcmp (id,"IDL:Bonobo/ActivationContext/AlreadyListed:1.0" ) == 0)
           {
             if (err)
               *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("attempt to add already-listed OAF directory")); 
           }
-        else if (strcmp (id,"IDL:OAF/ActivationContext/ParseFailed:1.0") == 0)
+        else if (strcmp (id,"IDL:Bonobo/ActivationContext/ParseFailed:1.0") == 0)
           {
-            OAF_ActivationContext_ParseFailed* pe = CORBA_exception_value(ev);
+            Bonobo_ActivationContext_ParseFailed* pe = CORBA_exception_value(ev);
             
             if (err)
               *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("OAF parse error: %s"), pe->description);
@@ -2307,7 +2307,7 @@ gconf_get_lock_or_current_holder (const gchar*  lock_directory,
 
                   CORBA_exception_init(&ev);
                   
-                  orb = oaf_orb_get();
+                  orb = bonobo_activation_orb_get();
 
                   if (orb == NULL)
                     {

@@ -605,7 +605,7 @@ gconf_sources_set_value   (GConfSources* sources,
   g_set_error (err,
                GCONF_ERROR,
                GCONF_ERROR_NO_WRITABLE_DATABASE,
-               _("Unable to store a value at key '%s', as the configuration server has no writeable databases. There are two common causes of this problem: 1) your configuration path file doesn't contain any databases or wasn't found or 2) OAF mistakenly created two gconfd processes. If you have two gconfd processes (or had two at the time the second was launched), then it's an OAF bug, not a GConf issue. Logging out, killing oafd and gconfd, and logging back in may help. As always, check the user.* syslog for details on problems gconfd encountered."),
+               _("Unable to store a value at key '%s', as the configuration server has no writeable databases. There are two common causes of this problem: 1) your configuration path file doesn't contain any databases or wasn't found or 2) bonobo-activation mistakenly created two gconfd processes. If you have two gconfd processes (or had two at the time the second was launched), then it's an bonobo-activation bug, not a GConf issue. Logging out, killing bonobo-activation-server and gconfd, and logging back in may help. As always, check the user.* syslog for details on problems gconfd encountered."),
                key);
 }
 

@@ -32,7 +32,7 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <liboaf/liboaf.h>
+#include <bonobo-activation/bonobo-activation.h>
 
 /* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err);
@@ -1845,15 +1845,15 @@ static ConfigServer
 try_to_contact_server(gboolean start_if_not_found, GError** err)
 {
   CORBA_Environment ev;
-  OAF_ActivationFlags flags;
+  Bonobo_ActivationFlags flags;
   
   CORBA_exception_init(&ev);
 
   flags = 0;
   if (!start_if_not_found)
-    flags |= OAF_FLAG_EXISTING_ONLY;
+    flags |= Bonobo_ACTIVATION_FLAG_EXISTING_ONLY;
   
-  server = oaf_activate_from_id ("OAFAID:["IID"]", flags, NULL, &ev);
+  server = bonobo_activation_activate_from_id ("OAFAID:["IID"]", flags, NULL, &ev);
 
   /* So try to ping server, by adding ourselves as a client */
   if (!CORBA_Object_is_nil (server, &ev))
@@ -1884,7 +1884,7 @@ try_to_contact_server(gboolean start_if_not_found, GError** err)
 
       if (err && *err == NULL)
         *err = gconf_error_new(GCONF_ERROR_NO_SERVER,
-                               _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. This is a bug in the OAF package; something went wrong in OAF, and no error was reported. This is not a bug in the GConf package. Do not report a GConf bug unless you have information indicating what went wrong with OAF that was caused by GConf."));
+                               _("Error contacting configuration server: bonobo-activation returned nil from bonobo_activation_activate_from_id() and did not set an exception explaining the problem. This is a bug in the bonobo-activation package; something went wrong in bonobo-activation, and no error was reported. This is not a bug in the GConf package. Do not report a GConf bug unless you have information indicating what went wrong with bonobo-activation that was caused by GConf."));
     }
 
 #ifdef GCONF_ENABLE_DEBUG      
@@ -2137,7 +2137,8 @@ gconf_postinit(gpointer app, gpointer mod_info)
       
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(oaf_orb_get(), "RootPOA", &ev);
+      poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(
+	      bonobo_activation_orb_get(), "RootPOA", &ev);
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
@@ -2179,13 +2180,13 @@ gconf_init           (int argc, char **argv, GError** err)
 
   gconf_preinit(NULL, NULL);
 
-  if (!oaf_is_initialized())
+  if (!bonobo_activation_is_initialized())
     {
-      orb = oaf_init(argc, argv);
+      orb = bonobo_activation_init(argc, argv);
     }
   else
     {
-      orb = oaf_orb_get();
+      orb = bonobo_activation_orb_get();
     }
       
   gconf_postinit(NULL, NULL);
