@@ -514,11 +514,10 @@ foreach_setup_overlap(gpointer key, gpointer value, gpointer user_data)
    * a notify_id, remove the notify handler now
    * FIXME: this is a race, from now on we can miss notifies, it is
    * not an incredible amount of time so this is not a showstopper */
-  else if (dir->notify_id != 0 ||
+  else if (dir->notify_id != 0 &&
 	   gconf_key_is_below(od->dirname, dir->name))
     {
-      if(dir->notify_id != 0)
-	    gconf_notify_remove(client->engine, dir->notify_id);
+      gconf_notify_remove(client->engine, dir->notify_id);
       dir->notify_id = 0;
     }
 }
