@@ -46,6 +46,8 @@ typedef struct _Listener Listener;
 
 struct _Listener {
   guint cnxn;
+  guint refcount : 24;
+  guint removed : 1; /* has been removed */
   gpointer listener_data;
   GFreeFunc destroy_notify;
 };
@@ -110,8 +112,11 @@ static LTableEntry* ltable_entry_new(const gchar* name,
                                      const gchar* full_name);
 static void         ltable_entry_destroy(LTableEntry* entry);
 
-static Listener* listener_new(guint cnxn_id, gpointer listener_data, GFreeFunc destroy_notify);
-static void listener_destroy(Listener* l);
+static Listener* listener_new   (guint      cnxn_id,
+                                 gpointer   listener_data,
+                                 GFreeFunc  destroy_notify);
+static void      listener_unref (Listener  *l);
+static void      listener_ref   (Listener  *l);
 
 /*
  * Public API
@@ -229,18 +234,30 @@ listener_new(guint cnxn_id, gpointer listener_data, GFreeFunc destroy_notify)
 
   l = g_new0(Listener, 1);
 
+  l->refcount = 1;
+  l->removed = FALSE;
   l->listener_data = listener_data;
-  l->cnxn = cnxn_id;
+  l->cnxn = cnxn_id;  
   l->destroy_notify = destroy_notify;
 
   return l;
 }
 
 static void      
-listener_destroy(Listener* l)
+listener_unref (Listener* l)
 {
-  (*l->destroy_notify)(l->listener_data);
-  g_free(l);
+  l->refcount -= 1;
+  if (l->refcount == 0)
+    {
+      (*l->destroy_notify)(l->listener_data);
+      g_free(l);
+    }
+}
+
+static void
+listener_ref (Listener  *l)
+{
+  l->refcount += 1;
 }
 
 static LTable* 
@@ -320,7 +337,7 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   const gchar* noroot_where = where + 1;
 
   g_return_if_fail(gconf_valid_key(where, NULL));
-
+  
   if (lt->tree == NULL)
     {
       lte = ltable_entry_new("/", "/");
@@ -459,8 +476,9 @@ ltable_remove(LTable* lt, guint cnxn)
 
           lt->removed_indices = g_slist_prepend(lt->removed_indices,
                                                 GUINT_TO_POINTER(index));
-          
-          listener_destroy(l);
+
+          l->removed = TRUE;
+          listener_unref (l);
 
           break;
         }
@@ -520,15 +538,16 @@ destroy_func(GNode* node, gpointer data)
   while (tmp != NULL)
     {
       Listener* l = tmp->data;
-      
-      listener_destroy(l);
+
+      l->removed = TRUE;
+      listener_unref (l);
 
       tmp = g_list_next(tmp);
     }
-  g_list_free(lte->listeners);
+  g_list_free (lte->listeners);
   lte->listeners = NULL;
   
-  ltable_entry_destroy(lte);
+  ltable_entry_destroy (lte);
   
   return FALSE;
 }
@@ -564,7 +583,9 @@ notify_listener_list(GConfListeners* listeners,
     {
       Listener* l = tmp->data;
 
-      (*callback)(listeners, key, l->cnxn, l->listener_data, user_data);
+      /* don't notify listeners that were removed during the notify */
+      if (!l->removed)
+        (*callback)(listeners, key, l->cnxn, l->listener_data, user_data);
 
       tmp = g_list_next(tmp);
     }
@@ -578,7 +599,8 @@ ltable_notify(LTable* lt, const gchar* key,
   guint i;
   const gchar* noroot_key;
   GNode* cur;
-
+  GList *to_notify;
+  
   noroot_key = key + 1;
 
   g_return_if_fail(*key == '/');
@@ -586,13 +608,15 @@ ltable_notify(LTable* lt, const gchar* key,
 
   if (lt->tree == NULL)
     return; /* no one to notify */
+
+  /* we build a list "to_notify" to be safe against tree
+   * modifications during the notification.
+   */
   
   /* Notify "/" listeners */
-  notify_listener_list((GConfListeners*)lt,
-                       ((LTableEntry*)lt->tree->data)->listeners, 
-                       key, callback, user_data);
+  to_notify = g_list_copy (((LTableEntry*)lt->tree->data)->listeners);  
 
-  dirs = g_strsplit(noroot_key, "/", -1);
+  dirs = g_strsplit (noroot_key, "/", -1);
 
   cur = lt->tree;
   i = 0;
@@ -606,9 +630,9 @@ ltable_notify(LTable* lt, const gchar* key,
 
           if (strcmp(lte->name, dirs[i]) == 0)
             {
-              notify_listener_list((GConfListeners*)lt,
-                                   lte->listeners, key,
-                                   callback, user_data);
+              GList *copy = g_list_copy (lte->listeners);
+              to_notify = g_list_concat (to_notify, copy);
+
               break;
             }
 
@@ -624,6 +648,16 @@ ltable_notify(LTable* lt, const gchar* key,
     }
   
   g_strfreev(dirs);
+
+  g_list_foreach (to_notify, (GFunc) listener_ref, NULL);
+  
+  notify_listener_list ((GConfListeners*)lt,
+                        to_notify, key,
+                        callback, user_data);
+
+  g_list_foreach (to_notify, (GFunc) listener_unref, NULL);
+
+  g_list_free (to_notify);
 }
 
 struct NodeTraverseData

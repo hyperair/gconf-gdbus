@@ -1,3 +1,9 @@
+2001-12-17  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-listeners.c: reference count the listeners, make a
+	copy of listener lists and ref all listeners prior to doing the
+	notifies, to minimize reentrancy screwups.
+
 2001-12-17  Josh Barrow  <drleary@mac.com>
 
 	* examples/basic-gconf-app.c:
