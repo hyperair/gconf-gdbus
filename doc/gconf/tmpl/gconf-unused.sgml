@@ -1,3 +1,27 @@
+<!-- ##### FUNCTION g_error_free ##### -->
+<para>
+Destroys a #GError. You must destroy any errors returned by GConf
+functions.
+</para>
+
+@error: 
+@err: a #GError to destroy.
+
+<!-- ##### FUNCTION g_clear_error ##### -->
+<para>
+Internal function.
+</para>
+
+@err: 
+
+<!-- ##### FUNCTION gconf_strerror ##### -->
+<para>
+Internal function.
+</para>
+
+@en: 
+@Returns: 
+
 <!-- ##### SECTION ./tmpl/gconf-unused.sgml:See_Also ##### -->
 <para>
 
@@ -10,6 +34,21 @@
 </para>
 
 @Returns: 
+
+<!-- ##### STRUCT GError ##### -->
+<para>
+This structure describes an error. The @str field gives a
+human-readable description of the problem; the string is intended for
+display to users. It will be internationalized and as informative as
+possible. The @num field is intended for programs that want to
+distinguish between different kinds of error. The @num and @str fields
+are meant to be accessed directly, because it's convenient to write
+err->code and err->message.
+</para>
+
+@domain: 
+@code: 
+@message: 
 
 <!-- ##### FUNCTION gconf_server_info_dir ##### -->
 <para>
@@ -89,6 +128,15 @@ Returns the ORB GConf is using.
 </para>
 
 @Returns: the ORB GConf is using.
+
+<!-- ##### FUNCTION g_error_copy ##### -->
+<para>
+Copies a #GError.
+</para>
+
+@error: 
+@Returns: a new #GError.
+@err: a #GError to copy.
 
 <!-- ##### SECTION ./tmpl/gconf-orbit.sgml:Title ##### -->
 

@@ -179,6 +179,17 @@ should return a pointer to a #GtkWindow.
 @Returns: the parent window for #GConfClient's error dialogs.
 
 
+<!-- ##### USER_FUNCTION GConfClientErrorHandlerFunc ##### -->
+<para>
+
+</para>
+
+@client: 
+@parent_func: 
+@parent_user_data: 
+@error: 
+
+
 <!-- ##### MACRO GCONF_CLIENT ##### -->
 <para>
 Casts a pointer to a #GConfClient*.
@@ -241,6 +252,7 @@ you must remove it the same number of times before the remove takes effect.
 
 @client: a #GConfClient.
 @dir: directory to remove.
+@err: 
 
 
 <!-- ##### FUNCTION gconf_client_notify_add ##### -->
@@ -304,6 +316,14 @@ Controls the default error handling for #GConfClient. See
 @user_data: user data to pass to @func.
 
 
+<!-- ##### FUNCTION gconf_client_set_global_default_error_handler ##### -->
+<para>
+
+</para>
+
+@func: 
+
+
 <!-- ##### FUNCTION gconf_client_clear_cache ##### -->
 <para>
 Dumps everything out of the #GConfClient client-side cache. If you know you're
@@ -342,15 +362,13 @@ modified.
 
 <!-- ##### FUNCTION gconf_client_get ##### -->
 <para>
-Gets the value of a configuration key. Just like gconf_get(), but uses
-#GConfClient caching and error-handling features. Return value must be freed
-with gconf_value_destroy().
+
 </para>
 
-@client: a #GConfClient.
-@key: key to get.
-@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: value of @key, or <symbol>NULL</symbol> if unset or an error occurs.
+@client: 
+@key: 
+@err: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gconf_client_get_without_default ##### -->

@@ -4,15 +4,17 @@ GConfClientPreloadType
 GConfClientErrorHandlingMode
 GConfClientNotifyFunc
 GConfClientParentWindowFunc
+GConfClientErrorHandlerFunc
 GCONF_CLIENT
 <TITLE>GConfClient</TITLE>
-gconf_client_new
-gconf_client_new_with_engine
+gconf_client_get_default
+gconf_client_get_for_engine
 gconf_client_add_dir
 gconf_client_remove_dir
 gconf_client_notify_add
 gconf_client_notify_remove
 gconf_client_set_error_handling
+gconf_client_set_global_default_error_handler
 gconf_client_clear_cache
 gconf_client_preload
 gconf_client_set
@@ -70,24 +72,19 @@ gconf_backend_resolve_address
 <SECTION>
 <FILE>gconf-engine</FILE>
 GConfEngine
-gconf_engine_new
-gconf_engine_new_from_address
+gconf_engine_get_default
+gconf_engine_get_for_address
+gconf_engine_get_local
 gconf_engine_unref
 gconf_engine_ref
-gconf_engine_new_local
 </SECTION>
 
 <SECTION>
 <FILE>gconf-error</FILE>
 GConfError
-GError
 gconf_error_new
-g_error_copy
-g_error_free
 gconf_set_error
-g_clear_error
 gconf_compose_errors
-gconf_strerror
 </SECTION>
 
 <SECTION>
@@ -163,6 +160,12 @@ gconf_schema_short_desc
 gconf_schema_long_desc
 gconf_schema_owner
 gconf_schema_default_value
+gconf_schema_car_type
+gconf_schema_cdr_type
+gconf_schema_list_type
+gconf_schema_set_car_type
+gconf_schema_set_cdr_type
+gconf_schema_set_list_type
 </SECTION>
 
 <SECTION>
@@ -235,6 +238,11 @@ gconf_entry_destroy
 gconf_entry_key
 gconf_entry_value
 gconf_entry_steal_value
+gconf_entry_is_default
+gconf_entry_schema_name
+gconf_entry_set_is_default
+gconf_entry_set_schema_name
+gconf_entry_set_value_nocopy
 </SECTION>
 
 <SECTION>

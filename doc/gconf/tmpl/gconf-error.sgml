@@ -98,20 +98,6 @@ specific actions depending on the error type.
 @GCONF_ERROR_LOCAL_ENGINE: 
 @GCONF_ERROR_LOCK_FAILED: 
 
-<!-- ##### STRUCT GError ##### -->
-<para>
-This structure describes an error. The @str field gives a
-human-readable description of the problem; the string is intended for
-display to users. It will be internationalized and as informative as
-possible. The @num field is intended for programs that want to
-distinguish between different kinds of error. The @num and @str fields
-are meant to be accessed directly, because it's convenient to write
-err->code and err->message.
-</para>
-
-@str: the error description.
-@num: the error number.
-
 <!-- ##### FUNCTION gconf_error_new ##### -->
 <para>
 Creates a new error. Normally the GConf library does this, but you
@@ -126,24 +112,6 @@ argument list is the same as in printf().
 @Returns: newly-allocated #GError.
 
 
-<!-- ##### FUNCTION g_error_copy ##### -->
-<para>
-Copies a #GError.
-</para>
-
-@err: a #GError to copy.
-@Returns: a new #GError.
-
-
-<!-- ##### FUNCTION g_error_free ##### -->
-<para>
-Destroys a #GError. You must destroy any errors returned by GConf
-functions.
-</para>
-
-@err: a #GError to destroy.
-
-
 <!-- ##### FUNCTION gconf_set_error ##### -->
 <para>
 Internal function.
@@ -155,14 +123,6 @@ Internal function.
 @Varargs: 
 
 
-<!-- ##### FUNCTION g_clear_error ##### -->
-<para>
-Internal function.
-</para>
-
-@err: 
-
-
 <!-- ##### FUNCTION gconf_compose_errors ##### -->
 <para>
 Internal function.
@@ -170,15 +130,6 @@ Internal function.
 
 @err1: 
 @err2: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gconf_strerror ##### -->
-<para>
-Internal function.
-</para>
-
-@en: 
 @Returns: 
 
 
