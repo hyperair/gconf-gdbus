@@ -597,8 +597,11 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
           GConfEntry* pair = tmp->data;
           gchar* s;
 
-          s = gconf_value_to_string(pair->value);
-
+          if (pair->value)
+                  s = gconf_value_to_string(pair->value);
+          else
+                  s = g_strdup(_("(no value set)"));
+          
           printf(" %s%s = %s\n", whitespace, pair->key, s);
 
           g_free(s);

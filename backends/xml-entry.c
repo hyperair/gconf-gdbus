@@ -43,6 +43,8 @@ static xmlNodePtr
 find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale);
 static void
 node_unset_by_locale(xmlNodePtr node, const gchar* locale);
+static void
+node_unset_value(xmlNodePtr node);
 
 struct _Entry {
   gchar* name; /* a relative key */
@@ -429,13 +431,7 @@ entry_sync_to_node (Entry* e)
   if (e->cached_value)
     node_set_value(e->node, e->cached_value);
   else
-    {
-      free_childs(e->node);
-      my_xmlSetProp(e->node, "value", NULL);
-      my_xmlSetProp(e->node, "type", NULL);
-      my_xmlSetProp(e->node, "stype", NULL);
-      my_xmlSetProp(e->node, "ltype", NULL);
-    }
+    node_unset_value(e->node);
   
   e->dirty = FALSE;
 }
@@ -613,6 +609,16 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
 }
 
 static void
+node_unset_value(xmlNodePtr node)
+{
+  free_childs(node);
+  my_xmlSetProp(node, "value", NULL);
+  my_xmlSetProp(node, "type", NULL);
+  my_xmlSetProp(node, "stype", NULL);
+  my_xmlSetProp(node, "ltype", NULL);
+}
+
+static void
 node_unset_by_locale(xmlNodePtr node, const gchar* locale)
 {
   xmlNodePtr found;
@@ -620,12 +626,19 @@ node_unset_by_locale(xmlNodePtr node, const gchar* locale)
   g_return_if_fail(node != NULL);
   g_return_if_fail(locale != NULL);
 
-  found = find_schema_subnode_by_locale(node, locale);
-  
-  if (found != NULL)
+  if (locale != NULL)
     {
-      xmlUnlinkNode(found);
-      xmlFreeNode(found);
+      found = find_schema_subnode_by_locale(node, locale);
+      
+      if (found != NULL)
+        {
+          xmlUnlinkNode(found);
+          xmlFreeNode(found);
+        }
+    }
+  else
+    {
+      node_unset_value(node);
     }
 }
 

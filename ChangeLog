@@ -1,5 +1,21 @@
 2000-01-15  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-dir.c (dir_unset_value): check entries for 
+	uselessness on unset, even if they are unchanged by the unset.
+	Allows us to delete useless crap we loaded from disk.
+	If you unset, the entry should no longer appear in all_entries
+	unless there's a schema name to remember.
+	
+	* backends/xml-entry.c (entry_unset_value): Fix this to properly
+	unset value for all locales if the locale passed in to "unset" is
+	NULL
+	(entry_sync_to_node): Remember to unset the value if necessary
+	
+	* gconf/gconftool.c (list_pairs_in_dir): handle entries with no
+	value.
+
+2000-01-15  Havoc Pennington  <hp@pobox.com>
+
 	* backends/xml-dir.c (dir_destroy): destroy entries before the xml
 	doc, since they hold pointers into the xml doc.
 

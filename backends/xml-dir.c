@@ -531,6 +531,13 @@ dir_unset_value (Dir* d, const gchar* relative_key,
           entry_set_mod_user(e, g_get_user_name());
         }
     }
+  else
+    {
+      /* Check uselessness anyway; this ensures that if it was useless
+         when the daemon started or we otherwise missed its lack of
+         utility, we clean it up if the user does an explicit unset */
+      dir_forget_entry_if_useless(d, e);
+    }
 }
 
 typedef struct _ListifyData ListifyData;
@@ -857,7 +864,7 @@ static gboolean
 dir_forget_entry_if_useless(Dir* d, Entry* e)
 {
   GConfValue* val;
-
+  
   if (entry_get_schema_name(e) != NULL)
     return FALSE;
   
@@ -865,7 +872,7 @@ dir_forget_entry_if_useless(Dir* d, Entry* e)
   
   if (val != NULL)
     return FALSE; /* not useless */
-
+      
   g_hash_table_remove(d->entry_cache, entry_get_name(e));
 
   entry_destroy(e);
