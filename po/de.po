@@ -8,9 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.1.x\n"
-"POT-Creation-Date: 2002-06-02 22:33-0400\n"
-"PO-Revision-Date: 2002-03-11 23:57+0100\n"
-"Last-Translator: Christian Meyer <chrisime@gnome.org>\n"
+"POT-Creation-Date: 2002-07-08 13:21+0200\n"
+"PO-Revision-Date: 2002-07-08 13:21+0200\n"
+"Last-Translator: Manuel Borchers <webmaster@matronix.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -170,11 +170,9 @@ msgid "Failed to stat `%s': %s"
 msgstr "»%s« konnte nicht mit stat() untersucht werden: %s"
 
 #: backends/xml-dir.c:959
-#, fuzzy, c-format
+#, c-format
 msgid "%s"
-msgstr ""
-"\n"
-"%s\n"
+msgstr "%s"
 
 #: backends/xml-dir.c:1109
 #, c-format
@@ -199,9 +197,9 @@ msgid "Failed to create file `%s': %s"
 msgstr "Erstellen von Datei %s fehlgeschlagen: %s"
 
 #: backends/xml-dir.c:1327
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "Schreiben von »%s« fehlgeschlagen: %s"
+msgstr "Analysieren von XML-Datei »%s« fehlgeschlagen"
 
 #. There was an error
 #: backends/xml-entry.c:154
@@ -368,7 +366,7 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "Eine oder mehrere Quellen konnten nicht synchronisiert werden: %s"
 
 #: gconf/gconf-database.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
@@ -394,7 +392,7 @@ msgstr ""
 "(wahrscheinlich harmlos, könnte zu einer neu erscheinenden Benachrichtung "
 "führen): %s"
 
-#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1540
+#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Fehler beim Erhalten des Wertes für »%s«: %s"
@@ -701,15 +699,15 @@ msgstr "Datei »%s« konnte nicht bereinigt werden: %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Sperrverzeichnis »%s« konnte nicht gelöscht werden: %s"
 
-#: gconf/gconf-internals.c:2815 gconf/gconfd.c:595
+#: gconf/gconf-internals.c:2815 gconf/gconfd.c:596
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Erzeugen von %s fehlgeschlagen: %s"
 
 #: gconf/gconf-internals.c:2837
-#, fuzzy, c-format
+#, c-format
 msgid "Server ping error: %s"
-msgstr "Fehler beim Herunterfahren: %s\n"
+msgstr "Fehler beim pingen des Servers: %s"
 
 #: gconf/gconf-internals.c:2858
 #, c-format
@@ -730,10 +728,14 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"Konfigurationsserver konnte nicht kontaktiert werden; mögliche Fehlerquellen "
+"sind, dass Sie TCP/IP für ORBit aktivieren müssen oder Sie haben alte NFS "
+"Sperren wegen eines Systemabsturzes. Gehen Sie zu http://www.gnome.org/"
+"projects/gconf/ für weitere Informationen (Details - %s)"
 
 #: gconf/gconf-internals.c:2908
 msgid "none"
-msgstr ""
+msgstr "kein"
 
 #: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:73
 msgid "Help options"
@@ -915,17 +917,17 @@ msgstr ""
 "muss eine Sperrdatei in ~/gconfd besitzen aber auch Sperrdateien an "
 "individuellen Speicherorten, wie z.B. ~/.gconf."
 
-#: gconf/gconf-sources.c:1413
+#: gconf/gconf-sources.c:1414
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Fehler beim Finden der Meta-Informationen: %s"
 
-#: gconf/gconf-sources.c:1482
+#: gconf/gconf-sources.c:1483
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Fehler beim Ermitteln der Meta-Informationen: %s"
 
-#: gconf/gconf-sources.c:1506
+#: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
@@ -1080,11 +1082,11 @@ msgstr "Schema erwartet, aber %s erhalten"
 msgid "CORBA error: %s"
 msgstr "CORBA-Fehler: %s"
 
-#: gconf/gconfd.c:249
+#: gconf/gconfd.c:250
 msgid "Shutdown request received"
 msgstr "Anfrage zum Beenden empfangen"
 
-#: gconf/gconfd.c:281
+#: gconf/gconfd.c:282
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1092,7 +1094,7 @@ msgstr ""
 "gconfd wurde mit Fehlerdiagnose compiliert; es wird versucht gconf.path aus "
 "dem Quellverzeichnis zu laden"
 
-#: gconf/gconfd.c:295
+#: gconf/gconfd.c:296
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1103,7 +1105,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:303
+#: gconf/gconfd.c:304
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -1111,16 +1113,16 @@ msgstr ""
 "Keine Konfigurationsquellen im Quellpfad, Konfiguration wird nicht "
 "gespeichert werden; bearbeiten Sie sie"
 
-#: gconf/gconfd.c:303
+#: gconf/gconfd.c:304
 msgid "/path"
 msgstr "/Pfad"
 
-#: gconf/gconfd.c:316
+#: gconf/gconfd.c:317
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fehler beim Laden von Konfigurationsquellen: %s"
 
-#: gconf/gconfd.c:328
+#: gconf/gconfd.c:329
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1128,7 +1130,7 @@ msgstr ""
 "Es konnten keine Konfigurations-Quelladressen aufgelöst werden, "
 "Konfigurationsdaten können nicht geladen oder gespeichert werden"
 
-#: gconf/gconfd.c:345
+#: gconf/gconfd.c:346
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1136,65 +1138,65 @@ msgstr ""
 "Es konnten keine schreibbaren Konfigurationsquellen aufgelöst werden; einige "
 "Konfigurationsänderungen können nicht gespeichert werden"
 
-#: gconf/gconfd.c:371
+#: gconf/gconfd.c:372
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr "Signal %d erhalten, Absturz. Bitte melden Sie einen GConf-Bug."
 
-#: gconf/gconfd.c:389
+#: gconf/gconfd.c:390
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Signal %d erhalten, unplanmäßiges Beenden. Bitte melden Sie einen GConf-Bug."
 
-#: gconf/gconfd.c:406
+#: gconf/gconfd.c:407
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Signal %d erhalten, sauberes Herunterfahren"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:542
+#: gconf/gconfd.c:543
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "(Version %s) wird gestartet, PID %u, Benutzer »%s«"
 
-#: gconf/gconfd.c:582
+#: gconf/gconfd.c:583
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Objektreferenz für ConfigServer konnte nicht erhalten werden"
 
-#: gconf/gconfd.c:620
+#: gconf/gconfd.c:621
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Schreiben auf Pipe-FileDescriptor %d fehlgeschlagen; das Client-Programm "
 "könnte hängen: %s"
 
-#: gconf/gconfd.c:630
+#: gconf/gconfd.c:631
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Sperre für den Dämon konnte nicht erzeugt werden, beendet: %s"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:669
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Fehler bei der Freigabe der Sperrdatei: %s"
 
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:677
 msgid "Exiting"
 msgstr "Beendet"
 
-#: gconf/gconfd.c:702
+#: gconf/gconfd.c:703
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-Server wird nicht verwendet, wird beendet."
 
-#: gconf/gconfd.c:1067
+#: gconf/gconfd.c:1068
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Ausnahmefehler: %s"
 
-#: gconf/gconfd.c:1167
+#: gconf/gconfd.c:1168
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1203,7 +1205,7 @@ msgstr ""
 "gconfd-Protkolldatei konnte nicht geöffnet werden; Zuhörer können nach "
 "Beenden von gconfd nicht wiederhergestellt werden (%s)"
 
-#: gconf/gconfd.c:1202
+#: gconf/gconfd.c:1203
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1211,36 +1213,36 @@ msgstr ""
 "gconfd-Protokolldatei konnte nicht geschlossen werden; Daten können evtl. "
 "nicht ordnungsgemäß gespeichert worden sein (%s)"
 
-#: gconf/gconfd.c:1271
+#: gconf/gconfd.c:1272
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr ""
 "Status-Speicherungsdatei »%s« konnte nicht zum Schreiben geöffnet werden: %s"
 
-#: gconf/gconfd.c:1285
+#: gconf/gconfd.c:1286
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr ""
 "Status-Speicherungsdatei »%s«, FD %d, konnte nicht geschrieben werden: %s"
 
-#: gconf/gconfd.c:1294
+#: gconf/gconfd.c:1295
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Neue Status-Speicherungsdatei »%s« konnet nicht geschlossen werden: %s"
 
-#: gconf/gconfd.c:1308
+#: gconf/gconfd.c:1309
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Alte Status-Speicherungsdatei »%s« konnte verschoben werden: %s"
 
-#: gconf/gconfd.c:1318
+#: gconf/gconfd.c:1319
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr ""
 "Neue Status-Speicherungsdatei konnte nicht an den richtigen Platz verschoben "
 "werden: %s"
 
-#: gconf/gconfd.c:1327
+#: gconf/gconfd.c:1328
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1248,7 +1250,7 @@ msgstr ""
 "Ursprüngliche Status-Speicherungsdatei, nach »%s« verschoben wurde, konnte "
 "nicht wiederhergestellt werden: %s"
 
-#: gconf/gconfd.c:1798
+#: gconf/gconfd.c:1799
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1256,17 +1258,17 @@ msgstr ""
 "Zuhörer auf Adresse »%s« konnte nicht wiederhergestellt werden, Datenbank "
 "konnte nicht aufgelöst werden"
 
-#: gconf/gconfd.c:1844
+#: gconf/gconfd.c:1845
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Lesen der gespeicherten Statusdatei fehlgeschlagen: %s"
 
-#: gconf/gconfd.c:1897
+#: gconf/gconfd.c:1898
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Öffnen der gespeicherten Statusdatei »%s« nicht möglich: %s"
 
-#: gconf/gconfd.c:2014
+#: gconf/gconfd.c:2017
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1276,7 +1278,7 @@ msgstr ""
 "geschrieben werden; Zuhörer wird nicht wieder hinzugefügt werden können, "
 "wenn gconfd beendet wird (%s)"
 
-#: gconf/gconfd.c:2019
+#: gconf/gconfd.c:2022
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1286,31 +1288,31 @@ msgstr ""
 "geschrieben werden; Zuhörer wird vielleicht irrtümlich wieder hinzugefügt, "
 "wenn gconfd beendet wird (%s)"
 
-#: gconf/gconfd.c:2042 gconf/gconfd.c:2216
+#: gconf/gconfd.c:2045 gconf/gconfd.c:2219
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Empfangen des IOR für Client fehlgeschlagen: %s"
 
-#: gconf/gconfd.c:2057
+#: gconf/gconfd.c:2060
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Öffnen der gespeicherten Statusdatei nicht möglich: %s"
 
-#: gconf/gconfd.c:2070
+#: gconf/gconfd.c:2073
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Schreiben des Clients, der zur gespeicherten Statusdatei hinzugefügt wurde, "
 "fehlgeschlagen: %s"
 
-#: gconf/gconfd.c:2078
+#: gconf/gconfd.c:2081
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Entfernen des Clients, der zur gespeicherten Statusdatei hinzugefügt wurde, "
 "fehlgeschlagen: %s"
 
-#: gconf/gconfd.c:2177
+#: gconf/gconfd.c:2180
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1318,21 +1320,21 @@ msgstr ""
 "hinzugefügt wurden."
 
 #. dialog display isn't working out
-#: gconf/gconfd.c:2318
+#: gconf/gconfd.c:2321
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 msgstr ""
 "Mehrere Speicherschutzfehler sind aufgetreten. Fehlerdialog kann nicht "
 "angezeigt werden\n"
 
 #. Eeeek! Can't show dialog
-#: gconf/gconfd.c:2327
-#, fuzzy, c-format
+#: gconf/gconfd.c:2330
+#, c-format
 msgid ""
 "Segmentation fault!\n"
 "Cannot display crash dialog: %s\n"
 msgstr ""
 "Speicherschutzfehler!\n"
-"Absturzdialog kann nicht angezeigt werden\n"
+"Absturzdialog kann nicht angezeigt werden: %s\n"
 
 #: gconf/gconftool.c:82
 msgid "Set a key to a value and sync. Use with --type."
@@ -1545,7 +1547,7 @@ msgstr "Geben Sie den Namen der voreingestellten Quelle an"
 
 #: gconf/gconftool.c:362
 msgid "Print version"
-msgstr ""
+msgstr "Version ausgeben"
 
 #: gconf/gconftool.c:441
 msgid "Can't get and set/unset simultaneously\n"
