@@ -32,6 +32,8 @@ BUILT_SOURCES = \
 	gconfmarshal.h		\
 	gconfmarshal.c
 
+$(OBJECTS): $(BUILT_SOURCES)
+
 CLEANFILES = \
 	$(BUILT_SOURCES)	\
 	stamp-gconfmarshal.h	\
