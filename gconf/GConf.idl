@@ -30,6 +30,8 @@ union ConfigBasicValue switch (ConfigBasicValueType) {
    ConfigSchema schema_value;
 };
 
+typedef sequence<ConfigBasicValue> BasicValueList;
+
 union ConfigValue switch (ConfigValueType) {
  case InvalidVal:
    long dummy;
@@ -44,9 +46,9 @@ union ConfigValue switch (ConfigValueType) {
  case SchemaVal:
    ConfigSchema schema_value;
  case ListVal:
-   sequence<ConfigBasicValue> list_value;
+   BasicValueList list_value;
  case PairVal:
-   sequence<ConfigBasicValue> pair_value;
+   BasicValueList pair_value;
 };
 
 interface ConfigListener {

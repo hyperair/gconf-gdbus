@@ -853,6 +853,12 @@ g_conf_value_from_corba_value(const ConfigValue* value)
     case SchemaVal:
       type = G_CONF_VALUE_SCHEMA;
       break;
+    case ListVal:
+      type = G_CONF_VALUE_LIST;
+      break;
+    case PairVal:
+      type = G_CONF_VALUE_PAIR;
+      break;
     default:
       g_warning("Invalid type in %s", __FUNCTION__);
       return NULL;
@@ -877,6 +883,42 @@ g_conf_value_from_corba_value(const ConfigValue* value)
     case G_CONF_VALUE_SCHEMA:
       g_conf_value_set_schema_nocopy(gval, 
                                      g_conf_schema_from_corba_schema(&(value->_u.schema_value)));
+      break;
+    case G_CONF_VALUE_LIST:
+      {
+        GSList* list = NULL;
+        guint i = 0;
+        while (i < value->_u.list_value._length)
+          {
+            GConfValue* val;
+
+            /* This is a bit dubious; we cast a ConfigBasicValue to ConfigValue
+               because they have the same initial members, but by the time
+               the CORBA and C specs kick in, not sure we are guaranteed
+               to be able to do this.
+            */
+            val = g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value._buffer[i]);
+
+            list = g_slist_prepend(list, val);
+
+            ++i;
+          }
+        
+        list = g_slist_reverse(list);
+
+        g_conf_value_set_list_nocopy(gval, list);
+      }
+      break;
+    case G_CONF_VALUE_PAIR:
+      {
+        g_return_val_if_fail(value->_u.pair_value._length == 2, gval);
+
+        g_conf_value_set_car_nocopy(gval,
+                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value._buffer[0]));
+
+        g_conf_value_set_cdr_nocopy(gval,
+                                    g_conf_value_from_corba_value((ConfigValue*)&value->_u.list_value._buffer[1]));
+      }
       break;
     default:
       g_assert_not_reached();
@@ -919,6 +961,51 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
       fill_corba_schema_from_g_conf_schema(g_conf_value_schema(value),
                                            &cv->_u.schema_value);
       break;
+    case G_CONF_VALUE_LIST:
+      {
+        guint n, i;
+        GSList* list;
+        
+        cv->_d = ListVal;
+
+        list = g_conf_value_list(value);
+
+        n = g_slist_length(list);
+
+        cv->_u.list_value._buffer =
+          CORBA_sequence_ConfigBasicValue_allocbuf(n);
+        cv->_u.list_value._length = n;
+        cv->_u.list_value._maximum = n;
+
+        i= 0;
+        while (list != NULL)
+          {
+            /* That dubious ConfigBasicValue->ConfigValue cast again */
+            fill_corba_value_from_g_conf_value((GConfValue*)list->data,
+                                               (ConfigValue*)&cv->_u.list_value.buffer[i]);
+
+            list = g_slist_next(list);
+            ++i;
+          }
+      }
+      break;
+    case G_CONF_VALUE_PAIR:
+      {
+        cv->_d = PairVal;
+
+        cv->_u.pair_value._buffer =
+          CORBA_sequence_ConfigBasicValue_allocbuf(n);
+        cv->_u.pair_value._length = 2;
+        cv->_u.pair_value._maximum = 2;
+
+        /* dubious cast */
+        fill_corba_value_from_g_conf_value(g_conf_value_car(value),
+                                           (ConfigValue*)&cv->_u.pair_value.buffer[0]);
+        fill_corba_value_from_g_conf_value(g_conf_value_cdr(value),
+                                           (ConfigValue*)&cv->_u.pair_value.buffer[1]);
+      }
+      break;
+      
     case G_CONF_VALUE_INVALID:
       cv->_d = InvalidVal;
       break;
