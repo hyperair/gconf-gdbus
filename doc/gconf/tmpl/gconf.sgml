@@ -1,12 +1,24 @@
 <!-- ##### SECTION Title ##### -->
-gconf
+
+GConf Core Interfaces
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Basic functions to initialize GConf and get/set values
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+These functions initialize GConf, and communicate with the
+<application>gconfd</application> server via a
+#GConfEngine object. You can install a notification
+request on the server, get values, set values, list directories, and associate
+schema names with keys.
+</para>
 
+<para>
+Most of this interface is replicated in the #GtkObject
+wrapper; an alternative to the value-setting functions is the
+#GConfChangeSet interface.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -16,53 +28,67 @@ gconf
 
 <!-- ##### FUNCTION gconf_init ##### -->
 <para>
-
+Initializes the GConf library. Creates a connection to a CORBA ORB unless 
+you have previously called gconf_set_orb().
 </para>
 
-@err: 
-@Returns: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> otherwise.
 
 
 <!-- ##### FUNCTION gconf_is_initialized ##### -->
 <para>
-
+Asks whether the library has been initialized.
 </para>
 
-@Returns: 
+@Returns: <symbol>TRUE</symbol> if the library has been initialized.
 
 
 <!-- ##### USER_FUNCTION GConfNotifyFunc ##### -->
 <para>
-
+A callback function invoked when a key's value changes. The @cnxn_id parameter
+will be the connection ID returned from gconf_notify_add(). @key will be the
+full path of the changed key, @value will be the new value (or
+<symbol>NULL</symbol> if the key was unset), and @user_data is the data passed
+to gconf_notify_add().
 </para>
 
-@conf: 
-@cnxn_id: 
-@key: 
-@value: 
-@user_data: 
+@conf: the #GConfEngine passed to gconf_notify_add().
+@cnxn_id: the ID returned from gconf_notify_add().
+@key: the full path of the changed key.
+@value: the new value, or <symbol>NULL</symbol> if the key was unset.
+@user_data: the user data passed to gconf_notify_add().
 
 
 <!-- ##### FUNCTION gconf_notify_add ##### -->
 <para>
-
+Registers a notification request with the <application>gconfd</application>
+server.  The server will notify the client when any key at or below
+@namespace_section is set or unset. Try to watch the smallest possible part of
+the namespace; otherwise you will slow down the server and your application with
+unnecessary notifications. Note that you should prefer gconf_client_notify_add()
+if you're using the #GtkObject wrapper library, because
+gconf_client_notify_add() does not require a client-server conversation for
+every callback. gconf_notify_add() requests a different server notification for
+every callback. The function returns an ID you can use to remove the
+notification request; 0 is an invalid ID, and is returned if an error occurs.
 </para>
 
-@conf: 
-@namespace_section: 
-@func: 
-@user_data: 
-@err: 
-@Returns: 
+@conf: a #GConfEngine to monitor for changes.
+@namespace_section: the directory or key to watch; you will be notified of changes at or below this point.
+@func: the callback to invoke when a notification is received from the server.
+@user_data: the data to pass to the callback.
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
+@Returns: an ID for the notification request, or 0 on error.
 
 
 <!-- ##### FUNCTION gconf_notify_remove ##### -->
 <para>
-
+Removes a notification request.
 </para>
 
-@conf: 
-@cnxn: 
+@conf: the #GConfEngine you were monitoring for changes.
+@cnxn: The ID returned by gconf_notify_add().
 
 
 <!-- ##### FUNCTION gconf_get ##### -->
@@ -72,7 +98,7 @@ gconf
 
 @conf: 
 @key: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -84,7 +110,7 @@ gconf
 @conf: 
 @key: 
 @locale: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -96,7 +122,7 @@ gconf
 @conf: 
 @key: 
 @value: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -107,7 +133,7 @@ gconf
 
 @conf: 
 @key: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -119,7 +145,7 @@ gconf
 @conf: 
 @key: 
 @schema_key: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -130,7 +156,7 @@ gconf
 
 @conf: 
 @dir: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -141,7 +167,7 @@ gconf
 
 @conf: 
 @dir: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -151,7 +177,7 @@ gconf
 </para>
 
 @conf: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 
 
 <!-- ##### FUNCTION gconf_dir_exists ##### -->
@@ -161,7 +187,7 @@ gconf
 
 @conf: 
 @dir: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -193,7 +219,7 @@ gconf
 @conf: 
 @key: 
 @def: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -205,7 +231,7 @@ gconf
 @conf: 
 @key: 
 @def: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -217,7 +243,7 @@ gconf
 @conf: 
 @key: 
 @def: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -229,7 +255,7 @@ gconf
 @conf: 
 @key: 
 @def: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -240,7 +266,7 @@ gconf
 
 @conf: 
 @key: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -252,7 +278,7 @@ gconf
 @conf: 
 @key: 
 @val: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -264,7 +290,7 @@ gconf
 @conf: 
 @key: 
 @val: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -276,7 +302,7 @@ gconf
 @conf: 
 @key: 
 @val: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -288,7 +314,7 @@ gconf
 @conf: 
 @key: 
 @val: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
@@ -300,7 +326,7 @@ gconf
 @conf: 
 @key: 
 @val: 
-@err: 
+@err: the return location for a #GConfError, or <symbol>NULL</symbol> to ignore errors. 
 @Returns: 
 
 
