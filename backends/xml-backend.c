@@ -408,7 +408,8 @@ resolve_address (const gchar* address, GConfError** err)
   XMLSource* xsource;
   GConfSource* source;
   guint len;
-
+  gint flags = 0;
+  
   root_dir = gconf_address_resource(address);
 
   if (root_dir == NULL)
@@ -423,19 +424,64 @@ resolve_address (const gchar* address, GConfError** err)
   if (root_dir[len-1] == '/')
     root_dir[len-1] = '\0';
 
+  {
+    /* See if we're writeable */
+    gboolean writeable = FALSE;
+    int fd;
+    gchar* testfile;
+
+    testfile = g_strconcat(root_dir, "/.testing.writeability", NULL);    
+    
+    fd = open(testfile, O_CREAT|O_WRONLY, S_IRWXU);
+
+    if (fd >= 0)
+      {
+        writeable = TRUE;
+        close(fd);
+      }
+        
+    unlink(testfile);
+
+    g_free(testfile);
+    
+    if (writeable)
+      flags |= GCONF_SOURCE_ALL_WRITEABLE;
+  }
+
+  {
+    /* see if we're readable */
+    gboolean readable = FALSE;
+    DIR* d;
+
+    d = opendir(root_dir);
+
+    if (d != NULL)
+      {
+        readable = TRUE;
+        closedir(d);
+      }
+    
+    if (readable)
+      flags |= GCONF_SOURCE_ALL_READABLE;
+  }
+
+  if (!(flags & GCONF_SOURCE_ALL_READABLE) &&
+      !(flags & GCONF_SOURCE_ALL_WRITEABLE))
+    {
+      gconf_set_error(err, GCONF_BAD_ADDRESS, _("Can't read from or write to the XML root directory in the address `%s'"), address);
+      g_free(root_dir);
+      return NULL;
+    }
+
   /* Create the new source */
 
   xsource = xs_new(root_dir);
-
-  g_free(root_dir);
   
   source = (GConfSource*)xsource;
+
+  source->flags = flags;
   
-  /* FIXME just a hack for now, eventually
-     it'll be based on something 
-  */
-  source->flags |= GCONF_SOURCE_ALL_WRITEABLE;
-  source->flags |= GCONF_SOURCE_ALL_READABLE;
+  g_free(root_dir);
   
   return source;
 }

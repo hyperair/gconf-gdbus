@@ -1,5 +1,14 @@
 1999-11-22  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-backend.c (resolve_address): Check whether the XML
+	directory is readable/writeable and report an error if neither;
+	set readable/writeable flags properly.
+
+	* gconf/gconfd.c (gconf_server_load_sources): log decision to use
+	default config source
+
+1999-11-22  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconfd.c (gconf_server_load_sources): Fall back to
 	xml:~/.gconf if no config file is found
 

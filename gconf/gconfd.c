@@ -732,13 +732,15 @@ gconf_server_load_sources(void)
 #endif
 
   if (addresses == NULL)
-    {
+    {      
       /* Try using the default address xml:$(HOME)/.gconf */
       addresses = g_new0(gchar*, 2);
 
       addresses[0] = g_strconcat("xml:", g_get_home_dir(), "/.gconf", NULL);
 
       addresses[1] = NULL;
+      
+      gconf_log(GCL_INFO, _("No configuration files found, trying to use the default config source `%s'"), addresses[0]);
     }
   
   if (addresses == NULL)
@@ -766,7 +768,7 @@ gconf_server_load_sources(void)
           gconf_error_destroy(error);
           error = NULL;
         }
-  
+      
       g_free(addresses);
 
       g_assert(sources != NULL);
