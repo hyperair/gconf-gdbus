@@ -1,15 +1,16 @@
 # Turkish translation of GConf.
-# Copyright (C) 2001 Free Software Foundation, Inc.
+# Copyright (C) 2001-2003 Free Software Foundation, Inc.
 # Nilgün Belma Bugüner <nilgun@fide.org>, 2001
 # Fatih Demir <kabalak@gtranslator.org>, 2000
 # Ömer Fadıl USTA <omer_fad@hotmail.com>, 2001
-# 
+# Barbaros Ulutas <barbaros@ekolojikpolitika.org>, 2003
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 1.0.3\n"
-"POT-Creation-Date: 2003-01-12 13:13-0500\n"
-"PO-Revision-Date: 2001-12-25 13:23+0100\n"
-"Last-Translator: Ömer Fadıl USTA <omer_fad@hotmail.com>\n"
+"Project-Id-Version: GConf\n"
+"POT-Creation-Date: 2003-02-01 12:05+0100\n"
+"PO-Revision-Date: 2003-02-01 19:08+0200\n"
+"Last-Translator: Barbaros Ulutas <barbaros@ekolojikpolitika.org>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,7 +18,7 @@ msgstr ""
 
 #: backends/bdb-backend.c:215
 msgid "Unloading BerkeleyDB (BDB) backend module."
-msgstr "BerkeleyDB (BDB) modülü kaldırılıyor."
+msgstr "BerkeleyDB (BDB) arkayüz modülü"
 
 #: backends/bdb-backend.c:238
 #, c-format
@@ -26,7 +27,7 @@ msgstr "BerkeleyDB kaynağı kök %s'de açıldı"
 
 #: backends/bdb-backend.c:578
 msgid "Initializing BDB backend module"
-msgstr "BDB modülü başlatılıyor"
+msgstr "BDB arkayüz modülü başlatılıyor"
 
 #: backends/dir-utils.c:108
 #, c-format
@@ -54,8 +55,7 @@ msgstr "`%s' kök dizini `%s' adresinde bulunamadı"
 
 #: backends/xml-backend.c:414
 #, fuzzy, c-format
-msgid ""
-"Can't read from or write to the XML root directory in the address \"%s\""
+msgid "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "`%s' adresinde XML kök dizini okunamaz/yazılamaz."
 
 #: backends/xml-backend.c:424
@@ -64,15 +64,17 @@ msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "%s kökündeki XML kaynak dizin/dosya erişim izinleri: %o/%o"
 
 #: backends/xml-backend.c:590
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Yapılandırma verisini eşzamanlarken hata: %s"
+msgstr "XML arkayüz dizini geçici belleği eşzamanlanırken hata: %s"
 
 #: backends/xml-backend.c:655
 msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
 msgstr ""
+"Dizin kaldırma işlemi artık desteklenmiyor, sadece dizin içerisindeki tüm değerleri "
+"kaldırın."
 
 #: backends/xml-backend.c:722
 msgid "Initializing XML backend module"
@@ -85,7 +87,7 @@ msgstr "`%s' XML dizininde kilitleme yapılamadı: %s"
 
 #: backends/xml-cache.c:257
 msgid "Failed to sync XML cache contents to disk"
-msgstr ""
+msgstr "XML cache içeriği diskle senkronize edilemedi."
 
 #: backends/xml-cache.c:287
 #, c-format
@@ -162,11 +164,9 @@ msgid "Failed to stat `%s': %s"
 msgstr "`%s' durumlanamadı: %s"
 
 #: backends/xml-dir.c:959
-#, fuzzy, c-format
+#, c-format
 msgid "%s"
-msgstr ""
-"\n"
-"%s\n"
+msgstr "%s"
 
 #: backends/xml-dir.c:1109
 #, c-format
@@ -194,9 +194,9 @@ msgid "Failed to create file `%s': %s"
 msgstr "`%s' dosyası oluşturulamadı: %s"
 
 #: backends/xml-dir.c:1327
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "`%s' dosyası yazılamadı: %s"
+msgstr "\"%s\" dosyası yazılamadı"
 
 #. There was an error
 #: backends/xml-entry.c:154
@@ -240,8 +240,7 @@ msgstr "Bir XML liste düğümü içindeki <%s> XML düğümü anlaşılamadı"
 
 #: backends/xml-entry.c:1063
 msgid "Invalid type (list, pair, or unknown) in a list node"
-msgstr ""
-"Bir liste düğümü içindeki tür (liste, değer çifti ya da  her neyse) geçersiz"
+msgstr "Bir liste düğümü içindeki tür (liste, değer çifti ya da  her neyse) geçersiz"
 
 #: backends/xml-entry.c:1086
 #, c-format
@@ -361,13 +360,13 @@ msgid "Failed to sync one or more sources: %s"
 msgstr "Bir ya da daha fazla kaynağın eşzamanlamasında hata: %s"
 
 #: gconf/gconf-database.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Dinleyicinin (%s) ek günlük kaydı yapılamadı; yapılandırma değişikliklerinin "
+"%s dinleyicinin (%s) ek günlük kaydı yapılamadı; yapılandırma değişikliklerinin "
 "güvenilir olmayan bildirimlerinin sonucu olarak bu dinleyici gconfd tekrar "
 "başlatılırken etkinleştirilemeyecek."
 
@@ -411,9 +410,9 @@ msgid "Error unsetting \"%s\": %s"
 msgstr "`%s' kaldırılamadı: %s"
 
 #: gconf/gconf-database.c:1445
-#, fuzzy, c-format
+#, c-format
 msgid "Error getting new value for \"%s\": %s"
-msgstr "`%s' için değer alınırken hata: %s"
+msgstr "\"%s\" için yeni değer alınırken hata: %s"
 
 #: gconf/gconf-database.c:1493
 #, c-format
@@ -505,9 +504,9 @@ msgid "No database available to save your configuration"
 msgstr "Yapılandırmanızın kaydedilebileceği bir veritabanı yok"
 
 #: gconf/gconf-internals.c:86
-#, fuzzy, c-format
+#, c-format
 msgid "No '/' in key \"%s\""
-msgstr "`%s' anahtarında '/' yok"
+msgstr "\"%s\" anahtarında '/' yok"
 
 #: gconf/gconf-internals.c:199
 #, c-format
@@ -621,11 +620,13 @@ msgid "Failed to create or open '%s'"
 msgstr "'%s' oluşturulamadı ya da açılamadı"
 
 #: gconf/gconf-internals.c:2370
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
-msgstr "'%s' kilitlenemedi: başka bir süreç kilitlemiş (%s)"
+msgstr ""
+"'%s' kilitlenemedi: başka bir süreç kilitlemiş olabilir ya da "
+"işletim sisteminizde NFS dosya kilitlemesi yapılandırılmamış olabilir(%s)"
 
 #: gconf/gconf-internals.c:2400
 #, c-format
@@ -687,9 +688,9 @@ msgid "Failed to create %s: %s"
 msgstr "%s oluşturulamadı: %s"
 
 #: gconf/gconf-internals.c:2838
-#, fuzzy, c-format
+#, c-format
 msgid "Server ping error: %s"
-msgstr "Kapanma hatası: %s\n"
+msgstr "Sunucu ping hatası: %s"
 
 #: gconf/gconf-internals.c:2859
 #, c-format
@@ -709,10 +710,15 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"Yapılandırma sunucusuna bağlanılamıyor, olası nedenler şunlar olabilir: "
+"ORBit için TCP/IP desteğini etkinleştirmeniz gerekebilir, ya da bir sistem çökmesinden "
+"kaynaklı, bozuk NFS kilitlerine sahip olabilrsiniz. Lütfen daha fazla ayrıntı için"
+"http://www.gnome.org/projects/gconf adresine gidiniz. "
+"(Ayrıntılar - %s)"
 
 #: gconf/gconf-internals.c:2909
 msgid "none"
-msgstr ""
+msgstr "hiçbiri"
 
 #: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:73
 msgid "Help options"
@@ -736,6 +742,10 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
+"Lütfen aşağıdaki sorunu çözemek için sistem yöneticinize başvurun:\n"
+"\"%s\" dosyası açılamadı ya da oluşturulamadı, bu durum yapılandırma "
+"ayarlarınızla ilgili bir sorun olduğunu gösterebilir, çünkü bir çok program ev "
+"dizininizde dosyalar oluşturmaya gereksinim duyar. Hata: \"%s\" (errno = %d)"
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
@@ -748,11 +758,17 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
+"Lütfen aşağıdaki sorunu çözmek için sistem yöneticinize başvurun:\n"
+"\"%s\" dosyası kilitlenemiyor, bu durum işletim sistemi yapılandırmanızla "
+"ilgili bir sorun olduğunu gösterir. Eğer NFS-bağlı bir ev dizininiz varsa, istemci "
+"ya da sunucu doğru ayarlanmamış olabilir. Lütfen rpc.statd ve rpc.lockd belgelerine "
+"göz atın. Bu hata için genel bir neden, \"nfslock\" hizmetinin devre dışı bırakılmasıdır. "
+"Hata: \"%s\" (errno =%d)"
 
 #: gconf/gconf-sanity-check.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr "`%s' dosyasına yazılamadı: %s"
+msgstr "`%s' dosyası kaldırılamadı: %s\n"
 
 #: gconf/gconf-sanity-check.c:195
 #, c-format
@@ -761,11 +777,13 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
+"Lütfen aşağıdaki sorunu çözmek için sistem yöneticinize başvurun:\n"
+"\"%s\" yapılandırma dosyasında yapılandırma kaynağı bulunamadı; bu "
+"tercihler ve diğer ayarların kaydedilemediği anlamına gelir. %s%s"
 
 #: gconf/gconf-sanity-check.c:198
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "Durum kayıt dosyası okunurken hata: %s"
+msgstr "Dosya okunurken hata:"
 
 #: gconf/gconf-sanity-check.c:220
 #, c-format
@@ -773,6 +791,8 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
+"Lütfen aşağıdaki sorunu çözmek için sistem yöneticinize başvurun:\n"
+"\"%s\" yapılandırma dosyasındaki \"%s\" adresi çözülemedi: %s"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
@@ -780,42 +800,41 @@ msgid "Schema contains invalid UTF-8"
 msgstr "Şema geçersiz UTF-8 içeriyor"
 
 #: gconf/gconf-schema.c:254
-msgid ""
-"Schema specifies type list but doesn't specify the type of the list elements"
-msgstr ""
+msgid "Schema specifies type list but doesn't specify the type of the list elements"
+msgstr "Şema liste türünü belirtiyor, ancak liste öğelerinin türünü belirtmiyor"
 
 #: gconf/gconf-schema.c:264
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
-msgstr ""
+msgstr "Şema tür çiftini belirtiyor, ancak car/cdr öğelerinin türünü belirtmiyor"
 
 #: gconf/gconf-sources.c:319
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to load source \"%s\": %s"
-msgstr "`%s' kaynağı yüklenemedi: %s"
+msgstr "\"%s\" kaynağı yüklenemedi: %s"
 
 #: gconf/gconf-sources.c:346
 #, c-format
+#, fuzzy
 msgid "Resolved address \"%s\" to a writable config source at position %d"
-msgstr ""
+msgstr "\"%s\" adresi %d konumundaki yazılabilir yapılandırma kaynağına çözüldü"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
-msgstr ""
+msgstr "\"%s\" adresi %d konumundaki salt okunur yapılandırma kaynağına çözüldü"
 
 #: gconf/gconf-sources.c:359
 #, c-format
-msgid ""
-"Resolved address \"%s\" to a partially writable config source at position %d"
-msgstr ""
+msgid "Resolved address \"%s\" to a partially writable config source at position %d"
+msgstr "\"%s\" adresi %d konumundaki kısmen yazılabilir yapılandırma kaynağına çözüldü"
 
 #: gconf/gconf-sources.c:368
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
-msgstr ""
+msgstr "Çözülen hiç bir adres yazılabilir değil. Yapılandırma ayarları kaydedilemeyecek."
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -945,13 +964,14 @@ msgstr "`%s' anlaşılamadı (çift içinde fazladan bir ')' var)"
 
 #: gconf/gconf.c:55
 #, c-format
+#, fuzzy
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "\"%s\" Anahtarı NULL"
 
 #: gconf/gconf.c:62
-#, fuzzy, c-format
+#, c-format
 msgid "\"%s\": %s"
-msgstr "`%s': %s"
+msgstr "\"%s\": %s"
 
 #: gconf/gconf.c:345
 #, c-format
@@ -1042,8 +1062,7 @@ msgstr ""
 
 #: gconf/gconfd.c:296
 #, c-format
-msgid ""
-"No configuration files found, trying to use the default config source `%s'"
+msgid "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
 "Yapılandırma dosyaları bulunamadı, öntanımlı yapılandırma kaynağı `%s' "
 "deneniyor"
@@ -1093,8 +1112,7 @@ msgstr ""
 
 #: gconf/gconfd.c:390
 #, c-format
-msgid ""
-"Received signal %d, shutting down abnormally. Please file a GConf bug report."
+msgid "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "%d sinyali alındı, olağandışı kapanma (GConf çöktü). Lütfen bir hata raporu "
 "gönderin"
@@ -1154,10 +1172,8 @@ msgstr ""
 
 #: gconf/gconfd.c:1204
 #, c-format
-msgid ""
-"Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr ""
-"gconfd günlük dosyası kapatılamadı; veri gereği gibi kaydedilemeyecek (%s)"
+msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
+msgstr "gconfd günlük dosyası kapatılamadı; veri gereği gibi kaydedilemeyecek (%s)"
 
 #: gconf/gconfd.c:1273
 #, c-format
@@ -1186,14 +1202,12 @@ msgstr "Yeni durum kayıt dosyası yerine taşınamadı: %s"
 
 #: gconf/gconfd.c:1329
 #, c-format
-msgid ""
-"Failed to restore original saved state file that had been moved to '%s': %s"
+msgid "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "'%s' e taşınmış olan durum kayıt dosyası özgün haline getirilemedi: %s"
 
 #: gconf/gconfd.c:1800
 #, c-format
-msgid ""
-"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "'%s' adresindeki bir dinleyici eski haline getirilemedi, veritabanı "
 "çözümlenemedi"
@@ -1246,18 +1260,15 @@ msgstr "Durum kayıt dosyasına istemci eklenmesi kaydedilemedi: %s"
 #: gconf/gconfd.c:2082
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
-msgstr ""
-"Durum kayıt dosyasından istemci eklenmesinin temizlenmesi başarısız: %s"
+msgstr "Durum kayıt dosyasından istemci eklenmesinin temizlenmesi başarısız: %s"
 
 #: gconf/gconfd.c:2181
-msgid ""
-"Some client removed itself from the GConf server when it hadn't been added."
+msgid "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "GConf sunucusu eklemediği sırada tek bir istemci sunucudan silindi."
 
 #: gconf/gconftool.c:82
 msgid "Set a key to a value and sync. Use with --type."
-msgstr ""
-"Bir anahtara bir değer ve eşzamanlama belirtilir. --type ile kullanılır."
+msgstr "Bir anahtara bir değer ve eşzamanlama belirtilir. --type ile kullanılır."
 
 #: gconf/gconftool.c:91
 msgid "Print the value of a key to standard output."
@@ -1442,13 +1453,11 @@ msgstr "Bu anahtara uygulanan şemanın ismi alınır"
 
 #: gconf/gconftool.c:335
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr ""
-"Şema ismine uygulanacak anahtar tarafından izlenen şema ismi belirtilir"
+msgstr "Şema ismine uygulanacak anahtar tarafından izlenen şema ismi belirtilir"
 
 #: gconf/gconftool.c:344
-#, fuzzy
 msgid "Remove any schema name applied to the given keys"
-msgstr "Bu anahtara uygulanan şemanın ismi alınır"
+msgstr "Verili anahtarlara uygulanan şema adları silinir"
 
 #: gconf/gconftool.c:353
 msgid "Get the name of the default source"
@@ -1456,7 +1465,7 @@ msgstr "Öntanımlı kaynağın ismi alınır"
 
 #: gconf/gconftool.c:362
 msgid "Print version"
-msgstr ""
+msgstr "Sürümü yazdır"
 
 #: gconf/gconftool.c:441
 msgid "Can't get and set/unset simultaneously\n"
@@ -1523,15 +1532,14 @@ msgid "--break-directory must be used by itself.\n"
 msgstr "--break-directory seçeneği tek başına kullanılabilir.\n"
 
 #: gconf/gconftool.c:567
-msgid ""
-"You must specify a config source with --config-source when using --direct\n"
+msgid "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "--direct seçeneğini kullanırken --config-source seçeneği ile bir "
 "yapılandırma kaynağı belirtmelisiniz\n"
 
 #: gconf/gconftool.c:573
 msgid "You should use --direct when using a non-default configuration source\n"
-msgstr ""
+msgstr "Öntanımlı olmayan yapılandırma kaynağı kullanırken --direct kullanmalısınız\n"
 
 #: gconf/gconftool.c:579
 #, c-format
@@ -1540,7 +1548,7 @@ msgstr "GConf başlatılamadı: %s\n"
 
 #: gconf/gconftool.c:608
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
-msgstr ""
+msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL ayarlandı, şemalar yüklenmiyor\n"
 
 #: gconf/gconftool.c:621
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1656,8 +1664,7 @@ msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Bir listeyi ayarlarken bir temel liste türü belirtmelisiniz\n"
 
 #: gconf/gconftool.c:1235
-msgid ""
-"When setting a pair you must specify a primitive car-type and cdr-type\n"
+msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Bir çifti ayarlarken bir temel car türü ve cdr türü belirtmelisiniz\n"
 
 #: gconf/gconftool.c:1250
@@ -1714,9 +1721,9 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "UYARI: `%s' şeması `%s' anahtarı ile ilişkilendirilirken hata: %s\n"
 
 #: gconf/gconftool.c:1463
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing schema name from '%s': %s\n"
-msgstr "`%s' de şema alınırken hata: %s\n"
+msgstr "`%s' den şema kaldırılırken hata: %s\n"
 
 #: gconf/gconftool.c:1488
 msgid "Must specify key (schema name) as the only argument\n"
@@ -1770,9 +1777,9 @@ msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Ardışık kaldırılacak bir ya da daha fazla dizin belirtilmelidir.\n"
 
 #: gconf/gconftool.c:1673
-#, fuzzy, c-format
+#, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr "`%s' içinde girdiler listelenemedi: %s\n"
+msgstr "\"%s içinde girdiler listelenemedi: %s\n"
 
 #: gconf/gconftool.c:1691
 msgid "Must specify one or more dirs to get subdirs from.\n"
@@ -1801,8 +1808,7 @@ msgstr "UYARI: öntanımlı `%s' değeri şema (%s) için ayrıştırılamadı\n
 #: gconf/gconftool.c:1805
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr ""
-"UYARI: şema (%s) için car_type ya da cdr_type geçersiz ya da verilmemiş\n"
+msgstr "UYARI: şema (%s) için car_type ya da cdr_type geçersiz ya da verilmemiş\n"
 
 #: gconf/gconftool.c:1830
 msgid "WARNING: You cannot set a default value for a schema\n"
@@ -1820,8 +1826,7 @@ msgstr "UYARI: Tür ismi `%s' ayrıştırılamadı\n"
 
 #: gconf/gconftool.c:1923
 #, c-format
-msgid ""
-"WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "UYARI: list_type sadece tamsayı, gerçek sayı, dizge ya da mantıksal değer "
 "olabilir, %s değil\n"
@@ -1854,19 +1859,16 @@ msgid "WARNING: no key specified for schema\n"
 msgstr "UYARI: şema için belirtilmiş bir anahtar yok\n"
 
 #: gconf/gconftool.c:2017
-#, fuzzy
 msgid "WARNING: no <list_type> specified for schema of type list\n"
-msgstr "UYARI: şema için belirtilmiş bir anahtar yok\n"
+msgstr "UYARI:tür listesi şeması için hiç bir <list_type> belirtilmemiş\n"
 
 #: gconf/gconftool.c:2024
-#, fuzzy
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
-msgstr "UYARI: şema için belirtilmiş bir anahtar yok\n"
+msgstr "UYARI:tür çifti şeması için hiç bir <car_type> belirtilmemiş\n"
 
 #: gconf/gconftool.c:2030
-#, fuzzy
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
-msgstr "UYARI: şema için belirtilmiş bir anahtar yok\n"
+msgstr "UYARI:tür çifti şeması için hiç bir <cdr_type> belirtilmemiş\n"
 
 #: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
@@ -1876,8 +1878,7 @@ msgstr ""
 
 #: gconf/gconftool.c:2064
 #, c-format
-msgid ""
-"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
+msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "UYARI: `%s' konumu için çok sayıda <locale> düğümü, ilkinden sonrakiler "
 "yoksayıldı\n"
@@ -1931,8 +1932,7 @@ msgstr "Belge %s boş mu?\n"
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
-msgstr ""
-"Belge %s kök düğümde yanlış tür içeriyor (<%s>, <gconfschemafile> olmalı)\n"
+msgstr "Belge %s kök düğümde yanlış tür içeriyor (<%s>, <gconfschemafile> olmalı)\n"
 
 #: gconf/gconftool.c:2377
 #, c-format
@@ -2022,3 +2022,4 @@ msgstr ""
 
 #~ msgid "Error unsetting '%s': %s\n"
 #~ msgstr "`%s' kaldırılırken hata: %s\n"
+
