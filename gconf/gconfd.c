@@ -46,6 +46,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <ctype.h>
 
 
 /* Quick hack so I can mark strings */
@@ -67,6 +68,11 @@
  */
 
 static void g_conf_main(void);
+
+/* fast_cleanup() nukes the info file,
+   and is theoretically re-entrant.
+*/
+static void fast_cleanup(void);
 
 typedef struct _Listener Listener;
 
@@ -215,45 +221,6 @@ gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
   return getpid();
 }
 
-#if 0
-
-void
-test_query(GConfSource* source, const gchar* key)
-{
-  GConfValue* value;
-
-  value = g_conf_source_query_value(source, key);
-
-  if (value != NULL)
-    {
-      gchar* str = g_conf_value_to_string(value);
-      syslog(LOG_INFO, "Got value `%s' for key `%s'\n", str, key);
-      g_free(str);
-      g_conf_value_destroy(value);
-    }
-  else
-    {
-      syslog(LOG_INFO, "Didn't get value for `%s'\n", key);
-    }
-}
-
-void 
-test_set(GConfSource* source, const gchar* key, int val)
-{
-  GConfValue* value;
-
-  value = g_conf_value_new(G_CONF_VALUE_INT);
-  
-  g_conf_value_set_int(value, val);
-
-  g_conf_source_set_value(source, key, value);
-
-  g_conf_value_destroy(value);
-
-  syslog(LOG_INFO, "Set value of `%s' to %d\n", key, val);
-}
-#endif
-
 /* From Stevens */
 int
 lock_reg(int fd, int cmd, int type, off_t offset, int whence, off_t len)
@@ -394,6 +361,8 @@ signal_handler (int signo)
 {
   syslog (LOG_ERR, "Received signal %d\nshutting down.", signo);
   
+  fast_cleanup();
+
   switch(signo) {
   case SIGSEGV:
     abort();
@@ -417,6 +386,7 @@ main(int argc, char** argv)
 
   GConfSource* source;
   GConfSource* source2;
+  int launcher_fd = -1; /* FD passed from the client that spawned us */
 
   /* Following all Stevens' rules for daemons */
 
@@ -458,45 +428,30 @@ main(int argc, char** argv)
   act.sa_handler = SIG_IGN;
   sigaction (SIGINT, &act, 0);
 
-#if 0
-  source = g_conf_resolve_address("xml:/home/hp/.gconf");
-
-  if (source != NULL)
+  if (argc > 2)
     {
-      syslog(LOG_INFO, "Resolved source.\n");
-
-      test_query(source, "/foo");
-      test_query(source, "/bar");
-      test_set(source, "/foo", 40);
-      test_query(source, "/foo");
-      test_query(source, "/bar");
-      test_query(source, "/subdir/super");
-      test_query(source, "/subdir/duper");
-      test_set(source, "/hello/this/is/a/nested/subdir", 115);
-
-      if (!g_conf_source_sync_all(source))
+      syslog(LOG_ERR, "Invalid command line arguments");
+      exit(1);
+    }
+  else if (argc == 2)
+    {
+      /* Verify that it's a positive integer */
+      gchar* s = argv[1];
+      while (*s)
         {
-          syslog(LOG_ERR, "Sync failed.\n");
+          if (!isdigit(*s))
+            {
+              syslog(LOG_ERR, "Command line arg should be a file descriptor, not `%s'",
+                     argv[1]);
+              exit(1);
+            }
+          ++s;
         }
+
+      launcher_fd = atoi(argv[1]);
+
+      syslog(LOG_DEBUG, "Will notify launcher client on fd %d", launcher_fd);
     }
-  else
-    syslog(LOG_ERR, "Failed to resolve source.\n");
-
-  source2 = g_conf_resolve_address("xml:/home/hp/random");
-  
-  if (source2 != NULL)
-    {
-      printf("Resolved second source\n");
-
-      test_query(source2, "/hmm");
-      test_query(source2, "/hrm");
-    }
-
-  if (source)
-    g_conf_source_destroy(source);
-  if (source2)
-    g_conf_source_destroy(source2);
-#endif
 
   ltable = ltable_new();
 
@@ -542,6 +497,21 @@ main(int argc, char** argv)
     }
 
   CORBA_free(ior);
+
+  /* If we got a fd on the command line, write the magic byte 'g' 
+     to it to notify our spawning client. 
+  */
+
+  if (launcher_fd >= 0)
+    {
+      if (write(launcher_fd, "g", 1) != 1)
+        syslog(LOG_ERR, "Failed to notify spawning parent of server liveness: %s",
+               strerror(errno));
+
+      if (close(launcher_fd) < 0)
+        syslog(LOG_ERR, "Failed to close pipe to spawning parent: %d", 
+               strerror(errno));
+    }
 
   g_conf_main();
 
@@ -940,3 +910,26 @@ ltable_spew(LTable* lt)
 {
   g_node_traverse(lt->tree, G_LEVEL_ORDER, G_TRAVERSE_ALL, -1, spew_func, NULL);
 }
+
+/*
+ * Cleanup
+ */
+
+/* fast_cleanup() does the important parts,
+   and is re-entrant. thorough_cleanup() gets 
+   all the cruft. 
+*/
+static void 
+fast_cleanup(void)
+{
+  /* The goal of this function is to remove the 
+     stale server info file
+  */
+  gchar* fn;
+
+  fn = g_conf_server_info_file();
+
+  /* Nothing we can do if it fails */
+  unlink(fn);
+}
+

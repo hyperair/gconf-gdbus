@@ -37,3 +37,9 @@ gconf_testclient_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS)
 
 $(CORBA_SOURCES): GConf.idl
 	orbit-idl GConf.idl
+
+## This is totally broken, I just don't feel like doing the configure.in work to 
+## detect Gnome, etc. Depends on the non-GUI testclient to suck in its dependencies.
+gnome-testclient: gnome-testclient.c gconf-testclient
+	 cc -I.. `gnome-config --libs gnomeui gnorba` `gnome-config --cflags gnomeui gnorba` -Wall -ggdb -O2 gnome-testclient.c gconf.o gconf-internals.o gconf-orbit.o gconf-backend.o GConf-common.o GConf-stubs.o GConf-skels.o -o gnome-testclient
+

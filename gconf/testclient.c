@@ -19,6 +19,7 @@
  */
 
 #include "gconf.h"
+#include "gconf-orbit.h"
 #include <stdio.h>
 #include <unistd.h>
 
@@ -34,7 +35,13 @@ main (int argc, char** argv)
   guint cnxn;
   GConfValue* val;
 
-  if (!g_conf_init(&argc, argv))
+  if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
+    {
+      g_warning("Failed to init orb");
+      return 1;
+    }
+
+  if (!g_conf_init())
     {
       g_warning("Failed to init GConf");
       return 1;

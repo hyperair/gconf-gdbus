@@ -1,4 +1,8 @@
 
+// Really, this whole interface should be used only via the GConf 
+// client library. I reserve the right to change it whenever I feel 
+// like it. So there.
+
 enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal };
 
 union ConfigValue switch (ConfigValueType) {
@@ -14,6 +18,7 @@ union ConfigValue switch (ConfigValueType) {
 
 interface ConfigListener {
   oneway void notify (in unsigned long cnxn, in string key, in ConfigValue value);
+
 };
 
 interface ConfigServer {
@@ -29,6 +34,7 @@ interface ConfigServer {
 
   void sync();
 
+  // Internal use
   long ping();
 };
 

@@ -334,60 +334,86 @@ g_conf_get_config_server(void)
 
   if (server == CORBA_OBJECT_NIL)
     {
-      int attempts = 0;
+      pid_t pid;
+      int fds[2];
+      int status;
+
       printf("spawning gconfd from this client...\n");
 
-      while (attempts < 2 && server == CORBA_OBJECT_NIL)
-        {
-          /* Let's try launching it, sleeping a bit, and restarting. */
-          
-          pid_t pid;
+      if (pipe(fds) < 0)
+        g_warning("Pipe creation failed: %s", strerror(errno));
 
-          pid = fork();
+      pid = fork();
           
-          if (pid < 0)
-            {
-              g_warning("gconfd fork failed: %s", strerror(errno));
-              return CORBA_OBJECT_NIL;
-            }
+      if (pid < 0)
+        {
+          g_warning("gconfd fork failed: %s", strerror(errno));
+          return CORBA_OBJECT_NIL;
+        }
           
-          if (pid == 0)
+      if (pid == 0)
+        {
+          gchar buf[20];
+
+          close(fds[0]);
+
+          g_snprintf(buf, 20, "%d", fds[1]);
+          
+          /* Child. Exec... */
+          if (execlp("gconfd", "gconfd", buf, NULL) < 0)
             {
-              /* Child. Exec... */
-              if (execlp("gconfd", NULL) < 0)
-                {
-                  g_warning("Failed to exec gconfd: %s", strerror(errno));
-                }
+              g_warning("Failed to exec gconfd: %s", strerror(errno));
+       
+              close(fds[1]);
               
               /* Return error to parent, but parent is currently lame
                  and doesn't check. */
               _exit(1);
             }
+        }
           
-          /* Parent - waitpid(), gconfd instantly forks anyway */
-          if (waitpid(pid, NULL, 0) != pid)
+      /* Parent - waitpid(), gconfd instantly forks anyway */
+      if (waitpid(pid, &status, 0) != pid)
+        {
+          g_warning("waitpid() failed waiting for child in %s: %s",
+                    __FUNCTION__, strerror(errno));
+          return CORBA_OBJECT_NIL;
+        }
+
+      if (WIFEXITED(status))
+        {
+          if (WEXITSTATUS(status) != 0)
             {
-              g_warning("waitpid() failed waiting for child in %s: %s",
-                        __FUNCTION__, strerror(errno));
+              g_warning("spawned gconfd child exited abnormally, giving up on contacting it.");
               return CORBA_OBJECT_NIL;
             }
+        }
+      else
+        {
+          g_warning("spawned gconfd child didn't exit normally, things are looking grim.");
+        }
 
-          /* Sleep - OK, this is lame. Should do something more
-             determininistic and less "hope it works." I'll fix it
-             later. */
+      close(fds[1]);
+      
+      /* Wait for the child to send us a byte */
+      {
+        char c = '\0';
+
+        if (read(fds[0], &c, 1) < 0)
           {
-            struct timeval tv;
-            
-            tv.tv_sec = 0;
-            tv.tv_usec = 10000;
-            
-            select(0, NULL, NULL, NULL, &tv);
+            g_warning("Error reading from pipe to gconfd: %s", strerror(errno));
+            c = 'g'; /* suppress next error message */
           }
 
-          server = try_to_contact_server();
+        if (c != 'g') /* g is the magic letter */
+          {
+            g_warning("gconfd sent us the wrong byte!");
+          }
 
-          ++attempts;
-        }
+        close(fds[0]);
+      }
+
+      server = try_to_contact_server();
     }
 
   if (server == CORBA_OBJECT_NIL)
@@ -453,7 +479,7 @@ g_conf_get_config_listener(void)
 static gboolean have_initted = FALSE;
 
 gboolean     
-g_conf_init           (int* argc, char** argv)
+g_conf_init           ()
 {
   static CORBA_ORB orb = CORBA_OBJECT_NIL;
 
@@ -463,11 +489,11 @@ g_conf_init           (int* argc, char** argv)
       return FALSE;
     }
 
-  orb = g_conf_init_orb(argc, argv);
+  orb = g_conf_get_orb();
 
   if (orb == CORBA_OBJECT_NIL)
     {
-      g_warning("Failed to get orb");
+      g_warning("Failed to get orb (perhaps orb wasn't set/initted?)");
       return FALSE;
     }
 
