@@ -202,6 +202,8 @@ gconf_engine_new_local      (const gchar* address,
 
   priv->local_sources = gconf_sources_new_from_source(source);
 
+  g_assert (gconf_engine_is_local ((GConfEngine*)priv));
+  
   return (GConfEngine*)priv;
 }
 

@@ -8,3 +8,19 @@ m4datadir=$(datadir)/aclocal
 m4data_DATA=gconf.m4
 
 EXTRA_DIST=gconf-config.in gconf.m4 gconf.spec.in gconf.spec
+
+all-local:
+	echo "**** NOTE ****" && \
+	echo "If this is your first install of GConf, you may need to move prefix/etc/gconf/path.example to prefix/etc/gconf/path" && \
+	echo "**************"
+
+install-exec-local:
+	echo "**** NOTE ****" && \
+	echo "If this is your first install of GConf, you may need to move prefix/etc/gconf/path.example to prefix/etc/gconf/path" && \
+	echo "**************"
+
+install-data-local:
+	echo "**** NOTE ****" && \
+	echo "If this is your first install of GConf, you may need to move prefix/etc/gconf/path.example to prefix/etc/gconf/path" && \
+	echo "**************"
+
