@@ -20,10 +20,40 @@
 
 
 #include <gconf/gconf-backend.h>
+#include <gconf/gconf-internals.h>
 
-static void          shutdown        (GConfBackend* backend);
+/*
+ * XML storage implementation
+ */
 
-static GConfSource*  resolve_address (GConfBackend* backend, const gchar* address);
+typedef struct _XMLSource XMLSource;
+
+struct _XMLSource {
+  GConfSource source;
+  
+};
+
+static XMLSource* 
+xconf_source_new(const gchar* root_dir)
+{
+  
+  return g_new0(XMLSource, 1);
+}
+
+static void
+xconf_source_destroy(XMLSource* source)
+{
+  g_free(source);
+
+}
+
+/*
+ * Dyna-load implementation
+ */
+
+static void          shutdown        (void);
+
+static GConfSource*  resolve_address (const gchar* address);
 
 static GConfValue*   query_value     (GConfSource* source, const gchar* key);
 
@@ -37,29 +67,43 @@ static GConfBackendVTable xml_vtable = {
 };
 
 static void          
-shutdown (GConfBackend* backend)
+shutdown (void)
 {
-
+  printf("Shutting down XML module\n");
 }
 
 static GConfSource*  
-resolve_address (GConfBackend* backend, const gchar* address)
+resolve_address (const gchar* address)
 {
+  gchar* root_dir;
+  XMLSource* xsource;
+  
+  root_dir = g_conf_address_resource(address);
 
+  if (root_dir == NULL)
+    {
+      g_warning("Bad address");
+      return NULL;
+    }
+
+  xsource = xconf_source_new(root_dir);
+
+  g_free(root_dir);
+
+  return (GConfSource*)xsource;
 }
 
 static GConfValue* 
 query_value (GConfSource* source, const gchar* key)
 {
   
-
+  return NULL;
 }
 
 static void          
 destroy_source  (GConfSource* source)
 {
-
-
+  xconf_source_destroy((XMLSource*)source);
 }
 
 /* Initializer */
@@ -67,7 +111,7 @@ destroy_source  (GConfSource* source)
 G_MODULE_EXPORT const gchar*
 g_module_check_init (GModule *module)
 {
-  g_print("Init XML module\n");
+  printf("Initializing XML module\n");
 
   return NULL;
 }

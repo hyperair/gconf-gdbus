@@ -91,10 +91,20 @@ g_conf_resolve_address(const gchar* address)
       GConfSource* retval;
 
       retval = g_conf_backend_resolve_address(backend, address);
-      
-      /* Leave a ref on the backend, now held by the GConfSource */
-      
-      return retval;
+
+      if (retval == NULL)
+        {
+          g_conf_backend_unref(backend);
+          return NULL;
+        }
+      else
+        {
+          retval->backend = backend;
+          
+          /* Leave a ref on the backend, now held by the GConfSource */
+          
+          return retval;
+        }
     }
 }
 

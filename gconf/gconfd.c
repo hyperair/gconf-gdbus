@@ -35,7 +35,10 @@ main(int argc, char** argv)
   source = g_conf_resolve_address("xml:yadayadayada");
 
   if (source != NULL)
-    printf("Resolved source.\n");
+    {
+      printf("Resolved source.\n");
+      g_conf_source_destroy(source);
+    }
   else
     printf("Failed.\n");
 

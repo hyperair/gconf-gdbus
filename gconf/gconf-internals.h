@@ -71,7 +71,6 @@ typedef struct _GConfBackend GConfBackend;
 typedef struct _GConfSource GConfSource;
 
 struct _GConfSource {
-  gchar* backend_id;
   GConfBackend* backend;
 };
 
