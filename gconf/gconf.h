@@ -222,7 +222,7 @@ gboolean gconf_engine_set_bool   (GConfEngine     *conf,
                                   GError     **err);
 gboolean gconf_engine_set_schema (GConfEngine     *conf,
                                   const gchar     *key,
-                                  GConfSchema     *val,
+                                  const GConfSchema     *val,
                                   GError     **err);
 
 

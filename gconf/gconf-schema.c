@@ -57,7 +57,7 @@ gconf_schema_free(GConfSchema* sc)
 }
 
 GConfSchema*  
-gconf_schema_copy(GConfSchema* sc)
+gconf_schema_copy(const GConfSchema* sc)
 {
   GConfSchema* dest;
 
@@ -154,7 +154,7 @@ gconf_schema_set_owner(GConfSchema* sc, const gchar* owner)
 }
 
 void
-gconf_schema_set_default_value(GConfSchema* sc, GConfValue* val)
+gconf_schema_set_default_value(GConfSchema* sc, const GConfValue* val)
 {
   if (sc->default_value != NULL)
     gconf_value_free(sc->default_value);

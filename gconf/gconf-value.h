@@ -84,7 +84,7 @@ struct _GConfValue {
 
 GConfValue* gconf_value_new                  (GConfValueType type);
 
-GConfValue* gconf_value_copy                 (GConfValue* src);
+GConfValue* gconf_value_copy                 (const GConfValue* src);
 void        gconf_value_free                 (GConfValue* value);
 
 void        gconf_value_set_int              (GConfValue* value,
@@ -96,15 +96,15 @@ void        gconf_value_set_float            (GConfValue* value,
 void        gconf_value_set_bool             (GConfValue* value,
                                               gboolean the_bool);
 void        gconf_value_set_schema           (GConfValue* value,
-                                              GConfSchema* sc);
+                                              const GConfSchema* sc);
 void        gconf_value_set_schema_nocopy    (GConfValue* value,
                                               GConfSchema* sc);
 void        gconf_value_set_car              (GConfValue* value,
-                                              GConfValue* car);
+                                              const GConfValue* car);
 void        gconf_value_set_car_nocopy       (GConfValue* value,
                                               GConfValue* car);
 void        gconf_value_set_cdr              (GConfValue* value,
-                                              GConfValue* cdr);
+                                              const GConfValue* cdr);
 void        gconf_value_set_cdr_nocopy       (GConfValue* value,
                                               GConfValue* cdr);
 /* Set a list of GConfValue, NOT lists or pairs */
@@ -113,9 +113,9 @@ void        gconf_value_set_list_type        (GConfValue* value,
 void        gconf_value_set_list_nocopy      (GConfValue* value,
                                               GSList* list);
 void        gconf_value_set_list             (GConfValue* value,
-                                              GSList* list);
+                                              const GSList* list);
 
-gchar*      gconf_value_to_string            (GConfValue* value);
+gchar*      gconf_value_to_string            (const GConfValue* value);
 
 /* Meta-information about a key. Not the same as a schema; this is
  * information stored on the key, the schema is a specification
@@ -165,7 +165,7 @@ struct _GConfEntry {
 #define     gconf_entry_get_is_writable(x) ((x)->is_writable)
 
 GConfEntry* gconf_entry_new              (const gchar *key,
-                                          GConfValue  *val);
+                                          const GConfValue  *val);
 GConfEntry* gconf_entry_new_nocopy       (gchar       *key,
                                           GConfValue  *val);
 void        gconf_entry_free             (GConfEntry  *entry);
@@ -173,7 +173,7 @@ void        gconf_entry_free             (GConfEntry  *entry);
 /* Transfer ownership of value to the caller. */
 GConfValue* gconf_entry_steal_value      (GConfEntry  *entry);
 void        gconf_entry_set_value        (GConfEntry  *entry,
-                                          GConfValue  *val);
+                                          const GConfValue  *val);
 void        gconf_entry_set_value_nocopy (GConfEntry  *entry,
                                           GConfValue  *val);
 void        gconf_entry_set_schema_name  (GConfEntry  *entry,

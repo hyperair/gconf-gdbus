@@ -46,7 +46,7 @@ struct _GConfSchema {
 
 GConfSchema* gconf_schema_new  (void);
 void         gconf_schema_free (GConfSchema *sc);
-GConfSchema* gconf_schema_copy (GConfSchema *sc);
+GConfSchema* gconf_schema_copy (const GConfSchema *sc);
 
 void gconf_schema_set_type                 (GConfSchema    *sc,
                                             GConfValueType  type);
@@ -65,7 +65,7 @@ void gconf_schema_set_long_desc            (GConfSchema    *sc,
 void gconf_schema_set_owner                (GConfSchema    *sc,
                                             const gchar    *owner);
 void gconf_schema_set_default_value        (GConfSchema    *sc,
-                                            GConfValue     *val);
+                                            const GConfValue     *val);
 void gconf_schema_set_default_value_nocopy (GConfSchema    *sc,
                                             GConfValue     *val);
 

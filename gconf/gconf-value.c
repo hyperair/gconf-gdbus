@@ -487,7 +487,7 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
 }
 
 gchar*
-gconf_value_to_string(GConfValue* value)
+gconf_value_to_string(const GConfValue* value)
 {
   /* These strings shouldn't be translated; they're primarily 
      intended for machines to read, not humans, though I do
@@ -655,7 +655,7 @@ copy_value_list(GSList* list)
 }
 
 GConfValue* 
-gconf_value_copy(GConfValue* src)
+gconf_value_copy(const GConfValue* src)
 {
   GConfValue* dest;
 
@@ -802,7 +802,7 @@ gconf_value_set_bool(GConfValue* value, gboolean the_bool)
 }
 
 void       
-gconf_value_set_schema(GConfValue* value, GConfSchema* sc)
+gconf_value_set_schema(GConfValue* value, const GConfSchema* sc)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_SCHEMA);
@@ -827,7 +827,7 @@ gconf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
 }
 
 void
-gconf_value_set_car(GConfValue* value, GConfValue* car)
+gconf_value_set_car(GConfValue* value, const GConfValue* car)
 {
   gconf_value_set_car_nocopy(value, gconf_value_copy(car));
 }
@@ -845,7 +845,7 @@ gconf_value_set_car_nocopy(GConfValue* value, GConfValue* car)
 }
 
 void
-gconf_value_set_cdr(GConfValue* value, GConfValue* cdr)
+gconf_value_set_cdr(GConfValue* value, const GConfValue* cdr)
 {
   gconf_value_set_cdr_nocopy(value, gconf_value_copy(cdr));
 }
@@ -894,7 +894,7 @@ gconf_value_set_list_nocopy(GConfValue* value,
 
 void
 gconf_value_set_list       (GConfValue* value,
-                             GSList* list)
+                             const GSList* list)
 {
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == GCONF_VALUE_LIST);
@@ -958,7 +958,7 @@ gconf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
 
 GConfEntry*
 gconf_entry_new (const gchar *key,
-                 GConfValue  *val)
+                 const GConfValue  *val)
 {
   return gconf_entry_new_nocopy (g_strdup (key),
                                  val ? gconf_value_copy (val) : NULL);
@@ -1000,7 +1000,7 @@ gconf_entry_steal_value (GConfEntry* entry)
 
 void
 gconf_entry_set_value (GConfEntry  *entry,
-                       GConfValue  *val)
+                       const GConfValue  *val)
 {
   gconf_entry_set_value_nocopy (entry,
                                 val ? gconf_value_copy (val) : NULL);

@@ -882,7 +882,7 @@ gconf_client_preload    (GConfClient* client,
 void
 gconf_client_set             (GConfClient* client,
                               const gchar* key,
-                              GConfValue* val,
+                              const GConfValue* val,
                               GError** err)
 {
   GError* error = NULL;
@@ -1582,7 +1582,7 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_set_schema  (GConfClient* client, const gchar* key,
-                          GConfSchema* val, GError** err)
+                          const GConfSchema* val, GError** err)
 {
   GError* error = NULL;
   

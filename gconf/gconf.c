@@ -2842,7 +2842,7 @@ gconf_engine_set_bool    (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_schema  (GConfEngine* conf, const gchar* key,
-                    GConfSchema* val, GError** err)
+                    const GConfSchema* val, GError** err)
 {
   GConfValue* gval;
 

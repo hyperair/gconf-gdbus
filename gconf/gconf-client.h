@@ -224,7 +224,7 @@ void              gconf_client_preload    (GConfClient* client,
 
 void              gconf_client_set             (GConfClient* client,
                                                 const gchar* key,
-                                                GConfValue* val,
+                                                const GConfValue* val,
                                                 GError** err);
 
 GConfValue*       gconf_client_get             (GConfClient* client,
@@ -314,7 +314,7 @@ gboolean     gconf_client_set_bool    (GConfClient* client, const gchar* key,
                                        gboolean val, GError** err);
 
 gboolean     gconf_client_set_schema  (GConfClient* client, const gchar* key,
-                                       GConfSchema* val, GError** err);
+                                       const GConfSchema* val, GError** err);
 
 /* List should be the same as the one gconf_client_get_list() would return */
 gboolean     gconf_client_set_list    (GConfClient* client, const gchar* key,
