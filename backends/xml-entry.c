@@ -35,6 +35,14 @@
 #define N_(x) x
 #endif
 
+static void
+entry_sync_if_needed(Entry* e, GConfValue* val);
+static GConfValue*
+node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err);
+static xmlNodePtr
+find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale);
+static void
+node_unset_by_locale(xmlNodePtr node, const gchar* locale);
 
 struct _Entry {
   gchar* name; /* a relative key */
@@ -51,6 +59,8 @@ entry_new (const gchar* relative_name)
 {
   Entry* e;
 
+  g_return_val_if_fail(relative_name != NULL, NULL);
+  
   e = g_new0(Entry, 1);
 
   e->name = g_strdup(relative_name);
@@ -105,17 +115,68 @@ entry_get_node (Entry*e)
 GConfValue*
 entry_get_value(Entry* e, const gchar** locales, GConfError** err)
 {
+  const gchar* sl;
+  
   g_return_val_if_fail(e != NULL, NULL);
-  /* FIXME */
+  
+  if (e->cached_value == NULL)
+    return NULL;
 
-  return NULL;
+  /* only schemas have locales for now anyway */
+  if (e->cached_value->type != GCONF_VALUE_SCHEMA)
+    return e->cached_value;
+
+  g_assert(e->cached_value->type == GCONF_VALUE_SCHEMA);
+
+  sl = gconf_schema_locale(gconf_value_schema(e->cached_value));
+
+  /* optimize most common cases first */
+  if (sl == NULL && (locales == NULL ||
+                     *locales == NULL))
+    return e->cached_value;
+  else if (sl && locales && *locales &&
+           strcmp(sl, *locales) == 0)
+    return e->cached_value;
+  else
+    {
+      /* We want a locale other than the currently-loaded one */
+      GConfValue* newval;
+      GConfError* error = NULL;
+
+      entry_sync_if_needed(e, NULL);
+      
+      newval = node_extract_value(e->node, locales, &error);
+      if (newval != NULL)
+        {
+          /* We found a schema with an acceptable locale */
+          gconf_value_destroy(e->cached_value);
+          e->cached_value = newval;
+          g_return_val_if_fail(error == NULL, e->cached_value);
+        }
+      else if (error != NULL)
+        {
+          /* There was an error */
+          gconf_log(GCL_WARNING, _("Ignoring XML node `%s': %s"),
+                    e->name, error->str);
+          gconf_error_destroy(error);
+        }
+      /* else fall back to the currently-loaded schema */
+    }
+
+  return e->cached_value;
 }
 
 void
 entry_set_value(Entry* e, GConfValue* value)
 {
   g_return_if_fail(e != NULL);
-  /* FIXME */
+
+  entry_sync_if_needed(e, value);
+  
+  if (e->cached_value)
+    gconf_value_destroy(e->cached_value);
+      
+  e->cached_value = gconf_value_copy(value);
 
   e->dirty = TRUE;
 }
@@ -126,10 +187,48 @@ entry_unset_value     (Entry        *e,
 {
   g_return_val_if_fail(e != NULL, FALSE);
 
-  /* FIXME */
-  e->dirty = TRUE;
+  if (e->cached_value != NULL)
+    {
+      if (locale && e->cached_value->type == GCONF_VALUE_SCHEMA)
+        {
+          GConfError* error = NULL;
+          
+          /* Remove the localized node from the XML tree */
+          g_assert(e->node != NULL);
+          node_unset_by_locale(e->node, locale);
 
-  return TRUE; /* actually made a change */
+          /* e->cached_value is always non-NULL if some value is
+             available; in the schema case there may be leftover
+             values */
+          gconf_value_destroy(e->cached_value);
+          e->cached_value = node_extract_value(e->node, NULL, &error);
+
+          if (error != NULL)
+            {
+              gconf_log(GCL_WARNING, _("%s"), error->str);
+              gconf_error_destroy(error);
+              error = NULL;
+            }
+        }
+      else if (e->cached_value->type == GCONF_VALUE_SCHEMA)
+        {
+          /* if locale == NULL nuke all the locales */
+          if (e->cached_value)
+            gconf_value_destroy(e->cached_value);
+          e->cached_value = NULL;
+        }
+      else
+        {
+          gconf_value_destroy(e->cached_value);
+          e->cached_value = NULL;
+        }
+
+      e->dirty = TRUE;
+      
+      return TRUE;
+    }
+  else
+    return FALSE;
 }
 
 GConfMetaInfo*
@@ -198,19 +297,6 @@ entry_set_mod_user (Entry *e,
  * XML-related cruft
  */
 
-static void my_xmlSetProp(xmlNodePtr node,
-                          const gchar* name,
-                          const gchar* str);
-
-static char* my_xmlGetProp(xmlNodePtr node,
-                           const gchar* name);
-
-
-static GConfValue*
-node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err);
-static xmlNodePtr
-find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale);
-
 static void
 entry_sync_if_needed(Entry* e, GConfValue* val)
 {
@@ -225,31 +311,12 @@ entry_sync_if_needed(Entry* e, GConfValue* val)
 }
 
 void
-entry_fill_from_node(Entry* e, const gchar* name)
+entry_fill_from_node(Entry* e)
 {
   gchar* tmp;
   GConfError* error = NULL;
 
   g_return_if_fail(e->node != NULL);
-
-  if (e->name != NULL)
-    {
-      g_free(e->name);
-      e->name = NULL;
-    }
-  
-  if (name == NULL)
-    {
-      tmp = my_xmlGetProp(e->node, "name");
-      
-      if (tmp != NULL)
-        {
-          e->name = g_strdup(tmp);
-          free(tmp);
-        }
-    }
-  else
-    e->name = g_strdup(name);
   
   tmp = my_xmlGetProp(e->node, "schema");
   
@@ -997,7 +1064,8 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
  */
 
 /* makes setting to NULL or empty string equal to unset */
-static void
+
+void
 my_xmlSetProp(xmlNodePtr node,
               const gchar* name,
               const gchar* str)
@@ -1033,7 +1101,7 @@ my_xmlSetProp(xmlNodePtr node,
 }
 
 /* Makes empty strings equal to "unset" */
-static char*
+char*
 my_xmlGetProp(xmlNodePtr node,
               const gchar* name)
 {

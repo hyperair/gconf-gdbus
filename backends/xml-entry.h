@@ -36,8 +36,7 @@ const gchar*   entry_get_name        (Entry        *entry);
 void           entry_set_node        (Entry        *entry,
                                       xmlNodePtr    node);
 xmlNodePtr     entry_get_node        (Entry        *entry);
-void           entry_fill_from_node  (Entry        *entry,
-                                      const gchar  *name);
+void           entry_fill_from_node  (Entry        *entry);
 void           entry_sync_to_node    (Entry        *entry);
 GConfValue*    entry_get_value       (Entry        *entry,
                                       const gchar **locales,
@@ -55,5 +54,12 @@ const gchar*   entry_get_schema_name (Entry        *e);
 void           entry_set_schema_name (Entry        *e,
                                       const gchar  *name);
 
+
+void my_xmlSetProp(xmlNodePtr node,
+                   const gchar* name,
+                   const gchar* str);
+
+char* my_xmlGetProp(xmlNodePtr node,
+                    const gchar* name);
 
 #endif

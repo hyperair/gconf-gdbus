@@ -390,6 +390,12 @@ dir_set_value   (Dir* d, const gchar* relative_key,
   d->dirty = TRUE;
 }
 
+GTime
+dir_get_last_access (Dir          *d)
+{
+  return d->last_access;
+}
+
 GConfValue*
 dir_get_value   (Dir* d,
                  const gchar* relative_key,
@@ -856,9 +862,65 @@ dir_forget_entry_if_useless(Dir* d, Entry* e)
 static void
 dir_fill_cache_from_doc(Dir* d)
 {
+  xmlNodePtr node;
+  
+  if (d->doc == NULL ||
+      d->doc->root == NULL ||
+      d->doc->root->childs == NULL)
+    {
+      /* Empty document - just return. */
+      return;
+    }
 
-  /* FIXME */
+  node = d->doc->root->childs;
 
+  while (node != NULL)
+    {
+      if (node->type == XML_ELEMENT_NODE && 
+          (strcmp(node->name, "entry") == 0))
+        {
+          gchar* attr = my_xmlGetProp(node, "name");
+
+          if (attr != NULL)
+            {
+              if (g_hash_table_lookup(d->entry_cache, attr) != NULL)
+                {
+                  gconf_log(GCL_WARNING,
+                             _("Duplicate entry `%s' in `%s', ignoring"),
+                             attr, d->xml_filename);
+                }
+              else
+                {
+                  Entry* e;
+                  
+                  e = entry_new(attr);
+
+                  entry_set_node(e, node);
+                  
+                  entry_fill_from_node(e);
+                  
+                  safe_g_hash_table_insert(d->entry_cache,
+                                           (gchar*)entry_get_name(e), e);
+                }
+
+              free(attr);
+            }
+          else
+            {
+              gconf_log(GCL_WARNING,
+                         _("Entry with no name in XML file `%s', ignoring"),
+                         d->xml_filename);
+            }
+        }
+      else
+        {
+          gconf_log(GCL_WARNING,
+                     _("Toplevel node in XML file `%s' is not an <entry>, ignoring"),
+                     d->xml_filename);
+        }
+      
+      node = node->next;
+    }
 }
 
 /*

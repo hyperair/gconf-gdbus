@@ -38,6 +38,6 @@ void     cache_delete_dir (Cache        *cache,
 Dir*     cache_lookup     (Cache        *cache,
                            const gchar  *key,
                            gboolean create_if_missing,
-                           GConfError  **err);                         
+                           GConfError  **err); 
 
 #endif

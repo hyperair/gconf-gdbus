@@ -76,14 +76,13 @@ struct _Cache {
   gchar* root_dir;
   GHashTable* cache;
   GHashTable* nonexistent_cache;
-  GSList* deleted;
   /*
     List of lists of dirs marked deleted, in the
     proper order; should be synced by deleting each
     list from front to end, starting with the first
     list.
   */ 
-  
+  GSList* deleted;
 };
 
 Cache*
@@ -348,7 +347,8 @@ cache_lookup     (Cache        *cache,
   Dir* dir;
   
   g_assert(key != NULL);
-
+  g_return_val_if_fail(cache != NULL, NULL);
+  
   /* Check cache */
   dir = g_hash_table_lookup(cache->cache, key);
   
