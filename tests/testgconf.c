@@ -824,7 +824,9 @@ main (int argc, char** argv)
   
   if (!gconf_init(argc, argv, &err))
     {
+      g_assert(err != NULL);
       fprintf(stderr, "Failed to init GConf: %s\n", err->str);
+      fflush(stderr);
       gconf_error_destroy(err);
       err = NULL;
       return 1;

@@ -972,7 +972,24 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
     return server;
 
   if (start_if_not_found)
-    server = try_to_contact_server(err);
+    {
+      server = try_to_contact_server(err);
+
+#ifdef GCONF_ENABLE_DEBUG      
+      if (server == CORBA_OBJECT_NIL)
+        {
+          g_return_val_if_fail(err == NULL || *err != NULL, server);
+        }
+#endif
+    }
+  else
+    {
+      /* we need to set an error, since other code assumes the invariant that
+         an error gets set if no server is returned.
+      */
+      if (err)
+        *err = gconf_error_new(GCONF_NO_SERVER, _("Server is not running"));
+    }
   
   return server; /* return what we have, NIL or not */
 }

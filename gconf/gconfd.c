@@ -717,16 +717,19 @@ gconf_server_load_sources(void)
 
   g_free(conffile);
 
+#ifdef GCONF_ENABLE_DEBUG
   /* -- Debug only */
-
+  
   if (addresses == NULL)
     {
+      gconf_log(GCL_DEBUG, _("gconfd compiled with debugging; trying to load gconf.path from the source directory"));
       conffile = g_strconcat(GCONF_SRCDIR, "/gconf/gconf.path", NULL);
       addresses = gconf_load_source_path(conffile, NULL);
       g_free(conffile);
     }
 
   /* -- End of Debug Only */
+#endif
   
   if (addresses == NULL)
     {
@@ -737,46 +740,51 @@ gconf_server_load_sources(void)
       gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_SYSCONFDIR"/gconf/path"));
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(empty_addr, NULL);
-      return;
+
+      /* Install the sources as the default context */
+      set_default_context(context_new(sources));
     }
-  
-  sources = gconf_sources_new_from_addresses(addresses, &error);
-
-  if (error != NULL)
+  else
     {
-      gconf_log(GCL_ERR, _("Error loading some config sources: %s"),
-                error->str);
+      sources = gconf_sources_new_from_addresses(addresses, &error);
 
-      gconf_error_destroy(error);
-      error = NULL;
-    }
-  
-  g_free(addresses);
-
-  g_assert(sources != NULL);
-
-  if (sources->sources == NULL)
-    gconf_log(GCL_ERR, _("No config source addresses successfully resolved, can't load or store config data"));
-    
-  tmp = sources->sources;
-
-  while (tmp != NULL)
-    {
-      if (((GConfSource*)tmp->data)->flags & GCONF_SOURCE_ALL_WRITEABLE)
+      if (error != NULL)
         {
-          have_writeable = TRUE;
-          break;
+          gconf_log(GCL_ERR, _("Error loading some config sources: %s"),
+                    error->str);
+
+          gconf_error_destroy(error);
+          error = NULL;
+        }
+  
+      g_free(addresses);
+
+      g_assert(sources != NULL);
+
+      if (sources->sources == NULL)
+        gconf_log(GCL_ERR, _("No config source addresses successfully resolved, can't load or store config data"));
+    
+      tmp = sources->sources;
+
+      while (tmp != NULL)
+        {
+          if (((GConfSource*)tmp->data)->flags & GCONF_SOURCE_ALL_WRITEABLE)
+            {
+              have_writeable = TRUE;
+              break;
+            }
+
+          tmp = g_list_next(tmp);
         }
 
-      tmp = g_list_next(tmp);
+      /* In this case, some sources may still return TRUE from their writeable() function */
+      if (!have_writeable)
+        gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, may not be able to save some configuration changes"));
+
+        
+      /* Install the sources as the default context */
+      set_default_context(context_new(sources));
     }
-
-  /* In this case, some sources may still return TRUE from their writeable() function */
-  if (!have_writeable)
-    gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, may not be able to save some configuration changes"));
-
-  /* Install the sources as the default context */
-  set_default_context(context_new(sources));
 }
 
 static void
@@ -1768,6 +1776,9 @@ gconf_set_exception(GConfError** error, CORBA_Environment* ev)
       ConfigException* ce;
 
       ce = ConfigException__alloc();
+      g_assert(error != NULL);
+      g_assert(*error != NULL);
+      g_assert((*error)->str != NULL);
       ce->message = CORBA_string_dup((gchar*)(*error)->str); /* cast const */
       
       switch (en)

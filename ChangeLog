@@ -1,3 +1,18 @@
+1999-11-22  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c (gconf_set_exception): lots of assertions
+	(gconf_server_load_sources): Install the default context even if
+	we don't find any configuration sources in the path
+
+	* gconf/gconf.c (gconf_get_config_server): always return an error
+	if the server isn't available. This is still not doing the right
+	thing; for shutdown and ping we need to be able to get the object
+	if and only if it already exists. This feature is also needed for
+	something like magicdev-patched gtcd.
+
+	* gconf/gconfd.c (gconf_server_load_sources): #ifdef the
+	debug-only search for debugging path file.
+
 1999-11-19  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconfd.c (gconf_server_load_sources): Give actual
@@ -27,7 +42,6 @@
 
 	* gconf/gconf.c: include liboaf.h
 	(gconf_postinit): fix a bunch of missing semicolons
-	
 
 1999-11-19  Havoc Pennington  <hp@pobox.com>
 
