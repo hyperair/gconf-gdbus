@@ -1,3 +1,13 @@
+2000-07-25  James Henstridge  <james@daa.com.au>
+
+	* Makefile.am, gconf/Makefile.am: make relative symlinks rather than
+	absolute path symlinks.  Again to help packagers.
+
+	* configure.in (GCONF_CONFIG_SOURCE): don't use
+	EXPANDED_SYSCONFDIR hack.  Instead just escape the dollar sign in
+	${sysconfdir}.  This fixes build root installs used when building
+	packages.
+
 Mon Jul 24 16:39:01 2000  George Lebl <jirka@5z.com>
 
 	* wrappers/gtk/gconf-client.[ch]: Allow adding overlapping

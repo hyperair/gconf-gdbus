@@ -13,7 +13,7 @@ all-local:
 
 install-exec-local:
 	$(INSTALL_SCRIPT) gconf-config $(bindir)/gconf-config-$(MAJOR_VERSION)
-	$(LN_S) -f $(bindir)/gconf-config-$(MAJOR_VERSION) $(bindir)/gconf-config
+	(cd $(bindir) && $(LN_S) -f gconf-config-$(MAJOR_VERSION) gconf-config)
 	echo "**** NOTE ****" && \
 	echo $(WARNING_MESSAGE) && \
 	echo "**************"
