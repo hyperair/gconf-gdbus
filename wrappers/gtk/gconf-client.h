@@ -18,10 +18,13 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef GCONF_GCONF_GTK_H
-#define GCONF_GCONF_GTK_H
+#ifndef GCONF_GCONF_CLIENT_H
+#define GCONF_GCONF_CLIENT_H
 
 #include <gtk/gtkobject.h>
+#include <gtk/gtkwidget.h>
+#include <gconf/gconf.h>
+#include <gconf/gconf-listeners.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,6 +68,11 @@ typedef enum {
   GCONF_CLIENT_HANDLE_ALL
 } GConfClientErrorHandlingMode;
 
+
+typedef struct _GConfClient       GConfClient;
+typedef struct _GConfClientClass  GConfClientClass;
+
+
 typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
 /*
@@ -76,14 +84,10 @@ typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer
 
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
-#define GCONF_CLIENT(obj)                  (CONF_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
+#define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
 #define GCONF_CLIENT_CLASS(klass)          (CONF_CHECK_CLASS_CAST ((klass), GCONF_TYPE_CLIENT, GConfClientClass))
-#define GCONF_IS_CLIENT(obj)               (CONF_CHECK_TYPE ((obj), GCONF_TYPE_CLIENT))
+#define GCONF_IS_CLIENT(obj)               (GTK_CHECK_TYPE ((obj), GCONF_TYPE_CLIENT))
 #define GCONF_IS_CLIENT_CLASS(klass)       (CONF_CHECK_CLASS_TYPE ((klass), GCONF_TYPE_CLIENT))
-
-
-typedef struct _GConfClient       GConfClient;
-typedef struct _GConfClientClass  GConfClientClass;
 
 struct _GConfClient
 {
@@ -218,7 +222,8 @@ void              gconf_client_preload    (GConfClient* client,
                                            GConfError** err);
 
 /*
- * Basic key-manipulation facilities
+ * Basic key-manipulation facilities; these keys do _not_ have to be in the
+ * client's directory list, but they won't be cached unless they are.
  */
 
 void              gconf_client_set             (GConfClient* client,

@@ -18,7 +18,25 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "gconf-gtk.h"
+#include "gconf-client.h"
+#include <gtk/gtksignal.h>
+#include <gtk/gtktypeutils.h>
+#include <gconf/gconf-internals.h>
+
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
 
 /*
  * CacheEntry
@@ -60,9 +78,9 @@ struct _Listener {
   GFreeFunc destroy_notify;
 };
 
-static void listener_new(GConfClientNotifyFunc func,
-                         GFreeFunc destroy_notify,
-                         gpointer data);
+static Listener* listener_new(GConfClientNotifyFunc func,
+                              GFreeFunc destroy_notify,
+                              gpointer data);
 
 static void listener_destroy(Listener* l);
 
@@ -208,6 +226,7 @@ gconf_client_real_unreturned_error (GConfClient* client, GConfError* error)
 {
   /* FIXME use dialogs in an idle function, depending on the error mode */
 
+  g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
 }
 
 static void
@@ -215,6 +234,7 @@ gconf_client_real_error            (GConfClient* client, GConfError* error)
 {
   /* FIXME use dialogs in an idle function, depending on the error mode */
 
+  g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
 }
 
 /* Emit the proper signals for the error, and fill in err */
@@ -276,9 +296,11 @@ notify_from_server_callback(GConfEngine* conf, guint cnxn_id,
   g_return_if_fail(client->engine == conf);
 
   /* First do the caching, so that state is sane for the
-   * listeners or functions connected to value_changed
+   * listeners or functions connected to value_changed.
+   * We know this key is under a directory in our dir list.
    */
   gconf_client_cache(client,
+                     key,
                      value ? gconf_value_copy(value) : NULL);
 
   /* Emit the value_changed signal before notifying specific listeners;
@@ -355,8 +377,8 @@ gconf_client_add_dir     (GConfClient* client,
         Dir* old = tmp->data;
         
         /* Disallow overlap */
-        g_return_if_fail(!gconf_key_is_below(old, dirname));
-        g_return_if_fail(!gconf_key_is_below(dirname, old));
+        g_return_if_fail(!gconf_key_is_below(old->name, dirname));
+        g_return_if_fail(!gconf_key_is_below(dirname, old->name));
         
         tmp = g_slist_next(tmp);
       }
@@ -589,6 +611,11 @@ gconf_client_unset          (GConfClient* client,
   gconf_unset(client->engine, key, &error);
 
   handle_error(client, error, err);
+
+  if (error != NULL)
+    return FALSE;
+  else
+    return TRUE;
 }
 
 GSList*
@@ -637,7 +664,7 @@ gconf_client_dir_exists     (GConfClient* client,
   GConfError* error = NULL;
   gboolean retval;
   
-  retval = gconf_all_dirs(client->engine, dir, &error);
+  retval = gconf_dir_exists(client->engine, dir, &error);
 
   handle_error(client, error, err);
 
@@ -676,7 +703,7 @@ get(GConfClient* client, const gchar* key, GConfError** error)
   g_assert(val == NULL); /* if it was in the cache we should have returned */
 
   /* Check the GConfEngine */
-  val = gconf_get(client->engine, key, &error);
+  val = gconf_get(client->engine, key, error);
 
   if (*error != NULL)
     {
@@ -685,9 +712,25 @@ get(GConfClient* client, const gchar* key, GConfError** error)
     }
   else
     {
-      /* Cache this value and return */
-      gconf_client_cache(client, key,
-                         val ? gconf_value_copy(val) : NULL);
+      /* Cache this value, if it's in our directory list. FIXME could
+         speed this up. */
+      GSList* tmp;
+
+      tmp = client->dir_list;
+      while (tmp != NULL)
+        {
+          Dir* d = tmp->data;
+
+          if (gconf_key_is_below(d->name, key))
+            {
+              gconf_client_cache(client, key,
+                                 val ? gconf_value_copy(val) : NULL);
+              break;
+            }
+          else
+            tmp = g_slist_next(tmp);
+        }
+
       return val;
     }
 }
@@ -705,7 +748,7 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
     {
       gdouble retval = def;
 
-      g_assert(*error == NULL);
+      g_assert(error == NULL);
       
       if (check_type(val, GCONF_VALUE_FLOAT, &error))
         retval = gconf_value_float(val);
@@ -718,7 +761,7 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
     }
   else
     {
-      if (*error != NULL)
+      if (error != NULL)
         handle_error(client, error, err);
       return def;
     }
@@ -737,7 +780,7 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
     {
       gint retval = def;
 
-      g_assert(*error == NULL);
+      g_assert(error == NULL);
       
       if (check_type(val, GCONF_VALUE_INT, &error))
         retval = gconf_value_int(val);
@@ -750,7 +793,7 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
     }
   else
     {
-      if (*error != NULL)
+      if (error != NULL)
         handle_error(client, error, err);
       return def;
     }
@@ -770,7 +813,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
     {
       gchar* retval = NULL;
 
-      g_assert(*error == NULL);
+      g_assert(error == NULL);
       
       if (check_type(val, GCONF_VALUE_STRING, &error))
         retval = gconf_value_string(val);
@@ -789,7 +832,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
     }
   else
     {
-      if (*error != NULL)
+      if (error != NULL)
         handle_error(client, error, err);
       return def ? g_strdup(def) : NULL;
     }
@@ -809,7 +852,7 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
     {
       gboolean retval = def;
 
-      g_assert(*error == NULL);
+      g_assert(error == NULL);
       
       if (check_type(val, GCONF_VALUE_BOOL, &error))
         retval = gconf_value_bool(val);
@@ -822,7 +865,7 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
     }
   else
     {
-      if (*error != NULL)
+      if (error != NULL)
         handle_error(client, error, err);
       return def;
     }
@@ -841,7 +884,7 @@ gconf_client_get_schema  (GConfClient* client,
     {
       GConfSchema* retval = NULL;
 
-      g_assert(*error == NULL);
+      g_assert(error == NULL);
       
       if (check_type(val, GCONF_VALUE_SCHEMA, &error))
         retval = gconf_value_schema(val);
@@ -858,7 +901,7 @@ gconf_client_get_schema  (GConfClient* client,
     }
   else
     {
-      if (*error != NULL)
+      if (error != NULL)
         handle_error(client, error, err);
       return NULL;
     }

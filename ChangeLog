@@ -1,5 +1,27 @@
 1999-10-27  Havoc Pennington  <hp@pobox.com>
 
+	* configure.in: Add --enable-debug option to G_DISABLE_CHECKS as needed
+
+        * gconf/wrappers/gtk/testgconfclient.c: Test program for the GTK+ 
+	client wrapper.
+	
+	* gconf/gconf-sources.c (gconf_sources_query_value): 
+	Wasn't handling errors; now we report errors. The bad thing is,
+	it might be better to go ahead and do our best despite the error.
+
+	* gconf/gconf.c (gconf_init): Actually set the have_initted variable.	
+
+	* wrappers/gtk/Makefile.am (libgconf_gtk_la_LIBADD): Don't try to 
+	link with libgconf;
+	Add testgconfclient target.
+
+	* wrappers/gtk/gconf-client.h, wrappers/gtk/gconf-client.c: Make
+	it compile
+	
+	* configure.in: Generate Makefile for GtkObject wrapper
+
+1999-10-27  Havoc Pennington  <hp@pobox.com>
+
 	* gconf-editor/Makefile.am (gconf_editor_LDADD): 
 	link to libgconf.la
 

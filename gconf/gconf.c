@@ -999,13 +999,15 @@ gconf_init           (GConfError** err)
 
   ctable = ctable_new();
 
+  have_initted = TRUE;
+  
   return TRUE;
 }
 
 gboolean
 gconf_is_initialized (void)
 {
-  return (have_initted);
+  return have_initted;
 }
 
 /* 

@@ -364,6 +364,21 @@ gconf_sources_query_value (GConfSources* sources,
       /* we only want the first schema name we find */
       val = gconf_source_query_value(source, key,
                                      schema_name ? NULL : &schema_name, &error);
+
+      if (error != NULL)
+        {
+          /* Right thing to do? Don't know. */
+          g_assert(val == NULL);
+
+          if (err)
+            *err = error;
+          else
+            gconf_error_destroy(error);
+
+          error = NULL;
+
+          return NULL;
+        }
       
       if (val == NULL)
         {
