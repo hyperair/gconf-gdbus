@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf cvs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-04 15:10+0200\n"
+"POT-Creation-Date: 2004-07-05 17:11+0100\n"
 "PO-Revision-Date: 2004-07-04 17:22+0200\n"
 "Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -267,7 +267,9 @@ msgstr "Fout bij het schrijven van bestand \"%s\": %s"
 #: backends/markup-tree.c:3919
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
-msgstr "Verplaatsen van tijdelijk bestand \"%s\" naar bestemming \"%s\" is mislukt: %s"
+msgstr ""
+"Verplaatsen van tijdelijk bestand \"%s\" naar bestemming \"%s\" is mislukt: %"
+"s"
 
 #: backends/xml-backend.c:240
 msgid "Unloading XML backend module."
@@ -578,7 +580,9 @@ msgstr "Fout bij synchroniseren van een of meer bronnen: %s"
 msgid ""
 "Error obtaining new value for `%s' after change notification from backend `%"
 "s': %s"
-msgstr "Fout bij verkrijgen van nieuwe waarde voor `%s' na een 'change notification' van backend `%s': %s"
+msgstr ""
+"Fout bij verkrijgen van nieuwe waarde voor `%s' na een 'change notification' "
+"van backend `%s': %s"
 
 #: gconf/gconf-database.c:1119
 #, c-format
@@ -916,7 +920,7 @@ msgstr "Vrijgegeven van vergrendelingsmap `%s' mislukt: %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Verwijderen blokkeringsbestand %s mislukt: %s\n"
 
-#: gconf/gconf-internals.c:2938 gconf/gconfd.c:529
+#: gconf/gconf-internals.c:2938 gconf/gconfd.c:541
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Fout bij vergaren status van %s: %s"
@@ -1320,11 +1324,11 @@ msgstr "Verwachte 'schema', kreeg %s"
 msgid "CORBA error: %s"
 msgstr "CORBA fout: %s"
 
-#: gconf/gconfd.c:292
+#: gconf/gconfd.c:298
 msgid "Shutdown request received"
 msgstr "Afsluitingsverzoek ontvangen"
 
-#: gconf/gconfd.c:324
+#: gconf/gconfd.c:330
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1332,7 +1336,7 @@ msgstr ""
 "gconfd gecompileerd met debug informatie; bezig met proberen laden van gconf."
 "path uit de broncode-map"
 
-#: gconf/gconfd.c:338
+#: gconf/gconfd.c:344
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1343,7 +1347,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:346
+#: gconf/gconfd.c:352
 #, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
@@ -1352,12 +1356,12 @@ msgstr ""
 "Geen configuratiebronnen gevonden in bronpad, configuratie zal niet worden "
 "opgeslagen; bewerken  %s"
 
-#: gconf/gconfd.c:359
+#: gconf/gconfd.c:365
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fout bij het laden van enkele configuratiebronnen: %s"
 
-#: gconf/gconfd.c:371
+#: gconf/gconfd.c:377
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1365,7 +1369,7 @@ msgstr ""
 "Geen configuratie bronadressen gevonden, kan configuratiedata niet\n"
 "laden en opslaan"
 
-#: gconf/gconfd.c:388
+#: gconf/gconfd.c:394
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1373,96 +1377,100 @@ msgstr ""
 "Geen schrijfbare configuratiebronnen gevonden, misschien niet\n"
 "in staat om sommige wijzigingen op te slaan"
 
-#: gconf/gconfd.c:414
+#: gconf/gconfd.c:420
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr ""
 "Signaal %d ontvangen, kern word gedumpt. Rapporteer a.u.b. een GConf bug."
 
-#: gconf/gconfd.c:432
+#: gconf/gconfd.c:438
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Signaal %d ontvangen, abnormale afsluiting. Rapporteer a.u.b. een GConf bug."
 
-#: gconf/gconfd.c:449
+#: gconf/gconfd.c:454
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Signaal %d ontvangen, normale afsluiting"
 
-#: gconf/gconfd.c:522
+#: gconf/gconfd.c:534
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "Fout bij openen %s: %s"
 
-#: gconf/gconfd.c:538
+#: gconf/gconfd.c:550
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "Eigenaar van %s in niet de huidige gebruiker"
 
-#: gconf/gconfd.c:546
+#: gconf/gconfd.c:558
 #, c-format
 msgid "Bad permissions %lo on directory %s"
 msgstr "Foutieve rechten %lo op map %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:628
+#: gconf/gconfd.c:640
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "(versie %s) gestart, pid %u gebruiker '%s'"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:680
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Fout bij het verkrijgen van objectreferentie voor ConfigServer"
 
-#: gconf/gconfd.c:681
+#: gconf/gconfd.c:693
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Aanmaken bestand `%s' mislukt: %s"
 
-#: gconf/gconfd.c:688
+#: gconf/gconfd.c:700
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Directory %s heeft een probleem, gconfd kan het niet gebruiken"
 
-#: gconf/gconfd.c:717
+#: gconf/gconfd.c:729
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Niet gelukt om byte te schrijven naar pipe fd %d dus de cliënt kan hangen: %s"
 
-#: gconf/gconfd.c:727
+#: gconf/gconfd.c:739
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr ""
 "Niet mogelijk vergrendeling te krijgen voor daemon, bezig af te sluiten: %s"
 
-#: gconf/gconfd.c:765
+#: gconf/gconfd.c:777
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Fout bij vrijgeven vergrendelings bestand: %s"
 
-#: gconf/gconfd.c:773
+#: gconf/gconfd.c:785
 msgid "Exiting"
 msgstr "Gestopt"
 
-#: gconf/gconfd.c:799
+#: gconf/gconfd.c:806
+msgid "SIGHUP received, reloading all databases"
+msgstr ""
+
+#: gconf/gconfd.c:821
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf server wordt niet gebruikt, bezig met afsluiten."
 
-#: gconf/gconfd.c:1112
+#: gconf/gconfd.c:1134
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Fout bij het vergaren van nieuwe waarde voor `%s': %s"
 
-#: gconf/gconfd.c:1232
+#: gconf/gconfd.c:1254
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Uitzondering: %s"
 
-#: gconf/gconfd.c:1332
+#: gconf/gconfd.c:1354
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1471,7 +1479,7 @@ msgstr ""
 "Fout bij het openen van gconfd logbestand; kan luisteraars naar gconfd "
 "afsluiting niet herstarten (%s)"
 
-#: gconf/gconfd.c:1367
+#: gconf/gconfd.c:1389
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1479,34 +1487,34 @@ msgstr ""
 "Fout bij sluiten van gconfd logbestand; gegevens zijn misschien niet goed "
 "opgeslagen (%s)"
 
-#: gconf/gconfd.c:1429
+#: gconf/gconfd.c:1451
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kan opgeslagen statusbestand '%s' niet openen voor schrijven: %s"
 
-#: gconf/gconfd.c:1443
+#: gconf/gconfd.c:1465
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr ""
 "Kan de opgeslagen statusbestand '%s' niet wegschrijven, bestands-descriptor: "
 "%d: %s"
 
-#: gconf/gconfd.c:1452
+#: gconf/gconfd.c:1474
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Fout bij sluiten van nieuw opgeslagen statusbestand '%s': %s"
 
-#: gconf/gconfd.c:1466
+#: gconf/gconfd.c:1488
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kan oud opgeslagen statusbestand niet verplaatsen '%s': %s"
 
-#: gconf/gconfd.c:1476
+#: gconf/gconfd.c:1498
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Fout bij verplaatsen van nieuw opgeslagen statusbestand: %s"
 
-#: gconf/gconfd.c:1485
+#: gconf/gconfd.c:1507
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1514,7 +1522,7 @@ msgstr ""
 "Fout bij het herstellen van het originele opgeslagen statusbestand dat was "
 "verplaatst naar '%s': %s"
 
-#: gconf/gconfd.c:1964
+#: gconf/gconfd.c:1986
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1522,17 +1530,17 @@ msgstr ""
 "Fout bij het herstellen van luisteraar op adres '%s', kan de databank niet "
 "vinden"
 
-#: gconf/gconfd.c:2010
+#: gconf/gconfd.c:2032
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Fout bij lezen opgeslagen statusbestand: %s"
 
-#: gconf/gconfd.c:2064
+#: gconf/gconfd.c:2086
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Fout bij openen opgeslagen statusbestand '%s': %s"
 
-#: gconf/gconfd.c:2183
+#: gconf/gconfd.c:2205
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1541,7 +1549,7 @@ msgstr ""
 "Fout bij het loggen van toevoeging van luisteraars aan het gconfd "
 "logbestand; kan luisteraar niet opnieuw toevoegen als gconfd stopt (%s)"
 
-#: gconf/gconfd.c:2188
+#: gconf/gconfd.c:2210
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1551,30 +1559,30 @@ msgstr ""
 "logbestand; misschien wordt de luisteraar foutief opnieuw toegevoegd als "
 "gconfd stopt (%s)"
 
-#: gconf/gconfd.c:2211 gconf/gconfd.c:2385
+#: gconf/gconfd.c:2233 gconf/gconfd.c:2407
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Fout bij vergaren van IOR voor cliënt: %s"
 
-#: gconf/gconfd.c:2226
+#: gconf/gconfd.c:2248
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Fout bij openen opgeslagen statusbestand: %s"
 
-#: gconf/gconfd.c:2239
+#: gconf/gconfd.c:2261
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Fout bij het schrijven van cliënt add naar het opgeslagen statusbestand: %s"
 
-#: gconf/gconfd.c:2247
+#: gconf/gconfd.c:2269
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Fout bij spoelen van toevoeging van cliënt aan het opgeslagen statusbestand: "
 "%s"
 
-#: gconf/gconfd.c:2346
+#: gconf/gconfd.c:2368
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1882,7 +1890,9 @@ msgstr "Moet een type geven als een waarde word ingesteld\n"
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
-msgstr "--ignore-schema-defaults is slechts relevant met --get, --all-entries, --dump, --recursive-list, --get-list-size of --get-list-element\n"
+msgstr ""
+"--ignore-schema-defaults is slechts relevant met --get, --all-entries, --"
+"dump, --recursive-list, --get-list-size of --get-list-element\n"
 
 #: gconf/gconftool.c:641 gconf/gconftool.c:654 gconf/gconftool.c:667
 #: gconf/gconftool.c:681 gconf/gconftool.c:694 gconf/gconftool.c:707
@@ -2450,7 +2460,8 @@ msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
-"Probeer uw toepassing te breken door het instellen van foutieve waarden voor sleutel:\n"
+"Probeer uw toepassing te breken door het instellen van foutieve waarden voor "
+"sleutel:\n"
 "  %s\n"
 
 # Hmm, dit moet beter kunnen
@@ -2465,7 +2476,8 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Probeer uw applicatie te breken door. het instellen van foutieve waarden voor sleutels in map:\n"
+"Probeer uw applicatie te breken door. het instellen van foutieve waarden "
+"voor sleutels in map:\n"
 "  %s\n"
 
 #~ msgid "Couldn't find the %s root directory in the address `%s'"

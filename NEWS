@@ -1,3 +1,23 @@
+2.7.3
+=====
+
+ Features
+
+  - Switch on "subtree-in-a-file" at certain points in the tree (Mark)
+      o See http://mail.gnome.org/archives/desktop-devel-list/2004-June/msg00424.html
+  - Add --unload to gconftool which complements --load (Julio M. Merino Vidal, Mark)
+  - Add --sysgconfsubdir configure argument (Julio M. Merino Vidal)
+  - Make gconfd reload all databases on SIGHUP (Josselin Mouette)
+
+ Fixes
+
+  - Fix gconfd segfault from freeing the default database twice (Mark)
+  - Warn in docs to call g_type_init() before using GConfCient (Leonardo Quijano Vincenzi)
+  - Don't create a dir during docs build if not needed (Julio M. Merino Vidal)
+  - Encode non-ascii GConf keys using a more compact encoding (Mariano Suárez-Alvare)
+  - 64-bit fix (Joe Marcus Clarke)
+  - Plug a leak (Kjartan Maraas)
+
 2.7.1
 =====
 

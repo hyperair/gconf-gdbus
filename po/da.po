@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-04 21:17+0200\n"
+"POT-Creation-Date: 2004-07-05 17:11+0100\n"
 "PO-Revision-Date: 2004-07-04 17:23+0100\n"
 "Last-Translator: Martin Willemoes Hansen <mwh@sysrq.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
@@ -911,7 +911,7 @@ msgstr "Kunne ikke frigive låsemappen '%s': %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Kunne ikke fjerne låsefilen '%s': %s\n"
 
-#: gconf/gconf-internals.c:2938 gconf/gconfd.c:529
+#: gconf/gconf-internals.c:2938 gconf/gconfd.c:541
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Kunne ikke få oplysninger om '%s': %s"
@@ -1304,11 +1304,11 @@ msgstr "Forventede skema, fik %s"
 msgid "CORBA error: %s"
 msgstr "CORBA-fejl: %s"
 
-#: gconf/gconfd.c:292
+#: gconf/gconfd.c:298
 msgid "Shutdown request received"
 msgstr "Nedlukningsforespørgsel modtaget"
 
-#: gconf/gconfd.c:324
+#: gconf/gconfd.c:330
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1316,7 +1316,7 @@ msgstr ""
 "gconfd oversat med fejlanalyseinfo; forsøger at hente gconf.path fra "
 "kildemappen"
 
-#: gconf/gconfd.c:338
+#: gconf/gconfd.c:344
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1327,7 +1327,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:346
+#: gconf/gconfd.c:352
 #, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
@@ -1336,12 +1336,12 @@ msgstr ""
 "Ingen konfigurationskilder i kildestien, konfigurationen vil ikke blive "
 "gemt; redigér %s"
 
-#: gconf/gconfd.c:359
+#: gconf/gconfd.c:365
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fejl ved indlæsning af nogle konfigurationskilder: %s"
 
-#: gconf/gconfd.c:371
+#: gconf/gconfd.c:377
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1349,7 +1349,7 @@ msgstr ""
 "Kunne ikke slå nogen adresser op for konfigurationskilde, kan ikke hente "
 "eller gemme konfigurationsdata"
 
-#: gconf/gconfd.c:388
+#: gconf/gconfd.c:394
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1357,95 +1357,99 @@ msgstr ""
 "Ingen skrivbare konfigurationskilder fundet, kan ikke gemme dele af "
 "konfigurationsændringerne"
 
-#: gconf/gconfd.c:414
+#: gconf/gconfd.c:420
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr ""
 "Modtog signal %d, dumper hukommelsen. Rapportér venligst en GConf-fejl."
 
-#: gconf/gconfd.c:432
+#: gconf/gconfd.c:438
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Modtog signal %d, lukker unormalt ned. Rapportér venligst en GConf-fejl."
 
-#: gconf/gconfd.c:449
+#: gconf/gconfd.c:454
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Modtog signal %d, lukker pænt ned"
 
-#: gconf/gconfd.c:522
+#: gconf/gconfd.c:534
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "Kunne ikke åbne '%s': %s"
 
-#: gconf/gconfd.c:538
+#: gconf/gconfd.c:550
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "Ejer af %s er ikke den aktuelle bruger"
 
-#: gconf/gconfd.c:546
+#: gconf/gconfd.c:558
 #, c-format
 msgid "Bad permissions %lo on directory %s"
 msgstr "Ugyldige rettigheder %lo for mappen %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:628
+#: gconf/gconfd.c:640
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "starter (version %s), pid %u bruger '%s'"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:680
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Kunne ikke hente objektreference til ConfigServer"
 
-#: gconf/gconfd.c:681
+#: gconf/gconfd.c:693
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Kunne ikke oprette %s: %s"
 
-#: gconf/gconfd.c:688
+#: gconf/gconfd.c:700
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Mappen %s har et problem, gconfd kan ikke bruge det"
 
-#: gconf/gconfd.c:717
+#: gconf/gconfd.c:729
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Kunne ikke skrive byte til kanal-fd %d så klientprogram hænger muligvis: %s"
 
-#: gconf/gconfd.c:727
+#: gconf/gconfd.c:739
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Kunne ikke skaffe lås til dæmon, afslutter: %s"
 
-#: gconf/gconfd.c:765
+#: gconf/gconfd.c:777
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Fejl ved frigivelse af låsefil: %s"
 
-#: gconf/gconfd.c:773
+#: gconf/gconfd.c:785
 msgid "Exiting"
 msgstr "Afslutter"
 
-#: gconf/gconfd.c:799
+#: gconf/gconfd.c:806
+msgid "SIGHUP received, reloading all databases"
+msgstr ""
+
+#: gconf/gconfd.c:821
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-server er ikke i brug, lukker ned."
 
-#: gconf/gconfd.c:1112
+#: gconf/gconfd.c:1134
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Fejl ved henting af ny værdi for '%s': %s"
 
-#: gconf/gconfd.c:1232
+#: gconf/gconfd.c:1254
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerede undtagelse: %s"
 
-#: gconf/gconfd.c:1332
+#: gconf/gconfd.c:1354
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1454,38 +1458,38 @@ msgstr ""
 "Kunne ikke åbne gconfd-logfil; vil ikke kunne genoprette lyttere efter "
 "nedlukning af gconfd (%s)"
 
-#: gconf/gconfd.c:1367
+#: gconf/gconfd.c:1389
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "Kunne ikke lukke gconfd-logfil; data blev måske ikke gemt rigtigt (%s)"
 
-#: gconf/gconfd.c:1429
+#: gconf/gconfd.c:1451
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunne ikke åbne tilstandsgemningsfilen '%s' til skrivning: %s"
 
-#: gconf/gconfd.c:1443
+#: gconf/gconfd.c:1465
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Kunne ikke skrive tilstandsgemningsfilen '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1452
+#: gconf/gconfd.c:1474
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Kunne ikke lukke ny tilstandsgemningsfil '%s': %s"
 
-#: gconf/gconfd.c:1466
+#: gconf/gconfd.c:1488
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunne ikke flytte gammel tilstandsgemningsfil '%s': %s"
 
-#: gconf/gconfd.c:1476
+#: gconf/gconfd.c:1498
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Kunne ikke flytte ny tilstandsgemningsfil på plads: %s"
 
-#: gconf/gconfd.c:1485
+#: gconf/gconfd.c:1507
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1493,24 +1497,24 @@ msgstr ""
 "Kunne ikke genoprette oprindelig tilstandsgemningsfil som er blevet flyttet "
 "til '%s': %s"
 
-#: gconf/gconfd.c:1964
+#: gconf/gconfd.c:1986
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Kunne ikke genoprette en lytter på adressen '%s', kunne ikke finde databasen"
 
-#: gconf/gconfd.c:2010
+#: gconf/gconfd.c:2032
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Fejl ved læsning af tilstandsgemningsfil: %s"
 
-#: gconf/gconfd.c:2064
+#: gconf/gconfd.c:2086
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Kunne ikke åbne tilstandsgemningsfilen '%s': %s"
 
-#: gconf/gconfd.c:2183
+#: gconf/gconfd.c:2205
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1519,7 +1523,7 @@ msgstr ""
 "Kunne ikke logge tilføjelse af lytter til gconfd-logfilen; vil ikke kunne "
 "tilføje lytteren hvis gconfd afslutter eller lukker ned (%s)"
 
-#: gconf/gconfd.c:2188
+#: gconf/gconfd.c:2210
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1528,27 +1532,27 @@ msgstr ""
 "Kunne ikke logge fjernelse af lytter i gconfd-logfilen; kan medføre at "
 "lytter tilføjes igen hvis gconfd afsluttes eller maskinen lukkes ned (%s)."
 
-#: gconf/gconfd.c:2211 gconf/gconfd.c:2385
+#: gconf/gconfd.c:2233 gconf/gconfd.c:2407
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Kunne ikke få IOR for klient: %s"
 
-#: gconf/gconfd.c:2226
+#: gconf/gconfd.c:2248
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Kunne ikke åbne tilstandsgemningsfil: %s"
 
-#: gconf/gconfd.c:2239
+#: gconf/gconfd.c:2261
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Kunne ikke skrive tilføjelse af klient til tilstandsgemningsfil: %s"
 
-#: gconf/gconfd.c:2247
+#: gconf/gconfd.c:2269
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Kunne ikke afslutte tilføjelse af klient til tilstandsgemningsfil: %s"
 
-#: gconf/gconfd.c:2346
+#: gconf/gconfd.c:2368
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf 2.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-03 09:08+0200\n"
+"POT-Creation-Date: 2004-07-05 17:11+0100\n"
 "PO-Revision-Date: 2004-07-03 09:08+0200\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
@@ -944,7 +944,7 @@ msgstr "Das Sperrverzeichnis »%s« konnte nicht entfernt werden: %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Die Verknüpfung der Sperrdatei »%s« konnte nicht gelöscht werden: %s\n"
 
-#: gconf/gconf-internals.c:2938 gconf/gconfd.c:529
+#: gconf/gconf-internals.c:2938 gconf/gconfd.c:541
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "%s konnte nicht mit stat() untersucht werden: %s"
@@ -1368,11 +1368,11 @@ msgstr "»schema« erwartet, jedoch »%s« erhalten"
 msgid "CORBA error: %s"
 msgstr "CORBA-Fehler: %s"
 
-#: gconf/gconfd.c:292
+#: gconf/gconfd.c:298
 msgid "Shutdown request received"
 msgstr "Anfrage zum Herunterfahren empfangen"
 
-#: gconf/gconfd.c:324
+#: gconf/gconfd.c:330
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1380,7 +1380,7 @@ msgstr ""
 "gconfd wurde mit Fehlerdiagnose-Funktionen compiliert; es wird nun versucht, "
 "gconf.path aus dem Quellverzeichnis zu laden"
 
-#: gconf/gconfd.c:338
+#: gconf/gconfd.c:344
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1391,7 +1391,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:346
+#: gconf/gconfd.c:352
 #, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
@@ -1400,12 +1400,12 @@ msgstr ""
 "Keine Konfigurationsquellen im Quellpfad, daher wird die Konfiguration nicht "
 "gespeichert; bearbeiten Sie %s"
 
-#: gconf/gconfd.c:359
+#: gconf/gconfd.c:365
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fehler beim Laden von Konfigurationsquellen: %s"
 
-#: gconf/gconfd.c:371
+#: gconf/gconfd.c:377
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1413,7 +1413,7 @@ msgstr ""
 "Es konnten keine Adressen von Konfigurationsquellen aufgelöst werden, daher "
 "können Konfigurationsdaten weder geladen, noch gespeichert werden"
 
-#: gconf/gconfd.c:388
+#: gconf/gconfd.c:394
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1421,12 +1421,12 @@ msgstr ""
 "Es konnten keine schreibbaren Konfigurationsquellen aufgelöst werden; daher "
 "können einige Konfigurationsänderungen nicht gespeichert werden"
 
-#: gconf/gconfd.c:414
+#: gconf/gconfd.c:420
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr "Signal %d erhalten, Absturz. Bitte melden Sie diesen GConf-Fehler."
 
-#: gconf/gconfd.c:432
+#: gconf/gconfd.c:438
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
@@ -1434,87 +1434,91 @@ msgstr ""
 "Signal %d erhalten, außerplanmäßiges Herunterfahren. Bitte melden Sie diesen "
 "GConf-Fehler."
 
-#: gconf/gconfd.c:449
+#: gconf/gconfd.c:454
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Signal %d erhalten, ordungsgemäßes Herunterfahren"
 
-#: gconf/gconfd.c:522
+#: gconf/gconfd.c:534
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "%s konnte nicht geöffnet werden: %s"
 
-#: gconf/gconfd.c:538
+#: gconf/gconfd.c:550
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "Der Besitzer von %s ist nicht der momentan aktive Benutzer"
 
-#: gconf/gconfd.c:546
+#: gconf/gconfd.c:558
 #, c-format
 msgid "Bad permissions %lo on directory %s"
 msgstr "Fehlerhafte Zugriffsrechte %lo für Verzeichnis %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:628
+#: gconf/gconfd.c:640
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "(Version %s) wird gestartet, Prozesskennung %u, Benutzer »%s«"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:680
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Die Objektreferenz für ConfigServer konnte nicht ermittelt werden"
 
-#: gconf/gconfd.c:681
+#: gconf/gconfd.c:693
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "%s konnte nicht erzeugt werden: %s"
 
-#: gconf/gconfd.c:688
+#: gconf/gconfd.c:700
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr ""
 "Es liegt ein Problem mit dem Verzeichnis %s vor, daher kann gconfd es nicht "
 "verwenden"
 
-#: gconf/gconfd.c:717
+#: gconf/gconfd.c:729
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Schreiben eines Bytes auf den Dateideskriptor der Weiterleitung %d "
 "gescheitert; das Client-Programm könnte hängen: %s"
 
-#: gconf/gconfd.c:727
+#: gconf/gconfd.c:739
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr ""
 "Die Sperre für den Dämon konnte nicht erzeugt werden. Dieser wird daher "
 "beendet: %s"
 
-#: gconf/gconfd.c:765
+#: gconf/gconfd.c:777
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Fehler bei der Freigabe der Sperrdatei: %s"
 
-#: gconf/gconfd.c:773
+#: gconf/gconfd.c:785
 msgid "Exiting"
 msgstr "Beenden"
 
-#: gconf/gconfd.c:799
+#: gconf/gconfd.c:806
+msgid "SIGHUP received, reloading all databases"
+msgstr ""
+
+#: gconf/gconfd.c:821
 msgid "GConf server is not in use, shutting down."
 msgstr "Der GConf-Server wird nicht verwendet und daher beendet."
 
-#: gconf/gconfd.c:1112
+#: gconf/gconfd.c:1134
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Fehler beim Abrufen des neuen Wertes für »%s«: %s"
 
-#: gconf/gconfd.c:1232
+#: gconf/gconfd.c:1254
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Ausnahmefehler: %s"
 
-#: gconf/gconfd.c:1332
+#: gconf/gconfd.c:1354
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1523,7 +1527,7 @@ msgstr ""
 "Die gconfd-Protkolldatei konnte nicht geöffnet werden; Zuhörer können nach "
 "dem Herunterfahren von gconfd nicht wiederhergestellt werden (%s)"
 
-#: gconf/gconfd.c:1367
+#: gconf/gconfd.c:1389
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1531,36 +1535,36 @@ msgstr ""
 "Die gconfd-Protokolldatei konnte nicht geschlossen werden; möglicherweise "
 "wurden Daten nicht ordnungsgemäß gespeichert (%s)"
 
-#: gconf/gconfd.c:1429
+#: gconf/gconfd.c:1451
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr ""
 "Die Status-Speicherdatei »%s« konnte nicht zum Schreiben geöffnet werden: %s"
 
-#: gconf/gconfd.c:1443
+#: gconf/gconfd.c:1465
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr ""
 "Die Status-Speicherdatei »%s«, FD %d, konnte nicht geschrieben werden: %s"
 
-#: gconf/gconfd.c:1452
+#: gconf/gconfd.c:1474
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Die neue Status-Speicherdatei »%s« konnte nicht geschlossen werden: %s"
 
-#: gconf/gconfd.c:1466
+#: gconf/gconfd.c:1488
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Die alte Status-Speicherdatei »%s« konnte nicht verschoben werden: %s"
 
-#: gconf/gconfd.c:1476
+#: gconf/gconfd.c:1498
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr ""
 "Die neue Status-Speicherdatei konnte nicht an den richtigen Platz verschoben "
 "werden: %s"
 
-#: gconf/gconfd.c:1485
+#: gconf/gconfd.c:1507
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1568,7 +1572,7 @@ msgstr ""
 "Die nach »%s« verschobene ursprüngliche Status-Speicherdatei konnte nicht "
 "wiederhergestellt werden: %s"
 
-#: gconf/gconfd.c:1964
+#: gconf/gconfd.c:1986
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1576,17 +1580,17 @@ msgstr ""
 "Ein Zuhörer an der Adresse »%s« konnte nicht wiederhergestellt werden, die "
 "Datenbank konnte nicht aufgelöst werden"
 
-#: gconf/gconfd.c:2010
+#: gconf/gconfd.c:2032
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Fehler beim Lesen der gespeicherten Statusdatei: %s"
 
-#: gconf/gconfd.c:2064
+#: gconf/gconfd.c:2086
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Öffnen der gespeicherten Statusdatei »%s« nicht möglich: %s"
 
-#: gconf/gconfd.c:2183
+#: gconf/gconfd.c:2205
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1596,7 +1600,7 @@ msgstr ""
 "vermerkt werden; dieser kann nicht wieder hinzugefügt werden, wenn gconfd "
 "beendet wird (%s)"
 
-#: gconf/gconfd.c:2188
+#: gconf/gconfd.c:2210
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1606,31 +1610,31 @@ msgstr ""
 "vermerkt  werden; möglicherweise wird dieser irrtümlicherweise erneut "
 "hinzugefügt hinzugefügt, wenn gconfd beendet wird (%s)"
 
-#: gconf/gconfd.c:2211 gconf/gconfd.c:2385
+#: gconf/gconfd.c:2233 gconf/gconfd.c:2407
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Empfangen des IOR für Client gescheitert: %s"
 
-#: gconf/gconfd.c:2226
+#: gconf/gconfd.c:2248
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Öffnen der gespeicherten Statusdatei nicht möglich: %s"
 
-#: gconf/gconfd.c:2239
+#: gconf/gconfd.c:2261
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Der zur Status-Speicherdatei hinzugefügte Client konnte nicht geschrieben "
 "werden: %s"
 
-#: gconf/gconfd.c:2247
+#: gconf/gconfd.c:2269
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Der zur Status-Speicherdatei hinzugefügte Client konnte nicht entfernt "
 "werden: %s"
 
-#: gconf/gconfd.c:2346
+#: gconf/gconfd.c:2368
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
