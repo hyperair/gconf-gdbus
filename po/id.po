@@ -6,14 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
-"POT-Creation-Date: 2003-06-20 17:09+0700\n"
-"PO-Revision-Date: 2003-06-19 22:13+0700\n"
+"POT-Creation-Date: 2003-06-24 11:43+0700\n"
+"PO-Revision-Date: 2003-06-22 22:15+0700\n"
 "Last-Translator: Mohammad DAMT <mdamt@bisnisweb.com>\n"
 "Language-Team: Indonesia <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: (null)\n"
 
 #: backends/dir-utils.c:108
 #, c-format
@@ -374,12 +373,12 @@ msgstr ""
 "tidak dapat mengembalikan kondisi pendengar saat gconfd direstart, akibatnya "
 "pemberitahuan perubahan konfigurasi akan tidak dapat diandalkan."
 
-#: gconf/gconf-database.c:1111
+#: gconf/gconf-database.c:1114
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "ID Pendengar %lu tidak ada"
 
-#: gconf/gconf-database.c:1125
+#: gconf/gconf-database.c:1128
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -388,57 +387,57 @@ msgstr ""
 "Gagal mencatat saat menghapus pendengar (biasanya tidak apa-apa, hanya saja "
 "pemberitahuan bisa muncul lebih dari sekali): %s"
 
-#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1541
+#: gconf/gconf-database.c:1246 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Error saat mengambil nilai untuk `%s': %s"
 
-#: gconf/gconf-database.c:1290
+#: gconf/gconf-database.c:1293
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Error saat melakukan set nilai `%s': %s"
 
-#: gconf/gconf-database.c:1333
+#: gconf/gconf-database.c:1336
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Error saat melakukan unset `%s': %s"
 
-#: gconf/gconf-database.c:1362
+#: gconf/gconf-database.c:1365
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Error saat mengambil nilai awal untuk `%s': %s "
 
-#: gconf/gconf-database.c:1413
+#: gconf/gconf-database.c:1416
 #, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Error saat melakukan unset \"%s\": %s"
 
-#: gconf/gconf-database.c:1445
+#: gconf/gconf-database.c:1448
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "Error saat mengambil nilai baru untuk \"%s\": %s"
 
-#: gconf/gconf-database.c:1493
+#: gconf/gconf-database.c:1496
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Error saat melakukan pemeriksaan keberadaan `%s': %s"
 
-#: gconf/gconf-database.c:1517
+#: gconf/gconf-database.c:1520
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Error saat menghapus dir `%s': %s"
 
-#: gconf/gconf-database.c:1544
+#: gconf/gconf-database.c:1547
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Gagal saat mengambil semua isi `%s': %s"
 
-#: gconf/gconf-database.c:1570
+#: gconf/gconf-database.c:1573
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Error saat mendaftarkan dir pada `%s': %s"
 
-#: gconf/gconf-database.c:1591
+#: gconf/gconf-database.c:1594
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Error saat melakukan seting skema untuk `%s': %s"
@@ -871,35 +870,39 @@ msgstr "Alamat \"%s\" ke sumber konfigurasi yang dapat ditulis pada posisi %d"
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
-msgstr ""
+msgstr "Alamat \"%s\" ke sumber konfigurasi hanya-baca pada posisi %d"
 
 #: gconf/gconf-sources.c:359
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
+"Alamat \"%s\" pada sumber konfigurasi yang dapat ditulisi sebagian pada "
+"posisi %d"
 
 #: gconf/gconf-sources.c:368
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
 msgstr ""
+"Tidak ada alamat yang dapat ditulisi. Tidak mungkin dapat untuk menyimpan "
+"setingan konfigurasi"
 
 #: gconf/gconf-sources.c:584
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
-msgstr ""
+msgstr "Skema `%s' diberikan untuk `%s' menyimpan nilai non-skema"
 
 #: gconf/gconf-sources.c:642
 msgid "The '/' name can only be a directory, not a key"
-msgstr ""
+msgstr "Nama '/' hanya dapat berupa direktori, bukan key"
 
 #: gconf/gconf-sources.c:680
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
-msgstr ""
+msgstr "Nilai `%s' diset pada sumber hanya-baca pada awal path konfigurasi"
 
 #: gconf/gconf-sources.c:692
 #, c-format
@@ -921,182 +924,212 @@ msgid ""
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
 msgstr ""
+"Tidak dapat menyimpan nilai pada key '%s' karena tidak ada database yang "
+"dapat ditulisi pada server konfigurasi. Ada beberapa penyebab umum masalah "
+"ini: 1) Path file konfigurasi %s/path tidak berisi database atau sama sekali "
+"tidak ditemukan. 2) Entah kenapa ada dua proses gconfd 3) sistem operasi "
+"Anda tidak dikonfigurasikan dengan benar  sehingga penguncian file pada NFS "
+"tidak berjalan dengan mulus pada home direktori atau 4) mesin klien NFS "
+"telah mati dan tidak memberitahukan server pada saat reboot bahwa penguncian "
+"file harus dibatalkan. Bila ternyata terdapat dua proses gconfd (atau ada "
+"dua pada saat yang keduanya dijalankan), maka akan ada kunci yang batal, "
+"maka hapuslah file ~/.gconf*/*lock. Mungkin masalahnya adalah Anda coba "
+"menggunakan GConf pada dua mesin sekaligus, dan ORBit maish memili "
+"konfigurasi defaultnya yang mencegah koneksi CORBA remote. Dalam masalah ini "
+"silakan tambahkan baris \"ORBIIOPIPv4=1\" pada file /etc/orbitrc. "
+"Sebagaimana biasanya, silakan cek pada syslog user.* untuk mencari detil "
+"masalah yang ditemukan gconfd. Ingat bahwa hanya boleh ada satu gconfd pada "
+"tiap home direktori, dan harus memiliki  sendiri kunci file pada ~/.gconfd "
+"dan juga kunci file pada tiap-tiap lokasi penyimpanan sebagai misal pada ~/."
+"gconf"
 
 #: gconf/gconf-sources.c:1414
 #, c-format
 msgid "Error finding metainfo: %s"
-msgstr ""
+msgstr "Ada kesalahan saat mencari metainfo: %s"
 
 #: gconf/gconf-sources.c:1483
 #, c-format
 msgid "Error getting metainfo: %s"
-msgstr ""
+msgstr "Ada kesalahan saat mendapatkan metainfo: %s"
 
 #: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
+"Key `%s' didaftarkan sebagai skema untuk key `%s' padahal sebenarnya "
+"menyimpan tipe `%s'"
 
 #: gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
-msgstr ""
+msgstr "Tidak mengerti apa maksud dari `%s' (harusnya bernilai integer)"
 
 #: gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
-msgstr ""
+msgstr "Integer `%s' terlalu besar atau terlalu kecil"
 
 #: gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
-msgstr ""
+msgstr "Tidak mengerti apa maksud `%s' (seharusnya bernilai bilangan nyata)"
 
 #: gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
-msgstr ""
+msgstr "Tidak mengerti maksud dari `%s' (seharusnya bernilai true atau false)"
 
 #: gconf/gconf-value.c:261
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
-msgstr ""
+msgstr "Tidak mengerti maksud dari `%s' (daftar harus dimulai dengan '[')"
 
 #: gconf/gconf-value.c:274
 #, c-format
 msgid "Didn't understand `%s' (list must end with a ']')"
-msgstr ""
+msgstr "TIdak mengerti apa maksud dari `%s' (daftar harus diakhiri dengan ']')"
 
 #: gconf/gconf-value.c:325
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
 msgstr ""
+"Tidak mengerti maksud dari `%s' (ada ']' yang tidak diescape yang ditemukan "
+"dalam daftar)"
 
 #: gconf/gconf-value.c:356 gconf/gconf-value.c:517
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
-msgstr ""
+msgstr "Tidak mengerti maksud dari `%s' (ada karakter tambahan)"
 
 #: gconf/gconf-value.c:403
 #, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
-msgstr ""
+msgstr "Tidak mengerti maksud dari `%s' (pasangan harus dimulai dengan '(')"
 
 #: gconf/gconf-value.c:416
 #, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
-msgstr ""
+msgstr "Tidak mengerti maksud dari `%s' (pasangan harus berakhir dengan ')')"
 
 #: gconf/gconf-value.c:446 gconf/gconf-value.c:532
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
-msgstr ""
+msgstr "Tidak mengerti apa maksud dari `%s' (jumlah elemen salah)"
 
 #: gconf/gconf-value.c:486
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr ""
+"Tidak mengerti apa maksud dari `%s' (ada ')' yang tidak diescape yang "
+"ditemukan dalam pasangan "
 
 #: gconf/gconf.c:55
 #, c-format
 msgid "Key \"%s\" is NULL"
-msgstr ""
+msgstr "Key \"%s\" bernilai NULL"
 
 #: gconf/gconf.c:62
 #, c-format
 msgid "\"%s\": %s"
-msgstr ""
+msgstr "\"%s\": %s"
 
 #: gconf/gconf.c:345
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
-msgstr ""
+msgstr "Server tidak dapat menemukan alamat `%s'"
 
 #: gconf/gconf.c:634
 msgid "Can't add notifications to a local configuration source"
-msgstr ""
+msgstr "Tidak dapat menambahkan pemberitahuan kepada sumber konfigurasi lokal"
 
 #: gconf/gconf.c:2078
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr ""
+"Penambahan klien pada daftar server mengalami kegagalan, kode error CORBA: %s"
 
 #: gconf/gconf.c:2433
 msgid "Must begin with a slash (/)"
-msgstr ""
+msgstr "Harus dimulai dengan slash (/)"
 
 #: gconf/gconf.c:2455
 msgid "Can't have two slashes (/) in a row"
-msgstr ""
+msgstr "Tidak boleh ada dua slash (/) pada satu baris"
 
 #: gconf/gconf.c:2457
 msgid "Can't have a period (.) right after a slash (/)"
-msgstr ""
+msgstr "Tidak boleh ada titik (.) setelah slash (/)"
 
 #: gconf/gconf.c:2476
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
-msgstr ""
+msgstr "'%c' bukan karakter ASCII dan tidak dibolehkan pada nama key"
 
 #: gconf/gconf.c:2486
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr ""
+"`%c' adalah karakter yang tidak boleh digunakan pada nama key/direktori"
 
 #: gconf/gconf.c:2500
 msgid "Key/directory may not end with a slash (/)"
-msgstr ""
+msgstr "Key/Direktori tidak boleh diakhiri dengan slash (/)"
 
 #: gconf/gconf.c:2869
 #, c-format
 msgid "Failure shutting down config server: %s"
-msgstr ""
+msgstr "Mengalami kegagalan saat mematikan server konfigurasi: %s"
 
 #: gconf/gconf.c:2930
 #, c-format
 msgid "Expected float, got %s"
-msgstr ""
+msgstr "Harusnya bertipe float, tetapi didapat %s"
 
 #: gconf/gconf.c:2965
 #, c-format
 msgid "Expected int, got %s"
-msgstr ""
+msgstr "Harusnya bertipe integer, tetapi didapat %s"
 
 #: gconf/gconf.c:3000
 #, c-format
 msgid "Expected string, got %s"
-msgstr ""
+msgstr "Harusnya bertipe string, tetapi didapat %s"
 
 #: gconf/gconf.c:3034
 #, c-format
 msgid "Expected bool, got %s"
-msgstr ""
+msgstr "Harusnya bertipe boolean, tetapi didapat %s"
 
 #: gconf/gconf.c:3067
 #, c-format
 msgid "Expected schema, got %s"
-msgstr ""
+msgstr "Harusnya bertipe skema, tetapi didapat %s"
 
 #: gconf/gconf.c:3424
 #, c-format
 msgid "CORBA error: %s"
-msgstr ""
+msgstr "Error CORBA: %s"
 
 #: gconf/gconfd.c:250
 msgid "Shutdown request received"
-msgstr ""
+msgstr "Permintaan matikan diterima"
 
 #: gconf/gconfd.c:282
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
+"gconfd dikompilasi dengan informasi debug. Sekarang sedang mencoba mengambil "
+"gconf.path dari direktori sumber"
 
 #: gconf/gconfd.c:296
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
+"Tidak menemukan file konfigurasi, mencoba menggunakan sumber konfigurasi "
+"default `%s'"
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
@@ -1106,107 +1139,116 @@ msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
 msgstr ""
+"Tidak ada sumber konfigurasi pada path sumber, konfigurasi tidak akan "
+"disimpan; edit"
 
 #: gconf/gconfd.c:304
 msgid "/path"
-msgstr ""
+msgstr "/path"
 
 #: gconf/gconfd.c:317
 #, c-format
 msgid "Error loading some config sources: %s"
-msgstr ""
+msgstr "Error saat membua sumber konfigurasi: %s"
 
 #: gconf/gconfd.c:329
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
 msgstr ""
+"Tidak ada alamat konfigurasi sumber yang berhasil didapatkan, akibatnya data "
+"konfigurasi tidak dapat dibuka atau disimpan"
 
 #: gconf/gconfd.c:346
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
+"Tidak ada sumber konfigurasi yang dapat ditulisi yang berhasil didapatkan "
+"akibatnya tidak dapat menyimpan perubahan konfigurasi"
 
 #: gconf/gconfd.c:372
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr ""
+msgstr "Sinyal %d diterima, core disimpan. Silakan laporkan sebagai bug GConf"
 
 #: gconf/gconfd.c:390
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
+"Sinyal %d diterima, gconf dimatikan dengan abnormal. Silakan laporkan bug "
+"Gconf"
 
 #: gconf/gconfd.c:407
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
-msgstr ""
+msgstr "Sinyal %d diterima, gconf dimatikan normal"
 
 #: gconf/gconfd.c:481
 #, c-format
 msgid "Failed to open %s: %s"
-msgstr ""
+msgstr "Gagal untuk membuka %s: %s"
 
 #: gconf/gconfd.c:488
 #, c-format
 msgid "Failed to stat %s: %s"
-msgstr ""
+msgstr "Gagal melakukan stat %s: %s"
 
 #: gconf/gconfd.c:497
 #, c-format
 msgid "Owner of %s is not the current user"
-msgstr ""
+msgstr "Pemilik %s bukanlah pengguna saat ini"
 
 #: gconf/gconfd.c:505
 #, c-format
 msgid "Bad permissions %o on dir %s"
-msgstr ""
+msgstr "Hak akses %o tidak dapat diterima pada direktori %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
 #: gconf/gconfd.c:587
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr ""
+msgstr "dijalankan (versi %s), pid %u pengguna '%s'"
 
 #: gconf/gconfd.c:627
 msgid "Failed to get object reference for ConfigServer"
-msgstr ""
+msgstr "Gagal untuk mengamil rujukan obyek untuk ConfigServer"
 
 #: gconf/gconfd.c:647
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
-msgstr ""
+msgstr "Direktori %s ada masalah, gconf tidak dapat menggunakannya"
 
 #: gconf/gconfd.c:676
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
+"Gagal menuliskan byte ke pipa fd %d akibatnya program klien bisa hang: %s"
 
 #: gconf/gconfd.c:686
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
-msgstr ""
+msgstr "Gagal saat mengambil kunci daemon, keluar: %s"
 
 #: gconf/gconfd.c:724
 #, c-format
 msgid "Error releasing lockfile: %s"
-msgstr ""
+msgstr "Error melepaskan kuncil file: %s"
 
 #: gconf/gconfd.c:732
 msgid "Exiting"
-msgstr ""
+msgstr "Keluar"
 
 #: gconf/gconfd.c:758
 msgid "GConf server is not in use, shutting down."
-msgstr ""
+msgstr "Server GConf tidak digunakan, matikan saja."
 
 #: gconf/gconfd.c:1124
 #, c-format
 msgid "Returning exception: %s"
-msgstr ""
+msgstr "Ada eksepsi yang dikembalikan: %s"
 
 #: gconf/gconfd.c:1224
 #, c-format
@@ -1214,59 +1256,70 @@ msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr ""
+"Gagal saat membuka file log gconfd, akibatnya pendengar tidak dapat "
+"dikembalikan setelah mematikan gconfd (%s)"
 
 #: gconf/gconfd.c:1259
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
+"Gagal saat menutup logfile gconfd; data mungkin tidak disimpan dengan baik (%"
+"s)"
 
 #: gconf/gconfd.c:1328
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr ""
+"File status yang disimpan sebelumnya '%s' tidak dapat dibuka untuk ditulisi: "
+"%s"
 
 #: gconf/gconfd.c:1342
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr ""
+"File status yang disimpan sebelumnya '%s' tidak dapat ditulisi fd: %d: %s"
 
 #: gconf/gconfd.c:1351
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
-msgstr ""
+msgstr "File status yang disimpan sebelumnya '%s' tidak dapat ditutup: %s"
 
 #: gconf/gconfd.c:1365
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
-msgstr ""
+msgstr "File status yang disimpan sebelumnya '%s' tidak dapat dipindahkan: %s"
 
 #: gconf/gconfd.c:1375
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr ""
+"File status yang baru disimpan tidak dapat dipindahkan ke tempatnya: %s"
 
 #: gconf/gconfd.c:1384
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
+"Gagal saat mengembalikan file status asli yang telah dipindahkan ke '%s': %s"
 
 #: gconf/gconfd.c:1855
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
+"Tidak dapat mengembalikan pendengar pada alamat '%s' karena tidak berhasil "
+"mendapatkan database"
 
 #: gconf/gconfd.c:1901
 #, c-format
 msgid "Error reading saved state file: %s"
-msgstr ""
+msgstr "Ada error saat membaca file status yang disimpan: %s"
 
 #: gconf/gconfd.c:1955
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
-msgstr ""
+msgstr "Tidak dapat membua file status yang disimpan '%s': %s"
 
 #: gconf/gconfd.c:2074
 #, c-format
@@ -1274,6 +1327,9 @@ msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
+"Gagal saat menulis log tentang penambahan pendengar pada file log gconfd. "
+"Akibatnya tidak bisa lagi menambah pendengar bila gconfd keluar atau mati (%"
+"s)"
 
 #: gconf/gconfd.c:2079
 #, c-format
@@ -1281,125 +1337,147 @@ msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
+"Gagal untuk menulis log tentang pencabutan pendengar pada file log gconfd. "
+"Akibatnya mungkin ada error saat menambah kembali pendengar saat gconfd mati "
+"atau keluar (%s)"
 
 #: gconf/gconfd.c:2102 gconf/gconfd.c:2276
 #, c-format
 msgid "Failed to get IOR for client: %s"
-msgstr ""
+msgstr "Gagat mendaptkan IOR untuk klien: %s"
 
 #: gconf/gconfd.c:2117
 #, c-format
 msgid "Failed to open saved state file: %s"
-msgstr ""
+msgstr "Gagal membuka file status yang telah disimpan sebelumnya: %s"
 
 #: gconf/gconfd.c:2130
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
-msgstr ""
+msgstr "Gagal untuk menulis penambahan klien ke file status: %s"
 
 #: gconf/gconfd.c:2138
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
-msgstr ""
+msgstr "Gagal untuk mengakhiri penulisan penambahan klien ke file status: %s"
 
 #: gconf/gconfd.c:2237
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
+"Ada klien yang mencabut dirinya sendiri dari server GConf karena tidak "
+"ditambahkan."
 
 #: gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr ""
+"Memberikan nilai pada key dan lakukan sinkronisasi. Gunakan dengan --type"
 
 #: gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
-msgstr ""
+msgstr "Mencetak nilai suatu key ke standar output"
 
 #: gconf/gconftool.c:111
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
+"Memberikan nilai pada skema dan lakukan sinkronisasi. Gunakan dengan --short-"
+"desc, --long-desc, --owner, dan --type"
 
 #: gconf/gconftool.c:121
 msgid "Unset the keys on the command line"
-msgstr ""
+msgstr "Membatalkan nilai suatu key pada baris perintah"
 
 #: gconf/gconftool.c:130
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr ""
+"Membatalkan nilai semua key secara rekursif atau pada nama key/direktori "
+"pada baris perintah"
 
 #: gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
-msgstr ""
+msgstr "Cetak semua pasangan key/nilai pada sebuah direktori"
 
 #: gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
-msgstr ""
+msgstr "Cetak semua subdirektori pada suatu direktori"
 
 #: gconf/gconftool.c:157
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
 msgstr ""
+"Cetak deskripsi XML semua entri pada suatu direktori ke standar output "
+"secara rekursif."
 
 #: gconf/gconftool.c:166
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
 msgstr ""
+"Ambil nilai berupa deskripsi XML dari file tertentu dan mengesetnya pada "
+"suatu direktori."
 
 #: gconf/gconftool.c:175
 msgid "Print all subdirectories and entries under a dir, recursively."
 msgstr ""
+"Cetak semua subdirektori dan entri dibawah sebuah direktori secara rekursif."
 
 #: gconf/gconftool.c:184
 msgid "Return 0 if the directory exists, 2 if it does not."
-msgstr ""
+msgstr "Kembalikan 0 bila direktori ada, dan 2 bila tidak."
 
 #: gconf/gconftool.c:193
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
-msgstr ""
+msgstr "Matikan gconfd. JANGAN GUNAKAN PILIHAN INI TANPA ALASAN."
 
 #: gconf/gconftool.c:202
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr ""
+msgstr "Kembalikan 0 bila gconfd sedang jalan, dan 2 bila tidak."
 
 #: gconf/gconftool.c:211
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
 msgstr ""
+"Jalankan server konfigurasi (gconfd). (Biasanya jalan otomatis saat "
+"diperlukan.)"
 
 #: gconf/gconftool.c:220
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
+"Menentukan tipe nilai yang diset, atau tipe nilai sebuah skema. Singkatan "
+"unik OK."
 
 #: gconf/gconftool.c:221
 msgid "int|bool|float|string|list|pair"
-msgstr ""
+msgstr "int|bool|float|string|list|pair"
 
 #: gconf/gconftool.c:229
 msgid "Print the data type of a key to standard output."
-msgstr ""
+msgstr "Cetak tipe data sebuah key ke standar output"
 
 #: gconf/gconftool.c:238
 msgid "Get the number of elements in a list key."
-msgstr ""
+msgstr "Ambil jumlah elemen pada daftar key."
 
 #: gconf/gconftool.c:247
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr ""
+"Ambil elemen tertentu dari sebuah key daftar yang diindeks secara numerik"
 
 #: gconf/gconftool.c:256
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
+"Tentukan tipe nilai daftar yang akan diset atau tipe nilai suatu skema. "
+"Singkatan unik OK."
 
 #: gconf/gconftool.c:257 gconf/gconftool.c:266 gconf/gconftool.c:275
 msgid "int|bool|float|string"
@@ -1410,16 +1488,20 @@ msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
+"Tentukan tipe nilai pasangan car yang akan diset atau tipe nilai suatu "
+"skema. Singkatan unik OK."
 
 #: gconf/gconftool.c:274
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
+"Tentukan tipe nilai pasangan cdr yang akan diset atau tipe nilai suatu "
+"skema. Singkatan unik OK."
 
 #: gconf/gconftool.c:283
 msgid "Specify a short half-line description to go in a schema."
-msgstr ""
+msgstr "Tentukan deskripsi singkat yang disisipkan pada skema."
 
 #: gconf/gconftool.c:284 gconf/gconftool.c:293
 msgid "DESCRIPTION"
@@ -1427,11 +1509,11 @@ msgstr "DESKRIPSI"
 
 #: gconf/gconftool.c:292
 msgid "Specify a several-line description to go in a schema."
-msgstr ""
+msgstr "Tentukan deskripsi panjang yang disisipkan pada skema."
 
 #: gconf/gconftool.c:301
 msgid "Specify the owner of a schema"
-msgstr ""
+msgstr "Tentukan pemilik skema"
 
 #: gconf/gconftool.c:302
 msgid "OWNER"
@@ -1439,7 +1521,7 @@ msgstr "PEMILIK"
 
 #: gconf/gconftool.c:310
 msgid "Specify a schema file to be installed"
-msgstr ""
+msgstr "Tentukan file skema yang hendak diinstal"
 
 #: gconf/gconftool.c:311
 msgid "FILENAME"
@@ -1447,17 +1529,19 @@ msgstr "NAMA FILE"
 
 #: gconf/gconftool.c:319
 msgid "Specify a configuration source to use rather than the default path"
-msgstr ""
+msgstr "Tentukan sumber konfigurasi yang digunakan"
 
 #: gconf/gconftool.c:320
 msgid "SOURCE"
-msgstr "SUMER"
+msgstr "SUMBER"
 
 #: gconf/gconftool.c:328
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr ""
+"Akses database konfigurasi secara langsung tanpa melalui server. gconfd "
+"tidak boleh berjalan."
 
 #: gconf/gconftool.c:337
 msgid ""
@@ -1465,6 +1549,9 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
+"Install file skema pada baris perintah ke dalam database. Variabel "
+"environment GCONF_CONFIG_SOURCE harus diset pada sumber konfigurasi non-"
+"default atau set ke string kosong untuk menggunakan nilai defaultnya."
 
 #: gconf/gconftool.c:346
 msgid ""
@@ -1472,42 +1559,51 @@ msgid ""
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
 msgstr ""
+"Uninstall file skema pada baris perintah ke dalam database. Variabel "
+"environment GCONF_CONFIG_SOURCE harus diset pada sumber konfigurasi non-"
+"default atau set ke string kosong untuk menggunakan nilai defaultnya."
 
 #: gconf/gconftool.c:355
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
+"Tes aplikasi dengan berat dengan cara menset dan membatalkan nilai beberapa "
+"tipe key pada baris perintah"
 
 #: gconf/gconftool.c:364
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
+"Tes aplikasi dengan berat dengan cara menset dan membatalkan nilai beberapa "
+"key dalam direktori pada baris perintah"
 
 #: gconf/gconftool.c:373
 msgid "Get the short doc string for a key"
-msgstr ""
+msgstr "Ambil string dokumentasi untuk suatu key"
 
 #: gconf/gconftool.c:382
 msgid "Get the long doc string for a key"
-msgstr ""
+msgstr "Ambil string dokumentasi yang panjang untuk suatu key"
 
 #: gconf/gconftool.c:391
 msgid "Get the name of the schema applied to this key"
-msgstr ""
+msgstr "Ambil nama skema yang diberikan pada key ini"
 
 #: gconf/gconftool.c:400
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
+"Tentukan nama skema diikuti dengan key untuk memasangkan nama tersebut pada "
+"key"
 
 #: gconf/gconftool.c:409
 msgid "Remove any schema name applied to the given keys"
-msgstr ""
+msgstr "Cabut semua nama skema yang diberikan pada key tertentu"
 
 #: gconf/gconftool.c:418
 msgid "Get the name of the default source"
-msgstr ""
+msgstr "Ambil nama sumber default"
 
 #: gconf/gconftool.c:427
 msgid "Print version"
@@ -1516,84 +1612,93 @@ msgstr "Edisi cetak"
 #: gconf/gconftool.c:515
 msgid "Can't get and set/unset simultaneously\n"
 msgstr ""
+"Tidak dapat mengambil dan melakukan set/unset pada saat yang bersamaan\n"
 
 #: gconf/gconftool.c:525
 msgid "Can't set and get/unset simultaneously\n"
-msgstr ""
+msgstr "Tidak dapat set dan melakukan ambil/unset pada saat yang bersamaan\n"
 
 #: gconf/gconftool.c:532
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr ""
+"Tidak dapat mengambil tipe dan melakukan set/unset pada saat yang bersamaan\n"
 
 #: gconf/gconftool.c:543
 msgid "Can't use --all-entries with --get or --set\n"
-msgstr ""
+msgstr "Tidak boleh menggunakan --all-entries dengan --get atau --set\n"
 
 #: gconf/gconftool.c:554
 msgid "Can't use --all-dirs with --get or --set\n"
-msgstr ""
+msgstr "Tidak boleh menggunakan --all-dirs dengan --get atau --set\n"
 
 #: gconf/gconftool.c:567
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
 msgstr ""
+"--recursive-list tidak boleh digunakan bersamaan dengan --get, --set, --"
+"unset, --all-entries, atau --all-dirs\n"
 
 #: gconf/gconftool.c:580
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 msgstr ""
+"--set_schema tidak boleh digunakan bersamaan dengan --get, --set, --unset, --"
+"all-entries, --all-dirs\n"
 
 #: gconf/gconftool.c:586
 msgid "Value type is only relevant when setting a value\n"
-msgstr ""
+msgstr "Tipe nilai hanya relevan saat memberikan sebuah nilai\n"
 
 #: gconf/gconftool.c:592
 msgid "Must specify a type when setting a value\n"
-msgstr ""
+msgstr "Tipe harus diberikan saat memberikan nilai\n"
 
 #: gconf/gconftool.c:604
 msgid "Ping option must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan ping harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:616
 msgid "--dir-exists option must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan --dir-exists harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:628
 msgid "--install-schema-file must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan --install-schema-file harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:641
 msgid "--makefile-install-rule must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan --install-schema-file harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:653
 msgid "--makefile-uninstall-rule must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan --makefile-uninstall-rule harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:665
 msgid "--break-key must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan --break-key harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:678
 msgid "--break-directory must be used by itself.\n"
-msgstr ""
+msgstr "Pilihan --break-directory harus digunakan sendiri.\n"
 
 #: gconf/gconftool.c:686
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
+"Anda harus memberikan sumber konfigurasi dengan --config-source saat "
+"menggunakan --direct\n"
 
 #: gconf/gconftool.c:692
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr ""
+"Anda harus gunakan --direct saat menggunakan sumber konfigurasi non-default\n"
 
 #: gconf/gconftool.c:698
 #, c-format
 msgid "Failed to init GConf: %s\n"
-msgstr ""
+msgstr "Gagal saat inisialisasi GConf: %s\n"
 
 #: gconf/gconftool.c:727
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
@@ -1605,7 +1710,8 @@ msgstr ""
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
-"Variabel GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL terdefinisi, jadi skema tidak akan diuninstal\n"
+"Variabel GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL terdefinisi, jadi skema tidak "
+"akan diuninstal\n"
 
 #: gconf/gconftool.c:747
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
@@ -1614,7 +1720,7 @@ msgstr "Harus set variabel environment GCONF_CONFIG_SOURCE\n"
 #: gconf/gconftool.c:776
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
-msgstr ""
+msgstr "Gagal saat mengakses sumber-sumber konfigurasi: %s\n"
 
 #: gconf/gconftool.c:1061
 #, c-format
@@ -1623,54 +1729,54 @@ msgstr "Error shutdown %s\n"
 
 #: gconf/gconftool.c:1104
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr ""
+msgstr "Direktori yang hendak didaftarkan secara rekursif harus disebutkan.\n"
 
 #: gconf/gconftool.c:1154
 msgid "Must specify one or more dirs to dump.\n"
-msgstr ""
+msgstr "Direktori tempat dump harus disebutkan.\n"
 
 #: gconf/gconftool.c:1195 gconf/gconftool.c:1453
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
-msgstr ""
+msgstr "Gagal saat mendaftarkan pendengar di `%s': %s\n"
 
 #: gconf/gconftool.c:1213
 msgid "(no value set)"
-msgstr ""
+msgstr "(tidak ada nilai)"
 
 #: gconf/gconftool.c:1511
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
-msgstr ""
+msgstr "Gagal saat melahirkan proses baru server konfigurasi (gconfd): %s\n"
 
 #: gconf/gconftool.c:1525
 msgid "Must specify a key or keys to get\n"
-msgstr ""
+msgstr "Key harus disebutkan\n"
 
 #: gconf/gconftool.c:1560
 #, c-format
 msgid "Type: %s\n"
-msgstr ""
+msgstr "Tipe: %s\n"
 
 #: gconf/gconftool.c:1561
 #, c-format
 msgid "List Type: %s\n"
-msgstr ""
+msgstr "Tipe Daftar: %s\n"
 
 #: gconf/gconftool.c:1562
 #, c-format
 msgid "Car Type: %s\n"
-msgstr ""
+msgstr "Tipe Car: %s\n"
 
 #: gconf/gconftool.c:1563
 #, c-format
 msgid "Cdr Type: %s\n"
-msgstr ""
+msgstr "Tipe Cdr: %s\n"
 
 #: gconf/gconftool.c:1568
 #, c-format
 msgid "Default Value: %s\n"
-msgstr ""
+msgstr "Nilai Awal: %s\n"
 
 #: gconf/gconftool.c:1568 gconf/gconftool.c:1570 gconf/gconftool.c:1571
 #: gconf/gconftool.c:1572
@@ -1724,12 +1830,12 @@ msgstr "TIdak dapat melakukan set skema sebagai nilai\n"
 
 #: gconf/gconftool.c:1710
 msgid "When setting a list you must specify a primitive list-type\n"
-msgstr ""
+msgstr "Tipe-daftar dasar harus diberikan saat mengeset daftar\n"
 
 #: gconf/gconftool.c:1724
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr ""
+msgstr "Tipe car dan cdr dasar harus diberikan saat mengeset pasangan\n"
 
 #: gconf/gconftool.c:1739
 #, c-format
@@ -1845,239 +1951,250 @@ msgstr "Error memberikan nilai: %sn"
 #: gconf/gconftool.c:2242
 #, c-format
 msgid "Error syncing: %s"
-msgstr ""
+msgstr "Error saat sinkronisasi: %s"
 
 #: gconf/gconftool.c:2257
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
-msgstr ""
+msgstr "Asal direktori pasangan key/nilai harus diberikan\n"
 
 #: gconf/gconftool.c:2271
 msgid "Must specify one or more keys to unset.\n"
-msgstr ""
+msgstr "Key yang hendak dibatalkan nilainya harus diberikan.\n"
 
 #: gconf/gconftool.c:2282
 #, c-format
 msgid "Error unsetting `%s': %s\n"
-msgstr ""
+msgstr "Error membatalkan nilai `%s': %s\n"
 
 #: gconf/gconftool.c:2302
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr ""
+msgstr "Key yang hendak dibatalkan nilainya secara rekursif harus diberikan.\n"
 
 #: gconf/gconftool.c:2316
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
-msgstr ""
+msgstr "Ada kegagalan saat membatalkan nilai \"%s\" secara rekursif: %s\n"
 
 #: gconf/gconftool.c:2334
 msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr ""
+msgstr "Asal subdirektori harus diberikan.\n"
 
 #: gconf/gconftool.c:2368
 #, c-format
 msgid "Error listing dirs: %s\n"
-msgstr ""
+msgstr "Error saat mendaftarkan direktori: %s\n"
 
 #: gconf/gconftool.c:2504
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
-msgstr ""
+msgstr "AWAS: <car> dan <cdr> harus diberikan pada <pair>\n"
 
 #: gconf/gconftool.c:2531
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
-msgstr ""
+msgstr "AWAS: key yang diberikan (%s) untuk skema di bawah <value> diabaikan\n"
 
 #: gconf/gconftool.c:2564
 msgid "WARNING: must have a child node under <value>\n"
-msgstr ""
+msgstr "AWAS: Node anak harus ada di bawah <value>\n"
 
 #: gconf/gconftool.c:2570
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
-msgstr ""
+msgstr "AWAS: node <%s> tidak dikenal\n"
 
 #: gconf/gconftool.c:2588
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
-msgstr ""
+msgstr "AWAS: Gagal mendeteksi nilai integer pada `%s'\n"
 
 #: gconf/gconftool.c:2609
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
-msgstr ""
+msgstr "AWAS: Gagal mendeteksi nilai float pada `%s'\n"
 
 #: gconf/gconftool.c:2631
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
-msgstr ""
+msgstr "AWAS: Gagal mendeteksi string pada `%s'\n"
 
 #: gconf/gconftool.c:2652
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
-msgstr ""
+msgstr "AWAS: Gagal mendeteksi nilai boolean pada `%s'\n"
 
 #: gconf/gconftool.c:2768 gconf/gconftool.c:3304
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
-msgstr ""
+msgstr "AWAS: gagal menjodohkan skema `%s' dengan key `%s': %s\n"
 
 #: gconf/gconftool.c:2873
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
-msgstr ""
+msgstr "AWAS: Tipe skema tidak ada atau salah (%s)\n"
 
 #: gconf/gconftool.c:2882
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
-msgstr ""
+msgstr "AWAS: list_type tidak ada atau salah untuk skema (%s)\n"
 
 #: gconf/gconftool.c:2893 gconf/gconftool.c:2923 gconf/gconftool.c:2952
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr ""
+msgstr "AWAS: Nilai awal `%s' untuk skema (%s) tidak dapat diambil\n"
 
 #: gconf/gconftool.c:2911
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr ""
+msgstr "AWAS: car_type atau cdr_type untuk skema (%s) tidak ada atau salah\n"
 
 #: gconf/gconftool.c:2936
 msgid "WARNING: You cannot set a default value for a schema\n"
-msgstr ""
+msgstr "AWAS: Anda tidak boleh memberikan nilai awal untuk skema\n"
 
 #: gconf/gconftool.c:2965
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr ""
+"AWAS: ada error internal gconftool yaitu GConfValueType tidak dikenali\n"
 
 #: gconf/gconftool.c:3013 gconf/gconftool.c:3034 gconf/gconftool.c:3055
 #: gconf/gconftool.c:3076
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
-msgstr ""
+msgstr "AWAS: Gagal mendeteksi nama tipe `%s'\n"
 
 #: gconf/gconftool.c:3030
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"AWAS: list_type hanya boleh berupa int, float, string, atau bool dan "
+"bukannya `%s'\n"
 
 #: gconf/gconftool.c:3051
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"AWAS: car_type hanya dapat berupa int, float, string, atau bool dan bukannya "
+"`%s'\n"
 
 #: gconf/gconftool.c:3072
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"AWAS: cdr_type hanya dapat berupa int, float, string, atau bool dan bukannya "
+"`%s'\n"
 
 #: gconf/gconftool.c:3112
 msgid "WARNING: empty <applyto> node"
-msgstr ""
+msgstr "AWAS: node <applyto> kosong"
 
 #: gconf/gconftool.c:3115 gconf/gconftool.c:3377
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
-msgstr ""
+msgstr "AWAS: node <%s> tidak boleh ada di bawah <schema>\n"
 
 #: gconf/gconftool.c:3126
 msgid "WARNING: no <list_type> specified for schema of type list\n"
-msgstr ""
+msgstr "AWAS: <list_type> tidak terdapat untuk skema pad daftar tipe\n"
 
 #: gconf/gconftool.c:3132
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
-msgstr ""
+msgstr "AWAS: tidak ada <car_type> untuk skema pada tipe pasangan\n"
 
 #: gconf/gconftool.c:3138
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
-msgstr ""
+msgstr "AWAS: tidak ada <cdr_type> untuk skema pada tipe pasangan\n"
 
 #: gconf/gconftool.c:3167
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
+"AWAS: Node yang <locale> tidak memiliki atribut `name=\"locale\"' diabaikan\n"
 
 #: gconf/gconftool.c:3173
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
+"AWAS: ada lebih dari satu node <locale> untuk locale `%s' node yang muncul "
+"awal akan diabaikan\n"
 
 #: gconf/gconftool.c:3271
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
-msgstr ""
+msgstr "AWAS: Node <%s> tidak boleh ada di node <locale>\n"
 
 #: gconf/gconftool.c:3312
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
-msgstr ""
+msgstr "Skema `%s' dipasang ke key `%s'\n"
 
 #: gconf/gconftool.c:3386
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr ""
+msgstr "Harus ada minimal satu entri <locale> pada <schema>\n"
 
 #: gconf/gconftool.c:3418
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr ""
+msgstr "AWAS: gagal untuk menginstal skema `%s' untuk locale `%s': %s\n"
 
 #: gconf/gconftool.c:3426
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr ""
+msgstr "Instal skema `%s' untuk locale `%s'\n"
 
 #: gconf/gconftool.c:3450
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
-msgstr "PERHATIAN: Gagal menguninstall skema `%s' locale `%s': %s\n"
+msgstr "AWAS: Gagal menguninstall skema `%s' locale `%s': %s\n"
 
 #: gconf/gconftool.c:3458
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
-msgstr ""
+msgstr "Skema yang diuninstal `%s' dari locale `%s'\n"
 
 #: gconf/gconftool.c:3496
 msgid "WARNING: no key specified for schema\n"
-msgstr ""
+msgstr "AWAS: tidak ada key untuk skema\n"
 
 #: gconf/gconftool.c:3537
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
-msgstr ""
+msgstr "AWAS: node <%s> tidak boleh ada di bawah <%s>\n"
 
 #: gconf/gconftool.c:3568
 #, c-format
 msgid "Failed to open `%s': %s\n"
-msgstr ""
+msgstr "Gagal membuka `%s': %s\n"
 
 #: gconf/gconftool.c:3575
 #, c-format
 msgid "Document `%s' is empty?\n"
-msgstr ""
+msgstr "Apakah dokumen `%s' kosong?\n"
 
 #: gconf/gconftool.c:3587
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
+"Dokumen `%s' memiliki tipe node akar yang salah (<%s>, seharusnya <%s>\n"
 
 #: gconf/gconftool.c:3600
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
-msgstr ""
+msgstr "Dokumen `%s' tidak memiliki node <%s> tingkat atas\n"
 
 #: gconf/gconftool.c:3614
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
-msgstr ""
+msgstr "AWAS: node <%s> tidak boleh ada di bawah node <%s>\n"
 
 #: gconf/gconftool.c:3625 gconf/gconftool.c:3660 gconf/gconftool.c:3692
 #, c-format
 msgid "Error syncing config data: %s"
-msgstr ""
+msgstr "Error melakukan sinkronisasi data konfigurasi: %s"
 
 #: gconf/gconftool.c:3644
 msgid "Must specify some schema files to install\n"
-msgstr ""
+msgstr "File skema yang hendak diinstall harus disebutkan\n"
 
 #: gconf/gconftool.c:3676
 msgid "Must specify some schema files to uninstall\n"
@@ -2095,11 +2212,11 @@ msgstr ""
 #: gconf/gconftool.c:3733
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
-msgstr ""
+msgstr "Gagal saat membatalkan key breakage %s: %s\n"
 
 #: gconf/gconftool.c:3859
 msgid "Must specify some keys to break\n"
-msgstr ""
+msgstr "Key yang hendak dibreak harus disebutkan\n"
 
 #: gconf/gconftool.c:3865
 #, c-format
@@ -2107,10 +2224,13 @@ msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
+"Sedang mencoba menjebol aplikasi dengan memberikan nilai yang salah untuk "
+"key:\n"
+"  %s\n"
 
 #: gconf/gconftool.c:3883
 msgid "Must specify some directories to break\n"
-msgstr ""
+msgstr "Direktori yang hendak dijebol harus disebutkan\n"
 
 #: gconf/gconftool.c:3902
 #, c-format
@@ -2119,3 +2239,6 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
+"Sedang mencoba menjebol aplikasi dengan memberikan nilai yang salah untuk "
+"key padadirektori:\n"
+"  %s\n"
