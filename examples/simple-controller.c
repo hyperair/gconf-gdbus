@@ -67,6 +67,11 @@ main(int argc, char** argv)
   gtk_signal_connect(GTK_OBJECT(entry), "activate",
                      GTK_SIGNAL_FUNC(entry_activated_callback),
                      client);
+
+  /* If key isn't writable, then set insensitive */
+  gtk_widget_set_sensitive (entry,
+                            gconf_client_key_is_writable (client,
+                                                          "/extra/test/directory/key", NULL));
   
   gtk_widget_show_all(window);
 

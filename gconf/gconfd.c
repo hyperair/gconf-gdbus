@@ -806,6 +806,10 @@ gconf_set_exception(GError** error,
       case GCONF_ERROR_IS_KEY:
         ce->err_no = ConfigIsKey;
         break;
+      case GCONF_ERROR_NO_WRITABLE_DATABASE:
+        ce->err_no = ConfigNoWritableDatabase;
+        break;
+        
       case GCONF_ERROR_NO_SERVER:
       case GCONF_ERROR_SUCCESS:
       default:

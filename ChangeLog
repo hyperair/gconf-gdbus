@@ -1,5 +1,37 @@
 2000-09-16  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf.c (gconf_engine_key_is_writable): And actually 
+	implement it here. Doh.
+
+	* wrappers/gtk/gconf-client.c (gconf_client_key_is_writable): Gee,
+	forgot to actually implement this function after implementing all
+	the backend work for it... 
+
+	* gconf/gconf.c (corba_errno_to_gconf_errno): add
+	NO_WRITABLE_DATABASE handling here also
+
+	* gconf/gconfd.c (gconf_set_exception): handle
+	NO_WRITABLE_DATABASE error
+
+	* gconf/GConf.idl: Add NoWritableDatabase to error type enum
+
+	* wrappers/gtk/testgconfclient.c (entry_attached_to): Update 
+	to properly handle writability
+
+	* examples/simple-controller.c (main): set entry sensitivity
+	properly
+
+	* examples/basic-gconf-app.c (main): Remove ref/sink and destroy,
+	just use plain refcounting
+	(create_config_entry): Set entry sensitivity according to key
+	writability
+
+	* wrappers/gtk/gconf-client.c (gconf_client_finalize): Move all
+	cleanup to finalize, remove destroy handler
+	
+
+2000-09-16  Havoc Pennington  <hp@pobox.com>
+
 	* doc/gconf/tmpl/gconf-value.sgml: Update some docs
 
 	* wrappers/gtk/gconf-client.c (notify_listeners_callback): Update

@@ -1628,9 +1628,20 @@ gconf_engine_key_is_writable  (GConfEngine *conf,
                                const gchar *key,
                                GError     **err)
 {
-  /* FIXME */
+  gboolean is_writable = TRUE;
+  GConfValue *val;
+
+  /* FIXME implement IDL to allow getting only writability
+   * (not that urgent since GConfClient caches this crap
+   * anyway)
+   */
   
-  return TRUE;
+  val = gconf_engine_get_full(conf, key, NULL, TRUE,
+                              NULL, &is_writable, err);
+
+  gconf_value_free (val);
+  
+  return is_writable;
 }
 
 /*
@@ -2835,6 +2846,9 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
       break;
     case ConfigLockFailed:
       return GCONF_ERROR_LOCK_FAILED;
+      break;
+    case ConfigNoWritableDatabase:
+      return GCONF_ERROR_NO_WRITABLE_DATABASE;
       break;
     default:
       g_assert_not_reached();

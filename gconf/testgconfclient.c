@@ -136,6 +136,11 @@ entry_attached_to(GConfClient* client, const gchar* key)
   gtk_box_pack_start(GTK_BOX(hbox), label, FALSE, FALSE, 0);
   gtk_box_pack_end(GTK_BOX(hbox), entry, FALSE, FALSE, 0);
 
+  /* Set sensitive according to whether the key is writable or not. */
+  gtk_widget_set_sensitive (entry,
+                            gconf_client_key_is_writable (client,
+                                                          key, NULL));
+  
   return hbox;
 }
 

@@ -110,7 +110,6 @@ static void gconf_client_class_init (GConfClientClass *klass);
 static void gconf_client_init       (GConfClient      *client);
 static void gconf_client_real_unreturned_error (GConfClient* client, GError* error);
 static void gconf_client_real_error            (GConfClient* client, GError* error);
-static void gconf_client_destroy               (GtkObject* object); 
 static void gconf_client_finalize              (GtkObject* object); 
 
 static void gconf_client_cache                 (GConfClient* client,
@@ -196,8 +195,7 @@ gconf_client_class_init (GConfClientClass *class)
   class->value_changed    = NULL;
   class->unreturned_error = gconf_client_real_unreturned_error;
   class->error            = gconf_client_real_error;
-
-  object_class->destroy   = gconf_client_destroy;
+  
   object_class->finalize  = gconf_client_finalize;
 }
 
@@ -230,7 +228,7 @@ destroy_dir_foreach_remove(gpointer key, gpointer value, gpointer user_data)
 }
 
 static void
-gconf_client_destroy               (GtkObject* object)
+gconf_client_finalize (GtkObject* object)
 {
   GConfClient* client = GCONF_CLIENT(object);
 
@@ -238,15 +236,6 @@ gconf_client_destroy               (GtkObject* object)
                               destroy_dir_foreach_remove, client);
   
   gconf_client_clear_cache(client);
-  
-  if (parent_class->destroy)
-    (*parent_class->destroy)(object);
-}
-
-static void
-gconf_client_finalize (GtkObject* object)
-{
-  GConfClient* client = GCONF_CLIENT(object);
   
   if (client->listeners != NULL)
     {
@@ -632,7 +621,7 @@ foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
 static void
 gconf_client_real_remove_dir    (GConfClient* client,
                                  Dir* d,
-				 GError** err)
+                                 GError** err)
 {
   AddNotifiesData ad;
 
@@ -660,7 +649,7 @@ gconf_client_real_remove_dir    (GConfClient* client,
 void
 gconf_client_remove_dir  (GConfClient* client,
                           const gchar* dirname,
-			  GError** err)
+                          GError** err)
 {
   Dir* found = NULL;
 
@@ -973,8 +962,21 @@ gconf_client_key_is_writable(GConfClient* client,
                              const gchar* key,
                              GError**     err)
 {
-  /* FIXME */
-  return TRUE;
+  GError* error = NULL;
+  GConfValue* val = NULL;
+  gboolean is_writable = TRUE;
+  
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  val = get_nocopy (client, key, TRUE,
+                    NULL, &is_writable, &error);
+
+  if (val == NULL && error != NULL)
+    handle_error(client, error, err);
+  else
+    g_assert(error == NULL);
+
+  return is_writable;
 }
 
 static gboolean
@@ -994,11 +996,11 @@ check_type(const gchar* key, GConfValue* val, GConfValueType t, GError** err)
 }
 
 static GConfValue*
-get(GConfClient* client, const gchar* key,
-    gboolean use_default,
-    gboolean* is_default_retloc,
-    gboolean *is_writable_retloc,
-    GError** error)
+get_nocopy(GConfClient* client, const gchar* key,
+           gboolean use_default,
+           gboolean* is_default_retloc,
+           gboolean *is_writable_retloc,
+           GError** error)
 {
   GConfValue* val = NULL;
   gboolean is_default = FALSE;
@@ -1021,8 +1023,8 @@ get(GConfClient* client, const gchar* key,
       if (is_writable_retloc)
         *is_writable_retloc = is_writable;
       
-      /* stored in cache, not necessarily set though, so check NULL */
-      return val ? gconf_value_copy(val) : NULL;
+      /* may be NULL of course */
+      return val;
     }
       
   g_assert(val == NULL); /* if it was in the cache we should have returned */
@@ -1059,9 +1061,9 @@ get(GConfClient* client, const gchar* key,
           
           if (g_hash_table_lookup(client->dir_hash, parent) != NULL)
             {
-              /* note that we cache a _copy_ */
+              /* Cache gets ownership of the value */
               gconf_client_cache(client, key, is_default, is_writable,
-                                 val ? gconf_value_copy(val) : NULL);
+                                 val);
               break;
             }
           
@@ -1074,7 +1076,23 @@ get(GConfClient* client, const gchar* key,
     }
 }
 
+static GConfValue*
+get(GConfClient* client, const gchar* key,
+    gboolean use_default,
+    gboolean* is_default_retloc,
+    gboolean* is_writable_retloc,
+    GError** error)
+{
+  GConfValue *val;
 
+  val = get_nocopy (client, key, use_default,
+                    is_default_retloc,
+                    is_writable_retloc,
+                    error);
+
+  return val ? gconf_value_copy (val) : NULL;
+}
+     
 static GConfValue*
 gconf_client_get_full        (GConfClient* client,
                               const gchar* key, const gchar* locale,

@@ -27,9 +27,10 @@
    model; and the prefs dialog is a "controller."
 */
 
-/* Throughout, this program is letting GConfClient use its default error handlers
-   rather than checking for errors or attaching custom handlers to the
-   "unreturned_error" signal. Thus the last arg to GConfClient functions is NULL.
+/* Throughout, this program is letting GConfClient use its default
+   error handlers rather than checking for errors or attaching custom
+   handlers to the "unreturned_error" signal. Thus the last arg to
+   GConfClient functions is NULL.
 */
 
 /* A word about Apply/Revert/OK/Cancel. These should work as follows:
@@ -75,25 +76,15 @@ main(int argc, char** argv)
 
   gconf_client_add_dir(client, "/apps/basic-gconf-app", GCONF_CLIENT_PRELOAD_NONE, NULL);
 
-  /* The main() function takes over the floating object; the code that
-     "owns" the object should do this, as with any Gtk object.
-     Read about refcounting and destruction at developer.gnome.org/doc/GGAD/ */
-  gtk_object_ref(GTK_OBJECT(client));
-  gtk_object_sink(GTK_OBJECT(client));
-
   main_window = create_main_window(client);
   
   gtk_widget_show_all(main_window);
   
   gtk_main();
 
-  /* Shut down the client cleanly. Note the destroy rather than unref,
-     so the shutdown occurs even if there are outstanding references.
-     If your program isn't exiting you probably want to just plain unref()
-     Read about refcounting and destruction at developer.gnome.org/doc/GGAD/ */
-  gtk_object_destroy(GTK_OBJECT(client));
-  /* Now avoid leaking memory (not that this matters since the program
-     is exiting... */
+  /* This ensures we cleanly detach from the GConf server (assuming
+   * we hold the last reference)
+   */
   gtk_object_unref(GTK_OBJECT(client));
   
   return 0;
@@ -383,8 +374,8 @@ update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
           GConfValue* def;
 
           def = gconf_client_get_default_from_schema(client,
-                                                   config_key,
-                                                   NULL);
+                                                     config_key,
+                                                     NULL);
 
           if (def)
             {
@@ -493,7 +484,7 @@ create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* c
   frame = gtk_frame_new(config_key);
 
   entry = gtk_entry_new();
-
+  
   gtk_container_add(GTK_CONTAINER(frame), entry);
   
   initial = gconf_client_get(client, config_key, NULL);
@@ -523,6 +514,11 @@ create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* c
      revert code */
   gtk_object_set_data(GTK_OBJECT(prefs_dialog),
                       config_key, entry);
+
+  /* Set the entry insensitive if the key it edits isn't writable */
+  gtk_widget_set_sensitive (entry,
+                            gconf_client_key_is_writable (client,
+                                                          config_key, NULL));
   
   return frame;
 }
