@@ -1,5 +1,32 @@
 2004-09-13  Mark McLoughlin  <mark@skynet.ie>
 
+	* configure.in: Version 2.8.0.1.
+
+2004-09-14  Mark McLoughlin  <mark@skynet.ie>
+
+	* autogen.sh: use automake 1.7 and run gtkdocize.
+	
+	* configure.in: check for glib-genmarshal and use 
+	GTK_DOC_CHECK.
+	
+	* Makefile.am: add --enable-gtk-doc to 
+	DISTCHECK_CONFIGURE_FLAGS.
+	
+	* gconf/Makefile.am: re-do how the marshallers
+	are generated.
+	
+	* doc/gconf/Makefile.am: use gtk-doc.make.
+
+	* doc/gconf/gconf.sgml: tweak to validate.
+
+	* backends/Makefile.am: make xml-test link
+	against the backend rather than rebuilding
+	the sources.
+
+	* gconf-2.m4.in: rename from gconf.m4.in.
+
+2004-09-13  Mark McLoughlin  <mark@skynet.ie>
+
 	* configure.in: post-release bump to 2.8.1.
 
 ==================== 2.8.0 ====================

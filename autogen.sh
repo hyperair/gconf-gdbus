@@ -16,12 +16,12 @@ DIE=0
 	echo
 	echo "You must have autoconf installed to compile $PROJECT."
 	echo "Download the appropriate package for your distribution,"
-	echo "or get the source tarball at ftp://ftp.gnu.org/pub/gnu/"
+	echo "or get the source tarball at http://ftp.gnu.org/gnu/autoconf/"
 	DIE=1
 }
 
-AUTOMAKE=automake-1.4
-ACLOCAL=aclocal-1.4
+AUTOMAKE=automake-1.7
+ACLOCAL=aclocal-1.7
 
 ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
         AUTOMAKE=automake
@@ -30,9 +30,9 @@ ACLOCAL=aclocal-1.4
 
 ($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
 	echo
-	echo "You must have automake installed to compile $PROJECT."
-	echo "Get ftp://sourceware.cygnus.com/pub/automake/automake-1.4.tar.gz"
-	echo "(or a newer version if it is available)"
+	echo "You must have $AUTOMAKE installed to compile $PROJECT."
+	echo "Download the appropriate package for your distribution,"
+	echo "or get the source tarball at http://ftp.gnu.org/gnu/autoconf/"
 	DIE=1
 }
 
@@ -51,6 +51,14 @@ grep "^AM_GLIB_GNU_GETTEXT" configure.in >/dev/null && {
   (glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`glib' installed to compile $PROJECT."
+    DIE=1
+  }
+}
+
+(grep "^GTK_DOC_CHECK" configure.in >/dev/null) && {
+  (gtkdocize --version) < /dev/null > /dev/null 2>&1 || {
+    echo
+    echo "**Error**: You must have \`gtk-doc' installed to compile $PROJECT."
     DIE=1
   }
 }
@@ -121,6 +129,10 @@ do
       if grep "^AM_PROG_LIBTOOL" configure.in >/dev/null; then
 	echo "Running libtoolize..."
 	libtoolize --force --copy
+      fi
+      if grep "^GTK_DOC_CHECK" configure.in >/dev/null; then
+	echo "Running gtkdocize..."
+	gtkdocize
       fi
       echo "Running $ACLOCAL $aclocalinclude ..."
       $ACLOCAL $aclocalinclude
