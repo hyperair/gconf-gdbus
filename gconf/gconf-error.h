@@ -28,6 +28,7 @@ extern "C" {
 
 /* Error Numbers */
 
+/* Sync with ConfigErrorType in GConf.idl */
 typedef enum {
   GCONF_SUCCESS = 0,
   GCONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable

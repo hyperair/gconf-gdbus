@@ -133,6 +133,7 @@ static void          context_remove_listener(GConfContext* ctx,
 static GConfValue*   context_query_value(GConfContext* ctx,
                                          const gchar* key,
                                          const gchar** locales,
+                                         gboolean use_schema_default,
                                          GConfError** err);
 
 static void          context_set(GConfContext* ctx, const gchar* key,
@@ -195,6 +196,7 @@ static ConfigValue*
 gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
                           CORBA_char * key,
                           CORBA_char * locale,
+                          CORBA_boolean use_schema_default,
                           CORBA_Environment *ev);
 
 static void
@@ -368,13 +370,14 @@ gconfd_lookup(PortableServer_Servant servant,
               CORBA_Environment *ev)
 {
   /* CORBA_char* normally can't be NULL but we cheat here */
-  return gconfd_lookup_with_locale(servant, ctx, key, NULL, ev);
+  return gconfd_lookup_with_locale(servant, ctx, key, NULL, TRUE, ev);
 }
 
 static ConfigValue* 
 gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
                           CORBA_char * key,
                           CORBA_char * locale,
+                          CORBA_boolean use_schema_default,
                           CORBA_Environment *ev)
 {
   GConfValue* val;
@@ -389,7 +392,8 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
 
   locale_list = locale_cache_lookup(locale);
   
-  val = context_query_value(gcc, key, locale_list->list, &error);
+  val = context_query_value(gcc, key, locale_list->list,
+                            use_schema_default, &error);
 
   gconf_locale_list_unref(locale_list);
   
@@ -1300,6 +1304,7 @@ static GConfValue*
 context_query_value(GConfContext* ctx,
                     const gchar* key,
                     const gchar** locales,
+                    gboolean use_schema_default,
                     GConfError** err)
 {
   GConfValue* val;
@@ -1309,7 +1314,8 @@ context_query_value(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  val = gconf_sources_query_value(ctx->sources, key, locales, err);
+  val = gconf_sources_query_value(ctx->sources, key, locales,
+                                  use_schema_default, err);
 
   if (err && *err != NULL)
     {

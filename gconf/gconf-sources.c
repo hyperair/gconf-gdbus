@@ -343,6 +343,7 @@ GConfValue*
 gconf_sources_query_value (GConfSources* sources, 
                            const gchar* key,
                            const gchar** locales,
+                           gboolean use_schema_default,
                            GConfError** err)
 {
   GList* tmp;
@@ -362,13 +363,19 @@ gconf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
       GConfSource* source;
+      gchar** schema_name_retloc;
 
+      /* we only want the first schema name we find */
+      if (use_schema_default)
+        schema_name_retloc = schema_name ? NULL : &schema_name;
+      else
+        schema_name_retloc = NULL;
+      
       source = tmp->data;
       
-      /* we only want the first schema name we find */
       val = gconf_source_query_value(source, key, locales,
-                                     schema_name ? NULL : &schema_name, &error);
-
+                                     schema_name_retloc, &error);
+      
       if (error != NULL)
         {
           /* Right thing to do? Don't know. */
@@ -392,7 +399,7 @@ gconf_sources_query_value (GConfSources* sources,
         {
           /* Bail now, instead of looking for the standard values */
           gconf_value_destroy(val);
-          break;
+          return NULL;
         }
       else
         return val;
@@ -411,7 +418,8 @@ gconf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
 
-      val = gconf_sources_query_value(sources, schema_name, locales, &error);
+      /* We do look for a schema describing the schema, just for funnies */
+      val = gconf_sources_query_value(sources, schema_name, locales, TRUE, &error);
 
       if (error != NULL)
         {

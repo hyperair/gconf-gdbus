@@ -73,6 +73,7 @@ void          gconf_sources_destroy     (GConfSources* sources);
 GConfValue*   gconf_sources_query_value (GConfSources* sources, 
                                          const gchar* key,
                                          const gchar** locales,
+                                         gboolean use_schema_default,
                                          GConfError** err);
 
 void          gconf_sources_set_value   (GConfSources* sources,
@@ -111,5 +112,10 @@ gboolean      gconf_sources_sync_all    (GConfSources* sources,
                                          GConfError** err);
 
 #endif
+
+
+
+
+
 
 

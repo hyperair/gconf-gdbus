@@ -104,7 +104,9 @@ interface ConfigServer {
     raises (ConfigException);
 
   // separate from lookup for efficiency
-  ConfigValue lookup_with_locale(in Context ctx, in string key, in string locale);
+  ConfigValue lookup_with_locale(in Context ctx, in string key,
+                                 in string locale, in boolean use_schema_default)
+    raises (ConfigException);
   
   void set(in Context ctx, in string key, in ConfigValue value)
     raises (ConfigException);

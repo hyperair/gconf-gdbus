@@ -49,6 +49,10 @@ void         gconf_notify_remove  (GConfEngine* conf,
 /* Low-level interfaces */
 GConfValue*  gconf_get            (GConfEngine* conf, const gchar* key, GConfError** err);
 
+GConfValue*  gconf_get_no_default (GConfEngine* conf,
+                                   const gchar* key,
+                                   GConfError** err);
+
 /* Locale only matters if you are expecting to get a schema, or if you
    don't know what you are expecting and it might be a schema. Note
    that gconf_get() automatically uses the current locale, which is

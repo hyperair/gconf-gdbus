@@ -35,7 +35,7 @@
 #endif
 
 
-static const gchar* err_msgs[11] = {
+static const gchar* err_msgs[14] = {
   N_("Success"),
   N_("Failed"),
   N_("Configuration server couldn't be contacted"),
@@ -43,6 +43,7 @@ static const gchar* err_msgs[11] = {
   N_("Couldn't resolve address for configuration source"),
   N_("Bad key or directory name"),
   N_("Parse error"),
+  N_("Corrupt data in configuration source database"),
   N_("Type mismatch"),
   N_("Key operation on directory"),
   N_("Directory operation on key"),

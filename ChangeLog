@@ -1,3 +1,22 @@
+1999-12-02  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-error.c: Was missing an element in the err_msgs
+	array and the array had the wrong size.
+	
+	* gconf/gconf-sources.c (gconf_sources_query_value): Add
+	use_schema_default flag here (and in the other stuff that calls
+	it, I'm skipping some layers in the changelog)
+	(gconf_sources_query_value): If we find an IGNORE_SUBSEQUENT, we
+	should return immediately, rather than checking the schema default.
+
+	* gconf/gconfd.c (gconfd_lookup_with_locale): fix
+	
+	* gconf/gconf.c (gconf_get_no_default): new function to get
+	a value, but not fall back to the schema default.
+
+	* gconf/GConf.idl: lookup_with_locale() needs to raise
+	ConfigException. Also, add a "use schema default" flag.
+
 1999-12-01  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.c: Add local "direct mode" engine; mildly bad hack.

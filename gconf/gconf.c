@@ -483,15 +483,10 @@ gconf_notify_remove(GConfEngine* conf,
   gconf_cnxn_destroy(gcnxn);
 }
 
-GConfValue*  
-gconf_get(GConfEngine* conf, const gchar* key, GConfError** err)
-{
-  return gconf_get_with_locale(conf, key, NULL, err);
-}
-
 GConfValue*
-gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
-                      GConfError** err)
+gconf_get_full(GConfEngine* conf, const gchar* key, const gchar* locale,
+               gboolean use_schema_default,
+               GConfError** err)
 {
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfValue* val;
@@ -523,6 +518,7 @@ gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
   cv = ConfigServer_lookup_with_locale(cs, priv->context,
                                        (gchar*)key, (gchar*)
                                        (locale ? locale : gconf_current_locale()),
+                                       use_schema_default,
                                        &ev);
 
 
@@ -549,6 +545,25 @@ gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
 
       return val;
     }
+}
+     
+GConfValue*  
+gconf_get(GConfEngine* conf, const gchar* key, GConfError** err)
+{
+  return gconf_get_with_locale(conf, key, NULL, err);
+}
+
+GConfValue*
+gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
+                      GConfError** err)
+{
+  return gconf_get_full(conf, key, locale, TRUE, err);
+}
+
+GConfValue*
+gconf_get_no_default(GConfEngine* conf, const gchar* key, GConfError** err)
+{
+  return gconf_get_full(conf, key, NULL, FALSE, err);
 }
 
 gboolean
