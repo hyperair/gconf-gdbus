@@ -308,6 +308,11 @@ resolve_address (const char *address,
     if (writable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
 
+
+    /* FIXME locking code is out of sync with XML backend
+     * (doesn't support the GCONF_LOCAL_LOCKS stuff)
+     */
+    
     /* We only do locking if it's writable,
      * which is sort of broken but close enough
      */
