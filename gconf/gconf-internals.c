@@ -917,7 +917,11 @@ gconf_string_to_gulong(const gchar* str)
 const gchar*
 gconf_current_locale(void)
 {
+#ifdef HAVE_LC_MESSAGES
   return setlocale(LC_MESSAGES, NULL);
+#else
+  return setlocale(LC_CTYPE, NULL);
+#endif
 }
 
 /*
