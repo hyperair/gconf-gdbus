@@ -67,7 +67,7 @@ case $CC in
 *xlc | *xlc\ * | *lcc | *lcc\ *) am_opt=--include-deps;;
 esac
 
-for coin in `find . -name configure.in -print`
+for coin in ./configure.in
 do 
   dr=`dirname $coin`
   if test -f $dr/NO-AUTO-GEN; then

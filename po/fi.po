@@ -10,43 +10,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.9\n"
-"POT-Creation-Date: 2000-12-11 20:11+0200\n"
+"POT-Creation-Date: 2000-09-14 22:20-0400\n"
 "PO-Revision-Date: 2000-12-09 22:00+02:00\n"
 "Last-Translator: Pauli Virtanen <pauli.virtanen@saunalahti.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: backends/bdb-backend.c:211
-msgid "Unloading BerkeleyDB (BDB) backend module."
-msgstr "BerkeleyDB (BDB) -taustamoduuli poistuu muistista."
-
-#: backends/bdb-backend.c:234
-#, c-format
-msgid "Opened BerkeleyDB source at root %s"
-msgstr "BerkeleyDB-lähteen juuri %s avattu."
-
-#: backends/bdb-backend.c:574
-msgid "Initializing BDB backend module"
-msgstr "BDB-taustamoduuli käynnistyy"
-
-#: backends/dir-utils.c:88
-#, c-format
-msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "%s-juurihakemistoa ei löytynyt osoitteesta \"%s\""
-
-#: backends/dir-utils.c:104 backends/xml-backend.c:301 backends/xml-dir.c:1035
-#, c-format
-msgid "Could not make directory `%s': %s"
-msgstr "Hakemistoa '%s' ei voitu luoda: %s"
-
-#: backends/dir-utils.c:192
-#, c-format
-msgid "Can't read from or write to the %s root directory in the address `%s'"
-msgstr ""
-"%s-juurihakemistosta osoitteessa \"%s\" ei voi lukea, eikä sinne voi "
-"kirjoittaa"
 
 #: backends/xml-backend.c:233
 msgid "Unloading XML backend module."
@@ -56,6 +26,11 @@ msgstr "XML-taustamoduuli poistuu muistista."
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "XML-juurihakemistoa ei löytynyt osoitteesta '%s'"
+
+#: backends/xml-backend.c:301 backends/xml-dir.c:1033
+#, c-format
+msgid "Could not make directory `%s': %s"
+msgstr "Hakemistoa '%s' ei voitu luoda: %s"
 
 #: backends/xml-backend.c:386
 #, c-format
@@ -82,7 +57,7 @@ msgstr "XML-hakemiston '%s' lukituksen luovutus epäonnistui: %s"
 msgid "Unsynced directory deletions when shutting down XML backend"
 msgstr "Synkronoimattomia hakemistoja poistui XML-taustamoduulia sammuttaessa"
 
-#: backends/xml-cache.c:229
+#: backends/xml-cache.c:228
 #, c-format
 msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
@@ -91,7 +66,7 @@ msgstr ""
 "Hakemiston '%s' poistaminen XML-taustamoduulin välimuistista ei onnistu, "
 "koska se ei ole onnistuneesti synkronoitunut levylle"
 
-#: backends/xml-cache.c:256
+#: backends/xml-cache.c:253
 #, c-format
 msgid ""
 "%u items remain in the cache after cleaning already-synced items older than "
@@ -136,32 +111,32 @@ msgid "Failed to delete old file `%s': %s"
 msgstr "Vanhan tiedoston '%s' poisto epäonnistui: %s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:790
+#: backends/xml-dir.c:788
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Tiedoston '%s' tilatietojen lukeminen epäonnistui: %s"
 
-#: backends/xml-dir.c:934
+#: backends/xml-dir.c:932
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "Toinenkin '%s'-merkintä tiedostossa '%s': se jää huomiotta"
 
-#: backends/xml-dir.c:956
+#: backends/xml-dir.c:954
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Nimetön merkintä XML-tiedostossa '%s': se jää huomiotta"
 
-#: backends/xml-dir.c:963
+#: backends/xml-dir.c:961
 #, c-format
 msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
 msgstr "Ylätason solmu XML-tiedostossa '%s' ei ole <entry>: se jää huomiotta"
 
-#: backends/xml-dir.c:1051
+#: backends/xml-dir.c:1049
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "Tiedoston '%s' luominen epäonnistui: %s"
 
-#: backends/xml-dir.c:1059 gconf/gconf-internals.c:2471
+#: backends/xml-dir.c:1057 gconf/gconf-internals.c:2468
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Tiedoston '%s' sulkeminen epäonnistui: %s"
@@ -172,7 +147,7 @@ msgstr "Tiedoston '%s' sulkeminen epäonnistui: %s"
 msgid "Ignoring XML node with name `%s': %s"
 msgstr "'%s'-niminen XML-solmu jää huomiotta: %s"
 
-#: backends/xml-entry.c:199
+#: backends/xml-entry.c:199 gconf/gconf-internals.c:2172
 #, c-format
 msgid "%s"
 msgstr "%s"
@@ -297,28 +272,28 @@ msgstr "Taustamoduulia '%s' ei löytynyt"
 msgid "Failed to shut down backend"
 msgstr "Taustamoduulin sammutus epäonnistui"
 
-#: gconf/gconf-database.c:233
+#: gconf/gconf-database.c:193
 msgid "Received invalid value in set request"
 msgstr "Asetuspyyntöön vastaanotettiin virheellinen arvo."
 
-#: gconf/gconf-database.c:241
+#: gconf/gconf-database.c:201
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr "Avaimen '%s' asetuspyynnöstä saatu CORBA-arvo ei ole järkevä"
 
-#: gconf/gconf-database.c:518
+#: gconf/gconf-database.c:416
 msgid "Received request to drop all cached data"
 msgstr "Pyyntö kaiken välivarastoidun tiedon hylkäämiseen vastaanotettu"
 
-#: gconf/gconf-database.c:535
+#: gconf/gconf-database.c:430
 msgid "Received request to sync synchronously"
 msgstr "Synkronointipyyntö vastaanotettu"
 
-#: gconf/gconf-database.c:602
+#: gconf/gconf-database.c:495
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr "Vakava virhe: objektiin ConfigDatabase ei saatu viittausta"
 
-#: gconf/gconf-database.c:761
+#: gconf/gconf-database.c:617
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Yhden tai useamman lähteen synkronointi epäonnistui: %s"
@@ -327,7 +302,7 @@ msgstr "Yhden tai useamman lähteen synkronointi epäonnistui: %s"
 #. * Because it's likely the right thing for the client
 #. * app to simply continue.
 #.
-#: gconf/gconf-database.c:843
+#: gconf/gconf-database.c:699
 #, c-format
 msgid ""
 "Failed to log addition of listener (%s); will not be able to restore this "
@@ -338,12 +313,12 @@ msgstr ""
 "palauttaa gconfd:n käynnistyessä uudestaan, mikä johtaa epäluotettavaan "
 "asetusten muutosten ilmoittamiseen."
 
-#: gconf/gconf-database.c:868
+#: gconf/gconf-database.c:724
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Kuuntelija ID %lu ei ole olemassa"
 
-#: gconf/gconf-database.c:877
+#: gconf/gconf-database.c:733
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -353,47 +328,47 @@ msgstr ""
 "harmitonta, mutta saattaa johtaa ilmoituksen kummalliseen uudelleen "
 "ilmaantumiseen): %s"
 
-#: gconf/gconf-database.c:989 gconf/gconf-sources.c:1281
+#: gconf/gconf-database.c:838 gconf/gconf-sources.c:1189
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Virhe avaimen '%s' arvoa hakiessa: %s"
 
-#: gconf/gconf-database.c:1031
+#: gconf/gconf-database.c:875
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Virhe avaimen '%s' arvoa asettaessa: %s"
 
-#: gconf/gconf-database.c:1074
+#: gconf/gconf-database.c:910
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Virhe avaimen '%s' arvoa poistaessa: %s"
 
-#: gconf/gconf-database.c:1098
+#: gconf/gconf-database.c:931
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Virhe avaimen '%s' oletusarvoa hakiessa: %s"
 
-#: gconf/gconf-database.c:1137
+#: gconf/gconf-database.c:969
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Virhe hakemiston '%s' olemassaoloa tarkistaessa: %s"
 
-#: gconf/gconf-database.c:1161
+#: gconf/gconf-database.c:993
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Virhe hakemistoa '%s' poistaessa: %s"
 
-#: gconf/gconf-database.c:1187
+#: gconf/gconf-database.c:1019
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Kaikkien hakemiston '%s' merkintöjen saaminen epäonnistui: %s"
 
-#: gconf/gconf-database.c:1213
+#: gconf/gconf-database.c:1045
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Virhe hakemiston '%s' hakemistoja luetteloidessa: %s"
 
-#: gconf/gconf-database.c:1234
+#: gconf/gconf-database.c:1066
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Virhe avaimen '%s' kaavainta asettaessa: %s"
@@ -458,9 +433,188 @@ msgstr "Toiminto ei ole sallittu ilman asetuspalvelinta"
 msgid "Failed to get a lock"
 msgstr "Lukituksen saaminen epäonnistui"
 
-#: gconf/gconf-error.c:40
-msgid "No database available to save your configuration"
-msgstr "Tietokantaa ei ole asetusten tallentamista varten."
+#: gconf/gconf-glib.c:629
+#, c-format
+msgid ""
+"Error on line %d char %d: %s\n"
+"(Some surrounding text was '%s')\n"
+msgstr ""
+
+#: gconf/gconf-glib.c:749
+msgid ""
+"Text ended in the middle of an entity, or entity name too long to be valid "
+"('&' should begin an entity such as '&quot;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:801
+#, c-format
+msgid ""
+"Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
+msgstr ""
+
+#: gconf/gconf-glib.c:841
+msgid ""
+"Markup text ended in the middle of a character reference, just after '&#'"
+msgstr ""
+
+#: gconf/gconf-glib.c:867
+#, c-format
+msgid ""
+"Character reference contained non-digit '%s' ('&#' should begin a reference "
+"to a unicode character, such as '&#2342;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:891
+msgid ""
+"Text ended in the middle of an character reference ('&#' should begin a "
+"character reference such as '&#2342;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:916
+#, c-format
+msgid ""
+"Couldn't parse character reference '%s' ('&#' must begin a character "
+"reference such as '&#2343;')"
+msgstr ""
+
+#: gconf/gconf-glib.c:938
+#, c-format
+msgid ""
+"Character code %#lx is not allowed in XML documents or is not a valid "
+"Unicode character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1013
+msgid ""
+"Documented ended just after an '&', '&' should begin an entity or character "
+"reference."
+msgstr ""
+
+#: gconf/gconf-glib.c:1027
+msgid ""
+"'<' or '>' character not allowed here; only allowed around tags, for example "
+"<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
+"&lt; and &gt;"
+msgstr ""
+
+#: gconf/gconf-glib.c:1082
+#, c-format
+msgid "Character '%s' is not valid at the start of an attribute name"
+msgstr ""
+
+#: gconf/gconf-glib.c:1109
+msgid "Document ended just after attribute name"
+msgstr ""
+
+#: gconf/gconf-glib.c:1120
+msgid "Attribute name must be immediately followed by an '=' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1135
+msgid ""
+"'=' character after attribute must be immediately followed by an '\"' "
+"character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1161
+#, c-format
+msgid ""
+"Character '%c' found inside an attribute value; perhaps your attribute value "
+"is missing the closing quotation mark '\"'"
+msgstr ""
+
+#: gconf/gconf-glib.c:1181
+msgid ""
+"Ran out of text before a quote mark ('\"') was seen at the end of an "
+"attribute value"
+msgstr ""
+
+#: gconf/gconf-glib.c:1194
+msgid ""
+"Text ends immediately after an attribute value, before the element was closed"
+msgstr ""
+
+#: gconf/gconf-glib.c:1508
+msgid "Missing '<' at start of element"
+msgstr ""
+
+#: gconf/gconf-glib.c:1519
+msgid "Document ended just after '<' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1547
+msgid "No closing '>' found for a <? or <!"
+msgstr ""
+
+#: gconf/gconf-glib.c:1576
+#, c-format
+msgid "Character '%s' is not valid at the start of an element name"
+msgstr ""
+
+#: gconf/gconf-glib.c:1600 gconf/gconf-glib.c:1613
+msgid "Document ended just after element name, no '>' seen"
+msgstr ""
+
+#: gconf/gconf-glib.c:1638
+#, c-format
+msgid "Elements should be closed with '>' or '/>', not with '%s'"
+msgstr ""
+
+#: gconf/gconf-glib.c:1655
+msgid ""
+"Element ended just after '/', no '>' seen; empty elements should end with "
+"'/>'"
+msgstr ""
+
+#: gconf/gconf-glib.c:1694
+msgid "Close tag not found at end of element"
+msgstr ""
+
+#: gconf/gconf-glib.c:1709
+msgid "Close tag ends just after '<' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1723
+msgid "Close tag should begin with '</', '/' character is missing"
+msgstr ""
+
+#: gconf/gconf-glib.c:1737
+msgid "Close tag ends just after '/' character"
+msgstr ""
+
+#: gconf/gconf-glib.c:1772
+msgid "Document ended just after element name in close tag, no '>' seen"
+msgstr ""
+
+#: gconf/gconf-glib.c:1788
+msgid "Document ended just after close tag name, no '>' seen"
+msgstr ""
+
+#: gconf/gconf-glib.c:1807
+#, c-format
+msgid "Close tag '%s' does not match opening tag '%s'"
+msgstr ""
+
+#: gconf/gconf-glib.c:2145
+#, c-format
+msgid ""
+"Invalid UTF-8 character at byte %d in marked-up text. Some text before the "
+"bad character was '%s'"
+msgstr ""
+
+#: gconf/gconf-glib.c:2202
+msgid "The marked-up text contained nothing but whitespace."
+msgstr ""
+
+#: gconf/gconf-glib.c:10666
+#, fuzzy, c-format
+msgid "Failed to open file '%s': %s"
+msgstr "Tiedoston '%s' sulkeminen epäonnistui: %s"
+
+#: gconf/gconf-glib.c:10683
+#, fuzzy, c-format
+msgid "Error reading file '%s': %s"
+msgstr "Virhe hakemistoa '%s' poistaessa: %s"
 
 #: gconf/gconf-internals.c:85
 #, c-format
@@ -499,89 +653,84 @@ msgstr "Lisätään lähde '%s'\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Virhe luettaessa tiedostoa '%s': %s\n"
 
-#: gconf/gconf-internals.c:1321
+#: gconf/gconf-internals.c:1320
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Odotettiin luetteloa, saatiin %s"
 
-#: gconf/gconf-internals.c:1331
+#: gconf/gconf-internals.c:1330
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Odotettiin %s:n listaa, mutta saatiin %s:n lista"
 
-#: gconf/gconf-internals.c:1470
+#: gconf/gconf-internals.c:1469
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Odotettiin paria, saatiin %s"
 
-#: gconf/gconf-internals.c:1484
+#: gconf/gconf-internals.c:1483
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Odotettiin (%s,%s) -paria, mutta saatiin pari, josta toinen tai molemmat "
 "osat puuttuvat"
 
-#: gconf/gconf-internals.c:1500
+#: gconf/gconf-internals.c:1499
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Odotettiin (%s,%s) -tyyppistä paria, saatiin tyyppiä (%s,%s) oleva"
 
-#: gconf/gconf-internals.c:1616
+#: gconf/gconf-internals.c:1615
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Lainattu merkkijono ei ala lainausmerkillä"
 
-#: gconf/gconf-internals.c:1678
+#: gconf/gconf-internals.c:1677
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Lainattu merkkijono ei lopu lainausmerkkiin"
 
-#: gconf/gconf-internals.c:2158 gconf/gconf.c:2945
+#: gconf/gconf-internals.c:2157 gconf/gconf.c:2751
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-virhe: %s"
 
-#: gconf/gconf-internals.c:2174
-#, c-format
-msgid "OAF problem description: '%s'"
-msgstr "OAF:n ongelman kuvaus: '%s'"
-
-#: gconf/gconf-internals.c:2180
+#: gconf/gconf-internals.c:2177
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "yritettiin poistaa luetteloimaton OAF-olio hakemistosta"
 
-#: gconf/gconf-internals.c:2185
+#: gconf/gconf-internals.c:2182
 msgid "attempt to add already-listed OAF directory"
 msgstr "yritettiin lisätä jo luetteloitu OAF hakemisto"
 
-#: gconf/gconf-internals.c:2192
+#: gconf/gconf-internals.c:2189
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "OAF-jäsennysvirhe: %s"
 
-#: gconf/gconf-internals.c:2197
+#: gconf/gconf-internals.c:2194
 msgid "Unknown OAF error"
 msgstr "Tuntematon OAF-virhe"
 
-#: gconf/gconf-internals.c:2280
+#: gconf/gconf-internals.c:2277
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Ei IOR-tiedostoa hakemistossa '%s'"
 
-#: gconf/gconf-internals.c:2311
+#: gconf/gconf-internals.c:2308
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd vei lukituksen '%s' toiselta prosessilta"
 
-#: gconf/gconf-internals.c:2322
+#: gconf/gconf-internals.c:2319
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Toinen ohjelma on jo lukinnut hakemiston '%s'"
 
-#: gconf/gconf-internals.c:2342
+#: gconf/gconf-internals.c:2339
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr ""
 "ORB:iin ei saatu yhteyttä yritettäessä ping:iä olemassaolevaan gconfd:hen"
 
-#: gconf/gconf-internals.c:2350
+#: gconf/gconf-internals.c:2347
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
@@ -590,43 +739,43 @@ msgstr ""
 "Poistetaan tyhjä lukitus '%s', koska IOR:ia ei voitu muuntaa "
 "olioviittaukseksi. IOR '%s'"
 
-#: gconf/gconf-internals.c:2362
+#: gconf/gconf-internals.c:2359
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr "Poistetaan tyhjä lukitus '%s' ping:in epäonnistuttua palvelimeen: %s"
 
-#: gconf/gconf-internals.c:2374
+#: gconf/gconf-internals.c:2371
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "GConf asetusdemoni (gconfd) omistaa lukituksen '%s'"
 
-#: gconf/gconf-internals.c:2388
+#: gconf/gconf-internals.c:2385
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "hakemistoa '%s' ei voitu luoda: %s"
 
-#: gconf/gconf-internals.c:2423
+#: gconf/gconf-internals.c:2420
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "Lukitusta '%s' ei voi luoda: %s"
 
-#: gconf/gconf-internals.c:2459
+#: gconf/gconf-internals.c:2456
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Tiedostoon '%s' ei voi kirjoittaa: %s"
 
-#: gconf/gconf-internals.c:2502
+#: gconf/gconf-internals.c:2499
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr ""
 "Lukitustiedostoa '%s' ei voi avata; oletetaan ettei se kuulu meille: %s"
 
-#: gconf/gconf-internals.c:2519
+#: gconf/gconf-internals.c:2516
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr "Virheellinen lukitustiedosto '%s': poistetaan"
 
-#: gconf/gconf-internals.c:2529
+#: gconf/gconf-internals.c:2526
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
@@ -635,28 +784,28 @@ msgstr ""
 "Lukitustiedostoa '%s' ei luotu. (luojan pid %u, oma pid %u; oletetaan jonkin "
 "vieneen lukituksen)"
 
-#: gconf/gconf-internals.c:2546
+#: gconf/gconf-internals.c:2543
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Lukitushakemiston '%s' palauttaminen epäonnistui: %s"
 
-#: gconf/gconf-sources.c:320
+#: gconf/gconf-sources.c:318
 #, c-format
 msgid "Failed to load source `%s': %s"
 msgstr "Lähteen '%s' lataaminen epäonnistui: %s"
 
-#: gconf/gconf-sources.c:506
+#: gconf/gconf-sources.c:490
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
 "Kaavain '%s', joka on määritelty arvolle '%s' sisältää arvon, joka ei ole "
 "kaavain."
 
-#: gconf/gconf-sources.c:555
+#: gconf/gconf-sources.c:539
 msgid "The '/' name can only be a directory, not a key"
 msgstr "Nimi '/' voi olla vain hakemisto, ei avain"
 
-#: gconf/gconf-sources.c:584
+#: gconf/gconf-sources.c:568
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -664,22 +813,17 @@ msgid ""
 msgstr ""
 "Arvo avaimelle '%s' on asetettu vain-luku-lähteessä asetuspolkusi alussa."
 
-#: gconf/gconf-sources.c:596
-#, c-format
-msgid "Unable to store a value at key '%s'"
-msgstr "Avaimen '%s' arvon tallentaminen ei onnistu"
-
-#: gconf/gconf-sources.c:1151
+#: gconf/gconf-sources.c:1063
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Virhe metainfoa etsiessä: %s"
 
-#: gconf/gconf-sources.c:1220
+#: gconf/gconf-sources.c:1128
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Virhe metainfoa saadessa: %s"
 
-#: gconf/gconf-sources.c:1244
+#: gconf/gconf-sources.c:1152
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
@@ -752,22 +896,22 @@ msgstr "En ymmärtänyt arvoa '%s' (ylimääräinen lainaamaton ')' parin sisällä)"
 msgid "`%s': %s"
 msgstr "'%s': %s"
 
-#: gconf/gconf.c:289
+#: gconf/gconf.c:288
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Palvelin ei voinut selvittää osoitetta '%s'"
 
-#: gconf/gconf.c:568
+#: gconf/gconf.c:542
 msgid "Can't add notifications to a local configuration source"
 msgstr "Paikalliseen asetuslähteeseen ei voi lisätä huomautuksia"
 
-#: gconf/gconf.c:1724
-#, c-format
-msgid "Adding client to server's list failed, CORBA error: %s"
+#: gconf/gconf.c:1597
+#, fuzzy, c-format
+msgid "Pinging the server failed, CORBA error: %s"
 msgstr ""
 "Asiakkaan lisääminen palvelimen luetteloon epäonnistui, CORBA-virhe: %s"
 
-#: gconf/gconf.c:1740
+#: gconf/gconf.c:1613
 msgid ""
 "Error contacting configuration server: OAF returned nil from "
 "oaf_activate_from_id() and did not set an exception explaining the problem. "
@@ -777,66 +921,66 @@ msgstr ""
 "oaf_activate_from_id() ja ei asettanut ongelmaa selittävää virhekeskeytystä. "
 "Olkaa hyvä, ja tehkää OAF:ista virheilmoitus."
 
-#: gconf/gconf.c:2051
+#: gconf/gconf.c:1880
 msgid "Failed to init GConf, exiting\n"
 msgstr "GConfin käynnistyminen epäonnistui, lopetetaan\n"
 
-#: gconf/gconf.c:2088
+#: gconf/gconf.c:1917
 msgid "Must begin with a slash (/)"
 msgstr "Täytyy alkaa kauttaviivalla (/)"
 
-#: gconf/gconf.c:2110
+#: gconf/gconf.c:1939
 msgid "Can't have two slashes (/) in a row"
 msgstr "Kahta kauttaviivaa (/) ei voi olla peräkkäin"
 
-#: gconf/gconf.c:2112
+#: gconf/gconf.c:1941
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Pistettä (.) ei voi olla heti kauttaviivan (/) jälkeen"
 
-#: gconf/gconf.c:2133
+#: gconf/gconf.c:1962
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "'%c' on virheellinen merkki avaimien ja hakemistojen nimissä"
 
-#: gconf/gconf.c:2147
+#: gconf/gconf.c:1976
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Avaimen tai hakemiston nimi ei voi päättyä kauttaviivaan (/)"
 
-#: gconf/gconf.c:2400
+#: gconf/gconf.c:2223
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Asetuspalvelimen sammutus epäonnistui: %s"
 
-#: gconf/gconf.c:2461
+#: gconf/gconf.c:2284
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Odotettiin liukulukua, saatiin %s"
 
-#: gconf/gconf.c:2496
+#: gconf/gconf.c:2319
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Odotettiin kokonaislukua, mutta saatiin %s"
 
-#: gconf/gconf.c:2531
+#: gconf/gconf.c:2354
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Odotettiin merkkijonoa, mutta saatiin %s"
 
-#: gconf/gconf.c:2568
+#: gconf/gconf.c:2391
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Odotettiin totuusarvoa, mutta saatiin %s"
 
-#: gconf/gconf.c:2601
+#: gconf/gconf.c:2424
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Odotettiin kaavainta, mutta saatiin %s"
 
-#: gconf/gconfd.c:247
+#: gconf/gconfd.c:185
 msgid "Shutdown request received"
 msgstr "Sammutuspyyntö vastaanotettu"
 
-#: gconf/gconfd.c:279
+#: gconf/gconfd.c:217
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -844,25 +988,25 @@ msgstr ""
 "gconfd käännetty debug-tietojen kanssa. Yritetään ladata gconf.path "
 "lähdekoodihakemistosta"
 
-#: gconf/gconfd.c:297
+#: gconf/gconfd.c:235
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
 "Asetustiedostoja ei löytynyt: yritetään käyttää oletusasetuslähdettä '%s'"
 
-#: gconf/gconfd.c:306
+#: gconf/gconfd.c:244
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
 msgstr "Ei asetuslähteitä lähdehakemistossa: asetuksia ei tallenneta. Muokkaa "
 
-#: gconf/gconfd.c:320
+#: gconf/gconfd.c:258
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Virhe joitakin asetuslähteitä ladatessa: %s"
 
-#: gconf/gconfd.c:332
+#: gconf/gconfd.c:270
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -870,7 +1014,7 @@ msgstr ""
 "Lähdehakemistoja ei saatu selville: asetustietoja ei voi ladata eikä "
 "tallentaa"
 
-#: gconf/gconfd.c:349
+#: gconf/gconfd.c:287
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -878,38 +1022,28 @@ msgstr ""
 "Kirjoitettavissa olevia asetuslähteitä ei saatu selville: joitakin asetusten "
 "muutoksia ei välttämättä voi tallentaa "
 
-#: gconf/gconfd.c:375
-#, c-format
-msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr ""
-"Signaali %d vastaanotettu, core-tiedosto kirjoitetaan. Tee ilmoitus GConfin "
-"virheestä."
+#: gconf/gconfd.c:312 gconf/gconfd.c:324
+#, fuzzy, c-format
+msgid "Received signal %d, shutting down."
+msgstr "Signaali %d vastaanotettu: sammutetaan siististi"
 
-#: gconf/gconfd.c:391
-#, c-format
-msgid ""
-"Received signal %d, shutting down abnormally. Please file a GConf bug report."
-msgstr ""
-"Signaali %d vastaanotettu: sammutetaan epänormaalisti. Tee ilmoitus GConfin "
-"virheestä."
-
-#: gconf/gconfd.c:408
+#: gconf/gconfd.c:329
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Signaali %d vastaanotettu: sammutetaan siististi"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:457
+#: gconf/gconfd.c:376
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "käynnistyy (versio %s), pid %u, käyttäjä '%s'"
 
-#: gconf/gconfd.c:461
+#: gconf/gconfd.c:380
 msgid "GConf was built with debugging features enabled"
 msgstr "GConf on käännetty virheenetsintäominaisuuksineen"
 
-#: gconf/gconfd.c:484
+#: gconf/gconfd.c:403
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to OAF "
 "maintainers"
@@ -917,11 +1051,11 @@ msgstr ""
 "Object Activation Frameworkin käynnistys epäonnistui: olkaa hyvä ja "
 "lähettäkää virheilmoitus OAF:in ylläpitäjille"
 
-#: gconf/gconfd.c:504
+#: gconf/gconfd.c:423
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Olioon ConfigServer ei saatu viittausta"
 
-#: gconf/gconfd.c:524
+#: gconf/gconfd.c:443
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
@@ -929,28 +1063,24 @@ msgstr ""
 "OAF ei tunne IID:tämme, joten asennus on virheellinen. Ei voitu "
 "rekisteröityä: poistutaan\n"
 
-#: gconf/gconfd.c:528
+#: gconf/gconfd.c:447
 msgid "Another gconfd already registered with OAF; exiting\n"
 msgstr "Toinen gconfd on jo rekisteröitynyt OAF:iin: poistutaan\n"
 
-#: gconf/gconfd.c:533
+#: gconf/gconfd.c:452
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Tuntematon virhe rekisteröitäessä gconfd:tä OAF:iin: poistutaan\n"
 
-#: gconf/gconfd.c:571
+#: gconf/gconfd.c:476
 msgid "Exiting"
 msgstr "Poistutaan"
 
-#: gconf/gconfd.c:595
-msgid "GConf server is not in use, shutting down."
-msgstr "GConf-palvelin ei ole käytössä: sammutetaan"
-
-#: gconf/gconfd.c:930
+#: gconf/gconfd.c:818
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Palautetaan poikkeus: %s"
 
-#: gconf/gconfd.c:1018
+#: gconf/gconfd.c:885
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -959,7 +1089,7 @@ msgstr ""
 "gconfd:n lokitiedoston avaaminen epäonnistui: kuuntelijoita ei voi palauttaa "
 "gconfd:n sammutuksen jälkeen (%s)"
 
-#: gconf/gconfd.c:1041
+#: gconf/gconfd.c:908
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -967,32 +1097,32 @@ msgstr ""
 "gconfd:n lokitiedoston sulkeminen epäonnistui: tietoja saattaa olla hävinnyt "
 "(%s)"
 
-#: gconf/gconfd.c:1104
+#: gconf/gconfd.c:966
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Tilatiedostoa '%s' ei voitu avata kirjoittamista varten: %s"
 
-#: gconf/gconfd.c:1118
+#: gconf/gconfd.c:980
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Tilatiedostoa '%s', fd: %d, ei voitu kirjoittaa: %s"
 
-#: gconf/gconfd.c:1127
+#: gconf/gconfd.c:989
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Uuden tilatiedoston '%s' sulkeminen epäonnistui: %s"
 
-#: gconf/gconfd.c:1141
+#: gconf/gconfd.c:1003
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Vanhaa tilatiedostoa '%s' ei voitu siirtää syrjään: %s"
 
-#: gconf/gconfd.c:1151
+#: gconf/gconfd.c:1013
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Uuden tilatiedoston siirtäminen paikalleen epäonnistui: %s"
 
-#: gconf/gconfd.c:1160
+#: gconf/gconfd.c:1022
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1000,7 +1130,44 @@ msgstr ""
 "Alkuperäisen tilatiedoston, joka on nimetty tiedostoksi '%s', palauttaminen "
 "epäonnistui: %s"
 
-#: gconf/gconfd.c:1633
+#: gconf/gconfd.c:1110
+#, fuzzy, c-format
+msgid "Didn't understand line in saved state file: '%s'"
+msgstr "Tilatiedoston avaaminen epäonnistui: %s"
+
+#: gconf/gconfd.c:1125
+#, fuzzy
+msgid "Failed to parse connection ID in saved state file"
+msgstr "Tilatiedoston avaaminen epäonnistui: %s"
+
+#: gconf/gconfd.c:1140
+#, fuzzy, c-format
+msgid "Failed to unquote config source address from saved state file: %s"
+msgstr "Asiakkaan lisäämisen kirjoittaminen tilatiedostoon epäonnistui: %s"
+
+#: gconf/gconfd.c:1160
+#, fuzzy, c-format
+msgid "Failed to unquote listener location from saved state file: %s"
+msgstr "Asiakkaan lisäämisen kirjoittaminen tilatiedostoon epäonnistui: %s"
+
+#: gconf/gconfd.c:1180
+#, fuzzy, c-format
+msgid "Failed to unquote IOR from saved state file: %s"
+msgstr "Tilatiedoston avaaminen epäonnistui: %s"
+
+#: gconf/gconfd.c:1204
+msgid ""
+"Saved state file records the same listener added twice; ignoring the second "
+"instance"
+msgstr ""
+
+#: gconf/gconfd.c:1225
+msgid ""
+"Saved state file had a removal of a listener that wasn't added; ignoring the "
+"removal."
+msgstr ""
+
+#: gconf/gconfd.c:1346
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1008,17 +1175,12 @@ msgstr ""
 "Kuuntelijan, osoitteessa '%s', palauttaminen ei onnistu: tietokannan "
 "selvittäminen ei onnistunut"
 
-#: gconf/gconfd.c:1679
-#, c-format
-msgid "Error reading saved state file: %s"
-msgstr "Virhe tilatiedostoa lukiessa: %s"
-
-#: gconf/gconfd.c:1732
+#: gconf/gconfd.c:1377
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Tilatiedoston '%s' avaaminen ei onnistu: %s"
 
-#: gconf/gconfd.c:1849
+#: gconf/gconfd.c:1476
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to "
@@ -1027,7 +1189,7 @@ msgstr ""
 "Kuuntelijan lisäämisen kirjaaminen gconfd:n lokitiedostoon epäonnistui: sitä "
 "ei voi lisätä uudestaan, kun gconfd lopetetaan tai sammuu (%s)"
 
-#: gconf/gconfd.c:1854
+#: gconf/gconfd.c:1481
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously "
@@ -1036,32 +1198,6 @@ msgstr ""
 "Kuuntelijan poiston kirjaaminen gconfd:n lokitiedostoon epäonnistui; se "
 "saattaa virheellisesti tulla lisätyksi uudestaan, kun gconfd lopetetaan tai "
 "sammuu (%s)"
-
-#: gconf/gconfd.c:1877 gconf/gconfd.c:2038
-#, c-format
-msgid "Failed to get IOR for client: %s"
-msgstr "Asiakkaan IOR:n saaminen epäonnistui: '%s'"
-
-#: gconf/gconfd.c:1892
-#, c-format
-msgid "Failed to open saved state file: %s"
-msgstr "Tilatiedoston avaaminen epäonnistui: %s"
-
-#: gconf/gconfd.c:1905
-#, c-format
-msgid "Failed to write client add to saved state file: %s"
-msgstr "Asiakkaan lisäämisen kirjoittaminen tilatiedostoon epäonnistui: %s"
-
-#: gconf/gconfd.c:1913
-#, c-format
-msgid "Failed to flush client add to saved state file: %s"
-msgstr "Asiakkaan lisäämisen fflush() tilatiedostoon epäonnistui: '%s'"
-
-#: gconf/gconfd.c:1999
-msgid ""
-"Some client removed itself from the GConf server when it hadn't been added."
-msgstr ""
-"Jokin asiakas poisti itsensä GConf-palvelimesta, kun sitä ei oltu lisätty."
 
 #: gconf/gconftool.c:62
 msgid "Help options"
@@ -1699,17 +1835,70 @@ msgstr ""
 "hakemistossa:\n"
 "  %s\n"
 
-#: wrappers/gtk/gconf-client.c:287 wrappers/gtk/gconf-client.c:304
-#, c-format
-msgid "GConf Error: %s\n"
-msgstr "GConf-virhe: %s\n"
-
-#: wrappers/gtk/gconf-client.c:795
+#: wrappers/gtk/gconf-client.c:812
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf-varoitus: Hakemiston '%s' parien luetteloiminen epäonnistui: %s"
 
-#: wrappers/gtk/gconf-client.c:997
+#: wrappers/gtk/gconf-client.c:985
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Odotettiin tyyppiä '%s', saatiin tyyppi '%s' avaimelle %s"
+
+#~ msgid "Unloading BerkeleyDB (BDB) backend module."
+#~ msgstr "BerkeleyDB (BDB) -taustamoduuli poistuu muistista."
+
+#~ msgid "Opened BerkeleyDB source at root %s"
+#~ msgstr "BerkeleyDB-lähteen juuri %s avattu."
+
+#~ msgid "Initializing BDB backend module"
+#~ msgstr "BDB-taustamoduuli käynnistyy"
+
+#~ msgid "Couldn't find the %s root directory in the address `%s'"
+#~ msgstr "%s-juurihakemistoa ei löytynyt osoitteesta \"%s\""
+
+#~ msgid ""
+#~ "Can't read from or write to the %s root directory in the address `%s'"
+#~ msgstr ""
+#~ "%s-juurihakemistosta osoitteessa \"%s\" ei voi lukea, eikä sinne voi "
+#~ "kirjoittaa"
+
+#~ msgid "No database available to save your configuration"
+#~ msgstr "Tietokantaa ei ole asetusten tallentamista varten."
+
+#~ msgid "OAF problem description: '%s'"
+#~ msgstr "OAF:n ongelman kuvaus: '%s'"
+
+#~ msgid "Unable to store a value at key '%s'"
+#~ msgstr "Avaimen '%s' arvon tallentaminen ei onnistu"
+
+#~ msgid "Received signal %d, dumping core. Please report a GConf bug."
+#~ msgstr ""
+#~ "Signaali %d vastaanotettu, core-tiedosto kirjoitetaan. Tee ilmoitus GConfin "
+#~ "virheestä."
+
+#~ msgid ""
+#~ "Received signal %d, shutting down abnormally. Please file a GConf bug report."
+#~ msgstr ""
+#~ "Signaali %d vastaanotettu: sammutetaan epänormaalisti. Tee ilmoitus GConfin "
+#~ "virheestä."
+
+#~ msgid "GConf server is not in use, shutting down."
+#~ msgstr "GConf-palvelin ei ole käytössä: sammutetaan"
+
+#~ msgid "Error reading saved state file: %s"
+#~ msgstr "Virhe tilatiedostoa lukiessa: %s"
+
+#~ msgid "Failed to get IOR for client: %s"
+#~ msgstr "Asiakkaan IOR:n saaminen epäonnistui: '%s'"
+
+#~ msgid "Failed to flush client add to saved state file: %s"
+#~ msgstr "Asiakkaan lisäämisen fflush() tilatiedostoon epäonnistui: '%s'"
+
+#~ msgid ""
+#~ "Some client removed itself from the GConf server when it hadn't been added."
+#~ msgstr ""
+#~ "Jokin asiakas poisti itsensä GConf-palvelimesta, kun sitä ei oltu lisätty."
+
+#~ msgid "GConf Error: %s\n"
+#~ msgstr "GConf-virhe: %s\n"
