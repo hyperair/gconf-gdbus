@@ -85,6 +85,7 @@ exception ConfigException {
 interface ConfigServer {
   typedef sequence<string> KeyList;
   typedef sequence<ConfigValue> ValueList;
+  typedef sequence<boolean> IsDefaultList;
   typedef unsigned long Context;
   
   const Context invalid_context = 0;
@@ -135,7 +136,8 @@ interface ConfigServer {
                    in string dir,
                    in string locale,
                    out KeyList keys,
-                   out ValueList values)
+                   out ValueList values,
+                   out IsDefaultList is_defaults)
     raises (ConfigException);
 
   void all_dirs(in Context ctx,

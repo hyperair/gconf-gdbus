@@ -298,7 +298,7 @@ gconf_source_sync_all         (GConfSource* source, GConfError** err)
  */
 
 GConfSources* 
-gconf_sources_new_from_addresses(gchar** addresses, GConfError** err)
+gconf_sources_new_from_addresses(const gchar** addresses, GConfError** err)
 {
   GConfSources* sources;
   GConfError* all_errors = NULL;
@@ -729,6 +729,43 @@ hash_destroy_pointers_func(gpointer key, gpointer value, gpointer user_data)
   g_free(value);
 }
 
+struct DefaultsLookupData {
+  GConfSources* sources;
+  const gchar** locales;
+};
+
+static void
+hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
+{
+  GConfEntry *entry = value;
+  struct DefaultsLookupData* dld = user_data;
+  GConfSources *sources = dld->sources;
+  const gchar** locales = dld->locales;
+  
+  if (gconf_entry_value(entry) == NULL)
+    {      
+      if (gconf_entry_schema_name(entry) != NULL)
+        {
+          GConfValue *val;
+
+
+          val = gconf_sources_query_value(sources,
+                                          gconf_entry_schema_name(entry),
+                                          locales,
+                                          TRUE,
+                                          NULL,
+                                          NULL);
+
+          if (val != NULL)
+            {
+              gconf_entry_set_value_nocopy(entry, val);
+              gconf_entry_set_is_default(entry, TRUE);
+            }
+        }
+    }
+}
+
+
 GSList*       
 gconf_sources_all_entries   (GConfSources* sources,
                              const gchar* dir,
@@ -741,19 +778,11 @@ gconf_sources_all_entries   (GConfSources* sources,
   gboolean first_pass = TRUE; /* as an optimization, don't bother
                                  doing hash lookups on first source
                               */
-
+  struct DefaultsLookupData dld = { sources, locales };
+  
   /* Empty GConfSources, skip it */
   if (sources->sources == NULL)
     return NULL;
-
-  /* Only one GConfSource, just return its list of entries */
-  if (sources->sources->next == NULL)
-    {
-      return gconf_source_all_entries(sources->sources->data, dir, locales, err);
-    }
-
-  /* 2 or more sources in the list, use a hash to merge them */
-  g_assert(g_list_length(sources->sources) > 1);
 
   hash = g_hash_table_new(g_str_hash, g_str_equal);
 
@@ -805,7 +834,14 @@ gconf_sources_all_entries   (GConfSources* sources,
           
           if (previous != NULL)
             {
-              /* Discard */
+              if (gconf_entry_value(previous) != NULL)
+                /* Discard this latest one */
+                ;
+              else
+                /* Save the new value, previously we had an entry but no value */
+                gconf_entry_set_value_nocopy(previous,
+                                             gconf_entry_steal_value(pair));
+              
               gconf_entry_destroy(pair);
             }
           else
@@ -827,6 +863,8 @@ gconf_sources_all_entries   (GConfSources* sources,
 
   flattened = NULL;
 
+  g_hash_table_foreach(hash, hash_lookup_defaults_func, &dld);
+  
   g_hash_table_foreach(hash, hash_listify_func, &flattened);
 
   g_hash_table_destroy(hash);

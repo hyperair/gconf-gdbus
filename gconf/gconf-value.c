@@ -665,7 +665,9 @@ gconf_entry_new_nocopy(gchar* key, GConfValue* val)
 
   pair->key   = key;
   pair->value = val;
-
+  pair->schema_name = NULL;
+  pair->is_default = FALSE;
+  
   return pair;
 }
 
@@ -685,3 +687,32 @@ gconf_entry_steal_value (GConfEntry* entry)
   entry->value = NULL;
   return val;
 }
+
+void
+gconf_entry_set_value_nocopy(GConfEntry* entry,
+                             GConfValue* val)
+{
+  if (entry->value)
+    gconf_value_destroy(entry->value);
+
+  entry->value = val;
+}
+
+void
+gconf_entry_set_schema_name(GConfEntry* entry,
+                            const gchar* name)
+{
+  if (entry->schema_name)
+    g_free(entry->schema_name);
+
+  entry->schema_name = name ? g_strdup(name) : NULL;
+}
+
+void
+gconf_entry_set_is_default (GConfEntry* entry,
+                            gboolean is_default)
+{
+  entry->is_default = is_default;
+}
+
+

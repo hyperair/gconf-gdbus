@@ -65,7 +65,7 @@ struct _GConfSources {
 /* Even on error, this gives you an empty source list, i.e.  never
    returns NULL but may set the error if some addresses weren't
    resolved and may contain no sources.  */
-GConfSources* gconf_sources_new_from_addresses (gchar        **addresses,
+GConfSources* gconf_sources_new_from_addresses (const gchar **addresses,
                                                 GConfError   **err);
 GConfSources* gconf_sources_new_from_source    (GConfSource   *source);
 void          gconf_sources_destroy            (GConfSources  *sources);

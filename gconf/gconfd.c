@@ -144,7 +144,7 @@ static GConfValue*   context_query_default_value(GConfContext* ctx,
                                                  GConfError** err);
 
 static void          context_set(GConfContext* ctx, const gchar* key,
-                                 GConfValue* value, ConfigValue* cvalue,
+                                 GConfValue* value, const ConfigValue* cvalue,
                                  GConfError** err);
 static void          context_unset(GConfContext* ctx, const gchar* key,
                                    const gchar* locale,
@@ -182,12 +182,12 @@ static void                 sleep_old_contexts(void);
 static ConfigServer server = CORBA_OBJECT_NIL;
 
 static ConfigServer_Context
-gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
+gconfd_get_context(PortableServer_Servant servant, const CORBA_char* address,
                    CORBA_Environment* ev);
 
 static CORBA_unsigned_long 
 gconfd_add_listener(PortableServer_Servant servant, ConfigServer_Context ctx,
-                    CORBA_char * where, 
+                    const CORBA_char* where, 
                     ConfigListener who, CORBA_Environment *ev);
 static void 
 gconfd_remove_listener(PortableServer_Servant servant,
@@ -196,13 +196,13 @@ gconfd_remove_listener(PortableServer_Servant servant,
                        CORBA_Environment *ev);
 static ConfigValue* 
 gconfd_lookup(PortableServer_Servant servant, ConfigServer_Context ctx,
-              CORBA_char * key, 
+              const CORBA_char* key, 
               CORBA_Environment *ev);
 
 static ConfigValue* 
 gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
-                          CORBA_char * key,
-                          CORBA_char * locale,
+                          const CORBA_char* key,
+                          const CORBA_char* locale,
                           CORBA_boolean use_schema_default,
                           CORBA_boolean * is_default,
                           CORBA_Environment *ev);
@@ -210,59 +210,61 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
 static ConfigValue* 
 gconfd_lookup_default_value(PortableServer_Servant servant,
                             ConfigServer_Context ctx,
-                            CORBA_char * key,
-                            CORBA_char * locale,
+                            const CORBA_char* key,
+                            const CORBA_char* locale,
                             CORBA_Environment *ev);
 
 static void
 gconfd_set(PortableServer_Servant servant, ConfigServer_Context ctx,
-           CORBA_char * key, 
-           ConfigValue* value, CORBA_Environment *ev);
+           const CORBA_char* key, 
+           const ConfigValue* value, CORBA_Environment *ev);
 
 static void 
 gconfd_unset(PortableServer_Servant servant,
              ConfigServer_Context ctx,
-             CORBA_char * key, 
+             const CORBA_char* key, 
              CORBA_Environment *ev);
 
 static void 
 gconfd_unset_with_locale(PortableServer_Servant servant,
                          ConfigServer_Context ctx,
-                         CORBA_char * key,
-                         CORBA_char * locale,
+                         const CORBA_char* key,
+                         const CORBA_char* locale,
                          CORBA_Environment *ev);
 
 static CORBA_boolean
 gconfd_dir_exists(PortableServer_Servant servant,
                   ConfigServer_Context ctx,
-                  CORBA_char * dir,
+                  const CORBA_char* dir,
                   CORBA_Environment *ev);
 
 static void 
 gconfd_remove_dir(PortableServer_Servant servant,
                   ConfigServer_Context ctx,
-                  CORBA_char * dir, 
+                  const CORBA_char* dir, 
                   CORBA_Environment *ev);
 
 static void 
 gconfd_all_entries (PortableServer_Servant servant,
                     ConfigServer_Context ctx,
-                    CORBA_char * dir,
-                    CORBA_char * locale,
+                    const CORBA_char* dir,
+                    const CORBA_char* locale,
                     ConfigServer_KeyList ** keys, 
-                    ConfigServer_ValueList ** values, CORBA_Environment * ev);
+                    ConfigServer_ValueList ** values,
+                    ConfigServer_IsDefaultList ** is_defaults,
+                    CORBA_Environment * ev);
 
 static void 
 gconfd_all_dirs (PortableServer_Servant servant,
                  ConfigServer_Context ctx,
-                 CORBA_char * dir, 
+                 const CORBA_char* dir, 
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev);
 
 static void 
 gconfd_set_schema (PortableServer_Servant servant,
                    ConfigServer_Context ctx,
-                   CORBA_char * key,
-                   CORBA_char* schema_key, CORBA_Environment * ev);
+                   const CORBA_char* key,
+                   const CORBA_char* schema_key, CORBA_Environment * ev);
 
 static void 
 gconfd_sync(PortableServer_Servant servant,
@@ -306,12 +308,12 @@ static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
 static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
 static ConfigServer_Context
-gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
+gconfd_get_context(PortableServer_Servant servant, const CORBA_char* address,
                    CORBA_Environment* ev)
 {
   ConfigServer_Context ctx;
   GConfSources* sources;
-  gchar* addresses[] = { address, NULL };
+  const gchar* addresses[] = { address, NULL };
   GConfError* error = NULL;
   
   ctx = lookup_context_id_from_address(address);
@@ -338,7 +340,7 @@ gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
 static CORBA_unsigned_long
 gconfd_add_listener(PortableServer_Servant servant,
                     ConfigServer_Context ctx,
-                    CORBA_char * where, 
+                    const CORBA_char* where, 
                     const ConfigListener who, CORBA_Environment *ev)
 {
   GConfContext* gcc;
@@ -382,17 +384,17 @@ gconfd_remove_listener(PortableServer_Servant servant,
 static ConfigValue*
 gconfd_lookup(PortableServer_Servant servant,
               ConfigServer_Context ctx,
-              CORBA_char * key, 
+              const CORBA_char* key, 
               CORBA_Environment *ev)
 {
-  /* CORBA_char* normally can't be NULL but we cheat here */
+  /* const CORBA_char* normally can't be NULL but we cheat here */
   return gconfd_lookup_with_locale(servant, ctx, key, NULL, TRUE, NULL, ev);
 }
 
 static ConfigValue* 
 gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context ctx,
-                          CORBA_char * key,
-                          CORBA_char * locale,
+                          const CORBA_char* key,
+                          const CORBA_char* locale,
                           CORBA_boolean use_schema_default,
                           CORBA_boolean * value_is_default,
                           CORBA_Environment *ev)
@@ -438,8 +440,8 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
 static ConfigValue* 
 gconfd_lookup_default_value(PortableServer_Servant servant,
                             ConfigServer_Context ctx,
-                            CORBA_char * key,
-                            CORBA_char * locale,
+                            const CORBA_char* key,
+                            const CORBA_char* locale,
                             CORBA_Environment *ev)
 {
   GConfValue* val;
@@ -480,8 +482,8 @@ gconfd_lookup_default_value(PortableServer_Servant servant,
 static void
 gconfd_set(PortableServer_Servant servant,
            ConfigServer_Context ctx,
-           CORBA_char * key, 
-           ConfigValue* value, CORBA_Environment *ev)
+           const CORBA_char* key, 
+           const ConfigValue* value, CORBA_Environment *ev)
 {
   gchar* str;
   GConfValue* val;
@@ -523,8 +525,8 @@ gconfd_set(PortableServer_Servant servant,
 static void 
 gconfd_unset_with_locale(PortableServer_Servant servant,
                          ConfigServer_Context ctx,
-                         CORBA_char * key,
-                         CORBA_char * locale,
+                         const CORBA_char* key,
+                         const CORBA_char* locale,
                          CORBA_Environment *ev)
 {
   GConfContext* gcc;
@@ -543,17 +545,17 @@ gconfd_unset_with_locale(PortableServer_Servant servant,
 static void 
 gconfd_unset(PortableServer_Servant servant,
              ConfigServer_Context ctx,
-             CORBA_char * key, 
+             const CORBA_char* key, 
              CORBA_Environment *ev)
 {
-  /* This is a cheat, since CORBA_char* isn't normally NULL */
+  /* This is a cheat, since const CORBA_char* isn't normally NULL */
   gconfd_unset_with_locale(servant, ctx, key, NULL, ev);
 }
 
 static CORBA_boolean
 gconfd_dir_exists(PortableServer_Servant servant,
                   ConfigServer_Context ctx,
-                  CORBA_char *dir,
+                  const CORBA_char* dir,
                   CORBA_Environment *ev)
 {
   GConfContext *gcc;
@@ -576,7 +578,7 @@ gconfd_dir_exists(PortableServer_Servant servant,
 static void 
 gconfd_remove_dir(PortableServer_Servant servant,
                   ConfigServer_Context ctx,
-                  CORBA_char * dir, 
+                  const CORBA_char* dir, 
                   CORBA_Environment *ev)
 {  
   GConfContext* gcc;
@@ -597,10 +599,11 @@ gconfd_remove_dir(PortableServer_Servant servant,
 static void 
 gconfd_all_entries (PortableServer_Servant servant,
                     ConfigServer_Context ctx,
-                    CORBA_char * dir,
-                    CORBA_char * locale,
+                    const CORBA_char* dir,
+                    const CORBA_char* locale,
                     ConfigServer_KeyList ** keys, 
                     ConfigServer_ValueList ** values,
+                    ConfigServer_IsDefaultList ** is_defaults,
                     CORBA_Environment * ev)
 {
   GSList* pairs;
@@ -637,6 +640,11 @@ gconfd_all_entries (PortableServer_Servant servant,
   (*values)->_length = n;
   (*values)->_maximum = n;
 
+  *is_defaults = ConfigServer_IsDefaultList__alloc();
+  (*is_defaults)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
+  (*is_defaults)->_length = n;
+  (*is_defaults)->_maximum = n;
+  
   tmp = pairs;
   i = 0;
 
@@ -650,7 +658,8 @@ gconfd_all_entries (PortableServer_Servant servant,
 
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
-
+      (*is_defaults)->_buffer[i] = gconf_entry_is_default(p);
+      
       gconf_entry_destroy(p);
 
       ++i;
@@ -667,7 +676,7 @@ gconfd_all_entries (PortableServer_Servant servant,
 static void 
 gconfd_all_dirs (PortableServer_Servant servant,
                  ConfigServer_Context ctx,
-                 CORBA_char * dir, 
+                 const CORBA_char* dir, 
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev)
 {
   GSList* subdirs;
@@ -719,8 +728,8 @@ gconfd_all_dirs (PortableServer_Servant servant,
 static void 
 gconfd_set_schema (PortableServer_Servant servant,
                    ConfigServer_Context ctx,
-                   CORBA_char * key,
-                   CORBA_char* schema_key, CORBA_Environment * ev)
+                   const CORBA_char* key,
+                   const CORBA_char* schema_key, CORBA_Environment * ev)
 {
   GConfContext* gcc;
   GConfError* error = NULL;
@@ -820,7 +829,7 @@ gconf_server_load_sources(void)
       /* We want to stay alive but do nothing, because otherwise every
          request would result in another failed gconfd being spawned.  
       */
-      gchar* empty_addr[] = { NULL };
+      const gchar* empty_addr[] = { NULL };
       gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_SYSCONFDIR"/gconf/path"));
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(empty_addr, NULL);
@@ -830,7 +839,7 @@ gconf_server_load_sources(void)
     }
   else
     {
-      sources = gconf_sources_new_from_addresses(addresses, &error);
+      sources = gconf_sources_new_from_addresses((const gchar**)addresses, &error);
 
       if (error != NULL)
         {
@@ -1169,7 +1178,7 @@ context_hibernate(GConfContext* ctx)
 static void
 context_awaken(GConfContext* ctx, GConfError** err)
 {
-  gchar* addresses[2];
+  const gchar* addresses[2];
   
   g_return_if_fail(ctx->listeners == NULL);
   g_return_if_fail(ctx->sources == NULL);
@@ -1293,7 +1302,7 @@ typedef struct _ListenerNotifyClosure ListenerNotifyClosure;
 
 struct _ListenerNotifyClosure {
   ConfigServer_Context context;
-  ConfigValue* value;
+  const ConfigValue* value;
   gboolean is_default;
   GSList* dead;
   CORBA_Environment ev;
@@ -1334,7 +1343,7 @@ notify_listeners_cb(GConfListeners* listeners,
 
 static void
 context_notify_listeners(GConfContext* ctx,
-                         const gchar* key, ConfigValue* value,
+                         const gchar* key, const ConfigValue* value,
                          gboolean is_default)
 {
   ListenerNotifyClosure closure;
@@ -1412,7 +1421,7 @@ static void
 context_set(GConfContext* ctx,
             const gchar* key,
             GConfValue* val,
-            ConfigValue* value,
+            const ConfigValue* value,
             GConfError** err)
 {
   g_assert(ctx->listeners != NULL);

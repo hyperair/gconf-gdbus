@@ -615,11 +615,10 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
           
           gconf_client_cache(client,
                              full_key,
-                             /* It can't be the default, all_entries() only
-                                returns values that are actually set */
-                             FALSE,
+                             gconf_entry_is_default(pair),
                              gconf_entry_steal_value(pair));
 
+          g_free(full_key);
           
           gconf_entry_destroy(pair);
 

@@ -1708,13 +1708,20 @@ static void
 listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 {
   GConfValue* val;
-
-  val = entry_value(e, ld->locales);
+  GConfEntry* entry;
   
-  if (val != NULL)
-    ld->list = g_slist_prepend(ld->list,
-                               gconf_entry_new_nocopy(g_strdup(key),
-                                                      gconf_value_copy(val)));
+  val = entry_value(e, ld->locales);
+
+  entry = gconf_entry_new_nocopy(g_strdup(key),
+                                 val ? gconf_value_copy(val) : NULL);
+  
+  if (val == NULL &&
+      e->schema_name)
+    {
+      gconf_entry_set_schema_name(entry, e->schema_name);
+    }
+  
+  ld->list = g_slist_prepend(ld->list, entry);
 }
 
 static GSList*

@@ -918,6 +918,7 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
   GSList* pairs = NULL;
   ConfigServer_ValueList* values;
   ConfigServer_KeyList* keys;
+  ConfigServer_IsDefaultList* is_defaults;
   CORBA_Environment ev;
   ConfigServer cs;
   guint i;
@@ -982,7 +983,7 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
   ConfigServer_all_entries(cs, priv->context,
                            (gchar*)dir,
                            (gchar*)gconf_current_locale(),
-                           &keys, &values,
+                           &keys, &values, &is_defaults,
                            &ev);
 
   if (gconf_server_broken(&ev))
@@ -1014,6 +1015,10 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
       pair = 
         gconf_entry_new_nocopy(g_strdup(keys->_buffer[i]),
                                gconf_value_from_corba_value(&(values->_buffer[i])));
+
+      /* note, there's an accesor function for setting this that we are
+         cheating and not using */
+      pair->is_default = is_defaults->_buffer[i];
       
       pairs = g_slist_prepend(pairs, pair);
       
@@ -1022,6 +1027,7 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
   
   CORBA_free(keys);
   CORBA_free(values);
+  CORBA_free(is_defaults);
 
   return pairs;
 }
@@ -1395,8 +1401,8 @@ static void
 notify(PortableServer_Servant servant,
        CORBA_unsigned_long context,
        CORBA_unsigned_long cnxn,
-       CORBA_char* key, 
-       ConfigValue* value,
+       const CORBA_char* key, 
+       const ConfigValue* value,
        CORBA_boolean is_default,
        CORBA_Environment *ev);
 
@@ -1414,8 +1420,8 @@ static void
 notify(PortableServer_Servant servant,
        CORBA_unsigned_long context,
        CORBA_unsigned_long server_id,
-       CORBA_char* key,
-       ConfigValue* value,
+       const CORBA_char* key,
+       const ConfigValue* value,
        CORBA_boolean is_default,
        CORBA_Environment *ev)
 {

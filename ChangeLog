@@ -1,5 +1,38 @@
 1999-12-20  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconf-sources.c (gconf_sources_new_from_addresses): const
+	correctness
+
+	* gconf/gconfd.c: Massive const-correctness changes to match
+	latest ORBit
+
+	* gconf/gconf.c (notify): "in string" seems to be const again now.
+
+	* wrappers/gtk/gconf-client.c (cache_pairs_in_dir): store the
+	is_default parameter when preloading
+
+	* gconf/gconf.c (gconf_all_entries): receive the is_default
+	parameter
+
+	* gconf/gconfd.c (gconfd_all_entries): pass the is_default
+	parameter over the CORBA link
+
+	* backends/xml-backend.c (listify_foreach): Add the schema name to
+	the entry if appropriate (if value is unset)
+
+	* gconf/gconf-sources.c (gconf_sources_all_entries): Change to
+	match new semantics of all_entries in the backend; get all entries
+	that have a schema set on them, and the corresponding default 
+	value if appropriate.
+
+	* gconf/gconf-value.c (gconf_entry_set_is_default): new function
+	(gconf_entry_set_schema_name): new function
+
+	* backends/xml-backend.c (listify_foreach): Include keys that
+	exist but have no value set in the list of returned entries.
+
+1999-12-20  Havoc Pennington  <hp@redhat.com>
+
 	* tests/testlisteners.c: fix include
 
 	* wrappers/gtk/gconf-client.c (gconf_client_preload): Actually
