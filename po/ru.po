@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-07-16 08:55+0400\n"
+"POT-Creation-Date: 2004-01-21 03:42+0100\n"
+"PO-Revision-Date: 2004-01-21 16:38+0300\n"
 "Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,40 @@ msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "Невозможно прочитать из или записать в корневой каталог \"%s\" по адресу \"%s"
 "\""
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Невозможно найти каталог \"%s\"\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Произошла ошибка сохранения дерева GConf в \"%s\": %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Использование: %s <каталог>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Использование: %s <каталог>\n"
+"  Сливает иерархию файлов вида\n"
+"    каталог/%%gconf.xml\n"
+"        подкаталог1/%%gconf.xml\n"
+"        подкаталог2/%%gconf.xml\n"
+"  в\n"
+"    каталог/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -59,7 +93,6 @@ msgid "Error syncing the XML backend directory cache: %s"
 msgstr "Произошла ошибка синхронизации кэша каталога серверного модуля XML: %s"
 
 #: backends/xml-backend.c:684
-#, fuzzy
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -84,7 +117,7 @@ msgid "Initializing XML backend module"
 msgstr "Инициализируется серверный модуль XML"
 
 #: backends/xml-backend.c:877
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Произошёл сбой при разблокировке XML-каталога \"%s\": %s"
 
@@ -417,7 +450,7 @@ msgid "Error checking existence of `%s': %s"
 msgstr "Произошла ошибка проверки существования \"%s\": %s"
 
 #: gconf/gconf-database.c:1520
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing directory \"%s\": %s"
 msgstr "Произошла ошибка удаления каталога \"%s\": %s"
 
@@ -1139,13 +1172,13 @@ msgstr ""
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit %s"
 msgstr ""
 "Нет источников конфигурации в пути источников, конфигурация не была "
-"сохранена; отредактировать "
+"сохранена; отредактировать %s"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1204,9 +1237,9 @@ msgid "Owner of %s is not the current user"
 msgstr "Текущий пользователь не является владельцем %s"
 
 #: gconf/gconfd.c:504
-#, fuzzy, c-format
+#, c-format
 msgid "Bad permissions %lo on directory %s"
-msgstr "Неправильные права доступа %o для каталога %s"
+msgstr "Права доступа %lo для каталога \"%s\" неверны"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
@@ -1712,12 +1745,10 @@ msgid "Shutdown error: %s\n"
 msgstr "Произошла ошибка выключения: %s\n"
 
 #: gconf/gconftool.c:1120
-#, fuzzy
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Требуется указать один или более каталогов для рекурсивного списка.\n"
 
 #: gconf/gconftool.c:1172
-#, fuzzy
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Требуется указать один или более каталогов для выгрузки (dump).\n"
 
@@ -1949,11 +1980,9 @@ msgid "Error syncing: %s"
 msgstr "Произошла ошибка синхронизации: %s"
 
 #: gconf/gconftool.c:2283
-#, fuzzy
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
-"Необходимо указать один или более каталогов для получения пар ключ/"
-"значение.\n"
+"Требуется указать один или более каталогов для получения пар ключ/значение.\n"
 
 #: gconf/gconftool.c:2297
 msgid "Must specify one or more keys to unset.\n"
@@ -1974,10 +2003,9 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Произошёл сбой при рекурсивном удалении \"%s\": %s\n"
 
 #: gconf/gconftool.c:2362
-#, fuzzy
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
-"Необходимо указать один или более каталогов для получения из них "
+"Требуется указать один или более каталогов для получения из них "
 "подкаталогов.\n"
 
 #: gconf/gconftool.c:2396
