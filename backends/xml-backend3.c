@@ -153,6 +153,8 @@ typedef struct _Dir Dir;
 struct _Dir {
   XMLSource* source;
   gchar* key;
+  gchar* fs_dirname;
+  gchar* xml_filename;
   GTime last_access; /* so we know when to un-cache */
   GTime mod_time;    /* time of last dir modification */
   xmlDocPtr doc;
@@ -169,9 +171,13 @@ static gboolean    dir_sync        (Dir* d);
  /* key should have no slashes in it */
 static void        dir_set_value   (Dir* d, const gchar* relative_key);
 static GConfValue* dir_get_value   (Dir* d, const gchar* relative_key);
+static GConfMetaInfo* dir_get_metainfo(Dir* d, const gchar* relative_key);
 static void        dir_unset_value (Dir* d, const gchar* relative_key);
 static GSList*     dir_all_entries (Dir* d);
 static GSList*     dir_all_subdirs (Dir* d);
+static void        dir_set_schema  (Dir* d,
+                                    const gchar* relative_key,
+                                    const gchar* schema_key);
 /* doesn't have to be empty */
 static gboolean    dir_delete      (Dir* d);
 static GTime       dir_last_access (Dir* d);
@@ -183,6 +189,7 @@ typedef struct _DirCache DirCache;
 struct _DirCache {
   XMLSource* source;
   GHashTable* cache;
+  GHashTable* nonexistent_cache;
   GTime length; /* amount of time to keep cached items */
 };
 
@@ -190,6 +197,11 @@ static DirCache*   dir_cache_new         (XMLSource* source, GTime length);
 static void        dir_cache_destroy     (DirCache* dc);
 static Dir*        dir_cache_lookup      (DirCache* dc,
                                           const gchar* key);
+static gboolean    dir_cache_lookup_nonexistent(DirCache* dc,
+                                                const gchar* key);
+static void        dir_cache_set_nonexistent   (DirCache* dc,
+                                                const gchar* key,
+                                                gboolean setting);
 static void        dir_cache_insert      (DirCache* dc, Dir* d);
 static void        dir_cache_remove      (DirCache* dc, Dir* d);
 static void        dir_cache_sync        (DirCache* dc);
@@ -202,6 +214,412 @@ struct _XMLSource {
   gchar* root_dir;
   DirCache* cache;
 };
+
+static XMLSource* xs_new       (const gchar* root_dir);
+static void       xs_destroy   (XMLSource* source);
+static Dir*       xs_do_very_best_to_load_dir(XMLSource* xs,
+                                              const gchar* key);
+static Dir*       xs_create_or_load_dir      (XMLSource* xs,
+                                              const gchar* key);
+
+/*
+ * VTable functions
+ */
+
+static void          shutdown        (void);
+
+static GConfSource*  resolve_address (const gchar* address);
+
+static GConfValue*   query_value     (GConfSource* source, const gchar* key);
+
+static GConfMetaInfo*query_metainfo  (GConfSource* source, const gchar* key_or_dir);
+
+static void          set_value       (GConfSource* source, const gchar* key, GConfValue* value);
+
+static GSList*       all_entries    (GConfSource* source,
+                                     const gchar* dir);
+
+static GSList*       all_subdirs     (GConfSource* source,
+                                      const gchar* dir);
+
+static void          unset_value     (GConfSource* source,
+                                      const gchar* key);
+
+static void          remove_dir      (GConfSource* source,
+                                      const gchar* dir);
+
+static void          set_schema      (GConfSource* source,
+                                      const gchar* key,
+                                      const gchar* schema_key);
+
+static gboolean      sync_all        (GConfSource* source);
+
+static void          destroy_source  (GConfSource* source);
+
+static GConfBackendVTable xml_vtable = {
+  shutdown,
+  resolve_address,
+  query_value,
+  query_metainfo,
+  set_value,
+  all_entries,
+  all_subdirs,
+  unset_value,
+  remove_dir,
+  set_schema,
+  sync_all,
+  destroy_source
+};
+
+static void          
+shutdown (void)
+{
+  printf("Shutting down XML module\n");
+}
+
+static GConfSource*  
+resolve_address (const gchar* address)
+{
+  gchar* root_dir;
+  XMLSource* xsource;
+  GConfSource* source;
+  guint len;
+
+  root_dir = g_conf_address_resource(address);
+
+  if (root_dir == NULL)
+    {
+      g_conf_set_error(G_CONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address"));
+      return NULL;
+    }
+
+  /* Chop trailing '/' to canonicalize */
+  len = strlen(root_dir);
+
+  if (root_dir[len-1] == '/')
+    root_dir[len-1] = '\0';
+
+  /* Create the new source */
+
+  xsource = xs_new(root_dir);
+
+  g_free(root_dir);
+
+  source = (GConfSource*)xsource;
+  
+  /* FIXME just a hack for now, eventually
+     it'll be based on something 
+  */
+  source->flags |= G_CONF_SOURCE_WRITEABLE;
+
+  return source;
+}
+
+static GConfValue* 
+query_value (GConfSource* source, const gchar* key)
+{
+  XMLSource* xs = (XMLSource*)source;
+  gchar* parent;
+  Dir* dir;
+
+  parent = g_conf_key_directory(key);
+  
+  g_assert(parent != NULL);
+  
+  dir = xs_do_very_best_to_load_dir(xs, parent);
+
+  g_free(parent);
+  parent = NULL;
+  
+  if (dir != NULL)
+    {
+      const gchar* relative_key;
+  
+      relative_key = g_conf_key_key(key);
+
+      return dir_get_value(dir, relative_key);
+    }
+  else
+    return NULL;
+}
+
+static GConfMetaInfo*
+query_metainfo  (GConfSource* source, const gchar* key_or_dir)
+{
+  XMLSource* xs = (XMLSource*)source;
+
+  return NULL; /* for now */
+}
+
+static void          
+set_value (GConfSource* source, const gchar* key, GConfValue* value)
+{
+  XMLSource* xs = (XMLSource*)source;
+  Dir* dir;
+  gchar* parent;
+  
+  g_return_if_fail(value != NULL);
+
+  parent = g_conf_key_directory(key);
+  
+  g_assert(parent != NULL);
+  
+  dir = xs_create_or_load_dir(xs, parent);
+  
+  g_free(parent);
+  parent = NULL;
+
+  if (dir == NULL)
+    return; /* error should be set */
+  else
+    {
+      const gchar* relative_key;
+      
+      relative_key = g_conf_key_key(key);
+      
+      dir_set_value(dir, relative_key, value);
+    }
+}
+
+
+static GSList*             
+all_entries    (GConfSource* source,
+                const gchar* key)
+{
+  XMLSource* xs = (XMLSource*)source;
+  Dir* dir;
+
+  dir = xs_do_very_best_to_load_dir(xs, key);
+  
+  if (dir == NULL)
+    return NULL;
+  else
+    return dir_all_entries(dir);
+}
+
+static GSList*
+all_subdirs     (GConfSource* source,
+                 const gchar* key)
+
+{  
+  XMLSource* xs = (XMLSource*)source;
+
+  dir = xs_do_very_best_to_load_dir(xs, key);
+  
+  if (dir == NULL)
+    return NULL;
+  else
+    return dir_all_subdirs(dir);
+}
+
+static void          
+unset_value     (GConfSource* source,
+                 const gchar* key)
+{
+  XMLSource* xs = (XMLSource*)source;
+  
+  dir = xs_do_very_best_to_load_dir(xs, key);
+  
+  if (dir == NULL)
+    return;
+  else
+    {
+      const gchar* relative_key;
+  
+      relative_key = g_conf_key_key(key);
+
+      dir_unset_value(dir, relative_key);
+    }
+}
+
+static void          
+remove_dir      (GConfSource* source,
+                 const gchar* key)
+{
+  XMLSource* xs = (XMLSource*)source;
+
+  dir = xs_do_very_best_to_load_dir(xs, key);
+  
+  if (dir == NULL)
+    return;
+  else
+    {
+      dir_delete(dir);
+    }
+}
+
+static void          
+set_schema      (GConfSource* source,
+                 const gchar* key,
+                 const gchar* schema_key)
+{
+  XMLSource* xs = (XMLSource*)source;
+
+  Dir* dir;
+  gchar* parent;
+  
+  g_return_if_fail(value != NULL);
+
+  parent = g_conf_key_directory(key);
+  
+  g_assert(parent != NULL);
+  
+  dir = xs_create_or_load_dir(xs, parent);
+  
+  g_free(parent);
+  parent = NULL;
+
+  if (dir == NULL)
+    return; /* error should be set */
+  else
+    {
+      const gchar* relative_key;
+      
+      relative_key = g_conf_key_key(key);
+      
+      dir_set_schema(dir, relative_key, schema_key);
+    }
+}
+
+static gboolean      
+sync_all        (GConfSource* source)
+{
+  XMLSource* xs = (XMLSource*)source;
+
+  dir = xs_do_very_best_to_load_dir(xs, key);
+  
+  if (dir == NULL)
+    return;
+  else
+    {
+      dir_sync(dir);
+    }
+}
+
+static void          
+destroy_source  (GConfSource* source)
+{
+  xs_destroy((XMLSource*)source);
+}
+
+/* Initializer */
+
+G_MODULE_EXPORT const gchar*
+g_module_check_init (GModule *module)
+{
+  printf("Initializing XML module\n");
+
+  return NULL;
+}
+
+G_MODULE_EXPORT GConfBackendVTable* 
+g_conf_backend_get_vtable(void)
+{
+  return &xml_vtable;
+}
+
+/*
+ * Misc helpers
+ */
+
+static Dir*
+xs_do_very_best_to_load_dir(XMLSource* xs,
+                            const gchar* key)
+{
+  Dir* dir;
+
+  g_assert(key != NULL);
+
+  /* Check cache */
+  dir = dir_cache_lookup(xs->cache, key);
+  
+  if (dir != NULL)
+    {
+      return dir;
+    }
+  else
+    {
+      /* Not in cache, check whether we already failed
+         to load it */
+      if (dir_cache_lookup_nonexistent(xs->cache, key))
+        {
+          return NULL;
+        }
+      else
+        {
+          /* Didn't already fail to load, try to load */
+          dir = dir_load(xs, key);
+          
+          if (dir != NULL)
+            {
+              /* Cache it */
+              dir_cache_insert(xs->cache, dir);
+              
+              return dir;
+            }
+          else
+            {
+              /* Remember that we failed to load it */
+              dir_cache_set_nonexistent(xs->cache, key, TRUE);
+              
+              return NULL;
+            }
+        }
+    }
+}
+
+static Dir*
+xs_create_or_load_dir      (XMLSource* xs,
+                            const gchar* key)
+{
+  Dir* dir;
+  
+  dir = xs_do_very_best_to_load_dir(xs, key);
+  
+  if (dir == NULL)
+    {
+      dir = dir_create(xs, parent);
+
+      if (dir == NULL)
+        return NULL; /* error should be set */
+      else
+        dir_cache_insert(xs->cache, dir);
+    }
+
+  return dir;
+}
+
+/******************************************************/
+
+/*
+ *  XMLSource
+ */ 
+
+static XMLSource*
+xs_new       (const gchar* root_dir)
+{
+  XMLSource* xs;
+
+  g_return_val_if_fail(root_dir != NULL, NULL);
+
+  xs = g_new0(XMLSource, 1);
+
+  xs->root_dir = g_strdup(root_dir);
+
+  xs->cache = dir_cache_new(xs);
+
+  return xs;
+}
+
+static void
+xs_destroy   (XMLSource* xs)
+{
+  g_return_if_fail(xs != NULL);
+
+  dir_cache_destroy(xs->cache);
+  g_free(xs->root_dir);
+  g_free(xs);
+}
 
 /*
  * DirCache
@@ -217,6 +635,10 @@ static void dir_cache_sync_foreach(const gchar* key,
 static void dir_cache_destroy_foreach(const gchar* key,
                                       Dir* dir, gpointer data);
 
+static void dir_cache_destroy_nonexistent_foreach(gchar* key,
+                                                  gpointer val,
+                                                  gpointer data);
+
 static gboolean dir_cache_clean_foreach(const gchar* key,
                                         Dir* dir, CleanData* cd);
 
@@ -230,7 +652,8 @@ dir_cache_new         (XMLSource* source, GTime length)
   dc->source = source;
   
   dc->cache = g_hash_table_new(g_str_hash, g_str_equal);
-
+  dc->nonexistent_cache = g_hash_table_new(g_str_hash, g_str_equal);
+  
   dc->length = length;
 }
 
@@ -239,7 +662,11 @@ dir_cache_destroy     (DirCache* dc)
 {
   g_hash_table_foreach(dc->cache, (GHFunc)dir_cache_destroy_foreach,
                        NULL);
+  g_hash_table_foreach(dc->nonexistent_cache,
+                       (GHFunc)dir_cache_destroy_nonexistent_foreach,
+                       NULL);
   g_hash_table_destroy(dc->cache);
+  g_hash_table_destroy(dc->nonexistent_cache);
   g_free(dc);
 }
 
@@ -248,6 +675,42 @@ dir_cache_lookup      (DirCache* dc,
                        const gchar* key)
 {
   return g_hash_table_lookup(dc->cache, key);
+}
+
+static gboolean
+dir_cache_lookup_nonexistent(DirCache* dc,
+                             const gchar* key)
+{
+  return GPOINTER_TO_INT(g_hash_table_lookup(dc->nonexistent_cache,
+                                             key));
+}
+
+static void
+dir_cache_set_nonexistent   (DirCache* dc,
+                             const gchar* key,
+                             gboolean setting)
+{
+  if (setting)
+    {
+      /* don't use safe_ here, doesn't matter */
+      g_hash_table_insert(dc->nonexistent_cache,
+                          g_strdup(key),
+                          GINT_TO_POINTER(TRUE));
+    }
+  else
+    {
+      gpointer origkey;
+      gpointer origval;
+
+      if (g_hash_table_lookup_extended(dc->nonexistent_cache,
+                                       key,
+                                       &origkey, &origval))
+        {
+          g_free(origkey);
+          g_hash_table_remove(dc->nonexistent_cache,
+                              key);
+        }
+    }
 }
 
 static void
@@ -310,6 +773,14 @@ dir_cache_destroy_foreach(const gchar* key,
   dir_destroy(dir);
 }
 
+static void
+dir_cache_destroy_nonexistent_foreach(gchar* key,
+                                      gpointer val,
+                                      gpointer data)
+{
+  g_free(key);
+}
+
 static gboolean
 dir_cache_clean_foreach(const gchar* key,
                         Dir* dir, gpointer data)
@@ -329,5 +800,169 @@ dir_cache_clean_foreach(const gchar* key,
  * Dir
  */
 
+static Dir*
+dir_new_blank(XMLSource* source, const gchar* key,
+              gchar* xml_filename, gchar* fs_dirname);
+
+static Dir*
+dir_load        (XMLSource* source, const gchar* key)
+{
+  xmlDocPtr 
+  Dir* d;
+  gchar* fs_dirname;
+  gchar* xml_filename;
+  
+  fs_dirname = g_conf_concat_key_and_dir(source->root_dir, key);
+  xml_filename = g_strconcat(fs_dirname, "/.gconf.xml", NULL);
+  
+  doc = xmlParseFile(xml_filename);
+
+  if (doc == NULL)
+    {
+      g_conf_set_error(G_CONF_FAILED,
+                       _("Couldn't load file `%s'"), xml_filename);
+      g_free(fs_dirname);
+      g_free(xml_filename);
+      return NULL;
+    }
+
+  if (doc->root == NULL ||
+      strcmp(doc->root->name, "gconf") != 0)
+    {
+      g_conf_set_error(G_CONF_FAILED,
+                       _("Empty or wrong type document `%s'"),
+                       xml_filename);
+      g_free(fs_dirname);
+      g_free(xml_filename);
+      return NULL;
+    }
+  
+  d = dir_new_blank(source, key, fs_dirname, xml_filename);
+
+  d->doc = doc;
+
+  /* FIXME find mod time in doc */
+
+  /* FIXME fill child_cache from entries and subdirs */
+  
+  return d;
+}
+
+static Dir*
+dir_create      (XMLSource* source, const gchar* key)
+{
 
 
+}
+
+static void
+dir_destroy     (Dir* d)
+{
+  g_free(d->key);
+  g_free(d->fs_dirname);
+  g_free(d->xml_filename);
+  
+  if (d->doc != NULL)
+    xmlFreeDoc(d->doc);
+  
+  /* FIXME foreach destroy the child entries */
+  g_hash_table_destroy(d->child_cache);
+
+  g_free(d);
+}
+
+static gboolean
+dir_sync        (Dir* d)
+{
+
+
+}
+
+static void
+dir_set_value   (Dir* d, const gchar* relative_key)
+{
+
+
+}
+
+static GConfValue*
+dir_get_value   (Dir* d, const gchar* relative_key)
+{
+
+
+}
+
+static GConfMetaInfo*
+dir_get_metainfo(Dir* d, const gchar* relative_key)
+{
+
+
+}
+
+static void
+dir_unset_value (Dir* d, const gchar* relative_key)
+{
+
+
+}
+
+static GSList*
+dir_all_entries (Dir* d)
+{
+
+
+}
+
+static GSList*
+dir_all_subdirs (Dir* d)
+{
+
+}
+
+static void
+dir_set_schema  (Dir* d,
+                 const gchar* relative_key,
+                 const gchar* schema_key)
+{
+
+
+}
+static gboolean
+dir_delete      (Dir* d)
+{
+
+
+}
+
+static GTime
+dir_last_access (Dir* d)
+{
+  return d->last_access;
+}
+
+
+/* private Dir functions */
+
+static Dir*
+dir_new_blank(XMLSource* source, const gchar* key, gchar* xml_filename)
+{
+  Dir* d;
+  
+  d = g_new0(Dir, 1);
+
+  d->source = source;
+  d->key = g_strdup(key);
+
+  d->xml_filename = xml_filename;
+  
+  d->last_access = time(NULL);
+  d->mod_time = 0;
+  d->doc = NULL;
+
+  d->child_cache = g_hash_table_new(g_str_hash, g_str_equal);
+
+  d->dirty = FALSE;
+  d->deleted = FALSE;
+
+  return d;
+}

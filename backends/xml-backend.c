@@ -283,9 +283,6 @@ static void          unset_value     (GConfSource* source,
 static void          remove_dir      (GConfSource* source,
                                       const gchar* dir);
 
-static void          nuke_dir        (GConfSource* source,
-                                      const gchar* dir);
-
 static void          set_schema      (GConfSource* source,
                                       const gchar* key,
                                       const gchar* schema_key);
@@ -304,7 +301,6 @@ static GConfBackendVTable xml_vtable = {
   all_subdirs,
   unset_value,
   remove_dir,
-  nuke_dir,
   set_schema,
   sync_all,
   destroy_source
@@ -467,22 +463,6 @@ remove_dir      (GConfSource* source,
   TreeCacheEntry* entry;
 
   g_warning("Not implemented");
-}
-
-static void          
-nuke_dir      (GConfSource* source,
-               const gchar* dir)
-{
-  XMLSource* xsource = (XMLSource*)source;
-  CacheEntry* entry;
-
-  entry = xs_lookup(xsource, dir);
-
-  g_assert(entry != NULL);
-
-  g_assert_not_reached(); /* don't use this method yet */
-  
-  /* FIXME */
 }
 
 static void          
