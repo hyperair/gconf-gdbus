@@ -9,28 +9,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-04-16 14:40+0200\n"
-"PO-Revision-Date: 2004-04-16 16:31+0200\n"
+"POT-Creation-Date: 2004-04-20 14:47+0200\n"
+"PO-Revision-Date: 2004-04-20 20:33+0200\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: backends/dir-utils.c:108
-#, c-format
-msgid "Couldn't find the %s root directory in the address `%s'"
-msgstr "Nemohu nalézt kořenový adresář %s na adrese `%s'"
-
-#: backends/dir-utils.c:124 backends/xml-backend.c:336
-#, c-format
-msgid "Could not make directory `%s': %s"
-msgstr "Nemohu vytvořit adresář `%s': %s"
-
-#: backends/dir-utils.c:212
-#, c-format
-msgid "Can't read from or write to the %s root directory in the address `%s'"
-msgstr "Nemohu číst nebo zapisovat do kořenového adresáře %s na adrese `%s'"
 
 #: backends/gconf-merge-tree.c:78
 #, c-format
@@ -66,32 +51,32 @@ msgstr ""
 "  to:\n"
 "    adr/%%gconf-tree.xml\n"
 
-#: backends/xml-backend.c:240
-msgid "Unloading XML backend module."
-msgstr "Uvolňuji modul pro provoz nad XML."
+#: backends/markup-backend.c:163
+msgid "Unloading text markup backend module."
+msgstr "Uvolňuji modul pro provoz nad textem se značkami."
 
-#: backends/xml-backend.c:289
+#: backends/markup-backend.c:226 backends/xml-backend.c:289
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Nemohu nalézt kořenový adresář XML na adrese `%s'"
 
-#: backends/xml-backend.c:447
+#: backends/markup-backend.c:282 backends/xml-backend.c:344
+#, c-format
+msgid "Could not make directory `%s': %s"
+msgstr "Nemohu vytvořit adresář `%s': %s"
+
+#: backends/markup-backend.c:383 backends/xml-backend.c:443
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "Nemohu číst nebo zapisovat do kořenového adresáře XML na adrese \"%s\""
 
-#: backends/xml-backend.c:457
+#: backends/markup-backend.c:394 backends/xml-backend.c:453
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Oprávnění k adresáři/souboru pro zdroj XML v kořeni %s jsou: %o/%o"
 
-#: backends/xml-backend.c:623
-#, c-format
-msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Chyba při synchronizaci vyrovnávací paměti adresářů modulu XML: %s"
-
-#: backends/xml-backend.c:688
+#: backends/markup-backend.c:733 backends/xml-backend.c:684
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -99,24 +84,199 @@ msgstr ""
 "Operace odstranění adresáře již není podporována, jednoduše odstraňte "
 "všechny hodnoty z adresáře"
 
-#: backends/xml-backend.c:774
+#: backends/markup-backend.c:819 backends/xml-backend.c:770
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr "Nemohu otevřít adresář zámků pro %s pro odstranění zámků: %s\n"
 
-#: backends/xml-backend.c:792
+#: backends/markup-backend.c:837 backends/xml-backend.c:788
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Nemohu odstranit soubor %s: %s\n"
 
-#: backends/xml-backend.c:813
-msgid "Initializing XML backend module"
-msgstr "Inicializuji modul pro provoz nad XML"
+#: backends/markup-backend.c:858
+msgid "Initializing Markup backend module"
+msgstr "Inicializuji modul pro provoz nad textem se značkami"
 
-#: backends/xml-backend.c:881
+#: backends/markup-backend.c:930 backends/xml-backend.c:877
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Nemohu uvolnit zámek na adresář XML \"%s\": %s"
+
+#: backends/markup-tree.c:348
+msgid "Failed to write some configuration data to disk\n"
+msgstr "Nemohu zapsat některá data nastavení na disk\n"
+
+#: backends/markup-tree.c:752 backends/xml-dir.c:1255
+#, c-format
+msgid "Could not make directory \"%s\": %s"
+msgstr "Nemohu vytvořit adresář \"%s\": %s"
+
+#: backends/markup-tree.c:795 backends/markup-tree.c:802
+#, c-format
+msgid "Could not remove \"%s\": %s\n"
+msgstr "Nemohu odstranit \"%s\": %s\n"
+
+#: backends/markup-tree.c:955
+#, c-format
+msgid "Failed to write \"%s\": %s\n"
+msgstr "Nemohu zapsat \"%s\": %s\n"
+
+#: backends/markup-tree.c:1633
+#, c-format
+msgid "Line %d character %d: %s"
+msgstr "Řádek %d znak %d: %s"
+
+#: backends/markup-tree.c:1846
+#, c-format
+msgid "Attribute \"%s\" repeated twice on the same <%s> element"
+msgstr "Atribut \"%s\" opakován dvakrát u jednoho elementu <%s>"
+
+#: backends/markup-tree.c:1863 backends/markup-tree.c:1887
+#, c-format
+msgid "Attribute \"%s\" is invalid on <%s> element in this context"
+msgstr "Atribut \"%s\" u elementu <%s> není v tomto kontextu platný"
+
+#: backends/markup-tree.c:1912 gconf/gconf-value.c:110
+#, c-format
+msgid "Didn't understand `%s' (expected integer)"
+msgstr "Nerozpoznáno `%s' (očekáváno celé číslo)"
+
+#: backends/markup-tree.c:1919 gconf/gconf-value.c:120
+#, c-format
+msgid "Integer `%s' is too large or small"
+msgstr "Celé číslo `%s' je příliš velké nebo příliš malé"
+
+#: backends/markup-tree.c:1951 gconf/gconf-value.c:185
+#, c-format
+msgid "Didn't understand `%s' (expected true or false)"
+msgstr "Nerozpoznáno `%s' (očekáváno true nebo false)"
+
+#: backends/markup-tree.c:1975 gconf/gconf-value.c:141
+#, c-format
+msgid "Didn't understand `%s' (expected real number)"
+msgstr "Nerozpoznáno `%s' (očekáváno reálné číslo)"
+
+#: backends/markup-tree.c:2045 backends/markup-tree.c:2074
+#: backends/markup-tree.c:2114 backends/markup-tree.c:2138
+#: backends/markup-tree.c:2146 backends/markup-tree.c:2201
+#: backends/markup-tree.c:2266 backends/markup-tree.c:2374
+#: backends/markup-tree.c:2453 backends/markup-tree.c:2565
+#, c-format
+msgid "No \"%s\" attribute on element <%s>"
+msgstr "Chybí \"%s\" atribut u elementu <%s>"
+
+#: backends/markup-tree.c:2054
+#, c-format
+msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
+msgstr "Neznámá hodnota \"%s\" atributu \"%s\" u elementu <%s>"
+
+#: backends/markup-tree.c:2088
+#, c-format
+msgid "Invalid ltype \"%s\" on <%s>"
+msgstr "Neplatný ltype \"%s\" u <%s>"
+
+#: backends/markup-tree.c:2168
+#, c-format
+msgid "Invalid car_type \"%s\" on <%s>"
+msgstr "Neplatný car_type \"%s\" u <%s>"
+
+#: backends/markup-tree.c:2182
+#, c-format
+msgid "Invalid cdr_type \"%s\" on <%s>"
+msgstr "Neplatný cdr_type \"%s\" u <%s>"
+
+#: backends/markup-tree.c:2218
+#, c-format
+msgid "Invalid list_type \"%s\" on <%s>"
+msgstr "Neplatný list_type \"%s\" u <%s>"
+
+#: backends/markup-tree.c:2499
+msgid "Two <default> elements below a <local_schema>"
+msgstr "Dva elementy <default> pod <local_schema>"
+
+#: backends/markup-tree.c:2514
+msgid "Two <longdesc> elements below a <local_schema>"
+msgstr "Dva elementy <longdesc> pod <local_schema>"
+
+#: backends/markup-tree.c:2521
+#, c-format
+msgid "Element <%s> is not allowed below <%s>"
+msgstr "Element <%s> není povolen pod <%s>"
+
+#: backends/markup-tree.c:2545 backends/markup-tree.c:2637
+#: backends/markup-tree.c:2691 backends/markup-tree.c:2739
+#, c-format
+msgid "<%s> provided but current element does not have type %s"
+msgstr "Poskytnuto <%s>, ale aktuální element nemá typ %s"
+
+#: backends/markup-tree.c:2615
+msgid "Two <car> elements given for same pair"
+msgstr "Uvedeny dva elementy <car> u jednoho páru"
+
+#: backends/markup-tree.c:2629
+msgid "Two <cdr> elements given for same pair"
+msgstr "Uvedeny dva elementy <cdr> u jednoho páru"
+
+#: backends/markup-tree.c:2683
+#, c-format
+msgid "<li> has wrong type %s"
+msgstr "<li> má špatný typ %s"
+
+#: backends/markup-tree.c:2712
+#, c-format
+msgid "<%s> provided but parent <entry> does not have a value"
+msgstr "Poskytnuto <%s>, ale rodičovský <entry> nemá hodnotu"
+
+#: backends/markup-tree.c:2752 backends/markup-tree.c:2774
+#: backends/markup-tree.c:2796 backends/markup-tree.c:2813
+#, c-format
+msgid "Element <%s> is not allowed inside current element"
+msgstr "Element <%s> není uvnitř aktuálního elementu povolen"
+
+#: backends/markup-tree.c:2845
+#, c-format
+msgid "Outermost element in menu file must be <gconf> not <%s>"
+msgstr "Vnější element v soubor menu musí být <gconf>, ne <%s>"
+
+#: backends/markup-tree.c:2865 backends/markup-tree.c:2887
+#: backends/markup-tree.c:2892
+#, c-format
+msgid "Element <%s> is not allowed inside a <%s> element"
+msgstr "Element <%s> není uvnitř elementu <%s> povolen"
+
+#: backends/markup-tree.c:2972
+#, c-format
+msgid "No text is allowed inside element <%s>"
+msgstr "Uvnitř elementu <%s> není povolen text"
+
+#: backends/markup-tree.c:3648 backends/markup-tree.c:3662
+#, c-format
+msgid "Failed to open \"%s\": %s\n"
+msgstr "Nemohu otevřít \"%s\": %s\n"
+
+#: backends/markup-tree.c:3736
+#, c-format
+msgid "Error writing file \"%s\": %s"
+msgstr "Chyba při zápisu souboru \"%s\": %s"
+
+#: backends/markup-tree.c:3743
+#, c-format
+msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
+msgstr "Nemohu přesunout dočasný soubor \"%s\" na konečné umístění \"%s\": %s"
+
+#: backends/xml-backend.c:240
+msgid "Unloading XML backend module."
+msgstr "Uvolňuji modul pro provoz nad XML."
+
+#: backends/xml-backend.c:619
+#, c-format
+msgid "Error syncing the XML backend directory cache: %s"
+msgstr "Chyba při synchronizaci vyrovnávací paměti adresářů modulu XML: %s"
+
+#: backends/xml-backend.c:809
+msgid "Initializing XML backend module"
+msgstr "Inicializuji modul pro provoz nad XML"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -201,11 +361,6 @@ msgstr "Položka bez názvu v souboru XML `%s', ignoruji"
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "Kořenový uzel v souboru XML `%s' je <%s> místo <entry>, ignoruji"
-
-#: backends/xml-dir.c:1255
-#, c-format
-msgid "Could not make directory \"%s\": %s"
-msgstr "Nemohu vytvořit adresář \"%s\": %s"
 
 #: backends/xml-dir.c:1271
 #, c-format
@@ -407,7 +562,9 @@ msgstr "Nemohu synchronizovat jeden nebo více zdrojů: %s"
 msgid ""
 "Error obtaining new value for `%s' after change notification from backend `%"
 "s': %s"
-msgstr "Chyba při získávání nové hodnoty `%s' po upozornění na změnu od modulu `%s': %s"
+msgstr ""
+"Chyba při získávání nové hodnoty `%s' po upozornění na změnu od modulu `%s': "
+"%s"
 
 #: gconf/gconf-database.c:1119
 #, c-format
@@ -738,27 +895,27 @@ msgstr "Nemohu odstranit adresář zámků `%s': %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Nemohu odstranit soubor zámku %s: %s\n"
 
-#: gconf/gconf-internals.c:2932 gconf/gconfd.c:681
+#: gconf/gconf-internals.c:2939 gconf/gconfd.c:529
 #, c-format
-msgid "Failed to create %s: %s"
-msgstr "Nemohu vytvořit %s: %s"
+msgid "Failed to stat %s: %s"
+msgstr "Nemohu stat %s: %s"
 
-#: gconf/gconf-internals.c:2954
+#: gconf/gconf-internals.c:2961
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Chyba při pingu serveru: %s"
 
-#: gconf/gconf-internals.c:2975
+#: gconf/gconf-internals.c:2985
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "Nemohu vytvořit rour pro komunikaci s vytvořeným démonem gconfd: %s\n"
 
-#: gconf/gconf-internals.c:2999
+#: gconf/gconf-internals.c:3009
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Nemohu spustit server nastavení: %s\n"
 
-#: gconf/gconf-internals.c:3024
+#: gconf/gconf-internals.c:3034
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -770,7 +927,7 @@ msgstr ""
 "TCP/IP síť pro ORBit nebo máte staré zámky NFS po pádu systému. Více "
 "informací viz na http://www.gnome.org/projects/gconf/. (Detaily - %s)"
 
-#: gconf/gconf-internals.c:3025
+#: gconf/gconf-internals.c:3035
 msgid "none"
 msgstr "žádné"
 
@@ -1002,26 +1159,6 @@ msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
 "Klíč `%s' uvedený jako schéma pro klíč `%s' ve skutečnosti obsahuje typ `%s'"
 
-#: gconf/gconf-value.c:110
-#, c-format
-msgid "Didn't understand `%s' (expected integer)"
-msgstr "Nerozpoznáno `%s' (očekáváno celé číslo)"
-
-#: gconf/gconf-value.c:120
-#, c-format
-msgid "Integer `%s' is too large or small"
-msgstr "Celé číslo `%s' je příliš velké nebo příliš malé"
-
-#: gconf/gconf-value.c:141
-#, c-format
-msgid "Didn't understand `%s' (expected real number)"
-msgstr "Nerozpoznáno `%s' (očekáváno reálné číslo)"
-
-#: gconf/gconf-value.c:185
-#, c-format
-msgid "Didn't understand `%s' (expected true or false)"
-msgstr "Nerozpoznáno `%s' (očekáváno true nebo false)"
-
 #: gconf/gconf-value.c:261
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
@@ -1223,11 +1360,6 @@ msgstr "Obdržen signál %d, provádím řádné ukončení."
 msgid "Failed to open %s: %s"
 msgstr "Nemohu otevřít %s: %s"
 
-#: gconf/gconfd.c:529
-#, c-format
-msgid "Failed to stat %s: %s"
-msgstr "Nemohu stat %s: %s"
-
 #: gconf/gconfd.c:538
 #, c-format
 msgid "Owner of %s is not the current user"
@@ -1248,6 +1380,11 @@ msgstr "startuji (verze %s), pid %u, uživatel '%s'"
 #: gconf/gconfd.c:668
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Nemohu získat odkaz na objekt pro ConfigServer"
+
+#: gconf/gconfd.c:681
+#, c-format
+msgid "Failed to create %s: %s"
+msgstr "Nemohu vytvořit %s: %s"
 
 #: gconf/gconfd.c:688
 #, c-format
@@ -1305,32 +1442,32 @@ msgid ""
 msgstr ""
 "Nemohu zavřít soubor záznamů gconfd; data možná nejsou řádně uložena (%s)"
 
-#: gconf/gconfd.c:1440
+#: gconf/gconfd.c:1433
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Nemohu otevřít soubor s uloženým stavem '%s' pro zápis: %s"
 
-#: gconf/gconfd.c:1454
+#: gconf/gconfd.c:1447
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Nemohu zapsat soubor s uloženým stavem '%s', fd: %d: %s"
 
-#: gconf/gconfd.c:1463
+#: gconf/gconfd.c:1456
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Nemohu zavřít nový soubor s uloženým stavem '%s': %s"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1470
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Nemohu odsunout bokem starý soubor s uloženým stavem '%s': %s"
 
-#: gconf/gconfd.c:1487
+#: gconf/gconfd.c:1480
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Nemohu přesunout na místo nový soubor s uloženým stavem: %s"
 
-#: gconf/gconfd.c:1496
+#: gconf/gconfd.c:1489
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1338,24 +1475,24 @@ msgstr ""
 "Nemohu obnovit původní soubor s uloženým stavem, který byl přesunut do '%s': "
 "%s"
 
-#: gconf/gconfd.c:1975
+#: gconf/gconfd.c:1968
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Nepodařilo se obnovit listener na adrese '%s', nemohu zjistit adresu databáze"
 
-#: gconf/gconfd.c:2021
+#: gconf/gconfd.c:2014
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Chyba při čtení souboru s uloženým stavem: %s"
 
-#: gconf/gconfd.c:2075
+#: gconf/gconfd.c:2068
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Nemohu otevřít soubor s uloženým stavem '%s': %s"
 
-#: gconf/gconfd.c:2194
+#: gconf/gconfd.c:2187
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1364,7 +1501,7 @@ msgstr ""
 "Selhalo zaznamenání přidání listenera do záznamového souboru gconfd; nebude "
 "možné listenera znovu přidat, pokud bude program gconfd ukončen (%s)"
 
-#: gconf/gconfd.c:2199
+#: gconf/gconfd.c:2192
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1373,27 +1510,27 @@ msgstr ""
 "Nemohu zaznamenat odstranění listenera do souboru záznamu gconfd; listener "
 "může být znovu chybně přidán, pokud bude gconfd ukončen (%s)"
 
-#: gconf/gconfd.c:2222 gconf/gconfd.c:2396
+#: gconf/gconfd.c:2215 gconf/gconfd.c:2389
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Nemohu získat IOR pro klienta: %s"
 
-#: gconf/gconfd.c:2237
+#: gconf/gconfd.c:2230
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Nemohu otevřít soubor s uloženým stavem: %s"
 
-#: gconf/gconfd.c:2250
+#: gconf/gconfd.c:2243
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Nemohu zaznamenat přidání klienta do souboru s uloženým stavem: %s"
 
-#: gconf/gconfd.c:2258
+#: gconf/gconfd.c:2251
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Nemohu potvrdit přidání klienta do souboru s uloženým stavem: %s"
 
-#: gconf/gconfd.c:2357
+#: gconf/gconfd.c:2350
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "Nějaký klient se odstranil ze serveru GConf, ale nebyl předtím přidán."
@@ -1688,7 +1825,9 @@ msgstr "Při nastavování hodnoty je nutné zadat typ\n"
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
-msgstr "--ignore-schema-defaults má vliv jen s --get, --all-entries, --dump, --recursive-list, --get-list-size nebo --get-list-element\n"
+msgstr ""
+"--ignore-schema-defaults má vliv jen s --get, --all-entries, --dump, --"
+"recursive-list, --get-list-size nebo --get-list-element\n"
 
 #: gconf/gconftool.c:631 gconf/gconftool.c:644 gconf/gconftool.c:657
 #: gconf/gconftool.c:671 gconf/gconftool.c:684 gconf/gconftool.c:697
@@ -2249,6 +2388,13 @@ msgstr ""
 "Pokouším se o narušení vaší aplikace nastavením chybných hodnot pro klíče v "
 "adresáři:\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the %s root directory in the address `%s'"
+#~ msgstr "Nemohu nalézt kořenový adresář %s na adrese `%s'"
+
+#~ msgid ""
+#~ "Can't read from or write to the %s root directory in the address `%s'"
+#~ msgstr "Nemohu číst nebo zapisovat do kořenového adresáře %s na adrese `%s'"
 
 #~ msgid ""
 #~ "You should use --direct when using a non-default configuration source\n"
