@@ -25,3 +25,5 @@ install-data-local:
 	echo $(WARNING_MESSAGE) && \
 	echo "**************"
 
+install-schemas:
+	(cd standard-schemas && $(MAKE) $(AM_MAKEFLAGS) install-schemas)

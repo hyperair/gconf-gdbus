@@ -961,6 +961,8 @@ close_append_handle (void)
         gconf_log (GCL_WARNING,
                    _("Failed to close gconfd logfile; data may not have been properly saved (%s)"),
                    strerror (errno));
+
+      append_handle = NULL;
     }
 }
 

@@ -1,3 +1,17 @@
+2000-10-03  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconfd.c (close_append_handle): set invalid FILE* to 
+	NULL afterward, avoid segfaults.
+
+	* Makefile.am: add install-schemas target here which recurses
+	into standard-schemas and runs install-schemas
+
+	* standard-schemas/Makefile.am (install-schemas): Move schema
+	installation to a special target install-schemas which must be 
+	run manually _after_ make install. This should resolve problems
+	people are having with RPMs and such. However it means spec files
+	have to explicitly add a 'make install-schemas'
+
 2000-09-29  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf.c (drop_all_caches): don't spew warnings here for
