@@ -83,7 +83,7 @@ typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const 
 
 typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
 
-typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client, GConfClientErrorHandlingMode mode, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GConfError* error);
+typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GConfError* error);
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
 #define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))

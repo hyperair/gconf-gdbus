@@ -209,7 +209,7 @@ static void
 gconf_client_init (GConfClient *client)
 {
   client->engine = NULL;
-  client->error_mode = GCONF_CLIENT_HANDLE_NONE;
+  client->error_mode = GCONF_CLIENT_HANDLE_UNRETURNED;
   client->dir_hash = g_hash_table_new(g_str_hash, g_str_equal);
   client->cache_hash = g_hash_table_new(g_str_hash, g_str_equal);
   /* We create the listeners only if they're actually used */
@@ -280,30 +280,36 @@ gconf_client_finalize (GtkObject* object)
 static void
 gconf_client_real_unreturned_error (GConfClient* client, GConfError* error)
 {
-  if (global_error_handler != NULL)
+  if (client->error_mode == GCONF_CLIENT_HANDLE_UNRETURNED)
     {
-      (*global_error_handler) (client, client->error_mode, client->parent_func, client->parent_user_data,
-                               error);
-      
-    }
-  else
-    {
-      g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+      if (global_error_handler != NULL)
+        {
+          (*global_error_handler) (client, client->parent_func, client->parent_user_data,
+                                   error);
+          
+        }
+      else
+        {
+          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+        }
     }
 }
 
 static void
 gconf_client_real_error            (GConfClient* client, GConfError* error)
 {
-  if (global_error_handler != NULL)
+  if (client->error_mode == GCONF_CLIENT_HANDLE_ALL)
     {
-      (*global_error_handler) (client, client->error_mode, client->parent_func, client->parent_user_data,
-                               error);
+      if (global_error_handler != NULL)
+        {
+          (*global_error_handler) (client, client->parent_func, client->parent_user_data,
+                                   error);
       
-    }
-  else
-    {
-      g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+        }
+      else
+        {
+          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+        }
     }
 }
 

@@ -1,3 +1,15 @@
+2000-01-31  Havoc Pennington  <hp@redhat.com>
+
+	* wrappers/gtk/gconf-client.c
+	(gconf_client_real_unreturned_error): only handle the error if the
+	mode is GCONF_CLIENT_HANDLE_UNRETURNED
+	(gconf_client_real_error): only handle if GCONF_CLIENT_HANDLE_ALL
+	(gconf_client_init): change default error handling to 
+	GCONF_CLIENT_HANDLE_UNRETURNED
+
+	* wrappers/gtk/gconf-client.h: don't pass error handling mode to
+	the error handler function
+
 2000-01-28  Havoc Pennington  <hp@redhat.com>
 
 	* wrappers/gtk/gconf-client.c
