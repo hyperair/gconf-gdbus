@@ -20,8 +20,8 @@
 #ifndef GCONF_GCONF_ORBIT_H
 #define GCONF_GCONF_ORBIT_H
 
-#include "GConf.h"
 #include <glib.h>
+#include <orb/orbit.h>
 #include "gconf-error.h"
 
 /* Sets up orb to work with a glib main loop, just as libgnorba does. */
