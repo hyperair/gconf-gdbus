@@ -1372,6 +1372,19 @@ static gboolean
 context_synchronous_sync(GConfContext* ctx,
                          GConfError** err)
 {
+  /* remove the scheduled syncs */
+  if (ctx->sync_timeout != 0)
+    {
+      g_source_remove(ctx->sync_timeout);
+      ctx->sync_timeout = 0;
+    }
+
+  if (ctx->sync_idle != 0)
+    {
+      g_source_remove(ctx->sync_idle);
+      ctx->sync_idle = 0;
+    }
+  
   return gconf_sources_sync_all(ctx->sources, err);
 }
 

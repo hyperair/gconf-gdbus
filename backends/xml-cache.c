@@ -160,10 +160,12 @@ cache_sync_foreach(const gchar* key,
       g_return_if_fail(error != NULL);
       gconf_log(GCL_ERR, error->str);
       gconf_error_destroy(error);
+      g_return_if_fail(dir_sync_pending(dir));
     }
   else
     {
       g_return_if_fail(error == NULL);
+      g_return_if_fail(!dir_sync_pending(dir));
     }
 }
 
@@ -222,7 +224,7 @@ cache_clean_foreach(const gchar* key,
 
   last_access = dir_get_last_access(dir);
 
-  if ((cd->now - last_access) > cd->length)
+  if ((cd->now - last_access) >= cd->length)
     {
       if (!dir_sync_pending(dir))
         {
@@ -492,6 +494,11 @@ static void
 cache_destroy_foreach(const gchar* key,
                       Dir* dir, gpointer data)
 {
+#ifdef GCONF_ENABLE_DEBUG
+  if (dir_sync_pending(dir))
+    gconf_log(GCL_DEBUG, "Destroying a directory (%s) with sync still pending",
+              dir_get_name(dir));
+#endif
   dir_destroy(dir);
 }
 
