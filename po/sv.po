@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-10-19 14:34+0200\n"
+"POT-Creation-Date: 2000-09-14 22:20-0400\n"
 "PO-Revision-Date: 2000-10-19 14:36+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
@@ -23,7 +23,7 @@ msgstr "Kopplar bort XML-backendmodulen."
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Kunde inte hitta XML-rotkatalogen i adressen \"%s\""
 
-#: backends/xml-backend.c:301 backends/xml-dir.c:1035
+#: backends/xml-backend.c:301 backends/xml-dir.c:1033
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Kunde inte skapa katalogen \"%s\": %s"
@@ -51,7 +51,7 @@ msgstr "Kunde inte ge upp lås på XML-katalogen \"%s\": %s"
 msgid "Unsynced directory deletions when shutting down XML backend"
 msgstr "Osynkroniserade katalogborttagningar vid avstängning av XML-backenden"
 
-#: backends/xml-cache.c:229
+#: backends/xml-cache.c:228
 #, c-format
 msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
@@ -60,7 +60,7 @@ msgstr ""
 "Kunde inte ta bort katalogen \"%s\" från XML-backenden eftersom den inte har "
 "synkroniserats korrekt till disk"
 
-#: backends/xml-cache.c:256
+#: backends/xml-cache.c:253
 #, c-format
 msgid ""
 "%u items remain in the cache after cleaning already-synced items older than "
@@ -105,32 +105,32 @@ msgid "Failed to delete old file `%s': %s"
 msgstr "Misslyckades med att ta bort den gamla filen \"%s\": %s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:790
+#: backends/xml-dir.c:788
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Misslyckades med att ta status på \"%s\": %s"
 
-#: backends/xml-dir.c:934
+#: backends/xml-dir.c:932
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "Dubbla \"%s\"-poster i \"%s\", ignorerar"
 
-#: backends/xml-dir.c:956
+#: backends/xml-dir.c:954
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Post utan namn i XML-filen \"%s\", ignorerar"
 
-#: backends/xml-dir.c:963
+#: backends/xml-dir.c:961
 #, c-format
 msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
 msgstr "Översta noden i XML-filen \"%s\" är inte ett <entry>, ignorerar"
 
-#: backends/xml-dir.c:1051
+#: backends/xml-dir.c:1049
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "Misslyckades med att skapa filen \"%s\": %s"
 
-#: backends/xml-dir.c:1059 gconf/gconf-internals.c:2470
+#: backends/xml-dir.c:1057 gconf/gconf-internals.c:2468
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Misslyckades med att stänga filen \"%s\": %s"
@@ -141,7 +141,7 @@ msgstr "Misslyckades med att stänga filen \"%s\": %s"
 msgid "Ignoring XML node with name `%s': %s"
 msgstr "Ignorerar XML-noden med namnet \"%s\": %s"
 
-#: backends/xml-entry.c:199
+#: backends/xml-entry.c:199 gconf/gconf-internals.c:2172
 #, c-format
 msgid "%s"
 msgstr "%s"
@@ -265,31 +265,31 @@ msgstr "Kunde inte hitta backendmodulen för \"%s\""
 msgid "Failed to shut down backend"
 msgstr "Fel vid avstängning av backend"
 
-#: gconf/gconf-database.c:233
+#: gconf/gconf-database.c:193
 msgid "Received invalid value in set request"
 msgstr "Mottog ogiltigt värde i sättbegäran"
 
-#: gconf/gconf-database.c:241
+#: gconf/gconf-database.c:201
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
 "Kunde inte få ut något vettigt av CORBA-värdet som mottogs i sättbegäran för "
 "nyckeln \"%s\""
 
-#: gconf/gconf-database.c:518
+#: gconf/gconf-database.c:416
 msgid "Received request to drop all cached data"
 msgstr "Mottog begäran att släppa all cachad data"
 
-#: gconf/gconf-database.c:535
+#: gconf/gconf-database.c:430
 msgid "Received request to sync synchronously"
 msgstr "Mottog begäran att synkronisera synkront"
 
-#: gconf/gconf-database.c:602
+#: gconf/gconf-database.c:495
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr ""
 "Allvarligt fel: misslyckades med att få objektreferens för konfig-databasen"
 
-#: gconf/gconf-database.c:761
+#: gconf/gconf-database.c:617
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Misslyckades med att synkronisera med en eller flera källor: %s"
@@ -298,7 +298,7 @@ msgstr "Misslyckades med att synkronisera med en eller flera källor: %s"
 #. * Because it's likely the right thing for the client
 #. * app to simply continue.
 #.
-#: gconf/gconf-database.c:843
+#: gconf/gconf-database.c:699
 #, c-format
 msgid ""
 "Failed to log addition of listener (%s); will not be able to restore this "
@@ -309,12 +309,12 @@ msgstr ""
 "kunna återställa den här lyssnaren vid omstart av gconfd, vilket kommer att "
 "resultera i otillförlitliga meddelanden om konfigurationsändringar."
 
-#: gconf/gconf-database.c:868
+#: gconf/gconf-database.c:724
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Lyssnar-ID %lu finns inte"
 
-#: gconf/gconf-database.c:877
+#: gconf/gconf-database.c:733
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -323,47 +323,47 @@ msgstr ""
 "Misslyckades med att logga borttagningen av lyssnare i loggfilen (troligtvis "
 "ofarligt, men kan resultera i att ett meddelande plötsligt återkommer): %s"
 
-#: gconf/gconf-database.c:989 gconf/gconf-sources.c:1281
+#: gconf/gconf-database.c:838 gconf/gconf-sources.c:1189
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Fel vid hämtning av värde för \"%s\": %s"
 
-#: gconf/gconf-database.c:1031
+#: gconf/gconf-database.c:875
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Fel när värde för \"%s\" sattes: %s"
 
-#: gconf/gconf-database.c:1074
+#: gconf/gconf-database.c:910
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Fel vid återställning av \"%s\": %s"
 
-#: gconf/gconf-database.c:1098
+#: gconf/gconf-database.c:931
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Fel vid hämtning av standardvärde för \"%s\": %s"
 
-#: gconf/gconf-database.c:1137
+#: gconf/gconf-database.c:969
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Fel vid existenskontroll av \"%s\": %s"
 
-#: gconf/gconf-database.c:1161
+#: gconf/gconf-database.c:993
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Fel vid borttagning av katalog \"%s\": %s"
 
-#: gconf/gconf-database.c:1187
+#: gconf/gconf-database.c:1019
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Misslyckades med att hämta alla poster i \"%s\": %s"
 
-#: gconf/gconf-database.c:1213
+#: gconf/gconf-database.c:1045
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Fel vid listning av kataloger i \"%s\": %s"
 
-#: gconf/gconf-database.c:1234
+#: gconf/gconf-database.c:1066
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Fel när schema för \"%s\" sattes: %s"
@@ -428,11 +428,7 @@ msgstr "Operationen inte tillåten utan en konfigurationsserver"
 msgid "Failed to get a lock"
 msgstr "Misslyckades med att få ett lås"
 
-#: gconf/gconf-error.c:40
-msgid "No database available to save your configuration"
-msgstr "Ingen databas tillgänglig för sparande av din konfiguration"
-
-#: gconf/gconf-glib.c:657
+#: gconf/gconf-glib.c:629
 #, c-format
 msgid ""
 "Error on line %d char %d: %s\n"
@@ -441,7 +437,7 @@ msgstr ""
 "Fel på rad %d, tecken %d: %s\n"
 "(En del omgivande text var \"%s\")\n"
 
-#: gconf/gconf-glib.c:777
+#: gconf/gconf-glib.c:749
 msgid ""
 "Text ended in the middle of an entity, or entity name too long to be valid "
 "('&' should begin an entity such as '&quot;')"
@@ -449,7 +445,7 @@ msgstr ""
 "Texten slutade mitt i en enhet, eller så är enhetsnamnet för långt för att "
 "vara giltigt (\"&\" måste finnas i början på en enhet, exempelvis \"&quot;\")"
 
-#: gconf/gconf-glib.c:829
+#: gconf/gconf-glib.c:801
 #, c-format
 msgid ""
 "Unknown entity '%s' ('&' must begin entities &amp; &quot; &lt; &gt; &apos;)"
@@ -457,13 +453,13 @@ msgstr ""
 "Okänd enhet \"%s\" (\"&\" måste finnas i början på enhet, exempelvis &amp; "
 "&quot; &lt; &gt; &apos;)"
 
-#: gconf/gconf-glib.c:869
+#: gconf/gconf-glib.c:841
 msgid ""
 "Markup text ended in the middle of a character reference, just after '&#'"
 msgstr ""
 "Märkestexten slutade i mitten av en teckenreferens, precis efter \"&#\""
 
-#: gconf/gconf-glib.c:895
+#: gconf/gconf-glib.c:867
 #, c-format
 msgid ""
 "Character reference contained non-digit '%s' ('&#' should begin a reference "
@@ -472,7 +468,7 @@ msgstr ""
 "Teckenreferensen innehöll tecknet \"%s\" som inte är en siffra (\"&#\" måste "
 "inleda en referens till ett Unicode-tecken, exempelvis \"&#2342;\")"
 
-#: gconf/gconf-glib.c:919
+#: gconf/gconf-glib.c:891
 msgid ""
 "Text ended in the middle of an character reference ('&#' should begin a "
 "character reference such as '&#2342;')"
@@ -480,7 +476,7 @@ msgstr ""
 "Texten slutade i mitten av en teckenreferens (\"&#\" måste inleda en "
 "teckenreferens, exempelvis \"&#2342;\")"
 
-#: gconf/gconf-glib.c:944
+#: gconf/gconf-glib.c:916
 #, c-format
 msgid ""
 "Couldn't parse character reference '%s' ('&#' must begin a character "
@@ -489,7 +485,7 @@ msgstr ""
 "Kunde inte tolka teckenreferensen \"%s\" (\"&#\" måste inleda en "
 "teckenreferens, exempelvis \"&#2342;\")"
 
-#: gconf/gconf-glib.c:966
+#: gconf/gconf-glib.c:938
 #, c-format
 msgid ""
 "Character code %#lx is not allowed in XML documents or is not a valid "
@@ -498,15 +494,16 @@ msgstr ""
 "Teckenkoden %#lx är inte tillåten i XML eller är inte ett giltigt "
 "Unicode-tecken"
 
-#: gconf/gconf-glib.c:1041
+#: gconf/gconf-glib.c:1013
+#, fuzzy
 msgid ""
-"Document ended just after an '&', '&' should begin an entity or character "
+"Documented ended just after an '&', '&' should begin an entity or character "
 "reference."
 msgstr ""
 "Dokumentet slutade direkt efter ett \"&\". \"&\" ska inleda en enhets- eller "
 "teckenreferens."
 
-#: gconf/gconf-glib.c:1055
+#: gconf/gconf-glib.c:1027
 msgid ""
 "'<' or '>' character not allowed here; only allowed around tags, for example "
 "<bold> or <paragraph>. Elsewhere, encode these characters as the entities "
@@ -516,27 +513,27 @@ msgstr ""
 "taggar, exempelvis <bold> eller <paragraph>. På andra ställen bör du koda "
 "dessa tecken som enheterna &lt; och &gt;"
 
-#: gconf/gconf-glib.c:1110
+#: gconf/gconf-glib.c:1082
 #, c-format
 msgid "Character '%s' is not valid at the start of an attribute name"
 msgstr "Tecknet \"%s\" är inte giltigt som inledning på ett attributnamn"
 
-#: gconf/gconf-glib.c:1137
+#: gconf/gconf-glib.c:1109
 msgid "Document ended just after attribute name"
 msgstr "Dokumentet slutade direkt ett attributnamn"
 
-#: gconf/gconf-glib.c:1148
+#: gconf/gconf-glib.c:1120
 msgid "Attribute name must be immediately followed by an '=' character"
 msgstr "Attributnamn måste omedelbart åtföljas av ett \"=\"-tecken"
 
-#: gconf/gconf-glib.c:1163
+#: gconf/gconf-glib.c:1135
 msgid ""
 "'=' character after attribute must be immediately followed by an '\"' "
 "character"
 msgstr ""
 "\"=\"-tecknet efter ett attribut måste omedelbart åtföljas av ett \"-tecken"
 
-#: gconf/gconf-glib.c:1189
+#: gconf/gconf-glib.c:1161
 #, c-format
 msgid ""
 "Character '%c' found inside an attribute value; perhaps your attribute value "
@@ -545,7 +542,7 @@ msgstr ""
 "Tecknet \"%c\" hittades inuti ett attributvärde. Ditt attributvärde kanske "
 "saknar det avslutande citationstecknet \""
 
-#: gconf/gconf-glib.c:1209
+#: gconf/gconf-glib.c:1181
 msgid ""
 "Ran out of text before a quote mark ('\"') was seen at the end of an "
 "attribute value"
@@ -553,39 +550,39 @@ msgstr ""
 "Fick slut på text innan ett citationstecken (\") hittades i slutet av ett "
 "attributvärde"
 
-#: gconf/gconf-glib.c:1222
+#: gconf/gconf-glib.c:1194
 msgid ""
 "Text ends immediately after an attribute value, before the element was closed"
 msgstr ""
 "Texten slutar omedelbart efter ett attributvärde, innan elementet var stängt"
 
-#: gconf/gconf-glib.c:1536
+#: gconf/gconf-glib.c:1508
 msgid "Missing '<' at start of element"
 msgstr "Ett \"<\" saknas i början på element"
 
-#: gconf/gconf-glib.c:1547
+#: gconf/gconf-glib.c:1519
 msgid "Document ended just after '<' character"
 msgstr "Dokumentet slutar omedelbart efter ett \"<\"-tecken"
 
-#: gconf/gconf-glib.c:1575
+#: gconf/gconf-glib.c:1547
 msgid "No closing '>' found for a <? or <!"
 msgstr "Inget avslutande \">\" hittades till ett <? eller <!"
 
-#: gconf/gconf-glib.c:1604
+#: gconf/gconf-glib.c:1576
 #, c-format
 msgid "Character '%s' is not valid at the start of an element name"
 msgstr "Tecknet \"%s\" är inte giltigt som inledning på ett elementnamn"
 
-#: gconf/gconf-glib.c:1628 gconf/gconf-glib.c:1641
+#: gconf/gconf-glib.c:1600 gconf/gconf-glib.c:1613
 msgid "Document ended just after element name, no '>' seen"
 msgstr "Dokumentet slutade direkt efter elementnamn, inget \">\" hittades"
 
-#: gconf/gconf-glib.c:1666
+#: gconf/gconf-glib.c:1638
 #, c-format
 msgid "Elements should be closed with '>' or '/>', not with '%s'"
 msgstr "Element måste avslutas med \">\" eller \"/>\", inte med \"%s\""
 
-#: gconf/gconf-glib.c:1683
+#: gconf/gconf-glib.c:1655
 msgid ""
 "Element ended just after '/', no '>' seen; empty elements should end with "
 "'/>'"
@@ -593,40 +590,40 @@ msgstr ""
 "Elementet slutade direkt efter ett \"/\"; inget \">\" hittades. Tomma "
 "element bör avslutas med \"/>\""
 
-#: gconf/gconf-glib.c:1722
+#: gconf/gconf-glib.c:1694
 msgid "Close tag not found at end of element"
 msgstr "Avslutande tagg hittades inte i slutet av element"
 
-#: gconf/gconf-glib.c:1737
+#: gconf/gconf-glib.c:1709
 msgid "Close tag ends just after '<' character"
 msgstr "Avslutande tagg direkt efter \"<\"-tecken"
 
-#: gconf/gconf-glib.c:1751
+#: gconf/gconf-glib.c:1723
 msgid "Close tag should begin with '</', '/' character is missing"
 msgstr "Avslutande tagg ska inledas med \"</\", \"/\"-tecknet saknas"
 
-#: gconf/gconf-glib.c:1765
+#: gconf/gconf-glib.c:1737
 msgid "Close tag ends just after '/' character"
 msgstr "Avslutande tagg slutar direkt efter \"/\"-tecknet"
 
-#: gconf/gconf-glib.c:1800
+#: gconf/gconf-glib.c:1772
 msgid "Document ended just after element name in close tag, no '>' seen"
 msgstr ""
 "Dokumentet slutade direkt efter elementnamnet i avslutningstagg, ingen \">\" "
 "hittades"
 
-#: gconf/gconf-glib.c:1816
+#: gconf/gconf-glib.c:1788
 msgid "Document ended just after close tag name, no '>' seen"
 msgstr ""
 "Dokumentet slutade direkt efter namnet på avslutningstagg, ingen \">\" "
 "hittades"
 
-#: gconf/gconf-glib.c:1835
+#: gconf/gconf-glib.c:1807
 #, c-format
 msgid "Close tag '%s' does not match opening tag '%s'"
 msgstr "Avslutningstaggen \"%s\" passar inte med öppningstaggen \"%s\""
 
-#: gconf/gconf-glib.c:2173
+#: gconf/gconf-glib.c:2145
 #, c-format
 msgid ""
 "Invalid UTF-8 character at byte %d in marked-up text. Some text before the "
@@ -635,16 +632,16 @@ msgstr ""
 "Ogiltigt UTF-8-tecken vid byte %d i den märkta texten. Texten närmast innan "
 "det felaktiga tecknet var \"%s\""
 
-#: gconf/gconf-glib.c:2230
+#: gconf/gconf-glib.c:2202
 msgid "The marked-up text contained nothing but whitespace."
 msgstr "Den märkta texten innehöll inget annat än blanksteg."
 
-#: gconf/gconf-glib.c:10694
+#: gconf/gconf-glib.c:10666
 #, c-format
 msgid "Failed to open file '%s': %s"
 msgstr "Misslyckades med att öppna filen \"%s\": %s"
 
-#: gconf/gconf-glib.c:10711
+#: gconf/gconf-glib.c:10683
 #, c-format
 msgid "Error reading file '%s': %s"
 msgstr "Fel vid läsning av filen \"%s\": %s"
@@ -720,53 +717,48 @@ msgstr "Citerad sträng börjar inte med ett citationstecken"
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Citerad sträng slutar inte med ett citationstecken"
 
-#: gconf/gconf-internals.c:2157 gconf/gconf.c:2945
+#: gconf/gconf-internals.c:2157 gconf/gconf.c:2751
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-fel: %s"
 
-#: gconf/gconf-internals.c:2173
-#, c-format
-msgid "OAF problem description: '%s'"
-msgstr "OAF-problembeskrivning: \"%s\""
-
-#: gconf/gconf-internals.c:2179
+#: gconf/gconf-internals.c:2177
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "försöker att ta bort icke-listad OAF-objektkatalog"
 
-#: gconf/gconf-internals.c:2184
+#: gconf/gconf-internals.c:2182
 msgid "attempt to add already-listed OAF directory"
 msgstr "försöker att lägga till en redan listad OAF-katalog"
 
-#: gconf/gconf-internals.c:2191
+#: gconf/gconf-internals.c:2189
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "OAF-tolkningsfel: %s"
 
-#: gconf/gconf-internals.c:2196
+#: gconf/gconf-internals.c:2194
 msgid "Unknown OAF error"
 msgstr "Okänt OAF-fel"
 
-#: gconf/gconf-internals.c:2279
+#: gconf/gconf-internals.c:2277
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Ingen ior-fil i \"%s\""
 
-#: gconf/gconf-internals.c:2310
+#: gconf/gconf-internals.c:2308
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd tar låset \"%s\" från en annan process"
 
-#: gconf/gconf-internals.c:2321
+#: gconf/gconf-internals.c:2319
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Ett annat program har låset \"%s\""
 
-#: gconf/gconf-internals.c:2341
+#: gconf/gconf-internals.c:2339
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr "kunde inte kontakta ORB för att pinga existerande gconfd"
 
-#: gconf/gconf-internals.c:2349
+#: gconf/gconf-internals.c:2347
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
@@ -775,43 +767,43 @@ msgstr ""
 "Tar bort det gamla låset \"%s\" på grund av att IOR inte kunde konverteras "
 "till objektreferensen, IOR \"%s\""
 
-#: gconf/gconf-internals.c:2361
+#: gconf/gconf-internals.c:2359
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr ""
 "Tar bort det gamla låset \"%s\" på grund av fel vid pingande av server: %s"
 
-#: gconf/gconf-internals.c:2373
+#: gconf/gconf-internals.c:2371
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "GConf-konfigurationsdemonen (gconfd) har låset \"%s\""
 
-#: gconf/gconf-internals.c:2387
+#: gconf/gconf-internals.c:2385
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "kunde inte skapa katalog \"%s\": %s"
 
-#: gconf/gconf-internals.c:2422
+#: gconf/gconf-internals.c:2420
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "kunde inte skapa låset \"%s\": %s"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2456
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Kan inte skriva till filen \"%s\": %s"
 
-#: gconf/gconf-internals.c:2501
+#: gconf/gconf-internals.c:2499
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr "Kan inte öppna låsfil \"%s\"; antar att den inte är vår: %s"
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2516
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr "Korrupt låsfil \"%s\", tar bort den ändå"
 
-#: gconf/gconf-internals.c:2528
+#: gconf/gconf-internals.c:2526
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
@@ -820,26 +812,26 @@ msgstr ""
 "Skapade inte låsfilen \"%s\" (skapare pid %u, vårt pid %u; antar att någon "
 "tog vårt lås"
 
-#: gconf/gconf-internals.c:2545
+#: gconf/gconf-internals.c:2543
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Misslyckades med att släppa låset på katalogen \"%s\": %s"
 
-#: gconf/gconf-sources.c:320
+#: gconf/gconf-sources.c:318
 #, c-format
 msgid "Failed to load source `%s': %s"
 msgstr "Misslyckades med att läsa källkoden \"%s\": %s"
 
-#: gconf/gconf-sources.c:506
+#: gconf/gconf-sources.c:490
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr "Schemat \"%s\" som är angivet för \"%s\" lagrar ett icke-schema-värde"
 
-#: gconf/gconf-sources.c:555
+#: gconf/gconf-sources.c:539
 msgid "The '/' name can only be a directory, not a key"
 msgstr "Namnet \"/\" kan bara vara en katalog, inte en nyckel"
 
-#: gconf/gconf-sources.c:584
+#: gconf/gconf-sources.c:568
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -848,22 +840,17 @@ msgstr ""
 "Värdet för \"%s\" är satt i en skrivskyddad källa i början på din "
 "konfigurationssökväg."
 
-#: gconf/gconf-sources.c:596
-#, c-format
-msgid "Unable to store a value at key '%s'"
-msgstr "Kan inte lagra ett värde vid nyckeln \"%s\""
-
-#: gconf/gconf-sources.c:1151
+#: gconf/gconf-sources.c:1063
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Fel vid sökning av metainformation: %s"
 
-#: gconf/gconf-sources.c:1220
+#: gconf/gconf-sources.c:1128
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Fel vid hämtning av metainformation: %s"
 
-#: gconf/gconf-sources.c:1244
+#: gconf/gconf-sources.c:1152
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
@@ -935,21 +922,21 @@ msgstr "Förstod inte \"%s\" (ett extra \")\" utan escape hittades inuti par)"
 msgid "`%s': %s"
 msgstr "\"%s\": %s"
 
-#: gconf/gconf.c:289
+#: gconf/gconf.c:288
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Servern kunde inte lösa adressen \"%s\""
 
-#: gconf/gconf.c:568
+#: gconf/gconf.c:542
 msgid "Can't add notifications to a local configuration source"
 msgstr "Kan inte lägga till notifikationer till lokal konfigurationskälla"
 
-#: gconf/gconf.c:1724
-#, c-format
-msgid "Adding client to server's list failed, CORBA error: %s"
+#: gconf/gconf.c:1597
+#, fuzzy, c-format
+msgid "Pinging the server failed, CORBA error: %s"
 msgstr "Tillägg av klient till serverns lista misslyckades, CORBA-fel: %s"
 
-#: gconf/gconf.c:1740
+#: gconf/gconf.c:1613
 msgid ""
 "Error contacting configuration server: OAF returned nil from "
 "oaf_activate_from_id() and did not set an exception explaining the problem. "
@@ -959,66 +946,66 @@ msgstr ""
 "oaf_activate_from_id() och satte inte ett undantag som förklarade problemet. "
 "Var vänlig och skicka en OAF-buggrapport."
 
-#: gconf/gconf.c:2051
+#: gconf/gconf.c:1880
 msgid "Failed to init GConf, exiting\n"
 msgstr "Misslyckades med att initiera GConf, avslutar\n"
 
-#: gconf/gconf.c:2088
+#: gconf/gconf.c:1917
 msgid "Must begin with a slash (/)"
 msgstr "Måste börja med ett snedstreck (/)"
 
-#: gconf/gconf.c:2110
+#: gconf/gconf.c:1939
 msgid "Can't have two slashes (/) in a row"
 msgstr "Kan inte ha två snedstreck (/) i rad"
 
-#: gconf/gconf.c:2112
+#: gconf/gconf.c:1941
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kan inte ha en punkt (.) precis efter ett snedstreck (/)"
 
-#: gconf/gconf.c:2133
+#: gconf/gconf.c:1962
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "\"%c\" är ett ogiligt tecken i nyckel/katalognamnen"
 
-#: gconf/gconf.c:2147
+#: gconf/gconf.c:1976
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Nyckel/katalog kan inte avslutas med ett snedstreck (/)"
 
-#: gconf/gconf.c:2400
+#: gconf/gconf.c:2223
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Misslyckades med att stänga ner konfigurationsservern: %s"
 
-#: gconf/gconf.c:2461
+#: gconf/gconf.c:2284
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Förväntade flyttal, fick %s"
 
-#: gconf/gconf.c:2496
+#: gconf/gconf.c:2319
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Förväntade heltal, fick %s"
 
-#: gconf/gconf.c:2531
+#: gconf/gconf.c:2354
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Förväntade sträng, fick %s"
 
-#: gconf/gconf.c:2568
+#: gconf/gconf.c:2391
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Förväntade boolean, fick %s"
 
-#: gconf/gconf.c:2601
+#: gconf/gconf.c:2424
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Förväntade schema, fick %s"
 
-#: gconf/gconfd.c:247
+#: gconf/gconfd.c:185
 msgid "Shutdown request received"
 msgstr "Avstängningsbegäran mottagen"
 
-#: gconf/gconfd.c:279
+#: gconf/gconfd.c:217
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1026,7 +1013,7 @@ msgstr ""
 "gconfd kompilerades med avbuggning; försök att ladda gconf.path från "
 "källkatalogen"
 
-#: gconf/gconfd.c:297
+#: gconf/gconfd.c:235
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1034,7 +1021,7 @@ msgstr ""
 "Kunde inte hitta några konfigurationsfiler, försöker använda standard "
 "konfigurationskällan \"%s\""
 
-#: gconf/gconfd.c:306
+#: gconf/gconfd.c:244
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -1042,12 +1029,12 @@ msgstr ""
 "Inga konfigurationskällor i källsökvägen, konfigurationen kommer ej sparas; "
 "redigera "
 
-#: gconf/gconfd.c:320
+#: gconf/gconfd.c:258
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fel vid laddning av vissa konfigurationskällor: %s"
 
-#: gconf/gconfd.c:332
+#: gconf/gconfd.c:270
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1055,7 +1042,7 @@ msgstr ""
 "Inga konfigurationskällor kunde lösas, kan inte ladda eller spara "
 "konfigurationsdata"
 
-#: gconf/gconfd.c:349
+#: gconf/gconfd.c:287
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1063,36 +1050,28 @@ msgstr ""
 "Inga skrivbara konfigurationskällor löstes lyckat, kommer kanske inte att "
 "kunna spara vissa konfigurationsändringar"
 
-#: gconf/gconfd.c:375
+#: gconf/gconfd.c:312 gconf/gconfd.c:324
 #, c-format
-msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr ""
-"Mottog signal %d, lämnar en core-fil. Rapportera vänligen en bugg i GConf."
+msgid "Received signal %d, shutting down."
+msgstr "Mottog signal %d, stänger ner."
 
-#: gconf/gconfd.c:391
-#, c-format
-msgid ""
-"Received signal %d, shutting down abnormally. Please file a GConf bug report."
-msgstr ""
-"Mottog signal %d, stänger ner onormalt. Rapportera vänligen en bugg i GConf."
-
-#: gconf/gconfd.c:408
+#: gconf/gconfd.c:329
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Mottog signal %d, stänger ner snyggt"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:457
+#: gconf/gconfd.c:376
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "startar (version %s), pid %u användare \"%s\""
 
-#: gconf/gconfd.c:461
+#: gconf/gconfd.c:380
 msgid "GConf was built with debugging features enabled"
 msgstr "GConf byggdes med felsökningsalternativ påslagna"
 
-#: gconf/gconfd.c:484
+#: gconf/gconfd.c:403
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to OAF "
 "maintainers"
@@ -1100,11 +1079,11 @@ msgstr ""
 "Misslyckades med att initiera Object Activation Framework: var god och "
 "skicka en buggrapport till OAF:s underhållare"
 
-#: gconf/gconfd.c:504
+#: gconf/gconfd.c:423
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Misslyckades med att få objektreferensen för konfigurationsservern"
 
-#: gconf/gconfd.c:524
+#: gconf/gconfd.c:443
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
@@ -1112,28 +1091,24 @@ msgstr ""
 "OAF vet inget om vår IID; verkar som en trasig installation; kan inte "
 "registrera; avslutar\n"
 
-#: gconf/gconfd.c:528
+#: gconf/gconfd.c:447
 msgid "Another gconfd already registered with OAF; exiting\n"
 msgstr "En annan gconfd är redan registrerad hos OAF; avslutar\n"
 
-#: gconf/gconfd.c:533
+#: gconf/gconfd.c:452
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Okänt fel vid registrering av gconfd hos OAF; avslutar\n"
 
-#: gconf/gconfd.c:571
+#: gconf/gconfd.c:476
 msgid "Exiting"
 msgstr "Avslutar"
 
-#: gconf/gconfd.c:595
-msgid "GConf server is not in use, shutting down."
-msgstr "GConf-servern används inte, stänger ner."
-
-#: gconf/gconfd.c:930
+#: gconf/gconfd.c:818
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerar undantag: %s"
 
-#: gconf/gconfd.c:1018
+#: gconf/gconfd.c:885
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1142,7 +1117,7 @@ msgstr ""
 "Misslyckades med att öppna gconfd-loggfilen; kommer inte att kunna "
 "återställa lyssnare efter avslutning av gconfd (%s)"
 
-#: gconf/gconfd.c:1041
+#: gconf/gconfd.c:908
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1150,32 +1125,32 @@ msgstr ""
 "Misslyckades med att stänga gconfd-loggfilen; data kanske inte har sparats "
 "korrekt (%s)"
 
-#: gconf/gconfd.c:1104
+#: gconf/gconfd.c:966
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunde inte öppna tillståndsfilen \"%s\" för skrivning: %s"
 
-#: gconf/gconfd.c:1118
+#: gconf/gconfd.c:980
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Kunde inte skriva fildeskriptorn för tillståndsfilen \"%s\": %d: %s"
 
-#: gconf/gconfd.c:1127
+#: gconf/gconfd.c:989
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Misslyckades med att stänga den nya tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1141
+#: gconf/gconfd.c:1003
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunde inte flytta undan den gamla tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1151
+#: gconf/gconfd.c:1013
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Misslyckades med att flytta den nya tillståndsfilen på plats: %s"
 
-#: gconf/gconfd.c:1160
+#: gconf/gconfd.c:1022
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1183,24 +1158,61 @@ msgstr ""
 "Misslyckades med att återskapa den ursprungliga tillståndsfilen som hade "
 "flyttats till \"%s\": %s"
 
-#: gconf/gconfd.c:1633
+#: gconf/gconfd.c:1110
+#, c-format
+msgid "Didn't understand line in saved state file: '%s'"
+msgstr "Förstod inte rad i tillståndsfilen: \"%s\""
+
+#: gconf/gconfd.c:1125
+msgid "Failed to parse connection ID in saved state file"
+msgstr "Misslyckades med att tolka anslutnings-ID i tillståndsfilen"
+
+#: gconf/gconfd.c:1140
+#, c-format
+msgid "Failed to unquote config source address from saved state file: %s"
+msgstr ""
+"Misslyckades med att avcitera källadressen för konfigurationen ifrån "
+"tillståndsfilen: %s"
+
+#: gconf/gconfd.c:1160
+#, c-format
+msgid "Failed to unquote listener location from saved state file: %s"
+msgstr "Misslyckades med att avcitera lyssnarplatsen från tillståndsfilen: %s"
+
+#: gconf/gconfd.c:1180
+#, c-format
+msgid "Failed to unquote IOR from saved state file: %s"
+msgstr "Misslyckades med att avcitera IOR från tillståndsfilen: %s"
+
+#: gconf/gconfd.c:1204
+msgid ""
+"Saved state file records the same listener added twice; ignoring the second "
+"instance"
+msgstr ""
+"Tillståndsfilen har hittat att samma lyssnare har lagts till två gånger; "
+"ignorerar den andra instansen"
+
+#: gconf/gconfd.c:1225
+msgid ""
+"Saved state file had a removal of a listener that wasn't added; ignoring the "
+"removal."
+msgstr ""
+"Tillståndsfilen hade en borttagning av en lyssnare som inte hade lagts till; "
+"ignorerar borttagningen."
+
+#: gconf/gconfd.c:1346
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Kunde inte återställa lyssnaren på adress \"%s\", kunde inte tolka databasen"
 
-#: gconf/gconfd.c:1679
-#, c-format
-msgid "Error reading saved state file: %s"
-msgstr "Fel vid läsning av tillståndsfilen: %s"
-
-#: gconf/gconfd.c:1732
+#: gconf/gconfd.c:1377
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Misslyckades med att öppna tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1849
+#: gconf/gconfd.c:1476
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to "
@@ -1210,7 +1222,7 @@ msgstr ""
 "kommer inte att kunna lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs av (%s)"
 
-#: gconf/gconfd.c:1854
+#: gconf/gconfd.c:1481
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously "
@@ -1219,32 +1231,6 @@ msgstr ""
 "Misslyckades med att logga borttagningen av en lyssnare i gconfd-loggfilen; "
 "kan komma att felaktigt lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs ner (%s)"
-
-#: gconf/gconfd.c:1877 gconf/gconfd.c:2038
-#, c-format
-msgid "Failed to get IOR for client: %s"
-msgstr "Misslyckades med att få IOR för klienten: %s"
-
-#: gconf/gconfd.c:1892
-#, c-format
-msgid "Failed to open saved state file: %s"
-msgstr "Misslyckades med att öppna tillståndsfilen: %s"
-
-#: gconf/gconfd.c:1905
-#, c-format
-msgid "Failed to write client add to saved state file: %s"
-msgstr "Misslyckades med att skriva klienttillägg till tillståndsfilen: %s"
-
-#: gconf/gconfd.c:1913
-#, c-format
-msgid "Failed to flush client add to saved state file: %s"
-msgstr "Misslyckades med att tömma klienttillägg till tillståndsfilen: %s"
-
-#: gconf/gconfd.c:1999
-msgid ""
-"Some client removed itself from the GConf server when it hadn't been added."
-msgstr ""
-"Någon klient tog bort sig själv från GConf-servern när den inte var tillagd."
 
 #: gconf/gconftool.c:62
 msgid "Help options"
@@ -1885,55 +1871,59 @@ msgstr ""
 "nyckeln i katalogen:\n"
 "  %s\n"
 
-#: wrappers/gtk/gconf-client.c:287 wrappers/gtk/gconf-client.c:304
-#, c-format
-msgid "GConf Error: %s\n"
-msgstr "GConf-fel: %s\n"
-
-#: wrappers/gtk/gconf-client.c:795
+#: wrappers/gtk/gconf-client.c:812
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf-varning: misslyckades med att lista par i \"%s\": %s"
 
-#: wrappers/gtk/gconf-client.c:991
+#: wrappers/gtk/gconf-client.c:985
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Förväntade \"%s\", fick \"%s\" för nyckeln \"%s\""
 
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "Mottog signal %d, stänger ner."
+#~ msgid "No database available to save your configuration"
+#~ msgstr "Ingen databas tillgänglig för sparande av din konfiguration"
 
-#~ msgid "Didn't understand line in saved state file: '%s'"
-#~ msgstr "Förstod inte rad i tillståndsfilen: \"%s\""
+#~ msgid "OAF problem description: '%s'"
+#~ msgstr "OAF-problembeskrivning: \"%s\""
 
-#~ msgid "Failed to parse connection ID in saved state file"
-#~ msgstr "Misslyckades med att tolka anslutnings-ID i tillståndsfilen"
+#~ msgid "Unable to store a value at key '%s'"
+#~ msgstr "Kan inte lagra ett värde vid nyckeln \"%s\""
 
-#~ msgid "Failed to unquote config source address from saved state file: %s"
+#~ msgid "Received signal %d, dumping core. Please report a GConf bug."
 #~ msgstr ""
-#~ "Misslyckades med att avcitera källadressen för konfigurationen ifrån "
-#~ "tillståndsfilen: %s"
-
-#~ msgid "Failed to unquote listener location from saved state file: %s"
-#~ msgstr ""
-#~ "Misslyckades med att avcitera lyssnarplatsen från tillståndsfilen: %s"
-
-#~ msgid "Failed to unquote IOR from saved state file: %s"
-#~ msgstr "Misslyckades med att avcitera IOR från tillståndsfilen: %s"
+#~ "Mottog signal %d, lämnar en core-fil. Rapportera vänligen en bugg i GConf."
 
 #~ msgid ""
-#~ "Saved state file records the same listener added twice; ignoring the second "
-#~ "instance"
+#~ "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 #~ msgstr ""
-#~ "Tillståndsfilen har hittat att samma lyssnare har lagts till två gånger; "
-#~ "ignorerar den andra instansen"
+#~ "Mottog signal %d, stänger ner onormalt. Rapportera vänligen en bugg i GConf."
+
+#~ msgid "GConf server is not in use, shutting down."
+#~ msgstr "GConf-servern används inte, stänger ner."
+
+#~ msgid "Error reading saved state file: %s"
+#~ msgstr "Fel vid läsning av tillståndsfilen: %s"
+
+#~ msgid "Failed to get IOR for client: %s"
+#~ msgstr "Misslyckades med att få IOR för klienten: %s"
+
+#~ msgid "Failed to open saved state file: %s"
+#~ msgstr "Misslyckades med att öppna tillståndsfilen: %s"
+
+#~ msgid "Failed to write client add to saved state file: %s"
+#~ msgstr "Misslyckades med att skriva klienttillägg till tillståndsfilen: %s"
+
+#~ msgid "Failed to flush client add to saved state file: %s"
+#~ msgstr "Misslyckades med att tömma klienttillägg till tillståndsfilen: %s"
 
 #~ msgid ""
-#~ "Saved state file had a removal of a listener that wasn't added; ignoring the "
-#~ "removal."
+#~ "Some client removed itself from the GConf server when it hadn't been added."
 #~ msgstr ""
-#~ "Tillståndsfilen hade en borttagning av en lyssnare som inte hade lagts till; "
-#~ "ignorerar borttagningen."
+#~ "Någon klient tog bort sig själv från GConf-servern när den inte var tillagd."
+
+#~ msgid "GConf Error: %s\n"
+#~ msgstr "GConf-fel: %s\n"
 
 #~ msgid ""
 #~ "Saved state file records the same client added twice; ignoring the second "
