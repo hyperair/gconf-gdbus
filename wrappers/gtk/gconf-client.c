@@ -113,6 +113,10 @@ enum {
   LAST_SIGNAL
 };
 
+static void         register_client   (GConfClient *client);
+static GConfClient *lookup_client     (GConfEngine *engine);
+static void         unregister_client (GConfClient *client);
+
 static void gconf_client_class_init (GConfClientClass *klass);
 static void gconf_client_init       (GConfClient      *client);
 static void gconf_client_real_unreturned_error (GConfClient* client, GConfError* error);
@@ -262,6 +266,8 @@ gconf_client_finalize (GtkObject* object)
   
   g_hash_table_destroy(client->cache_hash);
   client->cache_hash = NULL;
+
+  unregister_client (client);
   
   if (client->engine != NULL)
     {
@@ -411,12 +417,26 @@ GConfClient*
 gconf_client_new (void)
 {
   GConfClient *client;
-
-  g_return_val_if_fail(gconf_is_initialized(), NULL);
+  GConfEngine *engine;
   
-  client = gtk_type_new (gconf_client_get_type ());
+  g_return_val_if_fail(gconf_is_initialized(), NULL);
 
-  client->engine = gconf_engine_new();
+  engine = gconf_engine_new ();
+  
+  client = lookup_client (engine);
+  if (client)
+    {
+      g_assert (client->engine == engine);
+      gtk_object_ref (GTK_OBJECT (client));
+      gconf_engine_unref (engine);
+      return client;
+    }
+  else
+    {
+      client = gtk_type_new (gconf_client_get_type ());
+      client->engine = engine;
+      register_client (client);
+    }
   
   return client;
 }
@@ -427,12 +447,24 @@ gconf_client_new_with_engine (GConfEngine* engine)
   GConfClient *client;
 
   g_return_val_if_fail(gconf_is_initialized(), NULL);
-  
-  client = gtk_type_new (gconf_client_get_type ());
 
-  client->engine = engine;
+  client = lookup_client (engine);
+  if (client)
+    {
+      g_assert (client->engine == engine);
+      gtk_object_ref (GTK_OBJECT (client));
+      return client;
+    }
+  else
+    {
+      client = gtk_type_new (gconf_client_get_type ());
 
-  gconf_engine_ref(client->engine);
+      client->engine = engine;
+
+      gconf_engine_ref(client->engine);
+
+      register_client (client);
+    }
   
   return client;
 }
@@ -1887,4 +1919,32 @@ gconf_client_create_change_set_from_current (GConfClient* client,
   g_free(vec);
 
   return retval;
+}
+
+static GHashTable * clients = NULL;
+
+static void
+register_client (GConfClient *client)
+{
+  if (clients == NULL)
+    clients = g_hash_table_new (NULL, NULL);
+
+  g_hash_table_insert (clients, client->engine, client);
+}
+
+static GConfClient *
+lookup_client (GConfEngine *engine)
+{
+  if (clients == NULL)
+    return NULL;
+  else
+    return g_hash_table_lookup (clients, engine);
+}
+
+static void
+unregister_client (GConfClient *client)
+{
+  g_return_if_fail (clients != NULL);
+
+  g_hash_table_remove (clients, client->engine);
 }

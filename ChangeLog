@@ -1,3 +1,18 @@
+2000-06-01  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (gconf_engine_new): If there's an existing engine
+	for a given context, return that engine instead of creating a new
+	one.
+	(gconf_engine_new_from_address): ditto
+
+	* wrappers/gtk/gconf-client.c (gconf_client_finalize): remove
+	client from client registration table
+	(gconf_client_new): register newly-created client in hash from
+	engines to clients; return an existing client if there's already
+	a client for the default engine
+	(gconf_client_new_with_engine): register newly-created client,
+	and try to return existing client.
+
 2000-05-07  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-listeners.c: Move struct _GConfListeners

@@ -210,10 +210,18 @@ gconf_engine_new            (void)
 {
   GConfEnginePrivate* priv;
 
-  priv = gconf_engine_blank(TRUE);
+  priv = lookup_engine (ConfigServer_default_context);
 
-  register_engine(priv);
+  if (priv == NULL)
+    {
+      priv = gconf_engine_blank(TRUE);
+      
+      register_engine(priv);
+    }
+  else
+    priv->refcount += 1;
 
+  
   return (GConfEngine*)priv;
 }
 
@@ -238,8 +246,8 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
   if (cs == CORBA_OBJECT_NIL)
     return NULL; /* Error should already be set */
   
-  ctx = ConfigServer_get_context(cs, (gchar*)address, &ev);
-
+  ctx = ConfigServer_get_context(cs, (gchar*)address, &ev);  
+  
   if (gconf_server_broken(&ev))
     {
       if (tries < MAX_RETRIES)
@@ -263,14 +271,21 @@ gconf_engine_new_from_address(const gchar* address, GConfError** err)
 
       return NULL;
     }
-  
-  priv = gconf_engine_blank(TRUE);
-  
+
+  priv = lookup_engine (ctx);
+
+  if (priv == NULL)
+    {
+      priv = gconf_engine_blank(TRUE);
+
+      priv->context = ctx;
+
+      register_engine(priv);
+    }
+  else
+    priv->refcount += 1;
+
   gconf = (GConfEngine*)priv;
-
-  priv->context = ctx;
-
-  register_engine(priv);
   
   return gconf;
 }
