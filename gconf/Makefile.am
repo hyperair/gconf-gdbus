@@ -50,6 +50,7 @@ libgconf_client_la_SOURCES = \
 	gconf.c			\
 	$(CORBA_SOURCES)
 
+libgconf_client_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
 libgconf_client_la_LIBADD = $(GLIB_LIBS) $(ORBIT_LIBS)
 
 ## This is totally broken, I just don't feel like doing the configure.in work to 

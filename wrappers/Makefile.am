@@ -1,2 +1,8 @@
-SUBDIRS = cxx
+if GUILE
+GUILE_SUBDIRS=guile
+else
+GUILE_SUBDIRS=
+endif
+
+SUBDIRS = $(GUILE_SUBDIRS)
 

@@ -17,6 +17,32 @@ AC_HEADER_STDC
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 
+SCMGCONF_CURRENT=0
+SCMGCONF_REVISION=0
+SCMGCONF_AGE=0
+
+AC_SUBST(SCMGCONF_CURRENT)
+AC_SUBST(SCMGCONF_REVISION)
+AC_SUBST(SCMGCONF_AGE)
+
+dnl libtool versioning for libgconf-client
+
+dnl increment if the interface has additions, changes, removals.
+GCONF_CURRENT=7
+
+dnl increment any time the source changes; set to 
+dnl  0 if you increment CURRENT
+GCONF_REVISION=0
+
+dnl increment if any interfaces have been added; set to 0
+dnl  if any interfaces have been removed. removal has 
+dnl  precedence over adding, so set to 0 if both happened.
+GCONF_AGE=0
+
+AC_SUBST(GCONF_CURRENT)
+AC_SUBST(GCONF_REVISION)
+AC_SUBST(GCONF_AGE)
+
 AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib not found),gmodule)
 
 GNOME_INIT
@@ -46,6 +72,21 @@ ORBIT_CFLAGS=`$ORBIT_CONFIG --cflags server`
 AC_SUBST(ORBIT_LIBS)
 AC_SUBST(ORBIT_CFLAGS)
 
+AC_PATH_PROG(GUILE_CONFIG,guile-config,no)
+if (test x$ORBIT_CONFIG = xno); then
+  AC_MSG_WARN(didn't find guile-config, won't build Guile wrappers)
+else
+  GUILE_LIBS=`$GUILE_CONFIG link`
+  GUILE_CFLAGS=`$GUILE_CONFIG compile`
+fi
+if (test -z "$GUILE_LIBS"); then
+  AC_MSG_WARN(guile-config reports no libraries, won't build Guile wrappers)
+fi
+
+AM_CONDITIONAL(GUILE, test -n "$GUILE_LIBS")
+AC_SUBST(GUILE_LIBS)
+AC_SUBST(GUILE_CFLAGS)
+
 ALL_LINGUAS="no"
 AM_GNU_GETTEXT
 
@@ -66,7 +107,7 @@ gconf/Makefile
 backends/Makefile
 gconf-editor/Makefile
 wrappers/Makefile
-wrappers/gtk/Makefile
+wrappers/guile/Makefile
 intl/Makefile
 po/Makefile.in
 ],

@@ -1,4 +1,4 @@
-SUBDIRS = gconf backends po intl
+SUBDIRS = gconf backends wrappers po intl
 
 bin_SCRIPTS = gconf-config
 

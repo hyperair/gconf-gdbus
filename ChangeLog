@@ -1,5 +1,16 @@
 1999-09-03  Havoc Pennington  <hp@pobox.com>
 
+	* configure.in: Set library version info variables, and locate
+	Guile libraries, etc.	
+
+	* wrappers/Makefile.am: conditionally build Guile subdir if we
+	found guile.
+
+	* wrappers/guile: new subdir with the basic files/build for Guile 
+	bindings, will add the actual bindings later. 
+	
+1999-09-03  Havoc Pennington  <hp@pobox.com>
+
 	* configure.in: set POPT_LIBS instead of adding -lpopt to generic
 	LDFLAGS; this was causing libtool to fail to generate the .so 
 	file for the XML backend module.
