@@ -476,7 +476,6 @@ main (int argc, char** argv)
       if (*config_source == '\0')
         {
           /* Properly set, but set to nothing (use default source) */
-          g_free(config_source);
           config_source = NULL;
         }
       
