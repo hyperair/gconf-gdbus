@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <limits.h>
+#include <stdio.h>
 #include <time.h>
 
 typedef struct
