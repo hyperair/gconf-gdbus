@@ -541,6 +541,16 @@ main (int argc, char** argv)
       else 
         return 2;
     }
+
+  /* Before creating engine */
+  if (default_source_mode)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      if (do_get_default_source (conf, args)  == 1)
+        return 1;
+      else
+        return 0;
+    }
   
   if (makefile_install_mode)
     {
@@ -562,6 +572,9 @@ main (int argc, char** argv)
         }
 
       use_local_source = TRUE;
+
+      /* shut down daemon, this is a race condition, but will usually work. */
+      gconf_shutdown_daemon (NULL);
     }
   
   if (config_source == NULL)
@@ -716,16 +729,6 @@ main (int argc, char** argv)
     {
       const gchar** args = poptGetArgs(ctx);
       if (do_associate_schema(conf, args)  == 1)
-        {
-          gconf_engine_unref(conf);
-          return 1;
-        }
-    }
-
-  if (default_source_mode)
-    {
-      const gchar** args = poptGetArgs(ctx);
-      if (do_get_default_source(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
           return 1;
