@@ -15,7 +15,6 @@ Copyright: LGPL
 Group: System Environment/Base
 Source: ftp://ftp.gnome.org/pub/GNOME/unstable/sources/GConf/GConf-%{ver}.tar.gz
 BuildRoot: /var/tmp/gconf
-Obsoletes: gconf
 Packager: Eskil Heyn Olsen <deity@eazel.com>
 URL: http://www.gnome.org
 Prereq: /sbin/install-info
@@ -86,14 +85,15 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 %doc AUTHORS COPYING ChangeLog NEWS README
-%{prefix}/bin
-%{prefix}/lib/*
-%{prefix}/lib/gconf/*
+%{prefix}/bin/*
+%{prefix}/lib/lib*.so.*
+%{prefix}/lib/gconf/lib*.so
 %{prefix}/share/aclocal/*
-%{prefix}/share/gconf/*
 %{prefix}/share/oaf/*
 %config /etc/gconf/*
 
 %files devel
 %defattr(-, root, root)
+%{prefix}/lib/*.a
+%{prefix}/lib/gconf/*.a
 %{prefix}/include/gconf/*
