@@ -70,8 +70,7 @@ typedef struct
 static MarkupSource* ms_new     (const char   *root_dir,
                                  guint         dir_mode,
                                  guint         file_mode,
-                                 GConfLock    *lock,
-                                 gboolean      read_only);
+                                 GConfLock    *lock);
 static void          ms_destroy (MarkupSource *source);
 
 /*
@@ -367,8 +366,7 @@ resolve_address (const char *address,
   
   /* Create the new source */
 
-  xsource = ms_new (root_dir, dir_mode, file_mode, lock,
-                    (flags & GCONF_SOURCE_ALL_WRITEABLE) == 0);
+  xsource = ms_new (root_dir, dir_mode, file_mode, lock);
 
   gconf_log (GCL_DEBUG,
              _("Directory/file permissions for XML source at root %s are: %o/%o"),
@@ -768,12 +766,8 @@ clear_cache (GConfSource *source)
       gconf_log (GCL_WARNING, "Could not sync data in order to drop cache");
       return;
     }
-  
-  markup_tree_free (ms->tree);
-  
-  ms->tree = markup_tree_new (ms->root_dir,
-                              ms->dir_mode, ms->file_mode,
-                              (ms->source.flags & GCONF_SOURCE_ALL_WRITEABLE) == 0);
+
+  markup_tree_rebuild (ms->tree);
 }
 
 /* Initializer */
@@ -817,8 +811,7 @@ static MarkupSource*
 ms_new (const char* root_dir,
         guint       dir_mode,
         guint       file_mode,
-        GConfLock  *lock,
-        gboolean    read_only)
+        GConfLock  *lock)
 {
   MarkupSource* ms;
 
@@ -837,9 +830,7 @@ ms_new (const char* root_dir,
   ms->dir_mode = dir_mode;
   ms->file_mode = file_mode;
   
-  ms->tree = markup_tree_new (ms->root_dir,
-                              ms->dir_mode, ms->file_mode,
-                              read_only);
+  ms->tree = markup_tree_get (ms->root_dir, ms->dir_mode, ms->file_mode);
   
   return ms;
 }
@@ -868,7 +859,7 @@ ms_destroy (MarkupSource* ms)
       gconf_log (GCL_ERR, "timeout not found to remove?");
     }
 
-  markup_tree_free (ms->tree);
+  markup_tree_unref (ms->tree);
 
   g_free (ms->root_dir);
   g_free (ms);

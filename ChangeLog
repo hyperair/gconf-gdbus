@@ -1,3 +1,24 @@
+2003-03-14  Mark McLoughlin  <mark@skynet.ie>
+
+	Basically the same patch as the previous one .. but
+	for the markup backend.
+
+	* backends/markup-backend.c:
+	(resolve_address): update.
+	(clear_cache): use markup_tree_rebuild() instead of
+	re-creating the tree.
+	(ms_new): remove the read_only arg and s/markup_tree_new/
+	markup_tree_get/
+	(ms_destroy): s/markup_tree_free/markup_tree_unref/
+
+	* backends/markup-tree.[ch]:
+	(markup_tree_get), (markup_tree_unref): rename these
+	from new()/free() and share caches for sources with
+	the same root directory.
+	(markup_tree_rebuild): impl.
+	(markup_dir_needs_sync): we don't keep the read_only
+	flag per-tree anymore so don't check it here.
+
 2002-07-16  Mark McLoughlin  <mark@skynet.ie>
 
 	Use the same cache for multiple sources with the same

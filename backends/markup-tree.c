@@ -89,35 +89,78 @@ struct _MarkupTree
 
   MarkupDir *root;
 
-  guint read_only : 1;
+  guint refcount;
 };
 
+static GHashTable *trees_by_root_dir = NULL;
+
 MarkupTree*
-markup_tree_new (const char *root_dir,
+markup_tree_get (const char *root_dir,
                  guint       dir_mode,
-                 guint       file_mode,
-                 gboolean    read_only)
+                 guint       file_mode)
 {
-  MarkupTree *tree;
+  MarkupTree *tree = NULL;
+
+  if (trees_by_root_dir == NULL)
+    trees_by_root_dir = g_hash_table_new (g_str_hash, g_str_equal);
+  else
+    tree = g_hash_table_lookup (trees_by_root_dir, root_dir);
+
+  if (tree != NULL)
+    {
+      tree->refcount += 1;
+      return tree;
+    }
 
   tree = g_new0 (MarkupTree, 1);
 
   tree->dirname = g_strdup (root_dir);
   tree->dir_mode = dir_mode;
   tree->file_mode = file_mode;
-  tree->read_only = read_only;
 
   tree->root = markup_dir_new (tree, NULL, "/");  
+
+  tree->refcount = 1;
+
+  g_hash_table_insert (trees_by_root_dir, tree->dirname, tree);
   
   return tree;
 }
 
 void
-markup_tree_free (MarkupTree *tree)
+markup_tree_unref (MarkupTree *tree)
 {
+  g_return_if_fail (tree != NULL);
+  g_return_if_fail (tree->refcount > 0);
+
+  if (tree->refcount > 1)
+    {
+      tree->refcount -= 1;
+      return;
+    }
+
+  g_hash_table_remove (trees_by_root_dir, tree->dirname);
+  if (g_hash_table_size (trees_by_root_dir) == 0)
+    {
+      g_hash_table_destroy (trees_by_root_dir);
+      trees_by_root_dir = NULL;
+    }
+
+  markup_dir_free (tree->root);
+  tree->root = NULL;
+
   g_free (tree->dirname);
 
   g_free (tree);
+}
+
+void
+markup_tree_rebuild (MarkupTree *tree)
+{
+  g_return_if_fail (markup_dir_needs_sync (tree->root));
+
+  markup_dir_free (tree->root);
+  tree->root = markup_dir_new (tree, NULL, "/");  
 }
 
 struct _MarkupDir
@@ -585,13 +628,6 @@ markup_dir_get_name (MarkupDir   *dir)
 static gboolean
 markup_dir_needs_sync (MarkupDir *dir)
 {
-  /* Never write to read-only tree
-   * (it shouldn't get marked dirty, but this
-   * is here as a safeguard)
-   */
-  if (dir->tree->read_only)
-    return FALSE;
-
   return dir->entries_need_save || dir->some_subdir_needs_sync;
 }
 
