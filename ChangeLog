@@ -1,3 +1,13 @@
+1999-10-12  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/Makefile.am: Fixes - remove some public headers from
+	libgconf_client_SOURCES, look for GConf.idl in $(srcdir) (bug from
+	Wichert Akkerman)
+
+	* gconf/gconf-listeners.h, gconf/gconf-listeners.c: New files,
+	compile but are not tested. Moves listener tree interface into 
+	a public header to re-use in GTK+ wrapper.
+
 1999-10-11  Havoc Pennington  <hp@pobox.com>
 
 	* For all files, s/g_conf/gconf

@@ -13,8 +13,9 @@ BUILT_SOURCES = $(CORBA_SOURCES)
 
 gconfincludedir = $(includedir)/gconf
 gconfinclude_HEADERS =     \
-        GConf.h            \
 	gconf.h            \
+	gconf-backend.h		\
+	gconf-listeners.h  \
 	gconf-orbit.h      \
 	gconf-schema.h 	   \
 	gconf-value.h	   \
@@ -42,22 +43,18 @@ gconftool_SOURCES = \
 
 gconftool_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) libgconf-client.la
 
-$(CORBA_SOURCES): GConf.idl
-	orbit-idl GConf.idl
+$(CORBA_SOURCES): $(srcdir)/GConf.idl
+	orbit-idl $(srcdir)/GConf.idl
 
 libgconf_client_la_SOURCES = \
 	gconf-orbit.c		\
-	gconf-orbit.h		\
 	gconf-internals.c	\
 	gconf-internals.h	\
-	gconf-backend.h		\
 	gconf-backend.c		\
-	gconf-error.h		\
 	gconf-error.c		\
-	gconf-schema.h		\
+	gconf-listeners.c	\
 	gconf-schema.c		\
 	gconf-value.c		\
-	gconf.h			\
 	gconf.c			\
 	$(CORBA_SOURCES)
 
@@ -70,4 +67,5 @@ EXTRA_DIST=GConf.idl
 ## detect Gnome, etc. Depends on the non-GUI testclient to suck in its dependencies.
 gnome-testclient: gnome-testclient.c gconf-testclient
 	 cc -I.. `gnome-config --libs gnomeui gnorba` `gnome-config --cflags gnomeui gnorba` -Wall -ggdb -O2 gnome-testclient.c libgconf-client.a -o gnome-testclient
+
 
