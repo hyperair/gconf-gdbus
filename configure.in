@@ -172,11 +172,9 @@ if test "x$enable_bdbbackend" = "xyes"; then
 	CFLAGS_save="$CFLAGS"
 	LIBS_save="$LDFLAGS"
 	
-	db3libs="-ldb-3"
 	AC_CACHE_CHECK([for DB3 libraries], db3_libs,
 	[
-		CFLAGS="$CFLAGS $NSPR_CFLAGS"
-		
+	    for db3libs in "-ldb-3.3" "-ldb-3.2" "-ldb-3.1" "-ldb-3"; do
 		if test "x${with_db3_libs}" != "x"; then
 			LIBS="$LIBS -L$with_db3_libs $db3libs"
 		else
@@ -186,10 +184,15 @@ if test "x$enable_bdbbackend" = "xyes"; then
 		AC_TRY_LINK_FUNC(db_env_create, db3_libs="yes", db3_libs="no")
 		CFLAGS="$CFLAGS_save"
 		LIBS="$LIBS_save"
+
+		if test "$db3_libs" = "yes"; then
+			break
+		fi
+	    done
 	])
 	if test "x${db3_libs}" != "xno"; then
 		have_db3_libs="yes"
-		BDB_LIBS="-L$with_db3_libs $nsprlibs"
+		BDB_LIBS="-L$with_db3_libs $db3libs"
 	else
 		BDB_LIBS=""
 	fi
