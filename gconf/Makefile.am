@@ -110,7 +110,7 @@ libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
-EXTRA_DIST=GConf.idl default.path.in gconfmarshal.list
+EXTRA_DIST=GConf.idl default.path.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
 
 install-exec-local:
 	(cd $(DESTDIR)$(bindir) && $(RM) gconftool && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
@@ -141,14 +141,14 @@ stamp-gconfmarshal.c: @REBUILD@ gconfmarshal.list
 gconf-enum-types.h: s-enum-types-h
 	@true
 
-s-enum-types-h: @REBUILD@ $(gconf_headers) Makefile
+s-enum-types-h: @REBUILD@ $(gconf_headers) Makefile regenerate-enum-header.sh
 	GCONF_SRCDIR=$(srcdir) $(srcdir)/regenerate-enum-header.sh $(gconf_headers) \
 	&& echo timestamp > $(@F)
 
 gconf-enum-types.c: s-enum-types-c
 	@true
 
-s-enum-types-c: @REBUILD@ $(gconf_headers) Makefile
+s-enum-types-c: @REBUILD@ $(gconf_headers) Makefile regenerate-enum-footer.sh
 	GCONF_SRCDIR=$(srcdir) $(srcdir)/regenerate-enum-footer.sh $(gconf_headers) \
 	&& echo timestamp > $(@F)
 
