@@ -92,7 +92,7 @@ msgstr "Kunde inte öppna filen `%s': %s\n"
 #: gconf/gconf-internals.c:815
 #, c-format
 msgid "Adding source `%s'\n"
-msgstr ""
+msgstr "Lägger till källan `%s'\n"
 
 #: gconf/gconf-internals.c:827
 #, c-format
@@ -126,11 +126,11 @@ msgstr "Förväntade par av typen (%s,%s) fick typen (%s,%s)"
 
 #: gconf/gconf-internals.c:1521
 msgid "Quoted string doesn't begin with a quotation mark"
-msgstr ""
+msgstr "Strängar inom citattecken börjar inte med ett citationstecken"
 
 #: gconf/gconf-internals.c:1583
 msgid "Quoted string doesn't end with a quotation mark"
-msgstr ""
+msgstr "Strängar inom citattecken slutar inte med ett citationstecken"
 
 #: gconf/gconf-internals.c:2049 gconf/gconf.c:2437
 #, c-format
@@ -153,7 +153,7 @@ msgstr "försöker att lägga till redan-listad OAF katalog"
 #: gconf/gconf-internals.c:2081
 #, c-format
 msgid "OAF parse error: %s"
-msgstr ""
+msgstr "OAF tolkningsfel: %s"
 
 #: gconf/gconf-internals.c:2086
 msgid "Unknown OAF error"
@@ -165,6 +165,8 @@ msgid ""
 "timeout expired, lock `%s' still not available (try manually deleting it, "
 "first be sure `gconfd' is not running)"
 msgstr ""
+"tiden gick ut, låset `%s' är fortfarande inte tillgängligt (försök att ta bort den manuellt, "
+"men se först till att `gconfd' inte är igång)"
 
 #: gconf/gconf-internals.c:2238
 #, c-format
@@ -188,7 +190,7 @@ msgstr "Servern kunde inte lösa adressen `%s'"
 
 #: gconf/gconf.c:391
 msgid "Can't add notifications to a local configuration source"
-msgstr ""
+msgstr "Kan inte lägga till notifikationer till lokal konfigurationskälla"
 
 #: gconf/gconf.c:1316
 #, c-format
@@ -201,6 +203,9 @@ msgid ""
 "oaf_activate_from_id() and did not set an exception explaining the problem. "
 "Please file an OAF bug report."
 msgstr ""
+"Fel vid kontaktning av konfigurationsservern: OAF retunerade nil från "
+"oaf_activate_from_id() och satte inte ett undantag som förklarade problemet. "
+"Var god och skicka en OAF buggrapport."
 
 #: gconf/gconf.c:1370
 msgid "Server is not running"
@@ -259,12 +264,12 @@ msgstr "Förväntade schema, fick %s"
 
 #: gconf/gconfd.c:495
 msgid "Received invalid value in set request"
-msgstr ""
+msgstr "Mottog ogiltigt värde i sätt-begäran"
 
 #: gconf/gconfd.c:503
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
-msgstr ""
+msgstr "Kunde inte göra något vettigt av CORBA värdet som mottogs i sätt-begäran för nyckeln `%s'"
 
 #: gconf/gconfd.c:774
 msgid "Shutdown request received"
@@ -275,35 +280,44 @@ msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
+"gconfd kompilerades med avbuggning; försök att ladda gconf.path från käll"
+"katalogen"
 
 #: gconf/gconfd.c:824
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
 msgstr ""
+"Kunde inte hitta några konfigurationsfiler, försöker använda standard konfigurationskällan `%s'"
 
 #: gconf/gconfd.c:833
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
 msgstr ""
+"Inga konfigurationskällor i källsökvägen, konfigurationen kommer ej sparas; "
+"redigera "
 
 #: gconf/gconfd.c:846
 #, c-format
 msgid "Error loading some config sources: %s"
-msgstr ""
+msgstr "Fel vid laddning av vissa konfigurationskällor: %s"
 
 #: gconf/gconfd.c:858
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
 msgstr ""
+"Inga konfigurationskällor löstes lyckat, kan inte ladda eller spara konfigurations"
+"data"
 
 #: gconf/gconfd.c:875
 msgid ""
 "No writeable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
+"Inga skrivbara konfigurationskällor löstes lyckat, kommer kanske inte att kunna spara "
+"vissa konfigurationsändringar"
 
 #: gconf/gconfd.c:900 gconf/gconfd.c:912
 #, c-format
@@ -341,7 +355,7 @@ msgstr "Avlsutar normalt"
 #: gconf/gconfd.c:1108
 #, c-format
 msgid "Failed to sync one or more sources: %s"
-msgstr ""
+msgstr "Misslyckades att synkronisera med en eller flera källor: %s"
 
 #: gconf/gconfd.c:1418
 #, c-format
@@ -351,12 +365,12 @@ msgstr "Fel vid mottagning av värde för `%s': %s"
 #: gconf/gconfd.c:1456
 #, c-format
 msgid "Error setting value for `%s': %s"
-msgstr ""
+msgstr "Fel vids sättning av värde för `%s': %s"
 
 #: gconf/gconfd.c:1488
 #, c-format
 msgid "Error unsetting `%s': %s"
-msgstr ""
+msgstr "Fel vid nollställning av `%s': %s"
 
 #: gconf/gconfd.c:1509
 #, c-format
@@ -366,7 +380,7 @@ msgstr "Fel vid mottagning av standard värde för `%s': %s"
 #: gconf/gconfd.c:1547
 #, c-format
 msgid "Error checking existence of `%s': %s"
-msgstr ""
+msgstr "Fel vid kontrollering av `%s': %s existens"
 
 #: gconf/gconfd.c:1571
 #, c-format
@@ -386,7 +400,7 @@ msgstr "Fel vid listning av kataloger i `%s': %s"
 #: gconf/gconfd.c:1640
 #, c-format
 msgid "Error setting schema for `%s': %s"
-msgstr ""
+msgstr "Fel vid sättning av schema för `%s': %s"
 
 #: gconf/gconfd.c:1795
 msgid "Attempt to unregister invalid context ID"
@@ -423,7 +437,7 @@ msgstr "Alternativ för hjälp"
 
 #: gconf/gconftool.c:78
 msgid "Set a key to a value and sync. Use with --type."
-msgstr ""
+msgstr "Sätt en nyckel till ett värde och synkronisera. Används med --type."
 
 #: gconf/gconftool.c:87
 msgid "Print the value of a key to standard output."
@@ -434,10 +448,12 @@ msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
 "--type."
 msgstr ""
+"Sätter ett schema och synkroniserar. Används med --short-desc, --long-desc, --owner, och "
+"--type." 
 
 #: gconf/gconftool.c:106
 msgid "Unset the keys on the command line"
-msgstr ""
+msgstr "Nollställer nycklarna på kommandoraden"
 
 #: gconf/gconftool.c:115
 msgid "Print all key/value pairs in a directory."
@@ -449,7 +465,7 @@ msgstr "Skriv ut alla underkataloger i en katalog."
 
 #: gconf/gconftool.c:133
 msgid "Print all subdirectories and entries under a dir, recursively."
-msgstr ""
+msgstr "Skriv ut alla underkataloger och poster under en katalog, rekursivt."
 
 #: gconf/gconftool.c:142
 msgid "Return 0 if the directory exists, 2 if it does not."
@@ -475,6 +491,8 @@ msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
+"Specifiera typen av värde som ska sättas, eller typen av värde som ett schema "
+"beskriver. Unika förkortningar OK." 
 
 #: gconf/gconftool.c:179
 msgid "int|bool|float|string"
@@ -482,7 +500,7 @@ msgstr "int|bool|float|string"
 
 #: gconf/gconftool.c:187
 msgid "Specify a short half-line description to go in a schema."
-msgstr ""
+msgstr "Specifiera en kort halvlinjebeskrivning som ska ingå i ett schema."
 
 #: gconf/gconftool.c:188 gconf/gconftool.c:197
 msgid "DESCRIPTION"
@@ -490,11 +508,11 @@ msgstr "BESKRIVELSE"
 
 #: gconf/gconftool.c:196
 msgid "Specify a several-line description to go in a schema."
-msgstr ""
+msgstr "Specifiera en mångradsbeskrivning som ska ingå i ett schema."
 
 #: gconf/gconftool.c:205
 msgid "Specify the owner of a schema"
-msgstr ""
+msgstr "Specifiera ägaren av ett schema"
 
 #: gconf/gconftool.c:206
 msgid "OWNER"
@@ -502,7 +520,7 @@ msgstr "ÄGARE"
 
 #: gconf/gconftool.c:214
 msgid "Specify a schema file to be installed"
-msgstr ""
+msgstr "Specifiera en schemafil som ska installeras"
 
 #: gconf/gconftool.c:215
 msgid "FILENAME"
@@ -510,11 +528,11 @@ msgstr "FILNAMN"
 
 #: gconf/gconftool.c:223
 msgid "Specify a configuration source to use rather than the default path"
-msgstr ""
+msgstr "Specifiera en konfigurationskälla som ska användas istället för standardsökvägen"
 
 #: gconf/gconftool.c:224
 msgid "SOURCE"
-msgstr ""
+msgstr "KÄLLA"
 
 #: gconf/gconftool.c:268
 #, c-format
@@ -527,11 +545,11 @@ msgstr ""
 
 #: gconf/gconftool.c:280
 msgid "Can't get and set/unset simultaneously\n"
-msgstr ""
+msgstr "Kan inte sätta/nollställ samtidigt\n"
 
 #: gconf/gconftool.c:287
 msgid "Can't set and get/unset simultaneously\n"
-msgstr ""
+msgstr "Kan inte sätta/nollställ samtidigt\n"
 
 #: gconf/gconftool.c:295
 msgid "Can't use --all-pairs with --get or --set\n"
@@ -583,7 +601,7 @@ msgstr "Misslyckades med att initiera GConf: %s\n"
 #: gconf/gconftool.c:379
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
-msgstr ""
+msgstr "Misslyckades att få tillgång till konfigurationskällorna: %s\n"
 
 #: gconf/gconftool.c:486
 #, c-format
@@ -602,7 +620,7 @@ msgstr "Misslyckades att lista par i `%s': %s"
 #: gconf/gconftool.c:633
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
-msgstr ""
+msgstr "Misslyckades att \"spawna\" konfigurationsservern (gconfd): %s\n"
 
 #: gconf/gconftool.c:647
 msgid "Must specify a key or keys to get\n"
@@ -620,7 +638,7 @@ msgstr "Ägare: %s\n"
 
 #: gconf/gconftool.c:679 gconf/gconftool.c:680 gconf/gconftool.c:681
 msgid "Unset"
-msgstr ""
+msgstr "Nollställ"
 
 #: gconf/gconftool.c:680
 #, c-format
@@ -681,12 +699,12 @@ msgstr "Måste ange en eller flera kataloger att få nyckel/värde par från.\n"
 
 #: gconf/gconftool.c:926
 msgid "Must specify one or more keys to unset.\n"
-msgstr ""
+msgstr "Måste specifiera en eller flera nycklar att nollställa.\n"
 
 #: gconf/gconftool.c:937
 #, c-format
 msgid "Error unsetting `%s': %s\n"
-msgstr ""
+msgstr "Fel vid nollställning av `%s': %s\n"
 
 #: gconf/gconftool.c:960
 msgid "Must specify one or more dirs to get subdirs from.\n"
@@ -712,7 +730,7 @@ msgstr "VARNING: Just nu vet bara gconftool hur man installerar standard värden 
 #: gconf/gconftool.c:1056
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr ""
+msgstr "VARNING: Misslyckades att tolka standardväde `%s' för schema (%s)\n"
 
 #: gconf/gconftool.c:1069
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
@@ -721,7 +739,7 @@ msgstr "VARNING: internt fel i gconftool, okänd GConfValueType\n"
 #: gconf/gconftool.c:1117
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
-msgstr ""
+msgstr "VARNING: misslyckades att tolka typnamnet `%s'\n"
 
 #: gconf/gconftool.c:1140
 msgid "WARNING: empty <applyto> node"
@@ -738,13 +756,14 @@ msgstr "VARNING: ingen nyckel specifierad för schema\n"
 
 #: gconf/gconftool.c:1186
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr ""
+msgstr "VARNING: <locale> noden har inget `name=\"locale\"' attribut, ignorerar\n"
 
 #: gconf/gconftool.c:1192
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
+"VARNING: multipla <locale> noder för platsen `%s', ignorerar allt föregående först\n" 
 
 #: gconf/gconftool.c:1262
 #, c-format
@@ -754,12 +773,12 @@ msgstr "VARNING: Ogiltig nod <%s> i en <locale> nod\n"
 #: gconf/gconftool.c:1291
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr ""
+msgstr "VARNING: misslyckades att installera schemat `%s' plats `%s': %s\n"
 
 #: gconf/gconftool.c:1299
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr ""
+msgstr "Installerade schemat `%s' för platsen `%s'\n"
 
 #: gconf/gconftool.c:1321
 #, c-format
@@ -792,6 +811,8 @@ msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
 msgstr ""
+"Dokumentet `%s' har fel typ av rotnod (<%s>, borde vara "
+"<gconfschemafile>)\n"
 
 #: gconf/gconftool.c:1472
 #, c-format
@@ -812,7 +833,7 @@ msgstr "Konfigurationseditor"
 
 #: gconf-editor/app.c:117
 msgid "Could not parse geometry string"
-msgstr ""
+msgstr "Kunde inte tolka geometristrängen"
 
 #: gconf-editor/gconf-editor.c:41
 msgid "Specify the geometry of the main window"
