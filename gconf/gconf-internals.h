@@ -84,6 +84,7 @@ GConfValue*   g_conf_source_query_value      (GConfSource* source,
 void          g_conf_source_set_value        (GConfSource* source,
                                               const gchar* key,
                                               GConfValue* value);
+gboolean      g_conf_source_sync_all         (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
 
 const gchar* g_conf_error          (void);

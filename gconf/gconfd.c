@@ -29,6 +29,26 @@
 
 #include <stdio.h>
 
+/* A bit pointless for now. :-) But we'll need it later. */
+
+static GSList* main_loops = NULL;
+
+static void
+g_conf_main(void)
+{
+  GMainLoop* loop;
+
+  loop = g_main_new(TRUE);
+
+  main_loops = g_slist_prepend(main_loops, loop);
+
+  g_main_run(loop);
+
+  main_loops = g_slist_remove(main_loops, loop);
+
+  g_main_destroy(loop);
+}
+
 void
 test_query(GConfSource* source, const gchar* key)
 {
@@ -49,6 +69,22 @@ test_query(GConfSource* source, const gchar* key)
     }
 }
 
+void 
+test_set(GConfSource* source, const gchar* key, int val)
+{
+  GConfValue* value;
+
+  value = g_conf_value_new(G_CONF_VALUE_INT);
+  
+  g_conf_value_set_int(value, val);
+
+  g_conf_source_set_value(source, key, value);
+
+  g_conf_value_destroy(value);
+
+  printf("Set value of `%s' to %d\n", key, val);
+}
+
 int 
 main(int argc, char** argv)
 {
@@ -63,10 +99,16 @@ main(int argc, char** argv)
 
       test_query(source, "/foo");
       test_query(source, "/bar");
+      test_set(source, "/foo", 40);
       test_query(source, "/foo");
       test_query(source, "/bar");
       test_query(source, "/subdir/super");
       test_query(source, "/subdir/duper");
+
+      if (!g_conf_source_sync_all(source))
+        {
+          printf("Sync failed.\n");
+        }
     }
   else
     printf("Failed.\n");
@@ -86,5 +128,10 @@ main(int argc, char** argv)
   if (source2)
     g_conf_source_destroy(source2);
 
+  /*  g_conf_main(); */
+
   return 0;
 }
+
+
+

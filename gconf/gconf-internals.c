@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 GConfValue* 
 g_conf_value_new(GConfValueType type)
@@ -233,6 +234,12 @@ g_conf_source_set_value        (GConfSource* source,
   (*source->backend->vtable->set_value)(source, key, value);
 }
 
+gboolean
+g_conf_source_sync_all         (GConfSource* source)
+{
+  return (*source->backend->vtable->sync_all)(source);
+}
+
 void         
 g_conf_source_destroy (GConfSource* source)
 {
@@ -321,11 +328,21 @@ g_conf_key_directory  (const gchar* key)
 
   len = end-key+1;
 
-  retval = g_malloc(len);
+  if (len == 1)
+    {
+      /* Root directory */
+      retval = g_strdup("/");
+    }
+  else 
+    {
+      retval = g_malloc(len);
+      
+      strncpy(retval, key, len);
+      
+      retval[len-1] = '\0';
+    }
 
-  strncpy(retval, key, len);
-  
-  retval[len-1] = '\0';
+  printf("dir is `%s'\n", retval);
 
   return retval;
 }
