@@ -1668,6 +1668,8 @@ gconf_value_validate (const GConfValue *value,
 {
   GConfRealValue *real;
 
+  g_return_val_if_fail (value != NULL, FALSE);
+
   real = REAL_VALUE (value);
   
   switch (value->type)
