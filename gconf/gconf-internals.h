@@ -103,6 +103,18 @@ GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
                                               GConfValueType cdr_type,
                                               const gchar* str);
 
+/* These are a hack to encode values into strings and ship them over CORBA,
+ * necessary for obscure reasons (ORBit doesn't like recursive datatypes yet)
+ */
+
+/* string quoting is only public for the benefit of the test suite */
+gchar*     gconf_quote_string   (const gchar* str);
+gchar*     gconf_unquote_string (const gchar* str, const gchar** end, GConfError** err);
+void       gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err);
+
+GConfValue* gconf_value_decode (const gchar* encoded);
+gchar*      gconf_value_encode (GConfValue* val);
+
 /*
  * List/pair conversion stuff
  */

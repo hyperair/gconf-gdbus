@@ -1376,3 +1376,181 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
 
 
 
+/*
+ * Encode/decode
+ */
+
+gchar*
+gconf_quote_string   (const gchar* src)
+{
+  gchar* dest;
+  const gchar* s;
+  gchar* d;
+
+  g_return_val_if_fail(src != NULL, NULL);
+  
+  /* waste memory! woo-hoo! */
+  dest = g_malloc0(strlen(src)*2+4);
+  
+  d = dest;
+
+  *d = '"';
+  ++d;
+  
+  s = src;
+  while (*s)
+    {
+      switch (*s)
+        {
+        case '"':
+          {
+            *d = '\\';
+            ++d;
+            *d = '"';
+            ++d;
+          }
+          break;
+          
+        case '\\':
+          {
+            *d = '\\';
+            ++d;
+            *d = '\\';
+            ++d;
+          }
+          break;
+          
+        default:
+          {
+            *d = *s;
+            ++d;
+          }
+          break;
+        }
+      ++s;
+    }
+
+  /* End with quote mark and NULL */
+  *d = '"';
+  ++d;
+  *d = '\0';
+  
+  return dest;
+}
+
+gchar*
+gconf_unquote_string (const gchar* str, const gchar** end, GConfError** err)
+{
+  gchar* unq;
+  gchar* unq_end = NULL;
+
+  g_return_val_if_fail(end != NULL, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  g_return_val_if_fail(str != NULL, NULL);
+  
+  unq = g_strdup(str);
+
+  gconf_unquote_string_inplace(unq, &unq_end, err);
+
+  *end = (str + (unq_end - unq));
+
+  return unq;
+}
+
+void
+gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err)
+{
+  gchar* dest;
+  gchar* s;
+
+  g_return_if_fail(end != NULL);
+  g_return_if_fail(err == NULL || *err == NULL);
+  g_return_if_fail(str != NULL);
+  
+  dest = s = str;
+
+  if (*s != '"')
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_PARSE_ERROR,
+                               _("Quoted string doesn't begin with a quotation mark"));
+      *end = str;
+      return;
+    }
+
+  /* Skip the initial quote mark */
+  ++s;
+  
+  while (*s)
+    {
+      g_assert(s > dest); /* loop invariant */
+      
+      switch (*s)
+        {
+        case '"':
+          /* End of the string, return now */
+          *dest = '\0';
+          ++s;
+          *end = s;
+          return;
+          break;
+
+        case '\\':
+          /* Possible escaped quote or \ */
+          ++s;
+          if (*s == '"')
+            {
+              *dest = *s;
+              ++s;
+              ++dest;
+            }
+          else if (*s == '\\')
+            {
+              *dest = *s;
+              ++s;
+              ++dest;
+            }
+          else
+            {
+              /* not an escaped char */
+              *dest = '\\';
+              ++dest;
+              /* ++s already done. */
+            }
+          break;
+
+        default:
+          *dest = *s;
+          ++dest;
+          ++s;
+          break;
+        }
+
+      g_assert(s > dest); /* loop invariant */
+    }
+  
+  /* If we reach here this means the close quote was never encountered */
+
+  *dest = '\0';
+  
+  if (err)
+    *err = gconf_error_new(GCONF_PARSE_ERROR,
+                           _("Quoted string doesn't end with a quotation mark"));
+  *end = s;
+  return;
+}
+
+GConfValue*
+gconf_value_decode (const gchar* encoded)
+{
+  
+  return NULL;
+}
+
+gchar*
+gconf_value_encode (GConfValue* val)
+{
+  
+
+  return NULL;
+}
