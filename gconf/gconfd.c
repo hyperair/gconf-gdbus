@@ -45,6 +45,7 @@
 #include <errno.h>
 #include <ctype.h>
 #include <syslog.h>
+#include <time.h>
 
 
 /* Quick hack so I can mark strings */
@@ -109,6 +110,7 @@ struct _GConfContext {
                            "dormant" context removed from the cache
                            and has to be re-instated.
                         */
+  GTime last_access;
 };
 
 static GConfContext* context_new(GConfSources* sources);
@@ -135,13 +137,14 @@ static void          context_sync(GConfContext* ctx);
 static void          context_hibernate(GConfContext* ctx);
 static void          context_awaken(GConfContext* ctx);
 
-static void                 init_contexts();
+static void                 init_contexts(void);
 static void                 shutdown_contexts(void);
 static void                 set_default_context(GConfContext* ctx);
 static ConfigServer_Context register_context(GConfContext* ctx);
 static void                 unregister_context(ConfigServer_Context ctx);
 static GConfContext*        lookup_context(ConfigServer_Context ctx);
 static ConfigServer_Context lookup_context_id_from_address(const gchar* address);
+static void                 sleep_old_contexts(void);
 
 /* 
  * CORBA goo
@@ -250,8 +253,23 @@ static ConfigServer_Context
 gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
                    CORBA_Environment* ev)
 {
+  ConfigServer_Context ctx;
+  GConfSources* sources;
+  gchar* addresses[] = { address, NULL };
+  
+  ctx = lookup_context_id_from_address(address);
 
-  return ConfigServer_invalid_context;
+  if (ctx != ConfigServer_invalid_context)
+    return ctx;
+
+  sources = g_conf_sources_new(addresses);
+
+  if (sources == NULL)
+    return ConfigServer_invalid_context;
+
+  ctx = register_context(context_new(sources));
+  
+  return ctx;
 }
 
 static CORBA_unsigned_long
@@ -696,7 +714,7 @@ g_conf_server_write_info_file(const gchar* ior)
   if (ftruncate(fd, 0) < 0)
     {
       g_conf_log(GCL_ERR, _("Couldn't truncate info file: %s"),
-             strerror(errno));
+                 strerror(errno));
       return FALSE;
     }
 
@@ -956,6 +974,15 @@ main(int argc, char** argv)
  */
 
 static GSList* main_loops = NULL;
+static guint timeout_id = 0;
+
+static gboolean
+one_hour_timeout(gpointer data)
+{
+  sleep_old_contexts();
+  
+  return TRUE;
+}
 
 static void
 g_conf_main(void)
@@ -964,12 +991,28 @@ g_conf_main(void)
 
   loop = g_main_new(TRUE);
 
+  if (main_loops == NULL)
+    {
+      g_assert(timeout_id == 0);
+      timeout_id = g_timeout_add(1000*60*60, /* 1 sec * 60 s/min * 60 min */
+                                 one_hour_timeout,
+                                 NULL);
+
+    }
+  
   main_loops = g_slist_prepend(main_loops, loop);
 
   g_main_run(loop);
 
   main_loops = g_slist_remove(main_loops, loop);
 
+  if (main_loops == NULL)
+    {
+      g_assert(timeout_id != 0);
+      g_source_remove(timeout_id);
+      timeout_id = 0;
+    }
+  
   g_main_destroy(loop);
 }
 
@@ -1040,6 +1083,8 @@ context_new(GConfSources* sources)
 
   ctx->sources = sources;
 
+  ctx->last_access = time(NULL);
+  
   return ctx;
 }
 
@@ -1114,6 +1159,10 @@ context_add_listener(GConfContext* ctx,
 {
   Listener* l;
 
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
+  
   l = listener_new(who);
 
   ltable_insert(ctx->ltable, where, l);
@@ -1126,7 +1175,10 @@ context_add_listener(GConfContext* ctx,
 static void
 context_remove_listener(GConfContext* ctx,
                         CORBA_unsigned_long cnxn)
-{  
+{
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   g_conf_log(GCL_DEBUG, "Removing listener %u", (guint)cnxn);
   ltable_remove(ctx->ltable, cnxn);
 }
@@ -1136,6 +1188,10 @@ context_lookup_value(GConfContext* ctx,
                      const gchar* key)
 {
   GConfValue* val;
+
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   
   val = g_conf_sources_query_value(ctx->sources, key);
 
@@ -1148,6 +1204,9 @@ context_set(GConfContext* ctx,
             GConfValue* val,
             ConfigValue* value)
 {
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   g_conf_clear_error();
   g_conf_sources_set_value(ctx->sources, key, val);
 
@@ -1165,6 +1224,10 @@ context_unset(GConfContext* ctx,
               const gchar* key)
 {
   ConfigValue* val;
+
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   
   g_conf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
 
@@ -1192,6 +1255,10 @@ context_dir_exists(GConfContext* ctx,
                    const gchar* dir)
 {
   gboolean ret;
+
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   
   g_conf_log(GCL_DEBUG, "Received dir_exists request for `%s'", dir);
   
@@ -1213,6 +1280,10 @@ static void
 context_remove_dir(GConfContext* ctx,
                    const gchar* dir)
 {
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
+  
   g_conf_log(GCL_DEBUG, "Received request to remove dir `%s'", dir);
 
   g_conf_clear_error();
@@ -1230,6 +1301,10 @@ static GSList*
 context_all_entries(GConfContext* ctx, const gchar* dir)
 {
   GSList* entries;
+
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   
   g_conf_clear_error();
   
@@ -1247,7 +1322,12 @@ context_all_entries(GConfContext* ctx, const gchar* dir)
 static GSList*
 context_all_dirs(GConfContext* ctx, const gchar* dir)
 {
-  GSList* subdirs;  
+  GSList* subdirs;
+
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
+    
   g_conf_log(GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
 
   g_conf_clear_error();
@@ -1266,6 +1346,9 @@ static void
 context_set_schema(GConfContext* ctx, const gchar* key,
                    const gchar* schema_key)
 {
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
   
   g_conf_clear_error();
 
@@ -1281,6 +1364,10 @@ context_set_schema(GConfContext* ctx, const gchar* key,
 static void
 context_sync(GConfContext* ctx)
 {
+  g_assert(ctx->ltable != NULL);
+  
+  ctx->last_access = time(NULL);
+  
   g_conf_log(GCL_DEBUG, "Received request to sync all config data");
   
   if (!g_conf_sources_sync_all(ctx->sources))
@@ -1329,6 +1416,32 @@ set_default_context(GConfContext* ctx)
   /* Default context isn't in the address hash since it has
      multiple addresses in a stack
   */
+}
+
+static void
+sleep_old_contexts(void)
+{
+  guint i;
+  GTime now;
+  
+  g_assert(context_list != NULL);
+  
+  now = time(NULL);
+  
+  i = 2; /* don't include the default context or invalid context */
+  while (i < context_list->len)
+    {
+      GConfContext* c = context_list->pdata[i];
+
+      if (c->ltable &&                        /* not already hibernating */
+          c->ltable->active_listeners == 0 && /* Can hibernate */
+          (now - c->last_access) > (60*45))   /* 45 minutes without access */
+        {
+          context_hibernate(c);
+        }
+      
+      ++i;
+    }
 }
 
 static void
@@ -1432,7 +1545,7 @@ lookup_context(ConfigServer_Context ctx)
   if (ctx >= context_list->len || ctx == ConfigServer_invalid_context)
     {
       g_conf_log(GCL_ERR, _("Attempt to use invalid context ID %lu"),
-             (gulong)ctx);
+                 (gulong)ctx);
       return NULL;
     }
   
@@ -1441,13 +1554,13 @@ lookup_context(ConfigServer_Context ctx)
   if (gcc == NULL)
     {
       g_conf_log(GCL_ERR, _("Attempt to use already-unregistered context ID %lu"),
-             (gulong)ctx);
+                 (gulong)ctx);
       return NULL;
     }
 
   if (gcc->ltable == NULL)
     {
-      context_awaken(gcc);
+      context_awaken(gcc);       /* Wake up hibernating contexts */
       if (gcc->ltable == NULL)
         {
           /* Failed, error is now set. */

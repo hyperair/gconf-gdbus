@@ -596,8 +596,8 @@ xs_new       (const gchar* root_dir)
   xs->cache = dir_cache_new(xs, 300);
 
   xs->timeout_id = g_timeout_add(1000*60*5, /* 1 sec * 60 s/min * 5 min */
-                                      cleanup_timeout,
-                                      xs);
+                                 cleanup_timeout,
+                                 xs);
   
   return xs;
 }
