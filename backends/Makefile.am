@@ -4,8 +4,7 @@ INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
 
 backenddir = $(pkglibdir)/$(MAJOR_VERSION)
 
-backend_LTLIBRARIES = libgconfbackend-xml.la
-noinst_LTLIBRARIES = libgconfbackend-markup.la
+backend_LTLIBRARIES = libgconfbackend-xml.la libgconfbackend-markup.la
 
 libgconfbackend_xml_la_SOURCES = \
 	xml-cache.h		\
@@ -31,3 +30,7 @@ noinst_PROGRAMS = xml-test
 
 xml_test_SOURCES= $(libgconfbackend_xml_la_SOURCES) xml-test.c
 xml_test_LDADD = $(DEPENDENT_WITH_XML_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
+
+bin_PROGRAMS = gconf-merge-tree
+gconf_merge_tree_SOURCES = gconf-merge-tree.c
+gconf_merge_tree_LDADD = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la

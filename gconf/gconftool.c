@@ -1138,28 +1138,30 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
 }
 
 static void 
-recurse_subdir_dump(GConfEngine* conf, GSList* subdirs, const gchar* base_dir)
+recurse_subdir_dump(GConfEngine* conf, GSList* dirs, const gchar* base_dir)
 {
   GSList* tmp;
 
-  tmp = subdirs;
+  tmp = dirs;
   
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
+      GSList* subdirs;
       
       dump_entries_in_dir(conf, s, base_dir);
 
-      recurse_subdir_dump(conf,
-			  gconf_engine_all_dirs(conf, s, NULL),
-			  base_dir);
+      subdirs = g_slist_sort(gconf_engine_all_dirs(conf, s, NULL),
+			     (GCompareFunc)strcmp);
+
+      recurse_subdir_dump(conf, subdirs, base_dir);
 
       g_free(s);
       
       tmp = tmp->next;
     }
   
-  g_slist_free(subdirs);
+  g_slist_free(dirs);
 }
 
 static int
@@ -1179,10 +1181,11 @@ do_dump_values(GConfEngine* conf, const gchar** args)
 
       g_print ("  <entrylist base=\"%s\">\n", *args);
 
-      subdirs = gconf_engine_all_dirs(conf, *args, NULL);
+      subdirs = g_slist_sort(gconf_engine_all_dirs(conf, *args, NULL),
+			     (GCompareFunc)strcmp);
 
       dump_entries_in_dir(conf, *args, *args);
-          
+
       recurse_subdir_dump(conf, subdirs, *args);
 
       g_print ("  </entrylist>\n");
@@ -1313,16 +1316,16 @@ print_schema_in_xml(GConfValue* value, int indent)
 
   if (short_desc)
     {
-      g_print ("%s    <short>\n", whitespace);
-      g_print ("%s\n", short_desc);
-      g_print ("%s    </short>\n", whitespace);
+      gchar* tmp = g_markup_escape_text(short_desc, -1);
+      g_print ("%s    <short>%s</short>\n", whitespace, tmp);
+      g_free(tmp);
     }
 
   if (long_desc)
     {
-      g_print ("%s    <long>\n", whitespace);
-      g_print ("%s\n", long_desc);
-      g_print ("%s    </long>\n", whitespace);
+      gchar* tmp = g_markup_escape_text(long_desc, -1);
+      g_print ("%s    <long>%s</long>\n", whitespace, tmp);
+      g_free(tmp);
     }
 
   g_print ("%s  </locale>\n", whitespace);
@@ -1404,7 +1407,7 @@ print_value_in_xml(GConfValue* value, int indent)
       break;
     case GCONF_VALUE_STRING:
       tmp = g_markup_escape_text(gconf_value_get_string(value), -1);
-      g_print ("%s  <string>%s</string>\n", whitespace, tmp);
+      g_print ("%s  <string>%s</string>\n", whitespace, (tmp[0] == ' ' && tmp[1] == '\0') ? "" : tmp);
       g_free(tmp);
       break;
     case GCONF_VALUE_BOOL:
@@ -1455,6 +1458,12 @@ get_key_relative(const gchar* key, const gchar* dir)
   return key + i;
 }
 
+static int
+compare_entries (GConfEntry* a, GConfEntry *b)
+{
+  return strcmp(gconf_entry_get_key(a), gconf_entry_get_key(b));
+}
+
 static void 
 dump_entries_in_dir(GConfEngine* conf, const gchar* dir, const gchar* base_dir)
 {
@@ -1462,7 +1471,8 @@ dump_entries_in_dir(GConfEngine* conf, const gchar* dir, const gchar* base_dir)
   GSList* tmp;
   GError* err = NULL;
   
-  entries = gconf_engine_all_entries(conf, dir, &err);
+  entries = g_slist_sort(gconf_engine_all_entries(conf, dir, &err),
+			 (GCompareFunc)compare_entries);
           
   if (err != NULL)
     {

@@ -876,12 +876,12 @@ gconf_backend_get_vtable (void)
  * data that hasn't been used in a while.
  */
 static gboolean
-cleanup_timeout (void  *data)
+cleanup_timeout (gpointer data)
 {
 #if 0
   MarkupSource* ms = (MarkupSource*)data;
 
-  cache_clean(xs->cache, 60*5 /* 5 minutes */);
+  cache_clean(ms->cache, 60*5 /* 5 minutes */);
 #endif
   
   return TRUE;

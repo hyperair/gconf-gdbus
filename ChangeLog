@@ -1,3 +1,37 @@
+2003-10-27  Mark McLoughlin  <mark@skynet.ie>
+
+	Patch to allow a single XML file to represent an arbitrary
+	GConf tree rather than a single directory. Also fixes
+	many little bugs with the markup backend. See bug #116948.
+
+	* backends/Makefile.am: install the markup backend and
+	build gconf-merge-tree.
+	
+	* backends/markup-tree.c: if a %gconf-tree.xml file exists
+	in a given directory, load that and ignore any %gconf.xml
+	files in the directory and any sub-directories. Also,
+	fix many little buglets to make this work compatibly with
+	the XML backend.
+
+	* gconf/gconftool.c:
+	(recurse_subdir_dump), (do_dump_values): sort the directories
+	before dumping.
+	(print_schema_in_xml): don't add extra whitespace to schema
+	descriptions.
+	(print_value_in_xml): dump " " strings as empty strings.
+	(compare_entries), (dump_entries_in_dir): dump entries
+	sorted by the key name.
+	
+	* backends/markup-backend.c: (cleanup_timeout): fixup.
+
+	* backends/gconf-merge-tree.c: utility to merge a GConf
+	tree into a single markup backend %gconf-tree.xml file.
+	Doing this to a tree means that any changes you make
+	to that tree using the markup backend will not be reflected
+	if you go back to the XML backend.
+	
+	* tests/testbackend.c: include stdio.h to fix warnings.
+	
 Wed Oct 22 22:59:47 2003  Matthias Clasen  <maclas@gmx.de>
 
 	* doc/gcnf/Makefile.am: 

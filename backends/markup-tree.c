@@ -56,30 +56,28 @@ struct _MarkupEntry
 static LocalSchemaInfo* local_schema_info_new  (void);
 static void             local_schema_info_free (LocalSchemaInfo *info);
 
+static MarkupDir* markup_dir_new                   (MarkupTree *tree,
+						    MarkupDir  *parent,
+						    const char *name);
+static void       markup_dir_free                  (MarkupDir  *dir);
+static gboolean   markup_dir_needs_sync            (MarkupDir  *dir);
+static gboolean   markup_dir_sync                  (MarkupDir  *dir);
+static char*      markup_dir_build_path            (MarkupDir  *dir,
+						    gboolean    with_data_file,
+						    gboolean    subtree_data_file);
+static void       markup_dir_set_entries_need_save (MarkupDir  *dir);
 
-static MarkupDir* markup_dir_new        (MarkupTree *tree,
-                                         MarkupDir  *parent,
-                                         const char *name);
-static void       markup_dir_free       (MarkupDir  *dir);
-static gboolean   markup_dir_needs_sync (MarkupDir  *dir);
-static gboolean   markup_dir_sync       (MarkupDir  *dir);
-static char*      markup_dir_build_path (MarkupDir  *dir,
-                                         gboolean    with_data_file);
+static MarkupEntry* markup_entry_new  (MarkupDir   *dir,
+				       const char  *name);
+static void         markup_entry_free (MarkupEntry *entry);
 
-static MarkupEntry* markup_entry_new             (MarkupDir   *dir,
-                                                  const char  *name);
-static void         markup_entry_free            (MarkupEntry *entry);
-static void         markup_entry_set_mod_user    (MarkupEntry *entry,
-                                                  const char  *muser);
-static void         markup_entry_set_mod_time    (MarkupEntry *entry,
-                                                  GTime        mtime);
-
-static GSList*  parse_entries (const char  *filename,
-                               GError     **err);
-static gboolean save_entries  (const char  *filename,
-                               guint        file_mode,
-                               GSList      *entries,
-                               GError     **err);
+static void parse_tree (MarkupDir  *root,
+			gboolean    parse_subtree,
+			GError    **err);
+static void save_tree  (MarkupDir  *root,
+			gboolean    save_as_subtree,
+			guint       file_mode,
+			GError    **err);
 
 
 struct _MarkupTree
@@ -158,7 +156,7 @@ markup_tree_unref (MarkupTree *tree)
 void
 markup_tree_rebuild (MarkupTree *tree)
 {
-  g_return_if_fail (markup_dir_needs_sync (tree->root));
+  g_return_if_fail (!markup_dir_needs_sync (tree->root));
 
   markup_dir_free (tree->root);
   tree->root = markup_dir_new (tree, NULL, "/");  
@@ -188,6 +186,12 @@ struct _MarkupDir
 
   /* We are pretty sure the filesystem dir exists */
   guint filesystem_dir_probably_exists : 1;
+
+  /* Not represented by an actual filesystem dir */
+  guint not_in_filesystem : 1;
+
+  /* Save to %gconf-tree.xml when syncing */
+  guint save_as_subtree : 1;
 };
 
 static MarkupDir*
@@ -203,14 +207,39 @@ markup_dir_new (MarkupTree *tree,
   dir->tree = tree;
   dir->parent = parent;
 
+  if (parent)
+    {
+      parent->subdirs = g_slist_prepend (parent->subdirs, dir);
+    }
+
   return dir;
 }
 
 static void
 markup_dir_free (MarkupDir *dir)
 {
-  /* FIXME free the entries */
-  
+  GSList *tmp;
+
+  tmp = dir->entries;
+  while (tmp)
+    {
+      MarkupEntry *entry = tmp->data;
+
+      markup_entry_free (entry);
+
+      tmp = tmp->next;
+    }
+
+  tmp = dir->subdirs;
+  while (tmp)
+    {
+      MarkupDir *subdir = tmp->data;
+
+      markup_dir_free (subdir);
+
+      tmp = tmp->next;
+    }
+
   g_free (dir->name);
 
   g_free (dir);
@@ -325,13 +354,50 @@ markup_tree_sync (MarkupTree *tree,
 }
 
 static gboolean
+load_subtree (MarkupDir *dir)
+{
+  /* Load subtree from %gconf-tree.xml if exists */
+
+  GError *tmp_err = NULL;
+  char *markup_file;
+
+  markup_file = markup_dir_build_path (dir, TRUE, TRUE);
+  if (!gconf_file_exists (markup_file))
+    {
+      g_free (markup_file);
+      return FALSE;
+    }
+
+  dir->subdirs_loaded  = TRUE;
+  dir->entries_loaded  = TRUE;
+  dir->save_as_subtree = TRUE;
+
+  parse_tree (dir, TRUE, &tmp_err);
+  if (tmp_err)
+    {
+      /* note that tmp_err may be a G_MARKUP_ERROR while only
+       * GCONF_ERROR could be returned, so if we decide to return this
+       * error someday we need to fix it up first
+       */
+
+      /* this message is debug-only because it usually happens
+       * when creating a new directory
+       */
+      gconf_log (GCL_DEBUG,
+		 "Failed to load file \"%s\": %s",
+		 markup_file, tmp_err->message);
+      g_error_free (tmp_err);
+    }
+
+  g_free (markup_file);
+
+  return TRUE;
+}
+
+static gboolean
 load_entries (MarkupDir *dir)
 {
   /* Load the entries in this directory */
-  char *markup_file;
-  GSList *entries;
-  GError *tmp_err;
-  GSList *tmp;
   
   if (dir->entries_loaded)
     return TRUE;
@@ -343,48 +409,33 @@ load_entries (MarkupDir *dir)
    * called load_entries()
    */
   dir->entries_loaded = TRUE;
-  
-  markup_file = markup_dir_build_path (dir, TRUE);
 
-  tmp_err = NULL;
-  entries = parse_entries (markup_file, &tmp_err);
-  
-  if (tmp_err)
+  if (!load_subtree (dir))
     {
-      g_assert (entries == NULL);
+      GError *tmp_err = NULL;
 
-      /* note that tmp_err may be a G_MARKUP_ERROR while only
-       * GCONF_ERROR could be returned, so if we decide to return this
-       * error someday we need to fix it up first
-       */
+      parse_tree (dir, FALSE, &tmp_err);
+      if (tmp_err)
+	{
+	  char *markup_file;
 
-      /* this message is debug-only because it usually happens
-       * when creating a new directory
-       */
-      gconf_log (GCL_DEBUG,
-                 "Failed to load file \"%s\": %s",
-                 markup_file, tmp_err->message);
-      g_error_free (tmp_err);
-      g_free (markup_file);
-      return FALSE;
+	  /* note that tmp_err may be a G_MARKUP_ERROR while only
+	   * GCONF_ERROR could be returned, so if we decide to return this
+	   * error someday we need to fix it up first
+	   */
+
+	  /* this message is debug-only because it usually happens
+	   * when creating a new directory
+	   */
+	  markup_file = markup_dir_build_path (dir, TRUE, FALSE);
+	  gconf_log (GCL_DEBUG,
+		     "Failed to load file \"%s\": %s",
+		     markup_file, tmp_err->message);
+	  g_error_free (tmp_err);
+	  g_free (markup_file);
+	}
     }
 
-  g_free (markup_file);
-
-  g_assert (dir->entries == NULL);
-  dir->entries = entries;
-
-  /* Fill in entry->dir */
-  tmp = dir->entries;
-  while (tmp != NULL)
-    {
-      MarkupEntry *entry = tmp->data;
-
-      entry->dir = dir;
-      
-      tmp = tmp->next;
-    }
-  
   return TRUE;
 }
 
@@ -394,7 +445,6 @@ load_subdirs (MarkupDir *dir)
   DIR* dp;
   struct dirent* dent;
   struct stat statbuf;
-  GSList* retval = NULL;
   gchar* fullpath;
   gchar* fullpath_end;
   guint len;
@@ -414,7 +464,10 @@ load_subdirs (MarkupDir *dir)
 
   g_assert (dir->subdirs == NULL);
 
-  markup_dir = markup_dir_build_path (dir, FALSE);
+  if (load_subtree (dir))
+    return TRUE;
+
+  markup_dir = markup_dir_build_path (dir, FALSE, FALSE);
   
   dp = opendir (markup_dir);
   
@@ -473,16 +526,13 @@ load_subdirs (MarkupDir *dir)
           continue;
         }      
 
-      retval = g_slist_prepend (retval,
-                                markup_dir_new (dir->tree, dir, dent->d_name));
+      markup_dir_new (dir->tree, dir, dent->d_name);
     }
 
   /* if this fails, we really can't do a thing about it
    * and it's not a meaningful error
    */
   closedir (dp);
-
-  dir->subdirs = retval;
 
   g_free (fullpath);
   g_free (markup_dir);
@@ -536,10 +586,9 @@ markup_dir_ensure_entry (MarkupDir   *dir,
   
   /* Create a new entry */
   entry = markup_entry_new (dir, relative_key);
-  dir->entries = g_slist_prepend (dir->entries, entry);
 
   /* Need to save this */
-  dir->entries_need_save = TRUE;
+  markup_dir_set_entries_need_save (dir);
   markup_dir_queue_sync (dir);
   
   return entry;
@@ -584,21 +633,18 @@ markup_dir_ensure_subdir (MarkupDir   *dir,
       return NULL;
     }
 
-  if (subdir == NULL)
-    {
-      g_return_val_if_fail (dir->subdirs_loaded, NULL);
-      
-      subdir = markup_dir_new (dir->tree, dir, relative_key);
-      subdir->entries_need_save = TRUE; /* so we save empty %gconf.xml */
-      
-      /* we don't need to load stuff, since we know the dir didn't exist */
-      subdir->entries_loaded = TRUE;
-      subdir->subdirs_loaded = TRUE;
-      
-      dir->subdirs = g_slist_prepend (dir->subdirs,
-                                      subdir);
-    }
+  if (subdir != NULL)
+    return subdir;
 
+  g_return_val_if_fail (dir->subdirs_loaded, NULL);
+      
+  subdir = markup_dir_new (dir->tree, dir, relative_key);
+  markup_dir_set_entries_need_save (subdir); /* so we save empty %gconf.xml */
+      
+  /* we don't need to load stuff, since we know the dir didn't exist */
+  subdir->entries_loaded = TRUE;
+  subdir->subdirs_loaded = TRUE;
+      
   return subdir;
 }
 
@@ -633,11 +679,24 @@ markup_dir_needs_sync (MarkupDir *dir)
 }
 
 static void
+markup_dir_set_entries_need_save (MarkupDir *dir)
+{
+  dir->entries_need_save = TRUE;
+  
+  if (dir->not_in_filesystem)
+    {
+      /* root must be a filesystem dir */
+      g_assert (dir->parent);
+
+      markup_dir_set_entries_need_save (dir->parent);
+    }
+}
+
+static void
 markup_entry_clean_old_local_schemas (MarkupEntry *entry)
 {
 
   /* Get rid of any local_schema that no longer apply */
-  LocalSchemaInfo *local_schema;
   GSList *tmp;
   GSList *kept_schemas;
 
@@ -646,6 +705,7 @@ markup_entry_clean_old_local_schemas (MarkupEntry *entry)
   tmp = entry->local_schemas;
   while (tmp != NULL)
     {
+      LocalSchemaInfo *local_schema = tmp->data;
       gboolean dead = FALSE;
           
       local_schema = tmp->data;
@@ -676,7 +736,7 @@ markup_entry_clean_old_local_schemas (MarkupEntry *entry)
 
   g_slist_free (entry->local_schemas);
   
-  entry->local_schemas = g_slist_reverse (entry->local_schemas);
+  entry->local_schemas = g_slist_reverse (kept_schemas);
 }
 
 static gboolean
@@ -720,28 +780,32 @@ delete_useless_subdirs (MarkupDir *dir)
           subdir->entries == NULL &&
           subdir->subdirs == NULL)
         {
-          char *fs_dirname;
-          char *fs_filename;
-          
-          fs_dirname = markup_dir_build_path (subdir, FALSE);
-          fs_filename = markup_dir_build_path (subdir, TRUE);
-          
-          if (unlink (fs_filename) < 0)
-            {
-              gconf_log (GCL_WARNING,
-                         _("Could not remove \"%s\": %s\n"),
-                         fs_filename, strerror (errno));
-            }
 
-          if (rmdir (fs_dirname) < 0)
-            {
-              gconf_log (GCL_WARNING,
-                         _("Could not remove \"%s\": %s\n"),
-                         fs_dirname, strerror (errno));
-            }
+	  if (!dir->not_in_filesystem)
+	    {
+	      char *fs_dirname;
+	      char *fs_filename;
           
-          g_free (fs_dirname);
-          g_free (fs_filename);
+	      fs_dirname = markup_dir_build_path (subdir, FALSE, FALSE);
+	      fs_filename = markup_dir_build_path (subdir, TRUE, dir->save_as_subtree);
+
+	      if (unlink (fs_filename) < 0)
+		{
+		  gconf_log (GCL_WARNING,
+			     _("Could not remove \"%s\": %s\n"),
+			     fs_filename, strerror (errno));
+		}
+
+	      if (rmdir (fs_dirname) < 0)
+		{
+		  gconf_log (GCL_WARNING,
+			     _("Could not remove \"%s\": %s\n"),
+			     fs_dirname, strerror (errno));
+		}
+          
+	      g_free (fs_dirname);
+	      g_free (fs_filename);
+	    }
 
           markup_dir_free (subdir);
 
@@ -759,7 +823,30 @@ delete_useless_subdirs (MarkupDir *dir)
   dir->subdirs = g_slist_reverse (kept_subdirs);
 
   return some_deleted;
-} 
+}
+
+static gboolean
+delete_useless_subdirs_recurse (MarkupDir *dir)
+{
+  GSList *tmp;
+  gboolean retval = FALSE;
+
+  tmp = dir->subdirs;
+  while (tmp)
+    {
+      MarkupDir *subdir = tmp->data;
+
+      if (delete_useless_subdirs (subdir))
+	retval = TRUE;
+
+      tmp = tmp->next;
+    }
+
+  if (delete_useless_subdirs (dir))
+    retval = TRUE;
+
+  return retval;
+}
 
 static gboolean
 delete_useless_entries (MarkupDir *dir)
@@ -805,6 +892,7 @@ markup_dir_sync (MarkupDir *dir)
 {
   char *fs_dirname;
   char *fs_filename;
+  char *fs_subtree;
   GSList *tmp;
   gboolean some_useless_entries;
   gboolean some_useless_subdirs;
@@ -812,24 +900,13 @@ markup_dir_sync (MarkupDir *dir)
   some_useless_entries = FALSE;
   some_useless_subdirs = FALSE;
 
-#if 0
-  {
-    MarkupDir *parent;
-
-    parent = dir->parent;
-    while (parent)
-      {
-        fputs ("  ", stdout);
-        parent = parent->parent;
-      }
-
-    g_print ("%s\n", dir->name);
-  }
-#endif
-    
   /* We assume our parent directories have all been synced, before
    * we are synced. So we don't need to mkdir() parent directories.
    */
+
+  /* We must have been synced already */
+  if (dir->not_in_filesystem)
+    return TRUE;
 
   /* Sanitize the entries */
   tmp = dir->entries;
@@ -842,8 +919,9 @@ markup_dir_sync (MarkupDir *dir)
       tmp = tmp->next;
     }
   
-  fs_dirname = markup_dir_build_path (dir, FALSE);
-  fs_filename = markup_dir_build_path (dir, TRUE);
+  fs_dirname = markup_dir_build_path (dir, FALSE, FALSE);
+  fs_filename = markup_dir_build_path (dir, TRUE, FALSE);
+  fs_subtree = markup_dir_build_path (dir, TRUE, TRUE);
 
   /* For a dir to be loaded as a subdir, it must have a
    * %gconf.xml file, even if it has no entries in that
@@ -851,7 +929,8 @@ markup_dir_sync (MarkupDir *dir)
    * even though the entry list is initially empty.
    */
   
-  if (dir->entries_need_save)
+  if (dir->entries_need_save ||
+      (dir->some_subdir_needs_sync && dir->save_as_subtree))
     {
       GError *err;
       
@@ -869,22 +948,24 @@ markup_dir_sync (MarkupDir *dir)
       
       /* Now write the file */
       err = NULL;
-      save_entries (fs_filename, dir->tree->file_mode, dir->entries, &err);
+      save_tree (dir, dir->save_as_subtree, dir->tree->file_mode, &err);
       if (err != NULL)
         {
           gconf_log (GCL_WARNING,
                      _("Failed to write \"%s\": %s\n"),
-                     fs_filename, err->message);
+                     !dir->save_as_subtree ? fs_filename : fs_subtree, err->message);
           
           g_error_free (err);
         }
       else
         {
           dir->entries_need_save = FALSE;
+	  if (dir->save_as_subtree)
+	    dir->some_subdir_needs_sync = FALSE;
         }
     }
 
-  if (dir->some_subdir_needs_sync)
+  if (dir->some_subdir_needs_sync && !dir->save_as_subtree)
     {
       GSList *tmp;
       gboolean one_failed;
@@ -929,12 +1010,24 @@ markup_dir_sync (MarkupDir *dir)
    * we're deleting our subdirs, the root dir (tree->root)
    * never gets deleted - this is intentional.
    */
-  if (delete_useless_subdirs (dir))
-    some_useless_subdirs = TRUE;
+
+  if (!dir->save_as_subtree)
+    {
+      if (delete_useless_subdirs (dir))
+	some_useless_subdirs = TRUE;
+    }
+  else
+    {
+      /* We haven't recursively synced subdirs so we need
+       * to now recursively delete useless subdirs.
+       */
+      if (delete_useless_subdirs_recurse (dir))
+	some_useless_subdirs = TRUE;
+    }
   
   g_free (fs_dirname);
   g_free (fs_filename);
-
+  g_free (fs_subtree);
 
   /* If we deleted an entry or subdir from this directory, and hadn't
    * fully loaded this directory, we now don't know whether the entry
@@ -958,7 +1051,8 @@ markup_dir_sync (MarkupDir *dir)
 
 static char*
 markup_dir_build_path (MarkupDir  *dir,
-                       gboolean    with_data_file)
+                       gboolean    with_data_file,
+		       gboolean    subtree_data_file)
 {
   GString *name;
   GSList *components;
@@ -988,7 +1082,7 @@ markup_dir_build_path (MarkupDir  *dir,
   g_slist_free (components);
 
   if (with_data_file)
-    g_string_append (name, "/%gconf.xml");
+    g_string_append (name, !subtree_data_file ? "/%gconf.xml" : "/%gconf-tree.xml");
 
   return g_string_free (name, FALSE);
 }
@@ -1005,10 +1099,10 @@ markup_entry_new (MarkupDir  *dir,
 
   entry = g_new0 (MarkupEntry, 1);
 
-  /* "dir" may be NULL during %gconf.xml parsing */
+  entry->name = g_strdup (name);
 
   entry->dir = dir;
-  entry->name = g_strdup (name);
+  dir->entries = g_slist_prepend (dir->entries, entry);
 
   return entry;
 }
@@ -1130,7 +1224,7 @@ markup_entry_set_value (MarkupEntry       *entry,
        * LocalSchemaInfo with the wrong type default value at that
        * time, more efficient than dropping it now.
        */
-      if (entry->value->type != GCONF_VALUE_SCHEMA)
+      if (entry->value && entry->value->type != GCONF_VALUE_SCHEMA)
         {
           gconf_value_free (entry->value);
           entry->value = NULL;
@@ -1169,7 +1263,7 @@ markup_entry_set_value (MarkupEntry       *entry,
   entry->mod_time = time (NULL);
 
   /* Need to save to disk */
-  entry->dir->entries_need_save = TRUE;
+  markup_dir_set_entries_need_save (entry->dir);
   markup_dir_queue_sync (entry->dir);
 }
 
@@ -1239,7 +1333,7 @@ markup_entry_unset_value (MarkupEntry *entry,
   entry->mod_time = time (NULL);
 
   /* Need to save to disk */
-  entry->dir->entries_need_save = TRUE;
+  markup_dir_set_entries_need_save (entry->dir);
   markup_dir_queue_sync (entry->dir);
 }
 
@@ -1263,7 +1357,7 @@ markup_entry_set_schema_name (MarkupEntry *entry,
   entry->mod_time = time (NULL);
 
   /* Need to save to disk */
-  entry->dir->entries_need_save = TRUE;
+  markup_dir_set_entries_need_save (entry->dir);
   markup_dir_queue_sync (entry->dir);
 }
 
@@ -1356,6 +1450,13 @@ markup_entry_get_value (MarkupEntry *entry,
        * fall back to C locale if we can
        */
 
+      g_assert (best != NULL);
+
+      if (best->locale)
+	gconf_schema_set_locale (schema, best->locale);
+      else
+	gconf_schema_set_locale (schema, "C");
+
       if (best->default_value)
         gconf_schema_set_default_value (schema, best->default_value);
       else if (c_local_schema && c_local_schema->default_value)
@@ -1443,6 +1544,7 @@ typedef enum
 {
   STATE_START,
   STATE_GCONF,
+  STATE_DIR,
   STATE_ENTRY,
   STATE_STRINGVALUE,
   STATE_LONGDESC,
@@ -1462,16 +1564,19 @@ typedef enum
 
 typedef struct
 {
-  GSList *states;
+  GSList      *states;
+
+  MarkupDir   *root;
+  GSList      *dir_stack;
+ 
   MarkupEntry *current_entry;  
-  GSList *value_stack;
-  GSList *value_freelist;
+  GSList      *value_stack;
+  GSList      *value_freelist;
 
   /* Collected while parsing a schema entry */
-  GSList *local_schemas;
+  GSList      *local_schemas;
 
-  GSList *complete_entries;
-  
+  guint        allow_subdirs : 1;
 } ParseInfo;
 
 static void set_error (GError             **err,
@@ -1480,20 +1585,8 @@ static void set_error (GError             **err,
                        const char          *format,
                        ...) G_GNUC_PRINTF (4, 5);
 
-static void          parse_info_init        (ParseInfo    *info);
-static void          parse_info_free        (ParseInfo    *info);
-
-static void       push_state (ParseInfo  *info,
-                              ParseState  state);
-static void       pop_state  (ParseInfo  *info);
-static ParseState peek_state (ParseInfo  *info);
-
-static void        value_stack_push (ParseInfo  *info,
-                                     GConfValue *value,
-                                     gboolean    add_to_freelist);
-static GConfValue* value_stack_peek (ParseInfo  *info);
-static void        value_stack_pop  (ParseInfo  *info);
-
+static void dir_stack_push (ParseInfo *info,
+			    MarkupDir *dir);
 
 static void start_element_handler (GMarkupParseContext  *context,
                                    const gchar          *element_name,
@@ -1544,31 +1637,37 @@ set_error (GError             **err,
 }
 
 static void
-parse_info_init (ParseInfo *info)
+parse_info_init (ParseInfo *info,
+		 MarkupDir *root,
+		 gboolean   allow_subdirs)
 {
   info->states = g_slist_prepend (NULL, GINT_TO_POINTER (STATE_START));
+
+  info->root = root;
+  info->dir_stack = NULL;
+
   info->current_entry = NULL;
   info->value_stack = NULL;
   info->value_freelist = NULL;
+
   info->local_schemas = NULL;
-  info->complete_entries = NULL;
+
+  info->allow_subdirs = allow_subdirs != FALSE;
+
+  dir_stack_push (info, root);
 }
 
 static void
 parse_info_free (ParseInfo *info)
 {
-  if (info->current_entry)
-    markup_entry_free (info->current_entry);
+  g_slist_free (info->dir_stack);
+  
+  /* Don't free current_entry - always owned by tree */
 
   g_slist_foreach (info->local_schemas,
                    (GFunc) local_schema_info_free,
                    NULL);
   g_slist_free (info->local_schemas);
-
-  g_slist_foreach (info->complete_entries,
-                   (GFunc) markup_entry_free,
-                   NULL);
-  g_slist_free (info->complete_entries);
 
   /* only free values on the freelist, not those on the stack,
    * but all values in the freelist are also in the stack.
@@ -1623,13 +1722,48 @@ value_stack_peek (ParseInfo *info)
   return info->value_stack ? info->value_stack->data : NULL;
 }
 
-static void
+static GConfValue*
 value_stack_pop (ParseInfo *info)
 {
-  info->value_freelist = g_slist_remove (info->value_freelist,
-                                         info->value_stack->data);
-  info->value_stack = g_slist_remove (info->value_stack,
-                                      info->value_stack->data);
+  GConfValue *retval;
+
+  if (!info->value_stack)
+    return NULL;
+
+  retval = info->value_stack->data;
+
+  info->value_freelist = g_slist_remove (info->value_freelist, retval);
+  info->value_stack    = g_slist_remove (info->value_stack,    retval);
+
+  return retval;
+}
+
+static void
+dir_stack_push (ParseInfo *info,
+		MarkupDir *dir)
+{
+  info->dir_stack = g_slist_prepend (info->dir_stack, dir);
+}
+
+static MarkupDir*
+dir_stack_peek (ParseInfo *info)
+{
+  g_return_val_if_fail (info->dir_stack != NULL, NULL);
+
+  return info->dir_stack->data;
+}
+
+static MarkupDir*
+dir_stack_pop (ParseInfo *info)
+{
+  MarkupDir *retval;
+
+  g_return_val_if_fail (info->dir_stack != NULL, NULL);
+
+  retval = info->dir_stack->data;
+  info->dir_stack = g_slist_remove (info->dir_stack, retval);
+
+  return retval;
 }
 
 #define ELEMENT_IS(name) (strcmp (element_name, (name)) == 0)
@@ -1662,8 +1796,6 @@ locate_attributes (GMarkupParseContext *context,
   g_return_val_if_fail (first_attribute_name != NULL, FALSE);
   g_return_val_if_fail (first_attribute_retloc != NULL, FALSE);
 
-  retval = TRUE;
-
   n_attrs = 1;
   attrs[0].name = first_attribute_name;
   attrs[0].retloc = first_attribute_retloc;
@@ -1691,8 +1823,7 @@ locate_attributes (GMarkupParseContext *context,
 
   va_end (args);
 
-  if (!retval)
-    return retval;
+  retval = TRUE;
 
   i = 0;
   while (attribute_names[i])
@@ -2204,7 +2335,7 @@ parse_entry_element (GMarkupParseContext  *context,
   GConfValue *value;
   GError *tmp_err;
   
-  g_return_if_fail (peek_state (info) == STATE_GCONF);
+  g_return_if_fail (peek_state (info) == STATE_GCONF || peek_state (info) == STATE_DIR);
   g_return_if_fail (ELEMENT_IS ("entry"));
   g_return_if_fail (info->current_entry == NULL);
 
@@ -2266,7 +2397,7 @@ parse_entry_element (GMarkupParseContext  *context,
         g_error_free (tmp_err);
     }
   
-  info->current_entry = markup_entry_new (NULL, name);
+  info->current_entry = markup_entry_new (dir_stack_peek (info), name);
   if (value != NULL)
     {
       info->current_entry->value = value;
@@ -2274,16 +2405,15 @@ parse_entry_element (GMarkupParseContext  *context,
     }
       
   if (muser)
-    markup_entry_set_mod_user (info->current_entry,
-                               muser);
+    markup_entry_set_mod_user (info->current_entry, muser);
+
   if (mtime)
     {
       GTime vmtime;
 
       vmtime = gconf_string_to_gulong (mtime);
       
-      markup_entry_set_mod_time (info->current_entry,
-                                 vmtime);
+      markup_entry_set_mod_time (info->current_entry, vmtime);
     }
 
   /* don't use markup_entry_set_schema_name because it would
@@ -2291,6 +2421,47 @@ parse_entry_element (GMarkupParseContext  *context,
    */
   if (schema)
     info->current_entry->schema_name = g_strdup (schema);
+}
+
+static void
+parse_dir_element (GMarkupParseContext  *context,
+		   const gchar          *element_name,
+		   const gchar         **attribute_names,
+		   const gchar         **attribute_values,
+		   ParseInfo            *info,
+		   GError              **error)
+{
+  MarkupDir *dir;
+  const char *name;
+  
+  g_return_if_fail (peek_state (info) == STATE_GCONF || peek_state (info) == STATE_DIR);
+  g_return_if_fail (ELEMENT_IS ("dir"));
+
+  push_state (info, STATE_DIR);
+
+  name = NULL;
+  
+  if (!locate_attributes (context, element_name, attribute_names, attribute_values,
+                          error,
+                          "name", &name,
+                          NULL))
+    return;
+
+  if (name == NULL)
+    {
+      set_error (error, context, GCONF_ERROR_PARSE_ERROR,
+                 _("No \"%s\" attribute on element <%s>"),
+                 "name", element_name);
+      return;
+    }
+
+  dir = markup_dir_new (info->root->tree, dir_stack_peek (info), name);
+
+  dir->not_in_filesystem = TRUE;
+  dir->entries_loaded    = TRUE;
+  dir->subdirs_loaded    = TRUE;
+
+  dir_stack_push (info, dir);
 }
 
 static void
@@ -2676,16 +2847,23 @@ start_element_handler (GMarkupParseContext *context,
       break;
 
     case STATE_GCONF:
+    case STATE_DIR:      
       if (ELEMENT_IS ("entry"))
         {
           parse_entry_element (context, element_name,
                                attribute_names, attribute_values,
                                info, error);
         }
+      else if (ELEMENT_IS ("dir") && info->allow_subdirs)
+	{
+	  parse_dir_element (context, element_name,
+			     attribute_names, attribute_values,
+			     info, error);
+	}
       else
         set_error (error, context, GCONF_ERROR_PARSE_ERROR,
                    _("Element <%s> is not allowed inside a <%s> element"),
-                   element_name, "gconf");
+                   element_name, current_state == STATE_GCONF ? "gconf" : "dir");
       break;
 
     case STATE_ENTRY:
@@ -2734,14 +2912,12 @@ end_element_handler (GMarkupParseContext *context,
       g_assert (info->current_entry);
       g_assert (info->current_entry->local_schemas == NULL);
 
-      info->current_entry->local_schemas = info->local_schemas;
+      info->current_entry->local_schemas = g_slist_reverse (info->local_schemas);
       info->local_schemas = NULL;
 
       if (info->current_entry->value != NULL)
         value_stack_pop (info);
       
-      info->complete_entries = g_slist_prepend (info->complete_entries,
-                                                info->current_entry);
       info->current_entry = NULL;
 
       pop_state (info);
@@ -2772,7 +2948,19 @@ end_element_handler (GMarkupParseContext *context,
       pop_state (info);
       break;
 
+    case STATE_DIR:
     case STATE_GCONF:
+      {
+	MarkupDir *dir;
+      
+	dir = dir_stack_pop (info);
+	dir->entries = g_slist_reverse (dir->entries);
+	dir->subdirs = g_slist_reverse (dir->subdirs);
+
+	pop_state (info);
+      }
+      break;
+
     case STATE_LOCAL_SCHEMA:
     case STATE_LONGDESC:
     case STATE_STRINGVALUE:
@@ -2848,6 +3036,9 @@ text_handler (GMarkupParseContext *context,
     case STATE_GCONF:
       NO_TEXT ("gconf");
       break;
+    case STATE_DIR:
+      NO_TEXT ("dir");
+      break;
     case STATE_ENTRY:
       NO_TEXT ("entry");
       break;
@@ -2869,41 +3060,33 @@ text_handler (GMarkupParseContext *context,
     }
 }
 
-static GSList*
-parse_entries (const char *filename,
-               GError    **err)
+static void
+parse_tree (MarkupDir  *root,
+	    gboolean    parse_subtree,
+	    GError    **err)
 {
   GMarkupParseContext *context;
   GError *error;
   ParseInfo info;
+  char *filename;
   char *text;
   int length;
-  GSList *retval;
+
+  filename = markup_dir_build_path (root, TRUE, parse_subtree);
+  
+  parse_info_init (&info, root, parse_subtree);
 
   text = NULL;
   length = 0;
-  retval = NULL;
-
   error = NULL;
-  if (!g_file_get_contents (filename,
-                            &text,
-                            &length,
-                            &error))
-    {
-      g_propagate_error (err, error);
-      return NULL;
-    }
-
-  g_assert (text);
+  if (!g_file_get_contents (filename, &text, &length, &error))
+    goto out;
 
   /* Empty documents are OK */
   if (length == 0)
-    {
-      g_free (text);
-      return NULL;
-    }
-  
-  parse_info_init (&info);
+    goto out;
+
+  g_assert (text);
 
   context = g_markup_parse_context_new (&gconf_parser,
                                         0, &info, NULL);
@@ -2921,54 +3104,42 @@ parse_entries (const char *filename,
 
   g_markup_parse_context_free (context);
 
-  goto out;
-
  out:
 
+  g_free (filename);
   g_free (text);
-
-  if (error)
-    {
-      g_propagate_error (err, error);
-    }
-  else if (info.complete_entries)
-    {
-      retval = info.complete_entries;
-      info.complete_entries = NULL;
-    }
-  else
-    {
-      /* No entries in here, but that's not an error,
-       * empty files are allowed.
-       */
-    }
-
   parse_info_free (&info);
 
-  return retval;
+  if (error)
+    g_propagate_error (err, error);
 }
 
 /*
  * Save
  */
 
+#define INDENT_SPACES 8
+
 static gboolean write_list_children   (GConfValue  *value,
                                        FILE        *f,
-                                       const char  *indent);
+                                       int          indent);
 static gboolean write_pair_children   (GConfValue  *value,
                                        FILE        *f,
-                                       const char  *indent);
+                                       int          indent);
 static gboolean write_schema_children (GConfValue  *value,
                                        GSList      *local_schemas,
                                        FILE        *f,
-                                       const char  *indent);
+                                       int          indent);
 
 static gboolean
 write_value_element (GConfValue  *value,
                      GSList      *local_schemas,
+		     const char  *closing_element,
                      FILE        *f,
-                     const char  *indent) 
+                     int          indent) 
 {
+  char *whitespace;
+
   /* We are at the "<foo bar="whatever"" stage here,
    * <foo> still missing the closing >
    */
@@ -3054,13 +3225,13 @@ write_value_element (GConfValue  *value,
       break;
 
     case GCONF_VALUE_INT:
-      if (fprintf (f, "value=\"%d\"",
+      if (fprintf (f, " value=\"%d\"",
                    gconf_value_get_int (value)) < 0)
         return FALSE;
       break;
 
     case GCONF_VALUE_BOOL:
-      if (fprintf (f, "value=\"%s\"",
+      if (fprintf (f, " value=\"%s\"",
                    gconf_value_get_bool (value) ? "true" : "false") < 0)
         return FALSE;
       break;
@@ -3070,7 +3241,7 @@ write_value_element (GConfValue  *value,
         char *s;
 
         s = gconf_double_to_string (gconf_value_get_float (value));
-        if (fprintf (f, "value=\"%s\"", s) < 0)
+        if (fprintf (f, " value=\"%s\"", s) < 0)
           {
             g_free (s);
             return FALSE;
@@ -3096,14 +3267,17 @@ write_value_element (GConfValue  *value,
         
         s = g_markup_escape_text (gconf_value_get_string (value),
                                   -1);
+	whitespace = g_strnfill (indent + INDENT_SPACES, ' ');
         
         if (fprintf (f, "%s<stringvalue>%s</stringvalue>\n",
-                     indent, s) < 0)
+                     whitespace, s) < 0)
           {
+	    g_free (whitespace);
             g_free (s);
             return FALSE;
           }
         
+	g_free (whitespace);
         g_free (s);
       }
       break;
@@ -3130,108 +3304,130 @@ write_value_element (GConfValue  *value,
       break;
     }
 
+  whitespace =  g_strnfill (indent, ' ');
+  if (fprintf (f, "%s</%s>\n", whitespace, closing_element) < 0)
+    {
+      g_free (whitespace);
+      return FALSE;
+    }
+  g_free (whitespace);
+
   return TRUE;
 }    
 
 static gboolean
 write_list_children (GConfValue  *value,
                      FILE        *f,
-                     const char  *indent)
+                     int          indent)
 {
   GSList *tmp;
+  gboolean retval = FALSE;
+  char *whitespace;
+
+  whitespace = g_strnfill (indent, ' ');
 
   tmp = gconf_value_get_list (value);
   while (tmp != NULL)
     {
       GConfValue *li = tmp->data;
 
-      if (fputs (indent, f) < 0)
-        return FALSE;
+      if (fputs (whitespace, f) < 0)
+	goto out;
       
       if (fputs ("<li", f) < 0)
-        return FALSE;
+	goto out;
 
-      if (!write_value_element (li, NULL, f, indent))
-        return FALSE;      
+      if (!write_value_element (li, NULL, "li", f, indent))
+	goto out;
 
-      if (fprintf (f, "%s</li>", indent) < 0)
-        return FALSE;
-      
       tmp = tmp->next;
     }
 
-  return TRUE;
+  retval = TRUE;
+
+ out:
+
+  g_free (whitespace);
+
+  return retval;
 }
 
 static gboolean
 write_pair_children (GConfValue  *value,
                      FILE        *f,
-                     const char  *indent)
+                     int          indent)
 {
   GConfValue *child;
+  gboolean retval = FALSE;
+  char *whitespace;
+
+  whitespace = g_strnfill (indent, ' ');
   
   child = gconf_value_get_car (value);
 
   if (child != NULL)
     {
-      if (fputs (indent, f) < 0)
-        return FALSE;
-      
-      if (fputs ("<car", f) < 0)
-        return FALSE;
+      if (fputs (whitespace, f) < 0)
+	goto out;
 
-      if (!write_value_element (child, NULL, f, indent))
-        return FALSE;      
-      
-      if (fprintf (f, "%s</car>", indent) < 0)
-        return FALSE;
+      if (fputs ("<car", f) < 0)
+	goto out;
+
+      if (!write_value_element (child, NULL, "car", f, indent))
+	goto out;
     }
 
   child = gconf_value_get_cdr (value);
 
   if (child != NULL)
     {
-      if (fputs (indent, f) < 0)
-        return FALSE;
+      if (fputs (whitespace, f) < 0)
+	goto out;
       
       if (fputs ("<cdr", f) < 0)
-        return FALSE;
+	goto out;
 
-      if (!write_value_element (child, NULL, f, indent))
-        return FALSE;      
-      
-      if (fprintf (f, "%s</cdr>", indent) < 0)
-        return FALSE;
+      if (!write_value_element (child, NULL, "cdr", f, indent))
+	goto out;
     }
+
+  retval = TRUE;
+ 
+ out:
+
+  g_free (whitespace);
   
-  return TRUE;
+  return retval;
 }
 
 static gboolean
 write_schema_children (GConfValue  *value,
                        GSList      *local_schemas,
                        FILE        *f,
-                       const char  *indent)
+                       int          indent)
 {
   /* Here we write each local_schema, in turn a local_schema can
    * contain <default> and <longdesc> and have locale and short_desc
    * attributes
    */
   GSList *tmp;
+  gboolean retval;
+  char *whitespace1, *whitespace2;
+
+  whitespace1 = g_strnfill (indent, ' ');
+  whitespace2 = g_strnfill (indent + INDENT_SPACES, ' ');
   
-  if (fputs (indent, f) < 0)
-    return FALSE;
-
-  if (fputs ("<local_schema", f) < 0)
-    return FALSE;
-
   tmp = local_schemas;
   while (tmp != NULL)
     {
-      LocalSchemaInfo *local_schema;
+      LocalSchemaInfo *local_schema = tmp->data;
       char *s;
 
-      local_schema = tmp->data;
+      if (fputs (whitespace1, f) < 0)
+	goto out;
+
+      if (fputs ("<local_schema", f) < 0)
+	goto out;
       
       g_assert (local_schema->locale);
       
@@ -3240,7 +3436,7 @@ write_schema_children (GConfValue  *value,
       if (fprintf (f, " locale=\"%s\"", s) < 0)
         {
           g_free (s);
-          return FALSE;
+	  goto out;
         }
       
       g_free (s);
@@ -3252,123 +3448,198 @@ write_schema_children (GConfValue  *value,
           if (fprintf (f, " short_desc=\"%s\"", s) < 0)
             {
               g_free (s);
-              return FALSE;
+	      goto out;
             }
           
           g_free (s);
         }
 
       if (fputs (">\n", f) < 0)
-        return FALSE;
+	goto out;
 
       if (local_schema->default_value)
         {
-          if (fputs (indent, f) < 0)
-            return FALSE;
+          if (fputs (whitespace2, f) < 0)
+	    goto out;
 
           if (fputs ("<default", f) < 0)
-            return FALSE;
+	    goto out;
 
-          if (!write_value_element (local_schema->default_value, NULL, f, indent))
-            return FALSE;      
-          
-          if (fprintf (f, "%s</default>", indent) < 0)
-            return FALSE;
+          if (!write_value_element (local_schema->default_value, NULL,
+				    "default", f,
+				    indent + INDENT_SPACES))
+	    goto out;
         }
 
       if (local_schema->long_desc)
         {
-          if (fputs (indent, f) < 0)
-            return FALSE;
-
-          if (fputs ("<longdesc>\n", f) < 0)
-            return FALSE;
+          if (fprintf (f, "%s<longdesc>", whitespace2) < 0)
+	    goto out;
 
           s = g_markup_escape_text (local_schema->long_desc, -1);
           
           if (fputs (s, f) < 0)
             {
               g_free (s);
-              return FALSE;
+	      goto out;
             }
           
           g_free (s);
+
+          if (fputs ("</longdesc>\n", f) < 0)
+	    goto out;
         }
-      
+
+      if (fputs (whitespace1, f) < 0)
+	goto out;
+
+      if (fputs ("</local_schema>\n", f) < 0)
+	goto out;
+
       tmp = tmp->next;
     }
         
-  if (fputs (indent, f) < 0)
-    return FALSE;
+  retval = TRUE;
 
-  if (fputs ("</local_schema>\n", f) < 0)
-    return FALSE;
+ out:
+
+  g_free (whitespace1);
+  g_free (whitespace2);
 
   return TRUE;
 }
 
 static gboolean
 write_entry (MarkupEntry *entry,
-             FILE        *f)
+             FILE        *f,
+	     int          indent)
 {
-  if (fputs ("  <entry", f) < 0)
-    return FALSE;
+  gboolean  retval = FALSE;
+  char     *whitespace;
+
+  whitespace = g_strnfill (indent, ' ');
+
+  if (fprintf (f, "%s<entry", whitespace) < 0)
+    goto out;
 
   g_assert (entry->name != NULL);
   
   if (fprintf (f, " name=\"%s\" mtime=\"%lu\"",
                entry->name,
                (unsigned long) entry->mod_time) < 0)
-    return FALSE;
+    goto out;
   
   if (entry->schema_name)
     {
       if (fprintf (f, " schema=\"%s\"", entry->schema_name) < 0)
-        return FALSE;
+	goto out;
     }
 
   if (entry->mod_user)
     {
       if (fprintf (f, " muser=\"%s\"", entry->mod_user) < 0)
-        return FALSE;
+	goto out;
     }
 
   if (entry->value != NULL)
     {
-      if (!write_value_element (entry->value, entry->local_schemas, f, "    "))
-        return FALSE;
-    }
+      if (!write_value_element (entry->value, entry->local_schemas, "entry", f, indent))
+	goto out;
+      }
   else
     {
-      if (fputs (">", f) < 0)
-        return FALSE;
+      if (fputs ("/>\n", f) < 0)
+	goto out;
     }
 
-  if (fputs ("  </entry>\n", f) < 0)
-    return FALSE;
+  retval = TRUE;
+
+ out:
+
+  g_free (whitespace);
   
-  return TRUE;
+  return retval;
 }
 
 static gboolean
-save_entries (const char  *filename,
-              guint        file_mode,
-              GSList      *entries,
-              GError     **err)
+write_dir (MarkupDir *dir,
+	   FILE      *f,
+	   int        indent)
+{
+  GSList *tmp;
+  gboolean retval = FALSE;
+  char *whitespace;
+
+  /* This dir will be deleted from the 
+   * MarkupTree after syncing anyway ...
+   */
+  if (!dir->entries && !dir->subdirs)
+    return TRUE;
+
+  whitespace = g_strnfill (indent, ' ');
+
+  g_assert (dir->name != NULL);
+  
+  if (fprintf (f, "%s<dir name=\"%s\">\n", whitespace, dir->name) < 0)
+    goto out;
+
+  tmp = dir->entries;
+  while (tmp != NULL)
+    {
+      MarkupEntry *entry = tmp->data;
+      
+      if (!write_entry (entry, f, indent + INDENT_SPACES))
+	goto out;
+        
+      tmp = tmp->next;
+    }
+
+  tmp = dir->subdirs;
+  while (tmp != NULL)
+    {
+      MarkupDir *subdir = tmp->data;
+      
+      if (!write_dir (subdir, f, indent + INDENT_SPACES))
+	goto out;
+        
+      tmp = tmp->next;
+    }
+
+  if (fprintf (f, "%s</dir>\n", whitespace) < 0)
+    return FALSE;
+
+  retval = TRUE;
+
+ out:
+
+  g_free (whitespace);
+
+  return retval;
+}
+
+static void
+save_tree (MarkupDir  *dir,
+	   gboolean    save_as_subtree,
+	   guint       file_mode,
+	   GError    **err)
 {
   /* We save to a secondary file then copy over, to handle
    * out-of-disk-space robustly
    */
   FILE *f;
   int new_fd;
+  char *filename;
   char *new_filename;
   char *err_str;
   gboolean write_failed;
+  GSList *tmp;
 
   write_failed = FALSE;
   err_str = NULL;
   new_fd = -1;
   f = NULL;
+
+  filename = markup_dir_build_path (dir, TRUE, save_as_subtree);
   
   new_filename = g_strconcat (filename, ".new", NULL);
   new_fd = open (new_filename, O_WRONLY | O_CREAT, file_mode);
@@ -3382,7 +3653,7 @@ save_entries (const char  *filename,
   /* Leave the file empty to avoid parsing it later
    * if there are no entries in it.
    */
-  if (entries == NULL)
+  if (dir->entries == NULL && (!save_as_subtree || dir->subdirs == NULL))
     goto done_writing;
   
   f = fdopen (new_fd, "w");
@@ -3409,23 +3680,37 @@ save_entries (const char  *filename,
       goto done_writing;
     }
 
-  {
-    GSList *tmp;
     
-    tmp = entries;
-    while (tmp != NULL)
-      {
-        MarkupEntry *entry = tmp->data;
+  tmp = dir->entries;
+  while (tmp != NULL)
+    {
+      MarkupEntry *entry = tmp->data;
+      
+      if (!write_entry (entry, f, INDENT_SPACES))
+	{
+	  write_failed = TRUE;
+	  goto done_writing;
+	}
         
-        if (!write_entry (entry, f))
-          {
-            write_failed = TRUE;
-            goto done_writing;
-          }
-        
-        tmp = tmp->next;
-      }
-  }
+      tmp = tmp->next;
+    }
+
+  if (save_as_subtree)
+    {
+      tmp = dir->subdirs;
+      while (tmp != NULL)
+	{
+	  MarkupDir *dir = tmp->data;
+
+	  if (!write_dir (dir, f, INDENT_SPACES))
+	    {
+	      write_failed = TRUE;
+	      goto done_writing;
+	    }
+
+	  tmp = tmp->next;
+	}
+    }
 
   if (fputs ("</gconf>\n", f) < 0)
     {
@@ -3462,6 +3747,7 @@ save_entries (const char  *filename,
   
  out:
   g_free (new_filename);
+  g_free (filename);
   
   if (err_str)
     {
@@ -3478,8 +3764,6 @@ save_entries (const char  *filename,
 
   if (f != NULL)
     fclose (f);
-
-  return err_str == NULL;
 }
 
 /*

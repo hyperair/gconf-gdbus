@@ -22,6 +22,7 @@
 #include <gconf/gconf-locale.h>
 #include <gconf/gconf.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <locale.h>
