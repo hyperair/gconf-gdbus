@@ -44,10 +44,14 @@ static int unset_mode = FALSE;
 static int all_pairs_mode = FALSE;
 static int all_subdirs_mode = FALSE;
 static int recursive_list = FALSE;
+static int set_schema_mode = FALSE;
 static char* value_type = NULL;
 static int shutdown_gconfd = FALSE;
 static int ping_gconfd = FALSE;
 static int spawn_gconfd = FALSE;
+static char* short_desc = NULL;
+static char* long_desc = NULL;
+static char* owner = NULL;
 
 struct poptOption options[] = {
   { 
@@ -74,7 +78,16 @@ struct poptOption options[] = {
     POPT_ARG_NONE,
     &get_mode,
     0,
-    N_("Print the value of a key to standard out."),
+    N_("Print the value of a key to standard output."),
+    NULL
+  },
+  {
+    "set-schema",
+    '\0',
+    POPT_ARG_NONE,
+    &set_schema_mode,
+    0,
+    N_("Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --type."),
     NULL
   },
   {
@@ -148,9 +161,36 @@ struct poptOption options[] = {
     POPT_ARG_STRING,
     &value_type,
     0,
-    N_("Specify the type of the value being set. Unique abbreviations OK."),
-    N_("[int|bool|float|string]")
+    N_("Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string")
   },  
+  { 
+    "short-desc",
+    '\0',
+    POPT_ARG_STRING,
+    &short_desc,
+    0,
+    N_("Specify a short half-line description to go in a schema."),
+    N_("DESCRIPTION")
+  },  
+  { 
+    "long-desc",
+    '\0',
+    POPT_ARG_STRING,
+    &long_desc,
+    0,
+    N_("Specify a several-line description to go in a schema."),
+    N_("DESCRIPTION")
+  },  
+  {
+    "owner",
+    '\0',
+    POPT_ARG_STRING,
+    &owner,
+    0,
+    N_("Specify the owner of a schema"),
+    N_("OWNER")
+  },
   {
     NULL,
     '\0',
@@ -233,8 +273,17 @@ main (int argc, char** argv)
       return 1;
     }
 
+  if ((set_schema_mode && get_mode) ||
+      (set_schema_mode && set_mode) ||
+      (set_schema_mode && unset_mode) ||
+      (set_schema_mode && all_pairs_mode) ||
+      (set_schema_mode && all_subdirs_mode))
+    {
+      fprintf(stderr, _("--set_schema should not be used with --get, --set, --unset, --all-pairs, --all-dirs\n"));
+      return 1;
+    }  
 
-  if ((value_type != NULL) && !set_mode)
+  if ((value_type != NULL) && !(set_mode || set_schema_mode))
     {
       fprintf(stderr, _("Value type is only relevant when setting a value\n"));
       return 1;
@@ -310,12 +359,28 @@ main (int argc, char** argv)
          
           if (value != NULL)
             {
-              s = g_conf_value_to_string(value);
+              if (value->type != G_CONF_VALUE_SCHEMA)
+                {
+                  s = g_conf_value_to_string(value);
 
-              fputs(s, stdout); /* in case the gstring contains printf formats */
-              fputs("\n", stdout);
+                  printf("%s\n", s);
 
-              g_free(s);
+                  g_free(s);
+                }
+              else
+                {
+                  GConfSchema* sc = g_conf_value_schema(value);
+                  GConfValueType stype = g_conf_schema_type(sc);
+                  const gchar* long_desc = g_conf_schema_long_desc(sc);
+                  const gchar* short_desc = g_conf_schema_short_desc(sc);
+                  const gchar* owner = g_conf_schema_owner(sc);
+
+                  printf(_("Type: %s\n"), g_conf_value_type_to_string(stype));
+                  printf(_("Owner: %s\n"), owner ? owner : _("Unset"));
+                  printf(_("Short Desc: %s\n"), short_desc ? short_desc : _("Unset"));
+                  printf(_("Long Desc: %s\n"), long_desc ? long_desc : _("Unset"));
+                }
+
               g_conf_value_destroy(value);
             }
           else
@@ -395,14 +460,130 @@ main (int argc, char** argv)
               return 1;
             }
 
+          g_conf_clear_error();
+
           g_conf_set(conf, key, gval);
+
+          if (g_conf_errno() != G_CONF_SUCCESS)
+            {
+              fprintf(stderr, _("Error setting value: %s"),
+                      g_conf_error());
+              return 1;
+            }
 
           g_conf_value_destroy(gval);
 
           ++args;
         }
 
+      g_conf_clear_error();
+
       g_conf_sync(conf);
+
+      if (g_conf_errno() != G_CONF_SUCCESS)
+        {
+          fprintf(stderr, _("Error syncing: %s"),
+                  g_conf_error());
+          return 1;
+        }
+    }
+
+  if (set_schema_mode)
+    {
+      gchar** args = poptGetArgs(ctx);
+      GConfSchema* sc;
+      GConfValue* val;
+      const gchar* key;
+      
+      if ((args == NULL) || (args[1] != NULL))
+        {
+          fprintf(stderr, _("Must specify key (schema name) as the only argument\n"));
+          return 1;
+        }
+      
+      key = *args;
+
+      val = g_conf_value_new(G_CONF_VALUE_SCHEMA);
+
+      sc = g_conf_schema_new();
+
+      g_conf_value_set_schema_nocopy(val, sc);
+
+      if (short_desc)
+        g_conf_schema_set_short_desc(sc, short_desc);
+
+      if (long_desc)
+        g_conf_schema_set_long_desc(sc, long_desc);
+
+      if (owner)
+        g_conf_schema_set_owner(sc, owner);
+
+      if (value_type)
+        {
+          GConfValueType type = G_CONF_VALUE_INVALID;
+
+          switch (*value_type)
+            {
+            case 'i':
+            case 'I':
+              type = G_CONF_VALUE_INT;
+              break;
+            case 'f':
+            case 'F':
+              type = G_CONF_VALUE_FLOAT;
+              break;
+            case 'b':
+            case 'B':
+              type = G_CONF_VALUE_BOOL;
+              break;
+            case 's':
+            case 'S':
+              switch (value_type[1])
+                {
+                case 't':
+                case 'T':
+                  type = G_CONF_VALUE_STRING;
+                  break;
+                case 'c':
+                case 'C':
+                  type = G_CONF_VALUE_SCHEMA;
+                  break;
+                default:
+                  fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+                }
+              break;
+            default:
+              fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+              break;
+            }
+
+          if (type != G_CONF_VALUE_INVALID)
+            g_conf_schema_set_type(sc, type);
+        }
+
+      g_conf_clear_error();
+      
+      g_conf_set(conf, key, val);
+      
+      if (g_conf_errno() != G_CONF_SUCCESS)
+        {
+          fprintf(stderr, _("Error setting value: %s"),
+                  g_conf_error());
+          return 1;
+        }
+      
+      g_conf_value_destroy(val);
+      
+      g_conf_clear_error();
+
+      g_conf_sync(conf);
+
+      if (g_conf_errno() != G_CONF_SUCCESS)
+        {
+          fprintf(stderr, _("Error syncing: %s"),
+                  g_conf_error());
+          return 1;
+        }
     }
 
   if (all_pairs_mode)

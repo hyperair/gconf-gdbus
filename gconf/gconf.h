@@ -23,6 +23,8 @@
 
 #include <glib.h>
 
+#include "gconf-schema.h"
+
 typedef enum {
   G_CONF_SUCCESS = 0,
   G_CONF_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
@@ -36,18 +38,6 @@ typedef enum {
   G_CONF_PARSE_ERROR = 6,   /* Syntax error when parsing */
   G_CONF_CORRUPT = 7        /* Error parsing/loading information inside the backend */
 } GConfErrNo;
-
-typedef enum {
-  G_CONF_VALUE_INVALID,
-  G_CONF_VALUE_STRING,
-  G_CONF_VALUE_INT,
-  G_CONF_VALUE_FLOAT,
-  G_CONF_VALUE_BOOL,
-  G_CONF_VALUE_LIST_OF_STRING,
-  G_CONF_VALUE_LIST_OF_INT,
-  G_CONF_VALUE_LIST_OF_FLOAT,
-  G_CONF_VALUE_LIST_OF_BOOL
-} GConfValueType;
 
 /* 
  * A GConfValue is used to pass configuration values around
@@ -63,6 +53,7 @@ struct _GConfValue {
     gboolean bool_data;
     gdouble float_data;
     GSList* list_data;
+    GConfSchema* schema_data;
   } d;
 };
 
@@ -71,6 +62,7 @@ struct _GConfValue {
 #define g_conf_value_float(x)  ((x)->d.float_data)
 #define g_conf_value_list(x)   ((x)->d.list_data)
 #define g_conf_value_bool(x)   ((x)->d.bool_data)
+#define g_conf_value_schema(x) ((x)->d.schema_data)
 
 GConfValue* g_conf_value_new(GConfValueType type);
 GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
@@ -81,6 +73,8 @@ void        g_conf_value_set_int(GConfValue* value, gint the_int);
 void        g_conf_value_set_string(GConfValue* value, const gchar* the_str);
 void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
 void        g_conf_value_set_bool(GConfValue* value, gboolean the_bool);
+void        g_conf_value_set_schema(GConfValue* value, GConfSchema* sc);
+void        g_conf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 

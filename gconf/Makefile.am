@@ -38,6 +38,8 @@ libgconf_client_la_SOURCES = \
 	gconf-internals.h	\
 	gconf-backend.h		\
 	gconf-backend.c		\
+	gconf-schema.h		\
+	gconf-schema.c		\
 	gconf.h			\
 	gconf.c			\
 	$(CORBA_SOURCES)

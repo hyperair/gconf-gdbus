@@ -87,6 +87,13 @@ void          fill_corba_value_from_g_conf_value(GConfValue* value,
                                                  ConfigValue* dest);
 ConfigValue*  invalid_corba_value();
 
+void          fill_corba_schema_from_g_conf_schema(GConfSchema* sc, 
+                                                   ConfigSchema* dest);
+ConfigSchema* corba_schema_from_g_conf_schema(GConfSchema* sc);
+GConfSchema*  g_conf_schema_from_corba_schema(const ConfigSchema* cs);
+
+const gchar* g_conf_value_type_to_string(GConfValueType type);
+
 /* This is the actual thing we want to talk to, the stack of sources */
 typedef struct _GConfSources GConfSources;
 

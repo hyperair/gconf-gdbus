@@ -3,7 +3,14 @@
 // client library. I reserve the right to change it whenever I feel 
 // like it. So there.
 
-enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal, BoolVal };
+enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal, BoolVal, SchemaVal };
+
+struct ConfigSchema {
+  ConfigValueType value_type;
+  string short_desc;
+  string long_desc;
+  string owner;
+};
 
 union ConfigValue switch (ConfigValueType) {
  case InvalidVal:
@@ -16,6 +23,9 @@ union ConfigValue switch (ConfigValueType) {
    float float_value;
  case BoolVal:
    boolean bool_value;
+   // hope this doesn't slow down transmission of smaller types 
+ case SchemaVal:
+   ConfigSchema schema_value;
 };
 
 interface ConfigListener {

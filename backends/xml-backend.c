@@ -1481,6 +1481,27 @@ xdirs_remove_child_dir(xmlNodePtr dirs, const gchar* relative_child_dir)
     }
 }
 
+static GConfValueType
+string_to_valuetype(const gchar* type_str)
+{ 
+  if (strcmp(type_str, "int") == 0)
+    return G_CONF_VALUE_INT;
+  else if (strcmp(type_str, "float") == 0)
+    return G_CONF_VALUE_FLOAT;
+  else if (strcmp(type_str, "string") == 0)
+    return G_CONF_VALUE_STRING;
+  else if (strcmp(type_str, "bool") == 0)
+    return G_CONF_VALUE_BOOL;
+  else if (strcmp(type_str, "schema") == 0)
+    return G_CONF_VALUE_SCHEMA;
+  else
+    {
+      g_warning("Unknown type `%s'", type_str);
+ 
+      return G_CONF_VALUE_INVALID;
+    }
+}
+
 static void
 xentry_set_value(xmlNodePtr node, GConfValue* value)
 {
@@ -1490,33 +1511,29 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
   g_return_if_fail(node != NULL);
   g_return_if_fail(value != NULL);
 
-  switch (value->type)
-    {
-    case G_CONF_VALUE_INT:
-      type = "int";
-      break;
-    case G_CONF_VALUE_STRING:
-      type = "string";
-      break;
-    case G_CONF_VALUE_FLOAT:
-      type = "float";
-      break;
-    case G_CONF_VALUE_BOOL:
-      type = "bool";
-      break;
-    default:
-      g_assert_not_reached();
-      type = NULL; /* for warnings */
-      break;
-    }
+  type = g_conf_value_type_to_string(value->type);
   
   xmlSetProp(node, "type", type);
 
-  value_str = g_conf_value_to_string(value);
+  if (value->type != G_CONF_VALUE_SCHEMA)
+    {
+      value_str = g_conf_value_to_string(value);
   
-  xmlSetProp(node, "value", value_str);
+      xmlSetProp(node, "value", value_str);
 
-  g_free(value_str);
+      g_free(value_str);
+    }
+  else
+    {
+      GConfSchema* sc = g_conf_value_schema(value);
+
+      xmlSetProp(node, "value", NULL);
+      xmlSetProp(node, "stype", g_conf_value_type_to_string(sc->type));
+      /* OK if these are set to NULL, since that unsets the property */
+      xmlSetProp(node, "short_desc", sc->short_desc);
+      xmlSetProp(node, "owner", sc->owner);
+      xmlNodeSetContent(node, sc->long_desc);
+    }
 }
 
 static GConfValue*
@@ -1524,43 +1541,88 @@ xentry_extract_value(xmlNodePtr node)
 {
   GConfValue* value;
   gchar* type_str;
-  gchar* value_str;
   GConfValueType type = G_CONF_VALUE_INVALID;
 
   type_str = xmlGetProp(node, "type");
-  value_str = xmlGetProp(node, "value");
 
-  if (type_str == NULL || value_str == NULL)
-    {
-      if (type_str != NULL)
-        free(type_str);
-      if (value_str != NULL)
-        free(value_str);
-      return NULL;
-    }
-  
-  if (strcmp(type_str, "int") == 0)
-    type = G_CONF_VALUE_INT;
-  else if (strcmp(type_str, "float") == 0)
-    type = G_CONF_VALUE_FLOAT;
-  else if (strcmp(type_str, "string") == 0)
-    type = G_CONF_VALUE_STRING;
-  else if (strcmp(type_str, "bool") == 0)
-    type = G_CONF_VALUE_BOOL;
-  else
+  type = string_to_valuetype(type_str);
+
+  if (type == G_CONF_VALUE_INVALID)
     {
       g_warning("Unknown type `%s'", type_str);
       free(type_str);
-      free(value_str);
       return NULL;
     }
 
-  value = g_conf_value_new_from_string(type, value_str);
+  if (type != G_CONF_VALUE_SCHEMA)
+    {
+      gchar* value_str;
 
-  free(value_str);
-  free(type_str);
+      value_str = xmlGetProp(node, "value");
+      
+      if (type_str == NULL || value_str == NULL)
+        {
+          if (type_str != NULL)
+            free(type_str);
+          if (value_str != NULL)
+            free(value_str);
+          return NULL;
+        }
 
-  return value;
+      value = g_conf_value_new_from_string(type, value_str);
+
+      free(value_str);
+      free(type_str);
+
+      return value;
+    }
+  else
+    {
+      gchar* sd_str;
+      gchar* ld_str;
+      gchar* owner_str;
+      gchar* stype_str;
+      GConfSchema* sc;
+      GConfValue* value;
+
+      free(type_str);
+
+      sd_str = xmlGetProp(node, "short_desc");
+      owner_str = xmlGetProp(node, "owner");
+      stype_str = xmlGetProp(node, "stype");
+      ld_str = xmlNodeGetContent(node);
+
+      sc = g_conf_schema_new();
+
+      if (sd_str)
+        {
+          g_conf_schema_set_short_desc(sc, sd_str);
+          free(sd_str);
+        }
+      if (ld_str)
+        {
+          g_conf_schema_set_long_desc(sc, ld_str);
+          free(ld_str);
+        }
+      if (owner_str)
+        {
+          g_conf_schema_set_owner(sc, owner_str);
+          free(owner_str);
+        }
+      if (stype_str)
+        {
+          GConfValueType stype;
+          stype = string_to_valuetype(stype_str);
+          g_conf_schema_set_type(sc, stype);
+          free(stype_str);
+        }
+
+      value = g_conf_value_new(G_CONF_VALUE_SCHEMA);
+      
+      g_conf_value_set_schema_nocopy(value, sc);
+
+      return value;
+    }
 }
 
 /*

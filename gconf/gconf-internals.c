@@ -74,7 +74,7 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
     {
     case G_CONF_VALUE_INT:
       {
-        gchar* s = value_str;
+        const gchar* s = value_str;
         gboolean not_digit = FALSE;
 
         while (*s)
@@ -146,6 +146,9 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
 gchar*
 g_conf_value_to_string(GConfValue* value)
 {
+  /* These strings shouldn't be translated; they're primarily 
+     intended for machines to read, not humans. 
+  */
   gchar* retval = NULL;
 
   switch (value->type)
@@ -166,6 +169,9 @@ g_conf_value_to_string(GConfValue* value)
       break;
     case G_CONF_VALUE_INVALID:
       retval = g_strdup("Invalid");
+      break;
+    case G_CONF_VALUE_SCHEMA:
+      retval = g_strdup("Schema");
       break;
     default:
       g_assert_not_reached();
@@ -198,6 +204,12 @@ g_conf_value_copy(GConfValue* src)
       else 
         dest->d.string_data = NULL;
       break;
+    case G_CONF_VALUE_SCHEMA:
+      if (src->d.schema_data)
+        dest->d.schema_data = g_conf_schema_copy(src->d.schema_data);
+      else
+        dest->d.schema_data = NULL;
+      break;
     default:
       g_assert_not_reached();
     }
@@ -213,6 +225,10 @@ g_conf_value_destroy(GConfValue* value)
   if (value->type == G_CONF_VALUE_STRING && 
       value->d.string_data != NULL)
     g_free(value->d.string_data);
+
+  if (value->type == G_CONF_VALUE_SCHEMA && 
+      value->d.schema_data != NULL)
+    g_conf_schema_destroy(value->d.schema_data);
 
   g_free(value);
 }
@@ -252,6 +268,31 @@ g_conf_value_set_bool(GConfValue* value, gboolean the_bool)
 
   value->d.bool_data = the_bool;
 }
+
+void       
+g_conf_value_set_schema(GConfValue* value, GConfSchema* sc)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_SCHEMA);
+  
+  if (value->d.schema_data != NULL)
+    g_conf_schema_destroy(value->d.schema_data);
+
+  value->d.schema_data = g_conf_schema_copy(sc);
+}
+
+void        
+g_conf_value_set_schema_nocopy(GConfValue* value, GConfSchema* sc)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_SCHEMA);
+
+  if (value->d.schema_data != NULL)
+    g_conf_schema_destroy(value->d.schema_data);
+
+  value->d.schema_data = sc;
+}
+
 
 GConfPair* 
 g_conf_pair_new(gchar* key, GConfValue* val)
@@ -587,6 +628,9 @@ g_conf_value_from_corba_value(const ConfigValue* value)
     case BoolVal:
       type = G_CONF_VALUE_BOOL;
       break;
+    case SchemaVal:
+      type = G_CONF_VALUE_SCHEMA;
+      break;
     default:
       g_warning("Invalid type in %s", __FUNCTION__);
       return NULL;
@@ -607,6 +651,10 @@ g_conf_value_from_corba_value(const ConfigValue* value)
       break;
     case G_CONF_VALUE_BOOL:
       g_conf_value_set_bool(gval, value->_u.bool_value);
+      break;
+    case G_CONF_VALUE_SCHEMA:
+      g_conf_value_set_schema_nocopy(gval, 
+                                     g_conf_schema_from_corba_schema(&(value->_u.schema_value)));
       break;
     default:
       g_assert_not_reached();
@@ -644,6 +692,11 @@ fill_corba_value_from_g_conf_value(GConfValue* value,
       cv->_d = BoolVal;
       cv->_u.bool_value = g_conf_value_bool(value);
       break;
+    case G_CONF_VALUE_SCHEMA:
+      cv->_d = SchemaVal;
+      fill_corba_schema_from_g_conf_schema(g_conf_value_schema(value),
+                                           &cv->_u.schema_value);
+      break;
     case G_CONF_VALUE_INVALID:
       cv->_d = InvalidVal;
       break;
@@ -678,8 +731,122 @@ invalid_corba_value()
   return cv;
 }
 
+void          
+fill_corba_schema_from_g_conf_schema(GConfSchema* sc, 
+                                     ConfigSchema* cs)
+{
+  switch (sc->type)
+    {
+    case G_CONF_VALUE_INT:
+      cs->value_type = IntVal;
+      break;
+    case G_CONF_VALUE_BOOL:
+      cs->value_type = BoolVal;
+      break;
+    case G_CONF_VALUE_FLOAT:
+      cs->value_type = FloatVal;
+      break;
+    case G_CONF_VALUE_INVALID:
+      cs->value_type = InvalidVal;
+      break;
+    case G_CONF_VALUE_STRING:
+      cs->value_type = StringVal;
+      break;
+    case G_CONF_VALUE_SCHEMA:
+      cs->value_type = SchemaVal;
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+  
+  cs->short_desc = CORBA_string_dup(sc->short_desc);
+  cs->long_desc = CORBA_string_dup(sc->long_desc);
+  cs->owner = CORBA_string_dup(sc->owner);
+}
+
+ConfigSchema* 
+corba_schema_from_g_conf_schema(GConfSchema* sc)
+{
+  ConfigSchema* cs;
+
+  cs = ConfigSchema__alloc();
+
+  fill_corba_schema_from_g_conf_schema(sc, cs);
+
+  return cs;
+}
+
+GConfSchema*  
+g_conf_schema_from_corba_schema(const ConfigSchema* cs)
+{
+  GConfSchema* sc;
+  GConfValueType type = G_CONF_VALUE_INVALID;
+
+  switch (cs->value_type)
+    {
+    case InvalidVal:
+      break;
+    case StringVal:
+      type = G_CONF_VALUE_STRING;
+      break;
+    case IntVal:
+      type = G_CONF_VALUE_INT;
+      break;
+    case FloatVal:
+      type = G_CONF_VALUE_FLOAT;
+      break;
+    case SchemaVal:
+      type = G_CONF_VALUE_SCHEMA;
+      break;
+    case BoolVal:
+      type = G_CONF_VALUE_BOOL;
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  sc = g_conf_schema_new();
+
+  g_conf_schema_set_type(sc, type);
+
+  g_conf_schema_set_short_desc(sc, cs->short_desc);
+  g_conf_schema_set_long_desc(sc, cs->long_desc);
+  g_conf_schema_set_owner(sc, cs->owner);
+
+  return sc;
+}
+
+const gchar* 
+g_conf_value_type_to_string(GConfValueType type)
+{
+  switch (type)
+    {
+    case G_CONF_VALUE_INT:
+      return "int";
+      break;
+    case G_CONF_VALUE_STRING:
+      return "string";
+      break;
+    case G_CONF_VALUE_FLOAT:
+      return "float";
+      break;
+    case G_CONF_VALUE_BOOL:
+      return "bool";
+      break;
+    case G_CONF_VALUE_SCHEMA:
+      return "schema";
+      break;
+    default:
+      g_assert_not_reached();
+      return NULL; /* for warnings */
+      break;
+    }
+}
+
 /*
- *   GConfSources
+ *   gconfsources
  */
 
 GConfSources* 
@@ -717,7 +884,7 @@ g_conf_sources_new(gchar** addresses)
         {
           gchar* old = all;
 
-          all = g_strconcat(old, tmp->data, NULL);
+          all = g_strconcat(old, ", ", tmp->data, NULL);
 
           g_free(old);
 
