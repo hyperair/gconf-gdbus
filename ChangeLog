@@ -1,5 +1,20 @@
 2000-10-08  Havoc Pennington  <hp@pobox.com>
 
+        gconfd should now exit when not in use.
+	
+	* gconf/gconf-database.c (gconf_database_drop_dead_listeners):
+	function to drop any listeners with dead clients.
+
+	* gconf/gconfd.c (drop_old_databases): before checking 
+	whether the listener count is 0, clean up listeners belonging 
+	to dead clients.
+
+	* gconf/gconf-listeners.c (gconf_listeners_remove_if): New
+	function removes listeners matching some predicate
+	(ltable_remove): fix some indentation
+
+2000-10-08  Havoc Pennington  <hp@pobox.com>
+
 	* configure.in: version to 0.10
 
 2000-10-06  Havoc Pennington  <hp@pobox.com>

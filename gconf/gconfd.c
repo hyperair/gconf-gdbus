@@ -765,12 +765,17 @@ drop_old_databases(void)
   GTime now;
   
   now = time(NULL);
+
+  gconf_database_drop_dead_listeners (default_db);
   
   tmp_list = db_list;
   while (tmp_list)
     {
       GConfDatabase* db = tmp_list->data;
 
+      /* Drop any listeners whose clients are gone. */
+      gconf_database_drop_dead_listeners (db);
+      
       if (db->listeners &&                             /* not already hibernating */
           gconf_listeners_count(db->listeners) == 0 && /* Can hibernate */
           (now - db->last_access) > (60*20))           /* 20 minutes without access */

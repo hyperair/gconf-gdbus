@@ -677,9 +677,46 @@ gconf_database_free (GConfDatabase *db)
   
   g_free (db);
 }
+  
+static gboolean
+client_alive_predicate (const gchar* location,
+                        guint        cnxn_id,
+                        gpointer     listener_data,
+                        gpointer     user_data)
+{
+  Listener *l = listener_data;
+  CORBA_Environment ev;
+
+  CORBA_exception_init (&ev);
+  
+  ConfigListener_ping (l->obj, &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      gconf_log (GCL_DEBUG, "Removing stale listener %u, client not alive",
+                 cnxn_id);
+      
+      CORBA_exception_free (&ev);
+
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
+void
+gconf_database_drop_dead_listeners (GConfDatabase *db)
+{
+  if (db->listeners)
+    {
+      gconf_listeners_remove_if (db->listeners,
+                                 client_alive_predicate,
+                                 NULL);
+    }
+}
 
 static gint
-gconf_database_sync_idle(GConfDatabase* db)
+gconf_database_sync_idle (GConfDatabase* db)
 {
   db->sync_idle = 0;
 
@@ -687,11 +724,11 @@ gconf_database_sync_idle(GConfDatabase* db)
      idle */
   if (db->sync_timeout != 0)
     {
-      g_source_remove(db->sync_timeout);
+      g_source_remove (db->sync_timeout);
       db->sync_timeout = 0;
     }
   
-  gconf_database_really_sync(db);
+  gconf_database_really_sync (db);
   
   /* Remove the idle function by returning FALSE */
   return FALSE; 

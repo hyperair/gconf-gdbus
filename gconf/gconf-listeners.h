@@ -37,15 +37,20 @@ extern "C" {
 typedef struct _GConfListeners GConfListeners;
 
 typedef void (*GConfListenersCallback)(GConfListeners* listeners,
-                                       const gchar* all_above_key,
-                                       guint cnxn_id,
-                                       gpointer listener_data,
-                                       gpointer user_data);
+                                       const gchar*    all_above_key,
+                                       guint           cnxn_id,
+                                       gpointer        listener_data,
+                                       gpointer        user_data);
 
 typedef void (*GConfListenersForeach) (const gchar* location,
-                                       guint cnxn_id,
-                                       gpointer listener_data,
-                                       gpointer user_data);
+                                       guint        cnxn_id,
+                                       gpointer     listener_data,
+                                       gpointer     user_data);
+
+typedef gboolean (*GConfListenersPredicate) (const gchar* location,
+                                             guint        cnxn_id,
+                                             gpointer     listener_data,
+                                             gpointer     user_data);
 
 GConfListeners*     gconf_listeners_new     (void);
 
@@ -75,6 +80,10 @@ gboolean gconf_listeners_get_data (GConfListeners          *listeners,
                                    guint                    cnxn_id,
                                    gpointer                *listener_data_p,
                                    const gchar            **location_p);
+
+void     gconf_listeners_remove_if (GConfListeners         *listeners,
+                                    GConfListenersPredicate predicate,
+                                    gpointer                user_data);
 
 #ifdef __cplusplus
 }

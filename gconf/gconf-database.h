@@ -56,6 +56,8 @@ struct _GConfDatabase
 GConfDatabase* gconf_database_new     (GConfSources  *sources);
 void           gconf_database_free (GConfDatabase *db);
 
+void                gconf_database_drop_dead_listeners (GConfDatabase *db);
+
 CORBA_unsigned_long gconf_database_add_listener     (GConfDatabase       *db,
                                                      ConfigListener       who,
                                                      const gchar         *where);

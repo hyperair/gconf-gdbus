@@ -98,6 +98,9 @@ static gboolean ltable_get_data (LTable *ltable,
                                  guint cnxn_id,
                                  gpointer *listener_data_p,
                                  const gchar  **location_p);
+static void    ltable_remove_if  (LTable* ltable,
+                                  GConfListenersPredicate predicate,
+                                  gpointer user_data);
 
 #ifdef DEBUG_LISTENERS
 static void    ltable_spew(LTable* ltable);
@@ -204,6 +207,16 @@ gconf_listeners_get_data (GConfListeners* listeners,
   LTable* lt = (LTable*)listeners;
 
   return ltable_get_data (lt, cnxn_id, listener_data_p, location_p);
+}
+
+void
+gconf_listeners_remove_if (GConfListeners         *listeners,
+                           GConfListenersPredicate predicate,
+                           gpointer                user_data)
+{
+  LTable* lt = (LTable*)listeners;
+
+  ltable_remove_if (lt, predicate, user_data);
 }
 
 /*
@@ -468,26 +481,26 @@ ltable_remove(LTable* lt, guint cnxn)
   g_ptr_array_index(lt->listeners, index) = NULL;
 
   /* Remove from the tree if this node is now pointless */
-    {
-      GNode* cur = node;
-      while (cur != NULL)
-        {
-          GNode* parent = cur->parent;
-          lte = cur->data;
-          if (lte->listeners == NULL && cur->children == NULL)
-            {
-              if (cur == lt->tree)
-                lt->tree = NULL;
+  {
+    GNode* cur = node;
+    while (cur != NULL)
+      {
+        GNode* parent = cur->parent;
+        lte = cur->data;
+        if (lte->listeners == NULL && cur->children == NULL)
+          {
+            if (cur == lt->tree)
+              lt->tree = NULL;
               
-              ltable_entry_destroy(lte);
-              g_node_destroy(cur);
-            }
-          else
-            break; /* don't delete more parents since this node exists */
+            ltable_entry_destroy(lte);
+            g_node_destroy(cur);
+          }
+        else
+          break; /* don't delete more parents since this node exists */
           
-          cur = parent;
-        }
-    }
+        cur = parent;
+      }
+  }
 
   lt->active_listeners -= 1;
 
@@ -710,6 +723,72 @@ ltable_get_data (LTable *lt,
     }
 
   return FALSE;
+}
+
+
+
+struct NodeRemoveData
+{
+  GConfListenersPredicate predicate;
+  gpointer user_data;
+  GSList *dead;
+};
+
+static gboolean
+node_remove_func (GNode   *node,
+                  gpointer user_data)
+{
+  struct NodeRemoveData *rd = user_data;
+  LTableEntry *lte = node->data;
+  GList *tmp;
+
+  tmp = lte->listeners;
+  while (tmp != NULL)
+    {
+      Listener *l = tmp->data;
+      
+      if ((* rd->predicate) (lte->full_name,
+                             l->cnxn,
+                             l->listener_data,
+                             rd->user_data))
+        rd->dead = g_slist_prepend (rd->dead, GINT_TO_POINTER (l->cnxn));
+      
+      tmp = g_list_next (tmp);
+    }
+
+  return FALSE; /* continue traversal */
+}
+
+static void
+ltable_remove_if  (LTable                 *ltable,
+                   GConfListenersPredicate predicate,
+                   gpointer                user_data)
+{
+  GSList *tmp;
+  struct NodeRemoveData rd;
+  rd.predicate = predicate;
+  rd.user_data = user_data;
+  rd.dead = NULL;
+  
+  if (ltable->tree == NULL)
+    return;
+  
+  g_node_traverse (ltable->tree,
+                   G_IN_ORDER,
+                   G_TRAVERSE_ALL,
+                   -1,
+                   node_remove_func,
+                   &rd);
+
+  tmp = rd.dead;
+  while (tmp != NULL)
+    {
+      ltable_remove (ltable, GPOINTER_TO_INT (tmp->data));
+
+      tmp = g_slist_next (tmp);
+    }
+
+  g_slist_free (rd.dead);
 }
 
 static LTableEntry* 
