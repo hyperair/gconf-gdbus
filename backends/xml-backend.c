@@ -1530,6 +1530,27 @@ dir_load_doc(Dir* d)
   
   if (d->doc == NULL)
     {
+      /* Back up the file we failed to parse, if it exists,
+         we aren't going to be able to do anything if this call
+         fails
+      */
+
+      gchar* backup = g_strconcat(d->xml_filename, ".bak", NULL);
+      int fd;
+      
+      rename(d->xml_filename, backup);
+
+      /* Recreate .gconf.xml to maintain our integrity and be sure
+         all_subdirs works */
+      /* If we failed to rename, we just give up and truncate the file */
+      fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+      if (fd >= 0)
+        close(fd);
+          
+      g_free(backup);
+
+      /* Create a new doc */
+      
       d->doc = xmlNewDoc("1.0");
     }
   
