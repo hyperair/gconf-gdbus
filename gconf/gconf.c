@@ -714,8 +714,8 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
       GConfEntry* pair;
 
       pair = 
-        gconf_entry_new(g_strdup(keys->_buffer[i]),
-                        gconf_value_from_corba_value(&(values->_buffer[i])));
+        gconf_entry_new_nocopy(g_strdup(keys->_buffer[i]),
+                               gconf_value_from_corba_value(&(values->_buffer[i])));
       
       pairs = g_slist_prepend(pairs, pair);
       

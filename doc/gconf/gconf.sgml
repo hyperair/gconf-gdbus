@@ -18,6 +18,14 @@
       <author>
 	<firstname>Havoc</firstname>
 	<surname>Pennington</surname>
+	<affiliation>
+	  <orgname>Red Hat Advanced Development Labs</orgname>
+	</affiliation>
+	<authorblurb>
+	  <para>
+	    <email>hp@redhat.com</email>
+	  </para>
+	</authorblurb>
       </author>
     </authorgroup>
     <copyright>
@@ -26,7 +34,7 @@
     </copyright>
 
     <!-- GConf -->
-    <title>GConf</title>
+    <title>GConf Manual</title>
     <abstract>
       <para>
         GConf is a system for storing configuration information, that is,
@@ -38,6 +46,18 @@
       </para>
       
     </abstract>
+
+
+    <legalnotice>
+      <para>
+	This document may be distributed subject to the terms and
+        conditions set forth in the Open Publication License, v1.0 or
+        later (the latest version is presently available at <ulink
+        url=" http://www.opencontent.org/openpub/"
+        type="http">http://www.opencontent.org/openpub/</ulink> )
+      </para>
+    </legalnotice>
+
   </bookinfo>
   
   <!-- Introduction to GConf -->
@@ -285,6 +305,32 @@
 
       </sect2>
 
+      <!-- Schemas -->
+      <sect2>
+        <title>Schemas</title>
+
+        <para>
+          A <firstterm>schema</firstterm> describes some configuration
+          key. Its primary purpose is to provide documentation about
+          the key to system administrators manipulating the GConf
+          database. Secondarily, schemas contain a good default value
+          for the key; GConf will automatically return this value when
+          a key is unset. Schemas also include the name of the
+          application that created a key (useful when trying to clean
+          old junk out of the database, for example).
+        </para>
+
+        <para>
+          Schemas are normally installed from special schema
+          description files; the <application>gconftool</application>
+          program knows how to read these and install the schemas into
+          the GConf database. Normally, schemas are not installed by
+          application code, though the interface for doing so is a
+          public part of the GConf API.
+        </para>
+
+      </sect2>
+
     </sect1>
 
   </chapter>
@@ -308,8 +354,9 @@
     </para>
 
     <para>
-      Note that this is only a tutorial-style introduction to the client library;
-      have a look at <xref linkend="gconf-reference"> for a complete reference.
+      Note that this is only a brief tutorial-style introduction to
+      the client library; have a look at <xref
+      linkend="gconf-reference"> for a complete reference.
     </para>
 
     <!-- Error Handling -->
@@ -335,11 +382,12 @@
       <para>
         GConf functions that potentially fail accept a
         <symbol>GConfError**</symbol> argument, where they store a
-        <structname>GConfError</structname> object if the operation fails. If no
-        error occurs, the location pointed to by the
-        <symbol>GConfError**</symbol> is left unchanged. In all cases, you can pass 
-        <symbol>NULL</symbol> as the <symbol>GConfError**</symbol>, to ignore any errors.
-        Needless to say, normally you should report errors instead of ignoring
+        <structname>GConfError</structname> object if the operation
+        fails. If no error occurs, the location pointed to by the
+        <symbol>GConfError**</symbol> is left unchanged. In all cases,
+        you can pass <symbol>NULL</symbol> as the
+        <symbol>GConfError**</symbol>, to ignore any errors.  Needless
+        to say, normally you should report errors instead of ignoring
         them.
       </para>
 
@@ -834,6 +882,17 @@ print_value(GConfValue* value)
     
     <para>
       
+    </para>
+
+  </chapter>
+
+  <!-- gconftool -->
+  <chapter>
+    <title><application>gconftool</application> Utility Program</title>
+
+    <para>
+      <application>gconftool</application> is used to control GConf
+      from the command line. 
     </para>
 
   </chapter>

@@ -654,7 +654,7 @@ gconf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
  */
 
 GConfEntry* 
-gconf_entry_new(gchar* key, GConfValue* val)
+gconf_entry_new_nocopy(gchar* key, GConfValue* val)
 {
   GConfEntry* pair;
 

@@ -89,6 +89,20 @@ void          gconf_log      (GConfLogPriority pri, const gchar* format, ...) G_
 /* return FALSE and set error if the key is bad */
 gboolean      gconf_key_check(const gchar* key, GConfError** err);
 
+/*
+ * If these were public they'd be in gconf-value.h
+ */
+
+/* doesn't work on complicated types (only string, int, bool, float) */
+GConfValue* gconf_value_new_from_string      (GConfValueType type, const gchar* str,
+                                              GConfError** err);
+/* for the complicated types */
+GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
+                                              const gchar* str);
+GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
+                                              GConfValueType cdr_type,
+                                              const gchar* str);
+
 #endif
 
 

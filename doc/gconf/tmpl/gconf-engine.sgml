@@ -1,12 +1,23 @@
 <!-- ##### SECTION Title ##### -->
-gconf-engine
+GConfEngine
 
 <!-- ##### SECTION Short_Description ##### -->
 
+a GConf "database"
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+A #GConfEngine represents a connection to the GConf database. The
+default #GConfEngine, returned from gconf_engine_new(), represents the
+user's normal configuration source search path. Configuration-related
+utilities, such as a configuration editor tool, might wish to access a
+particular configuration source directly; they can obtain a
+non-default #GConfEngine with gconf_engine_new_from_address().
+</para>
 
+<para>
+Once you have a #GConfEngine, you can query and manipulate
+configuration values.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -16,42 +27,52 @@ gconf-engine
 
 <!-- ##### STRUCT GConfEngine ##### -->
 <para>
-
+An opaque data type representing one or more configuration sources.
 </para>
 
 @dummy: 
 
 <!-- ##### FUNCTION gconf_engine_new ##### -->
 <para>
-
+Returns the default #GConfEngine. All clients should use this, unless 
+they are special configuration-related tools. The caller of this
+function assumes one reference count, and must call
+gconf_engine_unref() at some point. It's fairly important to unref the
+#GConfEngine, to cleanly close the connection to
+<application>gconfd</application>. So if possible close the connection
+before exiting your application.
 </para>
 
-@Returns: 
+@Returns: the default #GConfEngine.
 
 
 <!-- ##### FUNCTION gconf_engine_new_from_address ##### -->
 <para>
-
+Creates a special #GConfEngine; mostly useful for specialized
+GConf-related tools. Normal clients shouldn't need to use it.
+As with gconf_engine_new(), the returned #GConfEngine should be
+unreferenced by the caller of this function.
 </para>
 
-@address: 
-@err: 
-@Returns: 
+@address: a configuration source address.
+@err:  the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: a new #GConfEngine.
 
 
 <!-- ##### FUNCTION gconf_engine_unref ##### -->
 <para>
-
+Decreases the reference count of a #GConfEngine by one; if the
+reference count reaches 0, destroys the #GConfEngine.
 </para>
 
-@conf: 
+@conf: a #GConfEngine.
 
 
 <!-- ##### FUNCTION gconf_engine_ref ##### -->
 <para>
-
+Increases the reference count of a #GConfEngine by one.
 </para>
 
-@conf: 
+@conf: a #GConfEngine.
 
 

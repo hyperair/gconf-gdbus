@@ -1624,8 +1624,8 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
   
   if (val != NULL)
     ld->list = g_slist_prepend(ld->list,
-                               gconf_entry_new(g_strdup(key),
-                                                gconf_value_copy(val)));
+                               gconf_entry_new_nocopy(g_strdup(key),
+                                                      gconf_value_copy(val)));
 }
 
 static GSList*

@@ -1,3 +1,33 @@
+1999-11-14  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-backend.c (listify_foreach):  s/gconf_entry_new/gconf_entry_new_nocopy/
+
+	* gconf/gconf.c (gconf_all_entries):  s/gconf_entry_new/gconf_entry_new_nocopy/
+
+        * gconf/doc/*: tons of documentation updates.
+	
+	* gconf/gconf-changeset.c: Add an "in_foreach" flag and warn if
+	you do bad things during a foreach operation.
+	(gconf_change_set_remove): check that we aren't in a foreach
+	(gconf_change_set_unref): if refcount == 0 check that we aren't in
+	a foreach
+
+	* gconf/gconf-changeset.h: try to spell "committed" right.
+
+	* gconf/gconf-value.h (gconf_entry_value): add accessor macros 
+	to GConfEntry.
+
+	* gconf/gconf-value.c (gconf_entry_new_nocopy): Rename
+	gconf_entry_new() to gconf_entry_new_nocopy() to reflect its 
+	actual behavior.
+
+1999-11-13  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-internals.h: move the value-from-string constructors
+	here
+
+	* gconf/gconf-value.h: moved from here
+
 1999-11-13  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-value.h (gconf_meta_info_schema): Add const cast to

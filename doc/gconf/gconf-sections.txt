@@ -61,6 +61,9 @@ gconf_current_locale
 GConfLogPriority
 gconf_log
 gconf_key_check
+gconf_value_new_from_string
+gconf_value_new_list_from_string
+gconf_value_new_pair_from_string
 </SECTION>
 
 <SECTION>
@@ -127,6 +130,9 @@ gconf_sources_sync_all
 <FILE>gconf-value</FILE>
 GConfValueType
 GConfValue
+gconf_value_new
+gconf_value_copy
+gconf_value_destroy
 gconf_value_string
 gconf_value_int
 gconf_value_float
@@ -136,12 +142,6 @@ gconf_value_car
 gconf_value_cdr
 gconf_value_bool
 gconf_value_schema
-gconf_value_new
-gconf_value_new_from_string
-gconf_value_new_list_from_string
-gconf_value_new_pair_from_string
-gconf_value_copy
-gconf_value_destroy
 gconf_value_set_int
 gconf_value_set_string
 gconf_value_set_float
@@ -157,17 +157,19 @@ gconf_value_set_list_nocopy
 gconf_value_set_list
 gconf_value_to_string
 GConfMetaInfo
+gconf_meta_info_new
+gconf_meta_info_destroy
 gconf_meta_info_schema
 gconf_meta_info_mod_user
 gconf_meta_info_mod_time
-gconf_meta_info_new
-gconf_meta_info_destroy
 gconf_meta_info_set_schema
 gconf_meta_info_set_mod_user
 gconf_meta_info_set_mod_time
 GConfEntry
-gconf_entry_new
+gconf_entry_new_nocopy
 gconf_entry_destroy
+gconf_entry_key
+gconf_entry_value
 gconf_entry_steal_value
 </SECTION>
 

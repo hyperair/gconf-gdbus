@@ -3,9 +3,8 @@ GConfValue, GConfEntry, GConfMetaInfo
 
 <!-- ##### SECTION Short_Description ##### -->
 
-A #GConfValue stores a
-dynamically-typed value. A #GConfEntry stores a key-value pair.
-A #GConfMetaInfo stores metainformation about a key.
+A #GConfValue stores a dynamically-typed value. A #GConfEntry stores a
+key-value pair.  A #GConfMetaInfo stores metainformation about a key.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
@@ -67,6 +66,37 @@ list value.
 
 @type: The #GConfValueType of this #GConfValue. The only field of
 #GConfValue you should access directly.
+
+<!-- ##### FUNCTION gconf_value_new ##### -->
+<para>
+Creates a new #GConfValue with type @type. The type is immutable after
+creation; values have a fixed type. You <emphasis>must</emphasis>
+initialize the #GConfValue after creation; that is, you must set its 
+value with one of the "setter" functions.
+</para>
+
+@type: type of the new #GConfValue.
+@Returns: newly-allocated #GConfValue.
+
+
+<!-- ##### FUNCTION gconf_value_copy ##### -->
+<para>
+Copies a #GConfValue. The copy is a deep copy, that is, any allocated
+memory inside the #GConfValue will also be copied.
+</para>
+
+@src: a #GConfValue to copy.
+@Returns: a newly-allocated #GConfValue identical to @src.
+
+
+<!-- ##### FUNCTION gconf_value_destroy ##### -->
+<para>
+Deallocates a #GConfValue. Also deallocates any allocated memory
+inside the #GConfValue (such as lists, pair members, strings, and schemas).
+</para>
+
+@value: a #GConfValue to destroy.
+
 
 <!-- ##### MACRO gconf_value_string ##### -->
 <para>
@@ -178,194 +208,168 @@ be destroyed when the #GConfValue is destroyed.
 @x: a #GConfValue.
 
 
-<!-- ##### FUNCTION gconf_value_new ##### -->
-<para>
-Creates a new #GConfValue with type @type. The type is immutable after
-creation; values have a fixed type. You <emphasis>must</emphasis>
-initialize the #GConfValue after creation; that is, you must set its 
-value with one of the "setter" functions.
-</para>
-
-@type: type of the new #GConfValue.
-@Returns: newly-allocated #GconfValue.
-
-
-<!-- ##### FUNCTION gconf_value_new_from_string ##### -->
-<para>
-Tries to parse a string and create a primitive #GConfValue from
-it. This is an internal function for now; don't use it.
-</para>
-
-@type: 
-@str: 
-@err: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gconf_value_new_list_from_string ##### -->
-<para>
-This function does not work. Don't use it.
-</para>
-
-@list_type: 
-@str: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gconf_value_new_pair_from_string ##### -->
-<para>
-This function does not work. Don't use it.
-</para>
-
-@car_type: 
-@cdr_type: 
-@str: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gconf_value_copy ##### -->
-<para>
-Copies a #GConfValue. The copy is a deep copy, that is, any allocated
-memory inside the #GConfValue will also be copied.
-</para>
-
-@src: a #GConfValue to copy.
-@Returns: a newly-allocated #GConfValue identical to @src.
-
-
-<!-- ##### FUNCTION gconf_value_destroy ##### -->
-<para>
-Deallocates a #GConfValue. Also deallocates any allocated memory
-inside the #GConfValue (such as lists, pair members, strings, and schemas).
-</para>
-
-@value: a #GConfValue to destroy.
-
-
 <!-- ##### FUNCTION gconf_value_set_int ##### -->
 <para>
-
+Sets the value of a #GConfValue with type %GCONF_VALUE_INT.
 </para>
 
-@value: 
-@the_int: 
+@value: a #GConfValue of type %GCONF_VALUE_INT.
+@the_int: the integer.
 
 
 <!-- ##### FUNCTION gconf_value_set_string ##### -->
 <para>
-
+Sets the value of a #GConfValue with type
+%GCONF_VALUE_STRING. @the_str is copied.
 </para>
 
-@value: 
-@the_str: 
+@value: a #GConfValue of type %GCONF_VALUE_STRING.
+@the_str: the string.
 
 
 <!-- ##### FUNCTION gconf_value_set_float ##### -->
 <para>
-
+Sets the value of a #GConfValue with type
+%GCONF_VALUE_FLOAT. 
 </para>
 
-@value: 
-@the_float: 
+@value: a #GConfValue of type %GCONF_VALUE_FLOAT.
+@the_float: the floating point number.
 
 
 <!-- ##### FUNCTION gconf_value_set_bool ##### -->
 <para>
-
+Sets the value of a #GConfValue with type
+%GCONF_VALUE_BOOL. 
 </para>
 
-@value: 
-@the_bool: 
+@value: a #GConfValue of type %GCONF_VALUE_BOOL.
+@the_bool: a boolean value (<symbol>TRUE</symbol> or <symbol>FALSE</symbol>).
 
 
 <!-- ##### FUNCTION gconf_value_set_schema ##### -->
 <para>
-
+Sets the value of a #GConfValue with type %GCONF_VALUE_SCHEMA. The
+#GConfSchema is copied. Alternatively you can use
+gconf_value_set_schema_nocopy().
 </para>
 
-@value: 
-@sc: 
+@value: a #GConfValue with type %GCONF_VALUE_SCHEMA.
+@sc: the #GConfSchema.
 
 
 <!-- ##### FUNCTION gconf_value_set_schema_nocopy ##### -->
 <para>
-
+Sets the value of a #GConfValue with type
+%GCONF_VALUE_SCHEMA. The #GConfSchema is <emphasis>not</emphasis>
+copied; the #GConfValue takes ownership of it, and it should only be
+accessed via the gconf_value_schema() macro. This function is provided 
+as a more efficient version of gconf_value_set_schema().
 </para>
 
-@value: 
-@sc: 
+@value: a #GConfValue with type %GCONF_VALUE_SCHEMA.
+@sc: the #GConfSchema.
 
 
 <!-- ##### FUNCTION gconf_value_set_car ##### -->
 <para>
-
+Sets the value of the first field (car) of a #GConfValue with type
+%GCONF_VALUE_PAIR. The #GConfValue is copied. Alternatively, use
+gconf_value_set_car_nocopy().
 </para>
 
-@value: 
-@car: 
+@value: a #GConfValue with type %GCONF_VALUE_PAIR.
+@car: the #GConfValue to set as the car of the pair.
 
 
 <!-- ##### FUNCTION gconf_value_set_car_nocopy ##### -->
 <para>
-
+Sets the value of the first field (car) of a #GConfValue with type
+%GCONF_VALUE_PAIR. The #GConfValue is <emphasis>not</emphasis> copied;
+the #GConfValue takes ownership of it. Alternatively, use
+gconf_value_set_car().
 </para>
 
-@value: 
-@car: 
+@value: a #GConfValue with type %GCONF_VALUE_PAIR.
+@car: the #GConfValue to set as the car of the pair.
 
 
 <!-- ##### FUNCTION gconf_value_set_cdr ##### -->
 <para>
-
+Sets the value of the second field (cdr) of a #GConfValue with type
+%GCONF_VALUE_PAIR. The #GConfValue is copied. Alternatively, use
+gconf_value_set_cdr_nocopy().
 </para>
 
-@value: 
-@cdr: 
+@value: a #GConfValue with type %GCONF_VALUE_PAIR.
+@cdr: the #GConfValue to set as the cdr of the pair.
 
 
 <!-- ##### FUNCTION gconf_value_set_cdr_nocopy ##### -->
 <para>
-
+Sets the value of the second field (cdr) of a #GConfValue with type
+%GCONF_VALUE_PAIR. The #GConfValue is <emphasis>not</emphasis> copied;
+the #GConfValue takes ownership of it. Alternatively, use
+gconf_value_set_cdr().
 </para>
 
-@value: 
-@cdr: 
+@value: a #GConfValue with type %GCONF_VALUE_PAIR.
+@cdr: the #GConfValue to set as the cdr of the pair.
 
 
 <!-- ##### FUNCTION gconf_value_set_list_type ##### -->
 <para>
-
+Sets the type of the elements in a #GConfValue of type
+%GCONF_VALUE_LIST. All the elements in the list must have the same
+type. You must set the list type before you can set the list value.
 </para>
 
-@value: 
-@type: 
+@value: a #GConfValue with type %GCONF_VALUE_LIST.
+@type: the type of elements in this list.
 
 
 <!-- ##### FUNCTION gconf_value_set_list_nocopy ##### -->
 <para>
-
+Sets the value of a #GConfValue with type %GCONF_VALUE_LIST.  The
+@list argument should be a #GSList of #GConfValue. Each #GConfValue in
+the list must have the same type, and this type must be specified in
+advance with gconf_value_set_list_type(). This function does
+<emphasis>not</emphasis> copy the list; the #GConfValue will take
+ownership of the list and its contents, and they will be destroyed
+when the #GConfValue is destroyed. Alternatively, use
+gconf_value_set_list() to make a copy.
 </para>
 
-@value: 
-@list: 
+@value: a #GConfValue with type %GCONF_VALUE_LIST.
+@list: the #GSList of #GConfValue to set as the list value.
 
 
 <!-- ##### FUNCTION gconf_value_set_list ##### -->
 <para>
-
+Sets the value of a #GConfValue with type %GCONF_VALUE_LIST.  The
+@list argument should be a #GSList of #GConfValue. Each #GConfValue in
+the list must have the same type, and this type must be specified in
+advance with gconf_value_set_list_type(). This function copies the
+list; it will not modify the @list argument.
 </para>
 
-@value: 
-@list: 
+@value: a #GConfValue with type %GCONF_VALUE_LIST.
+@list: the #GSList of #GConfValue to set as the list value.
 
 
 <!-- ##### FUNCTION gconf_value_to_string ##### -->
 <para>
-
+Creates a human-readable string representation of a #GConfValue. This
+is intended for debugging and the like; the string representation is
+not suitable for reliable machine parsing (that is, you shouldn't use
+this function to save a value to a file or anything like that). The
+exact nature of the string representation may change in future
+versions. The returned string is newly-allocated and must be freed
+with g_free().
 </para>
 
-@value: 
-@Returns: 
+@value: a #GConfValue.
+@Returns: a newly-allocated string representing the #GConfValue.
 
 
 <!-- ##### STRUCT GConfMetaInfo ##### -->
@@ -376,30 +380,6 @@ inside the #GConfValue (such as lists, pair members, strings, and schemas).
 @schema: 
 @mod_user: 
 @mod_time: 
-
-<!-- ##### MACRO gconf_meta_info_schema ##### -->
-<para>
-
-</para>
-
-@x:
-
-
-<!-- ##### MACRO gconf_meta_info_mod_user ##### -->
-<para>
-
-</para>
-
-@x:
-
-
-<!-- ##### MACRO gconf_meta_info_mod_time ##### -->
-<para>
-
-</para>
-
-@x:
-
 
 <!-- ##### FUNCTION gconf_meta_info_new ##### -->
 <para>
@@ -415,6 +395,30 @@ inside the #GConfValue (such as lists, pair members, strings, and schemas).
 </para>
 
 @gcmi: 
+
+
+<!-- ##### MACRO gconf_meta_info_schema ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### MACRO gconf_meta_info_mod_user ##### -->
+<para>
+
+</para>
+
+@x: 
+
+
+<!-- ##### MACRO gconf_meta_info_mod_time ##### -->
+<para>
+
+</para>
+
+@x: 
 
 
 <!-- ##### FUNCTION gconf_meta_info_set_schema ##### -->
@@ -446,36 +450,66 @@ inside the #GConfValue (such as lists, pair members, strings, and schemas).
 
 <!-- ##### STRUCT GConfEntry ##### -->
 <para>
-
+Stores a key-value pair.  @key should be a
+ <emphasis>relative</emphasis> key, i.e., no slashes, just the final
+ "filename." For example, just "bar", not "/foo/bar". To access the
+ key and value, use gconf_entry_key() and gconf_entry_value().
 </para>
 
-@key: 
-@value: 
+@key: a relative key name.
+@value: a #GConfValue.
 
-<!-- ##### FUNCTION gconf_entry_new ##### -->
+<!-- ##### FUNCTION gconf_entry_new_nocopy ##### -->
 <para>
-
+Creates a new #GConfEntry with key @key and value @val. @key should be
+a <emphasis>relative</emphasis> key, not the full path. Neither the
+key nor the value is copied; both are freed when the #GConfEntry is
+freed. The string will be freed with g_free() so should be allocated
+with a GLib function, not malloc().
 </para>
 
-@key: 
-@val: 
-@Returns: 
+@key: the relative key.
+@val: the value.
+@Returns: a new #GConfentry.
 
 
 <!-- ##### FUNCTION gconf_entry_destroy ##### -->
 <para>
-
+Destroys a #GConfEntry, freeing the key, the value, and the entry itself.
 </para>
 
-@pair: 
+@entry: a #GConfEntry to free.
+
+
+<!-- ##### MACRO gconf_entry_key ##### -->
+<para>
+Accesses the @key field of a #GConfEntry. The returned key is not a
+copy, and should not be freed or modified.
+</para>
+
+@x: a #GConfEntry.
+
+
+<!-- ##### MACRO gconf_entry_value ##### -->
+<para>
+Accesses the @value field of a #GConfEntry. The returned value is not
+a copy, and should not be freed or modified. If you have called
+gconf_entry_steal_value(), the returned value will be
+<symbol>NULL</symbol>.
+</para>
+
+@x: a #GConfEntry.
 
 
 <!-- ##### FUNCTION gconf_entry_steal_value ##### -->
 <para>
-
+Extracts the value from a #GConfEntry, leaving the @value field in
+#GConfEntry set to <symbol>NULL</symbol>. Destroying the #GConfEntry
+will <emphasis>not</emphasis> destroy the value; the caller of
+gconf_entry_steal_value() assumes ownership of it.
 </para>
 
-@entry: 
-@Returns: 
+@entry: a #GConfEntry.
+@Returns: a #GConfValue that the caller must free.
 
 

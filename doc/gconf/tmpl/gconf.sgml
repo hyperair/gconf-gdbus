@@ -187,7 +187,7 @@ children of @dir.  To free the returned list, gconf_entry_destroy()
 each list element, then g_slist_free() the list itself.
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @dir: Directory to list.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: List of #GConfEntry.
@@ -250,6 +250,7 @@ argument is unused.
 @why_invalid: return location for an explanation of the problem, if any. g_free() the returned string.
 @Returns: <symbol>TRUE</symbol> if the key is valid, or <symbol>FALSE</symbol> if not.
 
+
 <!-- ##### FUNCTION gconf_key_is_below ##### -->
 <para>
 Asks whether the key @below would be found below the key @above, were
@@ -278,6 +279,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or @def if no value is obtained.
 
+
 <!-- ##### FUNCTION gconf_get_int ##### -->
 <para>
 Requests the integer (%GCONF_VALUE_INT) stored at
@@ -292,6 +294,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or @def if no value is obtained.
 
+
 <!-- ##### FUNCTION gconf_get_string ##### -->
 <para>
 Requests the string (%GCONF_VALUE_STRING) stored at
@@ -304,7 +307,7 @@ safely g_free() the returned string.
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@def: default value in case of error or unset value. 
+@def: default value in case of error or unset value.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: allocated string (value of @key), or copy of @def if no value is obtained.
 
@@ -317,9 +320,9 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @def is returned.
 </para>
 
-@conf: a #GConfEngine. 
-@key: key you want the value of. 
-@def: default value in case of error or unset value. 
+@conf: a #GConfEngine.
+@key: key you want the value of.
+@def: default value in case of error or unset value.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or @def if no value is obtained.
 
@@ -332,10 +335,10 @@ Automatically performs type-checking, so if a non-schema is stored at
 <symbol>NULL</symbol> is returned.
 </para>
 
-@conf: a #GConfEngine. 
-@key: key you want the value of. 
+@conf: a #GConfEngine.
+@key: key you want the value of.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
-@Returns: the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained. 
+@Returns: the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained.
 
 
 <!-- ##### FUNCTION gconf_get_list ##### -->
@@ -400,11 +403,12 @@ gconf_schema_destroy() each element. In all cases you must free the
 list itself with g_slist_free().
 </para>
 
-@conf: a #GConfEngine. 
-@key: key you want the value of. 
+@conf: a #GConfEngine.
+@key: key you want the value of.
 @list_type: type of each list element.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: an allocated list, with elements as described above.
+
 
 <!-- ##### FUNCTION gconf_get_pair ##### -->
 <para>
@@ -498,8 +502,8 @@ else
 </programlisting>
 </para>
 
-@conf: a #GConfEngine. 
-@key: key you want the value of. 
+@conf: a #GConfEngine.
+@key: key you want the value of.
 @car_type: desired type of the pair's first field (car).
 @cdr_type: desired type of the pair's second field (cdr).
 @car_retloc: address of a return location for the car.
@@ -513,7 +517,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @val: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
@@ -525,7 +529,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @val: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
@@ -537,7 +541,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @val: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
@@ -549,7 +553,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @val: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
@@ -561,7 +565,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @val: 
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
@@ -573,7 +577,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @list_type: 
 @list: 
@@ -586,7 +590,7 @@ else
 
 </para>
 
-@conf: a #GConfEngine. 
+@conf: a #GConfEngine.
 @key: 
 @car_type: 
 @cdr_type: 

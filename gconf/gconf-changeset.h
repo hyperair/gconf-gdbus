@@ -45,7 +45,7 @@ gboolean        gconf_commit_change_set   (GConfEngine* conf,
                                            GConfChangeSet* cs,
                                            /* remove all successfully committed
                                               changes from the set */
-                                           gboolean remove_commited,
+                                           gboolean remove_committed,
                                            GConfError** err);
 
 GConfChangeSet* gconf_change_set_new      (void);

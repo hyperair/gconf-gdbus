@@ -41,6 +41,7 @@ void    change_destroy(Change* c);
 struct _GConfChangeSet {
   guint refcount;
   GHashTable* hash;
+  gint in_foreach;
 };
 
 GConfChangeSet*
@@ -52,7 +53,8 @@ gconf_change_set_new      (void)
 
   cs->refcount = 1;
   cs->hash = g_hash_table_new(g_str_hash, g_str_equal);
-
+  cs->in_foreach = 0;
+  
   return cs;
 }
 
@@ -74,6 +76,9 @@ gconf_change_set_unref    (GConfChangeSet* cs)
 
   if (cs->refcount == 0)
     {
+      if (cs->in_foreach > 0)
+        g_warning("GConfChangeSet refcount reduced to 0 during a foreach");
+      
       gconf_change_set_clear(cs);
 
       g_hash_table_destroy(cs->hash);
@@ -127,7 +132,8 @@ gconf_change_set_remove   (GConfChangeSet* cs,
   Change* c;
   
   g_return_if_fail(cs != NULL);
-
+  g_return_if_fail(cs->in_foreach == 0);
+  
   c = g_hash_table_lookup(cs->hash, key);
 
   if (c != NULL)
@@ -165,15 +171,19 @@ gconf_change_set_foreach  (GConfChangeSet* cs,
   
   g_return_if_fail(cs != NULL);
   g_return_if_fail(func != NULL);
-
+  
   fd.cs = cs;
   fd.func = func;
   fd.user_data = user_data;
 
   gconf_change_set_ref(cs);
+
+  cs->in_foreach += 1;
   
   g_hash_table_foreach(cs->hash, foreach, &fd);
 
+  cs->in_foreach -= 1;
+  
   gconf_change_set_unref(cs);
 }
 
@@ -360,7 +370,7 @@ commit_foreach (GConfChangeSet* cs,
 
   if (cd->error != NULL)
     return;
-
+  
   if (value)
     gconf_set   (cd->conf, key, value, &cd->error);
   else

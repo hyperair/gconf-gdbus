@@ -88,15 +88,7 @@ struct _GConfValue {
 #define gconf_value_schema(x)    ((x)->d.schema_data)
 
 GConfValue* gconf_value_new                  (GConfValueType type);
-/* doesn't work on complicated types (only string, int, bool, float) */
-GConfValue* gconf_value_new_from_string      (GConfValueType type, const gchar* str,
-                                              GConfError** err);
-/* for the complicated types */
-GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
-                                              const gchar* str);
-GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
-                                              GConfValueType cdr_type,
-                                              const gchar* str);
+
 GConfValue* gconf_value_copy                 (GConfValue* src);
 void        gconf_value_destroy              (GConfValue* value);
 
@@ -167,9 +159,12 @@ struct _GConfEntry {
   GConfValue* value;
 };
 
+#define     gconf_entry_key(x)      ((const gchar*)(x)->key)
+#define     gconf_entry_value(x)    ((x)->value)
+
 /* Pair takes memory ownership of both key and value */
-GConfEntry* gconf_entry_new         (gchar* key, GConfValue* val);
-void        gconf_entry_destroy     (GConfEntry* pair);
+GConfEntry* gconf_entry_new_nocopy  (gchar* key, GConfValue* val);
+void        gconf_entry_destroy     (GConfEntry* entry);
 /* Transfer ownership of value to the caller. */
 GConfValue* gconf_entry_steal_value (GConfEntry* entry);
 
