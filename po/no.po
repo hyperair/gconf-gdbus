@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.6\n"
-"POT-Creation-Date: 2002-03-12 18:08+0100\n"
-"PO-Revision-Date: 2002-03-12 18:27+0100\n"
+"POT-Creation-Date: 2002-03-14 21:51+0100\n"
+"PO-Revision-Date: 2002-03-14 21:54+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,9 @@ msgstr "Feil under synkronisering av innhold i XML-buffer til disk"
 msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
-msgstr "Kunne ikke fjerne katalog «%s» fra XML-backend bufferen, fordi den ikke er synkronisert til disk"
+msgstr ""
+"Kunne ikke fjerne katalog «%s» fra XML-backend bufferen, fordi den ikke er "
+"synkronisert til disk"
 
 #: backends/xml-cache.c:305
 #, c-format
@@ -171,7 +173,8 @@ msgstr "Oppføring uten navn i XML-fil «%s», ignorerer"
 #: backends/xml-dir.c:1103
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr "En toppnivå-node i XML-fil «%s» er <%s> i stedet for <oppføring>, ignorerer"
+msgstr ""
+"En toppnivå-node i XML-fil «%s» er <%s> i stedet for <oppføring>, ignorerer"
 
 #: backends/xml-dir.c:1192
 #, c-format
@@ -318,7 +321,8 @@ msgstr "Mottok ugyldig verdi i sett-forespørsel"
 #: gconf/gconf-database.c:242
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
-msgstr "Kunne ikke forstå CORBA-verdien mottatt i sett-forespørsel etter nøkkel «%s»"
+msgstr ""
+"Kunne ikke forstå CORBA-verdien mottatt i sett-forespørsel etter nøkkel «%s»"
 
 #: gconf/gconf-database.c:523
 msgid "Received request to drop all cached data"
@@ -592,7 +596,8 @@ msgstr "Kunne ikke låse midlertidig fil «%s»: %s"
 #: gconf/gconf-internals.c:2341
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
-msgstr "Kunne ikke opprette fil «%s», sannsynligvis fordi den eksisterer allerede"
+msgstr ""
+"Kunne ikke opprette fil «%s», sannsynligvis fordi den eksisterer allerede"
 
 #: gconf/gconf-internals.c:2387
 #, c-format
@@ -671,7 +676,9 @@ msgstr "Kunne ikke opprette %s : %s"
 #: gconf/gconf-internals.c:2879
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "Feil under oppretting av rør for kommunikasjon med nystartet gconf daemon: %s\n"
+msgstr ""
+"Feil under oppretting av rør for kommunikasjon med nystartet gconf daemon: %"
+"s\n"
 
 #: gconf/gconf-internals.c:2903
 #, c-format
@@ -700,20 +707,21 @@ msgstr ""
 "sikker på at ingen gconfd-prosesser kjører på maskiner som bruker din "
 "hjemmekatalog"
 
-#: gconf/gconf-sanity-check.c:38 gconf/gconftool.c:72
+#: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:72
 msgid "Help options"
 msgstr "Alternativer for hjelp"
 
-#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:411
+#: gconf/gconf-sanity-check.c:75 gconf/gconftool.c:411
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Feil ved flagg %s: %s.\n"
-"Kjør «%s --help» for å se en full liste over tilgjengelige kommandolinjeflagg.\n"
+"Kjør «%s --help» for å se en full liste over tilgjengelige "
+"kommandolinjeflagg.\n"
 
-#: gconf/gconf-sanity-check.c:131
+#: gconf/gconf-sanity-check.c:132
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -722,24 +730,51 @@ msgid ""
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
 "Vennligst kontakt din systemadministrator for å løse følgende problem:\n"
-"Kunne ikke åpne eller opprette filen «%s»; dette indikerer at du har problemer med din konfigurasjon, siden mange programmer trenger å kunne opprette filer i din hjemmekatalog. Feilen var «%s» (errno = %d)."
+"Kunne ikke åpne eller opprette filen «%s»; dette indikerer at du har "
+"problemer med din konfigurasjon, siden mange programmer trenger å kunne "
+"opprette filer i din hjemmekatalog. Feilen var «%s» (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:143
+#: gconf/gconf-sanity-check.c:144
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not lock the file \"%s\"; this indicates that there may be a problem "
 "with your operating system configuration. If you have an NFS-mounted home "
 "directory, either the client or the server may be set up incorrectly. See "
-"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+"the rpc.statd and rpc.lockd documentation. A common cause of this error is "
+"that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
+"%d)."
 msgstr ""
 "Vennligst kontakt din systemadministrator for å løse følgende problem:\n"
-"Kunne ikke låse filen «%s»; dette indikerer at du har problemer med konfigurasjonen av ditt operativsystem. Hvis du har montert hjemmekatalogen via NFS kan det være at klienten eller tjeneren er satt opp feil. Se dokumentasjonen for rpc.statd og rpc.lockd. Feilen var «%s» (errno = %d)."
+"Kunne ikke låse filen «%s»; dette indikerer at du har problemer med konfigurasjonen av ditt operativsystem. Hvis du har montert hjemmekatalogen via NFS kan det være at klienten eller tjeneren er satt opp feil. Se dokumentasjonen for rpc.statd og rpc.lockd. En vanlig årsak til dette er at «nfslock»-tjenesten er deaktivert. Feilen var «%s» (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:159
+#: gconf/gconf-sanity-check.c:161
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Kunne ikke fjerne fil %s: %s\n"
+
+#: gconf/gconf-sanity-check.c:199
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"No configuration sources in the configuration file \"%s\"; this means that "
+"preferences and other settings can't be saved. %s%s"
+msgstr ""
+"Vennligst kontakt din systemadministrator for å løse følgende problem:\n"
+"Ingen konfigurasjonskilder i konfigurasjonsfil «%s»; dette betyr at brukervalg og andre innstillinger ikke kan lagres. %s%s"
+
+#: gconf/gconf-sanity-check.c:202
+msgid "Error reading the file: "
+msgstr "Feil under lesing av fil: "
+
+#: gconf/gconf-sanity-check.c:224
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
+msgstr ""
+"Vennligst kontakt din systemadministrator for å løse følgende problem:\n"
+"Kunne ikke slå opp adresse «%s» i konfigurasjonsfil «%s»: %s"
 
 #: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 #: gconf/gconf-schema.c:214
@@ -780,7 +815,8 @@ msgstr ""
 #: gconf/gconf-sources.c:584
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
-msgstr "Schema «%s» spesifisert for «%s» lagrer en verdi som ikke er for schema"
+msgstr ""
+"Schema «%s» spesifisert for «%s» lagrer en verdi som ikke er for schema"
 
 #: gconf/gconf-sources.c:641
 msgid "The '/' name can only be a directory, not a key"
@@ -791,7 +827,9 @@ msgstr "Navnet «/» kan kun være en katalog, ikke en nøkkel"
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
-msgstr "Verdi for «%s» satt i en skrivebeskyttet kilde i begynnelsen av din konfigurasjonssti"
+msgstr ""
+"Verdi for «%s» satt i en skrivebeskyttet kilde i begynnelsen av din "
+"konfigurasjonssti"
 
 #: gconf/gconf-sources.c:691
 #, c-format
@@ -812,7 +850,23 @@ msgid ""
 "details on problems gconfd encountered. There can only be one gconfd per "
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
-msgstr "Kan ikke lagre verdi i nøkkel «%s», siden konfigurasjonstjeneren ikke har noen skrivbare databaser. Det er flere vanlige årsaker for dette problemet: 1) din konfigurasjonsstifil %s/path inneholder ingen databaser eller ble ikke funnet 2) på en eller annen måte har vi opprettet to gconfd prosesser 3) operativsystemet ditt er feilkonfigurert slik at låsing av filer over NFS ikke virker i din hjemmekatalog eller 4) NFS-klienten krasjet og ga ikke beskjed til tjeneren om at fillåsene skulle slippes ved omstart. Hvis du har to gconfd prosesser (eller hadde to i det den andre ble startet), vil det hjelpe å logge ut og drepe alle instanser av gconfd for så å logge inn igjen. Hvis du har gamle låsfiler, fjern ~/.gconf*/*lock. Kanskje problemet er at du har forsøkt å bruke GConf fra to maskiner på samme tid, og ORBit fremdeles har sin standardkonfigurasjon som forhindrer eksterne CORBA-forbindelser - legg inn «ORBIIOPIPv4=1» i /etc/orbitrc. Som alltid, sjekk user.* syslog for detaljer om problemer gconfd kan ha møtt. Du kan kun ha en gconfd per hjemmekatalog, og denne må ha en låsfil i ~/.gconfd i tillegg til individuelle lagringslokasjoner slik som ~/.gconf"
+msgstr ""
+"Kan ikke lagre verdi i nøkkel «%s», siden konfigurasjonstjeneren ikke har "
+"noen skrivbare databaser. Det er flere vanlige årsaker for dette problemet: "
+"1) din konfigurasjonsstifil %s/path inneholder ingen databaser eller ble "
+"ikke funnet 2) på en eller annen måte har vi opprettet to gconfd prosesser "
+"3) operativsystemet ditt er feilkonfigurert slik at låsing av filer over NFS "
+"ikke virker i din hjemmekatalog eller 4) NFS-klienten krasjet og ga ikke "
+"beskjed til tjeneren om at fillåsene skulle slippes ved omstart. Hvis du har "
+"to gconfd prosesser (eller hadde to i det den andre ble startet), vil det "
+"hjelpe å logge ut og drepe alle instanser av gconfd for så å logge inn "
+"igjen. Hvis du har gamle låsfiler, fjern ~/.gconf*/*lock. Kanskje problemet "
+"er at du har forsøkt å bruke GConf fra to maskiner på samme tid, og ORBit "
+"fremdeles har sin standardkonfigurasjon som forhindrer eksterne CORBA-"
+"forbindelser - legg inn «ORBIIOPIPv4=1» i /etc/orbitrc. Som alltid, sjekk "
+"user.* syslog for detaljer om problemer gconfd kan ha møtt. Du kan kun ha en "
+"gconfd per hjemmekatalog, og denne må ha en låsfil i ~/.gconfd i tillegg til "
+"individuelle lagringslokasjoner slik som ~/.gconf"
 
 #: gconf/gconf-sources.c:1410
 #, c-format
@@ -989,7 +1043,9 @@ msgstr ""
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
-msgstr "Ingen konfigurasjonsfiler funnet, forsøker å bruke standard konfigurasjonskilde «%s»"
+msgstr ""
+"Ingen konfigurasjonsfiler funnet, forsøker å bruke standard "
+"konfigurasjonskilde «%s»"
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
@@ -1132,13 +1188,17 @@ msgstr "Kunne ikke flytte ny lagret tilstandsfil på plass: %s"
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "Kunne ikke gjenopprette opprinnelig lagret tilstandsfil som har blitt flyttet til «%s»: %s"
+msgstr ""
+"Kunne ikke gjenopprette opprinnelig lagret tilstandsfil som har blitt "
+"flyttet til «%s»: %s"
 
 #: gconf/gconfd.c:1794
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr "Kunne ikke gjenopprette en lytter på adresse «%s», kunne ikke gjøre databaseoppslag"
+msgstr ""
+"Kunne ikke gjenopprette en lytter på adresse «%s», kunne ikke gjøre "
+"databaseoppslag"
 
 #: gconf/gconfd.c:1840
 #, c-format
@@ -1769,17 +1829,20 @@ msgstr "ADVARSEL: kunne ikke forstå typenavnet «%s»\n"
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr "ADVARSEL: list_type kan kun være int, float, string eller bool og ikke «%s»\n"
+msgstr ""
+"ADVARSEL: list_type kan kun være int, float, string eller bool og ikke «%s»\n"
 
 #: gconf/gconftool.c:1926
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "ADVARSEL: car_type kan kun være int, float, string eller bool og ikke «%s»\n"
+msgstr ""
+"ADVARSEL: car_type kan kun være int, float, string eller bool og ikke «%s»\n"
 
 #: gconf/gconftool.c:1947
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "ADVARSEL: cdr_type kan kun være int, float, string eller bool og ikke «%s»\n"
+msgstr ""
+"ADVARSEL: cdr_type kan kun være int, float, string eller bool og ikke «%s»\n"
 
 #: gconf/gconftool.c:1975
 msgid "WARNING: empty <applyto> node"
@@ -1856,7 +1919,9 @@ msgstr "Dokument «%s» er tomt?\n"
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
-msgstr "Dokumentet «%s» har feil type rot-node (<%s>, skulle vært <gconfschemafile>)\n"
+msgstr ""
+"Dokumentet «%s» har feil type rot-node (<%s>, skulle vært "
+"<gconfschemafile>)\n"
 
 #: gconf/gconftool.c:2340
 #, c-format
