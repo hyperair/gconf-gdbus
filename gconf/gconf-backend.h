@@ -33,6 +33,9 @@
 typedef struct _GConfBackendVTable GConfBackendVTable;
 
 struct _GConfBackendVTable {
+  /* Set to sizeof (GConfBackendVTable) - used for future proofing */
+  gsize                  vtable_size;
+
   void                (* shutdown)        (GError** err);
 
   GConfSource*        (* resolve_address) (const gchar* address,
@@ -146,7 +149,7 @@ struct _GConfBackendVTable {
 struct _GConfBackend {
   const gchar* name;
   guint refcount;
-  GConfBackendVTable* vtable;
+  GConfBackendVTable vtable;
   GModule* module;
 };
 
