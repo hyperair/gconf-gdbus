@@ -2010,6 +2010,25 @@ extract_global_info(xmlNodePtr node,
     }
 
   g_assert(info->key != NULL);
+
+  if (info->type == GCONF_VALUE_LIST &&
+      info->list_type == GCONF_VALUE_INVALID)
+    {
+      fprintf(stderr, _("WARNING: no <list_type> specified for schema of type list\n"));
+    }
+
+
+  if (info->type == GCONF_VALUE_PAIR &&
+      info->car_type == GCONF_VALUE_INVALID)
+    {
+      fprintf(stderr, _("WARNING: no <car_type> specified for schema of type pair\n"));
+    }
+
+  if (info->type == GCONF_VALUE_PAIR &&
+      info->cdr_type == GCONF_VALUE_INVALID)
+    {
+      fprintf(stderr, _("WARNING: no <cdr_type> specified for schema of type pair\n"));
+    }
   
   /* Have to do this last, because the type may come after the default
      value

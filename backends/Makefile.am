@@ -34,6 +34,7 @@ libgconfbackend_bdb_la_LDFLAGS = -avoid-version -module
 libgconfbackend_bdb_la_LIBADD = $(DEPENDENT_LIBS) $(BDB_LIBS)
 
 libgconfbackend_markup_la_SOURCES = 	\
+	markup-backend.c		\
 	markup-tree.h			\
 	markup-tree.c
 

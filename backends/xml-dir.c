@@ -1209,8 +1209,8 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
       if (errno != EEXIST)
         {
           gconf_set_error(err, GCONF_ERROR_FAILED,
-                          _("Could not make directory `%s': %s"),
-                          (gchar*)dir, strerror(errno));
+                          _("Could not make directory \"%s\": %s"),
+                          (gchar*)dir, g_strerror(errno));
           return FALSE;
         }
     }

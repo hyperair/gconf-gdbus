@@ -41,6 +41,9 @@ MarkupDir*  markup_tree_ensure_dir (MarkupTree *tree,
                                     const char *full_key,
                                     GError    **err);
 
+gboolean    markup_tree_sync       (MarkupTree *tree,
+                                    GError    **err);
+
 /* Directories in the tree */
 
 MarkupEntry* markup_dir_lookup_entry  (MarkupDir   *dir,
@@ -55,18 +58,25 @@ MarkupDir*   markup_dir_lookup_subdir (MarkupDir   *dir,
 MarkupDir*   markup_dir_ensure_subdir (MarkupDir   *dir,
                                        const char  *relative_key,
                                        GError     **err);
-GSList*      markup_dir_list_entries (MarkupDir   *dir,
-                                      GError     **err);
-GSList*      markup_dir_list_subdirs (MarkupDir   *dir,
-                                      GError     **err);
+GSList*      markup_dir_list_entries  (MarkupDir   *dir,
+                                       GError     **err);
+GSList*      markup_dir_list_subdirs  (MarkupDir   *dir,
+                                       GError     **err);
+const char*  markup_dir_get_name      (MarkupDir   *dir);
 
 /* Value entries in the directory */
-void        markup_entry_set_value (MarkupEntry       *entry,
-                                    const GConfValue  *value,
-                                    GError           **err);
-GConfValue* markup_entry_get_value (MarkupEntry       *entry,
-                                    const char       **locales,
-                                    GError           **err);
-
+/* get_value returns a newly-generated GConfValue, caller owns it */
+GConfValue* markup_entry_get_value       (MarkupEntry       *entry,
+                                          const char       **locales);
+void        markup_entry_set_value       (MarkupEntry       *entry,
+                                          const GConfValue  *value);
+void        markup_entry_unset_value     (MarkupEntry       *entry,
+                                          const char        *locale);
+void        markup_entry_set_schema_name (MarkupEntry       *entry,
+                                          const char        *schema_name);
+const char* markup_entry_get_name        (MarkupEntry       *entry);
+const char* markup_entry_get_schema_name (MarkupEntry       *entry);
+const char* markup_entry_get_mod_user    (MarkupEntry       *entry);
+GTime       markup_entry_get_mod_time    (MarkupEntry       *entry);
 
 #endif

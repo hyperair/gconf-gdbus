@@ -30,7 +30,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <limits.h>
-
+#include <time.h>
 
 typedef struct
 {
@@ -61,8 +61,7 @@ static MarkupDir* markup_dir_new        (MarkupTree *tree,
                                          const char *name);
 static void       markup_dir_free       (MarkupDir  *dir);
 static gboolean   markup_dir_needs_sync (MarkupDir  *dir);
-static gboolean   markup_dir_sync       (MarkupDir  *dir,
-                                         GError    **err);
+static gboolean   markup_dir_sync       (MarkupDir  *dir);
 static char*      markup_dir_build_path (MarkupDir  *dir,
                                          gboolean    with_data_file);
 
@@ -73,11 +72,14 @@ static void         markup_entry_set_mod_user    (MarkupEntry *entry,
                                                   const char  *muser);
 static void         markup_entry_set_mod_time    (MarkupEntry *entry,
                                                   GTime        mtime);
-static void         markup_entry_set_schema_name (MarkupEntry *entry,
-                                                  const char  *schema_name);
 
-static GSList* parse_entries (const char *filename,
-                              GError    **err);
+static GSList*  parse_entries (const char  *filename,
+                               GError     **err);
+static gboolean save_entries  (const char  *filename,
+                               guint        file_mode,
+                               GSList      *entries,
+                               GError     **err);
+
 
 struct _MarkupTree
 {
@@ -105,8 +107,8 @@ markup_tree_new (const char *root_dir,
   tree->file_mode = file_mode;
   tree->read_only = read_only;
 
-  tree->root = markup_dir_new (tree, NULL, "/");
-
+  tree->root = markup_dir_new (tree, NULL, "/");  
+  
   return tree;
 }
 
@@ -137,8 +139,11 @@ struct _MarkupDir
   /* Have read the existing directories */
   guint subdirs_loaded : 1;
 
-  /* Some subdirs added/removed */
-  guint subdirs_added_or_removed : 1;
+  /* Child needs sync */
+  guint some_subdir_needs_sync : 1;
+
+  /* We are pretty sure the filesystem dir exists */
+  guint filesystem_dir_probably_exists : 1;
 };
 
 static MarkupDir*
@@ -160,9 +165,24 @@ markup_dir_new (MarkupTree *tree,
 static void
 markup_dir_free (MarkupDir *dir)
 {
+  /* FIXME free the entries */
+  
   g_free (dir->name);
 
   g_free (dir);
+}
+
+static void
+markup_dir_queue_sync (MarkupDir *dir)
+{
+  MarkupDir *iter;
+
+  iter = dir->parent;
+  while (iter != NULL) /* exclude root dir */
+    {
+      iter->some_subdir_needs_sync = TRUE;
+      iter = iter->parent;
+    }
 }
 
 static MarkupDir*
@@ -242,6 +262,24 @@ markup_tree_ensure_dir (MarkupTree *tree,
   return markup_tree_get_dir_internal (tree, full_key, TRUE, err);  
 }
 
+gboolean
+markup_tree_sync (MarkupTree *tree,
+                  GError    **err)
+{
+  if (markup_dir_needs_sync (tree->root))
+    {
+      if (!markup_dir_sync (tree->root))
+        {
+          g_set_error (err, GCONF_ERROR,
+                       GCONF_ERROR_FAILED,
+                       _("Failed to write some configuration data to disk\n"));
+          return FALSE;          
+        }
+    }
+
+  return TRUE;
+}
+
 static gboolean
 load_entries (MarkupDir *dir)
 {
@@ -266,13 +304,21 @@ load_entries (MarkupDir *dir)
 
   tmp_err = NULL;
   entries = parse_entries (markup_file, &tmp_err);
-
+  
   if (tmp_err)
     {
       g_assert (entries == NULL);
-      
-      gconf_log (GCL_WARNING,
-                 _("Failed to load file \"%s\": %s"),
+
+      /* note that tmp_err may be a G_MARKUP_ERROR while only
+       * GCONF_ERROR could be returned, so if we decide to return this
+       * error someday we need to fix it up first
+       */
+
+      /* this message is debug-only because it usually happens
+       * when creating a new directory
+       */
+      gconf_log (GCL_DEBUG,
+                 "Failed to load file \"%s\": %s",
                  markup_file, tmp_err->message);
       g_error_free (tmp_err);
       g_free (markup_file);
@@ -313,7 +359,7 @@ load_subdirs (MarkupDir *dir)
   
   if (dir->subdirs_loaded)
     return TRUE;
-
+  
   /* We mark it loaded even if the next stuff
    * fails, because we don't want to keep trying and
    * failing, plus we have invariants
@@ -330,8 +376,11 @@ load_subdirs (MarkupDir *dir)
   
   if (dp == NULL)
     {
-      gconf_log (GCL_WARNING,
-                 _("Could not open directory \"%s\": %s\n"),
+      /* This is debug-only since it usually happens when creating a
+       * new directory
+       */
+      gconf_log (GCL_DEBUG,
+                 "Could not open directory \"%s\": %s\n",
                  /* strerror, in locale encoding */
                  markup_dir, strerror (errno));
       g_free (markup_dir);
@@ -357,6 +406,12 @@ load_subdirs (MarkupDir *dir)
       /* ignore ., .., and all dot-files */
       if (dent->d_name[0] == '.')
         continue;
+
+      /* ignore stuff starting with % as it's an invalid gconf
+       * dir name, and probably %gconf.xml
+       */
+      if (dent->d_name[0] == '%')
+        continue;
       
       len = strlen (dent->d_name);
       
@@ -367,12 +422,12 @@ load_subdirs (MarkupDir *dir)
         }
       else
         continue; /* Shouldn't ever happen since PATH_MAX is available */
-      
+
       if (stat (fullpath, &statbuf) < 0)
         {
           /* This is some kind of cruft, not an XML directory */
           continue;
-        }
+        }      
 
       retval = g_slist_prepend (retval,
                                 markup_dir_new (dir->tree, dir, dent->d_name));
@@ -433,13 +488,16 @@ markup_dir_ensure_entry (MarkupDir   *dir,
   if (entry != NULL)
     return entry;
 
+  g_return_val_if_fail (dir->entries_loaded, NULL);
+  
   /* Create a new entry */
   entry = markup_entry_new (dir, relative_key);
   dir->entries = g_slist_prepend (dir->entries, entry);
 
   /* Need to save this */
   dir->entries_need_save = TRUE;
-
+  markup_dir_queue_sync (dir);
+  
   return entry;
 }
 
@@ -484,8 +542,15 @@ markup_dir_ensure_subdir (MarkupDir   *dir,
 
   if (subdir == NULL)
     {
+      g_return_val_if_fail (dir->subdirs_loaded, NULL);
+      
       subdir = markup_dir_new (dir->tree, dir, relative_key);
-
+      subdir->entries_need_save = TRUE; /* so we save empty %gconf.xml */
+      
+      /* we don't need to load stuff, since we know the dir didn't exist */
+      subdir->entries_loaded = TRUE;
+      subdir->subdirs_loaded = TRUE;
+      
       dir->subdirs = g_slist_prepend (dir->subdirs,
                                       subdir);
     }
@@ -511,6 +576,12 @@ markup_dir_list_subdirs (MarkupDir   *dir,
   return dir->subdirs;
 }
 
+const char*
+markup_dir_get_name (MarkupDir   *dir)
+{
+  return dir->name;
+}
+
 static gboolean
 markup_dir_needs_sync (MarkupDir *dir)
 {
@@ -521,16 +592,331 @@ markup_dir_needs_sync (MarkupDir *dir)
   if (dir->tree->read_only)
     return FALSE;
 
-  return dir->entries_need_save || dir->subdirs_added_or_removed;
+  return dir->entries_need_save || dir->some_subdir_needs_sync;
+}
+
+static void
+markup_entry_clean_old_local_schemas (MarkupEntry *entry)
+{
+
+  /* Get rid of any local_schema that no longer apply */
+  LocalSchemaInfo *local_schema;
+  GSList *tmp;
+  GSList *kept_schemas;
+
+  kept_schemas = NULL;
+  
+  tmp = entry->local_schemas;
+  while (tmp != NULL)
+    {
+      gboolean dead = FALSE;
+          
+      local_schema = tmp->data;
+
+      if (entry->value &&
+          entry->value->type != GCONF_VALUE_SCHEMA)
+        dead = TRUE;
+      else if (local_schema->default_value &&
+               entry->value &&
+               gconf_value_get_schema (entry->value) &&
+               gconf_schema_get_type (gconf_value_get_schema (entry->value)) !=
+               local_schema->default_value->type)
+        {
+          dead = TRUE;
+        }
+          
+      if (dead)
+        {
+          local_schema_info_free (local_schema);
+        }
+      else
+        {
+          kept_schemas = g_slist_prepend (kept_schemas, local_schema);
+        }
+
+      tmp = tmp->next;
+    }
+
+  g_slist_free (entry->local_schemas);
+  
+  entry->local_schemas = g_slist_reverse (entry->local_schemas);
 }
 
 static gboolean
-markup_dir_sync (MarkupDir  *dir,
-                 GError    **err)
+create_filesystem_dir (const char *name,
+                       guint       dir_mode)
 {
-  /* - Clean up local_schema */
-  /* - never delete root dir, always delete other empty dirs */
+  if (mkdir (name, dir_mode) < 0)
+    {
+      if (errno == EEXIST)
+        return TRUE;
 
+      gconf_log (GCL_WARNING,
+                 _("Could not make directory \"%s\": %s"),
+                 name, strerror (errno));
+
+      return FALSE;
+    }
+
+  return TRUE;
+}
+
+static gboolean
+delete_useless_subdirs (MarkupDir *dir)
+{
+  GSList *tmp;
+  GSList *kept_subdirs;
+  gboolean some_deleted;
+
+  some_deleted = FALSE;
+  kept_subdirs = NULL;
+  
+  tmp = dir->subdirs;
+  while (tmp != NULL)
+    {
+      MarkupDir *subdir = tmp->data;
+      
+      if (subdir->entries_loaded &&
+          subdir->subdirs_loaded &&
+          !subdir->some_subdir_needs_sync &&
+          !subdir->entries_need_save &&
+          subdir->entries == NULL &&
+          subdir->subdirs == NULL)
+        {
+          char *fs_dirname;
+          char *fs_filename;
+          
+          fs_dirname = markup_dir_build_path (subdir, FALSE);
+          fs_filename = markup_dir_build_path (subdir, TRUE);
+          
+          if (unlink (fs_filename) < 0)
+            {
+              gconf_log (GCL_WARNING,
+                         _("Could not remove \"%s\": %s\n"),
+                         fs_filename, strerror (errno));
+            }
+
+          if (rmdir (fs_dirname) < 0)
+            {
+              gconf_log (GCL_WARNING,
+                         _("Could not remove \"%s\": %s\n"),
+                         fs_dirname, strerror (errno));
+            }
+          
+          g_free (fs_dirname);
+          g_free (fs_filename);
+
+          markup_dir_free (subdir);
+
+          some_deleted = TRUE;
+        }
+      else
+        {
+          kept_subdirs = g_slist_prepend (kept_subdirs, subdir);
+        }
+      
+      tmp = tmp->next;
+    }
+ 
+  g_slist_free (dir->subdirs);
+  dir->subdirs = g_slist_reverse (kept_subdirs);
+
+  return some_deleted;
+} 
+
+static gboolean
+delete_useless_entries (MarkupDir *dir)
+{
+  GSList *tmp;
+  GSList *kept_entries;
+  gboolean some_deleted;
+
+  some_deleted = FALSE;
+  
+  kept_entries = NULL;
+
+  tmp = dir->entries;
+  while (tmp != NULL)
+    {
+      MarkupEntry *entry = tmp->data;
+
+      /* mod_user and mod_time don't keep an entry alive */
+      
+      if (entry->value == NULL &&
+          entry->local_schemas == NULL &&
+          entry->schema_name == NULL)
+        {
+          markup_entry_free (entry);
+          some_deleted = TRUE;
+        }
+      else
+        {
+          kept_entries = g_slist_prepend (kept_entries, entry);
+        }
+
+      tmp = tmp->next;
+    }
+
+  g_slist_free (dir->entries);
+  dir->entries = g_slist_reverse (kept_entries);
+
+  return some_deleted;
+}
+
+static gboolean
+markup_dir_sync (MarkupDir *dir)
+{
+  char *fs_dirname;
+  char *fs_filename;
+  GSList *tmp;
+  gboolean some_useless_entries;
+  gboolean some_useless_subdirs;
+
+  some_useless_entries = FALSE;
+  some_useless_subdirs = FALSE;
+
+#if 0
+  {
+    MarkupDir *parent;
+
+    parent = dir->parent;
+    while (parent)
+      {
+        fputs ("  ", stdout);
+        parent = parent->parent;
+      }
+
+    g_print ("%s\n", dir->name);
+  }
+#endif
+    
+  /* We assume our parent directories have all been synced, before
+   * we are synced. So we don't need to mkdir() parent directories.
+   */
+
+  /* Sanitize the entries */
+  tmp = dir->entries;
+  while (tmp != NULL)
+    {
+      MarkupEntry *entry = tmp->data;
+      
+      markup_entry_clean_old_local_schemas (entry);
+      
+      tmp = tmp->next;
+    }
+  
+  fs_dirname = markup_dir_build_path (dir, FALSE);
+  fs_filename = markup_dir_build_path (dir, TRUE);
+
+  /* For a dir to be loaded as a subdir, it must have a
+   * %gconf.xml file, even if it has no entries in that
+   * file.  Thus when creating a new dir, we set dir->entries_need_save
+   * even though the entry list is initially empty.
+   */
+  
+  if (dir->entries_need_save)
+    {
+      GError *err;
+      
+      g_return_val_if_fail (dir->entries_loaded, FALSE);
+
+      if (delete_useless_entries (dir))
+        some_useless_entries = TRUE;
+      
+      /* Be sure the directory exists */
+      if (!dir->filesystem_dir_probably_exists)
+        {
+          if (create_filesystem_dir (fs_dirname, dir->tree->dir_mode))
+            dir->filesystem_dir_probably_exists = TRUE;
+        }
+      
+      /* Now write the file */
+      err = NULL;
+      save_entries (fs_filename, dir->tree->file_mode, dir->entries, &err);
+      if (err != NULL)
+        {
+          gconf_log (GCL_WARNING,
+                     _("Failed to write \"%s\": %s\n"),
+                     fs_filename, err->message);
+          
+          g_error_free (err);
+        }
+      else
+        {
+          dir->entries_need_save = FALSE;
+        }
+    }
+
+  if (dir->some_subdir_needs_sync)
+    {
+      GSList *tmp;
+      gboolean one_failed;
+
+      g_return_val_if_fail (dir->subdirs_loaded, FALSE);
+      
+      one_failed = FALSE;
+      
+      tmp = dir->subdirs;
+      while (tmp != NULL)
+        {
+          MarkupDir *subdir = tmp->data;
+
+          if (markup_dir_needs_sync (subdir))
+            {
+              /* Be sure the directory exists (may not have
+               * had to save entries, if not we won't have done
+               * this there)
+               */
+              if (!dir->filesystem_dir_probably_exists)
+                {
+                  if (create_filesystem_dir (fs_dirname, dir->tree->dir_mode))
+                    dir->filesystem_dir_probably_exists = TRUE;
+                }
+              
+              if (!markup_dir_sync (subdir))
+                one_failed = TRUE;
+            }
+
+          tmp = tmp->next;
+        }
+
+      if (!one_failed)
+        dir->some_subdir_needs_sync = FALSE;
+    }
+
+  /* Now if we've synced everything and some subdirs have no entries
+   * and no subdirs, they have become useless - so we can delete
+   * them. Note that this happens _after_ recursing
+   * subdirectories, so the deletion happens first on
+   * the leaves, and then on the root. Also note that since
+   * we're deleting our subdirs, the root dir (tree->root)
+   * never gets deleted - this is intentional.
+   */
+  if (delete_useless_subdirs (dir))
+    some_useless_subdirs = TRUE;
+  
+  g_free (fs_dirname);
+  g_free (fs_filename);
+
+
+  /* If we deleted an entry or subdir from this directory, and hadn't
+   * fully loaded this directory, we now don't know whether the entry
+   * or subdir was the last thing making the directory worth keeping
+   * around. So we need to load so we can be established as useless if
+   * necessary.
+   */
+  if (some_useless_entries && !dir->subdirs_loaded)
+    {
+      g_assert (dir->entries_loaded);
+      load_subdirs (dir);
+    }
+  if (some_useless_subdirs && !dir->entries_loaded)
+    {
+      g_assert (dir->subdirs_loaded);
+      load_entries (dir);
+    }
+
+  return !markup_dir_needs_sync (dir);
 }
 
 static char*
@@ -544,7 +930,7 @@ markup_dir_build_path (MarkupDir  *dir,
 
   components = NULL;
   iter = dir;
-  while (iter != NULL)
+  while (iter->parent != NULL) /* exclude root dir */
     {
       components = g_slist_prepend (components, iter->name);
       iter = iter->parent;
@@ -556,9 +942,7 @@ markup_dir_build_path (MarkupDir  *dir,
     {
       const char *comp = tmp->data;
 
-      if (*comp != '/')
-        g_string_append_c (name, '/');
-
+      g_string_append_c (name, '/');
       g_string_append (name, comp);
 
       tmp = tmp->next;
@@ -612,8 +996,7 @@ markup_entry_free (MarkupEntry *entry)
 
 void
 markup_entry_set_value (MarkupEntry       *entry,
-                        const GConfValue  *value,
-                        GError           **err)
+                        const GConfValue  *value)
 {
   /* We have to have loaded entries, because
    * someone called ensure_entry to get this
@@ -621,7 +1004,8 @@ markup_entry_set_value (MarkupEntry       *entry,
    */
   g_return_if_fail (entry->dir != NULL);
   g_return_if_fail (entry->dir->entries_loaded);
-
+  g_return_if_fail (value != NULL);
+  
   if (value->type != GCONF_VALUE_SCHEMA)
     {
       if (entry->value == value)
@@ -744,13 +1128,111 @@ markup_entry_set_value (MarkupEntry       *entry,
                               gconf_schema_get_owner (schema));
     }
 
+  /* Update mod time */
+  entry->mod_time = time (NULL);
+
+  /* Need to save to disk */
   entry->dir->entries_need_save = TRUE;
+  markup_dir_queue_sync (entry->dir);
+}
+
+void
+markup_entry_unset_value (MarkupEntry *entry,
+                          const char  *locale)
+{
+  /* We have to have loaded entries, because
+   * someone called ensure_entry to get this
+   * entry.
+   */
+  g_return_if_fail (entry->dir != NULL);
+  g_return_if_fail (entry->dir->entries_loaded);
+
+  if (entry->value == NULL)
+    {
+      /* nothing to do */
+      return;
+    }
+  else if (entry->value->type == GCONF_VALUE_SCHEMA)
+    {
+      if (locale == NULL)
+        {
+          /* blow it all away */
+          gconf_value_free (entry->value);
+          entry->value = NULL;
+
+          g_slist_foreach (entry->local_schemas,
+                           (GFunc) local_schema_info_free,
+                           NULL);
+          
+          g_slist_free (entry->local_schemas);
+          
+          entry->local_schemas = NULL;
+        }
+      else
+        {
+          /* Just blow away any matching local schema */
+          GSList *tmp;
+
+          tmp = entry->local_schemas;
+          while (tmp != NULL)
+            {
+              LocalSchemaInfo *local_schema = tmp->data;
+
+              if (strcmp (local_schema->locale, locale) == 0)
+                {
+                  entry->local_schemas =
+                    g_slist_remove (entry->local_schemas,
+                                    local_schema);
+
+                  local_schema_info_free (local_schema);
+                  break;
+                }
+
+              tmp = tmp->next;
+            }
+        }
+    }
+  else
+    {
+      gconf_value_free (entry->value);
+      entry->value = NULL;
+    }
+
+  /* Update mod time */
+  entry->mod_time = time (NULL);
+
+  /* Need to save to disk */
+  entry->dir->entries_need_save = TRUE;
+  markup_dir_queue_sync (entry->dir);
+}
+
+void
+markup_entry_set_schema_name (MarkupEntry *entry,
+                              const char  *schema_name)
+{
+  /* We have to have loaded entries, because
+   * someone called ensure_entry to get this
+   * entry.
+   */
+  g_return_if_fail (entry->dir != NULL);
+  g_return_if_fail (entry->dir->entries_loaded);
+
+  /* schema_name may be NULL to unset it */
+  
+  g_free (entry->schema_name);
+  entry->schema_name = g_strdup (schema_name);
+  
+  /* Update mod time */
+  entry->mod_time = time (NULL);
+
+  /* Need to save to disk */
+  entry->dir->entries_need_save = TRUE;
+  markup_dir_queue_sync (entry->dir);
 }
 
 GConfValue*
 markup_entry_get_value (MarkupEntry *entry,
-                        const char **locales,
-                        GError     **err)
+                        const char **locales)
 {
   /* We have to have loaded entries, because
    * someone called ensure_entry to get this
@@ -856,6 +1338,42 @@ markup_entry_get_value (MarkupEntry *entry,
     }
 }
 
+const char*
+markup_entry_get_name (MarkupEntry *entry)
+{
+  g_return_val_if_fail (entry->dir != NULL, NULL);
+  g_return_val_if_fail (entry->dir->entries_loaded, NULL);
+
+  return entry->name;
+}
+
+const char*
+markup_entry_get_schema_name (MarkupEntry  *entry)
+{
+  g_return_val_if_fail (entry->dir != NULL, NULL);
+  g_return_val_if_fail (entry->dir->entries_loaded, NULL);
+
+  return entry->schema_name;
+}
+
+const char*
+markup_entry_get_mod_user (MarkupEntry *entry)
+{
+  g_return_val_if_fail (entry->dir != NULL, NULL);
+  g_return_val_if_fail (entry->dir->entries_loaded, NULL);
+
+  return entry->mod_user;
+}
+
+GTime
+markup_entry_get_mod_time (MarkupEntry *entry)
+{
+  g_return_val_if_fail (entry->dir != NULL, 0);
+  g_return_val_if_fail (entry->dir->entries_loaded, 0);
+
+  return entry->mod_time;
+}
+
 static void
 markup_entry_set_mod_user (MarkupEntry *entry,
                            const char  *muser)
@@ -872,17 +1390,6 @@ markup_entry_set_mod_time (MarkupEntry *entry,
                            GTime        mtime)
 {
   entry->mod_time = mtime;
-}
-
-static void
-markup_entry_set_schema_name (MarkupEntry *entry,
-                              const char  *schema_name)
-{
-  if (schema_name == entry->schema_name)
-    return;
-
-  g_free (entry->schema_name);
-  entry->schema_name = g_strdup (schema_name);
 }
 
 /*
@@ -919,7 +1426,7 @@ typedef enum
 typedef struct
 {
   GSList *states;
-  MarkupEntry *current_entry;
+  MarkupEntry *current_entry;  
   GSList *value_stack;
   GSList *value_freelist;
 
@@ -927,7 +1434,7 @@ typedef struct
   GSList *local_schemas;
 
   GSList *complete_entries;
-
+  
 } ParseInfo;
 
 static void set_error (GError             **err,
@@ -935,9 +1442,6 @@ static void set_error (GError             **err,
                        int                  error_code,
                        const char          *format,
                        ...) G_GNUC_PRINTF (4, 5);
-
-static void add_context_to_error (GError             **err,
-                                  GMarkupParseContext *context);
 
 static void          parse_info_init        (ParseInfo    *info);
 static void          parse_info_free        (ParseInfo    *info);
@@ -1000,24 +1504,6 @@ set_error (GError             **err,
                line, ch, str);
 
   g_free (str);
-}
-
-static void
-add_context_to_error (GError             **err,
-                      GMarkupParseContext *context)
-{
-  int line, ch;
-  char *str;
-
-  if (err == NULL || *err == NULL)
-    return;
-
-  g_markup_parse_context_get_position (context, &line, &ch);
-
-  str = g_strdup_printf (_("Line %d character %d: %s"),
-                         line, ch, (*err)->message);
-  g_free ((*err)->message);
-  (*err)->message = str;
 }
 
 static void
@@ -1211,7 +1697,7 @@ locate_attributes (GMarkupParseContext *context,
           retval = FALSE;
           goto out;
         }
-
+      
       ++i;
     }
 
@@ -1344,7 +1830,8 @@ parse_value_element (GMarkupParseContext  *context,
   const char *list_type;
   const char *owner;
   GConfValueType vtype;
-
+  const char *dummy1, *dummy2, *dummy3, *dummy4;
+  
 #if 0
   g_assert (ELEMENT_IS ("entry") ||
             ELEMENT_IS ("default") ||
@@ -1374,6 +1861,13 @@ parse_value_element (GMarkupParseContext  *context,
                           "car_type", &car_type,
                           "cdr_type", &cdr_type,
                           "owner", &owner,
+
+                          /* And these are just to eat any error messages */
+                          "name", &dummy1,
+                          "muser", &dummy2,
+                          "mtime", &dummy3,
+                          "schema", &dummy4,
+
                           NULL))
     return;
 
@@ -1463,6 +1957,13 @@ parse_value_element (GMarkupParseContext  *context,
 
         if (schema_vtype == GCONF_VALUE_PAIR)
           {
+            
+#if 0
+            /* We have to allow missing car_type/cdr_type because
+             * old versions of gconf would write it out that way
+             * (if a schema was provided by an app and the
+             *  schema was missing these fields)
+             */ 
             if (car_type == NULL)
               {
                 set_error (error, context, GCONF_ERROR_PARSE_ERROR,
@@ -1478,13 +1979,20 @@ parse_value_element (GMarkupParseContext  *context,
                            "cdr_type", element_name);
                 return;
               }
+#endif
 
-            car_vtype = gconf_value_type_from_string (car_type);
-            cdr_vtype = gconf_value_type_from_string (cdr_type);
+            if (car_type)
+              car_vtype = gconf_value_type_from_string (car_type);
+            else
+              car_vtype = GCONF_VALUE_INVALID;
+
+            if (cdr_vtype)
+              cdr_vtype = gconf_value_type_from_string (cdr_type);
+            else
+              cdr_vtype = GCONF_VALUE_INVALID;
 
             switch (car_vtype)
               {
-              case GCONF_VALUE_INVALID:
               case GCONF_VALUE_LIST:
               case GCONF_VALUE_PAIR:
               case GCONF_VALUE_SCHEMA:
@@ -1499,7 +2007,6 @@ parse_value_element (GMarkupParseContext  *context,
 
             switch (cdr_vtype)
               {
-              case GCONF_VALUE_INVALID:
               case GCONF_VALUE_LIST:
               case GCONF_VALUE_PAIR:
               case GCONF_VALUE_SCHEMA:
@@ -1514,6 +2021,12 @@ parse_value_element (GMarkupParseContext  *context,
           }
         else if (schema_vtype == GCONF_VALUE_LIST)
           {
+#if 0
+            /* We have to allow missing list_type because
+             * old versions of gconf would write it out that way
+             * (if a schema was provided by an app and the
+             *  schema was missing these fields)
+             */ 
             if (list_type == NULL)
               {
                 set_error (error, context, GCONF_ERROR_PARSE_ERROR,
@@ -1521,12 +2034,15 @@ parse_value_element (GMarkupParseContext  *context,
                            "list_type", element_name);
                 return;
               }
+#endif
 
-            list_vtype = gconf_value_type_from_string (list_type);
+            if (list_type)
+              list_vtype = gconf_value_type_from_string (list_type);
+            else
+              list_vtype = GCONF_VALUE_INVALID;
 
             switch (list_vtype)
               {
-              case GCONF_VALUE_INVALID:
               case GCONF_VALUE_LIST:
               case GCONF_VALUE_PAIR:
               case GCONF_VALUE_SCHEMA:
@@ -1645,8 +2161,12 @@ parse_entry_element (GMarkupParseContext  *context,
   const char *muser;
   const char *mtime;
   const char *schema;
+  const char *type;
+  const char *dummy1, *dummy2, *dummy3, *dummy4;
+  const char *dummy5, *dummy6, *dummy7;
   GConfValue *value;
-
+  GError *tmp_err;
+  
   g_return_if_fail (peek_state (info) == STATE_GCONF);
   g_return_if_fail (ELEMENT_IS ("entry"));
   g_return_if_fail (info->current_entry == NULL);
@@ -1657,13 +2177,26 @@ parse_entry_element (GMarkupParseContext  *context,
   muser = NULL;
   mtime = NULL;
   schema = NULL;
-
+  type = NULL;
+  
   if (!locate_attributes (context, element_name, attribute_names, attribute_values,
                           error,
                           "name", &name,
                           "muser", &muser,
                           "mtime", &mtime,
                           "schema", &schema,
+                          "type", &type,
+                          
+                          /* These are allowed but we don't use them until
+                           * parse_value_element
+                           */
+                          "value", &dummy1,
+                          "stype", &dummy2,
+                          "ltype", &dummy3,
+                          "list_type", &dummy4,
+                          "car_type", &dummy5,
+                          "cdr_type", &dummy6,
+                          "owner", &dummy7,
                           NULL))
     return;
 
@@ -1675,17 +2208,34 @@ parse_entry_element (GMarkupParseContext  *context,
       return;
     }
 
+  /* Entries can exist just for the schema name,
+   * lacking a value element. But if the entry has a type
+   * attribute, it's supposed to have a value.
+   */
   value = NULL;
+  tmp_err = NULL;
   parse_value_element (context, element_name, attribute_names,
                        attribute_values, &value,
-                       error);
-  if (value == NULL)
-    return;
+                       &tmp_err);
 
+  if (tmp_err)
+    {
+      if (type != NULL)
+        {
+          g_propagate_error (error, tmp_err);
+          return;
+        }
+      else
+        g_error_free (tmp_err);
+    }
+  
   info->current_entry = markup_entry_new (NULL, name);
-  info->current_entry->value = value;
-  value_stack_push (info, value, FALSE); /* FALSE since current_entry owns it */
-
+  if (value != NULL)
+    {
+      info->current_entry->value = value;
+      value_stack_push (info, value, FALSE); /* FALSE since current_entry owns it */
+    }
+      
   if (muser)
     markup_entry_set_mod_user (info->current_entry,
                                muser);
@@ -1699,9 +2249,11 @@ parse_entry_element (GMarkupParseContext  *context,
                                  vmtime);
     }
 
+  /* don't use markup_entry_set_schema_name because it would
+   * mess up the modtime
+   */
   if (schema)
-    markup_entry_set_schema_name (info->current_entry,
-                                  schema);
+    info->current_entry->schema_name = g_strdup (schema);
 }
 
 static void
@@ -1893,6 +2445,8 @@ parse_li_element (GMarkupParseContext  *context,
 
   current_state = peek_state (info);
 
+  push_state (info, STATE_LI);
+  
   value = NULL;
   parse_value_element (context, element_name, attribute_names,
                        attribute_values, &value,
@@ -1911,6 +2465,8 @@ parse_li_element (GMarkupParseContext  *context,
           slist = gconf_value_steal_list (list);
           slist = g_slist_append (slist, value);
           gconf_value_set_list_nocopy (list, slist);
+          
+          value_stack_push (info, value, FALSE); /* FALSE since list owns it */
         }
       else
         {
@@ -1941,6 +2497,19 @@ parse_value_child_element (GMarkupParseContext  *context,
 
   current_state = peek_state (info);
 
+  if (current_state == STATE_ENTRY &&
+      info->current_entry->value == NULL)
+    {
+      set_error (error, context, GCONF_ERROR_PARSE_ERROR,
+                 _("<%s> provided but parent <entry> does not have a value"),
+                 element_name);
+      return;
+    }
+  else if (current_state == STATE_ENTRY)
+    {
+      g_assert (info->current_entry->value == value_stack_peek (info));
+    }
+  
   if (ELEMENT_IS ("stringvalue"))
     {
       GConfValue *value;
@@ -1950,6 +2519,11 @@ parse_value_child_element (GMarkupParseContext  *context,
       if (value->type == GCONF_VALUE_STRING)
         {
           push_state (info, STATE_STRINGVALUE);
+
+          /* Put in an empty string, since <stringvalue></stringvalue>
+           * doesn't result in a text_handler callback
+           */
+          gconf_value_set_string (value, "");
         }
       else
         {
@@ -2126,11 +2700,13 @@ end_element_handler (GMarkupParseContext *context,
       info->current_entry->local_schemas = info->local_schemas;
       info->local_schemas = NULL;
 
+      if (info->current_entry->value != NULL)
+        value_stack_pop (info);
+      
       info->complete_entries = g_slist_prepend (info->complete_entries,
                                                 info->current_entry);
       info->current_entry = NULL;
 
-      value_stack_pop (info);
       pop_state (info);
       break;
 
@@ -2219,17 +2795,8 @@ text_handler (GMarkupParseContext *context,
         value = value_stack_peek (info);
         g_assert (value->type == GCONF_VALUE_STRING);
 
-        if (gconf_value_get_string (value) != NULL)
-          {
-            set_error (error, context, GCONF_ERROR_PARSE_ERROR,
-                       _("Element <%s> is not allowed inside current element"),
-                       "stringvalue");
-          }
-        else
-          {
-            gconf_value_set_string_nocopy (value,
-                                           g_strndup (text, text_len));
-          }
+        gconf_value_set_string_nocopy (value,
+                                       g_strndup (text, text_len));
       }
       break;
     case STATE_LONGDESC:
@@ -2280,14 +2847,25 @@ parse_entries (const char *filename,
   length = 0;
   retval = NULL;
 
+  error = NULL;
   if (!g_file_get_contents (filename,
                             &text,
                             &length,
-                            err))
-    return NULL;
+                            &error))
+    {
+      g_propagate_error (err, error);
+      return NULL;
+    }
 
   g_assert (text);
 
+  /* Empty documents are OK */
+  if (length == 0)
+    {
+      g_free (text);
+      return NULL;
+    }
+  
   parse_info_init (&info);
 
   context = g_markup_parse_context_new (&gconf_parser,
@@ -2331,6 +2909,540 @@ parse_entries (const char *filename,
   parse_info_free (&info);
 
   return retval;
+}
+
+/*
+ * Save
+ */
+
+static gboolean write_list_children   (GConfValue  *value,
+                                       FILE        *f,
+                                       const char  *indent);
+static gboolean write_pair_children   (GConfValue  *value,
+                                       FILE        *f,
+                                       const char  *indent);
+static gboolean write_schema_children (GConfValue  *value,
+                                       GSList      *local_schemas,
+                                       FILE        *f,
+                                       const char  *indent);
+
+static gboolean
+write_value_element (GConfValue  *value,
+                     GSList      *local_schemas,
+                     FILE        *f,
+                     const char  *indent) 
+{
+  /* We are at the "<foo bar="whatever"" stage here,
+   * <foo> still missing the closing >
+   */
+  
+  if (fprintf (f, " type=\"%s\"",
+               gconf_value_type_to_string (value->type)) < 0)
+    return FALSE;
+  
+  switch (value->type)
+    {          
+    case GCONF_VALUE_LIST:
+      if (fprintf (f, " ltype=\"%s\"",
+                   gconf_value_type_to_string (gconf_value_get_list_type (value))) < 0)
+        return FALSE;
+      break;
+      
+    case GCONF_VALUE_SCHEMA:
+      {
+        GConfSchema *schema;
+        GConfValueType stype;
+        const char *owner;
+        
+        schema = gconf_value_get_schema (value);
+
+        stype = gconf_schema_get_type (schema);
+        
+        if (fprintf (f, " stype=\"%s\"",
+                     gconf_value_type_to_string (stype)) < 0)
+          return FALSE;
+
+        owner = gconf_schema_get_owner (schema);
+
+        if (owner)
+          {
+            char *s;
+
+            s = g_markup_escape_text (owner, -1);
+            
+            if (fprintf (f, " owner=\"%s\"", s) < 0)
+              {
+                g_free (s);
+                return FALSE;
+              }
+            
+            g_free (s);
+          }
+        
+        if (stype == GCONF_VALUE_LIST)
+          {
+            GConfValueType list_type = gconf_schema_get_list_type (schema);
+
+            if (list_type != GCONF_VALUE_INVALID)
+              {
+                if (fprintf (f, " list_type=\"%s\"",
+                             gconf_value_type_to_string (list_type)) < 0)
+                  return FALSE;
+              }
+          }
+
+        if (stype == GCONF_VALUE_PAIR)
+          {
+            GConfValueType car_type;
+            GConfValueType cdr_type;
+
+            car_type = gconf_schema_get_car_type (schema);
+            cdr_type = gconf_schema_get_cdr_type (schema);
+
+            if (car_type != GCONF_VALUE_INVALID)
+              {
+                if (fprintf (f, " car_type=\"%s\"",
+                             gconf_value_type_to_string (car_type)) < 0)
+                  return FALSE;
+              }
+
+            if (cdr_type != GCONF_VALUE_INVALID)
+              {
+                if (fprintf (f, " cdr_type=\"%s\"",
+                             gconf_value_type_to_string (cdr_type)) < 0)
+                  return FALSE;
+              }
+          }
+      }
+      break;
+
+    case GCONF_VALUE_INT:
+      if (fprintf (f, "value=\"%d\"",
+                   gconf_value_get_int (value)) < 0)
+        return FALSE;
+      break;
+
+    case GCONF_VALUE_BOOL:
+      if (fprintf (f, "value=\"%s\"",
+                   gconf_value_get_bool (value) ? "true" : "false") < 0)
+        return FALSE;
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      {
+        char *s;
+
+        s = gconf_double_to_string (gconf_value_get_float (value));
+        if (fprintf (f, "value=\"%s\"", s) < 0)
+          {
+            g_free (s);
+            return FALSE;
+          }
+        g_free (s);
+      }
+      break;
+
+    case GCONF_VALUE_INVALID:
+    case GCONF_VALUE_STRING:
+    case GCONF_VALUE_PAIR:
+      break;
+    }
+  
+  if (fputs (">\n", f) < 0)
+    return FALSE;
+  
+  switch (value->type)
+    {
+    case GCONF_VALUE_STRING:
+      {
+        char *s;
+        
+        s = g_markup_escape_text (gconf_value_get_string (value),
+                                  -1);
+        
+        if (fprintf (f, "%s<stringvalue>%s</stringvalue>\n",
+                     indent, s) < 0)
+          {
+            g_free (s);
+            return FALSE;
+          }
+        
+        g_free (s);
+      }
+      break;
+      
+    case GCONF_VALUE_LIST:
+      if (!write_list_children (value, f, indent))
+        return FALSE;
+      break;
+      
+    case GCONF_VALUE_PAIR:
+      if (!write_pair_children (value, f, indent))
+        return FALSE;
+      break;
+      
+    case GCONF_VALUE_SCHEMA:
+      if (!write_schema_children (value, local_schemas, f, indent))
+        return FALSE;
+      break;
+
+    case GCONF_VALUE_INT:
+    case GCONF_VALUE_BOOL:
+    case GCONF_VALUE_FLOAT:
+    case GCONF_VALUE_INVALID:
+      break;
+    }
+
+  return TRUE;
+}    
+
+static gboolean
+write_list_children (GConfValue  *value,
+                     FILE        *f,
+                     const char  *indent)
+{
+  GSList *tmp;
+
+  tmp = gconf_value_get_list (value);
+  while (tmp != NULL)
+    {
+      GConfValue *li = tmp->data;
+
+      if (fputs (indent, f) < 0)
+        return FALSE;
+      
+      if (fputs ("<li", f) < 0)
+        return FALSE;
+
+      if (!write_value_element (li, NULL, f, indent))
+        return FALSE;      
+
+      if (fprintf (f, "%s</li>", indent) < 0)
+        return FALSE;
+      
+      tmp = tmp->next;
+    }
+
+  return TRUE;
+}
+
+static gboolean
+write_pair_children (GConfValue  *value,
+                     FILE        *f,
+                     const char  *indent)
+{
+  GConfValue *child;
+  
+  child = gconf_value_get_car (value);
+
+  if (child != NULL)
+    {
+      if (fputs (indent, f) < 0)
+        return FALSE;
+      
+      if (fputs ("<car", f) < 0)
+        return FALSE;
+
+      if (!write_value_element (child, NULL, f, indent))
+        return FALSE;      
+      
+      if (fprintf (f, "%s</car>", indent) < 0)
+        return FALSE;
+    }
+
+  child = gconf_value_get_cdr (value);
+
+  if (child != NULL)
+    {
+      if (fputs (indent, f) < 0)
+        return FALSE;
+      
+      if (fputs ("<cdr", f) < 0)
+        return FALSE;
+
+      if (!write_value_element (child, NULL, f, indent))
+        return FALSE;      
+      
+      if (fprintf (f, "%s</cdr>", indent) < 0)
+        return FALSE;
+    }
+  
+  return TRUE;
+}
+
+static gboolean
+write_schema_children (GConfValue  *value,
+                       GSList      *local_schemas,
+                       FILE        *f,
+                       const char  *indent)
+{
+  /* Here we write each local_schema, in turn a local_schema can
+   * contain <default> and <longdesc> and have locale and short_desc
+   * attributes
+   */
+  GSList *tmp;
+  
+  if (fputs (indent, f) < 0)
+    return FALSE;
+
+  if (fputs ("<local_schema", f) < 0)
+    return FALSE;
+
+  tmp = local_schemas;
+  while (tmp != NULL)
+    {
+      LocalSchemaInfo *local_schema;
+      char *s;
+
+      local_schema = tmp->data;
+      
+      g_assert (local_schema->locale);
+      
+      s = g_markup_escape_text (local_schema->locale, -1);
+
+      if (fprintf (f, " locale=\"%s\"", s) < 0)
+        {
+          g_free (s);
+          return FALSE;
+        }
+      
+      g_free (s);
+
+      if (local_schema->short_desc)
+        {
+          s = g_markup_escape_text (local_schema->short_desc, -1);
+
+          if (fprintf (f, " short_desc=\"%s\"", s) < 0)
+            {
+              g_free (s);
+              return FALSE;
+            }
+          
+          g_free (s);
+        }
+
+      if (fputs (">\n", f) < 0)
+        return FALSE;
+
+      if (local_schema->default_value)
+        {
+          if (fputs (indent, f) < 0)
+            return FALSE;
+
+          if (fputs ("<default", f) < 0)
+            return FALSE;
+
+          if (!write_value_element (local_schema->default_value, NULL, f, indent))
+            return FALSE;      
+          
+          if (fprintf (f, "%s</default>", indent) < 0)
+            return FALSE;
+        }
+
+      if (local_schema->long_desc)
+        {
+          if (fputs (indent, f) < 0)
+            return FALSE;
+
+          if (fputs ("<longdesc>\n", f) < 0)
+            return FALSE;
+
+          s = g_markup_escape_text (local_schema->long_desc, -1);
+          
+          if (fputs (s, f) < 0)
+            {
+              g_free (s);
+              return FALSE;
+            }
+          
+          g_free (s);
+        }
+      
+      tmp = tmp->next;
+    }
+        
+  if (fputs (indent, f) < 0)
+    return FALSE;
+
+  if (fputs ("</local_schema>\n", f) < 0)
+    return FALSE;
+
+  return TRUE;
+}
+
+static gboolean
+write_entry (MarkupEntry *entry,
+             FILE        *f)
+{
+  if (fputs ("  <entry", f) < 0)
+    return FALSE;
+
+  g_assert (entry->name != NULL);
+  
+  if (fprintf (f, " name=\"%s\" mtime=\"%lu\"",
+               entry->name,
+               (unsigned long) entry->mod_time) < 0)
+    return FALSE;
+  
+  if (entry->schema_name)
+    {
+      if (fprintf (f, " schema=\"%s\"", entry->schema_name) < 0)
+        return FALSE;
+    }
+
+  if (entry->mod_user)
+    {
+      if (fprintf (f, " muser=\"%s\"", entry->mod_user) < 0)
+        return FALSE;
+    }
+
+  if (entry->value != NULL)
+    {
+      if (!write_value_element (entry->value, entry->local_schemas, f, "    "))
+        return FALSE;
+    }
+  else
+    {
+      if (fputs (">", f) < 0)
+        return FALSE;
+    }
+
+  if (fputs ("  </entry>\n", f) < 0)
+    return FALSE;
+  
+  return TRUE;
+}
+
+static gboolean
+save_entries (const char  *filename,
+              guint        file_mode,
+              GSList      *entries,
+              GError     **err)
+{
+  /* We save to a secondary file then copy over, to handle
+   * out-of-disk-space robustly
+   */
+  FILE *f;
+  int new_fd;
+  char *new_filename;
+  char *err_str;
+  gboolean write_failed;
+
+  write_failed = FALSE;
+  err_str = NULL;
+  new_fd = -1;
+  f = NULL;
+  
+  new_filename = g_strconcat (filename, ".new", NULL);
+  new_fd = open (new_filename, O_WRONLY | O_CREAT, file_mode);
+  if (new_fd < 0)
+    {
+      err_str = g_strdup_printf (_("Failed to open \"%s\": %s\n"),
+                                 new_filename, g_strerror (errno));
+      goto out;
+    }
+
+  /* Leave the file empty to avoid parsing it later
+   * if there are no entries in it.
+   */
+  if (entries == NULL)
+    goto done_writing;
+  
+  f = fdopen (new_fd, "w");
+  if (f == NULL)
+    {
+      err_str = g_strdup_printf (_("Failed to open \"%s\": %s\n"),
+                                 new_filename, g_strerror (errno));
+      goto out;
+    }
+
+  new_fd = -1; /* owned by the FILE* now */
+
+  write_failed = FALSE;
+
+  if (fputs ("<?xml version=\"1.0\"?>\n", f) < 0)
+    {
+      write_failed = TRUE;
+      goto done_writing;
+    }
+  
+  if (fputs ("<gconf>\n", f) < 0)
+    {
+      write_failed = TRUE;
+      goto done_writing;
+    }
+
+  {
+    GSList *tmp;
+    
+    tmp = entries;
+    while (tmp != NULL)
+      {
+        MarkupEntry *entry = tmp->data;
+        
+        if (!write_entry (entry, f))
+          {
+            write_failed = TRUE;
+            goto done_writing;
+          }
+        
+        tmp = tmp->next;
+      }
+  }
+
+  if (fputs ("</gconf>\n", f) < 0)
+    {
+      write_failed = TRUE;
+      goto done_writing;
+    }
+
+  if (fclose (f) < 0)
+    {
+      f = NULL; /* f is still freed even if fclose fails according to the
+                 * linux man page
+                 */
+      write_failed = TRUE;
+      goto done_writing;
+    }
+
+  f = NULL;
+  
+ done_writing:
+  
+  if (write_failed)
+    {
+      err_str = g_strdup_printf (_("Error writing file \"%s\": %s"),
+                                 new_filename, g_strerror (errno));
+      goto out;
+    }
+  
+  if (rename (new_filename, filename) < 0)
+    {
+      err_str = g_strdup_printf (_("Failed to move temporary file \"%s\" to final location \"%s\": %s"),                                 
+                                 new_filename, filename, g_strerror (errno));
+      goto out;
+    }
+  
+ out:
+  g_free (new_filename);
+  
+  if (err_str)
+    {
+      if (err)
+        *err = g_error_new_literal (GCONF_ERROR,
+                                    GCONF_ERROR_FAILED,
+                                    err_str);
+
+      g_free (err_str);
+    }
+  
+  if (new_fd >= 0)
+    close (new_fd);
+
+  if (f != NULL)
+    fclose (f);
+
+  return err_str == NULL;
 }
 
 /*

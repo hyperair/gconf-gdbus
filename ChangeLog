@@ -1,3 +1,28 @@
+2002-09-18  Havoc Pennington  <hp@pobox.com>
+
+        Merge gconf-markup-hacking branch
+	
+	* tests/testbackend.c: add a test for backends
+
+	* gconf/gconftool.c (extract_global_info): add more error
+	checking, adding more error strings
+
+	* gconf/gconf-schema.c (gconf_schema_validate): do some more
+	validation with error strings that couldn't be added to stable
+	branch
+
+	* backends/xml-dir.c: fix quoting in error string
+
+	* backends/xml-backend.c (resolve_address): fix quoting in error
+	string
+
+	* backends/markup-tree.c: make it work
+
+	* backends/markup-backend.c: make it work
+
+	* backends/Makefile.am (libgconfbackend_markup_la_SOURCES): add
+	markup-backend.c
+
 2002-09-18  Yanko Kaneti <yaneti@declera.com>
 
 	* gconf.m4.in: Introduce --disable-schemas-install and the 

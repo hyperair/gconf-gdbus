@@ -5,7 +5,7 @@ INCLUDES = -I$(top_srcdir) -I$(top_builddir) \
 	 $(DEPENDENT_CFLAGS) \
 	 -DG_LOG_DOMAIN=\"GConf-Tests\" -DGCONF_ENABLE_INTERNALS=1
 
-noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence testdirlist testaddress
+noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence testdirlist testaddress testbackend
 
 TESTLIBS= $(INTLLIBS) $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la  $(EFENCE)
 
@@ -45,6 +45,10 @@ testdirlist_LDADD = $(TESTLIBS)
 testaddress_SOURCES=testaddress.c
 
 testaddress_LDADD = $(TESTLIBS)
+
+testbackend_SOURCES=testbackend.c
+
+testbackend_LDADD = $(TESTLIBS)
 
 
 

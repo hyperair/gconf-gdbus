@@ -34,6 +34,8 @@
 #include <dirent.h>
 #include <limits.h>
 
+#include "markup-tree.h"
+
 /*
  * Overview
  * 
@@ -57,9 +59,10 @@
 typedef struct
 {
   GConfSource source; /* inherit from GConfSource */
-  char* root_dir;
+  char *root_dir;
   guint timeout_id;
   GConfLock* lock;
+  MarkupTree *tree;
   guint dir_mode;
   guint file_mode;
 } MarkupSource;
@@ -67,7 +70,8 @@ typedef struct
 static MarkupSource* ms_new     (const char   *root_dir,
                                  guint         dir_mode,
                                  guint         file_mode,
-                                 GConfLock    *lock);
+                                 GConfLock    *lock,
+                                 gboolean      read_only);
 static void          ms_destroy (MarkupSource *source);
 
 /*
@@ -150,22 +154,22 @@ static GConfBackendVTable markup_vtable = {
 };
 
 static void          
-x_shutdown (GError** err)
+x_shutdown (GError **err)
 {
   gconf_log (GCL_DEBUG, _("Unloading text markup backend module."));
 }
 
 static void
-lock (GConfSource* source,
-      GError** err)
+lock (GConfSource *source,
+      GError **err)
 {
   
 
 }
 
 static void
-unlock (GConfSource* source,
-        GError** err)
+unlock (GConfSource *source,
+        GError **err)
 {
 
 
@@ -189,13 +193,27 @@ writable (GConfSource  *source,
   return TRUE;
 }
 
+guint
+_gconf_mode_t_to_mode(mode_t orig)
+{
+  /* I don't think this is portable. */
+  guint mode = 0;
+  guint fullmask = S_IRWXG | S_IRWXU | S_IRWXO;  
+
+  mode = orig & fullmask;
+  
+  g_return_val_if_fail (mode <= 0777, 0700);
+
+  return mode;
+}
+
 static GConfSource*  
 resolve_address (const char *address,
                  GError    **err)
 {
   char* root_dir;
   MarkupSource* xsource;
-  GConfSource* source;
+  GConfSource *source;
   guint len;
   gint flags = 0;
   GConfLock* lock = NULL;
@@ -205,39 +223,39 @@ resolve_address (const char *address,
   char** iter;
   gboolean force_readonly;
   
-  root_dir = gconf_address_resource(address);
+  root_dir = gconf_address_resource (address);
 
   if (root_dir == NULL)
     {
-      gconf_set_error(err, GCONF_ERROR_BAD_ADDRESS, _("Couldn't find the XML root directory in the address `%s'"), address);
+      gconf_set_error (err, GCONF_ERROR_BAD_ADDRESS, _("Couldn't find the root directory in the address \"%s\""), address);
       return NULL;
     }
 
   /* Chop trailing '/' to canonicalize */
-  len = strlen(root_dir);
+  len = strlen (root_dir);
 
   if (root_dir[len-1] == '/')
     root_dir[len-1] = '\0';
 
-  if (mkdir(root_dir, dir_mode) < 0)
+  if (mkdir (root_dir, dir_mode) < 0)
     {
       if (errno != EEXIST)
         {
-          gconf_set_error(err, GCONF_ERROR_FAILED,
-                          _("Could not make directory `%s': %s"),
-                          (char*)root_dir, strerror(errno));
-          g_free(root_dir);
+          gconf_set_error (err, GCONF_ERROR_FAILED,
+                           _("Could not make directory `%s': %s"),
+                           root_dir, g_strerror (errno));
+          g_free (root_dir);
           return NULL;
         }
       else
         {
           /* Already exists, base our dir_mode on it */
           struct stat statbuf;
-          if (stat(root_dir, &statbuf) == 0)
+          if (stat (root_dir, &statbuf) == 0)
             {
               dir_mode = _gconf_mode_t_to_mode (statbuf.st_mode);
               /* dir_mode without search bits */
-              file_mode = dir_mode & (~0111); 
+              file_mode = dir_mode & (~0111);
             }
         }
     }
@@ -272,43 +290,44 @@ resolve_address (const char *address,
     
     if (!force_readonly)
       {
-        testfile = g_strconcat(root_dir, "/.testing.writeability", NULL);    
+        testfile = g_strconcat (root_dir, "/.testing.writeability", NULL);    
         
-        fd = open(testfile, O_CREAT|O_WRONLY, S_IRWXU);
+        fd = open (testfile, O_CREAT|O_WRONLY, S_IRWXU);
         
         if (fd >= 0)
           {
             writable = TRUE;
-            close(fd);
+            close (fd);
           }
         
-        unlink(testfile);
+        unlink (testfile);
         
-        g_free(testfile);
+        g_free (testfile);
       }
     
     if (writable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
 
     /* We only do locking if it's writable,
-       which is sort of broken but close enough
-    */
+     * which is sort of broken but close enough
+     */
     if (writable)
       {
         char* lockdir;
 
-        lockdir = gconf_concat_dir_and_key(root_dir, "%gconf-xml-backend.lock");
+        /* use same lockfile name as XML backend, for safety */
+        lockdir = gconf_concat_dir_and_key (root_dir, "%gconf-xml-backend.lock");
         
-        lock = gconf_get_lock(lockdir, err);
+        lock = gconf_get_lock (lockdir, err);
 
         if (lock != NULL)
-          gconf_log(GCL_DEBUG, "Acquired lock directory `%s'", lockdir);
+          gconf_log (GCL_DEBUG, "Acquired lock directory `%s'", lockdir);
         
-        g_free(lockdir);
+        g_free (lockdir);
         
         if (lock == NULL)
           {
-            g_free(root_dir);
+            g_free (root_dir);
             return NULL;
           }
       }
@@ -319,12 +338,12 @@ resolve_address (const char *address,
     gboolean readable = FALSE;
     DIR* d;
 
-    d = opendir(root_dir);
+    d = opendir (root_dir);
 
     if (d != NULL)
       {
         readable = TRUE;
-        closedir(d);
+        closedir (d);
       }
     
     if (readable)
@@ -334,26 +353,82 @@ resolve_address (const char *address,
   if (!(flags & GCONF_SOURCE_ALL_READABLE) &&
       !(flags & GCONF_SOURCE_ALL_WRITEABLE))
     {
-      gconf_set_error(err, GCONF_ERROR_BAD_ADDRESS, _("Can't read from or write to the XML root directory in the address `%s'"), address);
-      g_free(root_dir);
+      gconf_set_error (err, GCONF_ERROR_BAD_ADDRESS,
+                       _("Can't read from or write to the XML root directory in the address \"%s\""),
+                       address);
+      g_free (root_dir);
       return NULL;
-    }  
+    }
   
   /* Create the new source */
 
-  xsource = ms_new(root_dir, dir_mode, file_mode, lock);
+  xsource = ms_new (root_dir, dir_mode, file_mode, lock,
+                    (flags & GCONF_SOURCE_ALL_WRITEABLE) == 0);
 
-  gconf_log(GCL_DEBUG,
-            _("Directory/file permissions for XML source at root %s are: %o/%o"),
-            root_dir, dir_mode, file_mode);
+  gconf_log (GCL_DEBUG,
+             _("Directory/file permissions for XML source at root %s are: %o/%o"),
+             root_dir, dir_mode, file_mode);
   
   source = (GConfSource*)xsource;
 
   source->flags = flags;
   
-  g_free(root_dir);
+  g_free (root_dir);
   
   return source;
+}
+
+static MarkupEntry*
+tree_lookup_entry (MarkupTree *tree,
+                   const char *key,
+                   gboolean    create_if_not_found,
+                   GError    **err)
+{
+  char* parent;
+  MarkupDir *dir;
+  GError* error = NULL;
+
+  parent = gconf_key_directory (key);
+  
+  g_assert (parent != NULL);
+
+  if (create_if_not_found)
+    dir = markup_tree_ensure_dir (tree, parent, &error);
+  else
+    dir = markup_tree_lookup_dir (tree, parent, &error);
+
+  if (error != NULL)
+    {
+      g_propagate_error (err, error);
+      return NULL;
+    }
+  
+  g_free (parent);
+  parent = NULL;
+  
+  if (dir != NULL)
+    {
+      const char *relative_key;
+      MarkupEntry *entry;
+      
+      relative_key = gconf_key_key (key);
+
+      error = NULL;
+      if (create_if_not_found)
+        entry = markup_dir_ensure_entry (dir, relative_key, &error);
+      else
+        entry = markup_dir_lookup_entry (dir, relative_key, &error);
+      if (error != NULL)
+        {
+          g_propagate_error (err, error);
+          g_return_val_if_fail (entry == NULL, NULL);
+          return NULL;
+        }
+      
+      return entry;
+    }
+  else
+    return NULL;
 }
 
 static GConfValue* 
@@ -363,52 +438,35 @@ query_value (GConfSource *source,
              char       **schema_name,
              GError     **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
-  char* parent;
-  Dir* dir;
+  MarkupSource* ms = (MarkupSource*)source;
   GError* error = NULL;
+  MarkupEntry *entry;
+  GConfValue *retval;
 
-  parent = gconf_key_directory(key);
+  retval = NULL;
   
-  g_assert(parent != NULL);
-  
-  dir = cache_lookup(xs->cache, parent, FALSE, &error);
-
-  /* We DO NOT want to return an error unless it represents a general
-     problem with the backend; since we don't want to report stuff
-     like "this key doesn't exist yet" - however this is a maintenance
-     problem, since some errors may be added that need reporting. */
+  error = NULL;
+  entry = tree_lookup_entry (ms->tree, key, FALSE, &error);
   if (error != NULL)
     {
-      gconf_log(GCL_WARNING, "%s", error->message);
-      g_error_free(error);
-      error = NULL;
+      g_propagate_error (err, error);
+      return NULL;
     }
-  
-  g_free(parent);
-  parent = NULL;
-  
-  if (dir != NULL)
+      
+  if (entry != NULL)
     {
-      const char* relative_key;
-      GConfValue* retval;
-      
-      relative_key = gconf_key_key(key);
-
-      retval = dir_get_value(dir, relative_key, locales, schema_name, &error);
-
-      /* perhaps we should be reporting this error... */
-      if (error != NULL)
-        {
-          gconf_log(GCL_WARNING, "%s", error->message);
-          g_error_free(error);
-          error = NULL;
-        }
-      
-      return retval;
+      retval = markup_entry_get_value (entry, locales);
+      if (schema_name)
+        *schema_name = g_strdup (markup_entry_get_schema_name (entry));
     }
   else
-    return NULL;
+    {
+      retval = NULL;
+      if (schema_name)
+        *schema_name = NULL;
+    }
+  
+  return retval;
 }
 
 static GConfMetaInfo*
@@ -416,163 +474,234 @@ query_metainfo (GConfSource *source,
                 const char  *key,
                 GError     **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
-  char* parent;
-  Dir* dir;
+  MarkupSource* ms = (MarkupSource*)source;
+  GError* error = NULL;
+  MarkupEntry *entry;
 
-  parent = gconf_key_directory(key);
-
-  if (parent != NULL)
+  error = NULL;
+  entry = tree_lookup_entry (ms->tree, key, FALSE, &error);
+  if (error != NULL)
     {
-      dir = cache_lookup(xs->cache, parent, FALSE, err);
-      g_free(parent);
-      parent = NULL;
-      
-      if (dir != NULL)
-        {
-          const char* relative_key;
-      
-          relative_key = gconf_key_key (key);
-
-          return dir_get_metainfo (dir, relative_key, err);
-        }
+      g_propagate_error (err, error);
+      return NULL;
     }
+      
+  if (entry != NULL)
+    {
+      GConfMetaInfo* gcmi;
+      const char *schema_name;
+      GTime mtime;
+      const char *mod_user;
+      
+      gcmi = gconf_meta_info_new ();
 
-  /* No metainfo found */
-  return NULL;
+      schema_name = markup_entry_get_schema_name (entry);
+      mtime = markup_entry_get_mod_time (entry);
+      mod_user = markup_entry_get_mod_user (entry);
+      
+      if (schema_name)
+        gconf_meta_info_set_schema (gcmi, schema_name);
+      
+      gconf_meta_info_set_mod_time (gcmi, mtime);
+      
+      if (mod_user)
+        gconf_meta_info_set_mod_user (gcmi, mod_user);
+
+      return gcmi;
+    }
+  else
+    {
+      return NULL;
+    }
 }
 
 static void          
-set_value (GConfSource* source, const char* key, const GConfValue* value,
-           GError** err)
+set_value (GConfSource      *source,
+           const char       *key,
+           const GConfValue *value,
+           GError          **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
-  Dir* dir;
-  char* parent;
+  MarkupSource* ms = (MarkupSource*)source;
+  MarkupEntry *entry;
+  GError *tmp_err;
   
-  g_return_if_fail(value != NULL);
-  g_return_if_fail(source != NULL);
-  
-  parent = gconf_key_directory(key);
-  
-  g_assert(parent != NULL);
-  
-  dir = cache_lookup(xs->cache, parent, TRUE, err);
-  
-  g_free(parent);
-  parent = NULL;
+  g_return_if_fail (value != NULL);
+  g_return_if_fail (source != NULL);
 
-  if (dir == NULL)
+  tmp_err = NULL;
+  entry = tree_lookup_entry (ms->tree,
+                             key, TRUE, &tmp_err);
+  if (tmp_err != NULL)
     {
-      g_return_if_fail((err == NULL || *err != NULL));
+      g_propagate_error (err, tmp_err);
       return;
     }
-  else
-    {
-      const char* relative_key;
-      
-      relative_key = gconf_key_key(key);
-      
-      dir_set_value(dir, relative_key, value, err);
-    }
+
+  g_return_if_fail (entry != NULL);
+
+  markup_entry_set_value (entry, value);
 }
 
+static GConfEntry*
+gconf_entry_from_markup_entry (MarkupEntry *entry,
+                               const char **locales)
+{
+  GConfValue *value;
+  const char *schema_name;
+  GConfEntry *gconf_entry;
+
+  value = markup_entry_get_value (entry, locales);
+  schema_name = markup_entry_get_schema_name (entry);
+
+  /* Entries here are created with relative names, not the usual
+   * full paths, for efficiency. Kind of lame though.
+   */
+  gconf_entry = gconf_entry_new_nocopy (g_strdup (markup_entry_get_name (entry)),
+                                        value);
+  gconf_entry_set_schema_name (gconf_entry, schema_name);
+
+  return gconf_entry;
+}
 
 static GSList*             
-all_entries    (GConfSource* source,
-                const char* key,
-                const char** locales,
-                GError** err)
+all_entries (GConfSource *source,
+             const char  *key,
+             const char **locales,
+             GError     **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
-  Dir* dir;
+  MarkupSource *ms = (MarkupSource*)source;
+  MarkupDir *dir;
+  GError* error;
+  GSList *retval;
+  GSList *tmp;
+  
+  retval = NULL;
 
-  dir = cache_lookup(xs->cache, key, FALSE, err);
+  error = NULL;
+  dir = markup_tree_lookup_dir (ms->tree, key, &error);
+  if (error != NULL)
+    {
+      g_propagate_error (err, error);
+      return NULL;
+    }
   
   if (dir == NULL)
     return NULL;
-  else
-    return dir_all_entries(dir, locales, err);
+
+  error = NULL;
+  tmp = markup_dir_list_entries (dir, &error);
+  if (error != NULL)
+    {
+      g_propagate_error (err, error);
+      return NULL;
+    }
+
+  while (tmp != NULL)
+    {
+      retval = g_slist_prepend (retval,
+                                gconf_entry_from_markup_entry (tmp->data,
+                                                               locales));
+      
+      tmp = tmp->next;
+    }
+
+  return retval;
 }
 
 static GSList*
-all_subdirs     (GConfSource* source,
-                 const char* key,
-                 GError** err)
+all_subdirs (GConfSource *source,
+             const char  *key,
+             GError     **err)
 {
-  Dir* dir;
-  MarkupSource* xs = (MarkupSource*)source;
-  GError *sync_err;
+  MarkupSource *ms = (MarkupSource*)source;
+  MarkupDir *dir;
+  GError* error;
+  GSList *retval;
+  GSList *tmp;
   
-  /* We have to sync before we can do this, to see which
-   * subdirs have gone away.
-   */
-  sync_err = NULL;
-  cache_sync (xs->cache, &sync_err);
-  if (sync_err)
+  retval = NULL;
+
+  error = NULL;
+  dir = markup_tree_lookup_dir (ms->tree, key, &error);
+  if (error != NULL)
     {
-      gconf_log (GCL_WARNING, _("Error syncing the XML backend directory cache: %s"),
-                 sync_err->message);
-      g_error_free (sync_err);
-      sync_err = NULL;
-      /* continue, may as well try our best. */
+      g_propagate_error (err, error);
+      return NULL;
     }
-  
-  dir = cache_lookup (xs->cache, key, FALSE, err);
   
   if (dir == NULL)
     return NULL;
-  else
-    return dir_all_subdirs (dir, err);
+
+  error = NULL;
+  tmp = markup_dir_list_subdirs (dir, &error);
+  if (error != NULL)
+    {
+      g_propagate_error (err, error);
+      return NULL;
+    }
+
+  while (tmp != NULL)
+    {
+      retval = g_slist_prepend (retval,
+                                g_strdup (markup_dir_get_name (tmp->data)));
+      
+      tmp = tmp->next;
+    }
+
+  return retval;
 }
 
 static void          
-unset_value     (GConfSource* source,
-                 const char* key,
-                 const char* locale,
-                 GError** err)
+unset_value (GConfSource *source,
+             const char  *key,
+             const char  *locale,
+             GError     **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
-  Dir* dir;
-  char* parent;
+  MarkupSource* ms = (MarkupSource*)source;
+  MarkupEntry *entry;
+  GError *tmp_err;
+  
+  g_return_if_fail (key != NULL);
+  g_return_if_fail (source != NULL);
 
-  gconf_log(GCL_DEBUG, "XML backend: unset value `%s'", key);
-  
-  parent = gconf_key_directory(key);
-  
-  dir = cache_lookup(xs->cache, parent, FALSE, err);
-
-  g_free(parent);
-  
-  if (dir == NULL)
-    return;
-  else
+  tmp_err = NULL;
+  entry = tree_lookup_entry (ms->tree,
+                             key, TRUE, &tmp_err);
+  if (tmp_err != NULL)
     {
-      const char* relative_key;
-  
-      relative_key = gconf_key_key(key);
-
-      dir_unset_value(dir, relative_key, locale, err);
+      g_propagate_error (err, tmp_err);
+      return;
     }
+
+  g_return_if_fail (entry != NULL);
+
+  markup_entry_unset_value (entry, locale);
 }
 
 static gboolean
-dir_exists      (GConfSource*source,
-                 const char* key,
-                 GError** err)
+dir_exists (GConfSource *source,
+            const char  *key,
+            GError     **err)
 {
-  MarkupSource *xs = (MarkupSource*)source;
-  Dir* dir;
-  
-  dir = cache_lookup(xs->cache, key, FALSE, err);
-  
-  return (dir != NULL);
+  MarkupSource *ms = (MarkupSource*)source;
+  MarkupDir *dir;
+  GError* error;
+
+  error = NULL;
+  dir = markup_tree_lookup_dir (ms->tree, key, &error);
+  if (error != NULL)
+    {
+      g_propagate_error (err, error);
+      return FALSE;
+    }
+
+  return dir != NULL;
 }  
 
 static void          
-remove_dir      (GConfSource* source,
-                 const char* key,
-                 GError** err)
+remove_dir (GConfSource *source,
+            const char  *key,
+            GError     **err)
 {
   g_set_error (err, GCONF_ERROR,
                GCONF_ERROR_FAILED,
@@ -581,61 +710,65 @@ remove_dir      (GConfSource* source,
 
 static void          
 set_schema (GConfSource *source,
-            const char *key,
-            const char *schema_key,
+            const char  *key,
+            const char  *schema_name,
             GError     **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
-
-  Dir* dir;
-  char* parent;
-
-  g_return_if_fail (source != NULL);
+  MarkupSource* ms = (MarkupSource*)source;
+  MarkupEntry *entry;
+  GError *tmp_err;
+  
   g_return_if_fail (key != NULL);
-
-  parent = gconf_key_directory (key);
+  g_return_if_fail (source != NULL);
+  /* schema_name can be NULL to unset */
   
-  g_assert (parent != NULL);
-  
-  dir = cache_lookup (xs->cache, parent, TRUE, err);
-  
-  g_free (parent);
-  parent = NULL;
-
-  if (dir == NULL)
-    return; /* error should be set */
-  else
+  tmp_err = NULL;
+  entry = tree_lookup_entry (ms->tree,
+                             key, TRUE, &tmp_err);
+  if (tmp_err != NULL)
     {
-      const char* relative_key;
-      
-      relative_key = gconf_key_key (key);
-      
-      dir_set_schema (dir, relative_key, schema_key, err);
+      g_propagate_error (err, tmp_err);
+      return;
     }
+
+  g_return_if_fail (entry != NULL);
+
+  markup_entry_set_schema_name (entry, schema_name);
 }
 
 static gboolean      
-sync_all        (GConfSource* source,
-                 GError** err)
+sync_all (GConfSource *source,
+          GError     **err)
 {
-  MarkupSource* xs = (MarkupSource*)source;
+  MarkupSource* ms = (MarkupSource*)source;
 
-  return cache_sync (xs->cache, err);
+  return markup_tree_sync (ms->tree, err);
 }
 
 static void          
-destroy_source  (GConfSource* source)
+destroy_source (GConfSource *source)
 {
-  ms_destroy((MarkupSource*)source);
+  ms_destroy ((MarkupSource*)source);
 }
 
 static void
-clear_cache     (GConfSource* source)
+clear_cache (GConfSource *source)
 {
-  MarkupSource* xs = (MarkupSource*)source;
+  MarkupSource* ms = (MarkupSource*)source;
 
-  /* clean all entries older than 0 seconds */
-  cache_clean(xs->cache, 0);
+  /* To blow the entire cache we just rebuild the tree */
+  if (!markup_tree_sync (ms->tree, NULL))
+    {
+      /* not translated since cache clearing is debug-only */
+      gconf_log (GCL_WARNING, "Could not sync data in order to drop cache");
+      return;
+    }
+  
+  markup_tree_free (ms->tree);
+  
+  ms->tree = markup_tree_new (ms->root_dir,
+                              ms->dir_mode, ms->file_mode,
+                              (ms->source.flags & GCONF_SOURCE_ALL_WRITEABLE) == 0);
 }
 
 /* Initializer */
@@ -660,68 +793,79 @@ gconf_backend_get_vtable (void)
  *  MarkupSource
  */ 
 
-/* This timeout periodically cleans up
-   the old cruft in the cache */
+/* This timeout periodically unloads
+ * data that hasn't been used in a while.
+ */
 static gboolean
-cleanup_timeout(gpointer data)
+cleanup_timeout (void  *data)
 {
-  MarkupSource* xs = (MarkupSource*)data;
+  MarkupSource* ms = (MarkupSource*)data;
 
+#if 0
   cache_clean(xs->cache, 60*5 /* 5 minutes */);
-
+#endif
+  
   return TRUE;
 }
 
 static MarkupSource*
-ms_new       (const char* root_dir, guint dir_mode, guint file_mode, GConfLock* lock)
+ms_new (const char* root_dir,
+        guint       dir_mode,
+        guint       file_mode,
+        GConfLock  *lock,
+        gboolean    read_only)
 {
-  MarkupSource* xs;
+  MarkupSource* ms;
 
   g_return_val_if_fail(root_dir != NULL, NULL);
 
-  xs = g_new0(MarkupSource, 1);
+  ms = g_new0(MarkupSource, 1);
 
-  xs->root_dir = g_strdup(root_dir);
+  ms->timeout_id = g_timeout_add (1000*60*5, /* 1 sec * 60 s/min * 5 min */
+                                  cleanup_timeout,
+                                  ms);
 
-  xs->cache = cache_new(xs->root_dir, dir_mode, file_mode);
-
-  xs->timeout_id = g_timeout_add(1000*60*5, /* 1 sec * 60 s/min * 5 min */
-                                 cleanup_timeout,
-                                 xs);
-
-  xs->lock = lock;
-
-  xs->dir_mode = dir_mode;
-  xs->file_mode = file_mode;
+  ms->root_dir = g_strdup (root_dir);
   
-  return xs;
+  ms->lock = lock;
+
+  ms->dir_mode = dir_mode;
+  ms->file_mode = file_mode;
+  
+  ms->tree = markup_tree_new (ms->root_dir,
+                              ms->dir_mode, ms->file_mode,
+                              read_only);
+  
+  return ms;
 }
 
 static void
-ms_destroy   (MarkupSource* xs)
+ms_destroy (MarkupSource* ms)
 {
   GError* error = NULL;
   
-  g_return_if_fail(xs != NULL);
+  g_return_if_fail (ms != NULL);
 
   /* do this first in case we're in a "fast cleanup just before exit"
-     situation */
-  if (xs->lock != NULL && !gconf_release_lock(xs->lock, &error))
+   * situation
+   */
+  if (ms->lock != NULL && !gconf_release_lock (ms->lock, &error))
     {
-      gconf_log(GCL_ERR, _("Failed to give up lock on XML dir `%s': %s"),
-                xs->root_dir, error->message);
+      gconf_log (GCL_ERR, _("Failed to give up lock on XML dir \"%s\": %s"),
+                 ms->root_dir, error->message);
       g_error_free(error);
       error = NULL;
     }
   
-  if (!g_source_remove(xs->timeout_id))
+  if (!g_source_remove (ms->timeout_id))
     {
       /* should not happen, don't translate */
-      gconf_log(GCL_ERR, "timeout not found to remove?");
+      gconf_log (GCL_ERR, "timeout not found to remove?");
     }
-  
-  cache_destroy(xs->cache);
-  g_free(xs->root_dir);
-  g_free(xs);
+
+  markup_tree_free (ms->tree);
+
+  g_free (ms->root_dir);
+  g_free (ms);
 }
 

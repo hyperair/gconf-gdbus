@@ -246,6 +246,25 @@ gconf_schema_validate (const GConfSchema *sc,
       return FALSE;
     }
 
+  if (real->type == GCONF_VALUE_LIST &&
+      real->list_type == GCONF_VALUE_INVALID)
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Schema specifies type list but doesn't specify the type of the list elements"));
+      return FALSE;
+    }
+  
+  if (real->type == GCONF_VALUE_PAIR &&
+      (real->car_type == GCONF_VALUE_INVALID ||
+       real->cdr_type == GCONF_VALUE_INVALID))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Schema specifies type pair but doesn't specify the type of the car/cdr elements"));
+      return FALSE;
+    }
+  
   return TRUE;
 }
 
