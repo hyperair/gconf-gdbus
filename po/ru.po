@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2001-09-14 12:44-0400\n"
-"PO-Revision-Date: 2001-02-15 14:53+03:00\n"
+"POT-Creation-Date: 2001-09-28 17:22+0400\n"
+"PO-Revision-Date: 2001-09-28 17:27+0400\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -176,9 +176,9 @@ msgid "Ignoring schema name `%s', invalid: %s"
 msgstr "Игнорируется имя schema \"%s\", недопустимо: %s"
 
 #: backends/xml-entry.c:376
-#, fuzzy, c-format
+#, c-format
 msgid "Ignoring XML node `%s': %s"
-msgstr "Игнорирование XML-узла с названием \"%s\": %s"
+msgstr "Игнорирование XML-узла \"%s\": %s"
 
 #: backends/xml-entry.c:727
 #, c-format
@@ -521,9 +521,9 @@ msgid "CORBA error: %s"
 msgstr "Ошибка CORBA: %s"
 
 #: gconf/gconf-internals.c:2148
-#, fuzzy, c-format
+#, c-format
 msgid "bonobo-activation problem description: '%s'"
-msgstr "Описание проблемы OAF: \"%s\""
+msgstr "Описание проблемы bonobo-activation: \"%s\""
 
 #: gconf/gconf-internals.c:2154
 msgid "attempt to remove not-listed OAF object directory"
@@ -744,7 +744,7 @@ msgid "Can't add notifications to a local configuration source"
 msgstr "Невозможно добавить замечание к локальному источнику конфигурации"
 
 #: gconf/gconf.c:1870
-#, fuzzy, c-format
+#, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Сбой добавления клиента к списку серверов, ошибка CORBA: %s"
 
@@ -896,22 +896,19 @@ msgid "starting (version %s), pid %u user '%s'"
 msgstr "запуск (версия %s), pid %u пользователь \"%s\""
 
 #: gconf/gconfd.c:546
-#, fuzzy
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to bonobo-"
 "activation maintainers"
-msgstr ""
-"Не удалось инициализировать Object Activation Framework: пожалуйста, "
-"отправьте сообщение об ошибке разработчикам OAF"
+msgstr "Не удалось инициализировать Object Activation Framework: пожалуйста, отправьте сообщение об ошибке разработчикам bonobo-activation"
 
 #: gconf/gconfd.c:566
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Не удалось получить ссылку на объект для ConfigServer"
 
 #: gconf/gconfd.c:579
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create %s: %s"
-msgstr "Не удалось создать файл \"%s\": %s"
+msgstr "Не удалось создать %s: %s"
 
 #. Bad hack alert - register the current lockholder with bonobo-activation-server,
 #. * since bonobo-activation-server seems to have forgotten about us.
@@ -941,9 +938,8 @@ msgid ""
 msgstr "Другой gconfd уже зарегистрирован с OAF; выход\n"
 
 #: gconf/gconfd.c:618
-#, fuzzy
 msgid "Unknown error registering existing gconfd with OAF; exiting"
-msgstr "Неизвестная ошибка при регистрации gconfd c OAF; выход\n"
+msgstr "Неизвестная ошибка при регистрации существующего gconfd c OAF; выход"
 
 #: gconf/gconfd.c:645
 msgid ""
@@ -1477,14 +1473,14 @@ msgid "Error: %s\n"
 msgstr "Ошибка: %s\n"
 
 #: gconf/gconftool.c:1193
-#, fuzzy, c-format
+#, c-format
 msgid "Error setting value: %s\n"
-msgstr "Ошибка установки значения: %s"
+msgstr "Ошибка установки значения: %s\n"
 
 #: gconf/gconftool.c:1211
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing: %s\n"
-msgstr "Ошибка синхронизации: %s"
+msgstr "Ошибка синхронизации: %s\n"
 
 #: gconf/gconftool.c:1234
 #, fuzzy
@@ -1778,48 +1774,3 @@ msgstr "Предупреждение GConf: Ошибка перечисления пар в \"%s\": %s"
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Ожидалось \"%s\" получено \"%s\" для ключа %s"
-
-#~ msgid "Ignoring XML node `%s', except for possible schema name: %s"
-#~ msgstr "Игнорирование XML-узла \"%s\", исключая возможные имена schema: %s"
-
-#, fuzzy
-#~ msgid "Failed to open file '%s': %s"
-#~ msgstr "Не удалось закрыть файл '%s': %s"
-
-#, fuzzy
-#~ msgid "Error reading file '%s': %s"
-#~ msgstr "Ошибка удаления каталога \"%s\": %s"
-
-#~ msgid ""
-#~ "Error contacting configuration server: OAF returned nil from "
-#~ "oaf_activate_from_id() and did not set an exception explaining the "
-#~ "problem. Please file an OAF bug report."
-#~ msgstr ""
-#~ "Ошибка подключения к серверу настроек: OAF вернул nil с "
-#~ "oaf_activate_from_id() и не установил исключения объясняющего проблему. "
-#~ "Пожалуйста, отправьте сообщение об ошибке OAF."
-
-#, fuzzy
-#~ msgid "Received signal %d, shutting down."
-#~ msgstr "Получен сигнал %d, чистое выключение."
-
-#~ msgid "GConf was built with debugging features enabled"
-#~ msgstr "GConf был собран с включенной поддержкой отладки"
-
-#, fuzzy
-#~ msgid "Didn't understand line in saved state file: '%s'"
-#~ msgstr "Не удалось открыть сохраненный файл состояния: %s"
-
-#, fuzzy
-#~ msgid "Failed to parse connection ID in saved state file"
-#~ msgstr "Не удалось открыть сохраненный файл состояния: %s"
-
-#, fuzzy
-#~ msgid "Failed to unquote config source address from saved state file: %s"
-#~ msgstr "Не удалось открыть сохраненный файл состояния: %s"
-
-#~ msgid "Can't use --all-pairs with --get or --set\n"
-#~ msgstr "Невозможно использовать --all-pairs вместе с --get или --set\n"
-
-#~ msgid "Unable to store a value at key '%s'"
-#~ msgstr "Не удалось сохранить значение по ключу \"%s\""
