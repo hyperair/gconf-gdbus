@@ -1586,6 +1586,10 @@ entry_sync    (Entry* e)
 
   if (!e->dirty)
     return;
+
+  /* Unset all properties, so we don't have old cruft. */
+  xmlFreePropList(e->node->properties);
+  e->node->properties = NULL;
   
   xmlSetProp(e->node, "name", e->name);
 
@@ -1763,6 +1767,27 @@ xentry_extract_value(xmlNodePtr node)
         xmlNodePtr iter;
         GSList* bad_nodes = NULL;
         GSList* values = NULL;
+        GConfValueType list_type = G_CONF_VALUE_INVALID;
+
+        {
+          gchar* s;
+          s = xmlGetProp(node, "ltype");
+          if (s != NULL)
+            {
+              list_type = g_conf_value_type_from_string(s);
+              free(s);
+            }
+        }
+
+        switch (list_type)
+          {
+          case G_CONF_VALUE_INVALID:
+          case G_CONF_VALUE_LIST:
+          case G_CONF_VALUE_PAIR:
+            return NULL;
+          default:
+            break;
+          }
         
         iter = node->childs;
 
@@ -1777,8 +1802,7 @@ xentry_extract_value(xmlNodePtr node)
                     v = xentry_extract_value(iter);
                     if (v == NULL)
                       bad_nodes = g_slist_prepend(bad_nodes, iter);
-                    else if (v->type == G_CONF_VALUE_LIST ||
-                             v->type == G_CONF_VALUE_PAIR)
+                    else if (v->type != list_type)
                       {
                         g_conf_value_destroy(v);
                         v = NULL;
@@ -1818,6 +1842,7 @@ xentry_extract_value(xmlNodePtr node)
 
         value = g_conf_value_new(G_CONF_VALUE_LIST);
 
+        g_conf_value_set_list_type(value, list_type);
         g_conf_value_set_list_nocopy(value, values);
 
         return value;
@@ -1951,6 +1976,9 @@ xentry_set_value(xmlNodePtr node, GConfValue* value)
         node->childs = NULL;
         node->last = NULL;
 
+        xmlSetProp(node, "ltype",
+                   g_conf_value_type_to_string(g_conf_value_list_type(value)));
+        
         /* Add a new child for each node */
         list = g_conf_value_list(value);
 

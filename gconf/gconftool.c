@@ -41,7 +41,7 @@
 static int set_mode = FALSE;
 static int get_mode = FALSE;
 static int unset_mode = FALSE;
-static int all_pairs_mode = FALSE;
+static int all_entries_mode = FALSE;
 static int all_subdirs_mode = FALSE;
 static int recursive_list = FALSE;
 static int set_schema_mode = FALSE;
@@ -101,10 +101,10 @@ struct poptOption options[] = {
     NULL
   },
   { 
-    "all-pairs",
+    "all-entries",
     'a',
     POPT_ARG_NONE,
-    &all_pairs_mode,
+    &all_entries_mode,
     0,
     N_("Print all key/value pairs in a directory."),
     NULL
@@ -172,7 +172,7 @@ struct poptOption options[] = {
     0,
     N_("Specify a short half-line description to go in a schema."),
     N_("DESCRIPTION")
-  },  
+  },
   { 
     "long-desc",
     '\0',
@@ -247,9 +247,9 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if ((all_pairs_mode && get_mode) ||
-      (all_pairs_mode && set_mode) ||
-      (all_pairs_mode && unset_mode))
+  if ((all_entries_mode && get_mode) ||
+      (all_entries_mode && set_mode) ||
+      (all_entries_mode && unset_mode))
     {
       fprintf(stderr, _("Can't use --all-pairs with --get or --set\n"));
       return 1;
@@ -266,7 +266,7 @@ main (int argc, char** argv)
   if ((recursive_list && get_mode) ||
       (recursive_list && set_mode) ||
       (recursive_list && unset_mode) ||
-      (recursive_list && all_pairs_mode) ||
+      (recursive_list && all_entries_mode) ||
       (recursive_list && all_subdirs_mode))
     {
       fprintf(stderr, _("--recursive-list should not be used with --get, --set, --unset, --all-pairs, or --all-dirs\n"));
@@ -276,7 +276,7 @@ main (int argc, char** argv)
   if ((set_schema_mode && get_mode) ||
       (set_schema_mode && set_mode) ||
       (set_schema_mode && unset_mode) ||
-      (set_schema_mode && all_pairs_mode) ||
+      (set_schema_mode && all_entries_mode) ||
       (set_schema_mode && all_subdirs_mode))
     {
       fprintf(stderr, _("--set_schema should not be used with --get, --set, --unset, --all-pairs, --all-dirs\n"));
@@ -296,7 +296,7 @@ main (int argc, char** argv)
     }
 
   if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
-                      all_subdirs_mode || all_pairs_mode || recursive_list || 
+                      all_subdirs_mode || all_entries_mode || recursive_list || 
                       spawn_gconfd))
     {
       fprintf(stderr, _("Ping option must be used by itself.\n"));
@@ -586,7 +586,7 @@ main (int argc, char** argv)
         }
     }
 
-  if (all_pairs_mode)
+  if (all_entries_mode)
     {
       gchar** args = poptGetArgs(ctx);
 

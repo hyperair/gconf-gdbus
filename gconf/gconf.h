@@ -92,6 +92,12 @@ struct _GConfValue {
 GConfValue* g_conf_value_new(GConfValueType type);
 /* doesn't work on complicated types (only string, int, bool, float) */
 GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
+/* for the complicated types */
+GConfValue* g_conf_value_new_list_from_string(GConfValueType list_type,
+                                              const gchar* str);
+GConfValue* g_conf_value_new_pair_from_string(GConfValueType car_type,
+                                              GConfValueType cdr_type,
+                                              const gchar* str);
 GConfValue* g_conf_value_copy(GConfValue* src);
 void        g_conf_value_destroy(GConfValue* value);
 
