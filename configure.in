@@ -165,7 +165,6 @@ AC_SUBST(POPT_LIBS)
 AC_CHECK_HEADER(pthread.h, have_pthreads=yes)
 AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
 
-AC_CHECK_FUNCS(nanosleep)
 AC_CHECK_FUNCS(usleep)
 
 AC_CHECK_FUNCS(flockfile)

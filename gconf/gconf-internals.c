@@ -2180,31 +2180,6 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err)
     }
 }
 
-/* Sleep */
-
-#ifdef HAVE_NANOSLEEP
-
-void
-gconf_nanosleep(gulong useconds)
-{
-  struct timespec ts={tv_sec: (long int)(useconds/1000000),
-                      tv_nsec: (long int)(useconds%1000000)*1000ul};
-  
-  nanosleep(&ts,NULL);
-}
-
-#elif HAVE_USLEEP
-
-void
-gconf_nanosleep(gulong useconds)
-{
-  usleep(useconds);
-}
-
-#else
-#error "need nanosleep or usleep right now (fix with simple select() hack)"
-#endif
-
 /*
  * Locks using directories, to work on NFS (at least potentially)
  */
