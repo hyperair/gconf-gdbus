@@ -965,9 +965,10 @@ gulong
 gconf_string_to_gulong(const gchar* str)
 {
   gulong retval;
+  gchar *end;
   errno = 0;
-  retval = strtoul(str, NULL, 10);
-  if (errno != 0)
+  retval = strtoul(str, &end, 10);
+  if (end == str || errno != 0)
     retval = 0;
 
   return retval;

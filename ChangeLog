@@ -1,5 +1,13 @@
 2000-11-05  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconfd.c (parse_listener_entry): fix strtoul error
+	checking
+
+	* gconf/gconf-internals.c (gconf_string_to_gulong): Fix error
+	checking on strtoul
+
+2000-11-05  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-glib.c (g_propagate_error): Sync from GLib,
 	should fix one very minor memory leak in GConf
 

@@ -1254,7 +1254,7 @@ parse_listener_entry (GHashTable *entries,
   errno = 0;
   end = NULL;
   connection_id = strtoul (p, &end, 10);
-  if (errno != 0)
+  if (end == p || errno != 0)
     {
       gconf_log (GCL_DEBUG,
                  "Failed to parse connection ID in saved state file");
