@@ -139,6 +139,7 @@ static void gconf_client_queue_notify       (GConfClient *client,
                                              const char  *key);
 static void gconf_client_flush_notifies     (GConfClient *client);
 static void gconf_client_unqueue_notifies   (GConfClient *client);
+static void notify_one_entry (GConfClient *client, GConfEntry  *entry);
 
 static GConfEntry* get (GConfClient  *client,
                         const gchar  *key,
@@ -742,6 +743,22 @@ gconf_client_notify_remove  (GConfClient* client,
     {
       gconf_listeners_free(client->listeners);
       client->listeners = NULL;
+    }
+}
+
+void
+gconf_client_notify (GConfClient* client, const char* key)
+{
+  GConfEntry *entry;
+
+  g_return_if_fail (client != NULL);
+  g_return_if_fail (GCONF_IS_CLIENT(client));
+  g_return_if_fail (key != NULL);
+
+  entry = gconf_client_get_entry (client, key, NULL, TRUE, NULL);
+  if (entry != NULL)
+    {
+      notify_one_entry (client, entry);
     }
 }
 

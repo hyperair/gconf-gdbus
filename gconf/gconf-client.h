@@ -189,6 +189,7 @@ guint        gconf_client_notify_add(GConfClient* client,
 
 void         gconf_client_notify_remove  (GConfClient* client,
                                           guint cnxn);
+void         gconf_client_notify (GConfClient* client, const char* key);
 
 /*
  * Error handling convenience; if you don't want the default handler,
