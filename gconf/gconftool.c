@@ -59,7 +59,7 @@ struct poptOption options[] = {
     POPT_ARG_INCLUDE_TABLE, 
     poptHelpOptions,
     0, 
-    _("Help options"), 
+    N_("Help options"), 
     NULL 
   },
   {

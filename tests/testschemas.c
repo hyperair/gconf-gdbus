@@ -22,7 +22,6 @@
 #include <unistd.h>
 #include <math.h>
 #include <gconf/gconf-internals.h>
-#include <locale.h>
 
 static void
 check(gboolean condition, const gchar* fmt, ...)

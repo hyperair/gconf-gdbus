@@ -428,7 +428,8 @@ gconf_sources_query_value (GConfSources* sources,
       
       source = tmp->data;
 
-      if (source_is_writable (source, key, NULL)) /* ignore errors */
+      if (value_is_writable &&
+          source_is_writable (source, key, NULL)) /* ignore errors */
         *value_is_writable = TRUE;
       
       val = gconf_source_query_value(source, key, locales,

@@ -1250,7 +1250,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   if (keys->_length != values->_length)
     {
       g_warning("Received unmatched key/value sequences in %s",
-                __FUNCTION__);
+                G_GNUC_FUNCTION);
       return NULL;
     }
 

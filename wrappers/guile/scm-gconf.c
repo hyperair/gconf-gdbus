@@ -135,7 +135,7 @@ gconf_value_to_scm(GConfValue* val)
                        gconf_value_to_scm(gconf_value_get_cdr(val)));
       break;
     default:
-      g_warning("Unhandled type in %s", __FUNCTION__);
+      g_warning("Unhandled type in %s", G_GNUC_FUNCTION);
       break;
     }
 

@@ -535,7 +535,7 @@ g_markup_node_get_attributes (GMarkupNodeElement *node,
 
 #if 1
 #include <stdio.h>
-#define T(desc, byte) printf("%8d %35s   (%s)\n", byte, desc, __FUNCTION__)
+#define T(desc, byte) printf("%8d %35s   (%s)\n", byte, desc, G_GNUC_FUNCTION)
 #else
 #define T(desc, byte)
 #endif

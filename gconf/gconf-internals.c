@@ -179,7 +179,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
       type = GCONF_VALUE_PAIR;
       break;
     default:
-      gconf_log(GCL_DEBUG, "Invalid type in %s", __FUNCTION__);
+      gconf_log(GCL_DEBUG, "Invalid type in %s", G_GNUC_FUNCTION);
       return NULL;
     }
 
@@ -227,7 +227,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
           case BInvalidVal:
             break;
           default:
-            g_warning("Bizarre list type in %s", __FUNCTION__);
+            g_warning("Bizarre list type in %s", G_GNUC_FUNCTION);
             break;
           }
 
@@ -248,7 +248,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
                 if (val == NULL)
                   gconf_log(GCL_ERR, _("Couldn't interpret CORBA value for list element"));
                 else if (val->type != gconf_value_get_list_type(gval))
-                  gconf_log(GCL_ERR, _("Incorrect type for list element in %s"), __FUNCTION__);
+                  gconf_log(GCL_ERR, _("Incorrect type for list element in %s"), G_GNUC_FUNCTION);
                 else
                   list = g_slist_prepend(list, val);
                 
@@ -358,7 +358,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
             
           default:
             cv->_u.list_value.list_type = BInvalidVal;
-            gconf_log(GCL_DEBUG, "Invalid list type in %s", __FUNCTION__);
+            gconf_log(GCL_DEBUG, "Invalid list type in %s", G_GNUC_FUNCTION);
             break;
           }
         
@@ -397,7 +397,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
       break;
     default:
       cv->_d = InvalidVal;
-      gconf_log(GCL_DEBUG, "Unknown type in %s", __FUNCTION__);
+      gconf_log(GCL_DEBUG, "Unknown type in %s", G_GNUC_FUNCTION);
       break;
     }
 }
@@ -1829,7 +1829,7 @@ gconf_value_decode (const gchar* encoded)
         
         d = g_strtod(s, &endptr);
         if (endptr == s)
-          g_warning("Failure converting string to double in %s", __FUNCTION__);
+          g_warning("Failure converting string to double in %s", G_GNUC_FUNCTION);
         gconf_value_set_float(val, d);
       }
       break;
