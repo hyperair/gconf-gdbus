@@ -1,3 +1,18 @@
+2001-03-18  Martin Baulig  <baulig@suse.de>
+
+	We're now on the GNOME 2.0 platform.
+
+	* configure.in: Set MAJOR_VERSION to 2, use pkg-config to
+	check for stuff; GTK+ is now optional and only used for
+	the examples; depend on ORBit2.
+
+	* acinclude.m4: Add the contents of
+	gnome-common/macros2/gnome-pkgconfig.m4 here.
+
+	* Makefile.am: Install gconf-2.0.pc.
+
+	* gconf-2.0.pc.in: New file.
+
 2001-03-13  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* backends/xml-entry.c: Merge from branch. Use xmlFree().

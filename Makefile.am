@@ -2,7 +2,8 @@
 SUBDIRS = gconf backends wrappers po doc examples standard-schemas
 DIST_SUBDIRS=tests $(SUBDIRS)
 
-EXTRA_DIST=gconf-config.in gconf.m4.in gconf.spec.in gconf.spec TODO
+EXTRA_DIST=gconf-config.in gconf.m4.in gconf.spec.in gconf.spec TODO \
+	   gconf-2.0.pc.in
 
 WARNING_MESSAGE="If this is your first install of GConf, you may need to move $(prefix)/etc/gconf/$(MAJOR_VERSION)/path.example to $(prefix)/etc/gconf/$(MAJOR_VERSION)/path, so that the default configuration is sane. If you are already using GConf, you may need to move your old configuration into place if $(MAJOR_VERSION) is not the same as your old version."
 
@@ -24,6 +25,9 @@ install-data-local:
 	@echo "**** NOTE ****"
 	@echo $(WARNING_MESSAGE)
 	@echo "**************"
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gconf-2.0.pc
 
 install-schemas:
 	(cd standard-schemas && $(MAKE) $(AM_MAKEFLAGS) install-schemas)
