@@ -70,11 +70,12 @@ CORBA_unsigned_long gconf_database_readd_listener   (GConfDatabase       *db,
                                                      const gchar         *where);
 
 void                gconf_database_notify_listeners (GConfDatabase       *db,
+                                                     GConfSources        *modified_sources,
                                                      const gchar         *key,
                                                      const ConfigValue   *value,
                                                      gboolean             is_default,
-                                                     gboolean             is_writable);
-
+                                                     gboolean             is_writable,
+                                                     gboolean             notify_others);
 
 GConfValue* gconf_database_query_value         (GConfDatabase  *db,
                                                 const gchar    *key,

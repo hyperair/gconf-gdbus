@@ -1039,51 +1039,51 @@ source_notify_cb (GConfSource   *source,
 		  const gchar   *location,
 		  GConfDatabase *db)
 {
-  GConfValue  *value;
-  ConfigValue *cvalue;
-  GError      *error;
-  gboolean     is_default;
-  gboolean     is_writable;
-
   g_return_if_fail (source != NULL);
   g_return_if_fail (location != NULL);
   g_return_if_fail (db != NULL);
 
-  error = NULL;
-  is_default = is_writable = FALSE;
-
-  /* FIXME: only notify if this location isn't already set
-   *        in a source above this one.
-   */
-
-  value = gconf_database_query_value (db,
-				      location,
-				      NULL,
-				      TRUE,
-				      NULL,
-				      &is_default,
-				      &is_writable,
-				      &error);
-  if (error != NULL)
+  if (gconf_sources_is_affected (db->sources, source, location))
     {
-      gconf_log (GCL_WARNING,
-		 _("Error obtaining new value for `%s' after change notification from backend `%s': %s"),
-		 location,
-		 source->address,
-		 error->message);
-      g_error_free (error);
-      return;
+      GConfValue  *value;
+      ConfigValue *cvalue;
+      GError      *error;
+      gboolean     is_default;
+      gboolean     is_writable;
+
+      error = NULL;
+      is_default = is_writable = FALSE;
+
+      value = gconf_database_query_value (db,
+					  location,
+					  NULL,
+					  TRUE,
+					  NULL,
+					  &is_default,
+					  &is_writable,
+					  &error);
+      if (error != NULL)
+	{
+	  gconf_log (GCL_WARNING,
+		     _("Error obtaining new value for `%s' after change notification from backend `%s': %s"),
+		     location,
+		     source->address,
+		     error->message);
+	  g_error_free (error);
+	  return;
+	}
+
+      cvalue = gconf_corba_value_from_gconf_value (value);
+      gconf_database_notify_listeners (db,
+				       NULL,
+				       location,
+				       cvalue,
+				       is_default,
+				       is_writable,
+				       FALSE);
+      CORBA_free (cvalue);
+      gconf_value_free (value);
     }
-
-  cvalue = gconf_corba_value_from_gconf_value (value);
-  gconf_database_notify_listeners (db,
-				   location,
-				   cvalue,
-				   is_default,
-				   is_writable);
-
-  CORBA_free (cvalue);
-  gconf_value_free (value);
 }
 
 CORBA_unsigned_long
@@ -1245,10 +1245,12 @@ notify_listeners_cb(GConfListeners* listeners,
 
 void
 gconf_database_notify_listeners (GConfDatabase       *db,
+				 GConfSources        *modified_sources,
                                  const gchar         *key,
                                  const ConfigValue   *value,
                                  gboolean             is_default,
-                                 gboolean             is_writable)
+                                 gboolean             is_writable,
+				 gboolean             notify_others)
 {
   ListenerNotifyClosure closure;
   GSList* tmp;
@@ -1277,6 +1279,16 @@ gconf_database_notify_listeners (GConfDatabase       *db,
       gconf_listeners_remove(db->listeners, dead);
 
       tmp = g_slist_next(tmp);
+    }
+
+  if (notify_others)
+    {
+      g_return_if_fail (modified_sources != NULL);
+
+      gconfd_notify_other_listeners (db, modified_sources, key);
+
+      g_list_free (modified_sources->sources);
+      g_free (modified_sources);
     }
 }
 
@@ -1338,6 +1350,7 @@ gconf_database_set   (GConfDatabase      *db,
                       GError        **err)
 {
   GError *error = NULL;
+  GConfSources *modified_sources;
   
   g_assert(db->listeners != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
@@ -1349,10 +1362,12 @@ gconf_database_set   (GConfDatabase      *db,
   gconf_log(GCL_DEBUG, "Received request to set key `%s'", key);
 #endif
   
-  gconf_sources_set_value(db->sources, key, value, &error);
+  gconf_sources_set_value(db->sources, key, value, &modified_sources, &error);
 
   if (error)
     {
+      g_assert (modified_sources == NULL);
+
       gconf_log(GCL_ERR, _("Error setting value for `%s': %s"),
                 key, error->message);
       
@@ -1364,14 +1379,16 @@ gconf_database_set   (GConfDatabase      *db,
     {
       gconf_database_schedule_sync(db);
       
-      gconf_database_notify_listeners(db, key, cvalue,
-                                      /* Can't possibly be the default,
-                                         since we just set it,
-                                         and must be writable since
-                                         setting it succeeded.
-                                      */
-                                      FALSE,
-                                      TRUE);
+      /* Can't possibly be the default, since we just set it,
+       * and must be writable since setting it succeeded.
+       */
+      gconf_database_notify_listeners (db,
+				       modified_sources,
+				       key,
+				       cvalue,
+                                       FALSE,
+				       TRUE,
+				       TRUE);
     }
 }
 
@@ -1383,6 +1400,7 @@ gconf_database_unset (GConfDatabase      *db,
 {
   ConfigValue* val;
   GError* error = NULL;
+  GConfSources *modified_sources;
   
   g_return_if_fail(err == NULL || *err == NULL);
   
@@ -1392,10 +1410,12 @@ gconf_database_unset (GConfDatabase      *db,
   
   gconf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
 
-  gconf_sources_unset_value(db->sources, key, locale, &error);
+  gconf_sources_unset_value(db->sources, key, locale, &modified_sources, &error);
 
   if (error != NULL)
     {
+      g_assert (modified_sources == NULL);
+
       gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
                 key, error->message);
 
@@ -1440,8 +1460,13 @@ gconf_database_unset (GConfDatabase      *db,
           
       gconf_database_schedule_sync(db);
 
-      gconf_database_notify_listeners(db, key, val, TRUE, is_writable);
-      
+      gconf_database_notify_listeners(db,
+				      modified_sources,
+				      key,
+				      val,
+				      TRUE,
+				      is_writable,
+				      TRUE);
       CORBA_free(val);
     }
 }
@@ -1476,6 +1501,8 @@ gconf_database_recursive_unset (GConfDatabase      *db,
    */
   if (error != NULL)
     {
+      g_assert (notifies == NULL);
+
       gconf_log (GCL_ERR, _("Error unsetting \"%s\": %s"),
                  key, error->message);
 
@@ -1494,12 +1521,11 @@ gconf_database_recursive_unset (GConfDatabase      *db,
       const gchar* locale_list[] = { NULL, NULL };
       gboolean is_writable = TRUE;
       gboolean is_default = TRUE;
-      char *notify_key = tmp->data;
-      
+      GConfUnsetNotify *notify = tmp->data;
 
       locale_list[0] = locale;
       new_value = gconf_database_query_value (db,
-                                              notify_key,
+                                              notify->key,
                                               locale_list,
                                               TRUE,
                                               NULL,
@@ -1509,7 +1535,7 @@ gconf_database_recursive_unset (GConfDatabase      *db,
 
       if (error)
         gconf_log (GCL_ERR, _("Error getting new value for \"%s\": %s"),
-                   notify_key, error->message);
+                   notify->key, error->message);
       g_propagate_error (err, error);
       error = NULL;
       
@@ -1525,11 +1551,17 @@ gconf_database_recursive_unset (GConfDatabase      *db,
           
       gconf_database_schedule_sync (db);
 
-      gconf_database_notify_listeners (db, notify_key, val,
-                                       is_default, is_writable);
+      gconf_database_notify_listeners (db,
+				       notify->modified_sources,
+				       notify->key,
+				       val,
+                                       is_default,
+				       is_writable,
+				       TRUE);
       
       CORBA_free (val);
-      g_free (notify_key);
+      g_free (notify->key);
+      g_free (notify);
       
       tmp = tmp->next;
     }
@@ -1709,17 +1741,43 @@ gconf_database_clear_cache (GConfDatabase  *db,
   gconf_sources_clear_cache(db->sources);
 }
 
-const gchar*
+const gchar *
 gconf_database_get_persistent_name (GConfDatabase *db)
 {
-  if (db->persistent_name == NULL)
+  GList   *tmp;
+  GString *str = NULL;
+
+  if (db->persistent_name != NULL)
+    return db->persistent_name;
+
+  if (db->sources == NULL || db->sources->sources == NULL)
     {
-      if (db->sources->sources)
-        db->persistent_name =
-          g_strdup (((GConfSource*)db->sources->sources->data)->address);
-      else
-        db->persistent_name = g_strdup ("empty");
+      db->persistent_name = g_strdup ("empty");
+      return db->persistent_name;
     }
+
+  tmp = db->sources->sources;
+  while (tmp != NULL)
+    {
+      GConfSource *source = tmp->data;
+
+      if (str == NULL)
+	{
+	  str = g_string_new (source->address);
+	}
+      else
+        {
+          g_string_append_c (str, GCONF_DATABASE_LIST_DELIM);
+          g_string_append (str, source->address);
+        }
+
+      tmp = tmp->next;
+    }
+
+  g_assert (str != NULL);
+
+  db->persistent_name = str->str;
+  g_string_free (str, FALSE);
 
   return db->persistent_name;
 }

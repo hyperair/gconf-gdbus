@@ -36,11 +36,16 @@ GConfEngine* gconf_engine_get_default     (void);
 /* returns NULL on error; requests single specified source */
 GConfEngine* gconf_engine_get_for_address (const gchar* address,
                                            GError** err);
+GConfEngine* gconf_engine_get_for_addresses (GSList *addresses,
+                                             GError** err);
 void         gconf_engine_unref           (GConfEngine* conf);
 void         gconf_engine_ref             (GConfEngine* conf);
 
 #ifdef GCONF_ENABLE_INTERNALS
-GConfEngine* gconf_engine_get_local      (const gchar* address, GError** err);
+GConfEngine *gconf_engine_get_local               (const char  *address,
+						   GError     **err);
+GConfEngine *gconf_engine_get_local_for_addresses (GSList      *addresses,
+						   GError     **err);
 #endif
 
 /* For use by language bindings only, will be deprecated in GNOME 2.0

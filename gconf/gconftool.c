@@ -703,12 +703,6 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if (config_source && !use_local_source)
-    {
-      g_printerr (_("You should use --direct when using a non-default configuration source\n"));
-      return 1;
-    }
-  
   if (!gconf_init(argc, argv, &err))
     {
       g_printerr (_("Failed to init GConf: %s\n"), err->message);
@@ -780,10 +774,16 @@ main (int argc, char** argv)
     conf = gconf_engine_get_default();
   else
     {
+      GSList *addresses;
+
+      addresses = gconf_persistent_name_get_address_list (config_source);
+
       if (use_local_source)
-        conf = gconf_engine_get_local(config_source, &err);
+        conf = gconf_engine_get_local_for_addresses (addresses, &err);
       else
-        conf = gconf_engine_get_for_address(config_source, &err);
+        conf = gconf_engine_get_for_addresses (addresses, &err);
+
+      gconf_address_list_free (addresses);
     }
   
   if (conf == NULL)

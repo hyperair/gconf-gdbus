@@ -80,10 +80,15 @@ struct _GConfEngine {
      local engines don't do notification! */
   GConfSources* local_sources;
   
-  /* An address if this is not the default engine;
+  /* A list of addresses that make up this db
+   * if this is not the default engine;
    * NULL if it's the default
    */
-  gchar *address;
+  GSList *addresses;
+
+  /* A concatentation of the addresses above.
+   */
+  char *persistent_address;
 
   gpointer user_data;
   GDestroyNotify dnotify;
@@ -147,7 +152,7 @@ static ConfigDatabase gconf_engine_get_database (GConfEngine     *conf,
 
 static void         register_engine           (GConfEngine    *conf);
 static void         unregister_engine         (GConfEngine    *conf);
-static GConfEngine *lookup_engine             (const gchar    *address);
+static GConfEngine *lookup_engine             (GSList         *addresses);
 static GConfEngine *lookup_engine_by_database (ConfigDatabase  db);
 
 
@@ -320,9 +325,40 @@ gconf_engine_connect (GConfEngine *conf,
     return FALSE; /* Error should already be set */
 
   if (conf->is_default)
-    db = ConfigServer_get_default_database (cs, &ev);      
+    {
+      db = ConfigServer_get_default_database (cs, &ev);      
+    }
+  else if (conf->addresses->next == NULL) /* single element list */
+    {
+      db = ConfigServer_get_database (cs, conf->addresses->data, &ev);
+    }
   else
-    db = ConfigServer_get_database (cs, conf->address, &ev);
+    {
+      ConfigServer2_AddressList *address_list;
+      GSList                    *tmp;
+      int                        i;
+
+      address_list = ConfigServer2_AddressList__alloc ();
+      address_list->_length  = address_list->_maximum = g_slist_length (conf->addresses);
+      address_list->_buffer  = ConfigServer2_AddressList_allocbuf (address_list->_length);
+      address_list->_release = CORBA_TRUE;
+
+      i = 0;
+      tmp = conf->addresses;
+      while (tmp != NULL)
+        {
+          g_assert (i < address_list->_length);
+
+          address_list->_buffer [i] = CORBA_string_dup (tmp->data);
+
+          tmp = tmp->next;
+          i++;
+        }
+
+      db = ConfigServer2_get_database_for_addresses ((ConfigServer2) cs, address_list, &ev);
+
+      CORBA_free (address_list);
+    }
 
   if (gconf_server_broken(&ev))
     {
@@ -343,7 +379,7 @@ gconf_engine_connect (GConfEngine *conf,
       if (err)
         *err = gconf_error_new(GCONF_ERROR_BAD_ADDRESS,
                                _("Server couldn't resolve the address `%s'"),
-                               conf->address ? conf->address : "default");
+                               conf->persistent_address);
           
       return FALSE;
     }
@@ -375,21 +411,29 @@ static GHashTable *engines_by_address = NULL;
 static void
 register_engine (GConfEngine *conf)
 {
-  g_return_if_fail (conf->address != NULL);
+  g_return_if_fail (conf->addresses != NULL);
+
+  g_assert (conf->persistent_address == NULL);
+
+  conf->persistent_address = 
+          gconf_address_list_get_persistent_name (conf->addresses);
 
   if (engines_by_address == NULL)
     engines_by_address = g_hash_table_new (g_str_hash, g_str_equal);
 
-  g_hash_table_insert (engines_by_address, conf->address, conf);
+  g_hash_table_insert (engines_by_address, conf->persistent_address, conf);
 }
 
 static void
 unregister_engine (GConfEngine *conf)
 {
-  g_return_if_fail (conf->address != NULL);
   g_return_if_fail (engines_by_address != NULL);
+
+  g_assert (conf->persistent_address != NULL);
   
-  g_hash_table_remove (engines_by_address, conf->address);
+  g_hash_table_remove (engines_by_address, conf->persistent_address);
+  g_free (conf->persistent_address);
+  conf->persistent_address = NULL;
 
   if (g_hash_table_size (engines_by_address) == 0)
     {
@@ -400,12 +444,23 @@ unregister_engine (GConfEngine *conf)
 }
 
 static GConfEngine *
-lookup_engine (const gchar *address)
+lookup_engine (GSList *addresses)
 {
-  if (engines_by_address)
-    return g_hash_table_lookup (engines_by_address, address);
-  else
-    return NULL;
+  if (engines_by_address != NULL)
+    {
+      GConfEngine *retval;
+      char        *key;
+
+      key = gconf_address_list_get_persistent_name (addresses);
+
+      retval = g_hash_table_lookup (engines_by_address, key);
+
+      g_free (key);
+
+      return retval;
+    }
+
+  return NULL;
 }
 
 
@@ -431,6 +486,24 @@ gconf_engine_get_local      (const gchar* address,
   conf = gconf_engine_blank(FALSE);
 
   conf->local_sources = gconf_sources_new_from_source(source);
+
+  g_assert (gconf_engine_is_local (conf));
+  
+  return conf;
+}
+
+GConfEngine *
+gconf_engine_get_local_for_addresses (GSList  *addresses,
+				      GError **err)
+{
+  GConfEngine *conf;
+
+  g_return_val_if_fail (addresses != NULL, NULL);
+  g_return_val_if_fail (err == NULL || *err == NULL, NULL);
+  
+  conf = gconf_engine_blank (FALSE);
+
+  conf->local_sources = gconf_sources_new_from_addresses (addresses, err);
 
   g_assert (gconf_engine_is_local (conf));
   
@@ -466,18 +539,64 @@ gconf_engine_get_default (void)
 }
 
 GConfEngine*
-gconf_engine_get_for_address (const gchar* address, GError** err)
+gconf_engine_get_for_address (const char  *address,
+			      GError     **err)
 {
-  GConfEngine* conf;
+  GConfEngine *conf;
+  GSList      *addresses;
 
-  conf = lookup_engine (address);
+  addresses = g_slist_append (NULL, g_strdup (address));
+
+  conf = lookup_engine (addresses);
 
   if (conf == NULL)
     {
-      conf = gconf_engine_blank(TRUE);
+      conf = gconf_engine_blank (TRUE);
 
       conf->is_default = FALSE;
-      conf->address = g_strdup (address);
+      conf->addresses = addresses;
+
+      if (!gconf_engine_connect (conf, TRUE, err))
+        {
+          gconf_engine_unref (conf);
+          return NULL;
+        }
+
+      register_engine (conf);
+    }
+  else
+    {
+      g_free (addresses->data);
+      g_slist_free (addresses);
+      conf->refcount += 1;
+    }
+  
+  return conf;
+}
+
+GConfEngine*
+gconf_engine_get_for_addresses (GSList *addresses, GError** err)
+{
+  GConfEngine* conf;
+
+  conf = lookup_engine (addresses);
+
+  if (conf == NULL)
+    {
+      GSList *tmp;
+
+      conf = gconf_engine_blank (TRUE);
+
+      conf->is_default = FALSE;
+      conf->addresses = NULL;
+
+      tmp = addresses;
+      while (tmp != NULL)
+        {
+          conf->addresses = g_slist_append (conf->addresses,
+                                            g_strdup (tmp->data));
+          tmp = tmp->next;
+        }
 
       if (!gconf_engine_connect (conf, TRUE, err))
         {
@@ -568,10 +687,16 @@ gconf_engine_unref(GConfEngine* conf)
               (* conf->dnotify) (conf->user_data);
             }
           
-          /* do this after removing the notifications,
-             to avoid funky race conditions */
-          if (conf->address)
-            unregister_engine (conf);
+          if (conf->addresses)
+	    {
+	      gconf_address_list_free (conf->addresses);
+	      conf->addresses = NULL;
+	    }
+
+	  if (conf->persistent_address)
+	    {
+	      unregister_engine (conf);
+	    }
 
           /* Release the ConfigDatabase */
           gconf_engine_detach (conf);
@@ -1096,7 +1221,7 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
     {
       GError* error = NULL;
       
-      gconf_sources_set_value(conf->local_sources, key, value, &error);
+      gconf_sources_set_value(conf->local_sources, key, value, NULL, &error);
 
       if (error != NULL)
         {
@@ -1174,7 +1299,7 @@ gconf_engine_unset (GConfEngine* conf, const gchar* key, GError** err)
     {
       GError* error = NULL;
       
-      gconf_sources_unset_value(conf->local_sources, key, NULL, &error);
+      gconf_sources_unset_value(conf->local_sources, key, NULL, NULL, &error);
 
       if (error != NULL)
         {
@@ -2302,7 +2427,15 @@ update_listener (PortableServer_Servant _servant,
       if (strcmp (address, "def") == 0)
         conf = default_engine;
       else
-        conf = lookup_engine (address);
+        {
+          GSList  *addresses;
+
+          addresses = gconf_persistent_name_get_address_list (address);
+    
+          conf = lookup_engine (addresses);
+    
+          gconf_address_list_free (addresses);
+        }
 
       if (conf)
         gconf_engine_set_database (conf,

@@ -39,6 +39,8 @@
 #include "gconf-sources.h"
 #include "GConfX.h"
 
+#define GCONF_DATABASE_LIST_DELIM ';'
+
 gchar*       gconf_key_directory  (const gchar* key);
 const gchar* gconf_key_key        (const gchar* key);
 
@@ -66,6 +68,10 @@ GConfSchema*  gconf_schema_from_corba_schema            (const ConfigSchema *cs)
 
 gchar* gconf_object_to_string (CORBA_Object obj,
                                GError **err);
+
+char   *gconf_address_list_get_persistent_name (GSList     *addresses);
+GSList *gconf_persistent_name_get_address_list (const char *persistent_name);
+void    gconf_address_list_free                (GSList     *addresses);
 
 const gchar*   gconf_value_type_to_string   (GConfValueType  type);
 GConfValueType gconf_value_type_from_string (const gchar    *str);

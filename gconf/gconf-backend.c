@@ -26,6 +26,46 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+
+/* Don't allow special characters in configuration source addresses.
+ * The important one here is not to allow ';' because we use that
+ * internally as a list delimiter. See GCONF_DATABASE_LIST_DELIM
+ */
+static const char invalid_chars[] = " \t\r\n\"$&<>,+=#!()'|{}[]?~`;%\\";
+
+static gboolean
+gconf_address_valid (const char  *address,
+		     char      **why_invalid)
+{
+  const char *s;
+
+  g_return_val_if_fail (address != NULL, FALSE);
+
+  if (why_invalid)
+    *why_invalid = NULL;
+
+  s = address;
+  while (*s)
+    {
+      const char *inv = invalid_chars;
+
+      while (*inv)
+	{
+	  if (*inv == *s)
+	    {
+	      if (why_invalid)
+		*why_invalid = g_strdup_printf(_("`%c' is an invalid character in a configuration storage address"), *s);
+	      return FALSE;
+	    }
+	  ++inv;
+	}
+
+      ++s;
+    }
+
+  return TRUE;
+}
+
 gchar* 
 gconf_address_backend(const gchar* address)
 {
@@ -239,11 +279,23 @@ gconf_get_backend(const gchar* address, GError** err)
 {
   GConfBackend* backend;
   gchar* name;
+  gchar* why_invalid;
 
   if (loaded_backends == NULL)
     {
       loaded_backends = g_hash_table_new(g_str_hash, g_str_equal);
     }
+
+  why_invalid = NULL;
+  if (!gconf_address_valid (address, &why_invalid))
+    {
+      g_assert (why_invalid != NULL);
+      gconf_set_error (err, GCONF_ERROR_BAD_ADDRESS, _("Bad address `%s': %s"),
+		       address, why_invalid);
+      g_free (why_invalid);
+      return NULL;
+    }
+
   name = gconf_address_backend(address);
       
   if (name == NULL)

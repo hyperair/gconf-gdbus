@@ -65,8 +65,14 @@ typedef struct _GConfSources GConfSources;
 
 struct _GConfSources {
   GList* sources;
-  
 };
+
+typedef struct
+{
+  GConfSources *modified_sources;
+  char         *key;
+} GConfUnsetNotify;
+
 
 /* Even on error, this gives you an empty source list, i.e.  never
    returns NULL but may set the error if some addresses weren't
@@ -87,10 +93,12 @@ GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
 void          gconf_sources_set_value          (GConfSources  *sources,
                                                 const gchar   *key,
                                                 const GConfValue *value,
+						GConfSources **modified_sources,
                                                 GError   **err);
 void          gconf_sources_unset_value        (GConfSources  *sources,
                                                 const gchar   *key,
                                                 const gchar   *locale,
+						GConfSources **modified_sources,
                                                 GError   **err);
 void          gconf_sources_recursive_unset    (GConfSources  *sources,
                                                 const gchar   *key,
@@ -137,5 +145,9 @@ void          gconf_sources_add_listener       (GConfSources          *sources,
 					        const gchar           *location);
 void          gconf_sources_remove_listener    (GConfSources          *sources,
 						guint                  id);
+
+gboolean      gconf_sources_is_affected        (GConfSources *sources,
+						GConfSource  *modified_src,
+						const char   *key);
 
 #endif

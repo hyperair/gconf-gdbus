@@ -1,5 +1,86 @@
 2004-03-29  Mark McLoughlin  <mark@skynet.ie>
 
+	* gconf/gconf-engine.h: add gconf_engine_get_for_addresses()
+	and gconf_engine_get_local_for_addresses().
+	
+	* gconf/gconf.c:
+	(gconf_engine_connect): implement setting up a database from
+	an arbitrary stack of sources.
+	(register_engine): use the concatenation of addresses for the key.
+	(unregister_engine): free the persistent address and address list on
+	unregistering.
+	(lookup_engine): use the concatenation of addresses for the key.
+	(gconf_engine_get_local_for_addresses): add.
+	(gconf_engine_get_for_address): update for register_engine change.
+	(gconf_engine_get_for_addresses): impl support for remote composite dbs.
+	(update_listener): update for the fact that listeners are now saved using
+	the persistent name.
+	
+	* gconf/GConfX.idl: extend the ConfigServer interface
+	by adding ConfigServer2 inherting from ConfigServer.
+	Add ConfigServer2::get_database_for_addresses().
+	
+	* gconf/gconf-backend.c:
+	(gconf_address_valid), (gconf_get_backend): check the backend
+	address doesn't contain any special characters.
+	
+	* gconf/gconf-database.[ch]:
+	(source_notify_cb): don't notify unless this change could
+	actually cause a change for the client.
+	(gconf_database_notify_listeners): impl. notifying "other"
+	listeners - clients listening on other stacks which contains
+	any of the modified sources.
+	(gconf_database_set), (gconf_database_unset): keep track of
+	the sources modified by the change and update for the
+	notify_listeners change.
+	(gconf_database_recursive_unset): ditto and upd. for the
+	change in the listeners list returned by
+	gconf_sources_recursive_unset().
+	(gconf_database_get_persistent_name): make the persistent
+	name a concatenation of the individual addresses instead
+	of the first address.
+	
+	* gconf/gconf-internals.[ch]:
+	(gconf_address_list_get_persistent_name): impl method similar
+	to gconf_database_get_persistent_name, except concatenate
+	the addresses from a GSList.
+	(gconf_persistent_name_get_address_list): do the reverse.
+	(gconf_address_list_free): free the list of strings.
+
+	* gconf/gconf-sources.[ch]:
+	(gconf_sources_new_from_source): allow creating an empty source
+	list.
+	(gconf_sources_set_value),
+	(gconf_sources_unset_value): return the sources modified by
+	the change.
+	(prepend_unset_notify), (recursive_unset_helper),
+	(gconf_sources_recursive_unset): return a list of GConfUnsetNotifys
+	which contains both the key and the modified source.
+	(get_address_resource): copy and paste of gconf_address_resource
+	except it doesn't dup the return value.
+	(gconf_sources_is_affected): figure out if a change to a particular
+	key in one source affects the key with a particular stack of sources.
+	
+	* gconf/gconfd.[ch]: impl ConfigServer2 inheritance.
+	(gconfd_get_database): upd for obtain_database change.
+	(gconfd_get_composite_database): implement.
+	(init_databases): rename dbs_by_address to dbs_by_addresses.
+	(set_default_database): register the default db like the others.
+	(register_database): use the persistent name as the key.
+	(unregister_database): ditto.
+	(lookup_database): ditto.
+	(obtain_database): use a list of addresses, not a single one.
+	(gconfd_notify_other_listeners): impl notifying listeners
+	on GConfDatabases other than the one which was changed.
+	(listener_logentry_restore_and_destroy_foreach): restore by
+	splitting the address list string.
+
+	* gconf/gconftool.c: (main): enable --config-source without
+	--direct as it works better now. Also allow --config-source
+	to be an address list.
+	
+2004-03-29  Mark McLoughlin  <mark@skynet.ie>
+
 	* backends/markup-backend.c,
 	  backends/xml-backend.c: initialize the set_notify_func
 	vtable member.

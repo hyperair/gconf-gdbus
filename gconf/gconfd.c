@@ -103,8 +103,8 @@ static void                 shutdown_databases (void);
 static void                 set_default_database (GConfDatabase* db);
 static void                 register_database (GConfDatabase* db);
 static void                 unregister_database (GConfDatabase* db);
-static GConfDatabase*       lookup_database (const gchar *address);
-static GConfDatabase*       obtain_database (const gchar *address,
+static GConfDatabase*       lookup_database (GSList *addresses);
+static GConfDatabase*       obtain_database (GSList *addresses,
                                              GError **err);
 static void                 drop_old_databases (void);
 static gboolean             no_databases_in_use (void);
@@ -124,7 +124,7 @@ static gboolean in_shutdown = FALSE;
  * CORBA goo
  */
 
-static ConfigServer server = CORBA_OBJECT_NIL;
+static ConfigServer2 server = CORBA_OBJECT_NIL;
 static PortableServer_POA the_poa;
 static GConfLock *daemon_lock = NULL;
 
@@ -136,6 +136,11 @@ static ConfigDatabase
 gconfd_get_database(PortableServer_Servant servant,
                     const CORBA_char* address,
                     CORBA_Environment* ev);
+
+static ConfigDatabase
+gconfd_get_database_for_addresses (PortableServer_Servant           servant,
+				   const ConfigServer2_AddressList *addresses,
+				   CORBA_Environment               *ev);
 
 static void
 gconfd_add_client (PortableServer_Servant servant,
@@ -169,8 +174,13 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_shutdown
 };
 
-static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
-static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
+static POA_ConfigServer2__epv server2_epv = { 
+  NULL,
+  gconfd_get_database_for_addresses
+};
+
+static POA_ConfigServer2__vepv poa_server_vepv = { &base_epv, &server_epv, &server2_epv };
+static POA_ConfigServer2 poa_server_servant = { NULL, &poa_server_vepv };
 
 static ConfigDatabase
 gconfd_get_default_database(PortableServer_Servant servant,
@@ -195,19 +205,51 @@ gconfd_get_database(PortableServer_Servant servant,
                     CORBA_Environment* ev)
 {
   GConfDatabase *db;
+  GSList *addresses;
   GError* error = NULL;  
 
   if (gconfd_check_in_shutdown (ev))
     return CORBA_OBJECT_NIL;
   
-  db = obtain_database (address, &error);
+  addresses = g_slist_append (NULL, (char *) address);
+  db = obtain_database (addresses, &error);
+  g_slist_free (addresses);
 
   if (db != NULL)
     return CORBA_Object_duplicate (db->objref, ev);
-  else if (gconf_set_exception(&error, ev))
+
+  gconf_set_exception (&error, ev);
+
+  return CORBA_OBJECT_NIL;
+}
+
+static ConfigDatabase
+gconfd_get_database_for_addresses (PortableServer_Servant           servant,
+				   const ConfigServer2_AddressList *seq,
+				   CORBA_Environment               *ev)
+{
+  GConfDatabase  *db;
+  GSList         *addresses = NULL;
+  GError         *error = NULL;  
+  int             i;
+
+  if (gconfd_check_in_shutdown (ev))
     return CORBA_OBJECT_NIL;
-  else
-    return CORBA_OBJECT_NIL;
+
+  i = 0;
+  while (i < seq->_length)
+    addresses = g_slist_append (addresses, seq->_buffer [i++]);
+
+  db = obtain_database (addresses, &error);
+
+  g_slist_free (addresses);
+
+  if (db != NULL)
+    return CORBA_Object_duplicate (db->objref, ev);
+
+  gconf_set_exception (&error, ev);
+
+  return CORBA_OBJECT_NIL;
 }
 
 static void
@@ -613,7 +655,7 @@ main(int argc, char** argv)
 
   orb = gconf_orb_get ();
   
-  POA_ConfigServer__init (&poa_server_servant, &ev);
+  POA_ConfigServer2__init (&poa_server_servant, &ev);
   
   the_poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
   PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(the_poa, &ev), &ev);
@@ -835,7 +877,7 @@ gconf_main_is_running (void)
  */
 
 static GList* db_list = NULL;
-static GHashTable* dbs_by_address = NULL;
+static GHashTable* dbs_by_addresses = NULL;
 static GConfDatabase *default_db = NULL;
 
 static void
@@ -844,13 +886,9 @@ init_databases (void)
   gconfd_need_log_cleanup ();
   
   g_assert(db_list == NULL);
-  g_assert(dbs_by_address == NULL);
+  g_assert(dbs_by_addresses == NULL);
   
-  dbs_by_address = g_hash_table_new (g_str_hash, g_str_equal);
-
-  /* Default database isn't in the address hash since it has
-     multiple addresses in a stack
-  */
+  dbs_by_addresses = g_hash_table_new (g_str_hash, g_str_equal);
 }
 
 static void
@@ -859,10 +897,8 @@ set_default_database (GConfDatabase* db)
   gconfd_need_log_cleanup ();
   
   default_db = db;
-  
-  /* Default database isn't in the address hash since it has
-     multiple addresses in a stack
-  */
+
+  register_database (db);
 }
 
 static void
@@ -871,9 +907,9 @@ register_database (GConfDatabase *db)
   gconfd_need_log_cleanup ();
   
   if (db->sources->sources)
-    safe_g_hash_table_insert(dbs_by_address,
-                             ((GConfSource*)db->sources->sources->data)->address,
-                             db);
+    safe_g_hash_table_insert (dbs_by_addresses,
+			      (char *) gconf_database_get_persistent_name (db),
+			      db);
   
   db_list = g_list_prepend (db_list, db);
 }
@@ -884,8 +920,10 @@ unregister_database (GConfDatabase *db)
   gconfd_need_log_cleanup ();
   
   if (db->sources->sources)
-    g_hash_table_remove(dbs_by_address,
-                        ((GConfSource*)(db->sources->sources->data))->address);
+    {
+      g_hash_table_remove (dbs_by_addresses,
+			   gconf_database_get_persistent_name (db));
+    }
 
   db_list = g_list_remove (db_list, db);
 
@@ -893,32 +931,37 @@ unregister_database (GConfDatabase *db)
 }
 
 static GConfDatabase*
-lookup_database (const gchar *address)
+lookup_database (GSList *addresses)
 {
-  if (address == NULL)
+  GConfDatabase *retval;
+  char          *key;
+
+  if (addresses == NULL)
     return default_db;
-  else
-    return g_hash_table_lookup (dbs_by_address, address);
+
+  key = gconf_address_list_get_persistent_name (addresses);
+
+  retval = g_hash_table_lookup (dbs_by_addresses, key);
+
+  g_free (key);
+
+  return retval;
 }
 
 static GConfDatabase*
-obtain_database (const gchar *address,
+obtain_database (GSList  *addresses,
                  GError **err)
 {
-  
   GConfSources* sources;
-  GSList* addresses = NULL;
   GError* error = NULL;
   GConfDatabase *db;
 
-  db = lookup_database (address);
+  db = lookup_database (addresses);
 
   if (db)
     return db;
 
-  addresses = g_slist_append(addresses, g_strdup(address));
   sources = gconf_sources_new_from_addresses(addresses, &error);
-  g_slist_free (addresses);
 
   if (error != NULL)
     {
@@ -1005,10 +1048,10 @@ shutdown_databases (void)
   g_list_free (db_list);
   db_list = NULL;
 
-  if (dbs_by_address)
-    g_hash_table_destroy(dbs_by_address);
+  if (dbs_by_addresses)
+    g_hash_table_destroy(dbs_by_addresses);
 
-  dbs_by_address = NULL;
+  dbs_by_addresses = NULL;
 
   if (default_db)
     gconf_database_free (default_db);
@@ -1024,6 +1067,76 @@ no_databases_in_use (void)
    */
   return db_list == NULL &&
     gconf_listeners_count (default_db->listeners) == 0;
+}
+
+void
+gconfd_notify_other_listeners (GConfDatabase *modified_db,
+			       GConfSources  *modified_sources,
+                               const char    *key)
+{
+  GList *tmp;
+
+  if (!modified_sources)
+    return;
+  
+  tmp = db_list;
+  while (tmp != NULL)
+    {
+      GConfDatabase *db = tmp->data;
+
+      if (db != modified_db)
+	{
+	  GList *tmp2;
+
+	  tmp2 = modified_sources->sources;
+	  while (tmp2)
+	    {
+	      GConfSource *modified_source = tmp2->data;
+
+	      if (gconf_sources_is_affected (db->sources, modified_source, key))
+		{
+		  GConfValue  *value;
+		  ConfigValue *cvalue;
+		  GError      *error;
+		  gboolean     is_default;
+		  gboolean     is_writable;
+
+		  error = NULL;
+		  value = gconf_database_query_value (db,
+						      key,
+						      NULL,
+						      TRUE,
+						      NULL,
+						      &is_default,
+						      &is_writable,
+						      &error);
+		  if (error != NULL)
+		    {
+		      gconf_log (GCL_WARNING,
+				 _("Error obtaining new value for `%s': %s"),
+				 key, error->message);
+		      g_error_free (error);
+		      return;
+		    }
+
+		  cvalue = gconf_corba_value_from_gconf_value (value);
+		  gconf_database_notify_listeners (db,
+						   NULL,
+						   key,
+						   cvalue,
+						   is_default,
+						   is_writable,
+						   FALSE);
+		  CORBA_free (cvalue);
+		  gconf_value_free (value);
+		}
+
+	      tmp2 = tmp2->next;
+	    }
+	}
+
+      tmp = tmp->next;
+    }
 }
 
 /*
@@ -1841,12 +1954,20 @@ listener_logentry_restore_and_destroy_foreach (gpointer key,
                                                gpointer data)
 {
   ListenerLogEntry *lle = key;
-  GConfDatabase *db;
+  GConfDatabase *db = NULL;
   
   if (strcmp (lle->address, "def") == 0)
     db = default_db;
   else
-    db = obtain_database (lle->address, NULL);
+    {
+      GSList *addresses;
+
+      addresses = gconf_persistent_name_get_address_list (lle->address);
+
+      db = obtain_database (addresses, NULL);
+
+      gconf_address_list_free (addresses);
+    }
   
   if (db == NULL)
     {

@@ -917,6 +917,82 @@ gconf_load_source_path(const gchar* filename, GError** err)
   return l;
 }
 
+char *
+gconf_address_list_get_persistent_name (GSList *addresses)
+{
+  GSList  *tmp;
+  GString *str = NULL;
+
+  if (!addresses)
+    {
+      return g_strdup ("empty");
+    }
+
+  tmp = addresses;
+  while (tmp != NULL)
+    {
+      const char *address = tmp->data;
+
+      if (str == NULL)
+	{
+	  str = g_string_new (address);
+	}
+      else
+        {
+          g_string_append_c (str, GCONF_DATABASE_LIST_DELIM);
+          g_string_append (str, address);
+        }
+
+      tmp = tmp->next;
+    }
+
+  return g_string_free (str, FALSE);
+}
+
+GSList *
+gconf_persistent_name_get_address_list (const char *persistent_name)
+{
+  char   delim [2] = { GCONF_DATABASE_LIST_DELIM, '\0' };
+  char **address_vector;
+
+  address_vector = g_strsplit (persistent_name, delim, -1);
+  if (address_vector != NULL)
+    {
+      GSList  *retval = NULL;
+      int      i;
+
+      i = 0;
+      while (address_vector [i] != NULL)
+        {
+          retval = g_slist_append (retval, g_strdup (address_vector [i]));
+          ++i;
+        }
+
+      g_strfreev (address_vector);
+
+      return retval;
+    }
+  else
+    {
+      return g_slist_append (NULL, g_strdup (persistent_name));
+    }
+}
+
+void
+gconf_address_list_free (GSList *addresses)
+{
+  GSList *tmp;
+
+  tmp = addresses;
+  while (tmp != NULL)
+    {
+      g_free (tmp->data);
+      tmp = tmp->next;
+    }
+
+  g_slist_free (addresses);
+}
+
 /* This should also support concatting filesystem dirs and keys, 
    or dir and subdir.
 */

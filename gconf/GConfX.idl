@@ -261,3 +261,8 @@ interface ConfigServer {
   void shutdown();
 };
 
+interface ConfigServer2 : ConfigServer {
+  typedef sequence<string> AddressList;
+
+  ConfigDatabase get_database_for_addresses (in AddressList addresses);
+};

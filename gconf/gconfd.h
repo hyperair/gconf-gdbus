@@ -44,6 +44,10 @@ gboolean gconfd_logfile_change_listener (GConfDatabase *db,
 
 gboolean gconfd_check_in_shutdown (CORBA_Environment *ev);
 
+void gconfd_notify_other_listeners (GConfDatabase *modified_db,
+				    GConfSources  *modified_sources,
+                                    const char    *key);
+
 void gconfd_need_log_cleanup (void);
 
 #ifdef __cplusplus
