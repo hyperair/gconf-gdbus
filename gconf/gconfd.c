@@ -112,7 +112,7 @@ static LTable* ltable_new(void);
 static void    ltable_insert(LTable* ltable, const gchar* where, Listener* listener);
 static void    ltable_remove(LTable* ltable, guint cnxn);
 static void    ltable_destroy(LTable* ltable);
-static void    ltable_notify_listeners(LTable* ltable, const gchar* key, const ConfigValue* value);
+static void    ltable_notify_listeners(LTable* ltable, const gchar* key, ConfigValue* value);
 static void    ltable_spew(LTable* ltable);
 
 static LTableEntry* ltable_entry_new(const gchar* name);
@@ -125,18 +125,24 @@ static void         ltable_entry_destroy(LTableEntry* entry);
 static ConfigServer server = CORBA_OBJECT_NIL;
 
 CORBA_unsigned_long 
-gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where, 
-                    const ConfigListener who, CORBA_Environment *ev);
+gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where, 
+                    ConfigListener who, CORBA_Environment *ev);
 void 
 gconfd_remove_listener(PortableServer_Servant servant,
-                       const CORBA_unsigned_long cnxn,
+                       CORBA_unsigned_long cnxn,
                        CORBA_Environment *ev);
 ConfigValue* 
-gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key, 
+gconfd_lookup(PortableServer_Servant servant, CORBA_char * key, 
               CORBA_Environment *ev);
 void
-gconfd_set(PortableServer_Servant servant, const CORBA_char * key, 
-           const ConfigValue* value, CORBA_Environment *ev);
+gconfd_set(PortableServer_Servant servant, CORBA_char * key, 
+           ConfigValue* value, CORBA_Environment *ev);
+
+void 
+gconfd_all_pairs (PortableServer_Servant servant, CORBA_char * dir, 
+                  ConfigServer_KeyList ** keys, 
+                  ConfigServer_ValueList ** values, CORBA_Environment * ev);
+
 void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 
@@ -158,6 +164,7 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_remove_listener, 
   gconfd_lookup, 
   gconfd_set, 
+  gconfd_all_pairs,
   gconfd_sync,
   gconfd_ping,
   gconfd_shutdown
@@ -168,7 +175,7 @@ static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
 
 CORBA_unsigned_long
-gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where, 
+gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where, 
                     const ConfigListener who, CORBA_Environment *ev)
 {
   Listener* l;
@@ -183,14 +190,14 @@ gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where,
 }
 
 void 
-gconfd_remove_listener(PortableServer_Servant servant, const CORBA_unsigned_long cnxn, CORBA_Environment *ev)
+gconfd_remove_listener(PortableServer_Servant servant, CORBA_unsigned_long cnxn, CORBA_Environment *ev)
 {
   syslog(LOG_DEBUG, "Removing listener %u", (guint)cnxn);
   ltable_remove(ltable, cnxn);
 }
 
 ConfigValue*
-gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key, 
+gconfd_lookup(PortableServer_Servant servant, CORBA_char * key, 
               CORBA_Environment *ev)
 {
   GConfValue* val;
@@ -216,8 +223,8 @@ gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key,
 }
 
 void
-gconfd_set(PortableServer_Servant servant, const CORBA_char * key, 
-           const ConfigValue* value, CORBA_Environment *ev)
+gconfd_set(PortableServer_Servant servant, CORBA_char * key, 
+           ConfigValue* value, CORBA_Environment *ev)
 {
   gchar* str;
   GConfValue* val;
@@ -245,6 +252,58 @@ gconfd_set(PortableServer_Servant servant, const CORBA_char * key,
   g_conf_sources_set_value(sources, key, val);
 
   ltable_notify_listeners(ltable, key, value);
+}
+
+void 
+gconfd_all_pairs (PortableServer_Servant servant, 
+                  CORBA_char * dir, 
+                  ConfigServer_KeyList ** keys, 
+                  ConfigServer_ValueList ** values,
+                  CORBA_Environment * ev)
+{
+  GSList* pairs;
+  guint n;
+  GSList* tmp;
+  guint i;
+
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received set request before initializing sources list; bug?");
+      return;
+    } 
+
+  pairs = g_conf_sources_all_pairs(sources, dir);
+  n = g_slist_length(pairs);
+
+  *keys= ConfigServer_KeyList__alloc();
+  (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
+  (*keys)->_length = n;
+  (*keys)->_maximum = n;
+
+  *values= ConfigServer_ValueList__alloc();
+  (*values)->_buffer = CORBA_sequence_ConfigValue_allocbuf(n);
+  (*values)->_length = n;
+  (*values)->_maximum = n;
+
+  tmp = pairs;
+  i = 0;
+
+  while (tmp != NULL)
+    {
+      GConfPair* p = tmp->data;
+
+      (*keys)->_buffer[i] = CORBA_string_dup(p->key);
+      fill_corba_value_from_g_conf_value(p->value, &((*values)->_buffer[i]));
+
+      g_conf_pair_destroy(p);
+
+      ++i;
+      tmp = g_slist_next(tmp);
+    }
+  
+  g_assert(i == n);
+
+  g_slist_free(pairs);
 }
 
 void 
@@ -901,7 +960,7 @@ ltable_destroy(LTable* ltable)
 }
 
 static void
-notify_listener_list(GList* list, const gchar* key, const ConfigValue* value, GList** dead)
+notify_listener_list(GList* list, const gchar* key, ConfigValue* value, GList** dead)
 {
   CORBA_Environment ev;
   GList* tmp;
@@ -915,7 +974,8 @@ notify_listener_list(GList* list, const gchar* key, const ConfigValue* value, GL
     {
       Listener* l = tmp->data;
 
-      ConfigListener_notify(l->obj, l->cnxn, key, value, &ev);
+      ConfigListener_notify(l->obj, l->cnxn, 
+                            (gchar*)key, value, &ev);
       
       if(ev._major != CORBA_NO_EXCEPTION) 
         {
@@ -938,7 +998,7 @@ notify_listener_list(GList* list, const gchar* key, const ConfigValue* value, GL
 }
 
 static void    
-ltable_notify_listeners(LTable* lt, const gchar* key, const ConfigValue* value)
+ltable_notify_listeners(LTable* lt, const gchar* key, ConfigValue* value)
 {
   gchar** dirs;
   guint i;
@@ -947,7 +1007,8 @@ ltable_notify_listeners(LTable* lt, const gchar* key, const ConfigValue* value)
   GList* dead = NULL;
 
   /* Notify "/" listeners */
-  notify_listener_list(((LTableEntry*)lt->tree->data)->listeners, key, value, &dead);
+  notify_listener_list(((LTableEntry*)lt->tree->data)->listeners, 
+                       (gchar*)key, value, &dead);
 
   dirs = g_strsplit(noroot_key, "/", -1);
 
@@ -1060,8 +1121,7 @@ ltable_spew(LTable* lt)
  */
 
 /* fast_cleanup() does the important parts,
-   and is re-entrant. thorough_cleanup() gets 
-   all the cruft. 
+   and is theoretically re-entrant.
 */
 static void 
 fast_cleanup(void)
@@ -1075,5 +1135,7 @@ fast_cleanup(void)
 
   /* Nothing we can do if it fails */
   unlink(fn);
+
+  g_free(fn);
 }
 

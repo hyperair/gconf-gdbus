@@ -31,10 +31,20 @@ struct _GConfBackendVTable {
 
   GConfSource*        (* resolve_address) (const gchar* address);
 
-  GConfValue*         (* query_value)     (GConfSource* source, const gchar* key);
+  GConfValue*         (* query_value)     (GConfSource* source, 
+                                           const gchar* key);
 
-  void                (* set_value)       (GConfSource* source, const gchar* key, 
+  void                (* set_value)       (GConfSource* source, 
+                                           const gchar* key, 
                                            GConfValue* value);
+
+  /* Returns list of GConfPair */
+  GSList*             (* all_entries)     (GConfSource* source,
+                                           const gchar* dir);
+
+  /* Returns list of allocated strings */
+  GSList*             (* all_subdirs)     (GConfSource* source,
+                                           const gchar* dir);
 
   gboolean            (* sync_all)        (GConfSource* source);
 

@@ -40,8 +40,11 @@
 
 int set_mode = FALSE;
 int get_mode = FALSE;
+int all_pairs_mode = FALSE;
 char* value_type = NULL;
 int shutdown_gconfd = FALSE;
+int ping_gconfd = FALSE;
+int spawn_gconfd = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -72,12 +75,39 @@ struct poptOption options[] = {
     NULL
   },
   { 
+    "all-pairs",
+    'a',
+    POPT_ARG_NONE,
+    &all_pairs_mode,
+    0,
+    N_("Print all key/value pairs in a directory."),
+    NULL
+  },
+  { 
     "shutdown",
     '\0',
     POPT_ARG_NONE,
     &shutdown_gconfd,
     0,
     N_("Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."),
+    NULL
+  },
+  { 
+    "ping",
+    'p',
+    POPT_ARG_NONE,
+    &ping_gconfd,
+    0,
+    N_("Return 0 if gconfd is running, 2 if not."),
+    NULL
+  },
+  { 
+    "spawn",
+    's',
+    POPT_ARG_NONE,
+    &spawn_gconfd,
+    0,
+    N_("Launch the config server (gconfd). (Normally happens automatically when needed.)"),
     NULL
   },
   { 
@@ -129,27 +159,40 @@ main (int argc, char** argv)
       return 1;
     }
 
+  if ((all_pairs_mode && get_mode) ||
+      (all_pairs_mode && set_mode))
+    {
+      fprintf(stderr, _("Can't use --all-pairs with --get or --set\n"));
+      return 1;
+    }
+
   if ((value_type != NULL) && !set_mode)
     {
-      fprintf(stderr, _("Value type is only relevant when setting a value"));
+      fprintf(stderr, _("Value type is only relevant when setting a value\n"));
       return 1;
     }
 
   if (set_mode && (value_type == NULL))
     {
-      fprintf(stderr, _("Must specify a type when setting a value"));
+      fprintf(stderr, _("Must specify a type when setting a value\n"));
+      return 1;
+    }
+
+  if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || spawn_gconfd))
+    {
+      fprintf(stderr, _("Ping option must be used by itself.\n"));
       return 1;
     }
 
   if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
     {
-      fprintf(stderr, _("Failed to init orb"));
+      fprintf(stderr, _("Failed to init orb\n"));
       return 1;
     }
 
   if (!g_conf_init())
     {
-      fprintf(stderr, _("Failed to init GConf"));
+      fprintf(stderr, _("Failed to init GConf\n"));
       return 1;
     }
 
@@ -157,13 +200,31 @@ main (int argc, char** argv)
 
   g_assert(conf != NULL);
 
+  /* Do this first, since we only want to do this if the user selected
+     it. */
+  if (ping_gconfd)
+    {
+      if (g_conf_ping_daemon())
+        return 0;
+      else 
+        return 2;
+    }
+
+  if (spawn_gconfd)
+    {
+      if (!g_conf_spawn_daemon())
+        fprintf(stderr, _("Failed to spawn the config server (gconfd)\n"));
+      /* don't exit, it's OK to have this along with other options
+         (however, it's probably pointless) */
+    }
+
   if (get_mode)
     {
       gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
-          fprintf(stderr, _("Must specify a key to get"));
+          fprintf(stderr, _("Must specify a key or keys to get\n"));
           return 1;
         }
       
@@ -199,7 +260,7 @@ main (int argc, char** argv)
 
       if (args == NULL)
         {
-          fprintf(stderr, _("Must specify alternating keys/values as arguments"));
+          fprintf(stderr, _("Must specify alternating keys/values as arguments\n"));
           return 1;
         }
 
@@ -216,13 +277,13 @@ main (int argc, char** argv)
 
           if (!g_conf_valid_key(key))
             {
-              fprintf(stderr, _("Invalid key: `%s'"), key);
+              fprintf(stderr, _("Invalid key: `%s'\n"), key);
               return 1;
             }
 
           if (value == NULL)
             {
-              fprintf(stderr, _("No value to set for key: `%s'"), key);
+              fprintf(stderr, _("No value to set for key: `%s'\n"), key);
               return 1;
             }
 
@@ -245,7 +306,7 @@ main (int argc, char** argv)
               type = G_CONF_VALUE_STRING;
               break;
             default:
-              fprintf(stderr, _("Don't understand type `%s'"), value_type);
+              fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
               return 1;
               break;
             }
@@ -254,7 +315,7 @@ main (int argc, char** argv)
 
           if (gval == NULL)
             {
-              fprintf(stderr, _("Didn't understand value `%s'"), value);
+              fprintf(stderr, _("Didn't understand value `%s'\n"), value);
               return 1;
             }
 
@@ -266,6 +327,63 @@ main (int argc, char** argv)
         }
 
       g_conf_sync(conf);
+    }
+
+  if (all_pairs_mode)
+    {
+      gchar** args = poptGetArgs(ctx);
+
+      if (args == NULL)
+        {
+          fprintf(stderr, _("Must specify one or more dirs to get key/value pairs from.\n"));
+          return 1;
+        }
+      
+      while (*args)
+        {
+          GSList* pairs;
+          GSList* tmp;
+
+          pairs = g_conf_all_pairs(conf, *args);
+          
+          if (pairs != NULL)
+            {
+              printf(_("# Key-value pairs in `%s':\n"), *args);
+
+              tmp = pairs;
+
+              while (tmp != NULL)
+                {
+                  GConfPair* pair = tmp->data;
+                  gchar* s;
+
+                  s = g_conf_value_to_string(pair->value);
+                  
+                  /* use fputs in case value contains printf 
+                     formats 
+                  */
+                  fputs(" ", stdout);
+                  fputs(pair->key, stdout);
+                  fputs(" = ", stdout);
+                  fputs(s, stdout);
+                  fputs("\n", stdout);
+
+                  g_free(s);
+                  
+                  g_conf_pair_destroy(pair);
+
+                  tmp = g_slist_next(tmp);
+                }
+
+              g_slist_free(pairs);
+            }
+          else
+            {
+              fprintf(stderr, _("Directory `%s' is empty.\n"), *args);
+            }
+ 
+          ++args;
+        }
     }
 
   poptFreeContext(ctx);

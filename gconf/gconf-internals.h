@@ -49,6 +49,8 @@ GConfValue*   g_conf_source_query_value      (GConfSource* source,
 void          g_conf_source_set_value        (GConfSource* source,
                                               const gchar* key,
                                               GConfValue* value);
+GSList*      g_conf_source_all_pairs         (GConfSource* source,
+                                              const gchar* dir);
 gboolean     g_conf_source_sync_all          (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
 
@@ -72,6 +74,8 @@ gchar*   g_conf_read_server_ior(void);
 
 GConfValue* g_conf_value_from_corba_value(const ConfigValue* value);
 ConfigValue*  corba_value_from_g_conf_value(GConfValue* value);
+void          fill_corba_value_from_g_conf_value(GConfValue* value, 
+                                                 ConfigValue* dest);
 ConfigValue*  invalid_corba_value();
 
 /* This is the actual thing we want to talk to, the stack of sources */
@@ -88,12 +92,16 @@ GConfValue*   g_conf_sources_query_value (GConfSources* sources,
 void          g_conf_sources_set_value   (GConfSources* sources,
                                           const gchar* key,
                                           GConfValue* value);
+GSList*       g_conf_sources_all_pairs   (GConfSources* sources,
+                                          const gchar* dir);
 gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 
 gchar**       g_conf_load_source_path(const gchar* filename);
 
 /* shouldn't be used in applications (although implemented in gconf.c) */
 void          g_conf_shutdown_daemon(void);
+gboolean      g_conf_ping_daemon(void);
+gboolean      g_conf_spawn_daemon(void);
 
 #endif
 

@@ -24,6 +24,9 @@ interface ConfigListener {
 };
 
 interface ConfigServer {
+  typedef sequence<string> KeyList;
+  typedef sequence<ConfigValue> ValueList;
+
   // "where" is the portion of the namespace to listen to
   // Returns a connection ID for removal
   unsigned long add_listener(in string where, in ConfigListener who);  
@@ -33,6 +36,10 @@ interface ConfigServer {
   ConfigValue lookup(in string key);
 
   void set(in string key, in ConfigValue value);
+
+  void all_pairs(in string dir, 
+                 out KeyList keys,
+                 out ValueList values);
 
   void sync();
 

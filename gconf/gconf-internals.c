@@ -31,6 +31,21 @@
 #include <ctype.h>
 
 
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
+
 /*
  * Values
  */
@@ -208,6 +223,26 @@ g_conf_value_set_bool(GConfValue* value, gboolean the_bool)
   value->d.bool_data = the_bool;
 }
 
+GConfPair* 
+g_conf_pair_new(gchar* key, GConfValue* val)
+{
+  GConfPair* pair;
+
+  pair = g_new(GConfPair, 1);
+
+  pair->key   = key;
+  pair->value = val;
+
+  return pair;
+}
+
+void
+g_conf_pair_destroy(GConfPair* pair)
+{
+  g_free(pair->key);
+  g_conf_value_destroy(pair->value);
+  g_free(pair);
+}
 
 /* 
  *  Sources
@@ -266,6 +301,17 @@ g_conf_source_set_value        (GConfSource* source,
       g_warning("Invalid key `%s'", key);
     }
   (*source->backend->vtable->set_value)(source, key, value);
+}
+
+GSList*      
+g_conf_source_all_pairs         (GConfSource* source,
+                                 const gchar* dir)
+{
+  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
+    {
+      g_warning("Invalid directory `%s'", dir);
+    }
+  return (*source->backend->vtable->all_entries)(source, dir);
 }
 
 gboolean
@@ -490,17 +536,14 @@ g_conf_value_from_corba_value(const ConfigValue* value)
   return gval;
 }
 
-ConfigValue*  
-corba_value_from_g_conf_value(GConfValue* value)
+void          
+fill_corba_value_from_g_conf_value(GConfValue* value, 
+                                   ConfigValue* cv)
 {
-  ConfigValue* cv;
-
-  cv = ConfigValue__alloc();
-
   if (value == NULL)
     {
       cv->_d = InvalidVal;
-      return cv;
+      return;
     }
 
   switch (value->type)
@@ -525,10 +568,20 @@ corba_value_from_g_conf_value(GConfValue* value)
       cv->_d = InvalidVal;
       break;
     default:
+      cv->_d = InvalidVal;
       g_warning("Unknown type in %s", __FUNCTION__);
-      return NULL;
       break;
     }
+}
+
+ConfigValue*  
+corba_value_from_g_conf_value(GConfValue* value)
+{
+  ConfigValue* cv;
+
+  cv = ConfigValue__alloc();
+
+  fill_corba_value_from_g_conf_value(value, cv);
 
   return cv;
 }
@@ -620,6 +673,98 @@ g_conf_sources_set_value   (GConfSources* sources,
 
       tmp = g_list_next(tmp);
     }
+}
+
+
+/* God, this is depressingly inefficient. Maybe there's a nicer way to
+   implement it... */
+/* Then we have to ship it all to the app via CORBA... */
+/* Anyway, we use a hash to be sure we have a single value for 
+   each key in the directory, and we always take that value from
+   the first source that had one set. When we're done we flatten
+   the hash.
+*/
+static void
+hash_listify_func(gpointer key, gpointer value, gpointer user_data)
+{
+  GSList** list_p = user_data;
+
+  *list_p = g_slist_prepend(*list_p, value);
+}
+
+GSList*       
+g_conf_sources_all_pairs   (GConfSources* sources,
+                            const gchar* dir)
+{
+  GList* tmp;
+  GHashTable* hash;
+  GSList* flattened;
+  gboolean first_pass = TRUE; /* as an optimization, don't bother
+                                 doing hash lookups on first source
+                              */
+
+  /* As another optimization, skip the whole 
+     hash thing if there's only zero or one sources
+  */
+  if (sources->sources == NULL)
+    return NULL;
+
+  if (sources->sources->next == NULL)
+    {
+      return g_conf_source_all_pairs(sources->sources->data, dir);
+    }
+
+  g_assert(g_list_length(sources->sources) > 1);
+
+  hash = g_hash_table_new(g_str_hash, g_str_equal);
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+      GSList* pairs = g_conf_source_all_pairs(src, dir);
+      GSList* iter = pairs;
+
+      while (iter != NULL)
+        {
+          GConfPair* pair = iter->data;
+          GConfPair* previous;
+          
+          if (first_pass)
+            previous = NULL; /* Can't possibly be there. */
+          else
+            previous = g_hash_table_lookup(hash, pair->key);
+          
+          if (previous != NULL)
+            {
+              /* Discard */
+              g_conf_pair_destroy(pair);
+            }
+          else
+            {
+              /* Save */
+              g_hash_table_insert(hash, pair->key, pair);
+            }
+
+          iter = g_slist_next(iter);
+        }
+      
+      /* All pairs are either stored or destroyed. */
+      g_slist_free(pairs);
+
+      first_pass = FALSE;
+
+      tmp = g_list_next(tmp);
+    }
+
+  flattened = NULL;
+
+  g_hash_table_foreach(hash, hash_listify_func, &flattened);
+
+  g_hash_table_destroy(hash);
+
+  return flattened;
 }
 
 gboolean

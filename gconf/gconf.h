@@ -70,6 +70,16 @@ void        g_conf_value_set_bool(GConfValue* value, gboolean the_bool);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 
+typedef struct _GConfPair GConfPair;
+
+struct _GConfPair {
+  gchar* key;
+  GConfValue* value;
+};
+
+/* Pair takes memory ownership of both key and value */
+GConfPair* g_conf_pair_new(gchar* key, GConfValue* val);
+void       g_conf_pair_destroy(GConfPair* pair);
 
 /* A configuration engine (stack of config sources); normally there's
  * just one of these on the system.  
@@ -107,6 +117,8 @@ GConfValue*  g_conf_get(GConf* conf, const gchar* key);
 
 /* ditto, higher-level version planned. */
 void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
+
+GSList*      g_conf_all_pairs(GConf* conf, const gchar* dir);
 
 void         g_conf_sync(GConf* conf);
 

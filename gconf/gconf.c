@@ -33,6 +33,21 @@
 #include <unistd.h>
 
 
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
+
 /*
  * Error handling
  */
@@ -86,7 +101,7 @@ static GConfCnxn* g_conf_cnxn_new(GConf* conf, CORBA_unsigned_long server_id, GC
 static void       g_conf_cnxn_destroy(GConfCnxn* cnxn);
 static void       g_conf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfValue* value);
 
-static ConfigServer g_conf_get_config_server(void);
+static ConfigServer g_conf_get_config_server(gboolean start_if_not_found);
 static ConfigListener g_conf_get_config_listener(void);
 
 /* We'll use client-specific connection numbers to return to library
@@ -108,6 +123,7 @@ static CnxnTable* ctable_new(void);
 static void       ctable_insert(CnxnTable* ct, GConfCnxn* cnxn);
 static void       ctable_remove(CnxnTable* ct, GConfCnxn* cnxn);
 static void       ctable_remove_by_client_id(CnxnTable* ct, guint client_id);
+static GSList*    ctable_remove_by_conf(CnxnTable* ct, GConf* conf);
 static GConfCnxn* ctable_lookup_by_client_id(CnxnTable* ct, guint client_id);
 static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id);
 
@@ -129,8 +145,38 @@ g_conf_new            (void)
 void         
 g_conf_destroy        (GConf* conf)
 {
-  /* FIXME remove all connections associated with this GConf */
+  /* Remove all connections associated with this GConf */
+  GSList* removed;
+  GSList* tmp;
+  CORBA_Environment ev;
 
+  CORBA_exception_init(&ev);
+
+  removed = ctable_remove_by_conf(ctable, conf);
+  
+  tmp = removed;
+  while (tmp != NULL)
+    {
+      GConfCnxn* gcnxn = tmp->data;
+
+      ConfigServer_remove_listener(g_conf_get_config_server(TRUE), 
+                                   gcnxn->server_id,
+                                   &ev);
+
+      if (ev._major != CORBA_NO_EXCEPTION)
+        {
+          g_warning("Failure removing listener %u from the config server: %s",
+                    (guint)gcnxn->server_id,
+                    CORBA_exception_id(&ev));
+          CORBA_exception_free(&ev);
+        }
+
+      g_conf_cnxn_destroy(gcnxn);
+
+      tmp = g_slist_next(tmp);
+    }
+
+  g_slist_free(removed);
 }
 
 guint
@@ -146,7 +192,7 @@ g_conf_notify_add(GConf* conf,
   CORBA_Environment ev;
   GConfCnxn* cnxn;
 
-  cs = g_conf_get_config_server();
+  cs = g_conf_get_config_server(TRUE);
 
   if (cs == CORBA_OBJECT_NIL)
     {
@@ -161,7 +207,7 @@ g_conf_notify_add(GConf* conf,
   /* Should have aborted the program in this case probably */
   g_return_val_if_fail(cl != CORBA_OBJECT_NIL, 0);
 
-  id = ConfigServer_add_listener(cs, namespace_section, 
+  id = ConfigServer_add_listener(cs, (gchar*)namespace_section, 
                                  cl, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
@@ -196,7 +242,7 @@ g_conf_notify_remove(GConf* conf,
 
   g_return_if_fail(gcnxn != NULL);
 
-  ConfigServer_remove_listener(g_conf_get_config_server(), 
+  ConfigServer_remove_listener(g_conf_get_config_server(TRUE), 
                                gcnxn->server_id,
                                &ev);
 
@@ -230,7 +276,7 @@ g_conf_get(GConf* conf, const gchar* key)
       return NULL;
     }
 
-  cs = g_conf_get_config_server();
+  cs = g_conf_get_config_server(TRUE);
 
   if (cs == CORBA_OBJECT_NIL)
     {
@@ -240,8 +286,7 @@ g_conf_get(GConf* conf, const gchar* key)
 
   CORBA_exception_init(&ev);
   
-  cv = ConfigServer_lookup(cs,
-                           key, &ev);
+  cv = ConfigServer_lookup(cs, (gchar*)key, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
@@ -278,7 +323,7 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
       return;
     }
 
-  cs = g_conf_get_config_server();
+  cs = g_conf_get_config_server(TRUE);
 
   if (cs == CORBA_OBJECT_NIL)
     {
@@ -291,7 +336,7 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
   CORBA_exception_init(&ev);
 
   ConfigServer_set(cs,
-                   key, cv,
+                   (gchar*)key, cv,
                    &ev);
 
   CORBA_free(cv);
@@ -305,13 +350,82 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
     }
 }
 
+GSList*      
+g_conf_all_pairs(GConf* conf, const gchar* dir)
+{
+  GSList* pairs = NULL;
+  ConfigServer_ValueList* values;
+  ConfigServer_KeyList* keys;
+  CORBA_Environment ev;
+  ConfigServer cs;
+  guint i;
+
+  if (!g_conf_valid_key(dir))
+    {
+      g_warning("Invalid dir `%s'", dir);
+      return NULL;
+    }
+
+  cs = g_conf_get_config_server(TRUE);
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return NULL;
+    }
+
+  CORBA_exception_init(&ev);
+  
+  ConfigServer_all_pairs(cs, (gchar*)dir, 
+                         &keys, &values,
+                         &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure getting list of entries in `%s' from config server: %s",
+                dir, CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+
+      return NULL;
+    }
+  
+  if (keys->_length != values->_length)
+    {
+      g_warning("Received unmatched key/value sequences in %s",
+                __FUNCTION__);
+      return NULL;
+    }
+
+  i = 0;
+  while (i < keys->_length)
+    {
+      GConfPair* pair;
+
+      pair = 
+        g_conf_pair_new(g_strdup(keys->_buffer[i]),
+                        g_conf_value_from_corba_value(&(values->_buffer[i])));
+      
+      pairs = g_slist_prepend(pairs, pair);
+      
+      ++i;
+    }
+  
+  /* hmm, not sure this is correct - does it free all the strings 
+     in keys? */
+  CORBA_free(keys);
+  CORBA_free(values);
+
+  return pairs;
+}
+
 void 
 g_conf_sync(GConf* conf)
 {
   CORBA_Environment ev;
   ConfigServer cs;
 
-  cs = g_conf_get_config_server();
+  cs = g_conf_get_config_server(TRUE);
 
   if (cs == CORBA_OBJECT_NIL)
     {
@@ -410,12 +524,15 @@ try_to_contact_server(void)
 }
 
 static ConfigServer
-g_conf_get_config_server(void)
+g_conf_get_config_server(gboolean start_if_not_found)
 {
   if (server != CORBA_OBJECT_NIL)
     return server;
   
   server = try_to_contact_server();
+
+  if (!start_if_not_found)
+    return server;
 
   if (server == CORBA_OBJECT_NIL)
     {
@@ -513,8 +630,8 @@ ConfigListener listener = CORBA_OBJECT_NIL;
 static void 
 notify(PortableServer_Servant servant, 
        CORBA_unsigned_long cnxn,
-       const CORBA_char* key, 
-       const ConfigValue* value,
+       CORBA_char* key, 
+       ConfigValue* value,
        CORBA_Environment *ev);
 
 static PortableServer_ServantBase__epv base_epv = {
@@ -530,8 +647,8 @@ static POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 static void 
 notify(PortableServer_Servant servant, 
        CORBA_unsigned_long server_id,
-       const CORBA_char* key, 
-       const ConfigValue* value,
+       CORBA_char* key, 
+       ConfigValue* value,
        CORBA_Environment *ev)
 {
   GConfCnxn* cnxn;
@@ -729,6 +846,53 @@ ctable_remove_by_client_id(CnxnTable* ct, guint client_id)
   ctable_remove(ctable, cnxn);
 }
 
+struct RemoveData {
+  GSList* removed;
+  GConf* conf;
+  gboolean save_removed;
+};
+
+static gboolean
+remove_by_conf(gpointer key, gpointer value, gpointer user_data)
+{
+  struct RemoveData* rd = user_data;
+  GConfCnxn* cnxn = value;
+  
+  if (cnxn->conf == rd->conf)
+    {
+      if (rd->save_removed)
+        rd->removed = g_slist_prepend(rd->removed, cnxn);
+
+      return TRUE;  /* remove this one */
+    }
+  else 
+    return FALSE; /* or not */
+}
+
+/* We return a list of the removed GConfCnxn */
+static GSList*      
+ctable_remove_by_conf(CnxnTable* ct, GConf* conf)
+{
+  guint client_ids_removed;
+  guint server_ids_removed;
+  struct RemoveData rd;
+
+  rd.removed = NULL;
+  rd.conf = conf;
+  rd.save_removed = TRUE;
+  
+  client_ids_removed = g_hash_table_foreach_remove(ct->server_ids, remove_by_conf, &rd);
+
+  rd.save_removed = FALSE;
+
+  server_ids_removed = g_hash_table_foreach_remove(ct->client_ids, remove_by_conf, &rd);
+
+  g_assert(client_ids_removed == server_ids_removed);
+  g_assert(client_ids_removed == g_slist_length(rd.removed));
+
+  return rd.removed;
+}
+
 static GConfCnxn* 
 ctable_lookup_by_client_id(CnxnTable* ct, guint client_id)
 {
@@ -752,11 +916,11 @@ g_conf_shutdown_daemon(void)
   CORBA_Environment ev;
   ConfigServer cs;
 
-  cs = g_conf_get_config_server();
+  cs = g_conf_get_config_server(FALSE); /* Don't want to spawn it if it's already down */
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_warning("Couldn't get config server");
+      printf(_("Config server (gconfd) is not running\n"));
       return;
     }
 
@@ -771,4 +935,30 @@ g_conf_shutdown_daemon(void)
       /* FIXME we could do better here... maybe respawn the server if needed... */
       CORBA_exception_free(&ev);
     }
+}
+
+gboolean
+g_conf_ping_daemon(void)
+{
+  ConfigServer cs;
+
+  cs = g_conf_get_config_server(FALSE);
+
+  if (cs == CORBA_OBJECT_NIL)
+    return FALSE;
+  else
+    return TRUE;
+}
+
+gboolean
+g_conf_spawn_daemon(void)
+{
+  ConfigServer cs;
+
+  cs = g_conf_get_config_server(TRUE);
+
+  if (cs == CORBA_OBJECT_NIL)
+    return FALSE; /* Failed to spawn */
+  else
+    return TRUE;
 }

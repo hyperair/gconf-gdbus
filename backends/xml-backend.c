@@ -166,6 +166,9 @@ xs_create_new_dir(XMLSource* xsource, const gchar* dir);
 static gboolean
 xs_sync_all(XMLSource* source);
 
+static GSList* 
+xs_pairs_in_dir(XMLSource* source, const gchar* dir);
+
 /*
  * Dyna-load implementation
  */
@@ -178,6 +181,13 @@ static GConfValue*   query_value     (GConfSource* source, const gchar* key);
 
 static void          set_value       (GConfSource* source, const gchar* key, GConfValue* value);
 
+static GSList*       all_entries    (GConfSource* source,
+                                     const gchar* dir);
+
+static GSList*       all_subdirs     (GConfSource* source,
+                                     const gchar* dir);
+
+
 static gboolean      sync_all        (GConfSource* source);
 
 static void          destroy_source  (GConfSource* source);
@@ -187,6 +197,8 @@ static GConfBackendVTable xml_vtable = {
   resolve_address,
   query_value,
   set_value,
+  all_entries,
+  all_subdirs,
   sync_all,
   destroy_source
 };
@@ -252,6 +264,26 @@ set_value (GConfSource* source, const gchar* key, GConfValue* value)
   XMLSource* xsource = (XMLSource*)source;
 
   xs_set_value(xsource, key, value);
+}
+
+
+static GSList*             
+all_entries    (GConfSource* source,
+                const gchar* dir)
+{
+  XMLSource* xsource = (XMLSource*)source;
+  
+  return xs_pairs_in_dir(xsource, dir);
+}
+
+static GSList*
+all_subdirs     (GConfSource* source,
+                 const gchar* dir)
+
+{  
+  XMLSource* xsource = (XMLSource*)source;
+
+  return NULL;
 }
 
 static gboolean      
@@ -368,6 +400,70 @@ xs_load_dir(XMLSource* source, const gchar* dir)
   return doc;
 }
 
+static KeyCacheEntry*
+xs_lookup_key_given_dir(XMLSource* source,
+                        TreeCacheEntry* tree_entry,
+                        const gchar* key,
+                        /* ugliness for efficiency when making a list of all entries */
+                        xmlNodePtr key_node)
+{
+  KeyCacheEntry* key_entry;
+
+  g_return_val_if_fail(tree_entry != NULL, NULL);
+  
+  key_entry = g_hash_table_lookup(source->keys, key);
+      
+  if (key_entry != NULL)
+    {
+      tree_entry->last_access = key_entry->last_access = time(NULL);
+
+      if (key_node && (key_entry->node != key_node))
+        g_warning("Scanned key entry node doesn't match cached node!");
+
+      return key_entry;
+    }
+  else 
+    {
+      /* Need to scan the tree, unless we were supplied with 
+         a key_node 
+      */
+      xmlNodePtr node;
+
+      if (key_node == NULL)
+        node = xdoc_find_entry(tree_entry->tree, key);
+      else 
+        node = key_node;
+      
+      if (node == NULL)
+        {
+          g_assert(key_node == NULL);
+          /* no such key */
+          return NULL;
+        }
+      else 
+        {
+          GConfValue* value;
+          
+          value = xentry_extract_value(node);
+          
+          /* Add key to key cache, then return the new entry. */
+          key_entry = key_cache_entry_new(key, value, node);
+          
+          /* Very important to use key_entry->key as the hash key */
+          g_hash_table_insert(source->keys, key_entry->key, key_entry);
+          
+          /* Tree entries track associated keys,
+             because the key entries hold a pointer into the XML 
+             tree 
+          */
+          tree_entry->cached_keys = g_slist_prepend(tree_entry->cached_keys,
+                                                    key_entry);
+          
+          return key_entry;
+        }
+    }
+}
+
 static void
 xs_lookup_key_and_dir(XMLSource* source, const gchar* key,
                       TreeCacheEntry** tree_entry_p, 
@@ -399,50 +495,12 @@ xs_lookup_key_and_dir(XMLSource* source, const gchar* key,
 
       *tree_entry_p = tree_entry;
 
-      key_entry = g_hash_table_lookup(source->keys, key);
+      key_entry = xs_lookup_key_given_dir(source, tree_entry, key, NULL);
       
-      if (key_entry != NULL)
-        {
-          tree_entry->last_access = key_entry->last_access = time(NULL);
-          *key_entry_p = key_entry;
-          return;
-        }
-      else 
-        {
-          /* Need to scan the tree */
-          xmlNodePtr node;
-
-          node = xdoc_find_entry(tree_entry->tree, key);
-
-          if (node == NULL)
-            {
-              /* no such key */
-              return;
-            }
-          else 
-            {
-              GConfValue* value;
-              
-              value = xentry_extract_value(node);
-              
-              /* Add key to key cache, then return the new entry. */
-              key_entry = key_cache_entry_new(key, value, node);
-              
-              /* Very important to use key_entry->key as the hash key */
-              g_hash_table_insert(source->keys, key_entry->key, key_entry);
-
-              /* Tree entries track associated keys,
-                 because the key entries hold a pointer into the XML 
-                 tree 
-              */
-              tree_entry->cached_keys = g_slist_prepend(tree_entry->cached_keys,
-                                                        key_entry);
-              
-              *key_entry_p = key_entry;
-              return;
-            }
-        }
+      *key_entry_p = key_entry;
     }
+
+  g_free(dir);
 }
 
 
@@ -490,6 +548,70 @@ xs_lookup_dir(XMLSource* source, const gchar* dir)
   g_hash_table_insert(source->trees, g_strdup(dir), tree_entry);
 
   return tree_entry;
+}
+
+static GSList* 
+xs_pairs_in_dir(XMLSource* source, const gchar* dir)
+{
+  /* Our goal is to create a GConfPair for each entry in this dir */
+  GSList* retval = NULL;
+  TreeCacheEntry* entry;
+  xmlNodePtr node;
+  xmlDocPtr doc;
+
+  entry = xs_lookup_dir(source, dir);
+
+  if (entry == NULL)
+    return retval;
+
+  doc = entry->tree;
+
+  if (doc == NULL ||
+      doc->root == NULL ||
+      doc->root->childs == NULL)
+    {
+      /* Empty document - just return. */
+      return NULL;
+    }
+
+  if (strcmp(doc->root->name, "gconf") != 0)
+    {
+      g_warning("Document root isn't a <gconf> tag");
+      return NULL;
+    }
+
+  node = doc->root->childs;
+
+  while (node != NULL)
+    {
+      if (node->type == XML_ELEMENT_NODE && 
+          (strcmp(node->name, "entry") == 0))
+        {
+          gchar* attr = xmlGetProp(node, "name");
+          
+          if (attr != NULL)
+            {
+              gchar* key = g_strconcat(dir, "/", attr, NULL);
+              KeyCacheEntry* key_entry;
+              GConfPair* pair;
+
+              key_entry = xs_lookup_key_given_dir(source, entry, key, node);
+
+              g_assert(key_entry != NULL);
+
+              pair = g_conf_pair_new(key, g_conf_value_copy(key_entry->value));
+
+              retval = g_slist_prepend(retval, pair);
+              
+              free(attr);
+              /* don't free key, because the GConfPair now owns it */
+            }
+        }
+
+      node = node->next;
+    }
+
+  return retval;
 }
 
 static XMLSource* 
@@ -756,13 +878,10 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
   filename = g_strconcat(relative_dir, "/.gconf.xml", NULL);
   old_filename = g_strconcat(relative_dir, "/.gconf.xml.old", NULL);
 
-  /* Should do this via the generic sync-all-dirty function we should have. */
   if (xmlSaveFile(tmp_filename, entry->tree) < 0)
     {
       /* I think libxml may mangle errno, but we might as well 
          try. */
-      /* Eventually we'll leave doc marked dirty if this happens,
-         so we can retry later. */
       g_warning("Failed to write file `%s': %s", 
                 tmp_filename, strerror(errno));
 
@@ -811,6 +930,9 @@ tree_cache_foreach_sync(gchar* dir, TreeCacheEntry* entry, struct SyncData* data
         }
     }
   
+  /* All successful, mark it not-dirty-anymore */
+  entry->dirty = FALSE;
+
  end_of_sync:
 
   g_free(old_filename);
@@ -877,8 +999,6 @@ xdoc_find_entry(xmlDocPtr doc, const gchar* full_key)
   
   node = doc->root->childs;
 
-  printf("root name: %s childs name: %s\n", doc->root->name, doc->root->childs->name);
-
   while (node != NULL)
     {
       if (node->type == XML_ELEMENT_NODE && 
@@ -886,16 +1006,23 @@ xdoc_find_entry(xmlDocPtr doc, const gchar* full_key)
         {
           gchar* attr = xmlGetProp(node, "name");
 
-          if (strcmp(attr, key) == 0)
+          if (attr != NULL)
             {
-              /* Found it! */
-              free(attr); /* free, it's from libxml */
-              g_free(key);
-              return node;
+              if (strcmp(attr, key) == 0)
+                {
+                  /* Found it! */
+                  free(attr); /* free, it's from libxml */
+                  g_free(key);
+                  return node;
+                }
+              else
+                {
+                  free(attr);
+                }
             }
           else
             {
-              free(attr);
+              g_warning("Entry with no name!");
             }
         }
 
