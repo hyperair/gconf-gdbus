@@ -3,14 +3,14 @@
 # Copyright (C) 2001-2002 Roy-Magne Mo
 # Kjartan Maraas  <kmaraas@gnome.org>
 # Roy-Magne Mo <rmo@sunnmore.net>, 2001-2002.
-# Åsmund Skjæveland <aasmunds@fys.uio.no>, 2003.
+# Åsmund Skjæveland <aasmunds@fys.uio.no>, 2003, 2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: nn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-27 17:16+0100\n"
-"PO-Revision-Date: 2003-12-28 12:55+0100\n"
+"POT-Creation-Date: 2004-01-02 12:43+0100\n"
+"PO-Revision-Date: 2004-01-02 15:40+0100\n"
 "Last-Translator: Åsmund Skjæveland <aasmunds@fys.uio.no>\n"
 "Language-Team: Norwegian Nynorsk <i18n-nn@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -32,6 +32,40 @@ msgstr "Kunne ikkje laga katalogen «%s»: %s"
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "Klarte ikkje å lesa eller skriva til rotkatalogen %s i addressa «%s»"
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Kan ikkje finna katalogen «%s»\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Feil under lagring av GConf-tre til «%s»: %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Bruk: %s <katalog>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Bruk: %s <katalog>\n"
+"  Slår ihop eit merka motorfilsystemhierarki slik:\n"
+"    kat/%%gconf.xml\n"
+"        underkat1/%%gconf.xml\n"
+"        underkat2/%%gconf.xml\n"
+"  til:\n"
+"    kat/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -115,7 +149,7 @@ msgstr "Klarte ikkje å sletta «%s»: %s"
 #: backends/xml-dir.c:471
 #, c-format
 msgid "Failed to write file `%s': %s"
-msgstr "Kunne ikkje skrive fil «%s»: %s"
+msgstr "Kunne ikkje skriva fila «%s»: %s"
 
 #: backends/xml-dir.c:484
 #, c-format
@@ -642,7 +676,7 @@ msgstr "klarte ikkje å oppretta katalogen «%s»: %s"
 #: gconf/gconf-internals.c:2574
 #, c-format
 msgid "Can't write to file `%s': %s"
-msgstr "Kan ikkje skrive til fila «%s»: %s"
+msgstr "Kan ikkje skriva til fila «%s»: %s"
 
 #: gconf/gconf-internals.c:2615
 #, c-format
@@ -1750,7 +1784,9 @@ msgstr "Når du stiller ei liste må du oppgje ein primitiv listetype\n"
 
 #: gconf/gconftool.c:1750
 msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "Når du stiller eit par, må du oppgje primitive typar til begge verdiane i paret\n"
+msgstr ""
+"Når du stiller eit par, må du oppgje primitive typar til begge verdiane i "
+"paret\n"
 
 #: gconf/gconftool.c:1765
 #, c-format
@@ -1985,22 +2021,22 @@ msgstr "ÅTVARING: Klarte ikkje å tolka typenamnet «%s»\n"
 #, c-format
 msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"ÅTVARING: «list_type» kan berre vera heiltal, flyttal, streng eller boolsk verdi. "
-"Ikkje «%s».\n"
+"ÅTVARING: «list_type» kan berre vera heiltal, flyttal, streng eller boolsk "
+"verdi. Ikkje «%s».\n"
 
 #: gconf/gconftool.c:3079
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"ÅTVARING: «car_type» kan berre vera heiltal, flyttal, streng eller boolsk verdi. "
-"Ikkje «%s».\n"
+"ÅTVARING: «car_type» kan berre vera heiltal, flyttal, streng eller boolsk "
+"verdi. Ikkje «%s».\n"
 
 #: gconf/gconftool.c:3100
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"ÅTVARING: «cdr_type» kan berre vera heiltal, flyttal, streng eller boolsk verdi. "
-"Ikkje «%s».\n"
+"ÅTVARING: «cdr_type» kan berre vera heiltal, flyttal, streng eller boolsk "
+"verdi. Ikkje «%s».\n"
 
 #: gconf/gconftool.c:3140
 msgid "WARNING: empty <applyto> node"
