@@ -129,12 +129,12 @@ static void gconf_client_real_remove_dir    (GConfClient* client,
                                              Dir* d,
 					     GError** err);
 
-static GConfValue* get_nocopy (GConfClient  *client,
-                               const gchar  *key,
-                               gboolean      use_default,
-                               gboolean     *is_default_retloc,
-                               gboolean     *is_writable_retloc,
-                               GError      **error);
+static GConfValue* get (GConfClient  *client,
+                        const gchar  *key,
+                        gboolean      use_default,
+                        gboolean     *is_default_retloc,
+                        gboolean     *is_writable_retloc,
+                        GError      **error);
 
 
 static guint client_signals[LAST_SIGNAL] = { 0 };
@@ -971,14 +971,20 @@ gconf_client_key_is_writable(GConfClient* client,
   
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
-  val = get_nocopy (client, key, TRUE,
-                    NULL, &is_writable, &error);
+  val = get (client, key, TRUE,
+             NULL, &is_writable, &error);
 
   if (val == NULL && error != NULL)
     handle_error(client, error, err);
   else
     g_assert(error == NULL);
 
+  /* FIXME we could avoid creating this value at all if
+   * we were somewhat less lame.
+   */
+  if (val)
+    gconf_value_free (val);
+  
   return is_writable;
 }
 
@@ -999,11 +1005,12 @@ check_type(const gchar* key, GConfValue* val, GConfValueType t, GError** err)
 }
 
 static GConfValue*
-get_nocopy(GConfClient* client, const gchar* key,
-           gboolean use_default,
-           gboolean* is_default_retloc,
-           gboolean *is_writable_retloc,
-           GError** error)
+get (GConfClient *client,
+     const gchar *key,
+     gboolean     use_default,
+     gboolean    *is_default_retloc,
+     gboolean    *is_writable_retloc,
+     GError     **error)
 {
   GConfValue* val = NULL;
   gboolean is_default = FALSE;
@@ -1027,7 +1034,7 @@ get_nocopy(GConfClient* client, const gchar* key,
         *is_writable_retloc = is_writable;
       
       /* may be NULL of course */
-      return val;
+      return val ? gconf_value_copy (val) : NULL;
     }
       
   g_assert(val == NULL); /* if it was in the cache we should have returned */
@@ -1052,7 +1059,8 @@ get_nocopy(GConfClient* client, const gchar* key,
   else
     {
       /* Cache this value, if it's in our directory list. FIXME could
-         speed this up. */
+       * speed this up.
+       */
       gchar* parent = g_strdup(key);
       gchar* end;
 
@@ -1064,9 +1072,9 @@ get_nocopy(GConfClient* client, const gchar* key,
           
           if (g_hash_table_lookup(client->dir_hash, parent) != NULL)
             {
-              /* Cache gets ownership of the value */
-              gconf_client_cache(client, key, is_default, is_writable,
-                                 val);
+              /* cache a copy of val */
+              gconf_client_cache (client, key, is_default, is_writable,
+                                  val ? gconf_value_copy (val) : NULL);
               break;
             }
           
@@ -1074,26 +1082,12 @@ get_nocopy(GConfClient* client, const gchar* key,
         }
 
       g_free(parent);
-      
+
+      /* We don't own val, we're returning this copy belonging
+       * to the caller
+       */
       return val;
     }
-}
-
-static GConfValue*
-get(GConfClient* client, const gchar* key,
-    gboolean use_default,
-    gboolean* is_default_retloc,
-    gboolean* is_writable_retloc,
-    GError** error)
-{
-  GConfValue *val;
-
-  val = get_nocopy (client, key, use_default,
-                    is_default_retloc,
-                    is_writable_retloc,
-                    error);
-
-  return val ? gconf_value_copy (val) : NULL;
 }
      
 static GConfValue*
