@@ -124,6 +124,20 @@ g_conf_errno          (void)
   return last_errno;
 }
 
+gboolean
+g_conf_key_check(const gchar* key)
+{
+  gchar* why = NULL;
+  if (!g_conf_valid_key(key, &why))
+    {
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s': %s"),
+                       key, why);
+      g_free(why);
+      return FALSE;
+    }
+  return TRUE;
+}
+
 /* 
  * GConfPrivate
  */
@@ -399,12 +413,8 @@ g_conf_get(GConf* conf, const gchar* key)
   CORBA_Environment ev;
   ConfigServer cs;
 
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      
-      return NULL;
-    }
+  if (!g_conf_key_check(key))
+    return NULL;
 
   cs = g_conf_get_config_server(TRUE);
 
@@ -444,11 +454,8 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 
   g_return_if_fail(value->type != G_CONF_VALUE_INVALID);
 
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return;
-    }
+  if (!g_conf_key_check(key))
+    return;
 
   cs = g_conf_get_config_server(TRUE);
 
@@ -481,11 +488,8 @@ g_conf_unset(GConf* conf, const gchar* key)
   CORBA_Environment ev;
   ConfigServer cs;
 
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return;
-    }
+  if (!g_conf_key_check(key))
+    return;
 
   cs = g_conf_get_config_server(TRUE);
 
@@ -518,11 +522,8 @@ g_conf_all_entries(GConf* conf, const gchar* dir)
   ConfigServer cs;
   guint i;
 
-  if (!g_conf_valid_key(dir))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return NULL;
-    }
+  if (!g_conf_key_check(dir))
+    return NULL;
 
   cs = g_conf_get_config_server(TRUE);
 
@@ -583,11 +584,8 @@ g_conf_all_dirs(GConf* conf, const gchar* dir)
   ConfigServer cs;
   guint i;
 
-  if (!g_conf_valid_key(dir))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return NULL;
-    }
+  if (!g_conf_key_check(dir))
+    return NULL;
 
   cs = g_conf_get_config_server(TRUE);
 
@@ -664,11 +662,8 @@ g_conf_dir_exists(GConf *conf, const gchar *dir)
 
   g_return_val_if_fail(dir != NULL, FALSE);
   
-  if (!g_conf_valid_key(dir))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return FALSE;
-    }
+  if (!g_conf_key_check(dir))
+    return FALSE;
   
   cs = g_conf_get_config_server(TRUE);
   
@@ -1046,14 +1041,18 @@ g_conf_is_initialized (void)
 static const gchar invalid_chars[] = "\"$&<>,+=#!()'|{}[]?~`;%\\";
 
 gboolean     
-g_conf_valid_key      (const gchar* key)
+g_conf_valid_key      (const gchar* key, gchar** why_invalid)
 {
   const gchar* s = key;
   gboolean just_saw_slash = FALSE;
 
   /* Key must start with the root */
   if (*key != '/')
-    return FALSE;
+    {
+      if (why_invalid != NULL)
+        *why_invalid = g_strdup(_("Must begin with a slash (/)"));
+      return FALSE;
+    }
   
   /* Root key is a valid dir */
   if (*key == '/' && key[1] == '\0')
@@ -1069,7 +1068,16 @@ g_conf_valid_key      (const gchar* key)
            * because it would be a pain for filesystem-based backends.
            */
           if (*s == '/' || *s == '.')
-            return FALSE;
+            {
+              if (why_invalid != NULL)
+                {
+                  if (*s == '/')
+                    *why_invalid = g_strdup(_("Can't have two slashes (/) in a row"));
+                  else
+                    *why_invalid = g_strdup(_("Can't have a period (.) right after a slash (/)"));
+                }
+              return FALSE;
+            }
         }
 
       if (*s == '/')
@@ -1085,7 +1093,11 @@ g_conf_valid_key      (const gchar* key)
           while (*inv)
             {
               if (*inv == *s)
-                return FALSE;
+                {
+                  if (why_invalid != NULL)
+                    *why_invalid = g_strdup_printf(_("`%c' is an invalid character in key/directory names"), *s);
+                  return FALSE;
+                }
               ++inv;
             }
         }
@@ -1095,7 +1107,11 @@ g_conf_valid_key      (const gchar* key)
 
   /* Can't end with slash */
   if (just_saw_slash)
-    return FALSE;
+    {
+      if (why_invalid != NULL)
+        *why_invalid = g_strdup(_("Key/directory may not end with a slash (/)"));
+      return FALSE;
+    }
   else
     return TRUE;
 }

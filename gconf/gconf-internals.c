@@ -86,11 +86,9 @@ g_conf_source_query_value      (GConfSource* source,
                                 const gchar* key,
                                 gchar** schema_name)
 {
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return NULL;
-    }
+  if (!g_conf_key_check(key))
+    return NULL;
+  
   return (*source->backend->vtable->query_value)(source, key, schema_name);
 }
 
@@ -102,11 +100,8 @@ g_conf_source_set_value        (GConfSource* source,
   g_return_if_fail(value != NULL);
   g_return_if_fail(key != NULL);
 
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return;
-    }
+  if (!g_conf_key_check(key))
+    return;
 
   g_assert(*key != '\0');
 
@@ -123,11 +118,9 @@ void
 g_conf_source_unset_value      (GConfSource* source,
                                 const gchar* key)
 {
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return;
-    }
+  if (!g_conf_key_check(key))
+    return;
+
   (*source->backend->vtable->unset_value)(source, key);
 }
 
@@ -135,11 +128,9 @@ GSList*
 g_conf_source_all_entries         (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return NULL;
-    }
+  if (!g_conf_key_check(dir))
+    return NULL;
+
   return (*source->backend->vtable->all_entries)(source, dir);
 }
 
@@ -147,11 +138,9 @@ GSList*
 g_conf_source_all_dirs          (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return NULL;
-    }
+  if (!g_conf_key_check(dir))
+    return NULL;
+
   return (*source->backend->vtable->all_subdirs)(source, dir);
 }
 
@@ -159,11 +148,8 @@ gboolean
 g_conf_source_dir_exists        (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return FALSE;
-    }
+  if (!g_conf_key_check(dir))
+    return FALSE;
   
   return (*source->backend->vtable->dir_exists)(source, dir);
 }
@@ -172,11 +158,9 @@ void
 g_conf_source_remove_dir        (GConfSource* source,
                                  const gchar* dir)
 {
-  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
-      return;
-    }
+  if (!g_conf_key_check(dir))
+    return;
+
   return (*source->backend->vtable->remove_dir)(source, dir);
 }
 
@@ -185,16 +169,11 @@ g_conf_source_set_schema        (GConfSource* source,
                                  const gchar* key,
                                  const gchar* schema_key)
 {
-  if (!g_conf_valid_key(key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return;
-    }
-  if (!g_conf_valid_key(schema_key))
-    {
-      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), key);
-      return;
-    }
+  if (!g_conf_key_check(key))
+    return;
+
+  if (!g_conf_key_check(schema_key))
+    return;
   
   return (*source->backend->vtable->set_schema)(source, key, schema_key);
 }

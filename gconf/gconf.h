@@ -61,7 +61,10 @@ void         g_conf_sync           (GConf* conf);
 
 gboolean     g_conf_dir_exists     (GConf *conf, const gchar* dir);
 
-gboolean     g_conf_valid_key      (const gchar* key);
+/* if you pass non-NULL for why_invalid, it gives a user-readable
+   explanation of the problem in g_malloc()'d memory
+*/
+gboolean     g_conf_valid_key      (const gchar* key, gchar** why_invalid);
 
 
 /* 

@@ -57,8 +57,8 @@ struct _GConfError {
   GConfErrNo num;
 };
 
-GConfError* g_conf_error_new(GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-void        g_conf_error_destroy(GConfError* err);
+GConfError*  g_conf_error_new      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void         g_conf_error_destroy  (GConfError* err);
 
 const gchar* g_conf_error          (void);
 GConfErrNo   g_conf_errno          (void);
