@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-06-05 21:25+0000\n"
-"PO-Revision-Date: 2000-06-05 22:07+00:00\n"
+"POT-Creation-Date: 2000-06-29 18:47+0000\n"
+"PO-Revision-Date: 2000-06-29 19:18+00:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr "Выгрузка серверного модуля XML."
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Не удалось найти корневой каталог XML по адресу '%s'"
 
-#: backends/xml-backend.c:315
+#: backends/xml-backend.c:315 backends/xml-dir.c:1047
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Не удалось создать каталог '%s': %s"
@@ -45,6 +45,183 @@ msgstr "Инициализация серверного модуля XML"
 #, c-format
 msgid "Failed to give up lock on XML dir `%s': %s"
 msgstr "Не удалось заблокировать XML каталог \"%s\": %s"
+
+#: backends/xml-cache.c:134
+msgid "Unsynced directory deletions when shutting down XML backend"
+msgstr ""
+
+#: backends/xml-cache.c:243
+#, c-format
+msgid ""
+"Unable to remove directory `%s' from the XML backend cache, because it has "
+"not been successfully synced to disk"
+msgstr ""
+
+#: backends/xml-cache.c:268
+#, c-format
+msgid ""
+"%u items remain in the cache after cleaning already-synced items older than "
+"%u seconds"
+msgstr ""
+
+#: backends/xml-dir.c:178
+#, c-format
+msgid "Could not stat `%s': %s"
+msgstr ""
+
+#: backends/xml-dir.c:188
+#, c-format
+msgid "XML filename `%s' is a directory"
+msgstr "XML файл \"%s\" является каталогом"
+
+#: backends/xml-dir.c:307 backends/xml-dir.c:314
+#, c-format
+msgid "Failed to delete `%s': %s"
+msgstr "Не удалось удалить \"%s\": %s"
+
+#: backends/xml-dir.c:355
+#, c-format
+msgid "Failed to write file `%s': %s"
+msgstr "Не удалось записать файл \"%s\": %s"
+
+#: backends/xml-dir.c:371 backends/xml-dir.c:381
+#, c-format
+msgid "Failed to rename `%s' to `%s': %s"
+msgstr "Не удалось переименовать \"%s\" в \"%s\": %s"
+
+#: backends/xml-dir.c:387
+#, c-format
+msgid "Failed to restore `%s' from `%s': %s"
+msgstr "Не удалось получить \"%s\" из \"%s\": %s"
+
+#: backends/xml-dir.c:399
+#, c-format
+msgid "Failed to delete old file `%s': %s"
+msgstr "Не удалось удалить старый файл \"%s\": %s"
+
+#. These are all fatal errors
+#: backends/xml-dir.c:802
+#, c-format
+msgid "Failed to stat `%s': %s"
+msgstr ""
+
+#: backends/xml-dir.c:946
+#, c-format
+msgid "Duplicate entry `%s' in `%s', ignoring"
+msgstr "Повторная запись \"%s\" в \"%s\", игнорируется"
+
+#: backends/xml-dir.c:968
+#, c-format
+msgid "Entry with no name in XML file `%s', ignoring"
+msgstr "Запись без имени в XML-файле \"%s\", игнорируется"
+
+#: backends/xml-dir.c:975
+#, c-format
+msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
+msgstr ""
+
+#: backends/xml-dir.c:1063
+#, c-format
+msgid "Failed to create file `%s': %s"
+msgstr "Не удалось создать файл \"%s\": %s"
+
+#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2418
+#, c-format
+msgid "Failed to close file `%s': %s"
+msgstr "Не удалось закрыть файл '%s': %s"
+
+#. There was an error
+#: backends/xml-entry.c:162 backends/xml-entry.c:381
+#, c-format
+msgid "Ignoring XML node `%s': %s"
+msgstr "Игнорирование XML-узла \"%s\": %s"
+
+#: backends/xml-entry.c:211 gconf/gconf-internals.c:2122
+#, c-format
+msgid "%s"
+msgstr "%s"
+
+#: backends/xml-entry.c:338
+#, c-format
+msgid "Ignoring schema name `%s', invalid: %s"
+msgstr ""
+
+#: backends/xml-entry.c:683
+msgid "found <local_schema> with no locale setting"
+msgstr ""
+
+#: backends/xml-entry.c:705
+#, c-format
+msgid "Failed reading default value for schema: %s"
+msgstr ""
+
+#: backends/xml-entry.c:888
+#, c-format
+msgid "No \"type\" attribute for <%s> node"
+msgstr "Нет аттрубута \"type\" для узла <%s>"
+
+#: backends/xml-entry.c:902
+#, c-format
+msgid "A node has unknown \"type\" attribute `%s', ignoring"
+msgstr "Узел имеет неизвестный аттрибут \"type\" \"%s\", игнорируется"
+
+#: backends/xml-entry.c:917
+msgid "No \"value\" attribute for node"
+msgstr "Нет аттрибута \"value\" для узла"
+
+#: backends/xml-entry.c:965 backends/xml-entry.c:1041
+#, c-format
+msgid "Didn't understand XML node <%s> inside an XML list node"
+msgstr ""
+
+#: backends/xml-entry.c:999
+msgid "Invalid type (list, pair, or unknown) in a list node"
+msgstr ""
+
+#: backends/xml-entry.c:1022
+#, c-format
+msgid "Bad XML node: %s"
+msgstr "Неправильный узел XML: %s"
+
+#: backends/xml-entry.c:1030
+#, c-format
+msgid "List contains a badly-typed node (%s, should be %s)"
+msgstr ""
+
+#: backends/xml-entry.c:1082
+#, c-format
+msgid "Ignoring bad car from XML pair: %s"
+msgstr ""
+
+#: backends/xml-entry.c:1091 backends/xml-entry.c:1114
+msgid "parsing XML file: lists and pairs may not be placed inside a pair"
+msgstr ""
+
+#: backends/xml-entry.c:1104
+#, c-format
+msgid "Ignoring bad cdr from XML pair: %s"
+msgstr ""
+
+#: backends/xml-entry.c:1123
+#, c-format
+msgid "Didn't understand XML node <%s> inside an XML pair node"
+msgstr ""
+
+#: backends/xml-entry.c:1141
+msgid "Didn't find car and cdr for XML pair node"
+msgstr ""
+
+#: backends/xml-entry.c:1147
+msgid "Missing cdr from pair of values in XML file"
+msgstr ""
+
+#: backends/xml-entry.c:1154
+msgid "Missing car from pair of values in XML file"
+msgstr ""
+
+#: backends/xml-entry.c:1159
+msgid "Missing both car and cdr values from pair in XML file"
+msgstr ""
 
 #. -- end debug only
 #: gconf/gconf-backend.c:180
@@ -74,6 +251,66 @@ msgstr "Не удалось найти серверный модуль для '%s'"
 #: gconf/gconf-backend.c:312
 msgid "Failed to shut down backend"
 msgstr "Не удалось отключить сервер"
+
+#: gconf/gconf-error.c:39
+msgid "Success"
+msgstr "Успешно"
+
+#: gconf/gconf-error.c:40
+msgid "Failed"
+msgstr "Сбой"
+
+#: gconf/gconf-error.c:41
+msgid "Configuration server couldn't be contacted"
+msgstr "Невозможно подключение к серверу конфигурации"
+
+#: gconf/gconf-error.c:42
+msgid "Permission denied"
+msgstr "В правах отказано"
+
+#: gconf/gconf-error.c:43
+msgid "Couldn't resolve address for configuration source"
+msgstr "Не удалось распознать адрес для источника конфигурации"
+
+#: gconf/gconf-error.c:44
+msgid "Bad key or directory name"
+msgstr "Неправильный ключ или имя каталога"
+
+#: gconf/gconf-error.c:45
+msgid "Parse error"
+msgstr "Ошибка лексического анализа"
+
+#: gconf/gconf-error.c:46
+msgid "Corrupt data in configuration source database"
+msgstr "Испорченные данные в базе данных источников конфигурации"
+
+#: gconf/gconf-error.c:47
+msgid "Type mismatch"
+msgstr "Несоответствие типа"
+
+#: gconf/gconf-error.c:48
+msgid "Key operation on directory"
+msgstr ""
+
+#: gconf/gconf-error.c:49
+msgid "Directory operation on key"
+msgstr ""
+
+#: gconf/gconf-error.c:50
+msgid "Can't overwrite existing read-only value"
+msgstr "Невозможно перезаписать существующее значение предназначенное только для чтения"
+
+#: gconf/gconf-error.c:51
+msgid "Object Activation Framework error"
+msgstr "Ошибка OAF"
+
+#: gconf/gconf-error.c:52
+msgid "Operation not allowed without configuration server"
+msgstr "Действие не допустимо без сервера конфигурации"
+
+#: gconf/gconf-error.c:53
+msgid "Failed to get a lock"
+msgstr ""
 
 #: gconf/gconf-internals.c:100
 #, c-format
@@ -147,11 +384,6 @@ msgstr "Строка в кавычках не заканчивается кавычкой"
 msgid "CORBA error: %s"
 msgstr "Ошибка CORBA: %s"
 
-#: gconf/gconf-internals.c:2122
-#, c-format
-msgid "%s"
-msgstr "%s"
-
 #: gconf/gconf-internals.c:2127
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "попытка удалить не указанный в списке каталог объектов OAF"
@@ -220,11 +452,6 @@ msgstr "Невозможно создать блокировку '%s': %s"
 msgid "Can't write to file `%s': %s"
 msgstr "Невозможно записать в файл '%s': %s"
 
-#: gconf/gconf-internals.c:2418
-#, c-format
-msgid "Failed to close file `%s': %s"
-msgstr "Не удалось закрыть файл '%s': %s"
-
 #: gconf/gconf-internals.c:2449
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
@@ -247,10 +474,71 @@ msgstr ""
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Не удалось освободить заблокированный каталог \"%s\": %s"
 
+#: gconf/gconf-sources.c:334
+#, c-format
+msgid "Failed to load source `%s': %s"
+msgstr "Не удалось закрыть источник \"%s\": %s"
+
+#: gconf/gconf-sources.c:502
+#, c-format
+msgid "Schema `%s' specified for `%s' stores a non-schema value"
+msgstr ""
+
+#: gconf/gconf-sources.c:551
+msgid "The '/' name can only be a directory, not a key"
+msgstr ""
+
+#: gconf/gconf-sources.c:580
+#, c-format
+msgid ""
+"Value for `%s' set in a read-only source at the front of your configuration "
+"path."
+msgstr ""
+
+#: gconf/gconf-sources.c:1067
+#, c-format
+msgid "Error finding metainfo: %s"
+msgstr "Ошибка поиска метаинформации: %s"
+
+#: gconf/gconf-sources.c:1132
+#, c-format
+msgid "Error getting metainfo: %s"
+msgstr "Ошибка получения метаинформации: %s"
+
+#: gconf/gconf-sources.c:1156
+#, c-format
+msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
+msgstr ""
+
+#: gconf/gconf-sources.c:1193 gconf/gconfd.c:1523
+#, c-format
+msgid "Error getting value for `%s': %s"
+msgstr "Ошибка получения значения для \"%s\": %s"
+
+#: gconf/gconf-value.c:96
+#, c-format
+msgid "Didn't understand `%s' (expected integer)"
+msgstr "Не понято \"%s\" (ожидалось целое)"
+
+#: gconf/gconf-value.c:106
+#, c-format
+msgid "Integer `%s' is too large or small"
+msgstr "Целое \"%s\" слишком большое или маленькое"
+
+#: gconf/gconf-value.c:127
+#, c-format
+msgid "Didn't understand `%s' (expected real number)"
+msgstr "Не понято \"%s\" (ожидалось реальное число)"
+
+#: gconf/gconf-value.c:160
+#, c-format
+msgid "Didn't understand `%s' (expected true or false)"
+msgstr "Не понято \"%s\" (ожидалось логическое значение)"
+
 #: gconf/gconf.c:69
 #, c-format
 msgid "`%s': %s"
-msgstr "'%s': %s"
+msgstr "\"%s\": %s"
 
 #: gconf/gconf.c:269
 #, c-format
@@ -359,7 +647,9 @@ msgstr ""
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
-msgstr "Файлы настроек не найдены, попытаемся использовать источник настроек по умолчанию \"%s\""
+msgstr ""
+"Файлы настроек не найдены, попытаемся использовать источник настроек по "
+"умолчанию \"%s\""
 
 #: gconf/gconfd.c:888
 msgid ""
@@ -436,11 +726,6 @@ msgstr "Завершение"
 msgid "Failed to sync one or more sources: %s"
 msgstr "Сбой синхронизации одного или более источников: %s"
 
-#: gconf/gconfd.c:1523
-#, c-format
-msgid "Error getting value for `%s': %s"
-msgstr "Ошибка получения значения для \"%s\": %s"
-
 #: gconf/gconfd.c:1561
 #, c-format
 msgid "Error setting value for `%s': %s"
@@ -493,7 +778,8 @@ msgstr "Плохой идентификатор контекста %lu, запрос проигнорирован"
 #: gconf/gconfd.c:1926
 #, c-format
 msgid "Already-unregistered context ID %lu, request ignored"
-msgstr "Уже разрегистрированный идентификатор контекста %lu, запрос проигнорирован"
+msgstr ""
+"Уже разрегистрированный идентификатор контекста %lu, запрос проигнорирован"
 
 #: gconf/gconfd.c:1951
 #, c-format
@@ -503,7 +789,8 @@ msgstr "Попытка использовать неправильный идентификатор контекста %lu"
 #: gconf/gconfd.c:1961
 #, c-format
 msgid "Attempt to use already-unregistered context ID %lu"
-msgstr "Попытка использовать уже разрегистрированный идентификатор контекста %lu"
+msgstr ""
+"Попытка использовать уже разрегистрированный идентификатор контекста %lu"
 
 #: gconf/gconfd.c:2121
 #, c-format
@@ -614,7 +901,9 @@ msgstr "ИСТОЧНИК"
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
-msgstr "Доступ к базе данных конфигурации напрямую, минуя сервер. Требует, чтобы gconfd не был запущен."
+msgstr ""
+"Доступ к базе данных конфигурации напрямую, минуя сервер. Требует, чтобы "
+"gconfd не был запущен."
 
 #: gconf/gconftool.c:245
 msgid ""
@@ -1016,3 +1305,13 @@ msgstr ""
 "Попытка прервать ваше приложение установкой плохих значений для ключей в "
 "каталоге:\n"
 "  %s\n"
+
+#: wrappers/gtk/gconf-client.c:699
+#, c-format
+msgid "GConf warning: failure listing pairs in `%s': %s"
+msgstr ""
+
+#: wrappers/gtk/gconf-client.c:877
+#, c-format
+msgid "Expected `%s' got `%s' for key %s"
+msgstr "Ожидалось \"%s\" получено \"%s\" для ключа %s"
