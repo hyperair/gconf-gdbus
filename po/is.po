@@ -92,6 +92,8 @@ msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
 msgstr ""
+"Get ekki fjarlægt möppuna `%s' úr XML bakendanum vegna þess að hann er ekki "
+"enn búinn færa hana úr biðminni á disk"
 
 #: backends/xml-cache.c:343
 #, c-format
@@ -99,6 +101,8 @@ msgid ""
 "%u items remain in the cache after cleaning already-synced items older than %"
 "u seconds"
 msgstr ""
+"%u hlutir er enn í biðminninu eftir að hlutir sem eru eldri en %u sekúndur "
+"voru ritaðar á disk"
 
 #: backends/xml-dir.c:171
 #, c-format
@@ -174,7 +178,7 @@ msgstr "Færsla með engu heiti í XML skránni `%s', hunsa hana"
 #: backends/xml-dir.c:1182
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr ""
+msgstr "Aðalnóða í XML skránni `%s' er <%s> en ekki <entry>, hunsa hana"
 
 #: backends/xml-dir.c:1255
 #, c-format
@@ -480,11 +484,11 @@ msgstr "Get ekki ritað yfir núverandi gildi sem má aðeins lesa"
 
 #: gconf/gconf-error.c:37
 msgid "Object Activation Framework error"
-msgstr ""
+msgstr "Hlutaræsingavilla"
 
 #: gconf/gconf-error.c:38
 msgid "Operation not allowed without configuration server"
-msgstr ""
+msgstr "Aðgerðin er ekki leyfileg án stillingaþjóns"
 
 #: gconf/gconf-error.c:39
 msgid "Failed to get a lock"
@@ -506,46 +510,46 @@ msgstr "Ógildur UTF-8 strengur í '%s'"
 
 #: gconf/gconf-internals.c:258
 msgid "Couldn't interpret CORBA value for list element"
-msgstr "Skil ekki CORBA gildi listanns"
+msgstr "Skil ekki CORBA gildi listamengisins"
 
 #: gconf/gconf-internals.c:260
 #, c-format
 msgid "Incorrect type for list element in %s"
-msgstr ""
+msgstr "Listamengið er af rangri gerð í %s"
 
 #: gconf/gconf-internals.c:273
 msgid "Received list from gconfd with a bad list type"
-msgstr ""
+msgstr "Tók við lista frá gconfd með ógildri gerð lista"
 
 #: gconf/gconf-internals.c:454
 msgid "Failed to convert object to IOR"
-msgstr ""
+msgstr "Gat ekki umbreytt hlutnum í IOR"
 
 #: gconf/gconf-internals.c:591
 msgid "Invalid UTF-8 in locale for schema"
-msgstr ""
+msgstr "Ógilt UTF-8 í staðfærslu skemunnar"
 
 #: gconf/gconf-internals.c:599
 msgid "Invalid UTF-8 in short description for schema"
-msgstr ""
+msgstr "Ógilt UTF-8 í stuttu lýsingunni á skemunni"
 
 #: gconf/gconf-internals.c:607
 msgid "Invalid UTF-8 in long description for schema"
-msgstr ""
+msgstr "Ógilt UTF-8 í löngu lýsingunni á skemunni"
 
 #: gconf/gconf-internals.c:615
 msgid "Invalid UTF-8 in owner for schema"
-msgstr ""
+msgstr "Ógilt UTF-8 í í eiganda skemunnar"
 
 #: gconf/gconf-internals.c:838
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
-msgstr ""
+msgstr "Gat ekki opnað slóðaskrána `%s': %s\n"
 
 #: gconf/gconf-internals.c:887
 #, c-format
 msgid "Adding source `%s'\n"
-msgstr ""
+msgstr "Bæti við lindinni `%s'\n"
 
 #: gconf/gconf-internals.c:899
 #, c-format
@@ -556,32 +560,32 @@ msgstr "Lesvilla í skránni `%s': %s\n"
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1681
 msgid "Text contains invalid UTF-8"
-msgstr ""
+msgstr "Textinn inniheldur ógilt UTF-8"
 
 #: gconf/gconf-internals.c:1354
 #, c-format
 msgid "Expected list, got %s"
-msgstr ""
+msgstr "Átti von á lista en fékk %s"
 
 #: gconf/gconf-internals.c:1364
 #, c-format
 msgid "Expected list of %s, got list of %s"
-msgstr ""
+msgstr "Átti von á lista af %s en fékk lista af %s"
 
 #: gconf/gconf-internals.c:1492
 #, c-format
 msgid "Expected pair, got %s"
-msgstr ""
+msgstr "Átti von á pari en fékk %s"
 
 #: gconf/gconf-internals.c:1506
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
-msgstr ""
+msgstr "Átti von á (%s,%s) pari en fékk par þar sem eitt eða bæði gildin vantar"
 
 #: gconf/gconf-internals.c:1522
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
-msgstr ""
+msgstr "Átti von á pari af gerðinni (%s,%s) en fékk (%s,%s)"
 
 #: gconf/gconf-internals.c:1638
 msgid "Quoted string doesn't begin with a quotation mark"
@@ -593,12 +597,12 @@ msgstr ""
 
 #: gconf/gconf-internals.c:1836
 msgid "Encoded value is not valid UTF-8"
-msgstr ""
+msgstr "Umbreytt gildið er ekki gilt UTF-8"
 
 #: gconf/gconf-internals.c:2295
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
-msgstr ""
+msgstr "Gat ekki læst tímabundinni skrá '%s': %s"
 
 #: gconf/gconf-internals.c:2322
 #, c-format
@@ -616,25 +620,27 @@ msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
+"Gat ekki læst '%s': Annað ferli er líklegast með lásinn eða NFS "
+"skráalæsingar á vélinni þinni eru ekki rétt stilltar (%s)"
 
 #: gconf/gconf-internals.c:2408
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
-msgstr ""
+msgstr "IOR skráin '%s' opnaðist ekki eðlilega og enginn gconfd fannst: %s"
 
 #: gconf/gconf-internals.c:2438
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr ""
+msgstr "gconftool eða annað ferli sem ekki er gconfd hefur læst skránni '%s'"
 
 #: gconf/gconf-internals.c:2455
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr ""
+msgstr "get ekki tengst ORB til að leysa núverandi gconfd tilvísanir"
 
 #: gconf/gconf-internals.c:2465
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr ""
+msgstr "Gat ekki umbreytt IOR '%s' í hlutatilvísun"
 
 #: gconf/gconf-internals.c:2515
 #, c-format
@@ -649,7 +655,7 @@ msgstr "Gat ekki ritað í skrána `%s': %s"
 #: gconf/gconf-internals.c:2615
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
-msgstr ""
+msgstr "Við vorum ekki með lás á skránni `%s' en ættum að hafa hann"
 
 #: gconf/gconf-internals.c:2636
 #, c-format
@@ -659,42 +665,42 @@ msgstr "Gat ekki tengt '%s' í '%s': %s"
 #: gconf/gconf-internals.c:2648
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
-msgstr ""
+msgstr "Gat ekki fjarlægt lásaskrá `%s': %s"
 
 #: gconf/gconf-internals.c:2667
 #, c-format
 msgid "Failed to clean up file '%s': %s"
-msgstr ""
+msgstr "Gat ekki hreinsað skrána '%s': %s"
 
 #: gconf/gconf-internals.c:2681
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
-msgstr ""
+msgstr "Gat ekki fjarlægt lásamöppuna `%s': %s"
 
 #: gconf/gconf-internals.c:2723
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
-msgstr ""
+msgstr "Gat ekki eytt lásaskránni %s: %s\n"
 
 #: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
 #, c-format
 msgid "Failed to create %s: %s"
-msgstr ""
+msgstr "Gat ekki búið til %s: %s"
 
 #: gconf/gconf-internals.c:2878
 #, c-format
 msgid "Server ping error: %s"
-msgstr ""
+msgstr "Tengingavilla við þjón: %s"
 
 #: gconf/gconf-internals.c:2899
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr ""
+msgstr "Gat ekki búið til pípu til samskipta við nýja gconf púkann: %s\n"
 
 #: gconf/gconf-internals.c:2923
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
-msgstr ""
+msgstr "Gat ekki ræst stillingaþjóninn: %s\n"
 
 #: gconf/gconf-internals.c:2948
 #, c-format
@@ -704,14 +710,19 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"Gat ekki tengst stillingaþjóninum; mögulegar skýringar þess eru til dæmis "
+"að þú hafir ekki virkjað TCP/IP samskipti í ORBit eða að þú hafir skráarlása "
+"á NFS diskum eftir kerfishrun.  Sjá http://www.gnome.org/projects/gconf/ "
+"fyrir frekari upplýsingar.  "
+"(Lýsing - %s)"
 
 #: gconf/gconf-internals.c:2949
 msgid "none"
-msgstr ""
+msgstr "enginn"
 
 #: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:84
 msgid "Help options"
-msgstr ""
+msgstr "Hjálparrofar"
 
 #: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:506
 #, c-format
@@ -719,6 +730,8 @@ msgid ""
 "Error on option %s: %s.\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
+"Villa í rofa %s: %s.\n"
+"Keyrðu '%s --help' til að fá lista yfir gilda rofa þessa forrits.\n"
 
 #: gconf/gconf-sanity-check.c:141 gconf/gconf-sanity-check.c:166
 #, c-format
@@ -744,7 +757,7 @@ msgstr ""
 #: gconf/gconf-sanity-check.c:197
 #, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr ""
+msgstr "Gat ekki fjarlægt skrána %s: %s\n"
 
 #: gconf/gconf-sanity-check.c:233
 #, c-format
@@ -756,7 +769,7 @@ msgstr ""
 
 #: gconf/gconf-sanity-check.c:236
 msgid "Error reading the file: "
-msgstr ""
+msgstr "Villa við lestur skráar: "
 
 #: gconf/gconf-sanity-check.c:259
 #, c-format
@@ -789,12 +802,12 @@ msgstr "_Halda áfram"
 #: gconf/gconf-sanity-check.c:356
 #, c-format
 msgid "%s Continue (y/n)?"
-msgstr "%s _Halda áfram (j/n)"
+msgstr "%s _Halda áfram (y/n)"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
-msgstr ""
+msgstr "Skeman inniheldur ógilt UTF-8"
 
 #: gconf/gconf-schema.c:254
 msgid ""
@@ -999,41 +1012,41 @@ msgstr ""
 #: gconf/gconf.c:2869
 #, c-format
 msgid "Failure shutting down config server: %s"
-msgstr ""
+msgstr "Villa við að slökkva á stillingaþjóninum: %s"
 
 #: gconf/gconf.c:2930
 #, c-format
 msgid "Expected float, got %s"
-msgstr ""
+msgstr "Átti von á tölu en fékk %s"
 
 #: gconf/gconf.c:2965
 #, c-format
 msgid "Expected int, got %s"
-msgstr ""
+msgstr "Átti von á heiltölu en fékk %s"
 
 #: gconf/gconf.c:3000
 #, c-format
 msgid "Expected string, got %s"
-msgstr ""
+msgstr "Átti von á streng en fékk %s"
 
 #: gconf/gconf.c:3034
 #, c-format
 msgid "Expected bool, got %s"
-msgstr ""
+msgstr "Átti von á \"bool\" en fékk %s"
 
 #: gconf/gconf.c:3067
 #, c-format
 msgid "Expected schema, got %s"
-msgstr ""
+msgstr "Átti von á skemu en fékk %s"
 
 #: gconf/gconf.c:3424
 #, c-format
 msgid "CORBA error: %s"
-msgstr ""
+msgstr "CORBA villa: %s"
 
 #: gconf/gconfd.c:250
 msgid "Shutdown request received"
-msgstr ""
+msgstr "Fékk beiðni um að keyra niður"
 
 #: gconf/gconfd.c:282
 msgid ""
@@ -1096,29 +1109,29 @@ msgstr ""
 #: gconf/gconfd.c:481
 #, c-format
 msgid "Failed to open %s: %s"
-msgstr ""
+msgstr "Gat ekki opnað %s: %s"
 
 #: gconf/gconfd.c:488
 #, c-format
 msgid "Failed to stat %s: %s"
-msgstr ""
+msgstr "Gat ekki fundið %s: %s"
 
 #: gconf/gconfd.c:497
 #, c-format
 msgid "Owner of %s is not the current user"
-msgstr ""
+msgstr "Eigandi %s er ekki núverandi notandi"
 
 #: gconf/gconfd.c:505
 #, c-format
 msgid "Bad permissions %o on dir %s"
-msgstr ""
+msgstr "Slæmar heimildir %o á möppunni %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
 #: gconf/gconfd.c:587
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr ""
+msgstr "ræsi (útgáfu %s), feri númer %u notandi '%s'"
 
 #: gconf/gconfd.c:627
 msgid "Failed to get object reference for ConfigServer"
@@ -1127,7 +1140,7 @@ msgstr ""
 #: gconf/gconfd.c:647
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
-msgstr ""
+msgstr "Það er vandamál með möppuna %s svo gconfd getur ekki notað hana"
 
 #: gconf/gconfd.c:676
 #, c-format
@@ -1142,11 +1155,11 @@ msgstr ""
 #: gconf/gconfd.c:724
 #, c-format
 msgid "Error releasing lockfile: %s"
-msgstr ""
+msgstr "Villa við að loda lásaskrá: %s"
 
 #: gconf/gconfd.c:732
 msgid "Exiting"
-msgstr ""
+msgstr "Hætti"
 
 #: gconf/gconfd.c:758
 msgid "GConf server is not in use, shutting down."
