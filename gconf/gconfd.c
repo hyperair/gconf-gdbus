@@ -542,7 +542,7 @@ main(int argc, char** argv)
    */
   if (chdir ("/") < 0)
     {
-       fprintf (stderr, "Could not change to root directory: %s\n",
+       g_printerr ("Could not change to root directory: %s\n",
 		g_strerror (errno));
        exit (1);
     }

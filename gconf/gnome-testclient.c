@@ -30,7 +30,7 @@ static void
 notify_func(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data)
 {
   int pid = getpid();
-  printf("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
+  g_print ("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
   self_change = TRUE;
   gtk_entry_set_text(GTK_ENTRY(user_data), gconf_value_get_string(value));
   self_change = FALSE;
@@ -120,10 +120,10 @@ main(int argc, char* argv[])
   cnxn = gconf_engine_notify_add(conf, "/gnome/gconf-testclient/entry_contents", notify_func, entry);
 
   if (cnxn != 0)
-    printf("Connection %u added\n", cnxn);
+    g_print ("Connection %u added\n", cnxn);
   else
     {
-      fprintf(stderr, "Failed to add listener\n");
+      fg_print (stderr, "Failed to add listener\n");
       return 1;
     }
 

@@ -340,8 +340,8 @@ gconf_client_real_unreturned_error (GConfClient* client, GError* error)
               error->code == GCONF_ERROR_NO_WRITABLE_DATABASE)
             return;
           
-          fprintf (stderr, _("GConf Error: %s\n"),
-                   error->message);
+          g_printerr (_("GConf Error: %s\n"),
+                      error->message);
         }
     }
 }
@@ -358,8 +358,8 @@ gconf_client_real_error            (GConfClient* client, GError* error)
         }
       else
         {
-          fprintf (stderr, _("GConf Error: %s\n"),
-                   error->message);
+          g_printerr (_("GConf Error: %s\n"),
+                      error->message);
         }
     }
 }
@@ -892,8 +892,8 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
   
   if (error != NULL)
     {
-      fprintf(stderr, _("GConf warning: failure listing pairs in `%s': %s"),
-              dir, error->message);
+      g_printerr (_("GConf warning: failure listing pairs in `%s': %s"),
+                  dir, error->message);
       g_error_free(error);
       error = NULL;
     }

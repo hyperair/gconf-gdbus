@@ -52,10 +52,10 @@ main (int argc, char** argv)
   cnxn = gconf_engine_notify_add(conf, "/hello/world", notify_func, NULL);
 
   if (cnxn != 0)
-    printf("Connection %u added\n", cnxn);
+    g_print ("Connection %u added\n", cnxn);
   else
     {
-      fprintf(stderr, "Failed to add listener\n");
+      g_printerr ("Failed to add listener\n");
       return 1;
     }
 
@@ -76,7 +76,7 @@ static void
 notify_func(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data)
 {
   int pid = getpid();
-  printf("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
+  g_print ("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
 }
 
 /*

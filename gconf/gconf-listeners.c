@@ -419,8 +419,8 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   lt->active_listeners += 1;
 
 #ifdef DEBUG_LISTENERS
-  printf("Added %u at %s, spewing:\n",
-         l->cnxn, where);
+  g_print ("Added %u at %s, spewing:\n",
+	   l->cnxn, where);
   ltable_spew(lt);
 #endif
 }
@@ -523,7 +523,7 @@ ltable_remove(LTable* lt, guint cnxn)
   lt->active_listeners -= 1;
 
 #ifdef DEBUG_LISTENERS
-  printf("Removed %u, spewing:\n", cnxn);
+  g_print ("Removed %u, spewing:\n", cnxn);
   ltable_spew(lt);
 #endif
 }
@@ -860,20 +860,20 @@ spew_func(GNode* node, gpointer data)
   spaces[g_node_depth(node)] = '\0';
 
   
-  printf(" %sSpewing node `%s' (%p): ", spaces, lte->name, node);
+  g_print (" %sSpewing node `%s' (%p): ", spaces, lte->name, node);
 
   tmp = lte->listeners;
   while (tmp != NULL)
     {
       Listener* l = tmp->data;
       
-      printf("  %slistener %u is here\n", spaces, (guint)l->cnxn);
+      g_print ("  %slistener %u is here\n", spaces, (guint)l->cnxn);
 
       tmp = g_list_next(tmp);
     }
 
   if (lte->listeners == NULL)
-    printf("\n");
+    g_print ("\n");
   
   return FALSE;
 }
@@ -882,13 +882,13 @@ static void
 ltable_spew(LTable* lt)
 {
   guint i;
-  printf("Flat table:\n");
+  g_print ("Flat table:\n");
   i = 0;
   while (i < lt->listeners->len)
     {
       GNode* node = g_ptr_array_index(lt->listeners, i);
       LTableEntry* lte = node ? node->data : NULL;
-      printf("%u `%s' %p\n", i, lte ? lte->name : "", node);
+      g_print ("%u `%s' %p\n", i, lte ? lte->name : "", node);
       
       ++i;
     }

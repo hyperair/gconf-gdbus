@@ -1,3 +1,33 @@
+2003-08-11  Frederic Crozat  <fcrozat@mandrakesoft.com>
+
+	* gconf/gconf-client.c: (gconf_client_real_unreturned_error),
+	(gconf_client_real_error), (cache_pairs_in_dir):
+	* gconf/gconf-internals.c: (gconf_log):
+	* gconf/gconf-listeners.c: (ltable_insert), (ltable_remove),
+	(spew_func), (ltable_spew):
+	* gconf/gconfd.c: (main):
+	* gconf/gconftool.c: (main), (recurse_subdir_list),
+	(do_recursive_list), (do_dump_values), (list_pairs_in_dir),
+	(print_schema_in_xml), (print_pair_in_xml), (print_list_in_xml),
+	(print_value_in_xml), (dump_entries_in_dir), (do_dir_exists),
+	(do_spawn_daemon), (do_get), (read_value_type), (do_set),
+	(do_get_type), (do_get_list_size), (do_get_list_element),
+	(do_schema_info), (do_associate_schema), (do_dissociate_schema),
+	(do_set_schema), (do_all_entries), (do_unset),
+	(do_recursive_unset), (do_all_subdirs), (get_list_value_from_xml),
+	(get_pair_value_from_xml), (get_schema_values_from_xml),
+	(get_values_from_xml), (set_values), (fill_default_from_string),
+	(extract_global_info), (process_locale_info), (process_key_list),
+	(get_schema_from_xml), (hash_install_foreach),
+	(hash_uninstall_foreach), (process_schema), (process_list),
+	(do_load_file), (do_makefile_install), (do_makefile_uninstall),
+	(check_err), (key_breakage), (do_break_key), (do_break_directory),
+	(do_get_default_source):
+	* gconf/gnome-testclient.c: (notify_func), (main):
+	* gconf/testclient.c: (main), (notify_func):
+	use g_print/g_printerr instead of printf/fprintf(strerr). It
+	fixes UTF-8 being displayed on command line with non-UTF-8 locales.
+
 2003-08-09  Guntupalli Karunakar  <karunakar@freedomink.org>
 
 	* configure.in: Added "hi" in ALL_LINGUAS.

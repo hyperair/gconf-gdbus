@@ -1138,13 +1138,13 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
         case GCL_CRIT:
         case GCL_ERR:
         case GCL_WARNING:
-          fprintf(stderr, "%s\n", msg);
+          g_printerr ("%s\n", msg);
           break;
       
         case GCL_NOTICE:
         case GCL_INFO:
         case GCL_DEBUG:
-          printf("%s\n", msg);
+          g_print ("%s\n", msg);
           break;
 
         default:
