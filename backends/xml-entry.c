@@ -159,9 +159,11 @@ entry_get_value(Entry* e, const gchar** locales, GConfError** err)
       else if (error != NULL)
         {
           /* There was an error */
-          gconf_log(GCL_WARNING, _("Ignoring XML node `%s': %s"),
+          gconf_log(GCL_WARNING, _("Ignoring XML node with name `%s': %s"),
                     e->name, error->str);
           gconf_error_destroy(error);
+
+          /* Fall back to currently-loaded thing if any */
         }
       /* else fall back to the currently-loaded schema */
     }
@@ -378,7 +380,10 @@ entry_fill_from_node(Entry* e)
     }
   else if (error != NULL)
     {
-      gconf_log(GCL_WARNING, _("Ignoring XML node `%s': %s"),
+      /* FIXME for nodes with no value stored, but containing a schema name,
+       * we improperly log an error here
+       */
+      gconf_log(GCL_WARNING, _("Ignoring XML node `%s', except for possible schema name: %s"),
                 e->name, error->str);
       gconf_error_destroy(error);
     }

@@ -15,6 +15,11 @@ AC_HEADER_STDC
 AC_ARG_PROGRAM
 AM_PROG_LIBTOOL
 
+dnl used to rename everything and support simultaneous installs.
+dnl not incremented for bugfix releases.
+MAJOR_VERSION=0.6
+AC_SUBST(MAJOR_VERSION)
+
 dnl libtool versioning for guile wrapper
 
 SCMGCONF_CURRENT=1
@@ -179,8 +184,10 @@ AC_OUTPUT([
 Makefile
 gconf-config
 gconf.spec
+gconf.m4
 gconf/Makefile
 gconf/default.path
+gconf/gconfd.oafinfo
 backends/Makefile
 wrappers/Makefile
 wrappers/gtk/Makefile

@@ -1,19 +1,19 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir) \
 	$(GLIB_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) $(OAF_CFLAGS) \
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" \
-	-DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\" -DVERSION=\""$(VERSION)"\" -DIID=\""OAFIID:gconfd:19991118"\" -DGCONF_ENABLE_INTERNALS=1
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\" \
+	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\" -DVERSION=\""$(VERSION)"\" -DIID=\""OAFIID:gconfd:19991118"\" -DGCONF_ENABLE_INTERNALS=1
 
 EFENCE=
 
-lib_LTLIBRARIES = libgconf.la
+lib_LTLIBRARIES = libgconf-0.6.la
 
-bin_PROGRAMS = gconfd gconftool
+bin_PROGRAMS = gconfd-0.6 gconftool-0.6
 
 CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
 BUILT_SOURCES = $(CORBA_SOURCES)
 
-gconfincludedir = $(includedir)/gconf
+gconfincludedir = $(includedir)/gconf/$(MAJOR_VERSION)/gconf
 gconfinclude_HEADERS =     \
 	gconf.h            \
 	gconf-backend.h		\
@@ -26,26 +26,26 @@ gconfinclude_HEADERS =     \
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
-gconfd_SOURCES = \
+gconfd_0_6_SOURCES = \
 	gconf-sources.h		\
 	gconfd.c
 
-gconfd_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf.la
+gconfd_0_6_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) libgconf-$(MAJOR_VERSION).la
 
 # gconf_testclient_SOURCES = \
 # 	testclient.c
 
 # gconf_testclient_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
-gconftool_SOURCES = \
+gconftool_0_6_SOURCES = \
 	gconftool.c
 
-gconftool_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf.la
+gconftool_0_6_LDADD = $(EFENCE) $(OAF_LIBS) $(GLIB_LIBS) $(ORBIT_LIBS) $(POPT_LIBS) $(XML_LIBS) libgconf-$(MAJOR_VERSION).la
 
 $(CORBA_SOURCES): $(srcdir)/GConf.idl
 	orbit-idl $(srcdir)/GConf.idl
 
-libgconf_la_SOURCES = \
+libgconf_0_6_la_SOURCES = \
 	gconf-internals.c	\
 	gconf-internals.h	\
 	gconf-backend.c		\
@@ -60,18 +60,18 @@ libgconf_la_SOURCES = \
 	gconf.c			\
 	$(CORBA_SOURCES)
 
-libgconf_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
+libgconf_0_6_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
 
-libgconf_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
+libgconf_0_6_la_LIBADD =  $(OAF_LIBS) $(GLIB_LIBS)
 
-EXTRA_DIST=GConf.idl gconfd.oafinfo default.path.in
+EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in
 
-oafinfodir=$(datadir)/oaf
-oafinfo_DATA=gconfd.oafinfo
-
+install-exec-local:
+	$(LN_S) -f $(bindir)/gconftool-$(MAJOR_VERSION) $(bindir)/gconftool
 
 install-data-local:
-	-mkdir -p $(sysconfdir)/gconf
-	$(INSTALL_DATA) default.path $(sysconfdir)/gconf/path.example
-
+	-mkdir -p $(sysconfdir)/gconf/$(MAJOR_VERSION)
+	$(INSTALL_DATA) default.path $(sysconfdir)/gconf/$(MAJOR_VERSION)/path.example
+	-mkdir -p $(datadir)/oaf
+	$(INSTALL_DATA) gconfd.oafinfo $(datadir)/oaf/gconfd-$(MAJOR_VERSION).oafinfo
 

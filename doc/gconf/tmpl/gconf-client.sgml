@@ -33,7 +33,7 @@ Signals when a value changes or an error occurs.
 If you use #GConfClient, you should not use the underlying #GConfEngine
 directly, or you'll break things. This is why there's no
 gconf_client_get_engine() function; in fact, if you create the #GConfClient with
-gconf_client_new(), there is no (legitimate) way to obtain a pointer to the
+gconf_client_get_default(), there is no (legitimate) way to obtain a pointer to the
 underlying #GConfEngine. If you create a #GConfClient from an existing engine,
 you'll have to be disciplined enough to avoid using that engine directly.
 <footnote>
@@ -187,7 +187,7 @@ Casts a pointer to a #GConfClient*.
 @obj: a #GConfClient.
 
 
-<!-- ##### FUNCTION gconf_client_new ##### -->
+<!-- ##### FUNCTION gconf_client_get_default ##### -->
 <para>
 Creates a new #GConfClient using the default #GConfEngine. Normally this is the
 engine you want.
@@ -196,7 +196,7 @@ engine you want.
 @Returns: a new #GConfClient.
 
 
-<!-- ##### FUNCTION gconf_client_new_with_engine ##### -->
+<!-- ##### FUNCTION gconf_client_get_for_engine ##### -->
 <para>
 Creates a new #GConfClient with a specific #GConfEngine. Only specialized
 configuration-related programs should need to call this function.  The

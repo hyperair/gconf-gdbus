@@ -619,9 +619,9 @@
         connection to a configuration database. Normally the database
         you're connecting to is the user's default database, defined
         by all the sources in their configuration source
-        path. <function>gconf_engine_new()</function> returns a handle to
+        path. <function>gconf_engine_get_default()</function> returns a handle to
         this default
-        database. <function>gconf_engine_new_with_address()</function>
+        database. <function>gconf_engine_get_default_with_address()</function>
         returns a handle to a single configuration source; normally,
         applications will not use this function&mdash;it's intended
         for system configuration tools and the like.        
@@ -639,14 +639,14 @@
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>GConfEngine*
-            <function>gconf_engine_new</function>
+            <function>gconf_engine_get_default</function>
           </funcdef>
           <void>
         </funcsynopsis>        
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>GConfEngine*
-            <function>gconf_engine_new_with_address</function>
+            <function>gconf_engine_get_default_with_address</function>
           </funcdef>
           <paramdef>const gchar* <parameter>address</parameter></paramdef>
         </funcsynopsis>

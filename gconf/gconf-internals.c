@@ -1095,9 +1095,7 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
           break;
         }
 
-#if 0      
       syslog(syslog_pri, "%s", msg);
-#endif
     }
   else
     {

@@ -1,3 +1,36 @@
+2000-07-14  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-sources.c (gconf_sources_query_value): Fix memleak
+	of schema_name in case where we return a value
+	(hash_lookup_defaults_func): Fix bug where we returned the schema
+	instead of the default value stored in the schema, when returning
+	default values for a directory listing, which GConfClient did in
+	order to preload its cache. (Upshot: GConfClient with preloading
+	was broken if you had schemas.)
+
+2000-07-13  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c (shutdown_contexts): fix cheesy race condition 
+	(context_list may not exist at this point)
+
+2000-07-12  Havoc Pennington  <hp@pobox.com>
+
+	* gconf.spec.in: Change spec file to reflect my fooling with
+	names of things
+
+	* configure.in: Some files converted to .in files, so we can 
+	do versioning
+
+	* gconf-config.in: output versioned names for libs and includes
+
+	* gconf/Makefile.am: version all installed files
+
+	* wrappers/gtk/Makefile.am: put version in the name of 
+	everything
+
+	* wrappers/gtk/testgconfclient.c (main): remove ref/sink to
+	reflect change to GConfClient
+
 2000-07-13  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-entry.c (schema_node_extract_value): fix a

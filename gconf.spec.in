@@ -27,7 +27,7 @@ Requires: ORBit >= 0.5.0
 Requires: libxml >= 1.8.0
 
 %description
-GConf is the GNOME Configuration database system. 
+GConf is the GNOME Configuration database system.
 
 GNOME is the GNU Network Object Model Environment.  That's a fancy
 name but really GNOME is a nice GUI desktop environment.  It makes
@@ -87,13 +87,18 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{prefix}/bin/*
 %{prefix}/lib/lib*.so.*
-%{prefix}/lib/gconf/lib*.so
+%{prefix}/lib/gconf/@MAJOR_VERSION@/lib*.so
 %{prefix}/share/aclocal/*
 %{prefix}/share/oaf/*
-%config /etc/gconf/*
+%config /etc/gconf/@MAJOR_VERSION@/*
+
+## /etc/gconf/schemas/desktop.schemas is notably missing;
+## it will be shared between versions of GConf, preventing
+## simulataneous installation, so maybe should be in 
+## a different (minuscule) package.
 
 %files devel
 %defattr(-, root, root)
 %{prefix}/lib/*.a
 %{prefix}/lib/gconf/*.a
-%{prefix}/include/gconf/*
+%{prefix}/include/gconf/@MAJOR_VERSION@/*

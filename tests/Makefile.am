@@ -8,42 +8,44 @@ INCLUDES = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/gconf \
 
 noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence testdirlist testaddress
 
+TESTLIBS= $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la  $(EFENCE)
+
 testunique_SOURCES=testunique.c
 
-testunique_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testunique_LDADD = $(TESTLIBS)
 
 testgconf_SOURCES=testgconf.c
 
-testgconf_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testgconf_LDADD = $(TESTLIBS)
 
 testpersistence_SOURCES=testpersistence.c
 
-testpersistence_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testpersistence_LDADD = $(TESTLIBS)
 
 testlisteners_SOURCES=testlisteners.c
 
-testlisteners_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testlisteners_LDADD = $(TESTLIBS)
 
 testschemas_SOURCES=testschemas.c
 
-testschemas_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testschemas_LDADD = $(TESTLIBS)
 
 testchangeset_SOURCES=testchangeset.c
 
-testchangeset_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testchangeset_LDADD = $(TESTLIBS)
 
 testencode_SOURCES=testencode.c
 
-testencode_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testencode_LDADD = $(TESTLIBS)
 
 testdirlist_SOURCES=testdirlist.c
 
-testdirlist_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testdirlist_LDADD = $(TESTLIBS)
 
 
 testaddress_SOURCES=testaddress.c
 
-testaddress_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+testaddress_LDADD = $(TESTLIBS)
 
 
 

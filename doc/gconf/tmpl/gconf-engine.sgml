@@ -8,11 +8,11 @@ a GConf "database"
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 A #GConfEngine represents a connection to the GConf database. The
-default #GConfEngine, returned from gconf_engine_new(), represents the
+default #GConfEngine, returned from gconf_engine_get_default(), represents the
 user's normal configuration source search path. Configuration-related
 utilities, such as a configuration editor tool, might wish to access a
 particular configuration source directly; they can obtain a
-non-default #GConfEngine with gconf_engine_new_from_address().
+non-default #GConfEngine with gconf_engine_get_for_address().
 </para>
 
 <para>
@@ -32,7 +32,7 @@ An opaque data type representing one or more configuration sources.
 
 @dummy: 
 
-<!-- ##### FUNCTION gconf_engine_new ##### -->
+<!-- ##### FUNCTION gconf_engine_get_default ##### -->
 <para>
 Returns the default #GConfEngine. All clients should use this, unless 
 they are special configuration-related tools. The caller of this
@@ -46,11 +46,11 @@ before exiting your application.
 @Returns: the default #GConfEngine.
 
 
-<!-- ##### FUNCTION gconf_engine_new_from_address ##### -->
+<!-- ##### FUNCTION gconf_engine_get_for_address ##### -->
 <para>
 Creates a special #GConfEngine; mostly useful for specialized
 GConf-related tools. Normal clients shouldn't need to use it.
-As with gconf_engine_new(), the returned #GConfEngine should be
+As with gconf_engine_get_default(), the returned #GConfEngine should be
 unreferenced by the caller of this function.
 </para>
 
@@ -76,7 +76,7 @@ Increases the reference count of a #GConfEngine by one.
 @conf: a #GConfEngine.
 
 
-<!-- ##### FUNCTION gconf_engine_new_local ##### -->
+<!-- ##### FUNCTION gconf_engine_get_local ##### -->
 <para>
 
 </para>

@@ -210,14 +210,12 @@ fi
 #dummy because this should always be selected
 
 
-if test "@includedir@" != /usr/include ; then
-  includes="-I@includedir@"
-fi
+includes="-I@includedir@/gconf/@MAJOR_VERSION@"
 af_cflags="$af_cflags $includes $cflags `@OAF_CONFIG@ --cflags`"
-af_libs="-L@libdir@ $af_libs -lgconf `@OAF_CONFIG@ --libs`"
+af_libs="-L@libdir@ $af_libs -lgconf-@MAJOR_VERSION@ `@OAF_CONFIG@ --libs`"
 
 if test "X$af_lib_gconf_gtk" = "Xyes"; then
-    af_libs="$af_libs -lgconf-gtk $af_libs @GTK_LIBS@"
+    af_libs="$af_libs -lgconf-gtk-@MAJOR_VERSION@ $af_libs @GTK_LIBS@"
 	af_cflags="$af_cflags @GTK_CFLAGS@"
 fi
 

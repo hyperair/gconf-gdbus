@@ -18,6 +18,7 @@
  */
 
 #include "gconf-locale.h"
+#include "gconf-internals.h"
 #include <sys/time.h>
 #include <string.h>
 
@@ -379,7 +380,7 @@ gconf_split_locale               (const gchar* locale)
 
     g_assert(n > 0);
     
-    vector = g_new0(gchar*, n + 1);
+    vector = g_new0(gchar*, n + 2);
 
     i = 0;
     tmp = list;

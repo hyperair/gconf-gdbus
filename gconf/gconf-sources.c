@@ -455,7 +455,11 @@ gconf_sources_query_value (GConfSources* sources,
           ; /* keep going, try more sources */
         }
       else
-        return val;
+        {
+          g_free (schema_name);
+          schema_name = NULL;
+          return val;
+        }
 
       tmp = g_list_next(tmp);
     }
@@ -767,7 +771,7 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
   const gchar** locales = dld->locales;
   
   if (gconf_entry_value(entry) == NULL)
-    {      
+    {
       if (gconf_entry_schema_name(entry) != NULL)
         {
           GConfValue *val;
@@ -780,11 +784,19 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
                                           NULL,
                                           NULL);
 
-          if (val != NULL)
+          if (val != NULL &&
+              val->type == GCONF_VALUE_SCHEMA)
             {
-              gconf_entry_set_value_nocopy(entry, val);
+              GConfValue* defval = gconf_value_schema(val)->default_value;
+              /* cheat, "unparent" the value to avoid a copy */
+              gconf_value_schema(val)->default_value = NULL;
+
+              gconf_entry_set_value_nocopy(entry, defval);
               gconf_entry_set_is_default(entry, TRUE);
             }
+
+          if (val)
+            gconf_value_destroy(val);
         }
     }
 }

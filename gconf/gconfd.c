@@ -847,7 +847,7 @@ gconf_server_load_sources(void)
   GConfSources* sources = NULL;
   GConfError* error = NULL;
   
-  conffile = g_strconcat(GCONF_SYSCONFDIR, "/gconf/path", NULL);
+  conffile = g_strconcat(GCONF_CONFDIR, "/path", NULL);
 
   addresses = gconf_load_source_path(conffile, NULL);
 
@@ -885,7 +885,7 @@ gconf_server_load_sources(void)
          request would result in another failed gconfd being spawned.  
       */
       const gchar* empty_addr[] = { NULL };
-      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_SYSCONFDIR"/gconf/path"));
+      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit "GCONF_CONFDIR"/path"));
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(empty_addr, NULL);
 
@@ -1850,7 +1850,9 @@ shutdown_contexts(void)
 {
   guint i;
   
-  g_assert(context_list != NULL);
+  if (context_list == NULL)
+    return; /* Can happen if we get a signal before creating it */
+  
   g_assert(contexts_by_address != NULL);
   
   i = context_list->len - 1;

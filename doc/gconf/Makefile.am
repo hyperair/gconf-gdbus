@@ -7,7 +7,7 @@ DOC_MODULE=gconf
 # The top-level SGML file.
 DOC_MAIN_SGML_FILE=gconf.sgml
 
-TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
+TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)/$(MAJOR_VERSION)
 
 # not sure this will work...
 LDFLAGS=$(ORBIT_LIBS) $(GTK_LIBS) $(OAF_LIBS) $(top_builddir)/wrappers/gtk/.libs/libgconf-gtk.a $(top_builddir)/gconf/.libs/libgconf.a

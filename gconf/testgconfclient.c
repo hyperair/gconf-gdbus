@@ -45,10 +45,6 @@ main(int argc, char** argv)
 
   gconf_client_add_dir(client, "/apps/gnome/testgconfclient", GCONF_CLIENT_PRELOAD_NONE, NULL);
 
-  /* The main() function takes over the floating object */
-  gtk_object_ref(GTK_OBJECT(client));
-  gtk_object_sink(GTK_OBJECT(client));
-
   create_controls(client);
   
   gtk_main();

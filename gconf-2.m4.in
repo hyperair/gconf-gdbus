@@ -28,7 +28,7 @@ AC_ARG_ENABLE(gconftest, [  --disable-gconftest       Do not try to compile and 
   fi
 
   AC_PATH_PROG(GCONF_CONFIG, gconf-config, no)
-  min_gconf_version=ifelse([$1], , 0.3, $1)
+  min_gconf_version=ifelse([$1], , 0.5, $1)
   AC_MSG_CHECKING(for GCONF - version >= $min_gconf_version)
   no_gconf=""
   if test "$GCONF_CONFIG" = "no" ; then
