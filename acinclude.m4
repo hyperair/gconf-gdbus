@@ -396,7 +396,7 @@ AC_DEFUN([GNOME_CHECK_PKGCONFIG],[
 		AC_MSG_ERROR([
 *** You need the latest pkg-config (at least $pkgconfig_required_version).
 *** Get the latest version of pkg-config from
-*** http://pkgconfig.sourceforce.net.])
+*** http://pkgconfig.sourceforge.net.])
 	    fi
 	fi
 	AC_SUBST(PKG_CONFIG)
