@@ -257,7 +257,7 @@ const gchar* gconf_enum_to_string (GConfEnumStringPair  lookup_table[],
 #ifndef GCONF_DISABLE_DEPRECATED
 gboolean     gconf_init           (int argc, char **argv, GError** err);
 gboolean     gconf_is_initialized (void);
-#endif /* GCONF_DISABLE_DEPRECATED
+#endif /* GCONF_DISABLE_DEPRECATED */
 
 /* No, you can't use this stuff. Bad application developer. Bad. */
 #ifdef GCONF_ENABLE_INTERNALS
