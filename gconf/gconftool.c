@@ -601,7 +601,8 @@ main (int argc, char** argv)
                       break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("Ping option must be used by itself.\n"));
+      fprintf(stderr, _("%s option must be used by itself.\n"),
+		      "-p/--ping");
       return 1;
     }
 
@@ -613,7 +614,8 @@ main (int argc, char** argv)
                      break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("--dir-exists option must be used by itself.\n"));
+      fprintf(stderr, _("%s option must be used by itself.\n"),
+		      "--dir-exists");
       return 1;
     }
 
@@ -625,7 +627,8 @@ main (int argc, char** argv)
                       break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("--install-schema-file must be used by itself.\n"));
+      fprintf(stderr, _("%s option must be used by itself.\n"),
+		      "--install-schema-file");
       return 1;
     }
 
@@ -638,7 +641,8 @@ main (int argc, char** argv)
                                 break_key_mode || break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("--makefile-install-rule must be used by itself.\n"));
+      fprintf(stderr, _("%s option must be used by itself.\n"),
+		      "--makefile-install-rule");
       return 1;
     }
   
@@ -650,7 +654,8 @@ main (int argc, char** argv)
                                   break_key_mode || break_dir_mode || short_docs_mode ||
                                   long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("--makefile-uninstall-rule must be used by itself.\n"));
+      fprintf(stderr, _("%s option must be used by itself.\n"),
+		      "--makefile-uninstall-rule");
       return 1;
     }
   
@@ -662,7 +667,8 @@ main (int argc, char** argv)
                                 break_dir_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("--break-key must be used by itself.\n"));
+      fprintf(stderr, _("%s must be used by itself.\n"),
+		      "--break-key");
       return 1;
     }
 
@@ -675,7 +681,8 @@ main (int argc, char** argv)
                                 makefile_uninstall_mode || short_docs_mode ||
                          long_docs_mode || schema_name_mode))
     {
-      fprintf(stderr, _("--break-directory must be used by itself.\n"));
+      fprintf(stderr, _("%s must be used by itself.\n"),
+		      "--break-directory");
       return 1;
     }
 
