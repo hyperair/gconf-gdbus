@@ -146,13 +146,13 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  * 
  */
 
-/** Misc */
+/* Misc */
 
 static gchar* parent_dir(const gchar* dir);
 
 typedef struct _XMLSource XMLSource;
 
-/** Dir **/
+/* Dir **/
 
 typedef struct _Dir Dir;
 
@@ -209,7 +209,7 @@ static void        dir_delete      (Dir* d);
 static GTime       dir_last_access (Dir* d);
 static gboolean    dir_deleted     (Dir* d);
 
-/** DirCache **/
+/* DirCache **/
 
 typedef struct _DirCache DirCache;
 
@@ -247,7 +247,7 @@ static Dir*       dir_cache_create_or_load_dir      (DirCache* dc,
                                                      const gchar* key,
                                                      GConfError** err);
 
-/** XMLSource **/
+/* XMLSource **/
 
 struct _XMLSource {
   GConfSource source;
@@ -679,7 +679,7 @@ gconf_backend_get_vtable(void)
   return &xml_vtable;
 }
 
-/******************************************************/
+/* ****************************************************/
 
 /*
  *  XMLSource
