@@ -1,0 +1,53 @@
+* Move to a cut-and-pasted version of GError from GLib unstable branch, 
+  replacing GConfError.
+
+* Berkeley DB backend (note: consider issues surrounding various incompatible 
+  versions of DB and historical problems with the upgrade path, cf. 
+  RPM and gnome-mime-db)
+
+* Performance tuning
+
+* Document locking issues for backends (backends should perform
+  their own locking, etc.)
+
+* Document which database GConf will write to given multiple 
+  writeable databases
+
+* Fix spelling of "writable" throughout, or at least
+  in public API (s/writeable/writable/g)
+
+* Implement a way for backends to notify gconfd of changes they detect
+
+* Implement a "database map"; this would be a tree structure (similar
+  in implementation to GConfListeners). Rather than storing listeners
+  at the tree nodes, store a list of databases in order, and 
+  readability/writability of each database. Create a config file
+  (perhaps in the GMarkup XML subset from glib 2.0) for configuring
+  the database map. Figure out whether this can entirely replace
+  the readable/writable methods from the backend vtable.
+  It likely replaces the gconf/path configuration file. (Essentially
+  the idea is a database path per key/directory, instead of a 
+  global database path, giving administrators more flexibility.)
+
+  Details to be figured out.
+
+* GUI admin tool, and GUI user tool (are these the same?)
+
+* Thread support for scalability; may require ORBit thread safety?
+  Or a protocol with oneway CORBA methods (client requests a value,
+  gconfd calls back when it has the value)
+
+* Robustness against gconfd exit or crash; probably by logging
+  the current list of clients to a file
+
+* Life cycle management for gconfd (exit if no clients are alive, 
+  maybe ping clients periodically)
+
+* Maintain documentation
+
+* API so clients can find out if they can write to a given key
+  (gconf_key_is_writable() or the like)
+
+* Implement the default error handlers in GConfClient
+
+
