@@ -1,1 +1,168 @@
-No news.
+September 24, 2000 (GConf 0.9)
+====
+
+This release of GConf has a relatively large number of changes, but
+should be the last release before GNOME 1.4 that has public API
+changes, if at all possible. The most application-developer-visible
+change is that a bunch of API entry points have been renamed, for
+consistency and correctness. It will be better in the long run! I've
+provided a perl script, below, to fix the names.
+
+Summary of changes in the script:
+ - Fix spelling of "writable"
+ - Replace GConfError with GError cut-and-pasted from GLib 2.0
+ - Use _get_ in getters
+ - Make a bunch of GConfEngine methods begin with gconf_engine_
+ - Replace "_destroy" with "_free" in various cases
+ - s/gconf_concat_key_and_dir/gconf_concat_dir_and_key/g;
+
+There are, sadly, a couple of changes the perl script can't fix. 
+These are, as far as I remember anyway:
+
+ - the "key" field in GConfEntry is now an absolute key name,
+   not a relative key name
+ - the notification callback signature changed. Yeah this one 
+   is ugly; I apologize; the way I changed it makes it possible
+   to extend in the future. Basically the many arguments it 
+   had are replaced with a GConfEntry (see examples/*.c for 
+   examples)
+
+There's a semantic change that won't actually break your existing app,
+but you should consider updating your app to reflect. It's now
+possible to disable settings in the GUI if the administrator has
+locked them down. See this mail:
+  http://mail.gnome.org/archives/gconf-list/2000-September/msg00025.html
+
+Aside from API changes, most of the changes in this release are
+bugfixes, and the fact that gconfd should be quite robust against
+exiting or crashing; it now logs state to disk and tries to reload it
+on restart. The logfile is in ~/.gconfd/saved_state; if there are new
+bugs in this release, they may be related to the logfile.
+
+I've also set the periodic "clean up and think about exiting" timeout
+in gconfd to 3 minutes or so in this release, as opposed to 30
+normally. So there will be a performance hit, etc.; it's just to get
+bugs to show up and will go back to a longer interval later.
+
+<begin perl script> 
+#!/usr/bin/perl -pi.bak
+
+## Fix spelling mistake
+## note that this regexp could affect non-GConf stuff
+s/writeable/writable/g;
+
+## Convert GConfError to GError
+
+## You might add expressions here if you use a different convention 
+## for error variable names
+s/err->str/err->message/g;
+s/error->str/error->message/g;
+s/\(\*err\)->str/(*err)->message/g;
+s/\(\*error\)->str/(*error)->message/g;
+s/err->num/err->code/g;
+s/error->num/error->code/g;
+s/\(\*err\)->num/(*err)->code/g;
+s/\(\*error\)->num/(*error)->code/g;
+
+s/GConfError/GError/g;
+s/GConfErrNo/GConfError/g;
+s/gconf_error_copy/g_error_copy/g;
+s/gconf_error_destroy/g_error_free/g;
+s/gconf_clear_error/g_clear_error/g;
+
+## Correct naming convention for getters
+
+s/gconf_meta_info_schema/gconf_meta_info_get_schema/g;
+s/gconf_meta_info_mod_user/gconf_meta_info_get_mod_user/g;
+s/gconf_meta_info_mod_time/gconf_meta_info_mod_time/g;
+
+s/gconf_entry_key/gconf_entry_get_key/g;
+s/gconf_entry_value/gconf_entry_get_value/g;
+s/gconf_entry_schema_name/gconf_entry_get_schema_name/g;
+s/gconf_entry_is_default/gconf_entry_get_is_default/g;
+
+s/gconf_value_string/gconf_value_get_string/g;
+s/gconf_value_int/gconf_value_get_int/g;
+s/gconf_value_float/gconf_value_get_float/g;
+s/gconf_value_list_type/gconf_value_get_list_type/g;
+s/gconf_value_list/gconf_value_get_list/g;
+s/gconf_value_car/gconf_value_get_car/g;
+s/gconf_value_cdr/gconf_value_get_cdr/g;
+s/gconf_value_bool/gconf_value_get_bool/g;
+s/gconf_value_schema/gconf_value_get_schema/g;
+
+s/gconf_schema_type/gconf_schema_get_type/g;
+s/gconf_schema_list_type/gconf_schema_get_list_type/g;
+s/gconf_schema_car_type/gconf_schema_get_car_type/g;
+s/gconf_schema_cdr_type/gconf_schema_get_cdr_type/g;
+s/gconf_schema_locale/gconf_schema_get_locale/g;
+s/gconf_schema_short_desc/gconf_schema_get_short_desc/g;
+s/gconf_schema_long_desc/gconf_schema_get_long_desc/g;
+s/gconf_schema_owner/gconf_schema_get_owner/g;
+s/gconf_schema_default_value/gconf_schema_get_default_value/g;
+
+## Name these as methods on GConfEngine 
+
+s/gconf_notify_add/gconf_engine_notify_add/g;
+s/gconf_notify_remove/gconf_engine_notify_remove/g;
+s/gconf_get_without_default/gconf_engine_get_without_default/g;
+s/gconf_get_full/gconf_engine_get_full/g;
+s/gconf_get_with_locale/gconf_engine_get_with_locale/g;
+s/gconf_get_default_from_schema/gconf_engine_get_default_from_schema/g;
+s/gconf_unset/gconf_engine_unset/g;
+s/gconf_associate_schema/gconf_engine_associate_schema/g;
+s/gconf_all_entries/gconf_engine_all_entries/g;
+s/gconf_all_dirs/gconf_engine_all_dirs/g;
+s/gconf_suggest_sync/gconf_engine_suggest_sync/g;
+s/gconf_dir_exists/gconf_engine_dir_exists/g;
+s/gconf_get_string/gconf_engine_get_string/g;
+s/gconf_get_float/gconf_engine_get_float/g;
+s/gconf_get_int/gconf_engine_get_int/g;
+s/gconf_get_bool/gconf_engine_get_bool/g;
+s/gconf_get_schema/gconf_engine_get_schema/g;
+s/gconf_get_list/gconf_engine_get_list/g;
+s/gconf_get_pair/gconf_engine_get_pair/g;
+s/gconf_set_float/gconf_engine_set_float/g;
+s/gconf_set_int/gconf_engine_set_int/g;
+s/gconf_set_string/gconf_engine_set_string/g;
+s/gconf_set_bool/gconf_engine_set_bool/g;
+s/gconf_set_schema/gconf_engine_set_schema/g;
+s/gconf_set_list/gconf_engine_set_list/g;
+s/gconf_set_pair/gconf_engine_set_pair/g;
+
+s/gconf_commit_change_set/gconf_engine_commit_change_set/g;
+s/gconf_create_reverse_change_set/gconf_engine_reverse_change_set/g;
+s/gconf_create_change_set_from_currentv/gconf_engine_change_set_from_currentv/g;
+s/gconf_create_change_set_from_current/gconf_engine_change_set_from_current/g;
+
+## These require some care, since they can be the prefix for unrelated stuff.
+s/gconf_get /gconf_engine_get /g;
+s/gconf_set /gconf_engine_set /g;
+
+s/gconf_get\(/gconf_engine_get (/g;
+s/gconf_set\(/gconf_engine_set (/g;
+
+## Make these match GConfEngine versions
+
+s/gconf_client_create_change_set_from_current/gconf_client_change_set_from_current/g;
+s/gconf_client_create_change_set_from_currentv/gconf_client_change_set_from_currentv/g;
+s/gconf_client_create_reverse_change_set/gconf_client_reverse_change_set/g;
+
+## s/destroy/free/ to follow newer GLib convention
+
+s/gconf_schema_destroy/gconf_schema_free/g;
+s/gconf_value_destroy/gconf_value_free/g;
+s/gconf_listeners_destroy/gconf_listeners_free/g;
+s/gconf_entry_destroy/gconf_entry_free/g;
+
+
+s/gconf_meta_info_destroy/gconf_meta_info_free/g;
+s/gconf_database_destroy/gconf_database_free/g;
+s/gconf_source_destroy/gconf_source_free/g;
+s/gconf_sources_destroy/gconf_sources_free/g;
+s/gconf_locale_cache_destroy/gconf_locale_cache_free/g;
+
+## Make dir_and_key be in the order of the arguments you pass in
+s/gconf_concat_key_and_dir/gconf_concat_dir_and_key/g;
+
+</end perl script>
