@@ -1149,7 +1149,7 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
   if (gconf_handle_corba_exception(&ev, err))
     return FALSE;
 
-  g_return_val_if_fail(*err == NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   return TRUE;
 }
@@ -1395,7 +1395,7 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
   if (gconf_handle_corba_exception(&ev, err))
     return FALSE;
 
-  g_return_val_if_fail (*err == NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
   
   return TRUE;
 }
