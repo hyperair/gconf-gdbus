@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.0.3\n"
-"POT-Creation-Date: 2001-12-04 10:50-0500\n"
+"POT-Creation-Date: 2001-10-31 23:14-0500\n"
 "PO-Revision-Date: 2001-12-25 13:23+0100\n"
 "Last-Translator: Ömer Fadýl USTA <omer_fad@hotmail.com>\n"
 "Language-Team: Turkish <gnome-turk@gnome.org>\n"
@@ -87,8 +87,8 @@ msgstr ""
 #: backends/xml-cache.c:256
 #, c-format
 msgid ""
-"%u items remain in the cache after cleaning already-synced items older than "
-"%u seconds"
+"%u items remain in the cache after cleaning already-synced items older than %"
+"u seconds"
 msgstr ""
 "arabellekte %u öðe kaldý.\n"
 "(%u saniyeden daha eski eþzamanlý öðeler temizlendikten sonra)"
@@ -296,8 +296,7 @@ msgstr "Ayar isteðinden geçersiz deðer alýndý"
 
 #: gconf/gconf-database.c:239
 #, c-format
-msgid ""
-"Couldn't make sense of CORBA value received in set request for key `%s'"
+msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr "`%s' anahtarýnýn ayarý için alýnan CORBA deðerine anlam verilemedi"
 
 #: gconf/gconf-database.c:517
@@ -630,22 +629,22 @@ msgstr "'%s' dosyasý temizlenemedi: %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "`%s' kilit dizini silinemedi: %s"
 
-#: gconf/gconf-internals.c:2842 gconf/gconfd.c:576
+#: gconf/gconf-internals.c:2841 gconf/gconfd.c:576
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "%s oluþturulamadý: %s"
 
-#: gconf/gconf-internals.c:2875
+#: gconf/gconf-internals.c:2874
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "Alt gconfd süreciyle haberleþmek için veriyolu oluþturulamadý: %s\n"
 
-#: gconf/gconf-internals.c:2899
+#: gconf/gconf-internals.c:2898
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Yapýlandýrma sunucusuna eriþilemedi: %s\n"
 
-#: gconf/gconf-internals.c:2923
+#: gconf/gconf-internals.c:2922
 msgid ""
 "Failed to contact configuration server (a likely cause of this is that you "
 "have an existing configuration server (gconfd) running, but it isn't "
@@ -656,11 +655,6 @@ msgstr ""
 "yapýlandýrma sunucunuz çalýþmasýna raðmen buradan ona eriþemezsiniz - Eðer "
 "iki makinadan da ayný anda giriþ yaptýysanýz, ORBit için TCP aðýný "
 "etkinleþtirmeniz gerekebilir.)\n"
-
-#: gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
-#: gconf/gconf-schema.c:214
-msgid "Schema contains invalid UTF-8"
-msgstr "Þema geçersiz UTF-8 içeriyor"
 
 #: gconf/gconf-sources.c:320
 #, c-format
@@ -702,11 +696,11 @@ msgstr ""
 "Yapýlandýrma sunucusu yazýlabilir veritabanlarýna sahip olmadýðýndan '%s'de "
 "bir deðer saklanamýyor. Bu sorun iki sebepten ortaya çýkabilir: 1) "
 "Yapýlandýrma dosya yolu dosyanýz herhangi bir veritabaný içermiyordur ya da "
-"yoktur veya 2) Yanlýþlýkla iki gconfd süreci oluþturulmuþtur. Eðer iki gconfd "
-"süreciniz varsa (veya ikincisi çalýþtýrýldýðýnda zaten iki süreç varsa) "
-"Gconfd'yi öldürmek üzere bir çýkýþ ve tekrar giriþ yardýmcý olabilir. Bu "
-"durum GConfd'nin iki makinada ayný anda kullanýlmasýndan kaynaklanabilir ve "
-"ORBit hala, uzak CORBA baðlantýlarýný önleyen öntanýmlý yapýlandýrmasýna "
+"yoktur veya 2) Yanlýþlýkla iki gconfd süreci oluþturulmuþtur. Eðer iki "
+"gconfd süreciniz varsa (veya ikincisi çalýþtýrýldýðýnda zaten iki süreç "
+"varsa) Gconfd'yi öldürmek üzere bir çýkýþ ve tekrar giriþ yardýmcý olabilir. "
+"Bu durum GConfd'nin iki makinada ayný anda kullanýlmasýndan kaynaklanabilir "
+"ve ORBit hala, uzak CORBA baðlantýlarýný önleyen öntanýmlý yapýlandýrmasýna "
 "sahip olabilir mi? Daima, GConfd tarafýndan saptanan sorunlar hakkýndaki "
 "ayrýntýlarý görmek için user.* sistem günlük dosyasýna bakýnýz."
 
@@ -920,8 +914,8 @@ msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
-"Çözümlenebilen bir yazýlabilir ayarlama kaynaðý adresi yok, bazý yapýlandýrma "
-"deðiþikliklerini kaydetmek mümkün olmayabilir"
+"Çözümlenebilen bir yazýlabilir ayarlama kaynaðý adresi yok, bazý "
+"yapýlandýrma deðiþikliklerini kaydetmek mümkün olmayabilir"
 
 #: gconf/gconfd.c:368
 #, c-format
@@ -1050,8 +1044,8 @@ msgstr "Durum kayýt dosyasý '%s' açýlamadý: %s"
 #: gconf/gconfd.c:1988
 #, c-format
 msgid ""
-"Failed to log addition of listener to gconfd logfile; won't be able to re-add "
-"the listener if gconfd exits or shuts down (%s)"
+"Failed to log addition of listener to gconfd logfile; won't be able to re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 "gconfd günlük dosyasýna dinleyicilerin eklenmesine iliþkin kayýtlar "
 "eklenemedi; gconf'dan çýkýldýðýnda ya da bir kapanmadan sonra dinleyicilerin "
@@ -1060,12 +1054,12 @@ msgstr ""
 #: gconf/gconfd.c:1993
 #, c-format
 msgid ""
-"Failed to log removal of listener to gconfd logfile; might erroneously re-add "
-"the listener if gconfd exits or shuts down (%s)"
+"Failed to log removal of listener to gconfd logfile; might erroneously re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 "gconfd günlük dosyasýna dinleyicilerin kaldýrýlmasýna iliþkin kayýtlar "
-"eklenemedi; gconf'dan çýkýldýðýnda ya da bir kapanmadan sonra bu dinleyiciler "
-"yeniden eklenebilir. (%s)"
+"eklenemedi; gconf'dan çýkýldýðýnda ya da bir kapanmadan sonra bu "
+"dinleyiciler yeniden eklenebilir. (%s)"
 
 #: gconf/gconfd.c:2016 gconf/gconfd.c:2181
 #, c-format
@@ -1108,11 +1102,11 @@ msgstr "Bir anahtarýn deðerini standart çýktýya yazar."
 
 #: gconf/gconftool.c:97
 msgid ""
-"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
-"--type."
+"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
+"type."
 msgstr ""
-"Bir þema ve eþzamanlama belirler. --short-desc, --long-desc, --owner, ve "
-"--type ile kullanýn."
+"Bir þema ve eþzamanlama belirler. --short-desc, --long-desc, --owner, ve --"
+"type ile kullanýn."
 
 #: gconf/gconftool.c:107
 msgid "Unset the keys on the command line"
@@ -1120,8 +1114,8 @@ msgstr "komut satýrýnda anahtarlarý kaldýrýr"
 
 #: gconf/gconftool.c:116
 msgid ""
-"Recursively unset all keys at or below the key/directory names on the command "
-"line"
+"Recursively unset all keys at or below the key/directory names on the "
+"command line"
 msgstr ""
 "Komut satýrýndan anahtar/dizin altýndaki tüm anahtarlar ardýþýk olarak "
 "kaldýrýlýr"
@@ -1284,8 +1278,7 @@ msgid "Get the name of the schema applied to this key"
 msgstr "Bu anahtara uygulanan þemanýn ismi alýnýr"
 
 #: gconf/gconftool.c:332
-msgid ""
-"Specify the schema name followed by the key to apply the schema name to"
+msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
 "Þema ismine uygulanacak anahtar tarafýndan izlenen þema ismi belirtilir"
 
@@ -1300,8 +1293,8 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "%s seçeneðinde hata: %s\n"
-"Kullanýlabilecek komut satýrý seçeneklerinin tam listesini almak için '%s "
-"--help' çalýþtýrýn.\n"
+"Kullanýlabilecek komut satýrý seçeneklerinin tam listesini almak için '%s --"
+"help' çalýþtýrýn.\n"
 
 #: gconf/gconftool.c:409
 msgid "Can't get and set/unset simultaneously\n"
@@ -1321,16 +1314,16 @@ msgstr "--all-dirs seçeneði ile --get veya --set birlikte kullanýlamaz.\n"
 
 #: gconf/gconftool.c:442
 msgid ""
-"--recursive-list should not be used with --get, --set, --unset, "
-"--all-entries, or --all-dirs\n"
+"--recursive-list should not be used with --get, --set, --unset, --all-"
+"entries, or --all-dirs\n"
 msgstr ""
-"--recursive-list seçeneði ile --get, --set, --unset, --all-entries ya da "
-"--all-dirs birlikte kullanýlamaz.\n"
+"--recursive-list seçeneði ile --get, --set, --unset, --all-entries ya da --"
+"all-dirs birlikte kullanýlamaz.\n"
 
 #: gconf/gconftool.c:452
 msgid ""
-"--set_schema should not be used with --get, --set, --unset, --all-entries, "
-"--all-dirs\n"
+"--set_schema should not be used with --get, --set, --unset, --all-entries, --"
+"all-dirs\n"
 msgstr ""
 "--set_schema seçeneði ile --get, --set, --unset, --all-entries, --all-dirs "
 "birlikte kullanýlamaz.\n"
@@ -1371,8 +1364,8 @@ msgstr "--break-directory seçeneði tek baþýna kullanýlabilir.\n"
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
-"--direct seçeneðini kullanýrken --config-source seçeneði ile bir yapýlandýrma "
-"kaynaðý belirtmelisiniz\n"
+"--direct seçeneðini kullanýrken --config-source seçeneði ile bir "
+"yapýlandýrma kaynaðý belirtmelisiniz\n"
 
 #: gconf/gconftool.c:541
 #, c-format
@@ -1585,7 +1578,8 @@ msgstr "Eþzamanlamada hata: %s"
 #: gconf/gconftool.c:1526
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr ""
-"anahtar/deðer çiftinin alýnacaðý bir ya da daha fazla dizin belirtilmelidir.\n"
+"anahtar/deðer çiftinin alýnacaðý bir ya da daha fazla dizin "
+"belirtilmelidir.\n"
 
 #: gconf/gconftool.c:1540
 msgid "Must specify one or more keys to unset.\n"
@@ -1814,24 +1808,27 @@ msgstr "Kýrýlacak dizinler belirtilmeli\n"
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
-"directory:\n  %s\n"
+"directory:\n"
+"  %s\n"
 msgstr ""
 "Uygulamanýz dizin içindeki anahtarlara hatalý deðerler atayarak kýrmaya "
 "çalýþýyor:\n"
 "  %s\n"
 
-#: gconf/gconf-client.c:295 gconf/gconf-client.c:312
+#: gconf/gconf-client.c:298 gconf/gconf-client.c:315
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf Hatasý: %s\n"
 
-#: gconf/gconf-client.c:795
+#: gconf/gconf-client.c:798
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf uyarýsý: `%s' içindeki çiftlerin listelenmesi baþarýsýz oldu: %s"
 
-#: gconf/gconf-client.c:997
+#: gconf/gconf-client.c:1000
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "`%s' olmalýydý, `%s' alýndý (%s anahtarý için)"
 
+#~ msgid "Schema contains invalid UTF-8"
+#~ msgstr "Þema geçersiz UTF-8 içeriyor"
