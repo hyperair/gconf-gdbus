@@ -1121,7 +1121,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type(key, val, GCONF_VALUE_STRING, &error))
-        retval = g_strdup(gconf_value_string(val));
+        retval = gconf_value_string(val);
       else
         handle_error(client, error, err);
 
