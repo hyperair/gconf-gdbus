@@ -575,7 +575,7 @@ main (int argc, char** argv)
       g_assert (config_source == NULL);
 
       /* Try the environment variable */
-      config_source = g_getenv("GCONF_CONFIG_SOURCE");
+      config_source = g_getenv ("GCONF_CONFIG_SOURCE");
 
       if (config_source == NULL)
         {
@@ -655,9 +655,9 @@ main (int argc, char** argv)
   if (makefile_install_mode)
     {
       const gchar** args = poptGetArgs(ctx);
-      gint retval = do_makefile_install(conf, args);
-
-      gconf_engine_unref(conf);
+      gint retval = do_makefile_install (conf, args);
+      
+      gconf_engine_unref (conf);
 
       return retval;
     }
