@@ -30,8 +30,7 @@ BUILT_SOURCES = \
 	gconfmarshal.c
 
 CLEANFILES = \
-	$(BUILT_SOURCES)	\
-	stamp-gconfmarshal.h
+	$(BUILT_SOURCES)
 
 dist-hook:
 	cd $(distdir) ; rm -f $(CLEANFILES)
@@ -103,16 +102,21 @@ install-data-local:
 	-mkdir -p $(DESTDIR)$(datadir)/oaf
 	$(INSTALL_DATA) gconfd.oafinfo $(DESTDIR)$(datadir)/oaf/gconfd-$(MAJOR_VERSION).oafinfo
 
+gconfmarshal.h: @REBUILD@ stamp-gconfmarshal.h
+	@true
+
+gconfmarshal.c: @REBUILD@ stamp-gconfmarshal.c
+	@true
+
 stamp-gconfmarshal.h: @REBUILD@ gconfmarshal.list
 	cd $(srcdir) \
 	&& glib-genmarshal --prefix=gconf_marshal gconfmarshal.list --header >> xgen-gmh \
 	&& (cmp -s xgen-gmh gconfmarshal.h || cp xgen-gmh gconfmarshal.h) \
-	&& rm -f xgen-gmh xgen-gmh~ \
-	&& echo timestamp > $(@F)
+	&& rm -f xgen-gmh xgen-gmh~
 
-gconfmarshal.h gconfmarshal.c: @REBUILD@ stamp-gconfmarshal.h
+stamp-gconfmarshal.c: @REBUILD@ gconfmarshal.list
 	cd $(srcdir) \
 	&& glib-genmarshal --prefix=gconf_marshal gconfmarshal.list --body >> xgen-gmc \
-	&& cp xgen-gmc gconfmarshal.c \
+	&& (cmp -s xgen-gmc gconfmarshal.c || cp xgen-gmc gconfmarshal.c) \
 	&& rm -f xgen-gmc xgen-gmc~
 
