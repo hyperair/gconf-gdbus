@@ -19,6 +19,8 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+
 #include "gconf-client.h"
 #include <gobject/gobject.h>
 #include <gobject/gsignal.h>

@@ -21,6 +21,7 @@
 #include "gconf-internals.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include <popt.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>

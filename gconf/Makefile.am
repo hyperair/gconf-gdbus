@@ -67,8 +67,8 @@ gconftool_2_SOURCES = \
 
 gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
 
-$(CORBA_SOURCES): $(srcdir)/GConf.idl
-	orbit-idl $(srcdir)/GConf.idl
+$(CORBA_SOURCES): $(srcdir)/GConf.idl $(ORBIT_IDL)
+	$(ORBIT_IDL) $(srcdir)/GConf.idl
 
 libgconf_2_la_SOURCES = \
 	gconf-internals.c	\

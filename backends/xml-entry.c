@@ -20,6 +20,7 @@
 #include "xml-entry.h"
 #include <gconf/gconf-internals.h>
 #include <stdlib.h>
+#include <string.h>
 #include <libxml/entities.h>
 #include <libxml/xmlmemory.h>
 

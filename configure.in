@@ -153,6 +153,9 @@ AM_CONDITIONAL(BDB, test -n "$BDB_LIBS")
 AC_SUBST(BDB_LIBS)
 AC_SUBST(BDB_CFLAGS)
 
+AC_PATH_PROG(ORBIT_IDL, orbit-idl, no)
+AC_SUBST(ORBIT_IDL)
+
 AC_CHECK_LIB(popt, poptGetArg, POPT_LIBS=-lpopt,
 	[AC_CHECK_HEADER(popt.h, , AC_MSG_ERROR([[
 *** Couldn't find popt. Please download and install from
