@@ -2374,6 +2374,7 @@ open_empty_locked_file (const gchar *directory,
     }
 
   /* We have the lock on filename, so delete it */
+  /* FIXME this leaves .nfs32423432 cruft */
   unlink (filename);
   close (fd);
   fd = -1;
