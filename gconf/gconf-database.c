@@ -789,7 +789,6 @@ gconf_database_new (GConfSources  *sources)
 {
   GConfDatabase* db;
   CORBA_Environment ev;
-  PortableServer_ObjectId* objid;
   
   db = g_new0 (GConfDatabase, 1);
 
@@ -800,11 +799,6 @@ gconf_database_new (GConfSources  *sources)
   
   POA_ConfigDatabase3__init (&db->servant, &ev);
 
-  objid =
-    PortableServer_POA_activate_object (gconf_get_poa (),
-                                        &db->servant,
-                                        &ev);
-  
   db->objref = PortableServer_POA_servant_to_reference (gconf_get_poa (),
                                                         &db->servant,
                                                         &ev);
@@ -815,8 +809,6 @@ gconf_database_new (GConfSources  *sources)
 
       exit (1);
     }
-
-  CORBA_free (objid);
 
   db->listeners = gconf_listeners_new();
 

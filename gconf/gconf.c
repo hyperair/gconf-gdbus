@@ -2202,7 +2202,6 @@ gconf_get_config_listener(void)
   if (listener == CORBA_OBJECT_NIL)
     {
       CORBA_Environment ev;
-      PortableServer_ObjectId* objid;
       PortableServer_POA poa;
 
       CORBA_exception_init (&ev);
@@ -2220,10 +2219,6 @@ gconf_get_config_listener(void)
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      objid = PortableServer_POA_activate_object (poa, &poa_listener_servant, &ev);
-
-      g_assert (ev._major == CORBA_NO_EXCEPTION);
-      
       listener = PortableServer_POA_servant_to_reference(poa,
                                                          &poa_listener_servant,
                                                          &ev);

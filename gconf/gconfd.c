@@ -460,7 +460,6 @@ main(int argc, char** argv)
 {
   struct sigaction act;
   sigset_t empty_mask;
-  PortableServer_ObjectId* objid;
   CORBA_Environment ev;
   CORBA_ORB orb;
   gchar* logname;
@@ -563,8 +562,6 @@ main(int argc, char** argv)
   the_poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
   PortableServer_POAManager_activate(PortableServer_POA__get_the_POAManager(the_poa, &ev), &ev);
 
-  objid = PortableServer_POA_activate_object(the_poa, &poa_server_servant, &ev);
-  
   server = PortableServer_POA_servant_to_reference(the_poa,
                                                    &poa_server_servant,
                                                    &ev);

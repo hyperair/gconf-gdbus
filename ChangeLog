@@ -1,3 +1,10 @@
+2002-01-07  Mark McLoughlin  <mark@skynet.ie>
+
+	* gconf/gconf-database.c: (gconf_database_new):
+	* gconf/gconf.c: (gconf_get_config_listener):
+	* gconf/gconfd.c: (main): no need to explicitly activate CORBA objects,
+	the RootPOA has the IMPLICIT_ACTIVATION policy.
+
 2002-01-05  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-client.c (gconf_client_cache): return bool for
