@@ -3380,7 +3380,7 @@ process_key_list(GConfEngine* conf, gboolean unload, const gchar* schema_name, G
     {
       GError* error = NULL;
 
-      if (!gconf_engine_associate_schema(conf, tmp->data, unload ? schema_name : NULL, &error))
+      if (!gconf_engine_associate_schema(conf, tmp->data, !unload ? schema_name : NULL, &error))
         {
           g_assert(error != NULL);
           
