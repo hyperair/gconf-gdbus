@@ -2,7 +2,7 @@
 SUBDIRS = gconf backends po doc examples
 DIST_SUBDIRS=tests $(SUBDIRS)
 
-EXTRA_DIST=gconf.m4.in gconf.spec.in gconf.spec TODO \
+EXTRA_DIST=gconf.m4.in TODO \
 	   gconf-2.0.pc.in
 
 install-data-local:

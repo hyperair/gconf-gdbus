@@ -6,14 +6,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD.mn\n"
-"POT-Creation-Date: 2003-09-10 15:15-0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-12-14 21:55-0500\n"
 "PO-Revision-Date: 2003-08-20 12:31+0200\n"
 "Last-Translator: Sanlig Badral <badral@openmn.org>\n"
 "Language-Team: Mongolian <openmn-linux@lists.sf.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 "X-Generator: KBabel 1.0.1\n"
 
 #: backends/dir-utils.c:108
@@ -57,9 +57,10 @@ msgid "Error syncing the XML backend directory cache: %s"
 msgstr "XML-Backend-Лавлахын cache-д синхронизаци хийж байхад алдаа: %s"
 
 #: backends/xml-backend.c:684
+#, fuzzy
 msgid ""
-"Remove dir operation is no longer supported, just remove all the values in "
-"the directory"
+"Remove directory operation is no longer supported, just remove all the "
+"values in the directory"
 msgstr ""
 "dir устгах үйлдэл дэмжигдэхээ больсон, Та зүгээр л лавлах доторхи бүх "
 "үсгүүдийг устгана уу"
@@ -79,8 +80,8 @@ msgid "Initializing XML backend module"
 msgstr "XML-Backend-Модул инициацлагдаж байна"
 
 #: backends/xml-backend.c:877
-#, c-format
-msgid "Failed to give up lock on XML dir \"%s\": %s"
+#, fuzzy, c-format
+msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "»%s« XML-Лавлахыг түлхүүрлэх оролдлого бүтсэнгүй: %s"
 
 #: backends/xml-cache.c:286
@@ -95,15 +96,6 @@ msgid ""
 msgstr ""
 "%s лавлах XML-Backand-Cache -с устгагдсангүй, учир нь тэр диск рүү амжилттай "
 "синхронизацилагдсангүй."
-
-#: backends/xml-cache.c:343
-#, c-format
-msgid ""
-"%u items remain in the cache after cleaning already-synced items older than %"
-"u seconds"
-msgstr ""
-"%u элемент Cache -д бүх хэдийнэ %u секундээс илүү болсон синхронизаци "
-"элементүүдийг цэвэрлэсний дараа үлдэв"
 
 #: backends/xml-dir.c:171
 #, c-format
@@ -160,11 +152,6 @@ msgstr "%s хуучин файлыг усгах бүтсэнгүй: %s"
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "»%s« stat() р шинжлэгдэж чадахгүй: %s"
-
-#: backends/xml-dir.c:1002
-#, c-format
-msgid "%s"
-msgstr "%s"
 
 #: backends/xml-dir.c:1152
 #, c-format
@@ -317,17 +304,17 @@ msgstr "»%s« -н backend-Модул олдсонгүй"
 msgid "Failed to shut down backend"
 msgstr "Backend хаагдахгүй (shut down) байна"
 
-#: gconf/gconf-client.c:343 gconf/gconf-client.c:361
+#: gconf/gconf-client.c:344 gconf/gconf-client.c:362
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf-Алдаа: %s\n"
 
-#: gconf/gconf-client.c:895
+#: gconf/gconf-client.c:896
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf-Сануулга: »%s« доторхи хосуудыг жигсааж байхад алдаа: %s"
 
-#: gconf/gconf-client.c:1180
+#: gconf/gconf-client.c:1181
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Хүлээгдэж буй »%s« %s түлхүүрийн хувьд »%s« -г авлаа"
@@ -420,8 +407,8 @@ msgid "Error checking existence of `%s': %s"
 msgstr "»%s« -н оршин буй эсэхийг шалгаж байхад алдаа: %s"
 
 #: gconf/gconf-database.c:1520
-#, c-format
-msgid "Error removing dir `%s': %s"
+#, fuzzy, c-format
+msgid "Error removing directory \"%s\": %s"
 msgstr "»%s« лавлахыг устгаж байхад алдаа: %s"
 
 #: gconf/gconf-database.c:1547
@@ -691,7 +678,7 @@ msgstr "»%s« түгжээ лавлах устгагдсанүй: %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Түгжээ файл »%s« таслаж чадсангүй: %s\n"
 
-#: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
+#: gconf/gconf-internals.c:2856 gconf/gconfd.c:639
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "%s-г үүсгэх бүтсэнгүй: %s"
@@ -1033,68 +1020,68 @@ msgstr "Сервер »%s« хаягийг шийдэж чадахгүй бай�
 msgid "Can't add notifications to a local configuration source"
 msgstr "Дотоод тохируулгын эхэд сонордуулга нэмж чадахгүй байна"
 
-#: gconf/gconf.c:2078
+#: gconf/gconf.c:2097
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Клиентийг серверүүдийн жигсаалтад нэмэх бүтсэнгүй. CORBA-Алдаа: %s"
 
-#: gconf/gconf.c:2433
+#: gconf/gconf.c:2452
 msgid "Must begin with a slash (/)"
 msgstr "Ташуу зураасаар (/) эхлэх ёстой"
 
-#: gconf/gconf.c:2455
+#: gconf/gconf.c:2474
 msgid "Can't have two slashes (/) in a row"
 msgstr "Нэг мөрөнд хоёр ташуу зураас (/) байж болохгүй"
 
-#: gconf/gconf.c:2457
+#: gconf/gconf.c:2476
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Цэг (.) ташуу зураасын (/) ард шууд байж болохгүй"
 
-#: gconf/gconf.c:2476
+#: gconf/gconf.c:2495
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "»%c« АБТ. (ASCII-Биш Тэмдэгт) тиймээс түлхүүрийн нэрэнд орж болохгүй."
 
-#: gconf/gconf.c:2486
+#: gconf/gconf.c:2505
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "»%c« нь түлхүүр эсвэл лавлахын нэрэнд хүчингүй тэмдэгт"
 
-#: gconf/gconf.c:2500
+#: gconf/gconf.c:2519
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Түлхүүр/лавлах ташуу зураасаар (/) төгсөхгүй"
 
-#: gconf/gconf.c:2869
+#: gconf/gconf.c:2888
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Тохируулгын серверийг унтрааж байхад алдаа гарлаа: %s"
 
-#: gconf/gconf.c:2930
+#: gconf/gconf.c:2949
 #, c-format
 msgid "Expected float, got %s"
 msgstr "float хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:2965
+#: gconf/gconf.c:2984
 #, c-format
 msgid "Expected int, got %s"
 msgstr "int хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3000
+#: gconf/gconf.c:3019
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Стринг хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3034
+#: gconf/gconf.c:3053
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "bool хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3067
+#: gconf/gconf.c:3086
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Схем хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3424
+#: gconf/gconf.c:3443
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-алдаа: %s"
@@ -1123,16 +1110,13 @@ msgstr ""
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
+#, fuzzy, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
-"edit "
+"edit %s"
 msgstr ""
 "Эхийн замд тохируулгын эх алга, тохируулга хадгалагдахгүй; Та замыг "
 "засварлана уу"
-
-#: gconf/gconfd.c:304
-msgid "/path"
-msgstr "/Зам"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1173,73 +1157,73 @@ msgstr ""
 msgid "Received signal %d, shutting down cleanly"
 msgstr "%d сигнал хүлээн авлаа, цэвэрхэн унтраах"
 
-#: gconf/gconfd.c:481
+#: gconf/gconfd.c:480
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "»%s« нээгдсэнгүй: %s"
 
-#: gconf/gconfd.c:488
+#: gconf/gconfd.c:487
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "»%s« stat() шинжлэгдэж чадахгүй: %s"
 
-#: gconf/gconfd.c:497
+#: gconf/gconfd.c:496
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "Идэвхитэй хэрэглэгч %s -н эзэмшигч биш байна"
 
-#: gconf/gconfd.c:505
-#, c-format
-msgid "Bad permissions %o on dir %s"
+#: gconf/gconfd.c:504
+#, fuzzy, c-format
+msgid "Bad permissions %lo on directory %s"
 msgstr "Лавлах %s дэх буруу хандалт %o"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:587
+#: gconf/gconfd.c:586
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "(Хувилбар %s) эхэлж байна, PID %u, Хэрэглэгч »%s«"
 
-#: gconf/gconfd.c:627
+#: gconf/gconfd.c:626
 msgid "Failed to get object reference for ConfigServer"
 msgstr "ConfigServer -н Объект хамааралыг авч чадсангүй"
 
-#: gconf/gconfd.c:647
+#: gconf/gconfd.c:646
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Лавлах %s-д асуудал байгаа тул gconfd үүнийг хэрэглэх боломжгүй"
 
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:675
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "%d файлын тодорхойлогч шугам руу байт бичих бүтэлгүйтлээ тиймээс клиент "
 "программыг дуусгав: %s"
 
-#: gconf/gconfd.c:686
+#: gconf/gconfd.c:685
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Daemon -ны түгжээ үүсгэгдсэнгүй, дуусгаж байна: %s"
 
-#: gconf/gconfd.c:724
+#: gconf/gconfd.c:723
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Түгжээ файлыг чөлөөлж байхад алдаа: %s"
 
-#: gconf/gconfd.c:732
+#: gconf/gconfd.c:731
 msgid "Exiting"
 msgstr "Дуусгах"
 
-#: gconf/gconfd.c:758
+#: gconf/gconfd.c:757
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-сервер хэрэглэгдээгүй байна, унтраах уу."
 
-#: gconf/gconfd.c:1124
+#: gconf/gconfd.c:1123
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Онцгой алдаа: %s"
 
-#: gconf/gconfd.c:1224
+#: gconf/gconfd.c:1223
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1248,7 +1232,7 @@ msgstr ""
 "gconfd-протоколл файл нээгдсэнгүй; Сонсогч gconfd -г унтарсаны дараа эргэж "
 "сэргэхгүй (%s)"
 
-#: gconf/gconfd.c:1259
+#: gconf/gconfd.c:1258
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1256,55 +1240,55 @@ msgstr ""
 "gconfd-протоколл файл хаагдсангүй; Өгөгдөл ном ёсоороо хадгалагдаагүй байж "
 "болно (%s)"
 
-#: gconf/gconfd.c:1328
+#: gconf/gconfd.c:1327
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "»%s« төлөв хадгалагч файл бичихээр нээгдэхгүй байна: %s"
 
-#: gconf/gconfd.c:1342
+#: gconf/gconfd.c:1341
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "»%s« төлөв хадгалагч файл, FD %d, бичигдсэнгүй: %s"
 
-#: gconf/gconfd.c:1351
+#: gconf/gconfd.c:1350
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Шинэ »%s« төлөв хадгалагч файл хаагдсангүй: %s"
 
-#: gconf/gconfd.c:1365
+#: gconf/gconfd.c:1364
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Хуучин »%s« төлөв хадгалагч файл зөөгдсөнгүй: %s"
 
-#: gconf/gconfd.c:1375
+#: gconf/gconfd.c:1374
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Шинэ төлөв хадгалагч файл зөв байрлал руу зөөгдсөнгүй: %s"
 
-#: gconf/gconfd.c:1384
+#: gconf/gconfd.c:1383
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "»%s« рүү зөөгдсөн жинхэнэ төлөв хадгалагч файл эргэж сэргээгдсэнгүй: %s"
 
-#: gconf/gconfd.c:1855
+#: gconf/gconfd.c:1854
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "»%s« хаяг дахь сонсогч сэргээгдсэнгүй, өгөгдлийн бааз тайлж чадсангүй"
 
-#: gconf/gconfd.c:1901
+#: gconf/gconfd.c:1900
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Төлөв хадгалагч файлыг уншиж байхад алдаа: %s"
 
-#: gconf/gconfd.c:1955
+#: gconf/gconfd.c:1954
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "»%s« төлөв хадгалагч файлыг нээх боломжгүй: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2073
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1313,7 +1297,7 @@ msgstr ""
 "Сонсогч нэмэх гэтэл gconfd-протоколл файл руу бичигдсэнгүй; Сонсогч gconfd "
 "унтрах үед нэмэгдэх боломжгүй (%s)"
 
-#: gconf/gconfd.c:2079
+#: gconf/gconfd.c:2078
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1322,27 +1306,27 @@ msgstr ""
 "Сонсогч устгах гэтэл gconfd-протоколл файл руу бичигдсэнгүй; Сонсогч gconfd "
 "төгсөх үед магадгүй андуурлаар эргэж нэмэгдэж болно (%s)."
 
-#: gconf/gconfd.c:2102 gconf/gconfd.c:2276
+#: gconf/gconfd.c:2101 gconf/gconfd.c:2275
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Клиентийн IOR хүлээн авах бүтэлгүйтлээ: %s"
 
-#: gconf/gconfd.c:2117
+#: gconf/gconfd.c:2116
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Төлөв хагалагч файл нээгдэх боломжгүй: %s"
 
-#: gconf/gconfd.c:2130
+#: gconf/gconfd.c:2129
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Клиентийг төлөв хагалагч файл руу нэмж бичих бүтсэнгүй: %s"
 
-#: gconf/gconfd.c:2138
+#: gconf/gconfd.c:2137
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Клиентийн устгалыг төлөв хагалагч файл руу бичих бүтсэнгүй: %s"
 
-#: gconf/gconfd.c:2237
+#: gconf/gconfd.c:2236
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1681,352 +1665,356 @@ msgid "Shutdown error: %s\n"
 msgstr "Унтрааж байхад алдаа: %s\n"
 
 #: gconf/gconftool.c:1120
-msgid "Must specify one or more dirs to recursively list.\n"
+#, fuzzy
+msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Та нэг эсвэл хэд хэдэн лавлах рекурс жигсаалтаар тодорхойлох ёстой.\n"
 
-#: gconf/gconftool.c:1170
-msgid "Must specify one or more dirs to dump.\n"
+#: gconf/gconftool.c:1172
+#, fuzzy
+msgid "Must specify one or more directories to dump.\n"
 msgstr "Та гаргахдаа нэг эсвэл хэд хэдэн түлхүүр өгөх ёстой.\n"
 
-#: gconf/gconftool.c:1211 gconf/gconftool.c:1469
+#: gconf/gconftool.c:1214 gconf/gconftool.c:1479
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "»%s« доторхи бичлэгүүдийг жигсааж байхад алдаа: %s\n"
 
-#: gconf/gconftool.c:1229
+#: gconf/gconftool.c:1232
 msgid "(no value set)"
 msgstr "(утга олгогдоогүй байна)"
 
-#: gconf/gconftool.c:1527
+#: gconf/gconftool.c:1537
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Тохируулгын сервер (gconfd) эхэлж чадсангүй: %s\n"
 
-#: gconf/gconftool.c:1541
+#: gconf/gconftool.c:1551
 msgid "Must specify a key or keys to get\n"
 msgstr "Та дуудалтад нэг эсвэл хэд хэдэн түлхүүр өгөх ёстой\n"
 
-#: gconf/gconftool.c:1576
+#: gconf/gconftool.c:1586
 #, c-format
 msgid "Type: %s\n"
 msgstr "Төрөл: %s\n"
 
-#: gconf/gconftool.c:1577
+#: gconf/gconftool.c:1587
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Жигсаалтын төрөл: %s\n"
 
-#: gconf/gconftool.c:1578
+#: gconf/gconftool.c:1588
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "car-төрөл: %s\n"
 
-#: gconf/gconftool.c:1579
+#: gconf/gconftool.c:1589
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "cdr-төрөл: %s\n"
 
-#: gconf/gconftool.c:1584
+#: gconf/gconftool.c:1594
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Стандарт утга: %s\n"
 
-#: gconf/gconftool.c:1584 gconf/gconftool.c:1586 gconf/gconftool.c:1587
-#: gconf/gconftool.c:1588
+#: gconf/gconftool.c:1594 gconf/gconftool.c:1596 gconf/gconftool.c:1597
+#: gconf/gconftool.c:1598
 msgid "Unset"
 msgstr "Утга суллах"
 
-#: gconf/gconftool.c:1586
+#: gconf/gconftool.c:1596
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Эзэмшигч: %s\n"
 
-#: gconf/gconftool.c:1587
+#: gconf/gconftool.c:1597
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Богино тод.: %s\n"
 
-#: gconf/gconftool.c:1588
+#: gconf/gconftool.c:1598
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Урт тод.: %s\n"
 
-#: gconf/gconftool.c:1597 gconf/gconftool.c:1821 gconf/gconftool.c:1855
-#: gconf/gconftool.c:1900 gconf/gconftool.c:2045
+#: gconf/gconftool.c:1607 gconf/gconftool.c:1831 gconf/gconftool.c:1865
+#: gconf/gconftool.c:1910 gconf/gconftool.c:2055
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "»%s« -т утга олгогдоогүй байна\n"
 
-#: gconf/gconftool.c:1601 gconf/gconftool.c:1825 gconf/gconftool.c:1859
-#: gconf/gconftool.c:1904 gconf/gconftool.c:2049
+#: gconf/gconftool.c:1611 gconf/gconftool.c:1835 gconf/gconftool.c:1869
+#: gconf/gconftool.c:1914 gconf/gconftool.c:2059
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "»%s« -н утга авагдахгүй байна: %s\n"
 
-#: gconf/gconftool.c:1644 gconf/gconftool.c:1656
+#: gconf/gconftool.c:1654 gconf/gconftool.c:1666
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "»%s« төрөл ойлгогдохгүй байна\n"
 
-#: gconf/gconftool.c:1668
+#: gconf/gconftool.c:1678
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Та хоёрдогч түлхүүр болон утгыг параметрээр өгөх ёстой\n"
 
-#: gconf/gconftool.c:1688
+#: gconf/gconftool.c:1698
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "»%s« түлхүүрийн хувьд тогтоосон утга алга\n"
 
-#: gconf/gconftool.c:1716
+#: gconf/gconftool.c:1726
 msgid "Cannot set schema as value\n"
 msgstr "Схем утгаар тогтоогдох боломжгүй\n"
 
-#: gconf/gconftool.c:1726
+#: gconf/gconftool.c:1736
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Жигсаалтад утга олгох үед та энгийн жигсаалтын төрөл өгөх ёстой\n"
 
-#: gconf/gconftool.c:1740
+#: gconf/gconftool.c:1750
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Хосод утга олгох үед та car төрөл ба cdr төрөл өгөх ёстой\n"
 
-#: gconf/gconftool.c:1755
+#: gconf/gconftool.c:1765
 #, c-format
 msgid "Error: %s\n"
 msgstr "Алдаа: %s\n"
 
-#: gconf/gconftool.c:1768 gconf/gconftool.c:2796
+#: gconf/gconftool.c:1778 gconf/gconftool.c:2806
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Утга олгож байхад алдаа: %s\n"
 
-#: gconf/gconftool.c:1786
+#: gconf/gconftool.c:1796
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Синхронизаци хийж байхад алдаа: %s\n"
 
-#: gconf/gconftool.c:1801
+#: gconf/gconftool.c:1811
 msgid "Must specify a key or keys to get type\n"
 msgstr "Та төрөл авахдаа нэг эсвэл хэд хэдэн түлхүүр өгөх ёстой\n"
 
-#: gconf/gconftool.c:1845
+#: gconf/gconftool.c:1855
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Та хэмжээ авахдаа нэг эсвэл хэд хэдэн түлхүүр өгөх ёстой\n"
 
-#: gconf/gconftool.c:1870 gconf/gconftool.c:1915
+#: gconf/gconftool.c:1880 gconf/gconftool.c:1925
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "»%s« түлхүүр жагсаалт биш.\n"
 
-#: gconf/gconftool.c:1890
+#: gconf/gconftool.c:1900
 msgid "Must specify a key from which to get list element.\n"
 msgstr ""
 "Та жагсаалтын элементүүдээс авахдаа нэг эсвэл хэд хэдэн түлхүүр өгөх ёстой\n"
 
-#: gconf/gconftool.c:1921
+#: gconf/gconftool.c:1931
 msgid "Must specify list index.\n"
 msgstr "Та жагсаалтын индекс тодорхойлох ёстой\n"
 
-#: gconf/gconftool.c:1928
+#: gconf/gconftool.c:1938
 msgid "List index must be non-negative.\n"
 msgstr "Жагсаалтын дугаарлалт сөрөг байж болохгүй.\n"
 
-#: gconf/gconftool.c:1937
+#: gconf/gconftool.c:1947
 msgid "List index is out of bounds.\n"
 msgstr "Жагсаалтын дугаарлалт хязгаараас халив.\n"
 
-#: gconf/gconftool.c:1963
+#: gconf/gconftool.c:1973
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Та түлхүүр эсвэл түлхүүрүүд тушаалын мөрөнд өгөх ёстой\n"
 
-#: gconf/gconftool.c:1983
+#: gconf/gconftool.c:1993
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "»%s« -н хувьд схем тодорхойгүй\n"
 
-#: gconf/gconftool.c:2016
+#: gconf/gconftool.c:2026
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "doc-стринг »%s« доторхи схемд хадгалагдаагүй байна\n"
 
-#: gconf/gconftool.c:2021
+#: gconf/gconftool.c:2031
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "»%s« доторхи схемийг хүлээн авах үед алдаа: %s\n"
 
-#: gconf/gconftool.c:2028
+#: gconf/gconftool.c:2038
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "»%s« дотор схем хадгалагдаагүй байна\n"
 
-#: gconf/gconftool.c:2031
+#: gconf/gconftool.c:2041
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "»%s« доторхи утга схем биш\n"
 
-#: gconf/gconftool.c:2087
+#: gconf/gconftool.c:2097
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Та схемийн нэрэнд хэрэглэгдэх түлхүүрийн нэрээр дагалдах схемийн нэрийг өгнө "
 "үү\n"
 
-#: gconf/gconftool.c:2094
+#: gconf/gconftool.c:2104
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "»%s« схемийн нэрийг »%s« түлхүүрийн нэртэй холбох үед алдаа: %s\n"
 
-#: gconf/gconftool.c:2112
+#: gconf/gconftool.c:2122
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Та схемүүдийг утга оноохдоо түлхүүрүүд өгөх ёстой\n"
 
-#: gconf/gconftool.c:2122
+#: gconf/gconftool.c:2132
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "»%s«-ээс схем нэрийг устгаж байхад алдаа: %s\n"
 
-#: gconf/gconftool.c:2147
+#: gconf/gconftool.c:2157
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Та түлхүүрийг (Схем нэр) зөвхөн аргументаар өгөх ёстой\n"
 
-#: gconf/gconftool.c:2189
+#: gconf/gconftool.c:2199
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Жигсаалтын төрөл энгийн төрөл байх ёстой: string, int, float эсвэл bool\n"
 
-#: gconf/gconftool.c:2209
+#: gconf/gconftool.c:2219
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Хос car-төрөл энгийн төрөл байх ёстой: string, int, float эсвэл bool\n"
 
-#: gconf/gconftool.c:2229
+#: gconf/gconftool.c:2239
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Хос cdr-төрөл энгийн төрөл байх ёстой: string, int, float эсвэл bool\n"
 
-#: gconf/gconftool.c:2244
+#: gconf/gconftool.c:2254
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Утга олгож байхад алдаа: %s"
 
-#: gconf/gconftool.c:2258
+#: gconf/gconftool.c:2268
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Синхронизаци хийж байхад алдаа: %s"
 
-#: gconf/gconftool.c:2273
-msgid "Must specify one or more dirs to get key/value pairs from.\n"
+#: gconf/gconftool.c:2283
+#, fuzzy
+msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr "Та түлхүүр/утгын хос авахдаа нэг эсвэл хэд хэдэн лавлах өгөх ёстой.\n"
 
-#: gconf/gconftool.c:2287
+#: gconf/gconftool.c:2297
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Та суллахдаа нэг эсвэл хэд хэдэн түлхүүр өгөх ёстой.\n"
 
-#: gconf/gconftool.c:2298
+#: gconf/gconftool.c:2308
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "»%s« -г суллаж байх үед алдаа: %s\n"
 
 # CHECK
-#: gconf/gconftool.c:2318
+#: gconf/gconftool.c:2328
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Та нэг эсвэл хэд хэдэн түлхүүр рекурс суллахдаа өгөх ёстой.\n"
 
-#: gconf/gconftool.c:2332
+#: gconf/gconftool.c:2342
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "»%s« -н рекурс чөлөөлөлтийн үед алдаа: %s\n"
 
-#: gconf/gconftool.c:2352
-msgid "Must specify one or more dirs to get subdirs from.\n"
+#: gconf/gconftool.c:2362
+#, fuzzy
+msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Та дэд лавлахуудыг авахын тулд нэг эсвэл хэд хэдэн лавлах тодорхойлох "
 "ёстой.\n"
 
-#: gconf/gconftool.c:2386
+#: gconf/gconftool.c:2396
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Лавлахыг жигсааж байхад алдаа: %s\n"
 
-#: gconf/gconftool.c:2522
+#: gconf/gconftool.c:2532
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "САНУУЛГА: <pair> дотор <car> ба <cdr> хоёул тодорхойлогдох ёстой\n"
 
-#: gconf/gconftool.c:2549
+#: gconf/gconftool.c:2559
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "САНУУЛГА: Схемийн хувьд нэгэн <Утга>-нд түлхүүр (%s) тодорхойлогдсон.-үл "
 "хэрэгсэнэ\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2592
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "<Утга> хүү элемент агуулж байх ёстой\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2598
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "САНУУЛГА: <%s> зангилаа ойлгогдохгүй байна\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2616
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "САНУУЛГА: бүхэл төрлийн »%s« утга задлан ялгагдсангүй\n"
 
-#: gconf/gconftool.c:2627
+#: gconf/gconftool.c:2637
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "САНУУЛГА: бутархай төрлийн »%s« утга задлан ялгагдсангүй\n"
 
-#: gconf/gconftool.c:2649
+#: gconf/gconftool.c:2659
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "САНУУЛГА: Стринг төрлийн »%s« утга задлан ялгагдсангүй\n"
 
-#: gconf/gconftool.c:2670
+#: gconf/gconftool.c:2680
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "САНУУЛГА: boolean төрлийн »%s« утга задлан ялгагдсангүй\n"
 
-#: gconf/gconftool.c:2786 gconf/gconftool.c:3322
+#: gconf/gconftool.c:2796 gconf/gconftool.c:3332
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "САНУУЛГА: »%s« схем »%s« түлхүүртэй холбогдсонгүй: %s\n"
 
-#: gconf/gconftool.c:2891
+#: gconf/gconftool.c:2901
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "САНУУЛГА: (%s) схемийн хувьд хүчингүй эсвэл байхгүй төрөл\n"
 
-#: gconf/gconftool.c:2900
+#: gconf/gconftool.c:2910
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "САНУУЛГА: (%s) схемийн хувьд хүчингүй эсвэл байхгүй төрөл\n"
 
-#: gconf/gconftool.c:2911 gconf/gconftool.c:2941 gconf/gconftool.c:2970
+#: gconf/gconftool.c:2921 gconf/gconftool.c:2951 gconf/gconftool.c:2980
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
 "САНУУЛГА: (%s) схемийн »%s« стандарт төрөлд задлан ялгал хийгдэхгүй байна\n"
 
-#: gconf/gconftool.c:2929
+#: gconf/gconftool.c:2939
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "САНУУЛГА: (%s) схемийн хувьд хүчингүй эсвэл байхгүй car_type эсвэл cdr_type\n"
 
-#: gconf/gconftool.c:2954
+#: gconf/gconftool.c:2964
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "САНУУЛГА: Та схемийн хувьд стандарт төрөл өгч чадахгүй\n"
 
-#: gconf/gconftool.c:2983
+#: gconf/gconftool.c:2993
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "САНУУЛГА: »gconftool« -д дотоод алдаа, тодорхойгүй GConfValueType\n"
 
-#: gconf/gconftool.c:3031 gconf/gconftool.c:3052 gconf/gconftool.c:3073
-#: gconf/gconftool.c:3094
+#: gconf/gconftool.c:3041 gconf/gconftool.c:3062 gconf/gconftool.c:3083
+#: gconf/gconftool.c:3104
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "САНУУЛГА: »%s« төрлийн нэр задлан ялгагдсангүй\n"
 
-#: gconf/gconftool.c:3048
+#: gconf/gconftool.c:3058
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
@@ -2034,48 +2022,48 @@ msgstr ""
 "САНУУЛГА: list_type зөвхөн int, float, string эсвэл bool байж болно. Харин »%"
 "s« байж болохгүй\n"
 
-#: gconf/gconftool.c:3069
+#: gconf/gconftool.c:3079
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "САНУУЛГА: car_type зөвхөн int, float, string эсвэл bool байж болно. Харин »%"
 "s« байж болохгүй\n"
 
-#: gconf/gconftool.c:3090
+#: gconf/gconftool.c:3100
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "САНУУЛГА: cdr_type зөвхөн int, float, string эсвэл bool байж болно. Харин »%"
 "s« байж болохгүй\n"
 
-#: gconf/gconftool.c:3130
+#: gconf/gconftool.c:3140
 msgid "WARNING: empty <applyto> node"
 msgstr "САНУУЛГА: хоосон <applyto>-зангилаа"
 
-#: gconf/gconftool.c:3133 gconf/gconftool.c:3395
+#: gconf/gconftool.c:3143 gconf/gconftool.c:3405
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "САНУУЛГА: <schema> доторхи <%s> зангилаа ойлгомжгүй байна\n"
 
-#: gconf/gconftool.c:3144
+#: gconf/gconftool.c:3154
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr ""
 "САНУУЛГА: Жигсаалт төрлийн схемд <list_type> түлхүүр өгөгдөөгүй байна\n"
 
-#: gconf/gconftool.c:3150
+#: gconf/gconftool.c:3160
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "САНУУЛГА: Хос төрлийн схемд <car_type> түлхүүр өгөгдөөгүй байна\n"
 
-#: gconf/gconftool.c:3156
+#: gconf/gconftool.c:3166
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "САНУУЛГА: Хос төрлийн схемд <cdr_type> түлхүүр өгөгдөөгүй байна\n"
 
-#: gconf/gconftool.c:3185
+#: gconf/gconftool.c:3195
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "САНУУЛГА: <locale> зангилаанд »name='locale'« аттрибут алга, үл хэрэгсэх\n"
 
-#: gconf/gconftool.c:3191
+#: gconf/gconftool.c:3201
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -2083,89 +2071,89 @@ msgstr ""
 "САНУУЛГА: »%s« локалын хувьд олон <locale> зангилаа байна. Эхнийхээс хойшхи "
 "бүгдийг үл хэрэгсэх\n"
 
-#: gconf/gconftool.c:3289
+#: gconf/gconftool.c:3299
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "САНУУЛГА: <locale> зангилаанд <%s> хүчингүй зангилаа\n"
 
-#: gconf/gconftool.c:3330
+#: gconf/gconftool.c:3340
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "»%s« схем »%s« түлхүүрт хавсрагдав.\n"
 
-#: gconf/gconftool.c:3404
+#: gconf/gconftool.c:3414
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Та нэг <schema> дотор ядаж нэг <locale>-бичлэг хийх ёстой\n"
 
-#: gconf/gconftool.c:3436
+#: gconf/gconftool.c:3446
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "САНУУЛГА: »%s« схем »%s« локал суусангүй: %s\n"
 
-#: gconf/gconftool.c:3444
+#: gconf/gconftool.c:3454
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Суусан »%s« схем (»%s« локалын хувьд)\n"
 
-#: gconf/gconftool.c:3468
+#: gconf/gconftool.c:3478
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
 msgstr "САНУУЛГА: »%s« схем (»%s« локалтай) устгагдсангүй: %s\n"
 
-#: gconf/gconftool.c:3476
+#: gconf/gconftool.c:3486
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "»%s« схем (»%s« локалын хувьд) устгагдлаа.\n"
 
-#: gconf/gconftool.c:3514
+#: gconf/gconftool.c:3524
 msgid "WARNING: no key specified for schema\n"
 msgstr "САНУУЛГА: Схемд түлхүүр өгөгдөөгүй байна\n"
 
-#: gconf/gconftool.c:3555
+#: gconf/gconftool.c:3565
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "САНУУЛГА: <%s> зангилаа (<%s> элемент доорх) ойлгогдохгүй байна\n"
 
-#: gconf/gconftool.c:3586
+#: gconf/gconftool.c:3596
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "»%s« нээгдсэнгүй: %s\n"
 
-#: gconf/gconftool.c:3593
+#: gconf/gconftool.c:3603
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "»%s« баримт хоосон юм уу?\n"
 
-#: gconf/gconftool.c:3605
+#: gconf/gconftool.c:3615
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "»%s« баримтад үндсэн зангилааны буруу төрөл байна (<%s>, <%s> байхсан)\n"
 
-#: gconf/gconftool.c:3618
+#: gconf/gconftool.c:3628
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "»%s« баримтад дээд төвшиний <%s> зангилаа алга\n"
 
-#: gconf/gconftool.c:3632
+#: gconf/gconftool.c:3642
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "САНУУЛГА: <%s> зангилаа (<%s> доторхи) ойлгомжгүй\n"
 
-#: gconf/gconftool.c:3643 gconf/gconftool.c:3678 gconf/gconftool.c:3710
+#: gconf/gconftool.c:3653 gconf/gconftool.c:3688 gconf/gconftool.c:3720
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Тохируулгын өгөгдлүүдийг синхронизаци хийж байхад алдаа: %s"
 
-#: gconf/gconftool.c:3662
+#: gconf/gconftool.c:3672
 msgid "Must specify some schema files to install\n"
 msgstr "Та суулгалт хийхдээ схем файлуудыг өгөх ёстой\n"
 
-#: gconf/gconftool.c:3694
+#: gconf/gconftool.c:3704
 msgid "Must specify some schema files to uninstall\n"
 msgstr "Та суулгалт устгахдаа схем файлуудыг өгөх ёстой\n"
 
-#: gconf/gconftool.c:3731
+#: gconf/gconftool.c:3741
 #, c-format
 msgid ""
 "\n"
@@ -2174,16 +2162,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:3751
+#: gconf/gconftool.c:3761
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "%s Breakage-Түлхүүр суллагдахгүй байна: %s\n"
 
-#: gconf/gconftool.c:3877
+#: gconf/gconftool.c:3887
 msgid "Must specify some keys to break\n"
 msgstr "Та таслахдаа түлхүүрүүд тодорхойлох ёстой\n"
 
-#: gconf/gconftool.c:3883
+#: gconf/gconftool.c:3893
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2192,11 +2180,11 @@ msgstr ""
 "Таны х.программ эвдрэхдээ түлхүүрт буруу утга олгохыг оролдож байна:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:3901
+#: gconf/gconftool.c:3911
 msgid "Must specify some directories to break\n"
 msgstr "Та эвдэх лавлахаа өгөх ёстой\n"
 
-#: gconf/gconftool.c:3920
+#: gconf/gconftool.c:3930
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2206,6 +2194,19 @@ msgstr ""
 "Таны х.программ эвдрэхдээ лавлах доторхи түлхүүрт буруу утга олгохыг оролдож "
 "байна:\n"
 "  %s\n"
+
+#~ msgid ""
+#~ "%u items remain in the cache after cleaning already-synced items older "
+#~ "than %u seconds"
+#~ msgstr ""
+#~ "%u элемент Cache -д бүх хэдийнэ %u секундээс илүү болсон синхронизаци "
+#~ "элементүүдийг цэвэрлэсний дараа үлдэв"
+
+#~ msgid "%s"
+#~ msgstr "%s"
+
+#~ msgid "/path"
+#~ msgstr "/Зам"
 
 #~ msgid "--dir-exists option must be used by itself.\n"
 #~ msgstr "--dir-exists сонголт дангаараа хэрэглэгдэх ёстой.\n"
