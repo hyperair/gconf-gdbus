@@ -163,7 +163,7 @@ gconf_backend_file(const gchar* address)
       gchar* dir;
 
       g_free(retval);
-      dir = g_strconcat(GCONF_SRCDIR, "/backends/.libs", NULL);
+      dir = g_strconcat(GCONF_BUILDDIR, "/backends/.libs", NULL);
 
       retval = g_module_build_path(dir, file);
 

@@ -2,7 +2,7 @@ INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
 	$(GLIB_CFLAGS) $(OAF_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) \
 	-DGCONF_ENABLE_INTERNALS=1 -DG_LOG_DOMAIN=\"GConf-Backends\"
 
-backenddir = $(pkglibdir)/$(VERSION)
+backenddir = $(pkglibdir)/$(MAJOR_VERSION)
 
 backend_LTLIBRARIES = libgconfbackend-xml.la
 

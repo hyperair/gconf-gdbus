@@ -1,6 +1,7 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir) \
 	$(GLIB_CFLAGS) $(ORBIT_CFLAGS) $(XML_CFLAGS) $(OAF_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\" \
+	-DGCONF_BUILDDIR=\""$(builddir)"\" \
 	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\" -DVERSION=\""$(VERSION)"\" -DIID=\""OAFIID:gconfd:19991118"\" -DGCONF_ENABLE_INTERNALS=1
 
 EFENCE=
