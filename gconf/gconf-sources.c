@@ -289,22 +289,29 @@ gconf_source_sync_all         (GConfSource* source, GError** err)
 }
 
 static void
-gconf_source_add_listener (GConfSource           *source,
-			   guint                  id,
-			   const gchar           *namespace_section,
-			   GConfSourceNotifyFunc  notify_func,
-			   gpointer               user_data)
+gconf_source_set_notify_func (GConfSource           *source,
+			      GConfSourceNotifyFunc  notify_func,
+			      gpointer               user_data)
+{
+  g_return_if_fail (source != NULL);
+
+  if (source->backend->vtable.set_notify_func)
+    {
+      (*source->backend->vtable.set_notify_func) (source, notify_func, user_data);
+    }
+}
+
+static void
+gconf_source_add_listener (GConfSource *source,
+			   guint        id,
+			   const gchar *namespace_section)
 {
   g_return_if_fail (source != NULL);
   g_return_if_fail (id > 0);
 
   if (source->backend->vtable.add_listener)
     {
-      (*source->backend->vtable.add_listener) (source,
-					       id,
-					       namespace_section,
-					       notify_func,
-					       user_data);
+      (*source->backend->vtable.add_listener) (source, id, namespace_section);
     }
 }
 
@@ -1585,26 +1592,32 @@ gconf_sources_query_default_value(GConfSources* sources,
 }
 
 void
-gconf_sources_add_listener (GConfSources          *sources,
-			    guint                  id,
-			    const gchar           *namespace_section,
-			    GConfSourceNotifyFunc  notify_func,
-			    gpointer               user_data)
+gconf_sources_set_notify_func (GConfSources          *sources,
+			       GConfSourceNotifyFunc  notify_func,
+			       gpointer               user_data)
 {
   GList *tmp;
 
   tmp = sources->sources;
-
-  while (sources != NULL)
+  while (tmp != NULL)
     {
-      GConfSource *source = tmp->data;
+      gconf_source_set_notify_func (tmp->data, notify_func, user_data);
 
-      gconf_source_add_listener (source,
-				 id,
-				 namespace_section,
-				 notify_func,
-				 user_data);
+      tmp = tmp->next;
+    }
+}
 
+void
+gconf_sources_add_listener (GConfSources *sources,
+			    guint         id,
+			    const gchar  *namespace_section)
+{
+  GList *tmp;
+
+  tmp = sources->sources;
+  while (tmp != NULL)
+    {
+      gconf_source_add_listener (tmp->data, id, namespace_section);
 
       tmp = tmp->next;
     }
@@ -1617,12 +1630,9 @@ gconf_sources_remove_listener (GConfSources *sources,
   GList *tmp;
 
   tmp = sources->sources;
-
-  while (sources != NULL)
+  while (tmp != NULL)
     {
-      GConfSource *source = tmp->data;
-
-      gconf_source_remove_listener (source, id);
+      gconf_source_remove_listener (tmp->data, id);
 
       tmp = tmp->next;
     }

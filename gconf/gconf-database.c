@@ -800,7 +800,10 @@ static POA_ConfigDatabase3__epv server3_epv = {
 
 static POA_ConfigDatabase3__vepv poa_server_vepv = { &base_epv, &server_epv, &server2_epv, &server3_epv };
 
-static void gconf_database_really_sync(GConfDatabase* db);
+static void gconf_database_really_sync (GConfDatabase *db);
+static void source_notify_cb           (GConfSource   *source,
+					const gchar   *location,
+					GConfDatabase *db);
 
 GConfDatabase*
 gconf_database_new (GConfSources  *sources)
@@ -831,6 +834,10 @@ gconf_database_new (GConfSources  *sources)
   db->listeners = gconf_listeners_new();
 
   db->sources = sources;
+
+  gconf_sources_set_notify_func (db->sources,
+				 (GConfSourceNotifyFunc) source_notify_cb,
+				 db);
 
   db->last_access = time(NULL);
 
@@ -1035,7 +1042,6 @@ source_notify_cb (GConfSource   *source,
   GConfValue  *value;
   ConfigValue *cvalue;
   GError      *error;
-  gchar       *schema_name;
   gboolean     is_default;
   gboolean     is_writable;
 
@@ -1044,7 +1050,6 @@ source_notify_cb (GConfSource   *source,
   g_return_if_fail (db != NULL);
 
   error = NULL;
-  schema_name = NULL;
   is_default = is_writable = FALSE;
 
   /* FIXME: only notify if this location isn't already set
@@ -1055,7 +1060,7 @@ source_notify_cb (GConfSource   *source,
 				      location,
 				      NULL,
 				      TRUE,
-				      &schema_name,
+				      NULL,
 				      &is_default,
 				      &is_writable,
 				      &error);
@@ -1101,11 +1106,7 @@ gconf_database_readd_listener   (GConfDatabase       *db,
   cnxn = gconf_listeners_add (db->listeners, where, l,
                               (GFreeFunc)listener_destroy);
 
-  gconf_sources_add_listener (db->sources,
-			      cnxn,
-			      where,
-			      (GConfSourceNotifyFunc) source_notify_cb,
-			      db);
+  gconf_sources_add_listener (db->sources, cnxn, where);
 
   if (l->name == NULL)
     l->name = g_strdup_printf ("%u", cnxn);

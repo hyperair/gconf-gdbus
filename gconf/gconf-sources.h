@@ -129,11 +129,12 @@ GConfValue*   gconf_sources_query_default_value(GConfSources* sources,
                                                 gboolean* is_writable,
                                                 GError** err);
 
-void          gconf_sources_add_listener       (GConfSources          *sources,
-						guint                  id,
-					        const gchar           *location,
+void          gconf_sources_set_notify_func    (GConfSources          *sources,
 					        GConfSourceNotifyFunc  notify_func,
 					        gpointer               user_data);
+void          gconf_sources_add_listener       (GConfSources          *sources,
+						guint                  id,
+					        const gchar           *location);
 void          gconf_sources_remove_listener    (GConfSources          *sources,
 						guint                  id);
 

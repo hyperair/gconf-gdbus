@@ -229,8 +229,9 @@ static GConfBackendVTable xml_vtable = {
   destroy_source,
   clear_cache,
   blow_away_locks,
-  NULL, /* add_listener */
-  NULL /* remove_listener */
+  NULL, /* set_notify_func */
+  NULL, /* add_listener    */
+  NULL  /* remove_listener */
 };
 
 static void          

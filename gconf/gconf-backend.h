@@ -131,11 +131,13 @@ struct _GConfBackendVTable {
   /* used by gconf-sanity-check */
   void                (* blow_away_locks) (const char *address);
 
-  void                (* add_listener)    (GConfSource           *source,
-					   guint                  id,
-					   const gchar           *namespace_section,
+  void                (* set_notify_func) (GConfSource           *source,
 					   GConfSourceNotifyFunc  notify_func,
 					   gpointer               user_data);
+
+  void                (* add_listener)    (GConfSource           *source,
+					   guint                  id,
+					   const gchar           *namespace_section);
 
   void                (* remove_listener) (GConfSource           *source,
 					   guint                  id);

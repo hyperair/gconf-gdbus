@@ -1,3 +1,38 @@
+2004-03-29  Mark McLoughlin  <mark@skynet.ie>
+
+	* backends/markup-backend.c,
+	  backends/xml-backend.c: initialize the set_notify_func
+	vtable member.
+
+2004-03-29  Mark McLoughlin  <mark@skynet.ie>
+
+	Re-work the notifications-from-backends patch so that the
+	backend doesn't have to keep track of a callback per
+	listener as suggested by Cyrille.
+
+	* gconf/gconf-backend.h: add a set_notify_func() member	to
+	the vtable and remove the callback arg from add_listener().
+	
+	* gconf/gconf-database.c:
+	(gconf_database_new): set the notification callback here.
+	(gconf_database_readd_listener): upd.
+	
+	* gconf/gconf-sources.[ch]:
+	(gconf_source_set_notify_func): add.
+	(gconf_source_add_listener): upd.
+	(gconf_sources_set_notify_func): add.
+	(gconf_sources_add_listener): upd.
+
+2004-03-26  Mark McLoughlin  <mark@skynet.ie>
+
+	* gconf/gconf-database.c: (source_notify_cb): don't leak
+	the schema name.
+	
+	* gconf/gconf-sources.c:
+	(gconf_sources_add_listener),
+	(gconf_sources_remove_listener): fix mistake pointed out
+	by Cyrille.
+
 2004-03-25  Mark McLoughlin  <mark@skynet.ie>
 
 	Allow backends to notify the daemon of changes to entries.
