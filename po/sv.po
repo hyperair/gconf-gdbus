@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2003-09-10 15:15-0400\n"
-"PO-Revision-Date: 2003-07-15 11:51+0200\n"
+"POT-Creation-Date: 2003-10-24 00:46+0200\n"
+"PO-Revision-Date: 2003-10-24 00:48+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -59,8 +59,8 @@ msgstr "Fel vid synkronisering av XML-backendkatalogcache: %s"
 
 #: backends/xml-backend.c:684
 msgid ""
-"Remove dir operation is no longer supported, just remove all the values in "
-"the directory"
+"Remove directory operation is no longer supported, just remove all the "
+"values in the directory"
 msgstr ""
 "Katalogborttagningsåtgärden stöds inte längre, ta bara bort alla värden i "
 "katalogen"
@@ -81,7 +81,7 @@ msgstr "Initierar XML-backendmodulen"
 
 #: backends/xml-backend.c:877
 #, c-format
-msgid "Failed to give up lock on XML dir \"%s\": %s"
+msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Misslyckades med att ge upp lås på XML-katalogen \"%s\": %s"
 
 #: backends/xml-cache.c:286
@@ -96,15 +96,6 @@ msgid ""
 msgstr ""
 "Kunde inte ta bort katalogen \"%s\" från XML-backenden eftersom den inte har "
 "synkroniserats korrekt till disk"
-
-#: backends/xml-cache.c:343
-#, c-format
-msgid ""
-"%u items remain in the cache after cleaning already-synced items older than %"
-"u seconds"
-msgstr ""
-"%u objekt återstår i cachen efter städning av objekt som redan "
-"synkroniserats och som är äldre än %u sekunder"
 
 #: backends/xml-dir.c:171
 #, c-format
@@ -161,11 +152,6 @@ msgstr "Misslyckades med att ta bort den gamla filen \"%s\": %s"
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Misslyckades med att ta status på \"%s\": %s"
-
-#: backends/xml-dir.c:1002
-#, c-format
-msgid "%s"
-msgstr "%s"
 
 #: backends/xml-dir.c:1152
 #, c-format
@@ -316,17 +302,17 @@ msgstr "Kunde inte hitta backendmodulen för \"%s\""
 msgid "Failed to shut down backend"
 msgstr "Fel vid avstängning av backend"
 
-#: gconf/gconf-client.c:343 gconf/gconf-client.c:361
+#: gconf/gconf-client.c:344 gconf/gconf-client.c:362
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf-fel: %s\n"
 
-#: gconf/gconf-client.c:895
+#: gconf/gconf-client.c:896
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf-varning: misslyckades med att lista par i \"%s\": %s"
 
-#: gconf/gconf-client.c:1180
+#: gconf/gconf-client.c:1181
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "\"%s\" förväntades, fick \"%s\" för nyckeln \"%s\""
@@ -422,7 +408,7 @@ msgstr "Fel vid existenskontroll av \"%s\": %s"
 
 #: gconf/gconf-database.c:1520
 #, c-format
-msgid "Error removing dir `%s': %s"
+msgid "Error removing directory \"%s\": %s"
 msgstr "Fel vid borttagning av katalogen \"%s\": %s"
 
 #: gconf/gconf-database.c:1547
@@ -692,7 +678,7 @@ msgstr "Misslyckades med att ta bort låskatalogen \"%s\": %s"
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Misslyckades med att avlänka låsfilen %s: %s\n"
 
-#: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
+#: gconf/gconf-internals.c:2856 gconf/gconfd.c:639
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Misslyckades med att skapa %s: %s"
@@ -1042,68 +1028,68 @@ msgstr "Servern kunde inte slå upp adressen \"%s\""
 msgid "Can't add notifications to a local configuration source"
 msgstr "Kan inte lägga till notifikationer till lokal konfigurationskälla"
 
-#: gconf/gconf.c:2078
+#: gconf/gconf.c:2097
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Tillägg av klient till serverns lista misslyckades, CORBA-fel: %s"
 
-#: gconf/gconf.c:2433
+#: gconf/gconf.c:2452
 msgid "Must begin with a slash (/)"
 msgstr "Måste börja med ett snedstreck (/)"
 
-#: gconf/gconf.c:2455
+#: gconf/gconf.c:2474
 msgid "Can't have two slashes (/) in a row"
 msgstr "Kan inte ha två snedstreck (/) i rad"
 
-#: gconf/gconf.c:2457
+#: gconf/gconf.c:2476
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kan inte ha en punkt (.) precis efter ett snedstreck (/)"
 
-#: gconf/gconf.c:2476
+#: gconf/gconf.c:2495
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "\"%c\" är inte ett ASCII-tecken, så det är inte tillåtet i nyckelnamn"
 
-#: gconf/gconf.c:2486
+#: gconf/gconf.c:2505
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "\"%c\" är ett ogiligt tecken i nyckel/katalognamn"
 
-#: gconf/gconf.c:2500
+#: gconf/gconf.c:2519
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Nyckel/katalog kan inte avslutas med ett snedstreck (/)"
 
-#: gconf/gconf.c:2869
+#: gconf/gconf.c:2888
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Misslyckades med att stänga ner konfigurationsservern: %s"
 
-#: gconf/gconf.c:2930
+#: gconf/gconf.c:2949
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Flyttal förväntades, fick %s"
 
-#: gconf/gconf.c:2965
+#: gconf/gconf.c:2984
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Heltal förväntades, fick %s"
 
-#: gconf/gconf.c:3000
+#: gconf/gconf.c:3019
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Sträng förväntades, fick %s"
 
-#: gconf/gconf.c:3034
+#: gconf/gconf.c:3053
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Boolean förväntades, fick %s"
 
-#: gconf/gconf.c:3067
+#: gconf/gconf.c:3086
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Schema förväntades, fick %s"
 
-#: gconf/gconf.c:3424
+#: gconf/gconf.c:3443
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-fel: %s"
@@ -1132,16 +1118,13 @@ msgstr ""
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
+#, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
-"edit "
+"edit %s"
 msgstr ""
 "Inga konfigurationskällor i källsökvägen, konfigurationen kommer inte att  "
-"sparas; redigera "
-
-#: gconf/gconfd.c:304
-msgid "/path"
-msgstr "/sökväg"
+"sparas; redigera %s"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1182,72 +1165,72 @@ msgstr ""
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Mottog signal %d, stänger ner snyggt"
 
-#: gconf/gconfd.c:481
+#: gconf/gconfd.c:480
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "Misslyckades med att öppna %s: %s"
 
-#: gconf/gconfd.c:488
+#: gconf/gconfd.c:487
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Misslyckades med att ta status på %s: %s"
 
-#: gconf/gconfd.c:497
+#: gconf/gconfd.c:496
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "Ägaren av %s är inte den aktuella användaren"
 
-#: gconf/gconfd.c:505
+#: gconf/gconfd.c:504
 #, c-format
-msgid "Bad permissions %o on dir %s"
-msgstr "Felaktiga rättigheter %o på katalogen %s"
+msgid "Bad permissions %lo on directory %s"
+msgstr "Felaktiga rättigheter %lo på katalogen %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:587
+#: gconf/gconfd.c:586
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "startar (version %s), pid %u användare \"%s\""
 
-#: gconf/gconfd.c:627
+#: gconf/gconfd.c:626
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Misslyckades med att få objektreferensen för konfigurationsservern"
 
-#: gconf/gconfd.c:647
+#: gconf/gconfd.c:646
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "Katalogen %s har ett problem, gconfd kan inte använda den"
 
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:675
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Misslyckades med att skriva byte till rör-fh %d, så programmet kan hänga: %s"
 
-#: gconf/gconfd.c:686
+#: gconf/gconfd.c:685
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Misslyckades med att få lås för demonen, avslutar: %s"
 
-#: gconf/gconfd.c:724
+#: gconf/gconfd.c:723
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Fel när låsfil skulle släppas: %s"
 
-#: gconf/gconfd.c:732
+#: gconf/gconfd.c:731
 msgid "Exiting"
 msgstr "Avslutar"
 
-#: gconf/gconfd.c:758
+#: gconf/gconfd.c:757
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-servern används inte, stänger ner."
 
-#: gconf/gconfd.c:1124
+#: gconf/gconfd.c:1123
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerar undantag: %s"
 
-#: gconf/gconfd.c:1224
+#: gconf/gconfd.c:1223
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1256,7 +1239,7 @@ msgstr ""
 "Misslyckades med att öppna gconfd-loggfilen; kommer inte att kunna "
 "återställa lyssnare efter avslutning av gconfd (%s)"
 
-#: gconf/gconfd.c:1259
+#: gconf/gconfd.c:1258
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1264,32 +1247,32 @@ msgstr ""
 "Misslyckades med att stänga gconfd-loggfilen; data kanske inte har sparats "
 "korrekt (%s)"
 
-#: gconf/gconfd.c:1328
+#: gconf/gconfd.c:1327
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunde inte öppna tillståndsfilen \"%s\" för skrivning: %s"
 
-#: gconf/gconfd.c:1342
+#: gconf/gconfd.c:1341
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Kunde inte skriva filidentifieraren för tillståndsfilen \"%s\": %d: %s"
 
-#: gconf/gconfd.c:1351
+#: gconf/gconfd.c:1350
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Misslyckades med att stänga den nya tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1365
+#: gconf/gconfd.c:1364
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunde inte flytta undan den gamla tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1375
+#: gconf/gconfd.c:1374
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Misslyckades med att flytta den nya tillståndsfilen på plats: %s"
 
-#: gconf/gconfd.c:1384
+#: gconf/gconfd.c:1383
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1297,7 +1280,7 @@ msgstr ""
 "Misslyckades med att återskapa den ursprungliga tillståndsfilen som hade "
 "flyttats till \"%s\": %s"
 
-#: gconf/gconfd.c:1855
+#: gconf/gconfd.c:1854
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1305,17 +1288,17 @@ msgstr ""
 "Kunde inte återställa lyssnaren på adress \"%s\", kunde inte slå upp "
 "databasen"
 
-#: gconf/gconfd.c:1901
+#: gconf/gconfd.c:1900
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Fel vid läsning av tillståndsfilen: %s"
 
-#: gconf/gconfd.c:1955
+#: gconf/gconfd.c:1954
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Misslyckades med att öppna tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2073
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1325,7 +1308,7 @@ msgstr ""
 "kommer inte att kunna lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs av (%s)"
 
-#: gconf/gconfd.c:2079
+#: gconf/gconfd.c:2078
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1335,27 +1318,27 @@ msgstr ""
 "kan komma att felaktigt lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs ner (%s)"
 
-#: gconf/gconfd.c:2102 gconf/gconfd.c:2276
+#: gconf/gconfd.c:2101 gconf/gconfd.c:2275
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Misslyckades med att få IOR för klienten: %s"
 
-#: gconf/gconfd.c:2117
+#: gconf/gconfd.c:2116
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Misslyckades med att öppna tillståndsfilen: %s"
 
-#: gconf/gconfd.c:2130
+#: gconf/gconfd.c:2129
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Misslyckades med att skriva klienttillägg till tillståndsfilen: %s"
 
-#: gconf/gconfd.c:2138
+#: gconf/gconfd.c:2137
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Misslyckades med att tömma klienttillägg till tillståndsfilen: %s"
 
-#: gconf/gconfd.c:2237
+#: gconf/gconfd.c:2236
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1694,11 +1677,11 @@ msgid "Shutdown error: %s\n"
 msgstr "Avstängningsfel: %s\n"
 
 #: gconf/gconftool.c:1120
-msgid "Must specify one or more dirs to recursively list.\n"
+msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Måste ange en eller flera kataloger att rekursivt lista.\n"
 
 #: gconf/gconftool.c:1170
-msgid "Must specify one or more dirs to dump.\n"
+msgid "Must specify one or more directories to dump.\n"
 msgstr "Måste ange en eller flera kataloger att dumpa.\n"
 
 #: gconf/gconftool.c:1211 gconf/gconftool.c:1469
@@ -1924,7 +1907,7 @@ msgid "Error syncing: %s"
 msgstr "Fel vid synkronisering: %s"
 
 #: gconf/gconftool.c:2273
-msgid "Must specify one or more dirs to get key/value pairs from.\n"
+msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr "Måste ange en eller flera kataloger att få nyckel-/värdepar från.\n"
 
 #: gconf/gconftool.c:2287
@@ -1946,7 +1929,7 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Misslyckande med rekursiv återställning av \"%s\": %s\n"
 
 #: gconf/gconftool.c:2352
-msgid "Must specify one or more dirs to get subdirs from.\n"
+msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "Måste ange en eller flera kataloger att få underkataloger från.\n"
 
 #: gconf/gconftool.c:2386
@@ -2217,6 +2200,22 @@ msgstr ""
 "katalogen:\n"
 "  %s\n"
 
+#~ msgid ""
+#~ "%u items remain in the cache after cleaning already-synced items older "
+#~ "than %u seconds"
+#~ msgstr ""
+#~ "%u objekt återstår i cachen efter städning av objekt som redan "
+#~ "synkroniserats och som är äldre än %u sekunder"
+
+#~ msgid "%s"
+#~ msgstr "%s"
+
+#~ msgid "/path"
+#~ msgstr "/sökväg"
+
+#~ msgid "Must specify one or more dirs to dump.\n"
+#~ msgstr "Måste ange en eller flera kataloger att dumpa.\n"
+
 #~ msgid "--dir-exists option must be used by itself.\n"
 #~ msgstr "--dir-exists måste användas för sig själv.\n"
 
@@ -2243,9 +2242,6 @@ msgstr ""
 
 #~ msgid "Failed to open '%s': %s"
 #~ msgstr "Misslyckades med att öppna \"%s\": %s"
-
-#~ msgid "Must specify one or more directories to dump.\n"
-#~ msgstr "Måste ange en eller flera kataloger att dumpa.\n"
 
 #~ msgid "Unloading BerkeleyDB (BDB) backend module."
 #~ msgstr "Kopplar bort BerkeleyDB-backendmodulen (BDB)."
