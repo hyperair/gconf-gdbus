@@ -1,3 +1,11 @@
+2000-01-15  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-dir.c (dir_destroy): destroy entries before the xml
+	doc, since they hold pointers into the xml doc.
+
+	* backends/xml-entry.c (entry_sync_to_node): if no cached value,
+	blow away the value in the node.
+
 2000-01-14  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconfd.c (gconfd_all_entries): remove bad assertion that 

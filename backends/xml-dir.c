@@ -208,13 +208,13 @@ dir_destroy(Dir* d)
   g_free(d->fs_dirname);
   g_free(d->xml_filename);
   
-  if (d->doc != NULL)
-    xmlFreeDoc(d->doc);
-  
   g_hash_table_foreach(d->entry_cache, (GHFunc)entry_destroy_foreach,
                        NULL);
   
   g_hash_table_destroy(d->entry_cache);
+
+  if (d->doc != NULL)
+    xmlFreeDoc(d->doc);
   
   g_free(d);
 }

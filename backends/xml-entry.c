@@ -384,12 +384,23 @@ entry_fill_from_node(Entry* e)
 static void
 node_set_value(xmlNodePtr node, GConfValue* value);
 
+static void
+free_childs(xmlNodePtr node)
+{
+  g_return_if_fail(node != NULL);
+  
+  if (node->childs)
+    xmlFreeNodeList(node->childs);
+  node->childs = NULL;
+  node->last = NULL;
+}
+
 void
 entry_sync_to_node (Entry* e)
 {
   g_return_if_fail(e != NULL);
   g_return_if_fail(e->node != NULL);
-
+  
   if (!e->dirty)
     return;
 
@@ -414,21 +425,19 @@ entry_sync_to_node (Entry* e)
 
   /* OK if mod_user is NULL, since it unsets */
   my_xmlSetProp(e->node, "muser", e->mod_user);
-  
-  node_set_value(e->node, e->cached_value);
 
+  if (e->cached_value)
+    node_set_value(e->node, e->cached_value);
+  else
+    {
+      free_childs(e->node);
+      my_xmlSetProp(e->node, "value", NULL);
+      my_xmlSetProp(e->node, "type", NULL);
+      my_xmlSetProp(e->node, "stype", NULL);
+      my_xmlSetProp(e->node, "ltype", NULL);
+    }
+  
   e->dirty = FALSE;
-}
-
-static void
-free_childs(xmlNodePtr node)
-{
-  g_return_if_fail(node != NULL);
-  
-  if (node->childs)
-    xmlFreeNodeList(node->childs);
-  node->childs = NULL;
-  node->last = NULL;
 }
 
 static void
@@ -534,6 +543,8 @@ node_set_value(xmlNodePtr node, GConfValue* value)
             /* this is O(1) because libxml saves the list tail */
             child = xmlNewChild(node, NULL, "li", NULL);
 
+            g_return_if_fail(list->data != NULL);
+            
             node_set_value(child, (GConfValue*)list->data);
             
             list = g_slist_next(list);
@@ -550,6 +561,9 @@ node_set_value(xmlNodePtr node, GConfValue* value)
         car = xmlNewChild(node, NULL, "car", NULL);
         cdr = xmlNewChild(node, NULL, "cdr", NULL);
 
+        g_return_if_fail(gconf_value_car(value) != NULL);
+        g_return_if_fail(gconf_value_cdr(value) != NULL);
+        
         node_set_value(car, gconf_value_car(value));
         node_set_value(cdr, gconf_value_cdr(value));
       }
