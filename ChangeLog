@@ -1,3 +1,11 @@
+2003-05-09  Mark McLoughlin  <mark@skynet.ie>
+
+	* gconf/gconftool.c:
+	(print_value_in_xml): escape the string text before
+	outputting it in the XML.
+	(dump_entries_in_dir): ouput the keyname relative to
+	the base directory rather than the current directory.
+
 2003-05-08  Ross Burton  <ross@burtonini.com>
 
 	* gconf/gconf-client.[ch]: Add gconf_client_notify(), to fake a

@@ -438,7 +438,7 @@ static void list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth);
 static int get_schema_from_xml(xmlNodePtr node, gchar **schema_key, GHashTable** schemas_hash, GSList **applyto_list);
 static int get_first_value_from_xml(xmlNodePtr node, GConfValue** ret_value);
 static void print_value_in_xml(GConfValue* value, int indent);
-static void dump_entries_in_dir(GConfEngine* conf, const gchar* dir);
+static void dump_entries_in_dir(GConfEngine* conf, const gchar* dir, const gchar *base_dir);
 static gboolean do_dir_exists(GConfEngine* conf, const gchar* dir);
 static void do_spawn_daemon(GConfEngine* conf);
 static int do_get(GConfEngine* conf, const gchar** args);
@@ -1077,7 +1077,7 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
 }
 
 static void 
-recurse_subdir_dump(GConfEngine* conf, GSList* subdirs)
+recurse_subdir_dump(GConfEngine* conf, GSList* subdirs, const gchar* base_dir)
 {
   GSList* tmp;
 
@@ -1087,9 +1087,11 @@ recurse_subdir_dump(GConfEngine* conf, GSList* subdirs)
     {
       gchar* s = tmp->data;
       
-      dump_entries_in_dir(conf, s);
+      dump_entries_in_dir(conf, s, base_dir);
 
-      recurse_subdir_dump(conf, gconf_engine_all_dirs(conf, s, NULL));
+      recurse_subdir_dump(conf,
+			  gconf_engine_all_dirs(conf, s, NULL),
+			  base_dir);
 
       g_free(s);
       
@@ -1118,9 +1120,9 @@ do_dump_values(GConfEngine* conf, const gchar** args)
 
       subdirs = gconf_engine_all_dirs(conf, *args, NULL);
 
-      dump_entries_in_dir(conf, *args);
+      dump_entries_in_dir(conf, *args, *args);
           
-      recurse_subdir_dump(conf, subdirs);
+      recurse_subdir_dump(conf, subdirs, *args);
 
       printf("  </entrylist>\n");
  
@@ -1340,7 +1342,7 @@ print_value_in_xml(GConfValue* value, int indent)
       g_free(tmp);
       break;
     case GCONF_VALUE_STRING:
-      tmp = gconf_value_to_string(value);
+      tmp = g_markup_escape_text(gconf_value_get_string(value), -1);
       printf("%s  <string>%s</string>\n", whitespace, tmp);
       g_free(tmp);
       break;
@@ -1393,7 +1395,7 @@ get_key_relative(const gchar* key, const gchar* dir)
 }
 
 static void 
-dump_entries_in_dir(GConfEngine* conf, const gchar* dir)
+dump_entries_in_dir(GConfEngine* conf, const gchar* dir, const gchar* base_dir)
 {
   GSList* entries;
   GSList* tmp;
@@ -1417,12 +1419,12 @@ dump_entries_in_dir(GConfEngine* conf, const gchar* dir)
       printf("    <entry>\n");
 
       printf("      <key>%s</key>\n",
-             get_key_relative(gconf_entry_get_key(entry), dir));
+             get_key_relative(gconf_entry_get_key(entry), base_dir));
 
       /* <schema_key> will only be relative if its under the base dir */
       if (gconf_entry_get_schema_name(entry))
         printf("      <schema_key>%s</schema_key>\n",
-               get_key_relative(gconf_entry_get_schema_name(entry), dir));
+               get_key_relative(gconf_entry_get_schema_name(entry), base_dir));
 
       if (entry->value)
         print_value_in_xml(entry->value, 6);
