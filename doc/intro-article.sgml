@@ -588,7 +588,82 @@
 
       <para>
         <programlisting>
+/* A very simple program that monitors a single key for changes. */
 
+#include &lt;gconf/gconf-client.h&gt;
+#include &lt;gtk/gtk.h&gt;
+
+void
+key_changed_callback(GConfClient* client,
+                     guint cnxn_id,
+                     const gchar* key,
+                     GConfValue* value,
+                     gboolean is_default,
+                     gpointer user_data)
+{
+  GtkWidget* label;
+  
+  label = GTK_WIDGET(user_data);
+
+  if (value == NULL)
+    {
+      gtk_label_set(GTK_LABEL(label), "&lt;unset&gt;");
+    }
+  else
+    {
+      if (value-&gt;type == GCONF_VALUE_STRING)
+        {
+          gtk_label_set(GTK_LABEL(label), gconf_value_string(value));
+        }
+      else
+        {
+          gtk_label_set(GTK_LABEL(label), "&lt;wrong type&gt;");
+        }
+    }
+}
+
+int
+main(int argc, char** argv)
+{
+  GtkWidget* window;
+  GtkWidget* label;
+  GConfClient* client;
+  gchar* str;
+  
+  gtk_init(&amp;argc, &amp;argv);
+  if (!gconf_init(argc, argv, NULL))
+    g_error("Failed to init gconf");
+
+  client = gconf_client_new();
+  
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+  str = gconf_client_get_string(client, "/extra/test/directory/key",
+                                NULL);
+  
+  label = gtk_label_new(str ? str : "&lt;unset&gt;");
+
+  if (str)
+    g_free(str);
+  
+  gtk_container_add(GTK_CONTAINER(window), label);
+
+  gconf_client_add_dir(client,
+                       "/extra/test/directory",
+                       GCONF_CLIENT_PRELOAD_NONE,
+                       NULL);
+
+  gconf_client_notify_add(client, "/extra/test/directory/key",
+                          key_changed_callback,
+                          label,
+                          NULL, NULL);
+  
+  gtk_widget_show_all(window);
+
+  gtk_main();
+
+  return 0;
+}
         </programlisting>
       </para>
 
@@ -613,7 +688,62 @@
 
       <para>
         <programlisting>
+/* A very simple program that sets a single key value when you type
+   it in an entry and press return */
 
+#include &lt;gconf/gconf-client.h&gt;
+#include &lt;gtk/gtk.h&gt;
+
+void
+entry_activated_callback(GtkWidget* entry, gpointer user_data)
+{
+  GConfClient* client;
+  gchar* str;
+  
+  client = GCONF_CLIENT(user_data);
+
+  str = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
+
+  gconf_client_set_string(client, "/extra/test/directory/key",
+                          str, NULL);
+
+  g_free(str);
+}
+
+int
+main(int argc, char** argv)
+{
+  GtkWidget* window;
+  GtkWidget* entry;
+  GConfClient* client;
+
+  gtk_init(&amp;argc, &amp;argv);
+  if (!gconf_init(argc, argv, NULL))
+    g_error("Failed to init gconf");
+  
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  entry = gtk_entry_new();
+
+  gtk_container_add(GTK_CONTAINER(window), entry);  
+
+  client = gconf_client_new();
+
+  gconf_client_add_dir(client,
+                       "/extra/test/directory",
+                       GCONF_CLIENT_PRELOAD_NONE,
+                       NULL);
+
+
+  gtk_signal_connect(GTK_OBJECT(entry), "activate",
+                     GTK_SIGNAL_FUNC(entry_activated_callback),
+                     client);
+  
+  gtk_widget_show_all(window);
+
+  gtk_main();
+
+  return 0;
+}
         </programlisting>
       </para>
 
