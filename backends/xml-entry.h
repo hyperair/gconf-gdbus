@@ -44,7 +44,7 @@ GConfValue*    entry_get_value       (Entry        *entry,
                                       GConfError  **err);
 void           entry_set_value       (Entry        *entry,
                                       GConfValue   *value);
-void           entry_unset_value     (Entry        *entry,
+gboolean       entry_unset_value     (Entry        *entry,
                                       const gchar  *locale);
 GConfMetaInfo* entry_get_metainfo    (Entry        *entry);
 void           entry_set_mod_time    (Entry        *entry,
