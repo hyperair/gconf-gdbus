@@ -44,6 +44,9 @@ CLEANFILES = \
 	$(BUILT_SOURCES)	\
 	stamp-gconfmarshal.h
 
+dist-hook:
+	cd $(distdir) ; rm -f $(CLEANFILES)
+
 gconfincludedir = $(includedir)/gconf/$(MAJOR_VERSION)/gconf
 gconfinclude_HEADERS = \
 	gconf.h			\
