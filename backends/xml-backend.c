@@ -21,7 +21,6 @@
 
 #include <gconf/gconf-backend.h>
 #include <gconf/gconf-internals.h>
-#include <gconf/gconfd-error.h>
 #include <gconf/gconf.h>
 
 #include <gnome-xml/tree.h>
@@ -64,8 +63,8 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 
   if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
     {
-      gconf_log(GCL_DEBUG, "Hash key `%s' is already in the table!",
-                 (gchar*)key);
+      gconf_log(GCL_WARNING, "Hash key `%s' is already in the table!",
+                (gchar*)key);
       return;
     }
   else
@@ -171,21 +170,37 @@ struct _Dir {
 };
 
 /* returns NULL if the load fails. */
-static Dir*        dir_load        (XMLSource* source, const gchar* key);
-static Dir*        dir_create      (XMLSource* source, const gchar* key);
+static Dir*        dir_load        (XMLSource* source,
+                                    const gchar* key,
+                                    GConfError** err);
+static Dir*        dir_create      (XMLSource* source,
+                                    const gchar* key,
+                                    GConfError** err);
 static void        dir_destroy     (Dir* d);
-static gboolean    dir_sync        (Dir* d);
- /* key should have no slashes in it */
-static void        dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value);
-static GConfValue* dir_get_value   (Dir* d, const gchar* relative_key,
-                                    gchar** schema_name);
-static GConfMetaInfo* dir_get_metainfo(Dir* d, const gchar* relative_key);
-static void        dir_unset_value (Dir* d, const gchar* relative_key);
-static GSList*     dir_all_entries (Dir* d);
-static GSList*     dir_all_subdirs (Dir* d);
+static gboolean    dir_sync        (Dir* d,
+                                    GConfError** err);
+/* key should have no slashes in it */
+static void        dir_set_value   (Dir* d,
+                                    const gchar* relative_key,
+                                    GConfValue* value,
+                                    GConfError** err);
+static GConfValue* dir_get_value   (Dir* d,
+                                    const gchar* relative_key,
+                                    gchar** schema_name,
+                                    GConfError** err);
+static GConfMetaInfo* dir_get_metainfo(Dir* d,
+                                       const gchar* relative_key,
+                                       GConfError** err);
+static void        dir_unset_value (Dir* d,
+                                    const gchar* relative_key,
+                                    GConfError** err);
+static GSList*     dir_all_entries (Dir* d, GConfError** err);
+static GSList*     dir_all_subdirs (Dir* d, GConfError** err);
 static void        dir_set_schema  (Dir* d,
                                     const gchar* relative_key,
-                                    const gchar* schema_key);
+                                    const gchar* schema_key,
+                                    GConfError** err);
+
 /* Marks for deletion; dir cache really has to implement this,
    since it is recursive */
 static void        dir_delete      (Dir* d);
@@ -221,12 +236,14 @@ static void        dir_cache_insert      (DirCache* dc, Dir* d);
 static void        dir_cache_remove      (DirCache* dc, Dir* d);
 static gboolean    dir_cache_sync        (DirCache* dc);
 static void        dir_cache_clean       (DirCache* dc);
-static void        dir_cache_delete      (DirCache* dc, Dir* d);
+static void        dir_cache_delete      (DirCache* dc, Dir* d, GConfError** err);
 
 static Dir*       dir_cache_do_very_best_to_load_dir(DirCache* dc,
-                                                     const gchar* key);
+                                                     const gchar* key,
+                                                     GConfError** err);
 static Dir*       dir_cache_create_or_load_dir      (DirCache* dc,
-                                                     const gchar* key);
+                                                     const gchar* key,
+                                                     GConfError** err);
 
 /** XMLSource **/
 
@@ -244,39 +261,77 @@ static void       xs_destroy   (XMLSource* source);
  * VTable functions
  */
 
-static void          x_shutdown        (void); /* shutdown() is a BSD libc function */
+ /* shutdown() is a BSD libc function */
+static void          x_shutdown        (GConfError** err);
 
-static GConfSource*  resolve_address (const gchar* address);
+static GConfSource*  resolve_address (const gchar* address,
+                                      GConfError** err);
 
-static GConfValue*   query_value     (GConfSource* source, const gchar* key, gchar** schema_name);
+static void          lock            (GConfSource* source,
+                                      GConfError** err);
 
-static GConfMetaInfo*query_metainfo  (GConfSource* source, const gchar* key);
+static void          unlock          (GConfSource* source,
+                                      GConfError** err);
 
-static void          set_value       (GConfSource* source, const gchar* key, GConfValue* value);
+static gboolean     readable         (GConfSource* source,
+                                      const gchar* key,
+                                      GConfError** err);
+
+static gboolean     writeable        (GConfSource* source,
+                                      const gchar* key,
+                                      GConfError** err);
+
+static GConfValue*   query_value     (GConfSource* source,
+                                      const gchar* key,
+                                      gchar** schema_name,
+                                      GConfError** err);
+
+static GConfMetaInfo*query_metainfo  (GConfSource* source,
+                                      const gchar* key,
+                                      GConfError** err);
+
+static void          set_value       (GConfSource* source,
+                                      const gchar* key,
+                                      GConfValue* value,
+                                      GConfError** err);
+
 static GSList*       all_entries    (GConfSource* source,
-                                     const gchar* dir);
+                                     const gchar* dir,
+                                     GConfError** err);
 
 static GSList*       all_subdirs     (GConfSource* source,
-                                      const gchar* dir);
+                                      const gchar* dir,
+                                      GConfError** err);
 
 static void          unset_value     (GConfSource* source,
-                                      const gchar* key);
+                                      const gchar* key,
+                                      GConfError** err);
+
 static gboolean      dir_exists      (GConfSource *source,
-                                      const gchar *dir);
+                                      const gchar *dir,
+                                      GConfError** err);
+
 static void          remove_dir      (GConfSource* source,
-                                      const gchar* dir);
+                                      const gchar* dir,
+                                      GConfError** err);
 
 static void          set_schema      (GConfSource* source,
                                       const gchar* key,
-                                      const gchar* schema_key);
+                                      const gchar* schema_key,
+                                      GConfError** err);
 
-static gboolean      sync_all        (GConfSource* source);
+static gboolean      sync_all        (GConfSource* source,
+                                      GConfError** err);
 
 static void          destroy_source  (GConfSource* source);
 
 static GConfBackendVTable xml_vtable = {
   x_shutdown,
   resolve_address,
+  lock,
+  unlock,
+  readable,
+  writeable,
   query_value,
   query_metainfo,
   set_value,
@@ -291,13 +346,47 @@ static GConfBackendVTable xml_vtable = {
 };
 
 static void          
-x_shutdown (void)
+x_shutdown (GConfError** err)
 {
   gconf_log(GCL_INFO, _("Unloading XML backend module."));
 }
 
+static void
+lock (GConfSource* source,
+      GConfError** err)
+{
+  
+
+}
+
+static void
+unlock (GConfSource* source,
+        GConfError** err)
+{
+
+
+}
+
+static gboolean
+readable (GConfSource* source,
+          const gchar* key,
+          GConfError** err)
+{
+
+  return TRUE;
+}
+
+static gboolean
+writeable (GConfSource* source,
+           const gchar* key,
+           GConfError** err)
+{
+
+  return TRUE;
+}
+
 static GConfSource*  
-resolve_address (const gchar* address)
+resolve_address (const gchar* address, GConfError** err)
 {
   gchar* root_dir;
   XMLSource* xsource;
@@ -308,7 +397,7 @@ resolve_address (const gchar* address)
 
   if (root_dir == NULL)
     {
-      gconf_set_error(GCONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address"));
+      gconf_set_error(err, GCONF_BAD_ADDRESS, _("Couldn't find the XML root directory in the address `%s'"), address);
       return NULL;
     }
 
@@ -329,13 +418,15 @@ resolve_address (const gchar* address)
   /* FIXME just a hack for now, eventually
      it'll be based on something 
   */
-  source->flags |= GCONF_SOURCE_WRITEABLE;
+  source->flags |= GCONF_SOURCE_ALL_WRITEABLE;
+  source->flags |= GCONF_SOURCE_ALL_READABLE;
   
   return source;
 }
 
 static GConfValue* 
-query_value (GConfSource* source, const gchar* key, gchar** schema_name)
+query_value (GConfSource* source, const gchar* key, gchar** schema_name,
+             GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   gchar* parent;
@@ -345,7 +436,7 @@ query_value (GConfSource* source, const gchar* key, gchar** schema_name)
   
   g_assert(parent != NULL);
   
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent, err);
 
   g_free(parent);
   parent = NULL;
@@ -356,14 +447,15 @@ query_value (GConfSource* source, const gchar* key, gchar** schema_name)
   
       relative_key = gconf_key_key(key);
 
-      return dir_get_value(dir, relative_key, schema_name);
+      return dir_get_value(dir, relative_key, schema_name, err);
     }
   else
     return NULL;
 }
 
 static GConfMetaInfo*
-query_metainfo  (GConfSource* source, const gchar* key)
+query_metainfo  (GConfSource* source, const gchar* key,
+                 GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   gchar* parent;
@@ -373,12 +465,12 @@ query_metainfo  (GConfSource* source, const gchar* key)
 
   if (parent != NULL)
     {
-      dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent);
+      dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent, err);
       g_free(parent);
       parent = NULL;
       
       if (dir != NULL)
-        return dir_get_metainfo(dir, key);
+        return dir_get_metainfo(dir, key, err);
     }
 
   /* No metainfo found */
@@ -386,71 +478,76 @@ query_metainfo  (GConfSource* source, const gchar* key)
 }
 
 static void          
-set_value (GConfSource* source, const gchar* key, GConfValue* value)
+set_value (GConfSource* source, const gchar* key, GConfValue* value,
+           GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
   gchar* parent;
   
   g_return_if_fail(value != NULL);
-  g_return_if_fail(source->flags & GCONF_SOURCE_WRITEABLE);
   
   parent = gconf_key_directory(key);
   
   g_assert(parent != NULL);
   
-  dir = dir_cache_create_or_load_dir(xs->cache, parent);
+  dir = dir_cache_create_or_load_dir(xs->cache, parent, err);
   
   g_free(parent);
   parent = NULL;
 
   if (dir == NULL)
-    return; /* error should be set */
+    {
+      g_return_if_fail((err == NULL || *err != NULL));
+      return;
+    }
   else
     {
       const gchar* relative_key;
       
       relative_key = gconf_key_key(key);
       
-      dir_set_value(dir, relative_key, value);
+      dir_set_value(dir, relative_key, value, err);
     }
 }
 
 
 static GSList*             
 all_entries    (GConfSource* source,
-                const gchar* key)
+                const gchar* key,
+                GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
 
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key, err);
   
   if (dir == NULL)
     return NULL;
   else
-    return dir_all_entries(dir);
+    return dir_all_entries(dir, err);
 }
 
 static GSList*
 all_subdirs     (GConfSource* source,
-                 const gchar* key)
-
+                 const gchar* key,
+                 GConfError** err)
 {
   Dir* dir;
   XMLSource* xs = (XMLSource*)source;
 
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key, err);
   
   if (dir == NULL)
     return NULL;
   else
-    return dir_all_subdirs(dir);
+    return dir_all_subdirs(dir, err);
 }
 
 static void          
 unset_value     (GConfSource* source,
-                 const gchar* key)
+                 const gchar* key,
+                 GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
@@ -460,7 +557,7 @@ unset_value     (GConfSource* source,
   
   parent = gconf_key_directory(key);
   
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, parent, err);
 
   g_free(parent);
   
@@ -472,30 +569,32 @@ unset_value     (GConfSource* source,
   
       relative_key = gconf_key_key(key);
 
-      dir_unset_value(dir, relative_key);
+      dir_unset_value(dir, relative_key, err);
     }
 }
 
 static gboolean
 dir_exists      (GConfSource*source,
-                 const gchar* key)
+                 const gchar* key,
+                 GConfError** err)
 {
   XMLSource *xs = (XMLSource*)source;
   Dir* dir;
   
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key, err);
   
   return (dir != NULL);
 }  
 
 static void          
 remove_dir      (GConfSource* source,
-                 const gchar* key)
+                 const gchar* key,
+                 GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
   
-  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key);
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key, err);
   
   if (dir == NULL)
     return;
@@ -508,7 +607,8 @@ remove_dir      (GConfSource* source,
 static void          
 set_schema      (GConfSource* source,
                  const gchar* key,
-                 const gchar* schema_key)
+                 const gchar* schema_key,
+                 GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
 
@@ -521,7 +621,7 @@ set_schema      (GConfSource* source,
   
   g_assert(parent != NULL);
   
-  dir = dir_cache_create_or_load_dir(xs->cache, parent);
+  dir = dir_cache_create_or_load_dir(xs->cache, parent, err);
   
   g_free(parent);
   parent = NULL;
@@ -534,12 +634,13 @@ set_schema      (GConfSource* source,
       
       relative_key = gconf_key_key(key);
       
-      dir_set_schema(dir, relative_key, schema_key);
+      dir_set_schema(dir, relative_key, schema_key, err);
     }
 }
 
 static gboolean      
-sync_all        (GConfSource* source)
+sync_all        (GConfSource* source,
+                 GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
 
@@ -755,7 +856,7 @@ dir_cache_sync        (DirCache* dc)
         {
           Dir* d = tmp->data;
 
-          if (!dir_sync(d))
+          if (!dir_sync(d, NULL)) /* don't get errors, they'd pile up */
             sd.failed = TRUE;
           
           tmp = g_slist_next(tmp);
@@ -792,41 +893,56 @@ dir_cache_clean       (DirCache* dc)
 }
 
 static void
-dir_cache_delete_recursive(DirCache* dc, Dir* d, GSList** hit_list)
+dir_cache_delete_recursive(DirCache* dc, Dir* d, GSList** hit_list, GConfError** err)
 {  
   GSList* subdirs;
   GSList* tmp;
+  gboolean failure = FALSE;
   
-  subdirs = dir_all_subdirs(d);
+  subdirs = dir_all_subdirs(d, err);
 
+  if (subdirs == NULL && err && *err != NULL)
+    failure = TRUE;
+  
   tmp = subdirs;
-  while (tmp != NULL)
+  while (tmp != NULL && !failure)
     {
       Dir* subd;
 
-      subd = dir_cache_do_very_best_to_load_dir(dc, (gchar*)tmp->data);
+      subd = dir_cache_do_very_best_to_load_dir(dc, (gchar*)tmp->data, err);
 
-      /* recurse, whee! (unless the subdir is already deleted) */
-      if (subd != NULL &&
-          !dir_deleted(subd))
-        dir_cache_delete(dc, subd);
+      if (subd == NULL && err && *err)
+        failure = TRUE;
+      else if (subd != NULL &&
+               !dir_deleted(subd))
+        {
+          /* recurse, whee! (unless the subdir is already deleted) */
+          dir_cache_delete(dc, subd, err);
 
+          if (err && *err)
+            failure = TRUE;
+        }
+          
       tmp = g_slist_next(tmp);
     }
 
   /* The first directories to be deleted (fringes) go on the front
      of the list. */
   *hit_list = g_slist_prepend(*hit_list, d);
+  
   /* We go ahead and mark the dir deleted */
   dir_delete(d);
+
+  /* be sure we set error if failure occurred */
+  g_return_if_fail( (!failure) || (err == NULL) || (*err != NULL));
 }
 
 static void
-dir_cache_delete      (DirCache* dc, Dir* d)
+dir_cache_delete      (DirCache* dc, Dir* d, GConfError** err)
 {
   GSList* hit_list = NULL;
 
-  dir_cache_delete_recursive(dc, d, &hit_list);
+  dir_cache_delete_recursive(dc, d, &hit_list, err);
 
   /* If you first dir_cache_delete() a subdir, then dir_cache_delete()
      its parent, without syncing, first the list generated by
@@ -843,7 +959,8 @@ dir_cache_delete      (DirCache* dc, Dir* d)
 
 static Dir*
 dir_cache_do_very_best_to_load_dir(DirCache* dc,
-                                   const gchar* key)
+                                   const gchar* key,
+                                   GConfError** err)
 {
   Dir* dir;
 
@@ -867,7 +984,7 @@ dir_cache_do_very_best_to_load_dir(DirCache* dc,
       else
         {
           /* Didn't already fail to load, try to load */
-          dir = dir_load(dc->source, key);
+          dir = dir_load(dc->source, key, err);
           
           if (dir != NULL)
             {
@@ -889,19 +1006,25 @@ dir_cache_do_very_best_to_load_dir(DirCache* dc,
 
 static Dir*
 dir_cache_create_or_load_dir      (DirCache* dc,
-                                   const gchar* key)
+                                   const gchar* key,
+                                   GConfError** err)
 {
   Dir* dir;
-  
-  dir = dir_cache_do_very_best_to_load_dir(dc, key);
+
+  /* not interested in error because we create if loading fails */
+  dir = dir_cache_do_very_best_to_load_dir(dc, key, NULL);
   
   if (dir == NULL)
     {
-      gconf_clear_error(); /* Only pass an error up if we can't create */
-      dir = dir_create(dc->source, key);
+      dir = dir_create(dc->source, key, err);
 
       if (dir == NULL)
-        return NULL; /* error should be set */
+        {
+          g_return_val_if_fail((err == NULL) ||
+                               (*err != NULL) ,
+                               NULL);
+          return NULL;
+        }
       else
         dir_cache_insert(dc, dir);
     }
@@ -914,8 +1037,20 @@ dir_cache_sync_foreach(const gchar* key,
                        Dir* dir,
                        SyncData* sd)
 {
-  if (!dir_sync(dir))
-    sd->failed = TRUE;
+  GConfError* error = NULL;
+  
+  /* log errors but don't report the specific ones */
+  if (!dir_sync(dir, &error))
+    {
+      sd->failed = TRUE;
+      g_return_if_fail(error != NULL);
+      gconf_log(GCL_ERR, error->str);
+      gconf_error_destroy(error);
+    }
+  else
+    {
+      g_return_if_fail(error == NULL);
+    }
 }
 
 static void
@@ -966,20 +1101,22 @@ struct _Entry {
   guint dirty : 1;
 };
 
-Entry* entry_new     (void);
-void   entry_destroy (Entry* e);
-void   entry_sync    (Entry* e); /* syncs to the node */
-void   entry_fill    (Entry* e, const gchar* name); /* syncs Entry from node */
+static Entry* entry_new     (void);
+static void   entry_destroy (Entry* e);
+ /* syncs to the node */
+static void   entry_sync    (Entry* e);
+ /* syncs Entry from node */
+static void   entry_fill    (Entry* e, const gchar* name);
 
 /* xml manipulation */
 
-static GConfValue* xentry_extract_value(xmlNodePtr node);
+static GConfValue* xentry_extract_value(xmlNodePtr node, GConfError** err);
 static void        xentry_set_value(xmlNodePtr node, GConfValue* value);
 
 /* private dir func decls */
 
 static void
-dir_load_doc(Dir* d);
+dir_load_doc(Dir* d, GConfError** err);
 
 static Dir*
 dir_new_blank(XMLSource* source, const gchar* key,
@@ -991,7 +1128,7 @@ static gboolean dir_forget_entry_if_useless(Dir* d, Entry* e);
 
 /* dir implementations */
 static Dir*
-dir_load        (XMLSource* source, const gchar* key)
+dir_load        (XMLSource* source, const gchar* key, GConfError** err)
 {
   Dir* d;
   gchar* fs_dirname;
@@ -1006,14 +1143,14 @@ dir_load        (XMLSource* source, const gchar* key)
     
     if (stat(xml_filename, &s) != 0)
       {
-        gconf_set_error(GCONF_FAILED,
+        gconf_set_error(err, GCONF_FAILED,
                          _("Could not stat `%s': %s"),
                          xml_filename, strerror(errno));
         error = TRUE;
       }
     else if (S_ISDIR(s.st_mode))
       {
-        gconf_set_error(GCONF_FAILED,
+        gconf_set_error(err, GCONF_FAILED,
                          _("XML filename `%s' is a directory"),
                          xml_filename);
         error = TRUE;
@@ -1033,7 +1170,8 @@ dir_load        (XMLSource* source, const gchar* key)
 }
 
 static gboolean
-create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir)
+create_fs_dir(const gchar* dir, const gchar* xml_filename,
+              const gchar* root_dir, GConfError** err)
 {
   if (gconf_file_test(dir, GCONF_FILE_ISDIR))
     return TRUE;
@@ -1053,7 +1191,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
           if (xml_filename)
             parent_xml = g_strconcat(parent, "/%gconf.xml", NULL);
           
-          success = create_fs_dir(parent, parent_xml, root_dir);
+          success = create_fs_dir(parent, parent_xml, root_dir, err);
 
           g_free(parent);
           if (parent_xml)
@@ -1068,9 +1206,9 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
     {
       if (errno != EEXIST)
         {
-          gconf_set_error(GCONF_FAILED,
-                           _("Could not make directory `%s': %s"),
-                           (gchar*)dir, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED,
+                          _("Could not make directory `%s': %s"),
+                          (gchar*)dir, strerror(errno));
           return FALSE;
         }
     }
@@ -1083,16 +1221,16 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
       
       if (fd < 0)
         {
-          gconf_set_error(GCONF_FAILED, _("Failed to create file `%s': %s"),
-                           xml_filename, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED, _("Failed to create file `%s': %s"),
+                          xml_filename, strerror(errno));
           
           return FALSE;
         }
       
       if (close(fd) < 0)
         {
-          gconf_set_error(GCONF_FAILED, _("Failed to close file `%s': %s"),
-                           xml_filename, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED, _("Failed to close file `%s': %s"),
+                          xml_filename, strerror(errno));
           
           return FALSE;
         }
@@ -1102,7 +1240,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename, const gchar* root_dir
 }
 
 static Dir*
-dir_create      (XMLSource* source, const gchar* key)
+dir_create      (XMLSource* source, const gchar* key, GConfError** err)
 {
   Dir* d;
   gchar* fs_dirname;
@@ -1111,11 +1249,14 @@ dir_create      (XMLSource* source, const gchar* key)
   fs_dirname = gconf_concat_key_and_dir(source->root_dir, key);
   xml_filename = g_strconcat(fs_dirname, "/%gconf.xml", NULL);
 
-  if (!create_fs_dir(fs_dirname, xml_filename, source->root_dir))
+  if (!create_fs_dir(fs_dirname, xml_filename, source->root_dir, err))
     {
-      /* Error is already set */
       g_free(fs_dirname);
       g_free(xml_filename);
+
+      /* check that error is set */
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      
       return NULL;
     }
   
@@ -1155,7 +1296,7 @@ entry_sync_foreach(const gchar* name, Entry* e, gpointer data)
 }
 
 static gboolean
-dir_sync        (Dir* d)
+dir_sync        (Dir* d, GConfError** err)
 {
   gboolean retval = TRUE;
   
@@ -1176,15 +1317,15 @@ dir_sync        (Dir* d)
     {
       if (unlink(d->xml_filename) != 0)
         {
-          gconf_set_error(GCONF_FAILED, _("Failed to delete `%s': %s"),
-                           d->xml_filename, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED, _("Failed to delete `%s': %s"),
+                          d->xml_filename, strerror(errno));
           return FALSE;
         }
 
       if (rmdir(d->fs_dirname) != 0)
         {
-          gconf_set_error(GCONF_FAILED, _("Failed to delete `%s': %s"),
-                           d->fs_dirname, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED, _("Failed to delete `%s': %s"),
+                          d->fs_dirname, strerror(errno));
           return FALSE;
         }
     }
@@ -1208,7 +1349,7 @@ dir_sync        (Dir* d)
           /* Try to solve the problem by creating the FS dir */
           if (!gconf_file_exists(d->fs_dirname))
             {
-              if (create_fs_dir(d->fs_dirname, NULL, d->source->root_dir))
+              if (create_fs_dir(d->fs_dirname, NULL, d->source->root_dir, err))
                 {
                   if (xmlSaveFile(tmp_filename, d->doc) >= 0)
                     recovered = TRUE;
@@ -1218,9 +1359,11 @@ dir_sync        (Dir* d)
           if (!recovered)
             {
               /* I think libxml may mangle errno, but we might as well 
-                 try. */
-              gconf_set_error(GCONF_FAILED, _("Failed to write file `%s': %s"), 
-                               tmp_filename, strerror(errno));
+                 try. Don't set error if it's already set by some
+                 earlier failure. */
+              if (err && *err == NULL)
+                gconf_set_error(err, GCONF_FAILED, _("Failed to write file `%s': %s"), 
+                                tmp_filename, strerror(errno));
               
               retval = FALSE;
               
@@ -1234,9 +1377,9 @@ dir_sync        (Dir* d)
         {
           if (rename(d->xml_filename, old_filename) < 0)
             {
-              gconf_set_error(GCONF_FAILED, 
-                               _("Failed to rename `%s' to `%s': %s"),
-                               d->xml_filename, old_filename, strerror(errno));
+              gconf_set_error(err, GCONF_FAILED, 
+                              _("Failed to rename `%s' to `%s': %s"),
+                              d->xml_filename, old_filename, strerror(errno));
 
               retval = FALSE;
               goto failed_end_of_sync;
@@ -1245,14 +1388,14 @@ dir_sync        (Dir* d)
 
       if (rename(tmp_filename, d->xml_filename) < 0)
         {
-          gconf_set_error(GCONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
-                           tmp_filename, d->xml_filename, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED, _("Failed to rename `%s' to `%s': %s"),
+                          tmp_filename, d->xml_filename, strerror(errno));
 
           /* Put the original file back, so this isn't a total disaster. */
           if (rename(old_filename, d->xml_filename) < 0)
             {
-              gconf_set_error(GCONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
-                               d->xml_filename, old_filename, strerror(errno));
+              gconf_set_error(err, GCONF_FAILED, _("Failed to restore `%s' from `%s': %s"),
+                              d->xml_filename, old_filename, strerror(errno));
             }
 
           retval = FALSE;
@@ -1282,12 +1425,19 @@ dir_sync        (Dir* d)
 }
 
 static void
-dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
+dir_set_value   (Dir* d, const gchar* relative_key,
+                 GConfValue* value, GConfError** err)
 {
   Entry* e;
   
   if (d->doc == NULL)
-    dir_load_doc(d);
+    dir_load_doc(d, err);
+
+  if (d->doc == NULL)
+    {
+      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      return;
+    }
   
   e = g_hash_table_lookup(d->entry_cache, relative_key);
   
@@ -1311,13 +1461,20 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
 }
 
 static GConfValue*
-dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name)
+dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name,
+                 GConfError** err)
 {
   Entry* e;
 
   if (d->doc == NULL)
-    dir_load_doc(d);
+    dir_load_doc(d, err);
 
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   d->last_access = time(NULL);
@@ -1340,7 +1497,7 @@ dir_get_value   (Dir* d, const gchar* relative_key, gchar** schema_name)
 }
 
 static GConfMetaInfo*
-dir_get_metainfo(Dir* d, const gchar* relative_key)
+dir_get_metainfo(Dir* d, const gchar* relative_key, GConfError** err)
 {
   GConfMetaInfo* gcmi;
   Entry* e;
@@ -1348,8 +1505,14 @@ dir_get_metainfo(Dir* d, const gchar* relative_key)
   d->last_access = time(NULL);
   
   if (d->doc == NULL)
-    dir_load_doc(d);
+    dir_load_doc(d, err);
 
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   if (e == NULL)
@@ -1370,15 +1533,21 @@ dir_get_metainfo(Dir* d, const gchar* relative_key)
 }
 
 static void
-dir_unset_value (Dir* d, const gchar* relative_key)
+dir_unset_value (Dir* d, const gchar* relative_key, GConfError** err)
 {
   Entry* e;
   
   d->last_access = time(NULL);
   
   if (d->doc == NULL)
-    dir_load_doc(d);
+    dir_load_doc(d, err);
 
+  if (d->doc == NULL)
+    {
+      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      return;
+    }
+  
   e = g_hash_table_lookup(d->entry_cache, relative_key);
   
   if (e == NULL ||
@@ -1425,13 +1594,19 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 }
 
 static GSList*
-dir_all_entries (Dir* d)
+dir_all_entries (Dir* d, GConfError** err)
 {
   ListifyData ld;
   
   if (d->doc == NULL)
-    dir_load_doc(d);
+    dir_load_doc(d, err);
 
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
   ld.list = NULL;
   ld.name = d->key;
 
@@ -1442,7 +1617,7 @@ dir_all_entries (Dir* d)
 }
 
 static GSList*
-dir_all_subdirs (Dir* d)
+dir_all_subdirs (Dir* d, GConfError** err)
 {
   DIR* dp;
   struct dirent* dent;
@@ -1454,14 +1629,20 @@ dir_all_subdirs (Dir* d)
   guint subdir_len;
   
   if (d->doc == NULL)
-    dir_load_doc(d);
-
+    dir_load_doc(d, err);
+  
+  if (d->doc == NULL)
+    {
+      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
+      return NULL;
+    }
+  
   dp = opendir(d->fs_dirname);
 
   if (dp == NULL)
     {
-      gconf_set_error(GCONF_FAILED, _("Failed to open directory `%s': %s"),
-                       d->fs_dirname, strerror(errno));
+      gconf_set_error(err, GCONF_FAILED, _("Failed to open directory `%s': %s"),
+                      d->fs_dirname, strerror(errno));
       return NULL;
     }
 
@@ -1511,13 +1692,20 @@ dir_all_subdirs (Dir* d)
 static void
 dir_set_schema  (Dir* d,
                  const gchar* relative_key,
-                 const gchar* schema_key)
+                 const gchar* schema_key,
+                 GConfError** err)
 {
   Entry* e;
 
   if (d->doc == NULL)
-    dir_load_doc(d);
+    dir_load_doc(d, err);
 
+  if (d->doc == NULL)
+    {
+      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      return;
+    }
+  
   d->dirty = TRUE;
   d->last_access = time(NULL);
   
@@ -1574,7 +1762,7 @@ static void
 dir_fill_cache_from_doc(Dir* d);     
 
 static void
-dir_load_doc(Dir* d)
+dir_load_doc(Dir* d, GConfError** err)
 {
   gboolean xml_already_exists = TRUE;
   gboolean need_backup = FALSE;
@@ -1597,8 +1785,8 @@ dir_load_doc(Dir* d)
         case ENAMETOOLONG:
         default:
           /* These are all fatal errors */
-          gconf_set_error(GCONF_FAILED, _("Failed to stat `%s': %s"),
-                           d->xml_filename, strerror(errno));
+          gconf_set_error(err, GCONF_FAILED, _("Failed to stat `%s': %s"),
+                          d->xml_filename, strerror(errno));
           return;
           break;
         }
@@ -1780,7 +1968,7 @@ dir_fill_cache_from_doc(Dir* d)
                   e->node = node;
                   
                   entry_fill(e, attr);
-
+                  
                   safe_g_hash_table_insert(d->entry_cache, e->name, e);
                 }
 
@@ -1831,7 +2019,7 @@ dir_fill_cache_from_doc(Dir* d)
  * Entry
  */
 
-Entry*
+static Entry*
 entry_new     (void)
 {
   Entry* e;
@@ -1841,7 +2029,7 @@ entry_new     (void)
   return e;
 }
 
-void
+static void
 entry_destroy (Entry* e)
 {
   if (e->name)
@@ -1856,7 +2044,7 @@ entry_destroy (Entry* e)
   g_free(e);
 }
 
-void
+static void
 entry_sync    (Entry* e)
 {
   g_return_if_fail(e->node != NULL);
@@ -1891,10 +2079,11 @@ entry_sync    (Entry* e)
   e->dirty = FALSE;
 }
 
-void
+static void
 entry_fill    (Entry* e, const gchar* name)
 {
   gchar* tmp;
+  GConfError* error = NULL;
 
   g_return_if_fail(e->node != NULL);
 
@@ -1902,7 +2091,7 @@ entry_fill    (Entry* e, const gchar* name)
     {
       g_free(e->name);
       e->name = NULL;
-    } 
+    }
   
   if (name == NULL)
     {
@@ -1922,11 +2111,20 @@ entry_fill    (Entry* e, const gchar* name)
   if (tmp != NULL)
     {
       /* Filter any crap schemas that appear, some speed cost */
-      if (gconf_valid_key(tmp, NULL))
-        e->schema_name = g_strdup(tmp);
+      gchar* why_bad = NULL;
+      if (gconf_valid_key(tmp, &why_bad))
+        {
+          g_assert(why_bad == NULL);
+          e->schema_name = g_strdup(tmp);
+        }
       else
-        e->schema_name = NULL;
-
+        {
+          e->schema_name = NULL;
+          gconf_log(GCL_WARNING, _("Ignoring schema name `%s', invalid: %s"),
+                    tmp, why_bad);
+          g_free(why_bad);
+        }
+          
       free(tmp);
     }
       
@@ -1953,7 +2151,19 @@ entry_fill    (Entry* e, const gchar* name)
   if (e->value != NULL)
     gconf_value_destroy(e->value);
   
-  e->value = xentry_extract_value(e->node);
+  e->value = xentry_extract_value(e->node, &error);
+
+  if (e->value)
+    {
+      g_return_if_fail(error == NULL);
+      return;
+    }
+  else if (error != NULL)
+    {
+      gconf_log(GCL_WARNING, _("Ignoring XML node `%s': %s"),
+                e->name, error->str);
+      gconf_error_destroy(error);
+    }
 }
 
 /*
@@ -1968,7 +2178,8 @@ schema_node_extract_value(xmlNodePtr node)
   gchar* owner_str;
   gchar* stype_str;
   GConfSchema* sc;
-
+  GConfError* error = NULL;
+  
   sd_str = xmlGetProp(node, "short_desc");
   owner_str = xmlGetProp(node, "owner");
   stype_str = xmlGetProp(node, "stype");
@@ -2007,7 +2218,19 @@ schema_node_extract_value(xmlNodePtr node)
               if (default_value == NULL &&
                   strcmp(iter->name, "default") == 0)
                 {
-                  default_value = xentry_extract_value(iter);
+                  default_value = xentry_extract_value(iter, &error);
+
+                  if (error != NULL)
+                    {
+                      g_assert(default_value == NULL);
+                      
+                      gconf_log(GCL_WARNING, _("Failed reading default value for schema: %s"), 
+                                error->str);
+                      gconf_error_destroy(error);
+                      error = NULL;
+                      
+                      bad_nodes = g_slist_prepend(bad_nodes, iter);
+                    }
                 }
               else if (ld_str == NULL &&
                        strcmp(iter->name, "longdesc") == 0)
@@ -2065,7 +2288,7 @@ schema_node_extract_value(xmlNodePtr node)
    <default> node
 */
 static GConfValue*
-xentry_extract_value(xmlNodePtr node)
+xentry_extract_value(xmlNodePtr node, GConfError** err)
 {
   GConfValue* value = NULL;
   gchar* type_str;
@@ -2074,8 +2297,12 @@ xentry_extract_value(xmlNodePtr node)
   type_str = xmlGetProp(node, "type");
 
   if (type_str == NULL)
-    return NULL;
-  
+    {
+      gconf_set_error(err, GCONF_PARSE_ERROR,
+                      _("No \"type\" attribute for node"));
+      return NULL;
+    }
+      
   type = gconf_value_type_from_string(type_str);
 
   free(type_str);
@@ -2084,7 +2311,7 @@ xentry_extract_value(xmlNodePtr node)
     {
     case GCONF_VALUE_INVALID:
       {
-        gconf_log(GCL_WARNING, _("A node has unknown \"type\" attribute `%s', ignoring"), type_str);
+        gconf_set_error(err, GCONF_PARSE_ERROR, _("A node has unknown \"type\" attribute `%s', ignoring"), type_str);
         return NULL;
       }
       break;
@@ -2094,23 +2321,25 @@ xentry_extract_value(xmlNodePtr node)
     case GCONF_VALUE_FLOAT:
       {
         gchar* value_str;
-        GConfError* err = NULL;
         
         value_str = xmlGetProp(node, "value");
         
         if (value_str == NULL)
-          return NULL;
-
-        value = gconf_value_new_from_string(type, value_str, &err);
-
-        if (value == NULL)
           {
-            gconf_set_error(err->num, err->str);
-            gconf_error_destroy(err);
+            gconf_set_error(err, GCONF_PARSE_ERROR,
+                            _("No \"value\" attribute for node"));
+            return NULL;
           }
-        
+            
+        value = gconf_value_new_from_string(type, value_str, err);
+
         free(value_str);
 
+        g_return_val_if_fail( (value != NULL) ||
+                              (err == NULL) ||
+                              (*err != NULL),
+                              NULL );
+        
         return value;
       }
       break;
@@ -2145,6 +2374,9 @@ xentry_extract_value(xmlNodePtr node)
           case GCONF_VALUE_INVALID:
           case GCONF_VALUE_LIST:
           case GCONF_VALUE_PAIR:
+            gconf_set_error(err, GCONF_PARSE_ERROR,
+                            _("Invalid type (list, pair, or unknown) in a list node"));
+              
             return NULL;
           default:
             break;
@@ -2160,9 +2392,19 @@ xentry_extract_value(xmlNodePtr node)
                 if (strcmp(iter->name, "li") == 0)
                   {
                     
-                    v = xentry_extract_value(iter);
+                    v = xentry_extract_value(iter, err);
                     if (v == NULL)
-                      bad_nodes = g_slist_prepend(bad_nodes, iter);
+                      {
+                        if (err && *err)
+                          {
+                            gconf_log(GCL_WARNING,
+                                      _("Removing bad XML node: %s"),
+                                      (*err)->str);
+                            /* avoid pile-ups */
+                            gconf_clear_error(err);
+                          }
+                        bad_nodes = g_slist_prepend(bad_nodes, iter);
+                      }
                     else if (v->type != list_type)
                       {
                         gconf_value_destroy(v);
@@ -2224,9 +2466,19 @@ xentry_extract_value(xmlNodePtr node)
               {
                 if (car == NULL && strcmp(iter->name, "car") == 0)
                   {
-                    car = xentry_extract_value(iter);
+                    car = xentry_extract_value(iter, err);
                     if (car == NULL)
-                      bad_nodes = g_slist_prepend(bad_nodes, iter);
+                      {
+                        if (err && *err)
+                          {
+                            gconf_log(GCL_WARNING,
+                                      _("Removing bad car from XML pair: %s"),
+                                      (*err)->str);
+                            /* prevent pile-ups */
+                            gconf_clear_error(err);
+                          }
+                        bad_nodes = g_slist_prepend(bad_nodes, iter);
+                      }
                     else if (car->type == GCONF_VALUE_LIST ||
                              car->type == GCONF_VALUE_PAIR)
                       {
@@ -2237,9 +2489,19 @@ xentry_extract_value(xmlNodePtr node)
                   }
                 else if (cdr == NULL && strcmp(iter->name, "cdr") == 0)
                   {
-                    cdr = xentry_extract_value(iter);
+                    cdr = xentry_extract_value(iter, err);
                     if (cdr == NULL)
-                      bad_nodes = g_slist_prepend(bad_nodes, iter);
+                      {
+                        if (err && *err)
+                          {
+                            gconf_log(GCL_WARNING,
+                                      _("Removing bad cdr from XML pair: %s"),
+                                      (*err)->str);
+                            /* avoid pile-ups */
+                            gconf_clear_error(err);
+                          }
+                        bad_nodes = g_slist_prepend(bad_nodes, iter);
+                      }
                     else if (cdr->type == GCONF_VALUE_LIST ||
                              cdr->type == GCONF_VALUE_PAIR)
                       {

@@ -57,7 +57,17 @@ struct _GConfError {
 };
 
 GConfError*  gconf_error_new      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+GConfError*  gconf_error_copy     (GConfError* err);
 void         gconf_error_destroy  (GConfError* err);
+
+/* if (err) *err = gconf_error_new(en, format, ...), also has some sanity checks. */
+void         gconf_set_error      (GConfError** err, GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (3, 4);
+
+/* if (err && *err) { gconf_error_destroy(*err); *err = NULL; } */
+void         gconf_clear_error    (GConfError** err);
+
+/* merge two errors into a single message */
+GConfError*  gconf_compose_errors (GConfError* err1, GConfError* err2);
 
 /* strerror() really shouldn't be used, because GConfError->str gives
  * a more complete error message.

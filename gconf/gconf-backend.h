@@ -33,45 +33,89 @@
 typedef struct _GConfBackendVTable GConfBackendVTable;
 
 struct _GConfBackendVTable {
-  void                (* shutdown)        (void);
+  void                (* shutdown)        (GConfError** err);
 
-  GConfSource*        (* resolve_address) (const gchar* address);
+  GConfSource*        (* resolve_address) (const gchar* address,
+                                           GConfError** err);
 
+  /* Thread locks. If the backend is thread-safe, then these
+   * can be NULL. If per-source locks are needed, then these
+   * calls should lock a mutex stored in the GConfSource.
+   * If a per-backend lock is needed, then the calls can ignore
+   * their source argument and lock the whole backend.
+   */
+  void                (* lock)            (GConfSource* source,
+                                           GConfError** err);
+
+  void                (* unlock)          (GConfSource* source,
+                                           GConfError** err);
+
+  /* Report whether a given key (and its subkeys) can be read/written.
+   * Sources may not permit reading/writing from/to /foo but forbid
+   * writing to /foo/bar; if a key can be read or written then its
+   * subkeys may also be read/written.
+   *
+   * This field allows backends to be configured so that they only
+   * store certain kinds of data in certain sections of the GConf
+   * namespace.
+   *
+   * If these functions return an error, they MUST return FALSE as
+   * well.
+   */
+
+  gboolean           (* readable)         (GConfSource* source,
+                                           const gchar* key,
+                                           GConfError** err);
+
+  gboolean           (* writeable)        (GConfSource* source,
+                                           const gchar* key,
+                                           GConfError** err);
+  
   /* schema_name filled if NULL or GCONF_VALUE_IGNORE_SUBSEQUENT returned.
      if schema_name is NULL, it isn't filled */
   GConfValue*         (* query_value)     (GConfSource* source, 
                                            const gchar* key,
-                                           gchar** schema_name);
+                                           gchar** schema_name,
+                                           GConfError** err);
   
   GConfMetaInfo*      (* query_metainfo)  (GConfSource* source,
-                                           const gchar* key);
+                                           const gchar* key,
+                                           GConfError** err);
   
   void                (* set_value)       (GConfSource* source, 
                                            const gchar* key, 
-                                           GConfValue* value);
+                                           GConfValue* value,
+                                           GConfError** err);
 
   /* Returns list of GConfEntry */
   GSList*             (* all_entries)     (GConfSource* source,
-                                           const gchar* dir);
+                                           const gchar* dir,
+                                           GConfError** err);
 
   /* Returns list of allocated strings, relative names */
   GSList*             (* all_subdirs)     (GConfSource* source,
-                                           const gchar* dir);
+                                           const gchar* dir,
+                                           GConfError** err);
 
   void                (* unset_value)     (GConfSource* source,
-                                           const gchar* key);
+                                           const gchar* key,
+                                           GConfError** err);
 
   gboolean            (* dir_exists)      (GConfSource* source,
-                                           const gchar* dir);
+                                           const gchar* dir,
+                                           GConfError** err);
         
   void                (* remove_dir)      (GConfSource* source,
-                                           const gchar* dir);
+                                           const gchar* dir,
+                                           GConfError** err);
   
-  void                (* set_schema)    (GConfSource* source,
-                                         const gchar* key,
-                                         const gchar* schema_key);
+  void                (* set_schema)      (GConfSource* source,
+                                           const gchar* key,
+                                           const gchar* schema_key,
+                                           GConfError** err);
 
-  gboolean            (* sync_all)        (GConfSource* source);
+  gboolean            (* sync_all)        (GConfSource* source,
+                                           GConfError** err);
 
   void                (* destroy_source)  (GConfSource* source);
 };
@@ -86,22 +130,26 @@ struct _GConfBackend {
 /* Address utility stuff */
 
 /* Get the backend name */
-gchar* gconf_address_backend(const gchar* address);
+gchar*        gconf_address_backend(const gchar* address);
 /* Get the resource name understood only by the backend */
-gchar* gconf_address_resource(const gchar* address);
+gchar*        gconf_address_resource(const gchar* address);
 
-gchar*       gconf_backend_file(const gchar* address);
+gchar*        gconf_backend_file(const gchar* address);
 
 /* Obtain the GConfBackend for this address, based on the first part of the 
- * address. The refcount is always incremented, and you must unref() later
+ * address. The refcount is always incremented, and you must unref() later.
+ * The same backend may be returned by multiple calls to this routine,
+ * but you can assume they are different if you do the refcounting
+ * right. Returns NULL if it fails.
  */
-GConfBackend* gconf_get_backend(const gchar* address);
+GConfBackend* gconf_get_backend(const gchar* address, GConfError** err);
 
 void          gconf_backend_ref(GConfBackend* backend);
 void          gconf_backend_unref(GConfBackend* backend);
 
 GConfSource*  gconf_backend_resolve_address (GConfBackend* backend, 
-                                              const gchar* address);
+                                             const gchar* address,
+                                             GConfError** err);
 
 #endif
 

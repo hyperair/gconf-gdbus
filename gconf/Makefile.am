@@ -27,8 +27,6 @@ gconfinclude_HEADERS =     \
 
 gconfd_SOURCES = \
 	gconfd.c	\
-	gconfd-error.h	\
-	gconfd-error.c  \
 	gconf-sources.c
 
 gconfd_LDADD = $(EFENCE) $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la

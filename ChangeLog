@@ -1,3 +1,48 @@
+1999-10-20  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c, gconf/gconf-sources.c: Finish stuff from the
+	17th (use GConfError throughout, etc.)
+
+	* gconf/gconfd-error.h, gconf/gconfd-error.c: Remove the broken
+	old error stuff, even gconfd no longer uses it.
+	
+1999-10-17  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-sources.c: Use GConfError** throughout, make the
+	_source_ functions static
+	(gconf_sources_query_value): Use the new flags and readable
+	function
+	(gconf_sources_set_value): use the new flags and writeable
+	function
+
+	* gconf/gconf-error.c (gconf_error_copy): new function
+	(gconf_compose_errors): new function
+
+        * backends/xml-backend.c: Throughout, use a GConfError** argument
+	instead of the global errno thing
+	
+	* gconf/gconf-error.c (gconf_set_error): New function properly
+	handles a GConfError** by setting error or ignoring if NULL, 
+	also warns if you "stack" two errors on top of each other.
+	(gconf_clear_error): New function clears a GConfError** 
+
+	* gconf/gconfd.c: don't include gconfd-error.h
+
+	* backends/xml-backend.c: Remove inclusion of gconfd-error.h
+
+	* gconf/gconf-backend.h: Add lock/unlock and readable/writeable
+	functions to the backend vtable, and add error arguments to 
+	all functions in the vtable.
+
+	* gconf/gconfd.c (safe_g_hash_table_insert): priority GCL_WARNING
+
+	* backends/xml-backend.c (safe_g_hash_table_insert): make
+	it priority GCL_WARNING.
+
+	* gconf/gconf-sources.h: GCONF_SOURCE_ALL_WRITEABLE,
+	GCONF_SOURCE_ALL_READABLE flags to short-circuit calls to the new
+	writeable/readable vtable functions.
+
 1999-10-17  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-orbit.h: Include orb/orbit.h instead of GConf.h

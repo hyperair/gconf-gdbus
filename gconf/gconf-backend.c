@@ -145,7 +145,7 @@ gconf_backend_file(const gchar* address)
 static GHashTable* loaded_backends = NULL;
 
 GConfBackend* 
-gconf_get_backend(const gchar* address)
+gconf_get_backend(const gchar* address, GConfError** err)
 {
   GConfBackend* backend;
   gchar* name;
@@ -158,7 +158,7 @@ gconf_get_backend(const gchar* address)
       
   if (name == NULL)
     {
-      gconf_log(GCL_ERR, _("Bad address `%s'"), address);
+      gconf_set_error(err, GCONF_BAD_ADDRESS, _("Bad address `%s'"), address);
       return NULL;
     }
 
@@ -191,8 +191,9 @@ gconf_get_backend(const gchar* address)
           if (module == NULL)
             {
               gchar* error = g_module_error();
-              fprintf(stderr, _("Error opening module `%s': %s\n"),
-                      name, error);
+              gconf_set_error(err,
+                              GCONF_FAILED, _("Error opening module `%s': %s\n"),
+                              name, error);
               g_free(name);
               return NULL;
             }
@@ -222,7 +223,8 @@ gconf_get_backend(const gchar* address)
         }
       else
         {
-          gconf_log(GCL_ERR, _("Couldn't locate backend module for `%s'"), address);
+          gconf_set_error(err, GCONF_FAILED,
+                          _("Couldn't locate backend module for `%s'"), address);
           return NULL;
         }
     }
@@ -248,8 +250,16 @@ gconf_backend_unref(GConfBackend* backend)
     }
   else
     {
-      (*backend->vtable->shutdown)();
+      GConfError* error = NULL;
+      
+      (*backend->vtable->shutdown)(&error);
 
+      if (error != NULL)
+        {
+          g_warning(error->str);
+          gconf_error_destroy(error);
+        }
+          
       if (!g_module_close(backend->module))
         g_warning(_("Failed to shut down backend"));
 
@@ -267,10 +277,10 @@ gconf_backend_unref(GConfBackend* backend)
 
 GConfSource*  
 gconf_backend_resolve_address (GConfBackend* backend, 
-                                const gchar* address)
+                               const gchar* address,
+                               GConfError** err)
 {
-  return (*backend->vtable->resolve_address)(address);
-
+  return (*backend->vtable->resolve_address)(address, err);
 }
 
 
