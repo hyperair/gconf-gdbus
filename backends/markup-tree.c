@@ -1269,7 +1269,7 @@ markup_entry_get_value (MarkupEntry *entry,
 
       /* Find the best local schema */
 
-      if (locales == NULL && locales[0] == NULL)
+      if (locales == NULL || locales[0] == NULL)
         locales = fallback_locales;
 
       n_locales = 0;
