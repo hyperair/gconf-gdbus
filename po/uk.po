@@ -42,9 +42,9 @@ msgid "Initializing XML backend module"
 msgstr ""
 
 #: backends/xml-backend.c:759
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr "Не вдалося отримати значення для \"%s\": %s\n"
+msgstr ""
 
 #. -- end debug only
 #: gconf/gconf-backend.c:180
@@ -169,9 +169,9 @@ msgid "Unknown OAF error"
 msgstr "Нев╕дома помилка OAF"
 
 #: gconf/gconf-internals.c:2225
-#, fuzzy, c-format
+#, c-format
 msgid "No ior file in `%s'"
-msgstr "Нев╕рний файл \"%s\"\n"
+msgstr "Нев╕рний файл ior в \"%s\""
 
 #: gconf/gconf-internals.c:2256
 #, c-format
@@ -205,19 +205,19 @@ msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr ""
 
 #: gconf/gconf-internals.c:2333
-#, fuzzy, c-format
+#, c-format
 msgid "couldn't create directory `%s': %s"
-msgstr "Неможливо створити каталог \"%s\": %s"
+msgstr "не вдалося створити каталог \"%s\": %s"
 
 #: gconf/gconf-internals.c:2368
-#, fuzzy, c-format
+#, c-format
 msgid "Can't create lock `%s': %s"
-msgstr "Не вдалося створити файл \"%s\": %s"
+msgstr "Неможливо створити блокування \"%s\": %s"
 
 #: gconf/gconf-internals.c:2404
-#, fuzzy, c-format
+#, c-format
 msgid "Can't write to file `%s': %s"
-msgstr "Не вдалося записати файл \"%s\": %s"
+msgstr "Неможливо записати у файл \"%s\": %s"
 
 #: gconf/gconf-internals.c:2416
 #, c-format
@@ -242,9 +242,9 @@ msgid ""
 msgstr ""
 
 #: gconf/gconf-internals.c:2491
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to release lock directory `%s': %s"
-msgstr "Не вдилося в╕дкрити каталог \"%s\": %s"
+msgstr "Не вдалося зв╕льнити заблокований каталог \"%s\": %s"
 
 #: gconf/gconf.c:69
 #, c-format
@@ -421,9 +421,8 @@ msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr ""
 
 #: gconf/gconfd.c:1100
-#, fuzzy
 msgid "Exiting"
-msgstr "Нормальний вих╕д"
+msgstr "Завершення"
 
 #: gconf/gconfd.c:1194
 #, c-format
@@ -745,9 +744,8 @@ msgid "Failure listing pairs in `%s': %s"
 msgstr ""
 
 #: gconf/gconftool.c:767
-#, fuzzy
 msgid "(no value set)"
-msgstr "Не встановлено значення для \"%s\"\n"
+msgstr "(не встановлено значення)"
 
 #: gconf/gconftool.c:820
 #, c-format
@@ -949,11 +947,9 @@ msgstr ""
 "<gconfschemafile>)\n"
 
 #: gconf/gconftool.c:1671
-#, fuzzy, c-format
+#, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
-msgstr ""
-"Документ \"%s\" ма╓ нев╕рний тип кор╕нного вузла (<%s>, ма╓ бути "
-"<gconfschemafile>)\n"
+msgstr "Документ \"%s\" нема╓ вузла верхнього р╕вня <gconfschemafile>\n"
 
 #: gconf/gconftool.c:1685
 #, c-format
@@ -961,31 +957,31 @@ msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "УВАГА: вузол <%s> перед <gconfschemafile> - незрозум╕лий\n"
 
 #: gconf/gconftool.c:1696 gconf/gconftool.c:1728
-#, fuzzy, c-format
+#, c-format
 msgid "Error syncing config data: %s"
-msgstr "Помилка синхрон╕зац╕╖: %s"
+msgstr "Помилка синхрон╕зац╕╖ даних конф╕гурац╕╖: %s"
 
 #: gconf/gconftool.c:1712
-#, fuzzy
 msgid "Must specify some schema files to install\n"
-msgstr "Потр╕бно вказати ключ або ключ╕ для отримання\n"
+msgstr ""
 
 #: gconf/gconftool.c:1749
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s\n"
-msgstr "%s"
+msgstr ""
+"\n"
+"%s\n"
 
 #: gconf/gconftool.c:1769
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unset breakage key %s: %s\n"
-msgstr "Не вдалося створити файл \"%s\": %s"
+msgstr ""
 
 #: gconf/gconftool.c:1895
-#, fuzzy
 msgid "Must specify some keys to break\n"
-msgstr "Потр╕бно вказати ключ або ключ╕ для отримання\n"
+msgstr ""
 
 #: gconf/gconftool.c:1901
 #, c-format
@@ -995,9 +991,8 @@ msgid ""
 msgstr ""
 
 #: gconf/gconftool.c:1919
-#, fuzzy
 msgid "Must specify some directories to break\n"
-msgstr "Потр╕бно вказати ключ або ключ╕ для отримання\n"
+msgstr ""
 
 #: gconf/gconftool.c:1938
 #, c-format
@@ -1030,27 +1025,3 @@ msgstr "Визнача╓ геометр╕ю головного в╕кна"
 #: gconf-editor/gconf-editor.c:42
 msgid "GEOMETRY"
 msgstr "ГЕОМЕТР╤Я"
-
-#~ msgid "XML filename `%s' is a directory"
-#~ msgstr "Назва файлу XML \"%s\" -- каталог"
-
-#~ msgid "Failed to delete `%s': %s"
-#~ msgstr "Не вдалося видалити \"%s\": %s"
-
-#~ msgid "Failed to rename `%s' to `%s': %s"
-#~ msgstr "Не вдалося перейменувати \"%s\" на \"%s\": %s"
-
-#~ msgid "Failed to restore `%s' from `%s': %s"
-#~ msgstr "Не вдалося в╕дновити \"%s\" з \"%s\": %s"
-
-#~ msgid "Failed to delete old file `%s': %s"
-#~ msgstr "Не вдалося видалити старий файл \"%s\": %s"
-
-#~ msgid "Ignoring XML node `%s': %s"
-#~ msgstr "╤гнорування XML-вузла \"%s\": %s"
-
-#~ msgid "Removing bad XML node: %s"
-#~ msgstr "Видалення поганого XML-вузла: %s"
-
-#~ msgid "Server is not running"
-#~ msgstr "Сервер не викону╓ться"
