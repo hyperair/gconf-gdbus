@@ -152,8 +152,6 @@ static void       ctable_insert              (CnxnTable           *ct,
                                               GConfCnxn           *cnxn);
 static void       ctable_remove              (CnxnTable           *ct,
                                               GConfCnxn           *cnxn);
-static void       ctable_remove_by_client_id (CnxnTable           *ct,
-                                              guint                client_id);
 static GSList*    ctable_remove_by_conf      (CnxnTable           *ct,
                                               GConfEngine         *conf);
 static GConfCnxn* ctable_lookup_by_client_id (CnxnTable           *ct,
@@ -2379,18 +2377,6 @@ ctable_remove(CnxnTable* ct, GConfCnxn* cnxn)
 {
   g_hash_table_remove (ct->server_ids, &cnxn->server_id);
   g_hash_table_remove (ct->client_ids, &cnxn->client_id);
-}
-
-static void       
-ctable_remove_by_client_id(CnxnTable* ct, guint client_id)
-{
-  GConfCnxn* cnxn;
-
-  cnxn = ctable_lookup_by_client_id (ct, client_id);
-
-  g_return_if_fail (cnxn != NULL);
-
-  ctable_remove (ct, cnxn);
 }
 
 struct RemoveData {
