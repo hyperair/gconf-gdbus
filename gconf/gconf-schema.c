@@ -18,7 +18,7 @@
  */
 
 #include "gconf-schema.h"
-
+#include "gconf-internals.h"
 
 GConfSchema*  
 gconf_schema_new(void)
@@ -108,6 +108,8 @@ gconf_schema_set_cdr_type(GConfSchema* sc, GConfValueType type)
 void
 gconf_schema_set_locale(GConfSchema* sc, const gchar* locale)
 {
+  g_return_if_fail (locale == NULL || g_utf8_validate (locale, -1, NULL));
+  
   if (sc->locale)
     g_free(sc->locale);
 
@@ -120,6 +122,8 @@ gconf_schema_set_locale(GConfSchema* sc, const gchar* locale)
 void          
 gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
 {
+  g_return_if_fail (desc == NULL || g_utf8_validate (desc, -1, NULL));
+  
   if (sc->short_desc)
     g_free(sc->short_desc);
 
@@ -132,6 +136,8 @@ gconf_schema_set_short_desc(GConfSchema* sc, const gchar* desc)
 void          
 gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc)
 {
+  g_return_if_fail (desc == NULL || g_utf8_validate (desc, -1, NULL));
+  
   if (sc->long_desc)
     g_free(sc->long_desc);
 
@@ -144,6 +150,8 @@ gconf_schema_set_long_desc(GConfSchema* sc, const gchar* desc)
 void          
 gconf_schema_set_owner(GConfSchema* sc, const gchar* owner)
 {
+  g_return_if_fail (owner == NULL || g_utf8_validate (owner, -1, NULL));
+  
   if (sc->owner)
     g_free(sc->owner);
 
@@ -171,4 +179,41 @@ gconf_schema_set_default_value_nocopy(GConfSchema* sc, GConfValue* val)
   sc->default_value = val;
 }
 
+gboolean
+gconf_schema_validate (const GConfSchema *sc,
+                       GError           **err)
+{
+  if (sc->locale && !g_utf8_validate (sc->locale, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Schema contains invalid UTF-8"));
+      return FALSE;
+    }
 
+  if (sc->short_desc && !g_utf8_validate (sc->short_desc, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Schema contains invalid UTF-8"));
+      return FALSE;
+    }
+
+  if (sc->long_desc && !g_utf8_validate (sc->long_desc, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Schema contains invalid UTF-8"));
+      return FALSE;
+    }
+
+  if (sc->owner && !g_utf8_validate (sc->owner, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Schema contains invalid UTF-8"));
+      return FALSE;
+    }
+
+  return TRUE;
+}

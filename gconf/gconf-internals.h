@@ -138,12 +138,13 @@ gchar* gconf_quote_percents (const gchar* src);
  */
 
 GConfValue* gconf_value_list_from_primitive_list (GConfValueType  list_type,
-                                                  GSList         *list);
+                                                  GSList         *list,
+                                                  GError        **err);
 GConfValue* gconf_value_pair_from_primitive_pair (GConfValueType  car_type,
                                                   GConfValueType  cdr_type,
                                                   gconstpointer   address_of_car,
-                                                  gconstpointer   address_of_cdr);
-
+                                                  gconstpointer   address_of_cdr,
+                                                  GError        **err);
 
 GSList*  gconf_value_list_to_primitive_list_destructive (GConfValue      *val,
                                                          GConfValueType   list_type,
@@ -194,6 +195,9 @@ ConfigServer gconf_activate_server (gboolean  start_if_not_found,
 
 char*     gconf_get_lock_dir (void);
 char*     gconf_get_daemon_dir (void);
+
+gboolean gconf_schema_validate (const GConfSchema *sc,
+                                GError           **err);
 
 #ifdef ENABLE_NLS
 #    include <libintl.h>

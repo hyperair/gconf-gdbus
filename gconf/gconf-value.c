@@ -1,4 +1,3 @@
-
 /* GConf
  * Copyright (C) 1999, 2000 Red Hat Inc.
  *
@@ -118,8 +117,19 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
           }
       }
       break;
-    case GCONF_VALUE_STRING:
-      gconf_value_set_string(value, value_str);
+    case GCONF_VALUE_STRING:      
+      if (!g_utf8_validate (value_str, -1, NULL))
+        {
+          g_set_error (err, GCONF_ERROR,
+                       GCONF_ERROR_PARSE_ERROR,
+                       _("Text contains invalid UTF-8"));
+          gconf_value_free(value);
+          value = NULL;
+        }
+      else
+        {
+          gconf_value_set_string(value, value_str);
+        }
       break;
     case GCONF_VALUE_BOOL:
       switch (*value_str)
@@ -207,6 +217,14 @@ gconf_value_new_list_from_string(GConfValueType list_type,
   g_return_val_if_fail(list_type != GCONF_VALUE_LIST, NULL);
   g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, NULL);
 
+  if (!g_utf8_validate (str, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_PARSE_ERROR,
+                   _("Text contains invalid UTF-8"));
+      return NULL;
+    }
+  
   if (str[0] != '[')
     {
       if (err)
@@ -341,6 +359,14 @@ gconf_value_new_pair_from_string(GConfValueType car_type,
   g_return_val_if_fail(cdr_type != GCONF_VALUE_LIST, NULL);
   g_return_val_if_fail(cdr_type != GCONF_VALUE_PAIR, NULL);
 
+  if (!g_utf8_validate (str, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_PARSE_ERROR,
+                   _("Text contains invalid UTF-8"));
+      return NULL;
+    }
+  
   if (str[0] != '(')
     {
       if (err)

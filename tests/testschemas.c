@@ -373,7 +373,8 @@ check_schema_storage(GConfEngine* conf)
                                        *keyp, ints[i]);
           gconf_schema_set_short_desc(schema, short_desc);
 
-          long_desc = g_strdup_printf("Long description for schema with short description `%s' is really really long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long ", short_desc);
+          long_desc = g_strdup_printf("Long description for schema with short description `%s' is really really long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long "
+                                      "UTF-8: German (Deutsch Süd) Grüß Gott Greek (Ελληνικά) Γειά σας Hebrew(שלום) Hebrew punctuation(\xd6\xbfש\xd6\xbb\xd6\xbc\xd6\xbb\xd6\xbfל\xd6\xbcו\xd6\xbc\xd6\xbb\xd6\xbb\xd6\xbfם\xd6\xbc\xd6\xbb\xd6\xbf) Japanese (日本語) Thai (สวัสดีครับ) Thai wrong spelling (คำต่อไปนื่สะกดผิด พัั้ัั่งโกะ)\n", short_desc);
           
           gconf_schema_set_long_desc(schema, long_desc);
 

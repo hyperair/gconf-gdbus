@@ -359,7 +359,7 @@ gconf_change_set_set_list    (GConfChangeSet* cs, const gchar* key,
   g_return_if_fail(list_type != GCONF_VALUE_LIST);
   g_return_if_fail(list_type != GCONF_VALUE_PAIR);
   
-  value_list = gconf_value_list_from_primitive_list(list_type, list);
+  value_list = gconf_value_list_from_primitive_list (list_type, list, NULL);
   
   gconf_change_set_set_nocopy(cs, key, value_list);
 }
@@ -384,8 +384,9 @@ gconf_change_set_set_pair    (GConfChangeSet* cs, const gchar* key,
   g_return_if_fail(address_of_car != NULL);
   g_return_if_fail(address_of_cdr != NULL);
 
-  pair = gconf_value_pair_from_primitive_pair(car_type, cdr_type,
-                                              address_of_car, address_of_cdr);
+  pair = gconf_value_pair_from_primitive_pair (car_type, cdr_type,
+                                               address_of_car, address_of_cdr,
+                                               NULL);
   
   gconf_change_set_set_nocopy(cs, key, pair);
 }

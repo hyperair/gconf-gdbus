@@ -194,7 +194,15 @@ gconf_value_from_corba_value(const ConfigValue* value)
       gconf_value_set_int(gval, value->_u.int_value);
       break;
     case GCONF_VALUE_STRING:
-      gconf_value_set_string(gval, value->_u.string_value);
+      if (!g_utf8_validate (value->_u.string_value, -1, NULL))
+        {
+          gconf_log (GCL_ERR, _("Invalid UTF-8 in string value in '%s'"),
+                     value->_u.string_value); 
+        }
+      else
+        {
+          gconf_value_set_string(gval, value->_u.string_value);
+        }
       break;
     case GCONF_VALUE_FLOAT:
       gconf_value_set_float(gval, value->_u.float_value);
@@ -578,17 +586,37 @@ gconf_schema_from_corba_schema(const ConfigSchema* cs)
   gconf_schema_set_cdr_type(sc, cdr_type);
 
   if (*cs->locale != '\0')
-    gconf_schema_set_locale(sc, cs->locale);
+    {
+      if (!g_utf8_validate (cs->locale, -1, NULL))
+        gconf_log (GCL_ERR, _("Invalid UTF-8 in locale for schema"));
+      else
+        gconf_schema_set_locale(sc, cs->locale);
+    }
 
   if (*cs->short_desc != '\0')
-    gconf_schema_set_short_desc(sc, cs->short_desc);
+    {
+      if (!g_utf8_validate (cs->short_desc, -1, NULL))
+        gconf_log (GCL_ERR, _("Invalid UTF-8 in short description for schema"));
+      else
+        gconf_schema_set_short_desc(sc, cs->short_desc);
+    }
 
   if (*cs->long_desc != '\0')
-    gconf_schema_set_long_desc(sc, cs->long_desc);
+    {
+      if (!g_utf8_validate (cs->long_desc, -1, NULL))
+        gconf_log (GCL_ERR, _("Invalid UTF-8 in long description for schema"));
+      else
+        gconf_schema_set_long_desc(sc, cs->long_desc);
+    }
 
   if (*cs->owner != '\0')
-    gconf_schema_set_owner(sc, cs->owner);
-
+    {
+      if (!g_utf8_validate (cs->owner, -1, NULL))
+        gconf_log (GCL_ERR, _("Invalid UTF-8 in owner for schema"));
+      else
+        gconf_schema_set_owner(sc, cs->owner);
+    }
+      
   {
     GConfValue* val;
 
@@ -1141,7 +1169,8 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
  */
 
 GConfValue*
-gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list)
+gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list,
+                                     GError **err)
 {
   GSList* value_list;
   GSList* tmp;
@@ -1175,10 +1204,20 @@ gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list)
           break;
 
         case GCONF_VALUE_STRING:
+          if (!g_utf8_validate (tmp->data, -1, NULL))
+            {
+              g_set_error (err, GCONF_ERROR,
+                           GCONF_ERROR_FAILED,
+                           _("Text contains invalid UTF-8"));
+              goto error;
+            }
+                     
           gconf_value_set_string(val, tmp->data);
           break;
 
         case GCONF_VALUE_SCHEMA:
+          if (!gconf_schema_validate (tmp->data, err))
+            goto error;
           gconf_value_set_schema(val, tmp->data);
           break;
           
@@ -1204,11 +1243,17 @@ gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list)
 
     return value_with_list;
   }
+
+ error:
+  g_slist_foreach (value_list, (GFunc)gconf_value_free, NULL);
+  g_slist_free (value_list);
+  return NULL;
 }
 
 
 static GConfValue*
-from_primitive(GConfValueType type, gconstpointer address)
+from_primitive(GConfValueType type, gconstpointer address,
+               GError **err)
 {
   GConfValue* val;
 
@@ -1225,6 +1270,15 @@ from_primitive(GConfValueType type, gconstpointer address)
       break;
 
     case GCONF_VALUE_STRING:
+      if (!g_utf8_validate (*((const gchar**)address), -1, NULL))
+        {
+          g_set_error (err, GCONF_ERROR,
+                       GCONF_ERROR_FAILED,
+                       _("Text contains invalid UTF-8"));
+          gconf_value_free (val);
+          return NULL;
+        }
+
       gconf_value_set_string(val, *((const gchar**)address));
       break;
 
@@ -1233,6 +1287,12 @@ from_primitive(GConfValueType type, gconstpointer address)
       break;
 
     case GCONF_VALUE_SCHEMA:
+      if (!gconf_schema_validate (*((GConfSchema**)address), err))
+        {
+          gconf_value_free (val);
+          return NULL;
+        }
+      
       gconf_value_set_schema(val, *((GConfSchema**)address));
       break;
       
@@ -1248,7 +1308,8 @@ GConfValue*
 gconf_value_pair_from_primitive_pair(GConfValueType car_type,
                                      GConfValueType cdr_type,
                                      gconstpointer address_of_car,
-                                     gconstpointer address_of_cdr)
+                                     gconstpointer address_of_cdr,
+                                     GError       **err)
 {
   GConfValue* pair;
   GConfValue* car;
@@ -1263,9 +1324,16 @@ gconf_value_pair_from_primitive_pair(GConfValueType car_type,
   g_return_val_if_fail(address_of_car != NULL, NULL);
   g_return_val_if_fail(address_of_cdr != NULL, NULL);
   
-  car = from_primitive(car_type, address_of_car);
-  cdr = from_primitive(cdr_type, address_of_cdr);
-
+  car = from_primitive(car_type, address_of_car, err);
+  if (car == NULL)
+    return NULL;
+  cdr = from_primitive(cdr_type, address_of_cdr, err);
+  if (cdr == NULL)
+    {
+      gconf_value_free (car);
+      return NULL;
+    }
+  
   pair = gconf_value_new(GCONF_VALUE_PAIR);
   gconf_value_set_car_nocopy(pair, car);
   gconf_value_set_cdr_nocopy(pair, cdr);
@@ -1782,6 +1850,12 @@ gconf_value_decode (const gchar* encoded)
   if (type == GCONF_VALUE_INVALID)
     return NULL;
 
+  if (!g_utf8_validate (encoded, -1, NULL))
+    {
+      gconf_log (GCL_ERR, _("Encoded value is not valid UTF-8"));
+      return NULL;
+    }
+  
   val = gconf_value_new(type);
 
   s = encoded + 1;

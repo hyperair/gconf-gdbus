@@ -2932,7 +2932,7 @@ error_checked_set(GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_float   (GConfEngine* conf, const gchar* key,
-                   gdouble val, GError** err)
+                          gdouble val, GError** err)
 {
   GConfValue* gval;
 
@@ -2949,7 +2949,7 @@ gconf_engine_set_float   (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_int     (GConfEngine* conf, const gchar* key,
-                   gint val, GError** err)
+                          gint val, GError** err)
 {
   GConfValue* gval;
 
@@ -2966,14 +2966,24 @@ gconf_engine_set_int     (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_string  (GConfEngine* conf, const gchar* key,
-                    const gchar* val, GError** err)
+                          const gchar* val, GError** err)
 {
   GConfValue* gval;
 
-  g_return_val_if_fail(val != NULL, FALSE);
-  g_return_val_if_fail(conf != NULL, FALSE);
-  g_return_val_if_fail(key != NULL, FALSE);
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (val != NULL, FALSE);
+  g_return_val_if_fail (conf != NULL, FALSE);
+  g_return_val_if_fail (key != NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
+
+  if (!g_utf8_validate (val, -1, NULL))
+    {
+      g_set_error (err, GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("Text contains invalid UTF-8"));
+      return FALSE;
+    }
+  
+  g_return_val_if_fail (g_utf8_validate (val, -1, NULL), FALSE);
   
   gval = gconf_value_new(GCONF_VALUE_STRING);
 
@@ -2984,7 +2994,7 @@ gconf_engine_set_string  (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_bool    (GConfEngine* conf, const gchar* key,
-                   gboolean val, GError** err)
+                          gboolean val, GError** err)
 {
   GConfValue* gval;
 
@@ -3001,7 +3011,7 @@ gconf_engine_set_bool    (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_schema  (GConfEngine* conf, const gchar* key,
-                    const GConfSchema* val, GError** err)
+                          const GConfSchema* val, GError** err)
 {
   GConfValue* gval;
 
@@ -3009,6 +3019,9 @@ gconf_engine_set_schema  (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+
+  if (!gconf_schema_validate (val, err))
+    return FALSE;
   
   gval = gconf_value_new(GCONF_VALUE_SCHEMA);
 
@@ -3019,11 +3032,12 @@ gconf_engine_set_schema  (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_list    (GConfEngine* conf, const gchar* key,
-                   GConfValueType list_type,
-                   GSList* list,
-                   GError** err)
+                          GConfValueType list_type,
+                          GSList* list,
+                          GError** err)
 {
   GConfValue* value_list;
+  GError *tmp_err = NULL;
   
   g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(key != NULL, FALSE);
@@ -3032,7 +3046,13 @@ gconf_engine_set_list    (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
 
-  value_list = gconf_value_list_from_primitive_list(list_type, list);
+  value_list = gconf_value_list_from_primitive_list(list_type, list, &tmp_err);
+
+  if (tmp_err)
+    {
+      g_propagate_error (err, tmp_err);
+      return FALSE;
+    }
   
   /* destroys the value_list */
   
@@ -3041,12 +3061,13 @@ gconf_engine_set_list    (GConfEngine* conf, const gchar* key,
 
 gboolean
 gconf_engine_set_pair    (GConfEngine* conf, const gchar* key,
-                   GConfValueType car_type, GConfValueType cdr_type,
-                   gconstpointer address_of_car,
-                   gconstpointer address_of_cdr,
-                   GError** err)
+                          GConfValueType car_type, GConfValueType cdr_type,
+                          gconstpointer address_of_car,
+                          gconstpointer address_of_cdr,
+                          GError** err)
 {
   GConfValue* pair;
+  GError *tmp_err = NULL;
   
   g_return_val_if_fail(conf != NULL, FALSE);
   g_return_val_if_fail(key != NULL, FALSE);
@@ -3062,7 +3083,14 @@ gconf_engine_set_pair    (GConfEngine* conf, const gchar* key,
   
 
   pair = gconf_value_pair_from_primitive_pair(car_type, cdr_type,
-                                              address_of_car, address_of_cdr);
+                                              address_of_car, address_of_cdr,
+                                              &tmp_err);
+
+  if (tmp_err)
+    {
+      g_propagate_error (err, tmp_err);
+      return FALSE;
+    }  
   
   return error_checked_set(conf, key, pair, err);
 }
