@@ -4,7 +4,7 @@ EFENCE=
 INCLUDES = -I$(top_srcdir) -I$(top_builddir) -I$(includedir)  $(ORBIT_CFLAGS) $(GLIB_CFLAGS) \
 	 -DG_LOG_DOMAIN=\"GConf-Tests\" -DGCONF_ENABLE_INTERNALS=1
 
-noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique
+noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence
 
 testunique_SOURCES=testunique.c
 
@@ -13,6 +13,10 @@ testunique_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la 
 testgconf_SOURCES=testgconf.c
 
 testgconf_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
+
+testpersistence_SOURCES=testpersistence.c
+
+testpersistence_LDADD = $(ORBIT_LIBS) $(GLIB_LIBS) $(top_builddir)/gconf/libgconf.la  $(EFENCE)
 
 testlisteners_SOURCES=testlisteners.c
 

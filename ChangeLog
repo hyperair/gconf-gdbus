@@ -1,5 +1,13 @@
 2000-01-21  Havoc Pennington  <hp@pobox.com>
 
+	* tests/Makefile.am (testpersistence_SOURCES): add new test
+
+	* tests/testpersistence.c: New test, clears the cache after every
+	set, to see if the get() function can properly load stuff off of
+	disk. Right now we fail this test. Blah.
+
+2000-01-21  Havoc Pennington  <hp@pobox.com>
+
 	* backends/xml-cache.c (cache_clean): oops, this was broken
 	before; we need to check that the dir doesn't need a sync before
 	we destroy it.
