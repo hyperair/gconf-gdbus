@@ -34,7 +34,7 @@ extern "C" {
  *  - It (recursively) caches the contents of certain directories on
  *    the client side, such as your application's configuration
  *    directory
- * 
+ *
  *  - It allows you to register per-key callbacks within these directories,
  *    without having to register multiple server-side callbacks
  *    (gconf_notify_add() adds a request-for-notify to the server,
@@ -45,6 +45,12 @@ extern "C" {
  *
  * This class is heavily specialized for per-user desktop applications -
  * even more so than GConf itself.
+ */
+
+/*
+ * IMPORTANT: you can't mix GConfClient with direct GConfEngine access,
+ * or you will have a mess because the client won't know what you're doing
+ * underneath it.
  */
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
@@ -64,12 +70,18 @@ struct _GConfClient
   /*< private >*/
 
   GConfEngine* engine;
-  
+
 };
 
 struct _GConfClientClass
 {
   GtkObjectClass parent_class;
+
+  /* emitted whenever a value changes. Often, you should use a notify
+     function instead; the problem with this signal is that you
+     probably have to do an expensive chain of strcmp() to
+     determine how to respond to it.
+  */
 
   void (* value_changed) (GConfClient* client,
                           const gchar* relative_key,
@@ -78,10 +90,9 @@ struct _GConfClientClass
   /* General note about error handling: AVOID DIALOG DELUGES.
      That is, if lots of errors could happen in a row you need
      to collect those and put them in _one_ dialog, maybe using
-     an idle function. gconf_client_basic_error_handler()
-     is provided and it does this using GnomeDialog.
-  */
-  
+     an idle function. gconf_client_set_error_handling()
+     is provided and it does this using GnomeDialog.  */
+
   /* emitted when you pass NULL for the error return location to a
      GConfClient function and an error occurs. This allows you to
      ignore errors when your generic handler will work, and handle
@@ -98,18 +109,139 @@ struct _GConfClientClass
 
 
 GtkType           gconf_client_get_type        (void);
-GConfClient*      gconf_client_new             (const gchar* dirname);
-GConfClient*      gconf_client_new_with_engine (const gchar* dirname,
-                                                GConfEngine* engine);
 
-/* keys passed to GConfClient instances are relative to the dirname
- * of the GConfClient
+/* use the default engine */
+GConfClient*      gconf_client_new             (void);
+
+/* specify an engine */
+GConfClient*      gconf_client_new_with_engine (GConfEngine* engine);
+
+/* Pre-load the contents of this directory, much faster if you plan
+   to access most of the directory contents.
+*/
+void              gconf_client_preload_dir     (const gchar* dir);
+
+
+/*
+ *  The notification facility allows you to attach a callback to a single
+ *  key or directory, which is more convenient most of the time than
+ *  the value_changed signal
+ */
+
+typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
+
+/* Returns ID of the notification */
+/* returns 0 on error, 0 is an invalid ID */
+guint        gconf_client_notify_add(GConfClient* client,
+                                     const gchar* namespace_section, /* dir or key to listen to */
+                                     GConfClientNotifyFunc func,
+                                     gpointer user_data,
+                                     GConfError** err);
+
+void         gconf_client_notify_remove  (GConfClient* client,
+                                          guint cnxn);
+
+/*
+ * Error handling convenience; if you don't want the default handler,
+ * set the error handling to GCONF_CLIENT_HANDLE_NONE
+ */
+
+typedef enum {
+  GCONF_CLIENT_HANDLE_NONE,
+  GCONF_CLIENT_HANDLE_UNRETURNED,
+  GCONF_CLIENT_HANDLE_ALL
+} GConfClientErrorHandlingMode;
+
+/*
+ * Return the parent window error dialogs should be associated with, or NULL for
+ * none.
+ */
+typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
+
+void              gconf_client_set_error_handling(GConfClient* client,
+                                                  GConfClientErrorHandlingMode mode,
+                                                  /* func can be NULL for none or N/A */
+                                                  GConfClientParentWindowFunc func,
+                                                  gpointer user_data);
+
+
+/*
+ * Basic key-manipulation facilities
  */
 
 void              gconf_client_set             (GConfClient* client,
                                                 const gchar* key,
                                                 GConfValue* val,
                                                 GConfError** err);
+
+GConfValue*       gconf_client_get             (GConfClient* client,
+                                                const gchar* key,
+                                                GConfError** err);
+
+gboolean     gconf_client_unset          (GConfClient* client,
+                                          const gchar* key, GConfError** err);
+
+GSList*      gconf_client_all_entries    (GConfClient* client,
+                                          const gchar* dir, GConfError** err);
+
+GSList*      gconf_client_all_dirs       (GConfClient* client,
+                                          const gchar* dir, GConfError** err);
+
+void         gconf_client_suggest_sync   (GConfClient* client,
+                                          GConfError** err);
+
+gboolean     gconf_client_dir_exists     (GConfClient* client,
+                                          const gchar* dir, GConfError** err);
+
+/* Get/Set convenience wrappers */
+
+/* 'def' (default) is used if the key is not set or if there's an error. */
+
+gdouble      gconf_client_get_float (GConfClient* client, const gchar* key,
+                                     gdouble def, GConfError** err);
+
+gint         gconf_client_get_int   (GConfClient* client, const gchar* key,
+                                     gint def, GConfError** err);
+
+/* free the retval */
+gchar*       gconf_client_get_string(GConfClient* client, const gchar* key,
+                                     const gchar* def, /* def is copied when returned,
+                                                        * and can be NULL to return
+                                                        * NULL
+                                                        */
+                                     GConfError** err);
+
+gboolean     gconf_client_get_bool  (GConfClient* client, const gchar* key,
+                                     gboolean def, GConfError** err);
+
+/* this one has no default since it would be expensive and make little
+   sense; it returns NULL as a default, to indicate unset or error */
+/* free the retval */
+/* Note that this returns the schema stored at key, NOT
+   the schema that key conforms to. */
+GConfSchema* gconf_client_get_schema  (GConfClient* client,
+                                       const gchar* key, GConfError** err);
+
+/* No convenience functions for lists or pairs, since there are too
+   many combinations of types possible
+*/
+
+/* setters return TRUE on success; note that you still have to sync */
+
+gboolean     gconf_client_set_float   (GConfClient* client, const gchar* key,
+                                       gdouble val, GConfError** err);
+
+gboolean     gconf_client_set_int     (GConfClient* client, const gchar* key,
+                                       gint val, GConfError** err);
+
+gboolean     gconf_client_set_string  (GConfClient* client, const gchar* key,
+                                       const gchar* val, GConfError** err);
+
+gboolean     gconf_client_set_bool    (GConfClient* client, const gchar* key,
+                                       gboolean val, GConfError** err);
+
+gboolean     gconf_client_set_schema  (GConfClient* client, const gchar* key,
+                                       GConfSchema* val, GConfError** err);
 
 
 #ifdef __cplusplus

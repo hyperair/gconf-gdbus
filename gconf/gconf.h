@@ -39,20 +39,20 @@ typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* k
 /* Returns ID of the notification */
 /* returns 0 on error, 0 is an invalid ID */
 guint        gconf_notify_add(GConfEngine* conf,
-                               const gchar* namespace_section, /* dir or key to listen to */
-                               GConfNotifyFunc func,
-                               gpointer user_data,
-                               GConfError** err);
+                              const gchar* namespace_section, /* dir or key to listen to */
+                              GConfNotifyFunc func,
+                              gpointer user_data,
+                              GConfError** err);
 
 void         gconf_notify_remove  (GConfEngine* conf,
-                                    guint cnxn);
+                                   guint cnxn);
 
 
 /* Low-level interfaces */
 GConfValue*  gconf_get            (GConfEngine* conf, const gchar* key, GConfError** err);
 
 gboolean     gconf_set            (GConfEngine* conf, const gchar* key,
-                                        GConfValue* value, GConfError** err);
+                                   GConfValue* value, GConfError** err);
 
 gboolean     gconf_unset          (GConfEngine* conf, const gchar* key, GConfError** err);
 
@@ -60,7 +60,7 @@ GSList*      gconf_all_entries    (GConfEngine* conf, const gchar* dir, GConfErr
 
 GSList*      gconf_all_dirs       (GConfEngine* conf, const gchar* dir, GConfError** err);
 
-void         gconf_suggest_sync           (GConfEngine* conf, GConfError** err);
+void         gconf_suggest_sync   (GConfEngine* conf, GConfError** err);
 
 gboolean     gconf_dir_exists     (GConfEngine* conf, const gchar* dir, GConfError** err);
 
@@ -77,21 +77,21 @@ gboolean     gconf_valid_key      (const gchar* key, gchar** why_invalid);
 /* 'def' (default) is used if the key is not set or if there's an error. */
 
 gdouble      gconf_get_float (GConfEngine* conf, const gchar* key,
-                               gdouble def, GConfError** err);
+                              gdouble def, GConfError** err);
 
 gint         gconf_get_int   (GConfEngine* conf, const gchar* key,
-                               gint def, GConfError** err);
+                              gint def, GConfError** err);
 
 /* free the retval */
 gchar*       gconf_get_string(GConfEngine* conf, const gchar* key,
-                               const gchar* def, /* def is copied when returned, 
-                                                  * and can be NULL to return 
-                                                  * NULL 
-                                                  */
-                               GConfError** err);
-                               
+                              const gchar* def, /* def is copied when returned, 
+                                                 * and can be NULL to return 
+                                                 * NULL 
+                                                 */
+                              GConfError** err);
+
 gboolean     gconf_get_bool  (GConfEngine* conf, const gchar* key,
-                               gboolean def, GConfError** err);
+                              gboolean def, GConfError** err);
 
 /* this one has no default since it would be expensive and make little
    sense; it returns NULL as a default, to indicate unset or error */
@@ -107,19 +107,19 @@ GConfSchema* gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError*
 /* setters return TRUE on success; note that you still have to sync */
 
 gboolean     gconf_set_float   (GConfEngine* conf, const gchar* key,
-                                 gdouble val, GConfError** err);
+                                gdouble val, GConfError** err);
 
 gboolean     gconf_set_int     (GConfEngine* conf, const gchar* key,
-                                 gint val, GConfError** err);
+                                gint val, GConfError** err);
 
 gboolean     gconf_set_string  (GConfEngine* conf, const gchar* key,
-                                 const gchar* val, GConfError** err);
+                                const gchar* val, GConfError** err);
 
 gboolean     gconf_set_bool    (GConfEngine* conf, const gchar* key,
-                                 gboolean val, GConfError** err);
+                                gboolean val, GConfError** err);
 
 gboolean     gconf_set_schema  (GConfEngine* conf, const gchar* key,
-                                 GConfSchema* val, GConfError** err);
+                                GConfSchema* val, GConfError** err);
 
 
 #ifdef __cplusplus
