@@ -686,7 +686,8 @@ g_conf_load_source_path(const gchar* filename)
 
   if (f == NULL)
     {
-      printf("Didn't open file `%s': %s", filename, strerror(errno));
+      fprintf(stderr, 
+              "Didn't open file `%s': %s\n", filename, strerror(errno));
       /* FIXME better error */
       return NULL;
     }

@@ -68,6 +68,7 @@
  */
 
 static void g_conf_main(void);
+static void g_conf_main_quit(void);
 
 static GConfSources* sources = NULL;
 
@@ -142,6 +143,8 @@ gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
 
+void
+gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev);
 
 static PortableServer_ServantBase__epv base_epv = {
   NULL,
@@ -156,7 +159,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_lookup, 
   gconfd_set, 
   gconfd_sync,
-  gconfd_ping
+  gconfd_ping,
+  gconfd_shutdown
 };
 
 static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
@@ -267,6 +271,14 @@ gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
   return getpid();
 }
 
+void
+gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
+{
+  syslog(LOG_INFO, "Shutdown request received; exiting.");
+
+  g_conf_main_quit();
+}
+
 /*
  * Main code
  */
@@ -281,12 +293,33 @@ g_conf_server_load_sources(void)
   gchar** addresses;
   GList* tmp;
   gboolean have_writeable = FALSE;
+  gchar* conffile;
 
-  addresses = g_conf_load_source_path("/cvs/gnome-cvs/gconf/gconf/gconf.path"); /* FIXME sysconfdir/something */
+  conffile = g_strconcat(GCONF_SYSCONFDIR, "/gconf/path", NULL);
+
+  addresses = g_conf_load_source_path(conffile);
+
+  g_free(conffile);
+
+  /* -- Debug only */
+
+  if (addresses == NULL)
+    {
+      conffile = g_strconcat(GCONF_SRCDIR, "/gconf/gconf.path", NULL);
+      addresses = g_conf_load_source_path(conffile);
+      g_free(conffile);
+    }
+
+  /* -- End of Debug Only */
   
   if (addresses == NULL)
     {
+      /* We want to stay alive but do nothing, because otherwise every
+         request would result in another failed gconfd being spawned.  
+      */
+      gchar* empty_addr[] = { NULL };
       syslog(LOG_ERR, "No configuration sources in the source path");
+      sources = g_conf_sources_new(empty_addr);
       return;
     }
   
@@ -298,8 +331,7 @@ g_conf_server_load_sources(void)
 
   if (sources->sources == NULL)
     syslog(LOG_ERR, "No config source addresses successfully resolved, can't load or store config data");
-  
-  
+    
   tmp = sources->sources;
 
   while (tmp != NULL)
@@ -648,6 +680,13 @@ g_conf_main(void)
   g_main_destroy(loop);
 }
 
+static void 
+g_conf_main_quit(void)
+{
+  g_return_if_fail(main_loops != NULL);
+
+  g_main_quit(main_loops->data);
+}
 
 /*
  * The listener table

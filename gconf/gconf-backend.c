@@ -84,13 +84,6 @@ g_conf_address_resource(const gchar* address)
     }
 }
 
-const gchar* 
-g_conf_backend_dir(void)
-{
-  /* FIXME Obviously not permanent... :-) */
-  return "/cvs/gnome-cvs/gconf/backends/.libs/";
-}
-
 gchar*       
 g_conf_backend_file(const gchar* address)
 {
@@ -105,22 +98,36 @@ g_conf_backend_file(const gchar* address)
   if (back == NULL)
     return NULL;
 
-  file = g_strconcat("libgconfbackend-", back, ".so");
+  file = g_strconcat("/libgconfbackend-", back, ".so", NULL);
   
-  retval = g_strconcat(g_conf_backend_dir(), file, NULL);
+  retval = g_strconcat(GCONF_BACKEND_DIR, file, NULL);
 
   g_free(back);
-  g_free(file);
 
-  if (retval != NULL && 
-      g_conf_file_exists(retval))
+  if (g_conf_file_exists(retval))
     {
+      g_free(file);
+
       return retval;
     }
   else
     {
-      if (retval)
-        g_warning("No such file `%s'\n", retval);
+      /* -- debug only */
+
+      g_free(retval);
+      retval = g_strconcat(GCONF_SRCDIR, "/backends/.libs/", file, NULL);
+
+      if (g_conf_file_exists(retval))
+        {
+          g_free(file);
+          return retval;
+        }
+
+      /* -- end debug only */
+
+      g_warning("No such file `%s'\n", retval);
+
+      g_free(file);
       g_free(retval);
       return NULL;
     }

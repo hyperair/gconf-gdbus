@@ -55,7 +55,6 @@ gchar* g_conf_address_backend(const gchar* address);
 /* Get the resource name understood only by the backend */
 gchar* g_conf_address_resource(const gchar* address);
 
-const gchar* g_conf_backend_dir(void);
 gchar*       g_conf_backend_file(const gchar* address);
 
 /* Obtain the GConfBackend for this address, based on the first part of the 

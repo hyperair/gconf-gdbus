@@ -741,3 +741,34 @@ ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id)
   return g_hash_table_lookup(ctable->server_ids, &server_id);
 }
 
+
+/*
+ * Daemon control
+ */
+
+void          
+g_conf_shutdown_daemon(void)
+{
+  CORBA_Environment ev;
+  ConfigServer cs;
+
+  cs = g_conf_get_config_server();
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return;
+    }
+
+  CORBA_exception_init(&ev);
+
+  ConfigServer_shutdown(cs, &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure shutting down config server: %s",
+                CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+    }
+}

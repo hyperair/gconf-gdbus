@@ -19,6 +19,7 @@
 
 #include "gconf.h"
 #include "gconf-orbit.h"
+#include "gconf-internals.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <popt.h>
@@ -40,6 +41,7 @@
 int set_mode = FALSE;
 int get_mode = FALSE;
 char* value_type = NULL;
+int shutdown_gconfd = FALSE;
 
 struct poptOption options[] = {
   {
@@ -58,6 +60,15 @@ struct poptOption options[] = {
     &get_mode,
     0,
     N_("Print the value of a key to standard out."),
+    NULL
+  },
+  { 
+    "shutdown",
+    '\0',
+    POPT_ARG_NONE,
+    &shutdown_gconfd,
+    0,
+    N_("Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."),
     NULL
   },
   { 
@@ -251,6 +262,9 @@ main (int argc, char** argv)
   poptFreeContext(ctx);
   
   g_conf_destroy(conf);
+
+  if (shutdown_gconfd)
+    g_conf_shutdown_daemon();
 
   return 0;
 }

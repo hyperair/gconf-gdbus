@@ -92,6 +92,9 @@ gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 
 gchar**       g_conf_load_source_path(const gchar* filename);
 
+/* shouldn't be used in applications (although implemented in gconf.c) */
+void          g_conf_shutdown_daemon(void);
+
 #endif
 
 
