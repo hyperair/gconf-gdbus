@@ -732,11 +732,7 @@ gconf_main(void)
 
   if (main_loops == NULL)
     {
-#ifdef GCONF_ENABLE_DEBUG
-      gulong timeout_len = 1000*60*1; /* 1 sec * 60 s/min * 1 min */
-#else
-      gulong timeout_len = 1000*60*15; /* 1 sec * 60 s/min * 2 min */
-#endif
+      gulong timeout_len = 1000*60*2; /* 1 sec * 60 s/min * 2 min */
       
       g_assert(timeout_id == 0);
       timeout_id = g_timeout_add (timeout_len,
