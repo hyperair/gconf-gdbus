@@ -84,6 +84,8 @@ struct _Dir {
   xmlDocPtr doc;
   GHashTable* entry_cache; /* store key-value entries */
   GHashTable* subdir_cache; /* store subdirectories */
+  guint dir_mode;
+  guint file_mode;
   guint dirty : 1;
   guint deleted : 1;
 };
@@ -123,12 +125,17 @@ dir_blank(const gchar* key)
   d->dirty = FALSE;
   d->deleted = FALSE;
 
+  d->dir_mode = 0700;
+  d->file_mode = 0600;
+  
   return d;
 }
 
 Dir*
 dir_new(const gchar  *keyname,
-        const gchar  *xml_root_dir)
+        const gchar  *xml_root_dir,
+        guint dir_mode,
+        guint file_mode)
 {
   Dir* d;
   
@@ -138,6 +145,9 @@ dir_new(const gchar  *keyname,
   d->fs_dirname = gconf_concat_key_and_dir(xml_root_dir, keyname);
   d->xml_filename =  g_strconcat(d->fs_dirname, "/%gconf.xml", NULL);
   d->root_dir_len = strlen(xml_root_dir);
+
+  d->dir_mode = dir_mode;
+  d->file_mode = file_mode;
   
   return d;
 }
@@ -148,7 +158,9 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
   Dir* d;
   gchar* fs_dirname;
   gchar* xml_filename;
-
+  guint dir_mode = 0700;
+  guint file_mode = 0600;
+  
   g_return_val_if_fail(gconf_valid_key(key, NULL), NULL);
   
   fs_dirname = gconf_concat_key_and_dir(xml_root_dir, key);
@@ -185,6 +197,11 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
         g_free(xml_filename);
         return NULL;
       }
+    else
+      {
+        dir_mode = mode_t_to_mode(s.st_mode);
+        file_mode &= ~0111; /* turn off search bits */
+      }
   }
 
   d = dir_blank(key);
@@ -194,6 +211,9 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
   d->xml_filename = xml_filename;
   d->root_dir_len = strlen(xml_root_dir);
 
+  d->dir_mode = dir_mode;
+  d->file_mode = file_mode;
+  
   gconf_log(GCL_DEBUG, "loaded dir %s", fs_dirname);
   
   return d;
@@ -226,13 +246,16 @@ dir_destroy(Dir* d)
 
 static gboolean
 create_fs_dir(const gchar* dir, const gchar* xml_filename,
-              guint root_dir_len, GConfError** err);
+              guint root_dir_len,
+              guint dir_mode, guint file_mode,
+              GConfError** err);
 
 gboolean
 dir_ensure_exists (Dir* d,
                    GConfError** err)
 {
   if (!create_fs_dir(d->fs_dirname, d->xml_filename, d->root_dir_len,
+                     d->dir_mode, d->file_mode,
                      err))
     {
 
@@ -314,7 +337,9 @@ dir_sync        (Dir* d, GConfError** err)
           if (!gconf_file_exists(d->fs_dirname))
             {
               if (create_fs_dir(d->fs_dirname, d->xml_filename,
-                                d->root_dir_len, err))
+                                d->root_dir_len,
+                                d->dir_mode, d->file_mode,
+                                err))
                 {
                   if (xmlSaveFile(tmp_filename, d->doc) >= 0)
                     recovered = TRUE;
@@ -843,7 +868,7 @@ dir_load_doc(Dir* d, GConfError** err)
       /* Recreate %gconf.xml to maintain our integrity and be sure
          all_subdirs works */
       /* If we failed to rename, we just give up and truncate the file */
-      fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
+      fd = open(d->xml_filename, O_CREAT | O_WRONLY | O_TRUNC, d->file_mode);
       if (fd >= 0)
         close(fd);
       
@@ -961,7 +986,8 @@ dir_fill_cache_from_doc(Dir* d)
 
 static gboolean
 create_fs_dir(const gchar* dir, const gchar* xml_filename,
-              guint root_dir_len, GConfError** err)
+              guint root_dir_len, guint dir_mode, guint file_mode,
+              GConfError** err)
 {
   g_return_val_if_fail(xml_filename != NULL, FALSE);
   
@@ -990,7 +1016,8 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
           if (xml_filename)
             parent_xml = g_strconcat(parent, "/%gconf.xml", NULL);
           
-          success = create_fs_dir(parent, parent_xml, root_dir_len, err);
+          success = create_fs_dir(parent, parent_xml, root_dir_len,
+                                  dir_mode, file_mode, err);
 
           if (success)
             gconf_log(GCL_DEBUG, "created parent: %s", parent);
@@ -1012,7 +1039,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
 
   gconf_log(GCL_DEBUG, "Making directory %s", dir);
   
-  if (mkdir(dir, 0700) < 0)
+  if (mkdir(dir, dir_mode) < 0)
     {
       if (errno != EEXIST)
         {
@@ -1027,7 +1054,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
     {
       int fd;
       /* don't truncate the file, it may well already exist */
-      fd = open(xml_filename, O_CREAT | O_WRONLY, 0600);
+      fd = open(xml_filename, O_CREAT | O_WRONLY, file_mode);
 
       gconf_log(GCL_DEBUG, "Creating XML file %s", xml_filename);
       
@@ -1089,3 +1116,19 @@ parent_dir(const gchar* dir)
   return parent;
 }
 
+
+/* util */
+guint
+mode_t_to_mode(mode_t orig)
+{
+  /* I don't think this is portable. */
+  guint mode = 0;
+  guint fullmask = S_IRWXG | S_IRWXU | S_IRWXO;
+  
+
+  mode = orig & fullmask;
+  
+  g_return_val_if_fail(mode <= 0777, 0700);
+
+  return mode;
+}

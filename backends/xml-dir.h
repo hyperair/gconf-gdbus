@@ -27,7 +27,9 @@
 
 typedef struct _Dir Dir;
 Dir*           dir_new             (const gchar  *keyname,
-                                    const gchar  *xml_root_dir);
+                                    const gchar  *xml_root_dir,
+                                    guint dir_mode,
+                                    guint file_mode);
 Dir*           dir_load            (const gchar  *key,
                                     const gchar  *xml_root_dir,
                                     GConfError  **err);
@@ -75,5 +77,11 @@ gboolean       dir_sync_pending    (Dir          *d);
 void           dir_mark_deleted    (Dir          *d);
 gboolean       dir_is_deleted      (Dir          *d);
 
+
+/* random utility function */
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+guint mode_t_to_mode(mode_t orig);
 
 #endif

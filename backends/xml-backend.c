@@ -137,9 +137,14 @@ struct _XMLSource {
   gchar* root_dir;
   guint timeout_id;
   GConfLock* lock;
+  guint dir_mode;
+  guint file_mode;
 };
 
-static XMLSource* xs_new       (const gchar* root_dir, GConfLock* lock);
+static XMLSource* xs_new       (const gchar* root_dir,
+                                guint dir_mode,
+                                guint file_mode,
+                                GConfLock* lock);
 static void       xs_destroy   (XMLSource* source);
 
 /*
@@ -285,6 +290,8 @@ resolve_address (const gchar* address, GConfError** err)
   guint len;
   gint flags = 0;
   GConfLock* lock = NULL;
+  guint dir_mode = 0700;
+  guint file_mode = 0600;
   
   root_dir = gconf_address_resource(address);
 
@@ -300,7 +307,7 @@ resolve_address (const gchar* address, GConfError** err)
   if (root_dir[len-1] == '/')
     root_dir[len-1] = '\0';
 
-  if (mkdir(root_dir, 0700) < 0)
+  if (mkdir(root_dir, dir_mode) < 0)
     {
       if (errno != EEXIST)
         {
@@ -309,6 +316,17 @@ resolve_address (const gchar* address, GConfError** err)
                           (gchar*)root_dir, strerror(errno));
           g_free(root_dir);
           return NULL;
+        }
+      else
+        {
+          /* Already exists, base our dir_mode on it */
+          struct stat statbuf;
+          if (stat(root_dir, &statbuf) == 0)
+            {
+              dir_mode = mode_t_to_mode(statbuf.st_mode);
+              /* dir_mode without search bits */
+              file_mode = dir_mode & (~0111); 
+            }
         }
     }
   
@@ -386,7 +404,11 @@ resolve_address (const gchar* address, GConfError** err)
   
   /* Create the new source */
 
-  xsource = xs_new(root_dir, lock);
+  xsource = xs_new(root_dir, dir_mode, file_mode, lock);
+
+  gconf_log(GCL_INFO,
+            _("Directory/file permissions for XML source at root %s are: %o/%o"),
+            root_dir, dir_mode, file_mode);
   
   source = (GConfSource*)xsource;
 
@@ -699,7 +721,7 @@ cleanup_timeout(gpointer data)
 }
 
 static XMLSource*
-xs_new       (const gchar* root_dir, GConfLock* lock)
+xs_new       (const gchar* root_dir, guint dir_mode, guint file_mode, GConfLock* lock)
 {
   XMLSource* xs;
 
@@ -709,13 +731,16 @@ xs_new       (const gchar* root_dir, GConfLock* lock)
 
   xs->root_dir = g_strdup(root_dir);
 
-  xs->cache = cache_new(xs->root_dir);
+  xs->cache = cache_new(xs->root_dir, dir_mode, file_mode);
 
   xs->timeout_id = g_timeout_add(1000*60*5, /* 1 sec * 60 s/min * 5 min */
                                  cleanup_timeout,
                                  xs);
 
   xs->lock = lock;
+
+  xs->dir_mode = dir_mode;
+  xs->file_mode = file_mode;
   
   return xs;
 }

@@ -83,10 +83,14 @@ struct _Cache {
     list.
   */ 
   GSList* deleted;
+  guint dir_mode;
+  guint file_mode;
 };
 
 Cache*
-cache_new (const gchar  *root_dir)
+cache_new (const gchar  *root_dir,
+           guint dir_mode,
+           guint file_mode)
 {
   Cache* cache;
 
@@ -99,6 +103,9 @@ cache_new (const gchar  *root_dir)
 
   cache->deleted = NULL;
 
+  cache->dir_mode = dir_mode;
+  cache->file_mode = file_mode;
+  
   return cache;
 }
 
@@ -431,7 +438,7 @@ cache_lookup     (Cache        *cache,
     {
       gconf_log(GCL_DEBUG, "Creating new dir %s", key);
       
-      dir = dir_new(key, cache->root_dir);
+      dir = dir_new(key, cache->root_dir, cache->dir_mode, cache->file_mode);
 
       if (!dir_ensure_exists(dir, err))
         {

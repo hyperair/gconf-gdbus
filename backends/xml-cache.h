@@ -26,7 +26,9 @@
 
 typedef struct _Cache Cache;
 
-Cache*   cache_new        (const gchar  *root_dir);
+Cache*   cache_new        (const gchar  *root_dir,
+                           guint dir_mode,
+                           guint file_mode);
 void     cache_destroy    (Cache        *cache);
 gboolean cache_sync       (Cache        *cache,
                            GConfError  **err);

@@ -36,102 +36,133 @@ typedef void (*GConfNotifyFunc)(GConfEngine* conf, guint cnxn_id, const gchar* k
   
 /* Returns ID of the notification */
 /* returns 0 on error, 0 is an invalid ID */
-guint        gconf_notify_add(GConfEngine* conf,
-                              const gchar* namespace_section, /* dir or key to listen to */
-                              GConfNotifyFunc func,
-                              gpointer user_data,
-                              GConfError** err);
+guint gconf_notify_add    (GConfEngine      *conf,
+                           /* dir or key to listen to */
+                           const gchar      *namespace_section,
+                           GConfNotifyFunc   func,
+                           gpointer          user_data,
+                           GConfError      **err);
 
-void         gconf_notify_remove  (GConfEngine* conf,
-                                   guint cnxn);
+void  gconf_notify_remove (GConfEngine      *conf,
+                           guint             cnxn);
+
 
 
 /* Low-level interfaces */
-GConfValue*  gconf_get            (GConfEngine* conf, const gchar* key, GConfError** err);
+GConfValue* gconf_get                     (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           GConfError  **err);
 
-GConfValue*  gconf_get_without_default (GConfEngine* conf,
-                                        const gchar* key,
-                                        GConfError** err);
+GConfValue* gconf_get_without_default     (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           GConfError  **err);
 
-GConfValue*  gconf_get_full       (GConfEngine* conf,
-                                   const gchar* key, const gchar* locale,
-                                   gboolean use_schema_default,
-                                   gboolean* value_is_default,
-                                   GConfError** err);
+GConfValue* gconf_get_full                (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           const gchar  *locale,
+                                           gboolean      use_schema_default,
+                                           gboolean     *value_is_default,
+                                           GConfError  **err);
+
 
 /* Locale only matters if you are expecting to get a schema, or if you
    don't know what you are expecting and it might be a schema. Note
    that gconf_get() automatically uses the current locale, which is
    normally what you want. */
-GConfValue*  gconf_get_with_locale(GConfEngine* conf,
-                                   const gchar* key, const gchar* locale,
-                                   GConfError** err);
+GConfValue* gconf_get_with_locale         (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           const gchar  *locale,
+                                           GConfError  **err);
+
 
 /* Get the default value stored in the schema associated with this key */
-GConfValue*  gconf_get_default_from_schema (GConfEngine* conf,
-                                            const gchar* key,
-                                            GConfError** err);
+GConfValue* gconf_get_default_from_schema (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           GConfError  **err);
+gboolean    gconf_set                     (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           GConfValue   *value,
+                                           GConfError  **err);
+gboolean    gconf_unset                   (GConfEngine  *conf,
+                                           const gchar  *key,
+                                           GConfError  **err);
 
-gboolean     gconf_set            (GConfEngine* conf, const gchar* key,
-                                   GConfValue* value, GConfError** err);
-
-gboolean     gconf_unset          (GConfEngine* conf, const gchar* key, GConfError** err);
 
 /*
  * schema_key should have a schema (if key stores a value) or a dir full of schemas
  * (if key stores a directory name)
  */
-gboolean     gconf_associate_schema  (GConfEngine* conf, const gchar* key,
-                                      const gchar* schema_key, GConfError** err);
+gboolean gconf_associate_schema (GConfEngine  *conf,
+                                 const gchar  *key,
+                                 const gchar  *schema_key,
+                                 GConfError  **err);
+GSList*  gconf_all_entries      (GConfEngine  *conf,
+                                 const gchar  *dir,
+                                 GConfError  **err);
+GSList*  gconf_all_dirs         (GConfEngine  *conf,
+                                 const gchar  *dir,
+                                 GConfError  **err);
+void     gconf_suggest_sync     (GConfEngine  *conf,
+                                 GConfError  **err);
+gboolean gconf_dir_exists       (GConfEngine  *conf,
+                                 const gchar  *dir,
+                                 GConfError  **err);
 
-GSList*      gconf_all_entries    (GConfEngine* conf, const gchar* dir, GConfError** err);
-
-GSList*      gconf_all_dirs       (GConfEngine* conf, const gchar* dir, GConfError** err);
-
-void         gconf_suggest_sync   (GConfEngine* conf, GConfError** err);
-
-gboolean     gconf_dir_exists     (GConfEngine* conf, const gchar* dir, GConfError** err);
 
 /* if you pass non-NULL for why_invalid, it gives a user-readable
    explanation of the problem in g_malloc()'d memory
 */
-gboolean     gconf_valid_key      (const gchar* key, gchar** why_invalid);
+gboolean gconf_valid_key          (const gchar  *key,
+                                   gchar       **why_invalid);
+
 
 /* return TRUE if the path "below" would be somewhere below the directory "above" */
-gboolean     gconf_key_is_below   (const gchar* above, const gchar* below);
+gboolean gconf_key_is_below       (const gchar  *above,
+                                   const gchar  *below);
+
 
 /* Returns allocated concatenation of these two */
-gchar*        gconf_concat_key_and_dir(const gchar* dir, const gchar* key);
+gchar*   gconf_concat_key_and_dir (const gchar  *dir,
+                                   const gchar  *key);
+
 
 /* Returns a different string every time (at least, the chances of
    getting a duplicate are like one in a zillion). The key is a
    legal gconf key name (a single element of one) */
-gchar*        gconf_unique_key (void);
+gchar*   gconf_unique_key         (void);
+
 
 /* 
  * Higher-level stuff 
  */
 
 
-gdouble      gconf_get_float (GConfEngine* conf, const gchar* key,
-                              GConfError** err);
+gdouble      gconf_get_float  (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfError     **err);
+gint         gconf_get_int    (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfError     **err);
 
-gint         gconf_get_int   (GConfEngine* conf, const gchar* key,
-                              GConfError** err);
 
 /* free the retval, retval can be NULL for "unset" */
-gchar*       gconf_get_string(GConfEngine* conf, const gchar* key,
-                              GConfError** err);
+gchar*       gconf_get_string (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfError     **err);
+gboolean     gconf_get_bool   (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfError     **err);
 
-gboolean     gconf_get_bool  (GConfEngine* conf, const gchar* key,
-                              GConfError** err);
 
 /* this one has no default since it would be expensive and make little
    sense; it returns NULL as a default, to indicate unset or error */
 /* free the retval */
 /* Note that this returns the schema stored at key, NOT
    the schema associated with the key. */
-GConfSchema* gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err);
+GConfSchema* gconf_get_schema (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfError     **err);
+
 
 /*
    This automatically converts the list to the given list type;
@@ -140,8 +171,11 @@ GConfSchema* gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError*
    in list->data, a list of float contains pointers to allocated
    gdouble (gotta love C!).
 */
-GSList*      gconf_get_list    (GConfEngine* conf, const gchar* key,
-                                GConfValueType list_type, GConfError** err);
+GSList*      gconf_get_list   (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfValueType   list_type,
+                               GConfError     **err);
+
 /*
   The car_retloc and cdr_retloc args should be the address of the appropriate
   type:
@@ -151,39 +185,52 @@ GSList*      gconf_get_list    (GConfEngine* conf, const gchar* key,
   float   gdouble*
   schema  GConfSchema**
  */
-gboolean     gconf_get_pair    (GConfEngine* conf, const gchar* key,
-                                GConfValueType car_type, GConfValueType cdr_type,
-                                gpointer car_retloc, gpointer cdr_retloc,
-                                GConfError** err);
+gboolean     gconf_get_pair   (GConfEngine     *conf,
+                               const gchar     *key,
+                               GConfValueType   car_type,
+                               GConfValueType   cdr_type,
+                               gpointer         car_retloc,
+                               gpointer         cdr_retloc,
+                               GConfError     **err);
+
 
 /* setters return TRUE on success; note that you still should suggest a sync */
+gboolean gconf_set_float  (GConfEngine     *conf,
+                           const gchar     *key,
+                           gdouble          val,
+                           GConfError     **err);
+gboolean gconf_set_int    (GConfEngine     *conf,
+                           const gchar     *key,
+                           gint             val,
+                           GConfError     **err);
+gboolean gconf_set_string (GConfEngine     *conf,
+                           const gchar     *key,
+                           const gchar     *val,
+                           GConfError     **err);
+gboolean gconf_set_bool   (GConfEngine     *conf,
+                           const gchar     *key,
+                           gboolean         val,
+                           GConfError     **err);
+gboolean gconf_set_schema (GConfEngine     *conf,
+                           const gchar     *key,
+                           GConfSchema     *val,
+                           GConfError     **err);
 
-gboolean     gconf_set_float   (GConfEngine* conf, const gchar* key,
-                                gdouble val, GConfError** err);
-
-gboolean     gconf_set_int     (GConfEngine* conf, const gchar* key,
-                                gint val, GConfError** err);
-
-gboolean     gconf_set_string  (GConfEngine* conf, const gchar* key,
-                                const gchar* val, GConfError** err);
-
-gboolean     gconf_set_bool    (GConfEngine* conf, const gchar* key,
-                                gboolean val, GConfError** err);
-
-gboolean     gconf_set_schema  (GConfEngine* conf, const gchar* key,
-                                GConfSchema* val, GConfError** err);
 
 /* List should be the same as the one gconf_get_list() would return */
-gboolean     gconf_set_list    (GConfEngine* conf, const gchar* key,
-                                GConfValueType list_type,
-                                GSList* list,
-                                GConfError** err);
+gboolean gconf_set_list   (GConfEngine     *conf,
+                           const gchar     *key,
+                           GConfValueType   list_type,
+                           GSList          *list,
+                           GConfError     **err);
+gboolean gconf_set_pair   (GConfEngine     *conf,
+                           const gchar     *key,
+                           GConfValueType   car_type,
+                           GConfValueType   cdr_type,
+                           gconstpointer    address_of_car,
+                           gconstpointer    address_of_cdr,
+                           GConfError     **err);
 
-gboolean     gconf_set_pair    (GConfEngine* conf, const gchar* key,
-                                GConfValueType car_type, GConfValueType cdr_type,
-                                gconstpointer address_of_car,
-                                gconstpointer address_of_cdr,
-                                GConfError** err);
 
 
 gboolean     gconf_init        (int argc, char **argv, GConfError** err);
@@ -211,13 +258,11 @@ struct _GConfEnumStringPair {
   const gchar* str;
 };
 
-gboolean       gconf_string_to_enum (GConfEnumStringPair lookup_table[],
-                                     const gchar* str,
-                                     gint* enum_value_retloc);   
-
-const gchar*   gconf_enum_to_string (GConfEnumStringPair lookup_table[],
-                                     gint enum_value);
-
+gboolean     gconf_string_to_enum (GConfEnumStringPair  lookup_table[],
+                                   const gchar         *str,
+                                   gint                *enum_value_retloc);
+const gchar* gconf_enum_to_string (GConfEnumStringPair  lookup_table[],
+                                   gint                 enum_value);
 
 /* No, you can't use this function. Bad application developer. Bad. */
 #ifdef GCONF_ENABLE_INTERNALS
