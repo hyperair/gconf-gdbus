@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-30 08:45+0100\n"
-"PO-Revision-Date: 2004-07-27 17:52+0300\n"
+"POT-Creation-Date: 2004-09-18 12:12+0300\n"
+"PO-Revision-Date: 2004-09-18 16:50+0300\n"
 "Last-Translator: Žygimantas Beručka <uid0@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr "Nepavyko rasti aplanko: %s\n"
 #: backends/gconf-merge-tree.c:95
 #, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
-msgstr "Klaida saugant GConf medį į „%s“: %s\n"
+msgstr "Saugant GConf medį į „%s“ įvyko klaida: %s\n"
 
 #: backends/gconf-merge-tree.c:121
 #, c-format
@@ -52,17 +52,17 @@ msgstr ""
 
 #: backends/markup-backend.c:163
 msgid "Unloading text markup backend module."
-msgstr ""
+msgstr "Iškeliamas teksto žymėjimo posistemės modulis."
 
 #: backends/markup-backend.c:226 backends/xml-backend.c:289
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Adresu „%s“ nepavyko rasti pagrindinio XML katalogo"
+msgstr "„%s“ nepavyko rasti pagrindinio XML aplanko"
 
 #: backends/markup-backend.c:282 backends/xml-backend.c:344
 #, c-format
 msgid "Could not make directory `%s': %s"
-msgstr "Nepavyko sukurti katalogo „%s“: %s"
+msgstr "Nepavyko sukurti aplanko „%s“: %s"
 
 #: backends/markup-backend.c:382 backends/xml-backend.c:443
 #, c-format
@@ -149,7 +149,7 @@ msgstr "Nesuprantama „%s“ reikšmė (laukta sveiko skaičiaus)"
 #: backends/markup-tree.c:1989 gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
-msgstr "Sveikas skaičius „%s“ yra per didelis arba per mažas"
+msgstr "Sveikasis skaičius „%s“ yra per didelis arba per mažas"
 
 #: backends/markup-tree.c:2021 gconf/gconf-value.c:185
 #, c-format
@@ -181,9 +181,9 @@ msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "Netinkamas ltype „%s“ esantis <%s>"
 
 #: backends/markup-tree.c:2238
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
-msgstr "Invalid list_type „%s“ esantis <%s>"
+msgstr "Netinkamas pirmo elemento tipas „%s“ esantis <%s>"
 
 #: backends/markup-tree.c:2252
 #, c-format
@@ -303,7 +303,7 @@ msgstr "Nepavyko pasiekti „%s“: %s"
 #: backends/xml-dir.c:181
 #, c-format
 msgid "XML filename `%s' is a directory"
-msgstr "XML byla „%s“ yra katalogas"
+msgstr "XML byla „%s“ yra aplankas"
 
 #: backends/xml-dir.c:416 backends/xml-dir.c:425
 #, c-format
@@ -318,7 +318,7 @@ msgstr "Nepavyko įrašyti bylos „%s“: %s"
 #: backends/xml-dir.c:484
 #, c-format
 msgid "Failed to set mode on `%s': %s"
-msgstr "Nepavyko nustatyti bylos „%s“ teisių: %s"
+msgstr "Nepavyko nustatyti režimo bylai „%s“: %s"
 
 #: backends/xml-dir.c:494
 #, c-format
@@ -711,7 +711,7 @@ msgstr "Negalima vyktyti operacijos be nustatymų serverio"
 
 #: gconf/gconf-error.c:39
 msgid "Failed to get a lock"
-msgstr "Nepavyko užrezervuoti"
+msgstr "Nepavyko rezervuoti"
 
 #: gconf/gconf-error.c:40
 msgid "No database available to save your configuration"
@@ -725,7 +725,7 @@ msgstr "Rakte „%s“ nėra „/“ "
 #: gconf/gconf-internals.c:199
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
-msgstr "Netinkama UTF-8 simbolių seka tarp „%s“"
+msgstr "„%s“ yra netinkama UTF-8 simbolių seka"
 
 #: gconf/gconf-internals.c:258
 msgid "Couldn't interpret CORBA value for list element"
@@ -734,7 +734,7 @@ msgstr "Nepavyko atpažinti CORBA reikšmės skirtos sąrašo elementui"
 #: gconf/gconf-internals.c:260
 #, c-format
 msgid "Incorrect type for list element in %s"
-msgstr "Netinkamas tipas sąrašo elemente %s"
+msgstr "Netinkamas sąrašo tipas elemente %s"
 
 #: gconf/gconf-internals.c:273
 msgid "Received list from gconfd with a bad list type"
@@ -763,7 +763,7 @@ msgstr "Klaidingas UTF-8 schemos savininko aprašyme"
 #: gconf/gconf-internals.c:838
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
-msgstr "Nepavyko atidaryti bylos „%s“ kelio: %s\n"
+msgstr "Nepavyko atidaryti kelio bylos „%s“: %s\n"
 
 #: gconf/gconf-internals.c:887
 #, c-format
@@ -794,7 +794,7 @@ msgstr "Tikėtasi %s sąrašo, gautas %s sąrašas"
 #: gconf/gconf-internals.c:1524
 #, c-format
 msgid "Expected pair, got %s"
-msgstr "Tikėtasi poros, gauta %s"
+msgstr "Tikėtasi poros, bet gauta %s"
 
 #: gconf/gconf-internals.c:1538
 #, c-format
@@ -867,7 +867,7 @@ msgstr "Nepavyko paversti IOR „%s“ į objekto aprašymą"
 #: gconf/gconf-internals.c:2547
 #, c-format
 msgid "couldn't create directory `%s': %s"
-msgstr "nepavyko sukurti katalogo „%s“: %s"
+msgstr "nepavyko sukurti aplanko „%s“: %s"
 
 #: gconf/gconf-internals.c:2606
 #, c-format
@@ -897,7 +897,7 @@ msgstr "Nepavyko išvalyti bylos „%s“: %s"
 #: gconf/gconf-internals.c:2713
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
-msgstr "Nepavyko pašalinti rezervavimo katalogo „%s“: %s"
+msgstr "Nepavyko pašalinti rezervavimo aplanko „%s“: %s"
 
 #: gconf/gconf-internals.c:2755
 #, c-format
@@ -912,7 +912,7 @@ msgstr "Nepavyko pasiekti %s: %s"
 #: gconf/gconf-internals.c:2916
 #, c-format
 msgid "Server ping error: %s"
-msgstr "Serverio testavimo klaida: %s"
+msgstr "Serverio ping'o klaida: %s"
 
 #: gconf/gconf-internals.c:2941
 #, c-format
@@ -1076,17 +1076,15 @@ msgstr "Schema aprašo poros tipą, tačiau ji neaprašo car/cdr elementų tipo"
 #: gconf/gconf-sources.c:368
 #, c-format
 msgid "Failed to load source \"%s\": %s"
-msgstr "Nepavyko paleisti pradinės bylos „%s“: %s"
+msgstr "Nepavyko įkelti šaltinio „%s“: %s"
 
 #: gconf/gconf-sources.c:408
-#, fuzzy, c-format
 msgid ""
 "Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr ""
 "Atpažintas adresas „%s“ skirtas rašomam nustatymų šaltiniui pozicijoje %d"
 
 #: gconf/gconf-sources.c:414
-#, fuzzy, c-format
 msgid ""
 "Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr ""
@@ -1419,16 +1417,16 @@ msgstr "Nepavyko sukurti %s: %s"
 #: gconf/gconfd.c:700
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
-msgstr "Kataloge %s yra problemų, gconfd negali jo naudoti"
+msgstr "Aplanke %s yra problemų, gconfd negali jo naudoti"
 
 #: gconf/gconfd.c:729
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
 "s"
 msgstr ""
-"Nepavyko įrašyti duomenų į tunelį fd %d, todėl klientinės programos darbas "
-"gali sutrikti: %s"
+"Nepavyko įrašyti duomenų į konvejerio bylos aprašą %d, todėl klientinė programa gali "
+"pakibti: %s"
 
 #: gconf/gconfd.c:739
 #, c-format
@@ -1614,33 +1612,30 @@ msgid "Print all subdirectories in a directory."
 msgstr "Parodyti visus kataloge esančius žemesnio lygio katalogus."
 
 #: gconf/gconftool.c:161
-#, fuzzy
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr ""
-"Išvesti į standartinį išvedimą XML aprašymą visų įrašų saugomų dabartiniame "
+"Išvesti į standartinę išvestį XML aprašus visų įrašų, saugomų dabartiniame "
 "kataloge bei žemiau esančiuose kataloguose."
 
 #: gconf/gconftool.c:170
-#, fuzzy
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
 msgstr ""
-"Perskaityti iš nurodytos bylos XML reikšmių aprašymą ir jas nustatyti "
-"nurodytame kataloge"
+"Įkelti iš nurodytos bylos XML reikšmių aprašymą ir nustatyti jas "
+"nurodytame kataloge."
 
 #: gconf/gconftool.c:179
 msgid "Unload a set of values described in an XML file."
 msgstr "Iškrauti reikšmių, aprašytų XML byloje, rinkinį."
 
 #: gconf/gconftool.c:188
-#, fuzzy
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr ""
-"Parodyti visus katalogus ir įrašus saugomus nurodytame kataloge bei žemiau "
-"esančiuose kataloguose."
+"Parodyti visus aplankus ir įrašus saugomus nurodytame bei giliau "
+"esančiuose aplankuose."
 
 #: gconf/gconftool.c:197
 msgid "Return 0 if the directory exists, 2 if it does not."
