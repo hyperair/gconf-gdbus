@@ -1,3 +1,13 @@
+2000-09-23  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c: Implement add/remove client methods; 
+	still need to log these to disk, and on restart tell the
+	logged clients to drop their caches.
+
+	* gconf/GConf.idl: Add methods on ConfigServer to maintain
+	a list of active clients; this allows us to invalidate client
+	caches on daemon restart.
+
 2000-09-21  Havoc Pennington  <hp@pobox.com>
 
 	* configure.in: remove intl/Makefile

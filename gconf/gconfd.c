@@ -86,6 +86,10 @@ static void gconf_main_quit(void);
 static void logfile_save (void);
 static void logfile_read (void);
 
+static void add_client (const ConfigListener client);
+static void remove_client (const ConfigListener client);
+static GSList *list_clients (void);
+
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
 */
@@ -118,6 +122,16 @@ gconfd_get_database(PortableServer_Servant servant,
                     const CORBA_char* address,
                     CORBA_Environment* ev);
 
+static void
+gconfd_add_client (PortableServer_Servant servant,
+                   const ConfigListener client,
+                   CORBA_Environment *ev);
+
+static void
+gconfd_remove_client (PortableServer_Servant servant,
+                      const ConfigListener client,
+                      CORBA_Environment *ev);
+
 static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
 
@@ -134,6 +148,8 @@ static POA_ConfigServer__epv server_epv = {
   NULL,
   gconfd_get_default_database,
   gconfd_get_database,
+  gconfd_add_client,
+  gconfd_remove_client,
   gconfd_ping,
   gconfd_shutdown
 };
@@ -171,6 +187,26 @@ gconfd_get_database(PortableServer_Servant servant,
     return CORBA_OBJECT_NIL;
   else
     return CORBA_OBJECT_NIL;
+}
+
+static void
+gconfd_add_client (PortableServer_Servant servant,
+                   const ConfigListener client,
+                   CORBA_Environment *ev)
+{
+  
+
+
+}
+
+static void
+gconfd_remove_client (PortableServer_Servant servant,
+                      const ConfigListener client,
+                      CORBA_Environment *ev)
+{
+
+
+
 }
 
 static CORBA_long
@@ -1492,3 +1528,81 @@ gconfd_logfile_change_listener (GConfDatabase *db,
   return FALSE;
 }
 
+/*
+ * Client handling
+ */
+
+static GHashTable *client_table = NULL;
+
+static void
+add_client (const ConfigListener client)
+{  
+  if (client_table == NULL)
+    client_table = g_hash_table_new ((GHashFunc) g_CORBA_Object_hash,
+                                     (GCompareFunc) g_CORBA_Object_equal);
+
+  if (g_hash_table_lookup (client_table, client))
+    {
+      gconf_log (GCL_WARNING, _("Some client added itself to the GConf server twice."));
+      return;
+    }
+  else
+    {
+      CORBA_Environment ev;
+      ConfigListener copy;
+      
+      CORBA_exception_init (&ev);
+      copy = CORBA_Object_duplicate (client, &ev);
+      g_hash_table_insert (client_table, copy, copy);
+      CORBA_exception_free (&ev);
+    }
+}
+
+static void
+remove_client (const ConfigListener client)
+{
+  ConfigListener old_client;
+  CORBA_Environment ev;
+  
+  if (client_table == NULL)
+    goto notfound;
+  
+  old_client = g_hash_table_lookup (client_table, 
+                                    client);
+
+  if (old_client == NULL)
+    goto notfound;
+
+  g_hash_table_remove (client_table,
+                       old_client);
+
+  CORBA_exception_init (&ev);
+  CORBA_Object_release (old_client, &ev);
+  CORBA_exception_free (&ev);
+
+  return;
+  
+ notfound:
+  gconf_log (GCL_WARNING, _("Some client removed itself from the GConf server when it hadn't been added."));  
+}
+
+static void
+hash_listify_func(gpointer key, gpointer value, gpointer user_data)
+{
+  GSList** list_p = user_data;
+
+  *list_p = g_slist_prepend(*list_p, value);
+}
+
+static GSList*
+list_clients (void)
+{
+  GSList *clients = NULL;
+
+  if (client_table == NULL)
+    return NULL;
+
+  g_hash_table_foreach (client_table, hash_listify_func, &clients);
+
+  return clients;
+}

@@ -192,7 +192,6 @@ interface ConfigDatabase {
   void sync()
     raises (ConfigException);
 
-  // Internal use
   void clear_cache();
   
   void synchronous_sync()
@@ -207,7 +206,9 @@ interface ConfigServer {
   // invalid_context returned on failure.
   ConfigDatabase get_database (in string address);
 
-  // Internal use
+  void add_client (in ConfigListener client);
+  void remove_client (in ConfigListener client);
+  
   long ping();
 
   void shutdown();
