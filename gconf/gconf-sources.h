@@ -72,7 +72,7 @@ void          gconf_sources_destroy     (GConfSources* sources);
 
 GConfValue*   gconf_sources_query_value (GConfSources* sources, 
                                          const gchar* key,
-                                         const gchar* locale,
+                                         const gchar** locales,
                                          GConfError** err);
 
 void          gconf_sources_set_value   (GConfSources* sources,
@@ -82,10 +82,12 @@ void          gconf_sources_set_value   (GConfSources* sources,
 
 void          gconf_sources_unset_value (GConfSources* sources,
                                          const gchar* key,
+                                         const gchar* locale,
                                          GConfError** err);
 
 GSList*       gconf_sources_all_entries (GConfSources* sources,
                                          const gchar* dir,
+                                         const gchar** locales,
                                          GConfError** err);
 
 GSList*       gconf_sources_all_dirs    (GConfSources* sources,

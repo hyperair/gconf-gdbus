@@ -53,7 +53,7 @@
 #endif
 
 /* This makes hash table safer when debugging */
-#if 0
+#ifndef GCONF_ENABLE_DEBUG
 #define safe_g_hash_table_insert g_hash_table_insert
 #else
 static void
@@ -186,7 +186,7 @@ static void        dir_set_value   (Dir* d,
                                     GConfError** err);
 static GConfValue* dir_get_value   (Dir* d,
                                     const gchar* relative_key,
-                                    const gchar* locale,
+                                    const gchar** locales,
                                     gchar** schema_name,
                                     GConfError** err);
 static GConfMetaInfo* dir_get_metainfo(Dir* d,
@@ -194,8 +194,9 @@ static GConfMetaInfo* dir_get_metainfo(Dir* d,
                                        GConfError** err);
 static void        dir_unset_value (Dir* d,
                                     const gchar* relative_key,
+                                    const gchar* locale,
                                     GConfError** err);
-static GSList*     dir_all_entries (Dir* d, GConfError** err);
+static GSList*     dir_all_entries (Dir* d, const gchar** locales, GConfError** err);
 static GSList*     dir_all_subdirs (Dir* d, GConfError** err);
 static void        dir_set_schema  (Dir* d,
                                     const gchar* relative_key,
@@ -284,7 +285,7 @@ static gboolean     writeable        (GConfSource* source,
 
 static GConfValue*   query_value     (GConfSource* source,
                                       const gchar* key,
-                                      const gchar* locale,
+                                      const gchar** locales,
                                       gchar** schema_name,
                                       GConfError** err);
 
@@ -299,6 +300,7 @@ static void          set_value       (GConfSource* source,
 
 static GSList*       all_entries    (GConfSource* source,
                                      const gchar* dir,
+                                     const gchar** locales,
                                      GConfError** err);
 
 static GSList*       all_subdirs     (GConfSource* source,
@@ -307,6 +309,7 @@ static GSList*       all_subdirs     (GConfSource* source,
 
 static void          unset_value     (GConfSource* source,
                                       const gchar* key,
+                                      const gchar* locale,
                                       GConfError** err);
 
 static gboolean      dir_exists      (GConfSource *source,
@@ -429,7 +432,7 @@ resolve_address (const gchar* address, GConfError** err)
 static GConfValue* 
 query_value (GConfSource* source,
              const gchar* key,
-             const gchar* locale,
+             const gchar** locales,
              gchar** schema_name,
              GConfError** err)
 {
@@ -452,7 +455,7 @@ query_value (GConfSource* source,
   
       relative_key = gconf_key_key(key);
 
-      return dir_get_value(dir, relative_key, locale, schema_name, err);
+      return dir_get_value(dir, relative_key, locales, schema_name, err);
     }
   else
     return NULL;
@@ -520,6 +523,7 @@ set_value (GConfSource* source, const gchar* key, GConfValue* value,
 static GSList*             
 all_entries    (GConfSource* source,
                 const gchar* key,
+                const gchar** locales,
                 GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
@@ -530,7 +534,7 @@ all_entries    (GConfSource* source,
   if (dir == NULL)
     return NULL;
   else
-    return dir_all_entries(dir, err);
+    return dir_all_entries(dir, locales, err);
 }
 
 static GSList*
@@ -552,6 +556,7 @@ all_subdirs     (GConfSource* source,
 static void          
 unset_value     (GConfSource* source,
                  const gchar* key,
+                 const gchar* locale,
                  GConfError** err)
 {
   XMLSource* xs = (XMLSource*)source;
@@ -574,7 +579,7 @@ unset_value     (GConfSource* source,
   
       relative_key = gconf_key_key(key);
 
-      dir_unset_value(dir, relative_key, err);
+      dir_unset_value(dir, relative_key, locale, err);
     }
 }
 
@@ -1112,7 +1117,7 @@ static void   entry_destroy (Entry* e);
 static void   entry_sync    (Entry* e);
  /* syncs Entry from node */
 static void   entry_fill    (Entry* e, const gchar* name);
-static GConfValue* entry_value (Entry* e, const gchar* locale);
+static GConfValue* entry_value (Entry* e, const gchar** locales);
 
 /* xml manipulation */
 
@@ -1469,7 +1474,7 @@ dir_set_value   (Dir* d, const gchar* relative_key,
 static GConfValue*
 dir_get_value   (Dir* d,
                  const gchar* relative_key,
-                 const gchar* locale,
+                 const gchar** locales,
                  gchar** schema_name,
                  GConfError** err)
 {
@@ -1503,7 +1508,7 @@ dir_get_value   (Dir* d,
           e->schema_name)
         *schema_name = g_strdup(e->schema_name);
 
-      val = entry_value(e, locale);
+      val = entry_value(e, locales);
 
       if (val != NULL)
         return gconf_value_copy(val);      
@@ -1549,7 +1554,8 @@ dir_get_metainfo(Dir* d, const gchar* relative_key, GConfError** err)
 }
 
 static void
-dir_unset_value (Dir* d, const gchar* relative_key, GConfError** err)
+dir_unset_value (Dir* d, const gchar* relative_key,
+                 const gchar* locale, GConfError** err)
 {
   Entry* e;
   
@@ -1610,7 +1616,7 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 }
 
 static GSList*
-dir_all_entries (Dir* d, GConfError** err)
+dir_all_entries (Dir* d, const gchar** locales, GConfError** err)
 {
   ListifyData ld;
   
@@ -2184,7 +2190,7 @@ entry_fill    (Entry* e, const gchar* name)
 }
 
 static GConfValue*
-entry_value (Entry* e, const gchar* locale)
+entry_value (Entry* e, const gchar** locales)
 {
   const gchar* sl;
   
@@ -2193,6 +2199,7 @@ entry_value (Entry* e, const gchar* locale)
   if (e->value == NULL)
     return NULL;
 
+#if 0
   /* only schemas have locales */
   if (e->value->type != GCONF_VALUE_SCHEMA)
     return e->value;
@@ -2229,7 +2236,7 @@ entry_value (Entry* e, const gchar* locale)
         }
       /* else fall back to the currently-loaded schema */
     }
-
+#endif
   return e->value;
 }
 

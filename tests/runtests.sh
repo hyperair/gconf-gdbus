@@ -2,11 +2,33 @@
 
 export GCONFTOOL=`pwd`/../gconf/gconftool
 LOGFILE=runtests.log
-TESTS='testgconf testlisteners testschemas'
+POTENTIAL_TESTS='testgconf testlisteners testschemas'
+
+for I in $POTENTIAL_TESTS
+do
+    GOOD=yes
+    test -f $I || {
+        echo "WARNING: test program $I not found, not running"
+        GOOD=no
+    }
+
+    if test x$GOOD = xyes; then
+        test -x $I || {
+            echo "WARNING: test program $I is not executable, not running"
+            GOOD=no
+        }
+    fi
+    
+    if test x$GOOD = xyes; then
+        TESTS="$TESTS$I "
+    fi
+done
 
 echo "Logging to $LOGFILE"
 
 echo "Log file for GConf test programs." > $LOGFILE
+echo "" >> $LOGFILE
+echo "Tests are: "$TESTS >> $LOGFILE
 echo "" >> $LOGFILE
 
 for I in $TESTS

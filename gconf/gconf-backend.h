@@ -75,7 +75,7 @@ struct _GConfBackendVTable {
      if schema_name is NULL, it isn't filled */
   GConfValue*         (* query_value)     (GConfSource* source, 
                                            const gchar* key,
-                                           const gchar* locale,
+                                           const gchar** locales,
                                            gchar** schema_name,
                                            GConfError** err);
   
@@ -91,6 +91,7 @@ struct _GConfBackendVTable {
   /* Returns list of GConfEntry */
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir,
+                                           const gchar** locales,
                                            GConfError** err);
 
   /* Returns list of allocated strings, relative names */
@@ -100,6 +101,7 @@ struct _GConfBackendVTable {
 
   void                (* unset_value)     (GConfSource* source,
                                            const gchar* key,
+                                           const gchar* locale,
                                            GConfError** err);
 
   gboolean            (* dir_exists)      (GConfSource* source,

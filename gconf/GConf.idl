@@ -106,10 +106,13 @@ interface ConfigServer {
   
   void set(in Context ctx, in string key, in ConfigValue value)
     raises (ConfigException);
-
+  
   void unset(in Context ctx, in string key)
     raises (ConfigException);
 
+  void unset_with_locale(in Context ctx, in string key, in string locale)
+    raises (ConfigException);
+  
   boolean dir_exists(in Context ctx, in string dir)
     raises (ConfigException);
 
@@ -117,7 +120,8 @@ interface ConfigServer {
     raises (ConfigException);
 
   void all_entries(in Context ctx,
-                   in string dir, 
+                   in string dir,
+                   in string locale,
                    out KeyList keys,
                    out ValueList values)
     raises (ConfigException);

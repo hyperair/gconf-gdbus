@@ -26,6 +26,8 @@ gconfinclude_HEADERS =     \
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
 gconfd_SOURCES = \
+	gconf-locale.h  	\
+	gconf-locale.c  	\
 	gconfd.c	\
 	gconf-sources.c
 
@@ -51,8 +53,6 @@ libgconf_la_SOURCES = \
 	gconf-backend.c		\
 	gconf-error.c		\
 	gconf-listeners.c	\
-	gconf-locale.h  	\
-	gconf-locale.c  	\
 	gconf-schema.c		\
 	gconf-value.c		\
 	gconf.c			\

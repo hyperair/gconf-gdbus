@@ -659,7 +659,8 @@ gconf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
     }
   
   ConfigServer_all_entries(cs, priv->context,
-                           (gchar*)dir, 
+                           (gchar*)dir,
+                           (gchar*)gconf_current_locale(),
                            &keys, &values,
                            &ev);
 

@@ -111,7 +111,7 @@ gconf_source_destroy (GConfSource* source)
 static GConfValue*
 gconf_source_query_value      (GConfSource* source,
                                const gchar* key,
-                               const gchar* locale,
+                               const gchar** locales,
                                gchar** schema_name,
                                GConfError** err)
 {
@@ -124,7 +124,7 @@ gconf_source_query_value      (GConfSource* source,
   if ( SOURCE_READABLE(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->query_value)(source, key, locale, schema_name, err);
+      return (*source->backend->vtable->query_value)(source, key, locales, schema_name, err);
     }
   else
     return NULL;
@@ -157,6 +157,7 @@ gconf_source_set_value        (GConfSource* source,
 static gboolean
 gconf_source_unset_value      (GConfSource* source,
                                const gchar* key,
+                               const gchar* locale,
                                GConfError** err)
 {
   g_return_val_if_fail(source != NULL, FALSE);
@@ -166,7 +167,7 @@ gconf_source_unset_value      (GConfSource* source,
   if ( SOURCE_WRITEABLE(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
-      (*source->backend->vtable->unset_value)(source, key, err);
+      (*source->backend->vtable->unset_value)(source, key, locale, err);
       return TRUE;
     }
   else
@@ -176,6 +177,7 @@ gconf_source_unset_value      (GConfSource* source,
 static GSList*      
 gconf_source_all_entries         (GConfSource* source,
                                   const gchar* dir,
+                                  const gchar** locales,
                                   GConfError** err)
 {
   g_return_val_if_fail(source != NULL, NULL);
@@ -185,7 +187,7 @@ gconf_source_all_entries         (GConfSource* source,
   if ( SOURCE_READABLE(source, dir, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, NULL);
-      return (*source->backend->vtable->all_entries)(source, dir, err);
+      return (*source->backend->vtable->all_entries)(source, dir, locales, err);
     }
   else
     return NULL;
@@ -340,7 +342,7 @@ gconf_sources_destroy(GConfSources* sources)
 GConfValue*   
 gconf_sources_query_value (GConfSources* sources, 
                            const gchar* key,
-                           const gchar* locale,
+                           const gchar** locales,
                            GConfError** err)
 {
   GList* tmp;
@@ -364,7 +366,7 @@ gconf_sources_query_value (GConfSources* sources,
       source = tmp->data;
       
       /* we only want the first schema name we find */
-      val = gconf_source_query_value(source, key, locale,
+      val = gconf_source_query_value(source, key, locales,
                                      schema_name ? NULL : &schema_name, &error);
 
       if (error != NULL)
@@ -409,7 +411,7 @@ gconf_sources_query_value (GConfSources* sources,
     {
       GConfValue* val;
 
-      val = gconf_sources_query_value(sources, schema_name, locale, &error);
+      val = gconf_sources_query_value(sources, schema_name, locales, &error);
 
       if (error != NULL)
         {
@@ -513,6 +515,7 @@ gconf_sources_set_value   (GConfSources* sources,
 void
 gconf_sources_unset_value   (GConfSources* sources,
                              const gchar* key,
+                             const gchar* locale,
                              GConfError** err)
 {
   /* We unset in every layer we can write to... */
@@ -526,7 +529,7 @@ gconf_sources_unset_value   (GConfSources* sources,
     {
       GConfSource* src = tmp->data;
 
-      if (gconf_source_unset_value(src, key, &error))
+      if (gconf_source_unset_value(src, key, locale, &error))
         {
           /* it was writeable */
 
@@ -697,6 +700,7 @@ hash_destroy_pointers_func(gpointer key, gpointer value, gpointer user_data)
 GSList*       
 gconf_sources_all_entries   (GConfSources* sources,
                              const gchar* dir,
+                             const gchar** locales,
                              GConfError** err)
 {
   GList* tmp;
@@ -713,7 +717,7 @@ gconf_sources_all_entries   (GConfSources* sources,
   /* Only one GConfSource, just return its list of entries */
   if (sources->sources->next == NULL)
     {
-      return gconf_source_all_entries(sources->sources->data, dir, err);
+      return gconf_source_all_entries(sources->sources->data, dir, locales, err);
     }
 
   /* 2 or more sources in the list, use a hash to merge them */
@@ -731,7 +735,7 @@ gconf_sources_all_entries   (GConfSources* sources,
       GConfError* error = NULL;
       
       src   = tmp->data;
-      pairs = gconf_source_all_entries(src, dir, &error);
+      pairs = gconf_source_all_entries(src, dir, locales, &error);
       iter  = pairs;
       
       /* On error, set error and bail */

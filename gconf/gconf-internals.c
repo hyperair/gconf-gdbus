@@ -947,48 +947,10 @@ gconf_string_to_gulong(const gchar* str)
   return retval;
 }
 
-/* START OF CUT-AND-PASTE */
-/* The following is (partly) taken from the gettext package.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.  */
-
-static const gchar *
-guess_category_value (const gchar *categoryname)
-{
-  const gchar *retval;
-
-  /* The highest priority value is the `LANGUAGE' environment
-     variable.  This is a GNU extension.  */
-  retval = getenv ("LANGUAGE");
-  if (retval != NULL && retval[0] != '\0')
-    return retval;
-
-  /* `LANGUAGE' is not set.  So we have to proceed with the POSIX
-     methods of looking to `LC_ALL', `LC_xxx', and `LANG'.  On some
-     systems this can be done by the `setlocale' function itself.  */
-
-  /* Setting of LC_ALL overwrites all other.  */
-  retval = getenv ("LC_ALL");  
-  if (retval != NULL && retval[0] != '\0')
-    return retval;
-
-  /* Next comes the name of the desired category.  */
-  retval = getenv (categoryname);
-  if (retval != NULL && retval[0] != '\0')
-    return retval;
-
-  /* Last possibility is the LANG environment variable.  */
-  retval = getenv ("LANG");
-  if (retval != NULL && retval[0] != '\0')
-    return retval;
-
-  return NULL;
-}
-/* END OF CUT-AND-PASTE */
-
 const gchar*
 gconf_current_locale(void)
 {
-  return guess_category_value("LC_MESSAGES");
+  return setlocale(LC_MESSAGES, NULL);
 }
 
 /*
@@ -1047,7 +1009,14 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
       break;
     }
 
-  syslog(syslog_pri, msg);
-
+#ifndef GCONF_ENABLE_DEBUG
+  if (pri != GCL_DEBUG)
+    {
+#endif
+      syslog(syslog_pri, msg);
+#ifndef GCONF_ENABLE_DEBUG
+    }
+#endif
+      
   g_free(msg);
 }

@@ -1,3 +1,49 @@
+1999-11-11  Havoc Pennington  <hp@pobox.com>
+
+	* tests/runtests.sh: Enhance to detect missing tests.
+
+	* gconf/gconf-internals.c (gconf_log): don't log DEBUG level stuff 
+	if built without GCONF_ENABLE_DEBUG
+
+	* backends/xml-backend.c (safe_g_hash_table_insert): Same, use
+	GCONF_ENABLE_DEBUG
+	Add locales stuff throughout this file, but do nothing with it for
+	now.
+
+	* gconf/gconfd.c (safe_g_hash_table_insert): Make this dependent
+	on GCONF_ENABLE_DEBUG setting.
+
+	* gconf/gconf-sources.c (gconf_sources_query_value): fix locale
+	(gconf_sources_unset_value): locale
+	(gconf_sources_all_entries): locales
+
+	* gconf/gconfd.c (context_query_value): Use locale list
+	(context_unset): locale argument
+	(context_all_entries): locale argument
+	(gconfd_unset_with_locale): locale
+
+	* gconf/gconf-sources.c (gconf_source_query_value): Pass an array
+	of locales to look for
+	(gconf_source_all_entries): ditto
+	(gconf_source_unset_value): pass locale to unset
+
+	* gconf/gconf-backend.h: Add locale args to the backend functions
+	that need it
+
+	* gconf/gconf-internals.c (gconf_current_locale): Use setlocale()
+	again, not guess_category_value from gnome-i18n
+
+1999-11-10  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/Makefile.am (gconfd_SOURCES): Move the locale stuff here;
+	decided not to use it in backends, so it can be in gconfd not the
+	library.
+
+	* gconf/gconfd.c (one_hour_timeout): Expire old locale cache stuff
+	(locale_cache_lookup): New function to look stuff up in the locale
+	cache. 
+	(main): free the locale cache on exit
+
 1999-11-10  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-backend.c (free_childs): function to free children

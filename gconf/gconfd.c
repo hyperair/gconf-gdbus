@@ -32,6 +32,7 @@
 #include "gconf-orbit.h"
 #include "gconf-sources.h"
 #include "gconf-listeners.h"
+#include "gconf-locale.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -66,7 +67,7 @@
 #endif
 
 /* This makes hash table safer when debugging */
-#if 0
+#ifndef GCONF_ENABLE_DEBUG
 #define safe_g_hash_table_insert g_hash_table_insert
 #else
 static void
@@ -77,7 +78,7 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
   if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
     {
       gconf_log(GCL_WARNING, "Hash key `%s' is already in the table!",
-                 (gchar*)key);
+                (gchar*) key);
       return;
     }
   else
@@ -96,6 +97,10 @@ static gboolean gconf_set_exception(GConfError** err, CORBA_Environment* ev);
 
 static void gconf_main(void);
 static void gconf_main_quit(void);
+
+static GConfLocaleList* locale_cache_lookup(const gchar* locale);
+static void             locale_cache_expire(void);
+static void             locale_cache_drop  (void);
 
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
@@ -127,19 +132,21 @@ static void          context_remove_listener(GConfContext* ctx,
 
 static GConfValue*   context_query_value(GConfContext* ctx,
                                          const gchar* key,
-                                         const gchar* locale,
+                                         const gchar** locales,
                                          GConfError** err);
 
 static void          context_set(GConfContext* ctx, const gchar* key,
                                  GConfValue* value, ConfigValue* cvalue,
                                  GConfError** err);
 static void          context_unset(GConfContext* ctx, const gchar* key,
+                                   const gchar* locale,
                                    GConfError** err);
 static gboolean      context_dir_exists(GConfContext* ctx, const gchar* dir,
                                         GConfError** err);
 static void          context_remove_dir(GConfContext* ctx, const gchar* dir,
                                         GConfError** err);
 static GSList*       context_all_entries(GConfContext* ctx, const gchar* dir,
+                                         const gchar** locales,
                                          GConfError** err);
 static GSList*       context_all_dirs(GConfContext* ctx, const gchar* dir,
                                       GConfError** err);
@@ -201,6 +208,13 @@ gconfd_unset(PortableServer_Servant servant,
              CORBA_char * key, 
              CORBA_Environment *ev);
 
+static void 
+gconfd_unset_with_locale(PortableServer_Servant servant,
+                         ConfigServer_Context ctx,
+                         CORBA_char * key,
+                         CORBA_char * locale,
+                         CORBA_Environment *ev);
+
 static CORBA_boolean
 gconfd_dir_exists(PortableServer_Servant servant,
                   ConfigServer_Context ctx,
@@ -216,7 +230,8 @@ gconfd_remove_dir(PortableServer_Servant servant,
 static void 
 gconfd_all_entries (PortableServer_Servant servant,
                     ConfigServer_Context ctx,
-                    CORBA_char * dir, 
+                    CORBA_char * dir,
+                    CORBA_char * locale,
                     ConfigServer_KeyList ** keys, 
                     ConfigServer_ValueList ** values, CORBA_Environment * ev);
 
@@ -258,6 +273,7 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_lookup_with_locale, 
   gconfd_set,
   gconfd_unset,
+  gconfd_unset_with_locale,
   gconfd_dir_exists,
   gconfd_remove_dir,
   gconfd_all_entries,
@@ -364,14 +380,19 @@ gconfd_lookup_with_locale(PortableServer_Servant servant, ConfigServer_Context c
   GConfValue* val;
   GConfContext* gcc;
   GConfError* error = NULL;
+  GConfLocaleList* locale_list;
   
   gcc = lookup_context(ctx, &error);
 
   if (gconf_set_exception(&error, ev))
     return invalid_corba_value();
-  
-  val = context_query_value(gcc, key, locale, &error);
 
+  locale_list = locale_cache_lookup(locale);
+  
+  val = context_query_value(gcc, key, locale_list->list, &error);
+
+  gconf_locale_list_unref(locale_list);
+  
   if (val != NULL)
     {
       ConfigValue* cval = corba_value_from_gconf_value(val);
@@ -428,10 +449,11 @@ gconfd_set(PortableServer_Servant servant,
 }
 
 static void 
-gconfd_unset(PortableServer_Servant servant,
-             ConfigServer_Context ctx,
-             CORBA_char * key, 
-             CORBA_Environment *ev)
+gconfd_unset_with_locale(PortableServer_Servant servant,
+                         ConfigServer_Context ctx,
+                         CORBA_char * key,
+                         CORBA_char * locale,
+                         CORBA_Environment *ev)
 {
   GConfContext* gcc;
   GConfError* error = NULL;
@@ -441,9 +463,19 @@ gconfd_unset(PortableServer_Servant servant,
   if (gconf_set_exception(&error, ev))
     return;
   
-  context_unset(gcc, key, &error);
+  context_unset(gcc, key, locale, &error);
 
   gconf_set_exception(&error, ev);
+}
+
+static void 
+gconfd_unset(PortableServer_Servant servant,
+             ConfigServer_Context ctx,
+             CORBA_char * key, 
+             CORBA_Environment *ev)
+{
+  /* This is a cheat, since CORBA_char* isn't normally NULL */
+  gconfd_unset_with_locale(servant, ctx, key, NULL, ev);
 }
 
 static CORBA_boolean
@@ -493,7 +525,8 @@ gconfd_remove_dir(PortableServer_Servant servant,
 static void 
 gconfd_all_entries (PortableServer_Servant servant,
                     ConfigServer_Context ctx,
-                    CORBA_char * dir, 
+                    CORBA_char * dir,
+                    CORBA_char * locale,
                     ConfigServer_KeyList ** keys, 
                     ConfigServer_ValueList ** values,
                     CORBA_Environment * ev)
@@ -504,16 +537,21 @@ gconfd_all_entries (PortableServer_Servant servant,
   guint i;
   GConfContext* gcc;
   GConfError* error = NULL;
+  GConfLocaleList* locale_list;
   
   gcc = lookup_context(ctx, &error);
 
   if (gconf_set_exception(&error, ev))
     return;
+
+  locale_list = locale_cache_lookup(locale);
   
   if (gcc != NULL)
-    pairs = context_all_entries(gcc, dir, &error);
+    pairs = context_all_entries(gcc, dir, locale_list->list, &error);
   else
     pairs = NULL;
+
+  gconf_locale_list_unref(locale_list);
   
   n = g_slist_length(pairs);
 
@@ -933,8 +971,8 @@ main(int argc, char** argv)
 
   if (!nodaemon)
     {
-      /* Following all Stevens' rules for daemons, unless the GCONFD_NO_DAEMON env variable
-         is set to 1 */
+      /* Following all Stevens' rules for daemons, unless the
+         GCONFD_NO_DAEMON env variable is set to 1 */
       
       switch (fork())
         {
@@ -1053,7 +1091,8 @@ main(int argc, char** argv)
   /* Write IOR to a file (temporary hack, name server will be used eventually */
   if (!gconf_server_write_info_file(ior))
     {
-      gconf_log(GCL_ERR, _("Failed to write info file - maybe another gconfd is running. Exiting."));
+      gconf_log(GCL_ERR,
+                _("Failed to write info file - maybe another gconfd is running. Exiting."));
       return 1;
     }
 
@@ -1067,11 +1106,11 @@ main(int argc, char** argv)
     {
       if (write(launcher_fd, "g", 1) != 1)
         gconf_log(GCL_ERR, _("Failed to notify spawning parent of server liveness: %s"),
-                   strerror(errno));
+                  strerror(errno));
 
       if (close(launcher_fd) < 0)
         gconf_log(GCL_ERR, _("Failed to close pipe to spawning parent: %s"), 
-                   strerror(errno));
+                  strerror(errno));
     }
 
   gconf_main();
@@ -1080,7 +1119,9 @@ main(int argc, char** argv)
 
   shutdown_contexts();
 
-  gconf_log(GCL_INFO, _("Exiting"));
+  locale_cache_drop();
+  
+  gconf_log(GCL_INFO, _("Exiting normally"));
   
   g_free(logname);
   
@@ -1097,7 +1138,11 @@ static guint timeout_id = 0;
 static gboolean
 one_hour_timeout(gpointer data)
 {
+  /* shrink unused context objects */
   sleep_old_contexts();
+
+  /* expire old locale cache entries */
+  locale_cache_expire();
   
   return TRUE;
 }
@@ -1451,7 +1496,7 @@ context_notify_listeners(GConfContext* ctx,
 static GConfValue*
 context_query_value(GConfContext* ctx,
                     const gchar* key,
-                    const gchar* locale,
+                    const gchar** locales,
                     GConfError** err)
 {
   GConfValue* val;
@@ -1461,7 +1506,7 @@ context_query_value(GConfContext* ctx,
   
   ctx->last_access = time(NULL);
   
-  val = gconf_sources_query_value(ctx->sources, key, locale, err);
+  val = gconf_sources_query_value(ctx->sources, key, locales, err);
 
   if (err && *err != NULL)
     {
@@ -1501,6 +1546,7 @@ context_set(GConfContext* ctx,
 static void
 context_unset(GConfContext* ctx,
               const gchar* key,
+              const gchar* locale,
               GConfError** err)
 {
   ConfigValue* val;
@@ -1512,7 +1558,7 @@ context_unset(GConfContext* ctx,
   
   gconf_log(GCL_DEBUG, "Received request to unset key `%s'", key);
 
-  gconf_sources_unset_value(ctx->sources, key, err);
+  gconf_sources_unset_value(ctx->sources, key, locale, err);
 
   if (err && *err != NULL)
     {
@@ -1583,6 +1629,7 @@ context_remove_dir(GConfContext* ctx,
 
 static GSList*
 context_all_entries(GConfContext* ctx, const gchar* dir,
+                    const gchar** locales,
                     GConfError** err)
 {
   GSList* entries;
@@ -1592,7 +1639,7 @@ context_all_entries(GConfContext* ctx, const gchar* dir,
   
   ctx->last_access = time(NULL);
   
-  entries = gconf_sources_all_entries(ctx->sources, dir, err);
+  entries = gconf_sources_all_entries(ctx->sources, dir, locales, err);
 
   if (err && *err != NULL)
     {
@@ -2002,5 +2049,43 @@ gconf_set_exception(GConfError** error, CORBA_Environment* ev)
       *error = NULL;
       
       return TRUE;
+    }
+}
+
+/*
+ * Locale hash
+ */
+
+static GConfLocaleCache* locale_cache = NULL;
+
+static GConfLocaleList*
+locale_cache_lookup(const gchar* locale)
+{
+  GConfLocaleList* locale_list;
+  
+  if (locale_cache == NULL)
+    locale_cache = gconf_locale_cache_new();
+
+  locale_list = gconf_locale_cache_get_list(locale_cache, locale);
+
+  g_assert(locale_list != NULL);
+
+  return locale_list;
+}
+
+static void
+locale_cache_expire(void)
+{
+  if (locale_cache != NULL)
+    gconf_locale_cache_expire(locale_cache, 60 * 30); /* 60 sec * 30 min */
+}
+
+static void
+locale_cache_drop(void)
+{
+  if (locale_cache != NULL)
+    {
+      gconf_locale_cache_destroy(locale_cache);
+      locale_cache = NULL;
     }
 }
