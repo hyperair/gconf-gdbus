@@ -793,8 +793,6 @@ g_conf_get_config_server(gboolean start_if_not_found)
       int fds[2];
       int status;
 
-      printf("spawning gconfd from this client...\n");
-
       if (pipe(fds) < 0)
         {
           g_conf_set_error(G_CONF_NO_SERVER, _("Failed to create pipe to server: %s"),
@@ -827,8 +825,6 @@ g_conf_get_config_server(gboolean start_if_not_found)
        
               close(fds[1]);
               
-              /* Return error to parent, but parent is currently lame
-                 and doesn't check. */
               _exit(1);
             }
         }

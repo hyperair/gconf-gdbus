@@ -92,10 +92,67 @@ static scm_smobfuns gconf_funcs = {
   mark_gconf, 
   free_gconf, 
   print_gconf, 
-  0 // means we can never be equal? (FIXME gconfs should be able to be equal?) 
+  0 /* means we can never be equal? */
 };
 
-//// GConf routines
+/*
+ * Assorted utility stuff
+ */
+
+SCM
+g_conf_value_to_scm(GConfValue* val)
+{
+  SCM retval = SCM_EOL;
+
+  if (val == NULL)
+    return SCM_EOL;
+  
+  switch (val->type)
+    {
+    case G_CONF_VALUE_INVALID:
+      /* EOL */
+      break;
+    case G_CONF_VALUE_STRING:
+      retval = gh_str02scm(g_conf_value_string(val));
+      break;
+    case G_CONF_VALUE_INT:
+      retval = gh_int2scm(g_conf_value_int(val));
+      break;
+    case G_CONF_VALUE_FLOAT:
+      retval = gh_double2scm(g_conf_value_float(val));
+      break;
+    case G_CONF_VALUE_BOOL:
+      retval = gh_bool2scm(g_conf_value_bool(val));
+      break;
+    case G_CONF_VALUE_SCHEMA:
+      /* FIXME this is more complicated, we need a smob or something */
+      break;
+    case G_CONF_VALUE_LIST:
+      /* FIXME This is complicated too... */
+      break;
+    case G_CONF_VALUE_PAIR:
+      retval = gh_cons(g_conf_value_to_scm(g_conf_value_car(val)),
+                       g_conf_value_to_scm(g_conf_value_cdr(val)));
+      break;
+    default:
+      g_warning("Unhandled type in %s", __FUNCTION__);
+      break;
+    }
+
+  return retval;
+}
+
+GConfValue*
+g_conf_value_new_from_scm(SCM obj)
+{
+
+
+  return NULL;
+}
+
+/*
+ * GConf routines
+ */
 
 GCONF_PROC(gconfp,"gconf?",1,0,0,(SCM conf))
 {
@@ -114,8 +171,39 @@ GCONF_PROC(make_gconf,"gconf-default",0,0,0,())
 
 GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
 {
+  char* str;
+  GConfValue* val;
+  SCM retval;
   
-  return SCM_BOOL_F;
+  SCM_ASSERT(GCONF_P(obj), obj, SCM_ARG1, "gconf-get");
+  SCM_ASSERT(gh_string_p(keyname), keyname, SCM_ARG2, "gconf-get");
+
+  gh_defer_ints();
+  
+  str = gh_scm2newstr(keyname, NULL);
+  
+  val = g_conf_get(SCM_TO_GCONF(obj), str);
+
+  free(str);
+
+  if (val == NULL &&
+      g_conf_errno() != G_CONF_SUCCESS)
+    {
+      printf("Failed: %s\n", g_conf_error());
+      retval = SCM_EOL;
+    }
+  else
+    {
+      /* NULL val is OK */
+      retval = g_conf_value_to_scm(val);
+      
+      if (val)
+        g_conf_value_destroy(val);
+    }
+      
+  gh_allow_ints();
+
+  return retval;
 }
 
 void

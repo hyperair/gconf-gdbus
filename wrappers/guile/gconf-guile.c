@@ -26,6 +26,8 @@
 static void
 real_main(void* closure, int argc, char* argv[])
 {
+  g_conf_init_orb(&argc, argv);
+  g_conf_init("gconf-guile");
   g_conf_init_scm();
 
   gh_eval_str("(set-repl-prompt! \"gconf> \")");

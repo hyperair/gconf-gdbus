@@ -74,8 +74,8 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 
   if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
     {
-      g_warning("Hash key `%s' is already in the table!",
-                (gchar*)key);
+      g_conf_log(GCL_DEBUG, "Hash key `%s' is already in the table!",
+                 (gchar*)key);
       return;
     }
   else
