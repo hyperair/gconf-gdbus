@@ -622,9 +622,9 @@ gconf_main(void)
 #endif
       
       g_assert(timeout_id == 0);
-      timeout_id = g_timeout_add(timeout_len,
-                                 half_hour_timeout,
-                                 NULL);
+      timeout_id = g_timeout_add (timeout_len,
+                                  half_hour_timeout,
+                                  NULL);
 
     }
   
@@ -1086,7 +1086,7 @@ logfile_save (void)
                                               saveme);
       
       tmp_list = g_list_next (tmp_list);
-    }  
+    }
   
   /* Now try saving the string to a temporary file */
   tmpfile = g_strconcat (logfile, ".tmp", NULL);
@@ -1251,12 +1251,19 @@ parse_listener_entry (GHashTable *entries,
   connection_id = strtoul (p, &end, 10);
   if (errno != 0)
     {
-      gconf_log (GCL_WARNING,
-                 _("Failed to parse connection ID in saved state file"));
+      gconf_log (GCL_DEBUG,
+                 "Failed to parse connection ID in saved state file");
       
       return TRUE;
     }
 
+  if (connection_id == 0)
+    {
+      gconf_log (GCL_DEBUG,
+                 "Connection ID 0 in saved state file is not valid");
+      return TRUE;
+    }
+  
   p = end;
 
   while (*p && isspace (*p))
@@ -1267,8 +1274,8 @@ parse_listener_entry (GHashTable *entries,
   gconf_unquote_string_inplace (p, &end, &err);
   if (err != NULL)
     {
-      gconf_log (GCL_WARNING,
-                 _("Failed to unquote config source address from saved state file: %s"),
+      gconf_log (GCL_DEBUG,
+                 "Failed to unquote config source address from saved state file: %s",
                  err->message);
 
       g_error_free (err);
@@ -1287,8 +1294,8 @@ parse_listener_entry (GHashTable *entries,
   gconf_unquote_string_inplace (p, &end, &err);
   if (err != NULL)
     {
-      gconf_log (GCL_WARNING,
-                 _("Failed to unquote listener location from saved state file: %s"),
+      gconf_log (GCL_DEBUG,
+                 "Failed to unquote listener location from saved state file: %s",
                  err->message);
 
       g_error_free (err);
@@ -1307,8 +1314,8 @@ parse_listener_entry (GHashTable *entries,
   gconf_unquote_string_inplace (p, &end, &err);
   if (err != NULL)
     {
-      gconf_log (GCL_WARNING,
-                 _("Failed to unquote IOR from saved state file: %s"),
+      gconf_log (GCL_DEBUG,
+                 "Failed to unquote IOR from saved state file: %s",
                  err->message);
       
       g_error_free (err);
@@ -1324,6 +1331,18 @@ parse_listener_entry (GHashTable *entries,
   lle->address = address;
   lle->ior = ior;
   lle->location = location;
+
+  if (*(lle->address) == '\0' ||
+      *(lle->ior) == '\0' ||
+      *(lle->location) == '\0')
+    {
+      gconf_log (GCL_DEBUG,
+                 "Saved state file listener entry didn't contain all the fields; ignoring.");
+
+      g_free (lle);
+
+      return TRUE;
+    }
   
   old = g_hash_table_lookup (entries, lle);
 
@@ -1331,8 +1350,8 @@ parse_listener_entry (GHashTable *entries,
     {
       if (add)
         {
-          gconf_log (GCL_WARNING,
-                     _("Saved state file records the same listener added twice; ignoring the second instance"));
+          gconf_log (GCL_DEBUG,
+                     "Saved state file records the same listener added twice; ignoring the second instance");
           goto quit;
         }
       else
@@ -1352,8 +1371,8 @@ parse_listener_entry (GHashTable *entries,
         }
       else
         {
-          gconf_log (GCL_WARNING,
-                     _("Saved state file had a removal of a listener that wasn't added; ignoring the removal."));
+          gconf_log (GCL_DEBUG,
+                     "Saved state file had a removal of a listener that wasn't added; ignoring the removal.");
           goto quit;
         }
     }
@@ -1399,8 +1418,8 @@ parse_client_entry (GHashTable *clients,
   gconf_unquote_string_inplace (p, &end, &err);
   if (err != NULL)
     {
-      gconf_log (GCL_WARNING,
-                 _("Failed to unquote IOR from saved state file: %s"),
+      gconf_log (GCL_DEBUG,
+                 "Failed to unquote IOR from saved state file: %s",
                  err->message);
       
       g_error_free (err);
@@ -1417,8 +1436,8 @@ parse_client_entry (GHashTable *clients,
     {
       if (add)
         {
-          gconf_log (GCL_WARNING,
-                     _("Saved state file records the same client added twice; ignoring the second instance"));
+          gconf_log (GCL_DEBUG,
+                     "Saved state file records the same client added twice; ignoring the second instance");
           goto quit;
         }
       else
@@ -1438,8 +1457,8 @@ parse_client_entry (GHashTable *clients,
         }
       else
         {
-          gconf_log (GCL_WARNING,
-                     _("Saved state file had a removal of a client that wasn't added; ignoring the removal."));
+          gconf_log (GCL_DEBUG,
+                     "Saved state file had a removal of a client that wasn't added; ignoring the removal.");
           goto quit;
         }
     }
@@ -1721,8 +1740,8 @@ logfile_read (void)
         {
           if (!parse_client_entry (clients, line))
             {
-              gconf_log (GCL_WARNING,
-                         _("Didn't understand line in saved state file: '%s'"), 
+              gconf_log (GCL_DEBUG,
+                         "Didn't understand line in saved state file: '%s'", 
                          line);
               g_free (line);
               line = NULL;
@@ -1823,12 +1842,12 @@ gconfd_logfile_change_listener (GConfDatabase *db,
     gconf_set_error (err,
                      GCONF_ERROR_FAILED,
                      _("Failed to log addition of listener to gconfd logfile; won't be able to re-add the listener if gconfd exits or shuts down (%s)"),
-                     strerror (errno));
+                     g_strerror (errno));
   else
     gconf_set_error (err,
                      GCONF_ERROR_FAILED,
                      _("Failed to log removal of listener to gconfd logfile; might erroneously re-add the listener if gconfd exits or shuts down (%s)"),
-                     strerror (errno));
+                     g_strerror (errno));
 
   g_free (quoted_db_name);
   g_free (quoted_ior);

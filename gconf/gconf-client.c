@@ -476,7 +476,8 @@ foreach_setup_overlap(gpointer key, gpointer value, gpointer user_data)
   client = od->client;
 
   /* if we have found the first (well there is only one anyway) directory
-   * that includes us that has a notify handler */
+   * that includes us that has a notify handler
+   */
 #ifdef GCONF_ENABLE_DEBUG
   if (dir->notify_id != 0 &&
       gconf_key_is_below(dir->name, od->dirname))
@@ -495,9 +496,9 @@ foreach_setup_overlap(gpointer key, gpointer value, gpointer user_data)
    * FIXME: this is a race, from now on we can miss notifies, it is
    * not an incredible amount of time so this is not a showstopper */
   else if (dir->notify_id != 0 &&
-	   gconf_key_is_below(od->dirname, dir->name))
+           gconf_key_is_below (od->dirname, dir->name))
     {
-      gconf_engine_notify_remove(client->engine, dir->notify_id);
+      gconf_engine_notify_remove (client->engine, dir->notify_id);
       dir->notify_id = 0;
     }
 }
@@ -528,24 +529,25 @@ gconf_client_add_dir     (GConfClient* client,
 
   g_return_if_fail(gconf_valid_key(dirname, NULL));
   
-  d = g_hash_table_lookup(client->dir_hash, dirname);
+  d = g_hash_table_lookup (client->dir_hash, dirname);
 
   if (d == NULL)
     {
       Dir *overlap_dir;
 
-      overlap_dir = setup_overlaps(client, dirname);
+      overlap_dir = setup_overlaps (client, dirname);
 
       /* only if there is no directory that includes us
-       * already add a notify */
+       * already add a notify
+       */
       if (overlap_dir == NULL)
         {
 
-          notify_id = gconf_engine_notify_add(client->engine,
-                                       dirname,
-                                       notify_from_server_callback,
-                                       client,
-                                       &error);
+          notify_id = gconf_engine_notify_add (client->engine,
+                                               dirname,
+                                               notify_from_server_callback,
+                                               client,
+                                               &error);
       
           /* We got a notify ID or we got an error, not both */
           g_return_if_fail( (notify_id != 0 && error == NULL) ||
@@ -556,11 +558,11 @@ gconf_client_add_dir     (GConfClient* client,
             return;
 
           g_assert(error == NULL);
-	}
+        }
       else
-	{
-	  notify_id = 0;
-	}
+        {
+          notify_id = 0;
+        }
       
       d = dir_new(dirname, notify_id);
 
@@ -612,9 +614,9 @@ foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
           g_return_if_fail( (dir->notify_id != 0 && ad->error == NULL) ||
 		            (dir->notify_id == 0 && ad->error != NULL) );
 
-	  /* if error is returned, then we'll just ignore
-	   * things until the end */
-	}
+          /* if error is returned, then we'll just ignore
+           * things until the end */
+        }
     }
 }
 
@@ -689,10 +691,10 @@ gconf_client_notify_add(GConfClient* client,
   if (client->listeners == NULL)
     client->listeners = gconf_listeners_new();
   
-  cnxn_id = gconf_listeners_add(client->listeners,
-                                namespace_section,
-                                listener_new(func, destroy_notify, user_data),
-                                (GFreeFunc)listener_destroy);
+  cnxn_id = gconf_listeners_add (client->listeners,
+                                 namespace_section,
+                                 listener_new (func, destroy_notify, user_data),
+                                 (GFreeFunc)listener_destroy);
 
   return cnxn_id;
 }

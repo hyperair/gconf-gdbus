@@ -1,5 +1,12 @@
 2000-10-06  Havoc Pennington  <hp@pobox.com>
 
+	* wrappers/gtk/gconf-client.c: indentation/formatting
+
+	* gconf/gconfd.c (parse_listener_entry): extra paranoia error
+	check. Also, make log messages level DEBUG, not WARNING.
+
+2000-10-06  Havoc Pennington  <hp@pobox.com>
+
 	* configure.in: check for flockfile.
 	Check for BDB, but don't make it fatal; do an AM_CONDITIONAL and
 	don't build the BDB backend if it's not found.
