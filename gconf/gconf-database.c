@@ -861,7 +861,7 @@ client_alive_predicate (const gchar* location,
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
-      gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_existant(), assuming stale listener %u",
+      gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_existent(), assuming stale listener %u",
                  cnxn_id);
       
       CORBA_exception_free (&ev);

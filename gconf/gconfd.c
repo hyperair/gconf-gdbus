@@ -2242,15 +2242,14 @@ drop_old_clients (void)
         {
           ConfigListener cl = tmp->data;
           CORBA_boolean result;
-          
-          ConfigListener_ping (cl, &ev);
 
           result = CORBA_Object_non_existent (cl, &ev);
           
           if (ev._major != CORBA_NO_EXCEPTION)
             {
-              gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_existant(), assuming stale listener");
+              gconf_log (GCL_WARNING, "Exception from CORBA_Object_non_exist3nt(), assuming stale listener");
               CORBA_exception_free (&ev);
+              CORBA_exception_init (&ev);
               result = TRUE;
             }
 
@@ -2265,6 +2264,8 @@ drop_old_clients (void)
         }
 
       g_slist_free (clients);
+
+      CORBA_exception_free (&ev);
     }
 }
 
