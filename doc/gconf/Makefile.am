@@ -9,8 +9,14 @@ DOC_MAIN_SGML_FILE=gconf.sgml
 
 TARGET_DIR=$(HTML_DIR)/$(DOC_MODULE)
 
+# not sure this will work...
+LDFLAGS=$(ORBIT_LIBS) $(GNOME_LIBS) $(top_builddir)/wrappers/gtk/.libs/libgconf-gtk.a $(top_builddir)/gconf/.libs/libgconf.a
+
+CFLAGS=$(GMODULE_CFLAGS) $(ORBIT_CFLAGS) $(GNOME_CFLAGS) -I$(top_srcdir)/wrappers/gtk -I$(top_srcdir)
+
 scan:
-	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(top_srcdir)/gconf
+	env CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" gtkdoc-scanobj --module=$(DOC_MODULE)
+	gtkdoc-scan --module=$(DOC_MODULE) --source-dir=$(top_srcdir)
 
 templates: scan
 	gtkdoc-mktmpl --module=$(DOC_MODULE)

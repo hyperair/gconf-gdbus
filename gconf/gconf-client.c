@@ -350,8 +350,9 @@ gconf_client_new_with_engine (GConfEngine* engine)
   
   client = gtk_type_new (gconf_client_get_type ());
 
-  /* take over a ref count */
   client->engine = engine;
+
+  gconf_engine_ref(client->engine);
   
   return client;
 }

@@ -37,6 +37,7 @@ An opaque data type representing a set of changes to be made.
 A change set can contain "set" and "unset" operations.
 </para>
 
+
 <!-- ##### USER_FUNCTION GConfChangeSetForeachFunc ##### -->
 <para>
 The type of a function passed to gconf_change_set_foreach(). 
@@ -73,7 +74,7 @@ occurred will have been removed from the set. If any error occurs,
 @conf: a #GConfEngine.
 @cs: a #GConfChangeSet.
 @remove_committed: whether to remove successfully-committed changes from the set
-@err:  the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> if an error occurs.
 
 
@@ -179,8 +180,8 @@ creating a #GConfValue.
 </para>
 
 @cs: a #GConfChangeSet.
-@key: the key to set. 
-@val: the new value of @key. 
+@key: the key to set.
+@val: the new value of @key.
 
 
 <!-- ##### FUNCTION gconf_change_set_set_int ##### -->
@@ -190,8 +191,8 @@ creating a #GConfValue.
 </para>
 
 @cs: a #GConfChangeSet.
-@key: the key to set. 
-@val: the new value of @key. 
+@key: the key to set.
+@val: the new value of @key.
 
 
 <!-- ##### FUNCTION gconf_change_set_set_string ##### -->
@@ -201,8 +202,8 @@ creating a #GConfValue.
 </para>
 
 @cs: a #GConfChangeSet.
-@key: the key to set. 
-@val: the new value of @key. 
+@key: the key to set.
+@val: the new value of @key.
 
 
 <!-- ##### FUNCTION gconf_change_set_set_bool ##### -->
@@ -212,8 +213,8 @@ creating a #GConfValue.
 </para>
 
 @cs: a #GConfChangeSet.
-@key: the key to set. 
-@val: the new value of @key. 
+@key: the key to set.
+@val: the new value of @key.
 
 
 <!-- ##### FUNCTION gconf_change_set_set_schema ##### -->
@@ -224,5 +225,31 @@ unmodified.
 </para>
 
 @cs: a #GConfChangeSet.
-@key: the key to set. 
-@val: the new value of @key. 
+@key: the key to set.
+@val: the new value of @key.
+
+
+<!-- ##### FUNCTION gconf_change_set_set_list ##### -->
+<para>
+
+</para>
+
+@cs: 
+@key: 
+@list_type: 
+@list: 
+
+
+<!-- ##### FUNCTION gconf_change_set_set_pair ##### -->
+<para>
+
+</para>
+
+@cs: 
+@key: 
+@car_type: 
+@cdr_type: 
+@address_of_car: 
+@address_of_cdr: 
+
+

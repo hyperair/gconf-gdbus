@@ -1,5 +1,25 @@
 1999-11-15  Havoc Pennington  <hp@pobox.com>
 
+	* doc/gconf/tmpl/gconf-client.sgml: write GConfClient docs.
+
+	* wrappers/gtk/gconf-client.c (gconf_client_new_with_engine):
+	change this to increment the #GConfEngine reference count.
+
+	* doc/gconf/gconf.sgml: Add GConfClient entity
+
+	* doc/gconf/gconf-sections.txt: Add GConfClient stuff, add
+	set_list and set_pair for GConfChangeSet
+
+	* doc/gconf/gconf.types: New file gtk-doc requires
+
+	* doc/gconf/Makefile.am (scan): Scan GConfClient as well. 
+	Uses a bad, probably nonportable hack, but this stuff isn't 
+	built by default anyway.
+
+	* wrappers/Makefile.am: Build GConfClient if we have GNOME
+
+1999-11-15  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf.c (gconf_get): Fix it to use the current
 	locale as documented.
 

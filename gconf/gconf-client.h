@@ -144,8 +144,7 @@ GtkType           gconf_client_get_type        (void);
 /* use the default engine */
 GConfClient*      gconf_client_new             (void);
 
-/* specify an engine; you pass a reference count to the engine,
-   i.e. the client now owns your reference. */
+/* refcount on engine is incremented, you still own your ref */
 GConfClient*      gconf_client_new_with_engine (GConfEngine* engine);
 
 /* Add a directory to monitor and emit the value_changed signal and
