@@ -1,6 +1,6 @@
 
 /* GConf
- * Copyright (C) 1999 Red Hat Inc.
+ * Copyright (C) 1999, 2000 Red Hat Inc.
  * Developed by Havoc Pennington
  *
  * This library is free software; you can redistribute it and/or
