@@ -704,7 +704,7 @@ recurse_subdir_list(GConfEngine* conf, GSList* subdirs, const gchar* parent, gui
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
-      gchar* full = gconf_concat_key_and_dir(parent, s);
+      gchar* full = gconf_concat_dir_and_key(parent, s);
       
       printf("%s%s:\n", whitespace, s);
       
@@ -2204,7 +2204,7 @@ do_break_directory(GConfEngine* conf, const gchar** args)
       while (i < 10)
         {
           keys[i] = gconf_unique_key();
-          full_keys[i] = gconf_concat_key_and_dir(*args, keys[i]);
+          full_keys[i] = gconf_concat_dir_and_key(*args, keys[i]);
 
           ++i;
         }

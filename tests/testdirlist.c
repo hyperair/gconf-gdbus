@@ -80,7 +80,7 @@ check_dir_listing(GConfEngine* conf)
 
       tmp = g_strconcat(*iter, "/woo", NULL);
       
-      full_key = gconf_concat_key_and_dir("/testing/foo", tmp);
+      full_key = gconf_concat_dir_and_key("/testing/foo", tmp);
       g_free(tmp);
       
       gconf_engine_set_int(conf, full_key, 10, &error);
@@ -147,7 +147,7 @@ check_dir_listing(GConfEngine* conf)
       iter = keys_in_foo;
       while (*iter)
         {
-          gchar *full = gconf_concat_key_and_dir ("/testing/foo", *iter);
+          gchar *full = gconf_concat_dir_and_key ("/testing/foo", *iter);
           if (strcmp(iter2->data, full) == 0)
             found[i] = TRUE;
 
@@ -181,7 +181,7 @@ check_dir_listing(GConfEngine* conf)
 
       tmp = g_strconcat(*iter, "/woo", NULL);
 
-      full_key = gconf_concat_key_and_dir("/testing/foo", tmp);
+      full_key = gconf_concat_dir_and_key("/testing/foo", tmp);
       g_free(tmp);
       
       gconf_engine_unset(conf, full_key, &error);

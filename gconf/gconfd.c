@@ -856,8 +856,8 @@ gconf_set_exception(GError** error,
 static void
 get_log_names (gchar **logdir, gchar **logfile)
 {
-  *logdir = gconf_concat_key_and_dir (g_get_home_dir (), ".gconfd");
-  *logfile = gconf_concat_key_and_dir (*logdir, "saved_state");
+  *logdir = gconf_concat_dir_and_key (g_get_home_dir (), ".gconfd");
+  *logfile = gconf_concat_dir_and_key (*logdir, "saved_state");
 }
 
 static FILE* append_handle = NULL;

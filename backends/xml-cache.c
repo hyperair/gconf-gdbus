@@ -278,7 +278,7 @@ cache_delete_recursive(Cache* cache, Dir* d, GSList** hit_list, GError** err)
       Dir* subd;
       gchar* fullkey;
 
-      fullkey = gconf_concat_key_and_dir(dir_get_name(d), (gchar*)tmp->data);
+      fullkey = gconf_concat_dir_and_key(dir_get_name(d), (gchar*)tmp->data);
       
       subd = cache_lookup(cache, fullkey, FALSE, err);
 

@@ -346,7 +346,7 @@ resolve_address (const gchar* address, GError** err)
       {
         gchar* lockdir;
 
-        lockdir = gconf_concat_key_and_dir(root_dir, "%gconf-xml-backend.lock");
+        lockdir = gconf_concat_dir_and_key(root_dir, "%gconf-xml-backend.lock");
         
         lock = gconf_get_lock(lockdir, err);
 

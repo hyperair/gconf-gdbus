@@ -919,7 +919,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
    or dir and subdir.
 */
 gchar*        
-gconf_concat_key_and_dir(const gchar* dir, const gchar* key)
+gconf_concat_dir_and_key(const gchar* dir, const gchar* key)
 {
   guint dirlen;
   guint keylen;

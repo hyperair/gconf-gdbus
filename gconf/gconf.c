@@ -1069,7 +1069,7 @@ qualify_entries (GSList *entries, const char *dir)
       GConfEntry *entry = tmp->data;
       gchar *full;
 
-      full = gconf_concat_key_and_dir (dir, entry->key);
+      full = gconf_concat_dir_and_key (dir, entry->key);
 
       g_free (entry->key);
       entry->key = full;
@@ -1181,7 +1181,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
       GConfEntry* pair;
 
       pair = 
-        gconf_entry_new_nocopy(gconf_concat_key_and_dir (dir, keys->_buffer[i]),
+        gconf_entry_new_nocopy(gconf_concat_dir_and_key (dir, keys->_buffer[i]),
                                gconf_value_from_corba_value(&(values->_buffer[i])));
 
       /* note, there's an accesor function for setting this that we are
@@ -1284,7 +1284,7 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
     {
       gchar* s;
 
-      s = gconf_concat_key_and_dir (dir, keys->_buffer[i]);
+      s = gconf_concat_dir_and_key (dir, keys->_buffer[i]);
       
       subdirs = g_slist_prepend(subdirs, s);
       

@@ -783,7 +783,7 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
-      gchar* full = gconf_concat_key_and_dir(parent, s);
+      gchar* full = gconf_concat_dir_and_key(parent, s);
       
       cache_pairs_in_dir(client, full);
 

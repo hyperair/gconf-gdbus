@@ -128,7 +128,7 @@ gboolean gconf_key_is_below       (const gchar  *above,
 
 
 /* Returns allocated concatenation of these two */
-gchar*   gconf_concat_key_and_dir (const gchar  *dir,
+gchar*   gconf_concat_dir_and_key (const gchar  *dir,
                                    const gchar  *key);
 
 

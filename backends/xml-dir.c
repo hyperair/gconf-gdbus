@@ -128,7 +128,7 @@ dir_new(const gchar  *keyname,
   d = dir_blank(keyname);
 
   /* sync with dir_load() */
-  d->fs_dirname = gconf_concat_key_and_dir(xml_root_dir, keyname);
+  d->fs_dirname = gconf_concat_dir_and_key(xml_root_dir, keyname);
   d->xml_filename =  g_strconcat(d->fs_dirname, "/%gconf.xml", NULL);
   d->root_dir_len = strlen(xml_root_dir);
 
@@ -149,7 +149,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
   
   g_return_val_if_fail(gconf_valid_key(key, NULL), NULL);
   
-  fs_dirname = gconf_concat_key_and_dir(xml_root_dir, key);
+  fs_dirname = gconf_concat_dir_and_key(xml_root_dir, key);
   xml_filename = g_strconcat(fs_dirname, "/%gconf.xml", NULL);
 
   {
