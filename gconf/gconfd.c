@@ -246,13 +246,19 @@ gconfd_set(PortableServer_Servant servant, const CORBA_char * key,
 void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
 {
+  syslog(LOG_DEBUG, "Received request to sync all config data");
+
   if (sources == NULL)
     {
       syslog(LOG_ERR, "Received sync request before initializing sources list; bug?");
       return;
     } 
 
-  g_conf_sources_sync_all(sources);
+  if (!g_conf_sources_sync_all(sources))
+    {
+      syslog(LOG_ERR, "Failed to sync one or more sources");
+      return;
+    }
 }
 
 CORBA_long
@@ -507,8 +513,6 @@ main(int argc, char** argv)
   openlog ("gconfd", LOG_NDELAY, LOG_USER);
   syslog (LOG_INFO, "starting, pid %u user `%s'", 
           (guint)getpid(), g_get_user_name());
-
-  sleep(5);
   
   /* Session setup */
   sigemptyset (&empty_mask);

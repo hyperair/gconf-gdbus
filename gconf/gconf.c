@@ -305,6 +305,33 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
     }
 }
 
+void 
+g_conf_sync(GConf* conf)
+{
+  CORBA_Environment ev;
+  ConfigServer cs;
+
+  cs = g_conf_get_config_server();
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return;
+    }
+
+  CORBA_exception_init(&ev);
+
+  ConfigServer_sync(cs, &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure syncing config server: %s",
+                CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+    }
+}
+
 /*
  * Connection maintenance
  */

@@ -64,9 +64,15 @@ main(int argc, char* argv[])
   CORBA_Environment ev;
   GConf* conf;
   guint cnxn;
+  GConfValue* val;
 
   CORBA_exception_init(&ev);
 
+  /* Bleah. Server can't use Gnome authentication unless we have a
+     gnome-gconfd, which we'll have to have eventually I guess, but
+     anyway, this is irritating. 
+  */
+#if 0
   orb = gnome_CORBA_init(PACKAGE, VERSION, &argc, argv, 0, &ev);
 
   if (orb == CORBA_OBJECT_NIL)
@@ -75,11 +81,11 @@ main(int argc, char* argv[])
       exit(1);
     }
 
-  /* Bleah. Server can't use Gnome authentication unless we have a
-     gnome-gconfd, which we'll have to have eventually I guess, but
-     anyway, this is irritating. 
-  */
-  /*  g_conf_set_orb(orb); */
+
+  g_conf_set_orb(orb); 
+#endif
+  gnome_init(PACKAGE, VERSION, argc, argv);
+
   g_conf_init_orb(&argc, argv);
 
   g_conf_init();
@@ -89,6 +95,15 @@ main(int argc, char* argv[])
   app = gnome_app_new("gconf-test", "Testing GConf");
 
   entry = gtk_entry_new();
+  
+  val = g_conf_get(conf, "/gnome/gconf-testclient/entry_contents");
+
+  if (val != NULL)
+    {
+      gtk_entry_set_text(GTK_ENTRY(entry), g_conf_value_string(val));
+      g_conf_value_destroy(val);
+      val = NULL;
+    }
 
   gnome_app_set_contents(GNOME_APP(app), entry);
 

@@ -88,7 +88,7 @@ GConfValue*   g_conf_sources_query_value (GConfSources* sources,
 void          g_conf_sources_set_value   (GConfSources* sources,
                                           const gchar* key,
                                           GConfValue* value);
-void          g_conf_sources_sync_all    (GConfSources* sources);
+gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 
 gchar**       g_conf_load_source_path(const gchar* filename);
 

@@ -202,6 +202,7 @@ resolve_address (const gchar* address)
 {
   gchar* root_dir;
   XMLSource* xsource;
+  GConfSource* source;
   guint len;
 
   root_dir = g_conf_address_resource(address);
@@ -224,7 +225,14 @@ resolve_address (const gchar* address)
 
   g_free(root_dir);
 
-  return (GConfSource*)xsource;
+  source = (GConfSource*)xsource;
+  
+  /* FIXME just a hack for now, eventually
+     it'll be based on something 
+  */
+  source->flags |= G_CONF_SOURCE_WRITEABLE;
+
+  return source;
 }
 
 static GConfValue* 

@@ -108,6 +108,7 @@ GConfValue*  g_conf_get(GConf* conf, const gchar* key);
 /* ditto, higher-level version planned. */
 void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
+void         g_conf_sync(GConf* conf);
 
 gboolean     g_conf_valid_key      (const gchar* key);
 

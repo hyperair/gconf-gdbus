@@ -622,10 +622,11 @@ g_conf_sources_set_value   (GConfSources* sources,
     }
 }
 
-void
+gboolean
 g_conf_sources_sync_all    (GConfSources* sources)
 {
   GList* tmp;
+  gboolean failed = FALSE;
 
   tmp = sources->sources;
 
@@ -633,10 +634,13 @@ g_conf_sources_sync_all    (GConfSources* sources)
     {
       GConfSource* src = tmp->data;
 
-      g_conf_source_sync_all(src);
+      if (!g_conf_source_sync_all(src))
+        failed = TRUE;
 
       tmp = g_list_next(tmp);
     }
+
+  return !failed;
 }
 
 /*

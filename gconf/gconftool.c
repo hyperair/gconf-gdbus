@@ -244,6 +244,8 @@ main (int argc, char** argv)
 
           ++args;
         }
+
+      g_conf_sync(conf);
     }
 
   poptFreeContext(ctx);
