@@ -1013,6 +1013,7 @@ typedef struct _SchemaInfo SchemaInfo;
 struct _SchemaInfo {
   gchar* key;
   gchar* owner;
+  GSList* apply_to;
   GConfValueType type;
   GConfValue* global_default;
   GHashTable* hash;
@@ -1124,6 +1125,19 @@ extract_global_info(xmlNodePtr node,
           else if (strcmp(iter->name, "locale") == 0)
             {
               ; /* ignore, this is parsed later after we have the global info */
+            }
+          else if (strcmp(iter->name, "applyto") == 0)
+            {
+              /* Add the contents to the list of nodes to apply to */
+              tmp = xmlNodeGetContent(iter);
+
+              if (tmp)
+                {
+                  info->apply_to = g_slist_prepend(info->apply_to, g_strdup(tmp));
+                  free(tmp);
+                }
+              else
+                fprintf(stderr, _("WARNING: empty <applyto> node"));
             }
           else
             fprintf(stderr, _("WARNING: node <%s> not understood below <schema>\n"),
@@ -1280,9 +1294,46 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
       error = NULL;
     }
   else
-    g_assert(error == NULL);
-
+    {
+      g_assert(error == NULL);
+      printf(_("Installed schema `%s' for locale `%s'\n"),
+             info->key, gconf_schema_locale(schema));
+    }
+      
   gconf_schema_destroy(schema);
+}
+
+
+static int
+process_key_list(GConfEngine* conf, const gchar* schema_name, GSList* keylist)
+{
+  GSList* tmp;
+  GConfError* error = NULL;
+
+  tmp = keylist;
+
+  while (tmp != NULL)
+    {
+      if (!gconf_associate_schema(conf, tmp->data, schema_name,  &error))
+        {
+          g_assert(error != NULL);
+          
+          fprintf(stderr, _("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
+                  schema_name, (gchar*)tmp->data, error->str);
+          gconf_error_destroy(error);
+          error = NULL;
+        }
+      else
+        {
+          g_assert(error == NULL);
+          printf(_("Attached schema `%s' to key `%s'\n"),
+                 schema_name, (gchar*)tmp->data);
+        }
+          
+      tmp = g_slist_next(tmp);
+    }
+  
+  return 0;
 }
 
 static int
@@ -1293,6 +1344,7 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
 
   info.key = NULL;
   info.type = GCONF_VALUE_INVALID;
+  info.apply_to = NULL;
   info.owner = NULL;
   info.global_default = NULL;
   info.hash = g_hash_table_new(g_str_hash, g_str_equal);
@@ -1324,6 +1376,8 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
             ;  /* nothing */
           else if (strcmp(iter->name, "default") == 0)
             ;  /* nothing */
+          else if (strcmp(iter->name, "applyto") == 0)
+            ;  /* nothing */
           else if (strcmp(iter->name, "locale") == 0)
             {
               process_locale_info(iter, &info);
@@ -1336,6 +1390,10 @@ process_schema(GConfEngine* conf, xmlNodePtr node)
       iter = iter->next;
     }
 
+  /* Attach schema to keys */
+
+  process_key_list(conf, info.key, info.apply_to);
+  
   /* Now install each schema in the hash into the GConfEngine */
   g_hash_table_foreach(info.hash, hash_foreach, &info);
 
@@ -1364,60 +1422,6 @@ process_schema_list(GConfEngine* conf, xmlNodePtr node)
         fprintf(stderr, _("WARNING: node <%s> not understood below <schemalist>\n"),
                 iter->name);
 
-      iter = iter->next;
-    }
-
-  return 0;
-}
-
-static int
-process_key_list(GConfEngine* conf, xmlNodePtr node)
-{
-  xmlNodePtr iter;
-  GConfError* error = NULL;
-  
-  iter = node->childs;
-
-  while (iter != NULL)
-    {
-      if (iter->type == XML_ELEMENT_NODE)
-        {
-          if (strcmp(iter->name, "key") == 0)
-            {
-              char* name = NULL;
-              char* schema = NULL;
-
-              name = xmlGetProp(iter, "name");
-              schema = xmlGetProp(iter, "schema");
-
-              if (name && schema)
-                {
-                  if (!gconf_associate_schema(conf, name, schema,  &error))
-                    {
-                      g_assert(error != NULL);
-
-                      fprintf(stderr, _("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
-                              schema, name, error->str);
-                      gconf_error_destroy(error);
-                      error = NULL;
-                    }
-                  else
-                    g_assert(error == NULL);
-                }
-              else
-                fprintf(stderr, _("WARNING: <key> node must have `name' and `schema' attributes\n"));
-          
-              if (name)
-                free(name);
-          
-              if (schema)
-                free(schema);
-            }
-          else
-            fprintf(stderr, _("WARNING: node <%s> not understood below <keylist>\n"),
-                    iter->name);
-        }
-      
       iter = iter->next;
     }
 
@@ -1464,8 +1468,6 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
         {
           if (strcmp(iter->name, "schemalist") == 0)
             process_schema_list(conf, iter);
-          else if (strcmp(iter->name, "keylist") == 0)
-            process_key_list(conf, iter);
           else
             fprintf(stderr, _("WARNING: node <%s> below <gconfschemafile> not understood\n"),
                     iter->name);

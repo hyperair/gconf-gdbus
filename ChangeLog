@@ -1,5 +1,13 @@
 1999-11-29  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconftool.c (do_load_schema_file): Use new syntax for
+	attaching schema names to key names
+
+	* backends/xml-backend.c (resolve_address): Create the XML root
+	directory if necessary.
+
+1999-11-29  Havoc Pennington  <hp@pobox.com>
+
 	* wrappers/gtk/gconf-client.c (gconf_client_get): sheesh, this
 	stupid function didn't work at all. fix it
 	(get): properly check whther val is NULL before copying it.

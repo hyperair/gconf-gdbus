@@ -424,6 +424,17 @@ resolve_address (const gchar* address, GConfError** err)
   if (root_dir[len-1] == '/')
     root_dir[len-1] = '\0';
 
+  if (mkdir(root_dir, 0700) < 0)
+    {
+      if (errno != EEXIST)
+        {
+          gconf_set_error(err, GCONF_FAILED,
+                          _("Could not make directory `%s': %s"),
+                          (gchar*)dir, strerror(errno));
+          return NULL;
+        }
+    }
+  
   {
     /* See if we're writeable */
     gboolean writeable = FALSE;
