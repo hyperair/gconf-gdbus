@@ -1069,3 +1069,32 @@ gconf_entry_set_is_writable (GConfEntry  *entry,
 }
 
 
+gboolean
+gconf_value_validate (GConfValue *value,
+                      GError    **err)
+{
+  switch (value->type)
+    {
+    case GCONF_VALUE_STRING:
+      if (value->d.string_data &&
+          !g_utf8_validate (value->d.string_data, -1, NULL))
+        {
+          g_set_error (err, GCONF_ERROR,
+                       GCONF_ERROR_FAILED,
+                       _("Text contains invalid UTF-8"));
+          return FALSE;
+        }
+      break;
+
+    case GCONF_VALUE_SCHEMA:
+      if (value->d.schema_data)
+        return gconf_schema_validate (value->d.schema_data,
+                                      err);
+      break;
+
+    default:
+      break;
+    }
+
+  return TRUE;
+}

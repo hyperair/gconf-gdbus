@@ -991,6 +991,9 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
   if (!gconf_key_check(key, err))
     return FALSE;
 
+  if (!gconf_value_validate (value, err))
+    return FALSE;
+  
   if (gconf_engine_is_local(conf))
     {
       GError* error = NULL;
@@ -2974,14 +2977,6 @@ gconf_engine_set_string  (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail (conf != NULL, FALSE);
   g_return_val_if_fail (key != NULL, FALSE);
   g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
-
-  if (!g_utf8_validate (val, -1, NULL))
-    {
-      g_set_error (err, GCONF_ERROR,
-                   GCONF_ERROR_FAILED,
-                   _("Text contains invalid UTF-8"));
-      return FALSE;
-    }
   
   g_return_val_if_fail (g_utf8_validate (val, -1, NULL), FALSE);
   
@@ -3019,9 +3014,6 @@ gconf_engine_set_schema  (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
-
-  if (!gconf_schema_validate (val, err))
-    return FALSE;
   
   gval = gconf_value_new(GCONF_VALUE_SCHEMA);
 

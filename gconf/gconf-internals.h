@@ -196,8 +196,12 @@ ConfigServer gconf_activate_server (gboolean  start_if_not_found,
 char*     gconf_get_lock_dir (void);
 char*     gconf_get_daemon_dir (void);
 
-gboolean gconf_schema_validate (const GConfSchema *sc,
-                                GError           **err);
+gboolean gconf_schema_validate (const GConfSchema  *sc,
+                                GError            **err);
+gboolean gconf_value_validate  (GConfValue         *value,
+                                GError            **err);
+
+
 
 #ifdef ENABLE_NLS
 #    include <libintl.h>
