@@ -1052,10 +1052,6 @@ shutdown_databases (void)
     g_hash_table_destroy(dbs_by_addresses);
 
   dbs_by_addresses = NULL;
-
-  if (default_db)
-    gconf_database_free (default_db);
-
   default_db = NULL;
 }
 

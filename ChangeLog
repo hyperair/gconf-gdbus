@@ -1,5 +1,11 @@
 2004-06-21  Mark McLoughlin  <mark@skynet.ie>
 
+	* gconf/gconfd.c: (shutdown_databases): don't free the
+	default database twice. Its on the databases list now
+	so it doesn't need to freed explicitly.
+
+2004-06-21  Mark McLoughlin  <mark@skynet.ie>
+
 	Patch from Leonardo Quijano Vincenzi <lquijano@hotpop.com>
 	in bug #144502.
 
