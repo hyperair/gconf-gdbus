@@ -23,11 +23,41 @@
 
 #include "scm-gconf.h"
 
+
+/* Quick hack so I can mark strings */
+
+#ifdef _ 
+#warning "_ already defined"
+#else
+#define _(x) x
+#endif
+
+#ifdef N_ 
+#warning "N_ already defined"
+#else
+#define N_(x) x
+#endif
+
+
 static void
 real_main(void* closure, int argc, char* argv[])
 {
-  g_conf_init_orb(&argc, argv);
-  g_conf_init("gconf-guile");
+  GConfError* err = NULL;
+  
+  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
+    {
+      fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
+      g_conf_error_destroy(err);
+      exit(1);
+    }
+  
+  if (!g_conf_init(&err))
+    {
+      fprintf(stderr, _("Failed to init gconf: %s\n"), err->str);
+      g_conf_error_destroy(err);
+      exit(1);
+    }
+  
   g_conf_init_scm();
 
   gh_eval_str("(set-repl-prompt! \"gconf> \")");

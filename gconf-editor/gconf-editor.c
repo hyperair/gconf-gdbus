@@ -60,19 +60,22 @@ main(int argc, char** argv)
   poptContext pctx;
   char** args;
   GnomeClient* client;
-
+  GConfError* err = NULL;
+  
   bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
   textdomain(PACKAGE);
 
-  if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
+  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
-      fprintf(stderr, _("Failed to init orb\n"));
+      fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
+      g_conf_error_destroy(err);
       return 1;
     }
 
-  if (!g_conf_init())
+  if (!g_conf_init(&err))
     {
-      fprintf(stderr, _("Failed to init GConf\n"));
+      fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
+      g_conf_error_destroy(err);
       return 1;
     }
 

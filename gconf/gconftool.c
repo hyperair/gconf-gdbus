@@ -211,9 +211,9 @@ struct poptOption options[] = {
   }
 };
 
-static void do_recursive_list(GConf* conf, gchar** args);
-static void do_all_pairs(GConf* conf, gchar** args);
-static void list_pairs_in_dir(GConf* conf, gchar* dir, guint depth);
+static void do_recursive_list(GConf* conf, const gchar** args);
+static void do_all_pairs(GConf* conf, const gchar** args);
+static void list_pairs_in_dir(GConf* conf, const gchar* dir, guint depth);
 
 /* FIXME um, break this function up... */
 /* FIXME do a single sync on exit */
@@ -223,7 +223,8 @@ main (int argc, char** argv)
   GConf* conf;
   poptContext ctx;
   gint nextopt;
-
+  GConfError* err = NULL;
+  
   ctx = poptGetContext("gconftool", argc, argv, options, 0);
 
   poptReadDefaultConfig(ctx, TRUE);
@@ -320,15 +321,19 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if (g_conf_init_orb(&argc, argv) == CORBA_OBJECT_NIL)
+  if (g_conf_init_orb(&argc, argv, &err) == CORBA_OBJECT_NIL)
     {
-      fprintf(stderr, _("Failed to init orb: %s\n"), g_conf_error());
+      fprintf(stderr, _("Failed to init orb: %s\n"), err->str);
+      g_conf_error_destroy(err);
+      err = NULL;
       return 1;
     }
 
-  if (!g_conf_init())
+  if (!g_conf_init(&err))
     {
-      fprintf(stderr, _("Failed to init GConf: %s\n"), g_conf_error());
+      fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
+      g_conf_error_destroy(err);
+      err = NULL;
       return 1;
     }
 
@@ -348,7 +353,16 @@ main (int argc, char** argv)
 
   if (dir_exists != NULL) 
     {
-      if (g_conf_dir_exists(conf, dir_exists)) 
+      gboolean exists = g_conf_dir_exists(conf, dir_exists, &err);
+
+      if (err != NULL)
+        {
+          fprintf(stderr, "%s\n", err->str);
+          g_conf_error_destroy(err);
+          err = NULL;
+        }
+
+      if (exists)
         return 0;
       else
         return 2;
@@ -356,16 +370,20 @@ main (int argc, char** argv)
 
   if (spawn_gconfd)
     {
-      if (!g_conf_spawn_daemon())
-        fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
-                g_conf_error());
+      if (!g_conf_spawn_daemon(&err))
+        {
+          fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
+                  err->str);
+          g_conf_error_destroy(err);
+          err = NULL;
+        }
       /* don't exit, it's OK to have this along with other options
          (however, it's probably pointless) */
     }
 
   if (get_mode)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
@@ -378,9 +396,9 @@ main (int argc, char** argv)
           GConfValue* value;
           gchar* s;
 
-          g_conf_clear_error();
+          err = NULL;
 
-          value = g_conf_get(conf, *args);
+          value = g_conf_get(conf, *args, &err);
          
           if (value != NULL)
             {
@@ -410,13 +428,17 @@ main (int argc, char** argv)
             }
           else
             {
-              if (g_conf_errno() == G_CONF_SUCCESS)
+              if (err == NULL)
                 {
                   fprintf(stderr, _("No value set for `%s'\n"), *args);
                 }
               else
-                fprintf(stderr, _("Failed to get value for `%s': %s\n"),
-                        *args, g_conf_error());
+                {
+                  fprintf(stderr, _("Failed to get value for `%s': %s\n"),
+                          *args, err->str);
+                  g_conf_error_destroy(err);
+                  err = NULL;
+                }
             }
  
           ++args;
@@ -425,7 +447,7 @@ main (int argc, char** argv)
 
   if (set_mode)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
@@ -435,8 +457,8 @@ main (int argc, char** argv)
 
       while (*args)
         {
-          gchar* key;
-          gchar* value;
+          const gchar* key;
+          const gchar* value;
           GConfValueType type = G_CONF_VALUE_INVALID;
           GConfValue* gval;
 
@@ -474,25 +496,29 @@ main (int argc, char** argv)
               break;
             }
           
-          g_conf_clear_error();
+          err = NULL;
 
-          gval = g_conf_value_new_from_string(type, value);
+          gval = g_conf_value_new_from_string(type, value, &err);
 
           if (gval == NULL)
             {
               fprintf(stderr, _("Error: %s\n"),
-                      g_conf_error());
+                      err->str);
+              g_conf_error_destroy(err);
+              err = NULL;
               return 1;
             }
 
-          g_conf_clear_error();
+          err = NULL;
+          
+          g_conf_set(conf, key, gval, &err);
 
-          g_conf_set(conf, key, gval);
-
-          if (g_conf_errno() != G_CONF_SUCCESS)
+          if (err != NULL)
             {
               fprintf(stderr, _("Error setting value: %s"),
-                      g_conf_error());
+                      err->str);
+              g_conf_error_destroy(err);
+              err = NULL;
               return 1;
             }
 
@@ -501,21 +527,21 @@ main (int argc, char** argv)
           ++args;
         }
 
-      g_conf_clear_error();
+      err = NULL;
 
-      g_conf_sync(conf);
+      g_conf_sync(conf, &err);
 
-      if (g_conf_errno() != G_CONF_SUCCESS)
+      if (err != NULL);
         {
           fprintf(stderr, _("Error syncing: %s"),
-                  g_conf_error());
+                  err->str);
           return 1;
         }
     }
 
   if (set_schema_mode)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
       GConfSchema* sc;
       GConfValue* val;
       const gchar* key;
@@ -586,34 +612,37 @@ main (int argc, char** argv)
             g_conf_schema_set_type(sc, type);
         }
 
-      g_conf_clear_error();
+      err = NULL;
       
-      g_conf_set(conf, key, val);
+      g_conf_set(conf, key, val, &err);
       
-      if (g_conf_errno() != G_CONF_SUCCESS)
+      if (err != NULL)
         {
           fprintf(stderr, _("Error setting value: %s"),
-                  g_conf_error());
+                  err->str);
+          g_conf_error_destroy(err);
+          err = NULL;
           return 1;
         }
       
       g_conf_value_destroy(val);
+
+      err = NULL;
+      g_conf_sync(conf, &err);
       
-      g_conf_clear_error();
-
-      g_conf_sync(conf);
-
-      if (g_conf_errno() != G_CONF_SUCCESS)
+      if (err != NULL)
         {
           fprintf(stderr, _("Error syncing: %s"),
-                  g_conf_error());
+                  err->str);
+          g_conf_error_destroy(err);
+          err = NULL;
           return 1;
         }
     }
 
   if (all_entries_mode)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
@@ -626,7 +655,7 @@ main (int argc, char** argv)
 
   if (unset_mode)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
@@ -636,24 +665,27 @@ main (int argc, char** argv)
 
       while (*args)
         {
-          g_conf_clear_error();
-          g_conf_unset(conf, *args);
+          err = NULL;
+          g_conf_unset(conf, *args, &err);
 
-          if (g_conf_errno() != G_CONF_SUCCESS)
+          if (err != NULL)
             {
               fprintf(stderr, _("Error unsetting `%s': %s\n"),
-                      *args, g_conf_error());
+                      *args, err->str);
+              g_conf_error_destroy(err);
+              err = NULL;
             }
 
           ++args;
         }
 
-      g_conf_sync(conf);
+      err = NULL;
+      g_conf_sync(conf, NULL); /* ignore errors */
     }
 
   if (all_subdirs_mode)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
@@ -666,9 +698,9 @@ main (int argc, char** argv)
           GSList* subdirs;
           GSList* tmp;
 
-          g_conf_clear_error();
+          err = NULL;
 
-          subdirs = g_conf_all_dirs(conf, *args);
+          subdirs = g_conf_all_dirs(conf, *args, &err);
           
           if (subdirs != NULL)
             {
@@ -689,9 +721,13 @@ main (int argc, char** argv)
             }
           else
             {
-              if (g_conf_errno() != G_CONF_SUCCESS)
-                fprintf(stderr, _("Error listing dirs: %s\n"),
-                        g_conf_error());
+              if (err != NULL)
+                {
+                  fprintf(stderr, _("Error listing dirs: %s\n"),
+                          err->str);
+                  g_conf_error_destroy(err);
+                  err = NULL;
+                }
             }
  
           ++args;
@@ -700,7 +736,7 @@ main (int argc, char** argv)
 
   if (recursive_list)
     {
-      gchar** args = poptGetArgs(ctx);
+      const gchar** args = poptGetArgs(ctx);
 
       if (args == NULL)
         {
@@ -713,24 +749,27 @@ main (int argc, char** argv)
 
   poptFreeContext(ctx);
 
-  g_conf_clear_error();
-  
   g_conf_unref(conf);
 
   if (shutdown_gconfd)
-    g_conf_shutdown_daemon();
-
-  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      err = NULL;
+      g_conf_shutdown_daemon(&err);
+    }
+      
+  if (err != NULL)
     {
       fprintf(stderr, _("Shutdown error: %s\n"),
-              g_conf_error());
+              err->str);
+      g_conf_error_destroy(err);
+      err = NULL;
     }
 
   return 0;
 }
 
 static void 
-recurse_subdir_list(GConf* conf, GSList* subdirs, gchar* parent, guint depth)
+recurse_subdir_list(GConf* conf, GSList* subdirs, const gchar* parent, guint depth)
 {
   GSList* tmp;
   gchar* whitespace;
@@ -748,7 +787,7 @@ recurse_subdir_list(GConf* conf, GSList* subdirs, gchar* parent, guint depth)
       
       list_pairs_in_dir(conf, full, depth);
 
-      recurse_subdir_list(conf, g_conf_all_dirs(conf, full), full, depth+1);
+      recurse_subdir_list(conf, g_conf_all_dirs(conf, full, NULL), full, depth+1);
 
       g_free(s);
       g_free(full);
@@ -761,13 +800,13 @@ recurse_subdir_list(GConf* conf, GSList* subdirs, gchar* parent, guint depth)
 }
 
 static void
-do_recursive_list(GConf* conf, gchar** args)
+do_recursive_list(GConf* conf, const gchar** args)
 {
   while (*args)
     {
       GSList* subdirs;
 
-      subdirs = g_conf_all_dirs(conf, *args);
+      subdirs = g_conf_all_dirs(conf, *args, NULL);
 
       list_pairs_in_dir(conf, *args, 0);
           
@@ -778,22 +817,23 @@ do_recursive_list(GConf* conf, gchar** args)
 }
 
 static void 
-list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
+list_pairs_in_dir(GConf* conf, const gchar* dir, guint depth)
 {
   GSList* pairs;
   GSList* tmp;
   gchar* whitespace;
-
+  GConfError* err = NULL;
+  
   whitespace = g_strnfill(depth, ' ');
 
-  g_conf_clear_error();
-  
-  pairs = g_conf_all_entries(conf, dir);
+  pairs = g_conf_all_entries(conf, dir, &err);
           
-  if (g_conf_errno() != G_CONF_SUCCESS)
+  if (err != NULL)
     {
       fprintf(stderr, _("Failure listing pairs in `%s': %s"),
-              dir, g_conf_error());
+              dir, err->str);
+      g_conf_error_destroy(err);
+      err = NULL;
     }
 
   if (pairs != NULL)
@@ -823,7 +863,7 @@ list_pairs_in_dir(GConf* conf, gchar* dir, guint depth)
 }
 
 static void 
-do_all_pairs(GConf* conf, gchar** args)
+do_all_pairs(GConf* conf, const gchar** args)
 {      
   while (*args)
     {

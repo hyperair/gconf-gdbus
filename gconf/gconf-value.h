@@ -22,6 +22,7 @@
 #define GCONF_GCONF_VALUE_H
 
 #include <glib.h>
+#include "gconf-error.h"
 
 /* 
  * A GConfValue is used to pass configuration values around
@@ -88,7 +89,8 @@ struct _GConfValue {
 
 GConfValue* g_conf_value_new(GConfValueType type);
 /* doesn't work on complicated types (only string, int, bool, float) */
-GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
+GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str,
+                                         GConfError** err);
 /* for the complicated types */
 GConfValue* g_conf_value_new_list_from_string(GConfValueType list_type,
                                               const gchar* str);

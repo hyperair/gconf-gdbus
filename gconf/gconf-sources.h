@@ -1,0 +1,107 @@
+
+/* GConf
+ * Copyright (C) 1999 Red Hat Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef GCONF_GCONF_SOURCES_H
+#define GCONF_GCONF_SOURCES_H
+
+#include <glib.h>
+#include "gconf-error.h"
+#include "gconf-value.h"
+
+/* Sources are not interchangeable; different backend engines will return 
+ * GConfSource with different private elements.
+ */
+
+typedef struct _GConfBackend GConfBackend;
+
+typedef struct _GConfSource GConfSource;
+
+struct _GConfSource {
+  guint flags;
+  gchar* address;
+  GConfBackend* backend;
+};
+
+typedef enum {
+  G_CONF_SOURCE_WRITEABLE = 1 << 0,
+  G_CONF_SOURCE_ALL_FLAGS = ((1 << 0))
+} GConfSourceFlags;
+
+GConfSource*  g_conf_resolve_address         (const gchar* address);
+GConfValue*   g_conf_source_query_value      (GConfSource* source,
+                                              const gchar* key,
+                                              gchar** schema_name);
+void          g_conf_source_set_value        (GConfSource* source,
+                                              const gchar* key,
+                                              GConfValue* value);
+void          g_conf_source_unset_value      (GConfSource* source,
+                                              const gchar* key);
+GSList*      g_conf_source_all_entries         (GConfSource* source,
+                                                const gchar* dir);
+GSList*      g_conf_source_all_dirs          (GConfSource* source,
+                                              const gchar* dir);
+
+void         g_conf_source_set_schema        (GConfSource* source,
+                                              const gchar* key,
+                                              const gchar* schema_key);
+
+gboolean     g_conf_source_dir_exists        (GConfSource* source,
+                                              const gchar* dir);
+void         g_conf_source_remove_dir        (GConfSource* source,
+                                              const gchar* dir);
+
+gboolean     g_conf_source_sync_all          (GConfSource* source);
+void         g_conf_source_destroy (GConfSource* source);
+
+/* This is the actual thing we want to talk to, the stack of sources */
+typedef struct _GConfSources GConfSources;
+
+struct _GConfSources {
+  GList* sources;
+  
+};
+
+GConfSources* g_conf_sources_new(gchar** addresses);
+void          g_conf_sources_destroy(GConfSources* sources);
+GConfValue*   g_conf_sources_query_value (GConfSources* sources, 
+                                          const gchar* key);
+void          g_conf_sources_set_value   (GConfSources* sources,
+                                          const gchar* key,
+                                          GConfValue* value);
+void          g_conf_sources_unset_value (GConfSources* sources,
+                                          const gchar* key);
+GSList*       g_conf_sources_all_entries   (GConfSources* sources,
+                                            const gchar* dir);
+GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
+                                         const gchar* dir);
+gboolean      g_conf_sources_dir_exists (GConfSources* sources,
+                                         const gchar* dir);
+void          g_conf_sources_remove_dir (GConfSources* sources,
+                                         const gchar* dir);
+
+void          g_conf_sources_set_schema        (GConfSources* sources,
+                                                const gchar* key,
+                                                const gchar* schema_key);
+
+gboolean      g_conf_sources_sync_all    (GConfSources* sources);
+
+#endif
+
+

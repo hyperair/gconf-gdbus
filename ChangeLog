@@ -1,3 +1,26 @@
+1999-09-29  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-backend.c: include gconfd-error.h and gconf.h, 
+	change error checking to new system as needed
+
+	* gconf/Makefile.am: Put more stuff in gconfd_SOURCES instead of
+	client lib, add new files
+
+	* gconf/gconf-backend.h: include gconf-sources.h
+
+	* gconf/gconf-conf.h: add error arg to g_conf_new_from_address
+
+	* gconf/gconf-error.c: move strerror in here, fixups,
+	preconditions
+
+	* gconf/gconf-internals.c, gconf/gconf-sources.c: move all sources
+	stuff to new gconf-sources file
+
+	* gconf/gconf-orbit.c: Check for failure to get lock
+
+	* All the rest of this giant diff: Move to new error-handling
+	scheme
+	
 1999-09-26  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/Makefile.am: add gconf-error.h, gconf-conf.h headers,

@@ -69,7 +69,8 @@ g_conf_value_new(GConfValueType type)
 }
 
 GConfValue* 
-g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
+g_conf_value_new_from_string(GConfValueType type, const gchar* value_str,
+                             GConfError** err)
 {
   GConfValue* value;
 
@@ -87,18 +88,20 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
 
         if (endptr == value_str)
           {
-            g_conf_set_error(G_CONF_PARSE_ERROR,
-                             _("Didn't understand `%s' (expected integer)"),
-                             value_str);
+            if (err)
+              *err = g_conf_error_new(G_CONF_PARSE_ERROR,
+                                      _("Didn't understand `%s' (expected integer)"),
+                                      value_str);
             
             g_conf_value_destroy(value);
             value = NULL;
           }
         else if (errno == ERANGE)
           {
-            g_conf_set_error(G_CONF_PARSE_ERROR,
-                             _("Integer `%s' is too large or small"),
-                             value_str);
+            if (err)
+              *err = g_conf_error_new(G_CONF_PARSE_ERROR,
+                                      _("Integer `%s' is too large or small"),
+                                      value_str);
             g_conf_value_destroy(value);
             value = NULL;
           }
@@ -117,9 +120,10 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
           }
         else
           {
-            g_conf_set_error(G_CONF_PARSE_ERROR,
-                             _("Didn't understand `%s' (expected real number)"),
-                             value_str);
+            if (err)
+              *err = g_conf_error_new(G_CONF_PARSE_ERROR,
+                                      _("Didn't understand `%s' (expected real number)"),
+                                      value_str);
             
             g_conf_value_destroy(value);
             value = NULL;
@@ -136,9 +140,10 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
         g_conf_value_set_bool(value, FALSE);
       else
         {
-          g_conf_set_error(G_CONF_PARSE_ERROR,
-                           _("Didn't understand `%s' (expected true or false)"),
-                           value_str);
+          if (err)
+            *err = g_conf_error_new(G_CONF_PARSE_ERROR,
+                                    _("Didn't understand `%s' (expected true or false)"),
+                                    value_str);
 
           g_conf_value_destroy(value);
           value = NULL;

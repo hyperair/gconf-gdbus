@@ -17,8 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef GCONF_GCONF_CONF_H
-#define GCONF_GCONF_CONF_H
+#ifndef GCONF_GCONFD_ERROR_H
+#define GCONF_GCONFD_ERROR_H
 
 #include <glib.h>
 #include "gconf-error.h"
@@ -27,20 +27,12 @@
 extern "C" {
 #endif /* __cplusplus */
 
-/* A configuration engine (stack of config sources); normally there's
- * just one of these on the system.  
- */
-typedef struct _GConf GConf;
+/* This global error handling is used by gconfd */
 
-struct _GConf {
-  gpointer dummy;
-};
-  
-GConf*       g_conf_new             (void); /* Default source stack */
-/* returns NULL on error; requests single specified source */
-GConf*       g_conf_new_from_address(const gchar* address, GConfError** err);
-void         g_conf_unref           (GConf* conf);
-void         g_conf_ref             (GConf* conf);
+const gchar* g_conf_error          (void);
+GConfErrNo   g_conf_errno          (void);
+void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
+void         g_conf_clear_error    (void); /* like setting errno to 0 */
 
 #ifdef __cplusplus
 }

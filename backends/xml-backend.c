@@ -21,6 +21,8 @@
 
 #include <gconf/gconf-backend.h>
 #include <gconf/gconf-internals.h>
+#include <gconf/gconfd-error.h>
+#include <gconf/gconf.h>
 
 #include <gnome-xml/tree.h>
 #include <gnome-xml/parser.h>
@@ -2065,14 +2067,21 @@ xentry_extract_value(xmlNodePtr node)
     case G_CONF_VALUE_FLOAT:
       {
         gchar* value_str;
+        GConfError* err = NULL;
         
         value_str = xmlGetProp(node, "value");
         
         if (value_str == NULL)
           return NULL;
 
-        value = g_conf_value_new_from_string(type, value_str);
+        value = g_conf_value_new_from_string(type, value_str, &err);
 
+        if (value == NULL)
+          {
+            g_conf_set_error(err->num, err->str);
+            g_conf_error_destroy(err);
+          }
+        
         free(value_str);
 
         return value;

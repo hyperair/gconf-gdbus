@@ -17,12 +17,16 @@ gconfinclude_HEADERS =     \
 	gconf-schema.h 	   \
 	gconf-value.h	   \
 	gconf-error.h	   \
-	gconf-conf.h
+	gconf-conf.h	\
+	gconf-sources.h
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
 gconfd_SOURCES = \
-	gconfd.c
+	gconfd.c	\
+	gconfd-error.h	\
+	gconfd-error.c  \
+	gconf-sources.c
 
 gconfd_LDADD = $(GLIB_LIBS) $(ORBIT_LIBS) libgconf-client.la
 
@@ -46,6 +50,8 @@ libgconf_client_la_SOURCES = \
 	gconf-internals.h	\
 	gconf-backend.h		\
 	gconf-backend.c		\
+	gconf-error.h		\
+	gconf-error.c		\
 	gconf-schema.h		\
 	gconf-schema.c		\
 	gconf-value.c		\

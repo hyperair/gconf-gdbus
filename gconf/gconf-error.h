@@ -21,7 +21,6 @@
 #define GCONF_GCONF_ERROR_H
 
 #include <glib.h>
-#include "gconf-conf.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,13 +59,7 @@ struct _GConfError {
 GConfError*  g_conf_error_new      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
 void         g_conf_error_destroy  (GConfError* err);
 
-const gchar* g_conf_error          (void);
-GConfErrNo   g_conf_errno          (void);
-void         g_conf_set_error      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-void         g_conf_clear_error    (void); /* like setting errno to 0 */
-
-
-/* strerror() really shouldn't be used, because g_conf_error() gives
+/* strerror() really shouldn't be used, because GConfError->str gives
  * a more complete error message.
  */
 const gchar* g_conf_strerror       (GConfErrNo en);

@@ -30,6 +30,8 @@
 
 #include "gconf-internals.h"
 #include "gconf-orbit.h"
+#include "gconfd-error.h"
+#include "gconf-sources.h"
 #include <orb/orbit.h>
 
 #include "GConf.h"
@@ -586,7 +588,7 @@ g_conf_server_load_sources(void)
   
   conffile = g_strconcat(GCONF_SYSCONFDIR, "/gconf/path", NULL);
 
-  addresses = g_conf_load_source_path(conffile);
+  addresses = g_conf_load_source_path(conffile, NULL);
 
   g_free(conffile);
 
@@ -595,7 +597,7 @@ g_conf_server_load_sources(void)
   if (addresses == NULL)
     {
       conffile = g_strconcat(GCONF_SRCDIR, "/gconf/gconf.path", NULL);
-      addresses = g_conf_load_source_path(conffile);
+      addresses = g_conf_load_source_path(conffile, NULL);
       g_free(conffile);
     }
 
@@ -821,6 +823,7 @@ main(int argc, char** argv)
   gchar* logname;
   const gchar* username;
   guint len;
+  GConfError* err = NULL;
   
   int launcher_fd = -1; /* FD passed from the client that spawned us */
 
@@ -874,9 +877,9 @@ main(int argc, char** argv)
 
   CORBA_exception_init(&ev);
 
-  if (!g_conf_init_orb(&argc, argv)) /* must do before our own arg parsing */
+  if (!g_conf_init_orb(&argc, argv, &err)) /* must do before our own arg parsing */
     {
-      g_conf_log(GCL_ERR, _("Failed to init ORB: %s"), g_conf_error());
+      g_conf_log(GCL_ERR, _("Failed to init ORB: %s"), err->str);
       exit(1);
     }
 
