@@ -18,6 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <stdio.h>
 #include "gconf-client.h"
 #include <gtk/gtksignal.h>
 #include <gtk/gtktypeutils.h>
