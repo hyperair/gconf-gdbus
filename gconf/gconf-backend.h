@@ -88,7 +88,10 @@ struct _GConfBackendVTable {
                                            GConfValue* value,
                                            GError** err);
 
-  /* Returns list of GConfEntry */
+  /* Returns list of GConfEntry with key set to a relative
+   * pathname. In the public client-side API the key
+   * is always absolute though.
+   */
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir,
                                            const gchar** locales,

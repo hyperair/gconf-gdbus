@@ -465,28 +465,27 @@ with g_free().
 
 <!-- ##### STRUCT GConfEntry ##### -->
 <para>
-Stores a key-value pair.  @key should be a
- <emphasis>relative</emphasis> key, i.e., no slashes, just the final
- "filename." For example, just "bar", not "/foo/bar". To access the
- key and value, use gconf_entry_key() and gconf_entry_value().
+Stores a key-value pair.  @key should be an absolute key, not a relative key.
+(Note that internally GConf breaks this rule sometimes; but in the public
+interface, @key is always an absolute key.)  To access the key and value, use
+gconf_entry_key() and gconf_entry_value().
 </para>
 
-@key: a relative key name.
-@value: a #GConfValue.
+@key: an absolute key name
+@value: a #GConfValue
 @schema_name: 
 @is_default: 
 
 <!-- ##### FUNCTION gconf_entry_new_nocopy ##### -->
 <para>
-Creates a new #GConfEntry with key @key and value @val. @key should be
-a <emphasis>relative</emphasis> key, not the full path. Neither the
-key nor the value is copied; both are freed when the #GConfEntry is
-freed. The string will be freed with g_free() so should be allocated
-with a GLib function, not malloc().
+Creates a new #GConfEntry with key @key and value @val. @key should be a full
+path to the key, starting with '/'. Neither the key nor the value is copied;
+both are freed when the #GConfEntry is freed. The string will be freed with
+g_free() so should be allocated with a GLib function, not malloc().
 </para>
 
-@key: the relative key.
-@val: the value.
+@key: the key name
+@val: the value
 @Returns: a new #GConfentry.
 
 

@@ -822,17 +822,12 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
       while (tmp != NULL)
         {
           GConfEntry* pair = tmp->data;
-          gchar* full_key;
-
-          full_key = gconf_concat_key_and_dir(dir, gconf_entry_key(pair));
           
           gconf_client_cache(client,
-                             full_key,
+                             gconf_entry_key (pair),
                              gconf_entry_is_default(pair),
                              gconf_entry_steal_value(pair));
 
-          g_free(full_key);
-          
           gconf_entry_free(pair);
 
           tmp = g_slist_next(tmp);
@@ -1024,7 +1019,7 @@ get(GConfClient* client, const gchar* key,
 
   /* Check the GConfEngine */
   val = gconf_engine_get_full(client->engine, key, gconf_current_locale(),
-                       use_default, &is_default, error);
+                              use_default, &is_default, error);
 
   if (is_default_retloc)
     *is_default_retloc = is_default;

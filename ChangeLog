@@ -1,3 +1,18 @@
+2000-09-13  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf.c (gconf_engine_all_entries): Put full key in
+	GConfEntry (but we only get the relative key over the 
+	CORBA wire)
+
+	* wrappers/gtk/gconf-client.c (cache_pairs_in_dir): Change to 
+	reflect fact that GConfEntry now contains full key
+
+	* gconf/gconftool.c (list_pairs_in_dir): Change to reflect full
+	key in GConfEntry
+
+	* doc/gconf/tmpl/gconf-value.sgml: updated GConfEntry docs on this
+	matter.
+	
 2000-09-11  Havoc Pennington  <hp@redhat.com>
 
 	* Actually use gettext. Involves checking in configure.in, linking

@@ -1160,7 +1160,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
       GConfEntry* pair;
 
       pair = 
-        gconf_entry_new_nocopy(g_strdup(keys->_buffer[i]),
+        gconf_entry_new_nocopy(gconf_concat_key_and_dir (dir, keys->_buffer[i]),
                                gconf_value_from_corba_value(&(values->_buffer[i])));
 
       /* note, there's an accesor function for setting this that we are

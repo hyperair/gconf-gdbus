@@ -6,24 +6,28 @@ installation administration; it's mostly just going to be a
 process-transparent way to store settings, limited to single
 workstation config files.
 
-* Maintain documentation
-
-* API so clients can find out if they can write to a given key
-  (gconf_key_is_writable() or the like)
-
-* Implement the default error handlers in GConfClient
-
-* Change GConfEntry::key to be the full key, not a subdir
-  name
-
-* Add gconf_engine_key_is_writable()
+API changes
+==
 
 * Make sure accessors are named _get_foo() (e.g. GConfSchema,
   GConfValue, GConfMetaInfo, GConfEntry) - hrm, maybe not 
   though, since they don't follow GTK _get_ conventions
   and are just struct access macros.
 
+API additions
+==
+
+* API so clients can find out if they can write to a given key
+  (gconf_engine_key_is_writable() or the like)
+
 * Implement batch gets
+
+Other
+==
+
+* Maintain documentation
+
+* Implement the default error handlers in GConfClient
 
 * Envisioneer the vortals
 
