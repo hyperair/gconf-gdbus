@@ -108,8 +108,8 @@ static void    ltable_remove_if  (LTable* ltable,
 static void    ltable_spew(LTable* ltable);
 #endif
 
-static LTableEntry* ltable_entry_new(const gchar* name,
-                                     const gchar* full_name);
+static LTableEntry* ltable_entry_new(gchar **pathv,
+				     int     end);
 static void         ltable_entry_destroy(LTableEntry* entry);
 
 static Listener* listener_new   (guint      cnxn_id,
@@ -340,7 +340,7 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   
   if (lt->tree == NULL)
     {
-      lte = ltable_entry_new("/", "/");
+      lte = ltable_entry_new(NULL, 0);
       
       lt->tree = g_node_new(lte);
 
@@ -389,7 +389,7 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
 
       if (found == NULL)
         {
-          ne = ltable_entry_new(dirnames[i], where);
+          ne = ltable_entry_new(dirnames, i);
               
           if (across != NULL) /* Across is at the one past */
             found = g_node_insert_data_before(cur, across, ne);
@@ -826,15 +826,36 @@ ltable_remove_if  (LTable                 *ltable,
 }
 
 static LTableEntry* 
-ltable_entry_new(const gchar* name,
-                 const gchar *full_name)
+ltable_entry_new(gchar **pathv,
+		 int     end)
 {
   LTableEntry* lte;
 
   lte = g_new0(LTableEntry, 1);
 
-  lte->name = g_strdup(name);
-  lte->full_name = g_strdup (full_name);
+  if (pathv != NULL)
+    {
+      GString* full_name;
+      guint i;
+
+      lte->name = g_strdup(pathv[end]);
+
+      full_name = g_string_new("/");
+      i = 0;
+      while (i <= end)
+	{
+	  g_string_append(full_name, pathv[i]);
+	  if (i != end)
+	    g_string_append_c(full_name, '/');
+	  i++;
+	}
+      lte->full_name = g_string_free(full_name, FALSE);
+    }
+  else
+    {
+      lte->name = g_strdup("/");
+      lte->full_name = g_strdup("/");
+    }
   
   return lte;
 }

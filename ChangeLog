@@ -1,3 +1,15 @@
+2005-02-06  Mark McLoughlin  <mark@skynet.ie>
+
+	Fix bug #154005 - "preload breaks saved state", caused
+	by a bug in the way the listeners tree was constructed.
+
+	* gconf/gconf-listeners.c:
+	(ltable_entry_new): take a list of path elements
+	and index to the entry and construct the full 
+	path for that entry.
+	(ltable_insert): update for above so that we
+	don't pass use the wrong path for full_name.
+
 2005-01-18  Mark McLoughlin  <mark@skynet.ie>
 
 	Fixes problem where a path file which only includes
