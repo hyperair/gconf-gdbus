@@ -24,7 +24,9 @@ workstation config files.
 * Add gconf_engine_key_is_writable()
 
 * Make sure accessors are named _get_foo() (e.g. GConfSchema,
-  GConfValue, GConfMetaInfo, GConfEntry)
+  GConfValue, GConfMetaInfo, GConfEntry) - hrm, maybe not 
+  though, since they don't follow GTK _get_ conventions
+  and are just struct access macros.
 
 * Check for more _destroy() that should be _free()
 
@@ -35,6 +37,8 @@ workstation config files.
 * Remove goofy "dummy" thing in GConfEngine
 
 * Implement batch gets
+
+* Envisioneer the vortals
 
 Maybe 1.4
 ===
