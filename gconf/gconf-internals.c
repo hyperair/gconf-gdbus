@@ -1693,3 +1693,15 @@ g_conf_concat_key_and_dir(const gchar* dir, const gchar* key)
   
   return retval;
 }
+
+gulong
+g_conf_string_to_gulong(const gchar* str)
+{
+  gulong retval;
+  errno = 0;
+  retval = strtoul(str, NULL, 10);
+  if (errno != 0)
+    retval = 0;
+
+  return retval;
+}

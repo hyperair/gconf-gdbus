@@ -140,6 +140,9 @@ gchar*        g_conf_concat_key_and_dir(const gchar* dir, const gchar* key);
 
 const gchar*  g_conf_global_appname(void);
 
+/* Returns 0 on failure */
+gulong        g_conf_string_to_gulong(const gchar* str);
+
 #endif
 
 

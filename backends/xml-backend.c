@@ -160,7 +160,6 @@ struct _Dir {
   gchar* fs_dirname;
   gchar* xml_filename;
   GTime last_access; /* so we know when to un-cache */
-  GTime mod_time;    /* time of last dir modification */
   xmlDocPtr doc;
   GHashTable* entry_cache; /* store key-value entries */
   GHashTable* subdir_cache; /* store subdirectories */
@@ -902,6 +901,7 @@ struct _Entry {
   gchar* schema_name;
   GConfValue* value;
   xmlNodePtr node;
+  gchar* mod_user;
   GTime mod_time;
   guint dirty : 1;
 };
@@ -925,8 +925,9 @@ static Dir*
 dir_new_blank(XMLSource* source, const gchar* key,
               gchar* fs_dirname, gchar* xml_filename);
 
-static Entry*
-dir_make_new_entry(Dir* d, const gchar* relative_key);
+static Entry* dir_make_new_entry(Dir* d, const gchar* relative_key);
+
+static gboolean dir_forget_entry_if_useless(Dir* d, Entry* e);
 
 /* dir implementations */
 
@@ -1021,7 +1022,7 @@ dir_create      (XMLSource* source, const gchar* key)
     }
   
   d = dir_new_blank(source, key, fs_dirname, xml_filename);
-
+  
   return d;
 }
 
@@ -1070,6 +1071,8 @@ dir_sync        (Dir* d)
 
   /* We should have a doc if dirty is TRUE */
   g_assert(d->doc != NULL);
+
+  d->last_access = time(NULL);
   
   if (d->deleted)
     {
@@ -1184,7 +1187,7 @@ static void
 dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
 {
   Entry* e;
-
+  
   if (d->doc == NULL)
     dir_load_doc(d);
   
@@ -1198,6 +1201,13 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
 
   e->value = g_conf_value_copy(value);
 
+  d->last_access = time(NULL);
+  e->mod_time = d->last_access;
+
+  if (e->mod_user)
+    g_free(e->mod_user);
+  e->mod_user = g_strdup(g_get_user_name());
+  
   e->dirty = TRUE;
   d->dirty = TRUE;
 }
@@ -1212,6 +1222,8 @@ dir_get_value   (Dir* d, const gchar* relative_key)
 
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
+  d->last_access = time(NULL);
+  
   if (e == NULL || e->value == NULL)
     return NULL;
   else
@@ -1221,9 +1233,31 @@ dir_get_value   (Dir* d, const gchar* relative_key)
 static GConfMetaInfo*
 dir_get_metainfo(Dir* d, const gchar* relative_key)
 {
-  /* FIXME */
+  GConfMetaInfo* gcmi;
+  Entry* e;
   
-  return NULL;
+  d->last_access = time(NULL);
+  
+  if (d->doc == NULL)
+    dir_load_doc(d);
+
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+
+  if (e == NULL)
+    return NULL;
+  
+  gcmi = g_conf_meta_info_new();
+
+  if (e->schema_name)
+    g_conf_meta_info_set_schema(gcmi, e->schema_name);
+
+  if (e->mod_time != 0)
+    g_conf_meta_info_set_mod_time(gcmi, e->mod_time);
+
+  if (e->mod_user)
+    g_conf_meta_info_set_mod_user(gcmi, e->mod_user);
+  
+  return gcmi;
 }
 
 static void
@@ -1231,26 +1265,34 @@ dir_unset_value (Dir* d, const gchar* relative_key)
 {
   Entry* e; 
 
+  d->last_access = time(NULL);
+  
   if (d->doc == NULL)
     dir_load_doc(d);
 
   e = g_hash_table_lookup(d->entry_cache, relative_key);
   
-  if (e == NULL)
+  if (e == NULL ||
+      e->value == NULL) /* nothing to change */
     return;
 
-  if (e->node != NULL)
-    {
-      xmlUnlinkNode(e->node);
-      xmlFreeNode(e->node);
-      e->node = NULL;
-    }
-
-  g_hash_table_remove(d->entry_cache, e->name);
-
-  entry_destroy(e);
-
   d->dirty = TRUE;
+  
+  if (dir_forget_entry_if_useless(d, e))
+    {
+      /* entry is destroyed */
+      return;
+    }
+  else
+    {
+      e->mod_time = d->last_access;
+      
+      if (e->mod_user)
+        g_free(e->mod_user);
+      e->mod_user = g_strdup(g_get_user_name());
+
+      e->dirty = TRUE;
+    }
 }
 
 static GSList*
@@ -1283,18 +1325,30 @@ dir_set_schema  (Dir* d,
 
   if (d->doc == NULL)
     dir_load_doc(d);
+
+  d->dirty = TRUE;
+  d->last_access = time(NULL);
   
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   if (e == NULL)
     e = dir_make_new_entry(d, relative_key);
 
+  e->mod_time = d->last_access;
+  
   if (e->schema_name)
     g_free(e->schema_name);
 
-  e->schema_name = g_strdup(schema_key);
-
-  e->dirty = TRUE;
+  if (schema_key != NULL)
+    {
+      e->schema_name = g_strdup(schema_key);
+      e->dirty = TRUE;
+    }
+  else
+    {
+      e->schema_name = NULL;
+      dir_forget_entry_if_useless(d, e);
+    }
 }
 
 static void
@@ -1364,18 +1418,6 @@ dir_load_doc(Dir* d)
     }
   else
     {
-      gchar* str = xmlGetProp(doc->root, "mtime");
-      
-      if (str != NULL)
-        {
-          d->mod_time = atoi(str);
-          free(str);
-        }
-      else
-        {
-          d->mod_time = time(NULL);
-        }
-      
       /* Fill child_cache from entries */
       dir_fill_cache_from_doc(d);
     }
@@ -1397,7 +1439,6 @@ dir_new_blank(XMLSource* source, const gchar* key, gchar* fs_dirname, gchar* xml
   d->fs_dirname = fs_dirname;
   
   d->last_access = time(NULL);
-  d->mod_time = 0;
   d->doc = NULL;
 
   d->entry_cache = g_hash_table_new(g_str_hash, g_str_equal);
@@ -1418,10 +1459,33 @@ dir_make_new_entry(Dir* d, const gchar* relative_key)
   e->name = g_strdup(relative_key);
   e->node = xmlNewChild(d->doc->root, NULL, "entry", NULL);
   e->dirty = TRUE;
-
+  e->mod_time = 0;
+  e->mod_user = NULL;
+  
   safe_g_hash_table_insert(d->entry_cache, e->name, e);
 
   return e;
+}
+
+static gboolean
+dir_forget_entry_if_useless(Dir* d, Entry* e)
+{
+  if (e->schema_name ||
+      e->value)
+    return FALSE; /* not useless */
+
+  if (e->node != NULL)
+    {
+      xmlUnlinkNode(e->node);
+      xmlFreeNode(e->node);
+      e->node = NULL;
+    }
+
+  g_hash_table_remove(d->entry_cache, e->name);
+
+  entry_destroy(e);
+
+  return TRUE;
 }
 
 static void
@@ -1559,14 +1623,20 @@ entry_sync    (Entry* e)
   
   xmlSetProp(e->node, "name", e->name);
 
-  {
-    gchar* str = g_strdup_printf("%u", (guint)e->mod_time);
-    xmlSetProp(e->node, "mtime", str);
-    g_free(str);
-  }
+  if (e->mod_time != 0)
+    {
+      gchar* str = g_strdup_printf("%u", (guint)e->mod_time);
+      xmlSetProp(e->node, "mtime", str);
+      g_free(str);
+    }
+  else
+    xmlSetProp(e->node, "mtime", NULL); /* Unset */
 
-  if (e->schema_name)
-    xmlSetProp(e->node, "schema", e->schema_name);
+  /* OK if schema_name is NULL, then we unset */
+  xmlSetProp(e->node, "schema", e->schema_name);
+
+  /* OK if mod_user is NULL, since it unsets */
+  xmlSetProp(e->node, "muser", e->mod_user);
   
   xentry_set_value(e->node, e->value);
 
@@ -1601,12 +1671,22 @@ entry_fill    (Entry* e)
 
   if (tmp != NULL)
     {
-      e->mod_time = atoi(tmp);
+      e->mod_time = g_conf_string_to_gulong(tmp);
       free(tmp);
     }
   else
-    e->mod_time = time(NULL);
+    e->mod_time = 0;
 
+  tmp = xmlGetProp(e->node, "muser");
+
+  if (tmp != NULL)
+    {
+      e->mod_user = g_strdup(tmp);
+      free(tmp);
+    }
+  else
+    e->mod_user = NULL;
+  
   if (e->value != NULL)
     g_conf_value_destroy(e->value);
   
