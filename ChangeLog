@@ -1,3 +1,8 @@
+2005-03-23  Tor Lillqvist  <tml@novell.com>
+
+	* gconf/gconfd.c (test_safe_tmp_dir): Nah, stat() isn't useful for
+	permission checking on Win32. Bypass for now on Win32.
+
 2005-03-18  Tor Lillqvist  <tml@novell.com>
 
 	Port to Windows:

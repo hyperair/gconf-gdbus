@@ -553,10 +553,11 @@ log_handler (const gchar   *log_domain,
 static gboolean
 test_safe_tmp_dir (const char *dirname)
 {
-  struct stat statbuf;
-
 #ifndef G_OS_WIN32
-  int fd = open (dirname, O_RDONLY);  
+  struct stat statbuf;
+  int fd;
+
+  fd = open (dirname, O_RDONLY);  
   if (fd < 0)
     {
       gconf_log (GCL_WARNING, _("Failed to open %s: %s"),
@@ -572,19 +573,14 @@ test_safe_tmp_dir (const char *dirname)
       return FALSE;
     }
   close (fd);
-#else
-  /* Can't open() a directory on Win32 */
-  stat (dirname, &statbuf);
-#endif
 
-#ifdef HAVE_GETUID  
   if (statbuf.st_uid != getuid ())
     {
       gconf_log (GCL_WARNING, _("Owner of %s is not the current user"),
                  dirname);
       return FALSE;
     }
-#endif
+
   if ((statbuf.st_mode & (S_IRWXG|S_IRWXO)) ||
       !S_ISDIR (statbuf.st_mode))
     {
@@ -592,6 +588,12 @@ test_safe_tmp_dir (const char *dirname)
                  (unsigned long) statbuf.st_mode & 07777, dirname);
       return FALSE;
     }
+#else
+  /* FIXME: We can't get any useful information about the actual
+   * protection for the directory using stat(). We must use the Win32
+   * API to check the owner and permissions (ACL). Later.
+   */
+#endif
   
   return TRUE;
 }
