@@ -1,3 +1,28 @@
+2001-02-27  Havoc Pennington  <hp@redhat.com>
+
+        Merge from stable.
+	
+	* gconf/gconfd.c (main): Close stdin/stdout/stderr. Also, set the
+	log handler, so we don't need stdout/stderr to see GLib messages,
+	they go to syslog.
+
+	* gconf/Makefile.am (INCLUDES): set the log domain
+
+	* gconf/gconftool.c (recurse_subdir_list): the list contains full
+	directory paths to start with, fix from Colm
+
+	* gconf/gconfd.c (register_database): bugfix from Colm
+
+	* gconf/gconf.c (lookup_engine): fix from Colm to check that we
+	have an engines hash
+	(gconf_engine_get_for_address): improve warning message, fix from
+	Colm
+	(gconf_engine_remove_dir): new function from Colm, this was
+	implemented on the server side but somehow never exported.
+
+	* gconf/gconf-database.c (gconf_database_get_persistent_name): Fix
+	from Colm to handle the case of empty databases (no sources).
+
 2001-02-05  Havoc Pennington  <hp@redhat.com>
 
         File permissions fixes, problem pointed out by Steve Fox.

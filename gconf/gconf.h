@@ -110,6 +110,9 @@ void     gconf_engine_suggest_sync     (GConfEngine  *conf,
 gboolean gconf_engine_dir_exists       (GConfEngine  *conf,
                                         const gchar  *dir,
                                         GError  **err);
+void     gconf_engine_remove_dir       (GConfEngine* conf,
+                                        const gchar* dir,
+                                        GError** err);
 
 gboolean gconf_engine_key_is_writable  (GConfEngine *conf,
                                         const gchar *key,

@@ -1298,7 +1298,13 @@ const gchar*
 gconf_database_get_persistent_name (GConfDatabase *db)
 {
   if (db->persistent_name == NULL)
-    db->persistent_name = g_strdup (((GConfSource*)db->sources->sources->data)->address);
+    {
+      if (db->sources->sources)
+        db->persistent_name =
+          g_strdup (((GConfSource*)db->sources->sources->data)->address);
+      else
+        db->persistent_name = g_strdup ("empty");
+    }
 
   return db->persistent_name;
 }

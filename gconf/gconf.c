@@ -346,7 +346,10 @@ unregister_engine (GConfEngine *conf)
 static GConfEngine *
 lookup_engine (const gchar *address)
 {
-  return g_hash_table_lookup (engines_by_address, address);
+  if (engines_by_address)
+    return g_hash_table_lookup (engines_by_address, address);
+  else
+    return NULL;
 }
 
 
@@ -409,8 +412,8 @@ GConfEngine*
 gconf_engine_get_for_address (const gchar* address, GError** err)
 {
   GConfEngine* conf;
-
-  g_warning("Non-default GConfEngine's are basically broken, best not to use them right now.");
+  
+  g_warning("Non-default configuration sources currently do not support change-notification, and are not yet recommended for use in applications.");
 
   conf = lookup_engine (address);
 
@@ -1621,6 +1624,57 @@ gconf_engine_dir_exists(GConfEngine *conf, const gchar *dir, GError** err)
     ; /* nothing */
 
   return (server_ret == CORBA_TRUE);
+}
+
+void
+gconf_engine_remove_dir (GConfEngine* conf,
+                         const gchar* dir,
+                         GError** err)
+{
+  CORBA_Environment ev;
+  ConfigDatabase db;
+  gint tries = 0;
+
+  g_return_if_fail(conf != NULL);
+  g_return_if_fail(dir != NULL);
+  g_return_if_fail(err == NULL || *err == NULL);
+  
+  if (!gconf_key_check(dir, err))
+    return;
+
+  if (gconf_engine_is_local(conf))
+    {
+      gconf_sources_remove_dir(conf->local_sources, dir, err);
+      return;
+    }
+
+  CORBA_exception_init(&ev);
+  
+ RETRY:
+  
+  db = gconf_engine_get_database (conf, TRUE, err);
+
+  if (db == CORBA_OBJECT_NIL)
+    {
+      g_return_if_fail(err == NULL || *err != NULL);
+      return;
+    }
+  
+  ConfigDatabase_remove_dir(db, (gchar*)dir, &ev);
+
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_engine_detach (conf);
+          goto RETRY;
+        }
+    }
+  gconf_handle_corba_exception(&ev, err);
+  
+  return;
 }
 
 gboolean

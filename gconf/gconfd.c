@@ -416,6 +416,41 @@ gconf_get_poa ()
   return the_poa;
 }
 
+static void
+log_handler (const gchar   *log_domain,
+             GLogLevelFlags log_level,
+             const gchar   *message,
+             gpointer       user_data)
+{
+  GConfLogPriority pri = GCL_WARNING;
+  
+  switch (log_level)
+    {
+    case G_LOG_LEVEL_ERROR:
+    case G_LOG_LEVEL_CRITICAL:
+      pri = GCL_ERR;
+      break;
+
+    case G_LOG_LEVEL_WARNING:
+      pri = GCL_WARNING;
+      break;
+
+    case G_LOG_LEVEL_MESSAGE:
+    case G_LOG_LEVEL_INFO:
+      pri = GCL_INFO;
+      break;
+
+    case G_LOG_LEVEL_DEBUG:
+      pri = GCL_DEBUG;
+      break;
+
+    default:
+      break;
+    }
+
+  gconf_log (pri, "%s", message);
+}
+
 int 
 main(int argc, char** argv)
 {
@@ -431,11 +466,19 @@ main(int argc, char** argv)
   gchar* ior;
   OAF_RegistrationResult result;
   int exit_code = 0;
-  
+
+
   chdir ("/");
 
+  /* This is so we don't prevent unmounting of devices. We divert
+   * all messages to syslog
+   */
+  close (0);
+  close (1);
+  close (2);
+  
   umask (022);
-
+  
   gconf_set_daemon_mode(TRUE);
   
   /* Logs */
@@ -445,6 +488,10 @@ main(int argc, char** argv)
   g_snprintf(logname, len, "gconfd (%s-%u)", username, (guint)getpid());
 
   openlog (logname, LOG_NDELAY, LOG_USER);
+
+  g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
+                     log_handler, NULL);
+  
   /* openlog() does not copy logname - what total brokenness.
      So we free it at the end of main() */
   
@@ -452,7 +499,7 @@ main(int argc, char** argv)
              VERSION, (guint)getpid(), g_get_user_name());
 
 #ifdef GCONF_ENABLE_DEBUG
-  gconf_log (GCL_DEBUG, _("GConf was built with debugging features enabled"));
+  gconf_log (GCL_DEBUG, "GConf was built with debugging features enabled");
 #endif
   
   /* Session setup */
@@ -686,9 +733,10 @@ set_default_database (GConfDatabase* db)
 static void
 register_database (GConfDatabase *db)
 {
-  safe_g_hash_table_insert(dbs_by_address,
-                           ((GConfSource*)db->sources->sources->data)->address,
-                           db);
+  if (db->sources->sources)
+    safe_g_hash_table_insert(dbs_by_address,
+                             ((GConfSource*)db->sources->sources->data)->address,
+                             db);
   
   db_list = g_list_prepend (db_list, db);
 }
@@ -696,8 +744,9 @@ register_database (GConfDatabase *db)
 static void
 unregister_database (GConfDatabase *db)
 {
-  g_hash_table_remove(dbs_by_address,
-                      ((GConfSource*)(db->sources->sources->data))->address);
+  if (db->sources->sources)
+    g_hash_table_remove(dbs_by_address,
+                        ((GConfSource*)(db->sources->sources->data))->address);
 
   db_list = g_list_remove (db_list, db);
 

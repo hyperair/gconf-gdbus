@@ -704,16 +704,14 @@ recurse_subdir_list(GConfEngine* conf, GSList* subdirs, const gchar* parent, gui
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
-      gchar* full = gconf_concat_dir_and_key(parent, s);
       
       printf("%s%s:\n", whitespace, s);
       
-      list_pairs_in_dir(conf, full, depth);
+      list_pairs_in_dir(conf, s, depth);
 
-      recurse_subdir_list(conf, gconf_engine_all_dirs(conf, full, NULL), full, depth+1);
+      recurse_subdir_list(conf, gconf_engine_all_dirs(conf, s, NULL), s, depth+1);
 
       g_free(s);
-      g_free(full);
       
       tmp = g_slist_next(tmp);
     }

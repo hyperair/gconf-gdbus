@@ -7,6 +7,7 @@ INCLUDES=\
 	$(ORBIT_CFLAGS) \
 	$(XML_CFLAGS) \
 	$(OAF_CFLAGS) \
+	-DG_LOG_DOMAIN=\"GConf\"                   \
 	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"  \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" \
 	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\" \
