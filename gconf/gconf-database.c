@@ -27,28 +27,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-/* This makes hash table safer when debugging */
-#ifndef GCONF_ENABLE_DEBUG
-#define safe_g_hash_table_insert g_hash_table_insert
-#else
-static void
-safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
-{
-  gpointer oldkey = NULL, oldval = NULL;
-
-  if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
-    {
-      gconf_log(GCL_WARNING, "Hash key `%s' is already in the table!",
-                (gchar*) key);
-      return;
-    }
-  else
-    {
-      g_hash_table_insert(ht, key, value);
-    }
-}
-#endif
-
 /*
  * Forward decls
  */
