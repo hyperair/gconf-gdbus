@@ -336,6 +336,30 @@ g_conf_source_all_dirs          (GConfSource* source,
   return (*source->backend->vtable->all_subdirs)(source, dir);
 }
 
+void         
+g_conf_source_remove_dir        (GConfSource* source,
+                                 const gchar* dir)
+{
+  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
+    {
+      g_warning("Invalid directory `%s'", dir);
+    }
+  return (*source->backend->vtable->remove_dir)(source, dir);
+}
+
+void          
+g_conf_source_nuke_dir        (GConfSource* source,
+                               const gchar* dir)
+{
+  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
+    {
+      g_warning("Invalid directory `%s'", dir);
+    }
+
+  return (*source->backend->vtable->nuke_dir)(source, dir);
+}
+
+
 gboolean
 g_conf_source_sync_all         (GConfSource* source)
 {
@@ -716,6 +740,48 @@ g_conf_sources_unset_value   (GConfSources* sources,
       tmp = g_list_next(tmp);
     }
 }
+
+void          
+g_conf_sources_remove_dir (GConfSources* sources,
+                           const gchar* dir)
+{
+  /* We remove in every layer we can write to... */
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+
+      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+        g_conf_source_remove_dir(src, dir);
+      
+      tmp = g_list_next(tmp);
+    }
+}
+
+
+void          
+g_conf_sources_nuke_dir (GConfSources* sources,
+                         const gchar* dir)
+{
+  /* We remove in every layer we can write to... */
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+
+      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+        g_conf_source_nuke_dir(src, dir);
+      
+      tmp = g_list_next(tmp);
+    }
+}
+
 
 /* God, this is depressingly inefficient. Maybe there's a nicer way to
    implement it... */

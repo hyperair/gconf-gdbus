@@ -39,6 +39,10 @@ interface ConfigServer {
 
   void unset(in string key);
 
+  void remove_dir(in string dir);
+
+  void nuke_dir(in string dir);
+
   void all_pairs(in string dir, 
                  out KeyList keys,
                  out ValueList values);

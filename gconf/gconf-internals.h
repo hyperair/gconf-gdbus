@@ -55,6 +55,11 @@ GSList*      g_conf_source_all_pairs         (GConfSource* source,
                                               const gchar* dir);
 GSList*      g_conf_source_all_dirs          (GConfSource* source,
                                               const gchar* dir);
+void         g_conf_source_remove_dir        (GConfSource* source,
+                                              const gchar* dir);
+void          g_conf_source_nuke_dir        (GConfSource* source,
+                                             const gchar* dir);
+
 gboolean     g_conf_source_sync_all          (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
 
@@ -102,6 +107,12 @@ GSList*       g_conf_sources_all_pairs   (GConfSources* sources,
                                           const gchar* dir);
 GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
                                          const gchar* dir);
+void          g_conf_sources_remove_dir (GConfSources* sources,
+                                         const gchar* dir);
+
+void          g_conf_sources_nuke_dir (GConfSources* sources,
+                                       const gchar* dir);
+
 gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 
 gchar**       g_conf_load_source_path(const gchar* filename);

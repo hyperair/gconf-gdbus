@@ -124,40 +124,48 @@ static void         ltable_entry_destroy(LTableEntry* entry);
 
 static ConfigServer server = CORBA_OBJECT_NIL;
 
-CORBA_unsigned_long 
+static CORBA_unsigned_long 
 gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where, 
                     ConfigListener who, CORBA_Environment *ev);
-void 
+static void 
 gconfd_remove_listener(PortableServer_Servant servant,
                        CORBA_unsigned_long cnxn,
                        CORBA_Environment *ev);
-ConfigValue* 
+static ConfigValue* 
 gconfd_lookup(PortableServer_Servant servant, CORBA_char * key, 
               CORBA_Environment *ev);
-void
+static void
 gconfd_set(PortableServer_Servant servant, CORBA_char * key, 
            ConfigValue* value, CORBA_Environment *ev);
 
-void 
+static void 
 gconfd_unset(PortableServer_Servant servant, CORBA_char * key, 
              CORBA_Environment *ev);
 
-void 
+static void 
+gconfd_remove_dir(PortableServer_Servant servant, CORBA_char * dir, 
+                  CORBA_Environment *ev);
+
+static void 
+gconfd_nuke_dir(PortableServer_Servant servant, CORBA_char * dir, 
+                CORBA_Environment *ev);
+
+static void 
 gconfd_all_pairs (PortableServer_Servant servant, CORBA_char * dir, 
                   ConfigServer_KeyList ** keys, 
                   ConfigServer_ValueList ** values, CORBA_Environment * ev);
 
-void 
+static void 
 gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev);
 
-void 
+static void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
 
-CORBA_long
+static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
 
-void
+static void
 gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev);
 
 static PortableServer_ServantBase__epv base_epv = {
@@ -173,6 +181,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_lookup, 
   gconfd_set,
   gconfd_unset,
+  gconfd_remove_dir,
+  gconfd_nuke_dir,
   gconfd_all_pairs,
   gconfd_all_dirs,
   gconfd_sync,
@@ -184,7 +194,7 @@ static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
 static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
 
-CORBA_unsigned_long
+static CORBA_unsigned_long
 gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where, 
                     const ConfigListener who, CORBA_Environment *ev)
 {
@@ -199,14 +209,14 @@ gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where,
   return l->cnxn;
 }
 
-void 
+static void 
 gconfd_remove_listener(PortableServer_Servant servant, CORBA_unsigned_long cnxn, CORBA_Environment *ev)
 {
   syslog(LOG_DEBUG, "Removing listener %u", (guint)cnxn);
   ltable_remove(ltable, cnxn);
 }
 
-ConfigValue*
+static ConfigValue*
 gconfd_lookup(PortableServer_Servant servant, CORBA_char * key, 
               CORBA_Environment *ev)
 {
@@ -232,7 +242,7 @@ gconfd_lookup(PortableServer_Servant servant, CORBA_char * key,
     return invalid_corba_value();
 }
 
-void
+static void
 gconfd_set(PortableServer_Servant servant, CORBA_char * key, 
            ConfigValue* value, CORBA_Environment *ev)
 {
@@ -264,7 +274,7 @@ gconfd_set(PortableServer_Servant servant, CORBA_char * key,
   ltable_notify_listeners(ltable, key, value);
 }
 
-void 
+static void 
 gconfd_unset(PortableServer_Servant servant, CORBA_char * key, 
              CORBA_Environment *ev)
 {
@@ -287,7 +297,42 @@ gconfd_unset(PortableServer_Servant servant, CORBA_char * key,
   CORBA_free(val);
 }
 
-void 
+static void 
+gconfd_remove_dir(PortableServer_Servant servant, CORBA_char * dir, 
+                  CORBA_Environment *ev)
+{
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received rmdir request before initializing sources list; bug?");
+      return;
+    } 
+  
+  syslog(LOG_DEBUG, "Received request to remove dir `%s'", dir);
+
+  g_conf_sources_remove_dir(sources, dir);
+}
+
+static void 
+gconfd_nuke_dir(PortableServer_Servant servant, CORBA_char * dir, 
+                CORBA_Environment *ev)
+{
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received rm -rf request before initializing sources list; bug?");
+      return;
+    } 
+  
+  syslog(LOG_DEBUG, "Received request to nuke dir `%s'", dir);
+
+  syslog(LOG_ERR, "Nuke dir isn't implemented");
+
+  return;
+
+  g_conf_sources_nuke_dir(sources, dir);
+
+}
+
+static void 
 gconfd_all_pairs (PortableServer_Servant servant, 
                   CORBA_char * dir, 
                   ConfigServer_KeyList ** keys, 
@@ -343,7 +388,7 @@ gconfd_all_pairs (PortableServer_Servant servant,
   g_slist_free(pairs);
 }
 
-void 
+static void 
 gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev)
 {
@@ -388,7 +433,7 @@ gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir,
   g_slist_free(subdirs);
 }
 
-void 
+static void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
 {
   syslog(LOG_DEBUG, "Received request to sync all config data");
@@ -406,13 +451,13 @@ gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
     }
 }
 
-CORBA_long
+static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
 {
   return getpid();
 }
 
-void
+static void
 gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 {
   syslog(LOG_INFO, "Shutdown request received; exiting.");

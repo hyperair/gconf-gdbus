@@ -184,7 +184,7 @@ xs_prune(XMLSource* source, const gchar* dir);
 static void
 xs_remove_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry);
 
-static void
+static gboolean
 xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry);
 
 /*
@@ -208,6 +208,12 @@ static GSList*       all_subdirs     (GConfSource* source,
 static void          unset_value     (GConfSource* source,
                                       const gchar* key);
 
+static void          remove_dir      (GConfSource* source,
+                                      const gchar* dir);
+
+static void          nuke_dir        (GConfSource* source,
+                                      const gchar* dir);
+
 static gboolean      sync_all        (GConfSource* source);
 
 static void          destroy_source  (GConfSource* source);
@@ -220,6 +226,8 @@ static GConfBackendVTable xml_vtable = {
   all_entries,
   all_subdirs,
   unset_value,
+  remove_dir,
+  nuke_dir,
   sync_all,
   destroy_source
 };
@@ -317,6 +325,38 @@ unset_value     (GConfSource* source,
 
   xs_unset_value(xsource, key);
 }
+
+static void          
+remove_dir      (GConfSource* source,
+                 const gchar* dir)
+{
+  XMLSource* xsource = (XMLSource*)source;
+  TreeCacheEntry* entry;
+
+  entry = xs_lookup_dir(xsource, dir);
+
+  g_assert(entry != NULL);
+
+  if (!xs_remove_dir_if_empty(xsource, dir, entry))
+    g_warning("Directory `%s' wasn't empty, not removed", dir);
+}
+
+static void          
+nuke_dir      (GConfSource* source,
+               const gchar* dir)
+{
+  XMLSource* xsource = (XMLSource*)source;
+  TreeCacheEntry* entry;
+
+  entry = xs_lookup_dir(xsource, dir);
+
+  g_assert(entry != NULL);
+
+  g_assert_not_reached(); /* don't use this method yet */
+  
+  /* FIXME */
+}
+
 
 static gboolean      
 sync_all        (GConfSource* source)
@@ -774,9 +814,6 @@ xs_remove_dir(XMLSource* source, const gchar* dir, TreeCacheEntry* entry)
 
       parent_entry->dirty = TRUE;
 
-      /* Remove the parent if it just became empty */
-      xs_remove_dir_if_empty(source, parent, parent_entry);
-
       g_free(parent);
     }
   else 
@@ -962,7 +999,7 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
   g_assert(tree_entry->dirty);
 }
 
-static void
+static gboolean
 xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree_entry)
 {
   if (tree_entry->dirs != NULL)
@@ -986,9 +1023,15 @@ xs_remove_dir_if_empty(XMLSource* source, const gchar* dir, TreeCacheEntry* tree
       tree_entry->dirty = TRUE;
     }
 
-  /* Remove from parent */
+
   if (tree_entry->tree == NULL)
-    xs_remove_dir(source, dir, tree_entry);
+    {
+      /* Remove from parent */
+      xs_remove_dir(source, dir, tree_entry);
+      return TRUE;
+    }
+  else
+    return FALSE; /* not removed */
 }
 
 static void
@@ -996,7 +1039,6 @@ xs_unset_value(XMLSource* source, const gchar* key)
 {
   KeyCacheEntry* key_entry;
   TreeCacheEntry* tree_entry;
-  gchar* parent;
 
   xs_lookup_key_and_dir(source, key, &tree_entry, &key_entry);
 
@@ -1021,12 +1063,6 @@ xs_unset_value(XMLSource* source, const gchar* key)
   g_conf_value_destroy(key_entry->value);
   
   key_entry->value = NULL;
-
-  parent = parent_dir(key);
-
-  xs_remove_dir_if_empty(source, parent, tree_entry);
-  
-  g_free(parent);
 }
 
 static void
