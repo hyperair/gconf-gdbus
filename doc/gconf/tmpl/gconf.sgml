@@ -78,6 +78,7 @@ to gconf_notify_add().
 @cnxn_id: the ID returned from gconf_notify_add().
 @key: the full path of the changed key.
 @value: the new value, or <symbol>NULL</symbol> if the key was unset.
+@is_default: 
 @user_data: the user data passed to gconf_notify_add().
 
 
@@ -144,6 +145,42 @@ identical to gconf_get() in all respects.
 @locale: preferred locale (as in the locale-related environment variables).
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
+
+
+<!-- ##### FUNCTION gconf_get_without_default ##### -->
+<para>
+
+</para>
+
+@conf: 
+@key: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_get_full ##### -->
+<para>
+
+</para>
+
+@conf: 
+@key: 
+@locale: 
+@use_schema_default: 
+@value_is_default: 
+@err: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gconf_get_default_from_schema ##### -->
+<para>
+
+</para>
+
+@conf: 
+@key: 
+@err: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gconf_set ##### -->
@@ -312,6 +349,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 @key: key you want the value of.
 @err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or 0 if no value is obtained.
+
 
 <!-- ##### FUNCTION gconf_get_string ##### -->
 <para>
