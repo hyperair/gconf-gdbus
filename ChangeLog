@@ -1,3 +1,31 @@
+2002-01-05  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-client.c (gconf_client_cache): return bool for
+	whether the value in the cache changed
+	(notify_from_server_callback): short-circuit notification if a
+	value hasn't actually changed. would be better to do this
+	server-side, but that's a bit complicated for now.
+
+	* gconf/gconf-value.c (gconf_value_compare): new function,
+	internal for now to avoid API addition
+
+	* gconf/gconf-client.c (cache_entry_list_destructively): new
+	static function
+	(gconf_client_all_entries): cache the requested entries, if 
+	we are monitoring the dir we get the values from.
+
+	* gconf/gconf-value.c (gconf_entry_copy): new function, internal
+	for now to avoid API addition
+
+2002-01-04  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-client.c (gconf_client_class_init): add
+	GCONF_DEBUG_TRACE_CLIENT setting, to debug spew about
+	what's going on
+	(gconf_client_real_unreturned_error): also ignore
+	GCONF_ERROR_NO_WRITABLE_DATABASE since it's typically not 
+	an error to report.
+
 2002-01-04  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-client.c (gconf_client_preload): allow preloading 

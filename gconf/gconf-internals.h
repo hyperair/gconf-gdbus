@@ -246,6 +246,11 @@ gconf_CORBA_Object_hash(gconstpointer key)
   return retval;
 }
 
+/* FIXME move to public eventually */
+GConfEntry* gconf_entry_copy (const GConfEntry *src);
+int         gconf_value_compare (const GConfValue *value_a,
+                                 const GConfValue *value_b);
+
 #endif /* GCONF_ENABLE_INTERNALS */
 
 #endif /* GCONF_GCONF_INTERNALS_H */

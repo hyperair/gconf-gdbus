@@ -935,6 +935,217 @@ gconf_value_set_list       (GConfValue* value,
   value->d.list_data.list = copy_value_list(list);
 }
 
+
+static int
+null_safe_strcmp(const char* lhs, const char* rhs)
+{
+  if (lhs == NULL && rhs == NULL)
+    return 0;
+  else if (lhs == NULL)
+    return -1;
+  else if (rhs == NULL)
+    return 1;
+  else
+    return strcmp (lhs, rhs);
+}
+
+int
+gconf_value_compare (const GConfValue *value_a,
+                     const GConfValue *value_b)
+{
+  g_return_val_if_fail (value_a != NULL, 0);
+  g_return_val_if_fail (value_b != NULL, 0);
+
+  /* Impose arbitrary type ordering, just to keep the
+   * sort invariants stable.
+   */
+  if (value_a->type < value_b->type)
+    return -1;
+  else if (value_a->type > value_b->type)
+    return 1;
+  
+  switch (value_a->type)
+    {
+    case GCONF_VALUE_INT:
+      if (gconf_value_get_int (value_a) < gconf_value_get_int (value_b))
+        return -1;
+      else if (gconf_value_get_int (value_a) > gconf_value_get_int (value_b))
+        return 1;
+      else
+        return 0;
+      break;
+    case GCONF_VALUE_FLOAT:
+      if (gconf_value_get_float (value_a) < gconf_value_get_float (value_b))
+        return -1;
+      else if (gconf_value_get_float (value_a) > gconf_value_get_float (value_b))
+        return 1;
+      else
+        return 0;
+      break;
+    case GCONF_VALUE_STRING:
+      return strcmp (gconf_value_get_string (value_a),
+                     gconf_value_get_string (value_b));
+      break;
+    case GCONF_VALUE_BOOL:
+      if (gconf_value_get_bool (value_a) == gconf_value_get_bool (value_b))
+        return 0;
+      /* make TRUE > FALSE to maintain sort invariants */
+      else if (gconf_value_get_bool (value_a))
+        return 1;
+      else
+        return -1;
+      break;
+    case GCONF_VALUE_LIST:
+      {
+        GSList *list_a;
+        GSList *list_b;
+
+        list_a = gconf_value_get_list (value_a);
+        list_b = gconf_value_get_list (value_b);
+        
+        while (list_a != NULL && list_b != NULL)
+          {
+            int result;
+
+            result = gconf_value_compare (list_a->data, list_b->data);
+
+            if (result != 0)
+              return result;
+            
+            list_a = g_slist_next (list_a);
+            list_b = g_slist_next (list_b);
+          }
+        
+        if (list_a)
+          return 1; /* list_a is longer so "greater" */
+        else if (list_b)
+          return -1;
+        else
+          return 0;
+      }
+      break;
+    case GCONF_VALUE_PAIR:
+      {
+        GConfValue *a_car, *b_car, *a_cdr, *b_cdr;
+        int result;
+        
+        a_car = gconf_value_get_car (value_a);
+        b_car = gconf_value_get_car (value_b);
+        a_cdr = gconf_value_get_cdr (value_a);
+        b_cdr = gconf_value_get_cdr (value_b);
+
+        if (a_car == NULL && b_car != NULL)
+          return -1;
+        else if (a_car != NULL && b_car == NULL)
+          return 1;
+        else if (a_car != NULL && b_car != NULL)
+          {
+            result = gconf_value_compare (a_car, b_car);
+
+            if (result != 0)
+              return result;
+          }
+
+        if (a_cdr == NULL && b_cdr != NULL)
+          return -1;
+        else if (a_cdr != NULL && b_cdr == NULL)
+          return 1;
+        else if (a_cdr != NULL && b_cdr != NULL)
+          {
+            result = gconf_value_compare (a_cdr, b_cdr);
+
+            if (result != 0)
+              return result;
+          }
+
+        return 0;
+      }
+      break;
+    case GCONF_VALUE_INVALID:
+      return 0;
+      break;
+    case GCONF_VALUE_SCHEMA:
+      {
+        const char *locale_a, *locale_b;
+        GConfValueType type_a, type_b;
+        GConfValueType list_type_a, list_type_b;
+        GConfValueType car_type_a, car_type_b;
+        GConfValueType cdr_type_a, cdr_type_b;
+        const char *short_desc_a, *short_desc_b;
+        const char *long_desc_a, *long_desc_b;
+        int result;
+        
+        type_a = gconf_schema_get_type (gconf_value_get_schema (value_a));
+        type_b = gconf_schema_get_type (gconf_value_get_schema (value_b));
+
+        if (type_a < type_b)
+          return -1;
+        else if (type_a > type_b)
+          return 1;
+
+        short_desc_a = gconf_schema_get_short_desc (gconf_value_get_schema (value_a));
+        short_desc_b = gconf_schema_get_short_desc (gconf_value_get_schema (value_b));
+
+        result = null_safe_strcmp (short_desc_a, short_desc_b);
+        if (result != 0)
+          return result;
+        
+        long_desc_a = gconf_schema_get_long_desc (gconf_value_get_schema (value_a));
+
+
+        long_desc_b = gconf_schema_get_long_desc (gconf_value_get_schema (value_b));
+
+        result = null_safe_strcmp (long_desc_a, long_desc_b);
+        if (result != 0)
+          return result;
+        
+        locale_a = gconf_schema_get_locale (gconf_value_get_schema (value_a));
+        locale_b = gconf_schema_get_locale (gconf_value_get_schema (value_b));
+
+        result = null_safe_strcmp (locale_a, locale_b);
+        if (result != 0)
+          return result;        
+
+        if (type_a == GCONF_VALUE_LIST)
+          {
+            list_type_a = gconf_schema_get_list_type (gconf_value_get_schema (value_a));
+            list_type_b = gconf_schema_get_list_type (gconf_value_get_schema (value_b));
+            
+            if (list_type_a < list_type_b)
+              return -1;
+            else if (list_type_a > list_type_b)
+              return 1;
+          }
+
+        if (type_a == GCONF_VALUE_PAIR)
+          {
+            car_type_a = gconf_schema_get_car_type (gconf_value_get_schema (value_a));
+            car_type_b = gconf_schema_get_car_type (gconf_value_get_schema (value_b));
+            
+            if (car_type_a < car_type_b)
+              return -1;
+            else if (car_type_a > car_type_b)
+              return 1;
+            
+            cdr_type_a = gconf_schema_get_cdr_type (gconf_value_get_schema (value_a));
+            cdr_type_b = gconf_schema_get_cdr_type (gconf_value_get_schema (value_b));
+            
+            if (cdr_type_a < cdr_type_b)
+              return -1;
+            else if (cdr_type_a > cdr_type_b)
+              return 1;
+          }
+
+        return 0;
+      }
+      break;
+    }
+
+  g_assert_not_reached ();
+
+  return 0;
+}
+
 /*
  * GConfMetaInfo
  */
@@ -1016,6 +1227,20 @@ gconf_entry_free(GConfEntry* pair)
   if (pair->schema_name)
     g_free (pair->schema_name);
   g_free(pair);
+}
+
+GConfEntry*
+gconf_entry_copy (const GConfEntry *src)
+{
+  GConfEntry *entry;
+
+  entry = gconf_entry_new (src->key, src->value);
+
+  entry->schema_name = g_strdup (src->schema_name);
+  entry->is_default = src->is_default;
+  entry->is_writable = src->is_writable;
+
+  return entry;
 }
 
 GConfValue*
