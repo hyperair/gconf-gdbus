@@ -936,8 +936,14 @@ main (int argc, char** argv)
 {
   GConfEngine* conf;
   GError* err = NULL;
+  const char *locale;
+  
+  locale = setlocale (LC_ALL, "");
 
-  setlocale (LC_ALL, "");
+  if (locale == NULL)
+    g_printerr ("Failed to set locale, invalid env variables?\n");
+  
+  g_print ("Locale = %s\n", setlocale (LC_ALL, NULL));
   
   if (!gconf_init(argc, argv, &err))
     {

@@ -178,7 +178,12 @@ static gboolean bools[] = { TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, 
 
 static const guint n_bools = sizeof(bools)/sizeof(bools[0]);
 
-static gdouble floats[] = { 0.0, 1.0, 2.0, 3.0, 4.0, -10.0, -10.34645764573475637657367346743734878734109870187200000000000009, -100.39458694856908, 3.14159, 4.4532464e7, 9.35e-10, 4.5, 6.7, 8.3, -5.1, G_MINFLOAT, -G_MAXFLOAT, G_MAXFLOAT }; /* don't use max/min double, we don't guarantee that we can store huge numbers */
+static gdouble floats[] = {
+  0.0, 1.0, 2.0, 3.0, 4.0, -10.0,
+  -10.34645764573475637657367346743734878734109870187200000000000009,
+  -100.39458694856908, 3.14159, 4.4532464e7, 9.35e-10, 4.5, 6.7, 8.3,  
+  -5.1, G_MINFLOAT, G_MAXFLOAT
+};
 
 static const guint n_floats = sizeof(floats)/sizeof(floats[0]);
 

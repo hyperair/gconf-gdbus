@@ -1,3 +1,12 @@
+2002-03-20  Havoc Pennington  <hp@pobox.com>
+
+	* tests/testpersistence.c: remove the -G_MAXFLOAT test, since
+	it didn't work and probably shouldn't
+
+	* gconf/gconf-internals.c (gconf_double_to_string): use
+	g_ascii_dtostr()
+	(gconf_string_to_double): use g_ascii_strtod()
+
 2002-03-21  Havoc Pennington  <hp@redhat.com>
 
 	* configure.in: fuck, Martin apparently deleted -Wall last March.

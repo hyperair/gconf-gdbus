@@ -977,46 +977,30 @@ gconf_string_to_gulong(const gchar* str)
 }
 
 gboolean
-gconf_string_to_double(const gchar* str, gdouble* retloc)
+gconf_string_to_double(const gchar* str,
+                       gdouble*     retloc)
 {
-  int res;
-  char *old_locale;
+  char *end;
 
-  /* make sure we write values to files in a consistent manner */
-  old_locale = g_strdup (setlocale (LC_NUMERIC, NULL));
-  setlocale (LC_NUMERIC, "C");
-
-  *retloc = 0.0;
-  res = sscanf (str, "%lf", retloc);
-
-  setlocale (LC_NUMERIC, old_locale);
-  g_free (old_locale);
-
-  if (res == 1)
-    return TRUE;
+  errno = 0;
+  *retloc = g_ascii_strtod (str, &end);
+  if (end == str || errno != 0)
+    {
+      *retloc = 0.0;
+      return FALSE;
+    }
   else
-    return FALSE;
+    return TRUE;
 }
 
 gchar*
-gconf_double_to_string(gdouble val)
+gconf_double_to_string (gdouble val)
 {
-  char str[101 + DBL_DIG];
-  char *old_locale;
+  char str[G_ASCII_DTOSTR_BUF_SIZE];
 
-  /* make sure we write values to files in a consistent manner */
-  old_locale = g_strdup (setlocale (LC_NUMERIC, NULL));
-  setlocale (LC_NUMERIC, "C");
+  g_ascii_dtostr (str, G_ASCII_DTOSTR_BUF_SIZE, val);
   
-  if (fabs (val) < 1e9 && fabs (val) > 1e-5)
-    g_snprintf (str, 100 + DBL_DIG, "%.*g", DBL_DIG, val);
-  else
-    g_snprintf (str, 100 + DBL_DIG, "%f", val);
-
-  setlocale (LC_NUMERIC, old_locale);
-  g_free (old_locale);
-  
-  return g_strdup(str);
+  return g_strdup (str);
 }
 
 const gchar*

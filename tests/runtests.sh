@@ -35,11 +35,11 @@ for I in $TESTS
 do
     echo "Running test program \"$I\", please wait:"
     echo "" >> $LOGFILE
-    LOCALES="C en_US ja_JP ja_JP:en_US:C"
+    LOCALES="C en_US ja_JP ja_JP:en_US:C:es_ES"
     for L in $LOCALES
     do
-        echo "Output of LANG=$L $I:" >> $LOGFILE
-        if LANG=$L ./$I >>$LOGFILE 2>&1; then
+        echo "Output of LANG=$L LANGUAGES=$L $I:" >> $LOGFILE
+        if LANG=$L LANGUAGES=$L ./$I >>$LOGFILE 2>&1; then
             echo " passed in $L locale"
         else
             echo
