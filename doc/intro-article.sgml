@@ -1,9 +1,9 @@
-<!DOCTYPE Article PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.0//EN"[
+<!DOCTYPE Article PUBLIC "-//Davenport//DTD DocBook V3.0//EN"[
 ]>
 
 <article lang="en" id="index">
   <artheader>
-    <date>2000-2-20</date>
+    <date>2000-2-22</date>
     <authorgroup>
       <author>
 	<surname>Pennington</surname>
@@ -38,7 +38,8 @@
       GConf is a configuration data storage mechanism scheduled to
       ship with GNOME 2.0. GConf does work without GNOME however; it
       can be used with plain GTK+, Xlib, KDE, or even text mode
-      applications as well.
+      applications as well. As of February 2000, there is no stable
+      release of GConf yet, but the library is feature-complete.
     </para>
     
     <para>
@@ -69,6 +70,7 @@
             the whole operating system installation.
           </para>
           </listitem>
+      </itemizedlist>
     </para>
     
     <para>
@@ -158,11 +160,121 @@
     <sect2 id="keysvalues">
       <title>Keys and Values</title>
       <para>
-        
+        GConf is not a full-blown database by any means. It stores
+        simple key-value pairs. This keeps the implementation simple
+        and efficient. Applications that require more sophisticated
+        features should use LDAP or a full-scale database.
       </para>
-    </sect2>
-  </sect1>
 
+      <para>
+        A GConf key looks like a UNIX filename. Keys are organized
+        into "directories" just as UNIX files are. For example, the
+        <literal>/desktop</literal> directory stores desktop settings,
+        and the hypothetical
+        key <literal>/desktop/standard/background-color</literal> might
+        store the color of the desktop background. The GConf
+        documentation establishes a number of conventional directory
+        names; you should follow the guidelines in the documentation
+        when naming your application keys.        
+      </para>
+
+      <para>
+        Values have types; the primitive types are integers, booleans,
+        strings, and floating point numbers. Also, lists and pairs of 
+        primitive types are possible. Recursive types (list of list)
+        are not permitted. Types have no size restriction; strings
+        can be as long as you like, though at some point performance
+        will be degraded.
+      </para>
+
+    </sect2>
+
+    <sect2 id="gconfd">
+      <title>Configuration Server</title>
+
+      <para>
+        GConf is implemented as a per-user daemon called
+        <application>gconfd</application>.
+        <application>gconfd</application> actually accesses the user's
+        configuration backends by dynamically loading the appropriate
+        backend modules. <application>gconfd</application> is also in
+        charge of sending out notifications to interested applications
+        when configuration values are modified.
+      </para>
+
+      <para>
+        One <application>gconfd</application> should exist per user at
+        any given time. If a user logs in to two machines
+        simultaneously, <application>gconfd</application> will run on
+        the first machine, and the second machine will access it over
+        the network.
+      </para>
+
+      <para>
+        <application>gconfd</application> talks to applications using
+        CORBA as a transport. This is purely an implementation detail;
+        a custom protocol over sockets could have been used or could
+        be used in the future. Directly accessing the CORBA interface
+        is <emphasis>not</emphasis> supported. Application programmers
+        do not see CORBA while using GConf.
+      </para>
+      
+      <para>
+        In general, <application>gconfd</application> is not visible
+        to the application programmer. It is automatically launched as
+        required. (Internally, the OAF object activation framework is
+        used to obtain an object reference for the
+        <application>gconfd</application> CORBA server.)
+      </para>
+
+      <para>
+        Because all database access goes via
+        <application>gconfd</application>, locking is not really an
+        issue. <application>gconfd</application> also aggressively
+        caches configuration values, because all applications can
+        share the same cache.
+      </para>
+
+    </sect2>
+
+    <sect2 id="schemas">
+      <title>Schemas</title>
+
+      <para>
+        In addition to the primitive types mentioned earlier (integer,
+        string, etc.) the GConf database can store a
+        <firstterm>schema</firstterm>. A schema is a description of a
+        key; it includes a short description of the key, a longer
+        documentation paragraph, the type of the key, and the name of
+        the application owning the key. Schemas are primarily intended
+        for use by an eventual regedit-style tool; such a tool could
+        display the documentation, and validate the type of any values
+        you enter for the key.
+      </para>
+
+      <para>
+        Because schemas are simply values in the database, they can be
+        referenced by key name. Conventionally, all schemas are below
+        the <literal>/schemas</literal> toplevel directory.
+      </para>
+
+      <para>
+        Applications should come with a special <firstterm>schema
+        file</firstterm> which encodes the schema information 
+        in a human-editable text format. When the application is
+        installed, the <application>gconftool</application> program 
+        shipped with GConf can be used to insert the schema
+        information into the GConf database. Also, all applications 
+        should install their schema file to a system-wide directory
+        (specified in the GConf documentation). This allows system
+        administrators to re-install all schemas into a different
+        GConf backend with a single command (something like <literal>gconftool
+        --install-schema-file /etc/gconf/schemas/*</literal>).
+      </para>
+
+    </sect2>
+
+  </sect1>
 
   <sect1 id="api">
     <title>Application Programming</title>
@@ -184,7 +296,7 @@
         pattern. In this pattern, your application contains three
         separate objects:
 
-        <numberedlist>
+        <orderedlist>
           <listitem>
             <para>
               The <firstterm>model</firstterm> traditionally models 
@@ -224,7 +336,7 @@
             </para>
             </listitem>
 
-          </numberedlist>              
+          </orderedlist>              
       </para>
       
       <para>
@@ -250,8 +362,182 @@
         world of component technology, this is extremely useful.
       </para>
 
+      <para>
+        All buzz-acronyms aside, all MVC means for you as an
+        application programmer is that every section of code only has
+        to be concerned with <emphasis>directly related</emphasis>
+        configuration issues. For example, the menu item code only
+        monitors the keys that affect how menu items are displayed. It
+        is not concerned with any other keys, or with setting or
+        saving that setting.
+      </para>
+
+      <para>
+        With a simple configuration file, typically you have a global
+        data structure which stores all your preferences, and you load
+        and save it as a single unit. To add a setting, you have to
+        modify the global structure. Whenever you load settings, you
+        have to add code to the global preferences code that knows
+        about all the interested parts of the program and notifies
+        them (via some ad-hoc mechanism). It's kind of unpleasant and
+        leads to poor modularity in a single process; but once
+        multiple processes are involved, coming up with a suitable
+        ad-hoc mechanism for setting change notification becomes a
+        really significant problem.
+      </para>
+
     </sect2>
 
+    <sect2 id="datatypes">
+      <title>Major Data Types</title>
+
+      <sect3 id="gconfengine">
+      <title><structname>GConfEngine</structname></title>
+
+        <para>
+          A <structname>GConfEngine</structname> represents a
+          configuration database (normally a connection to
+          <application>gconfd</application>). You can store values in
+          a <structname>GConfEngine</structname>, and retrieve values
+          from one. You can also ask a
+          <structname>GConfEngine</structname> to monitor a key or
+          directory for changes, and invoke an application-supplied
+          callback if changes occur. Each time you ask a
+          <structname>GConfEngine</structname> to notify you of
+          changes, it registers a request for notification with
+          <application>gconfd</application>. Thus, notification
+          requests are relatively expensive. With
+          <structname>GConfClient</structname>, they are relatively
+          cheap.
+        </para>
+      </sect3>
+
+      <sect3>
+        <title><structname>GConfClient</structname></title>
+        <para>
+          <structname>GConfClient</structname> is located in a small 
+          auxiliary library that comes with GConf, because to use it 
+          you must link with
+          GTK+. <structname>GConfClient</structname>
+          derives from <structname>GtkObject</structname> and is a
+          wrapper for the <structname>GConfEngine</structname> type.
+          It adds a few nice features:
+          <itemizedlist>
+            <listitem>
+              <para>
+                It can keep a client-side cache of values. Sometimes 
+                this is just memory overhead, so you'll want to turn
+                it off. However, if you access the same keys
+                frequently it can be a performance win.                
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                It can do client-side notification request
+                dispatching. This means that if you want to monitor
+                the keys <literal>/foo/bar</literal> and
+                <literal>/foo/baz</literal>,
+                <structname>GConfClient</structname> can register a
+                single notification request with
+                <application>gconfd</application>; when the
+                notification comes from
+                <application>gconfd</application>,
+                <structname>GConfClient</structname> decides which key
+                has changed and dispatches to the proper application
+                callback. With <structname>GConfEngine</structname>,
+                each callback involves registering a request with
+                <application>gconfd</application>.
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                It uses the GTK signal system. Instead of using
+                GConf's custom callback API for notification, you can
+                simply connect to a <literal>"value_changed"</literal>
+                signal. 
+              </para>
+            </listitem>
+            <listitem>
+              <para>
+                Finally, <structname>GConfClient</structname> provides
+                default error handlers. This allows you to ignore
+                errors, and let <structname>GConfClient</structname> 
+                present them to the user via an error dialog.
+              </para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </sect3>
+
+      <sect3>
+        <title><structname>GConfValue</structname></title>
+        <para>
+          When GConf needs to pass around a dynamically-typed value
+          retrieved from or to be stored in the database, it uses a
+          type-tagged union called
+          <structname>GConfValue</structname>.  For example, the
+          <function>gconf_get()</function> function takes a
+          <structname>GConfEngine</structname> and a key name as
+          arguments and returns a
+          <structname>GConfValue</structname>. There are also
+          convenience wrappers such as
+          <function>gconf_get_string()</function> and
+          <function>gconf_get_int()</function> that allow you to avoid
+          the pesky <structname>GConfValue</structname> union.
+        </para>
+      </sect3>
+
+      <sect3>
+        <title><structname>GConfError</structname></title>
+        <para>
+          If you explicitly handle errors, rather than allowing the 
+          <structname>GConfClient</structname> default error handler
+          to report them to the user, you receive information about 
+          an error in an object called
+          <structname>GConfError</structname>. This contains a verbose
+          error description, and an error code number.
+        </para>
+      </sect3>
+
+    </sect2>
+
+    <sect2 id="integration">
+      <title>GNOME Integration</title>
+      
+      <para>
+        Version 2.0 of GNOME automatically integrates with GConf, 
+        making it simpler to use the library. It does the following:
+        <itemizedlist>
+          <listitem>
+            <para>
+              Keeps a global <structname>GConfClient</structname>
+              that's easy to access with a
+              <function>gnome_get_gconf_client()</function>
+              function.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              The default error handling for
+              <structname>GConfClient</structname> automatically uses
+              GNOME dialogs.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Provides convenience functions to extract and insert 
+              a <structname>GConfValue</structname> from various kinds
+              of widget. For example, there is a function to 
+              get the string inside a
+              <structname>GtkEntry</structname> 
+              as a <structname>GConfValue</structname>.
+            </para>
+          </listitem>
+        </itemizedlist>
+
+      </para>
+
+    </sect2>
 
   </sect1>
 
