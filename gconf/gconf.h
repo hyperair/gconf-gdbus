@@ -100,6 +100,9 @@ gboolean     gconf_valid_key      (const gchar* key, gchar** why_invalid);
 /* return TRUE if the path "below" would be somewhere below the directory "above" */
 gboolean     gconf_key_is_below   (const gchar* above, const gchar* below);
 
+/* Returns allocated concatenation of these two */
+gchar*        gconf_concat_key_and_dir(const gchar* dir, const gchar* key);
+
 /* 
  * Higher-level stuff 
  */

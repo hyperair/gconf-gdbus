@@ -66,8 +66,6 @@ void          gconf_shutdown_daemon(GConfError** err);
 gboolean      gconf_ping_daemon(void);
 gboolean      gconf_spawn_daemon(GConfError** err);
 
-gchar*        gconf_concat_key_and_dir(const gchar* dir, const gchar* key);
-
 /* Returns 0 on failure */
 gulong        gconf_string_to_gulong(const gchar* str);
 

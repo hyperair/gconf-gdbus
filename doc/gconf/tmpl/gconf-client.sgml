@@ -219,7 +219,9 @@ preload its contents; see #GConfClientPreloadType for details.
 
 <para>
 Added directories may not overlap. That is, if you add "/foo", you may not add
-"/foo/bar". However you can add "/foo" and "/bar".
+"/foo/bar". However you can add "/foo" and "/bar". You can also add "/foo"
+multiple times; if you add a directory multiple times, it will not be removed
+until you call gconf_client_remove_dir() an equal number of times.
 </para>
 
 @client: a #GConfClient.
@@ -230,9 +232,11 @@ Added directories may not overlap. That is, if you add "/foo", you may not add
 
 <!-- ##### FUNCTION gconf_client_remove_dir ##### -->
 <para>
-Remove a directory from the list created with gconf_client_add_dir().
-If any notifications have been added below this directory with gconf_client_notify_add(), 
-those notifications will be disabled until you re-add the removed directory.
+Remove a directory from the list created with gconf_client_add_dir().  If any
+notifications have been added below this directory with
+gconf_client_notify_add(), those notifications will be disabled until you re-add
+the removed directory.  Note that if a directory has been added multiple times,
+you must remove it the same number of times before the remove takes effect.
 </para>
 
 @client: a #GConfClient.
