@@ -312,7 +312,7 @@ resolve_address (const gchar* address, GError** err)
           struct stat statbuf;
           if (stat(root_dir, &statbuf) == 0)
             {
-              dir_mode = mode_t_to_mode(statbuf.st_mode);
+              dir_mode = _gconf_mode_t_to_mode (statbuf.st_mode);
               /* dir_mode without search bits */
               file_mode = dir_mode & (~0111); 
             }
@@ -572,7 +572,22 @@ all_subdirs     (GConfSource* source,
 {
   Dir* dir;
   XMLSource* xs = (XMLSource*)source;
-
+  GError *sync_err;
+  
+  /* We have to sync before we can do this, to see which
+   * subdirs have gone away.
+   */
+  sync_err = NULL;
+  cache_sync (xs->cache, &sync_err);
+  if (sync_err)
+    {
+      gconf_log (GCL_WARNING, _("Error syncing the XML backend directory cache: %s"),
+                 sync_err->message);
+      g_error_free (sync_err);
+      sync_err = NULL;
+      /* continue, may as well try our best. */
+    }
+  
   dir = cache_lookup (xs->cache, key, FALSE, err);
   
   if (dir == NULL)
@@ -630,38 +645,33 @@ remove_dir      (GConfSource* source,
                  GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
-  Dir* dir;
-  
-  dir = cache_lookup(xs->cache, key, FALSE, err);
-  
-  if (dir == NULL)
-    return;
-  else
-    {
-      dir_mark_deleted(dir);
-    }
+
+  g_set_error (err, GCONF_ERROR,
+               GCONF_ERROR_FAILED,
+               _("Remove dir operation is no longer supported, just remove all the values in the directory"));
 }
 
 static void          
-set_schema      (GConfSource* source,
-                 const gchar* key,
-                 const gchar* schema_key,
-                 GError** err)
+set_schema (GConfSource *source,
+            const gchar *key,
+            const gchar *schema_key,
+            GError     **err)
 {
   XMLSource* xs = (XMLSource*)source;
 
   Dir* dir;
   gchar* parent;
-  
-  g_return_if_fail(schema_key != NULL);
 
-  parent = gconf_key_directory(key);
+  g_return_if_fail (source != NULL);
+  g_return_if_fail (key != NULL);
+
+  parent = gconf_key_directory (key);
   
-  g_assert(parent != NULL);
+  g_assert (parent != NULL);
   
-  dir = cache_lookup(xs->cache, parent, TRUE, err);
+  dir = cache_lookup (xs->cache, parent, TRUE, err);
   
-  g_free(parent);
+  g_free (parent);
   parent = NULL;
 
   if (dir == NULL)
@@ -670,9 +680,9 @@ set_schema      (GConfSource* source,
     {
       const gchar* relative_key;
       
-      relative_key = gconf_key_key(key);
+      relative_key = gconf_key_key (key);
       
-      dir_set_schema(dir, relative_key, schema_key, err);
+      dir_set_schema (dir, relative_key, schema_key, err);
     }
 }
 
@@ -682,7 +692,7 @@ sync_all        (GConfSource* source,
 {
   XMLSource* xs = (XMLSource*)source;
 
-  return cache_sync(xs->cache, err);
+  return cache_sync (xs->cache, err);
 }
 
 static void          

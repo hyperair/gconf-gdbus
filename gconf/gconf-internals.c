@@ -83,7 +83,7 @@ gconf_key_directory  (const gchar* key)
 
   if (end == NULL)
     {
-      gconf_log(GCL_ERR, _("No '/' in key `%s'"), key);
+      gconf_log(GCL_ERR, _("No '/' in key \"%s\""), key);
       return NULL;
     }
 
@@ -2920,7 +2920,7 @@ gconf_activate_server (gboolean  start_if_not_found,
     g_set_error (error,
                  GCONF_ERROR,
                  GCONF_ERROR_NO_SERVER,
-                 _("Failed to contact configuration server (a likely cause of this is that you have an existing configuration server (gconfd) running, but it isn't reachable from here - if you're logged in from two machines at once, you may need to enable TCP networking for ORBit)\n"));
+                 _("Failed to contact configuration server; some possible causes are:\na) you have an existing configuration server (gconfd) running, but it isn't reachable from here - if you're logged in from two machines at once, you may need to enable TCP networking for ORBit by putting the line \"ORBIIOPIPv4=1\" in /etc/orbitrc\nb) you have stale locks in your NFS-mounted home directory due to a system crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are sure no gconfd processes are running on any machine using your home dir"));
 
   close (p[0]);
   close (p[1]);

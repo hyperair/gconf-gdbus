@@ -232,13 +232,16 @@ interface ConfigDatabase2 : ConfigDatabase {
 interface ConfigDatabase3 : ConfigDatabase2 {
 
   typedef sequence<ConfigStringProperty> PropList;
-
+  typedef long UnsetFlags;
+  const UnsetFlags UNSET_INCLUDING_SCHEMA_NAMES = 1;
+  
   unsigned long add_listener_with_properties (in string where,
                                               in ConfigListener who,
                                               in PropList properties)
     raises (ConfigException); /* plain add_listener doesn't have this, sadly */
   
-  void recursive_unset (in string key)
+  void recursive_unset (in string key,
+                        in UnsetFlags flags)
     raises (ConfigException);
 };
 

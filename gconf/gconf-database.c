@@ -260,10 +260,10 @@ impl_ConfigDatabase_set(PortableServer_Servant servant,
 }
 
 static void
-impl_ConfigDatabase_unset_with_locale(PortableServer_Servant servant,
-				      const CORBA_char * key,
-				      const CORBA_char * locale,
-				      CORBA_Environment * ev)
+impl_ConfigDatabase_unset_with_locale (PortableServer_Servant servant,
+                                       const CORBA_char * key,
+                                       const CORBA_char * locale,
+                                       CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
@@ -475,10 +475,10 @@ impl_ConfigDatabase_all_dirs(PortableServer_Servant servant,
 }
 
 static void
-impl_ConfigDatabase_set_schema(PortableServer_Servant servant,
-			       const CORBA_char * key,
-			       const CORBA_char * schema_key,
-			       CORBA_Environment * ev)
+impl_ConfigDatabase_set_schema (PortableServer_Servant servant,
+                                const CORBA_char * key,
+                                const CORBA_char * schema_key,
+                                CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
@@ -486,14 +486,17 @@ impl_ConfigDatabase_set_schema(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  gconf_database_set_schema(db, key, schema_key, &error);
-
-  gconf_set_exception(&error, ev);
+  gconf_database_set_schema (db, key,
+                             *schema_key != '\0' ?
+                             schema_key : NULL,
+                             &error);
+  
+  gconf_set_exception (&error, ev);
 }
 
 static void
-impl_ConfigDatabase_sync(PortableServer_Servant servant,
-			 CORBA_Environment * ev)
+impl_ConfigDatabase_sync (PortableServer_Servant servant,
+                          CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
@@ -501,9 +504,9 @@ impl_ConfigDatabase_sync(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  gconf_database_sync(db, &error);
+  gconf_database_sync (db, &error);
 
-  gconf_set_exception(&error, ev);
+  gconf_set_exception (&error, ev);
 }
 
 static void
@@ -516,16 +519,16 @@ impl_ConfigDatabase_clear_cache(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  gconf_log(GCL_DEBUG, _("Received request to drop all cached data"));  
+  gconf_log (GCL_DEBUG, _("Received request to drop all cached data"));  
   
-  gconf_database_clear_cache(db, &error);
+  gconf_database_clear_cache (db, &error);
 
-  gconf_set_exception(&error, ev);
+  gconf_set_exception (&error, ev);
 }
 
 static void
-impl_ConfigDatabase_synchronous_sync(PortableServer_Servant servant,
-				     CORBA_Environment * ev)
+impl_ConfigDatabase_synchronous_sync (PortableServer_Servant servant,
+                                      CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
@@ -536,9 +539,9 @@ impl_ConfigDatabase_synchronous_sync(PortableServer_Servant servant,
   gconf_log(GCL_DEBUG, _("Received request to sync synchronously"));
   
   
-  gconf_database_synchronous_sync(db, &error);
+  gconf_database_synchronous_sync (db, &error);
 
-  gconf_set_exception(&error, ev);
+  gconf_set_exception (&error, ev);
 }
 
 
@@ -732,12 +735,24 @@ impl_ConfigDatabase3_add_listener_with_properties (PortableServer_Servant servan
 static void
 impl_ConfigDatabase3_recursive_unset (PortableServer_Servant servant,
                                       const CORBA_char *key,
+                                      ConfigDatabase3_UnsetFlags flags,
                                       CORBA_Environment *ev)
 {
+  GConfDatabase *db = (GConfDatabase*) servant;
+  GError *error;
+  GConfUnsetFlags gconf_flags;
+  
   if (gconfd_check_in_shutdown (ev))
     return;
 
-  /* FIXME not implemented yet */
+  gconf_flags = 0;
+  if (flags & ConfigDatabase3_UNSET_INCLUDING_SCHEMA_NAMES)
+    gconf_flags |= GCONF_UNSET_INCLUDING_SCHEMA_NAMES;
+  
+  error = NULL;
+  gconf_database_recursive_unset (db, key, NULL, gconf_flags, &error);
+
+  gconf_set_exception (&error, ev);
 }
 
 static PortableServer_ServantBase__epv base_epv = {
@@ -1322,7 +1337,12 @@ gconf_database_unset (GConfDatabase      *db,
       GConfValue* def_value;
       const gchar* locale_list[] = { NULL, NULL };
       gboolean is_writable = TRUE;
-      
+
+      /* This is a somewhat dubious optimization
+       * that assumes that if the unset was successful
+       * the default value is the new value. Which is
+       * safe for now, I _think_
+       */
       locale_list[0] = locale;
       def_value = gconf_database_query_default_value(db,
                                                      key,
@@ -1350,6 +1370,97 @@ gconf_database_unset (GConfDatabase      *db,
       
       CORBA_free(val);
     }
+}
+
+void
+gconf_database_recursive_unset (GConfDatabase      *db,
+                                const gchar        *key,
+                                const gchar        *locale,
+                                GConfUnsetFlags     flags,
+                                GError            **err)
+{
+  ConfigValue* val;
+  GError* error = NULL;
+  GSList *notifies;
+  GSList *tmp;
+  
+  g_return_if_fail (err == NULL || *err == NULL);
+  
+  g_assert (db->listeners != NULL);
+  
+  db->last_access = time (NULL);
+  
+  gconf_log (GCL_DEBUG, "Received request to recursively unset key \"%s\"", key);
+
+  notifies = NULL;
+  gconf_sources_recursive_unset (db->sources, key, locale,
+                                 flags, &notifies, &error);
+
+  /* We return the error but go ahead and finish the unset.
+   * We're just returning the first error seen during the
+   * unset process.
+   */
+  if (error != NULL)
+    {
+      gconf_log (GCL_ERR, _("Error unsetting \"%s\": %s"),
+                 key, error->message);
+
+      if (err)
+        *err = error;
+      else
+        g_error_free (error);
+
+      error = NULL;
+    }
+  
+  tmp = notifies;
+  while (tmp != NULL)
+    {
+      GConfValue* new_value;
+      const gchar* locale_list[] = { NULL, NULL };
+      gboolean is_writable = TRUE;
+      gboolean is_default = TRUE;
+      char *notify_key = tmp->data;
+      
+
+      locale_list[0] = locale;
+      new_value = gconf_database_query_value (db,
+                                              notify_key,
+                                              locale_list,
+                                              TRUE,
+                                              NULL,
+                                              &is_default,
+                                              &is_writable,
+                                              &error);
+
+      if (error)
+        gconf_log (GCL_ERR, _("Error getting new value for \"%s\": %s"),
+                   notify_key, error->message);
+      g_propagate_error (err, error);
+      error = NULL;
+      
+      if (new_value != NULL)
+        {
+          val = corba_value_from_gconf_value (new_value);
+          gconf_value_free (new_value);
+        }
+      else
+        {
+          val = invalid_corba_value();
+        }
+          
+      gconf_database_schedule_sync (db);
+
+      gconf_database_notify_listeners (db, notify_key, val,
+                                       is_default, is_writable);
+      
+      CORBA_free (val);
+      g_free (notify_key);
+      
+      tmp = tmp->next;
+    }
+
+  g_slist_free (notifies);
 }
 
 gboolean
@@ -1458,23 +1569,23 @@ void
 gconf_database_set_schema (GConfDatabase  *db,
                            const gchar    *key,
                            const gchar    *schema_key,
-                           GError    **err)
+                           GError        **err)
 {
-  g_return_if_fail(err == NULL || *err == NULL);
-  g_assert(db->listeners != NULL);
+  g_return_if_fail (err == NULL || *err == NULL);
+  g_assert (db->listeners != NULL);
   
-  db->last_access = time(NULL);
+  db->last_access = time (NULL);
   
-  gconf_sources_set_schema(db->sources, key, schema_key, err);
+  gconf_sources_set_schema (db->sources, key, schema_key, err);
 
   if (err && *err != NULL)
     {
-      gconf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
+      gconf_log (GCL_ERR, _("Error setting schema for `%s': %s"),
                 key, (*err)->message);
     }
   else
     {
-      gconf_database_schedule_sync(db);
+      gconf_database_schedule_sync (db);
     }
 }
 

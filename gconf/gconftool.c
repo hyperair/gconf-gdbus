@@ -57,6 +57,7 @@ static int short_docs_mode = FALSE;
 static int long_docs_mode = FALSE;
 static int schema_name_mode = FALSE;
 static int associate_schema_mode = FALSE;
+static int dissociate_schema_mode = FALSE;
 static int default_source_mode = FALSE;
 static int recursive_unset_mode = FALSE;
 
@@ -333,6 +334,15 @@ struct poptOption options[] = {
     NULL
   },
   {
+    "unapply-schema",
+    '\0',
+    POPT_ARG_NONE,
+    &dissociate_schema_mode,
+    0,
+    N_("Remove any schema name applied to the given keys"),
+    NULL
+  },
+  {
     "get-default-source",
     '\0',
     POPT_ARG_NONE,
@@ -372,6 +382,7 @@ static int do_short_docs (GConfEngine *conf, const gchar **args);
 static int do_long_docs (GConfEngine *conf, const gchar **args);
 static int do_get_schema_name (GConfEngine *conf, const gchar **args);
 static int do_associate_schema (GConfEngine *conf, const gchar **args);
+static int do_dissociate_schema (GConfEngine *conf, const gchar **args);
 static int do_get_default_source (GConfEngine *conf, const gchar **args);
 
 int 
@@ -756,6 +767,16 @@ main (int argc, char** argv)
       if (do_associate_schema(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
+          return 1;
+        }
+    }
+
+  if (dissociate_schema_mode)
+    {
+      const gchar** args = poptGetArgs (ctx);
+      if (do_dissociate_schema (conf, args)  == 1)
+        {
+          gconf_engine_unref (conf);
           return 1;
         }
     }
@@ -1401,6 +1422,39 @@ do_associate_schema (GConfEngine *conf, const gchar **args)
 }
 
 static int
+do_dissociate_schema (GConfEngine *conf, const gchar **args)
+{
+  GError *err;
+  gboolean failed;
+  
+  if (args[0] == NULL)
+    {
+      fprintf (stderr, _("Must specify a schema name followed by the key name to apply it to\n"));
+      return 1;
+    }
+
+  failed = FALSE;
+  while (*args)
+    {
+      err = NULL;
+      if (!gconf_engine_associate_schema (conf, *args, NULL, &err))
+        {
+          fprintf (stderr, _("Error removing schema name from '%s': %s\n"),
+                   *args, err->message);
+          g_error_free (err);
+          failed = TRUE;
+        }
+      
+      ++args;
+    }
+
+  if (failed)
+    return 1;
+  else
+    return 0;
+}
+
+static int
 do_set_schema(GConfEngine* conf, const gchar** args)
 {
   GConfSchema* sc;
@@ -1576,106 +1630,29 @@ do_unset(GConfEngine* conf, const gchar** args)
   return 0;
 }
 
-static void
-recursive_unset_helper (GConfEngine *conf,
-                        const char  *key)
-{
-  GError* err = NULL;
-  GSList* subdirs;
-  GSList* entries;
-  GSList* tmp;
-
-  err = NULL;
-  
-  subdirs = gconf_engine_all_dirs (conf, key, &err);
-          
-  if (subdirs != NULL)
-    {
-      tmp = subdirs;
-
-      while (tmp != NULL)
-        {
-          gchar* s = tmp->data;
-
-          recursive_unset_helper (conf, s);
-          
-          g_free (s);
-
-          tmp = g_slist_next (tmp);
-        }
-
-      g_slist_free (subdirs);
-    }
-  else
-    {
-      if (err != NULL)
-        {
-          fprintf (stderr, _("Error listing subdirs of '%s': %s\n"),
-                   key, err->message);
-          g_error_free(err);
-          err = NULL;
-        }
-    }
-
-  entries = gconf_engine_all_entries (conf, key, &err);
-          
-  if (err != NULL)
-    {
-      fprintf (stderr, _("Failure listing entries in '%s': %s\n"),
-               key, err->message);
-      g_error_free(err);
-      err = NULL;
-    }
-
-  if (entries != NULL)
-    {
-      tmp = entries;
-
-      while (tmp != NULL)
-        {
-          GConfEntry* entry = tmp->data;
-          
-          gconf_engine_unset (conf,
-                              gconf_entry_get_key (entry),
-                              &err);
-          if (err != NULL)
-            {
-              fprintf (stderr, _("Error unsetting '%s': %s\n"),
-                       gconf_entry_get_key (entry), err->message);
-              g_error_free (err);
-              err = NULL;
-            }
-          
-          gconf_entry_free (entry);
-
-          tmp = g_slist_next (tmp);
-        }
-
-      g_slist_free (entries);
-    }
-
-  gconf_engine_unset (conf, key, &err);
-  if (err != NULL)
-    {
-      fprintf (stderr, _("Error unsetting '%s': %s\n"),
-               key, err->message);
-      g_error_free (err);
-      err = NULL;
-    }
-}
-
 static int
 do_recursive_unset (GConfEngine* conf, const gchar** args)
 {
   if (args == NULL)
     {
-      fprintf(stderr, _("Must specify one or more keys to recursively unset.\n"));
+      fprintf (stderr, _("Must specify one or more keys to recursively unset.\n"));
       return 1;
     }  
       
   while (*args)
     {
-      recursive_unset_helper (conf, *args);
+      GError *err;
+
+      err = NULL;
+      gconf_engine_recursive_unset (conf, *args,
+                                    GCONF_UNSET_INCLUDING_SCHEMA_NAMES,
+                                    &err);
+      if (err != NULL)
+        {
+          fprintf (stderr, _("Failure during recursive unset of \"%s\": %s\n"),
+                   *args, err->message);
+          g_error_free (err);
+        }
       
       ++args;
     }

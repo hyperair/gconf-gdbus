@@ -47,11 +47,19 @@ gconf_key_check(const gchar* key, GError** err)
 {
   gchar* why = NULL;
 
-  if (!gconf_valid_key(key, &why))
+  if (key == NULL)
     {
       if (err)
-        *err = gconf_error_new(GCONF_ERROR_BAD_KEY, _("`%s': %s"),
-                               key, why);
+        *err = gconf_error_new (GCONF_ERROR_BAD_KEY,
+                                _("Key \"%s\" is NULL"),
+                                key);
+      return FALSE;
+    }
+  else if (!gconf_valid_key (key, &why))
+    {
+      if (err)
+        *err = gconf_error_new (GCONF_ERROR_BAD_KEY, _("\"%s\": %s"),
+                                key, why);
       g_free(why);
       return FALSE;
     }
@@ -1209,6 +1217,100 @@ gconf_engine_unset (GConfEngine* conf, const gchar* key, GError** err)
   return TRUE;
 }
 
+/**
+ * gconf_engine_recursive_unset:
+ * @engine: a #GConfEngine
+ * @key: a key or directory name
+ * @flags: change how the unset is done
+ * @err: return location for a #GError, or %NULL to ignore errors
+ * 
+ * Unsets all keys below @key, including @key itself.  If any unset
+ * fails, continues on to unset as much as it can. The first
+ * failure is returned in @err.
+ *
+ * Returns: %FALSE if error is set
+ **/
+gboolean
+gconf_engine_recursive_unset (GConfEngine    *conf,
+                              const char     *key,
+                              GConfUnsetFlags flags,
+                              GError        **err)
+{
+  CORBA_Environment ev;
+  ConfigDatabase3 db;
+  gint tries = 0;
+  ConfigDatabase3_UnsetFlags corba_flags;
+  
+  g_return_val_if_fail (conf != NULL, FALSE);
+  g_return_val_if_fail (key != NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
+
+  CHECK_OWNER_USE (conf);
+  
+  if (!gconf_key_check (key, err))
+    return FALSE;
+
+  if (gconf_engine_is_local (conf))
+    {
+      GError* error = NULL;
+      
+      gconf_sources_recursive_unset (conf->local_sources, key, NULL,
+                                     flags, NULL, &error);
+
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              g_error_free (error);
+            }
+          return FALSE;
+        }
+      
+      return TRUE;
+    }
+
+  g_assert (!gconf_engine_is_local (conf));
+  
+  CORBA_exception_init(&ev);
+
+  corba_flags = 0;
+  if (flags & GCONF_UNSET_INCLUDING_SCHEMA_NAMES)
+    corba_flags |= ConfigDatabase3_UNSET_INCLUDING_SCHEMA_NAMES;
+  
+ RETRY:
+  
+  db = (ConfigDatabase3) gconf_engine_get_database (conf, TRUE, err);
+
+  if (db == CORBA_OBJECT_NIL)
+    {
+      g_return_val_if_fail (err == NULL || *err != NULL, FALSE);
+
+      return FALSE;
+    }
+
+  ConfigDatabase3_recursive_unset (db, key, corba_flags, &ev);
+
+  if (gconf_server_broken (&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_engine_detach(conf);
+          goto RETRY;
+        }
+    }
+  
+  if (gconf_handle_corba_exception (&ev, err))
+    return FALSE;
+
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
+  
+  return TRUE;
+}
+
 gboolean
 gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
                                 const gchar* schema_key, GError** err)
@@ -1217,24 +1319,23 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
   ConfigDatabase db;
   gint tries = 0;
 
-  g_return_val_if_fail(conf != NULL, FALSE);
-  g_return_val_if_fail(key != NULL, FALSE);
-  g_return_val_if_fail(schema_key != NULL, FALSE);
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (conf != NULL, FALSE);
+  g_return_val_if_fail (key != NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
   CHECK_OWNER_USE (conf);
   
-  if (!gconf_key_check(key, err))
+  if (!gconf_key_check (key, err))
     return FALSE;
 
-  if (!gconf_key_check(schema_key, err))
+  if (schema_key && !gconf_key_check (schema_key, err))
     return FALSE;
 
   if (gconf_engine_is_local(conf))
     {
       GError* error = NULL;
       
-      gconf_sources_set_schema(conf->local_sources, key, schema_key, &error);
+      gconf_sources_set_schema (conf->local_sources, key, schema_key, &error);
 
       if (error != NULL)
         {
@@ -1250,32 +1351,33 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
       return TRUE;
     }
 
-  g_assert(!gconf_engine_is_local(conf));
+  g_assert (!gconf_engine_is_local (conf));
   
-  CORBA_exception_init(&ev);
+  CORBA_exception_init (&ev);
 
  RETRY:
   
-  db = gconf_engine_get_database(conf, TRUE, err);
+  db = gconf_engine_get_database (conf, TRUE, err);
 
   if (db == CORBA_OBJECT_NIL)
     {
-      g_return_val_if_fail(err == NULL || *err != NULL, FALSE);
+      g_return_val_if_fail (err == NULL || *err != NULL, FALSE);
 
       return FALSE;
     }
 
-  ConfigDatabase_set_schema(db,
-                            (gchar*)key,
-                            (gchar*)schema_key,
-                            &ev);
+  ConfigDatabase_set_schema (db,
+                             key,
+                             /* empty string means unset */
+                             schema_key ? schema_key : "",
+                             &ev);
 
-  if (gconf_server_broken(&ev))
+  if (gconf_server_broken (&ev))
     {
       if (tries < MAX_RETRIES)
         {
           ++tries;
-          CORBA_exception_free(&ev);
+          CORBA_exception_free (&ev);
           gconf_engine_detach (conf);
           goto RETRY;
         }
@@ -1284,7 +1386,7 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
   if (gconf_handle_corba_exception(&ev, err))
     return FALSE;
 
-  g_return_val_if_fail(*err == NULL, FALSE);
+  g_return_val_if_fail (*err == NULL, FALSE);
   
   return TRUE;
 }
@@ -2481,8 +2583,13 @@ gconf_unescape_key (const char *escaped_key,
 gboolean
 gconf_key_is_below   (const gchar* above, const gchar* below)
 {
-  int len = strlen(above);
-  if (strncmp(below, above, len) == 0)
+  int len;
+
+  if (above[0] == '/' && above[1] == '\0')
+    return TRUE;
+  
+  len = strlen (above);
+  if (strncmp (below, above, len) == 0)
     {
       /* only if this is a complete key component,
        * so that /foo is not above /foofoo/bar */

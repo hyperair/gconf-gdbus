@@ -1103,10 +1103,10 @@ gconf_client_dir_exists     (GConfClient* client,
   trace ("Checking whether dir '%s' exists...\n", dir);
   
   PUSH_USE_ENGINE (client);
-  retval = gconf_engine_dir_exists(client->engine, dir, &error);
+  retval = gconf_engine_dir_exists (client->engine, dir, &error);
   POP_USE_ENGINE (client);
   
-  handle_error(client, error, err);
+  handle_error (client, error, err);
 
   if (retval)
     trace ("%s exists\n", dir);

@@ -44,30 +44,23 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 }
 #endif
 
-static gboolean
-cache_is_nonexistent(Cache* cache,
-                     const gchar* key);
+static gboolean cache_is_nonexistent  (Cache       *cache,
+                                       const gchar *key);
+static void     cache_set_nonexistent (Cache       *cache,
+                                       const gchar *key,
+                                       gboolean     setting);
+static void     cache_insert          (Cache       *cache,
+                                       Dir         *d);
 
-static void
-cache_set_nonexistent   (Cache* cache,
-                         const gchar* key,
-                         gboolean setting);
-
-static void
-cache_insert (Cache* cache,
-              Dir* d);
+static void     cache_remove_from_parent (Cache *cache,
+                                          Dir   *d);
+static void     cache_add_to_parent      (Cache *cache,
+                                          Dir   *d);
 
 struct _Cache {
   gchar* root_dir;
   GHashTable* cache;
   GHashTable* nonexistent_cache;
-  /*
-    List of lists of dirs marked deleted, in the
-    proper order; should be synced by deleting each
-    list from front to end, starting with the first
-    list.
-  */ 
-  GSList* deleted;
   guint dir_mode;
   guint file_mode;
 };
@@ -86,8 +79,6 @@ cache_new (const gchar  *root_dir,
   cache->cache = g_hash_table_new(g_str_hash, g_str_equal);
   cache->nonexistent_cache = g_hash_table_new(g_str_hash, g_str_equal);
 
-  cache->deleted = NULL;
-
   cache->dir_mode = dir_mode;
   cache->file_mode = file_mode;
   
@@ -104,7 +95,6 @@ static void cache_destroy_nonexistent_foreach(gchar* key,
 void
 cache_destroy (Cache        *cache)
 {
-  GSList *iter;
   
   g_free(cache->root_dir);
   g_hash_table_foreach(cache->cache, (GHFunc)cache_destroy_foreach,
@@ -114,19 +104,6 @@ cache_destroy (Cache        *cache)
                        NULL);
   g_hash_table_destroy(cache->cache);
   g_hash_table_destroy(cache->nonexistent_cache);
-
-  if (cache->deleted != NULL)
-    gconf_log(GCL_WARNING, _("Unsynced directory deletions when shutting down XML backend"));
-  
-  iter = cache->deleted;
-
-  while (iter != NULL)
-    {
-      g_slist_free(iter->data);
-
-      iter = g_slist_next(iter);
-    }
-  g_slist_free(cache->deleted);
   
   g_free(cache);
 }
@@ -139,70 +116,136 @@ struct _SyncData {
 };
 
 static void
-cache_sync_foreach(const gchar* key,
-                   Dir* dir,
-                   SyncData* sd)
+listify_foreach (gpointer key, gpointer value, gpointer data)
+{
+  GSList **list = data;
+
+  *list = g_slist_prepend (*list, value);
+}
+
+static void
+cache_sync_foreach (Dir      *dir,
+                    SyncData *sd)
 {
   GError* error = NULL;
+  gboolean deleted;
+  
+  deleted = FALSE;
   
   /* log errors but don't report the specific ones */
-  if (!dir_sync(dir, &error))
+  if (!dir_sync (dir, &deleted, &error))
     {
       sd->failed = TRUE;
-      g_return_if_fail(error != NULL);
-      gconf_log(GCL_ERR, "%s", error->message);
-      g_error_free(error);
-      g_return_if_fail(dir_sync_pending(dir));
+      g_return_if_fail (error != NULL);
+      gconf_log (GCL_ERR, "%s", error->message);
+      g_error_free (error);
+      g_return_if_fail (dir_sync_pending (dir));
     }
   else
     {
-      g_return_if_fail(error == NULL);
-      g_return_if_fail(!dir_sync_pending(dir));
+      g_return_if_fail (error == NULL);
+      g_return_if_fail (!dir_sync_pending (dir));
+
+      if (deleted)
+        {
+          /* Get rid of this directory */
+          cache_remove_from_parent (sd->dc, dir);
+          g_hash_table_remove (sd->dc->cache,
+                               dir_get_name (dir));
+          cache_set_nonexistent (sd->dc, dir_get_name (dir),
+                                 TRUE);
+          dir_destroy (dir);
+        }
+    }
+}
+
+static int
+dircmp (gconstpointer a,
+        gconstpointer b)
+{
+  Dir *dir_a = (Dir*) a;
+  Dir *dir_b = (Dir*) b;
+  const char *key_a = dir_get_name (dir_a);
+  const char *key_b = dir_get_name (dir_b);
+  
+  /* This function is supposed to sort the list such that
+   * subdirectories are synced prior to their parents,
+   * thus ensuring that we are always able to get rid
+   * of directories that we don't need anymore.
+   *
+   * Keys with an ancestor/descendent relationship are always
+   * sorted with descendent before ancestor. Other keys are sorted
+   * in order to alphabetize directories, i.e. we find the common
+   * path segments and alphabetize the level below the common level.
+   * /foo/bar/a before /foo/bar/b, etc.
+   *
+   * This ensures that our sort function has proper semantics.
+   */
+
+  if (gconf_key_is_below (key_a, key_b))
+    return 1; /* a above b, so b is earlier in the list */
+  else if (gconf_key_is_below (key_b, key_a))
+    return -1;
+  else
+    {
+      const char *ap = key_a;
+      const char *bp = key_b;
+
+      while (*ap && *bp && *ap == *bp)
+        {
+          ++ap;
+          ++bp;
+        }
+      
+      if (*ap == '\0')
+        {
+          /* *bp must be ended also, otherwise a and b
+           * would have had an ancestor relationship,
+           * here they are equal.
+           */
+          g_assert (*bp == '\0');
+          return 0;
+        }
+      
+      /* we don't care about localization here,
+       * just some fixed order
+       */
+      if (*ap < *bp)
+        return -1;
+      else
+        return 1;
     }
 }
 
 gboolean
-cache_sync       (Cache        *cache,
-                  GError  **err)
+cache_sync (Cache    *cache,
+            GError  **err)
 {
   SyncData sd = { FALSE, NULL };
-  GSList* delete_list;
+  GSList *list;
+  
   sd.dc = cache;
 
-  /* First delete pending directories */
-  delete_list = cache->deleted;
+  gconf_log (GCL_DEBUG, "Syncing the dir cache");
 
-  while (delete_list != NULL)
-    {
-      GSList* tmp;
+  /* get a list of everything; we can't filter by
+   * whether a sync is pending since we may make parents
+   * of removed directories dirty when we sync their child
+   * dir.
+   */
+  list = NULL;
+  g_hash_table_foreach (cache->cache, (GHFunc)listify_foreach, &list);
 
-      tmp = delete_list->data;
+  /* sort subdirs before parents */
+  list = g_slist_sort (list, dircmp);
 
-      while (tmp != NULL)
-        {
-          Dir* d = tmp->data;
-
-          if (!dir_sync(d, NULL)) /* don't get errors, they'd pile up */
-            sd.failed = TRUE;
-          
-          tmp = g_slist_next(tmp);
-        }
-
-      g_slist_free(delete_list->data);
-      
-      delete_list = g_slist_next(delete_list);
-    }
-
-  g_slist_free(cache->deleted);
-  cache->deleted = NULL;
+  /* sync it all */
+  g_slist_foreach (list, (GFunc) cache_sync_foreach, &sd);
   
-  g_hash_table_foreach(cache->cache, (GHFunc)cache_sync_foreach,
-                       &sd);
-
   if (sd.failed && err && *err == NULL)
     {
       gconf_set_error (err, GCONF_ERROR_FAILED,
-		       _ ("Failed to sync XML cache contents to disk"));
+		       _("Failed to sync XML cache contents to disk"));
     }
   
   return !sd.failed;  
@@ -264,103 +307,6 @@ cache_clean      (Cache        *cache,
                older_than);
 }
 
-static void
-cache_delete_dir_by_pointer(Cache* cache,
-                            Dir * d,
-                            GError** err);
-
-static void
-cache_delete_recursive(Cache* cache, Dir* d, GSList** hit_list, GError** err)
-{  
-  GSList* subdirs;
-  GSList* tmp;
-  gboolean failure = FALSE;
-  
-  subdirs = dir_all_subdirs(d, err);
-
-  if (subdirs == NULL && err && *err != NULL)
-    failure = TRUE;
-  
-  tmp = subdirs;
-  while (tmp != NULL && !failure)
-    {
-      Dir* subd;
-      gchar* fullkey;
-
-      fullkey = gconf_concat_dir_and_key(dir_get_name(d), (gchar*)tmp->data);
-      
-      subd = cache_lookup(cache, fullkey, FALSE, err);
-
-      g_free(tmp->data);
-      g_free(fullkey);
-      
-      if (subd == NULL && err && *err)
-        failure = TRUE;
-      else if (subd != NULL &&
-               !dir_is_deleted(subd))
-        {
-          /* recurse, whee! (unless the subdir is already deleted) */
-          cache_delete_dir_by_pointer(cache, subd, err);
-
-          if (err && *err)
-            failure = TRUE;
-        }
-          
-      tmp = g_slist_next(tmp);
-    }
-
-  g_slist_free(subdirs);
-  
-  /* The first directories to be deleted (fringes) go on the front
-     of the list. */
-  *hit_list = g_slist_prepend(*hit_list, d);
-  
-  /* We go ahead and mark the dir deleted */
-  dir_mark_deleted(d);
-
-  /* be sure we set error if failure occurred */
-  g_return_if_fail( (!failure) || (err == NULL) || (*err != NULL));
-}
-
-
-static void
-cache_delete_dir_by_pointer(Cache* cache,
-                            Dir * d,
-                            GError** err)
-{
-  GSList* hit_list = NULL;
-
-  cache_delete_recursive(cache, d, &hit_list, err);
-
-  /* If you first dir_cache_delete() a subdir, then dir_cache_delete()
-     its parent, without syncing, first the list generated by
-     the subdir delete then the list from the parent delete should
-     be nuked. If you first delete a parent, then its subdir,
-     really only the parent list should be nuked, but
-     in effect it's OK to nuke the parent first then
-     fail to nuke the subdir. So, if we prepend here,
-     then nuke the list in order, it will work fine.
-  */
-  
-  cache->deleted = g_slist_prepend(cache->deleted, hit_list);
-}
-
-void
-cache_delete_dir (Cache        *cache,
-                  const gchar  *key,
-                  GError  **err)
-{
-  Dir* d;
-
-  d = cache_lookup(cache, key, FALSE, err);
-
-  if (d != NULL)
-    {
-      g_assert(err == NULL || *err == NULL);
-      cache_delete_dir_by_pointer(cache, d, err);
-    }
-}
-
 Dir*
 cache_lookup     (Cache        *cache,
                   const gchar  *key,
@@ -392,14 +338,15 @@ cache_lookup     (Cache        *cache,
       else
         {
           /* Didn't already fail to load, try to load */
-          dir = dir_load(key, cache->root_dir, err);
+          dir = dir_load (key, cache->root_dir, err);
           
           if (dir != NULL)
             {
               g_assert(err == NULL || *err == NULL);
               
-              /* Cache it */
-              cache_insert(cache, dir);
+              /* Cache it and add to parent */
+              cache_insert (cache, dir);
+              cache_add_to_parent (cache, dir);
               
               return dir;
             }
@@ -444,7 +391,10 @@ cache_lookup     (Cache        *cache,
           return NULL;
         }
       else
-        cache_insert(cache, dir);
+        {
+          cache_insert (cache, dir);
+          cache_add_to_parent (cache, dir);
+        }
     }
 
   return dir;
@@ -502,11 +452,11 @@ cache_destroy_foreach(const gchar* key,
                       Dir* dir, gpointer data)
 {
 #ifdef GCONF_ENABLE_DEBUG
-  if (dir_sync_pending(dir))
+  if (dir_sync_pending (dir))
     gconf_log(GCL_DEBUG, "Destroying a directory (%s) with sync still pending",
-              dir_get_name(dir));
+              dir_get_name (dir));
 #endif
-  dir_destroy(dir);
+  dir_destroy (dir);
 }
 
 static void
@@ -517,6 +467,43 @@ cache_destroy_nonexistent_foreach(gchar* key,
   g_free(key);
 }
 
+static void
+cache_remove_from_parent (Cache *cache,
+                          Dir   *d)
+{
+  Dir *parent;
+  const char *name;
 
+  /* We have to actually force a load here, to decide
+   * whether to delete the parent.
+   */
+  parent = cache_lookup (cache, dir_get_parent_name (d),
+                         TRUE, NULL);
 
+  /* parent == d means d is the root dir */
+  if (parent == NULL || parent == d)
+    return;
+  
+  name = gconf_key_key (dir_get_name (d));
 
+  dir_child_removed (parent, name);
+}
+
+static void
+cache_add_to_parent (Cache *cache,
+                     Dir   *d)
+{
+  Dir *parent;
+  const char *name;
+
+  parent = cache_lookup (cache, dir_get_parent_name (d),
+                         FALSE, NULL);
+
+  /* parent == d means d is the root dir */
+  if (parent == NULL || parent == d)
+    return;
+
+  name = gconf_key_key (dir_get_name (d));
+
+  dir_child_added (parent, name);
+}

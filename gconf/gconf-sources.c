@@ -176,9 +176,9 @@ gconf_source_unset_value      (GConfSource* source,
                                const gchar* locale,
                                GError** err)
 {
-  g_return_val_if_fail(source != NULL, FALSE);
-  g_return_val_if_fail(key != NULL, FALSE);
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (source != NULL, FALSE);
+  g_return_val_if_fail (key != NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
   
   if ( source_is_writable(source, key, err) )
     {
@@ -268,10 +268,9 @@ gconf_source_set_schema        (GConfSource* source,
                                 const gchar* schema_key,
                                 GError** err)
 {
-  g_return_val_if_fail(source != NULL, FALSE);
-  g_return_val_if_fail(key != NULL, FALSE);
-  g_return_val_if_fail(schema_key != NULL, FALSE);
-  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  g_return_val_if_fail (source != NULL, FALSE);
+  g_return_val_if_fail (key != NULL, FALSE);
+  g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
   
   if ( source_is_writable(source, key, err) )
     {
@@ -689,8 +688,8 @@ gconf_sources_set_value   (GConfSources* sources,
   g_set_error (err,
                GCONF_ERROR,
                GCONF_ERROR_NO_WRITABLE_DATABASE,
-               _("Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections? As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconf"),
-               key);
+               _("Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file %s/path doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. If you have stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections - put \"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconfd and also lockfiles in individual storage locations such as ~/.gconf"),           
+               key, GCONF_CONFDIR);
 }
 
 void
@@ -732,6 +731,169 @@ gconf_sources_unset_value   (GConfSources* sources,
       
       tmp = g_list_next(tmp);
     }
+}
+
+static void
+recursive_unset_helper (GConfSources   *sources,
+                        const char     *key,
+                        const char     *locale,
+                        GConfUnsetFlags flags,
+                        GSList        **notifies,
+                        GError        **first_error)
+{
+  GError* err = NULL;
+  GSList* subdirs;
+  GSList* entries;
+  GSList* tmp;
+  const char *locales[2] = { NULL, NULL };
+  
+  err = NULL;
+  
+  subdirs = gconf_sources_all_dirs (sources, key, &err);
+          
+  if (subdirs != NULL)
+    {
+      tmp = subdirs;
+
+      while (tmp != NULL)
+        {
+          char *s = tmp->data;
+          char *full = gconf_concat_dir_and_key (key, s);
+          
+          recursive_unset_helper (sources, full, locale, flags,
+                                  notifies, first_error);
+          
+          g_free (s);
+          g_free (full);
+
+          tmp = g_slist_next (tmp);
+        }
+
+      g_slist_free (subdirs);
+    }
+  else
+    {
+      if (err != NULL)
+        {
+          gconf_log (GCL_DEBUG, "Error listing subdirs of '%s': %s\n",
+                     key, err->message);
+          if (*first_error)
+            g_error_free (err);
+          else
+            *first_error = err;
+          err = NULL;
+        }
+    }
+
+  locales[0] = locale;
+  entries = gconf_sources_all_entries (sources, key,
+                                       locale ? locales : NULL,
+                                       &err);
+          
+  if (err != NULL)
+    {
+      gconf_log (GCL_DEBUG, "Failure listing entries in '%s': %s\n",
+                 key, err->message);
+      if (*first_error)
+        g_error_free (err);
+      else
+        *first_error = err;
+      err = NULL;
+    }
+
+  if (entries != NULL)
+    {
+      tmp = entries;
+
+      while (tmp != NULL)
+        {
+          GConfEntry* entry = tmp->data;
+          char *full = gconf_concat_dir_and_key (key,
+                                                 gconf_entry_get_key (entry));
+          
+          if (notifies)
+            *notifies = g_slist_prepend (*notifies, g_strdup (full));
+          
+          gconf_sources_unset_value (sources,
+                                     full,
+                                     locale,
+                                     &err);
+          if (err != NULL)
+            {
+              gconf_log (GCL_DEBUG, "Error unsetting '%s': %s\n",
+                         full, err->message);
+
+              if (*first_error)
+                g_error_free (err);
+              else
+                *first_error = err;
+              err = NULL;
+            }
+
+          if (flags & GCONF_UNSET_INCLUDING_SCHEMA_NAMES)
+            {
+              gconf_sources_set_schema (sources,
+                                        full, NULL,
+                                        &err);
+              if (err != NULL)
+                {
+                  gconf_log (GCL_DEBUG, "Error unsetting schema on '%s': %s\n",
+                             full, err->message);
+                  
+                  if (*first_error)
+                    g_error_free (err);
+                  else
+                    *first_error = err;
+                  err = NULL;
+                }
+            }
+          
+          gconf_entry_free (entry);
+          g_free (full);
+          
+          tmp = g_slist_next (tmp);
+        }
+
+      g_slist_free (entries);
+    }
+
+  if (notifies)
+    *notifies = g_slist_prepend (*notifies, g_strdup (key));
+  
+  gconf_sources_unset_value (sources, key, locale, &err);
+  
+  if (err != NULL)
+    {
+      gconf_log (GCL_DEBUG, "Error unsetting '%s': %s\n",
+                 key, err->message);
+
+      if (*first_error)
+        g_error_free (err);
+      else
+        *first_error = err;
+      err = NULL;
+    }
+}
+
+void
+gconf_sources_recursive_unset (GConfSources   *sources,
+                               const gchar    *key,
+                               const gchar    *locale,
+                               GConfUnsetFlags flags,
+                               GSList        **notifies,
+                               GError        **err)
+{
+  GError *first_error;
+  
+  g_return_if_fail (sources != NULL);
+  g_return_if_fail (key != NULL);
+  g_return_if_fail (err == NULL || *err == NULL);
+
+  first_error = NULL;
+  recursive_unset_helper (sources, key, locale, flags,
+                          notifies, &first_error);
+
+  g_propagate_error (err, first_error);
 }
 
 gboolean
@@ -800,17 +962,17 @@ gconf_sources_remove_dir (GConfSources* sources,
 }
 
 void         
-gconf_sources_set_schema        (GConfSources* sources,
-                                 const gchar* key,
-                                 const gchar* schema_key,
-                                 GError** err)
+gconf_sources_set_schema (GConfSources *sources,
+                          const gchar  *key,
+                          const gchar  *schema_key,
+                          GError      **err)
 {
   GList* tmp;
 
-  if (!gconf_key_check(key, err))
+  if (!gconf_key_check (key, err))
     return;
 
-  if (!gconf_key_check(schema_key, err))
+  if (schema_key && !gconf_key_check (schema_key, err))
     return;
   
   tmp = sources->sources;
@@ -821,7 +983,7 @@ gconf_sources_set_schema        (GConfSources* sources,
 
       /* may set error, we just leave its setting */
       /* returns TRUE if the source was writable */
-      if (gconf_source_set_schema(src, key, schema_key, err))
+      if (gconf_source_set_schema (src, key, schema_key, err))
         return;
 
       tmp = g_list_next(tmp);

@@ -25,6 +25,12 @@
 #include "gconf-error.h"
 #include "gconf-value.h"
 
+typedef enum
+{
+  GCONF_UNSET_INCLUDING_SCHEMA_NAMES
+} GConfUnsetFlags;
+
+
 /* Sources are not interchangeable; different backend engines will return 
  * GConfSource with different private elements.
  */
@@ -87,6 +93,12 @@ void          gconf_sources_unset_value        (GConfSources  *sources,
                                                 const gchar   *key,
                                                 const gchar   *locale,
                                                 GError   **err);
+void          gconf_sources_recursive_unset    (GConfSources  *sources,
+                                                const gchar   *key,
+                                                const gchar   *locale,
+                                                GConfUnsetFlags flags,
+                                                GSList      **notifies,
+                                                GError      **err);
 GSList*       gconf_sources_all_entries        (GConfSources  *sources,
                                                 const gchar   *dir,
                                                 const gchar  **locales,

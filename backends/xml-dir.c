@@ -59,10 +59,11 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
 }
 #endif
 
-static gchar* parent_dir(const gchar* dir);
+static gboolean dir_rescan_subdirs (Dir* d, GError** err);
 
 struct _Dir {
   gchar* key;
+  gchar* parent_key;
   gchar* fs_dirname;
   gchar* xml_filename;
   guint root_dir_len;
@@ -71,8 +72,9 @@ struct _Dir {
   GHashTable* entry_cache; /* store key-value entries */
   guint dir_mode;
   guint file_mode;
+  GSList *subdir_names;
   guint dirty : 1;
-  guint deleted : 1;
+  guint need_rescan_subdirs : 1;
 };
 
 static void
@@ -100,16 +102,19 @@ dir_blank(const gchar* key)
   }
 #endif
   
-  d->key = g_strdup(key);
+  d->key = g_strdup (key);
+  d->parent_key = gconf_key_directory (key);
   
   d->last_access = time(NULL);
   d->doc = NULL;
 
-  d->entry_cache = g_hash_table_new(g_str_hash, g_str_equal);
+  d->entry_cache = g_hash_table_new (g_str_hash, g_str_equal);
   
   d->dirty = FALSE;
-  d->deleted = FALSE;
+  d->need_rescan_subdirs = TRUE;
 
+  d->subdir_names = NULL;
+  
   d->dir_mode = 0700;
   d->file_mode = 0600;
   
@@ -117,10 +122,10 @@ dir_blank(const gchar* key)
 }
 
 Dir*
-dir_new(const gchar  *keyname,
-        const gchar  *xml_root_dir,
-        guint dir_mode,
-        guint file_mode)
+dir_new (const gchar  *keyname,
+         const gchar  *xml_root_dir,
+         guint dir_mode,
+         guint file_mode)
 {
   Dir* d;
   
@@ -138,7 +143,7 @@ dir_new(const gchar  *keyname,
 }
 
 Dir*
-dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
+dir_load (const gchar* key, const gchar* xml_root_dir, GError** err)
 {
   Dir* d;
   gchar* fs_dirname;
@@ -159,9 +164,9 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
       {
         if (errno != ENOENT)
           {
-            gconf_set_error(err, GCONF_ERROR_FAILED,
-                            _("Could not stat `%s': %s"),
-                            xml_filename, strerror(errno));
+            gconf_set_error (err, GCONF_ERROR_FAILED,
+                             _("Could not stat `%s': %s"),
+                             xml_filename, strerror(errno));
 
           }
         
@@ -169,7 +174,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
       }
     else if (S_ISDIR(s.st_mode))
       {
-        gconf_set_error(err, GCONF_ERROR_FAILED,
+        gconf_set_error (err, GCONF_ERROR_FAILED,
                          _("XML filename `%s' is a directory"),
                          xml_filename);
         notfound = TRUE;
@@ -187,7 +192,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
         /* Take directory mode from the xml_root_dir, if possible */
         if (stat (xml_root_dir, &s) == 0)
           {
-            dir_mode = mode_t_to_mode(s.st_mode);
+            dir_mode = _gconf_mode_t_to_mode (s.st_mode);
           }
         
         file_mode = dir_mode & ~0111; /* turn off search bits */
@@ -204,7 +209,7 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
   d->dir_mode = dir_mode;
   d->file_mode = file_mode;
   
-  gconf_log(GCL_DEBUG, "loaded dir %s", fs_dirname);
+  gconf_log (GCL_DEBUG, "loaded dir %s", fs_dirname);
   
   return d;
 }
@@ -213,25 +218,29 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
 static void
 entry_destroy_foreach(const gchar* name, Entry* e, gpointer data)
 {
-  entry_destroy(e);
+  entry_destroy (e);
 }
 
 void
 dir_destroy(Dir* d)
 {
-  g_free(d->key);
-  g_free(d->fs_dirname);
-  g_free(d->xml_filename);
+  g_free (d->key);
+  g_free (d->parent_key);
+  g_free (d->fs_dirname);
+  g_free (d->xml_filename);
+
+  g_slist_foreach (d->subdir_names, (GFunc) g_free, NULL);
+  g_slist_free (d->subdir_names);
   
-  g_hash_table_foreach(d->entry_cache, (GHFunc)entry_destroy_foreach,
-                       NULL);
+  g_hash_table_foreach (d->entry_cache, (GHFunc)entry_destroy_foreach,
+                        NULL);
   
-  g_hash_table_destroy(d->entry_cache);
+  g_hash_table_destroy (d->entry_cache);
 
   if (d->doc != NULL)
-    xmlFreeDoc(d->doc);
+    xmlFreeDoc (d->doc);
   
-  g_free(d);
+  g_free (d);
 }
 
 static gboolean
@@ -267,41 +276,110 @@ entry_sync_foreach(const gchar* name, Entry* e, gpointer data)
 }
 
 gboolean
-dir_sync_pending    (Dir          *d)
+dir_sync_pending (Dir *d)
 {
   return d->dirty;
 }
 
+void
+dir_child_removed (Dir        *d,
+                   const char *child_name)
+{
+  GSList *tmp;
+  
+  /* dirty because we need to consider removing
+   * this directory, it may have become empty.
+   */
+  d->dirty = TRUE;
+  
+  if (d->need_rescan_subdirs)
+    return; /* subdir_names is totally invalid anyhow */
+
+  tmp = d->subdir_names;
+  while (tmp != NULL)
+    {
+      if (strcmp (tmp->data, child_name) == 0)
+        {
+          char *tofree = tmp->data;
+          
+          d->subdir_names = g_slist_remove (d->subdir_names,
+                                            tofree);
+          g_free (tofree);
+
+          break;
+        }
+      
+      tmp = tmp->next;
+    }
+}
+
+void
+dir_child_added (Dir        *d,
+                 const char *child_name)
+{
+  if (d->need_rescan_subdirs)
+    return;
+
+  if (g_slist_find_custom (d->subdir_names,
+                           child_name,
+                           (GCompareFunc) strcmp) == NULL)
+    d->subdir_names = g_slist_prepend (d->subdir_names,
+                                       g_strdup (child_name));
+}
+
+/* directories auto-disappear when they're empty */
+static gboolean
+dir_useless (Dir *d)
+{
+  if (d->doc == NULL)
+    dir_load_doc (d, NULL);
+
+  if (d->need_rescan_subdirs)
+    dir_rescan_subdirs (d, NULL);
+  
+  return
+    d->subdir_names == NULL &&
+    g_hash_table_size (d->entry_cache) == 0;
+}
+
 gboolean
-dir_sync        (Dir* d, GError** err)
+dir_sync (Dir      *d,
+          gboolean *deleted,
+          GError  **err)
 {
   gboolean retval = TRUE;
-  
-  /* note that if we are deleted but already
-     synced, this returns now, making the
-     dircache's recursive delete tactic reasonably
-     efficient
-  */
+
+  if (deleted)
+    *deleted = FALSE;  
+
   if (!d->dirty)
     return TRUE; 
 
-  d->last_access = time(NULL);
+  gconf_log (GCL_DEBUG, "Syncing dir \"%s\"", d->key);
   
-  if (d->deleted)
+  d->last_access = time (NULL);
+  
+  if (dir_useless (d))
     {
-      if (unlink(d->xml_filename) != 0)
+      gconf_log (GCL_DEBUG, "Deleting useless dir \"%s\"",
+                 d->key);
+      
+      if (unlink (d->xml_filename) != 0)
         {
-          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to delete `%s': %s"),
-                          d->xml_filename, strerror(errno));
+          gconf_set_error (err, GCONF_ERROR_FAILED, _("Failed to delete \"%s\": %s"),
+                           d->xml_filename, strerror (errno));
           return FALSE;
         }
 
-      if (rmdir(d->fs_dirname) != 0)
+      if (rmdir (d->fs_dirname) != 0)
         {
-          gconf_set_error(err, GCONF_ERROR_FAILED, _("Failed to delete `%s': %s"),
-                          d->fs_dirname, strerror(errno));
+          gconf_set_error (err, GCONF_ERROR_FAILED, _("Failed to delete \"%s\": %s"),
+                           d->fs_dirname, strerror (errno));
           return FALSE;
         }
+
+      if (deleted)
+        *deleted = TRUE;
     }
   else
     {
@@ -358,7 +436,7 @@ dir_sync        (Dir* d, GError** err)
           
           retval = FALSE;
           goto failed_end_of_sync;
-        }     
+        }  
 
       if (xmlDocDump (outfile, d->doc) < 0)
         {
@@ -438,8 +516,8 @@ dir_sync        (Dir* d, GError** err)
 }
 
 void
-dir_set_value   (Dir* d, const gchar* relative_key,
-                 const GConfValue* value, GError** err)
+dir_set_value (Dir* d, const gchar* relative_key,
+               const GConfValue* value, GError** err)
 {
   Entry* e;
   
@@ -521,10 +599,17 @@ dir_get_value   (Dir* d,
 }
 
 const gchar*
-dir_get_name        (Dir          *d)
+dir_get_name (Dir *d)
 {
-  g_return_val_if_fail(d != NULL, NULL);
+  g_return_val_if_fail (d != NULL, NULL);
   return d->key;
+}
+
+const char*
+dir_get_parent_name (Dir *d)
+{
+  g_return_val_if_fail (d != NULL, NULL);
+  return d->parent_key;
 }
 
 GConfMetaInfo*
@@ -660,8 +745,27 @@ dir_all_entries (Dir* d, const gchar** locales, GError** err)
   return ld.list;
 }
 
-GSList*
-dir_all_subdirs (Dir* d, GError** err)
+static GSList*
+copy_string_list (GSList *src)
+{
+  GSList *copy;
+  GSList *tmp;
+  
+  copy = NULL;
+  tmp = src;
+  while (tmp != NULL)
+    {
+      copy = g_slist_prepend (copy, g_strdup (tmp->data));
+      tmp = tmp->next;
+    }
+
+  copy = g_slist_reverse (copy);
+
+  return copy;
+}
+
+static gboolean
+dir_rescan_subdirs (Dir* d, GError** err)
 {
   DIR* dp;
   struct dirent* dent;
@@ -673,18 +777,28 @@ dir_all_subdirs (Dir* d, GError** err)
   guint subdir_len;
   
   if (d->doc == NULL)
-    dir_load_doc(d, err);
+    dir_load_doc (d, err);
   
   if (d->doc == NULL)
     {
-      g_return_val_if_fail( (err == NULL) || (*err != NULL), NULL );
-      return NULL;
+      g_return_val_if_fail ((err == NULL) || (*err != NULL), FALSE);
+      return FALSE;
     }
+
+  if (!d->need_rescan_subdirs)
+    return;
+
+  g_slist_foreach (d->subdir_names, (GFunc) g_free, NULL);
+  g_slist_free (d->subdir_names);
+  d->subdir_names = NULL;
   
-  dp = opendir(d->fs_dirname);
+  dp = opendir (d->fs_dirname);
 
   if (dp == NULL)
-    return NULL;
+    {
+      d->need_rescan_subdirs = FALSE;
+      return TRUE;
+    }
 
   len = strlen(d->fs_dirname);
   subdir_len = PATH_MAX - len;
@@ -719,71 +833,62 @@ dir_all_subdirs (Dir* d, GError** err)
           continue;
         }
       
-      retval = g_slist_prepend(retval, g_strdup(dent->d_name));
+      retval = g_slist_prepend (retval, g_strdup(dent->d_name));
     }
 
   /* if this fails, we really can't do a thing about it
-     and it's not a meaningful error */
-  closedir(dp);
+   * and it's not a meaningful error
+   */
+  closedir (dp);
 
   g_free (fullpath);
-  
-  return retval;
+
+  d->subdir_names = retval;
+  d->need_rescan_subdirs = FALSE;
+
+  return TRUE;
+}
+
+GSList*
+dir_all_subdirs (Dir* d, GError** err)
+{
+  if (!dir_rescan_subdirs (d, err))
+    return NULL;
+
+  return copy_string_list (d->subdir_names);
 }
 
 void
-dir_set_schema  (Dir* d,
-                 const gchar* relative_key,
-                 const gchar* schema_key,
-                 GError** err)
+dir_set_schema  (Dir         *d,
+                 const gchar *relative_key,
+                 const gchar *schema_key,
+                 GError     **err)
 {
   Entry* e;
 
   if (d->doc == NULL)
-    dir_load_doc(d, err);
+    dir_load_doc (d, err);
 
   if (d->doc == NULL)
     {
-      g_return_if_fail( (err == NULL) || (*err != NULL) );
+      g_return_if_fail ((err == NULL) || (*err != NULL));
       return;
     }
   
   d->dirty = TRUE;
-  d->last_access = time(NULL);
+  d->last_access = time (NULL);
   
-  e = g_hash_table_lookup(d->entry_cache, relative_key);
+  e = g_hash_table_lookup (d->entry_cache, relative_key);
 
   if (e == NULL)
-    e = dir_make_new_entry(d, relative_key);
+    e = dir_make_new_entry (d, relative_key);
 
-  entry_set_mod_time(e, d->last_access);
+  entry_set_mod_time (e, d->last_access);
 
-  entry_set_schema_name(e, schema_key);
+  entry_set_schema_name (e, schema_key);
 
   if (schema_key == NULL)
-    dir_forget_entry_if_useless(d, e);
-}
-
-void
-dir_mark_deleted(Dir* d)
-{
-  if (d->deleted)
-    return;
-  
-  d->deleted = TRUE;
-  d->dirty = TRUE;
-  
-  /* go ahead and free the XML document */
-
-  if (d->doc)
-    xmlFreeDoc(d->doc);
-  d->doc = NULL;
-}
-
-gboolean
-dir_is_deleted     (Dir* d)
-{
-  return d->deleted;
+    dir_forget_entry_if_useless (d, e);
 }
 
 GTime
@@ -1028,9 +1133,9 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
     {
       gchar* parent;
       
-      parent = parent_dir(dir);
+      parent = _gconf_parent_dir (dir);
 
-      gconf_log(GCL_DEBUG, "Parent dir is %s", parent);
+      gconf_log (GCL_DEBUG, "Parent dir is %s", parent);
       
       if (parent != NULL)
         {
@@ -1106,8 +1211,8 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
   return TRUE;
 }
 
-static gchar* 
-parent_dir(const gchar* dir)
+gchar* 
+_gconf_parent_dir (const gchar* dir)
 {
   /* We assume the dir doesn't have a trailing slash, since that's our
      standard canonicalization in GConf */
@@ -1140,10 +1245,9 @@ parent_dir(const gchar* dir)
   return parent;
 }
 
-
 /* util */
 guint
-mode_t_to_mode(mode_t orig)
+_gconf_mode_t_to_mode(mode_t orig)
 {
   /* I don't think this is portable. */
   guint mode = 0;

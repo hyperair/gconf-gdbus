@@ -27,19 +27,16 @@
 typedef struct _Cache Cache;
 
 Cache*   cache_new        (const gchar  *root_dir,
-                           guint dir_mode,
-                           guint file_mode);
+                           guint         dir_mode,
+                           guint         file_mode);
 void     cache_destroy    (Cache        *cache);
 gboolean cache_sync       (Cache        *cache,
-                           GError  **err);
+                           GError      **err);
 void     cache_clean      (Cache        *cache,
                            GTime         older_than);
-void     cache_delete_dir (Cache        *cache,
-                           const gchar  *key,
-                           GError  **err);
 Dir*     cache_lookup     (Cache        *cache,
                            const gchar  *key,
-                           gboolean create_if_missing,
-                           GError  **err); 
+                           gboolean      create_if_missing,
+                           GError      **err);
 
 #endif

@@ -32,15 +32,17 @@ Dir*           dir_new             (const gchar  *keyname,
                                     guint file_mode);
 Dir*           dir_load            (const gchar  *key,
                                     const gchar  *xml_root_dir,
-                                    GError  **err);
+                                    GError      **err);
 void           dir_destroy         (Dir          *d);
 void           dir_clear_cache     (Dir          *d);
 gboolean       dir_ensure_exists   (Dir          *d,
                                     GError  **err);
 gboolean       dir_sync            (Dir          *d,
-                                    GError  **err);
+                                    gboolean     *deleted,
+                                    GError      **err);
 
-const gchar*   dir_get_name        (Dir          *d);
+const char*    dir_get_name        (Dir          *d);
+const char*    dir_get_parent_name (Dir          *d);
 
 /* key should have no slashes in it */
 void           dir_set_value       (Dir          *d,
@@ -72,16 +74,16 @@ GTime          dir_get_last_access (Dir          *d);
 
 gboolean       dir_sync_pending    (Dir          *d);
 
-/* Marks for deletion; dir cache really has to implement directory
-   deletion, since it is recursive */
-void           dir_mark_deleted    (Dir          *d);
-gboolean       dir_is_deleted      (Dir          *d);
-
+void           dir_child_removed   (Dir          *d,
+                                    const char   *child_name);
+void           dir_child_added     (Dir          *d,
+                                    const char   *child_name);
 
 /* random utility function */
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-guint mode_t_to_mode(mode_t orig);
+guint  _gconf_mode_t_to_mode (mode_t orig);
+gchar* _gconf_parent_dir (const gchar* dir);
 
 #endif

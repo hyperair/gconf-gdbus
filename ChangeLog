@@ -1,3 +1,45 @@
+2002-01-14  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (gconf_key_is_below): fix to handle root dir
+
+	* gconf/gconftool.c (main): add --unapply-schema mode
+
+	* gconf/gconf-database.c (impl_ConfigDatabase_set_schema): allow
+	unset schema if we get an empty schema name
+
+	* gconf/gconf.c (gconf_engine_associate_schema): allow NULL 
+	schema name to unset the schema
+
+	* gconf/gconftool.c (do_recursive_unset): use new
+	gconf_engine_recursive_unset internal function to do the unset
+
+	* backends/xml-cache.c, backends/xml-dir.c: rearrange things 
+	to try and make directories auto-disappear when empty
+
+	* backends/xml-backend.c (remove_dir): make this do nothing
+
+	* backends/xml-dir.c (dir_all_subdirs): cache subdir names in the
+	directory so we can cheaply check if we have subdirectories
+
+	* gconf/gconf-sources.c (gconf_sources_set_value): enhance the
+	other giant error message
+
+	* gconf/gconf-internals.c (gconf_activate_server): improve error
+	message to cover stale locks and explain how to active TCP for 
+	ORBit
+
+	* gconf/gconf-sources.c (gconf_sources_recursive_unset): implement
+
+	* gconf/gconf.c (gconf_key_check): handle NULL key
+
+	* gconf/gconf-sources.c (gconf_sources_set_schema): allow NULL
+	schema name
+
+	* gconf/GConf.idl: add flags to recursive_unset
+
+	* gconf/gconf.c (gconf_engine_recursive_unset): Add this internal
+	API to use in gconftool etc.
+	
 2002-01-14  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf-client.c (gconf_client_get_full): fix segfault on

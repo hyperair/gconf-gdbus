@@ -21,7 +21,7 @@
 #define GCONF_GCONF_INTERNALS_H
 
 #ifndef GCONF_ENABLE_INTERNALS
-#warning "you are trying to use GConf internal functions outside of GConf. This is a Bad Idea"
+#error "you are trying to use GConf internal functions outside of GConf. This is a Bad Idea, the ABI for these internals is not fixed"
 #endif
 
 #ifdef GCONF_ENABLE_INTERNALS
@@ -36,6 +36,7 @@
 #include "gconf-error.h"
 #include "gconf-value.h"
 #include "gconf-engine.h"
+#include "gconf-sources.h"
 #include "GConf.h"
 
 gchar*       gconf_key_directory  (const gchar* key);
@@ -216,6 +217,10 @@ void gconf_engine_push_owner_usage (GConfEngine *engine,
 void gconf_engine_pop_owner_usage  (GConfEngine *engine,
                                     gpointer     client);
 
+gboolean gconf_engine_recursive_unset (GConfEngine      *engine,
+                                       const char       *key,
+                                       GConfUnsetFlags   flags,
+                                       GError          **err);
 
 static inline gboolean
 gconf_CORBA_Object_equal (gconstpointer a, gconstpointer b)

@@ -102,6 +102,11 @@ void gconf_database_unset (GConfDatabase      *db,
                            const gchar        *locale,
                            GError        **err);
 
+void gconf_database_recursive_unset (GConfDatabase      *db,
+                                     const gchar        *key,
+                                     const gchar        *locale,
+                                     GConfUnsetFlags     flags,
+                                     GError            **err);
 
 
 gboolean gconf_database_dir_exists  (GConfDatabase  *db,
