@@ -167,7 +167,7 @@ static gboolean     readable         (GConfSource* source,
                                       const gchar* key,
                                       GError** err);
 
-static gboolean     writeable        (GConfSource* source,
+static gboolean     writable        (GConfSource* source,
                                       const gchar* key,
                                       GError** err);
 
@@ -226,7 +226,7 @@ static GConfBackendVTable xml_vtable = {
   lock,
   unlock,
   readable,
-  writeable,
+  writable,
   query_value,
   query_metainfo,
   set_value,
@@ -273,7 +273,7 @@ readable (GConfSource* source,
 }
 
 static gboolean
-writeable (GConfSource* source,
+writable (GConfSource* source,
            const gchar* key,
            GError** err)
 {
@@ -331,8 +331,8 @@ resolve_address (const gchar* address, GError** err)
     }
   
   {
-    /* See if we're writeable */
-    gboolean writeable = FALSE;
+    /* See if we're writable */
+    gboolean writable = FALSE;
     int fd;
     gchar* testfile;
 
@@ -342,7 +342,7 @@ resolve_address (const gchar* address, GError** err)
 
     if (fd >= 0)
       {
-        writeable = TRUE;
+        writable = TRUE;
         close(fd);
       }
         
@@ -350,13 +350,13 @@ resolve_address (const gchar* address, GError** err)
 
     g_free(testfile);
     
-    if (writeable)
+    if (writable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
 
-    /* We only do locking if it's writeable,
+    /* We only do locking if it's writable,
        which is sort of broken but close enough
     */
-    if (writeable)
+    if (writable)
       {
         gchar* lockdir;
 

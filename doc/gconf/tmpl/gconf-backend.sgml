@@ -44,7 +44,7 @@ no longer needs.
 <entry>
 Should create a #GConfSource for accessing the supplied address. Should set the
 %GCONF_SOURCE_ALL_READABLE and %GCONF_SOURCE_ALL_WRITEABLE flags if
-appropriate. If these are not set, the backend must implement the @writeable and
+appropriate. If these are not set, the backend must implement the @writable and
 @readable methods. If <symbol>NULL</symbol> is returned, then the error should
 be set.
 </entry>
@@ -88,7 +88,7 @@ asking whether the key exists. <emphasis>If an error is set, then
  
 
 <row>
-<entry>@writeable</entry>
+<entry>@writable</entry>
 <entry>Analagous to @readable, but for writing.</entry>
 </row>
  
@@ -128,7 +128,7 @@ should also be returned if an error is set.
 <entry>@set_value</entry>
 
 <entry>This method must be implemented if the source is
-writeable. It sets the value of a key. If the key is already set, its value
+writable. It sets the value of a key. If the key is already set, its value
 should be replaced. Setting a value should update the modification time of the
 key.
 </entry>
@@ -236,7 +236,7 @@ Should destroy a source obtained with @resolve_address.
 @lock: 
 @unlock: 
 @readable: 
-@writeable: 
+@writable: 
 @query_value: 
 @query_metainfo: 
 @set_value: 

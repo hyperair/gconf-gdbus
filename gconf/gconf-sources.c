@@ -84,7 +84,7 @@ gconf_resolve_address(const gchar* address, GError** err)
 }
 
 void         
-gconf_source_destroy (GConfSource* source)
+gconf_source_free (GConfSource* source)
 {
   GConfBackend* backend;
   
@@ -104,14 +104,14 @@ gconf_source_destroy (GConfSource* source)
         (*(source)->backend->vtable->readable)((source), (key), (err))) )
 
 static gboolean
-source_is_writeable(GConfSource* source, const gchar* key, GError** err)
+source_is_writable(GConfSource* source, const gchar* key, GError** err)
 {
   if ((source->flags & GCONF_SOURCE_NEVER_WRITEABLE) != 0)
     return FALSE;
   else if ((source->flags & GCONF_SOURCE_ALL_WRITEABLE) != 0)
     return TRUE;
-  else if (source->backend->vtable->writeable != NULL &&
-           (*source->backend->vtable->writeable)(source, key, err))
+  else if (source->backend->vtable->writable != NULL &&
+           (*source->backend->vtable->writable)(source, key, err))
     return TRUE;
   else
     return FALSE;
@@ -160,7 +160,7 @@ gconf_source_query_metainfo      (GConfSource* source,
 }
 
 
-/* return value indicates whether the key was writeable */
+/* return value indicates whether the key was writable */
 static gboolean
 gconf_source_set_value        (GConfSource* source,
                                const gchar* key,
@@ -174,7 +174,7 @@ gconf_source_set_value        (GConfSource* source,
   
   /* don't check key validity */
 
-  if ( source_is_writeable(source, key, err) )
+  if ( source_is_writable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
       (*source->backend->vtable->set_value)(source, key, value, err);
@@ -194,7 +194,7 @@ gconf_source_unset_value      (GConfSource* source,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
-  if ( source_is_writeable(source, key, err) )
+  if ( source_is_writable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
       (*source->backend->vtable->unset_value)(source, key, locale, err);
@@ -268,7 +268,7 @@ gconf_source_remove_dir        (GConfSource* source,
   g_return_if_fail(dir != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
   
-  if ( source_is_writeable(source, dir, err) )
+  if ( source_is_writable(source, dir, err) )
     {
       g_return_if_fail(err == NULL || *err == NULL);
       (*source->backend->vtable->remove_dir)(source, dir, err);
@@ -286,7 +286,7 @@ gconf_source_set_schema        (GConfSource* source,
   g_return_val_if_fail(schema_key != NULL, FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
-  if ( source_is_writeable(source, key, err) )
+  if ( source_is_writable(source, key, err) )
     {
       g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
       (*source->backend->vtable->set_schema)(source, key, schema_key, err);
@@ -358,7 +358,7 @@ gconf_sources_new_from_source       (GConfSource* source)
 }
 
 void
-gconf_sources_destroy(GConfSources* sources)
+gconf_sources_free(GConfSources* sources)
 {
   GList* tmp;
 
@@ -366,7 +366,7 @@ gconf_sources_destroy(GConfSources* sources)
 
   while (tmp != NULL)
     {
-      gconf_source_destroy(tmp->data);
+      gconf_source_free(tmp->data);
       
       tmp = g_list_next(tmp);
     }
@@ -564,7 +564,7 @@ gconf_sources_set_value   (GConfSources* sources,
 
       if (gconf_source_set_value(src, key, value, err))
         {
-          /* source was writeable */
+          /* source was writable */
           return;
         }
       else
@@ -608,7 +608,7 @@ gconf_sources_unset_value   (GConfSources* sources,
 
       if (gconf_source_unset_value(src, key, locale, &error))
         {
-          /* it was writeable */
+          /* it was writable */
 
           /* On error, set error and bail */
           if (error != NULL)
@@ -717,7 +717,7 @@ gconf_sources_set_schema        (GConfSources* sources,
       GConfSource* src = tmp->data;
 
       /* may set error, we just leave its setting */
-      /* returns TRUE if the source was writeable */
+      /* returns TRUE if the source was writable */
       if (gconf_source_set_schema(src, key, schema_key, err))
         return;
 
@@ -1109,7 +1109,7 @@ gconf_sources_query_metainfo (GConfSources* sources,
                                                gconf_meta_info_mod_time(this_mi));
                 }
 
-              gconf_meta_info_destroy(this_mi);
+              gconf_meta_info_free(this_mi);
             }
         }
       
@@ -1150,7 +1150,7 @@ gconf_sources_query_default_value(GConfSources* sources,
 
   if (gconf_meta_info_schema(mi) == NULL)
     {
-      gconf_meta_info_destroy(mi);
+      gconf_meta_info_free(mi);
       return NULL;
     }
       
@@ -1170,11 +1170,11 @@ gconf_sources_query_default_value(GConfSources* sources,
                     key,
                     gconf_value_type_to_string(val->type));
 
-          gconf_meta_info_destroy(mi);
+          gconf_meta_info_free(mi);
           return NULL;
         }
 
-      gconf_meta_info_destroy(mi);
+      gconf_meta_info_free(mi);
 
       schema = gconf_value_schema(val);
       val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
@@ -1209,7 +1209,7 @@ gconf_sources_query_default_value(GConfSources* sources,
             }
         }
       
-      gconf_meta_info_destroy(mi);
+      gconf_meta_info_free(mi);
       
       return NULL;
     }

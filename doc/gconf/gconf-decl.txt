@@ -404,7 +404,7 @@ struct GConfBackendVTable {
                                            const gchar* key,
                                            GError** err);
 
-  gboolean           (* writeable)        (GConfSource* source,
+  gboolean           (* writable)        (GConfSource* source,
                                            const gchar* key,
                                            GError** err);
   
@@ -1014,7 +1014,7 @@ GConfListeners* listeners,GConfListenersForeach callback,gpointer user_data
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_locale_cache_destroy</NAME>
+<NAME>gconf_locale_cache_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfLocaleCache* cache
 </FUNCTION>
@@ -1185,7 +1185,7 @@ struct GConfSource {
 <NAME>GConfSourceFlags</NAME>
 typedef enum {
   /* These are an optimization to avoid calls to
-   * the writeable/readable methods in the backend
+   * the writable/readable methods in the backend
    * vtable
    */
   GCONF_SOURCE_ALL_WRITEABLE = 1 << 0,
@@ -1200,7 +1200,7 @@ typedef enum {
 const gchar* address,GError** err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_source_destroy</NAME>
+<NAME>gconf_source_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfSource* source
 </FUNCTION>
@@ -1225,7 +1225,7 @@ const gchar **addresses,GError   **err
 GConfSource   *source
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_sources_destroy</NAME>
+<NAME>gconf_sources_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfSources  *sources
 </FUNCTION>
@@ -1494,7 +1494,7 @@ struct GConfMetaInfo {
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_meta_info_destroy</NAME>
+<NAME>gconf_meta_info_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfMetaInfo* gcmi
 </FUNCTION>
@@ -3287,7 +3287,7 @@ struct GConfDatabase
 GConfSources  *sources
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_database_destroy</NAME>
+<NAME>gconf_database_free</NAME>
 <RETURNS>void  </RETURNS>
 GConfDatabase *db
 </FUNCTION>

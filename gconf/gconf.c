@@ -471,7 +471,7 @@ gconf_engine_unref        (GConfEngine* conf)
       if (gconf_engine_is_local(conf))
         {
           if (conf->local_sources != NULL)
-            gconf_sources_destroy(conf->local_sources);
+            gconf_sources_free(conf->local_sources);
         }
       else
         {

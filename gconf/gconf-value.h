@@ -135,7 +135,7 @@ struct _GConfMetaInfo {
 #define gconf_meta_info_mod_time(x)  ((x)->mod_time)
 
 GConfMetaInfo* gconf_meta_info_new         (void);
-void           gconf_meta_info_destroy     (GConfMetaInfo* gcmi);
+void           gconf_meta_info_free     (GConfMetaInfo* gcmi);
 void           gconf_meta_info_set_schema  (GConfMetaInfo* gcmi,
                                             const gchar* schema_name);
 void           gconf_meta_info_set_mod_user(GConfMetaInfo* gcmi,

@@ -1,5 +1,20 @@
 2000-09-10  Havoc Pennington  <hp@pobox.com>
 
+	* Another rename fest:
+
+	#!/usr/bin/perl -pi.bak
+
+	## note that this regexp could affect non-GConf stuff
+	s/writeable/writable/g;
+
+	s/gconf_meta_info_destroy/gconf_meta_info_free/g;
+	s/gconf_database_destroy/gconf_database_free/g;
+	s/gconf_source_destroy/gconf_source_free/g;
+	s/gconf_sources_destroy/gconf_sources_free/g;
+	s/gconf_locale_cache_destroy/gconf_locale_cache_free/g;
+
+2000-09-10  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-value.c (gconf_value_new): don't use
 	GCONF_INTERNAL_VALUE_TYPE_VALID
 

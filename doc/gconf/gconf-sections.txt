@@ -173,11 +173,11 @@ gconf_schema_set_list_type
 GConfSource
 GConfSourceFlags
 gconf_resolve_address
-gconf_source_destroy
+gconf_source_free
 GConfSources
 gconf_sources_new_from_addresses
 gconf_sources_new_from_source
-gconf_sources_destroy
+gconf_sources_free
 gconf_sources_query_value
 gconf_sources_set_value
 gconf_sources_unset_value
@@ -225,7 +225,7 @@ gconf_value_set_list
 gconf_value_to_string
 GConfMetaInfo
 gconf_meta_info_new
-gconf_meta_info_destroy
+gconf_meta_info_free
 gconf_meta_info_schema
 gconf_meta_info_mod_user
 gconf_meta_info_mod_time
@@ -291,7 +291,7 @@ gconf_enum_to_string
 <FILE>gconf-locale</FILE>
 GConfLocaleCache
 gconf_locale_cache_new
-gconf_locale_cache_destroy
+gconf_locale_cache_free
 gconf_locale_cache_expire
 GConfLocaleList
 gconf_locale_list_ref

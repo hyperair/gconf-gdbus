@@ -67,7 +67,7 @@ struct _GConfBackendVTable {
                                            const gchar* key,
                                            GError** err);
 
-  gboolean           (* writeable)        (GConfSource* source,
+  gboolean           (* writable)        (GConfSource* source,
                                            const gchar* key,
                                            GError** err);
   

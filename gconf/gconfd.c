@@ -214,7 +214,7 @@ gconf_server_load_sources(void)
 {
   gchar** addresses;
   GList* tmp;
-  gboolean have_writeable = FALSE;
+  gboolean have_writable = FALSE;
   gchar* conffile;
   GConfSources* sources = NULL;
   GError* error = NULL;
@@ -291,16 +291,16 @@ gconf_server_load_sources(void)
         {
           if (((GConfSource*)tmp->data)->flags & GCONF_SOURCE_ALL_WRITEABLE)
             {
-              have_writeable = TRUE;
+              have_writable = TRUE;
               break;
             }
 
           tmp = g_list_next(tmp);
         }
 
-      /* In this case, some sources may still return TRUE from their writeable() function */
-      if (!have_writeable)
-        gconf_log(GCL_WARNING, _("No writeable config sources successfully resolved, may not be able to save some configuration changes"));
+      /* In this case, some sources may still return TRUE from their writable() function */
+      if (!have_writable)
+        gconf_log(GCL_WARNING, _("No writable config sources successfully resolved, may not be able to save some configuration changes"));
 
         
       /* Install the sources as the default database */
@@ -614,7 +614,7 @@ unregister_database (GConfDatabase *db)
 
   db_list = g_list_remove (db_list, db);
 
-  gconf_database_destroy (db);
+  gconf_database_free (db);
 }
 
 static GConfDatabase*
@@ -714,7 +714,7 @@ shutdown_databases (void)
     {
       GConfDatabase *db = tmp_list->data;
 
-      gconf_database_destroy (db);
+      gconf_database_free (db);
       
       tmp_list = g_list_next (tmp_list);
     }
@@ -728,7 +728,7 @@ shutdown_databases (void)
   dbs_by_address = NULL;
 
   if (default_db)
-    gconf_database_destroy (default_db);
+    gconf_database_free (default_db);
 
   default_db = NULL;
 }

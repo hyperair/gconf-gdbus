@@ -939,7 +939,7 @@ gconf_meta_info_new(void)
 }
 
 void
-gconf_meta_info_destroy(GConfMetaInfo* gcmi)
+gconf_meta_info_free(GConfMetaInfo* gcmi)
 {
   g_free(gcmi);
 }

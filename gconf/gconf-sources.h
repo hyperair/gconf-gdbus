@@ -41,7 +41,7 @@ struct _GConfSource {
 
 typedef enum {
   /* These are an optimization to avoid calls to
-   * the writeable/readable methods in the backend
+   * the writable/readable methods in the backend
    * vtable
    */
   GCONF_SOURCE_ALL_WRITEABLE = 1 << 0,
@@ -53,7 +53,7 @@ typedef enum {
 GConfSource*  gconf_resolve_address         (const gchar* address,
                                              GError** err);
 
-void          gconf_source_destroy          (GConfSource* source);
+void          gconf_source_free          (GConfSource* source);
 
 /* This is the actual thing we want to talk to, the stack of sources */
 typedef struct _GConfSources GConfSources;
@@ -69,7 +69,7 @@ struct _GConfSources {
 GConfSources* gconf_sources_new_from_addresses (const gchar **addresses,
                                                 GError   **err);
 GConfSources* gconf_sources_new_from_source    (GConfSource   *source);
-void          gconf_sources_destroy            (GConfSources  *sources);
+void          gconf_sources_free            (GConfSources  *sources);
 void          gconf_sources_clear_cache        (GConfSources  *sources);
 GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
                                                 const gchar   *key,

@@ -61,7 +61,7 @@ gconf_locale_cache_new (void)
 }
 
 void
-gconf_locale_cache_destroy (GConfLocaleCache* cache)
+gconf_locale_cache_free (GConfLocaleCache* cache)
 {
   gconf_locale_cache_expire (cache, 0);
 

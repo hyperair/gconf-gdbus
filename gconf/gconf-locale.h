@@ -32,7 +32,7 @@ extern "C" {
 typedef struct _GConfLocaleCache GConfLocaleCache;
 
 GConfLocaleCache* gconf_locale_cache_new           (void);
-void              gconf_locale_cache_destroy       (GConfLocaleCache* cache);
+void              gconf_locale_cache_free       (GConfLocaleCache* cache);
 void              gconf_locale_cache_expire        (GConfLocaleCache* cache,
                                                     /* >= max_age is deleted */
                                                     guint max_age_exclusive_in_seconds);

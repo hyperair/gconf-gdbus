@@ -271,14 +271,14 @@
           with the first source in the path, and continue checking
           each source until the value is found or there are no more
           sources.  When setting a value, GConf will use the first
-          <emphasis>writeable</emphasis> source.  System
+          <emphasis>writable</emphasis> source.  System
           administrators can impose <emphasis>mandatory</emphasis>
           settings on their users by placing a read-only source at the
           front of the path (note that "mandatory" only means that
           existing programs won't let them change the value, users
           could hack their own copy of GConf that ignored system
           settings). If a key has a value in a read-only source placed
-          before the first user-writeable source, user applications
+          before the first user-writable source, user applications
           attempting to set that value will receive an error.
           Administrators can provide <emphasis>default</emphasis>
           values by placing a systemwide source at the end of the
@@ -555,7 +555,7 @@
               <para>
                 This means that you tried to set a value, and a
                 read-only configuration source found before the first
-                user-writeable source in the path has already set the
+                user-writable source in the path has already set the
                 value. That is, setting the value would have no 
                 effect because the read-only source's setting would
                 override the new value. You should report to the user

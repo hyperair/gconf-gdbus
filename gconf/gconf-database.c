@@ -530,7 +530,7 @@ gconf_database_new (GConfSources  *sources)
 }
 
 void
-gconf_database_destroy (GConfDatabase *db)
+gconf_database_free (GConfDatabase *db)
 {
   PortableServer_ObjectId *oid;
   CORBA_Environment ev;
@@ -579,7 +579,7 @@ gconf_database_destroy (GConfDatabase *db)
         gconf_database_really_sync(db);
       
       gconf_listeners_free(db->listeners);
-      gconf_sources_destroy(db->sources);
+      gconf_sources_free(db->sources);
     }
 
   g_free (db->persistent_name);
@@ -1248,7 +1248,7 @@ gconfd_locale_cache_drop(void)
 {
   if (locale_cache != NULL)
     {
-      gconf_locale_cache_destroy(locale_cache);
+      gconf_locale_cache_free(locale_cache);
       locale_cache = NULL;
     }
 }
