@@ -278,6 +278,9 @@ resolve_address (const gchar* address, GError** err)
   GConfLock* lock = NULL;
   guint dir_mode = 0700;
   guint file_mode = 0600;
+  gchar** address_flags;
+  gchar** iter;
+  gboolean force_readonly;
   
   root_dir = gconf_address_resource(address);
 
@@ -315,26 +318,51 @@ resolve_address (const gchar* address, GError** err)
             }
         }
     }
+
+  force_readonly = FALSE;
   
+  address_flags = gconf_address_flags (address);  
+  if (address_flags)
+    {
+      iter = address_flags;
+      while (*iter)
+        {
+          if (strcmp (*iter, "readonly") == 0)
+            {
+              force_readonly = TRUE;
+              break;
+            }
+
+          ++iter;
+        }
+    }
+
+  g_strfreev (address_flags);
+
   {
     /* See if we're writable */
-    gboolean writable = FALSE;
+    gboolean writable;
     int fd;
     gchar* testfile;
 
-    testfile = g_strconcat(root_dir, "/.testing.writeability", NULL);    
+    writable = FALSE;
     
-    fd = open(testfile, O_CREAT|O_WRONLY, S_IRWXU);
-
-    if (fd >= 0)
+    if (!force_readonly)
       {
-        writable = TRUE;
-        close(fd);
-      }
+        testfile = g_strconcat(root_dir, "/.testing.writeability", NULL);    
         
-    unlink(testfile);
-
-    g_free(testfile);
+        fd = open(testfile, O_CREAT|O_WRONLY, S_IRWXU);
+        
+        if (fd >= 0)
+          {
+            writable = TRUE;
+            close(fd);
+          }
+        
+        unlink(testfile);
+        
+        g_free(testfile);
+      }
     
     if (writable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;

@@ -2394,7 +2394,7 @@ open_empty_locked_file (const gchar *directory,
       g_set_error (err,
                    GCONF_ERROR,
                    GCONF_ERROR_LOCK_FAILED,
-                   _("Failed to lock '%s': another process has the lock (%s)"),
+                   _("Failed to lock '%s': probably another process has the lock, or your operating system has NFS file locking misconfigured (%s)"),
                    filename, strerror (errno));
       close (fd);
       return -1;

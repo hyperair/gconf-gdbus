@@ -1,5 +1,5 @@
 
-SUBDIRS = gconf backends po doc examples standard-schemas
+SUBDIRS = gconf backends po doc examples
 DIST_SUBDIRS=tests $(SUBDIRS)
 
 EXTRA_DIST=gconf.m4.in gconf.spec.in gconf.spec TODO \

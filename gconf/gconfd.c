@@ -1028,11 +1028,21 @@ gconf_set_exception(GError** error,
       case GCONF_ERROR_IN_SHUTDOWN:
         ce->err_no = ConfigInShutdown;
         break;
-        
+      case GCONF_ERROR_OVERRIDDEN:
+        ce->err_no = ConfigOverridden;
+        break;
+      case GCONF_ERROR_LOCK_FAILED:
+        ce->err_no = ConfigLockFailed;
+        break;
+
+      case GCONF_ERROR_OAF_ERROR:
+      case GCONF_ERROR_LOCAL_ENGINE:
       case GCONF_ERROR_NO_SERVER:
       case GCONF_ERROR_SUCCESS:
       default:
+        gconf_log (GCL_ERR, "Unhandled error code %d", en);
         g_assert_not_reached();
+        break;
       }
 
     CORBA_exception_set(ev, CORBA_USER_EXCEPTION,

@@ -535,6 +535,12 @@ main (int argc, char** argv)
       fprintf(stderr, _("You must specify a config source with --config-source when using --direct\n"));
       return 1;
     }
+
+  if (config_source && !use_local_source)
+    {
+      fprintf (stderr, _("You should use --direct when using a non-default configuration source\n"));
+      return 1;
+    }
   
   if (!gconf_init(argc, argv, &err))
     {
@@ -2284,12 +2290,15 @@ process_schema_list(GConfEngine* conf, xmlNodePtr node)
 
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "schema") == 0)
-        process_schema(conf, iter);
-      else
-        fprintf(stderr, _("WARNING: node <%s> not understood below <schemalist>\n"),
-                iter->name);
-
+      if (iter->type == XML_ELEMENT_NODE)
+        {
+          if (strcmp(iter->name, "schema") == 0)
+            process_schema(conf, iter);
+          else
+            fprintf(stderr, _("WARNING: node <%s> not understood below <schemalist>\n"),
+                    iter->name);
+        }
+      
       iter = iter->next;
     }
 

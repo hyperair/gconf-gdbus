@@ -1,3 +1,28 @@
+2001-12-04  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf-internals.c (open_empty_locked_file): improve error
+
+	* gconf/gconftool.c (main): complain about using --config-source
+	but not --direct
+
+	* backends/xml-backend.c (resolve_address): don't try to lock 
+	readonly sources; fixes the case where users install to a prefix 
+	that they can write to, was causing problems for people using
+	build scripts.
+
+	* gconf/gconfd.c (gconf_set_exception): add missing value to case
+	statement so we don't crash
+
+	* examples/basic-gconf-app.c: update comment to say that the
+	example isn't really right anymore
+
+	* gconf/gconftool.c (process_schema_list): make sure we have an
+	element instead of a text node before we try to process it; kills
+	a bunch of irritating warnings.
+
+	* Makefile.am (SUBDIRS): remove standard-schemas subdir, should
+	have long ago
+
 2001-12-04  jacob berkman  <jacob@ximian.com>
 
 	* gconf/Makefile.am: add an explicit dependency on the built files

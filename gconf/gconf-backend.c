@@ -329,6 +329,11 @@ gconf_backend_resolve_address (GConfBackend* backend,
   if (flags == NULL)
     return retval;
 
+  /* FIXME this is now already done in the XML backend,
+   * so the following code is pointless, except that I think
+   * the BDB backend isn't fixed. The reason it needs to go in
+   * the backend is so that we don't try to get a lock on read-only sources.
+   */
   iter = flags;
   while (*iter)
     {

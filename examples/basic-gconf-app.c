@@ -41,6 +41,22 @@
        was opened; it also resets the prefs dialog contents to those settings.
 */
 
+/* NOTE NOTE NOTE NOTE NOTE
+ *
+ * This example is obsolete; current GNOME wisdom is that dialogs should be
+ * "instant apply." That means you can drop all the stuff about using
+ * GConfChangeSet. You need three basic steps in your app:
+ *
+ *  - call gconf_client_add_dir() to add the dirs you're interested in
+ *  - call gconf_client_notify_add() to subscribe your views to notification
+ *  - call gconf_client_set_*() to modify the model
+ * 
+ * For bonus points, support "mandatory" sysadmin settings by
+ * turning off or desensitizing GUI according to gconf_client_key_is_writable().
+ * 
+ * You really shouldn't need to use much API beyond that.
+ */
+
 #include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
