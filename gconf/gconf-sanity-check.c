@@ -20,6 +20,7 @@
 #include "gconf.h"
 #include "gconf-internals.h"
 #include "gconf-sources.h"
+#include "gconf-backend.h"
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -53,8 +54,9 @@ struct poptOption options[] = {
 static gboolean ensure_gtk (void);
 static void     show_fatal_error_dialog (const char *format,
                                          ...) G_GNUC_PRINTF (1, 2);
+static gboolean offer_delete_locks (void);
 static gboolean check_file_locking (void);
-static gboolean check_gconf (void);
+static gboolean check_gconf (gboolean display_errors);
 
 int 
 main (int argc, char** argv)
@@ -83,8 +85,14 @@ main (int argc, char** argv)
   if (!check_file_locking ())
     return 1;
 
-  if (!check_gconf ())
-    return 1;
+  if (!check_gconf (FALSE))
+    {
+      if (!offer_delete_locks ())
+        return 1;
+  
+      if (!check_gconf (TRUE))
+        return 1;
+    }
   
   return 0;
 }
@@ -115,28 +123,57 @@ check_file_locking (void)
   int fd;
   gboolean retval;
 
-  testfile = g_build_filename (g_get_home_dir (),
-                               ".gconf-test-locking-file",
-                               NULL);
-  
   retval = FALSE;
-
-  /* keep the open from failing due to non-writable old file or something */
-  unlink (testfile);
+  testfile = NULL;
+  fd = -1;
   
-  fd = open (testfile, O_WRONLY | O_CREAT, 0700);
+  if (gconf_use_local_locks ())
+    {
+      GError *err;
 
-  if (fd < 0)
-    {      
-      show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
-                                 "Could not open or create the file \"%s\"; this indicates "
-                                 "that there may be a problem with your configuration, "
-                                 "as many programs will need to create files in your "
-                                 "home directory. The error was \"%s\" (errno = %d)."),
-                               testfile, strerror (errno), errno);
+      err = NULL;
+      fd = g_file_open_tmp ("gconf-test-locking-file-XXXXXX",
+                            &testfile,
+                            &err);
 
-      goto out;
+      if (err != NULL)
+        {
+          show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
+                                     "Could not open or create the file \"%s\"; this indicates "
+                                     "that there may be a problem with your configuration, "
+                                     "as many programs will need to create files in your "
+                                     "home directory. The error was \"%s\" (errno = %d)."),
+                                   testfile, err->message, errno);
+
+          g_error_free (err);
+
+          goto out;
+        }
     }
+  else
+    {
+      testfile = g_build_filename (g_get_home_dir (),
+                                   ".gconf-test-locking-file",
+                                   NULL);
+      
+      /* keep the open from failing due to non-writable old file or something */
+      unlink (testfile);
+  
+      fd = open (testfile, O_WRONLY | O_CREAT, 0700);
+
+      if (fd < 0)
+        {      
+          show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
+                                     "Could not open or create the file \"%s\"; this indicates "
+                                     "that there may be a problem with your configuration, "
+                                     "as many programs will need to create files in your "
+                                     "home directory. The error was \"%s\" (errno = %d)."),
+                                   testfile, strerror (errno), errno);
+          
+          goto out;
+        }
+    }
+      
 
   if (lock_entire_file (fd) < 0)
     {      
@@ -164,7 +201,7 @@ check_file_locking (void)
 }
 
 static gboolean
-check_gconf (void)
+check_gconf (gboolean display_errors)
 {
   GSList* addresses;
   GSList* tmp;
@@ -192,11 +229,12 @@ check_gconf (void)
 
   if (addresses == NULL)
     {
-      show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
-                                 "No configuration sources in the configuration file \"%s\"; this means that preferences and other settings can't be saved. %s%s"),
-                               conffile,
-                               error ? _("Error reading the file: ") : "",
-                               error ? error->message : "");
+      if (display_errors)
+        show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
+                                   "No configuration sources in the configuration file \"%s\"; this means that preferences and other settings can't be saved. %s%s"),
+                                 conffile,
+                                 error ? _("Error reading the file: ") : "",
+                                 error ? error->message : "");
 
       if (error)
         g_error_free (error);
@@ -217,9 +255,10 @@ check_gconf (void)
 
       if (error)
         {
-          show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
-                                     "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"),
-                                   address, conffile, error->message);
+          if (display_errors)
+            show_fatal_error_dialog (_("Please contact your system administrator to resolve the following problem:\n"
+                                       "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"),
+                                     address, conffile, error->message);
           g_error_free (error);
           goto out;
         }
@@ -269,6 +308,97 @@ show_fatal_error_dialog (const char *format,
   gtk_dialog_run (GTK_DIALOG (d));
 
   gtk_widget_destroy (d);
+}
+
+static gboolean
+offer_delete_locks (void)
+{
+  gboolean delete_locks;
+  const char *question;
+
+  delete_locks = FALSE;
+  question = _("Your preferences files are currently in use. "
+               "(If you are logged in to this same account from "
+               "another computer, the other login session is probably using "
+               "your preferences files.) "
+               "You can choose to continue, but be aware that other login "
+               "sessions may become temporarily confused. "
+               "If you are not logged in elsewhere, it should be harmless to "
+               "continue.");
+      
+  if (ensure_gtk ())
+    {
+      GtkWidget *d;
+      int response;
+      
+      d = gtk_message_dialog_new (NULL, 0,
+                                  GTK_MESSAGE_ERROR,
+                                  GTK_BUTTONS_NONE,
+                                  "%s", question);
+
+      gtk_dialog_add_buttons (GTK_DIALOG (d),
+                              GTK_STOCK_CANCEL,
+                              GTK_RESPONSE_REJECT,
+                              _("Continue"),
+                              GTK_RESPONSE_ACCEPT,
+                              NULL);
+      
+      response = gtk_dialog_run (GTK_DIALOG (d));
+
+      gtk_widget_destroy (d);
+
+      if (response == GTK_RESPONSE_ACCEPT)
+        delete_locks = TRUE;
+    }
+  else
+    {
+      g_print (_("%s Continue (y/n)?"), question);
+      switch (getchar ())
+        {
+        case 'y':
+        case 'Y':
+          delete_locks = TRUE;
+          break;
+        }
+    }
+
+  if (delete_locks)
+    {
+      GSList* addresses;
+      GSList* tmp;
+      char *conffile;
+      
+      conffile = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+      
+      addresses = gconf_load_source_path (conffile, NULL);
+
+      g_free (conffile);
+      
+      if (addresses == NULL)
+        g_printerr ("Failed to load addresses to delete locks\n");
+
+      tmp = addresses;
+      while (tmp != NULL)
+        {
+          const char *address;
+          
+          address = tmp->data;
+          
+          gconf_blow_away_locks (address);
+
+          g_free (tmp->data);
+          
+          tmp = tmp->next;
+        }
+
+      g_slist_free (addresses);
+      
+      gconf_daemon_blow_away_locks ();
+
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 /* this is because setting up gtk is kind of slow, no point doing it

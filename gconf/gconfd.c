@@ -463,6 +463,53 @@ log_handler (const gchar   *log_domain,
   gconf_log (pri, "%s", message);
 }
 
+/* From ORBit2 */
+/* There is a DOS attack if another user creates
+ * the given directory and keeps us from creating
+ * it
+ */
+/* FIXME this is just paranoia now since we use linc_get_tmpdir() */
+static gboolean
+test_safe_tmp_dir (const char *dirname)
+{
+  struct stat statbuf;
+  int fd;
+
+  fd = open (dirname, O_RDONLY);  
+  if (fd < 0)
+    {
+      gconf_log (GCL_WARNING, _("Failed to open %s: %s"),
+                 dirname, g_strerror (errno));
+      return FALSE;
+    }
+  
+  if (fstat (fd, &statbuf) != 0)
+    {
+      gconf_log (GCL_WARNING, _("Failed to stat %s: %s"),
+                 dirname, g_strerror (errno));
+      close (fd);
+      return FALSE;
+    }
+  close (fd);
+  
+  if (statbuf.st_uid != getuid ())
+    {
+      gconf_log (GCL_WARNING, _("Owner of %s is not the current user"),
+                 dirname);
+      return FALSE;
+    }
+  
+  if ((statbuf.st_mode & (S_IRWXG|S_IRWXO)) ||
+      !S_ISDIR (statbuf.st_mode))
+    {
+      gconf_log (GCL_WARNING, _("Bad permissions %o on dir %s"),
+                 statbuf.st_mode & 07777, dirname);
+      return FALSE;
+    }
+  
+  return TRUE;
+}
+
 int 
 main(int argc, char** argv)
 {
@@ -595,10 +642,21 @@ main(int argc, char** argv)
   if (mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
     gconf_log (GCL_WARNING, _("Failed to create %s: %s"),
                gconfd_dir, g_strerror (errno));
-  
-  err = NULL;
 
-  daemon_lock = gconf_get_lock (lock_dir, &err);
+  if (!test_safe_tmp_dir (gconfd_dir))
+    {
+      err = g_error_new (GCONF_ERROR,
+                         GCONF_ERROR_LOCK_FAILED,
+                         _("Directory %s has a problem, gconfd can't use it"),
+                         gconfd_dir);
+      daemon_lock = NULL;
+    }
+  else
+    {
+      err = NULL;
+      
+      daemon_lock = gconf_get_lock (lock_dir, &err);
+    }
 
   if (daemon_lock != NULL)
     {

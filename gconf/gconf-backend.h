@@ -127,6 +127,9 @@ struct _GConfBackendVTable {
 
   /* This is basically used by the test suite */
   void                (* clear_cache)     (GConfSource* source);
+
+  /* used by gconf-sanity-check */
+  void                (* blow_away_locks) (const char *address);
 };
 
 struct _GConfBackend {
@@ -161,6 +164,8 @@ void          gconf_backend_unref(GConfBackend* backend);
 GConfSource*  gconf_backend_resolve_address (GConfBackend* backend, 
                                              const gchar* address,
                                              GError** err);
+
+void          gconf_blow_away_locks       (const gchar* address);
 
 #endif
 

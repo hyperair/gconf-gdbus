@@ -353,5 +353,15 @@ gconf_backend_resolve_address (GConfBackend* backend,
   return retval;
 }
 
+void
+gconf_blow_away_locks (const gchar* address)
+{
+  GConfBackend* backend;
 
+  backend = gconf_get_backend (address, NULL);
 
+  if (backend != NULL)
+    {
+      (*backend->vtable->blow_away_locks) (address);
+    }
+}

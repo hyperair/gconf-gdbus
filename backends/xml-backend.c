@@ -206,6 +206,8 @@ static void          destroy_source  (GConfSource* source);
 
 static void          clear_cache     (GConfSource* source);
 
+static void          blow_away_locks (const char *address);
+
 static GConfBackendVTable xml_vtable = {
   x_shutdown,
   resolve_address,
@@ -224,7 +226,8 @@ static GConfBackendVTable xml_vtable = {
   set_schema,
   sync_all,
   destroy_source,
-  clear_cache
+  clear_cache,
+  blow_away_locks
 };
 
 static void          
@@ -267,13 +270,48 @@ writable (GConfSource* source,
   return TRUE;
 }
 
+static char*
+get_dir_from_address (const char *address,
+                      GError    **err)
+{
+  char *root_dir;
+  int len;
+  
+  root_dir = gconf_address_resource (address);
+
+  if (root_dir == NULL)
+    {
+      gconf_set_error (err, GCONF_ERROR_BAD_ADDRESS,
+                       _("Couldn't find the XML root directory in the address `%s'"),
+                       address);
+      return NULL;
+    }
+
+  /* Chop trailing '/' to canonicalize */
+  len = strlen (root_dir);
+
+  if (root_dir[len-1] == '/')
+    root_dir[len-1] = '\0';
+
+  return root_dir;
+}
+
+static char*
+get_lock_dir_from_root_dir (const char *root_dir)
+{
+  gchar* lockdir;
+  
+  lockdir = gconf_concat_dir_and_key (root_dir, "%gconf-xml-backend.lock");
+
+  return lockdir;
+}
+
 static GConfSource*  
 resolve_address (const gchar* address, GError** err)
 {
   gchar* root_dir;
   XMLSource* xsource;
   GConfSource* source;
-  guint len;
   gint flags = 0;
   GConfLock* lock = NULL;
   guint dir_mode = 0700;
@@ -282,19 +320,9 @@ resolve_address (const gchar* address, GError** err)
   gchar** iter;
   gboolean force_readonly;
   
-  root_dir = gconf_address_resource(address);
-
+  root_dir = get_dir_from_address (address, err);
   if (root_dir == NULL)
-    {
-      gconf_set_error (err, GCONF_ERROR_BAD_ADDRESS, _("Couldn't find the root directory in the address \"%s\""), address);
-      return NULL;
-    }
-
-  /* Chop trailing '/' to canonicalize */
-  len = strlen(root_dir);
-
-  if (root_dir[len-1] == '/')
-    root_dir[len-1] = '\0';
+    return NULL;
 
   if (mkdir(root_dir, dir_mode) < 0)
     {
@@ -368,13 +396,14 @@ resolve_address (const gchar* address, GError** err)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
 
     /* We only do locking if it's writable,
-       which is sort of broken but close enough
-    */
-    if (writable)
+     * and if not using local locks,
+     * which is sort of broken but close enough
+     */
+    if (writable && !gconf_use_local_locks ())
       {
         gchar* lockdir;
 
-        lockdir = gconf_concat_dir_and_key(root_dir, "%gconf-xml-backend.lock");
+        lockdir = get_lock_dir_from_root_dir (root_dir);
         
         lock = gconf_get_lock(lockdir, err);
 
@@ -712,6 +741,64 @@ clear_cache     (GConfSource* source)
 
   /* clean all entries older than 0 seconds */
   cache_clean(xs->cache, 0);
+}
+
+static void
+blow_away_locks (const char *address)
+{
+  char *root_dir;
+  char *lock_dir;
+  DIR *dp;
+  struct dirent *dent;
+
+  /* /tmp locks should never be stuck, and possible security issue to
+   * blow them away
+   */
+  if (gconf_use_local_locks ())
+    return;
+  
+  root_dir = get_dir_from_address (address, NULL);
+  if (root_dir == NULL)
+    return;
+
+  lock_dir = get_lock_dir_from_root_dir (root_dir);
+
+  dp = opendir (lock_dir);
+  
+  if (dp == NULL)
+    {
+      g_printerr (_("Could not open lock directory for %s to remove locks: %s\n"),
+                  address, g_strerror (errno));
+      goto out;
+    }
+  
+  while ((dent = readdir (dp)) != NULL)
+    {
+      char *path;
+      
+      /* ignore ., .. (and any ..foo as an intentional who-cares bug) */
+      if (dent->d_name[0] == '.' &&
+          (dent->d_name[1] == '\0' || dent->d_name[1] == '.'))
+        continue;
+
+      path = g_build_filename (lock_dir, dent->d_name, NULL);
+
+      if (unlink (path) < 0)
+        {
+          g_printerr (_("Could not remove file %s: %s\n"),
+                      path, g_strerror (errno));
+        }
+
+      g_free (path);
+    }
+
+ out:
+
+  if (dp)
+    closedir (dp);
+  
+  g_free (root_dir);
+  g_free (lock_dir);
 }
 
 /* Initializer */

@@ -1067,6 +1067,7 @@ void
 gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
 {
   gchar* msg;
+  gchar* convmsg;
   va_list args;
   int syslog_pri = LOG_DEBUG;
 
@@ -1119,7 +1120,14 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
           break;
         }
 
-      syslog(syslog_pri, "%s", msg);
+      convmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
+      if (!convmsg)
+        syslog (syslog_pri, "%s", msg);
+      else
+        {
+	  syslog (syslog_pri, "%s", convmsg);
+	  g_free (convmsg);
+	}
     }
   else
     {
@@ -2701,6 +2709,24 @@ gconf_get_current_lock_holder  (const gchar *lock_directory,
   return server;
 }
 
+void
+gconf_daemon_blow_away_locks (void)
+{
+  char *lock_directory;
+  char *iorfile;
+  
+  lock_directory = gconf_get_lock_dir ();
+
+  iorfile = g_strconcat (lock_directory, "/ior", NULL);
+
+  if (unlink (iorfile) < 0)
+    g_printerr (_("Failed to unlink lock file %s: %s\n"),
+                iorfile, g_strerror (errno));
+
+  g_free (iorfile);
+  g_free (lock_directory);
+}
+
 static CORBA_ORB gconf_orb = CORBA_OBJECT_NIL;      
 
 CORBA_ORB
@@ -2755,7 +2781,10 @@ gconf_orb_release (void)
 char*
 gconf_get_daemon_dir (void)
 {
-  return g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
+  if (gconf_use_local_locks ())
+    return linc_get_tmpdir ();
+  else
+    return g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
 }
 
 char*
@@ -2958,4 +2987,25 @@ _gconf_init_i18n (void)
 #endif
       done = TRUE;
     }
+}
+
+enum { UNKNOWN, LOCAL, NORMAL };
+
+gboolean
+gconf_use_local_locks (void)
+{
+  static int local_locks = UNKNOWN;
+  
+  if (local_locks == UNKNOWN)
+    {
+      const char *l =
+        g_getenv ("GCONF_GLOBAL_LOCKS");
+
+      if (l && atoi (l) == 1)
+        local_locks = NORMAL;
+      else
+        local_locks = LOCAL;
+    }
+
+  return local_locks == LOCAL;
 }

@@ -1,3 +1,14 @@
+2003-03-26  Havoc Pennington  <hp@redhat.com>
+
+	* configure.in: bump to 2.3.1
+
+	Apply "local locks" patch with linc_get_tmpdir modification from
+	Michael, and the default changed to local locks. Now to 
+	get global locks you must set GCONF_GLOBAL_LOCKS=1.
+
+	* gconf/gconf-internals.c (gconf_log): convert to locale encoding
+	to pass stuff to syslog
+
 2003-03-26  Christian Rose  <menthos@menthos.com>
 
 	* configure.in: Added "yi" to ALL_LINGUAS.
