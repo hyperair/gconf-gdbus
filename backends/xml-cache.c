@@ -197,18 +197,13 @@ dircmp (gconstpointer a,
           ++bp;
         }
       
-      if (*ap == '\0')
-        {
-          /* *bp must be ended also, otherwise a and b
-           * would have had an ancestor relationship,
-           * here they are equal.
-           */
-          g_assert (*bp == '\0');
-          return 0;
-        }
+      if (*ap == '\0' && *bp == '\0')
+        return 0;
       
       /* we don't care about localization here,
-       * just some fixed order
+       * just some fixed order. Either
+       * *ap or *bp may be '\0' if you have keys like
+       * "foo" and "foo_bar"
        */
       if (*ap < *bp)
         return -1;
