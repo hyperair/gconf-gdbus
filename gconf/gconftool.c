@@ -1104,7 +1104,7 @@ read_value_type(const char *string)
       break;
     case 's':
     case 'S':
-      switch (value_type[1])
+      switch (string[1])
 	{
 	case 't':
 	case 'T':
@@ -1115,7 +1115,7 @@ read_value_type(const char *string)
 	  type = GCONF_VALUE_SCHEMA;
 	  break;
 	default:
-	  fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+	  fprintf(stderr, _("Don't understand type `%s'\n"), string);
 	}
       break;
     case 'l':
@@ -1127,7 +1127,7 @@ read_value_type(const char *string)
       type = GCONF_VALUE_PAIR;
       break;
     default:
-      fprintf(stderr, _("Don't understand type `%s'\n"), value_type);
+      fprintf(stderr, _("Don't understand type `%s'\n"), string);
     }
   return type;
 }
