@@ -8,4 +8,5 @@ man_MANS = gconftool-2.1
 
 EXTRA_DIST = \
 	$(SchemasDTD_DATA) \
-	$(man_MANS)
+	$(man_MANS) \
+	FAQ.txt gconf-1.0.dtd
