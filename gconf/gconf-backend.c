@@ -150,7 +150,7 @@ g_conf_get_backend(const gchar* address)
 
   if (loaded_backends == NULL)
     {
-      loaded_backends = g_hash_table_new(g_str_hash, NULL);
+      loaded_backends = g_hash_table_new(g_str_hash, g_str_equal);
     }
   name = g_conf_address_backend(address);
       

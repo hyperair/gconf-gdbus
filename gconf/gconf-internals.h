@@ -56,11 +56,14 @@ struct _GConfValue {
 #define g_conf_value_list(x)   ((x)->d.list_data)
 
 GConfValue* g_conf_value_new(GConfValueType type);
+GConfValue* g_conf_value_copy(GConfValue* src);
 void        g_conf_value_destroy(GConfValue* value);
 
 void        g_conf_value_set_int(GConfValue* value, gint the_int);
 void        g_conf_value_set_string(GConfValue* value, const gchar* the_str);
 void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
+
+
 
 /* Sources are not interchangeable; different backend engines will return 
  * GConfSource with different private elements.
@@ -82,5 +85,7 @@ void         g_conf_source_destroy (GConfSource* source);
 const gchar* g_conf_error          (void);
 gboolean     g_conf_error_pending  (void);
 void         g_conf_set_error      (const gchar* str);
+
+gboolean     g_conf_valid_key      (const gchar* key);
 
 #endif

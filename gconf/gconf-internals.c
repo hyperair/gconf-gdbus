@@ -26,11 +26,36 @@ g_conf_value_new(GConfValueType type)
 {
   GConfValue* value;
 
+  /* Probably want to use mem chunks here eventually. */
   value = g_new0(GConfValue, 1);
 
   value->type = type;
 
   return value;
+}
+
+GConfValue* 
+g_conf_value_copy(GConfValue* src)
+{
+  GConfValue* dest;
+
+  g_return_val_if_fail(src != NULL, NULL);
+
+  dest = g_conf_value_new(src->type);
+
+  switch (src->type)
+    {
+    case G_CONF_VALUE_INT:
+    case G_CONF_VALUE_FLOAT:
+      dest->d = src->d
+      break;
+    case G_CONF_VALUE_STRING:
+      dest->d.string_data = g_strdup(src->d.string_data);
+    default:
+      g_assert_not_reached();
+    }
+  
+  return dest;
 }
 
 void 
@@ -125,3 +150,66 @@ g_conf_source_destroy (GConfSource* source)
   /* Remove ref held by the source. */
   g_conf_backend_unref(backend);
 }
+
+/* 
+ * Ampersand and <> are not allowed due to the XML backend; shell
+ * special characters aren't allowed; others are just in case we need
+ * some magic characters someday.  hyphen, underscore, period, colon
+ * are allowed as separators.  
+ */
+
+static const gchar invalid_chars[] = "\"$&<>,+=#!()'|{}[]?~`;\\";
+
+gboolean     
+g_conf_valid_key      (const gchar* key)
+{
+  const gchar* s = key;
+  gboolean just_saw_slash = FALSE;
+
+  /* Key must start with the root */
+  if (*key != '/')
+    return FALSE;
+
+  while (*s)
+    {
+      if (just_saw_slash)
+        {
+          /* Can't have two slashes in a row, since it would mean
+           * an empty spot.
+           * Can't have a period right after a slash,
+           * because it would be a pain for filesystem-based backends.
+           */
+          if (*s == '/' || *s == '.')
+            return FALSE;
+        }
+
+      if (*s == '/')
+        {
+          just_saw_slash = TRUE;
+        }
+      else
+        {
+          const gchar* inv = invalid_chars;
+
+          just_saw_slash = FALSE;
+
+          while (*inv)
+            {
+              if (*inv == *s)
+                return FALSE;
+              ++inv;
+            }
+        }
+
+      ++s;
+    }
+
+  /* Can't end with slash */
+  if (just_saw_slash)
+    return FALSE;
+  else
+    return TRUE;
+}
+
+
+
