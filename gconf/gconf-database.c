@@ -115,7 +115,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GConfValue* val;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfLocaleList* locale_list;
   gboolean is_default = FALSE;  
 
@@ -164,7 +164,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GConfValue* val;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfLocaleList* locale_list;  
 
   locale_list = locale_cache_lookup(locale);
@@ -202,7 +202,7 @@ impl_ConfigDatabase_set(PortableServer_Servant servant,
   GConfDatabase *db = (GConfDatabase*) servant;
   gchar* str;
   GConfValue* val;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   if (value->_d == InvalidVal)
     {
@@ -239,7 +239,7 @@ impl_ConfigDatabase_unset_with_locale(PortableServer_Servant servant,
 				      CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   gconf_database_unset(db, key, locale, &error);
 
@@ -262,7 +262,7 @@ impl_ConfigDatabase_dir_exists(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   CORBA_boolean retval;
-  GConfError* error = NULL;  
+  GError* error = NULL;  
   
   retval =
     gconf_database_dir_exists (db, dir, &error) ? CORBA_TRUE : CORBA_FALSE;
@@ -278,7 +278,7 @@ impl_ConfigDatabase_remove_dir(PortableServer_Servant servant,
                                CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  GConfError* error = NULL;  
+  GError* error = NULL;  
   
   gconf_database_remove_dir(db, dir, &error);
 
@@ -299,7 +299,7 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   guint n;
   GSList* tmp;
   guint i;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfLocaleList* locale_list;  
 
   locale_list = locale_cache_lookup(locale);
@@ -363,7 +363,7 @@ impl_ConfigDatabase_all_dirs(PortableServer_Servant servant,
   guint n;
   GSList* tmp;
   guint i;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   subdirs = gconf_database_all_dirs(db, dir, &error);
   
@@ -403,7 +403,7 @@ impl_ConfigDatabase_set_schema(PortableServer_Servant servant,
 			       CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   gconf_database_set_schema(db, key, schema_key, &error);
 
@@ -415,7 +415,7 @@ impl_ConfigDatabase_sync(PortableServer_Servant servant,
 			 CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   gconf_database_sync(db, &error);
 
@@ -427,7 +427,7 @@ impl_ConfigDatabase_clear_cache(PortableServer_Servant servant,
 				CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   gconf_log(GCL_INFO, _("Received request to drop all cached data"));  
   
@@ -441,7 +441,7 @@ impl_ConfigDatabase_synchronous_sync(PortableServer_Servant servant,
 				     CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   gconf_log(GCL_INFO, _("Received request to sync synchronously"));
   
@@ -620,15 +620,15 @@ gconf_database_sync_timeout(GConfDatabase* db)
 static void
 gconf_database_really_sync(GConfDatabase* db)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   if (!gconf_database_synchronous_sync(db, &error))
     {
       g_return_if_fail(error != NULL);
 
       gconf_log(GCL_ERR, _("Failed to sync one or more sources: %s"), 
-                error->str);
-      gconf_error_destroy(error);
+                error->message);
+      g_error_free(error);
     }
   else
     {
@@ -789,7 +789,7 @@ gconf_database_query_value (GConfDatabase  *db,
                             const gchar   **locales,
                             gboolean        use_schema_default,
                             gboolean       *value_is_default,
-                            GConfError    **err)
+                            GError    **err)
 {
   GConfValue* val;
 
@@ -804,7 +804,7 @@ gconf_database_query_value (GConfDatabase  *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error getting value for `%s': %s"),
-                key, (*err)->str);
+                key, (*err)->message);
     }
   
   return val;
@@ -814,7 +814,7 @@ GConfValue*
 gconf_database_query_default_value (GConfDatabase  *db,
                                     const gchar    *key,
                                     const gchar   **locales,
-                                    GConfError    **err)
+                                    GError    **err)
 {
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
   g_assert(db->listeners != NULL);
@@ -829,7 +829,7 @@ gconf_database_set   (GConfDatabase      *db,
                       const gchar        *key,
                       GConfValue         *value,
                       const ConfigValue  *cvalue,
-                      GConfError        **err)
+                      GError        **err)
 {
   g_assert(db->listeners != NULL);
   g_return_if_fail(err == NULL || *err == NULL);
@@ -841,7 +841,7 @@ gconf_database_set   (GConfDatabase      *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error setting value for `%s': %s"),
-                 key, (*err)->str);
+                 key, (*err)->message);
     }
   else
     {
@@ -858,10 +858,10 @@ void
 gconf_database_unset (GConfDatabase      *db,
                       const gchar        *key,
                       const gchar        *locale,
-                      GConfError        **err)
+                      GError        **err)
 {
   ConfigValue* val;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_if_fail(err == NULL || *err == NULL);
   
@@ -876,12 +876,12 @@ gconf_database_unset (GConfDatabase      *db,
   if (error != NULL)
     {
       gconf_log(GCL_ERR, _("Error unsetting `%s': %s"),
-                 key, error->str);
+                 key, error->message);
 
       if (err)
         *err = error;
       else
-        gconf_error_destroy(error);
+        g_error_free(error);
 
       error = NULL;
     }
@@ -897,7 +897,7 @@ gconf_database_unset (GConfDatabase      *db,
 
       if (err && *err)
         gconf_log(GCL_ERR, _("Error getting default value for `%s': %s"),
-                  key, (*err)->str);
+                  key, (*err)->message);
 
       if (def_value != NULL)
         {
@@ -919,7 +919,7 @@ gconf_database_unset (GConfDatabase      *db,
 gboolean
 gconf_database_dir_exists  (GConfDatabase  *db,
                             const gchar    *dir,
-                            GConfError    **err)
+                            GError    **err)
 {
   gboolean ret;
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
@@ -935,7 +935,7 @@ gconf_database_dir_exists  (GConfDatabase  *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error checking existence of `%s': %s"),
-                 dir, (*err)->str);
+                 dir, (*err)->message);
       ret = FALSE;
     }
 
@@ -945,7 +945,7 @@ gconf_database_dir_exists  (GConfDatabase  *db,
 void
 gconf_database_remove_dir  (GConfDatabase  *db,
                             const gchar    *dir,
-                            GConfError    **err)
+                            GError    **err)
 {
   g_return_if_fail(err == NULL || *err == NULL);
   g_assert(db->listeners != NULL);
@@ -959,7 +959,7 @@ gconf_database_remove_dir  (GConfDatabase  *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error removing dir `%s': %s"),
-                 dir, (*err)->str);
+                 dir, (*err)->message);
     }
   else
     {
@@ -971,7 +971,7 @@ GSList*
 gconf_database_all_entries (GConfDatabase  *db,
                             const gchar    *dir,
                             const gchar   **locales,
-                            GConfError    **err)
+                            GError    **err)
 {
   GSList* entries;
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -985,7 +985,7 @@ gconf_database_all_entries (GConfDatabase  *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Failed to get all entries in `%s': %s"),
-                 dir, (*err)->str);
+                 dir, (*err)->message);
     }
 
   return entries;
@@ -994,7 +994,7 @@ gconf_database_all_entries (GConfDatabase  *db,
 GSList*
 gconf_database_all_dirs (GConfDatabase  *db,
                          const gchar    *dir,
-                         GConfError    **err)
+                         GError    **err)
 {
   GSList* subdirs;
 
@@ -1011,7 +1011,7 @@ gconf_database_all_dirs (GConfDatabase  *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error listing dirs in `%s': %s"),
-                 dir, (*err)->str);
+                 dir, (*err)->message);
     }
   return subdirs;
 }
@@ -1020,7 +1020,7 @@ void
 gconf_database_set_schema (GConfDatabase  *db,
                            const gchar    *key,
                            const gchar    *schema_key,
-                           GConfError    **err)
+                           GError    **err)
 {
   g_return_if_fail(err == NULL || *err == NULL);
   g_assert(db->listeners != NULL);
@@ -1032,7 +1032,7 @@ gconf_database_set_schema (GConfDatabase  *db,
   if (err && *err != NULL)
     {
       gconf_log(GCL_ERR, _("Error setting schema for `%s': %s"),
-                key, (*err)->str);
+                key, (*err)->message);
     }
   else
     {
@@ -1042,7 +1042,7 @@ gconf_database_set_schema (GConfDatabase  *db,
 
 void
 gconf_database_sync (GConfDatabase  *db,
-                     GConfError    **err)
+                     GError    **err)
 {
   g_assert(db->listeners != NULL);
   
@@ -1055,7 +1055,7 @@ gconf_database_sync (GConfDatabase  *db,
 
 gboolean
 gconf_database_synchronous_sync (GConfDatabase  *db,
-                                 GConfError    **err)
+                                 GError    **err)
 {
   /* remove the scheduled syncs */
   if (db->sync_timeout != 0)
@@ -1077,7 +1077,7 @@ gconf_database_synchronous_sync (GConfDatabase  *db,
 
 void
 gconf_database_clear_cache (GConfDatabase  *db,
-                            GConfError    **err)
+                            GError    **err)
 {
   g_assert(db->listeners != NULL);
 

@@ -59,15 +59,15 @@ main(int argc, char** argv)
   poptContext pctx;
   char** args;
   GnomeClient* client;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
   textdomain(PACKAGE);
 
   if (!gconf_init(argc, argv, &err))
     {
-      fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, _("Failed to init GConf: %s\n"), err->message);
+      g_error_free(err);
       return 1;
     }
 

@@ -50,7 +50,7 @@ static GtkWidget* create_prefs_dialog(GtkWidget* parent, GConfClient* client);
 int
 main(int argc, char** argv)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfClient* client = NULL;
   GtkWidget* main_window;
   
@@ -61,10 +61,10 @@ main(int argc, char** argv)
   if (!gconf_init(argc, argv, &error))
     {
       g_assert(error != NULL);
-      g_warning("GConf init failed:\n  %s", error->str);
+      g_warning("GConf init failed:\n  %s", error->message);
       /* These next two lines would be important if we weren't going to
          exit immediately */
-      gconf_error_destroy(error);
+      g_error_free(error);
       error = NULL;
       return 1;
     }

@@ -35,7 +35,7 @@ initialized.
 
 @argc: 
 @argv: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> otherwise.
 
 
@@ -103,7 +103,7 @@ notification request; 0 is an invalid ID, and is returned if an error occurs.
 @namespace_section: the directory or key to watch; you will be notified of changes at or below this point.
 @func: the callback to invoke when a notification is received from the server.
 @user_data: the data to pass to the callback.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: an ID for the notification request, or 0 on error.
 
 
@@ -128,7 +128,7 @@ default value for a key, if the key is unset and a default exists.
 
 @conf: a #GConfEngine to get the value from.
 @key: the key to get.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset and no default exists.
 
 
@@ -146,7 +146,7 @@ identical to gconf_get() in all respects.
 @conf: a #GConfEngine to get the value from.
 @key: the key to get.
 @locale: preferred locale (as in the locale-related environment variables).
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
@@ -159,7 +159,7 @@ return <symbol>NULL</symbol> if no default exists or an error occurs.
 
 @conf: a #GConfEngine to get the value from.
 @key: the key to get.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
@@ -190,7 +190,7 @@ extract the default value.
 
 @conf: a #GConfEngine to get the value from.
 @key: the key to get the default value for.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: newly-allocated #GConfValue, or <symbol>NULL</symbol> if unset.
 
 
@@ -212,7 +212,7 @@ setup without a constant barrage of error messages.
 @conf: a #GConfEngine to set the value in.
 @key: the key to set.
 @value: the new value of @key.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
@@ -225,7 +225,7 @@ administrator has "forced" a value for this key.
 
 @conf: a #GConfEngine to affect.
 @key: the key to unset.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
@@ -242,7 +242,7 @@ schema associations into the database during "make install."
 @conf: a #GConfEngine to affect.
 @key: the key to associate the schema with.
 @schema_key: the key where the schema will be stored.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
@@ -258,7 +258,7 @@ each list element, then g_slist_free() the list itself.
 
 @conf: a #GConfEngine.
 @dir: Directory to list.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: List of #GConfEntry.
 
 
@@ -271,7 +271,7 @@ g_slist_free() the list itself.
 
 @conf: a #GConfEngine.
 @dir: Directory to get subdirectories from.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: List of allocated subdirectory names.
 
 
@@ -287,7 +287,7 @@ and minimize data loss.
 </para>
 
 @conf: the #GConfEngine to suggest syncing to.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 
 
 <!-- ##### FUNCTION gconf_dir_exists ##### -->
@@ -298,7 +298,7 @@ database. Returns <symbol>TRUE</symbol> or <symbol>FALSE</symbol>.
 
 @conf: a #GConfEngine.
 @dir: Directory to check for.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> or <symbol>FALSE</symbol>.
 
 
@@ -344,7 +344,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or 0.0 if no value is obtained.
 
 
@@ -358,7 +358,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or 0 if no value is obtained.
 
 
@@ -372,7 +372,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: allocated string (value of @key), or <symbol>NULL</symbol> if no value is obtained.
 
 
@@ -386,7 +386,7 @@ stored at @key, an error is returned. On error, or if @key is unset,
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key, or <symbol>FALSE</symbol> if no value is obtained.
 
 
@@ -400,7 +400,7 @@ Automatically performs type-checking, so if a non-schema is stored at
 
 @conf: a #GConfEngine.
 @key: key you want the value of.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained.
 
 
@@ -469,7 +469,7 @@ list itself with g_slist_free().
 @conf: a #GConfEngine.
 @key: key you want the value of.
 @list_type: type of each list element.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: an allocated list, with elements as described above.
 
 
@@ -540,7 +540,7 @@ An example of gconf_get_pair() in action:
 <programlisting>
 gdouble car = 10.0;
 gchar* cdr  = NULL; 
-GConfError* error = NULL;
+GError* error = NULL;
 
 if (!gconf_get_pair(conf, "/foo", 
                     GCONF_VALUE_FLOAT,
@@ -549,8 +549,8 @@ if (!gconf_get_pair(conf, "/foo",
   {
     /* Note: car/cdr should be untouched, because an error occurred */
     g_assert(error != NULL);
-    fprintf(stderr, "Error: %s\n", error->str);
-    gconf_error_destroy(error);
+    fprintf(stderr, "Error: %s\n", error->message);
+    g_error_free(error);
     error = NULL;
   }
 else
@@ -571,7 +571,7 @@ else
 @cdr_type: desired type of the pair's second field (cdr).
 @car_retloc: address of a return location for the car.
 @cdr_retloc: address of a return location for the cdr.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> on error.
 
 
@@ -583,7 +583,7 @@ else
 @conf: a #GConfEngine.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -595,7 +595,7 @@ else
 @conf: a #GConfEngine.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -607,7 +607,7 @@ else
 @conf: a #GConfEngine.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -619,7 +619,7 @@ else
 @conf: a #GConfEngine.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -631,7 +631,7 @@ else
 @conf: a #GConfEngine.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -644,7 +644,7 @@ else
 @key: 
 @list_type: 
 @list: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -659,7 +659,7 @@ else
 @cdr_type: 
 @address_of_car: 
 @address_of_cdr: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 

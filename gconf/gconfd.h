@@ -32,7 +32,7 @@ extern "C" {
 PortableServer_POA gconf_get_poa ();
 
 /* return TRUE if the exception was set, clear err if needed */
-gboolean gconf_set_exception(GConfError** err, CORBA_Environment* ev);
+gboolean gconf_set_exception(GError** err, CORBA_Environment* ev);
 
 void gconf_logfile_queue_save (void);
 

@@ -73,7 +73,7 @@ gconf_value_new(GConfValueType type)
 
 GConfValue* 
 gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
-                             GConfError** err)
+                             GError** err)
 {
   GConfValue* value;
 
@@ -210,7 +210,7 @@ escape_string(const char *str, const char *escaped_chars)
 GConfValue*
 gconf_value_new_list_from_string(GConfValueType list_type,
                                   const gchar* str,
-				  GConfError** err)
+				  GError** err)
 {
   int i, len;
   gboolean escaped, pending_chars;
@@ -340,7 +340,7 @@ GConfValue*
 gconf_value_new_pair_from_string(GConfValueType car_type,
                                   GConfValueType cdr_type,
                                   const gchar* str,
-				  GConfError** err)
+				  GError** err)
 {
   int i, len;
   int elem;

@@ -142,7 +142,7 @@ static const guint n_floats = sizeof(floats)/sizeof(floats[0]);
 static void
 check_unset(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   GConfChangeSet* cs;
 
@@ -162,8 +162,8 @@ check_unset(GConfEngine* conf)
   
   if (err != NULL)
     {
-      fprintf(stderr, "unset commit failed: %s\n", err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, "unset commit failed: %s\n", err->message);
+      g_error_free(err);
       err = NULL;
       exit(1);
     }
@@ -194,7 +194,7 @@ check_unset(GConfEngine* conf)
 static void
 check_string_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   const gchar** valp = NULL;
   GConfChangeSet* cs;
@@ -216,8 +216,8 @@ check_string_storage(GConfEngine* conf)
   
   if (err != NULL)
     {
-      fprintf(stderr, "set commit failed: %s\n", err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, "set commit failed: %s\n", err->message);
+      g_error_free(err);
       err = NULL;
       exit(1);
     }
@@ -237,8 +237,8 @@ check_string_storage(GConfEngine* conf)
         {
           check(gotten == NULL, "string was returned though there was an error");
           fprintf(stderr, "Failed to get key `%s': %s\n",
-                  *keyp, err->str);
-          gconf_error_destroy(err);
+                  *keyp, err->message);
+          g_error_free(err);
           err = NULL;
           exit(1);
         }
@@ -261,12 +261,12 @@ int
 main (int argc, char** argv)
 {
   GConfEngine* conf;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (!gconf_init(argc, argv, &err))
     {
-      fprintf(stderr, "Failed to init GConf: %s\n", err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, "Failed to init GConf: %s\n", err->message);
+      g_error_free(err);
       err = NULL;
       return 1;
     }

@@ -142,7 +142,7 @@ static const guint n_floats = sizeof(floats)/sizeof(floats[0]);
 static void
 check_unset(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
 
   keyp = keys;
@@ -153,8 +153,8 @@ check_unset(GConfEngine* conf)
 
       if (err != NULL)
         {
-          fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->str);
-          gconf_error_destroy(err);
+          fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->message);
+          g_error_free(err);
           err = NULL;
         }
       else
@@ -182,7 +182,7 @@ check_unset(GConfEngine* conf)
 static void
 check_string_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   const gchar** valp = NULL;
 
@@ -201,8 +201,8 @@ check_string_storage(GConfEngine* conf)
           if (!gconf_set_string(conf, *keyp, *valp, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%s': %s\n",
-                      *keyp, *valp, err->str);
-              gconf_error_destroy(err);
+                      *keyp, *valp, err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -213,8 +213,8 @@ check_string_storage(GConfEngine* conf)
                 {
                   check(gotten == NULL, "string was returned though there was an error");
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -246,8 +246,8 @@ check_string_storage(GConfEngine* conf)
           if (!gconf_set_string(conf, *keyp, *valp, &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%s': %s\n",
-                      *keyp, *valp, err->str);
-              gconf_error_destroy(err);
+                      *keyp, *valp, err->message);
+              g_error_free(err);
               err = NULL;
             }
 
@@ -257,8 +257,8 @@ check_string_storage(GConfEngine* conf)
             {
               check(gotten == NULL, "string was returned though there was an error");
               fprintf(stderr, "Failed to get key `%s': %s\n",
-                      *keyp, err->str);
-              gconf_error_destroy(err);
+                      *keyp, err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -282,7 +282,7 @@ check_string_storage(GConfEngine* conf)
 void
 check_bool_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   guint i; 
   
@@ -300,8 +300,8 @@ check_bool_storage(GConfEngine* conf)
           if (!gconf_set_bool(conf, *keyp, bools[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
-                      *keyp, bools[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, bools[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -313,8 +313,8 @@ check_bool_storage(GConfEngine* conf)
                   check(gotten == FALSE, "TRUE was returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -346,8 +346,8 @@ check_bool_storage(GConfEngine* conf)
           if (!gconf_set_bool(conf, *keyp, bools[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
-                      *keyp, bools[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, bools[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -359,8 +359,8 @@ check_bool_storage(GConfEngine* conf)
                   check(gotten == FALSE, "TRUE was returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -383,7 +383,7 @@ check_bool_storage(GConfEngine* conf)
 void
 check_float_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   guint i; 
   const gdouble tolerance = 1e-5;
@@ -402,8 +402,8 @@ check_float_storage(GConfEngine* conf)
           if (!gconf_set_float(conf, *keyp, floats[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%g': %s\n",
-                      *keyp, floats[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, floats[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -415,8 +415,8 @@ check_float_storage(GConfEngine* conf)
                   check(gotten == 0.0, "0.0 not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -449,8 +449,8 @@ check_float_storage(GConfEngine* conf)
           if (!gconf_set_float(conf, *keyp, floats[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%g': %s\n",
-                      *keyp, floats[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, floats[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -462,8 +462,8 @@ check_float_storage(GConfEngine* conf)
                   check(gotten == 0.0, "0.0 not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -488,7 +488,7 @@ check_float_storage(GConfEngine* conf)
 void
 check_int_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   guint i; 
   
@@ -506,8 +506,8 @@ check_int_storage(GConfEngine* conf)
           if (!gconf_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
-                      *keyp, ints[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, ints[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -519,8 +519,8 @@ check_int_storage(GConfEngine* conf)
                   check(gotten == 0.0, "0.0 not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -553,8 +553,8 @@ check_int_storage(GConfEngine* conf)
           if (!gconf_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
-                      *keyp, ints[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, ints[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -566,8 +566,8 @@ check_int_storage(GConfEngine* conf)
                   check(gotten == 0, "0 not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -735,7 +735,7 @@ list_of_floats(void)
 static void
 check_list_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   guint i;
   GConfValueType list_types[] = { GCONF_VALUE_INT, GCONF_VALUE_INT,
@@ -778,8 +778,8 @@ check_list_storage(GConfEngine* conf)
           if (!gconf_set_list(conf, *keyp, list_types[i], lists[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to list: %s\n",
-                      *keyp, err->str);
-              gconf_error_destroy(err);
+                      *keyp, err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -791,8 +791,8 @@ check_list_storage(GConfEngine* conf)
                   check(gotten == NULL, "NULL not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -821,14 +821,14 @@ int
 main (int argc, char** argv)
 {
   GConfEngine* conf;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (!gconf_init(argc, argv, &err))
     {
       g_assert(err != NULL);
-      fprintf(stderr, "Failed to init GConf: %s\n", err->str);
+      fprintf(stderr, "Failed to init GConf: %s\n", err->message);
       fflush(stderr);
-      gconf_error_destroy(err);
+      g_error_free(err);
       err = NULL;
       return 1;
     }

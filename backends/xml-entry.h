@@ -40,7 +40,7 @@ void           entry_fill_from_node  (Entry        *entry);
 void           entry_sync_to_node    (Entry        *entry);
 GConfValue*    entry_get_value       (Entry        *entry,
                                       const gchar **locales,
-                                      GConfError  **err);
+                                      GError  **err);
 void           entry_set_value       (Entry        *entry,
                                       GConfValue   *value);
 gboolean       entry_unset_value     (Entry        *entry,

@@ -174,7 +174,7 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
   char* str;
   GConfValue* val;
   SCM retval;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   SCM_ASSERT(GCONF_P(obj), obj, SCM_ARG1, "gconf-get");
   SCM_ASSERT(gh_string_p(keyname), keyname, SCM_ARG2, "gconf-get");
@@ -190,8 +190,8 @@ GCONF_PROC(get_value,"gconf-get",2,0,0,(SCM obj, SCM keyname))
   if (val == NULL &&
       err != NULL)
     {
-      printf("Failed: %s\n", err->str);
-      gconf_error_destroy(err);
+      printf("Failed: %s\n", err->message);
+      g_error_free(err);
       err = NULL;
       retval = SCM_EOL;
     }

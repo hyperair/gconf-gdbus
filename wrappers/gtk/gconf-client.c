@@ -119,8 +119,8 @@ static void         unregister_client (GConfClient *client);
 
 static void gconf_client_class_init (GConfClientClass *klass);
 static void gconf_client_init       (GConfClient      *client);
-static void gconf_client_real_unreturned_error (GConfClient* client, GConfError* error);
-static void gconf_client_real_error            (GConfClient* client, GConfError* error);
+static void gconf_client_real_unreturned_error (GConfClient* client, GError* error);
+static void gconf_client_real_error            (GConfClient* client, GError* error);
 static void gconf_client_destroy               (GtkObject* object); 
 static void gconf_client_finalize              (GtkObject* object); 
 
@@ -137,7 +137,7 @@ static gboolean gconf_client_lookup         (GConfClient* client,
 
 static void gconf_client_real_remove_dir    (GConfClient* client,
                                              Dir* d,
-					     GConfError** err);
+					     GError** err);
 
 static guint client_signals[LAST_SIGNAL] = { 0 };
 static GtkObjectClass* parent_class = NULL;
@@ -286,7 +286,7 @@ gconf_client_finalize (GtkObject* object)
  */
 
 static void
-gconf_client_real_unreturned_error (GConfClient* client, GConfError* error)
+gconf_client_real_unreturned_error (GConfClient* client, GError* error)
 {
   if (client->error_mode == GCONF_CLIENT_HANDLE_UNRETURNED)
     {
@@ -298,13 +298,13 @@ gconf_client_real_unreturned_error (GConfClient* client, GConfError* error)
         }
       else
         {
-          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->message);
         }
     }
 }
 
 static void
-gconf_client_real_error            (GConfClient* client, GConfError* error)
+gconf_client_real_error            (GConfClient* client, GError* error)
 {
   if (client->error_mode == GCONF_CLIENT_HANDLE_ALL)
     {
@@ -316,14 +316,14 @@ gconf_client_real_error            (GConfClient* client, GConfError* error)
         }
       else
         {
-          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->str);
+          g_warning("Default GConf error handler unimplemented, error is:\n   %s", error->message);
         }
     }
 }
 
 /* Emit the proper signals for the error, and fill in err */
 static gboolean
-handle_error(GConfClient* client, GConfError* error, GConfError** err)
+handle_error(GConfClient* client, GError* error, GError** err)
 {
   if (error != NULL)
     {
@@ -333,7 +333,7 @@ handle_error(GConfClient* client, GConfError* error, GConfError** err)
         {
           gconf_client_unreturned_error(client, error);
 
-          gconf_error_destroy(error);
+          g_error_free(error);
         }
       else
         *err = error;
@@ -540,11 +540,11 @@ void
 gconf_client_add_dir     (GConfClient* client,
                           const gchar* dirname,
                           GConfClientPreloadType preload,
-                          GConfError** err)
+                          GError** err)
 {
   Dir* d;
   guint notify_id = 0;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   g_return_if_fail(gconf_valid_key(dirname, NULL));
   
@@ -598,7 +598,7 @@ gconf_client_add_dir     (GConfClient* client,
 
 typedef struct {
   GConfClient *client;
-  GConfError *error;
+  GError *error;
 } AddNotifiesData;
 
 static void
@@ -641,7 +641,7 @@ foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
 static void
 gconf_client_real_remove_dir    (GConfClient* client,
                                  Dir* d,
-				 GConfError** err)
+				 GError** err)
 {
   AddNotifiesData ad;
 
@@ -669,7 +669,7 @@ gconf_client_real_remove_dir    (GConfClient* client,
 void
 gconf_client_remove_dir  (GConfClient* client,
                           const gchar* dirname,
-			  GConfError** err)
+			  GError** err)
 {
   Dir* found = NULL;
 
@@ -699,7 +699,7 @@ gconf_client_notify_add(GConfClient* client,
                         GConfClientNotifyFunc func,
                         gpointer user_data,
                         GFreeFunc destroy_notify,
-                        GConfError** err)
+                        GError** err)
 {
   guint cnxn_id = 0;
   
@@ -803,15 +803,15 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
 {
   GSList* pairs;
   GSList* tmp;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   pairs = gconf_all_entries(client->engine, dir, &error);
           
   if (error != NULL)
     {
       fprintf(stderr, _("GConf warning: failure listing pairs in `%s': %s"),
-              dir, error->str);
-      gconf_error_destroy(error);
+              dir, error->message);
+      g_error_free(error);
       error = NULL;
     }
 
@@ -846,7 +846,7 @@ void
 gconf_client_preload    (GConfClient* client,
                          const gchar* dirname,
                          GConfClientPreloadType type,
-                         GConfError** err)
+                         GError** err)
 {
 
   g_return_if_fail(client != NULL);
@@ -903,9 +903,9 @@ void
 gconf_client_set             (GConfClient* client,
                               const gchar* key,
                               GConfValue* val,
-                              GConfError** err)
+                              GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   gconf_set(client->engine, key, val, &error);
 
@@ -914,9 +914,9 @@ gconf_client_set             (GConfClient* client,
 
 gboolean
 gconf_client_unset          (GConfClient* client,
-                             const gchar* key, GConfError** err)
+                             const gchar* key, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   gconf_unset(client->engine, key, &error);
 
@@ -930,9 +930,9 @@ gconf_client_unset          (GConfClient* client,
 
 GSList*
 gconf_client_all_entries    (GConfClient* client,
-                             const gchar* dir, GConfError** err)
+                             const gchar* dir, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GSList* retval;
   
   retval = gconf_all_entries(client->engine, dir, &error);
@@ -944,9 +944,9 @@ gconf_client_all_entries    (GConfClient* client,
 
 GSList*
 gconf_client_all_dirs       (GConfClient* client,
-                             const gchar* dir, GConfError** err)
+                             const gchar* dir, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GSList* retval;
   
   retval = gconf_all_dirs(client->engine, dir, &error);
@@ -958,9 +958,9 @@ gconf_client_all_dirs       (GConfClient* client,
 
 void
 gconf_client_suggest_sync   (GConfClient* client,
-                             GConfError** err)
+                             GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   gconf_suggest_sync(client->engine, &error);
 
@@ -969,9 +969,9 @@ gconf_client_suggest_sync   (GConfClient* client,
 
 gboolean
 gconf_client_dir_exists     (GConfClient* client,
-                             const gchar* dir, GConfError** err)
+                             const gchar* dir, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   gboolean retval;
   
   retval = gconf_dir_exists(client->engine, dir, &error);
@@ -982,7 +982,7 @@ gconf_client_dir_exists     (GConfClient* client,
 }
 
 static gboolean
-check_type(const gchar* key, GConfValue* val, GConfValueType t, GConfError** err)
+check_type(const gchar* key, GConfValue* val, GConfValueType t, GError** err)
 {
   if (val->type != t)
     {
@@ -1000,7 +1000,7 @@ check_type(const gchar* key, GConfValue* val, GConfValueType t, GConfError** err
 static GConfValue*
 get(GConfClient* client, const gchar* key,
     gboolean use_default, gboolean* is_default_retloc,
-    GConfError** error)
+    GError** error)
 {
   GConfValue* val = NULL;
   gboolean is_default = FALSE;
@@ -1069,9 +1069,9 @@ gconf_client_get_full        (GConfClient* client,
                               const gchar* key, const gchar* locale,
                               gboolean use_schema_default,
                               gboolean* value_is_default,
-                              GConfError** err)
+                              GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val = NULL;
 
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -1092,7 +1092,7 @@ gconf_client_get_full        (GConfClient* client,
 GConfValue*
 gconf_client_get             (GConfClient* client,
                               const gchar* key,
-                              GConfError** err)
+                              GError** err)
 {
   return gconf_client_get_full(client, key, NULL, TRUE, NULL, err);
 }
@@ -1100,7 +1100,7 @@ gconf_client_get             (GConfClient* client,
 GConfValue*
 gconf_client_get_without_default  (GConfClient* client,
                                    const gchar* key,
-                                   GConfError** err)
+                                   GError** err)
 {
   return gconf_client_get_full(client, key, NULL, FALSE, NULL, err);
 }
@@ -1108,9 +1108,9 @@ gconf_client_get_without_default  (GConfClient* client,
 GConfValue*
 gconf_client_get_default_from_schema (GConfClient* client,
                                       const gchar* key,
-                                      GConfError** err)
+                                      GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val = NULL;
   gboolean is_default = FALSE;
   
@@ -1147,10 +1147,10 @@ gconf_client_get_default_from_schema (GConfClient* client,
 
 gdouble
 gconf_client_get_float (GConfClient* client, const gchar* key,
-                        GConfError** err)
+                        GError** err)
 {
   static const gdouble def = 0.0;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, 0.0);
@@ -1182,10 +1182,10 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
 
 gint
 gconf_client_get_int   (GConfClient* client, const gchar* key,
-                        GConfError** err)
+                        GError** err)
 {
   static const gint def = 0;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, 0);
@@ -1217,10 +1217,10 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
 
 gchar*
 gconf_client_get_string(GConfClient* client, const gchar* key,
-                        GConfError** err)
+                        GError** err)
 {
   static const gchar* def = NULL;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -1260,10 +1260,10 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_get_bool  (GConfClient* client, const gchar* key,
-                        GConfError** err)
+                        GError** err)
 {
   static const gboolean def = FALSE;
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
@@ -1295,9 +1295,9 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
 
 GConfSchema*
 gconf_client_get_schema  (GConfClient* client,
-                          const gchar* key, GConfError** err)
+                          const gchar* key, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -1333,9 +1333,9 @@ gconf_client_get_schema  (GConfClient* client,
 
 GSList*
 gconf_client_get_list    (GConfClient* client, const gchar* key,
-                          GConfValueType list_type, GConfError** err)
+                          GConfValueType list_type, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -1372,9 +1372,9 @@ gboolean
 gconf_client_get_pair    (GConfClient* client, const gchar* key,
                           GConfValueType car_type, GConfValueType cdr_type,
                           gpointer car_retloc, gpointer cdr_retloc,
-                          GConfError** err)
+                          GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfValue* val;
 
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
@@ -1431,9 +1431,9 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_set_float   (GConfClient* client, const gchar* key,
-                          gdouble val, GConfError** err)
+                          gdouble val, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1450,9 +1450,9 @@ gconf_client_set_float   (GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_set_int     (GConfClient* client, const gchar* key,
-                          gint val, GConfError** err)
+                          gint val, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1469,9 +1469,9 @@ gconf_client_set_int     (GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_set_string  (GConfClient* client, const gchar* key,
-                          const gchar* val, GConfError** err)
+                          const gchar* val, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1489,9 +1489,9 @@ gconf_client_set_string  (GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_set_bool    (GConfClient* client, const gchar* key,
-                          gboolean val, GConfError** err)
+                          gboolean val, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1508,9 +1508,9 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
 
 gboolean
 gconf_client_set_schema  (GConfClient* client, const gchar* key,
-                          GConfSchema* val, GConfError** err)
+                          GConfSchema* val, GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1530,9 +1530,9 @@ gboolean
 gconf_client_set_list    (GConfClient* client, const gchar* key,
                           GConfValueType list_type,
                           GSList* list,
-                          GConfError** err)
+                          GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1552,9 +1552,9 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
                           GConfValueType car_type, GConfValueType cdr_type,
                           gconstpointer address_of_car,
                           gconstpointer address_of_cdr,
-                          GConfError** err)
+                          GError** err)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_val_if_fail(client != NULL, FALSE);
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
@@ -1576,7 +1576,7 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
  */
 
 void
-gconf_client_error                  (GConfClient* client, GConfError* error)
+gconf_client_error                  (GConfClient* client, GError* error)
 {
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
@@ -1585,7 +1585,7 @@ gconf_client_error                  (GConfClient* client, GConfError* error)
 }
 
 void
-gconf_client_unreturned_error       (GConfClient* client, GConfError* error)
+gconf_client_unreturned_error       (GConfClient* client, GError* error)
 {
   g_return_if_fail(client != NULL);
   g_return_if_fail(GCONF_IS_CLIENT(client));
@@ -1775,7 +1775,7 @@ listener_destroy(Listener* l)
 
 struct CommitData {
   GConfClient* client;
-  GConfError* error;
+  GError* error;
   GSList* remove_list;
   gboolean remove_committed;
 };
@@ -1810,7 +1810,7 @@ gboolean
 gconf_client_commit_change_set   (GConfClient* client,
                                   GConfChangeSet* cs,
                                   gboolean remove_committed,
-                                  GConfError** err)
+                                  GError** err)
 {
   struct CommitData cd;
   GSList* tmp;
@@ -1854,7 +1854,7 @@ gconf_client_commit_change_set   (GConfClient* client,
       if (err != NULL)
         *err = cd.error;
       else
-        gconf_error_destroy(cd.error);
+        g_error_free(cd.error);
 
       return FALSE;
     }
@@ -1869,7 +1869,7 @@ gconf_client_commit_change_set   (GConfClient* client,
 
 struct RevertData {
   GConfClient* client;
-  GConfError* error;
+  GError* error;
   GConfChangeSet* revert_set;
 };
 
@@ -1881,7 +1881,7 @@ revert_foreach (GConfChangeSet* cs,
 {
   struct RevertData* rd = user_data;
   GConfValue* old_value;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_assert(rd != NULL);
 
@@ -1893,8 +1893,8 @@ revert_foreach (GConfChangeSet* cs,
   if (error != NULL)
     {
       /* FIXME */
-      g_warning("error creating revert set: %s", error->str);
-      gconf_error_destroy(error);
+      g_warning("error creating revert set: %s", error->message);
+      g_error_free(error);
       error = NULL;
     }
   
@@ -1912,7 +1912,7 @@ revert_foreach (GConfChangeSet* cs,
 GConfChangeSet*
 gconf_client_create_reverse_change_set  (GConfClient* client,
                                          GConfChangeSet* cs,
-                                         GConfError** err)
+                                         GError** err)
 {
   struct RevertData rd;
 
@@ -1933,7 +1933,7 @@ gconf_client_create_reverse_change_set  (GConfClient* client,
       if (err != NULL)
         *err = rd.error;
       else
-        gconf_error_destroy(rd.error);
+        g_error_free(rd.error);
     }
 
   gtk_object_unref(GTK_OBJECT(rd.client));
@@ -1946,7 +1946,7 @@ gconf_client_create_reverse_change_set  (GConfClient* client,
 GConfChangeSet*
 gconf_client_create_change_set_from_currentv (GConfClient* client,
                                               const gchar** keys,
-                                              GConfError** err)
+                                              GError** err)
 {
   GConfValue* old_value;
   GConfChangeSet* new_set;
@@ -1960,7 +1960,7 @@ gconf_client_create_change_set_from_currentv (GConfClient* client,
 
   while (*keyp != NULL)
     {
-      GConfError* error = NULL;
+      GError* error = NULL;
       const gchar* key = *keyp;
       
       old_value = gconf_client_get_without_default(client, key, &error);
@@ -1968,8 +1968,8 @@ gconf_client_create_change_set_from_currentv (GConfClient* client,
       if (error != NULL)
         {
           /* FIXME */
-          g_warning("error creating change set from current keys: %s", error->str);
-          gconf_error_destroy(error);
+          g_warning("error creating change set from current keys: %s", error->message);
+          g_error_free(error);
           error = NULL;
         }
       
@@ -1986,7 +1986,7 @@ gconf_client_create_change_set_from_currentv (GConfClient* client,
 
 GConfChangeSet*
 gconf_client_create_change_set_from_current (GConfClient* client,
-                                             GConfError** err,
+                                             GError** err,
                                              const gchar* first_key,
                                              ...)
 {

@@ -194,7 +194,7 @@ gconf_backend_file(const gchar* address)
 static GHashTable* loaded_backends = NULL;
 
 GConfBackend* 
-gconf_get_backend(const gchar* address, GConfError** err)
+gconf_get_backend(const gchar* address, GError** err)
 {
   GConfBackend* backend;
   gchar* name;
@@ -300,14 +300,14 @@ gconf_backend_unref(GConfBackend* backend)
     }
   else
     {
-      GConfError* error = NULL;
+      GError* error = NULL;
       
       (*backend->vtable->shutdown)(&error);
 
       if (error != NULL)
         {
-          g_warning(error->str);
-          gconf_error_destroy(error);
+          g_warning(error->message);
+          g_error_free(error);
         }
           
       if (!g_module_close(backend->module))
@@ -328,7 +328,7 @@ gconf_backend_unref(GConfBackend* backend)
 GConfSource*  
 gconf_backend_resolve_address (GConfBackend* backend, 
                                const gchar* address,
-                               GConfError** err)
+                               GError** err)
 {
   gchar** flags;
   gchar** iter;

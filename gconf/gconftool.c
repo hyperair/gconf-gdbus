@@ -326,7 +326,7 @@ main (int argc, char** argv)
   GConfEngine* conf;
   poptContext ctx;
   gint nextopt;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   ctx = poptGetContext("gconftool", argc, argv, options, 0);
 
@@ -474,8 +474,8 @@ main (int argc, char** argv)
   
   if (!gconf_init(argc, argv, &err))
     {
-      fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, _("Failed to init GConf: %s\n"), err->message);
+      g_error_free(err);
       err = NULL;
       return 1;
     }
@@ -536,8 +536,8 @@ main (int argc, char** argv)
   if (conf == NULL)
     {
       g_assert(err != NULL);
-      fprintf(stderr, _("Failed to access configuration source(s): %s\n"), err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, _("Failed to access configuration source(s): %s\n"), err->message);
+      g_error_free(err);
       err = NULL;
       return 1;
     }
@@ -697,8 +697,8 @@ main (int argc, char** argv)
   if (err != NULL)
     {
       fprintf(stderr, _("Shutdown error: %s\n"),
-              err->str);
-      gconf_error_destroy(err);
+              err->message);
+      g_error_free(err);
       err = NULL;
     }
 
@@ -767,7 +767,7 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
   GSList* pairs;
   GSList* tmp;
   gchar* whitespace;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   whitespace = g_strnfill(depth, ' ');
 
@@ -776,8 +776,8 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
   if (err != NULL)
     {
       fprintf(stderr, _("Failure listing pairs in `%s': %s"),
-              dir, err->str);
-      gconf_error_destroy(err);
+              dir, err->message);
+      g_error_free(err);
       err = NULL;
     }
 
@@ -824,15 +824,15 @@ do_all_pairs(GConfEngine* conf, const gchar** args)
 static gboolean
 do_dir_exists(GConfEngine* conf, const gchar* dir)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   gboolean exists = FALSE;
   
   exists = gconf_dir_exists(conf, dir_exists, &err);
   
   if (err != NULL)
     {
-      fprintf(stderr, "%s\n", err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, "%s\n", err->message);
+      g_error_free(err);
       err = NULL;
     }
   
@@ -842,13 +842,13 @@ do_dir_exists(GConfEngine* conf, const gchar* dir)
 static void
 do_spawn_daemon(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
 
   if (!gconf_spawn_daemon(&err))
     {
       fprintf(stderr, _("Failed to spawn the config server (gconfd): %s\n"), 
-              err->str);
-      gconf_error_destroy(err);
+              err->message);
+      g_error_free(err);
       err = NULL;
     }
 }
@@ -856,7 +856,7 @@ do_spawn_daemon(GConfEngine* conf)
 static int
 do_get(GConfEngine* conf, const gchar** args)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
 
   if (args == NULL)
     {
@@ -914,8 +914,8 @@ do_get(GConfEngine* conf, const gchar** args)
           else
             {
               fprintf(stderr, _("Failed to get value for `%s': %s\n"),
-                      *args, err->str);
-              gconf_error_destroy(err);
+                      *args, err->message);
+              g_error_free(err);
               err = NULL;
             }
         }
@@ -976,7 +976,7 @@ read_value_type(const char *string)
 static int
 do_set(GConfEngine* conf, const gchar** args)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (args == NULL)
     {
@@ -1068,8 +1068,8 @@ do_set(GConfEngine* conf, const gchar** args)
       if (gval == NULL)
         {
           fprintf(stderr, _("Error: %s\n"),
-                  err->str);
-          gconf_error_destroy(err);
+                  err->message);
+          g_error_free(err);
           err = NULL;
           return 1;
         }
@@ -1081,8 +1081,8 @@ do_set(GConfEngine* conf, const gchar** args)
       if (err != NULL)
         {
           fprintf(stderr, _("Error setting value: %s"),
-                  err->str);
-          gconf_error_destroy(err);
+                  err->message);
+          g_error_free(err);
           err = NULL;
           return 1;
         }
@@ -1099,7 +1099,7 @@ do_set(GConfEngine* conf, const gchar** args)
   if (err != NULL)
     {
       fprintf(stderr, _("Error syncing: %s"),
-              err->str);
+              err->message);
       return 1;
     }
 
@@ -1112,7 +1112,7 @@ do_set_schema(GConfEngine* conf, const gchar** args)
   GConfSchema* sc;
   GConfValue* val;
   const gchar* key;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if ((args == NULL) || (args[1] != NULL))
     {
@@ -1214,8 +1214,8 @@ do_set_schema(GConfEngine* conf, const gchar** args)
   if (err != NULL)
     {
       fprintf(stderr, _("Error setting value: %s"),
-              err->str);
-      gconf_error_destroy(err);
+              err->message);
+      g_error_free(err);
       err = NULL;
       return 1;
     }
@@ -1228,8 +1228,8 @@ do_set_schema(GConfEngine* conf, const gchar** args)
   if (err != NULL)
     {
       fprintf(stderr, _("Error syncing: %s"),
-              err->str);
-      gconf_error_destroy(err);
+              err->message);
+      g_error_free(err);
       err = NULL;
       return 1;
     }
@@ -1252,7 +1252,7 @@ do_all_entries(GConfEngine* conf, const gchar** args)
 static int
 do_unset(GConfEngine* conf, const gchar** args)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (args == NULL)
     {
@@ -1268,8 +1268,8 @@ do_unset(GConfEngine* conf, const gchar** args)
       if (err != NULL)
         {
           fprintf(stderr, _("Error unsetting `%s': %s\n"),
-                  *args, err->str);
-          gconf_error_destroy(err);
+                  *args, err->message);
+          g_error_free(err);
           err = NULL;
         }
 
@@ -1286,7 +1286,7 @@ do_unset(GConfEngine* conf, const gchar** args)
 static int
 do_all_subdirs(GConfEngine* conf, const gchar** args)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (args == NULL)
     {
@@ -1325,8 +1325,8 @@ do_all_subdirs(GConfEngine* conf, const gchar** args)
           if (err != NULL)
             {
               fprintf(stderr, _("Error listing dirs: %s\n"),
-                      err->str);
-              gconf_error_destroy(err);
+                      err->message);
+              g_error_free(err);
               err = NULL;
             }
         }
@@ -1372,7 +1372,7 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
 
     case GCONF_VALUE_LIST:
       {
-        GConfError* error = NULL;
+        GError* error = NULL;
         if (info->list_type == GCONF_VALUE_INVALID)
 	  {
             fprintf(stderr, _("WARNING: invalid or missing list_type for schema (%s)\n"),
@@ -1388,7 +1388,7 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
 
             fprintf(stderr, _("WARNING: Failed to parse default value `%s' for schema (%s)\n"), default_value, info->key);
 
-            gconf_error_destroy(error);
+            g_error_free(error);
             error = NULL;
           }
         else
@@ -1400,7 +1400,7 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
 
     case GCONF_VALUE_PAIR:
       {
-        GConfError* error = NULL;
+        GError* error = NULL;
         if (info->car_type == GCONF_VALUE_INVALID ||
 	    info->cdr_type == GCONF_VALUE_INVALID)
 	  {
@@ -1418,7 +1418,7 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
 
             fprintf(stderr, _("WARNING: Failed to parse default value `%s' for schema (%s)\n"), default_value, info->key);
 
-            gconf_error_destroy(error);
+            g_error_free(error);
             error = NULL;
           }
         else
@@ -1437,7 +1437,7 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
     case GCONF_VALUE_BOOL:
     case GCONF_VALUE_FLOAT:
       {
-        GConfError* error = NULL;
+        GError* error = NULL;
         *retloc = gconf_value_new_from_string(info->type,
                                               default_value,
                                               &error);
@@ -1447,7 +1447,7 @@ fill_default_from_string(SchemaInfo* info, const gchar* default_value,
 
             fprintf(stderr, _("WARNING: Failed to parse default value `%s' for schema (%s)\n"), default_value, info->key);
 
-            gconf_error_destroy(error);
+            g_error_free(error);
             error = NULL;
           }
         else
@@ -1745,7 +1745,7 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
 {
   SchemaInfo* info;
   GConfSchema* schema;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   info = user_data;
   schema = value;
@@ -1755,8 +1755,8 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
       g_assert(error != NULL);
 
       fprintf(stderr, _("WARNING: failed to install schema `%s' locale `%s': %s\n"),
-              info->key, gconf_schema_locale(schema), error->str);
-      gconf_error_destroy(error);
+              info->key, gconf_schema_locale(schema), error->message);
+      g_error_free(error);
       error = NULL;
     }
   else
@@ -1774,7 +1774,7 @@ static int
 process_key_list(GConfEngine* conf, const gchar* schema_name, GSList* keylist)
 {
   GSList* tmp;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   tmp = keylist;
 
@@ -1785,8 +1785,8 @@ process_key_list(GConfEngine* conf, const gchar* schema_name, GSList* keylist)
           g_assert(error != NULL);
           
           fprintf(stderr, _("WARNING: failed to associate schema `%s' with key `%s': %s\n"),
-                  schema_name, (gchar*)tmp->data, error->str);
-          gconf_error_destroy(error);
+                  schema_name, (gchar*)tmp->data, error->message);
+          g_error_free(error);
           error = NULL;
         }
       else
@@ -1914,7 +1914,7 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
 {
   xmlDocPtr doc;
   xmlNodePtr iter;
-  GConfError * err = NULL;
+  GError * err = NULL;
   
   errno = 0;
   doc = xmlParseFile(file);
@@ -1980,8 +1980,8 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
   if (err != NULL)
     {
       fprintf(stderr, _("Error syncing config data: %s"),
-              err->str);
-      gconf_error_destroy(err);
+              err->message);
+      g_error_free(err);
       return 1;
     }
   
@@ -1991,7 +1991,7 @@ do_load_schema_file(GConfEngine* conf, const gchar* file)
 static int
 do_makefile_install(GConfEngine* conf, const gchar** args)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (args == NULL)
     {
@@ -2012,8 +2012,8 @@ do_makefile_install(GConfEngine* conf, const gchar** args)
   if (err != NULL)
     {
       fprintf(stderr, _("Error syncing config data: %s"),
-              err->str);
-      gconf_error_destroy(err);
+              err->message);
+      g_error_free(err);
       return 1;
     }
   
@@ -2026,15 +2026,15 @@ typedef enum {
 } BreakagePhase;
 
 static gboolean
-check_err(GConfError** err)
+check_err(GError** err)
 {
   printf(".");
   
   if (*err != NULL)
     {
       fprintf(stderr, _("\n%s\n"),
-              (*err)->str);
-      gconf_error_destroy(*err);
+              (*err)->message);
+      g_error_free(*err);
       *err = NULL;
       return TRUE;
     }
@@ -2045,7 +2045,7 @@ check_err(GConfError** err)
 static gboolean
 key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   if (phase == BreakageCleanup)
     {
@@ -2053,8 +2053,8 @@ key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
       if (error != NULL)
         {
           fprintf(stderr, _("Failed to unset breakage key %s: %s\n"),
-                  key, error->str);
-          gconf_error_destroy(error);
+                  key, error->message);
+          g_error_free(error);
           return FALSE;
         }
     }

@@ -32,13 +32,13 @@ Dir*           dir_new             (const gchar  *keyname,
                                     guint file_mode);
 Dir*           dir_load            (const gchar  *key,
                                     const gchar  *xml_root_dir,
-                                    GConfError  **err);
+                                    GError  **err);
 void           dir_destroy         (Dir          *d);
 void           dir_clear_cache     (Dir          *d);
 gboolean       dir_ensure_exists   (Dir          *d,
-                                    GConfError  **err);
+                                    GError  **err);
 gboolean       dir_sync            (Dir          *d,
-                                    GConfError  **err);
+                                    GError  **err);
 
 const gchar*   dir_get_name        (Dir          *d);
 
@@ -46,28 +46,28 @@ const gchar*   dir_get_name        (Dir          *d);
 void           dir_set_value       (Dir          *d,
                                     const gchar  *relative_key,
                                     GConfValue   *value,
-                                    GConfError  **err);
+                                    GError  **err);
 GConfValue*    dir_get_value       (Dir          *d,
                                     const gchar  *relative_key,
                                     const gchar **locales,
                                     gchar       **schema_name,
-                                    GConfError  **err);
+                                    GError  **err);
 GConfMetaInfo* dir_get_metainfo    (Dir          *d,
                                     const gchar  *relative_key,
-                                    GConfError  **err);
+                                    GError  **err);
 void           dir_unset_value     (Dir          *d,
                                     const gchar  *relative_key,
                                     const gchar  *locale,
-                                    GConfError  **err);
+                                    GError  **err);
 GSList*        dir_all_entries     (Dir          *d,
                                     const gchar **locales,
-                                    GConfError  **err);
+                                    GError  **err);
 GSList*        dir_all_subdirs     (Dir          *d,
-                                    GConfError  **err);
+                                    GError  **err);
 void           dir_set_schema      (Dir          *d,
                                     const gchar  *relative_key,
                                     const gchar  *schema_key,
-                                    GConfError  **err);
+                                    GError  **err);
 GTime          dir_get_last_access (Dir          *d);
 
 gboolean       dir_sync_pending    (Dir          *d);

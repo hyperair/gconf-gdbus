@@ -186,7 +186,7 @@ Entry        *entry
 <FUNCTION>
 <NAME>entry_get_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-Entry        *entry,const gchar **locales,GConfError  **err
+Entry        *entry,const gchar **locales,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>entry_set_value</NAME>
@@ -244,7 +244,7 @@ const gchar  *keyname,const gchar  *xml_root_dir,guint dir_mode,guint file_mode
 <FUNCTION>
 <NAME>dir_load</NAME>
 <RETURNS>Dir *</RETURNS>
-const gchar  *key,const gchar  *xml_root_dir,GConfError  **err
+const gchar  *key,const gchar  *xml_root_dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_destroy</NAME>
@@ -259,12 +259,12 @@ Dir          *d
 <FUNCTION>
 <NAME>dir_ensure_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-Dir          *d,GConfError  **err
+Dir          *d,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_sync</NAME>
 <RETURNS>gboolean  </RETURNS>
-Dir          *d,GConfError  **err
+Dir          *d,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_name</NAME>
@@ -274,37 +274,37 @@ Dir          *d
 <FUNCTION>
 <NAME>dir_set_value</NAME>
 <RETURNS>void  </RETURNS>
-Dir          *d,const gchar  *relative_key,GConfValue   *value,GConfError  **err
+Dir          *d,const gchar  *relative_key,GConfValue   *value,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-Dir          *d,const gchar  *relative_key,const gchar **locales,gchar       **schema_name,GConfError  **err
+Dir          *d,const gchar  *relative_key,const gchar **locales,gchar       **schema_name,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_metainfo</NAME>
 <RETURNS>GConfMetaInfo *</RETURNS>
-Dir          *d,const gchar  *relative_key,GConfError  **err
+Dir          *d,const gchar  *relative_key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_unset_value</NAME>
 <RETURNS>void  </RETURNS>
-Dir          *d,const gchar  *relative_key,const gchar  *locale,GConfError  **err
+Dir          *d,const gchar  *relative_key,const gchar  *locale,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-Dir          *d,const gchar **locales,GConfError  **err
+Dir          *d,const gchar **locales,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_all_subdirs</NAME>
 <RETURNS>GSList *</RETURNS>
-Dir          *d,GConfError  **err
+Dir          *d,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_set_schema</NAME>
 <RETURNS>void  </RETURNS>
-Dir          *d,const gchar  *relative_key,const gchar  *schema_key,GConfError  **err
+Dir          *d,const gchar  *relative_key,const gchar  *schema_key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_last_access</NAME>
@@ -347,7 +347,7 @@ Cache        *cache
 <FUNCTION>
 <NAME>cache_sync</NAME>
 <RETURNS>gboolean  </RETURNS>
-Cache        *cache,GConfError  **err
+Cache        *cache,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>cache_clean</NAME>
@@ -357,12 +357,12 @@ Cache        *cache,GTime         older_than
 <FUNCTION>
 <NAME>cache_delete_dir</NAME>
 <RETURNS>void  </RETURNS>
-Cache        *cache,const gchar  *key,GConfError  **err
+Cache        *cache,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>cache_lookup</NAME>
 <RETURNS>Dir *</RETURNS>
-Cache        *cache,const gchar  *key,gboolean create_if_missing,GConfError  **err
+Cache        *cache,const gchar  *key,gboolean create_if_missing,GError  **err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfBackendVTable</NAME>
@@ -370,10 +370,10 @@ Cache        *cache,const gchar  *key,gboolean create_if_missing,GConfError  **e
 <STRUCT>
 <NAME>GConfBackendVTable</NAME>
 struct GConfBackendVTable {
-  void                (* shutdown)        (GConfError** err);
+  void                (* shutdown)        (GError** err);
 
   GConfSource*        (* resolve_address) (const gchar* address,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Thread locks. If the backend is thread-safe, then these
    * can be NULL. If per-source locks are needed, then these
@@ -382,10 +382,10 @@ struct GConfBackendVTable {
    * their source argument and lock the whole backend.
    */
   void                (* lock)            (GConfSource* source,
-                                           GConfError** err);
+                                           GError** err);
 
   void                (* unlock)          (GConfSource* source,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Report whether a given key (and its subkeys) can be read/written.
    * Sources may not permit reading/writing from/to /foo but forbid
@@ -402,11 +402,11 @@ struct GConfBackendVTable {
 
   gboolean           (* readable)         (GConfSource* source,
                                            const gchar* key,
-                                           GConfError** err);
+                                           GError** err);
 
   gboolean           (* writeable)        (GConfSource* source,
                                            const gchar* key,
-                                           GConfError** err);
+                                           GError** err);
   
   /* schema_name filled if NULL or GCONF_VALUE_IGNORE_SUBSEQUENT returned.
      if schema_name is NULL, it isn't filled */
@@ -414,48 +414,48 @@ struct GConfBackendVTable {
                                            const gchar* key,
                                            const gchar** locales,
                                            gchar** schema_name,
-                                           GConfError** err);
+                                           GError** err);
   
   GConfMetaInfo*      (* query_metainfo)  (GConfSource* source,
                                            const gchar* key,
-                                           GConfError** err);
+                                           GError** err);
   
   void                (* set_value)       (GConfSource* source, 
                                            const gchar* key, 
                                            GConfValue* value,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Returns list of GConfEntry */
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir,
                                            const gchar** locales,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Returns list of allocated strings, relative names */
   GSList*             (* all_subdirs)     (GConfSource* source,
                                            const gchar* dir,
-                                           GConfError** err);
+                                           GError** err);
 
   void                (* unset_value)     (GConfSource* source,
                                            const gchar* key,
                                            const gchar* locale,
-                                           GConfError** err);
+                                           GError** err);
 
   gboolean            (* dir_exists)      (GConfSource* source,
                                            const gchar* dir,
-                                           GConfError** err);
+                                           GError** err);
         
   void                (* remove_dir)      (GConfSource* source,
                                            const gchar* dir,
-                                           GConfError** err);
+                                           GError** err);
   
   void                (* set_schema)      (GConfSource* source,
                                            const gchar* key,
                                            const gchar* schema_key,
-                                           GConfError** err);
+                                           GError** err);
 
   gboolean            (* sync_all)        (GConfSource* source,
-                                           GConfError** err);
+                                           GError** err);
 
   void                (* destroy_source)  (GConfSource* source);
 
@@ -495,7 +495,7 @@ const gchar* address
 <FUNCTION>
 <NAME>gconf_get_backend</NAME>
 <RETURNS>GConfBackend *</RETURNS>
-const gchar* address, GConfError** err
+const gchar* address, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_backend_ref</NAME>
@@ -510,7 +510,7 @@ GConfBackend* backend
 <FUNCTION>
 <NAME>gconf_backend_resolve_address</NAME>
 <RETURNS>GConfSource *</RETURNS>
-GConfBackend* backend,const gchar* address,GConfError** err
+GConfBackend* backend,const gchar* address,GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfEngine</NAME>
@@ -529,7 +529,7 @@ void
 <FUNCTION>
 <NAME>gconf_engine_new_from_address</NAME>
 <RETURNS>GConfEngine *</RETURNS>
-const gchar* address, GConfError** err
+const gchar* address, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_engine_unref</NAME>
@@ -544,10 +544,10 @@ GConfEngine* conf
 <FUNCTION>
 <NAME>gconf_engine_new_local</NAME>
 <RETURNS>GConfEngine *</RETURNS>
-const gchar* address, GConfError** err
+const gchar* address, GError** err
 </FUNCTION>
 <ENUM>
-<NAME>GConfErrNo</NAME>
+<NAME>GConfError</NAME>
 typedef enum {
   GCONF_ERROR_SUCCESS = 0,
   GCONF_ERROR_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
@@ -567,53 +567,53 @@ typedef enum {
   GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
   GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
   GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
-} GConfErrNo;
+} GConfError;
 </ENUM>
 <STRUCT>
-<NAME>GConfError</NAME>
+<NAME>GError</NAME>
 </STRUCT>
 <STRUCT>
-<NAME>GConfError</NAME>
-struct GConfError {
+<NAME>GError</NAME>
+struct GError {
   const gchar* str; /* combination of strerror of the num and additional
                        details; a complete error message. */
-  GConfErrNo num;
+  GConfError num;
 };
 </STRUCT>
 <FUNCTION>
 <NAME>gconf_error_new</NAME>
-<RETURNS>GConfError *</RETURNS>
-GConfErrNo en, const gchar* format, ...
+<RETURNS>GError *</RETURNS>
+GConfError en, const gchar* format, ...
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_error_copy</NAME>
-<RETURNS>GConfError *</RETURNS>
-GConfError* err
+<NAME>g_error_copy</NAME>
+<RETURNS>GError *</RETURNS>
+GError* err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_error_destroy</NAME>
+<NAME>g_error_free</NAME>
 <RETURNS>void  </RETURNS>
-GConfError* err
+GError* err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfError** err, GConfErrNo en, const gchar* format, ...
+GError** err, GConfError en, const gchar* format, ...
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_clear_error</NAME>
+<NAME>g_clear_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfError** err
+GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_compose_errors</NAME>
-<RETURNS>GConfError *</RETURNS>
-GConfError* err1, GConfError* err2
+<RETURNS>GError *</RETURNS>
+GError* err1, GError* err2
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_strerror</NAME>
 <RETURNS>const gchar *</RETURNS>
-GConfErrNo en
+GConfError en
 </FUNCTION>
 <STRUCT>
 <NAME>GConfListeners</NAME>
@@ -778,7 +778,7 @@ typedef enum {
 <FUNCTION>
 <NAME>gconf_resolve_address</NAME>
 <RETURNS>GConfSource *</RETURNS>
-const gchar* address,GConfError** err
+const gchar* address,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_source_destroy</NAME>
@@ -798,7 +798,7 @@ struct GConfSources {
 <FUNCTION>
 <NAME>gconf_sources_new_from_addresses</NAME>
 <RETURNS>GConfSources *</RETURNS>
-const gchar **addresses,GConfError   **err
+const gchar **addresses,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_new_from_source</NAME>
@@ -818,57 +818,57 @@ GConfSources  *sources
 <FUNCTION>
 <NAME>gconf_sources_query_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,GConfError   **err
+GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *key,GConfValue    *value,GConfError   **err
+GConfSources  *sources,const gchar   *key,GConfValue    *value,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_unset_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar   *locale,GConfError   **err
+GConfSources  *sources,const gchar   *key,const gchar   *locale,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfSources  *sources,const gchar   *dir,const gchar  **locales,GConfError   **err
+GConfSources  *sources,const gchar   *dir,const gchar  **locales,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfSources  *sources,const gchar   *dir,GConfError   **err
+GConfSources  *sources,const gchar   *dir,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfSources  *sources,const gchar   *dir,GConfError   **err
+GConfSources  *sources,const gchar   *dir,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_remove_dir</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *dir,GConfError   **err
+GConfSources  *sources,const gchar   *dir,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_schema</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar   *schema_key,GConfError   **err
+GConfSources  *sources,const gchar   *key,const gchar   *schema_key,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_sync_all</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfSources  *sources,GConfError   **err
+GConfSources  *sources,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_query_metainfo</NAME>
 <RETURNS>GConfMetaInfo *</RETURNS>
-GConfSources* sources,const gchar* key,GConfError** err
+GConfSources* sources,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_query_default_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources* sources,const gchar* key,const gchar** locales,GConfError** err
+GConfSources* sources,const gchar* key,const gchar** locales,GError** err
 </FUNCTION>
 <ENUM>
 <NAME>GConfValueType</NAME>
@@ -1165,7 +1165,7 @@ GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gboolean 
 <FUNCTION>
 <NAME>gconf_notify_add</NAME>
 <RETURNS>guint  </RETURNS>
-GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GConfError      **err
+GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GError      **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_notify_remove</NAME>
@@ -1175,62 +1175,62 @@ GConfEngine      *conf,guint             cnxn
 <FUNCTION>
 <NAME>gconf_get</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_without_default</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_full</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,gboolean     *value_is_default,GConfError  **err
+GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,gboolean     *value_is_default,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_with_locale</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *locale,GConfError  **err
+GConfEngine  *conf,const gchar  *key,const gchar  *locale,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_default_from_schema</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfValue   *value,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GConfValue   *value,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_unset</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_associate_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfEngine  *conf,const gchar  *dir,GConfError  **err
+GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfEngine  *conf,const gchar  *dir,GConfError  **err
+GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_suggest_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfEngine  *conf,GConfError  **err
+GConfEngine  *conf,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *dir,GConfError  **err
+GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_valid_key</NAME>
@@ -1255,77 +1255,77 @@ void
 <FUNCTION>
 <NAME>gconf_get_float</NAME>
 <RETURNS>gdouble  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_int</NAME>
 <RETURNS>gint  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_string</NAME>
 <RETURNS>gchar *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_schema</NAME>
 <RETURNS>GConfSchema *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_list</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_float</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gdouble          val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,gdouble          val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_int</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gint             val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,gint             val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_string</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,const gchar     *val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,const gchar     *val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gboolean         val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,gboolean         val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_list</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_init</NAME>
 <RETURNS>gboolean  </RETURNS>
-int argc, char **argv, GConfError** err
+int argc, char **argv, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_preinit</NAME>
@@ -1360,12 +1360,12 @@ GConfEnumStringPair  lookup_table[],gint                 enum_value
 <FUNCTION>
 <NAME>gconf_clear_cache</NAME>
 <RETURNS>void  </RETURNS>
-GConfEngine* conf, GConfError** err
+GConfEngine* conf, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_synchronous_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfEngine* conf, GConfError** err
+GConfEngine* conf, GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfLocaleCache</NAME>
@@ -2567,12 +2567,12 @@ const gchar* str
 <FUNCTION>
 <NAME>gconf_load_source_path</NAME>
 <RETURNS>gchar **</RETURNS>
-const gchar* filename, GConfError** err
+const gchar* filename, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_shutdown_daemon</NAME>
 <RETURNS>void  </RETURNS>
-GConfError** err
+GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_ping_daemon</NAME>
@@ -2582,7 +2582,7 @@ void
 <FUNCTION>
 <NAME>gconf_spawn_daemon</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfError** err
+GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_string_to_gulong</NAME>
@@ -2625,12 +2625,12 @@ GConfLogPriority pri, const gchar* format, ...
 <FUNCTION>
 <NAME>gconf_key_check</NAME>
 <RETURNS>gboolean  </RETURNS>
-const gchar* key, GConfError** err
+const gchar* key, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_new_from_string</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfValueType type, const gchar* str,GConfError** err
+GConfValueType type, const gchar* str,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_new_list_from_string</NAME>
@@ -2650,12 +2650,12 @@ const gchar* str
 <FUNCTION>
 <NAME>gconf_unquote_string</NAME>
 <RETURNS>gchar *</RETURNS>
-const gchar* str, const gchar** end, GConfError** err
+const gchar* str, const gchar** end, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_unquote_string_inplace</NAME>
 <RETURNS>void  </RETURNS>
-gchar* str, gchar** end, GConfError** err
+gchar* str, gchar** end, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_decode</NAME>
@@ -2685,12 +2685,12 @@ GConfValueType car_type,GConfValueType cdr_type,gconstpointer address_of_car,gco
 <FUNCTION>
 <NAME>gconf_value_list_to_primitive_list_destructive</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfValue* val,GConfValueType list_type,GConfError** err
+GConfValue* val,GConfValueType list_type,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_pair_to_primitive_pair_destructive</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GConfError** err
+GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_daemon_mode</NAME>
@@ -2715,7 +2715,7 @@ void
 <FUNCTION>
 <NAME>gconf_handle_oaf_exception</NAME>
 <RETURNS>gboolean  </RETURNS>
-CORBA_Environment* ev, GConfError** err
+CORBA_Environment* ev, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_nanosleep</NAME>
@@ -2728,12 +2728,12 @@ gulong useconds
 <FUNCTION>
 <NAME>gconf_get_lock</NAME>
 <RETURNS>GConfLock *</RETURNS>
-const gchar* lock_directory,GConfError** err
+const gchar* lock_directory,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_release_lock</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfLock* lock,GConfError** err
+GConfLock* lock,GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfChangeSet</NAME>
@@ -2749,22 +2749,22 @@ GConfChangeSet* cs,
 <FUNCTION>
 <NAME>gconf_commit_change_set</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GConfError** err
+GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_create_reverse_change_set</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,GConfChangeSet* cs,GConfError** err
+GConfEngine* conf,GConfChangeSet* cs,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_create_change_set_from_currentv</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,const gchar** keys,GConfError** err
+GConfEngine* conf,const gchar** keys,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_create_change_set_from_current</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,GConfError** err,const gchar* first_key,...
+GConfEngine* conf,GError** err,const gchar* first_key,...
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_change_set_new</NAME>
@@ -2991,7 +2991,7 @@ GConfClient* client, gpointer user_data
 <USER_FUNCTION>
 <NAME>GConfClientErrorHandlerFunc</NAME>
 <RETURNS>void </RETURNS>
-GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GConfError* error
+GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GError* error
 </USER_FUNCTION>
 <MACRO>
 <NAME>GCONF_TYPE_CLIENT</NAME>
@@ -3048,7 +3048,7 @@ GConfEngine* engine
 <FUNCTION>
 <NAME>gconf_client_add_dir</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,const gchar* dir,GConfClientPreloadType preload,GConfError** err
+GConfClient* client,const gchar* dir,GConfClientPreloadType preload,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_remove_dir</NAME>
@@ -3058,7 +3058,7 @@ GConfClient* client,const gchar* dir
 <FUNCTION>
 <NAME>gconf_client_notify_add</NAME>
 <RETURNS>guint  </RETURNS>
-GConfClient* client,const gchar* namespace_section,GConfClientNotifyFunc func,gpointer user_data,GFreeFunc destroy_notify,GConfError** err
+GConfClient* client,const gchar* namespace_section,GConfClientNotifyFunc func,gpointer user_data,GFreeFunc destroy_notify,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_notify_remove</NAME>
@@ -3083,137 +3083,137 @@ GConfClient* client
 <FUNCTION>
 <NAME>gconf_client_preload</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,const gchar* dirname,GConfClientPreloadType type,GConfError** err
+GConfClient* client,const gchar* dirname,GConfClientPreloadType type,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,const gchar* key,GConfValue* val,GConfError** err
+GConfClient* client,const gchar* key,GConfValue* val,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key,GConfError** err
+GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_without_default</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key,GConfError** err
+GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_full</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key, const gchar* locale,gboolean use_schema_default,gboolean* value_is_default,GConfError** err
+GConfClient* client,const gchar* key, const gchar* locale,gboolean use_schema_default,gboolean* value_is_default,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_default_from_schema</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key,GConfError** err
+GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_unset</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client,const gchar* key, GConfError** err
+GConfClient* client,const gchar* key, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfClient* client,const gchar* dir, GConfError** err
+GConfClient* client,const gchar* dir, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfClient* client,const gchar* dir, GConfError** err
+GConfClient* client,const gchar* dir, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_suggest_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,GConfError** err
+GConfClient* client,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client,const gchar* dir, GConfError** err
+GConfClient* client,const gchar* dir, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_float</NAME>
 <RETURNS>gdouble  </RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_int</NAME>
 <RETURNS>gint  </RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_string</NAME>
 <RETURNS>gchar *</RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_schema</NAME>
 <RETURNS>GConfSchema *</RETURNS>
-GConfClient* client,const gchar* key, GConfError** err
+GConfClient* client,const gchar* key, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_list</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfClient* client, const gchar* key,GConfValueType list_type, GConfError** err
+GConfClient* client, const gchar* key,GConfValueType list_type, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gpointer car_retloc, gpointer cdr_retloc,GConfError** err
+GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gpointer car_retloc, gpointer cdr_retloc,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_float</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,gdouble val, GConfError** err
+GConfClient* client, const gchar* key,gdouble val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_int</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,gint val, GConfError** err
+GConfClient* client, const gchar* key,gint val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_string</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,const gchar* val, GConfError** err
+GConfClient* client, const gchar* key,const gchar* val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,gboolean val, GConfError** err
+GConfClient* client, const gchar* key,gboolean val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfSchema* val, GConfError** err
+GConfClient* client, const gchar* key,GConfSchema* val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_list</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfValueType list_type,GSList* list,GConfError** err
+GConfClient* client, const gchar* key,GConfValueType list_type,GSList* list,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr,GConfError** err
+GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client, GConfError* error
+GConfClient* client, GError* error
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_unreturned_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client, GConfError* error
+GConfClient* client, GError* error
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_value_changed</NAME>
@@ -3223,22 +3223,22 @@ GConfClient* client,const gchar* key,GConfValue* value
 <FUNCTION>
 <NAME>gconf_client_commit_change_set</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client,GConfChangeSet* cs,gboolean remove_committed,GConfError** err
+GConfClient* client,GConfChangeSet* cs,gboolean remove_committed,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_create_reverse_change_set</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfClient* client,GConfChangeSet* cs,GConfError** err
+GConfClient* client,GConfChangeSet* cs,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_create_change_set_from_currentv</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfClient* client,const gchar** keys,GConfError** err
+GConfClient* client,const gchar** keys,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_create_change_set_from_current</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfClient* client,GConfError** err,const gchar* first_key,...
+GConfClient* client,GError** err,const gchar* first_key,...
 </FUNCTION>
 <MACRO>
 <NAME>GCONF_PROC</NAME>
@@ -3537,12 +3537,12 @@ const gchar* str
 <FUNCTION>
 <NAME>gconf_load_source_path</NAME>
 <RETURNS>gchar **</RETURNS>
-const gchar* filename, GConfError** err
+const gchar* filename, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_shutdown_daemon</NAME>
 <RETURNS>void  </RETURNS>
-GConfError** err
+GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_ping_daemon</NAME>
@@ -3552,7 +3552,7 @@ void
 <FUNCTION>
 <NAME>gconf_spawn_daemon</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfError** err
+GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_string_to_gulong</NAME>
@@ -3595,12 +3595,12 @@ GConfLogPriority pri, const gchar* format, ...
 <FUNCTION>
 <NAME>gconf_key_check</NAME>
 <RETURNS>gboolean  </RETURNS>
-const gchar* key, GConfError** err
+const gchar* key, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_new_from_string</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfValueType type, const gchar* str,GConfError** err
+GConfValueType type, const gchar* str,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_new_list_from_string</NAME>
@@ -3620,12 +3620,12 @@ const gchar* str
 <FUNCTION>
 <NAME>gconf_unquote_string</NAME>
 <RETURNS>gchar *</RETURNS>
-const gchar* str, const gchar** end, GConfError** err
+const gchar* str, const gchar** end, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_unquote_string_inplace</NAME>
 <RETURNS>void  </RETURNS>
-gchar* str, gchar** end, GConfError** err
+gchar* str, gchar** end, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_decode</NAME>
@@ -3655,12 +3655,12 @@ GConfValueType car_type,GConfValueType cdr_type,gconstpointer address_of_car,gco
 <FUNCTION>
 <NAME>gconf_value_list_to_primitive_list_destructive</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfValue* val,GConfValueType list_type,GConfError** err
+GConfValue* val,GConfValueType list_type,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_value_pair_to_primitive_pair_destructive</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GConfError** err
+GConfValue* val,GConfValueType car_type,GConfValueType cdr_type,gpointer car_retloc,gpointer cdr_retloc,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_daemon_mode</NAME>
@@ -3685,7 +3685,7 @@ void
 <FUNCTION>
 <NAME>gconf_handle_oaf_exception</NAME>
 <RETURNS>gboolean  </RETURNS>
-CORBA_Environment* ev, GConfError** err
+CORBA_Environment* ev, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_nanosleep</NAME>
@@ -3698,12 +3698,12 @@ gulong useconds
 <FUNCTION>
 <NAME>gconf_get_lock</NAME>
 <RETURNS>GConfLock *</RETURNS>
-const gchar* lock_directory,GConfError** err
+const gchar* lock_directory,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_release_lock</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfLock* lock,GConfError** err
+GConfLock* lock,GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfLocaleCache</NAME>
@@ -4867,7 +4867,7 @@ typedef enum {
 <FUNCTION>
 <NAME>gconf_resolve_address</NAME>
 <RETURNS>GConfSource *</RETURNS>
-const gchar* address,GConfError** err
+const gchar* address,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_source_destroy</NAME>
@@ -4887,7 +4887,7 @@ struct GConfSources {
 <FUNCTION>
 <NAME>gconf_sources_new_from_addresses</NAME>
 <RETURNS>GConfSources *</RETURNS>
-const gchar **addresses,GConfError   **err
+const gchar **addresses,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_new_from_source</NAME>
@@ -4907,57 +4907,57 @@ GConfSources  *sources
 <FUNCTION>
 <NAME>gconf_sources_query_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,GConfError   **err
+GConfSources  *sources,const gchar   *key,const gchar  **locales,gboolean       use_schema_default,gboolean      *value_is_default,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *key,GConfValue    *value,GConfError   **err
+GConfSources  *sources,const gchar   *key,GConfValue    *value,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_unset_value</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar   *locale,GConfError   **err
+GConfSources  *sources,const gchar   *key,const gchar   *locale,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfSources  *sources,const gchar   *dir,const gchar  **locales,GConfError   **err
+GConfSources  *sources,const gchar   *dir,const gchar  **locales,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfSources  *sources,const gchar   *dir,GConfError   **err
+GConfSources  *sources,const gchar   *dir,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfSources  *sources,const gchar   *dir,GConfError   **err
+GConfSources  *sources,const gchar   *dir,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_remove_dir</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *dir,GConfError   **err
+GConfSources  *sources,const gchar   *dir,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_set_schema</NAME>
 <RETURNS>void  </RETURNS>
-GConfSources  *sources,const gchar   *key,const gchar   *schema_key,GConfError   **err
+GConfSources  *sources,const gchar   *key,const gchar   *schema_key,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_sync_all</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfSources  *sources,GConfError   **err
+GConfSources  *sources,GError   **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_query_metainfo</NAME>
 <RETURNS>GConfMetaInfo *</RETURNS>
-GConfSources* sources,const gchar* key,GConfError** err
+GConfSources* sources,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_sources_query_default_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfSources* sources,const gchar* key,const gchar** locales,GConfError** err
+GConfSources* sources,const gchar* key,const gchar** locales,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_is_initialized</NAME>
@@ -4972,7 +4972,7 @@ GConfEngine* conf, guint cnxn_id, const gchar* key, GConfValue* value, gboolean 
 <FUNCTION>
 <NAME>gconf_notify_add</NAME>
 <RETURNS>guint  </RETURNS>
-GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GConfError      **err
+GConfEngine      *conf,const gchar      *namespace_section,GConfNotifyFunc   func,gpointer          user_data,GError      **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_notify_remove</NAME>
@@ -4982,62 +4982,62 @@ GConfEngine      *conf,guint             cnxn
 <FUNCTION>
 <NAME>gconf_get</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_without_default</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_full</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,gboolean     *value_is_default,GConfError  **err
+GConfEngine  *conf,const gchar  *key,const gchar  *locale,gboolean      use_schema_default,gboolean     *value_is_default,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_with_locale</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *locale,GConfError  **err
+GConfEngine  *conf,const gchar  *key,const gchar  *locale,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_default_from_schema</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfValue   *value,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GConfValue   *value,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_unset</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_associate_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GConfError  **err
+GConfEngine  *conf,const gchar  *key,const gchar  *schema_key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfEngine  *conf,const gchar  *dir,GConfError  **err
+GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfEngine  *conf,const gchar  *dir,GConfError  **err
+GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_suggest_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfEngine  *conf,GConfError  **err
+GConfEngine  *conf,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine  *conf,const gchar  *dir,GConfError  **err
+GConfEngine  *conf,const gchar  *dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_valid_key</NAME>
@@ -5062,77 +5062,77 @@ void
 <FUNCTION>
 <NAME>gconf_get_float</NAME>
 <RETURNS>gdouble  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_int</NAME>
 <RETURNS>gint  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_string</NAME>
 <RETURNS>gchar *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_schema</NAME>
 <RETURNS>GConfSchema *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_list</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_get_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gpointer         car_retloc,gpointer         cdr_retloc,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_float</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gdouble          val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,gdouble          val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_int</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gint             val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,gint             val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_string</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,const gchar     *val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,const gchar     *val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,gboolean         val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,gboolean         val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfSchema     *val,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_list</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   list_type,GSList          *list,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GConfError     **err
+GConfEngine     *conf,const gchar     *key,GConfValueType   car_type,GConfValueType   cdr_type,gconstpointer    address_of_car,gconstpointer    address_of_cdr,GError     **err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_init</NAME>
 <RETURNS>gboolean  </RETURNS>
-int argc, char **argv, GConfError** err
+int argc, char **argv, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_preinit</NAME>
@@ -5167,12 +5167,12 @@ GConfEnumStringPair  lookup_table[],gint                 enum_value
 <FUNCTION>
 <NAME>gconf_clear_cache</NAME>
 <RETURNS>void  </RETURNS>
-GConfEngine* conf, GConfError** err
+GConfEngine* conf, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_synchronous_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfEngine* conf, GConfError** err
+GConfEngine* conf, GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfBackendVTable</NAME>
@@ -5180,10 +5180,10 @@ GConfEngine* conf, GConfError** err
 <STRUCT>
 <NAME>GConfBackendVTable</NAME>
 struct GConfBackendVTable {
-  void                (* shutdown)        (GConfError** err);
+  void                (* shutdown)        (GError** err);
 
   GConfSource*        (* resolve_address) (const gchar* address,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Thread locks. If the backend is thread-safe, then these
    * can be NULL. If per-source locks are needed, then these
@@ -5192,10 +5192,10 @@ struct GConfBackendVTable {
    * their source argument and lock the whole backend.
    */
   void                (* lock)            (GConfSource* source,
-                                           GConfError** err);
+                                           GError** err);
 
   void                (* unlock)          (GConfSource* source,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Report whether a given key (and its subkeys) can be read/written.
    * Sources may not permit reading/writing from/to /foo but forbid
@@ -5212,11 +5212,11 @@ struct GConfBackendVTable {
 
   gboolean           (* readable)         (GConfSource* source,
                                            const gchar* key,
-                                           GConfError** err);
+                                           GError** err);
 
   gboolean           (* writeable)        (GConfSource* source,
                                            const gchar* key,
-                                           GConfError** err);
+                                           GError** err);
   
   /* schema_name filled if NULL or GCONF_VALUE_IGNORE_SUBSEQUENT returned.
      if schema_name is NULL, it isn't filled */
@@ -5224,48 +5224,48 @@ struct GConfBackendVTable {
                                            const gchar* key,
                                            const gchar** locales,
                                            gchar** schema_name,
-                                           GConfError** err);
+                                           GError** err);
   
   GConfMetaInfo*      (* query_metainfo)  (GConfSource* source,
                                            const gchar* key,
-                                           GConfError** err);
+                                           GError** err);
   
   void                (* set_value)       (GConfSource* source, 
                                            const gchar* key, 
                                            GConfValue* value,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Returns list of GConfEntry */
   GSList*             (* all_entries)     (GConfSource* source,
                                            const gchar* dir,
                                            const gchar** locales,
-                                           GConfError** err);
+                                           GError** err);
 
   /* Returns list of allocated strings, relative names */
   GSList*             (* all_subdirs)     (GConfSource* source,
                                            const gchar* dir,
-                                           GConfError** err);
+                                           GError** err);
 
   void                (* unset_value)     (GConfSource* source,
                                            const gchar* key,
                                            const gchar* locale,
-                                           GConfError** err);
+                                           GError** err);
 
   gboolean            (* dir_exists)      (GConfSource* source,
                                            const gchar* dir,
-                                           GConfError** err);
+                                           GError** err);
         
   void                (* remove_dir)      (GConfSource* source,
                                            const gchar* dir,
-                                           GConfError** err);
+                                           GError** err);
   
   void                (* set_schema)      (GConfSource* source,
                                            const gchar* key,
                                            const gchar* schema_key,
-                                           GConfError** err);
+                                           GError** err);
 
   gboolean            (* sync_all)        (GConfSource* source,
-                                           GConfError** err);
+                                           GError** err);
 
   void                (* destroy_source)  (GConfSource* source);
 
@@ -5305,7 +5305,7 @@ const gchar* address
 <FUNCTION>
 <NAME>gconf_get_backend</NAME>
 <RETURNS>GConfBackend *</RETURNS>
-const gchar* address, GConfError** err
+const gchar* address, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_backend_ref</NAME>
@@ -5320,7 +5320,7 @@ GConfBackend* backend
 <FUNCTION>
 <NAME>gconf_backend_resolve_address</NAME>
 <RETURNS>GConfSource *</RETURNS>
-GConfBackend* backend,const gchar* address,GConfError** err
+GConfBackend* backend,const gchar* address,GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>GConfChangeSet</NAME>
@@ -5336,22 +5336,22 @@ GConfChangeSet* cs,
 <FUNCTION>
 <NAME>gconf_commit_change_set</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GConfError** err
+GConfEngine* conf,GConfChangeSet* cs,gboolean remove_committed,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_create_reverse_change_set</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,GConfChangeSet* cs,GConfError** err
+GConfEngine* conf,GConfChangeSet* cs,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_create_change_set_from_currentv</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,const gchar** keys,GConfError** err
+GConfEngine* conf,const gchar** keys,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_create_change_set_from_current</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfEngine* conf,GConfError** err,const gchar* first_key,...
+GConfEngine* conf,GError** err,const gchar* first_key,...
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_change_set_new</NAME>
@@ -5859,7 +5859,7 @@ GConfEntry  *entry,const gchar *name
 GConfEntry  *entry,gboolean     is_default
 </FUNCTION>
 <ENUM>
-<NAME>GConfErrNo</NAME>
+<NAME>GConfError</NAME>
 typedef enum {
   GCONF_ERROR_SUCCESS = 0,
   GCONF_ERROR_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
@@ -5879,53 +5879,53 @@ typedef enum {
   GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
   GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
   GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
-} GConfErrNo;
+} GConfError;
 </ENUM>
 <STRUCT>
-<NAME>GConfError</NAME>
+<NAME>GError</NAME>
 </STRUCT>
 <STRUCT>
-<NAME>GConfError</NAME>
-struct GConfError {
+<NAME>GError</NAME>
+struct GError {
   const gchar* str; /* combination of strerror of the num and additional
                        details; a complete error message. */
-  GConfErrNo num;
+  GConfError num;
 };
 </STRUCT>
 <FUNCTION>
 <NAME>gconf_error_new</NAME>
-<RETURNS>GConfError *</RETURNS>
-GConfErrNo en, const gchar* format, ...
+<RETURNS>GError *</RETURNS>
+GConfError en, const gchar* format, ...
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_error_copy</NAME>
-<RETURNS>GConfError *</RETURNS>
-GConfError* err
+<NAME>g_error_copy</NAME>
+<RETURNS>GError *</RETURNS>
+GError* err
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_error_destroy</NAME>
+<NAME>g_error_free</NAME>
 <RETURNS>void  </RETURNS>
-GConfError* err
+GError* err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_set_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfError** err, GConfErrNo en, const gchar* format, ...
+GError** err, GConfError en, const gchar* format, ...
 </FUNCTION>
 <FUNCTION>
-<NAME>gconf_clear_error</NAME>
+<NAME>g_clear_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfError** err
+GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_compose_errors</NAME>
-<RETURNS>GConfError *</RETURNS>
-GConfError* err1, GConfError* err2
+<RETURNS>GError *</RETURNS>
+GError* err1, GError* err2
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_strerror</NAME>
 <RETURNS>const gchar *</RETURNS>
-GConfErrNo en
+GConfError en
 </FUNCTION>
 <STRUCT>
 <NAME>GConfEngine</NAME>
@@ -5944,7 +5944,7 @@ void
 <FUNCTION>
 <NAME>gconf_engine_new_from_address</NAME>
 <RETURNS>GConfEngine *</RETURNS>
-const gchar* address, GConfError** err
+const gchar* address, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_engine_unref</NAME>
@@ -5959,7 +5959,7 @@ GConfEngine* conf
 <FUNCTION>
 <NAME>gconf_engine_new_local</NAME>
 <RETURNS>GConfEngine *</RETURNS>
-const gchar* address, GConfError** err
+const gchar* address, GError** err
 </FUNCTION>
 <STRUCT>
 <NAME>Cache</NAME>
@@ -5977,7 +5977,7 @@ Cache        *cache
 <FUNCTION>
 <NAME>cache_sync</NAME>
 <RETURNS>gboolean  </RETURNS>
-Cache        *cache,GConfError  **err
+Cache        *cache,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>cache_clean</NAME>
@@ -5987,12 +5987,12 @@ Cache        *cache,GTime         older_than
 <FUNCTION>
 <NAME>cache_delete_dir</NAME>
 <RETURNS>void  </RETURNS>
-Cache        *cache,const gchar  *key,GConfError  **err
+Cache        *cache,const gchar  *key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>cache_lookup</NAME>
 <RETURNS>Dir *</RETURNS>
-Cache        *cache,const gchar  *key,gboolean create_if_missing,GConfError  **err
+Cache        *cache,const gchar  *key,gboolean create_if_missing,GError  **err
 </FUNCTION>
 <STRUCT>
 <NAME>Dir</NAME>
@@ -6005,7 +6005,7 @@ const gchar  *keyname,const gchar  *xml_root_dir,guint dir_mode,guint file_mode
 <FUNCTION>
 <NAME>dir_load</NAME>
 <RETURNS>Dir *</RETURNS>
-const gchar  *key,const gchar  *xml_root_dir,GConfError  **err
+const gchar  *key,const gchar  *xml_root_dir,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_destroy</NAME>
@@ -6020,12 +6020,12 @@ Dir          *d
 <FUNCTION>
 <NAME>dir_ensure_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-Dir          *d,GConfError  **err
+Dir          *d,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_sync</NAME>
 <RETURNS>gboolean  </RETURNS>
-Dir          *d,GConfError  **err
+Dir          *d,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_name</NAME>
@@ -6035,37 +6035,37 @@ Dir          *d
 <FUNCTION>
 <NAME>dir_set_value</NAME>
 <RETURNS>void  </RETURNS>
-Dir          *d,const gchar  *relative_key,GConfValue   *value,GConfError  **err
+Dir          *d,const gchar  *relative_key,GConfValue   *value,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-Dir          *d,const gchar  *relative_key,const gchar **locales,gchar       **schema_name,GConfError  **err
+Dir          *d,const gchar  *relative_key,const gchar **locales,gchar       **schema_name,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_metainfo</NAME>
 <RETURNS>GConfMetaInfo *</RETURNS>
-Dir          *d,const gchar  *relative_key,GConfError  **err
+Dir          *d,const gchar  *relative_key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_unset_value</NAME>
 <RETURNS>void  </RETURNS>
-Dir          *d,const gchar  *relative_key,const gchar  *locale,GConfError  **err
+Dir          *d,const gchar  *relative_key,const gchar  *locale,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-Dir          *d,const gchar **locales,GConfError  **err
+Dir          *d,const gchar **locales,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_all_subdirs</NAME>
 <RETURNS>GSList *</RETURNS>
-Dir          *d,GConfError  **err
+Dir          *d,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_set_schema</NAME>
 <RETURNS>void  </RETURNS>
-Dir          *d,const gchar  *relative_key,const gchar  *schema_key,GConfError  **err
+Dir          *d,const gchar  *relative_key,const gchar  *schema_key,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>dir_get_last_access</NAME>
@@ -6133,7 +6133,7 @@ Entry        *entry
 <FUNCTION>
 <NAME>entry_get_value</NAME>
 <RETURNS>GConfValue *</RETURNS>
-Entry        *entry,const gchar **locales,GConfError  **err
+Entry        *entry,const gchar **locales,GError  **err
 </FUNCTION>
 <FUNCTION>
 <NAME>entry_set_value</NAME>
@@ -6215,7 +6215,7 @@ GConfClient* client, gpointer user_data
 <USER_FUNCTION>
 <NAME>GConfClientErrorHandlerFunc</NAME>
 <RETURNS>void </RETURNS>
-GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GConfError* error
+GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GError* error
 </USER_FUNCTION>
 <MACRO>
 <NAME>GCONF_TYPE_CLIENT</NAME>
@@ -6272,7 +6272,7 @@ GConfEngine* engine
 <FUNCTION>
 <NAME>gconf_client_add_dir</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,const gchar* dir,GConfClientPreloadType preload,GConfError** err
+GConfClient* client,const gchar* dir,GConfClientPreloadType preload,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_remove_dir</NAME>
@@ -6282,7 +6282,7 @@ GConfClient* client,const gchar* dir
 <FUNCTION>
 <NAME>gconf_client_notify_add</NAME>
 <RETURNS>guint  </RETURNS>
-GConfClient* client,const gchar* namespace_section,GConfClientNotifyFunc func,gpointer user_data,GFreeFunc destroy_notify,GConfError** err
+GConfClient* client,const gchar* namespace_section,GConfClientNotifyFunc func,gpointer user_data,GFreeFunc destroy_notify,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_notify_remove</NAME>
@@ -6307,137 +6307,137 @@ GConfClient* client
 <FUNCTION>
 <NAME>gconf_client_preload</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,const gchar* dirname,GConfClientPreloadType type,GConfError** err
+GConfClient* client,const gchar* dirname,GConfClientPreloadType type,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,const gchar* key,GConfValue* val,GConfError** err
+GConfClient* client,const gchar* key,GConfValue* val,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key,GConfError** err
+GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_without_default</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key,GConfError** err
+GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_full</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key, const gchar* locale,gboolean use_schema_default,gboolean* value_is_default,GConfError** err
+GConfClient* client,const gchar* key, const gchar* locale,gboolean use_schema_default,gboolean* value_is_default,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_default_from_schema</NAME>
 <RETURNS>GConfValue *</RETURNS>
-GConfClient* client,const gchar* key,GConfError** err
+GConfClient* client,const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_unset</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client,const gchar* key, GConfError** err
+GConfClient* client,const gchar* key, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_all_entries</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfClient* client,const gchar* dir, GConfError** err
+GConfClient* client,const gchar* dir, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_all_dirs</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfClient* client,const gchar* dir, GConfError** err
+GConfClient* client,const gchar* dir, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_suggest_sync</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client,GConfError** err
+GConfClient* client,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_dir_exists</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client,const gchar* dir, GConfError** err
+GConfClient* client,const gchar* dir, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_float</NAME>
 <RETURNS>gdouble  </RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_int</NAME>
 <RETURNS>gint  </RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_string</NAME>
 <RETURNS>gchar *</RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfError** err
+GConfClient* client, const gchar* key,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_schema</NAME>
 <RETURNS>GConfSchema *</RETURNS>
-GConfClient* client,const gchar* key, GConfError** err
+GConfClient* client,const gchar* key, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_list</NAME>
 <RETURNS>GSList *</RETURNS>
-GConfClient* client, const gchar* key,GConfValueType list_type, GConfError** err
+GConfClient* client, const gchar* key,GConfValueType list_type, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_get_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gpointer car_retloc, gpointer cdr_retloc,GConfError** err
+GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gpointer car_retloc, gpointer cdr_retloc,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_float</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,gdouble val, GConfError** err
+GConfClient* client, const gchar* key,gdouble val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_int</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,gint val, GConfError** err
+GConfClient* client, const gchar* key,gint val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_string</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,const gchar* val, GConfError** err
+GConfClient* client, const gchar* key,const gchar* val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_bool</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,gboolean val, GConfError** err
+GConfClient* client, const gchar* key,gboolean val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_schema</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfSchema* val, GConfError** err
+GConfClient* client, const gchar* key,GConfSchema* val, GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_list</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfValueType list_type,GSList* list,GConfError** err
+GConfClient* client, const gchar* key,GConfValueType list_type,GSList* list,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_set_pair</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr,GConfError** err
+GConfClient* client, const gchar* key,GConfValueType car_type, GConfValueType cdr_type,gconstpointer address_of_car,gconstpointer address_of_cdr,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client, GConfError* error
+GConfClient* client, GError* error
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_unreturned_error</NAME>
 <RETURNS>void  </RETURNS>
-GConfClient* client, GConfError* error
+GConfClient* client, GError* error
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_value_changed</NAME>
@@ -6447,22 +6447,22 @@ GConfClient* client,const gchar* key,GConfValue* value
 <FUNCTION>
 <NAME>gconf_client_commit_change_set</NAME>
 <RETURNS>gboolean  </RETURNS>
-GConfClient* client,GConfChangeSet* cs,gboolean remove_committed,GConfError** err
+GConfClient* client,GConfChangeSet* cs,gboolean remove_committed,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_create_reverse_change_set</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfClient* client,GConfChangeSet* cs,GConfError** err
+GConfClient* client,GConfChangeSet* cs,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_create_change_set_from_currentv</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfClient* client,const gchar** keys,GConfError** err
+GConfClient* client,const gchar** keys,GError** err
 </FUNCTION>
 <FUNCTION>
 <NAME>gconf_client_create_change_set_from_current</NAME>
 <RETURNS>GConfChangeSet *</RETURNS>
-GConfClient* client,GConfError** err,const gchar* first_key,...
+GConfClient* client,GError** err,const gchar* first_key,...
 </FUNCTION>
 <MACRO>
 <NAME>MO_REVISION_NUMBER</NAME>

@@ -83,7 +83,7 @@ typedef void (*GConfClientNotifyFunc)(GConfClient* client, guint cnxn_id, const 
 
 typedef GtkWidget* (*GConfClientParentWindowFunc) (GConfClient* client, gpointer user_data);
 
-typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GConfError* error);
+typedef void (*GConfClientErrorHandlerFunc) (GConfClient* client, GConfClientParentWindowFunc parent_func, gpointer parent_user_data, GError* error);
 
 #define GCONF_TYPE_CLIENT                  (gconf_client_get_type ())
 #define GCONF_CLIENT(obj)                  (GTK_CHECK_CAST ((obj), GCONF_TYPE_CLIENT, GConfClient))
@@ -131,13 +131,13 @@ struct _GConfClientClass
      ignore errors when your generic handler will work, and handle
      them specifically when you need to */
   void (* unreturned_error) (GConfClient* client,
-                             GConfError* error);
+                             GError* error);
 
   /* emitted unconditionally anytime there's an error, whether you ask
      for that error or not. Useful for creating an error log or
      something. */
   void (* error)            (GConfClient* client,
-                             GConfError* error);
+                             GError* error);
 };
 
 
@@ -158,13 +158,13 @@ GConfClient*      gconf_client_get_for_engine (GConfEngine* engine);
 void              gconf_client_add_dir     (GConfClient* client,
                                             const gchar* dir,
                                             GConfClientPreloadType preload,
-                                            GConfError** err);
+                                            GError** err);
 
 
 /* This removes any notifications associated with the dir */
 void              gconf_client_remove_dir  (GConfClient* client,
                                             const gchar* dir,
-                                            GConfError** err);
+                                            GError** err);
 
 /*
  *  The notification facility allows you to attach a callback to a single
@@ -181,7 +181,7 @@ guint        gconf_client_notify_add(GConfClient* client,
                                      GConfClientNotifyFunc func,
                                      gpointer user_data,
                                      GFreeFunc destroy_notify,
-                                     GConfError** err);
+                                     GError** err);
 
 void         gconf_client_notify_remove  (GConfClient* client,
                                           guint cnxn);
@@ -224,7 +224,7 @@ void              gconf_client_clear_cache(GConfClient* client);
 void              gconf_client_preload    (GConfClient* client,
                                            const gchar* dirname,
                                            GConfClientPreloadType type,
-                                           GConfError** err);
+                                           GError** err);
 
 /*
  * Basic key-manipulation facilities; these keys do _not_ have to be in the
@@ -234,56 +234,56 @@ void              gconf_client_preload    (GConfClient* client,
 void              gconf_client_set             (GConfClient* client,
                                                 const gchar* key,
                                                 GConfValue* val,
-                                                GConfError** err);
+                                                GError** err);
 
 GConfValue*       gconf_client_get             (GConfClient* client,
                                                 const gchar* key,
-                                                GConfError** err);
+                                                GError** err);
 
 GConfValue*       gconf_client_get_without_default  (GConfClient* client,
                                                      const gchar* key,
-                                                     GConfError** err);
+                                                     GError** err);
 
 /* Try not to use this function, it makes me nervous. */
 GConfValue*       gconf_client_get_full        (GConfClient* client,
                                                 const gchar* key, const gchar* locale,
                                                 gboolean use_schema_default,
                                                 gboolean* value_is_default,
-                                                GConfError** err);
+                                                GError** err);
 
 GConfValue*       gconf_client_get_default_from_schema (GConfClient* client,
                                                         const gchar* key,
-                                                        GConfError** err);
+                                                        GError** err);
 
 gboolean     gconf_client_unset          (GConfClient* client,
-                                          const gchar* key, GConfError** err);
+                                          const gchar* key, GError** err);
 
 GSList*      gconf_client_all_entries    (GConfClient* client,
-                                          const gchar* dir, GConfError** err);
+                                          const gchar* dir, GError** err);
 
 GSList*      gconf_client_all_dirs       (GConfClient* client,
-                                          const gchar* dir, GConfError** err);
+                                          const gchar* dir, GError** err);
 
 void         gconf_client_suggest_sync   (GConfClient* client,
-                                          GConfError** err);
+                                          GError** err);
 
 gboolean     gconf_client_dir_exists     (GConfClient* client,
-                                          const gchar* dir, GConfError** err);
+                                          const gchar* dir, GError** err);
 
 /* Get/Set convenience wrappers */
 
 gdouble      gconf_client_get_float (GConfClient* client, const gchar* key,
-                                     GConfError** err);
+                                     GError** err);
 
 gint         gconf_client_get_int   (GConfClient* client, const gchar* key,
-                                     GConfError** err);
+                                     GError** err);
 
 /* free the retval, if non-NULL */
 gchar*       gconf_client_get_string(GConfClient* client, const gchar* key,
-                                     GConfError** err);
+                                     GError** err);
 
 gboolean     gconf_client_get_bool  (GConfClient* client, const gchar* key,
-                                     GConfError** err);
+                                     GError** err);
 
 /* this one has no default since it would be expensive and make little
    sense; it returns NULL as a default, to indicate unset or error */
@@ -291,15 +291,15 @@ gboolean     gconf_client_get_bool  (GConfClient* client, const gchar* key,
 /* Note that this returns the schema stored at key, NOT
    the schema that key conforms to. */
 GConfSchema* gconf_client_get_schema  (GConfClient* client,
-                                       const gchar* key, GConfError** err);
+                                       const gchar* key, GError** err);
 
 GSList*      gconf_client_get_list    (GConfClient* client, const gchar* key,
-                                       GConfValueType list_type, GConfError** err);
+                                       GConfValueType list_type, GError** err);
 
 gboolean     gconf_client_get_pair    (GConfClient* client, const gchar* key,
                                        GConfValueType car_type, GConfValueType cdr_type,
                                        gpointer car_retloc, gpointer cdr_retloc,
-                                       GConfError** err);
+                                       GError** err);
 
 /* No convenience functions for lists or pairs, since there are too
    many combinations of types possible
@@ -308,39 +308,39 @@ gboolean     gconf_client_get_pair    (GConfClient* client, const gchar* key,
 /* setters return TRUE on success; note that you still should suggest a sync */
 
 gboolean     gconf_client_set_float   (GConfClient* client, const gchar* key,
-                                       gdouble val, GConfError** err);
+                                       gdouble val, GError** err);
 
 gboolean     gconf_client_set_int     (GConfClient* client, const gchar* key,
-                                       gint val, GConfError** err);
+                                       gint val, GError** err);
 
 gboolean     gconf_client_set_string  (GConfClient* client, const gchar* key,
-                                       const gchar* val, GConfError** err);
+                                       const gchar* val, GError** err);
 
 gboolean     gconf_client_set_bool    (GConfClient* client, const gchar* key,
-                                       gboolean val, GConfError** err);
+                                       gboolean val, GError** err);
 
 gboolean     gconf_client_set_schema  (GConfClient* client, const gchar* key,
-                                       GConfSchema* val, GConfError** err);
+                                       GConfSchema* val, GError** err);
 
 /* List should be the same as the one gconf_client_get_list() would return */
 gboolean     gconf_client_set_list    (GConfClient* client, const gchar* key,
                                        GConfValueType list_type,
                                        GSList* list,
-                                       GConfError** err);
+                                       GError** err);
 
 gboolean     gconf_client_set_pair    (GConfClient* client, const gchar* key,
                                        GConfValueType car_type, GConfValueType cdr_type,
                                        gconstpointer address_of_car,
                                        gconstpointer address_of_cdr,
-                                       GConfError** err);
+                                       GError** err);
 
 /*
  * Functions to emit signals
  */
 
 /* these are useful to manually invoke the default error handlers */
-void         gconf_client_error                  (GConfClient* client, GConfError* error);
-void         gconf_client_unreturned_error       (GConfClient* client, GConfError* error);
+void         gconf_client_error                  (GConfClient* client, GError* error);
+void         gconf_client_unreturned_error       (GConfClient* client, GError* error);
 
 /* useful to force an update */
 void         gconf_client_value_changed          (GConfClient* client,
@@ -358,20 +358,20 @@ gboolean        gconf_client_commit_change_set   (GConfClient* client,
                                                      committed changes
                                                      from the set */
                                                   gboolean remove_committed,
-                                                  GConfError** err);
+                                                  GError** err);
 
 /* Create a change set that would revert the given change set
    for the given GConfClient */
 GConfChangeSet* gconf_client_create_reverse_change_set  (GConfClient* client,
                                                          GConfChangeSet* cs,
-                                                         GConfError** err);
+                                                         GError** err);
 
 GConfChangeSet* gconf_client_create_change_set_from_currentv (GConfClient* client,
                                                               const gchar** keys,
-                                                              GConfError** err);
+                                                              GError** err);
 
 GConfChangeSet* gconf_client_create_change_set_from_current (GConfClient* client,
-                                                             GConfError** err,
+                                                             GError** err,
                                                              const gchar* first_key,
                                                              ...);
 

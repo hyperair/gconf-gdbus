@@ -46,22 +46,22 @@ gboolean        gconf_commit_change_set   (GConfEngine* conf,
                                            /* remove all successfully committed
                                               changes from the set */
                                            gboolean remove_committed,
-                                           GConfError** err);
+                                           GError** err);
 
 /* Create a change set that would revert the given change set
    for the given GConfEngine */
 GConfChangeSet* gconf_create_reverse_change_set  (GConfEngine* conf,
                                                   GConfChangeSet* cs,
-                                                  GConfError** err);
+                                                  GError** err);
 
 /* Create a change set that would restore the current state of all the keys
    in the NULL-terminated array "keys" */
 GConfChangeSet* gconf_create_change_set_from_currentv (GConfEngine* conf,
                                                        const gchar** keys,
-                                                       GConfError** err);
+                                                       GError** err);
 
 GConfChangeSet* gconf_create_change_set_from_current (GConfEngine* conf,
-                                                      GConfError** err,
+                                                      GError** err,
                                                       const gchar* first_key,
                                                       ...);
 

@@ -114,7 +114,7 @@ static void                 register_database (GConfDatabase* db);
 static void                 unregister_database (GConfDatabase* db);
 static GConfDatabase*       lookup_database (const gchar *address);
 static GConfDatabase*       obtain_database (const gchar *address,
-                                             GConfError **err);
+                                             GError **err);
 static void                 drop_old_databases (void);
 
 /* 
@@ -176,7 +176,7 @@ gconfd_get_database(PortableServer_Servant servant,
                     CORBA_Environment* ev)
 {
   GConfDatabase *db;
-  GConfError* error = NULL;  
+  GError* error = NULL;  
 
   db = obtain_database (address, &error);
 
@@ -216,7 +216,7 @@ gconf_server_load_sources(void)
   gboolean have_writeable = FALSE;
   gchar* conffile;
   GConfSources* sources = NULL;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   conffile = g_strconcat(GCONF_CONFDIR, "/path", NULL);
 
@@ -271,9 +271,9 @@ gconf_server_load_sources(void)
       if (error != NULL)
         {
           gconf_log(GCL_ERR, _("Error loading some config sources: %s"),
-                    error->str);
+                    error->message);
 
-          gconf_error_destroy(error);
+          g_error_free(error);
           error = NULL;
         }
       
@@ -614,12 +614,12 @@ lookup_database (const gchar *address)
 
 static GConfDatabase*
 obtain_database (const gchar *address,
-                 GConfError **err)
+                 GError **err)
 {
   
   GConfSources* sources;
   const gchar* addresses[] = { address, NULL };
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfDatabase *db;
 
   db = lookup_database (address);
@@ -634,7 +634,7 @@ obtain_database (const gchar *address,
       if (err)
         *err = error;
       else
-        gconf_error_destroy (error);
+        g_error_free (error);
 
       return NULL;
     }
@@ -745,10 +745,10 @@ fast_cleanup(void)
 /* Exceptions */
 
 gboolean
-gconf_set_exception(GConfError** error,
+gconf_set_exception(GError** error,
                     CORBA_Environment* ev)
 {
-  GConfErrNo en;
+  GConfError en;
 
   if (error == NULL)
     return FALSE;
@@ -756,7 +756,7 @@ gconf_set_exception(GConfError** error,
   if (*error == NULL)
     return FALSE;
   
-  en = (*error)->num;
+  en = (*error)->code;
 
   /* success is not supposed to get set */
   g_return_val_if_fail(en != GCONF_ERROR_SUCCESS, FALSE);
@@ -767,8 +767,8 @@ gconf_set_exception(GConfError** error,
     ce = ConfigException__alloc();
     g_assert(error != NULL);
     g_assert(*error != NULL);
-    g_assert((*error)->str != NULL);
-    ce->message = CORBA_string_dup((gchar*)(*error)->str); /* cast const */
+    g_assert((*error)->message != NULL);
+    ce->message = CORBA_string_dup((gchar*)(*error)->message); /* cast const */
       
     switch (en)
       {
@@ -808,9 +808,9 @@ gconf_set_exception(GConfError** error,
     CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
                         ex_ConfigException, ce);
 
-    gconf_log(GCL_ERR, _("Returning exception: %s"), (*error)->str);
+    gconf_log(GCL_ERR, _("Returning exception: %s"), (*error)->message);
       
-    gconf_error_destroy(*error);
+    g_error_free(*error);
     *error = NULL;
       
     return TRUE;

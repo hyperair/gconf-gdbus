@@ -384,48 +384,48 @@
       </para>
 
       <para>
-        Errors are returned in a <structname>GConfError</structname> object.
-        <structname>GConfError</structname> has two public fields:
+        Errors are returned in a <structname>GError</structname> object.
+        <structname>GError</structname> has two public fields:
         <structfield>str</structfield> is an error message, and
         <structfield>num</structfield> is an <symbol>errno</symbol>-style
-        enumerated value with type <symbol>GConfErrNo</symbol>, useful for
+        enumerated value with type <symbol>GConfError</symbol>, useful for
         switching on an error and taking different actions depending on the
         exact error that occurred.
       </para>
 
       <para>
         GConf functions that potentially fail accept a
-        <symbol>GConfError**</symbol> argument, where they store a
-        <structname>GConfError</structname> object if the operation
+        <symbol>GError**</symbol> argument, where they store a
+        <structname>GError</structname> object if the operation
         fails. If no error occurs, the location pointed to by the
-        <symbol>GConfError**</symbol> is left unchanged. In all cases,
+        <symbol>GError**</symbol> is left unchanged. In all cases,
         you can pass <symbol>NULL</symbol> as the
-        <symbol>GConfError**</symbol>, to ignore any errors.  Needless
+        <symbol>GError**</symbol>, to ignore any errors.  Needless
         to say, normally you should report errors instead of ignoring
         them.
       </para>
 
       <para>
         If an error is returned, you must free it with
-        <function>gconf_error_destroy()</function>:
+        <function>g_error_free()</function>:
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
           <funcdef>void
-            <function>gconf_error_destroy</function>
+            <function>g_error_free</function>
           </funcdef>
-          <paramdef>GConfError* <parameter>error</parameter></paramdef>          
+          <paramdef>GError* <parameter>error</parameter></paramdef>          
         </funcsynopsis>
       </para>
 
       <para>
         Thus, a complete error-checking sequence might work like this:
         <programlisting>
-          GConfError* err = NULL;
+          GError* err = NULL;
 
           if (!gconf_init(&amp;err))
             {
-              fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-              gconf_error_destroy(err); 
+              fprintf(stderr, _("Failed to init GConf: %s\n"), err->message);
+              g_error_free(err); 
               err = NULL;
             }
         </programlisting>
@@ -445,7 +445,7 @@
       </para>
 
       <para>
-        The available values for <symbol>GConfErrNo</symbol> are:
+        The available values for <symbol>GConfError</symbol> are:
         <variablelist>
           <varlistentry><term>GCONF_SUCCESS</term>
             <listitem>
@@ -570,7 +570,7 @@
         <function>gconf_error_new()</function> is used inside the
         library and inside the library backends. It is typically not
         useful to clients. It simply creates a new error, from a
-        <symbol>GConfErrNo</symbol> and a
+        <symbol>GConfError</symbol> and a
         <function>printf()</function>-style format and variable
         argument list.
         <funcsynopsis>
@@ -578,7 +578,7 @@
           <funcdef>void
             <function>gconf_error_new</function>
           </funcdef>
-          <paramdef>GConfErrNo <parameter>en</parameter></paramdef>
+          <paramdef>GConfError <parameter>en</parameter></paramdef>
           <paramdef>const gchar*
           <parameter>format</parameter></paramdef>
           <paramdef><parameter>...</parameter></paramdef>
@@ -838,7 +838,7 @@ print_value(GConfValue* value)
           <function>gconf_get()</function> returns a
           <structname>GConfValue</structname> if the key was set, or
           <symbol>NULL</symbol> if the key was unset or an error occurred. If an
-          error occurred a <structname>GConfError</structname> is returned in the
+          error occurred a <structname>GError</structname> is returned in the
           location given as the final argument.
         </para>
         

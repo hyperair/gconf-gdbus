@@ -70,11 +70,11 @@ GConfValue* gconf_database_query_value         (GConfDatabase  *db,
                                                 const gchar   **locales,
                                                 gboolean        use_schema_default,
                                                 gboolean       *value_is_default,
-                                                GConfError    **err);
+                                                GError    **err);
 GConfValue* gconf_database_query_default_value (GConfDatabase  *db,
                                                 const gchar    *key,
                                                 const gchar   **locales,
-                                                GConfError    **err);
+                                                GError    **err);
 
 
 
@@ -82,39 +82,39 @@ void gconf_database_set   (GConfDatabase      *db,
                            const gchar        *key,
                            GConfValue         *value,
                            const ConfigValue  *cvalue,
-                           GConfError        **err);
+                           GError        **err);
 void gconf_database_unset (GConfDatabase      *db,
                            const gchar        *key,
                            const gchar        *locale,
-                           GConfError        **err);
+                           GError        **err);
 
 
 
 gboolean gconf_database_dir_exists  (GConfDatabase  *db,
                                      const gchar    *dir,
-                                     GConfError    **err);
+                                     GError    **err);
 void     gconf_database_remove_dir  (GConfDatabase  *db,
                                      const gchar    *dir,
-                                     GConfError    **err);
+                                     GError    **err);
 GSList*  gconf_database_all_entries (GConfDatabase  *db,
                                      const gchar    *dir,
                                      const gchar   **locales,
-                                     GConfError    **err);
+                                     GError    **err);
 GSList*  gconf_database_all_dirs    (GConfDatabase  *db,
                                      const gchar    *dir,
-                                     GConfError    **err);
+                                     GError    **err);
 void     gconf_database_set_schema  (GConfDatabase  *db,
                                      const gchar    *key,
                                      const gchar    *schema_key,
-                                     GConfError    **err);
+                                     GError    **err);
 
 
 void     gconf_database_sync             (GConfDatabase  *db,
-                                          GConfError    **err);
+                                          GError    **err);
 gboolean gconf_database_synchronous_sync (GConfDatabase  *db,
-                                          GConfError    **err);
+                                          GError    **err);
 void     gconf_database_clear_cache      (GConfDatabase  *db,
-                                          GConfError    **err);
+                                          GError    **err);
 
 
 void gconfd_locale_cache_expire (void);

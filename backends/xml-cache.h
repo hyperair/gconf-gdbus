@@ -31,15 +31,15 @@ Cache*   cache_new        (const gchar  *root_dir,
                            guint file_mode);
 void     cache_destroy    (Cache        *cache);
 gboolean cache_sync       (Cache        *cache,
-                           GConfError  **err);
+                           GError  **err);
 void     cache_clean      (Cache        *cache,
                            GTime         older_than);
 void     cache_delete_dir (Cache        *cache,
                            const gchar  *key,
-                           GConfError  **err);
+                           GError  **err);
 Dir*     cache_lookup     (Cache        *cache,
                            const gchar  *key,
                            gboolean create_if_missing,
-                           GConfError  **err); 
+                           GError  **err); 
 
 #endif

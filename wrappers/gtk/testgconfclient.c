@@ -27,7 +27,7 @@ static void create_controls(GConfClient* client);
 int
 main(int argc, char** argv)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   GConfClient* client = NULL;
 
   gtk_init(&argc, &argv);
@@ -35,7 +35,7 @@ main(int argc, char** argv)
   if (!gconf_init(argc, argv, &error))
     {
       g_assert(error != NULL);
-      g_warning("GConf init failed:\n  %s", error->str);
+      g_warning("GConf init failed:\n  %s", error->message);
       return 1;
     }
 

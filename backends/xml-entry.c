@@ -39,7 +39,7 @@
 static void
 entry_sync_if_needed(Entry* e, GConfValue* val);
 static GConfValue*
-node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err);
+node_extract_value(xmlNodePtr node, const gchar** locales, GError** err);
 static xmlNodePtr
 find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale);
 static void
@@ -116,7 +116,7 @@ entry_get_node (Entry*e)
 }
 
 GConfValue*
-entry_get_value(Entry* e, const gchar** locales, GConfError** err)
+entry_get_value(Entry* e, const gchar** locales, GError** err)
 {
   const gchar* sl;
   
@@ -144,7 +144,7 @@ entry_get_value(Entry* e, const gchar** locales, GConfError** err)
     {
       /* We want a locale other than the currently-loaded one */
       GConfValue* newval;
-      GConfError* error = NULL;
+      GError* error = NULL;
 
       entry_sync_if_needed(e, NULL);
       
@@ -160,8 +160,8 @@ entry_get_value(Entry* e, const gchar** locales, GConfError** err)
         {
           /* There was an error */
           gconf_log(GCL_WARNING, _("Ignoring XML node with name `%s': %s"),
-                    e->name, error->str);
-          gconf_error_destroy(error);
+                    e->name, error->message);
+          g_error_free(error);
 
           /* Fall back to currently-loaded thing if any */
         }
@@ -196,7 +196,7 @@ entry_unset_value     (Entry        *e,
     {
       if (locale && e->cached_value->type == GCONF_VALUE_SCHEMA)
         {
-          GConfError* error = NULL;
+          GError* error = NULL;
           
           /* Remove the localized node from the XML tree */
           g_assert(e->node != NULL);
@@ -210,8 +210,8 @@ entry_unset_value     (Entry        *e,
 
           if (error != NULL)
             {
-              gconf_log(GCL_WARNING, _("%s"), error->str);
-              gconf_error_destroy(error);
+              gconf_log(GCL_WARNING, _("%s"), error->message);
+              g_error_free(error);
               error = NULL;
             }
         }
@@ -319,7 +319,7 @@ void
 entry_fill_from_node(Entry* e)
 {
   gchar* tmp;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   g_return_if_fail(e->node != NULL);
   
@@ -384,8 +384,8 @@ entry_fill_from_node(Entry* e)
        * we improperly log an error here
        */
       gconf_log(GCL_WARNING, _("Ignoring XML node `%s', except for possible schema name: %s"),
-                e->name, error->str);
-      gconf_error_destroy(error);
+                e->name, error->message);
+      g_error_free(error);
     }
 }
 
@@ -692,7 +692,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
 {
   gchar* sd_str;
   gchar* locale_str;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   sd_str = my_xmlGetProp(node, "short_desc");
   locale_str = my_xmlGetProp(node, "locale");
@@ -733,8 +733,8 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
                       g_assert(default_value == NULL);
                       
                       gconf_log(GCL_WARNING, _("Failed reading default value for schema: %s"), 
-                                error->str);
-                      gconf_error_destroy(error);
+                                error->message);
+                      g_error_free(error);
                       error = NULL;
                       
                       bad_nodes = g_slist_prepend(bad_nodes, iter);
@@ -926,7 +926,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
    <default> node
 */
 static GConfValue*
-node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
+node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
 {
   GConfValue* value = NULL;
   gchar* type_str;
@@ -1076,9 +1076,9 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
                           {
                             gconf_log(GCL_WARNING,
                                       _("Bad XML node: %s"),
-                                      (*err)->str);
+                                      (*err)->message);
                             /* avoid pile-ups */
-                            gconf_clear_error(err);
+                            g_clear_error(err);
                           }
                       }
                     else if (v->type != list_type)
@@ -1136,9 +1136,9 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
                           {
                             gconf_log(GCL_WARNING,
                                       _("Ignoring bad car from XML pair: %s"),
-                                      (*err)->str);
+                                      (*err)->message);
                             /* prevent pile-ups */
-                            gconf_clear_error(err);
+                            g_clear_error(err);
                           }
                       }
                     else if (car->type == GCONF_VALUE_LIST ||
@@ -1158,9 +1158,9 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
                           {
                             gconf_log(GCL_WARNING,
                                       _("Ignoring bad cdr from XML pair: %s"),
-                                      (*err)->str);
+                                      (*err)->message);
                             /* avoid pile-ups */
-                            gconf_clear_error(err);
+                            g_clear_error(err);
                           }
                       }
                     else if (cdr->type == GCONF_VALUE_LIST ||

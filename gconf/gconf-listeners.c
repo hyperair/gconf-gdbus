@@ -21,6 +21,7 @@
 #include "gconf.h"
 
 #include <string.h>
+#include <unistd.h>
 
 /* #define DEBUG_LISTENERS 1 */
 #ifdef DEBUG_LISTENERS

@@ -22,9 +22,13 @@
 
 #include <glib.h>
 
+#include <gconf/gconf-glib-public.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
+
+#define GCONF_ERROR gconf_error_quark ()
 
 /* Error Numbers */
 
@@ -48,35 +52,19 @@ typedef enum {
   GCONF_ERROR_OAF_ERROR = 12,    /* liboaf error */
   GCONF_ERROR_LOCAL_ENGINE = 13, /* Tried to use remote operations on a local engine */
   GCONF_ERROR_LOCK_FAILED = 14   /* Failed to get a lockfile */
-} GConfErrNo;
+} GConfError;
 
-/* Error Object */
+GQuark gconf_error_quark (void);
 
-typedef struct _GConfError GConfError;
+GError*  gconf_error_new  (GConfError en,
+                           const gchar* format, ...) G_GNUC_PRINTF (2, 3);
 
-struct _GConfError {
-  const gchar* str; /* combination of strerror of the num and additional
-                       details; a complete error message. */
-  GConfErrNo num;
-};
-
-GConfError*  gconf_error_new      (GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
-GConfError*  gconf_error_copy     (GConfError* err);
-void         gconf_error_destroy  (GConfError* err);
-
-/* if (err) *err = gconf_error_new(en, format, ...), also has some sanity checks. */
-void         gconf_set_error      (GConfError** err, GConfErrNo en, const gchar* format, ...) G_GNUC_PRINTF (3, 4);
-
-/* if (err && *err) { gconf_error_destroy(*err); *err = NULL; } */
-void         gconf_clear_error    (GConfError** err);
+void     gconf_set_error  (GError** err,
+                           GConfError en,
+                           const gchar* format, ...) G_GNUC_PRINTF (3, 4);
 
 /* merge two errors into a single message */
-GConfError*  gconf_compose_errors (GConfError* err1, GConfError* err2);
-
-/* strerror() really shouldn't be used, because GConfError->str gives
- * a more complete error message.
- */
-const gchar* gconf_strerror       (GConfErrNo en);
+GError*  gconf_compose_errors (GError* err1, GError* err2);
 
 #ifdef __cplusplus
 }

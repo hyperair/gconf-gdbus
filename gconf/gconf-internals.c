@@ -780,7 +780,7 @@ subst_variables(const gchar* src)
 }
 
 gchar**       
-gconf_load_source_path(const gchar* filename, GConfError** err)
+gconf_load_source_path(const gchar* filename, GError** err)
 {
   FILE* f;
   GSList* l = NULL;
@@ -1290,7 +1290,7 @@ gconf_value_pair_from_primitive_pair(GConfValueType car_type,
 GSList*
 gconf_value_list_to_primitive_list_destructive(GConfValue* val,
                                                GConfValueType list_type,
-                                               GConfError** err)
+                                               GError** err)
 {
   GSList* retval;
 
@@ -1433,7 +1433,7 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                                GConfValueType cdr_type,
                                                gpointer car_retloc,
                                                gpointer cdr_retloc,
-                                               GConfError** err)
+                                               GError** err)
 {
   GConfValue* car;
   GConfValue* cdr;
@@ -1565,7 +1565,7 @@ gconf_quote_string   (const gchar* src)
 }
 
 gchar*
-gconf_unquote_string (const gchar* str, const gchar** end, GConfError** err)
+gconf_unquote_string (const gchar* str, const gchar** end, GError** err)
 {
   gchar* unq;
   gchar* unq_end = NULL;
@@ -1584,7 +1584,7 @@ gconf_unquote_string (const gchar* str, const gchar** end, GConfError** err)
 }
 
 void
-gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err)
+gconf_unquote_string_inplace (gchar* str, gchar** end, GError** err)
 {
   gchar* dest;
   gchar* s;
@@ -2131,7 +2131,7 @@ gconf_value_encode (GConfValue* val)
 }
 
 gboolean
-gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err)
+gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err)
 {
   switch (ev->_major)
     {
@@ -2234,7 +2234,7 @@ gconf_lock_destroy(GConfLock* lock)
 
 GConfLock*
 gconf_get_lock(const gchar* lock_directory,
-               GConfError** err)
+               GError** err)
 {
   GConfLock* lock;
   gboolean got_it = FALSE;
@@ -2467,7 +2467,7 @@ gconf_get_lock(const gchar* lock_directory,
 
 gboolean
 gconf_release_lock(GConfLock* lock,
-                   GConfError** err)
+                   GError** err)
 {
   gchar* iorfile;
   FILE* fp;

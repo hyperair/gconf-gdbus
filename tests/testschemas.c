@@ -78,7 +78,7 @@ static const guint n_ints = sizeof(ints)/sizeof(ints[0]);
 static void
 check_unset(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
 
   keyp = keys;
@@ -89,8 +89,8 @@ check_unset(GConfEngine* conf)
 
       if (err != NULL)
         {
-          fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->str);
-          gconf_error_destroy(err);
+          fprintf(stderr, "unset of `%s' failed: %s\n", *keyp, err->message);
+          g_error_free(err);
           err = NULL;
         }
       else
@@ -118,7 +118,7 @@ check_unset(GConfEngine* conf)
 void
 check_int_storage(GConfEngine* conf)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   const gchar** keyp = NULL;
   guint i; 
   
@@ -136,8 +136,8 @@ check_int_storage(GConfEngine* conf)
           if (!gconf_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
-                      *keyp, ints[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, ints[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -149,8 +149,8 @@ check_int_storage(GConfEngine* conf)
                   check(gotten == 0.0, "0.0 not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -183,8 +183,8 @@ check_int_storage(GConfEngine* conf)
           if (!gconf_set_int(conf, *keyp, ints[i], &err))
             {
               fprintf(stderr, "Failed to set key `%s' to `%d': %s\n",
-                      *keyp, ints[i], err->str);
-              gconf_error_destroy(err);
+                      *keyp, ints[i], err->message);
+              g_error_free(err);
               err = NULL;
             }
           else
@@ -196,8 +196,8 @@ check_int_storage(GConfEngine* conf)
                   check(gotten == 0, "0 not returned though there was an error");
 
                   fprintf(stderr, "Failed to get key `%s': %s\n",
-                          *keyp, err->str);
-                  gconf_error_destroy(err);
+                          *keyp, err->message);
+                  g_error_free(err);
                   err = NULL;
                 }
               else
@@ -235,13 +235,13 @@ null_safe_strcmp(const char* lhs, const char* rhs)
 void
 check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (!gconf_set_schema(conf, *keyp, schema, &err))
     {
       fprintf(stderr, "Failed to set key `%s' to schema: %s\n",
-              *keyp, err->str);
-      gconf_error_destroy(err);
+              *keyp, err->message);
+      g_error_free(err);
       err = NULL;
     }
   else
@@ -255,8 +255,8 @@ check_one_schema(GConfEngine* conf, const gchar** keyp, GConfSchema* schema)
           check(gotten == NULL, "NULL not returned though there was an error");
 
           fprintf(stderr, "Failed to get key `%s': %s\n",
-                  *keyp, err->str);
-          gconf_error_destroy(err);
+                  *keyp, err->message);
+          g_error_free(err);
           err = NULL;
         }
       else
@@ -430,12 +430,12 @@ int
 main (int argc, char** argv)
 {
   GConfEngine* conf;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (!gconf_init(argc, argv, &err))
     {
-      fprintf(stderr, "Failed to init GConf: %s\n", err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, "Failed to init GConf: %s\n", err->message);
+      g_error_free(err);
       err = NULL;
       return 1;
     }

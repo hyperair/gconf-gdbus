@@ -158,15 +158,15 @@ cache_sync_foreach(const gchar* key,
                    Dir* dir,
                    SyncData* sd)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   /* log errors but don't report the specific ones */
   if (!dir_sync(dir, &error))
     {
       sd->failed = TRUE;
       g_return_if_fail(error != NULL);
-      gconf_log(GCL_ERR, error->str);
-      gconf_error_destroy(error);
+      gconf_log(GCL_ERR, error->message);
+      g_error_free(error);
       g_return_if_fail(dir_sync_pending(dir));
     }
   else
@@ -178,7 +178,7 @@ cache_sync_foreach(const gchar* key,
 
 gboolean
 cache_sync       (Cache        *cache,
-                  GConfError  **err)
+                  GError  **err)
 {
   SyncData sd = { FALSE, cache };
   GSList* delete_list;
@@ -273,10 +273,10 @@ cache_clean      (Cache        *cache,
 static void
 cache_delete_dir_by_pointer(Cache* cache,
                             Dir * d,
-                            GConfError** err);
+                            GError** err);
 
 static void
-cache_delete_recursive(Cache* cache, Dir* d, GSList** hit_list, GConfError** err)
+cache_delete_recursive(Cache* cache, Dir* d, GSList** hit_list, GError** err)
 {  
   GSList* subdirs;
   GSList* tmp;
@@ -332,7 +332,7 @@ cache_delete_recursive(Cache* cache, Dir* d, GSList** hit_list, GConfError** err
 static void
 cache_delete_dir_by_pointer(Cache* cache,
                             Dir * d,
-                            GConfError** err)
+                            GError** err)
 {
   GSList* hit_list = NULL;
 
@@ -354,7 +354,7 @@ cache_delete_dir_by_pointer(Cache* cache,
 void
 cache_delete_dir (Cache        *cache,
                   const gchar  *key,
-                  GConfError  **err)
+                  GError  **err)
 {
   Dir* d;
 
@@ -371,7 +371,7 @@ Dir*
 cache_lookup     (Cache        *cache,
                   const gchar  *key,
                   gboolean create_if_missing,
-                  GConfError  **err)
+                  GError  **err)
 {
   Dir* dir;
   
@@ -422,7 +422,7 @@ cache_lookup     (Cache        *cache,
                 {
                   if (err && *err)
                     {
-                      gconf_error_destroy(*err);
+                      g_error_free(*err);
                       *err = NULL;
                     }
                 }

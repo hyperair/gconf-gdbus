@@ -58,12 +58,12 @@ signal won't be emitted for them.
 <para>
 There are two error-related signals in #GConfClient. The first is plain "error";
 it's emitted anytime an error occurs. The second is "unreturned_error"; this
-signal is emitted if you pass <symbol>NULL</symbol> as the #GConfError** to any
+signal is emitted if you pass <symbol>NULL</symbol> as the #GError** to any
 #GConfClient function. The idea is that you can have a global error handler
 attached to the "unreturned_error" signal; if you want to use this handler, you
 don't need to use the normal GConf error handling mechanism. However, if you
 ever need to handle errors for a specific function call, you can override the
-global handler by passing a non-<symbol>NULL</symbol> #GConfError** to the
+global handler by passing a non-<symbol>NULL</symbol> #GError** to the
 function.  If you want an error handler that's <emphasis>always</emphasis>
 invoked, use the "error" signal.
 </para>
@@ -227,7 +227,7 @@ until you call gconf_client_remove_dir() an equal number of times.
 @client: a #GConfClient.
 @dir: directory to add to the list.
 @preload: degree of preload.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 
 
 <!-- ##### FUNCTION gconf_client_remove_dir ##### -->
@@ -277,7 +277,7 @@ notification function is called.
 @func: function to call when changes occur.
 @user_data: user data to pass to @func.
 @destroy_notify: function to call on @user_data when the notify is removed or the #GConfClient is destroyed, or <symbol>NULL</symbol> for none.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: a connection ID for removing the notification.
 
 
@@ -324,7 +324,7 @@ again.
 @client: a #GConfClient.
 @dirname: directory to preload.
 @type: degree of preload.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 
 
 <!-- ##### FUNCTION gconf_client_set ##### -->
@@ -337,7 +337,7 @@ modified.
 @client: a #GConfClient.
 @key: key to set.
 @val: new value.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 
 
 <!-- ##### FUNCTION gconf_client_get ##### -->
@@ -349,7 +349,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: key to get.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: value of @key, or <symbol>NULL</symbol> if unset or an error occurs.
 
 
@@ -396,7 +396,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -407,7 +407,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @dir: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -418,7 +418,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @dir: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -428,7 +428,7 @@ with gconf_value_destroy().
 </para>
 
 @client: a #GConfClient.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 
 
 <!-- ##### FUNCTION gconf_client_dir_exists ##### -->
@@ -438,7 +438,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @dir: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -449,7 +449,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -460,7 +460,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -471,7 +471,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -482,7 +482,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -493,7 +493,7 @@ with gconf_value_destroy().
 
 @client: a #GConfClient.
 @key: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -505,7 +505,7 @@ with gconf_value_destroy().
 @client: a #GConfClient.
 @key: 
 @list_type: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -520,7 +520,7 @@ with gconf_value_destroy().
 @cdr_type: 
 @car_retloc: 
 @cdr_retloc: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -532,7 +532,7 @@ with gconf_value_destroy().
 @client: a #GConfClient.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -544,7 +544,7 @@ with gconf_value_destroy().
 @client: a #GConfClient.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -556,7 +556,7 @@ with gconf_value_destroy().
 @client: a #GConfClient.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -568,7 +568,7 @@ with gconf_value_destroy().
 @client: a #GConfClient.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -580,7 +580,7 @@ with gconf_value_destroy().
 @client: a #GConfClient.
 @key: 
 @val: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -593,7 +593,7 @@ with gconf_value_destroy().
 @key: 
 @list_type: 
 @list: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -608,7 +608,7 @@ with gconf_value_destroy().
 @cdr_type: 
 @address_of_car: 
 @address_of_cdr: 
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: 
 
 
@@ -648,7 +648,7 @@ save the current state of that key in the returned change set.
 
 @client: a #GConfClient.
 @cs: change set to create the reverse of.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: a new change set that would restore the current state of each key in @cs.
 
 
@@ -662,7 +662,7 @@ current state by committing the returned change set.
 
 @client: a #GConfClient.
 @keys: <symbol>NULL</symbol>-terminated array of key names.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @Returns: new change set that changes all the @keys to their current state.
 
 
@@ -672,7 +672,7 @@ Convenient varargs version of gconf_client_create_change_set_from_currentv().
 </para>
 
 @client: a #GConfClient.
-@err: the return location for an allocated #GConfError, or <symbol>NULL</symbol> to ignore errors.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
 @first_key: first key to save the current state of.
 @Varargs: <symbol>NULL</symbol>-terminated list of additional keys.
 @Returns: new change set that changes all the keys to their current state.
@@ -705,14 +705,14 @@ gconf_client_notify_add().
 
 <!-- ##### SIGNAL GConfClient::unreturned-error ##### -->
 <para>
-Emitted when you pass <symbol>NULL</symbol> for the #GConfError** argument to
+Emitted when you pass <symbol>NULL</symbol> for the #GError** argument to
 any #GConfClient function, and an error occurs. Depending on the
 #GConfClientErrorHandlingMode, the default handler for this signal may or may
 not display an error dialog.
 </para>
 
 @gconfclient: the object which received the signal.
-@arg1: a #GConfError* (the unhandled error).
+@arg1: a #GError* (the unhandled error).
 
 <!-- ##### SIGNAL GConfClient::error ##### -->
 <para>
@@ -722,5 +722,5 @@ may not display an error dialog.
 </para>
 
 @gconfclient: the object which received the signal.
-@arg1: a #GConfError* (the error).
+@arg1: a #GError* (the error).
 

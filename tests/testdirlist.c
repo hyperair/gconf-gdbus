@@ -66,7 +66,7 @@ check_dir_listing(GConfEngine* conf)
   const gchar** iter;
   GSList* entries;
   GSList* iter2;
-  GConfError* error = NULL;
+  GError* error = NULL;
   gboolean found[sizeof(keys_in_foo)];
   int i;
   gboolean got_it;
@@ -86,7 +86,7 @@ check_dir_listing(GConfEngine* conf)
       gconf_set_int(conf, full_key, 10, &error);
 
       check (error == NULL, "Error setting key %s: %s",
-             full_key, error ? error->str : "");
+             full_key, error ? error->message : "");
       
       g_free(full_key);
 
@@ -97,7 +97,7 @@ check_dir_listing(GConfEngine* conf)
   entries = gconf_all_dirs(conf, "/", &error);
 
   check (error == NULL, "Error getting list of dirs in /: %s",
-         error ? error->str : "");
+         error ? error->message : "");
 
   got_it = FALSE;
   
@@ -117,7 +117,7 @@ check_dir_listing(GConfEngine* conf)
   entries = gconf_all_dirs(conf, "/testing", &error);
 
   check (error == NULL, "Error getting list of dirs in /testing: %s",
-         error ? error->str : "");
+         error ? error->message : "");
 
   got_it = FALSE;
   
@@ -138,7 +138,7 @@ check_dir_listing(GConfEngine* conf)
   entries = gconf_all_dirs(conf, "/testing/foo", &error);
 
   check (error == NULL, "Error getting list of dirs in /testing/foo: %s",
-         error ? error->str : "");
+         error ? error->message : "");
 
   iter2 = entries;
   while (iter2 != NULL)
@@ -184,7 +184,7 @@ check_dir_listing(GConfEngine* conf)
       gconf_unset(conf, full_key, &error);
 
       check (error == NULL, "Error unsetting key %s: %s",
-             full_key, error ? error->str : "");
+             full_key, error ? error->message : "");
       
       g_free(full_key);
 
@@ -196,14 +196,14 @@ int
 main (int argc, char** argv)
 {
   GConfEngine* conf;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (!gconf_init(argc, argv, &err))
     {
       g_assert(err != NULL);
-      fprintf(stderr, "Failed to init GConf: %s\n", err->str);
+      fprintf(stderr, "Failed to init GConf: %s\n", err->message);
       fflush(stderr);
-      gconf_error_destroy(err);
+      g_error_free(err);
       err = NULL;
       return 1;
     }

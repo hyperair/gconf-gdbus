@@ -135,7 +135,7 @@ check_quoting(void)
       gchar* quoted;
       gchar* unquoted;
       const gchar* end;
-      GConfError* error = NULL;
+      GError* error = NULL;
       
       quoted = gconf_quote_string(*testp);
 
@@ -145,7 +145,7 @@ check_quoting(void)
 
       check (error == NULL,
              "error parsing quoted string: %s",
-             error ? error->str : NULL);
+             error ? error->message : NULL);
       
       check (strcmp(*testp, unquoted) == 0,
              "Original: `%s'\nUnquoted: `%s'\nNot equal?",
@@ -167,7 +167,7 @@ int
 main (int argc, char** argv)
 {
   GConfEngine* conf;
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   printf("\nChecking string quoting:");
   

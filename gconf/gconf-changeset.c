@@ -434,7 +434,7 @@ change_unset  (Change* c)
 
 struct CommitData {
   GConfEngine* conf;
-  GConfError* error;
+  GError* error;
   GSList* remove_list;
   gboolean remove_committed;
 };
@@ -469,7 +469,7 @@ gboolean
 gconf_commit_change_set   (GConfEngine* conf,
                            GConfChangeSet* cs,
                            gboolean remove_committed,
-                           GConfError** err)
+                           GError** err)
 {
   struct CommitData cd;
   GSList* tmp;
@@ -512,7 +512,7 @@ gconf_commit_change_set   (GConfEngine* conf,
       if (err != NULL)
         *err = cd.error;
       else
-        gconf_error_destroy(cd.error);
+        g_error_free(cd.error);
 
       return FALSE;
     }
@@ -524,7 +524,7 @@ gconf_commit_change_set   (GConfEngine* conf,
 
 struct RevertData {
   GConfEngine* conf;
-  GConfError* error;
+  GError* error;
   GConfChangeSet* revert_set;
 };
 
@@ -536,7 +536,7 @@ revert_foreach (GConfChangeSet* cs,
 {
   struct RevertData* rd = user_data;
   GConfValue* old_value;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_assert(rd != NULL);
 
@@ -548,8 +548,8 @@ revert_foreach (GConfChangeSet* cs,
   if (error != NULL)
     {
       /* FIXME */
-      g_warning("error creating revert set: %s", error->str);
-      gconf_error_destroy(error);
+      g_warning("error creating revert set: %s", error->message);
+      g_error_free(error);
       error = NULL;
     }
   
@@ -567,7 +567,7 @@ revert_foreach (GConfChangeSet* cs,
 GConfChangeSet*
 gconf_create_reverse_change_set  (GConfEngine* conf,
                                   GConfChangeSet* cs,
-                                  GConfError** err)
+                                  GError** err)
 {
   struct RevertData rd;
 
@@ -584,7 +584,7 @@ gconf_create_reverse_change_set  (GConfEngine* conf,
       if (err != NULL)
         *err = rd.error;
       else
-        gconf_error_destroy(rd.error);
+        g_error_free(rd.error);
     }
   
   return rd.revert_set;
@@ -593,7 +593,7 @@ gconf_create_reverse_change_set  (GConfEngine* conf,
 GConfChangeSet*
 gconf_create_change_set_from_currentv (GConfEngine* conf,
                                        const gchar** keys,
-                                       GConfError** err)
+                                       GError** err)
 {
   GConfValue* old_value;
   GConfChangeSet* new_set;
@@ -607,7 +607,7 @@ gconf_create_change_set_from_currentv (GConfEngine* conf,
 
   while (*keyp != NULL)
     {
-      GConfError* error = NULL;
+      GError* error = NULL;
       const gchar* key = *keyp;
       
       old_value = gconf_get_without_default(conf, key, &error);
@@ -615,8 +615,8 @@ gconf_create_change_set_from_currentv (GConfEngine* conf,
       if (error != NULL)
         {
           /* FIXME */
-          g_warning("error creating change set from current keys: %s", error->str);
-          gconf_error_destroy(error);
+          g_warning("error creating change set from current keys: %s", error->message);
+          g_error_free(error);
           error = NULL;
         }
       
@@ -633,7 +633,7 @@ gconf_create_change_set_from_currentv (GConfEngine* conf,
 
 GConfChangeSet*
 gconf_create_change_set_from_current (GConfEngine* conf,
-                                      GConfError** err,
+                                      GError** err,
                                       const gchar* first_key,
                                       ...)
 {

@@ -59,12 +59,12 @@ GConfSchema*  gconf_schema_from_corba_schema(const ConfigSchema* cs);
 const gchar* gconf_value_type_to_string(GConfValueType type);
 GConfValueType gconf_value_type_from_string(const gchar* str);
 
-gchar**       gconf_load_source_path(const gchar* filename, GConfError** err);
+gchar**       gconf_load_source_path(const gchar* filename, GError** err);
 
 /* shouldn't be used in applications (although implemented in gconf.c) */
-void          gconf_shutdown_daemon(GConfError** err);
+void          gconf_shutdown_daemon(GError** err);
 gboolean      gconf_ping_daemon(void);
-gboolean      gconf_spawn_daemon(GConfError** err);
+gboolean      gconf_spawn_daemon(GError** err);
 
 /* Returns 0 on failure (or if the string is "0" of course) */
 gulong        gconf_string_to_gulong(const gchar* str);
@@ -89,7 +89,7 @@ typedef enum {
 void          gconf_log      (GConfLogPriority pri, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
 
 /* return FALSE and set error if the key is bad */
-gboolean      gconf_key_check(const gchar* key, GConfError** err);
+gboolean      gconf_key_check(const gchar* key, GError** err);
 
 /*
  * If these were public they'd be in gconf-value.h
@@ -97,15 +97,15 @@ gboolean      gconf_key_check(const gchar* key, GConfError** err);
 
 /* doesn't work on complicated types (only string, int, bool, float) */
 GConfValue* gconf_value_new_from_string      (GConfValueType type, const gchar* str,
-                                              GConfError** err);
+                                              GError** err);
 /* for the complicated types */
 GConfValue* gconf_value_new_list_from_string (GConfValueType list_type,
                                               const gchar* str,
-					      GConfError** err);
+					      GError** err);
 GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
                                               GConfValueType cdr_type,
                                               const gchar* str,
-					      GConfError** err);
+					      GError** err);
 
 /* These are a hack to encode values into strings and ship them over CORBA,
  * necessary for obscure reasons (ORBit doesn't like recursive datatypes yet)
@@ -113,8 +113,8 @@ GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
 
 /* string quoting is only public for the benefit of the test suite */
 gchar*     gconf_quote_string   (const gchar* str);
-gchar*     gconf_unquote_string (const gchar* str, const gchar** end, GConfError** err);
-void       gconf_unquote_string_inplace (gchar* str, gchar** end, GConfError** err);
+gchar*     gconf_unquote_string (const gchar* str, const gchar** end, GError** err);
+void       gconf_unquote_string_inplace (gchar* str, gchar** end, GError** err);
 
 GConfValue* gconf_value_decode (const gchar* encoded);
 gchar*      gconf_value_encode (GConfValue* val);
@@ -135,31 +135,31 @@ GConfValue* gconf_value_pair_from_primitive_pair(GConfValueType car_type,
 
 GSList*    gconf_value_list_to_primitive_list_destructive(GConfValue* val,
                                                           GConfValueType list_type,
-                                                          GConfError** err);
+                                                          GError** err);
 
 gboolean   gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
                                                           GConfValueType car_type,
                                                           GConfValueType cdr_type,
                                                           gpointer car_retloc,
                                                           gpointer cdr_retloc,
-                                                          GConfError** err);
+                                                          GError** err);
 void       gconf_set_daemon_mode(gboolean setting);
 gboolean   gconf_in_daemon_mode(void);
 void       gconf_set_daemon_ior(const gchar* ior);
 const gchar*gconf_get_daemon_ior(void);
 
 /* Returns TRUE if there was an error, frees exception, sets err */
-gboolean gconf_handle_oaf_exception(CORBA_Environment* ev, GConfError** err);
+gboolean gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err);
 
 void gconf_nanosleep(gulong useconds);
 
 typedef struct _GConfLock GConfLock;
 
 GConfLock* gconf_get_lock(const gchar* lock_directory,                          
-                          GConfError** err);
+                          GError** err);
 
 gboolean       gconf_release_lock(GConfLock* lock,
-                                  GConfError** err);
+                                  GError** err);
 
 #endif /* GCONF_ENABLE_INTERNALS */
 

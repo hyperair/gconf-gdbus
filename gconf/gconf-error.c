@@ -55,47 +55,46 @@ static const gchar* err_msgs[] = {
 
 static const int n_err_msgs = sizeof(err_msgs)/sizeof(err_msgs[0]);
 
-const gchar* 
-gconf_strerror       (GConfErrNo en)
+static const gchar* 
+gconf_strerror       (GConfError en)
 {
   g_return_val_if_fail (en < n_err_msgs, NULL);
 
   return _(err_msgs[en]);    
 }
 
-typedef struct _GConfErrorPrivate GConfErrorPrivate;
-
-struct _GConfErrorPrivate {
-  /* keep these members in sync with GConfError */
-  gchar* str; /* convert to non-const */
-  GConfErrNo num;
-};
-
-static GConfError* 
-gconf_error_new_valist(GConfErrNo en, const gchar* fmt, va_list args)
+GQuark
+gconf_error_quark (void)
 {
-  GConfErrorPrivate* priv;
+  static GQuark err_q = 0;
+
+  if (err_q == 0)
+    err_q = g_quark_from_static_string ("gconf-error-quark");
+
+  return err_q;
+}
+
+static GError* 
+gconf_error_new_valist(GConfError en, const gchar* fmt, va_list args)
+{
+  GError *err;
   gchar* orig;
   
-  priv = g_new(GConfErrorPrivate, 1);
+  orig = g_strdup_vprintf(fmt, args);
 
-  priv->str = g_strdup_vprintf(fmt, args);
-
-  orig = priv->str;
-  
-  priv->str = g_strconcat(gconf_strerror(en), ":\n ", orig, NULL);
+  err = g_error_new (GCONF_ERROR, en, "%s:\n %s",
+                     gconf_strerror (en),
+                     orig);  
 
   g_free(orig);
   
-  priv->num = en;
-
-  return (GConfError*)priv;
+  return err;
 }
 
-GConfError*
-gconf_error_new(GConfErrNo en, const gchar* fmt, ...)
+GError*
+gconf_error_new(GConfError en, const gchar* fmt, ...)
 {
-  GConfError* err;
+  GError* err;
   va_list args;
   
   va_start (args, fmt);
@@ -106,36 +105,9 @@ gconf_error_new(GConfErrNo en, const gchar* fmt, ...)
 }
 
 void
-gconf_error_destroy(GConfError* err)
+gconf_set_error      (GError** err, GConfError en, const gchar* fmt, ...)
 {
-  GConfErrorPrivate* priv = (GConfErrorPrivate*)err;
-
-  g_return_if_fail(err != NULL);
-  
-  g_free(priv->str);
-  g_free(priv);
-}
-
-GConfError*
-gconf_error_copy     (GConfError* err)
-{
-  GConfErrorPrivate* priv = (GConfErrorPrivate*)err;
-  GConfErrorPrivate* new;
-
-  g_return_val_if_fail(err != NULL, NULL);
-  
-  new = g_new(GConfErrorPrivate, 1);
-
-  new->str = g_strdup(priv->str);
-  new->num  = priv->num;
-
-  return (GConfError*)new;
-}
-
-void
-gconf_set_error      (GConfError** err, GConfErrNo en, const gchar* fmt, ...)
-{
-  GConfError* obj;
+  GError* obj;
   va_list args;
 
   if (err == NULL)
@@ -154,38 +126,31 @@ gconf_set_error      (GConfError** err, GConfErrNo en, const gchar* fmt, ...)
   *err = obj;
 }
 
-void
-gconf_clear_error    (GConfError** err)
-{
-  if (err && *err)
-    {
-      gconf_error_destroy(*err);
-      *err = NULL;
-    }
-}
-
-GConfError*
-gconf_compose_errors (GConfError* err1, GConfError* err2)
+/* This function should die. */
+GError*
+gconf_compose_errors (GError* err1, GError* err2)
 {
   if (err1 == NULL && err2 == NULL)
     return NULL;
   else if (err1 == NULL)
-    return gconf_error_copy(err2);
+    return g_error_copy(err2);
   else if (err2 == NULL)
-    return gconf_error_copy(err1);
+    return g_error_copy(err1);
   else
     {
-      GConfErrorPrivate* priv;
+      GError *n;
 
-      priv = g_new(GConfErrorPrivate, 1);
+      n = g_error_new (GCONF_ERROR, GCONF_ERROR_FAILED, "");
 
-      if (err1->num == err2->num)
-        priv->num = err1->num;
+      if (err1->code == err2->code)
+        n->code = err1->code;
       else
-        priv->num = GCONF_ERROR_FAILED;
+        n->code = GCONF_ERROR_FAILED;
 
-      priv->str = g_strconcat(err1->str, "\n", err2->str, NULL);
+      g_free (n->message);
+      
+      n->message = g_strconcat(err1->message, "\n", err2->message, NULL);
 
-      return (GConfError*)priv;
+      return n;
     }
 }

@@ -152,69 +152,69 @@ static void       xs_destroy   (XMLSource* source);
  */
 
  /* shutdown() is a BSD libc function */
-static void          x_shutdown        (GConfError** err);
+static void          x_shutdown        (GError** err);
 
 static GConfSource*  resolve_address (const gchar* address,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          lock            (GConfSource* source,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          unlock          (GConfSource* source,
-                                      GConfError** err);
+                                      GError** err);
 
 static gboolean     readable         (GConfSource* source,
                                       const gchar* key,
-                                      GConfError** err);
+                                      GError** err);
 
 static gboolean     writeable        (GConfSource* source,
                                       const gchar* key,
-                                      GConfError** err);
+                                      GError** err);
 
 static GConfValue*   query_value     (GConfSource* source,
                                       const gchar* key,
                                       const gchar** locales,
                                       gchar** schema_name,
-                                      GConfError** err);
+                                      GError** err);
 
 static GConfMetaInfo*query_metainfo  (GConfSource* source,
                                       const gchar* key,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          set_value       (GConfSource* source,
                                       const gchar* key,
                                       GConfValue* value,
-                                      GConfError** err);
+                                      GError** err);
 
 static GSList*       all_entries    (GConfSource* source,
                                      const gchar* dir,
                                      const gchar** locales,
-                                     GConfError** err);
+                                     GError** err);
 
 static GSList*       all_subdirs     (GConfSource* source,
                                       const gchar* dir,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          unset_value     (GConfSource* source,
                                       const gchar* key,
                                       const gchar* locale,
-                                      GConfError** err);
+                                      GError** err);
 
 static gboolean      dir_exists      (GConfSource *source,
                                       const gchar *dir,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          remove_dir      (GConfSource* source,
                                       const gchar* dir,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          set_schema      (GConfSource* source,
                                       const gchar* key,
                                       const gchar* schema_key,
-                                      GConfError** err);
+                                      GError** err);
 
 static gboolean      sync_all        (GConfSource* source,
-                                      GConfError** err);
+                                      GError** err);
 
 static void          destroy_source  (GConfSource* source);
 
@@ -242,14 +242,14 @@ static GConfBackendVTable xml_vtable = {
 };
 
 static void          
-x_shutdown (GConfError** err)
+x_shutdown (GError** err)
 {
   gconf_log(GCL_INFO, _("Unloading XML backend module."));
 }
 
 static void
 lock (GConfSource* source,
-      GConfError** err)
+      GError** err)
 {
   
 
@@ -257,7 +257,7 @@ lock (GConfSource* source,
 
 static void
 unlock (GConfSource* source,
-        GConfError** err)
+        GError** err)
 {
 
 
@@ -266,7 +266,7 @@ unlock (GConfSource* source,
 static gboolean
 readable (GConfSource* source,
           const gchar* key,
-          GConfError** err)
+          GError** err)
 {
 
   return TRUE;
@@ -275,14 +275,14 @@ readable (GConfSource* source,
 static gboolean
 writeable (GConfSource* source,
            const gchar* key,
-           GConfError** err)
+           GError** err)
 {
 
   return TRUE;
 }
 
 static GConfSource*  
-resolve_address (const gchar* address, GConfError** err)
+resolve_address (const gchar* address, GError** err)
 {
   gchar* root_dir;
   XMLSource* xsource;
@@ -424,12 +424,12 @@ query_value (GConfSource* source,
              const gchar* key,
              const gchar** locales,
              gchar** schema_name,
-             GConfError** err)
+             GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   gchar* parent;
   Dir* dir;
-  GConfError* error = NULL;
+  GError* error = NULL;
 
   parent = gconf_key_directory(key);
   
@@ -443,8 +443,8 @@ query_value (GConfSource* source,
      problem, since some errors may be added that need reporting. */
   if (error != NULL)
     {
-      gconf_log(GCL_WARNING, error->str);
-      gconf_error_destroy(error);
+      gconf_log(GCL_WARNING, error->message);
+      g_error_free(error);
       error = NULL;
     }
   
@@ -463,8 +463,8 @@ query_value (GConfSource* source,
       /* perhaps we should be reporting this error... */
       if (error != NULL)
         {
-          gconf_log(GCL_WARNING, error->str);
-          gconf_error_destroy(error);
+          gconf_log(GCL_WARNING, error->message);
+          g_error_free(error);
           error = NULL;
         }
       
@@ -476,7 +476,7 @@ query_value (GConfSource* source,
 
 static GConfMetaInfo*
 query_metainfo  (GConfSource* source, const gchar* key,
-                 GConfError** err)
+                 GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   gchar* parent;
@@ -500,7 +500,7 @@ query_metainfo  (GConfSource* source, const gchar* key,
 
 static void          
 set_value (GConfSource* source, const gchar* key, GConfValue* value,
-           GConfError** err)
+           GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
@@ -538,7 +538,7 @@ static GSList*
 all_entries    (GConfSource* source,
                 const gchar* key,
                 const gchar** locales,
-                GConfError** err)
+                GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
@@ -554,7 +554,7 @@ all_entries    (GConfSource* source,
 static GSList*
 all_subdirs     (GConfSource* source,
                  const gchar* key,
-                 GConfError** err)
+                 GError** err)
 {
   Dir* dir;
   XMLSource* xs = (XMLSource*)source;
@@ -571,7 +571,7 @@ static void
 unset_value     (GConfSource* source,
                  const gchar* key,
                  const gchar* locale,
-                 GConfError** err)
+                 GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
@@ -600,7 +600,7 @@ unset_value     (GConfSource* source,
 static gboolean
 dir_exists      (GConfSource*source,
                  const gchar* key,
-                 GConfError** err)
+                 GError** err)
 {
   XMLSource *xs = (XMLSource*)source;
   Dir* dir;
@@ -613,7 +613,7 @@ dir_exists      (GConfSource*source,
 static void          
 remove_dir      (GConfSource* source,
                  const gchar* key,
-                 GConfError** err)
+                 GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
   Dir* dir;
@@ -632,7 +632,7 @@ static void
 set_schema      (GConfSource* source,
                  const gchar* key,
                  const gchar* schema_key,
-                 GConfError** err)
+                 GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
 
@@ -664,7 +664,7 @@ set_schema      (GConfSource* source,
 
 static gboolean      
 sync_all        (GConfSource* source,
-                 GConfError** err)
+                 GError** err)
 {
   XMLSource* xs = (XMLSource*)source;
 
@@ -748,7 +748,7 @@ xs_new       (const gchar* root_dir, guint dir_mode, guint file_mode, GConfLock*
 static void
 xs_destroy   (XMLSource* xs)
 {
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   g_return_if_fail(xs != NULL);
 
@@ -757,8 +757,8 @@ xs_destroy   (XMLSource* xs)
   if (xs->lock != NULL && !gconf_release_lock(xs->lock, &error))
     {
       gconf_log(GCL_ERR, _("Failed to give up lock on XML dir `%s': %s"),
-                xs->root_dir, error->str);
-      gconf_error_destroy(error);
+                xs->root_dir, error->message);
+      g_error_free(error);
       error = NULL;
     }
   

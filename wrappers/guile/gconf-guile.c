@@ -42,12 +42,12 @@
 static void
 real_main(void* closure, int argc, char* argv[])
 {
-  GConfError* err = NULL;
+  GError* err = NULL;
   
   if (!gconf_init(argc, argv, &err))
     {
-      fprintf(stderr, _("Failed to init gconf: %s\n"), err->str);
-      gconf_error_destroy(err);
+      fprintf(stderr, _("Failed to init gconf: %s\n"), err->message);
+      g_error_free(err);
       exit(1);
     }
   

@@ -91,7 +91,7 @@ struct _Dir {
 };
 
 static void
-dir_load_doc(Dir* d, GConfError** err);
+dir_load_doc(Dir* d, GError** err);
 
 static Entry* dir_make_new_entry(Dir* d, const gchar* relative_key);
 
@@ -153,7 +153,7 @@ dir_new(const gchar  *keyname,
 }
 
 Dir*
-dir_load        (const gchar* key, const gchar* xml_root_dir, GConfError** err)
+dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
 {
   Dir* d;
   gchar* fs_dirname;
@@ -248,11 +248,11 @@ static gboolean
 create_fs_dir(const gchar* dir, const gchar* xml_filename,
               guint root_dir_len,
               guint dir_mode, guint file_mode,
-              GConfError** err);
+              GError** err);
 
 gboolean
 dir_ensure_exists (Dir* d,
-                   GConfError** err)
+                   GError** err)
 {
   if (!create_fs_dir(d->fs_dirname, d->xml_filename, d->root_dir_len,
                      d->dir_mode, d->file_mode,
@@ -283,7 +283,7 @@ dir_sync_pending    (Dir          *d)
 }
 
 gboolean
-dir_sync        (Dir* d, GConfError** err)
+dir_sync        (Dir* d, GError** err)
 {
   gboolean retval = TRUE;
   
@@ -416,7 +416,7 @@ dir_sync        (Dir* d, GConfError** err)
 
 void
 dir_set_value   (Dir* d, const gchar* relative_key,
-                 GConfValue* value, GConfError** err)
+                 GConfValue* value, GError** err)
 {
   Entry* e;
   
@@ -455,7 +455,7 @@ dir_get_value   (Dir* d,
                  const gchar* relative_key,
                  const gchar** locales,
                  gchar** schema_name,
-                 GConfError** err)
+                 GError** err)
 {
   Entry* e;
 
@@ -508,7 +508,7 @@ dir_get_name        (Dir          *d)
 }
 
 GConfMetaInfo*
-dir_get_metainfo(Dir* d, const gchar* relative_key, GConfError** err)
+dir_get_metainfo(Dir* d, const gchar* relative_key, GError** err)
 {
   Entry* e;
   
@@ -533,7 +533,7 @@ dir_get_metainfo(Dir* d, const gchar* relative_key, GConfError** err)
 
 void
 dir_unset_value (Dir* d, const gchar* relative_key,
-                 const gchar* locale, GConfError** err)
+                 const gchar* locale, GError** err)
 {
   Entry* e;
   
@@ -593,14 +593,14 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 {
   GConfValue* val;
   GConfEntry* entry;
-  GConfError* error = NULL;
+  GError* error = NULL;
   
   val = entry_get_value(e, ld->locales, &error);
 
   if (error != NULL)
     {
       g_assert(val == NULL);
-      gconf_error_destroy(error);
+      g_error_free(error);
       return;
     }
   
@@ -617,7 +617,7 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
 }
 
 GSList*
-dir_all_entries (Dir* d, const gchar** locales, GConfError** err)
+dir_all_entries (Dir* d, const gchar** locales, GError** err)
 {
   ListifyData ld;
   
@@ -641,7 +641,7 @@ dir_all_entries (Dir* d, const gchar** locales, GConfError** err)
 }
 
 GSList*
-dir_all_subdirs (Dir* d, GConfError** err)
+dir_all_subdirs (Dir* d, GError** err)
 {
   DIR* dp;
   struct dirent* dent;
@@ -713,7 +713,7 @@ void
 dir_set_schema  (Dir* d,
                  const gchar* relative_key,
                  const gchar* schema_key,
-                 GConfError** err)
+                 GError** err)
 {
   Entry* e;
 
@@ -776,7 +776,7 @@ static void
 dir_fill_cache_from_doc(Dir* d);
 
 static void
-dir_load_doc(Dir* d, GConfError** err)
+dir_load_doc(Dir* d, GError** err)
 {
   gboolean xml_already_exists = TRUE;
   gboolean need_backup = FALSE;
@@ -987,7 +987,7 @@ dir_fill_cache_from_doc(Dir* d)
 static gboolean
 create_fs_dir(const gchar* dir, const gchar* xml_filename,
               guint root_dir_len, guint dir_mode, guint file_mode,
-              GConfError** err)
+              GError** err)
 {
   g_return_val_if_fail(xml_filename != NULL, FALSE);
   

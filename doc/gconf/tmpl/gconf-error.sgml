@@ -1,5 +1,5 @@
 <!-- ##### SECTION Title ##### -->
-GConfError
+GError
 
 <!-- ##### SECTION Short_Description ##### -->
 
@@ -7,13 +7,13 @@ error reporting.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-The #GConfError object is used to report errors that occur in GConf
+The #GError object is used to report errors that occur in GConf
 library routines. All functions that report errors work the same way:
 <itemizedlist>
 <listitem>
 <para>
-The last argument to the function is a #GConfError**, a pointer to a
-location where a #GConfError* can be placed.
+The last argument to the function is a #GError**, a pointer to a
+location where a #GError* can be placed.
 </para>
 </listitem>
 <listitem>
@@ -25,15 +25,15 @@ error will be returned.
 <listitem>
 <para>
 If non-<symbol>NULL</symbol>, the argument should be the address of a 
-#GConfError* variable, which should be initialized to
+#GError* variable, which should be initialized to
 <symbol>NULL</symbol>. 
 </para>
 </listitem>
 <listitem>
 <para>
-If an error occurs, a #GConfError will be allocated and placed in the
-return location; the caller must free the #GConfError with
-gconf_error_destroy(). If no error occurs, the return location will be
+If an error occurs, a #GError will be allocated and placed in the
+return location; the caller must free the #GError with
+g_error_free(). If no error occurs, the return location will be
 left untouched. That is, the test <literal>error != NULL</literal> 
 should always be a reliable indicator of whether the operation failed.
 </para>
@@ -47,24 +47,24 @@ or not an error occurred. Typically, <symbol>TRUE</symbol> is returned
 on success. In some cases, a <symbol>NULL</symbol> return value
 indicates failure. Either way, if the return value indicates failure
 and you passed a non-<symbol>NULL</symbol> value for the last argument
-to the function, a #GConfError will be returned. If the return value
-indicates success, then a #GConfError will never be returned.  These
+to the function, a #GError will be returned. If the return value
+indicates success, then a #GError will never be returned.  These
 relationships are guaranteed; that is, you can reliably use the return
-value to decide whether a #GConfError was placed in the return
+value to decide whether a #GError was placed in the return
 location. If a function does <emphasis>not</emphasis> indicate
 success/failure by return value, you must check whether the
-#GConfError is <symbol>NULL</symbol> to detect errors.
+#GError is <symbol>NULL</symbol> to detect errors.
 </para>
 
 <para>
 Here's a short error handling example:
 <programlisting>
-  GConfError* err = NULL;
+  GError* err = NULL;
 
   if (!gconf_init(&amp;err))
     {
-      fprintf(stderr, _("Failed to init GConf: %s\n"), err->str);
-      gconf_error_destroy(err); 
+      fprintf(stderr, _("Failed to init GConf: %s\n"), err->message);
+      g_error_free(err); 
       err = NULL;
     }
 </programlisting>
@@ -75,15 +75,15 @@ Here's a short error handling example:
 
 </para>
 
-<!-- ##### ENUM GConfErrNo ##### -->
+<!-- ##### ENUM GConfError ##### -->
 <para>
-The #GConfErrNo enumeration allows client applications to
+The #GConfError enumeration allows client applications to
 differentiate between different kinds of error. You may wish to take
 specific actions depending on the error type.
 </para>
 
-@GCONF_ERROR_SUCCESS: indicates that no error occurred, won't be returned in a #GConfError.
-@GCONF_ERROR_FAILED: indicates failure, but no more specific #GConfErrNo applied.
+@GCONF_ERROR_SUCCESS: indicates that no error occurred, won't be returned in a #GError.
+@GCONF_ERROR_FAILED: indicates failure, but no more specific #GConfError applied.
 @GCONF_ERROR_NO_SERVER: indicates that the GConf server couldn't be contacted, probably a CORBA problem.
 @GCONF_ERROR_NO_PERMISSION: indicates that permission to access some resource was denied.
 @GCONF_ERROR_BAD_ADDRESS: indicates that a configuration source address was syntactically invalid or impossible to resolve.
@@ -98,7 +98,7 @@ specific actions depending on the error type.
 @GCONF_ERROR_LOCAL_ENGINE: 
 @GCONF_ERROR_LOCK_FAILED: 
 
-<!-- ##### STRUCT GConfError ##### -->
+<!-- ##### STRUCT GError ##### -->
 <para>
 This structure describes an error. The @str field gives a
 human-readable description of the problem; the string is intended for
@@ -106,7 +106,7 @@ display to users. It will be internationalized and as informative as
 possible. The @num field is intended for programs that want to
 distinguish between different kinds of error. The @num and @str fields
 are meant to be accessed directly, because it's convenient to write
-err->num and err->str.
+err->code and err->message.
 </para>
 
 @str: the error description.
@@ -123,25 +123,25 @@ argument list is the same as in printf().
 @en: the error number.
 @format: printf()-style format for error description.
 @Varargs: arguments required by the @format.
-@Returns: newly-allocated #GConfError.
+@Returns: newly-allocated #GError.
 
 
-<!-- ##### FUNCTION gconf_error_copy ##### -->
+<!-- ##### FUNCTION g_error_copy ##### -->
 <para>
-Copies a #GConfError.
+Copies a #GError.
 </para>
 
-@err: a #GConfError to copy.
-@Returns: a new #GConfError.
+@err: a #GError to copy.
+@Returns: a new #GError.
 
 
-<!-- ##### FUNCTION gconf_error_destroy ##### -->
+<!-- ##### FUNCTION g_error_free ##### -->
 <para>
-Destroys a #GConfError. You must destroy any errors returned by GConf
+Destroys a #GError. You must destroy any errors returned by GConf
 functions.
 </para>
 
-@err: a #GConfError to destroy.
+@err: a #GError to destroy.
 
 
 <!-- ##### FUNCTION gconf_set_error ##### -->
@@ -155,7 +155,7 @@ Internal function.
 @Varargs: 
 
 
-<!-- ##### FUNCTION gconf_clear_error ##### -->
+<!-- ##### FUNCTION g_clear_error ##### -->
 <para>
 Internal function.
 </para>
