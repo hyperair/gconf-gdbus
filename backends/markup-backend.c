@@ -331,6 +331,8 @@ resolve_address (const char *address,
     
     if (writable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
+    else
+      flags |= GCONF_SOURCE_NEVER_WRITEABLE;
 
     /* We only do locking if it's writable,
      * and if not using local locks,
