@@ -1355,7 +1355,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
         *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
                                _("Expected list of %s, got list of %s"),
                                gconf_value_type_to_string(list_type),
-                               gconf_value_type_to_string(val->type));
+                               gconf_value_type_to_string(gconf_value_get_list_type (val)));
       gconf_value_free(val);
       return NULL;
     }

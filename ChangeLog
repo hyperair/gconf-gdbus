@@ -1,3 +1,10 @@
+2002-11-02  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-internals.c
+	(gconf_value_list_to_primitive_list_destructive): fix using the 
+	wrong type (value->type not value->list_type) in an error message, 
+	#96210
+
 2002-10-18  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-internals.c (subst_variables): patch from 
