@@ -113,6 +113,37 @@ void        g_conf_value_set_list_nocopy(GConfValue* value,
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 
+/* Meta-information about a key. Not the same as a schema; a schema
+ * is normative, this is descriptive.
+ */
+
+typedef struct _GConfMetaInfo GConfMetaInfo;
+
+struct _GConfMetaInfo {
+  gchar* schema;
+  gchar* mod_user; /* user owning the daemon that made the last modification */
+  GTime  mod_time; /* time of the modification */
+  /* anything else? */
+};
+
+#define g_conf_meta_info_schema(x)    ((x)->schema)
+#define g_conf_meta_info_mod_user(x)  ((x)->mod_user)
+#define g_conf_meta_info_mod_time(x)  ((x)->mod_time)
+
+GConfMetaInfo* g_conf_meta_info_new         (void);
+void           g_conf_meta_info_destroy     (GConfMetaInfo* gcmi);
+void           g_conf_meta_info_set_schema  (GConfMetaInfo* gcmi,
+                                             const gchar* schema_name);
+void           g_conf_meta_info_set_mod_user(GConfMetaInfo* gcmi,
+                                             const gchar* mod_user);
+void           g_conf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
+                                             GTime mod_time);
+
+
+/* Key-value pairs; used to list the contents of
+ *  a directory
+ */  
+
 typedef struct _GConfEntry GConfEntry;
 
 struct _GConfEntry {
@@ -135,7 +166,7 @@ struct _GConf {
 
 typedef void (*GConfNotifyFunc)(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpointer user_data);
 
-gboolean     g_conf_init           ();
+gboolean     g_conf_init            (const gchar* appname);
 
 GConf*       g_conf_new             (void); /* Default source stack */
 /* returns NULL on error; requests single specified source */

@@ -309,7 +309,7 @@ main (int argc, char** argv)
       return 1;
     }
 
-  if (!g_conf_init())
+  if (!g_conf_init("gconftool"))
     {
       fprintf(stderr, _("Failed to init GConf: %s\n"), g_conf_error());
       return 1;

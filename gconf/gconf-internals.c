@@ -45,6 +45,14 @@
 #define N_(x) x
 #endif
 
+static void
+set_string(gchar** dest, const gchar* src)
+{
+  if (*dest != NULL)
+    g_free(*dest);
+
+  *dest = src ? g_strdup(src) : NULL;
+}
 
 /*
  * Values
@@ -209,10 +217,7 @@ g_conf_value_copy(GConfValue* src)
       dest->d = src->d;
       break;
     case G_CONF_VALUE_STRING:
-      if (src->d.string_data)
-        dest->d.string_data = g_strdup(src->d.string_data);
-      else 
-        dest->d.string_data = NULL;
+      set_string(&dest->d.string_data, src->d.string_data);
       break;
     case G_CONF_VALUE_SCHEMA:
       if (src->d.schema_data)
@@ -328,7 +333,7 @@ g_conf_value_set_string(GConfValue* value, const gchar* the_str)
   g_return_if_fail(value != NULL);
   g_return_if_fail(value->type == G_CONF_VALUE_STRING);
 
-  value->d.string_data = g_strdup(the_str);
+  set_string(&value->d.string_data, the_str);
 }
 
 void        
@@ -446,6 +451,52 @@ g_conf_value_set_list_nocopy(GConfValue* value,
   value->d.list_data.list = list;
 }
 
+/*
+ * GConfMetaInfo
+ */
+
+GConfMetaInfo*
+g_conf_meta_info_new(void)
+{
+  GConfMetaInfo* gcmi;
+
+  gcmi = g_new0(GConfMetaInfo, 1);
+
+  /* pointers and time are NULL/0 */
+  
+  return gcmi;
+}
+
+void
+g_conf_meta_info_destroy(GConfMetaInfo* gcmi)
+{
+  g_free(gcmi);
+}
+
+void
+g_conf_meta_info_set_schema  (GConfMetaInfo* gcmi,
+                              const gchar* schema_name)
+{
+  set_string(&gcmi->schema, schema_name);
+}
+
+void
+g_conf_meta_info_set_mod_user(GConfMetaInfo* gcmi,
+                              const gchar* mod_user)
+{
+  set_string(&gcmi->mod_user, mod_user);
+}
+
+void
+g_conf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
+                              GTime mod_time)
+{
+  gcmi->mod_time = mod_time;
+}
+
+/*
+ * GConfEntry
+ */
 
 GConfEntry* 
 g_conf_entry_new(gchar* key, GConfValue* val)

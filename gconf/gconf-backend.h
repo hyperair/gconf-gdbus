@@ -34,6 +34,9 @@ struct _GConfBackendVTable {
   GConfValue*         (* query_value)     (GConfSource* source, 
                                            const gchar* key);
 
+  GConfMetaInfo*      (* query_metainfo)  (GConfSource* source,
+                                           const gchar* key_or_dir);
+  
   void                (* set_value)       (GConfSource* source, 
                                            const gchar* key, 
                                            GConfValue* value);

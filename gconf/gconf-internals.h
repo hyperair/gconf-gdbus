@@ -128,9 +128,9 @@ void          g_conf_sources_remove_dir (GConfSources* sources,
 void          g_conf_sources_nuke_dir (GConfSources* sources,
                                        const gchar* dir);
 
-void         g_conf_sources_set_schema        (GConfSources* sources,
-                                               const gchar* key,
-                                               const gchar* schema_key);
+void          g_conf_sources_set_schema        (GConfSources* sources,
+                                                const gchar* key,
+                                                const gchar* schema_key);
 
 gboolean      g_conf_sources_sync_all    (GConfSources* sources);
 
@@ -142,6 +142,8 @@ gboolean      g_conf_ping_daemon(void);
 gboolean      g_conf_spawn_daemon(void);
 
 gchar*        g_conf_concat_key_and_dir(const gchar* dir, const gchar* key);
+
+const gchar*  g_conf_global_appname(void);
 
 #endif
 

@@ -199,6 +199,11 @@ struct _CacheEntry {
   gchar* key;       /* This string is used in multiple places, saving RAM, but 
                        the CacheEntry owns it */
   GTime last_access;
+  /* This is also in the key/tree XML, but we cache it here
+     since it could change a lot and it is common to key/tree
+     but stored differently
+  */
+  GTime mod_time;
   union {
     KeyCacheEntry* key_entry;
     TreeCacheEntry* tree_entry;
@@ -262,6 +267,8 @@ static GConfSource*  resolve_address (const gchar* address);
 
 static GConfValue*   query_value     (GConfSource* source, const gchar* key);
 
+static GConfMetaInfo*query_metainfo  (GConfSource* source, const gchar* key_or_dir);
+
 static void          set_value       (GConfSource* source, const gchar* key, GConfValue* value);
 
 static GSList*       all_entries    (GConfSource* source,
@@ -291,6 +298,7 @@ static GConfBackendVTable xml_vtable = {
   shutdown,
   resolve_address,
   query_value,
+  query_metainfo,
   set_value,
   all_entries,
   all_subdirs,
@@ -366,6 +374,40 @@ query_value (GConfSource* source, const gchar* key)
       g_conf_set_error(G_CONF_IS_DIR, _("`%s' is a directory"),
                        key);
       return NULL;
+      break;
+    case DELETED_TREE_ENTRY: /* fall thru */
+    case NONEXISTENT_ENTRY:
+      return NULL;
+      break;
+    default:
+      g_assert_not_reached();
+      return NULL;
+      break;
+    }
+}
+
+static GConfMetaInfo*
+query_metainfo  (GConfSource* source, const gchar* key_or_dir)
+{
+  XMLSource* xsource = (XMLSource*)source;
+  CacheEntry* entry;
+  GConfMetaInfo* gcmi;
+  
+  entry = xs_lookup(xsource, key_or_dir);
+
+  g_assert(entry != NULL);
+  
+  switch (entry->type)
+    {
+    case TREE_ENTRY:
+    case KEY_ENTRY:
+      gcmi = g_conf_meta_info_new();
+
+      gcmi->mod_time = entry->mod_time;
+
+      /* FIXME mod user */
+      
+      return gcmi;
       break;
     case DELETED_TREE_ENTRY: /* fall thru */
     case NONEXISTENT_ENTRY:
@@ -642,6 +684,20 @@ xs_new_key_entry(XMLSource* source, CacheEntry* tree_entry,
                   
       entry->d.key_entry = key_cache_entry_new_nocopy(value, enode);
 
+      {
+        gchar* str = xmlGetProp(enode, "mtime");
+
+        if (str == NULL)
+          {
+            entry->mod_time = time(NULL); /* to be synced to XML later */
+          }
+        else
+          {
+            entry->mod_time = atoi(str);
+            free(str);
+          }
+      }
+      
       cache_entry_add_child(tree_entry, entry);
     }
 
@@ -686,8 +742,6 @@ xs_load_dir(XMLSource* source, const gchar* dir)
 static xmlDocPtr   
 xs_entry_tree (XMLSource* source, CacheEntry* entry)
 {
-  xmlDocPtr doc;
-
   if (entry->d.tree_entry->tree != NULL)
     return entry->d.tree_entry->tree;
 
@@ -697,18 +751,42 @@ xs_entry_tree (XMLSource* source, CacheEntry* entry)
 
   if (entry->d.tree_entry->tree == NULL)
     {
+      xmlDocPtr doc;
+
       /* OK, loading failed for some reason. So, we create 
          the tree in memory to try to sync it later.
       */
       doc = xmlNewDoc("1.0");
-      
-      doc->root = xmlNewDocNode(doc, NULL, "gconf", NULL);
-      
+
       entry->d.tree_entry->tree = doc;
     }
 
   g_assert(entry->d.tree_entry->tree != NULL);
+  
+  if (entry->d.tree_entry->tree->root == NULL)
+    {
+      /* Fix corruption */
+      entry->d.tree_entry->tree->root =
+        xmlNewDocNode(entry->d.tree_entry->tree, NULL, "gconf", NULL);
+    }
 
+  g_assert(entry->d.tree_entry->tree->root != NULL);
+
+  /* Mod time */
+  {
+    gchar* str;
+    str = xmlGetProp(entry->d.tree_entry->tree->root, "mtime");
+    if (str == NULL)
+      {
+        entry->mod_time = time(NULL); /* to sync later */
+      }
+    else
+      {
+        entry->mod_time = atoi(str);
+        free(str);
+      }
+  }
+  
   return entry->d.tree_entry->tree;
 }
 
@@ -970,6 +1048,9 @@ xs_create_new_dir_assuming_parent_exists(XMLSource* source,
 
       xdirs_add_child_dir(pce->d.tree_entry->dirs, relative_dir);
 
+      /* Update parent mod time */
+      pce->mod_time = time(NULL);
+      
       /* Mark parent to be saved */
       pce->d.tree_entry->dirty = TRUE;
     }
@@ -1097,6 +1178,10 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
           
           key_entry->d.key_entry->node = 
             xdoc_add_entry(tree, key_entry->key, value);
+
+          /* First time we've added this entry,
+             so update the mod time */
+          tree_entry->mod_time = time(NULL);
         }
       else
         {
@@ -1112,6 +1197,9 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
 
       /* last_access is set by the lookup function above. */
 
+      /* Set mod time */
+      key_entry->mod_time = time(NULL);
+      
       return;
     }  
   else if (key_entry->type == TREE_ENTRY)
@@ -1176,6 +1264,10 @@ xs_set_value(XMLSource* source, const gchar* key, GConfValue* value)
                           xdoc_add_entry(tree, 
                                          key_entry->key,
                                          value));
+
+    /* Update mod time for both key and dir, since
+       we added the key to the dir just now */
+    tree_entry->mod_time = key_entry->mod_time = time(NULL);
   }
 
   g_assert(key_entry->type == KEY_ENTRY);
@@ -1227,6 +1319,8 @@ xs_unset_value(XMLSource* source, const gchar* key)
             
             tree_entry->d.tree_entry->dirty = TRUE;
             
+            tree_entry->mod_time = time(NULL);
+            
             return;
           }
         return;
@@ -1274,6 +1368,35 @@ struct SyncData {
   gboolean failed;
   XMLSource* source;
 };
+
+static void
+cache_foreach_update_mods(const gchar* key, CacheEntry* entry,
+                          const gchar* username)
+{
+  xmlNodePtr node = NULL;
+
+  switch (entry->type)
+    {
+    case KEY_ENTRY:
+      node = entry->d.key_entry->node;
+      break;
+    case TREE_ENTRY:
+      node = entry->d.tree_entry->tree->root;
+      break;
+    default:
+      break;
+    }
+
+  if (node != NULL)
+    {
+      /* Put mod time into the XML document */
+      gchar* str = g_strdup_printf("%u", (guint)entry->mod_time);
+      xmlSetProp(node, "mtime", str);
+      g_free(str);
+
+      xmlSetProp(node, "muser", username);
+    }
+}
 
 static void
 cache_foreach_sync(const gchar* key, CacheEntry* entry, struct SyncData* data)
@@ -1330,7 +1453,7 @@ cache_foreach_sync(const gchar* key, CacheEntry* entry, struct SyncData* data)
   else 
     {
       g_assert(entry->type == TREE_ENTRY);
-
+      
       if (xmlSaveFile(tmp_filename, entry->d.tree_entry->tree) < 0)
         {
           /* I think libxml may mangle errno, but we might as well 
@@ -1402,6 +1525,8 @@ xs_sync_all(XMLSource* source)
 {
   struct SyncData data = { FALSE, source };  
 
+  g_hash_table_foreach(source->cache, (GHFunc)cache_foreach_update_mods,
+                       g_get_user_name());
   g_hash_table_foreach(source->cache, (GHFunc)cache_foreach_sync, &data);
 
   return !data.failed;
