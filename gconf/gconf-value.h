@@ -147,6 +147,11 @@ void           gconf_meta_info_set_mod_time (GConfMetaInfo *gcmi,
  *  a directory
  */  
 
+typedef enum
+{
+  GCONF_UNSET_INCLUDING_SCHEMA_NAMES
+} GConfUnsetFlags;
+
 typedef struct _GConfEntry GConfEntry;
 
 struct _GConfEntry {

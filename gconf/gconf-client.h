@@ -259,6 +259,11 @@ GConfValue*       gconf_client_get_default_from_schema (GConfClient* client,
 gboolean     gconf_client_unset          (GConfClient* client,
                                           const gchar* key, GError** err);
 
+gboolean     gconf_client_recursive_unset (GConfClient *client,
+                                           const char     *key,
+                                           GConfUnsetFlags flags,
+                                           GError        **err);
+
 GSList*      gconf_client_all_entries    (GConfClient* client,
                                           const gchar* dir, GError** err);
 

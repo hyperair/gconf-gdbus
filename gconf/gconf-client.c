@@ -1006,6 +1006,28 @@ gconf_client_unset          (GConfClient* client,
     return TRUE;
 }
 
+gboolean
+gconf_client_recursive_unset (GConfClient *client,
+                              const char     *key,
+                              GConfUnsetFlags flags,
+                              GError        **err)
+{
+  GError* error = NULL;
+
+  trace ("Unsetting '%s'\n", key);
+  
+  PUSH_USE_ENGINE (client);
+  gconf_engine_recursive_unset(client->engine, key, flags, &error);
+  POP_USE_ENGINE (client);
+  
+  handle_error(client, error, err);
+
+  if (error != NULL)
+    return FALSE;
+  else
+    return TRUE;
+}
+
 static GSList*
 copy_entry_list (GSList *list)
 {
@@ -2337,8 +2359,8 @@ notify_listeners_callback(GConfListeners* listeners,
                           gpointer listener_data,
                           gpointer user_data)
 {
-  struct ClientAndEntry* cae = user_data;
   Listener* l = listener_data;
+  struct ClientAndEntry* cae = user_data;
   
   g_return_if_fail (cae != NULL);
   g_return_if_fail (cae->client != NULL);

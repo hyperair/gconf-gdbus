@@ -1,3 +1,15 @@
+2003-06-18  Rodrigo Moya <rodrigo@ximian.com>
+
+	Fixes #73323
+
+	* gconf/gconf-sources.h: moved GConfUnsetFlags enum...
+
+	* gconf/gconf-value.h: ...to here.
+
+	* gconf/gconf-client.[ch] (gconf_client_recursive_unset):
+	implemented new function for calling the unrecursive_unset
+	method on the engine.
+
 2003-06-12  Guntupalli Karunakar  <karunakar@freedomink.org>
 
 	* configure.in: Added "ml" in ALL_LINGUAS.
