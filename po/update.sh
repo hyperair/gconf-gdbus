@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#test
+
 xgettext --default-domain=gconf --directory=.. \
   --add-comments --keyword=_ --keyword=N_ \
   --files-from=./POTFILES.in \
