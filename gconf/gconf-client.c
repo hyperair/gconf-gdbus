@@ -1334,3 +1334,170 @@ listener_destroy(Listener* l)
   
   g_free(l);
 }
+
+/*
+ * Change sets
+ */
+
+
+struct CommitData {
+  GConfClient* client;
+  GConfError* error;
+  GSList* remove_list;
+  gboolean remove_committed;
+};
+
+static void
+commit_foreach (GConfChangeSet* cs,
+                const gchar* key,
+                GConfValue* value,
+                gpointer user_data)
+{
+  struct CommitData* cd = user_data;
+
+  g_assert(cd != NULL);
+
+  if (cd->error != NULL)
+    return;
+  
+  if (value)
+    gconf_client_set   (cd->client, key, value, &cd->error);
+  else
+    gconf_client_unset (cd->client, key, &cd->error);
+
+  if (cd->error == NULL && cd->remove_committed)
+    {
+      /* Bad bad bad; we keep the key reference, knowing that it's
+         valid until we modify the change set, to avoid string copies.  */
+      cd->remove_list = g_slist_prepend(cd->remove_list, (gchar*)key);
+    }
+}
+
+gboolean
+gconf_client_commit_change_set   (GConfClient* client,
+                                  GConfChangeSet* cs,
+                                  gboolean remove_committed,
+                                  GConfError** err)
+{
+  struct CommitData cd;
+  GSList* tmp;
+  
+  cd.client = client;
+  cd.error = NULL;
+  cd.remove_list = NULL;
+  cd.remove_committed = remove_committed;
+
+  /* Because the commit could have lots of side
+     effects, this makes it safer */
+  gconf_change_set_ref(cs);
+  gtk_object_ref(client);
+  
+  gconf_change_set_foreach(cs, commit_foreach, &cd);
+
+  tmp = cd.remove_list;
+  while (tmp != NULL)
+    {
+      const gchar* key = tmp->data;
+      
+      gconf_change_set_remove(cs, key);
+
+      /* key is now invalid due to our little evil trick */
+
+      tmp = g_slist_next(tmp);
+    }
+
+  g_slist_free(cd.remove_list);
+  
+  gconf_change_set_unref(cs);
+  gtk_object_unref(client);
+
+  if (cd.error != NULL)
+    {
+      if (err != NULL)
+        *err = cd.error;
+      else
+        gconf_error_destroy(cd.error);
+
+      return FALSE;
+    }
+  else
+    {
+      return TRUE;
+    }
+}
+
+struct RevertData {
+  GConfClient* client;
+  GConfError* error;
+  GConfChangeSet* revert_set;
+};
+
+static void
+revert_foreach (GConfChangeSet* cs,
+                const gchar* key,
+                GConfValue* value,
+                gpointer user_data)
+{
+  struct RevertData* rd = user_data;
+  GConfValue* old_value;
+  GConfError* error = NULL;
+  
+  g_assert(rd != NULL);
+
+  if (rd->error != NULL)
+    return;
+
+  old_value = gconf_client_get(rd->client, key, &error);
+
+  if (error != NULL)
+    {
+      /* FIXME */
+      g_warning("error creating revert set: %s", error->str);
+      gconf_error_destroy(error);
+      error = NULL;
+    }
+  
+  if (old_value == NULL &&
+      value == NULL)
+    return; /* this commit will have no effect. */
+
+  if (old_value == NULL)
+    gconf_change_set_unset(rd->revert_set, key);
+  else
+    gconf_change_set_set_nocopy(rd->revert_set, key, old_value);
+}
+
+
+GConfChangeSet*
+gconf_client_create_reverse_change_set  (GConfClient* client,
+                                         GConfChangeSet* cs,
+                                         GConfError** err)
+{
+  struct RevertData rd;
+
+  rd.error = NULL;
+  rd.client = client;
+  rd.revert_set = gconf_change_set_new();
+
+  /* we're emitting signals and such, avoid
+     nasty side effects with these.
+  */
+  gtk_object_ref(GTK_OBJECT(rd.client));
+  gconf_change_set_ref(cs);
+  
+  gconf_change_set_foreach(cs, revert_foreach, &rd);
+
+  if (rd.error != NULL)
+    {
+      if (err != NULL)
+        *err = rd.error;
+      else
+        gconf_error_destroy(rd.error);
+    }
+
+  gtk_object_unref(GTK_OBJECT(rd.client));
+  gconf_change_set_unref(cs);
+  
+  return rd.revert_set;
+}
+

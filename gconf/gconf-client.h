@@ -25,6 +25,7 @@
 #include <gtk/gtkwidget.h>
 #include <gconf/gconf.h>
 #include <gconf/gconf-listeners.h>
+#include <gconf/gconf-changeset.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -331,6 +332,26 @@ void         gconf_client_unreturned_error       (GConfClient* client, GConfErro
 void         gconf_client_value_changed          (GConfClient* client,
                                                   const gchar* key,
                                                   GConfValue* value);
+
+/*
+ * Change set stuff
+ */
+
+gboolean        gconf_client_commit_change_set   (GConfClient* client,
+                                                  GConfChangeSet* cs,
+                                                  /* remove all
+                                                     successfully
+                                                     committed changes
+                                                     from the set */
+                                                  gboolean remove_committed,
+                                                  GConfError** err);
+
+/* Create a change set that would revert the given change set
+   for the given GConfClient */
+GConfChangeSet* gconf_client_create_reverse_change_set  (GConfClient* client,
+                                                         GConfChangeSet* cs,
+                                                         GConfError** err);
+
 
 #ifdef __cplusplus
 }
