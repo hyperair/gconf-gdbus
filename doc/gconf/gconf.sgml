@@ -60,31 +60,343 @@
             </para>
           </listitem>
           <listitem>
-            Each user has a "GConf search path" which is a list of 
-            configuration sources to scan for each value. 
-            For example, the configuration engine might look for 
-            values first in the local machine's database and 
-            then in a network-wide database.
+            <para>
+              Each user has a "GConf search path" which is a list of 
+              configuration sources to scan for each value. 
+              For example, the configuration engine might look for 
+              values first in the local machine's database and 
+              then in a network-wide database.
+            </para>
           </listitem>
           <listitem>
-            GConf is implemented as a per-user daemon, which makes 
-            locking a non-issue and allows aggressive caching.
+            <para>
+              GConf is implemented as a per-user daemon, which makes 
+              locking a non-issue and allows aggressive caching.
+            </para>
           </listitem>
         </itemizedlist>
       </para>
-      
+
     </sect2>
 
-    <!-- GConf Components -->
+    <!-- Terms and Concepts -->
     <sect2>
-      <title>Components</title>
+      <title>Terms and Concepts</title>
+
+      <para>
+        Fill me in!
+      </para>
+
+      <!-- Data Types -->
+      <sect3>
+        <title>GConf Data Types</title>
+
+        
+
+      </sect3>
+
+    </sect2>
+
+  </sect1>
+
+  <!-- Client Library -->
+  <sect1>
+    <title>C Language Client Library</title>
+    
+    <para>
+      The GConf client library is used by applications
+      to store or retrieve configuration data. This library presents 
+      the lowest-level (but still fairly convenient) mode of access
+      to the GConf database; the GConf database does not speak a
+      public protocol and can not be accessed directly. 
+    </para>
+
+    <para>
+      Convenience wrappers for the GConf client library may eventually 
+      be written. A wrapper which performed client-side caching
+      could also be useful; time will tell.      
+    </para>
+
+    <!-- Error Handling -->
+    <sect2>
+      <title>Error Handling</title>
       
       <para>
-        
+        Error handling isn't exciting but it's unfortunately
+        necessary. Because even the initialization of the GConf
+        library can fail, we have to cover error handling first.
+      </para>
+
+      <para>
+        Errors are returned in two forms. The first is an
+        <symbol>errno</symbol>-style enumerated value with type
+        <symbol>GConfErrNo</symbol>, useful for switching on an error
+        and taking different actions depending on the exact error that
+        occurred. The second is human-readable text; human-readable
+        errors automatically consist of both a
+        <function>strerror()</function>-style string and a more
+        detailed message. For any error, both of these forms will be
+        available to you.
+      </para>
+
+      <para>
+        The available values for <symbol>GConfErrNo</symbol> are:
+        <variablelist>
+          <varlistentry><term>G_CONF_SUCCESS</term>
+            <listitem>
+              <para>
+                Indicates that there was no error.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_FAILED</term>
+            <listitem>
+              <para>
+                Indicates that the operation fatally failed for 
+                some fairly unpredictable and idiosyncratic reason
+                not covered by the more specific error values.
+                The error message will give details.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_NO_SERVER</term>
+            <listitem>
+              <para>
+                The <command>gconfd</command> configuration server
+                could not be contacted, and we couldn't or didn't
+                respawn it for whatever reason. The error message 
+                may give more details. This probably means either a
+                bug in <command>gconfd</command> or a hosed local
+                configuration.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_NO_PERMISSION</term>
+            <listitem>
+              <para>
+                User was denied permission to access some resource
+                at some point; perhaps a file in a file-based
+                configuration backend, perhaps some authentication 
+                tokens are wrong. The error message will give more details.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_BAD_ADDRESS</term>
+            <listitem>
+              <para>
+                A configuration source address was invalid.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_BAD_KEY</term>
+            <listitem>
+              <para>
+                A configuration key was invalid.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_PARSE_ERROR</term>
+            <listitem>
+              <para>
+                Something had to be parsed, and it couldn't
+                be. Typically, a string representation of a config 
+                value found in a config file or obtained from the 
+                user. Error message will often have more details.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_CORRUPT</term>
+            <listitem>
+              <para>
+                Typically means that the text files or binary database
+                used by some backend have gotten hosed. Most backends
+                will try to self-repair, within reason. If they can't
+                they will bail with this error.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_TYPE_MISMATCH</term>
+            <listitem>
+              <para>
+                Some routines in the GConf libraries impose type
+                constraints; if these are violated you get this error.
+                For example, <function>g_conf_get_int()</function>
+                returns this error if the value found is actually a 
+                string.
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_IS_DIR</term>
+            <listitem>
+              <para>
+                This error is returned if you try to perform a key 
+                operation on a name that turns out to be a directory.
+                Some backends don't check for this error, they just 
+                report that the key isn't set...
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry><term>G_CONF_IS_KEY</term>
+            <listitem>
+              <para>
+                This error is returned if you try to perform a
+                directory operation on a name that turns out to be 
+                a key. Some backends don't check for this error...
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </para>
+
+      <para>
+        To obtain the current <symbol>GConfErrNo</symbol>, call the 
+        <function>g_conf_errno()</function> function.
+        <funcsynopsis>
+          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
+          <funcdef>GConfErrNo
+            <function>g_conf_errno</function>
+          </funcdef>
+          <void>
+        </funcsynopsis>
+      </para>
+
+      <para>
+        To clear the current <symbol>GConfErrNo</symbol> (setting it
+        to <symbol>G_CONF_SUCCESS</symbol>, call
+        <function>g_conf_clear_error()</function> which is equivalent
+        to setting the UNIX <symbol>errno</symbol> to 0:
+
+        <funcsynopsis>
+          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
+          <funcdef>void
+            <function>g_conf_clear_error</function>
+          </funcdef>
+          <void>
+        </funcsynopsis>
+      </para>
+
+      <para>
+        To obtain the current error message, call
+        <function>g_conf_error()</function>. This message will include
+        the results of <function>g_conf_strerror()</function> plus
+        possible additional details about the problem.        
+        <funcsynopsis>
+          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
+          <funcdef>const gchar* 
+            <function>g_conf_error</function>
+          </funcdef>
+          <void>
+        </funcsynopsis>
+      </para>
+
+      <para>
+        <function>g_conf_strerror()</function> is not that useful,
+        because you should use <function>g_conf_error()</function>
+        instead to get additional details. However it's exported 
+        publically in case you think of a use for it.
+        <funcsynopsis>
+          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
+          <funcdef>const gchar* 
+            <function>g_conf_strerror</function>
+          </funcdef>
+          <void>
+        </funcsynopsis>
+      </para>
+
+      <para>
+        <function>g_conf_set_error()</function> is used inside the
+        library and inside the library backends. It is typically not
+        useful to clients. It simply sets the current error, from a
+        <symbol>GConfErrNo</symbol> and a
+        <function>printf()</function>-style format and variable
+        argument list.
+        <funcsynopsis>
+          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
+          <funcdef>void
+            <function>g_conf_set_error</function>
+          </funcdef>
+          <paramdef>GConfErrNo <parameter>en</parameter></paramdef>
+          <paramdef>const gchar*
+          <parameter>format</parameter></paramdef>
+          <paramdef><parameter>...</parameter></paramdef>
+        </funcsynopsis>
       </para>
 
     </sect2>
-  </sect1>
+
+
+    <!-- Initialization -->
+    <sect2>
+      <title>Initialization</title>
+      
+      <para>
+        The GConf client library must be initialized before use. 
+        Initialization establishes a connection to the ORB (because
+        CORBA is currently used to implement GConf, though clients
+        never have to see this) and sets up some global data
+        structures. <function>g_conf_init()</function> has no 
+        arguments. (Well, right now it does have one, the name of your
+        app, but I'm removing it soon.)
+      </para>
+
+      <para>
+        Before initializing GConf, you can specify the ORB object
+        reference to use when connecting to the configuration
+        database; call <function>g_conf_set_orb()</function>. You
+        would normally use this if you are writing a GNOME
+        application, and you want to use
+        <function>gnome_CORBA_init()</function> to obtain your ORB
+        reference.
+      </para>
+
+      <warning>
+        If you use <function>gnome_CORBA_init()</function> to get your
+        ORB reference, CORBA connections to your application are
+        authenticated via <filename>libgnorba</filename>. If you let
+        GConf set up the ORB, connections are authenticated in a
+        GConf-specific way. Your authentication mechanism must match
+        the one used by the <command>gconfd</command> per-user
+        configuration daemon, which is never the GNOME way for
+        now. This will obviously change before GConf goes into
+        production in a GNOME environment, but it works great 
+        for non-GNOME apps right now. :-)
+      </warning>
+
+      <para>
+        You can check whether GConf is initialized with
+        <function>g_conf_initialized()</function>.
+      </para>
+
+    </sect2>
+
+    <!-- GConfValue -->
+    <sect2>
+      <title>The <structname>GConfValue</structname> Datatype</title>
+      
+      <para>
+        The <structname>GConfValue</structname> struct represents 
+        a value that can be obtained from or stored in the
+        configuration database. It is simply a type marker 
+        and a union of several value types, with constructor,
+        destructor, "setter" and "getter" functions. When possible 
+        the GConf library allows you to deal with simple C types
+        instead of a <structname>GConfValue</structname>, but 
+        sometimes there is simply no way to know the type of an 
+        object in advance. The <filename>libgnome/gnome-config.h</filename>
+        interface simply returns strings in this case, for the
+        programmer to parse manually; this was phenomenally broken and
+        GConf fixes it with <structname>GConfValue</structname>.        
+      </para>
+
+      
+
+    </sect2>
+
+    <!-- Reading configuration values -->
+    <sect2>
+      <title>Reading Configuration Values</title>
+
+    </sect2>
 
 </article>
 <!-- Keep this comment at the end of the file
