@@ -102,7 +102,16 @@ dir_blank(const gchar* key)
   
   d = g_new0(Dir, 1);
 
-  g_assert(gconf_valid_key(key, NULL));
+#ifdef GCONF_ENABLE_DEBUG
+  {
+    gchar* why;
+    if (!gconf_valid_key(key, &why)) {
+      gconf_log(GCL_DEBUG, "key `%s' invalid: %s",
+                key, why);
+    }
+    g_assert(gconf_valid_key(key, NULL));
+  }
+#endif
   
   d->key = g_strdup(key);
   
@@ -149,10 +158,13 @@ dir_load        (const gchar* xml_root_dir, const gchar* key, GConfError** err)
     
     if (stat(xml_filename, &s) != 0)
       {
-        gconf_set_error(err, GCONF_FAILED,
-                         _("Could not stat `%s': %s"),
-                         xml_filename, strerror(errno));
-        error = TRUE;
+        if (errno != ENOENT)
+          {
+            gconf_set_error(err, GCONF_FAILED,
+                            _("Could not stat `%s': %s"),
+                            xml_filename, strerror(errno));
+            error = TRUE;
+          }
       }
     else if (S_ISDIR(s.st_mode))
       {

@@ -936,6 +936,8 @@ main(int argc, char** argv)
   gchar* logname;
   const gchar* username;
   guint len;
+  gchar* ior;
+  OAF_RegistrationResult result;
   
   chdir ("/");
 
@@ -1000,20 +1002,47 @@ main(int argc, char** argv)
       return 1;
     }
 
+  /* Needs to be done before loading sources */
+  ior = CORBA_ORB_object_to_string(orb, server, &ev);
+  gconf_set_daemon_ior(ior);
+  CORBA_free(ior);
+  
   /* Needs to be done right before registration */
   gconf_server_load_sources();
   
-  oaf_active_server_register(IID, server);
+  result = oaf_active_server_register(IID, server);
 
+  if (result != OAF_REG_SUCCESS)
+    {
+      switch (result)
+        {
+        case OAF_REG_NOT_LISTED:
+          gconf_log(GCL_ERR, _("OAF doesn't know about our IID; indicates broken installation; can't register; exiting\n"));
+          break;
+          
+        case OAF_REG_ALREADY_ACTIVE:
+          gconf_log(GCL_ERR, _("Another gconfd already registered with OAF; exiting\n"));
+          break;
+
+        case OAF_REG_ERROR:
+        default:
+          gconf_log(GCL_ERR, _("Unknown error registering gconfd with OAF; exiting\n"));
+          break;
+        }
+      fast_cleanup();
+      shutdown_contexts();
+      return 1;
+    }
+  
   gconf_main();
-
+      
   fast_cleanup();
 
   shutdown_contexts();
 
   locale_cache_drop();
   
-  gconf_log(GCL_INFO, _("Exiting normally"));
+  gconf_log(GCL_INFO, _("Exiting"));
   
   g_free(logname);
   
@@ -1030,6 +1059,8 @@ static guint timeout_id = 0;
 static gboolean
 one_hour_timeout(gpointer data)
 {
+  gconf_log(GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
+  
   /* shrink unused context objects */
   sleep_old_contexts();
 

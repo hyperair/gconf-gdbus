@@ -340,7 +340,7 @@ resolve_address (const gchar* address, GConfError** err)
 
         lockdir = gconf_concat_key_and_dir(root_dir, "%gconf-xml-backend.lock");
         
-        lock = gconf_get_lock(lockdir, 1000, err);
+        lock = gconf_get_lock(lockdir, err);
 
         if (lock != NULL)
           gconf_log(GCL_DEBUG, "Acquired lock directory `%s'", lockdir);

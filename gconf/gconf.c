@@ -1296,13 +1296,18 @@ static ConfigServer   server = CORBA_OBJECT_NIL;
 
 /* errors in here should be GCONF_NO_SERVER */
 static ConfigServer
-try_to_contact_server(GConfError** err)
+try_to_contact_server(gboolean start_if_not_found, GConfError** err)
 {
   CORBA_Environment ev;
-
+  OAF_ActivationFlags flags;
+  
   CORBA_exception_init(&ev);
 
-  server = oaf_activate_from_id("OAFAID:["IID"]", 0, NULL, &ev);
+  flags = 0;
+  if (!start_if_not_found)
+    flags |= OAF_FLAG_EXISTING_ONLY;
+  
+  server = oaf_activate_from_id("OAFAID:["IID"]", flags, NULL, &ev);
 
   /* So try to ping server */
   if (!CORBA_Object_is_nil(server, &ev))
@@ -1321,22 +1326,23 @@ try_to_contact_server(GConfError** err)
     }
   else
     {
-      gconf_handle_oaf_exception(&ev, err);
-
-      /* Make the errno more specific */
-      if (err && *err)
-	(*err)->num = GCONF_NO_SERVER;
-      else if (err && !*err)
-        *err = gconf_error_new(GCONF_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
+      if (gconf_handle_oaf_exception(&ev, err))
+        {
+          /* Make the errno more specific */
+          if (err && *err)
+            (*err)->num = GCONF_NO_SERVER;
+          else if (err && !*err)
+            *err = gconf_error_new(GCONF_NO_SERVER, _("Error contacting configuration server: OAF returned nil from oaf_activate_from_id() and did not set an exception explaining the problem. Please file an OAF bug report."));
+        }
     }
 
 #ifdef GCONF_ENABLE_DEBUG      
-  if (server == CORBA_OBJECT_NIL)
+  if (server == CORBA_OBJECT_NIL && start_if_not_found)
     {
       g_return_val_if_fail(err == NULL || *err != NULL, server);
     }
 #endif
-
+  
   return server;
 }
 
@@ -1350,25 +1356,7 @@ gconf_get_config_server(gboolean start_if_not_found, GConfError** err)
   if (server != CORBA_OBJECT_NIL)
     return server;
 
-  if (start_if_not_found)
-    {
-      server = try_to_contact_server(err);
-
-#ifdef GCONF_ENABLE_DEBUG      
-      if (server == CORBA_OBJECT_NIL)
-        {
-          g_return_val_if_fail(err == NULL || *err != NULL, server);
-        }
-#endif
-    }
-  else
-    {
-      /* we need to set an error, since other code assumes the invariant that
-         an error gets set if no server is returned.
-      */
-      if (err)
-        *err = gconf_error_new(GCONF_NO_SERVER, _("Server is not running"));
-    }
+  server = try_to_contact_server(start_if_not_found, err);
   
   return server; /* return what we have, NIL or not */
 }
@@ -1894,7 +1882,6 @@ gconf_shutdown_daemon(GConfError** err)
 
   if (cs == CORBA_OBJECT_NIL)
     {
-      g_return_if_fail(err == NULL || *err != NULL);
 
       return;
     }

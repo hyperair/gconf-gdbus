@@ -1,3 +1,26 @@
+2000-01-07  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf-internals.c (gconf_get_lock): totally rewrite the
+	locking stuff
+
+	* backends/xml-dir.c (dir_load): if errno == ENOENT don't make
+	dir_load() fail
+
+	* gconf/gconfd.c (main): check return value of
+	oaf_active_server_register() and act accordingly.
+
+	* gconf/gconf.c (try_to_contact_server): use new
+	OAF_FLAG_EXISTING_ONLY when appropriate	
+
+	* gconf/gconf-internals.c (gconf_set_daemon_ior): allow setting
+	IOR to a global var
+
+	* gconf/gconfd.c (main): set the IOR so it can be used in lockfiles
+
+2000-01-03  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconftool.c (main): add support for direct config source access
+
 1999-12-31  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-internals.c (gconf_log): in non-daemon mode, use
@@ -35,6 +58,7 @@
 	* gconf/gconf-internals.c: If LC_MESSAGE doesn't exist, use value of
 	LC_CTYPE (is this correct?)
 		
+>>>>>>> 1.102
 1999-12-31  Yuri Syrota  <rasta@renome.rovno.ua>
 
 	* configure.in: Added "uk" to ALL_LINGUAS

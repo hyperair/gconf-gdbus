@@ -58,6 +58,7 @@ static char* long_desc = NULL;
 static char* owner = NULL;
 static char* schema_file = NULL;
 static char* config_source = NULL;
+static int use_local_source = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -224,6 +225,15 @@ struct poptOption options[] = {
     N_("SOURCE")
   },
   {
+    "direct",
+    '\0',
+    POPT_ARG_NONE,
+    &use_local_source,
+    0,
+    N_("Access the config database directly, bypassing server. Requires that gconfd is not running."),
+    NULL
+  },
+  {
     NULL,
     '\0',
     0,
@@ -247,7 +257,6 @@ static int do_unset(GConfEngine* conf, const gchar** args);
 static int do_all_subdirs(GConfEngine* conf, const gchar** args);
 static int do_load_schema_file(GConfEngine* conf, const gchar* file);
 
-/* FIXME um, break this function up... */
 int 
 main (int argc, char** argv)
 {
@@ -359,6 +368,12 @@ main (int argc, char** argv)
       fprintf(stderr, _("--install-schema-file must be used by itself.\n"));
       return 1;
     }
+
+  if (use_local_source && config_source == NULL)
+    {
+      fprintf(stderr, _("You must specify a config source with --config-source when using --direct\n"));
+      return 1;
+    }
   
   if (!gconf_init(argc, argv, &err))
     {
@@ -371,8 +386,13 @@ main (int argc, char** argv)
   if (config_source == NULL)
     conf = gconf_engine_new();
   else
-    conf = gconf_engine_new_from_address(config_source, &err);
-
+    {
+      if (use_local_source)
+        conf = gconf_engine_new_from_address(config_source, &err);
+      else
+        conf = gconf_engine_new_local(config_source, &err);
+    }
+  
   if (conf == NULL)
     {
       g_assert(err != NULL);
@@ -387,8 +407,8 @@ main (int argc, char** argv)
     }
   
   g_assert(conf != NULL);
-
-  /* Do this first, since we only want to do this if the user selected
+  
+  /* Do this first, since we want to do only this if the user selected
      it. */
   if (ping_gconfd)
     {
@@ -397,7 +417,7 @@ main (int argc, char** argv)
       else 
         return 2;
     }
-
+  
   if (dir_exists != NULL) 
     {
       if (do_dir_exists(conf, dir_exists))
