@@ -1,8 +1,8 @@
 #!/bin/sh
 
-xgettext --default-domain=gconf --directory=.. \
+xgettext --default-domain=GConf --directory=.. \
   --add-comments --keyword=_ --keyword=N_ \
   --files-from=./POTFILES.in \
-&& test ! -f gconf.po \
-   || ( rm -f ./gconf.pot \
-    && mv gconf.po ./gconf.pot )
+&& test ! -f GConf.po \
+   || ( rm -f ./GConf.pot \
+    && mv GConf.po ./GConf.pot )
