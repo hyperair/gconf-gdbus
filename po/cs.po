@@ -1,15 +1,16 @@
 # Czech translation of GConf.
 # Copyright (C) 2002 Free Software Foundation, Inc.
+# Copyright (C) 2004 Miloslav Trmac <mitr@volny.cz>
 # George Lebl <jirka@5z.com>, 2000.
 # Michal Bukovjan <bukm@centrum.cz>, 2002.
-# Miloslav Trmac <mitr@volny.cz>, 2003.
+# Miloslav Trmac <mitr@volny.cz>, 2003, 2004.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-30 19:38+0100\n"
-"PO-Revision-Date: 2003-12-30 21:59+0100\n"
+"POT-Creation-Date: 2004-01-24 03:53+0100\n"
+"PO-Revision-Date: 2004-01-25 01:55+0100\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +40,7 @@ msgstr "Nemohu najít adresář %s\n"
 #: backends/gconf-merge-tree.c:94
 #, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
-msgstr "Chyba při ukládání stromu GCOnf do '%s': %s\n"
+msgstr "Chyba při ukládání stromu GConf do '%s': %s\n"
 
 #: backends/gconf-merge-tree.c:120
 #, c-format
@@ -863,7 +864,7 @@ msgstr "Schéma udává typ seznam, ale neudává typ prvků seznamu"
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
-msgstr "Schémá udává typ pár, ale neudává typ elementů car/cdr"
+msgstr "Schéma udává typ pár, ale neudává typ elementů car/cdr"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -933,24 +934,7 @@ msgid ""
 "details on problems gconfd encountered. There can only be one gconfd per "
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
-msgstr ""
-"Nemohu uložit hodnotu klíče '%s', protože server pro nastavení nemá žádnou "
-"zapisovatelnou databázi. Existuje několik častých příčin tohot problému: 1) "
-"váš soubor cest s nastavením %s/path neobsahuje žádnou databázi nebo nebyl "
-"nalezen, 2) díky chybě byly nějakým způsobem vytvořeny dva procesy gconfd, "
-"3) váš operační systém je špatně nastaven, takže zamykání souborů NFS "
-"nefunguje ve vašem domovském adresáři, nebo 4) vaše klientská stanice NFS "
-"havarovala a neuvědomila při restartu server, že by měl odstranit zámky na "
-"souborech. Pokud u vás běží dva procesy gconfd (nebo běžely v době, kdy byl "
-"spouštěn druhý), může pomoci odhlásit se, zabít všechny běžící procesy "
-"gconfd a přihlásit se znovu. Pokud máte staré zámky, odstraňte ~/.gconf*/"
-"*lock. Možná je problém v tom, že jste se pokusili použít GConf ze dvou "
-"počítačů současně a ORBit má stále implicitní nastavení, které zakazuje "
-"vzdálená připojení CORBA - dejte \"ORBIIOPIPv4=1\" do /etc/orbitrc. Jako "
-"obvykle prověřte syslog user.* a hledejte podrobnosti týkající se problémů v "
-"gconfd. Na jeden domovský adresář může existovat pouze jeden gconfd a musí "
-"vlastnit soubor zámku v ~/.gconfd a také soubory zámků v jednotlivých "
-"umístěních nastavení, například ~/.gconf"
+msgstr "Nemohu uložit hodnotu klíče '%s', protože server pro nastavení nemá žádnou zapisovatelnou databázi. Existuje několik častých příčin tohoto problému: 1) váš soubor cest s nastavením %s/path neobsahuje žádnou databázi nebo nebyl nalezen, 2) díky chybě byly nějakým způsobem vytvořeny dva procesy gconfd, 3) váš operační systém je špatně nastaven, takže zamykání souborů NFS nefunguje ve vašem domovském adresáři, nebo 4) vaše klientská stanice NFS havarovala a neuvědomila při restartu server, že by měl odstranit zámky na souborech. Pokud u vás běží dva procesy gconfd (nebo běžely v době, kdy byl spouštěn druhý), může pomoci odhlásit se, zabít všechny běžící procesy gconfd a přihlásit se znovu. Pokud máte staré zámky, odstraňte ~/.gconf*/*lock. Možná je problém v tom, že jste se pokusili použít GConf ze dvou počítačů současně a ORBit má stále implicitní nastavení, které zakazuje vzdálená připojení CORBA - dejte \"ORBIIOPIPv4=1\" do /etc/orbitrc. Jako obvykle prověřte syslog user.* a hledejte podrobnosti týkající se problémů v gconfd. Na jeden domovský adresář může existovat pouze jeden gconfd a musí vlastnit soubor zámku v ~/.gconfd a také soubory zámků v jednotlivých umístěních nastavení, například ~/.gconf"
 
 #: gconf/gconf-sources.c:1414
 #, c-format
@@ -1517,7 +1501,7 @@ msgstr "NÁZEVSOUBORU"
 
 #: gconf/gconftool.c:319
 msgid "Specify a configuration source to use rather than the default path"
-msgstr "Určení zdroje konfifurace, který použít místo implicitní cesty"
+msgstr "Určení zdroje konfigurace, který použít místo implicitní cesty"
 
 #: gconf/gconftool.c:320
 msgid "SOURCE"
@@ -1629,9 +1613,7 @@ msgstr ""
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
-msgstr ""
-"--set_schema by nemělo být použiváno s --get, --set, --unset, --all-entries, "
-"--all-dirs\n"
+msgstr "--set_schema by nemělo být používáno s --get, --set, --unset, --all-entries, --all-dirs\n"
 
 #: gconf/gconftool.c:595
 msgid "Value type is only relevant when setting a value\n"
