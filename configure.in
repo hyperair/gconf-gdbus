@@ -120,7 +120,7 @@ if test "x$docs_only" = "xyes"; then
         AC_FYI("Only building documentation")
 else
 
-PKGCONFIG_MODULES='gmodule-2.0 >= 1.3.5 gobject-2.0 >= 1.3.5 bonobo-activation-2.0'
+PKGCONFIG_MODULES='gmodule-2.0 >= 1.3.5 gobject-2.0 >= 1.3.5 bonobo-activation-2.0 >= 0.9.1'
 PKGCONFIG_MODULES_WITH_XML="$PKGCONFIG_MODULES libxml-2.0"
 PKGCONFIG_MODULES_WITH_GTK="gtk+-2.0 $PKGCONFIG_MODULES"
 
@@ -222,7 +222,7 @@ gconf.spec
 gconf.m4
 gconf/Makefile
 gconf/default.path
-gconf/gconfd.server
+gconf/GNOME_Config.server
 backends/Makefile
 po/Makefile.in
 doc/Makefile
