@@ -1,5 +1,12 @@
 1999-11-22  Havoc Pennington  <hp@pobox.com>
 
+        * gconf/default.path: default configuration file
+	
+	* gconf/Makefile.am (install-data-local): Install default.path to
+	sysconfdir/gconf/path (theoretically)
+
+1999-11-22  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconfd.c (gconf_set_exception): lots of assertions
 	(gconf_server_load_sources): Install the default context even if
 	we don't find any configuration sources in the path

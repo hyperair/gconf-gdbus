@@ -61,7 +61,13 @@ libgconf_la_SOURCES = \
 
 libgconf_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) $(OAF_LIBS)
 
-EXTRA_DIST=GConf.idl gconfd.oafinfo
+EXTRA_DIST=GConf.idl gconfd.oafinfo default.path
 
 oafinfodir=$(datadir)/oaf
 oafinfo_DATA=gconfd.oafinfo
+
+
+install-data-local:
+	$(INSTALL_DATA) $(top_srcdir)/gconf/default.path $(sysconfdir)/gconf/path
+
+
