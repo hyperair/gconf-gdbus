@@ -9,7 +9,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-03-01 14:32+0100\n"
+"POT-Creation-Date: 2002-03-08 19:38+0100\n"
 "PO-Revision-Date: 2002-03-01 14:32+0100\n"
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
@@ -714,6 +714,56 @@ msgstr ""
 "jeśli masz pewność, że nie działają żadne procesy gconfd, korzystające z "
 "katalogu domowego, spróbuj usunąć ~/.gconf/*.lock i ~/.gconfd/lock."
 
+#: gconf/gconf-sanity-check.c:1 gconf/gconftool.c:1
+msgid "Help options"
+msgstr "Opcje pomocy"
+
+#: gconf/gconf-sanity-check.c:1 gconf/gconftool.c:1
+#, c-format
+msgid ""
+"Error on option %s: %s.\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"Błąd przy opcji %s: %s.\n"
+"Uruchom \"%s --help\", aby wypisać pełną listę opcji dostępnych z wiersza "
+"poleceń.\n"
+
+#: gconf/gconf-sanity-check.c:1
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Skontaktuj się z administratorem systemu, aby rozwiązać następujący "
+"problem:\n"
+"Nie można otworzyć lub stworzyć pliku \"%s\"; wskazuje to, że może istnieć "
+"problem z konfiguracją, gdyż wiele programów wymaga tworzenia w katalogu "
+"domowym pewnych plików. Błąd, który wystąpił: \"%s\" (errno = %d)."
+
+#: gconf/gconf-sanity-check.c:1
+#, c-format
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See "
+"the rpc.statd and rpc.lockd documentation. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Skontaktuj się z administratorem systemu, aby rozwiązać następujący "
+"problem:\n"
+"Nie można zablokować pliku \"%s\"; wskazuje to, że może istnieć problem z "
+"konfiguracją systemu operacyjnego. Jeśli katalog domowy jest udostępniany "
+"poprzez NFS, może to być spowodowane niewłaściwymi ustawieniami klienta lub "
+"serwera. Zajrzyj do dokumentacji rpc.statd i rpc.lockd. Błąd, który "
+"wystąpił: \"%s\" (errno = %d)."
+
+#: gconf/gconf-sanity-check.c:1
+#, c-format
+msgid "Can't remove file %s: %s\n"
+msgstr "Nie można usunąć pliku \"%s\": %s"
+
 #: gconf/gconf-schema.c:1 gconf/gconf-schema.c:1 gconf/gconf-schema.c:1
 #: gconf/gconf-schema.c:1
 msgid "Schema contains invalid UTF-8"
@@ -1219,10 +1269,6 @@ msgstr ""
 "Nie można wyświetlić okna z informacją o błędzie\n"
 
 #: gconf/gconftool.c:1
-msgid "Help options"
-msgstr "Opcje pomocy"
-
-#: gconf/gconftool.c:1
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "Ustawia klucz na wartość i synchronizuje. Użycie z parametrem --type."
 
@@ -1420,16 +1466,6 @@ msgstr "Usuwa wszystkie nazwy schematów zastosowane do podanych kluczy"
 #: gconf/gconftool.c:1
 msgid "Get the name of the default source"
 msgstr "Pobiera nazwę domyślnego źródła"
-
-#: gconf/gconftool.c:1
-#, c-format
-msgid ""
-"Error on option %s: %s.\n"
-"Run '%s --help' to see a full list of available command line options.\n"
-msgstr ""
-"Błąd przy opcji %s: %s.\n"
-"Uruchom \"%s --help\", aby wypisać pełną listę opcji dostępnych z wiersza "
-"poleceń.\n"
 
 #: gconf/gconftool.c:1
 msgid "Can't get and set/unset simultaneously\n"
