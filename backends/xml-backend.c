@@ -549,6 +549,8 @@ xs_new       (const gchar* root_dir)
 
   xs->cache = dir_cache_new(xs, 300);
 
+  printf("root dir: `%s'\n", xs->root_dir);
+  
   return xs;
 }
 
@@ -921,7 +923,7 @@ dir_load_doc(Dir* d);
 
 static Dir*
 dir_new_blank(XMLSource* source, const gchar* key,
-              gchar* xml_filename, gchar* fs_dirname);
+              gchar* fs_dirname, gchar* xml_filename);
 
 static Entry*
 dir_make_new_entry(Dir* d, const gchar* relative_key);
@@ -1066,6 +1068,9 @@ dir_sync        (Dir* d)
   if (!d->dirty)
     return TRUE;  
 
+  /* We should have a doc if dirty is TRUE */
+  g_assert(d->doc != NULL);
+  
   if (d->deleted)
     {
       if (unlink(d->xml_filename) != 0)
@@ -1180,6 +1185,9 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
 {
   Entry* e;
 
+  if (d->doc == NULL)
+    dir_load_doc(d);
+  
   e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   if (e == NULL)
@@ -1197,7 +1205,12 @@ dir_set_value   (Dir* d, const gchar* relative_key, GConfValue* value)
 static GConfValue*
 dir_get_value   (Dir* d, const gchar* relative_key)
 {
-  Entry* e = g_hash_table_lookup(d->entry_cache, relative_key);
+  Entry* e;
+
+  if (d->doc == NULL)
+    dir_load_doc(d);
+
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   if (e == NULL || e->value == NULL)
     return NULL;
@@ -1216,8 +1229,13 @@ dir_get_metainfo(Dir* d, const gchar* relative_key)
 static void
 dir_unset_value (Dir* d, const gchar* relative_key)
 {
-  Entry* e = g_hash_table_lookup(d->entry_cache, relative_key);
+  Entry* e; 
 
+  if (d->doc == NULL)
+    dir_load_doc(d);
+
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
+  
   if (e == NULL)
     return;
 
@@ -1239,7 +1257,9 @@ static GSList*
 dir_all_entries (Dir* d)
 {
   /* FIXME */
-
+  if (d->doc == NULL)
+    dir_load_doc(d);
+  
   return NULL;
 }
 
@@ -1247,6 +1267,9 @@ static GSList*
 dir_all_subdirs (Dir* d)
 {
   /* FIXME */
+
+  if (d->doc == NULL)
+    dir_load_doc(d);
   
   return NULL;
 }
@@ -1256,7 +1279,12 @@ dir_set_schema  (Dir* d,
                  const gchar* relative_key,
                  const gchar* schema_key)
 {
-  Entry* e = g_hash_table_lookup(d->entry_cache, relative_key);
+  Entry* e;
+
+  if (d->doc == NULL)
+    dir_load_doc(d);
+  
+  e = g_hash_table_lookup(d->entry_cache, relative_key);
 
   if (e == NULL)
     e = dir_make_new_entry(d, relative_key);
@@ -1277,7 +1305,8 @@ dir_delete      (Dir* d)
   
   /* go ahead and free the XML document */
 
-  xmlFreeDoc(d->doc);
+  if (d->doc)
+    xmlFreeDoc(d->doc);
   d->doc = NULL;
 }
 
@@ -1310,42 +1339,52 @@ dir_load_doc(Dir* d)
     {
       g_conf_set_error(G_CONF_FAILED,
                        _("Couldn't load file `%s'"), d->xml_filename);
-      return;
     }
-
-  if (doc->root == NULL ||
+  else if (doc->root == NULL ||
       strcmp(doc->root->name, "gconf") != 0)
     {
       g_conf_set_error(G_CONF_FAILED,
                        _("Empty or wrong type document `%s'"),
                        d->xml_filename);
       xmlFreeDoc(doc);
-      return;
+      doc = NULL;
     }
 
-  d->doc = doc;
   
-  /* Find mod time */
-  {
-    gchar* str = xmlGetProp(doc->root, "mtime");
+  /* This has the potential to just blow away an entire corrupted
+     config file; but I think that is better than the alternatives
+     (disabling config for a directory because the document is mangled)
+  */
 
-    if (str != NULL)
-      {
-        d->mod_time = atoi(str);
-        free(str);
-      }
-    else
-      {
-        d->mod_time = 0;
-      }
-  }
-  
-  /* Fill child_cache from entries */
-  dir_fill_cache_from_doc(d);
+  if (doc == NULL)
+    {
+      doc = xmlNewDoc("1.0");
+      
+      doc->root = xmlNewDocNode(doc, NULL, "gconf", NULL);
+    }
+  else
+    {
+      gchar* str = xmlGetProp(doc->root, "mtime");
+      
+      if (str != NULL)
+        {
+          d->mod_time = atoi(str);
+          free(str);
+        }
+      else
+        {
+          d->mod_time = time(NULL);
+        }
+      
+      /* Fill child_cache from entries */
+      dir_fill_cache_from_doc(d);
+    }
+    
+  d->doc = doc;
 }
 
 static Dir*
-dir_new_blank(XMLSource* source, const gchar* key, gchar* xml_filename, gchar* fs_dirname)
+dir_new_blank(XMLSource* source, const gchar* key, gchar* fs_dirname, gchar* xml_filename)
 {
   Dir* d;
   
@@ -1565,6 +1604,8 @@ entry_fill    (Entry* e)
       e->mod_time = atoi(tmp);
       free(tmp);
     }
+  else
+    e->mod_time = time(NULL);
 
   if (e->value != NULL)
     g_conf_value_destroy(e->value);

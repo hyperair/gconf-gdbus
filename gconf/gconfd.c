@@ -747,6 +747,14 @@ g_conf_server_write_info_file(const gchar* ior)
 static void
 signal_handler (int signo)
 {
+  static gint in_fatal = 0;
+
+  /* avoid loops */
+  if (in_fatal > 1)
+    return;
+  
+  ++in_fatal;
+  
   syslog (LOG_ERR, "Received signal %d\nshutting down.", signo);
   
   fast_cleanup();
