@@ -1,12 +1,13 @@
 # GConf's Portuguese Translation
-# Copyright (C) 2001 Free Software Foundation, Inc.
-# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002
+# Copyright (C) 2001 GConf
+# Distributed under the same licence as the gconf package
+# Duarte Loreto <happyguy_pt@hotmail.com>, 2001, 2002, 2003
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.0\n"
-"POT-Creation-Date: 2003-05-03 13:12-0400\n"
-"PO-Revision-Date: 2002-06-15 19:19+0100\n"
+"POT-Creation-Date: 2003-05-05 22:31+0100\n"
+"PO-Revision-Date: 2003-05-05 22:40+0100\n"
 "Last-Translator: Duarte Loreto <happyguy_pt@hotmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -39,11 +40,11 @@ msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Directório raíz do XML não encontrado no endereço `%s'"
 
 #: backends/xml-backend.c:443
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
-"Não é possível escrever para ou ler do directório raíz XML no endereço `%s'"
+"Não é possível escrever para ou ler do directório raíz XML no endereço \"%s\""
 
 #: backends/xml-backend.c:453
 #, c-format
@@ -60,16 +61,16 @@ msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
 msgstr ""
-"Operação remover sirectório já não é suportada, apenas remova todos os "
+"Operação remover directório já não é suportada, apenas remova todos os "
 "valores no directório"
 
 #: backends/xml-backend.c:770
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
-msgstr "Impossível criar directório `%s': %s"
+msgstr "Incapaz de abrir directório de ficheiros de exclusividade para %s para os remover: %s\n"
 
 #: backends/xml-backend.c:788
-#, fuzzy, c-format
+#, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Incapaz de remover ficheiro %s: %s\n"
 
@@ -78,13 +79,13 @@ msgid "Initializing XML backend module"
 msgstr "A inicializar módulo de suporte XML"
 
 #: backends/xml-backend.c:877
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML dir \"%s\": %s"
-msgstr "Desistiu de libertar XML no directório `%s': %s"
+msgstr "Desistiu de libertar XML no directório \"%s\": %s"
 
 #: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
-msgstr "Falha ao xincronizar conteudos de cache XML para disco"
+msgstr "Falha ao sincronizar conteudos de cache XML para disco"
 
 #: backends/xml-cache.c:316
 #, c-format
@@ -183,9 +184,9 @@ msgstr ""
 "ignorar"
 
 #: backends/xml-dir.c:1211
-#, fuzzy, c-format
+#, c-format
 msgid "Could not make directory \"%s\": %s"
-msgstr "Impossível criar directório `%s': %s"
+msgstr "Impossível criar directório \"%s\": %s"
 
 #: backends/xml-dir.c:1227
 #, c-format
@@ -689,9 +690,9 @@ msgid "Failed to remove lock directory `%s': %s"
 msgstr "Falha ao remover directório de lock `%s': %s"
 
 #: gconf/gconf-internals.c:2723
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unlink lock file %s: %s\n"
-msgstr "Falha ao remover exclusividade (lock) do ficheiro `%s': %s"
+msgstr "Falha ao desligar ficheiro de exclusividade (lock) %s: %s\n"
 
 #: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
 #, c-format
@@ -818,19 +819,28 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
+"Os ficheiros que contêm as suas preferências estão a ser utilizadas.\n"
+"\n"
+"Pode ter iniciado uma sessão a partir de outro computador, e essa sessão "
+"estar a utilizar as suas preferências.\n"
+"\n"
+"Pode continuar a utilizar a sessão actual, mas tal poderá causar problemas "
+"temporários com as definições de preferências na outra sessão.\n"
+"\n"
+"Deseja continuar?"
 
 #: gconf/gconf-sanity-check.c:341
 msgid "_Log Out"
-msgstr ""
+msgstr "_Terminar"
 
 #: gconf/gconf-sanity-check.c:343
 msgid "_Continue"
-msgstr ""
+msgstr "_Continuar"
 
 #: gconf/gconf-sanity-check.c:356
 #, c-format
 msgid "%s Continue (y/n)?"
-msgstr ""
+msgstr "%s Continuar (s/n)?"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
@@ -841,12 +851,14 @@ msgstr "Esquema contém UTF-8 inválido"
 msgid ""
 "Schema specifies type list but doesn't specify the type of the list elements"
 msgstr ""
+"squema especifica tipo lista mas não especifica o tipo dos elementos da lista"
 
 #: gconf/gconf-schema.c:264
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
 msgstr ""
+"Esquema especifica tipo pares mas não especifica o tipo dos elementos car/cdr"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -1179,24 +1191,24 @@ msgid "Received signal %d, shutting down cleanly"
 msgstr "Recebido sinal %d, a desligar normalmente"
 
 #: gconf/gconfd.c:481
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open %s: %s"
-msgstr "Falha ao abrir `%s': %s\n"
+msgstr "Falha ao abrir %s: %s"
 
 #: gconf/gconfd.c:488
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to stat %s: %s"
-msgstr "Falha no estado `%s': %s"
+msgstr "Falha no estado %s: %s"
 
 #: gconf/gconfd.c:497
 #, c-format
 msgid "Owner of %s is not the current user"
-msgstr ""
+msgstr "Dono de %s não é o utilizador actual"
 
 #: gconf/gconfd.c:505
 #, c-format
 msgid "Bad permissions %o on dir %s"
-msgstr ""
+msgstr "Permissões %o incorrectas no directório %s"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
@@ -1212,7 +1224,7 @@ msgstr "Falha ao obter referência de objecto para ConfigServer"
 #: gconf/gconfd.c:647
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
-msgstr ""
+msgstr "Directório %s tem um problema, gconfd não o pode utilizar"
 
 #: gconf/gconfd.c:676
 #, c-format
@@ -1395,18 +1407,20 @@ msgid "Print all subdirectories in a directory."
 msgstr "Imprimir todos os subdirectórios de um directório."
 
 #: gconf/gconftool.c:156
-#, fuzzy
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
 msgstr ""
-"Imprimir todos os subdirectórios e entradas de um directório, recursivamente."
+"Despeja na consola normal (stdout) uma descrição XML de todas as entradas "
+"abaixo de um directório, recursivamente."
 
 #: gconf/gconftool.c:165
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
 msgstr ""
+"Ler do ficheiro especificado uma descrição XML de valores e definilos "
+"relativamente a um directório."
 
 #: gconf/gconftool.c:174
 msgid "Print all subdirectories and entries under a dir, recursively."
@@ -1446,18 +1460,16 @@ msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
 #: gconf/gconftool.c:228
-#, fuzzy
 msgid "Print the data type of a key to standard output."
-msgstr "Imprimir o valor de uma chave para a consola."
+msgstr "Imprime o tipo de dados de uma chave para a consola."
 
 #: gconf/gconftool.c:237
-#, fuzzy
 msgid "Get the number of elements in a list key."
-msgstr "Obter o nome do esquema aplicado a esta chave"
+msgstr "Obtém o número de elementos de uma chave de lista."
 
 #: gconf/gconftool.c:246
 msgid "Get a specific element from a list key, numerically indexed."
-msgstr ""
+msgstr "Obtém um elemento específico de uma lista de chaves, indexada numericamente."
 
 #: gconf/gconftool.c:255
 msgid ""
@@ -1599,10 +1611,9 @@ msgstr ""
 "Impossível definir (set) e obter/redefinir (set/unset) simultaneamente\n"
 
 #: gconf/gconftool.c:521
-#, fuzzy
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr ""
-"Impossível obter (get) e definir/redefinir (set/unset) simultaneamente\n"
+"Incapaz de obter (get) tipo e definir/redefinir (set/unset) simultaneamente\n"
 
 #: gconf/gconftool.c:532
 msgid "Can't use --all-entries with --get or --set\n"
@@ -1702,9 +1713,8 @@ msgid "Must specify one or more dirs to recursively list.\n"
 msgstr "Tem de especificar um ou mais directórios a listar recursivamente.\n"
 
 #: gconf/gconftool.c:1107
-#, fuzzy
 msgid "Must specify one or more dirs to dump.\n"
-msgstr "Tem de especificar uma ou mais chaves a redefinir (unset).\n"
+msgstr "Tem de especificar um ou mais directórios a despejar.\n"
 
 #: gconf/gconftool.c:1148 gconf/gconftool.c:1406
 #, c-format
@@ -1826,37 +1836,33 @@ msgid "Error syncing: %s\n"
 msgstr "Erro a sincronizar: %s\n"
 
 #: gconf/gconftool.c:1738
-#, fuzzy
 msgid "Must specify a key or keys to get type\n"
-msgstr "Tem de especificar chave ou chaves a obter\n"
+msgstr "Tem de especificar chave ou chaves a obter tipo\n"
 
 #: gconf/gconftool.c:1782
-#, fuzzy
 msgid "Must specify a key to lookup size of.\n"
-msgstr "Tem de especificar chave ou chaves a obter\n"
+msgstr "Tem de especificar chave para obter o seu tamanho.\n"
 
 #: gconf/gconftool.c:1807 gconf/gconftool.c:1852
-#, fuzzy, c-format
+#, c-format
 msgid "Key %s is not a list.\n"
-msgstr "Valor em '%s' não é um esquema\n"
+msgstr "Chave %s não é uma lista.\n"
 
 #: gconf/gconftool.c:1827
-#, fuzzy
 msgid "Must specify a key from which to get list element.\n"
-msgstr "Tem de especificar chave ou chaves a obter\n"
+msgstr "Tem de especificar chave de onde obter elemento de lista.\n"
 
 #: gconf/gconftool.c:1858
-#, fuzzy
 msgid "Must specify list index.\n"
-msgstr "Tem de especificar algumas chaves a quebrar\n"
+msgstr "Tem de especificar índice de lista.\n"
 
 #: gconf/gconftool.c:1865
 msgid "List index must be non-negative.\n"
-msgstr ""
+msgstr "Índice de lista tem de ser não-negativo.\n"
 
 #: gconf/gconftool.c:1874
 msgid "List index is out of bounds.\n"
-msgstr ""
+msgstr "Índice de lista está fora dos limites.\n"
 
 #: gconf/gconftool.c:1900
 msgid "Must specify a key or keys on the command line\n"
@@ -1968,41 +1974,41 @@ msgstr "Erro ao listar directórios: %s\n"
 
 #: gconf/gconftool.c:2457
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
-msgstr ""
+msgstr "AVISO: tem de especificar ambos <car> e <cdr> num <pair>\n"
 
 #: gconf/gconftool.c:2484
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
-msgstr "AVISO: nenhuma chave especificada para o esquema\n"
+msgstr "AVISO: chave especificada (%s) para o esquema sob um <value> - a ignorar\n"
 
 #: gconf/gconftool.c:2517
 msgid "WARNING: must have a child node under <value>\n"
-msgstr ""
+msgstr "AVISO: tem de ter um nó filho sob <value>\n"
 
 #: gconf/gconftool.c:2523
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: node <%s> not understood\n"
-msgstr "AVISO: nó <%s> não compreendido abaixo de <schema>\n"
+msgstr "AVISO: nó <%s> não compreendido\n"
 
 #: gconf/gconftool.c:2541
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
-msgstr "AVISO: falha ao parsear tipo de nome `%s'\n"
+msgstr "AVISO: falha ao parsear valor int `%s'\n"
 
 #: gconf/gconftool.c:2562
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
-msgstr "AVISO: falha ao parsear tipo de nome `%s'\n"
+msgstr "AVISO: falha ao parsear valor float `%s'\n"
 
 #: gconf/gconftool.c:2584
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
-msgstr "AVISO: falha ao parsear tipo de nome `%s'\n"
+msgstr "AVISO: falha ao parsear valor string `%s'\n"
 
 #: gconf/gconftool.c:2605
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
-msgstr "AVISO: falha ao parsear tipo de nome `%s'\n"
+msgstr "AVISO: falha ao parsear valor boolean `%s'\n"
 
 #: gconf/gconftool.c:2721 gconf/gconftool.c:3253
 #, c-format
@@ -2072,19 +2078,16 @@ msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "AVISO: nó <%s> não compreendido abaixo de <schema>\n"
 
 #: gconf/gconftool.c:3079
-#, fuzzy
 msgid "WARNING: no <list_type> specified for schema of type list\n"
-msgstr "AVISO: nenhuma chave especificada para o esquema\n"
+msgstr "AVISO: nenhuma <list_type> especificada para o esquema do tipo lista\n"
 
 #: gconf/gconftool.c:3085
-#, fuzzy
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
-msgstr "AVISO: nenhuma chave especificada para o esquema\n"
+msgstr "AVISO: nenhuma <car_type> especificada para o esquema do tipo par\n"
 
 #: gconf/gconftool.c:3091
-#, fuzzy
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
-msgstr "AVISO: nenhuma chave especificada para o esquema\n"
+msgstr "AVISO: nenhuma <cdr_type> especificada para o esquema do tipo par\n"
 
 #: gconf/gconftool.c:3120
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
@@ -2127,9 +2130,9 @@ msgid "WARNING: no key specified for schema\n"
 msgstr "AVISO: nenhuma chave especificada para o esquema\n"
 
 #: gconf/gconftool.c:3451
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
-msgstr "AVISO: nó <%s> não compreendido abaixo de <schema>\n"
+msgstr "AVISO: nó <%s> não compreendido abaixo de <%s>\n"
 
 #: gconf/gconftool.c:3482
 #, c-format
@@ -2142,21 +2145,19 @@ msgid "Document `%s' is empty?\n"
 msgstr "Documento `%s' está vazio?\n"
 
 #: gconf/gconftool.c:3501
-#, fuzzy, c-format
+#, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
-msgstr ""
-"Documento `%s' tem o tipo errado de nó raíz (<%s>, deveria ser "
-"<gconfschemafile>)\n"
+msgstr "Documento `%s' tem o tipo incorrecto de nó raíz (<%s>, deveria ser <%s>)\n"
 
 #: gconf/gconftool.c:3514
-#, fuzzy, c-format
+#, c-format
 msgid "Document `%s' has no top level <%s> node\n"
-msgstr "Documento `%s' não tem nó de nível de topo <gconfschemafile>\n"
+msgstr "Documento `%s' não tem nó de nível de topo <%s>\n"
 
 #: gconf/gconftool.c:3528
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
-msgstr "AVISO: nó <%s> abaixo de <gconfschemafile> não compreendido\n"
+msgstr "AVISO: nó <%s> abaixo de <%s> não compreendido\n"
 
 #: gconf/gconftool.c:3539 gconf/gconftool.c:3574
 #, c-format
@@ -2218,9 +2219,8 @@ msgstr ""
 #~ msgid "Initializing BDB backend module"
 #~ msgstr "A inicializar módulo de suporte BDB"
 
-#, fuzzy
 #~ msgid "Couldn't find the root directory in the address \"%s\""
-#~ msgstr "Directório raíz %s não encontrado no endereço `%s'"
+#~ msgstr "Directório raíz não encontrado no endereço \"%s\""
 
 #~ msgid "WARNING: node <%s> not understood below <schemalist>\n"
 #~ msgstr "AVISO: nó <%s> não compreendido abaixo de <schemalist>\n"
