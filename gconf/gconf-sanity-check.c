@@ -61,7 +61,6 @@ main (int argc, char** argv)
 {
   poptContext ctx;
   gint nextopt;
-  GError* err = NULL;
   
   ctx = poptGetContext ("gconf-sanity-check-2", argc, (const char **) argv, options, 0);
 
@@ -167,12 +166,9 @@ check_file_locking (void)
 static gboolean
 check_gconf (void)
 {
-  GConfEngine *conf;
   GSList* addresses;
   GSList* tmp;
-  gboolean have_writable = FALSE;
   gchar* conffile;
-  GConfSources* sources = NULL;
   GError* error;
   gboolean retval;
 

@@ -810,22 +810,6 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
   g_slist_free(subdirs);
 }
 
-
-typedef struct
-{
-  gboolean found_parent;
-  const char *key;
-} CheckUnderneathData;
-
-static void
-foreach_check_underneath (gpointer key, gpointer value, gpointer user_data)
-{
-  CheckUnderneathData *cud = user_data;
-  
-  if (gconf_key_is_below (key, cud->key))
-    cud->found_parent = TRUE;
-}
-
 static gboolean
 key_being_monitored (GConfClient *client,
                      const char  *key)

@@ -1,5 +1,24 @@
 2002-03-21  Havoc Pennington  <hp@redhat.com>
 
+	* configure.in: fuck, Martin apparently deleted -Wall last March.
+	
+	* gconf/gconftool.c (main): don't pass unused arg to do_get_default_source
+	
+	* backends/xml-test.c: include all headers we use
+
+	* backends/xml-backend.c (remove_dir): fix unused variable
+
+	* backends/xml-dir.c (dir_rescan_subdirs): return a value in all
+	cases
+
+	* gconf/gconf-sanity-check.c (check_gconf): remove unused variables
+
+	* gconf/gconfd.c: include sys/wait.h
+
+	* gconf/gconf-client.c: remove unused function
+
+2002-03-21  Havoc Pennington  <hp@redhat.com>
+
 	* backends/xml-entry.c (schema_node_extract_value): be sure 
 	we use only NODE elements as a fallback, and that we 
 	always use a NODE if possible

@@ -51,6 +51,7 @@
 #include <ctype.h>
 #include <syslog.h>
 #include <time.h>
+#include <sys/wait.h>
 
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG

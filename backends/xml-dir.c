@@ -789,7 +789,7 @@ dir_rescan_subdirs (Dir* d, GError** err)
     }
 
   if (!d->need_rescan_subdirs)
-    return;
+    return TRUE;
 
   g_slist_foreach (d->subdir_names, (GFunc) g_free, NULL);
   g_slist_free (d->subdir_names);

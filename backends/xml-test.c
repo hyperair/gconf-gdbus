@@ -19,6 +19,7 @@
 
 #include "xml-entry.h"
 #include "xml-dir.h"
+#include "xml-cache.h"
 #include <gconf/gconf-internals.h>
 #include <gconf/gconf-backend.h>
 #include <stdlib.h>

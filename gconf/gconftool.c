@@ -384,7 +384,7 @@ static int do_long_docs (GConfEngine *conf, const gchar **args);
 static int do_get_schema_name (GConfEngine *conf, const gchar **args);
 static int do_associate_schema (GConfEngine *conf, const gchar **args);
 static int do_dissociate_schema (GConfEngine *conf, const gchar **args);
-static int do_get_default_source (GConfEngine *conf, const gchar **args);
+static int do_get_default_source (const gchar **args);
 
 int 
 main (int argc, char** argv)
@@ -578,7 +578,7 @@ main (int argc, char** argv)
   if (default_source_mode)
     {
       const gchar** args = poptGetArgs(ctx);
-      if (do_get_default_source (conf, args)  == 1)
+      if (do_get_default_source (args)  == 1)
         return 1;
       else
         return 0;
@@ -615,7 +615,7 @@ main (int argc, char** argv)
       /* shut down daemon, this is a race condition, but will usually work. */
       gconf_shutdown_daemon (NULL);
     }
-  
+
   if (config_source == NULL)
     conf = gconf_engine_get_default();
   else
@@ -2640,7 +2640,7 @@ do_break_directory(GConfEngine* conf, const gchar** args)
 }
 
 static int
-do_get_default_source(GConfEngine* conf, const gchar** args)
+do_get_default_source (const gchar** args)
 {
   gchar *source;
   gchar buf[512];

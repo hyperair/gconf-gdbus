@@ -20,7 +20,7 @@ changequote(,)dnl
 if test "x$GCC" = "xyes"; then
   case " $CFLAGS " in
   *[\ \	]-Wall[\ \	]*) ;;
-  *) CFLAGS="$CFLAGS" ;;
+  *) CFLAGS="$CFLAGS -Wall" ;;
   esac
 
   if test "x$enable_ansi" = "xyes"; then

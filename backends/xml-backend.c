@@ -650,8 +650,6 @@ remove_dir      (GConfSource* source,
                  const gchar* key,
                  GError** err)
 {
-  XMLSource* xs = (XMLSource*)source;
-
   g_set_error (err, GCONF_ERROR,
                GCONF_ERROR_FAILED,
                _("Remove dir operation is no longer supported, just remove all the values in the directory"));
