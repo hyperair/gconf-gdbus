@@ -399,7 +399,7 @@ main (int argc, char** argv)
       (all_entries_mode && set_mode) ||
       (all_entries_mode && unset_mode))
     {
-      fprintf(stderr, _("Can't use --all-pairs with --get or --set\n"));
+      fprintf(stderr, _("Can't use --all-entries with --get or --set\n"));
       return 1;
     }
 
@@ -417,7 +417,7 @@ main (int argc, char** argv)
       (recursive_list && all_entries_mode) ||
       (recursive_list && all_subdirs_mode))
     {
-      fprintf(stderr, _("--recursive-list should not be used with --get, --set, --unset, --all-pairs, or --all-dirs\n"));
+      fprintf(stderr, _("--recursive-list should not be used with --get, --set, --unset, --all-entries, or --all-dirs\n"));
       return 1;
     }
 
@@ -427,7 +427,7 @@ main (int argc, char** argv)
       (set_schema_mode && all_entries_mode) ||
       (set_schema_mode && all_subdirs_mode))
     {
-      fprintf(stderr, _("--set_schema should not be used with --get, --set, --unset, --all-pairs, --all-dirs\n"));
+      fprintf(stderr, _("--set_schema should not be used with --get, --set, --unset, --all-entries, --all-dirs\n"));
       return 1;
     }  
 
