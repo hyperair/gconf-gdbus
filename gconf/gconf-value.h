@@ -72,15 +72,15 @@ struct _GConfValue {
   } d;
 };
 
-#define gconf_value_get_string(x)    ((const gchar*)((x)->d.string_data))
-#define gconf_value_get_int(x)       ((x)->d.int_data)
-#define gconf_value_get_float(x)     ((x)->d.float_data)
-#define gconf_value_get_list_type(x) ((x)->d.list_data.type)
-#define gconf_value_get_list(x)      ((x)->d.list_data.list)
-#define gconf_value_get_car(x)       ((x)->d.pair_data.car)
-#define gconf_value_get_cdr(x)       ((x)->d.pair_data.cdr)
-#define gconf_value_get_bool(x)      ((x)->d.bool_data)
-#define gconf_value_get_schema(x)    ((x)->d.schema_data)
+#define gconf_value_get_string(x)    ((const gchar*)(((GConfValue*)(x))->d.string_data))
+#define gconf_value_get_int(x)       (((GConfValue*)(x))->d.int_data)
+#define gconf_value_get_float(x)     (((GConfValue*)(x))->d.float_data)
+#define gconf_value_get_list_type(x) (((GConfValue*)(x))->d.list_data.type)
+#define gconf_value_get_list(x)      (((GConfValue*)(x))->d.list_data.list)
+#define gconf_value_get_car(x)       (((GConfValue*)(x))->d.pair_data.car)
+#define gconf_value_get_cdr(x)       (((GConfValue*)(x))->d.pair_data.cdr)
+#define gconf_value_get_bool(x)      (((GConfValue*)(x))->d.bool_data)
+#define gconf_value_get_schema(x)    (((GConfValue*)(x))->d.schema_data)
 
 GConfValue* gconf_value_new                  (GConfValueType type);
 
@@ -135,9 +135,9 @@ struct _GConfMetaInfo {
   GTime  mod_time; /* time of the modification */
 };
 
-#define gconf_meta_info_get_schema(x)    ((const gchar*)(x)->schema)
-#define gconf_meta_info_get_mod_user(x)  ((x)->mod_user)
-#define gconf_meta_info_mod_time(x)  ((x)->mod_time)
+#define gconf_meta_info_get_schema(x)    ((const gchar*)((GConfMetaInfo*)(x))->schema)
+#define gconf_meta_info_get_mod_user(x)  (((GConfMetaInfo*)(x))->mod_user)
+#define gconf_meta_info_mod_time(x)  (((GConfMetaInfo*)(x))->mod_time)
 
 GConfMetaInfo* gconf_meta_info_new         (void);
 void           gconf_meta_info_free     (GConfMetaInfo* gcmi);
@@ -163,11 +163,11 @@ struct _GConfEntry {
   guint is_writable : 1;
 };
 
-#define     gconf_entry_get_key(x)         ((const gchar*)(x)->key)
-#define     gconf_entry_get_value(x)       ((x)->value)
-#define     gconf_entry_get_schema_name(x) ((const gchar*)(x)->schema_name)
-#define     gconf_entry_get_is_default(x)  ((x)->is_default)
-#define     gconf_entry_get_is_writable(x) ((x)->is_writable)
+#define     gconf_entry_get_key(x)         ((const gchar*)((GConfEntry*)(x))->key)
+#define     gconf_entry_get_value(x)       (((GConfEntry*)(x))->value)
+#define     gconf_entry_get_schema_name(x) ((const gchar*)((GConfEntry*)(x))->schema_name)
+#define     gconf_entry_get_is_default(x)  (((GConfEntry*)(x))->is_default)
+#define     gconf_entry_get_is_writable(x) (((GConfEntry*)(x))->is_writable)
 
 GConfEntry* gconf_entry_new              (const gchar *key,
                                           const GConfValue  *val);
