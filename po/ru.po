@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
 "POT-Creation-Date: 2002-04-29 01:37-0400\n"
-"PO-Revision-Date: 2002-03-13 22:30+03:00\n"
-"Last-Translator: Valek Filippov <frob@df.ru>\n"
+"PO-Revision-Date: 2002-05-03 16:21+0400\n"
+"Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -109,8 +109,8 @@ msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
 msgstr ""
-"Невозможно удалить каталог `%s' из кэша серверного модуля XML, потому что он "
-"не был успешнр синхронизирован с диском"
+"Невозможно удалить каталог \"%s\" из кэша серверного модуля XML, потому что "
+"он не был успешно синхронизирован с диском"
 
 # backends/xml-cache.c:305
 #: backends/xml-cache.c:300
@@ -132,7 +132,7 @@ msgstr "Не удалось выполнить stat для \"%s\": %s"
 #: backends/xml-dir.c:181
 #, c-format
 msgid "XML filename `%s' is a directory"
-msgstr "Файл \"%s\" формата XML является каталогом"
+msgstr "Файл \"%s\" в формате XML является каталогом"
 
 # backends/xml-dir.c:369 backends/xml-dir.c:376
 #: backends/xml-dir.c:372 backends/xml-dir.c:379
@@ -191,11 +191,9 @@ msgstr "Сбой при выполнении stat для \"%s\": %s"
 
 # gconf/gconftool.c:2415
 #: backends/xml-dir.c:956
-#, fuzzy, c-format
+#,  c-format
 msgid "%s"
-msgstr ""
-"\n"
-"%s\n"
+msgstr "%s"
 
 # backends/xml-dir.c:1073
 #: backends/xml-dir.c:1106
@@ -207,14 +205,14 @@ msgstr "Повторная запись \"%s\" в \"%s\", игнорируетс
 #: backends/xml-dir.c:1128
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
-msgstr "Запись без имени в файле \"%s\" формата XML, игнорируется"
+msgstr "Запись без имени в файле \"%s\" в формате XML, игнорируется"
 
 # backends/xml-dir.c:1103
 #: backends/xml-dir.c:1136
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
-"Узел верхнего уровня в файле \"%s\" формата XML <%s> вместо <entry>, "
+"Узел верхнего уровня в файле \"%s\" в формате XML <%s> вместо <entry>, "
 "игнорируется"
 
 # backends/xml-dir.c:1192
@@ -225,16 +223,16 @@ msgstr "Сбой при создании файла \"%s\": %s"
 
 # backends/xml-dir.c:421
 #: backends/xml-dir.c:1324
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to parse XML file \"%s\""
-msgstr "Сбой при записи файла \"%s\": %s"
+msgstr "Сбой при разборе файла в формате XML \"%s\""
 
 # backends/xml-entry.c:150
 #. There was an error
 #: backends/xml-entry.c:154
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr "Игнорирование узда XML с названием \"%s\": %s"
+msgstr "Игнорирование узла XML с названием \"%s\": %s"
 
 # backends/xml-entry.c:328
 #: backends/xml-entry.c:332
@@ -304,7 +302,7 @@ msgstr "Игнорирование неправильного ключа для 
 #: backends/xml-entry.c:1155 backends/xml-entry.c:1178
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
 msgstr ""
-"разбор файла формата XML: списки и пары не могут быть помещены внутри пары"
+"разбор файла в формате XML: списки и пары не могут быть помещены внутри пары"
 
 # backends/xml-entry.c:1157
 #: backends/xml-entry.c:1168
@@ -326,17 +324,17 @@ msgstr "Не были найдены ключ и значение для узл�
 # backends/xml-entry.c:1200
 #: backends/xml-entry.c:1211
 msgid "Missing cdr from pair of values in XML file"
-msgstr "Отсутствует значение для пары в файле формата XML"
+msgstr "Отсутствует значение для пары в файле в формате XML"
 
 # backends/xml-entry.c:1207
 #: backends/xml-entry.c:1218
 msgid "Missing car from pair of values in XML file"
-msgstr "Отсутствует ключ для пары в файле формата XML"
+msgstr "Отсутствует ключ для пары в файле в формате XML"
 
 # backends/xml-entry.c:1212
 #: backends/xml-entry.c:1223
 msgid "Missing both car and cdr values from pair in XML file"
-msgstr "Отсутствует ключ и значение для пары в файле формата XML"
+msgstr "Отсутствует ключ и значение для пары в файле в формате XML"
 
 # gconf/gconf-backend.c:167
 #. -- end debug only
@@ -428,7 +426,7 @@ msgstr "Сбой при синхронизации одного или боле�
 
 # gconf/gconf-database.c:1076
 #: gconf/gconf-database.c:1080
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to log addition of listener %s (%s);will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
@@ -659,13 +657,13 @@ msgstr "Недопустимая последовательность UTF-8 дл
 #: gconf/gconf-internals.c:838
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
-msgstr "Не удалось открыть файл пути '%s': %s\n"
+msgstr "Не удалось открыть файл пути \"%s\": %s\n"
 
 # gconf/gconf-internals.c:887
 #: gconf/gconf-internals.c:887
 #, c-format
 msgid "Adding source `%s'\n"
-msgstr "Добавление источника '%s'\n"
+msgstr "Добавление источника \"%s\"\n"
 
 # gconf/gconf-internals.c:899
 #: gconf/gconf-internals.c:899
@@ -680,7 +678,7 @@ msgstr "Ошибка чтения файла '%s': %s\n"
 #: gconf/gconf-value.c:147 gconf/gconf-value.c:246 gconf/gconf-value.c:388
 #: gconf/gconf-value.c:1665
 msgid "Text contains invalid UTF-8"
-msgstr "Текст содержит Недопустимую последовательность UTF-8"
+msgstr "Текст содержит недопустимую последовательность UTF-8"
 
 # gconf/gconf-internals.c:1362
 #: gconf/gconf-internals.c:1346
@@ -728,7 +726,7 @@ msgstr "Строка в кавычках не заканчивается кав�
 #: gconf/gconf-internals.c:1828
 msgid "Encoded value is not valid UTF-8"
 msgstr ""
-"Закодированное значение не является Недопустимой последовательностью UTF-8"
+"Закодированное значение не является допустимой последовательностью UTF-8"
 
 # gconf/gconf-internals.c:2314
 #: gconf/gconf-internals.c:2287
@@ -755,7 +753,7 @@ msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
-"Сбой при блокировке '%s': возможно другой процесс заблокировал его, или в "
+"Сбой при блокировке \"%s\": возможно другой процесс заблокировал его, или в "
 "операционной системе файловая блокировка NFS несконфигурирована (%s)"
 
 # gconf/gconf-internals.c:2425
@@ -832,9 +830,9 @@ msgstr "Сбой при создании %s: %s"
 
 # gconf/gconftool.c:851
 #: gconf/gconf-internals.c:2835
-#, fuzzy, c-format
+#, c-format
 msgid "Server ping error: %s"
-msgstr "Ошибка выключения: %s\n"
+msgstr "Ошибка проверки доступности сервера: %s"
 
 # gconf/gconf-internals.c:2875
 #: gconf/gconf-internals.c:2856
@@ -856,10 +854,16 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
+"Сбой при контакте с сервером конфигурации; среди возможных причин то, что "
+"необходимо включить сетевые возможности TCP/IP для ORBit, или то, что "
+"остались старые блокировки NFS из-за краха системы. "
+"Для получения информации смотрите "
+"http://www.gnome.org/projects/gconf/ . "
+"(Подробно - %s)"
 
 #: gconf/gconf-internals.c:2906
 msgid "none"
-msgstr ""
+msgstr "нет"
 
 # gconf/gconftool.c:71
 #: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:72
@@ -874,8 +878,8 @@ msgid ""
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Ошибка в параметре %s: %s.\n"
-"Запустите '%s --help' чтобы увидеть полный список доступных параметров "
-"команндной строки.\n"
+"Запустите \"%s --help\" чтобы увидеть полный список доступных параметров "
+"командной строки.\n"
 
 #: gconf/gconf-sanity-check.c:131
 #, c-format
@@ -897,12 +901,23 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
+"Свяжитесь со своим системным администратором "
+"для разрешения следующей проблемы:\n"
+"Не удалось заблокировать файл \"%s\"; "
+"Это означает, что возможно существует проблема "
+"с конфигурацией вашей операционной системы. "
+"Если у вас есть смонтированный через NFS домашний каталог, "
+"возможно, либо сервер, либо клиент сконфигурированы неверно. "
+"Посмотрите документацию на rpc.statd and rpc.lockd. "
+"Общим случаем этой ошибки может быть то,"
+"что сервис \"nfslock\" был отключён. Произошедшая ошибка - \"%s\" "
+"(errno = %d)."
 
 # gconf/gconf-internals.c:2569
 #: gconf/gconf-sanity-check.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "Can't remove file %s: %s\n"
-msgstr "Невозможно записать в файл '%s': %s"
+msgstr "Невозможно удалить файл %s: %s\n"
 
 #: gconf/gconf-sanity-check.c:195
 #, c-format
@@ -911,12 +926,15 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
+"Свяжитесь со своим системным администратором "
+"для разрешения следующей проблемы:\n"
+"Нет источников конфигурации в файле \"%s\"; Это значит, что "
+"настройки и иные установки не могут быть сохранены. %s%s"
 
 # gconf/gconfd.c:1836
 #: gconf/gconf-sanity-check.c:198
-#, fuzzy
 msgid "Error reading the file: "
-msgstr "Ошибка при чтении файла сохранённого состояния: %s"
+msgstr "Ошибка при чтении файла: "
 
 #: gconf/gconf-sanity-check.c:220
 #, c-format
@@ -924,6 +942,9 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
+"Свяжитесь со своим системным администратором "
+"для разрешения следующей проблемы:\n"
+"Не удалось разрешить адрес \"%s\" в файле конфигурации \"%s\": %s"
 
 # gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
 # gconf/gconf-schema.c:214
@@ -976,7 +997,7 @@ msgstr ""
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
-"Схема \"%s\", указанная для \"%s\", хранит значение не являющееся схемой"
+"Схема \"%s\", указанная для \"%s\", хранит значение, не являющееся схемой"
 
 # gconf/gconf-sources.c:641
 #: gconf/gconf-sources.c:642
@@ -1495,6 +1516,8 @@ msgstr ""
 #: gconf/gconfd.c:2312
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 msgstr ""
+"Возникли множественные ошибки сегментации; "
+"Невозможно отобразить диалог ошибки\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2321
@@ -1503,6 +1526,8 @@ msgid ""
 "Segmentation fault!\n"
 "Cannot display crash dialog: %s\n"
 msgstr ""
+"Ошибка сегментации!\n"
+"Невозможно отобразить лиаог ошибки: %s\n"
 
 # gconf/gconftool.c:80
 #: gconf/gconftool.c:81
@@ -2048,7 +2073,7 @@ msgstr "Значение по \"%s\" не является схемой\n"
 # gconf/gconftool.c:1407 gconf/gconftool.c:1432
 #: gconf/gconftool.c:1410 gconf/gconftool.c:1435
 msgid "Must specify a schema name followed by the key name to apply it to\n"
-msgstr "Ьребуется указать имя схемы и имя ключа, к которому применить схему\n"
+msgstr "Требуется указать имя схемы и имя ключа, к которому применить схему\n"
 
 # gconf/gconftool.c:1414
 #: gconf/gconftool.c:1417
