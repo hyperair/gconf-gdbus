@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.6\n"
-"POT-Creation-Date: 2001-08-14 12:48+0200\n"
-"PO-Revision-Date: 2001-08-14 13:01+0200\n"
+"POT-Creation-Date: 2001-09-19 16:41+0200\n"
+"PO-Revision-Date: 2001-09-19 16:42+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -854,7 +854,7 @@ msgstr ""
 
 #: gconf/gconfd.c:301
 msgid "/path"
-msgstr ""
+msgstr "/path"
 
 #: gconf/gconfd.c:314
 #, c-format
@@ -898,22 +898,24 @@ msgstr "Mottok signal %d, stenger ned på riktig måte"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:506
+#: gconf/gconfd.c:519
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "starter (versjon %s), pid %u bruker '%s'"
 
-#: gconf/gconfd.c:533
+#: gconf/gconfd.c:546
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to bonobo-"
 "activation maintainers"
-msgstr "Kunne ikke initiere Object Activation Framework: vennligst send en feilrapport til bonobo-activation utviklerene"
+msgstr ""
+"Kunne ikke initiere Object Activation Framework: vennligst send en "
+"feilrapport til bonobo-activation utviklerene"
 
-#: gconf/gconfd.c:553
+#: gconf/gconfd.c:566
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Kunne ikke hente objektreferanse for ConfigServer"
 
-#: gconf/gconfd.c:566
+#: gconf/gconfd.c:579
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Kunne ikke opprette %s : %s"
@@ -921,18 +923,20 @@ msgstr "Kunne ikke opprette %s : %s"
 #. Bad hack alert - register the current lockholder with bonobo-activation-server,
 #. * since bonobo-activation-server seems to have forgotten about us.
 #.
-#: gconf/gconfd.c:581
+#: gconf/gconfd.c:594
 #, c-format
 msgid "Failed to get lock for daemon: %s"
 msgstr "Kunne ikke hente lås for daemon: %s"
 
-#: gconf/gconfd.c:587
+#: gconf/gconfd.c:600
 msgid ""
 "Registering existing server with bonobo-activation-server, since we seem to "
 "have been leaked"
-msgstr "Registrerer eksisterende tjener hos bonobo-activation tjener, siden vi ser ut til å ha en lekkasje"
+msgstr ""
+"Registrerer eksisterende tjener hos bonobo-activation tjener, siden vi ser "
+"ut til å ha en lekkasje"
 
-#: gconf/gconfd.c:596
+#: gconf/gconfd.c:609
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register existing server."
@@ -940,51 +944,56 @@ msgstr ""
 "OAF vet ikke om vår IID; indikerer feil i installasjon; kan ikke\n"
 "registrere eksisterende tjener."
 
-#: gconf/gconfd.c:600
+#: gconf/gconfd.c:613
 msgid ""
 "Another gconfd already registered with OAF, so we can't register the "
 "existing server"
-msgstr "En annen gconfd er allerede registrert hos OAF, så vi kan ikke registrere eksisterende tjener"
+msgstr ""
+"En annen gconfd er allerede registrert hos OAF, så vi kan ikke registrere "
+"eksisterende tjener"
 
-#: gconf/gconfd.c:605
+#: gconf/gconfd.c:618
 msgid "Unknown error registering existing gconfd with OAF; exiting"
 msgstr "Ukjent feil ved registrering av gconfd hos OAF; avslutter"
 
-#: gconf/gconfd.c:632
+#: gconf/gconfd.c:645
 msgid ""
 "bonobo-activation doesn't know about our IID; indicates broken installation; "
 "can't register; exiting\n"
 msgstr ""
-"bonobo-activation vet ikke om vår IID; indikerer feil i installasjon; kan ikke\n"
+"bonobo-activation vet ikke om vår IID; indikerer feil i installasjon; kan "
+"ikke\n"
 "registrere; avslutter\n"
 
-#: gconf/gconfd.c:636
+#: gconf/gconfd.c:649
 msgid "Another gconfd already registered with bonobo-activation; exiting\n"
-msgstr "En annen gconfd er allerede registrert hos bonobo-activation; avslutter\n"
+msgstr ""
+"En annen gconfd er allerede registrert hos bonobo-activation; avslutter\n"
 
-#: gconf/gconfd.c:641
+#: gconf/gconfd.c:654
 msgid "Unknown error registering gconfd with bonobo-activation; exiting\n"
-msgstr "Ukjent feil ved registrering av gconfd hos bonobo-activation; avslutter\n"
+msgstr ""
+"Ukjent feil ved registrering av gconfd hos bonobo-activation; avslutter\n"
 
-#: gconf/gconfd.c:685
+#: gconf/gconfd.c:698
 #, c-format
 msgid "Failed to release lockfile: %s"
 msgstr "Kunne ikke slippe låsfil: %s"
 
-#: gconf/gconfd.c:693
+#: gconf/gconfd.c:706
 msgid "Exiting"
 msgstr "Avslutter"
 
-#: gconf/gconfd.c:718
+#: gconf/gconfd.c:731
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-tjeneren er ikke i bruk, stenger ned."
 
-#: gconf/gconfd.c:1077
+#: gconf/gconfd.c:1090
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerer unntak: %s"
 
-#: gconf/gconfd.c:1177
+#: gconf/gconfd.c:1190
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -993,39 +1002,39 @@ msgstr ""
 "Klarte ikke å åpne gconfd loggfil; vil ikke kunne gjenopprette lyttere etter "
 "nedkjøring av gconfd (%s)"
 
-#: gconf/gconfd.c:1212
+#: gconf/gconfd.c:1225
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Klarte ikke å lukke gconfd loggfil; data ble kanskje ikke lagret riktig (%s)"
 
-#: gconf/gconfd.c:1281
+#: gconf/gconfd.c:1294
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil '%s' for skriving: %s"
 
-#: gconf/gconfd.c:1295
+#: gconf/gconfd.c:1308
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Kunne ikke skrive lagret tilstandsfil '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1304
+#: gconf/gconfd.c:1317
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Kunne ikke lukke ny lagret tilstandsfil '%s': %s"
 
-#: gconf/gconfd.c:1318
+#: gconf/gconfd.c:1331
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunne ikke flytte gammel lagret tilstandsfil '%s': %s"
 
-#: gconf/gconfd.c:1328
+#: gconf/gconfd.c:1341
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Kunne ikke flytte ny lagret tilstandsfil på plass: %s"
 
-#: gconf/gconfd.c:1337
+#: gconf/gconfd.c:1350
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1033,7 +1042,7 @@ msgstr ""
 "Kunne ikke gjenopprette opprinnelig lagret tilstandsfil som har blitt "
 "flyttet til '%s': %s"
 
-#: gconf/gconfd.c:1810
+#: gconf/gconfd.c:1823
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1041,17 +1050,17 @@ msgstr ""
 "Kunne ikke gjenopprette en lytter på adresse '%s', kunne ikke gjøre "
 "databaseoppslag"
 
-#: gconf/gconfd.c:1856
+#: gconf/gconfd.c:1869
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Feil under lesing av lagret tilstandsfil: %s"
 
-#: gconf/gconfd.c:1909
+#: gconf/gconfd.c:1922
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil '%s': %s"
 
-#: gconf/gconfd.c:2026
+#: gconf/gconfd.c:2039
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1060,7 +1069,7 @@ msgstr ""
 "Klarte ikke å logge tillegg av lytter til gconfd loggfilen; vil ikke kunne "
 "legge til lytteren hvis gconfd avslutter eller stenger ned (%s)"
 
-#: gconf/gconfd.c:2031
+#: gconf/gconfd.c:2044
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1069,27 +1078,27 @@ msgstr ""
 "Klarte ikke å logge fjerning av lytter i gconfd-loggfilen; kan medføre at "
 "lytter legges inn igjen hvis gconfd avsluttes eller maskinen stenges av (%s)."
 
-#: gconf/gconfd.c:2054 gconf/gconfd.c:2219
+#: gconf/gconfd.c:2067 gconf/gconfd.c:2232
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Kunne ikke hente IOR for klient: %s"
 
-#: gconf/gconfd.c:2069
+#: gconf/gconfd.c:2082
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil: %s"
 
-#: gconf/gconfd.c:2082
+#: gconf/gconfd.c:2095
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Kunne ikke skrive tillegg av klient til lagret tilstandsfil: %s"
 
-#: gconf/gconfd.c:2090
+#: gconf/gconfd.c:2103
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Kunne ikke synkronisere tillegg av klient til lagret tilstandsfil: %s"
 
-#: gconf/gconfd.c:2180
+#: gconf/gconfd.c:2193
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1267,23 +1276,23 @@ msgstr ""
 
 #: gconf/gconftool.c:295
 msgid "Get the short doc string for a key"
-msgstr ""
+msgstr "Hent kort dokumentstreng for en nøkkel"
 
 #: gconf/gconftool.c:304
 msgid "Get the long doc string for a key"
-msgstr ""
+msgstr "Hent lang dokumentstreng for en nøkkel"
 
 #: gconf/gconftool.c:313
 msgid "Get the name of the schema applied to this key"
-msgstr ""
+msgstr "Hent navn på skjema som brukes på denne nøkkelen"
 
 #: gconf/gconftool.c:322
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr ""
+msgstr "Spesifiser skjemanavn fulgt av nøkkel som skal bruke skjemanavnet"
 
 #: gconf/gconftool.c:331
 msgid "Get the name of the default source"
-msgstr ""
+msgstr "Hent navn på forvalgt kilde"
 
 #: gconf/gconftool.c:386
 #, c-format
@@ -1315,13 +1324,17 @@ msgstr "Kan ikke bruke --all-dirs sammen med --get eller --set\n"
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
-msgstr "--recursive-list bør ikke brukes sammen med --get, --set, --unset, --all-entries, eller --all-dirs\n"
+msgstr ""
+"--recursive-list bør ikke brukes sammen med --get, --set, --unset, --all-"
+"entries, eller --all-dirs\n"
 
 #: gconf/gconftool.c:441
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
-msgstr "--set_schema bør ikke brukes sammen med --get, --set, --unset, --all-entries, eller --all-dirs\n"
+msgstr ""
+"--set_schema bør ikke brukes sammen med --get, --set, --unset, --all-"
+"entries, eller --all-dirs\n"
 
 #: gconf/gconftool.c:447
 msgid "Value type is only relevant when setting a value\n"
