@@ -718,8 +718,7 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
   entry = gconf_entry_new_nocopy (g_strdup(key),
                                   val ? gconf_value_copy(val) : NULL);
   
-  if (val == NULL &&
-      entry_get_schema_name (e))
+  if (entry_get_schema_name (e))
     {
       gconf_entry_set_schema_name (entry, entry_get_schema_name (e));
     }
