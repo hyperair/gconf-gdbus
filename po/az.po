@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.1\n"
-"POT-Creation-Date: 2003-02-04 04:53+0100\n"
+"POT-Creation-Date: 2003-03-26 20:42-0500\n"
 "PO-Revision-Date: 2003-02-18 01:19+0200\n"
 "Last-Translator: Mətin Əmirov <metin@karegen.com>\n"
 "Language-Team: Azerbaijani Turkic <C@li.org>\n"
@@ -13,26 +13,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: backends/bdb-backend.c:215
-msgid "Unloading BerkeleyDB (BDB) backend module."
-msgstr "BerkeleyDB (BDB) \"backend\" modulunu çıxarıram ."
-
-#: backends/bdb-backend.c:238
-#, c-format
-msgid "Opened BerkeleyDB source at root %s"
-msgstr "BerkeleyDB qaynağı kök \"%s\"da(də) açıldı"
-
-#: backends/bdb-backend.c:578
-msgid "Initializing BDB backend module"
-msgstr "BDB \"backend\" modulu başladılır"
-
 #: backends/dir-utils.c:108
 #, c-format
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "`%s' ünvanda %s ana qovluğunu tapa bilmədim ."
 
-#: backends/dir-utils.c:124
-#: backends/xml-backend.c:304
+#: backends/dir-utils.c:124 backends/xml-backend.c:332
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "`%s' qovluğunu yarada bilmədim : %s"
@@ -42,56 +28,80 @@ msgstr "`%s' qovluğunu yarada bilmədim : %s"
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "`%s' ünvanda %s ana qovluğunda oxuya bilmədim və yaza bilmədim ."
 
-#: backends/xml-backend.c:233
+#: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
 msgstr "XML modulunu çıxarıram ."
 
-#: backends/xml-backend.c:289
-#, c-format
-msgid "Couldn't find the root directory in the address \"%s\""
-msgstr "\"%s\" ünvanda ana qovluğunu tapa bilmədim"
+#: backends/xml-backend.c:285
+#, fuzzy, c-format
+msgid "Couldn't find the XML root directory in the address `%s'"
+msgstr "`%s' ünvanda %s ana qovluğunu tapa bilmədim ."
 
-#: backends/xml-backend.c:414
+#: backends/xml-backend.c:443
 #, c-format
-msgid "Can't read from or write to the XML root directory in the address \"%s\""
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "`%s' ünvanındaki XML ana qovluğunu oxuya və yaza bilmədim ."
 
-#: backends/xml-backend.c:424
+#: backends/xml-backend.c:453
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "%s kökündəki XML qaynaq qovluq/fayl səlahiyyətləri : %o/%o"
 
-#: backends/xml-backend.c:590
+#: backends/xml-backend.c:619
 #, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "XML arxa plan qovluğunun ön yaddaşı sinxronlaşdırılırkən xəta oldu : %s"
+msgstr ""
+"XML arxa plan qovluğunun ön yaddaşı sinxronlaşdırılırkən xəta oldu : %s"
 
-#: backends/xml-backend.c:655
-msgid "Remove dir operation is no longer supported, just remove all the values in the directory"
-msgstr "Remove dir əməliyyatı artıq dəstəklənmir. Sadəcə olaraq qovluğun içindəki bütün qiymətləri silin"
+#: backends/xml-backend.c:684
+msgid ""
+"Remove dir operation is no longer supported, just remove all the values in "
+"the directory"
+msgstr ""
+"Remove dir əməliyyatı artıq dəstəklənmir. Sadəcə olaraq qovluğun içindəki "
+"bütün qiymətləri silin"
 
-#: backends/xml-backend.c:722
+#: backends/xml-backend.c:770
+#, fuzzy, c-format
+msgid "Could not open lock directory for %s to remove locks: %s\n"
+msgstr "`%s' qovluğunu yarada bilmədim : %s"
+
+#: backends/xml-backend.c:788
+#, fuzzy, c-format
+msgid "Could not remove file %s: %s\n"
+msgstr "`%s' faylını silə bilmədim : %s\n"
+
+#: backends/xml-backend.c:809
 msgid "Initializing XML backend module"
 msgstr "XML modulunu əlavə edirəm"
 
-#: backends/xml-backend.c:790
+#: backends/xml-backend.c:877
 #, c-format
 msgid "Failed to give up lock on XML dir \"%s\": %s"
 msgstr "`%s' XML qovluğunda qıfıllama edə bilmədim : %s"
 
-#: backends/xml-cache.c:257
+#: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
 msgstr "XML ön yaddaşının içindəkiləri diskə sinxrinlaşdıra bilmədim"
 
-#: backends/xml-cache.c:287
+#: backends/xml-cache.c:316
 #, c-format
-msgid "Unable to remove directory `%s' from the XML backend cache, because it has not been successfully synced to disk"
-msgstr "XML modulunun axtar yaddaşından `%s' qovluğunu silə bilmirəm, çünkü bu qovluq diskə müvəffəqiyyətlə sinxronlaşdırılmamışdır"
+msgid ""
+"Unable to remove directory `%s' from the XML backend cache, because it has "
+"not been successfully synced to disk"
+msgstr ""
+"XML modulunun axtar yaddaşından `%s' qovluğunu silə bilmirəm, çünkü bu "
+"qovluq diskə müvəffəqiyyətlə sinxronlaşdırılmamışdır"
 
-#: backends/xml-cache.c:314
+#: backends/xml-cache.c:343
 #, c-format
-msgid "%u items remain in the cache after cleaning already-synced items older than %u seconds"
-msgstr "%u üzv axtar yaddaşda geriyə qaldı. %u saniyədən köhnə sinxronlaşdırılmamış üzvlər silinmişdir"
+msgid ""
+"%u items remain in the cache after cleaning already-synced items older than %"
+"u seconds"
+msgstr ""
+"%u üzv axtar yaddaşda geriyə qaldı. %u saniyədən köhnə sinxronlaşdırılmamış "
+"üzvlər silinmişdir"
 
 #: backends/xml-dir.c:171
 #, c-format
@@ -103,8 +113,7 @@ msgstr "`%s''yi stat edə bilmədim :%s"
 msgid "XML filename `%s' is a directory"
 msgstr "XML faylı `%s' bir qovluqdur"
 
-#: backends/xml-dir.c:372
-#: backends/xml-dir.c:381
+#: backends/xml-dir.c:372 backends/xml-dir.c:381
 #, c-format
 msgid "Failed to delete \"%s\": %s"
 msgstr "`%s''yi silə bilmədim : %s"
@@ -124,14 +133,12 @@ msgstr "`%s''da(də) mod qurula bilmədi: %s"
 msgid "Failed to write XML data to `%s': %s"
 msgstr "`%s' üstünə XML verilənini yazarkən xəta oldu : %s"
 
-#: backends/xml-dir.c:460
-#: backends/xml-dir.c:1236
+#: backends/xml-dir.c:460 backends/xml-dir.c:1235
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "`%s' faylını qapadırkən xəta oldu : %s"
 
-#: backends/xml-dir.c:476
-#: backends/xml-dir.c:486
+#: backends/xml-dir.c:476 backends/xml-dir.c:486
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "`%s''yi təzədən `%s''ye adlandıra bilmədim : %s"
@@ -147,42 +154,45 @@ msgid "Failed to delete old file `%s': %s"
 msgstr "Esi fayl `%s''yi silerken xəta oldu : %s"
 
 #  These are all fatal errors
-#: backends/xml-dir.c:935
+#. These are all fatal errors
+#: backends/xml-dir.c:934
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "`%s'' -ni statlaya bilmədim : %s"
 
-#: backends/xml-dir.c:959
+#: backends/xml-dir.c:958
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: backends/xml-dir.c:1109
+#: backends/xml-dir.c:1108
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "Cüt `%s' üzvləri ( `%s''de ), keçirəm"
 
-#: backends/xml-dir.c:1131
+#: backends/xml-dir.c:1130
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "`%s' XML faylında adsız bir üzv var, keçirəm"
 
-#: backends/xml-dir.c:1139
+#: backends/xml-dir.c:1138
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr "XML faylı `%s' içindəki təpə nüqtəsi<entry> yerinə <%s> olaraq tapılmışdır, keçirəm"
+msgstr ""
+"XML faylı `%s' içindəki təpə nüqtəsi<entry> yerinə <%s> olaraq tapılmışdır, "
+"keçirəm"
 
-#: backends/xml-dir.c:1212
+#: backends/xml-dir.c:1211
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "`%s' qovluğunu yarada bilmədim : %s"
 
-#: backends/xml-dir.c:1228
+#: backends/xml-dir.c:1227
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "`%s' faylını yaradarkən xəta oldu : %s"
 
-#: backends/xml-dir.c:1327
+#: backends/xml-dir.c:1326
 #, c-format
 msgid "Failed to parse XML file \"%s\""
 msgstr "`%s' XML faylını yazarkən xəta oldu"
@@ -216,21 +226,22 @@ msgstr "<%s> üzvü üçün \"type\" xüsusiyyəti bildirilməmişdir"
 #: backends/xml-entry.c:966
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr "Bir üzvün namə'lum bir \"type\" xüsusiyyəti `%s''yi daxil edir, keçirəm"
+msgstr ""
+"Bir üzvün namə'lum bir \"type\" xüsusiyyəti `%s''yi daxil edir, keçirəm"
 
 #: backends/xml-entry.c:981
 msgid "No \"value\" attribute for node"
 msgstr "Üzv üçün bir qiymət yoxdur"
 
-#: backends/xml-entry.c:1029
-#: backends/xml-entry.c:1105
+#: backends/xml-entry.c:1029 backends/xml-entry.c:1105
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
 msgstr "XML siyahı üzvündəki <%s> XML üzvünü başa düşmədim"
 
 #: backends/xml-entry.c:1063
 msgid "Invalid type (list, pair, or unknown) in a list node"
-msgstr "Siyahı üzvünün növü keçərsizdir ( siyahı, yoldaş ya da namə'lum ola bilər )"
+msgstr ""
+"Siyahı üzvünün növü keçərsizdir ( siyahı, yoldaş ya da namə'lum ola bilər )"
 
 #: backends/xml-entry.c:1086
 #, c-format
@@ -247,10 +258,10 @@ msgstr "Siyahı səhv yazılmış bir üzv daxil edir ( %s, amma %s olmalıdır)
 msgid "Ignoring bad car from XML pair: %s"
 msgstr "XML yoldaşı üçün pis şəkilləndirilmiş `car''ı : %s"
 
-#: backends/xml-entry.c:1155
-#: backends/xml-entry.c:1178
+#: backends/xml-entry.c:1155 backends/xml-entry.c:1178
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
-msgstr "XML faylını oxuyuram : siyahı və yoldaşlar birlikdə bir yerdə ola bilməz"
+msgstr ""
+"XML faylını oxuyuram : siyahı və yoldaşlar birlikdə bir yerdə ola bilməz"
 
 #: backends/xml-entry.c:1168
 #, c-format
@@ -276,7 +287,8 @@ msgstr "XML faylındakı qiymət yoldaşları üçün `car' əksikdir"
 
 #: backends/xml-entry.c:1223
 msgid "Missing both car and cdr values from pair in XML file"
-msgstr "XML faylındakı qiymət yoldaşları üçün `cdr' və `cdr' qiymətləri əksikdir"
+msgstr ""
+"XML faylındakı qiymət yoldaşları üçün `cdr' və `cdr' qiymətləri əksikdir"
 
 #. -- end debug only
 #: gconf/gconf-backend.c:167
@@ -307,8 +319,7 @@ msgstr "`%s' üçün modul tapa bilmədim"
 msgid "Failed to shut down backend"
 msgstr "Modulu Qapada bilmədim"
 
-#: gconf/gconf-client.c:342
-#: gconf/gconf-client.c:360
+#: gconf/gconf-client.c:342 gconf/gconf-client.c:360
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf Xətası : %s\n"
@@ -351,8 +362,14 @@ msgstr "Bir ya da daha çox mənbələri sinxronlaşdırılırkən xəta oldu : 
 
 #: gconf/gconf-database.c:1080
 #, c-format
-msgid "Failed to log addition of listener %s (%s);will not be able to restore this listener on gconfd restart, resulting in unreliable notification of configuration changes."
-msgstr "Dinləyicinin diqqəti çəkilə bilmədi %s (%s);gconf-un yenidən başladılması sırasında dinləyici bərpaedilə bilməyacək. Quraşdırma dəyişiklikləri da buna görə həyəta keçirilə bilməyəcək."
+msgid ""
+"Failed to log addition of listener %s (%s);will not be able to restore this "
+"listener on gconfd restart, resulting in unreliable notification of "
+"configuration changes."
+msgstr ""
+"Dinləyicinin diqqəti çəkilə bilmədi %s (%s);gconf-un yenidən başladılması "
+"sırasında dinləyici bərpaedilə bilməyacək. Quraşdırma dəyişiklikləri da buna "
+"görə həyəta keçirilə bilməyəcək."
 
 #: gconf/gconf-database.c:1111
 #, c-format
@@ -361,11 +378,14 @@ msgstr "Dinləyici ID %lu yoxdur"
 
 #: gconf/gconf-database.c:1125
 #, c-format
-msgid "Failed to log removal of listener to logfile (most likely harmless, may result in a notification weirdly reappearing): %s"
-msgstr "Failed to log removal of listener to logfile (most likely harmless, may result in a notification weirdly reappearing): %s"
+msgid ""
+"Failed to log removal of listener to logfile (most likely harmless, may "
+"result in a notification weirdly reappearing): %s"
+msgstr ""
+"Failed to log removal of listener to logfile (most likely harmless, may "
+"result in a notification weirdly reappearing): %s"
 
-#: gconf/gconf-database.c:1243
-#: gconf/gconf-sources.c:1541
+#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "`%s' üçün qiyməti alırkən xəta oldu : %s"
@@ -542,220 +562,286 @@ msgstr "`%s' qaynağını əlavə edirəm\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "`%s' faylında oxuma xətası oldu: %s\n"
 
-#: gconf/gconf-internals.c:1195
-#: gconf/gconf-internals.c:1261
-#: gconf/gconf-value.c:154
-#: gconf/gconf-value.c:253
-#: gconf/gconf-value.c:395
+#: gconf/gconf-internals.c:1203 gconf/gconf-internals.c:1269
+#: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1681
 msgid "Text contains invalid UTF-8"
 msgstr "Mətn hökmsüz UTF-8 daxil edir"
 
-#: gconf/gconf-internals.c:1346
+#: gconf/gconf-internals.c:1354
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Siyahı gözləyərkən, %s aldım"
 
-#: gconf/gconf-internals.c:1356
+#: gconf/gconf-internals.c:1364
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "%s siyahısını gözləyərkən, %s siyahısını aldım"
 
-#: gconf/gconf-internals.c:1484
+#: gconf/gconf-internals.c:1492
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Cütünü gözləyərkən, %s aldım"
 
-#: gconf/gconf-internals.c:1498
+#: gconf/gconf-internals.c:1506
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
-msgstr "%s,%s cütünü gözləyərkən , bir ya da iki qiyməti olmayan bir oxşar aldım"
+msgstr ""
+"%s,%s cütünü gözləyərkən , bir ya da iki qiyməti olmayan bir oxşar aldım"
 
-#: gconf/gconf-internals.c:1514
+#: gconf/gconf-internals.c:1522
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "%s,%s cütünü gözləyərkən , %s,%s cütünü aldım"
 
-#: gconf/gconf-internals.c:1630
+#: gconf/gconf-internals.c:1638
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Alıntı mətni bir sual isarəti başlamıyor"
 
-#: gconf/gconf-internals.c:1692
+#: gconf/gconf-internals.c:1700
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Alıntı mətni bir sual isarəti ilə qurtarmır"
 
-#: gconf/gconf-internals.c:1828
+#: gconf/gconf-internals.c:1836
 msgid "Encoded value is not valid UTF-8"
 msgstr "Kodlanmış qiymət hökmlü UTF-8 deyildir"
 
-#: gconf/gconf-internals.c:2287
+#: gconf/gconf-internals.c:2295
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Müvəqqəti fayl '%s' qıfılana bilmir: %s"
 
-#: gconf/gconf-internals.c:2314
+#: gconf/gconf-internals.c:2322
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "'%s' faylı yaradıla bilmir, bəldə onsuz da var olduğu üçün"
 
-#: gconf/gconf-internals.c:2360
+#: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "'%s' yaradılması və ya açılmasında xəta"
 
-#: gconf/gconf-internals.c:2370
+#: gconf/gconf-internals.c:2378
 #, c-format
-msgid "Failed to lock '%s': probably another process has the lock, or your operating system has NFS file locking misconfigured (%s)"
-msgstr "'%s' qıfıllana bilmədi:başqa bir gedişat qıfılı tutur ya da əməliyyat sisteminizin NFS fayl qıfıllaması səhf konfiqurasiya edilib (%s)"
+msgid ""
+"Failed to lock '%s': probably another process has the lock, or your "
+"operating system has NFS file locking misconfigured (%s)"
+msgstr ""
+"'%s' qıfıllana bilmədi:başqa bir gedişat qıfılı tutur ya da əməliyyat "
+"sisteminizin NFS fayl qıfıllaması səhf konfiqurasiya edilib (%s)"
 
-#: gconf/gconf-internals.c:2400
+#: gconf/gconf-internals.c:2408
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "IOR faylı '%s' müvəffəqiyyətlə açıla bilmədi, heç gconfd tapılmadı: %s"
 
-#: gconf/gconf-internals.c:2430
+#: gconf/gconf-internals.c:2438
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool və ya başqa qeyri-gconfd gedişatı '%s' faylını qıfıllamışdır"
 
-#: gconf/gconf-internals.c:2447
+#: gconf/gconf-internals.c:2455
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "mövcud gconfd cism referenslərini həll etmək üçün ORB ilə rabitə qura bilmirəm"
+msgstr ""
+"mövcud gconfd cism referenslərini həll etmək üçün ORB ilə rabitə qura "
+"bilmirəm"
 
-#: gconf/gconf-internals.c:2457
+#: gconf/gconf-internals.c:2465
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "IOR '%s' cism referensinə dönüşdürülə bilmədi"
 
-#: gconf/gconf-internals.c:2507
+#: gconf/gconf-internals.c:2515
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "`%s' qovluğunu yarada bilmədim : %s"
 
-#: gconf/gconf-internals.c:2566
+#: gconf/gconf-internals.c:2574
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "`%s' faylına yaza bilmədim : %s"
 
-#: gconf/gconf-internals.c:2607
+#: gconf/gconf-internals.c:2615
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "`%s' üstündə qıfılımız yoxdur, amma olmalıdır"
 
-#: gconf/gconf-internals.c:2628
+#: gconf/gconf-internals.c:2636
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "'%s' ilə '%s' arasında körpü yaradılması xətası: %s"
 
-#: gconf/gconf-internals.c:2640
+#: gconf/gconf-internals.c:2648
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Qıfıllama faylı `%s' silinmə xətası: %s"
 
-#: gconf/gconf-internals.c:2659
+#: gconf/gconf-internals.c:2667
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "'%s' faylı təmizlənmə xətası: %s"
 
-#: gconf/gconf-internals.c:2673
+#: gconf/gconf-internals.c:2681
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Qıfıllanmış cərgə `%s' silinməsi xətası: %s"
 
-#: gconf/gconf-internals.c:2816
-#: gconf/gconfd.c:596
+#: gconf/gconf-internals.c:2723
+#, fuzzy, c-format
+msgid "Failed to unlink lock file %s: %s\n"
+msgstr "Qıfıllama faylı `%s' silinmə xətası: %s"
+
+#: gconf/gconf-internals.c:2845 gconf/gconfd.c:643
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "%s yaradılması bacarılmadı: %s"
 
-#: gconf/gconf-internals.c:2838
+#: gconf/gconf-internals.c:2867
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Verici ping xətası: %s"
 
-#: gconf/gconf-internals.c:2859
+#: gconf/gconf-internals.c:2888
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "gconf demonu ilə borulanmış rabitə yaradılması bacarılmadı: %s\n"
 
-#: gconf/gconf-internals.c:2883
+#: gconf/gconf-internals.c:2912
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Quraşdırma vericisi başladıla bilmədi: %s\n"
 
-#: gconf/gconf-internals.c:2908
+#: gconf/gconf-internals.c:2937
 #, c-format
-msgid "Failed to contact configuration server; some possible causes are that you need to enable TCP/IP networking for ORBit, or you have stale NFS locks due to a system crash. See http://www.gnome.org/projects/gconf/ for information. (Details - %s)"
-msgstr "Failed to contact configuration server; some possible causes are that you need to enable TCP/IP networking for ORBit, or you have stale NFS locks due to a system crash. See http://www.gnome.org/projects/gconf/ for information. (Details - %s)"
+msgid ""
+"Failed to contact configuration server; some possible causes are that you "
+"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
+"to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
+"(Details - %s)"
+msgstr ""
+"Failed to contact configuration server; some possible causes are that you "
+"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
+"to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
+"(Details - %s)"
 
-#: gconf/gconf-internals.c:2909
+#: gconf/gconf-internals.c:2938
 msgid "none"
 msgstr "yoxdur"
 
-#: gconf/gconf-sanity-check.c:39
-#: gconf/gconftool.c:73
+#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:80
 msgid "Help options"
 msgstr "Kömək seçənəkləri"
 
-#: gconf/gconf-sanity-check.c:74
-#: gconf/gconftool.c:423
+#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:453
 #, c-format
-msgid "Error on option %s: %s.\n"
+msgid ""
+"Error on option %s: %s.\n"
 "Run '%s --help' to see a full list of available command line options.\n"
-msgstr "`%s' seçənəyində xəta var : %s .\n"
+msgstr ""
+"`%s' seçənəyində xəta var : %s .\n"
 "Lütfən `%s --help' ilə mümkün olan seçənəkləri görün.\n"
 
-#: gconf/gconf-sanity-check.c:131
+#: gconf/gconf-sanity-check.c:141 gconf/gconf-sanity-check.c:166
 #, c-format
-msgid "Please contact your system administrator to resolve the following problem:\n"
-"Could not open or create the file \"%s\"; this indicates that there may be a problem with your configuration, as many programs will need to create files in your home directory. The error was \"%s\" (errno = %d)."
-msgstr "Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə qurun:\n"
-" \"%s\" faylını aça ya da yarada bilmədim; bu sizin quraşdırmanızda bir problem ilə əlaqəli ola bilər, çünki bir çox proqramım sizin ev cərgənizdə fayllar yaradmağa ehtiyacı olabilər. Xəta: \"%s\" (errno = %d)."
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
+msgstr ""
+"Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə "
+"qurun:\n"
+" \"%s\" faylını aça ya da yarada bilmədim; bu sizin quraşdırmanızda bir "
+"problem ilə əlaqəli ola bilər, çünki bir çox proqramım sizin ev cərgənizdə "
+"fayllar yaradmağa ehtiyacı olabilər. Xəta: \"%s\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:143
+#: gconf/gconf-sanity-check.c:180
 #, c-format
-msgid "Please contact your system administrator to resolve the following problem:\n"
-"Could not lock the file \"%s\"; this indicates that there may be a problem with your operating system configuration. If you have an NFS-mounted home directory, either the client or the server may be set up incorrectly. See the rpc.statd and rpc.lockd documentation. A common cause of this error is that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = %d)."
-msgstr "Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə qurun:\n"
-"\"%s\" faylını qıfıllaya bilmədim; bu sizin quraşdırmanızda bir problem ilə əlaqəli ola bilər, NFS olaraq bağlanılmış (mount) ev cərgəniz varsa, ya verici ya da alıcıdan biri səhv quraşdırılmış olabilər. Bunun üçün rpc.statd və rpc.lockd sənədlərinə baxın. Bu xətanın çox təkrarlanan səbəbi \"nfslock\" xidmətinin qeyri fəallaşdırılmasıdır. Xəta: \"%s\" (errno = %d)."
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"Could not lock the file \"%s\"; this indicates that there may be a problem "
+"with your operating system configuration. If you have an NFS-mounted home "
+"directory, either the client or the server may be set up incorrectly. See "
+"the rpc.statd and rpc.lockd documentation. A common cause of this error is "
+"that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
+"%d)."
+msgstr ""
+"Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə "
+"qurun:\n"
+"\"%s\" faylını qıfıllaya bilmədim; bu sizin quraşdırmanızda bir problem ilə "
+"əlaqəli ola bilər, NFS olaraq bağlanılmış (mount) ev cərgəniz varsa, ya "
+"verici ya da alıcıdan biri səhv quraşdırılmış olabilər. Bunun üçün rpc.statd "
+"və rpc.lockd sənədlərinə baxın. Bu xətanın çox təkrarlanan səbəbi \"nfslock"
+"\" xidmətinin qeyri fəallaşdırılmasıdır. Xəta: \"%s\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:160
+#: gconf/gconf-sanity-check.c:197
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "`%s' faylını silə bilmədim : %s\n"
 
-#: gconf/gconf-sanity-check.c:195
+#: gconf/gconf-sanity-check.c:233
 #, c-format
-msgid "Please contact your system administrator to resolve the following problem:\n"
-"No configuration sources in the configuration file \"%s\"; this means that preferences and other settings can't be saved. %s%s"
-msgstr "Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə qurun:\n"
-"\"%s\" quraşdırma faylı içində quraşdırma qaynaqları tapıla bilmədi; bu, seçənəklər və başqa qurğuların qeyd edilə bilmədiyi minasşna gəlir. %s%s"
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
+"No configuration sources in the configuration file \"%s\"; this means that "
+"preferences and other settings can't be saved. %s%s"
+msgstr ""
+"Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə "
+"qurun:\n"
+"\"%s\" quraşdırma faylı içində quraşdırma qaynaqları tapıla bilmədi; bu, "
+"seçənəklər və başqa qurğuların qeyd edilə bilmədiyi minasşna gəlir. %s%s"
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:236
 msgid "Error reading the file: "
 msgstr "Fayl oxunarkən xəta oldu :"
 
-#: gconf/gconf-sanity-check.c:220
+#: gconf/gconf-sanity-check.c:259
 #, c-format
-msgid "Please contact your system administrator to resolve the following problem:\n"
+msgid ""
+"Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
-msgstr "Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə qurun:\n"
+msgstr ""
+"Lütfən aşağıdaki problemi həll etməsi üçün sistem yönəticiniz ilə əlaqə "
+"qurun:\n"
 "\"%s\" quraşdırma faylındaki \"%s\" ünvanını çözümləyə bilmədim: %s"
 
-#: gconf/gconf-schema.c:221
-#: gconf/gconf-schema.c:229
-#: gconf/gconf-schema.c:237
+#: gconf/gconf-sanity-check.c:320
+msgid ""
+"Your preferences files are currently in use. (If you are logged in to this "
+"same account from another computer, the other login session is probably "
+"using your preferences files.) You can choose to continue, but be aware that "
+"other login sessions may become temporarily confused. If you are not logged "
+"in elsewhere, it should be harmless to continue."
+msgstr ""
+
+#: gconf/gconf-sanity-check.c:342
+msgid "Continue"
+msgstr ""
+
+#: gconf/gconf-sanity-check.c:355
+#, c-format
+msgid "%s Continue (y/n)?"
+msgstr ""
+
+#: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "Sxem hökmsüz UTF-8 daxil edir"
 
 #: gconf/gconf-schema.c:254
-msgid "Schema specifies type list but doesn't specify the type of the list elements"
-msgstr "Sxem, növ siyahısını müəyyən edir, sıyahı elementlərinin növünü isə müəyyən etməz"
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+"Sxem, növ siyahısını müəyyən edir, sıyahı elementlərinin növünü isə müəyyən "
+"etməz"
 
 #: gconf/gconf-schema.c:264
-msgid "Schema specifies type pair but doesn't specify the type of the car/cdr elements"
-msgstr "Sxem, növ cütünü müəyyən edir, car/cdr elementlərinin növünü isə müəyyən etməz"
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
+"Sxem, növ cütünü müəyyən edir, car/cdr elementlərinin növünü isə müəyyən "
+"etməz"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -765,21 +851,31 @@ msgstr "\"%s\" qaynağını yükləyə bilmədim : %s"
 #: gconf/gconf-sources.c:346
 #, c-format
 msgid "Resolved address \"%s\" to a writable config source at position %d"
-msgstr "\"%s\" ünvanını %d mövqesindəki yazıla bilən quraşdırma mənbəyinə çözümlədim"
+msgstr ""
+"\"%s\" ünvanını %d mövqesindəki yazıla bilən quraşdırma mənbəyinə çözümlədim"
 
 #: gconf/gconf-sources.c:352
 #, c-format
 msgid "Resolved address \"%s\" to a read-only config source at position %d"
-msgstr "\"%s\" ünvanını %d mövqesindəki ancaq oxuna bilən quraşdırma mənbəyinə çözümlədim"
+msgstr ""
+"\"%s\" ünvanını %d mövqesindəki ancaq oxuna bilən quraşdırma mənbəyinə "
+"çözümlədim"
 
 #: gconf/gconf-sources.c:359
 #, c-format
-msgid "Resolved address \"%s\" to a partially writable config source at position %d"
-msgstr "\"%s\" ünvanını %d mövqesindəki qismən yazıla bilən bilən quraşdırma mənbəyinə çözümlədim"
+msgid ""
+"Resolved address \"%s\" to a partially writable config source at position %d"
+msgstr ""
+"\"%s\" ünvanını %d mövqesindəki qismən yazıla bilən bilən quraşdırma "
+"mənbəyinə çözümlədim"
 
 #: gconf/gconf-sources.c:368
-msgid "None of the resolved addresses are writable; saving configuration settings will not be possible"
-msgstr "Çözümlənən ünvanlardan heç biri yazıla bilən deyil; quraşdırma qurğularını qeyd etmək mümkün olmayacaq"
+msgid ""
+"None of the resolved addresses are writable; saving configuration settings "
+"will not be possible"
+msgstr ""
+"Çözümlənən ünvanlardan heç biri yazıla bilən deyil; quraşdırma qurğularını "
+"qeyd etmək mümkün olmayacaq"
 
 #: gconf/gconf-sources.c:584
 #, c-format
@@ -788,19 +884,42 @@ msgstr "`%s' şəkli `%s' üçün bir şəkil qiyməti olmayan bir qiymət daxil
 
 #: gconf/gconf-sources.c:642
 msgid "The '/' name can only be a directory, not a key"
-msgstr "'/' adları sadəcə bir qovluq ola bilər, qətiyyan'iyyen bir açar ola bilməz"
+msgstr ""
+"'/' adları sadəcə bir qovluq ola bilər, qətiyyan'iyyen bir açar ola bilməz"
 
 #: gconf/gconf-sources.c:680
 #, c-format
-msgid "Value for `%s' set in a read-only source at the front of your configuration path"
-msgstr "`%s' üçün sırf-oxunan qaynaqda sənin konfiqurasiya yolundan əvvəl bir qiymət oturdulub"
+msgid ""
+"Value for `%s' set in a read-only source at the front of your configuration "
+"path"
+msgstr ""
+"`%s' üçün sırf-oxunan qaynaqda sənin konfiqurasiya yolundan əvvəl bir qiymət "
+"oturdulub"
 
 # not finished. needs editing..
 # Metin
 #: gconf/gconf-sources.c:692
 #, fuzzy, c-format
-msgid "Unable to store a value at key '%s', as the configuration server has no writable databases. There are some common causes of this problem: 1) your configuration path file %s/path doesn't contain any databases or wasn't found 2) somehow we mistakenly created two gconfd processes 3) your operating system is misconfigured so NFS file locking doesn't work in your home directory or 4) your NFS client machine crashed and didn't properly notify the server on reboot that file locks should be dropped. If you have two gconfd processes (or had two at the time the second was launched), logging out, killing all copies of gconfd, and logging back in may help. If you have stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that you attempted to use GConf from two machines at once, and ORBit still has its default configuration that prevents remote CORBA connections - put \"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for details on problems gconfd encountered. There can only be one gconfd per home directory, and it must own a lockfile in ~/.gconfd and also lockfiles in individual storage locations such as ~/.gconf"
-msgstr "Quraşdırma vericisində heç yazıla bilən databeyz olmadığına görə dəyəri '%s' açarında qeyd edə bilmədim."
+msgid ""
+"Unable to store a value at key '%s', as the configuration server has no "
+"writable databases. There are some common causes of this problem: 1) your "
+"configuration path file %s/path doesn't contain any databases or wasn't "
+"found 2) somehow we mistakenly created two gconfd processes 3) your "
+"operating system is misconfigured so NFS file locking doesn't work in your "
+"home directory or 4) your NFS client machine crashed and didn't properly "
+"notify the server on reboot that file locks should be dropped. If you have "
+"two gconfd processes (or had two at the time the second was launched), "
+"logging out, killing all copies of gconfd, and logging back in may help. If "
+"you have stale locks, remove ~/.gconf*/*lock. Perhaps the problem is that "
+"you attempted to use GConf from two machines at once, and ORBit still has "
+"its default configuration that prevents remote CORBA connections - put "
+"\"ORBIIOPIPv4=1\" in /etc/orbitrc. As always, check the user.* syslog for "
+"details on problems gconfd encountered. There can only be one gconfd per "
+"home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
+"in individual storage locations such as ~/.gconf"
+msgstr ""
+"Quraşdırma vericisində heç yazıla bilən databeyz olmadığına görə dəyəri '%s' "
+"açarında qeyd edə bilmədim."
 
 #: gconf/gconf-sources.c:1414
 #, c-format
@@ -815,7 +934,9 @@ msgstr "Meta mə'lumatları alırkən xəta oldu : %s"
 #: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-msgstr "Açar `%s' `%s' açarı üçün şəkil olaraq bildirilmiş və düzdür `%s' növünü qeyd edir"
+msgstr ""
+"Açar `%s' `%s' açarı üçün şəkil olaraq bildirilmiş və düzdür `%s' növünü "
+"qeyd edir"
 
 #: gconf/gconf-value.c:110
 #, c-format
@@ -852,8 +973,7 @@ msgstr "`%s''yi başa düşmədim (sətir bir ']' ilə bitmək məcburiyyətind�
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
 msgstr "`%s''yi başa düşmədim (siyahının içində bir əlavə ']' tapdım)"
 
-#: gconf/gconf-value.c:356
-#: gconf/gconf-value.c:517
+#: gconf/gconf-value.c:356 gconf/gconf-value.c:517
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
 msgstr "`%s''yi başa düşmədim (işe yaramaz hərfləri tapdım)"
@@ -868,8 +988,7 @@ msgstr "`%s''yi başa düşmədim (cüt bir '(' ilə başlamaq məcburiyyətind�
 msgid "Didn't understand `%s' (pair must end with a ')')"
 msgstr "`%s''yi başa düşmədim (cüt bir ')' ilə başlamaq məcburiyyətindədir)"
 
-#: gconf/gconf-value.c:446
-#: gconf/gconf-value.c:532
+#: gconf/gconf-value.c:446 gconf/gconf-value.c:532
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
 msgstr "`%s''yi başa düşmədim (element sayısı səhvdir)"
@@ -969,20 +1088,31 @@ msgid "Shutdown request received"
 msgstr "Qapanma istəyi alındı"
 
 #: gconf/gconfd.c:282
-msgid "gconfd compiled with debugging; trying to load gconf.path from the source directory"
-msgstr "gconfd vericisi mə'lumatlandırma ilə yoxlanıb ; qaynaq qovluğunda gconf.path'yuükləməyə cəhd edirəm"
+msgid ""
+"gconfd compiled with debugging; trying to load gconf.path from the source "
+"directory"
+msgstr ""
+"gconfd vericisi mə'lumatlandırma ilə yoxlanıb ; qaynaq qovluğunda gconf."
+"path'yuükləməyə cəhd edirəm"
 
 #: gconf/gconfd.c:296
 #, c-format
-msgid "No configuration files found, trying to use the default config source `%s'"
-msgstr "Quraşdırma faylları tapıla bilmədi , əsas quraşdırma qaynağı `%s''yi istifadə edirəm"
+msgid ""
+"No configuration files found, trying to use the default config source `%s'"
+msgstr ""
+"Quraşdırma faylları tapıla bilmədi , əsas quraşdırma qaynağı `%s''yi "
+"istifadə edirəm"
 
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
-msgid "No configuration sources in the source path, configuration won't be saved; edit "
-msgstr "Qaynaq qovluğunda quraşdırma mənbələri yoxdur, qurğular qeyd edilməyəcəkdir ; dəyişdir "
+msgid ""
+"No configuration sources in the source path, configuration won't be saved; "
+"edit "
+msgstr ""
+"Qaynaq qovluğunda quraşdırma mənbələri yoxdur, qurğular qeyd "
+"edilməyəcəkdir ; dəyişdir "
 
 #: gconf/gconfd.c:304
 msgid "/path"
@@ -994,810 +1124,1030 @@ msgid "Error loading some config sources: %s"
 msgstr "Bə'zi quraşdırma qaynaqlarını yüklərkən xəta oldu : %s"
 
 #: gconf/gconfd.c:329
-msgid "No config source addresses successfully resolved, can't load or store config data"
-msgstr "Quraşdırma qaynağı ünvanını müvəffəqiyyətlə həll edə bilmədim, quraşdırma mə'lumatlarını yükləya bilmərəm ya da qeyd eda bilmərəm"
+msgid ""
+"No config source addresses successfully resolved, can't load or store config "
+"data"
+msgstr ""
+"Quraşdırma qaynağı ünvanını müvəffəqiyyətlə həll edə bilmədim, quraşdırma "
+"mə'lumatlarını yükləya bilmərəm ya da qeyd eda bilmərəm"
 
 #: gconf/gconfd.c:346
-msgid "No writable config sources successfully resolved, may not be able to save some configuration changes"
-msgstr "Yazıla bilən bir quraşdırma qaynağı ünvanını həll edə bilmədim, bə'zi quraşdırma dəyişikliklərini bəlkə qeyd edə bilmədim"
+msgid ""
+"No writable config sources successfully resolved, may not be able to save "
+"some configuration changes"
+msgstr ""
+"Yazıla bilən bir quraşdırma qaynağı ünvanını həll edə bilmədim, bə'zi "
+"quraşdırma dəyişikliklərini bəlkə qeyd edə bilmədim"
 
 #: gconf/gconfd.c:372
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr "%d siqnalını aldım, ayıqlama mə'lumatını tökürəm. Lütfən GConf baqını raport edin."
+msgstr ""
+"%d siqnalını aldım, ayıqlama mə'lumatını tökürəm. Lütfən GConf baqını raport "
+"edin."
 
 #: gconf/gconfd.c:390
 #, c-format
-msgid "Received signal %d, shutting down abnormally. Please file a GConf bug report."
-msgstr "%d siqnalını aldım, təmiz sürətdə qapana bilmirəm. Lütfən GConf xətasını raport edin."
+msgid ""
+"Received signal %d, shutting down abnormally. Please file a GConf bug report."
+msgstr ""
+"%d siqnalını aldım, təmiz sürətdə qapana bilmirəm. Lütfən GConf xətasını "
+"raport edin."
 
 #: gconf/gconfd.c:407
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "%d siqnalını aldım, təmiz sürətdə qapanıram ."
 
+#: gconf/gconfd.c:481
+#, fuzzy, c-format
+msgid "Failed to open %s: %s"
+msgstr "`%s''yi aça bilmədim : %s\n"
+
+#  These are all fatal errors
+#: gconf/gconfd.c:488
+#, fuzzy, c-format
+msgid "Failed to stat %s: %s"
+msgstr "`%s'' -ni statlaya bilmədim : %s"
+
+#: gconf/gconfd.c:497
+#, c-format
+msgid "Owner of %s is not the current user"
+msgstr ""
+
+#: gconf/gconfd.c:505
+#, c-format
+msgid "Bad permissions %o on dir %s"
+msgstr ""
+
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:543
+#: gconf/gconfd.c:590
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "başlayıram (buraxılış %s), pid %u istifadəçi '%s'"
 
-#: gconf/gconfd.c:583
+#: gconf/gconfd.c:630
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Quraşdırma vericisi üçün cism bağını ala bilmədim"
 
-#: gconf/gconfd.c:621
+#: gconf/gconfd.c:650
+#, c-format
+msgid "Directory %s has a problem, gconfd can't use it"
+msgstr ""
+
+#: gconf/gconfd.c:679
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr "Bayt fd %d borusuna yazıla bilmədi, alıcı proqram dona bilər: %s"
 
-#: gconf/gconfd.c:631
+#: gconf/gconfd.c:689
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Demona baxıla bilmədi, çıxılır: %s"
 
-#: gconf/gconfd.c:669
+#: gconf/gconfd.c:727
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Qıfıl faylı açılma xətası: %s"
 
-#: gconf/gconfd.c:677
+#: gconf/gconfd.c:735
 msgid "Exiting"
 msgstr "Çıxıram"
 
-#: gconf/gconfd.c:703
+#: gconf/gconfd.c:761
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf vericisi istifadədə deyildir, qapanıram ."
 
-#: gconf/gconfd.c:1069
+#: gconf/gconfd.c:1127
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Xəta təpməsi: %s"
 
-#: gconf/gconfd.c:1169
+#: gconf/gconfd.c:1227
 #, c-format
-msgid "Failed to open gconfd logfile; won't be able to restore listeners after gconfd shutdown (%s)"
-msgstr "Gconf qeyd faylı açıla bilmədi; fconf qurtardıqdan sonra dinləyiciləri bərpa  eda bilməyəcəksən (%s)"
+msgid ""
+"Failed to open gconfd logfile; won't be able to restore listeners after "
+"gconfd shutdown (%s)"
+msgstr ""
+"Gconf qeyd faylı açıla bilmədi; fconf qurtardıqdan sonra dinləyiciləri "
+"bərpa  eda bilməyəcəksən (%s)"
 
-#: gconf/gconfd.c:1204
+#: gconf/gconfd.c:1262
 #, c-format
-msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
+msgid ""
+"Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "Gconf qeyd faylı qapadıla bilmədi; data düzgün qeyd edilə bilməz (%s)"
 
-#: gconf/gconfd.c:1273
+#: gconf/gconfd.c:1331
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Qeyd edilmiş hal faylı `%s''yi aça bilmədim : %s"
 
-#: gconf/gconfd.c:1287
+#: gconf/gconfd.c:1345
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Qeyd edilmiş hal faylı `%s' ni yaza bilmədim fd: %d: %s"
 
-#: gconf/gconfd.c:1296
+#: gconf/gconfd.c:1354
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Təzə qeyd edilmiş `%s' hal faylını qapada bilmədim: %s"
 
-#: gconf/gconfd.c:1310
+#: gconf/gconfd.c:1368
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Əvvəldən qeyd edilmiş hal faylı '%s' yi köçürə bilmədim : %s"
 
-#: gconf/gconfd.c:1320
+#: gconf/gconfd.c:1378
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Təzə qeyd edilmiş  hal faylını buraya köçürə bilmədim: %s"
 
-#: gconf/gconfd.c:1329
+#: gconf/gconfd.c:1387
 #, c-format
-msgid "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "'%s' a(ə) köçürülmüş əsl qeyd edilmiş hal faylını bərpa eda bilmədim: %s"
+msgid ""
+"Failed to restore original saved state file that had been moved to '%s': %s"
+msgstr ""
+"'%s' a(ə) köçürülmüş əsl qeyd edilmiş hal faylını bərpa eda bilmədim: %s"
 
-#: gconf/gconfd.c:1800
+#: gconf/gconfd.c:1858
 #, c-format
-msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
-msgstr "'%s' ünvanındakı dinləyici bərpa edilə bilmir, database hall edilə bilmir"
+msgid ""
+"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgstr ""
+"'%s' ünvanındakı dinləyici bərpa edilə bilmir, database hall edilə bilmir"
 
-#: gconf/gconfd.c:1846
+#: gconf/gconfd.c:1904
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Qeyd edilmiş vəziyyət faylı oxunarkən xəta oldu : %s"
 
-#: gconf/gconfd.c:1899
+#: gconf/gconfd.c:1957
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Qeyd edilmiş `%s' hal faylı açıla bilmədi:  %s"
 
-#: gconf/gconfd.c:2018
+#: gconf/gconfd.c:2076
 #, c-format
-msgid "Failed to log addition of listener to gconfd logfile; won't be able to re-add the listener if gconfd exits or shuts down (%s)"
-msgstr "Dinləyicini təsbitləri qeyd faylına yazıla bilmir; gconfddan çıxdığınız vaxt  bu qeydləri təzədən əlavə edə bilməyəcəyik (%s)"
+msgid ""
+"Failed to log addition of listener to gconfd logfile; won't be able to re-"
+"add the listener if gconfd exits or shuts down (%s)"
+msgstr ""
+"Dinləyicini təsbitləri qeyd faylına yazıla bilmir; gconfddan çıxdığınız "
+"vaxt  bu qeydləri təzədən əlavə edə bilməyəcəyik (%s)"
 
-#: gconf/gconfd.c:2023
+#: gconf/gconfd.c:2081
 #, c-format
-msgid "Failed to log removal of listener to gconfd logfile; might erroneously re-add the listener if gconfd exits or shuts down (%s)"
-msgstr "Gconfd qeyd faylından dinləyici silinə bilmədi; gconfddan çıxdığınız vaxt eyni dinləyiciyi xətalı olaraq təzədən əlavə edə bilərəm (%s)"
+msgid ""
+"Failed to log removal of listener to gconfd logfile; might erroneously re-"
+"add the listener if gconfd exits or shuts down (%s)"
+msgstr ""
+"Gconfd qeyd faylından dinləyici silinə bilmədi; gconfddan çıxdığınız vaxt "
+"eyni dinləyiciyi xətalı olaraq təzədən əlavə edə bilərəm (%s)"
 
-#: gconf/gconfd.c:2046
-#: gconf/gconfd.c:2220
+#: gconf/gconfd.c:2104 gconf/gconfd.c:2278
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "IOR alıcısı alınması bacarılmadı: %s"
 
-#: gconf/gconfd.c:2061
+#: gconf/gconfd.c:2119
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Qeyd edilmiş hal faylı açıla bilmədi:  %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2132
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Qeyd edilmiş hal faylına alıcı qeyd edilə bilmədi: %s"
 
-#: gconf/gconfd.c:2082
+#: gconf/gconfd.c:2140
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Qeyd edilmiş hal faylına \"flush\" alıcı qeyd edilə bilmədi: %s"
 
-#: gconf/gconfd.c:2181
-msgid "Some client removed itself from the GConf server when it hadn't been added."
-msgstr "Bir alıcı özünü GConf vericisindən çıxardıb və ona görə də əlavə edilməyib."
+#: gconf/gconfd.c:2239
+msgid ""
+"Some client removed itself from the GConf server when it hadn't been added."
+msgstr ""
+"Bir alıcı özünü GConf vericisindən çıxardıb və ona görə də əlavə edilməyib."
 
-#: gconf/gconftool.c:82
+#: gconf/gconftool.c:89
 msgid "Set a key to a value and sync. Use with --type."
-msgstr "Bir açara bir qiymət ver və sinxronlaşdır . --type'la istifadə edilir ."
+msgstr ""
+"Bir açara bir qiymət ver və sinxronlaşdır . --type'la istifadə edilir ."
 
-#: gconf/gconftool.c:91
+#: gconf/gconftool.c:98
 msgid "Print the value of a key to standard output."
 msgstr "Standart nəticəyə bir açarının qiymətini ver."
 
-#: gconf/gconftool.c:100
-msgid "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --type."
-msgstr "Bir şəkli oturt və sinxronlaşdır . --short-desc, --long-desc, --owner və --type'la birlikdə istifadə edilir ."
+#: gconf/gconftool.c:107
+msgid ""
+"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
+"type."
+msgstr ""
+"Bir şəkli oturt və sinxronlaşdır . --short-desc, --long-desc, --owner və --"
+"type'la birlikdə istifadə edilir ."
 
-#: gconf/gconftool.c:110
+#: gconf/gconftool.c:117
 msgid "Unset the keys on the command line"
 msgstr "Əmr sətirindəki açarları sil"
 
-#: gconf/gconftool.c:119
-msgid "Recursively unset all keys at or below the key/directory names on the command line"
-msgstr "Əmr sətirində açar/cərgə adları altındakı bütün açarların seçkilərini avtomatik olaraq qaldır"
+#: gconf/gconftool.c:126
+msgid ""
+"Recursively unset all keys at or below the key/directory names on the "
+"command line"
+msgstr ""
+"Əmr sətirində açar/cərgə adları altındakı bütün açarların seçkilərini "
+"avtomatik olaraq qaldır"
 
-#: gconf/gconftool.c:128
+#: gconf/gconftool.c:135
 msgid "Print all key/value pairs in a directory."
 msgstr "Bir qovluqdakı açar/qiymət yoldaşlarını göstər ."
 
-#: gconf/gconftool.c:137
+#: gconf/gconftool.c:144
 msgid "Print all subdirectories in a directory."
 msgstr "Bir qovluqdakı altqovluqları göstər ."
 
-#: gconf/gconftool.c:146
-msgid "Print all subdirectories and entries under a dir, recursively."
-msgstr "Bir qovluğun bütün alt qovluqlarını və üzvlərini dərinliyi ilə göstər ."
+#: gconf/gconftool.c:153
+#, fuzzy
+msgid ""
+"Dump to standard out an XML description of all entries under a dir, "
+"recursively."
+msgstr ""
+"Bir qovluğun bütün alt qovluqlarını və üzvlərini dərinliyi ilə göstər ."
 
-#: gconf/gconftool.c:155
+#: gconf/gconftool.c:162
+msgid ""
+"Load from the specified file an XML description of values and set them "
+"relative to a dir."
+msgstr ""
+
+#: gconf/gconftool.c:171
+msgid "Print all subdirectories and entries under a dir, recursively."
+msgstr ""
+"Bir qovluğun bütün alt qovluqlarını və üzvlərini dərinliyi ilə göstər ."
+
+#: gconf/gconftool.c:180
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "Qovluq varsa 0'ı nəticəsini ver, yoxsa 2'yi nəticəsini ver ."
 
-#: gconf/gconftool.c:164
+#: gconf/gconftool.c:189
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "gconfd'yi qapat . BU SEÇƏNƏYİ YAXŞI BIR SƏBƏBİN OLMADAN İSTİFADƏ ETMƏ."
 
-#: gconf/gconftool.c:173
+#: gconf/gconftool.c:198
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr "gconfd vericisi işləyirsə 0'ı nəticəsini ver, yoxsa 2'yi nəticəsini ver ."
+msgstr ""
+"gconfd vericisi işləyirsə 0'ı nəticəsini ver, yoxsa 2'yi nəticəsini ver ."
 
-#: gconf/gconftool.c:182
-msgid "Launch the config server (gconfd). (Normally happens automatically when needed.)"
-msgstr "Quraşdırma vericisini ( gconfd ) başlatdım. ( Bu onsuz da lazımlı olduğu vaxt edilir . )"
+#: gconf/gconftool.c:207
+msgid ""
+"Launch the config server (gconfd). (Normally happens automatically when "
+"needed.)"
+msgstr ""
+"Quraşdırma vericisini ( gconfd ) başlatdım. ( Bu onsuz da lazımlı olduğu "
+"vaxt edilir . )"
 
-#: gconf/gconftool.c:191
-msgid "Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Oturtulacaq qiymətin növünü bildir, ya da şəklin anlatdığı qiymətin növünü başa sal . Həmən başa düşüləcək qısaltmalar qəbul edilir ."
+#: gconf/gconftool.c:216
+msgid ""
+"Specify the type of the value being set, or the type of the value a schema "
+"describes. Unique abbreviations OK."
+msgstr ""
+"Oturtulacaq qiymətin növünü bildir, ya da şəklin anlatdığı qiymətin növünü "
+"başa sal . Həmən başa düşüləcək qısaltmalar qəbul edilir ."
 
-#: gconf/gconftool.c:192
+#: gconf/gconftool.c:217
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: gconf/gconftool.c:200
-msgid "Specify the type of the list value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Oturdulacaq siyahı qiymətinin növünü bildir, ya da şəklin anlatdığı qiymətin növünü başa sal. Həmən başa düşüləcək qısaltmalar qəbul edilir."
+#: gconf/gconftool.c:225
+msgid ""
+"Specify the type of the list value being set, or the type of the value a "
+"schema describes. Unique abbreviations OK."
+msgstr ""
+"Oturdulacaq siyahı qiymətinin növünü bildir, ya da şəklin anlatdığı qiymətin "
+"növünü başa sal. Həmən başa düşüləcək qısaltmalar qəbul edilir."
 
-#: gconf/gconftool.c:201
-#: gconf/gconftool.c:210
-#: gconf/gconftool.c:219
+#: gconf/gconftool.c:226 gconf/gconftool.c:235 gconf/gconftool.c:244
 msgid "int|bool|float|string"
 msgstr "int | bool | float | string"
 
-#: gconf/gconftool.c:209
-msgid "Specify the type of the car pair value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Oturdulacaq car çiftinin növünü bildir, ya da şəklin anlattığı qiymətin növünü başa sal. Həmən başa düşüləcək qısaltmalar qəbul edilir."
+#: gconf/gconftool.c:234
+msgid ""
+"Specify the type of the car pair value being set, or the type of the value a "
+"schema describes. Unique abbreviations OK."
+msgstr ""
+"Oturdulacaq car çiftinin növünü bildir, ya da şəklin anlattığı qiymətin "
+"növünü başa sal. Həmən başa düşüləcək qısaltmalar qəbul edilir."
 
-#: gconf/gconftool.c:218
-msgid "Specify the type of the cdr pair value being set, or the type of the value a schema describes. Unique abbreviations OK."
-msgstr "Oturdulacaq cdr çiftinin növünü bildir, ya da şəklin anlattığı qiymətin növünü başa sal. Həmən başa düşüləcək qısaltmalar qəbul edilir."
+#: gconf/gconftool.c:243
+msgid ""
+"Specify the type of the cdr pair value being set, or the type of the value a "
+"schema describes. Unique abbreviations OK."
+msgstr ""
+"Oturdulacaq cdr çiftinin növünü bildir, ya da şəklin anlattığı qiymətin "
+"növünü başa sal. Həmən başa düşüləcək qısaltmalar qəbul edilir."
 
-#: gconf/gconftool.c:227
+#: gconf/gconftool.c:252
 msgid "Specify a short half-line description to go in a schema."
-msgstr "Şekilldə yaxşı görünəcək növdə , qısa və yarım-sətir uzunluğunda bir izahı bildir ."
+msgstr ""
+"Şekilldə yaxşı görünəcək növdə , qısa və yarım-sətir uzunluğunda bir izahı "
+"bildir ."
 
-#: gconf/gconftool.c:228
-#: gconf/gconftool.c:237
+#: gconf/gconftool.c:253 gconf/gconftool.c:262
 msgid "DESCRIPTION"
 msgstr "İZAH"
 
-#: gconf/gconftool.c:236
+#: gconf/gconftool.c:261
 msgid "Specify a several-line description to go in a schema."
 msgstr "Şəkilə əlavə edləcək növdə bir izah ver ."
 
-#: gconf/gconftool.c:245
+#: gconf/gconftool.c:270
 msgid "Specify the owner of a schema"
 msgstr "Şəklin yiyəsini bildir"
 
-#: gconf/gconftool.c:246
+#: gconf/gconftool.c:271
 msgid "OWNER"
 msgstr "YİYƏ"
 
-#: gconf/gconftool.c:254
+#: gconf/gconftool.c:279
 msgid "Specify a schema file to be installed"
 msgstr "Yüklənəcək bir şəkil faylını bildir"
 
-#: gconf/gconftool.c:255
+#: gconf/gconftool.c:280
 msgid "FILENAME"
 msgstr "FAYLADI"
 
-#: gconf/gconftool.c:263
+#: gconf/gconftool.c:288
 msgid "Specify a configuration source to use rather than the default path"
-msgstr "Əsas qurğulu qovluq xaricində istifadə ediləcək bir quraşdırma qaynağını bildir"
+msgstr ""
+"Əsas qurğulu qovluq xaricində istifadə ediləcək bir quraşdırma qaynağını "
+"bildir"
 
-#: gconf/gconftool.c:264
+#: gconf/gconftool.c:289
 msgid "SOURCE"
 msgstr "QAYNAQ"
 
-#: gconf/gconftool.c:272
-msgid "Access the config database directly, bypassing server. Requires that gconfd is not running."
-msgstr "Quraşdırma bildi tabanına direkt olaraq yetiş və vericiyi keç . gconfd'nin fəal olmamalıdır."
+#: gconf/gconftool.c:297
+msgid ""
+"Access the config database directly, bypassing server. Requires that gconfd "
+"is not running."
+msgstr ""
+"Quraşdırma bildi tabanına direkt olaraq yetiş və vericiyi keç . gconfd'nin "
+"fəal olmamalıdır."
 
-#: gconf/gconftool.c:281
-msgid "Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."
-msgstr "Şəkil fayllarını mə'lumat tabanına oturdur və yüklər .GCONF_CONFIG_SOURCE verisi əsas quraşdırma qaynağı xaricindəki bir yerə göstərməyi lazımdır və ya əsas yeri istifadə etmək istəyirsənsə boş olmalıdır ."
+#: gconf/gconftool.c:306
+msgid ""
+"Properly installs schema files on the command line into the database. "
+"GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
+"config source or set to the empty string to use the default."
+msgstr ""
+"Şəkil fayllarını mə'lumat tabanına oturdur və yüklər .GCONF_CONFIG_SOURCE "
+"verisi əsas quraşdırma qaynağı xaricindəki bir yerə göstərməyi lazımdır və "
+"ya əsas yeri istifadə etmək istəyirsənsə boş olmalıdır ."
 
-#: gconf/gconftool.c:290
-msgid "Torture-test an application by setting and unsetting a bunch of values of different types for keys on the command line."
-msgstr "Bir proqrama cəfa sınağını əlavə et ( bu əmrdə tapılan müxtəlif növlü müxtəlif qiymətlərin oturdulub silinməsi ilə olur) ."
+#: gconf/gconftool.c:315
+msgid ""
+"Torture-test an application by setting and unsetting a bunch of values of "
+"different types for keys on the command line."
+msgstr ""
+"Bir proqrama cəfa sınağını əlavə et ( bu əmrdə tapılan müxtəlif növlü "
+"müxtəlif qiymətlərin oturdulub silinməsi ilə olur) ."
 
-#: gconf/gconftool.c:299
-msgid "Torture-test an application by setting and unsetting a bunch of keys inside the directories on the command line."
-msgstr "Bir proqrama cəfa sınağını əlavə et ( bu əmrdə tapılan qovluqlar içindəki müxtəlif açarların oturdulub silinməsi ilə olur) ."
+#: gconf/gconftool.c:324
+msgid ""
+"Torture-test an application by setting and unsetting a bunch of keys inside "
+"the directories on the command line."
+msgstr ""
+"Bir proqrama cəfa sınağını əlavə et ( bu əmrdə tapılan qovluqlar içindəki "
+"müxtəlif açarların oturdulub silinməsi ilə olur) ."
 
-#: gconf/gconftool.c:308
+#: gconf/gconftool.c:333
 msgid "Get the short doc string for a key"
 msgstr "Açarın qısa sənəd qatarını al"
 
-#: gconf/gconftool.c:317
+#: gconf/gconftool.c:342
 msgid "Get the long doc string for a key"
 msgstr "Açarın uzun sənəd qatarını al"
 
-#: gconf/gconftool.c:326
+#: gconf/gconftool.c:351
 msgid "Get the name of the schema applied to this key"
 msgstr "Açara əlavə edilmiş sxem adını öyrən"
 
-#: gconf/gconftool.c:335
+#: gconf/gconftool.c:360
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "Açarın sonrasında bildirilən sxem adını bildirmək çün seç"
 
-#: gconf/gconftool.c:344
+#: gconf/gconftool.c:369
 msgid "Remove any schema name applied to the given keys"
 msgstr "Verilən açara əlavə edilmiş bütün sxem adlarını sil"
 
-#: gconf/gconftool.c:353
+#: gconf/gconftool.c:378
 msgid "Get the name of the default source"
 msgstr "Əsas mənbənin adını öyrən"
 
-#: gconf/gconftool.c:362
+#: gconf/gconftool.c:387
 msgid "Print version"
 msgstr "Çap buraxılış"
 
-#: gconf/gconftool.c:441
+#: gconf/gconftool.c:471
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Eyni anda data alıb, oturda bilmərəm\n"
 
-#: gconf/gconftool.c:448
+#: gconf/gconftool.c:478
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Eyni anda data oturdub, ala bilmərəm\n"
 
-#: gconf/gconftool.c:456
+#: gconf/gconftool.c:486
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "--all-entries --get və ya --set ilə işlədilməz\n"
 
-#: gconf/gconftool.c:464
+#: gconf/gconftool.c:494
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "--get və ya --set'lə birlikdə --all-dirs istifadə edilə bilməz\n"
 
-#: gconf/gconftool.c:474
-msgid "--recursive-list should not be used with --get, --set, --unset, --all-entries, or --all-dirs\n"
-msgstr "--recursive-list --get, --set, --unset, --all-entries və ya --all-dirs ilə işlədilməz\n"
+#: gconf/gconftool.c:504
+msgid ""
+"--recursive-list should not be used with --get, --set, --unset, --all-"
+"entries, or --all-dirs\n"
+msgstr ""
+"--recursive-list --get, --set, --unset, --all-entries və ya --all-dirs ilə "
+"işlədilməz\n"
 
-#: gconf/gconftool.c:484
-msgid "--set_schema should not be used with --get, --set, --unset, --all-entries, --all-dirs\n"
-msgstr "--set_schema --get, --set, --unset, --all-entries, --all-dirs ilə işlədilə bilməz\n"
+#: gconf/gconftool.c:514
+msgid ""
+"--set_schema should not be used with --get, --set, --unset, --all-entries, --"
+"all-dirs\n"
+msgstr ""
+"--set_schema --get, --set, --unset, --all-entries, --all-dirs ilə işlədilə "
+"bilməz\n"
 
-#: gconf/gconftool.c:490
+#: gconf/gconftool.c:520
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Değer növü sadəcə qiyməti oturdurkən vacibdir\n"
 
-#: gconf/gconftool.c:496
+#: gconf/gconftool.c:526
 msgid "Must specify a type when setting a value\n"
 msgstr "Bir qiyməti oturdurkən növünü bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:506
+#: gconf/gconftool.c:536
 msgid "Ping option must be used by itself.\n"
 msgstr "Ping seçənəyi öz özünə istifadə edilmək məcburiyyətindədir .\n"
 
-#: gconf/gconftool.c:516
+#: gconf/gconftool.c:546
 msgid "--dir-exists option must be used by itself.\n"
 msgstr "--dir-exists öz özünə istifadə edilmək məcburiyyətindədir .\n"
 
-#: gconf/gconftool.c:526
+#: gconf/gconftool.c:556
 msgid "--install-schema-file must be used by itself.\n"
 msgstr "--install-schema-file öz özünə istifadə edilmək məcburiyyətindədir .\n"
 
-#: gconf/gconftool.c:537
+#: gconf/gconftool.c:567
 msgid "--makefile-install-rule must be used by itself.\n"
-msgstr "--makefile-install-rule öz özünə istifadə edilmək məcburiyyətindədir .\n"
+msgstr ""
+"--makefile-install-rule öz özünə istifadə edilmək məcburiyyətindədir .\n"
 
-#: gconf/gconftool.c:548
+#: gconf/gconftool.c:578
 msgid "--break-key must be used by itself.\n"
 msgstr "--break-key öz özünə istifadə edilmək məcburiyyətindədir .\n"
 
-#: gconf/gconftool.c:559
+#: gconf/gconftool.c:589
 msgid "--break-directory must be used by itself.\n"
 msgstr "--break-directory öz özünə istifadə edilmək məcburiyyətindədir .\n"
 
-#: gconf/gconftool.c:567
-msgid "You must specify a config source with --config-source when using --direct\n"
-msgstr "--direct'lə --config-source istifadə edildiyi vaxt bir quraşdırma qaynağını bildir \n"
+#: gconf/gconftool.c:597
+msgid ""
+"You must specify a config source with --config-source when using --direct\n"
+msgstr ""
+"--direct'lə --config-source istifadə edildiyi vaxt bir quraşdırma qaynağını "
+"bildir \n"
 
-#: gconf/gconftool.c:573
+#: gconf/gconftool.c:603
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr "Əsas olmayan quraşdırma qaynağını işlədirsənizsə --direct 'i işlədin\n"
 
-#: gconf/gconftool.c:579
+#: gconf/gconftool.c:609
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "GConf'un başlaması iflas etdi: %s\n"
 
-#: gconf/gconftool.c:608
+#: gconf/gconftool.c:638
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL verilibdir, sxemləri qurmuram\n"
 
-#: gconf/gconftool.c:621
+#: gconf/gconftool.c:651
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "GCONF_CONFIG_SOURCE verisi bildirilmiş olmaq məcburiyyətindədir\n"
 
-#: gconf/gconftool.c:650
+#: gconf/gconftool.c:680
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Quraşdırma fayllarına yetişirkən xəta oldu : %s\n"
 
-#: gconf/gconftool.c:872
+#: gconf/gconftool.c:925
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Qapatılma xətası : %s\n"
 
-#: gconf/gconftool.c:915
+#: gconf/gconftool.c:968
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr "Alt qovluqlarla göstəriləcək bir qovluğu ya da qovluqları bildirmək məcburiyyətindəsən \n"
+msgstr ""
+"Alt qovluqlarla göstəriləcək bir qovluğu ya da qovluqları bildirmək "
+"məcburiyyətindəsən \n"
 
-#: gconf/gconftool.c:949
+#: gconf/gconftool.c:1016
+#, fuzzy
+msgid "Must specify one or more dirs to dump.\n"
+msgstr "Silinəcək bir ya da daha çox açar vermək məcburiyyətindəsən .\n"
+
+#: gconf/gconftool.c:1056 gconf/gconftool.c:1314
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "`%s' içindəki sahələr sıralana bilmədi: %s\n"
 
-#: gconf/gconftool.c:967
+#: gconf/gconftool.c:1074
 msgid "(no value set)"
 msgstr "( qiyməti yoxdur )"
 
-#: gconf/gconftool.c:1022
+#: gconf/gconftool.c:1372
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Quraşdırma vericisini ( gconfd ) açdıra bilmədim : %s\n"
 
-#: gconf/gconftool.c:1036
+#: gconf/gconftool.c:1386
 msgid "Must specify a key or keys to get\n"
 msgstr "Alınacak açar(lar)ı bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:1071
+#: gconf/gconftool.c:1421
 #, c-format
 msgid "Type: %s\n"
 msgstr "Nov: %s\n"
 
-#: gconf/gconftool.c:1072
+#: gconf/gconftool.c:1422
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Siyahı növü : %s\n"
 
-#: gconf/gconftool.c:1073
+#: gconf/gconftool.c:1423
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car növü : %s\n"
 
-#: gconf/gconftool.c:1074
+#: gconf/gconftool.c:1424
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr növü : %s\n"
 
-#: gconf/gconftool.c:1079
+#: gconf/gconftool.c:1429
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Ana Qiymət: %s\n"
 
-#: gconf/gconftool.c:1079
-#: gconf/gconftool.c:1081
-#: gconf/gconftool.c:1082
-#: gconf/gconftool.c:1083
+#: gconf/gconftool.c:1429 gconf/gconftool.c:1431 gconf/gconftool.c:1432
+#: gconf/gconftool.c:1433
 msgid "Unset"
 msgstr "İşarəti Qaldır"
 
-#: gconf/gconftool.c:1081
+#: gconf/gconftool.c:1431
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Yiyə : %s\n"
 
-#: gconf/gconftool.c:1082
+#: gconf/gconftool.c:1432
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Qısa izahat : %s\n"
 
-#: gconf/gconftool.c:1083
+#: gconf/gconftool.c:1433
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Uzun izahat : %s\n"
 
-#: gconf/gconftool.c:1092
-#: gconf/gconftool.c:1386
+#: gconf/gconftool.c:1442 gconf/gconftool.c:1736
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "`%s' üçün bir qiymət bildirilməyib\n"
 
-#: gconf/gconftool.c:1096
-#: gconf/gconftool.c:1390
+#: gconf/gconftool.c:1446 gconf/gconftool.c:1740
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "`%s' üçün bir qiymət ala bilmədim : %s\n"
 
-#: gconf/gconftool.c:1139
-#: gconf/gconftool.c:1151
+#: gconf/gconftool.c:1489 gconf/gconftool.c:1501
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "`%s' növünü başa düşmürəm\n"
 
-#: gconf/gconftool.c:1163
+#: gconf/gconftool.c:1513
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Arqument olaraq dəyişən açar/qiymətlər vermək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:1183
+#: gconf/gconftool.c:1533
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "`%s' açarı üçün oturdulacaq bir qiymət yoxdur\n"
 
-#: gconf/gconftool.c:1211
+#: gconf/gconftool.c:1561
 msgid "Cannot set schema as value\n"
 msgstr "Bir şəkli bir qiymət olaraq oturda bilmərəm\n"
 
-#: gconf/gconftool.c:1221
+#: gconf/gconftool.c:1571
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Bir siyahıyı bildirirkən siyahı növünü bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:1235
-msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "Bir cütü bildirirkən car növünü və cdr növünü bildirmək məcburiyyətindəsən\n"
+#: gconf/gconftool.c:1585
+msgid ""
+"When setting a pair you must specify a primitive car-type and cdr-type\n"
+msgstr ""
+"Bir cütü bildirirkən car növünü və cdr növünü bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:1250
+#: gconf/gconftool.c:1600
 #, c-format
 msgid "Error: %s\n"
 msgstr "Xəta : %s\n"
 
-#: gconf/gconftool.c:1263
+#: gconf/gconftool.c:1613 gconf/gconftool.c:2485
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Qiymət vermə xətası: %s\n"
 
-#: gconf/gconftool.c:1281
+#: gconf/gconftool.c:1631
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Sinxronlaşdırma xətası: %s\n"
 
-#: gconf/gconftool.c:1304
+#: gconf/gconftool.c:1654
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Əmr sətrində açar və ya açarları bildirməlisən\n"
 
-#: gconf/gconftool.c:1324
+#: gconf/gconftool.c:1674
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "`%s' üçün sxem tapılmadı\n"
 
-#: gconf/gconftool.c:1357
+#: gconf/gconftool.c:1707
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "Sxemdə '%s' üstündə heç sənəd qatarı saxlanmayıb\n"
 
-#: gconf/gconftool.c:1362
+#: gconf/gconftool.c:1712
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "'%s' üstündə sxem alma xətası: %s\n"
 
-#: gconf/gconftool.c:1369
+#: gconf/gconftool.c:1719
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "'%s' üstündə heç sxem saxlanmayıb\n"
 
-#: gconf/gconftool.c:1372
+#: gconf/gconftool.c:1722
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "'%s' üstündəki qiymət sxem deyildir\n"
 
-#: gconf/gconftool.c:1428
-#: gconf/gconftool.c:1453
+#: gconf/gconftool.c:1778 gconf/gconftool.c:1803
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "Əlavə etmək üçün açar adı ilə davam edilmiş sxem adı girməlisən\n"
 
-#: gconf/gconftool.c:1435
+#: gconf/gconftool.c:1785
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "'%s' sxem adının '%s' açar adı ilə əlaqələndirmə xətası: %s\n"
 
-#: gconf/gconftool.c:1463
+#: gconf/gconftool.c:1813
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "'%s' üstündən sxem silmə xətası: %s\n"
 
-#: gconf/gconftool.c:1488
+#: gconf/gconftool.c:1838
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Tək arqument olaraq bir açarı ( şəkli ) bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:1530
+#: gconf/gconftool.c:1880
 msgid "List type must be a primitive type: string, int, float or bool\n"
-msgstr "Siyahı növü bu əsas növlərdən meydana gəlməlidir: string, int, float ya da bool\n"
+msgstr ""
+"Siyahı növü bu əsas növlərdən meydana gəlməlidir: string, int, float ya da "
+"bool\n"
 
-#: gconf/gconftool.c:1550
+#: gconf/gconftool.c:1900
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Cütün car növü bu meydana gəlməlidir: string, int, float ya da bool\n"
 
-#: gconf/gconftool.c:1570
+#: gconf/gconftool.c:1920
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Cütün cdr növü bu meydana gəlməlidir: string, int, float ya da bool\n"
 
-#: gconf/gconftool.c:1585
+#: gconf/gconftool.c:1935
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Qiyməti oturdurkən xəta oldu : %s"
 
-#: gconf/gconftool.c:1599
+#: gconf/gconftool.c:1949
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Sinxronlaşdırılırkən xəta oldu : %s"
 
-#: gconf/gconftool.c:1614
+#: gconf/gconftool.c:1964
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
-msgstr "Açar/qiymət eşlemlerini göstəriləcək bir ya da daha çox qovluqları bildirmək məcburiyyətindəsən .\n"
+msgstr ""
+"Açar/qiymət eşlemlerini göstəriləcək bir ya da daha çox qovluqları bildirmək "
+"məcburiyyətindəsən .\n"
 
-#: gconf/gconftool.c:1628
+#: gconf/gconftool.c:1978
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Silinəcək bir ya da daha çox açar vermək məcburiyyətindəsən .\n"
 
-#: gconf/gconftool.c:1639
+#: gconf/gconftool.c:1989
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "`%s''yi silinirkən xəta oldu : %s\n"
 
-#: gconf/gconftool.c:1659
+#: gconf/gconftool.c:2009
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Rekursiv olaraq seçkisi qaldırılacaq bir və ya daha çox açar müəyyənləşdirməlsiniz.\n"
+msgstr ""
+"Rekursiv olaraq seçkisi qaldırılacaq bir və ya daha çox açar "
+"müəyyənləşdirməlsiniz.\n"
 
-#: gconf/gconftool.c:1673
+#: gconf/gconftool.c:2023
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "\"%s\" -ın təkrar silinməsində xəta yarandı: %s\n"
 
-#: gconf/gconftool.c:1691
+#: gconf/gconftool.c:2041
 msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr "Alt qovluqları göstəriləcək bir ya da daha çox qovluqları bildirmək məcburiyyətindəsən .\n"
+msgstr ""
+"Alt qovluqları göstəriləcək bir ya da daha çox qovluqları bildirmək "
+"məcburiyyətindəsən .\n"
 
-#: gconf/gconftool.c:1725
+#: gconf/gconftool.c:2075
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Qovluqları sıralarkən xəta oldu : %s\n"
 
-#: gconf/gconftool.c:1767
+#: gconf/gconftool.c:2211
+msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
+msgstr ""
+
+#: gconf/gconftool.c:2238
+#, fuzzy, c-format
+msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
+msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
+
+#: gconf/gconftool.c:2271
+msgid "WARNING: must have a child node under <value>\n"
+msgstr ""
+
+#: gconf/gconftool.c:2277
+#, fuzzy, c-format
+msgid "WARNING: node <%s> not understood\n"
+msgstr "XƏBƏRDARLIQ : <schema>'nın altındakı <%s> nöqtəsini başa düşmədim\n"
+
+#: gconf/gconftool.c:2295
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse int value `%s'\n"
+msgstr "XƏBƏRDARLIQ : növ adı `%s''yi daraya bilmədim\n"
+
+#: gconf/gconftool.c:2316
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse float value `%s'\n"
+msgstr "XƏBƏRDARLIQ : növ adı `%s''yi daraya bilmədim\n"
+
+#: gconf/gconftool.c:2338
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse string value `%s'\n"
+msgstr "XƏBƏRDARLIQ : növ adı `%s''yi daraya bilmədim\n"
+
+#: gconf/gconftool.c:2359
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse boolean value `%s'\n"
+msgstr "XƏBƏRDARLIQ : növ adı `%s''yi daraya bilmədim\n"
+
+#: gconf/gconftool.c:2475 gconf/gconftool.c:3007
+#, c-format
+msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
+msgstr ""
+"XƏBƏRDARLIQ : `%s' şəkil faylını `%s' açarı ilə birləşdirə bilmədim : %s\n"
+
+#: gconf/gconftool.c:2580
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "XƏBƏRDARLIQ : %s şəkli üçün keçərsiz ya da əksik növ\n"
 
-#: gconf/gconftool.c:1776
+#: gconf/gconftool.c:2589
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "XƏBƏRDARLIQ : %s şəkli üçün keçərsiz ya da əksik siyahı növü\n"
 
-#: gconf/gconftool.c:1787
-#: gconf/gconftool.c:1817
-#: gconf/gconftool.c:1846
+#: gconf/gconftool.c:2600 gconf/gconftool.c:2630 gconf/gconftool.c:2659
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr "XƏBƏRDARLIQ : şəkil %s üçün əsas qiymət `%s''yi daramasında xəta oldu\n"
+msgstr ""
+"XƏBƏRDARLIQ : şəkil %s üçün əsas qiymət `%s''yi daramasında xəta oldu\n"
 
-#: gconf/gconftool.c:1805
+#: gconf/gconftool.c:2618
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "XƏBƏRDARLIQ : %s şəkli üçün keçərsiz ya da əksik cdr növü\n"
 
-#: gconf/gconftool.c:1830
+#: gconf/gconftool.c:2643
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "XƏBƏRDARLIQ : şəkil iÇin əsas qiyməti aturda bilmədim\n"
 
-#: gconf/gconftool.c:1859
+#: gconf/gconftool.c:2672
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
-msgstr "XƏBƏRDARLIQ : gconftool'd daxili bir xəta oldu , namə'lum GConfValueType\n"
+msgstr ""
+"XƏBƏRDARLIQ : gconftool'd daxili bir xəta oldu , namə'lum GConfValueType\n"
 
-#: gconf/gconftool.c:1906
-#: gconf/gconftool.c:1927
-#: gconf/gconftool.c:1948
-#: gconf/gconftool.c:1969
+#: gconf/gconftool.c:2720 gconf/gconftool.c:2741 gconf/gconftool.c:2762
+#: gconf/gconftool.c:2783
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "XƏBƏRDARLIQ : növ adı `%s''yi daraya bilmədim\n"
 
-#: gconf/gconftool.c:1923
+#: gconf/gconftool.c:2737
 #, c-format
-msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr "XƏBƏRDARLIQ : siyahı növü int, float, string ya da bool ola bilər, fəqət `%s' ola bilməz\n"
+msgid ""
+"WARNING: list_type can only be int, float, string or bool and not `%s'\n"
+msgstr ""
+"XƏBƏRDARLIQ : siyahı növü int, float, string ya da bool ola bilər, fəqət `%"
+"s' ola bilməz\n"
 
-#: gconf/gconftool.c:1944
+#: gconf/gconftool.c:2758
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "XƏBƏRDARLIQ : car növü int, float, string ya da bool ola bilər, fəqət `%s' ola bilməz\n"
+msgstr ""
+"XƏBƏRDARLIQ : car növü int, float, string ya da bool ola bilər, fəqət `%s' "
+"ola bilməz\n"
 
-#: gconf/gconftool.c:1965
+#: gconf/gconftool.c:2779
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "XƏBƏRDARLIQ : cdr növü int, float, string ya da bool ola bilər, fəqət `%s' ola bilməz\n"
+msgstr ""
+"XƏBƏRDARLIQ : cdr növü int, float, string ya da bool ola bilər, fəqət `%s' "
+"ola bilməz\n"
 
-#: gconf/gconftool.c:1993
+#: gconf/gconftool.c:2819
 msgid "WARNING: empty <applyto> node"
 msgstr "XƏBƏRDARLIQ : boşdur <applyto> nöqtəsi"
 
-#: gconf/gconftool.c:1996
-#: gconf/gconftool.c:2278
+#: gconf/gconftool.c:2822 gconf/gconftool.c:3080
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "XƏBƏRDARLIQ : <schema>'nın altındakı <%s> nöqtəsini başa düşmədim\n"
 
-#: gconf/gconftool.c:2006
-msgid "WARNING: no key specified for schema\n"
-msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
-
-#: gconf/gconftool.c:2017
+#: gconf/gconftool.c:2833
 msgid "WARNING: no <list_type> specified for schema of type list\n"
-msgstr "XƏBƏRDARLIQ: növ siyahısının sxemi üçün heç bir <list_type> verilməyib\n"
+msgstr ""
+"XƏBƏRDARLIQ: növ siyahısının sxemi üçün heç bir <list_type> verilməyib\n"
 
-#: gconf/gconftool.c:2024
+#: gconf/gconftool.c:2839
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "XƏBƏRDARLIQ: növ qoşasının sxemi üçün heç bir <car_növü> verilməyib\n"
 
-#: gconf/gconftool.c:2030
+#: gconf/gconftool.c:2845
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "XƏBƏRDARLIQ: növ qoşasının sxemi üçün heç bir <cdr_type> verilməyib\n"
 
-#: gconf/gconftool.c:2058
+#: gconf/gconftool.c:2874
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
-msgstr "XƏBƏRDARLIQ : <locale> nöqtəsinin `name=\"locale\"' xüsusiyyəti yoxdur, keçirəm\n"
+msgstr ""
+"XƏBƏRDARLIQ : <locale> nöqtəsinin `name=\"locale\"' xüsusiyyəti yoxdur, "
+"keçirəm\n"
 
-#: gconf/gconftool.c:2064
+#: gconf/gconftool.c:2880
 #, c-format
-msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr "XƏBƏRDARLIQ : `%s' lokalizasiyası üçün çoxlu <locale> nöqtələri var, köhnə ilkləri keçirəm\n"
+msgid ""
+"WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
+msgstr ""
+"XƏBƏRDARLIQ : `%s' lokalizasiyası üçün çoxlu <locale> nöqtələri var, köhnə "
+"ilkləri keçirəm\n"
 
-#: gconf/gconftool.c:2145
+#: gconf/gconftool.c:2978
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "XƏBƏRDARLIQ : <locale> nöqtəsində keçərsiz <%s> nöqtəsi\n"
 
-#: gconf/gconftool.c:2174
-#, c-format
-msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr "XƏBƏRDARLIQ : `%s' şəkil faylının `%s' lokalizasiyasının yüklənməsində xəta var : %s\n"
-
-#: gconf/gconftool.c:2182
-#, c-format
-msgid "Installed schema `%s' for locale `%s'\n"
-msgstr "`%s' şeklinde `%s' lokalizasiyası yükləndi\n"
-
-#: gconf/gconftool.c:2204
-#, c-format
-msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
-msgstr "XƏBƏRDARLIQ : `%s' şəkil faylını `%s' açarı ilə birləşdirə bilmədim : %s\n"
-
-#: gconf/gconftool.c:2212
+#: gconf/gconftool.c:3015
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "`%s' şekilni `%s' anahtarına ekledim\n"
 
-#: gconf/gconftool.c:2291
+#: gconf/gconftool.c:3089
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr "Bir <schema>'da ən azından bir <locale> nöqtəsi olmaq məcburiyyətindədir\n"
+msgstr ""
+"Bir <schema>'da ən azından bir <locale> nöqtəsi olmaq məcburiyyətindədir\n"
 
-#: gconf/gconftool.c:2322
+#: gconf/gconftool.c:3121
 #, c-format
-msgid "WARNING: node <%s> not understood below <schemalist>\n"
-msgstr "XƏBƏRDARLIQ : <schemalist>'in altındakı <%s> nöqtəsi başa düşülmədi\n"
+msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
+msgstr ""
+"XƏBƏRDARLIQ : `%s' şəkil faylının `%s' lokalizasiyasının yüklənməsində xəta "
+"var : %s\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:3129
+#, c-format
+msgid "Installed schema `%s' for locale `%s'\n"
+msgstr "`%s' şeklinde `%s' lokalizasiyası yükləndi\n"
+
+#: gconf/gconftool.c:3164
+msgid "WARNING: no key specified for schema\n"
+msgstr "XƏBƏRDARLIQ : bu şəkil üçün açar bildirmədi\n"
+
+#: gconf/gconftool.c:3205
+#, fuzzy, c-format
+msgid "WARNING: node <%s> not understood below <%s>\n"
+msgstr "XƏBƏRDARLIQ : <schema>'nın altındakı <%s> nöqtəsini başa düşmədim\n"
+
+#: gconf/gconftool.c:3236
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "`%s''yi aça bilmədim : %s\n"
 
-#: gconf/gconftool.c:2352
+#: gconf/gconftool.c:3243
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "`%s' sənədi yoxsa boşdur mu ?\n"
 
-#: gconf/gconftool.c:2364
-#, c-format
-msgid "Document `%s' has the wrong type of root node (<%s>, should be <gconfschemafile>)\n"
-msgstr "`%s' sənədin ana nöqtəsi (<%s>'in, <gconfschemafile> olmalıdır ) səhvdir \n"
+#: gconf/gconftool.c:3255
+#, fuzzy, c-format
+msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
+msgstr ""
+"`%s' sənədin ana nöqtəsi (<%s>'in, <gconfschemafile> olmalıdır ) səhvdir \n"
 
-#: gconf/gconftool.c:2377
-#, c-format
-msgid "Document `%s' has no top level <gconfschemafile> node\n"
+#: gconf/gconftool.c:3268
+#, fuzzy, c-format
+msgid "Document `%s' has no top level <%s> node\n"
 msgstr "`%s' sənədinin <gconfschemafile> ana nöqtəsi yoxdur \n"
 
-#: gconf/gconftool.c:2391
-#, c-format
-msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
-msgstr "XƏBƏRDARLIQ : <gconfschemafile> altındakı <%s> nöqtəsi başa düşülmədi\n"
+#: gconf/gconftool.c:3282
+#, fuzzy, c-format
+msgid "WARNING: node <%s> below <%s> not understood\n"
+msgstr ""
+"XƏBƏRDARLIQ : <gconfschemafile> altındakı <%s> nöqtəsi başa düşülmədi\n"
 
-#: gconf/gconftool.c:2402
-#: gconf/gconftool.c:2434
+#: gconf/gconftool.c:3293 gconf/gconftool.c:3328
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Quraşdurma mə'lumatlarını sinxronlaşdırılırkən xəta oldu : %s"
 
-#: gconf/gconftool.c:2418
+#: gconf/gconftool.c:3312
 msgid "Must specify some schema files to install\n"
 msgstr "Yüklənəcək şəkil fayllarını bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:2455
+#: gconf/gconftool.c:3349
 #, c-format
-msgid "\n"
+msgid ""
+"\n"
 "%s\n"
-msgstr "\n"
+msgstr ""
+"\n"
 "%s\n"
 
-#: gconf/gconftool.c:2475
+#: gconf/gconftool.c:3369
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Qırma açarı %s'yi silə bilmədim : %s\n"
 
-#: gconf/gconftool.c:2601
+#: gconf/gconftool.c:3495
 msgid "Must specify some keys to break\n"
 msgstr "Qırılacaq bə'zi açarları bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:2607
+#: gconf/gconftool.c:3501
 #, c-format
-msgid "Trying to break your application by setting bad values for key:\n"
+msgid ""
+"Trying to break your application by setting bad values for key:\n"
 "  %s\n"
-msgstr "Proqramı bə'zi xətalı qiymətləri oturdaraq qırmağa cəhd edirəm : \n"
+msgstr ""
+"Proqramı bə'zi xətalı qiymətləri oturdaraq qırmağa cəhd edirəm : \n"
 "  %s\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:3519
 msgid "Must specify some directories to break\n"
 msgstr "Qırılacaq bə'zi qovluqları bildirmək məcburiyyətindəsən\n"
 
-#: gconf/gconftool.c:2644
+#: gconf/gconftool.c:3538
 #, c-format
-msgid "Trying to break your application by setting bad values for keys in directory:\n"
+msgid ""
+"Trying to break your application by setting bad values for keys in "
+"directory:\n"
 "  %s\n"
-msgstr "Proqramı bə'zi xətalı qiymətləri bu qovuqda oturdaraq qırmağa cəhd edirəm :\n"
+msgstr ""
+"Proqramı bə'zi xətalı qiymətləri bu qovuqda oturdaraq qırmağa cəhd edirəm :\n"
 "  %s\n"
+
+#~ msgid "Unloading BerkeleyDB (BDB) backend module."
+#~ msgstr "BerkeleyDB (BDB) \"backend\" modulunu çıxarıram ."
+
+#~ msgid "Opened BerkeleyDB source at root %s"
+#~ msgstr "BerkeleyDB qaynağı kök \"%s\"da(də) açıldı"
+
+#~ msgid "Initializing BDB backend module"
+#~ msgstr "BDB \"backend\" modulu başladılır"
+
+#~ msgid "Couldn't find the root directory in the address \"%s\""
+#~ msgstr "\"%s\" ünvanda ana qovluğunu tapa bilmədim"
+
+#~ msgid "WARNING: node <%s> not understood below <schemalist>\n"
+#~ msgstr ""
+#~ "XƏBƏRDARLIQ : <schemalist>'in altındakı <%s> nöqtəsi başa düşülmədi\n"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 1.2.1\n"
-"POT-Creation-Date: 2003-01-12 13:13-0500\n"
+"POT-Creation-Date: 2003-03-26 20:42-0500\n"
 "PO-Revision-Date: 2002-08-06 08:26+0900\n"
 "Last-Translator: Nam SungHyun <namsh@kldp.org>\n"
 "Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
@@ -14,25 +14,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: backends/bdb-backend.c:215
-msgid "Unloading BerkeleyDB (BDB) backend module."
-msgstr "버클리DB (BDB) 백엔드 모듈을 해제합니다."
-
-#: backends/bdb-backend.c:238
-#, c-format
-msgid "Opened BerkeleyDB source at root %s"
-msgstr "버클리DB 소스를 루트 디렉토리 %s에서 열었습니다"
-
-#: backends/bdb-backend.c:578
-msgid "Initializing BDB backend module"
-msgstr "BDB 백엔드 모듈을 초기화중입니다"
-
 #: backends/dir-utils.c:108
 #, c-format
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "주소 `%2$s'에서 %1$s 루트 디렉토리를 찾을 수 없습니다"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304
+#: backends/dir-utils.c:124 backends/xml-backend.c:332
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "`%s'디렉토리를 만들수가 없습니다: %s"
@@ -43,32 +30,32 @@ msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "주소 `%2$s'의 %1$s 루트 디렉토리에서 읽거나 이 디렉토리로 쓸 수 없습니다"
 
-#: backends/xml-backend.c:233
+#: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
 msgstr "XML 백엔드 모듈을 해제합니다."
 
-#: backends/xml-backend.c:289
-#, fuzzy, c-format
-msgid "Couldn't find the root directory in the address \"%s\""
-msgstr "주소 `%2$s'에서 %1$s 루트 디렉토리를 찾을 수 없습니다"
+#: backends/xml-backend.c:285
+#, c-format
+msgid "Couldn't find the XML root directory in the address `%s'"
+msgstr "주소 `%2s'의 XML 루트 디렉토리를 찾을 수 없습니다"
 
-#: backends/xml-backend.c:414
+#: backends/xml-backend.c:443
 #, fuzzy, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "주소 `%s'의 XML 루트 디렉토리에서 읽거나 이 디렉토리로 쓸 수 없습니다"
 
-#: backends/xml-backend.c:424
+#: backends/xml-backend.c:453
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "루트 디렉토리 %s에 있는 XML 소스의 디렉토리/파일 허가권이: %o/%o"
 
-#: backends/xml-backend.c:590
+#: backends/xml-backend.c:619
 #, c-format
 msgid "Error syncing the XML backend directory cache: %s"
 msgstr "XML 백엔드 디렉토리 캐쉬를 동기화하는 데 오류가 발생했습니다: %s"
 
-#: backends/xml-backend.c:655
+#: backends/xml-backend.c:684
 msgid ""
 "Remove dir operation is no longer supported, just remove all the values in "
 "the directory"
@@ -76,20 +63,30 @@ msgstr ""
 "디렉토리 지우기 작업은 더 이상 지원되지 않습니다. 디렉토리 내의 모든 값을 지"
 "우면 됩니다"
 
-#: backends/xml-backend.c:722
+#: backends/xml-backend.c:770
+#, fuzzy, c-format
+msgid "Could not open lock directory for %s to remove locks: %s\n"
+msgstr "`%s'디렉토리를 만들수가 없습니다: %s"
+
+#: backends/xml-backend.c:788
+#, fuzzy, c-format
+msgid "Could not remove file %s: %s\n"
+msgstr "`%s' 파일을 지울 수 없습니다: %s\n"
+
+#: backends/xml-backend.c:809
 msgid "Initializing XML backend module"
 msgstr "XML 백엔드 모듈을 초기화합니다"
 
-#: backends/xml-backend.c:790
+#: backends/xml-backend.c:877
 #, fuzzy, c-format
 msgid "Failed to give up lock on XML dir \"%s\": %s"
 msgstr "XML 디렉토리 `%s'에 잠금을 포기하는 데 실패했습니다: %s"
 
-#: backends/xml-cache.c:257
+#: backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
 msgstr "XML 캐쉬의 내용을 디스크에 쓰는 데 실패했습니다"
 
-#: backends/xml-cache.c:287
+#: backends/xml-cache.c:316
 #, c-format
 msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
@@ -98,7 +95,7 @@ msgstr ""
 "XML 백엔드 캐쉬에서 %s 디렉토리를 지울 수 없습니다. 그 내용이 디스크에 올바르"
 "게 쓰여지지 않았기 때문입니다"
 
-#: backends/xml-cache.c:314
+#: backends/xml-cache.c:343
 #, c-format
 msgid ""
 "%u items remain in the cache after cleaning already-synced items older than %"
@@ -137,7 +134,7 @@ msgstr "`%s'의 허가권을 설정하는 데 실패: %s"
 msgid "Failed to write XML data to `%s': %s"
 msgstr "XMl 데이타를 %s에 쓰는 데 실패: %s"
 
-#: backends/xml-dir.c:460 backends/xml-dir.c:1236
+#: backends/xml-dir.c:460 backends/xml-dir.c:1235
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "`%s'파일을 닫는 데 실패했습니다: %s"
@@ -158,42 +155,42 @@ msgid "Failed to delete old file `%s': %s"
 msgstr "기존 파일 `%s` 지우기가 실패했습니다: %s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:935
+#: backends/xml-dir.c:934
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "`%s'의 정보를 얻을수가 없습니다: %s"
 
-#: backends/xml-dir.c:959
+#: backends/xml-dir.c:958
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: backends/xml-dir.c:1109
+#: backends/xml-dir.c:1108
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "엔트리 `%s'이(가) `%s'에서 중복되어있습니다. 무시"
 
-#: backends/xml-dir.c:1131
+#: backends/xml-dir.c:1130
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "`%s' XML 파일에 이름이 없는 엔트리가 있어서 무시합니다"
 
-#: backends/xml-dir.c:1139
+#: backends/xml-dir.c:1138
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "XML 파일 `%s'의 맨 위 노드가 <entry>가 아니라 <%s>입니다.  무시합니다"
 
-#: backends/xml-dir.c:1212
+#: backends/xml-dir.c:1211
 #, fuzzy, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "`%s'디렉토리를 만들수가 없습니다: %s"
 
-#: backends/xml-dir.c:1228
+#: backends/xml-dir.c:1227
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "`%s'파일을 생성하는 데 실패했습니다: %s"
 
-#: backends/xml-dir.c:1327
+#: backends/xml-dir.c:1326
 #, c-format
 msgid "Failed to parse XML file \"%s\""
 msgstr "XML 파일 \"%s\"의 구문 분석이 실패했습니다"
@@ -559,68 +556,68 @@ msgstr "소스 `%s'을(를) 추가합니다\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "`%s'파일을 읽는 데 오류가 발생했습니다: %s\n"
 
-#: gconf/gconf-internals.c:1195 gconf/gconf-internals.c:1261
+#: gconf/gconf-internals.c:1203 gconf/gconf-internals.c:1269
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1681
 msgid "Text contains invalid UTF-8"
 msgstr "텍스트에 잘못된 UTF-8이 들어 있습니다"
 
-#: gconf/gconf-internals.c:1346
+#: gconf/gconf-internals.c:1354
 #, c-format
 msgid "Expected list, got %s"
 msgstr "예상되는 리스트 대신 %s을(를) 얻었습니다"
 
-#: gconf/gconf-internals.c:1356
+#: gconf/gconf-internals.c:1364
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "예상되는 %s의 리스트대신 %s의 리스트를 얻었습니다"
 
-#: gconf/gconf-internals.c:1484
+#: gconf/gconf-internals.c:1492
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "예상되는 pair대신에 %s을(를) 얻었습니다"
 
-#: gconf/gconf-internals.c:1498
+#: gconf/gconf-internals.c:1506
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "(%s,%s) 쌍이 나와야 하는 데, 그 중에 한 개 혹은 두 모두의 값이 없는 채로 나타"
 "났습니다"
 
-#: gconf/gconf-internals.c:1514
+#: gconf/gconf-internals.c:1522
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "예상되는 (%s, %s)타입의 pair 대신에 (%s, %s)을 얻었습니다"
 
-#: gconf/gconf-internals.c:1630
+#: gconf/gconf-internals.c:1638
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "따옴표된 문자열이 따옴표로 시작하지 않습니다"
 
-#: gconf/gconf-internals.c:1692
+#: gconf/gconf-internals.c:1700
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "따옴표된 문자열이 따옴표로 끝나지 않습니다"
 
-#: gconf/gconf-internals.c:1828
+#: gconf/gconf-internals.c:1836
 msgid "Encoded value is not valid UTF-8"
 msgstr "인코딩된 값이 올바른 UTF-8이 아닙니다"
 
-#: gconf/gconf-internals.c:2287
+#: gconf/gconf-internals.c:2295
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "'%s' 임시 파일에 잠금을 걸 수 없습니다: %s"
 
-#: gconf/gconf-internals.c:2314
+#: gconf/gconf-internals.c:2322
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr ""
 "'%s' 파일을 만들 수 없습니다. 아마도 이미 존재하는 파일이기 때문일 것입니다"
 
-#: gconf/gconf-internals.c:2360
+#: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "`%s' 파일을 만들거나 여는 데 실패했습니다"
 
-#: gconf/gconf-internals.c:2370
+#: gconf/gconf-internals.c:2378
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -630,85 +627,90 @@ msgstr ""
 "던지, 아니면 이 운영 체제에서 NFS 파일 잠금이 잘못 설정되엉 있기 때문일 것입"
 "니다 (%s)"
 
-#: gconf/gconf-internals.c:2400
+#: gconf/gconf-internals.c:2408
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr ""
 "IOR 파일 '%s'을(를) 성공적으로 열지 못했습니다. gconfd를 찾을 수 없습니다: %s"
 
-#: gconf/gconf-internals.c:2430
+#: gconf/gconf-internals.c:2438
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
 "gconftool 혹은 다른 gconfd와 관계없는 프로세스가 '%s' 잠금 파일을 갖고 있습니"
 "다"
 
-#: gconf/gconf-internals.c:2447
+#: gconf/gconf-internals.c:2455
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "실행 중인 gconfd 오브젝트 참조를 확인하는 데 ORB에 접근할 수 없습니다"
 
-#: gconf/gconf-internals.c:2457
+#: gconf/gconf-internals.c:2465
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "IOR '%s'을(를) 오브젝트 참조로 변환할 수 없습니다"
 
-#: gconf/gconf-internals.c:2507
+#: gconf/gconf-internals.c:2515
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "`%s'디렉토리를 만들 수가 없습니다: %s"
 
-#: gconf/gconf-internals.c:2566
+#: gconf/gconf-internals.c:2574
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "`%s'파일에 쓸수가 없습니다: %s"
 
-#: gconf/gconf-internals.c:2607
+#: gconf/gconf-internals.c:2615
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "파일 `%s'에 대해 잠금을 가지고 있지 않지만, 잠금을 가져야 합니다"
 
-#: gconf/gconf-internals.c:2628
+#: gconf/gconf-internals.c:2636
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "`%s'을(를) '%s'(으)로 링크를 만들 수 없습니다: %s"
 
-#: gconf/gconf-internals.c:2640
+#: gconf/gconf-internals.c:2648
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "`%s' 잠금 파일을 지우는 데 실패했습니다: %s"
 
-#: gconf/gconf-internals.c:2659
+#: gconf/gconf-internals.c:2667
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "'%s' 파일을 지우는 데 실패했습니다: %s"
 
-#: gconf/gconf-internals.c:2673
+#: gconf/gconf-internals.c:2681
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "`%s' 잠금 디렉토리를 지우는 데 실패했습니다: %s"
 
-#: gconf/gconf-internals.c:2816 gconf/gconfd.c:596
+#: gconf/gconf-internals.c:2723
+#, fuzzy, c-format
+msgid "Failed to unlink lock file %s: %s\n"
+msgstr "`%s' 잠금 파일을 지우는 데 실패했습니다: %s"
+
+#: gconf/gconf-internals.c:2845 gconf/gconfd.c:643
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "`%s' 파일을 만드는 데 실패했습니다: %s"
 
-#: gconf/gconf-internals.c:2838
+#: gconf/gconf-internals.c:2867
 #, c-format
 msgid "Server ping error: %s"
 msgstr "서버 ping 오류: %s"
 
-#: gconf/gconf-internals.c:2859
+#: gconf/gconf-internals.c:2888
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "실행한 gconf 데몬과 통신하기 위한 파이프를 만드는 데 실패했습니다: %s\n"
 
-#: gconf/gconf-internals.c:2883
+#: gconf/gconf-internals.c:2912
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "설정 서버를 실행할 수 없습니다: %s\n"
 
-#: gconf/gconf-internals.c:2908
+#: gconf/gconf-internals.c:2937
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -721,15 +723,15 @@ msgstr ""
 "을 경우입니다.  자세한 정보는 <http://www.gnome.org/projects/gconf/>를 참조하"
 "십시오.  (자세한 정보 - %s)"
 
-#: gconf/gconf-internals.c:2909
+#: gconf/gconf-internals.c:2938
 msgid "none"
 msgstr "없음"
 
-#: gconf/gconf-sanity-check.c:39 gconf/gconftool.c:73
+#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:80
 msgid "Help options"
 msgstr "도움말 옵션"
 
-#: gconf/gconf-sanity-check.c:74 gconf/gconftool.c:423
+#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:453
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -738,7 +740,7 @@ msgstr ""
 "옵션 %s에 오류: %s.\n"
 "가능한 명령행 옵션을 모두 보려면 '%s --help'라고 실행하십시오.\n"
 
-#: gconf/gconf-sanity-check.c:131
+#: gconf/gconf-sanity-check.c:141 gconf/gconf-sanity-check.c:166
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -751,7 +753,7 @@ msgstr ""
 "니다. 많은 프로그램이 홈 디렉토리 내에 파일을 만들어야 합니다. 오류는 \"%s"
 "\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:143
+#: gconf/gconf-sanity-check.c:180
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -769,12 +771,12 @@ msgstr ""
 "의 원인은 \"nfslock\" 서비스를 사용하지 않았기 때문입니다.  오류는 \"%s"
 "\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:160
+#: gconf/gconf-sanity-check.c:197
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "`%s' 파일을 지울 수 없습니다: %s\n"
 
-#: gconf/gconf-sanity-check.c:195
+#: gconf/gconf-sanity-check.c:233
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -785,11 +787,11 @@ msgstr ""
 "설정 파일 \"%s\"에 설정 소스가 없습니다; 기본 설정과 그 외의 설정 사항을 저장"
 "할 수 없다는 뜻입니다. %s%s"
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:236
 msgid "Error reading the file: "
 msgstr "파일을 읽는 데 오류가 발생했습니다: "
 
-#: gconf/gconf-sanity-check.c:220
+#: gconf/gconf-sanity-check.c:259
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -797,6 +799,24 @@ msgid ""
 msgstr ""
 "시스템 관리자에게 접촉해 다음 문제를 해결하십시오: \n"
 "설정 파일 \"%2$s\"의 주소 \"%1$s\"(을)를 확인(resolve)할 수 없습니다: %3$s"
+
+#: gconf/gconf-sanity-check.c:320
+msgid ""
+"Your preferences files are currently in use. (If you are logged in to this "
+"same account from another computer, the other login session is probably "
+"using your preferences files.) You can choose to continue, but be aware that "
+"other login sessions may become temporarily confused. If you are not logged "
+"in elsewhere, it should be harmless to continue."
+msgstr ""
+
+#: gconf/gconf-sanity-check.c:342
+msgid "Continue"
+msgstr ""
+
+#: gconf/gconf-sanity-check.c:355
+#, c-format
+msgid "%s Continue (y/n)?"
+msgstr ""
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
@@ -1131,48 +1151,73 @@ msgstr ""
 msgid "Received signal %d, shutting down cleanly"
 msgstr "시그날 %d을(를) 받아서, 올바르게 끝마칩니다"
 
+#: gconf/gconfd.c:481
+#, fuzzy, c-format
+msgid "Failed to open %s: %s"
+msgstr "`%s'을(를) 여는 데 실패했습니다: %s\n"
+
+#: gconf/gconfd.c:488
+#, fuzzy, c-format
+msgid "Failed to stat %s: %s"
+msgstr "`%s'의 정보를 얻을수가 없습니다: %s"
+
+#: gconf/gconfd.c:497
+#, c-format
+msgid "Owner of %s is not the current user"
+msgstr ""
+
+#: gconf/gconfd.c:505
+#, c-format
+msgid "Bad permissions %o on dir %s"
+msgstr ""
+
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:543
+#: gconf/gconfd.c:590
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "시작 (버전 %s), pid %u 사용자 '%s'"
 
-#: gconf/gconfd.c:583
+#: gconf/gconfd.c:630
 msgid "Failed to get object reference for ConfigServer"
 msgstr "ConfigServer에 대한 오브젝트 참조를 얻지 못했습니다"
 
-#: gconf/gconfd.c:621
+#: gconf/gconfd.c:650
+#, c-format
+msgid "Directory %s has a problem, gconfd can't use it"
+msgstr ""
+
+#: gconf/gconfd.c:679
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "바이트를 파이프 fd %d에 쓰는 데 실패하여 클라이언트 프로그램이 이상 종료할 "
 "수 있습니다: %s"
 
-#: gconf/gconfd.c:631
+#: gconf/gconfd.c:689
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "데몬에 대한 잠금을 얻는 데 실패했습니다. 끝냅니다: %s"
 
-#: gconf/gconfd.c:669
+#: gconf/gconfd.c:727
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "잠금 파일을 해제하는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:677
+#: gconf/gconfd.c:735
 msgid "Exiting"
 msgstr "끝냄"
 
-#: gconf/gconfd.c:703
+#: gconf/gconfd.c:761
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf 서버가 사용중이 아니라, 끝마칩니다"
 
-#: gconf/gconfd.c:1069
+#: gconf/gconfd.c:1127
 #, c-format
 msgid "Returning exception: %s"
 msgstr "예외가 발생했습니다: %s"
 
-#: gconf/gconfd.c:1169
+#: gconf/gconfd.c:1227
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1181,7 +1226,7 @@ msgstr ""
 "gconfd 로그파일을 여는 데 실패했습니다; gconfd 셧다운 후에 리스너를 복구하지 "
 "못할 것입니다 (%s)"
 
-#: gconf/gconfd.c:1204
+#: gconf/gconfd.c:1262
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1189,38 +1234,38 @@ msgstr ""
 "gconfd 로그파일을 닫는 데 실패했습니다; 데이타를 올바르게 저장하지 못할 수도 "
 "있습니다 (%s)"
 
-#: gconf/gconfd.c:1273
+#: gconf/gconfd.c:1331
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "저장된 상태 파일 '%s'을(를) 쓰기로 열 수 없습니다: %s"
 
-#: gconf/gconfd.c:1287
+#: gconf/gconfd.c:1345
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "`%s' 파일에 저장된 상태를 쓸 수 없습니다. fd: %d: %s"
 
-#: gconf/gconfd.c:1296
+#: gconf/gconfd.c:1354
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "새로 저장된 상태 파일 '%s'을(를) 닫는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:1310
+#: gconf/gconfd.c:1368
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "과거에 저장된 상태 파일 `%s'을(를) 옮겨 놓을 수 없습니다: %s"
 
-#: gconf/gconfd.c:1320
+#: gconf/gconfd.c:1378
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "새로 저장된 상태 파일을 제 위치에 놓을 수 없습니다: %s"
 
-#: gconf/gconfd.c:1329
+#: gconf/gconfd.c:1387
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "'%s'(으)로 옮겨진 원래 저장된 상태 파일을 복구하는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:1800
+#: gconf/gconfd.c:1858
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1228,17 +1273,17 @@ msgstr ""
 "주소 '%s'의 리스너를 복구하는 데 실패했습니다. 데이타베이스를 확인할 수 없습"
 "니다"
 
-#: gconf/gconfd.c:1846
+#: gconf/gconfd.c:1904
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "저장된 상태 파일을 읽는 데 오류가 있습니다: %s"
 
-#: gconf/gconfd.c:1899
+#: gconf/gconfd.c:1957
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "저장된 상태 파일 '%s'을(를) 열 수 없습니다: %s"
 
-#: gconf/gconfd.c:2018
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1247,7 +1292,7 @@ msgstr ""
 "리스너의 추가를 gconfd 로그파일에 기록하는 데 실패했습니다; gconfd나 끝나거"
 "나 셧다운할 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
 
-#: gconf/gconfd.c:2023
+#: gconf/gconfd.c:2081
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1256,42 +1301,42 @@ msgstr ""
 "리스너의 제거를 gconfd 로그파일에 기록하는 데 실패했습니다; gconfd나 끝나거"
 "나 셧다운할 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
 
-#: gconf/gconfd.c:2046 gconf/gconfd.c:2220
+#: gconf/gconfd.c:2104 gconf/gconfd.c:2278
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "클라이언트에 대한 IOR을 얻는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2061
+#: gconf/gconfd.c:2119
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "저장된 상태 파일을 닫는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2132
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "클라이언트에 저장된 상태 파일에 추가하도록 쓰는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2082
+#: gconf/gconfd.c:2140
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "클라이언트에 저장된 상태 파일에 추가하도록 쓰기 실행하는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2181
+#: gconf/gconfd.c:2239
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "어떤 클라이언트가 추가도 되기 전에 자기 자신을 GConf 서버에서 지웠습니다."
 
-#: gconf/gconftool.c:82
+#: gconf/gconftool.c:89
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "어떤 키에 대해 값을 설정하고 동기화합니다. --type과 함께 씁니다."
 
-#: gconf/gconftool.c:91
+#: gconf/gconftool.c:98
 msgid "Print the value of a key to standard output."
 msgstr "어떤 키의 값을 표준 출력으로 표시합니다."
 
-#: gconf/gconftool.c:100
+#: gconf/gconftool.c:107
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1299,50 +1344,63 @@ msgstr ""
 "스키마를 설정하고 동기화합니다. --short-desc, --long-desc, --owner, --type과 "
 "함께 씁니다."
 
-#: gconf/gconftool.c:110
+#: gconf/gconftool.c:117
 msgid "Unset the keys on the command line"
 msgstr "명령행에서 키를 지웁니다"
 
-#: gconf/gconftool.c:119
+#: gconf/gconftool.c:126
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr ""
 "명령행에서 모든 키와 그 아래의 키/디렉토리 이름을 재귀적으로 모두 지웁니다"
 
-#: gconf/gconftool.c:128
+#: gconf/gconftool.c:135
 msgid "Print all key/value pairs in a directory."
 msgstr "디렉토리 내의 모든 키/값 쌍을 표시합니다."
 
-#: gconf/gconftool.c:137
+#: gconf/gconftool.c:144
 msgid "Print all subdirectories in a directory."
 msgstr "디렉토리 내의 모든 하위 디렉토리를 표시합니다."
 
-#: gconf/gconftool.c:146
+#: gconf/gconftool.c:153
+#, fuzzy
+msgid ""
+"Dump to standard out an XML description of all entries under a dir, "
+"recursively."
+msgstr "디렉토리 아래의 모든 하위 디렉토리와 항목들을 재귀적으로 표시합니다."
+
+#: gconf/gconftool.c:162
+msgid ""
+"Load from the specified file an XML description of values and set them "
+"relative to a dir."
+msgstr ""
+
+#: gconf/gconftool.c:171
 msgid "Print all subdirectories and entries under a dir, recursively."
 msgstr "디렉토리 아래의 모든 하위 디렉토리와 항목들을 재귀적으로 표시합니다."
 
-#: gconf/gconftool.c:155
+#: gconf/gconftool.c:180
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "디렉토리가 있으면 0 아니면 2를 돌려줍니다"
 
-#: gconf/gconftool.c:164
+#: gconf/gconftool.c:189
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr ""
 "gconfd를 셧다운합니다. 그럴만한 이유가 없다면 이 옵션을 사용하지 마십시오."
 
-#: gconf/gconftool.c:173
+#: gconf/gconftool.c:198
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "gconfd가 돌아가고 있으면 0 아니면 2를 돌려줍니다"
 
-#: gconf/gconftool.c:182
+#: gconf/gconftool.c:207
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
 msgstr ""
 "설정 서버(gconfd)를 실행합니다. (보통의 경우 필요할 때 자동으로 실행됩니다)"
 
-#: gconf/gconftool.c:191
+#: gconf/gconftool.c:216
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1350,11 +1408,11 @@ msgstr ""
 "설정할 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유일하다면 "
 "줄여서 써도 상관없습니다."
 
-#: gconf/gconftool.c:192
+#: gconf/gconftool.c:217
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: gconf/gconftool.c:200
+#: gconf/gconftool.c:225
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1362,11 +1420,11 @@ msgstr ""
 "설정할 리스트 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유일"
 "하다면 줄여서 써도 상관없습니다."
 
-#: gconf/gconftool.c:201 gconf/gconftool.c:210 gconf/gconftool.c:219
+#: gconf/gconftool.c:226 gconf/gconftool.c:235 gconf/gconftool.c:244
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: gconf/gconftool.c:209
+#: gconf/gconftool.c:234
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1374,7 +1432,7 @@ msgstr ""
 "설정할 car 쌍의 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유"
 "일하다면 줄여서 써도 상관없습니다."
 
-#: gconf/gconftool.c:218
+#: gconf/gconftool.c:243
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1382,43 +1440,43 @@ msgstr ""
 "설정할 cdr 쌍의 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유"
 "일하다면 줄여서 써도 상관없습니다."
 
-#: gconf/gconftool.c:227
+#: gconf/gconftool.c:252
 msgid "Specify a short half-line description to go in a schema."
 msgstr "스키마에 들어갈 짤막한 설명을 지정합니다."
 
-#: gconf/gconftool.c:228 gconf/gconftool.c:237
+#: gconf/gconftool.c:253 gconf/gconftool.c:262
 msgid "DESCRIPTION"
 msgstr "<설명>"
 
-#: gconf/gconftool.c:236
+#: gconf/gconftool.c:261
 msgid "Specify a several-line description to go in a schema."
 msgstr "스키마에 들어갈 여러 줄에 걸쳐 들어갈 설명을 지정합니다."
 
-#: gconf/gconftool.c:245
+#: gconf/gconftool.c:270
 msgid "Specify the owner of a schema"
 msgstr "스키마의 소유자를 지정합니다"
 
-#: gconf/gconftool.c:246
+#: gconf/gconftool.c:271
 msgid "OWNER"
 msgstr "<소유자>"
 
-#: gconf/gconftool.c:254
+#: gconf/gconftool.c:279
 msgid "Specify a schema file to be installed"
 msgstr "설치할 스키마 파일을 지정합니다"
 
-#: gconf/gconftool.c:255
+#: gconf/gconftool.c:280
 msgid "FILENAME"
 msgstr "<파일이름>"
 
-#: gconf/gconftool.c:263
+#: gconf/gconftool.c:288
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "기본 경로가 아닌 설정 소스를 지정합니다"
 
-#: gconf/gconftool.c:264
+#: gconf/gconftool.c:289
 msgid "SOURCE"
 msgstr "<소스>"
 
-#: gconf/gconftool.c:272
+#: gconf/gconftool.c:297
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
@@ -1426,7 +1484,7 @@ msgstr ""
 "서버를 무시하고, 설정 데이타베이스를 직접 접근합니다. gconfd가 실행되면 안 됩"
 "니다."
 
-#: gconf/gconftool.c:281
+#: gconf/gconftool.c:306
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1436,7 +1494,7 @@ msgstr ""
 "변수가 기본값이 아닌 설정 소스로 설정되어 있거나, 기본값을 사용하려면 빈 문자"
 "열로 설정되어 있어야 합니다."
 
-#: gconf/gconftool.c:290
+#: gconf/gconftool.c:315
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1444,7 +1502,7 @@ msgstr ""
 "명령행에서 여러가지 타입의 많은 값들의 설정 및 설정 해제를 반복하는 테스트를 "
 "수행합니다."
 
-#: gconf/gconftool.c:299
+#: gconf/gconftool.c:324
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1452,51 +1510,51 @@ msgstr ""
 "명령행에서 디렉토리 내의 많은 값들의 설정 및 설정 해제를 반복하는 테스트를 수"
 "행합니다."
 
-#: gconf/gconftool.c:308
+#: gconf/gconftool.c:333
 msgid "Get the short doc string for a key"
 msgstr "키의 짤막한 문서화 문자열을 얻습니다"
 
-#: gconf/gconftool.c:317
+#: gconf/gconftool.c:342
 msgid "Get the long doc string for a key"
 msgstr "키의 긴 문서화 문자열을 얻습니다"
 
-#: gconf/gconftool.c:326
+#: gconf/gconftool.c:351
 msgid "Get the name of the schema applied to this key"
 msgstr "이 키에 적용된 스키마의 이름을 얻습니다"
 
-#: gconf/gconftool.c:335
+#: gconf/gconftool.c:360
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "스키마 이름을 적용한 키 다음에 오는 스키마의 이름을 얻습니다"
 
-#: gconf/gconftool.c:344
+#: gconf/gconftool.c:369
 msgid "Remove any schema name applied to the given keys"
 msgstr "주어진 키에 적용된 모든 스키마 이름을 지웁니다"
 
-#: gconf/gconftool.c:353
+#: gconf/gconftool.c:378
 msgid "Get the name of the default source"
 msgstr "기본 소스의 이름을 얻습니다"
 
-#: gconf/gconftool.c:362
+#: gconf/gconftool.c:387
 msgid "Print version"
 msgstr "버전을 표시합니다"
 
-#: gconf/gconftool.c:441
+#: gconf/gconftool.c:471
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "읽기와 설정/설정 해제를 동시에 할 수 없습니다\n"
 
-#: gconf/gconftool.c:448
+#: gconf/gconftool.c:478
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "설정과 읽기/설정 해제를 동시에 할 수 없습니다\n"
 
-#: gconf/gconftool.c:456
+#: gconf/gconftool.c:486
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "--get 혹은 --set에서 --all-entries를 쓸 수 없습니다\n"
 
-#: gconf/gconftool.c:464
+#: gconf/gconftool.c:494
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "--get 혹은 --set에서 --all-dirs를 쓸 수 없습니다\n"
 
-#: gconf/gconftool.c:474
+#: gconf/gconftool.c:504
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1504,7 +1562,7 @@ msgstr ""
 "--recursive-list는 --get, --set, --unset, --all-entries, 혹은 --all-dirs와 함"
 "께 쓸 수 없습니다\n"
 
-#: gconf/gconftool.c:484
+#: gconf/gconftool.c:514
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1512,334 +1570,382 @@ msgstr ""
 "--set-schema는 --get, --set, --unset, --all-entries, 혹은 --all-dirs와 함께 "
 "쓸 수 없습니다\n"
 
-#: gconf/gconftool.c:490
+#: gconf/gconftool.c:520
 msgid "Value type is only relevant when setting a value\n"
 msgstr "값 타입은 값을 설정할 경우에만 유효합니다\n"
 
-#: gconf/gconftool.c:496
+#: gconf/gconftool.c:526
 msgid "Must specify a type when setting a value\n"
 msgstr "값을 설정할 때 타입을 지정해야 합니다\n"
 
-#: gconf/gconftool.c:506
+#: gconf/gconftool.c:536
 msgid "Ping option must be used by itself.\n"
 msgstr "ping 옵션은 이 옵션 단독으로 써야 합니다.\n"
 
-#: gconf/gconftool.c:516
+#: gconf/gconftool.c:546
 msgid "--dir-exists option must be used by itself.\n"
 msgstr "--dir-exists 옵션은 이 옵션 단독으로 써야 합니다.\n"
 
-#: gconf/gconftool.c:526
+#: gconf/gconftool.c:556
 msgid "--install-schema-file must be used by itself.\n"
 msgstr "--install-schema-file 옵션은 이 옵션 단독으로 써야 합니다.\n"
 
-#: gconf/gconftool.c:537
+#: gconf/gconftool.c:567
 msgid "--makefile-install-rule must be used by itself.\n"
 msgstr "--makefile-install-rule 옵션은 이 옵션 단독으로 써야 합니다.\n"
 
-#: gconf/gconftool.c:548
+#: gconf/gconftool.c:578
 msgid "--break-key must be used by itself.\n"
 msgstr "--break-key 옵션은 이 옵션 단독으로 써야 합니다.\n"
 
-#: gconf/gconftool.c:559
+#: gconf/gconftool.c:589
 msgid "--break-directory must be used by itself.\n"
 msgstr "--break-directory 옵션은 이 옵션 단독으로 써야 합니다.\n"
 
-#: gconf/gconftool.c:567
+#: gconf/gconftool.c:597
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "--direct 옵션을 사용할 때는 --config-source로 설정 소스를 지정해야 합니다\n"
 
-#: gconf/gconftool.c:573
+#: gconf/gconftool.c:603
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr ""
 "기본값이 아닌 설정 소스를 사용할 경우에는 --direct 옵션을 써야 합니다\n"
 
-#: gconf/gconftool.c:579
+#: gconf/gconftool.c:609
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "GConf를 초기화하는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:608
+#: gconf/gconftool.c:638
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL이 설정되었으므로, 스키마를 설치하지 않"
 "습니다\n"
 
-#: gconf/gconftool.c:621
+#: gconf/gconftool.c:651
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "GCONF_CONFIG_SOURCE 환경변수의 값을 설정하세요\n"
 
-#: gconf/gconftool.c:650
+#: gconf/gconftool.c:680
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "설정 소스에 접근하는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:872
+#: gconf/gconftool.c:925
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "끝마치는 데 오류가 발생했습니다: %s\n"
 
-#: gconf/gconftool.c:915
+#: gconf/gconftool.c:968
 msgid "Must specify one or more dirs to recursively list.\n"
 msgstr "재귀적으로 열거하려면 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
-#: gconf/gconftool.c:949
+#: gconf/gconftool.c:1016
+#, fuzzy
+msgid "Must specify one or more dirs to dump.\n"
+msgstr "설정 해제할 한 개 이상의 키를 지정해야 합니다.\n"
+
+#: gconf/gconftool.c:1056 gconf/gconftool.c:1314
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "`%s' 내의 항목들을 나열하는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:967
+#: gconf/gconftool.c:1074
 msgid "(no value set)"
 msgstr "(값이 없습니다)"
 
-#: gconf/gconftool.c:1022
+#: gconf/gconftool.c:1372
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "설정 서버(gconfd)를 생성할수가 없습니다: %s\n"
 
-#: gconf/gconftool.c:1036
+#: gconf/gconftool.c:1386
 msgid "Must specify a key or keys to get\n"
 msgstr "얻어낼 키나 키들을 지정하여야합니다\n"
 
-#: gconf/gconftool.c:1071
+#: gconf/gconftool.c:1421
 #, c-format
 msgid "Type: %s\n"
 msgstr "타입: %s\n"
 
-#: gconf/gconftool.c:1072
+#: gconf/gconftool.c:1422
 #, c-format
 msgid "List Type: %s\n"
 msgstr "List 타입: %s\n"
 
-#: gconf/gconftool.c:1073
+#: gconf/gconftool.c:1423
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car 타입: %s\n"
 
-#: gconf/gconftool.c:1074
+#: gconf/gconftool.c:1424
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr 타입: %s\n"
 
-#: gconf/gconftool.c:1079
+#: gconf/gconftool.c:1429
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "기본 값: %s\n"
 
-#: gconf/gconftool.c:1079 gconf/gconftool.c:1081 gconf/gconftool.c:1082
-#: gconf/gconftool.c:1083
+#: gconf/gconftool.c:1429 gconf/gconftool.c:1431 gconf/gconftool.c:1432
+#: gconf/gconftool.c:1433
 msgid "Unset"
 msgstr "설정 해제"
 
-#: gconf/gconftool.c:1081
+#: gconf/gconftool.c:1431
 #, c-format
 msgid "Owner: %s\n"
 msgstr "소유자: %s\n"
 
-#: gconf/gconftool.c:1082
+#: gconf/gconftool.c:1432
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "간단한 설명: %s\n"
 
-#: gconf/gconftool.c:1083
+#: gconf/gconftool.c:1433
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "상세한 설명: %s\n"
 
-#: gconf/gconftool.c:1092 gconf/gconftool.c:1386
+#: gconf/gconftool.c:1442 gconf/gconftool.c:1736
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "`%s'에 대한 값이 설정되지 않았습니다\n"
 
-#: gconf/gconftool.c:1096 gconf/gconftool.c:1390
+#: gconf/gconftool.c:1446 gconf/gconftool.c:1740
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "`%s'에대한 값을 얻는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:1139 gconf/gconftool.c:1151
+#: gconf/gconftool.c:1489 gconf/gconftool.c:1501
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "`%s'타입을 인식할수가 없습니다\n"
 
-#: gconf/gconftool.c:1163
+#: gconf/gconftool.c:1513
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "바꿀 키/값을 인자로 지정해야 합니다\n"
 
-#: gconf/gconftool.c:1183
+#: gconf/gconftool.c:1533
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "키에 대한 값이 설정되지 않았습니다: `%s'\n"
 
-#: gconf/gconftool.c:1211
+#: gconf/gconftool.c:1561
 msgid "Cannot set schema as value\n"
 msgstr "값으로서 스키마를 사용할수는 없습니다\n"
 
-#: gconf/gconftool.c:1221
+#: gconf/gconftool.c:1571
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "리스트 값을 설정할 때 내장된 리스트타입을 지정해야 합니다\n"
 
-#: gconf/gconftool.c:1235
+#: gconf/gconftool.c:1585
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "쌍의 값을 설정할 때 내장된 car-타입과 cdr-타입을 지정해야 합니다\n"
 
-#: gconf/gconftool.c:1250
+#: gconf/gconftool.c:1600
 #, c-format
 msgid "Error: %s\n"
 msgstr "오류: %s\n"
 
-#: gconf/gconftool.c:1263
+#: gconf/gconftool.c:1613 gconf/gconftool.c:2485
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "값을 설정하는 데 오류가 발생했습니다: %s\n"
 
-#: gconf/gconftool.c:1281
+#: gconf/gconftool.c:1631
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "동기화에 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:1304
+#: gconf/gconftool.c:1654
 msgid "Must specify a key or keys on the command line\n"
 msgstr "명령행에 키나 키들을 지정하여야 합니다\n"
 
-#: gconf/gconftool.c:1324
+#: gconf/gconftool.c:1674
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "`%s'에 대한 스키마가 없습니다\n"
 
-#: gconf/gconftool.c:1357
+#: gconf/gconftool.c:1707
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "'%s'에 있는 스키마에 문서화 문자열이 저장되어 있지 않습니다\n"
 
-#: gconf/gconftool.c:1362
+#: gconf/gconftool.c:1712
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "`%s'에서 스키마를 얻는 데 오류: %s\n"
 
-#: gconf/gconftool.c:1369
+#: gconf/gconftool.c:1719
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "'%s'에 저장되어 있는 스키마가 없습니다\n"
 
-#: gconf/gconftool.c:1372
+#: gconf/gconftool.c:1722
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "'%s'에 있는 값이 스키마가 아닙니다\n"
 
-#: gconf/gconftool.c:1428 gconf/gconftool.c:1453
+#: gconf/gconftool.c:1778 gconf/gconftool.c:1803
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "스키마에 적용할 키의 이름을 지정하기 바로 전에 스키마 이름을 지정해야 합니"
 "다.\n"
 
-#: gconf/gconftool.c:1435
+#: gconf/gconftool.c:1785
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr ""
 "스키마 이름 '%s'을(를) 키 이름 '%s'과(와) 연결하는 데 오류가 발생했습니다: %"
 "s\n"
 
-#: gconf/gconftool.c:1463
+#: gconf/gconftool.c:1813
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "'%s'에서 스키마 이름을 지우는 데 오류: %s\n"
 
-#: gconf/gconftool.c:1488
+#: gconf/gconftool.c:1838
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "키(스키마 이름)를 유일한 인자로 지정해야 합니다\n"
 
-#: gconf/gconftool.c:1530
+#: gconf/gconftool.c:1880
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "List 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
 
-#: gconf/gconftool.c:1550
+#: gconf/gconftool.c:1900
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Pair car 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
 
-#: gconf/gconftool.c:1570
+#: gconf/gconftool.c:1920
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Pair cdr 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
 
-#: gconf/gconftool.c:1585
+#: gconf/gconftool.c:1935
 #, c-format
 msgid "Error setting value: %s"
 msgstr "값을 설정하는 데 오류가 발생했습니다: %s"
 
-#: gconf/gconftool.c:1599
+#: gconf/gconftool.c:1949
 #, c-format
 msgid "Error syncing: %s"
 msgstr "동기화에 실패했습니다: %s"
 
-#: gconf/gconftool.c:1614
+#: gconf/gconftool.c:1964
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr "키/값 쌍을 얻어낼 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
-#: gconf/gconftool.c:1628
+#: gconf/gconftool.c:1978
 msgid "Must specify one or more keys to unset.\n"
 msgstr "설정 해제할 한 개 이상의 키를 지정해야 합니다.\n"
 
-#: gconf/gconftool.c:1639
+#: gconf/gconftool.c:1989
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "`%s'을(를) 설정 해제하는 데 오류: %s\n"
 
-#: gconf/gconftool.c:1659
+#: gconf/gconftool.c:2009
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "\"%s\"의 재귀적으로 값 해제할 때 한 개 이상의 키를 지정해야 합니다.\n"
 
-#: gconf/gconftool.c:1673
+#: gconf/gconftool.c:2023
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "\"%s\"의 재귀적으로 값 해제하는 중에 실패: %s\n"
 
-#: gconf/gconftool.c:1691
+#: gconf/gconftool.c:2041
 msgid "Must specify one or more dirs to get subdirs from.\n"
 msgstr "하위 디렉토리를 얻어낼 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
-#: gconf/gconftool.c:1725
+#: gconf/gconftool.c:2075
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "디렉토리들를 읽어오는 데 실패: %s\n"
 
-#: gconf/gconftool.c:1767
+#: gconf/gconftool.c:2211
+msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
+msgstr ""
+
+#: gconf/gconftool.c:2238
+#, fuzzy, c-format
+msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
+msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
+
+#: gconf/gconftool.c:2271
+msgid "WARNING: must have a child node under <value>\n"
+msgstr ""
+
+#: gconf/gconftool.c:2277
+#, fuzzy, c-format
+msgid "WARNING: node <%s> not understood\n"
+msgstr "경고: <schema>아래에서 <%s>노드는 부적절합니다\n"
+
+#: gconf/gconftool.c:2295
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse int value `%s'\n"
+msgstr "경고: 타입 이름 `%s'을(를) 파싱하는 데 실패했습니다\n"
+
+#: gconf/gconftool.c:2316
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse float value `%s'\n"
+msgstr "경고: 타입 이름 `%s'을(를) 파싱하는 데 실패했습니다\n"
+
+#: gconf/gconftool.c:2338
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse string value `%s'\n"
+msgstr "경고: 타입 이름 `%s'을(를) 파싱하는 데 실패했습니다\n"
+
+#: gconf/gconftool.c:2359
+#, fuzzy, c-format
+msgid "WARNING: Failed to parse boolean value `%s'\n"
+msgstr "경고: 타입 이름 `%s'을(를) 파싱하는 데 실패했습니다\n"
+
+#: gconf/gconftool.c:2475 gconf/gconftool.c:3007
+#, c-format
+msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
+msgstr "경고: 스키마 `%s'에 키 `%s'을(를) 할당하는 데 오류가 생겼습니다: %s\n"
+
+#: gconf/gconftool.c:2580
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "경고: 스키마(%s)에 부적절하거나 빠진 타입이 있습니다\n"
 
-#: gconf/gconftool.c:1776
+#: gconf/gconftool.c:2589
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "경고: 스키마(%s)에 부적절하거나 빠진 list_type이 있습니다\n"
 
-#: gconf/gconftool.c:1787 gconf/gconftool.c:1817 gconf/gconftool.c:1846
+#: gconf/gconftool.c:2600 gconf/gconftool.c:2630 gconf/gconftool.c:2659
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
 "경고: 스키마에 대한 기본값 `%s'을(를) 구문 분석하는 데 실패했습니다 (%s)\n"
 
-#: gconf/gconftool.c:1805
+#: gconf/gconftool.c:2618
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "경고: 스키마에 대한 car_type 혹은 cdr_type이 잘못되었거나 빠졌습니다 (%s)\n"
 
-#: gconf/gconftool.c:1830
+#: gconf/gconftool.c:2643
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "경고: 스키마에대한 기본값을 설정할 수는 없습니다\n"
 
-#: gconf/gconftool.c:1859
+#: gconf/gconftool.c:2672
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "경고: gconftool 내부 오류, 인식할수없는 GConfValueType\n"
 
-#: gconf/gconftool.c:1906 gconf/gconftool.c:1927 gconf/gconftool.c:1948
-#: gconf/gconftool.c:1969
+#: gconf/gconftool.c:2720 gconf/gconftool.c:2741 gconf/gconftool.c:2762
+#: gconf/gconftool.c:2783
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "경고: 타입 이름 `%s'을(를) 파싱하는 데 실패했습니다\n"
 
-#: gconf/gconftool.c:1923
+#: gconf/gconftool.c:2737
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
@@ -1847,53 +1953,49 @@ msgstr ""
 "경고: list_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩"
 "니다.\n"
 
-#: gconf/gconftool.c:1944
+#: gconf/gconftool.c:2758
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "경고: car_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩"
 "니다.\n"
 
-#: gconf/gconftool.c:1965
+#: gconf/gconftool.c:2779
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "경고: cdr_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩"
 "니다.\n"
 
-#: gconf/gconftool.c:1993
+#: gconf/gconftool.c:2819
 msgid "WARNING: empty <applyto> node"
 msgstr "경고: <applyto>노드가 비여있습니다"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
+#: gconf/gconftool.c:2822 gconf/gconftool.c:3080
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "경고: <schema>아래에서 <%s>노드는 부적절합니다\n"
 
-#: gconf/gconftool.c:2006
-msgid "WARNING: no key specified for schema\n"
-msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
-
-#: gconf/gconftool.c:2017
+#: gconf/gconftool.c:2833
 #, fuzzy
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
 
-#: gconf/gconftool.c:2024
+#: gconf/gconftool.c:2839
 #, fuzzy
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
 
-#: gconf/gconftool.c:2030
+#: gconf/gconftool.c:2845
 #, fuzzy
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
 
-#: gconf/gconftool.c:2058
+#: gconf/gconftool.c:2874
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "경고: <locale> 노드에 `name=\"locale\"' 속성이 없습니다.  무시합니다\n"
 
-#: gconf/gconftool.c:2064
+#: gconf/gconftool.c:2880
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -1901,79 +2003,76 @@ msgstr ""
 "경고: 로케일 `%s'에 대하여 <locale> 노드가 여러 개 있습니다, 맨 처음을 제외하"
 "고 무시합니다\n"
 
-#: gconf/gconftool.c:2145
+#: gconf/gconftool.c:2978
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "경고: <locale>노드속에 적합하지않는 <%s>노드가 있습니다\n"
 
-#: gconf/gconftool.c:2174
-#, c-format
-msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
-msgstr "경고: 스키마 `%s' 로케일 `%s' 설치 실패했습니다: %s\n"
-
-#: gconf/gconftool.c:2182
-#, c-format
-msgid "Installed schema `%s' for locale `%s'\n"
-msgstr "`%s' 스키마를 `%s' 로케일을 위해 설치했습니다\n"
-
-#: gconf/gconftool.c:2204
-#, c-format
-msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
-msgstr "경고: 스키마 `%s'에 키 `%s'을(를) 할당하는 데 오류가 생겼습니다: %s\n"
-
-#: gconf/gconftool.c:2212
+#: gconf/gconftool.c:3015
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "스키마 `%s'에 키 `%s'을(를) 할당합니다\n"
 
-#: gconf/gconftool.c:2291
+#: gconf/gconftool.c:3089
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "한 <schema>안에는 오직 한개의 <locale>엔트리만을 가지고 있어야합니다\n"
 
-#: gconf/gconftool.c:2322
+#: gconf/gconftool.c:3121
 #, c-format
-msgid "WARNING: node <%s> not understood below <schemalist>\n"
-msgstr "경고: <schemalist>아래서 <%s>노드는 적합하지않습니다\n"
+msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
+msgstr "경고: 스키마 `%s' 로케일 `%s' 설치 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:3129
+#, c-format
+msgid "Installed schema `%s' for locale `%s'\n"
+msgstr "`%s' 스키마를 `%s' 로케일을 위해 설치했습니다\n"
+
+#: gconf/gconftool.c:3164
+msgid "WARNING: no key specified for schema\n"
+msgstr "경고: 스키마에 대한 키가 정의되지 않았습니다\n"
+
+#: gconf/gconftool.c:3205
+#, fuzzy, c-format
+msgid "WARNING: node <%s> not understood below <%s>\n"
+msgstr "경고: <schema>아래에서 <%s>노드는 부적절합니다\n"
+
+#: gconf/gconftool.c:3236
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "`%s'을(를) 여는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:2352
+#: gconf/gconftool.c:3243
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "`%s' 문서가 비어있지 않나요?\n"
 
-#: gconf/gconftool.c:2364
-#, c-format
-msgid ""
-"Document `%s' has the wrong type of root node (<%s>, should be "
-"<gconfschemafile>)\n"
+#: gconf/gconftool.c:3255
+#, fuzzy, c-format
+msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "`%s'문서는 부적절한 최상위 노드(<%s>)를 가지고 있습니다(반드시"
 "<gconfschemafile>이어야 합니다\n"
 
-#: gconf/gconftool.c:2377
-#, c-format
-msgid "Document `%s' has no top level <gconfschemafile> node\n"
+#: gconf/gconftool.c:3268
+#, fuzzy, c-format
+msgid "Document `%s' has no top level <%s> node\n"
 msgstr "문서 `%s'에 최상위 단계 <gconfschemafile> 노드가 없습니다\n"
 
-#: gconf/gconftool.c:2391
-#, c-format
-msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
+#: gconf/gconftool.c:3282
+#, fuzzy, c-format
+msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "경고: <gconfschemafile>아래에 있는 노드 <%s>는 적합하지 않습니다\n"
 
-#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
+#: gconf/gconftool.c:3293 gconf/gconftool.c:3328
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "설정 데이타를 동기화하는 데 에러가 발생했습니다: %s"
 
-#: gconf/gconftool.c:2418
+#: gconf/gconftool.c:3312
 msgid "Must specify some schema files to install\n"
 msgstr "설치할 스키마 파일들을 설정하셔야 합니다\n"
 
-#: gconf/gconftool.c:2455
+#: gconf/gconftool.c:3349
 #, c-format
 msgid ""
 "\n"
@@ -1982,16 +2081,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2475
+#: gconf/gconftool.c:3369
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "중단 키 %s을(를) 설정 해제하는 데 실패했습니다: %s\n"
 
-#: gconf/gconftool.c:2601
+#: gconf/gconftool.c:3495
 msgid "Must specify some keys to break\n"
 msgstr "중단할 키를 지정해야 합니다\n"
 
-#: gconf/gconftool.c:2607
+#: gconf/gconftool.c:3501
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2000,11 +2099,11 @@ msgstr ""
 "키에 잘못된 값을 설정하여 응용 프로그램을 중단하도록 시도합니다:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:3519
 msgid "Must specify some directories to break\n"
 msgstr "중단할 디렉토리를 지정해야 합니다\n"
 
-#: gconf/gconftool.c:2644
+#: gconf/gconftool.c:3538
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2014,5 +2113,18 @@ msgstr ""
 "디렉토리의 키에 잘못된 값을 설정하여 응용 프로그램을 중단하도록 시도합니다:\n"
 "  %s\n"
 
-#~ msgid "Couldn't find the XML root directory in the address `%s'"
-#~ msgstr "주소 `%2s'의 XML 루트 디렉토리를 찾을 수 없습니다"
+#~ msgid "Unloading BerkeleyDB (BDB) backend module."
+#~ msgstr "버클리DB (BDB) 백엔드 모듈을 해제합니다."
+
+#~ msgid "Opened BerkeleyDB source at root %s"
+#~ msgstr "버클리DB 소스를 루트 디렉토리 %s에서 열었습니다"
+
+#~ msgid "Initializing BDB backend module"
+#~ msgstr "BDB 백엔드 모듈을 초기화중입니다"
+
+#, fuzzy
+#~ msgid "Couldn't find the root directory in the address \"%s\""
+#~ msgstr "주소 `%2$s'에서 %1$s 루트 디렉토리를 찾을 수 없습니다"
+
+#~ msgid "WARNING: node <%s> not understood below <schemalist>\n"
+#~ msgstr "경고: <schemalist>아래서 <%s>노드는 적합하지않습니다\n"
