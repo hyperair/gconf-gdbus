@@ -1,3 +1,12 @@
+2003-07-17  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconftool.c (do_recursive_unset): do a suggest_sync after 
+	do_recursive_unset() (which shouldn't be necessary except that we 
+	suck). Patch from Greg Hudson #117713
+
+	* gconf/gconf-value.h: flags can't be 0, patch from 
+	Greg Hudson, #117712
+
 2003-07-07  Mark McLoughlin  <mark@skynet.ie>
 
 	* gconf/gconf-client.c:

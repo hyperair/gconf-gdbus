@@ -149,7 +149,7 @@ void           gconf_meta_info_set_mod_time (GConfMetaInfo *gcmi,
 
 typedef enum
 {
-  GCONF_UNSET_INCLUDING_SCHEMA_NAMES
+  GCONF_UNSET_INCLUDING_SCHEMA_NAMES = 1 << 0
 } GConfUnsetFlags;
 
 typedef struct _GConfEntry GConfEntry;

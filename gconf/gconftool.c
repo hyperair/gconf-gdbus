@@ -2328,6 +2328,8 @@ do_recursive_unset (GConfEngine* conf, const gchar** args)
       ++args;
     }
 
+  gconf_engine_suggest_sync (conf, NULL); /* ignore errors */
+  
   return 0;
 }
 
