@@ -69,7 +69,6 @@ struct _Dir {
   GTime last_access; /* so we know when to un-cache */
   xmlDocPtr doc;
   GHashTable* entry_cache; /* store key-value entries */
-  GHashTable* subdir_cache; /* store subdirectories */
   guint dir_mode;
   guint file_mode;
   guint dirty : 1;
@@ -286,9 +285,6 @@ dir_sync        (Dir* d, GError** err)
   if (!d->dirty)
     return TRUE; 
 
-  /* We should have a doc if dirty is TRUE */
-  g_assert(d->doc != NULL);
-
   d->last_access = time(NULL);
   
   if (d->deleted)
@@ -313,6 +309,9 @@ dir_sync        (Dir* d, GError** err)
       gchar* tmp_filename;
       gchar* old_filename;
       FILE* outfile;
+
+      /* We should have a doc if deleted is FALSE */
+      g_assert(d->doc != NULL);
       
       /* First make sure entry values are synced to their
          XML nodes */
