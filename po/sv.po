@@ -1,7 +1,7 @@
 # Swedish messages for GConf.
-# Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
 # Andreas Hyden <andreas.hyden@telia.com>, 2000.
-# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002, 2003.
+# Christian Rose <menthos@menthos.com>, 2000, 2001, 2002, 2003, 2004.
 # Martin Norbäck <d95mback@dtek.chalmers.se>, 2001.
 #
 # $Id$
@@ -9,14 +9,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-10-24 00:48+0200\n"
+"POT-Creation-Date: 2004-01-06 00:58+0100\n"
+"PO-Revision-Date: 2004-01-06 00:59+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
 
 #: backends/dir-utils.c:108
 #, c-format
@@ -32,6 +32,40 @@ msgstr "Kunde inte skapa katalogen \"%s\": %s"
 #, c-format
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr "Kan inte läsa eller skriva till %s-rotkatalogen i adressen \"%s\""
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "Kan inte hitta katalogen %s\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "Fel vid sparande av GConf-träd till \"%s\": %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "Användning: %s <kat>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"Användning: %s <kat>\n"
+"  Slår samman en hierarki med markupbakändesfilsystem som:\n"
+"    kat/%%gconf.xml\n"
+"        underkat1/%%gconf.xml\n"
+"        underkat2/%%gconf.xml\n"
+"  till:\n"
+"    kat/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -2350,9 +2384,6 @@ msgstr ""
 #~ msgid "Unsynced directory deletions when shutting down XML backend"
 #~ msgstr ""
 #~ "Osynkroniserade katalogborttagningar vid avstängning av XML-backenden"
-
-#~ msgid "Error listing subdirs of '%s': %s\n"
-#~ msgstr "Fel vid listning av underkataloger till \"%s\": %s\n"
 
 #~ msgid "Error unsetting '%s': %s\n"
 #~ msgstr "Fel vid nollställning av \"%s\": %s\n"
