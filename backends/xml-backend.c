@@ -230,7 +230,7 @@ static GConfBackendVTable xml_vtable = {
 static void          
 x_shutdown (GError** err)
 {
-  gconf_log(GCL_INFO, _("Unloading XML backend module."));
+  gconf_log(GCL_DEBUG, _("Unloading XML backend module."));
 }
 
 static void
@@ -392,7 +392,7 @@ resolve_address (const gchar* address, GError** err)
 
   xsource = xs_new(root_dir, dir_mode, file_mode, lock);
 
-  gconf_log(GCL_INFO,
+  gconf_log(GCL_DEBUG,
             _("Directory/file permissions for XML source at root %s are: %o/%o"),
             root_dir, dir_mode, file_mode);
   
@@ -677,7 +677,7 @@ clear_cache     (GConfSource* source)
 G_MODULE_EXPORT const gchar*
 g_module_check_init (GModule *module)
 {
-  gconf_log(GCL_INFO, _("Initializing XML backend module"));
+  gconf_log(GCL_DEBUG, _("Initializing XML backend module"));
 
   LIBXML_TEST_VERSION;
   xmlKeepBlanksDefault(1);

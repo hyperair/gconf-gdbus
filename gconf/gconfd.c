@@ -290,7 +290,7 @@ gconf_server_load_sources(void)
       /* Try using the default address xml:readwrite:$(HOME)/.gconf */
       addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", g_get_home_dir(), "/.gconf", NULL));
 
-      gconf_log(GCL_INFO, _("No configuration files found, trying to use the default config source `%s'"), (char *)addresses->data);
+      gconf_log(GCL_DEBUG, _("No configuration files found, trying to use the default config source `%s'"), (char *)addresses->data);
     }
   
   if (addresses == NULL)

@@ -857,7 +857,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
           
           if (*varsubst != '\0') /* Drop lines with just two quote marks or something */
             {
-              gconf_log(GCL_INFO, _("Adding source `%s'\n"), varsubst);
+              gconf_log(GCL_DEBUG, _("Adding source `%s'\n"), varsubst);
               l = g_slist_prepend(l, g_strdup(varsubst));
             }
           g_free(varsubst);

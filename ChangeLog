@@ -1,3 +1,21 @@
+2001-08-15  Havoc Pennington  <hp@redhat.com>
+
+        Merge from stable.
+	
+	* backends/xml-backend.c (x_shutdown): ditto
+	(resolve_address): ditto
+
+	* backends/bdb-backend.c (vtable_bdb_shutdown): ditto
+	(vtable_bdb_resolve_address): ditto
+
+	* gconf/gconf-internals.c (gconf_load_source_path): ditto
+
+	* gconf/gconfd.c (gconf_server_load_sources): change to DEBUG
+	level
+
+	* backends/xml-backend.c (g_module_check_init): change a log
+	message to DEBUG level
+
 2001-08-14  Michael Meeks  <michael@ximian.com>
 
 	* configure.in: depend on bonobo-activation >= 0.9.1
