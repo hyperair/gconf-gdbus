@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-08-04 14:20-0400\n"
+"POT-Creation-Date: 2002-11-26 01:00+0100\n"
 "PO-Revision-Date: 2001-02-12 20:02+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "Incialliziram ozadni BerkeleyDB modul"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "Nisem mogel najti korenskega imenika %s na naslovu `%s'"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:304 backends/xml-dir.c:1212
+#: backends/dir-utils.c:124 backends/xml-backend.c:304
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Nisem mogel ustvariti imenika '%s': %s"
@@ -46,14 +46,13 @@ msgid "Unloading XML backend module."
 msgstr "Sproščam ozadni modul XML."
 
 #: backends/xml-backend.c:289
-#, c-format
-msgid "Couldn't find the XML root directory in the address `%s'"
-msgstr "Nisem mogel najti korenskega imenika XML na naslovu `%s'"
+msgid "Couldn't find the root directory in the address \"%s\""
+msgstr "Nisem mogel najti korenskega imenika na naslovu \"%s\""
 
 #: backends/xml-backend.c:414
-#, c-format
-msgid "Can't read from or write to the XML root directory in the address `%s'"
-msgstr "Ne morem brati iz ali pisati v korenski imenik XML na naslovu `%s'"
+msgid ""
+"Can't read from or write to the XML root directory in the address \"%s\""
+msgstr "Ne morem brati iz ali pisati v korenski imenik XML na naslovu \"%s\""
 
 #: backends/xml-backend.c:424
 #, c-format
@@ -78,9 +77,8 @@ msgid "Initializing XML backend module"
 msgstr "Inicializiram ozadni XML modul"
 
 #: backends/xml-backend.c:790
-#, c-format
-msgid "Failed to give up lock on XML dir `%s': %s"
-msgstr "Nisem uspel sprostiti ključavnice v imeniku XML `%s': %s"
+msgid "Failed to give up lock on XML dir \"%s\": %s"
+msgstr "Nisem uspel sprostiti ključavnice v imeniku XML \"%s\": %s"
 
 #: backends/xml-cache.c:257
 msgid "Failed to sync XML cache contents to disk"
@@ -179,6 +177,10 @@ msgstr "Vnos brez imena v datoteki XML  `%s', prezrto"
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "Vrhnje vozlišče v datoteki XML `%s' je <%s>, namesto <entry>, prezrto"
+
+#: backends/xml-dir.c:1212
+msgid "Could not make directory \"%s\": %s"
+msgstr "Nisem mogel ustvariti imenika \"%s\": %s"
 
 #: backends/xml-dir.c:1228
 #, c-format
@@ -796,6 +798,19 @@ msgstr ""
 #: gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "Shema vsebuje neveljaven UTF-8"
+
+#: gconf/gconf-schema.c:254
+msgid ""
+"Schema specifies type list but doesn't specify the type of the list elements"
+msgstr ""
+"Shema navede vrsto seznam, a ne navede vrste elementov seznama"
+
+#: gconf/gconf-schema.c:264
+msgid ""
+"Schema specifies type pair but doesn't specify the type of the car/cdr "
+"elements"
+msgstr ""
+"Shema navede vrsto par, a ne navede vrste car/cdr "
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -1853,7 +1868,7 @@ msgstr "OPOZORILO: cdr_type je lahko le int, float, niz ali bool in ne '%s'\n"
 msgid "WARNING: empty <applyto> node"
 msgstr "OPOZORILO: prazno vozlišče <applyto>"
 
-#: gconf/gconftool.c:1996 gconf/gconftool.c:2259
+#: gconf/gconftool.c:1996 gconf/gconftool.c:2278
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "OPOZORILO: vozlišče <%s> ni bilo razumljeno pod <schema>\n"
@@ -1862,63 +1877,75 @@ msgstr "OPOZORILO: vozlišče <%s> ni bilo razumljeno pod <schema>\n"
 msgid "WARNING: no key specified for schema\n"
 msgstr "OPOZORILO: ključ za shemo ni naveden\n"
 
-#: gconf/gconftool.c:2039
+#: gconf/gconftool.c:2017
+msgid "WARNING: no <list_type> specified for schema of type list\n"
+msgstr "OPOZORILO: za shemo vrste seznam ni bil naveden <list_type>\n"
+
+#: gconf/gconftool.c:2024
+msgid "WARNING: no <car_type> specified for schema of type pair\n"
+msgstr "OPOZORILO: za shemo vrste par ni bil naveden <car_type>\n"
+
+#: gconf/gconftool.c:2030
+msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
+msgstr "OPOZORILO: za shemo vrste par ni bil naveden <cdr_type>\n"
+
+#: gconf/gconftool.c:2058
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
-"OPOZORILO: vozlišče <locale> nima atributa `name=\"locale\"', prezrto\n"
+"OPOZORILO: vozlišče <locale> nima lastnosti `name=\"locale\"', preziram\n"
 
-#: gconf/gconftool.c:2045
+#: gconf/gconftool.c:2064
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr "OPOZORILO: več vozlišč <locale> za locale `%s, prezrti vsi za prvim\n"
 
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2145
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "OPOZORILO: Neveljavno vozlišče <%s> v vozlišču <locale>\n"
 
-#: gconf/gconftool.c:2155
+#: gconf/gconftool.c:2174
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr ""
 "OPOZORILO: nisem uspel namestiti definicij locale `%2$s' sheme `%1$s': %3$s\n"
 
-#: gconf/gconftool.c:2163
+#: gconf/gconftool.c:2182
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Namestil shemo `%s' za definicije locale  `%s'\n"
 
-#: gconf/gconftool.c:2185
+#: gconf/gconftool.c:2204
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "OPOZORILO: nisem uspel povezati sheme `%s' s ključem  `%s': %s\n"
 
-#: gconf/gconftool.c:2193
+#: gconf/gconftool.c:2212
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Pripel shemo `%s' h ključu  `%s'\n"
 
-#: gconf/gconftool.c:2272
+#: gconf/gconftool.c:2291
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "V <schema> morate imeti vsaj en vnos <locale>\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2322
 #, c-format
 msgid "WARNING: node <%s> not understood below <schemalist>\n"
 msgstr "OPOZORILO: vozlišče <%s> ni razumljeno pod <schemalist>\n"
 
-#: gconf/gconftool.c:2326
+#: gconf/gconftool.c:2345
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Nisem uspel odpreti `%s': %s\n"
 
-#: gconf/gconftool.c:2333
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Dokument  `%s' je prazen?\n"
 
-#: gconf/gconftool.c:2345
+#: gconf/gconftool.c:2364
 #, c-format
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
@@ -1927,26 +1954,26 @@ msgstr ""
 "Dokument `%s' ima napačno vrsto korenskega vozlišča (<%s>, moral bi biti "
 "<gconfschemafile>)\n"
 
-#: gconf/gconftool.c:2358
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
 msgstr "Dokument `%s' nima vrhnjega vozlišča <gconfschemafile>\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2391
 #, c-format
 msgid "WARNING: node <%s> below <gconfschemafile> not understood\n"
 msgstr "OPOZORILO: vozlišče <%s> pod <gconfschemafile> ni razumljeno\n"
 
-#: gconf/gconftool.c:2383 gconf/gconftool.c:2415
+#: gconf/gconftool.c:2402 gconf/gconftool.c:2434
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Napaka ob usklajevanju podatkov nastavitev: %s"
 
-#: gconf/gconftool.c:2399
+#: gconf/gconftool.c:2418
 msgid "Must specify some schema files to install\n"
 msgstr "Navedene morajo biti datoteke shem, ki naj se namestijo\n"
 
-#: gconf/gconftool.c:2436
+#: gconf/gconftool.c:2455
 #, c-format
 msgid ""
 "\n"
@@ -1955,16 +1982,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2475
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Nisem uspel odnastaviti problematičnega ključa %s: %s\n"
 
-#: gconf/gconftool.c:2582
+#: gconf/gconftool.c:2601
 msgid "Must specify some keys to break\n"
 msgstr "Navesti morate ključe, ki naj postanejo problematični\n"
 
-#: gconf/gconftool.c:2588
+#: gconf/gconftool.c:2607
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -1973,11 +2000,11 @@ msgstr ""
 "Poskušam zlomiti vaš program z nastavljanjem slabih vrednosti za ključ:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:2606
+#: gconf/gconftool.c:2625
 msgid "Must specify some directories to break\n"
 msgstr "Navesti morate imenike, ki naj postanejo problematični\n"
 
-#: gconf/gconftool.c:2625
+#: gconf/gconftool.c:2644
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -1987,6 +2014,9 @@ msgstr ""
 "Poskušam zlomiti vaš program z nastavljanjem slabih vrednosti za ključe v "
 "imeniku:\n"
 "  %s\n"
+
+#~ msgid "Couldn't find the XML root directory in the address `%s'"
+#~ msgstr "Nisem mogel najti korenskega imenika XML na naslovu `%s'"
 
 #~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 #~ msgstr ""
