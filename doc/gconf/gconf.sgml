@@ -130,16 +130,13 @@
       </para>
 
       <para>
-        GConf was inspired by Wichert Akkerman's configuration system
-        specification, originally developed for the Debian project. See <ulink
-        url="http://www.debian.org/~wakkerma/config6"
-        type="http">http://www.debian.org/~wakkerma/config6</ulink> for his
-        specification. Other sources of ideas include the Windows registry, 
+        GConf was inspired by Wichert Akkerman's configuration
+        system specification, originally developed for the Debian
+        project. Other sources of ideas include the Windows registry,
         the ACAP specification, and Emacs customize mode (try typing
-        <literal>M-x customize-browse</literal> in Emacs). Windows
-        XP's registry has some features such as documentation that
-        GConf has as well - maybe they copied GConf - hey, it's
-        possible. ;-)
+        <literal>M-x customize-browse</literal> in Emacs). Windows XP's
+        registry has some features such as documentation that GConf has
+        as well - maybe they copied GConf - hey, it's possible. ;-)
       </para>
 
     </sect1>
@@ -256,8 +253,8 @@
         <para> Users can specify <firstterm>configuration sources</firstterm>
           which will be used by the <application>gconfd</application> per-user
           configuration server.  <application>gconfd</application> loads the
-          file <filename>/etc/gconf/path</filename> (or
-          <filename>${sysconfdir}/gconf/path</filename>) on startup; this file
+          file <filename>/etc/gconf/2/path</filename> (or
+          <filename>${sysconfdir}/gconf/${version}/path</filename>) on startup; this file
           contains a list of <firstterm>configuration source
           addresses</firstterm>.  A source address is similar to a URL; it
           contains a "protocol" name (in this case, the name of the backend to
@@ -270,24 +267,20 @@
         </para>
 
         <para>
-          <filename>/etc/gconf/path</filename> stores a list of
+          <filename>/etc/gconf/2/path</filename> stores a list of
           addresses, which form a <firstterm>configuration source
           path</firstterm>. When looking up a value, GConf will begin
           with the first source in the path, and continue checking
           each source until the value is found or there are no more
           sources.  When setting a value, GConf will use the first
-          <emphasis>writable</emphasis> source.  System
-          administrators can impose <emphasis>mandatory</emphasis>
-          settings on their users by placing a read-only source at the
-          front of the path (note that "mandatory" only means that
-          existing programs won't let them change the value, users
-          could hack their own copy of GConf that ignored system
-          settings). If a key has a value in a read-only source placed
-          before the first user-writable source, user applications
-          attempting to set that value will receive an error.
-          Administrators can provide <emphasis>default</emphasis>
-          values by placing a systemwide source at the end of the
-          configuration source path.
+          <emphasis>writable</emphasis> source.  Administrators can
+          impose <emphasis>mandatory</emphasis> settings on their users
+          by placing only read-only configuration sources in the path, 
+          or by placing a read-only source at the front of the path 
+          and setting specific values in that source.
+          Administrators can provide <emphasis>default</emphasis> values
+          by placing a systemwide source at the end of the configuration
+          source path.
         </para>
         
         <para>
