@@ -241,8 +241,19 @@ ltable_new(void)
 static guint
 ltable_next_cnxn(LTable* lt)
 {
+  static guchar start = 0;
   static guchar uniqueness = 0;
   guint uniqueness_shifted;
+
+  if (start == 0)
+    {
+      /* Don't start uniqueness at the same place every time */
+      start = getpid () % 256;
+      if (start == 0)
+        start = 1;
+
+      uniqueness = start;
+    }
   
   /* this overflows and starts over occasionally */
   ++uniqueness;

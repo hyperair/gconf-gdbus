@@ -959,7 +959,7 @@ restore_listener (GConfDatabase* db,
   ConfigListener_update_listener (cl,
                                   db->objref,
                                   address,
-                                  atoi (cnxn),
+                                  gconf_string_to_gulong (cnxn),
                                   location,
                                   new_cnxn,
                                   &ev);

@@ -405,6 +405,8 @@ gconf_engine_get_default (void)
 
       priv->is_default = TRUE;
 
+      default_engine = priv;
+      
       /* Ignore errors, we never return a NULL
        * default database
        */
@@ -1788,7 +1790,7 @@ update_listener (PortableServer_Servant _servant,
       CORBA_exception_init (&ev);
       
       if (strcmp (address, "def") == 0)
-        priv = (GConfEnginePrivate*) gconf_engine_get_default ();
+        priv = default_engine;
       else
         priv = lookup_engine (address);
 
@@ -2106,7 +2108,7 @@ ctable_new(void)
 
   ct->server_ids = g_hash_table_new(corba_unsigned_long_hash, corba_unsigned_long_equal);  
   ct->client_ids = g_hash_table_new(g_int_hash, g_int_equal);
-
+  
   return ct;
 }
 

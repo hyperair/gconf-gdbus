@@ -1,5 +1,17 @@
 2000-08-30  Havoc Pennington  <hp@redhat.com>
 
+	* gconf/gconfd.c (restore_listener): use gconf_string_to_gulong
+	instead of atoi for reading a ulong out of the log file
+
+	* gconf/gconf.c (gconf_engine_get_default): assign to the
+	default_engine variable, so we don't keep creating new default
+	engines.
+
+	* gconf/gconf-listeners.c (ltable_next_cnxn): Start "uniqueness
+	bits" at a different location depending on pid
+
+2000-08-30  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconf.c: Change client to new system (use object
 	references to ConfigDatabase instead of the integer context ID).
 	

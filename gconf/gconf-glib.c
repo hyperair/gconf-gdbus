@@ -422,7 +422,7 @@ g_markup_node_get_attribute (GMarkupNodeElement *node,
   g_return_val_if_fail (node->type == G_MARKUP_NODE_ELEMENT, NULL);
   g_return_val_if_fail (attribute_name != NULL, NULL);
   
-  tmp_list = node->children;
+  tmp_list = node->attributes;
   while (tmp_list)
     {
       GMarkupAttribute *attr = tmp_list->data;
