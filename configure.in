@@ -156,12 +156,8 @@ AM_CONDITIONAL(BDB, test -n "$BDB_LIBS")
 AC_SUBST(BDB_LIBS)
 AC_SUBST(BDB_CFLAGS)
 
-AC_PATH_PROG(ORBIT_IDL, orbit-idl-2, no)
+ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
 AC_SUBST(ORBIT_IDL)
-
-if test x$ORBIT_IDL = xno; then
-  AC_MSG_ERROR([Could not find orbit-idl-2 in your path, should come with ORBit2])
-fi
 
 AC_CHECK_LIB(popt, poptGetArg, POPT_LIBS=-lpopt,
 	[AC_CHECK_HEADER(popt.h, , AC_MSG_ERROR([[
