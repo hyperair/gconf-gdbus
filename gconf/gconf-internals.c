@@ -37,6 +37,8 @@
 #include <time.h>
 #include <math.h>
 
+gboolean gconf_log_debug_messages = FALSE;
+
 static gboolean gconf_daemon_mode = FALSE;
 static gchar* daemon_ior = NULL;
 
@@ -1055,10 +1057,9 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
   va_list args;
   int syslog_pri = LOG_DEBUG;
 
-#ifndef GCONF_ENABLE_DEBUG
-  if (pri == GCL_DEBUG)
+  if (!gconf_log_debug_messages && 
+      pri == GCL_DEBUG)
     return;
-#endif
   
   va_start (args, fmt);
   msg = g_strdup_vprintf(fmt, args);

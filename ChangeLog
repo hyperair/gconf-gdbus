@@ -1,3 +1,17 @@
+2001-05-11  Havoc Pennington  <hp@redhat.com>
+
+       Merge from stable.
+
+	* gconf/gconfd.c (signal_handler): on SIGUSR1, enable/disable
+	debug spew.
+
+	* gconf/gconf-internals.c (gconf_log): use a runtime variable to
+	decide whether to log debug messages
+
+	* gconf/gconf-database.c, gconf/gconfd.c, gconf/gconf-internals.c:
+	Change some GCL_WARNING to GCL_DEBUG to chill out logging of
+	fairly normal events
+
 2001-05-09  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/Makefile.am: remove testgconfclient from build, should 

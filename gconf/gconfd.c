@@ -243,7 +243,7 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  gconf_log(GCL_INFO, _("Shutdown request received"));
+  gconf_log(GCL_DEBUG, _("Shutdown request received"));
 
   gconf_main_quit();
 }
@@ -402,6 +402,11 @@ signal_handler (int signo)
 
     if (gconf_main_is_running ())
       gconf_main_quit ();
+    break;
+
+  case SIGUSR1:
+    /* it'd be nice to log a message here but it's not very safe, so */
+    gconf_log_debug_messages = !gconf_log_debug_messages;
     break;
     
   default:

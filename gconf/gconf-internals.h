@@ -95,6 +95,8 @@ typedef enum {
 
 void          gconf_log      (GConfLogPriority pri, const gchar* format, ...) G_GNUC_PRINTF (2, 3);
 
+extern gboolean gconf_log_debug_messages;
+
 /* return FALSE and set error if the key is bad */
 gboolean      gconf_key_check(const gchar* key, GError** err);
 

@@ -514,7 +514,7 @@ impl_ConfigDatabase_clear_cache(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  gconf_log(GCL_INFO, _("Received request to drop all cached data"));  
+  gconf_log(GCL_DEBUG, _("Received request to drop all cached data"));  
   
   gconf_database_clear_cache(db, &error);
 
@@ -531,7 +531,7 @@ impl_ConfigDatabase_synchronous_sync(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  gconf_log(GCL_INFO, _("Received request to sync synchronously"));
+  gconf_log(GCL_DEBUG, _("Received request to sync synchronously"));
   
   
   gconf_database_synchronous_sync(db, &error);
@@ -920,7 +920,7 @@ notify_listeners_cb(GConfListeners* listeners,
   
   if(closure->ev._major != CORBA_NO_EXCEPTION) 
     {
-      gconf_log(GCL_WARNING, "Failed to notify listener %u, removing: %s", 
+      gconf_log(GCL_DEBUG, "Failed to notify listener %u, removing: %s", 
                 cnxn_id, CORBA_exception_id(&closure->ev));
       CORBA_exception_free(&closure->ev);
       
