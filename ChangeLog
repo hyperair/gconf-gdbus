@@ -1,3 +1,27 @@
+2000-09-24  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconfd.c (gconf_main): With debugging turned on, use
+	obscenely short timeout for periodic cleanups, to ensure bugs 
+	get triggered.
+
+	* gconf/gconf-database.c (impl_ConfigDatabase_all_dirs): Set
+	_release to TRUE for sequences
+	(impl_ConfigDatabase_all_entries): ditto
+
+	* gconf/gconfd.c (half_hour_timeout): exit only if client count is
+	0 after dropping all dead clients.
+	
+	* gconf/gconf-database.c (impl_ConfigDatabase_all_dirs): Don't
+	put memory in the out param if we set an exception
+	(impl_ConfigDatabase_all_entries): Ditto
+
+	* backends/xml-dir.c (dir_all_subdirs): Fix a memory leak
+
+	* gconf/gconfd.c: Implement client list logging
+
+	* gconf/gconf.c: Add self to the server's client list 
+	whenever we get a new server objref
+
 2000-09-23  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconfd.c: Implement add/remove client methods; 

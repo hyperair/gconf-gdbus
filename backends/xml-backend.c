@@ -545,12 +545,12 @@ all_subdirs     (GConfSource* source,
   Dir* dir;
   XMLSource* xs = (XMLSource*)source;
 
-  dir = cache_lookup(xs->cache, key, FALSE, err);
+  dir = cache_lookup (xs->cache, key, FALSE, err);
   
   if (dir == NULL)
     return NULL;
   else
-    return dir_all_subdirs(dir, err);
+    return dir_all_subdirs (dir, err);
 }
 
 static void          

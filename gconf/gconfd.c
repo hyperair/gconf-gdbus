@@ -80,22 +80,23 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  * Declarations
  */
 
-static void gconf_main(void);
-static void gconf_main_quit(void);
+static void     gconf_main            (void);
+static void     gconf_main_quit       (void);
+static gboolean gconf_main_is_running (void);
 
 static void logfile_save (void);
 static void logfile_read (void);
 static void log_client_add (const ConfigListener client);
 static void log_client_remove (const ConfigListener client);
 
-static void add_client (const ConfigListener client);
-static void remove_client (const ConfigListener client);
-static GSList *list_clients (void);
+static void    add_client            (const ConfigListener  client);
+static void    remove_client         (const ConfigListener  client);
+static GSList *list_clients          (void);
+static void    log_clients_to_string (GString              *str);
+static void    drop_old_clients      (void);
+static guint   client_count          (void);
 
-/* fast_cleanup() nukes the info file,
-   and is theoretically re-entrant.
-*/
-static void fast_cleanup(void);
+static void    fast_cleanup(void);
 
 static void                 init_databases (void);
 static void                 shutdown_databases (void);
@@ -361,7 +362,8 @@ signal_handler (int signo)
     
   case SIGHUP:
     gconf_log(GCL_INFO, _("Received signal %d, shutting down cleanly"), signo);
-    gconf_main_quit ();
+    if (gconf_main_is_running ())
+      gconf_main_quit ();
     --in_fatal;
     break;
     
@@ -486,8 +488,8 @@ main(int argc, char** argv)
           gconf_log(GCL_ERR, _("Unknown error registering gconfd with OAF; exiting\n"));
           break;
         }
-      fast_cleanup();
-      shutdown_databases();
+      fast_cleanup ();
+      shutdown_databases ();
       return 1;
     }
 
@@ -496,20 +498,20 @@ main(int argc, char** argv)
   
   gconf_main();
 
+  fast_cleanup ();
+
   /* Save current state in logfile (may compress the logfile a good
    * bit)
    */
   logfile_save ();
   
-  fast_cleanup();
+  shutdown_databases ();
 
-  shutdown_databases();
-
-  gconfd_locale_cache_drop();
+  gconfd_locale_cache_drop ();
   
-  gconf_log(GCL_INFO, _("Exiting"));
+  gconf_log (GCL_INFO, _("Exiting"));
   
-  g_free(logname);
+  g_free (logname);
   
   return 0;
 }
@@ -525,11 +527,13 @@ static gboolean
 half_hour_timeout(gpointer data)
 {
   gconf_log (GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
-  
+
+  drop_old_clients ();
   drop_old_databases ();
 
-  if (no_databases_in_use ())
+  if (no_databases_in_use () && client_count () == 0)
     {
+      gconf_log (GCL_INFO, _("GConf server is not in use, shutting down."));
       gconf_main_quit ();
       return FALSE;
     }
@@ -552,8 +556,14 @@ gconf_main(void)
 
   if (main_loops == NULL)
     {
+#ifdef GCONF_ENABLE_DEBUG
+      gulong timeout_len = 1000*60*2; /* 1 sec * 60 s/min * 2 min */
+#else
+      gulong timeout_len = 1000*60*30; /* 1 sec * 60 s/min * 30 min */
+#endif
+      
       g_assert(timeout_id == 0);
-      timeout_id = g_timeout_add(1000*60*30, /* 1 sec * 60 s/min * 30 min */
+      timeout_id = g_timeout_add(timeout_len,
                                  half_hour_timeout,
                                  NULL);
 
@@ -581,6 +591,12 @@ gconf_main_quit(void)
   g_return_if_fail(main_loops != NULL);
 
   g_main_quit(main_loops->data);
+}
+
+static gboolean
+gconf_main_is_running (void)
+{
+  return main_loops != NULL;
 }
 
 /*
@@ -724,7 +740,8 @@ shutdown_databases (void)
   GList *tmp_list;  
 
   /* This may be called before we init fully,
-     so check that everything != NULL */
+   * so check that everything != NULL
+   */
   
   tmp_list = db_list;
 
@@ -773,13 +790,12 @@ static void
 fast_cleanup(void)
 {
 #if 0
-  /* first and foremost, remove the stale server registration */
-  if (server != CORBA_OBJECT_NIL)
-    oaf_active_server_unregister("", server);
-#endif
-  /* OK we aren't going to unregister, because it can cause weird oafd
-   *  spawning. FIXME ????? What the heck was the problem here?
+  /* We can't do this because then OAF will spawn a new server before we
+   * finish shutting down.
    */
+  if (server != CORBA_OBJECT_NIL)
+    oaf_active_server_unregister ("", server);
+#endif
 }
 
 
@@ -973,6 +989,9 @@ logfile_save (void)
 
   saveme = g_string_new ("");
 
+  /* Clients */
+  log_clients_to_string (saveme);
+  
   /* Default database */
   gconf_database_log_listeners_to_string (default_db,
                                           TRUE,
@@ -991,7 +1010,7 @@ logfile_save (void)
                                               saveme);
       
       tmp_list = g_list_next (tmp_list);
-    }
+    }  
   
   /* Now try saving the string to a temporary file */
   tmpfile = g_strconcat (logfile, ".tmp", NULL);
@@ -1093,7 +1112,7 @@ struct _ListenerLogEntry
 };
 
 guint
-logentry_hash (gconstpointer v)
+listener_logentry_hash (gconstpointer v)
 {
   const ListenerLogEntry *lle = v;
 
@@ -1105,7 +1124,7 @@ logentry_hash (gconstpointer v)
 }
 
 gboolean
-logentry_equal (gconstpointer ap, gconstpointer bp)
+listener_logentry_equal (gconstpointer ap, gconstpointer bp)
 {
   const ListenerLogEntry *a = ap;
   const ListenerLogEntry *b = bp;
@@ -1117,9 +1136,10 @@ logentry_equal (gconstpointer ap, gconstpointer bp)
     strcmp (a->address, b->address) == 0;
 }
 
-static void
-parse_entry (GHashTable *entries,
-             gchar *text)
+/* Return value indicates whether we "handled" this line of text */
+static gboolean
+parse_listener_entry (GHashTable *entries,
+                      gchar *text)
 {
   gboolean add;
   gchar *p;
@@ -1144,11 +1164,7 @@ parse_entry (GHashTable *entries,
     }
   else
     {
-      gconf_log (GCL_WARNING,
-                 _("Didn't understand line in saved state file: '%s'"), 
-                 text);
-
-      return;
+      return FALSE;
     }
   
   while (*p && isspace (*p))
@@ -1161,7 +1177,7 @@ parse_entry (GHashTable *entries,
     {
       gconf_log (GCL_WARNING,
                  _("Failed to parse connection ID in saved state file"));                 
-      return;
+      return TRUE;
     }
 
   p = end;
@@ -1180,7 +1196,7 @@ parse_entry (GHashTable *entries,
 
       g_error_free (err);
       
-      return;
+      return TRUE;
     }
 
   address = p;
@@ -1200,7 +1216,7 @@ parse_entry (GHashTable *entries,
 
       g_error_free (err);
       
-      return;
+      return TRUE;
     }
 
   location = p;
@@ -1220,7 +1236,7 @@ parse_entry (GHashTable *entries,
       
       g_error_free (err);
       
-      return;
+      return TRUE;
     }
   
   ior = p;
@@ -1255,7 +1271,7 @@ parse_entry (GHashTable *entries,
         {
           g_hash_table_insert (entries, lle, lle);
           
-          return;
+          return TRUE;
         }
       else
         {
@@ -1267,8 +1283,140 @@ parse_entry (GHashTable *entries,
   
  quit:
   g_free (lle);
+
+  return TRUE;
 }                
 
+/* Return value indicates whether we "handled" this line of text */
+static gboolean
+parse_client_entry (GHashTable *clients,
+                    gchar *text)
+{
+  gboolean add;
+  gchar *ior;
+  GError *err;
+  gchar *old;
+  gchar *p;
+  gchar *end;
+  
+  if (strncmp (text, "CLIENTADD", 9) == 0)
+    {
+      add = TRUE;
+      p = text + 9;
+    }
+  else if (strncmp (text, "CLIENTREMOVE", 12) == 0)
+    {
+      add = FALSE;
+      p = text + 12;
+    }
+  else
+    {
+      return FALSE;
+    }
+  
+  while (*p && isspace (*p))
+    ++p;
+  
+  err = NULL;
+  end = NULL;
+  gconf_unquote_string_inplace (p, &end, &err);
+  if (err != NULL)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Failed to unquote IOR from saved state file: %s"),
+                 err->message);
+      
+      g_error_free (err);
+      
+      return TRUE;
+    }
+  
+  ior = p;
+  p = end;    
+  
+  old = g_hash_table_lookup (clients, ior);
+
+  if (old)
+    {
+      if (add)
+        {
+          gconf_log (GCL_WARNING,
+                     _("Saved state file records the same client added twice; ignoring the second instance"));
+          goto quit;
+        }
+      else
+        {
+          /* This entry was added, then removed. */
+          g_hash_table_remove (clients, ior);
+          goto quit;
+        }
+    }
+  else
+    {
+      if (add)
+        {
+          g_hash_table_insert (clients, ior, ior);
+          
+          return TRUE;
+        }
+      else
+        {
+          gconf_log (GCL_WARNING,
+                     _("Saved state file had a removal of a client that wasn't added; ignoring the removal."));
+          goto quit;
+        }
+    }
+  
+ quit:
+
+  return TRUE;
+}
+
+static void
+restore_client (const gchar *ior)
+{
+  ConfigListener cl;
+  CORBA_Environment ev;
+  
+  CORBA_exception_init (&ev);
+  
+  cl = CORBA_ORB_string_to_object (oaf_orb_get (),
+                                   (gchar*)ior,
+                                   &ev);
+
+  CORBA_exception_free (&ev);
+  
+  if (CORBA_Object_is_nil (cl, &ev))
+    {
+      CORBA_exception_free (&ev);
+
+      gconf_log (GCL_DEBUG,
+                 "Client in saved state file no longer exists, not restoring it as a client");
+      
+      return;
+    }
+
+  ConfigListener_drop_all_caches (cl, &ev);
+  
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      gconf_log (GCL_DEBUG, "Failed to update client in saved state file, probably the client no longer exists");
+
+      goto finished;
+    }
+
+  /* Add the client, since it still exists. Note that the client still
+   * has the wrong server object reference, so next time it tries to
+   * contact the server it will re-add itself; we just live with that,
+   * it's not a problem.
+   */
+  add_client (cl);
+  
+ finished:
+  CORBA_Object_release (cl, &ev);
+
+  CORBA_exception_free (&ev);
+}
 
 static void
 restore_listener (GConfDatabase* db,
@@ -1328,7 +1476,7 @@ restore_listener (GConfDatabase* db,
   
   if (ev._major != CORBA_NO_EXCEPTION)
     {
-      gconf_log (GCL_DEBUG, "Failed to update client in saved state file, probably the client no longer exists");
+      gconf_log (GCL_DEBUG, "Failed to update listener in saved state file, probably the client no longer exists");
 
       /* listener will get removed next time we try to notify -
        * we already appended a cancel of the listener to the
@@ -1366,9 +1514,9 @@ restore_listener (GConfDatabase* db,
 }
 
 static void
-logentry_restore_and_destroy_foreach (gpointer key,
-                                      gpointer value,
-                                      gpointer data)
+listener_logentry_restore_and_destroy_foreach (gpointer key,
+                                               gpointer value,
+                                               gpointer data)
 {
   ListenerLogEntry *lle = key;
   GConfDatabase *db;
@@ -1393,6 +1541,14 @@ logentry_restore_and_destroy_foreach (gpointer key,
 }
 
 static void
+restore_client_foreach (gpointer key,
+                        gpointer value,
+                        gpointer data)
+{
+  restore_client (key);
+}
+
+static void
 logfile_read (void)
 {
   gchar *logfile;
@@ -1402,7 +1558,8 @@ logfile_read (void)
   gchar **lines;
   gchar **iter;
   GHashTable *entries;
-
+  GHashTable *clients;
+  
   /* Just for good form */
   close_append_handle ();
   
@@ -1424,25 +1581,41 @@ logfile_read (void)
 
   g_free (str);
 
-  entries = g_hash_table_new (logentry_hash, logentry_equal);
+  entries = g_hash_table_new (listener_logentry_hash, listener_logentry_equal);
+  clients = g_hash_table_new (g_str_hash, g_str_equal);
   
   iter = lines;
   while (*iter)
     {
-      parse_entry (entries, *iter);
+      if (!parse_listener_entry (entries, *iter))
+        {
+          if (!parse_client_entry (clients, *iter))
+            {
+              gconf_log (GCL_WARNING,
+                         _("Didn't understand line in saved state file: '%s'"), 
+                         *iter);
+            }
+        }
 
       ++iter;
     }
 
-  /* Entries that still remain in the hash table were added but not
-   * removed, so add them in this daemon instantiation and update
-   * their listeners with the new connection ID etc.
+  /* Restore clients first */
+  g_hash_table_foreach (clients,
+                        restore_client_foreach,
+                        NULL);
+  
+  /* Entries that still remain in the listener hash table were added
+   * but not removed, so add them in this daemon instantiation and
+   * update their listeners with the new connection ID etc.
    */
   g_hash_table_foreach (entries, 
-                        logentry_restore_and_destroy_foreach,
+                        listener_logentry_restore_and_destroy_foreach,
                         NULL);
 
   g_hash_table_destroy (entries);
+  g_hash_table_destroy (clients);
+
   /* Note that we need the strings to remain valid until we are totally
    * finished, because we store pointers to them in the log entry
    * hash.
@@ -1492,7 +1665,8 @@ gconfd_logfile_change_listener (GConfDatabase *db,
     }
 
   quoted_where = gconf_quote_string (where);
-                                           
+
+  /* KEEP IN SYNC with gconf-database.c log to string function */
   if (fprintf (append_handle, "%s %u %s %s %s\n",
                add ? "ADD" : "REMOVE", connection_id,
                quoted_db_name, quoted_where, quoted_ior) < 0)
@@ -1528,7 +1702,8 @@ gconfd_logfile_change_listener (GConfDatabase *db,
 }
 
 static void
-log_client_add (const ConfigListener client)
+log_client_change (const ConfigListener client,
+                   gboolean add)
 {
   gchar *ior = NULL;
   gchar *quoted_ior = NULL;
@@ -1562,7 +1737,9 @@ log_client_add (const ConfigListener client)
       goto error;
     }
 
-  if (fprintf (append_handle, "CLIENTADD %s\n", quoted_ior) < 0)
+  /* KEEP IN SYNC with log to string function */
+  if (fprintf (append_handle, "%s %s\n",
+               add ? "CLIENTADD" : "CLIENTREMOVE", quoted_ior) < 0)
     {
       gconf_log (GCL_WARNING,
                  _("Failed to write client add to saved state file: %s"),
@@ -1578,18 +1755,21 @@ log_client_add (const ConfigListener client)
       goto error;
     }
 
-  
-
  error:
   g_free (ior);
   g_free (quoted_ior);
 }
 
 static void
+log_client_add (const ConfigListener client)
+{
+  log_client_change (client, TRUE);
+}
+
+static void
 log_client_remove (const ConfigListener client)
 {
-
-
+  log_client_change (client, FALSE);
 }
 
 /*
@@ -1607,7 +1787,10 @@ add_client (const ConfigListener client)
 
   if (g_hash_table_lookup (client_table, client))
     {
-      gconf_log (GCL_WARNING, _("Some client added itself to the GConf server twice."));
+      /* Ignore this case; it happens normally when we added a client
+       * from the logfile, and the client also adds itself
+       * when it gets a new server objref.
+       */
       return;
     }
   else
@@ -1619,6 +1802,10 @@ add_client (const ConfigListener client)
       copy = CORBA_Object_duplicate (client, &ev);
       g_hash_table_insert (client_table, copy, copy);
       CORBA_exception_free (&ev);
+
+      log_client_add (client);
+
+      gconf_log (GCL_DEBUG, "Added a new client");
     }
 }
 
@@ -1640,6 +1827,8 @@ remove_client (const ConfigListener client)
   g_hash_table_remove (client_table,
                        old_client);
 
+  log_client_remove (old_client);
+  
   CORBA_exception_init (&ev);
   CORBA_Object_release (old_client, &ev);
   CORBA_exception_free (&ev);
@@ -1669,4 +1858,93 @@ list_clients (void)
   g_hash_table_foreach (client_table, hash_listify_func, &clients);
 
   return clients;
+}
+
+static void
+log_clients_foreach (gpointer key, gpointer value, gpointer data)
+{
+  ConfigListener client;
+  gchar *ior = NULL;
+  gchar *quoted_ior = NULL;
+  GError *err;
+
+  client = value;
+  
+  err = NULL;
+  ior = gconf_object_to_string (client, &err);
+
+  if (err != NULL)
+    {
+      gconf_log (GCL_WARNING, _("Failed to get IOR for client: %s"),
+                 err->message);
+      g_error_free (err);
+      return;
+    }
+      
+  if (ior == NULL)
+    return;
+
+  quoted_ior = gconf_quote_string (ior);
+  g_free (ior);
+  ior = NULL;
+
+  g_string_append (data, "CLIENTADD ");
+  g_string_append (data, quoted_ior);
+  g_string_append_c (data, '\n');
+  g_free (quoted_ior);
+}
+
+static void
+log_clients_to_string (GString *str)
+{
+  if (client_table == NULL)
+    return;
+
+  g_hash_table_foreach (client_table, log_clients_foreach, str);
+}
+
+static void
+drop_old_clients (void)
+{
+  GSList *clients;
+  GSList *tmp;
+  
+  clients = list_clients ();
+
+  if (clients)
+    {
+      CORBA_Environment ev;
+
+      CORBA_exception_init (&ev);
+      
+      tmp = clients;
+      while (tmp != NULL)
+        {
+          ConfigListener cl = tmp->data;
+          
+          ConfigListener_ping (cl, &ev);
+
+          if (ev._major != CORBA_NO_EXCEPTION)
+            {
+              gconf_log (GCL_DEBUG, "Removing stale client");
+              
+              remove_client (cl);
+              
+              CORBA_exception_free (&ev);
+            }
+          
+          tmp = g_slist_next (tmp);
+        }
+
+      g_slist_free (clients);
+    }
+}
+
+static guint
+client_count (void)
+{
+  if (client_table == NULL)
+    return 0;
+  else
+    return g_hash_table_size (client_table);
 }

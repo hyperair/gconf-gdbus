@@ -94,8 +94,9 @@ interface ConfigListener {
   oneway void drop_all_caches ();
 };
 
-// Sync this with GConfErrNo in gconf.h, when it makes sense (e.g. G_CONF_NO_SERVER doesn't
-// make sense here)
+// Sync this with GConfErrNo in gconf.h, when it makes sense
+// (e.g. G_CONF_NO_SERVER doesn't make sense here)
+
 enum ConfigErrorType {
   ConfigFailed, ConfigNoPermission,
   ConfigBadAddress, ConfigBadKey,

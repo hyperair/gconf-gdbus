@@ -188,7 +188,6 @@ void     gconf_set_error  (GError** err,
 /* merge two errors into a single message */
 GError*  gconf_compose_errors (GError* err1, GError* err2);
 
-
 #ifdef ENABLE_NLS
 #    include <libintl.h>
 #    include <config.h>

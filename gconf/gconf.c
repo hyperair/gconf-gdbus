@@ -1709,16 +1709,19 @@ try_to_contact_server(gboolean start_if_not_found, GError** err)
   
   server = oaf_activate_from_id("OAFAID:["IID"]", flags, NULL, &ev);
 
-  /* So try to ping server */
-  if (!CORBA_Object_is_nil(server, &ev))
+  /* So try to ping server, by adding ourselves as a client */
+  if (!CORBA_Object_is_nil (server, &ev))
     {
-      ConfigServer_ping(server, &ev);
+      ConfigServer_add_client (server,
+                               gconf_get_config_listener (),
+                               &ev);
       
       if (ev._major != CORBA_NO_EXCEPTION)
 	{
 	  server = CORBA_OBJECT_NIL;
 	  if (err)
-	    *err = gconf_error_new(GCONF_ERROR_NO_SERVER, _("Pinging the server failed, CORBA error: %s"),
+	    *err = gconf_error_new(GCONF_ERROR_NO_SERVER,
+                                   _("Adding client to server's list failed, CORBA error: %s"),
 				   CORBA_exception_id(&ev));
 
           CORBA_exception_free(&ev);
@@ -1944,16 +1947,14 @@ invalidate_cached_values (PortableServer_Servant     _servant,
                           const ConfigListener_KeyList *keys,
                           CORBA_Environment         *ev)
 {
-
-
+  g_warning ("FIXME process %d received request to invalidate some cached GConf values from the server, but right now we don't know how to do that (not implemented).", (int) getpid());
 }
 
 static void
 drop_all_caches (PortableServer_Servant     _servant,
                  CORBA_Environment         *ev)
 {
-
-
+  g_warning ("FIXME process %d received request to invalidate all cached GConf values from the server, but right now we don't know how to do that (not implemented).", (int) getpid());
 }
 
 static ConfigListener 

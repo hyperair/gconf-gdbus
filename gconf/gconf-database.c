@@ -323,8 +323,14 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   locale_list = locale_cache_lookup(locale);
   
   pairs = gconf_database_all_entries(db, dir, locale_list->list, &error);
-
+  
   gconf_locale_list_unref(locale_list);
+
+  if (error != NULL)
+    {
+      gconf_set_exception(&error, ev);
+      return;
+    }
   
   n = g_slist_length(pairs);
 
@@ -332,21 +338,25 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
   (*keys)->_length = n;
   (*keys)->_maximum = n;
-
+  (*keys)->_release = CORBA_TRUE; /* free buffer */
+  
   *values= ConfigDatabase_ValueList__alloc();
   (*values)->_buffer = CORBA_sequence_ConfigValue_allocbuf(n);
   (*values)->_length = n;
   (*values)->_maximum = n;
+  (*values)->_release = CORBA_TRUE; /* free buffer */
 
   *is_defaults = ConfigDatabase_IsDefaultList__alloc();
   (*is_defaults)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
   (*is_defaults)->_length = n;
   (*is_defaults)->_maximum = n;
+  (*is_defaults)->_release = CORBA_TRUE; /* free buffer */
 
   *is_writables = ConfigDatabase_IsWritableList__alloc();
   (*is_writables)->_buffer = CORBA_sequence_CORBA_boolean_allocbuf(n);
   (*is_writables)->_length = n;
   (*is_writables)->_maximum = n;
+  (*is_writables)->_release = CORBA_TRUE; /* free buffer */
   
   tmp = pairs;
   i = 0;
@@ -372,8 +382,6 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   g_assert(i == n);
 
   g_slist_free(pairs);
-
-  gconf_set_exception(&error, ev);
 }
 
 static void
@@ -388,16 +396,25 @@ impl_ConfigDatabase_all_dirs(PortableServer_Servant servant,
   GSList* tmp;
   guint i;
   GError* error = NULL;
-  
-  subdirs = gconf_database_all_dirs(db, dir, &error);
-  
-  n = g_slist_length(subdirs);
 
-  *keys= ConfigDatabase_KeyList__alloc();
+  subdirs = gconf_database_all_dirs (db, dir, &error);
+
+  if (error != NULL)
+    {
+      /* I think this is right anyway... */
+      gconf_set_exception (&error, ev);
+      *keys = NULL;
+      return;
+    }
+  
+  n = g_slist_length (subdirs);
+
+  *keys = ConfigDatabase_KeyList__alloc();
   (*keys)->_buffer = CORBA_sequence_CORBA_string_allocbuf(n);
   (*keys)->_length = n;
   (*keys)->_maximum = n;
-
+  (*keys)->_release = CORBA_TRUE; /* free buffer */
+  
   tmp = subdirs;
   i = 0;
 
@@ -405,19 +422,17 @@ impl_ConfigDatabase_all_dirs(PortableServer_Servant servant,
     {
       gchar* subdir = tmp->data;
 
-      (*keys)->_buffer[i] = CORBA_string_dup(subdir);
+      (*keys)->_buffer[i] = CORBA_string_dup (subdir);
 
-      g_free(subdir);
+      g_free (subdir);
 
       ++i;
-      tmp = g_slist_next(tmp);
+      tmp = g_slist_next (tmp);
     }
   
-  g_assert(i == n);
-
-  g_slist_free(subdirs);
-
-  gconf_set_exception(&error, ev);
+  g_assert (i == n);
+  
+  g_slist_free (subdirs);
 }
 
 static void
@@ -1103,7 +1118,7 @@ gconf_database_all_dirs (GConfDatabase  *db,
     
   gconf_log(GCL_DEBUG, "Received request to list all subdirs in `%s'", dir);
 
-  subdirs = gconf_sources_all_dirs(db->sources, dir, err);
+  subdirs = gconf_sources_all_dirs (db->sources, dir, err);
 
   if (err && *err != NULL)
     {

@@ -999,7 +999,7 @@ gconf_sources_all_dirs   (GConfSources* sources,
 
   if (sources->sources->next == NULL)
     {
-      return gconf_source_all_dirs(sources->sources->data, dir, err);
+      return gconf_source_all_dirs (sources->sources->data, dir, err);
     }
 
   /* 2 or more sources */
@@ -1023,9 +1023,9 @@ gconf_sources_all_dirs   (GConfSources* sources,
       /* On error, set error and bail */
       if (error != NULL)
         {
-          g_hash_table_foreach(hash, hash_destroy_pointers_func, NULL);
+          g_hash_table_foreach (hash, hash_destroy_pointers_func, NULL);
           
-          g_hash_table_destroy(hash);
+          g_hash_table_destroy (hash);
           
           if (err)
             {

@@ -469,7 +469,7 @@ dir_get_value   (Dir* d,
 
       g_assert(e != NULL);
 
-      val = entry_get_value(e, locales, err);
+      val = entry_get_value (e, locales, err);
 
       /* Fill schema name if value is NULL because we might be
          interested in the default value of the key in that case. */
@@ -581,22 +581,22 @@ listify_foreach(const gchar* key, Entry* e, ListifyData* ld)
   GConfEntry* entry;
   GError* error = NULL;
   
-  val = entry_get_value(e, ld->locales, &error);
+  val = entry_get_value (e, ld->locales, &error);
 
   if (error != NULL)
     {
-      g_assert(val == NULL);
-      g_error_free(error);
+      g_assert (val == NULL);
+      g_error_free (error);
       return;
     }
   
-  entry = gconf_entry_new_nocopy(g_strdup(key),
-                                 val ? gconf_value_copy(val) : NULL);
+  entry = gconf_entry_new_nocopy (g_strdup(key),
+                                  val ? gconf_value_copy(val) : NULL);
   
   if (val == NULL &&
-      entry_get_schema_name(e))
+      entry_get_schema_name (e))
     {
-      gconf_entry_set_schema_name(entry, entry_get_schema_name(e));
+      gconf_entry_set_schema_name (entry, entry_get_schema_name (e));
     }
   
   ld->list = g_slist_prepend(ld->list, entry);
@@ -691,6 +691,8 @@ dir_all_subdirs (Dir* d, GError** err)
   /* if this fails, we really can't do a thing about it
      and it's not a meaningful error */
   closedir(dp);
+
+  g_free (fullpath);
   
   return retval;
 }

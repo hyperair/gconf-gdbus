@@ -2169,7 +2169,9 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err)
             OAF_GeneralError* ge = CORBA_exception_value(ev);
 
             if (err)
-              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("%s"), ge->description);
+              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR,
+                                     _("OAF problem description: '%s'"),
+                                     ge->description);
           }
         else if (strcmp(id,"IDL:OAF/ActivationContext/NotListed:1.0" ) == 0)
           {
