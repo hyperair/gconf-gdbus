@@ -2,12 +2,14 @@
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # Wang Jian <lark@linux.net.cn>, 2001
 # Xiong Jiang <jxiong@offtopic.org>, 2003
+# Funda Wang <fundawang@linux.net.cn>, 2003
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2003-05-03 13:12-0400\n"
-"PO-Revision-Date: 2003-01-29 22:44+0800\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-08-08 11:33+0200\n"
+"PO-Revision-Date: 2003-08-09 03:06+0800\n"
 "Last-Translator: Sun G11n <gnome_int_l10n@ireland.sun.com>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
@@ -62,13 +64,13 @@ msgid ""
 msgstr "删除目录操作不再被支持，仅删除目录中所有的值"
 
 #: backends/xml-backend.c:770
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
-msgstr "无法创建目录“%s”：%s"
+msgstr "无法打开锁定目录以让 %s 删除锁定：%s\n"
 
 # SUN CHANGED MESSAGE
 #: backends/xml-backend.c:788
-#, fuzzy, c-format
+#, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "无法删除文件 %s：%s\n"
 
@@ -109,85 +111,85 @@ msgstr "无法查看“%s”：%s"
 msgid "XML filename `%s' is a directory"
 msgstr "XML 文件名“%s”是个目录"
 
-#: backends/xml-dir.c:372 backends/xml-dir.c:381
+#: backends/xml-dir.c:416 backends/xml-dir.c:425
 #, c-format
 msgid "Failed to delete \"%s\": %s"
 msgstr "无法删除“%s”：%s"
 
-#: backends/xml-dir.c:427
+#: backends/xml-dir.c:471
 #, c-format
 msgid "Failed to write file `%s': %s"
 msgstr "无法写文件“%s”：%s"
 
-#: backends/xml-dir.c:440
+#: backends/xml-dir.c:484
 #, c-format
 msgid "Failed to set mode on `%s': %s"
 msgstr "无法设置“%s”的模式：%s"
 
-#: backends/xml-dir.c:450
+#: backends/xml-dir.c:494
 #, c-format
 msgid "Failed to write XML data to `%s': %s"
 msgstr "无法将 XML 数据写入“%s”：%s"
 
-#: backends/xml-dir.c:460 backends/xml-dir.c:1235
+#: backends/xml-dir.c:504 backends/xml-dir.c:1279
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "无法关闭文件“%s”：%s"
 
-#: backends/xml-dir.c:476 backends/xml-dir.c:486
+#: backends/xml-dir.c:520 backends/xml-dir.c:530
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "无法将“%s”改名为“%s”：%s"
 
-#: backends/xml-dir.c:492
+#: backends/xml-dir.c:536
 #, c-format
 msgid "Failed to restore `%s' from `%s': %s"
 msgstr "无法恢复“%s”从“%s”：%s"
 
-#: backends/xml-dir.c:504
+#: backends/xml-dir.c:548
 #, c-format
 msgid "Failed to delete old file `%s': %s"
 msgstr "无法删除旧文件“%s”：%s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:934
+#: backends/xml-dir.c:978
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "无法查看“%s”：%s"
 
-#: backends/xml-dir.c:958
+#: backends/xml-dir.c:1002
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: backends/xml-dir.c:1108
+#: backends/xml-dir.c:1152
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "重复的项“%s”在“%s”中，忽略"
 
-#: backends/xml-dir.c:1130
+#: backends/xml-dir.c:1174
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "在 XML 文件“%s”中的项目没有名字，忽略"
 
 # SUN NEW TRANSLATION
-#: backends/xml-dir.c:1138
+#: backends/xml-dir.c:1182
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "XML 文件“%s”的顶层节点是 <%s> 而不是 <entry>，忽略"
 
-#: backends/xml-dir.c:1211
+#: backends/xml-dir.c:1255
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "无法创建目录“%s”：%s"
 
-#: backends/xml-dir.c:1227
+#: backends/xml-dir.c:1271
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "无法创建文件“%s”：%s"
 
 # SUN CHANGED MESSAGE
-#: backends/xml-dir.c:1326
+#: backends/xml-dir.c:1370
 #, c-format
 msgid "Failed to parse XML file \"%s\""
 msgstr "无法分析 XML 文件“%s”"
@@ -317,21 +319,21 @@ msgstr "无法为“%s”定位后端模块"
 msgid "Failed to shut down backend"
 msgstr "无法关闭后端模块"
 
-#: gconf/gconf-client.c:342 gconf/gconf-client.c:360
+#: gconf/gconf-client.c:343 gconf/gconf-client.c:361
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf 错误：%s\n"
 
-#: gconf/gconf-client.c:881
+#: gconf/gconf-client.c:895
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf 警告：无法列出“%s”中的对：%s"
 
 # SUN NEW TRANSLATION
-#: gconf/gconf-client.c:1150
+#: gconf/gconf-client.c:1180
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
-msgstr "要求为“%s”，实际为“%s”（关键字 %s）"
+msgstr "要求为“%s”，实际为“%s”(关键字 %s)"
 
 #: gconf/gconf-database.c:234
 msgid "Received invalid value in set request"
@@ -371,72 +373,72 @@ msgstr ""
 "无法记录添加了监听程序 %s (%s)；将无法在 gconfd重启动时恢复该监听程序，这会导"
 "致配置更改的通知不可靠。"
 
-#: gconf/gconf-database.c:1111
+#: gconf/gconf-database.c:1114
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "监听程序 ID %lu 不存在"
 
 # SUN NEW TRANSLATION
-#: gconf/gconf-database.c:1125
+#: gconf/gconf-database.c:1128
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
 msgstr ""
-"无法向日志文件记录删除了监听程序（多半无害，可能会导致某个通知奇怪地反复出"
-"现）：%s"
+"无法向日志文件记录删除了监听程序(多半无害，可能会导致某个通知奇怪地反复出"
+"现)：%s"
 
-#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1541
+#: gconf/gconf-database.c:1246 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "获取“%s”的值时发生错误：%s"
 
-#: gconf/gconf-database.c:1290
+#: gconf/gconf-database.c:1293
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "设置“%s”的值时发生错误：%s"
 
-#: gconf/gconf-database.c:1333
+#: gconf/gconf-database.c:1336
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "取消“%s”设置值时发生错误：%s"
 
-#: gconf/gconf-database.c:1362
+#: gconf/gconf-database.c:1365
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "获取“%s”的默认值时发生错误：%s"
 
-#: gconf/gconf-database.c:1413
+#: gconf/gconf-database.c:1416
 #, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "取消“%s”的设置值时发生错误：%s"
 
-#: gconf/gconf-database.c:1445
+#: gconf/gconf-database.c:1448
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "获取“%s”的新值时发生错误：%s"
 
-#: gconf/gconf-database.c:1493
+#: gconf/gconf-database.c:1496
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "检查“%s”的存在时发生错误：%s"
 
-#: gconf/gconf-database.c:1517
+#: gconf/gconf-database.c:1520
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "删除目录“%s”发生错误：%s"
 
-#: gconf/gconf-database.c:1544
+#: gconf/gconf-database.c:1547
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "无法获取“%s”中的所有项：%s"
 
-#: gconf/gconf-database.c:1570
+#: gconf/gconf-database.c:1573
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "列出“%s”中的目录时发生错误：%s"
 
-#: gconf/gconf-database.c:1591
+#: gconf/gconf-database.c:1594
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "为“%s”设置 schema 时发生错误：%s"
@@ -641,8 +643,8 @@ msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
-"无法锁定“%s”：可能另一个进程已锁定它，或者您的操作系统的 NFS 文件锁定配置不正"
-"确 (%s)"
+"无法锁定“%s”：可能另一个进程已锁定它，或者您的操作系统的 NFS 文件锁定配置不"
+"正确 (%s)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-internals.c:2408
@@ -711,9 +713,9 @@ msgstr "无法删除锁定目录“%s”：%s"
 
 # SUN CHANGED MESSAGE
 #: gconf/gconf-internals.c:2723
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unlink lock file %s: %s\n"
-msgstr "无法删除锁定文件“%s”：%s"
+msgstr "取消锁定文件 %s 失败：%s\n"
 
 # SUN CHANGED MESSAGE
 #: gconf/gconf-internals.c:2856 gconf/gconfd.c:640
@@ -750,7 +752,7 @@ msgid ""
 msgstr ""
 "无法联系配置服务器；某些可能原因是需要为 ORBit 启用 TCP/IP 联网，或者由于系统"
 "崩溃，您的 NFS 锁定已失效。请访问 http://www.gnome.org/projects/gconf/ 了解详"
-"细信息。（详细信息 - %s）"
+"细信息。(详细信息 - %s)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-internals.c:2949
@@ -758,12 +760,12 @@ msgid "none"
 msgstr "无"
 
 # SUN NEW TRANSLATION
-#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:83
+#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:84
 msgid "Help options"
 msgstr "帮助选项"
 
 # SUN NEW TRANSLATION
-#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:486
+#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:497
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -783,7 +785,7 @@ msgid ""
 msgstr ""
 "请与系统管理员联系以解决如下问题：\n"
 "无法打开或创建文件 \"%s\"；这表示您的配置可能有问题， 因为许多程序都将需要在"
-"您的主目录下创建文件。该错误为 \"%s\"（错误号 = %d）。"
+"您的主目录下创建文件。该错误为 \"%s\"(错误号 = %d)。"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-sanity-check.c:180
@@ -798,9 +800,10 @@ msgid ""
 "%d)."
 msgstr ""
 "请与系统管理员联系以解决如下问题：\n"
-"无法锁定文件“%s”；这表明您的操作系统配置可能有问题。如果您的主目录安装了 NFS "
-"文件系统，那么客户端或者服务器可能设置不正确。请参见rpc.statd 和 rpc.lockd 文"
-"档。该错误的常见原因是“nfslock”服务已被禁用。该错误为“%s”（错误号 = %d）。"
+"无法锁定文件“%s”；这表明您的操作系统配置可能有问题。如果您的主目录安装了 "
+"NFS 文件系统，那么客户端或者服务器可能设置不正确。请参见rpc.statd 和 rpc."
+"lockd 文档。该错误的常见原因是“nfslock”服务已被禁用。该错误为“%s”(错误号 "
+"= %d)。"
 
 # SUN CHANGED MESSAGE
 #: gconf/gconf-sanity-check.c:197
@@ -832,7 +835,7 @@ msgid ""
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
 "请与系统管理员联系以解决如下问题：\n"
-"无法解析地址“%s”（位于配置文件“%s”中）：%s"
+"无法解析地址“%s”(位于配置文件“%s”中)：%s"
 
 #: gconf/gconf-sanity-check.c:320
 msgid ""
@@ -846,19 +849,26 @@ msgid ""
 "\n"
 "Do you want to continue?"
 msgstr ""
+"包含您首选项设置的文件正在使用中。\n"
+"\n"
+"您可能已经从其它电脑上登录了会话，而该会话正在使用您的首选项设置文件。\n"
+"\n"
+"您可以继续使用当前会话，但是可能在其它会话的首选项设置上遇到临时问题。\n"
+"\n"
+"您想要继续吗？"
 
 #: gconf/gconf-sanity-check.c:341
 msgid "_Log Out"
-msgstr ""
+msgstr "注销(_L)"
 
 #: gconf/gconf-sanity-check.c:343
 msgid "_Continue"
-msgstr ""
+msgstr "继续(_C)"
 
 #: gconf/gconf-sanity-check.c:356
 #, c-format
 msgid "%s Continue (y/n)?"
-msgstr ""
+msgstr "%s 继续吗(y/n)？"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
@@ -913,7 +923,7 @@ msgstr "没有一个解析的地址可以写入；将无法保存配置设置"
 #: gconf/gconf-sources.c:584
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
-msgstr "模式“%s”（为“%s”指定）存储了非模式值"
+msgstr "模式“%s”(为“%s”指定)存储了非模式值"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-sources.c:642
@@ -953,13 +963,13 @@ msgstr ""
 "下：1) 您的配置路径文件 %s/path 不包含任何数据库或者没有 找到该文件 2) 可能由"
 "于某些原因错误地创建了两个 gconfd 进程 3) 您的操作系统配置错误，所以 NFS 文件"
 "锁定在您的主目录中不起作用或者 4) 您的 NFS 客户机崩溃并在重新启动时没有正确通"
-"知服务器应删除文件锁定。如果您有两个gconfd 进程（或在第二个进程启动时曾有两个"
-"进程），注销、杀死 gconfd 的所有副本，然后再重新登录可能会有帮助。如果您的锁"
-"定已失效，删除 ~/.gconf*/*lock。可能问题是您尝试从两台计算机同时使用 GConf，"
-"而 ORBit 仍然使用阻止远程 CORBA 连接的默认配置 - 将 \"ORBIIOPIPv4=1\" 放入 /"
-"etc/orbitrc 目录中。并且一定要检查 user.* syslog 了解有关 gconfd 遇到的问题的"
-"详细信息。每个主目录只能有一个 gconfd 进程，并且该进程必须在 ~/.gconfd 中拥有"
-"一个锁定文件，并在各个存储位置，如 ~/.gconf 中拥有锁定文件"
+"知服务器应删除文件锁定。如果您有两个gconfd 进程(或在第二个进程启动时曾有两个"
+"进程)，注销、杀死 gconfd 的所有副本，然后再重新登录可能会有帮助。如果您的锁定"
+"已失效，删除 ~/.gconf*/*lock。可能问题是您尝试从两台计算机同时使用 GConf，而 "
+"ORBit 仍然使用阻止远程 CORBA 连接的默认配置 - 将 \"ORBIIOPIPv4=1\" 放入 /etc/"
+"orbitrc 目录中。并且一定要检查 user.* syslog 了解有关 gconfd 遇到的问题的详细"
+"信息。每个主目录只能有一个 gconfd 进程，并且该进程必须在 ~/.gconfd 中拥有一个"
+"锁定文件，并在各个存储位置，如 ~/.gconf 中拥有锁定文件"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-sources.c:1414
@@ -977,13 +987,13 @@ msgstr "获取元信息时出错：%s"
 #: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
-msgstr "关键字“%s”（作为关键字“%s”的模式列出）实际存储的类型是“%s”"
+msgstr "关键字“%s”(作为关键字“%s”的模式列出)实际存储的类型是“%s”"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
-msgstr "不理解“%s”（要求为整数）"
+msgstr "不理解“%s”(要求为整数)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:120
@@ -995,61 +1005,61 @@ msgstr "整数“%s”过大或过小"
 #: gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
-msgstr "不理解“%s”（要求为实数）"
+msgstr "不理解“%s”(要求为实数)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
-msgstr "不理解“%s”（要求为 true 或 false）"
+msgstr "不理解“%s”(要求为 true 或 false)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:261
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
-msgstr "不理解“%s”（列表必须以“[”开头）"
+msgstr "不理解“%s”(列表必须以“[”开头)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:274
 #, c-format
 msgid "Didn't understand `%s' (list must end with a ']')"
-msgstr "不理解“%s”（列表必须以“]”结束）"
+msgstr "不理解“%s”(列表必须以“]”结束)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:325
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
-msgstr "不理解“%s”（在列表中出现多余的非换码字符“]”）"
+msgstr "不理解“%s”(在列表中出现多余的非换码字符“]”)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:356 gconf/gconf-value.c:517
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
-msgstr "不理解“%s”（多余的结尾字符）"
+msgstr "不理解“%s”(多余的结尾字符)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:403
 #, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
-msgstr "不理解“%s”（pair 必须以“(”开头）"
+msgstr "不理解“%s”(pair 必须以“(”开头)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:416
 #, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
-msgstr "不理解“%s”（pair 必须以“)”结束）"
+msgstr "不理解“%s”(pair 必须以“)”结束)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:446 gconf/gconf-value.c:532
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
-msgstr "不理解“%s”（元素数不正确）"
+msgstr "不理解“%s”(元素数不正确)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf-value.c:486
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
-msgstr "不理解“%s”（在 pair 中找到多余的非换码字符“)”）"
+msgstr "不理解“%s”(在 pair 中找到多余的非换码字符“)”)"
 
 # SUN NEW TRANSLATION
 #: gconf/gconf.c:55
@@ -1228,24 +1238,24 @@ msgid "Received signal %d, shutting down cleanly"
 msgstr "已接收到信号 %d，正在干净地关闭"
 
 #: gconf/gconfd.c:481
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open %s: %s"
-msgstr "无法打开“%s”：%s\n"
+msgstr "打开 %s 失败：%s"
 
 #: gconf/gconfd.c:488
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to stat %s: %s"
-msgstr "无法查看“%s”：%s"
+msgstr "统计 %s 失败：%s"
 
 #: gconf/gconfd.c:497
 #, c-format
 msgid "Owner of %s is not the current user"
-msgstr ""
+msgstr "%s 的所有者并非当前用户"
 
 #: gconf/gconfd.c:505
 #, c-format
 msgid "Bad permissions %o on dir %s"
-msgstr ""
+msgstr "目录 %2$s 的权限 %1$o 有错"
 
 # SUN NEW TRANSLATION
 #. openlog() does not copy logname - what total brokenness.
@@ -1253,7 +1263,7 @@ msgstr ""
 #: gconf/gconfd.c:587
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr "正在启动（版本 %s），pid %u 用户“%s”"
+msgstr "正在启动(版本 %s)，pid %u 用户“%s”"
 
 # SUN NEW TRANSLATION
 #: gconf/gconfd.c:627
@@ -1263,7 +1273,7 @@ msgstr "无法获取 ConfigServer 的对象引用"
 #: gconf/gconfd.c:647
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
-msgstr ""
+msgstr "目录 %s 有问题，gconfd 无法使用它"
 
 # SUN NEW TRANSLATION
 #: gconf/gconfd.c:676
@@ -1421,127 +1431,124 @@ msgid ""
 msgstr "当某个客户端未被添加时，它将自己从 GConf 服务器中删除。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:92
+#: gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "将关键字设置为值和同步。使用 --type。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:101
+#: gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "将关键字的值显示到标准输出。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:110
+#: gconf/gconftool.c:111
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr "设置模式和同步。使用 --short-desc、--long-desc、--owner 和 --type。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:120
+#: gconf/gconftool.c:121
 msgid "Unset the keys on the command line"
 msgstr "取消命令行上的关键字设置"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:129
+#: gconf/gconftool.c:130
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr "递归取消设置命令行上该关键字/目录名称上或以下的所有关键字"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:138
+#: gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "显示某个目录中的所有关键字/值对。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:147
+#: gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "显示某个目录下的所有子目录。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:156
-#, fuzzy
+#: gconf/gconftool.c:157
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
-msgstr "递归显示某个目录下的所有子目录和条目。"
+msgstr "递归将目录下所有项的 XML 描述转存到标准输出。"
 
-#: gconf/gconftool.c:165
+#: gconf/gconftool.c:166
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a dir."
-msgstr ""
+msgstr "从指定文件中装入值的 XML 描述，并将其相对于目录进行设定。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:174
+#: gconf/gconftool.c:175
 msgid "Print all subdirectories and entries under a dir, recursively."
 msgstr "递归显示某个目录下的所有子目录和条目。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:183
+#: gconf/gconftool.c:184
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "如果该目录存在，返回 0，如果不存在，返回 2。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:192
+#: gconf/gconftool.c:193
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "关闭 gconfd。如无必要，请勿使用该选项。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:201
+#: gconf/gconftool.c:202
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "如果 gconfd 正在运行，返回 0，否则返回 2。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:210
+#: gconf/gconftool.c:211
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
-msgstr "启动该配置服务器 (gconfd)。（当需要时通常会自动启动。）"
+msgstr "启动该配置服务器 (gconfd)。(当需要时通常会自动启动。)"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:219
+#: gconf/gconftool.c:220
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr "指定正在设置的值的类型，或模式描述的值的类型。可使用唯一的缩写词。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:220
+#: gconf/gconftool.c:221
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:228
-#, fuzzy
+#: gconf/gconftool.c:229
 msgid "Print the data type of a key to standard output."
-msgstr "将关键字的值显示到标准输出。"
+msgstr "将关键字的数据类型显示到标准输出。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:237
-#, fuzzy
+#: gconf/gconftool.c:238
 msgid "Get the number of elements in a list key."
-msgstr "获取要应用于此关键字的模式名称"
+msgstr "获取列表键的元素编号。"
 
-#: gconf/gconftool.c:246
+#: gconf/gconftool.c:247
 msgid "Get a specific element from a list key, numerically indexed."
-msgstr ""
+msgstr "从列表键中获取指定元素，以数字作为索引。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:255
+#: gconf/gconftool.c:256
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr "指定正在设置的列表值的类型，或模式描述的值的类型。可使用唯一的缩写词。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:256 gconf/gconftool.c:265 gconf/gconftool.c:274
+#: gconf/gconftool.c:257 gconf/gconftool.c:266 gconf/gconftool.c:275
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:264
+#: gconf/gconftool.c:265
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1549,7 +1556,7 @@ msgstr ""
 "指定正在设置的 car pair 值的类型，或模式描述的值的类型。可使用唯一的缩写词。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:273
+#: gconf/gconftool.c:274
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1557,59 +1564,59 @@ msgstr ""
 "指定正在设置的 cdr pair 值的类型，或模式描述的值的类型。可使用唯一的缩写词。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:282
+#: gconf/gconftool.c:283
 msgid "Specify a short half-line description to go in a schema."
 msgstr "指定模式中使用的一条简短的半行说明。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:283 gconf/gconftool.c:292
+#: gconf/gconftool.c:284 gconf/gconftool.c:293
 msgid "DESCRIPTION"
 msgstr "说明"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:291
+#: gconf/gconftool.c:292
 msgid "Specify a several-line description to go in a schema."
 msgstr "指定模式中使用的一条多行说明。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:300
+#: gconf/gconftool.c:301
 msgid "Specify the owner of a schema"
 msgstr "指定模式的所有者"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:301
+#: gconf/gconftool.c:302
 msgid "OWNER"
 msgstr "所有者"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:309
+#: gconf/gconftool.c:310
 msgid "Specify a schema file to be installed"
 msgstr "指定要安装的模式文件"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:310
+#: gconf/gconftool.c:311
 msgid "FILENAME"
 msgstr "文件名"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:318
+#: gconf/gconftool.c:319
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "指定要使用的配置源，而不是默认路径"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:319
+#: gconf/gconftool.c:320
 msgid "SOURCE"
 msgstr "源"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:327
+#: gconf/gconftool.c:328
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr "绕过服务器，直接访问配置数据库。要求 gconfd 不在运行。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:336
+#: gconf/gconftool.c:337
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1619,7 +1626,17 @@ msgstr ""
 "境变量应设置为非默认配置源或设置为空字符串。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:345
+#: gconf/gconftool.c:346
+msgid ""
+"Properly uninstalls schema files on the command line from the database. "
+"GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
+"config source or set to the empty string to use the default."
+msgstr ""
+"在命令行上将模式文件正确从数据库中卸载。要使用默认值，GCONF_CONFIG_SOURCE 环"
+"境变量应设置为非默认配置源或设置为空字符串。"
+
+# SUN NEW TRANSLATION
+#: gconf/gconftool.c:355
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1628,7 +1645,7 @@ msgstr ""
 "试。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:354
+#: gconf/gconftool.c:364
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1636,68 +1653,67 @@ msgstr ""
 "通过在命令行上设置和取消设置目录中的各种关键字，对应用程序进行严格的测试。"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:363
+#: gconf/gconftool.c:373
 msgid "Get the short doc string for a key"
 msgstr "获取关键字的短文档字符串"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:372
+#: gconf/gconftool.c:382
 msgid "Get the long doc string for a key"
 msgstr "获取关键字的长文档字符串"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:381
+#: gconf/gconftool.c:391
 msgid "Get the name of the schema applied to this key"
 msgstr "获取要应用于此关键字的模式名称"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:390
+#: gconf/gconftool.c:400
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "指定模式名，后面跟着要应用该模式名的关键字"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:399
+#: gconf/gconftool.c:409
 msgid "Remove any schema name applied to the given keys"
 msgstr "删除所有已应用于指定关键字的模式名"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:408
+#: gconf/gconftool.c:418
 msgid "Get the name of the default source"
 msgstr "获取默认源的名称"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:417
+#: gconf/gconftool.c:427
 msgid "Print version"
 msgstr "显示版本"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:504
+#: gconf/gconftool.c:515
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "不能同时进行获取和设置/取消设置操作\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:514
+#: gconf/gconftool.c:525
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "不能同时进行设置和获取/取消设置操作\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:521
-#, fuzzy
+#: gconf/gconftool.c:532
 msgid "Can't get type and set/unset simultaneously\n"
-msgstr "不能同时进行获取和设置/取消设置操作\n"
+msgstr "不能同时进行获取类型和设置/取消设置操作\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:532
+#: gconf/gconftool.c:543
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "不能将 --all-entries 用于 --get 或 --set\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:543
+#: gconf/gconftool.c:554
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "不能将 --all-dirs 用于 --get 或 --set\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:556
+#: gconf/gconftool.c:567
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1706,7 +1722,7 @@ msgstr ""
 "dirs\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:569
+#: gconf/gconftool.c:580
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1714,562 +1730,559 @@ msgstr ""
 "--set_schema 不应用于 --get、--set、--unset、--all-entries、--all-dirs\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:575
+#: gconf/gconftool.c:586
 msgid "Value type is only relevant when setting a value\n"
 msgstr "只有在设置值时，值类型才有关系\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:581
+#: gconf/gconftool.c:592
 msgid "Must specify a type when setting a value\n"
 msgstr "当设置值时，必须指定值类型\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:592
-msgid "Ping option must be used by itself.\n"
-msgstr "Ping 选项必须单独使用。\n"
+#: gconf/gconftool.c:604 gconf/gconftool.c:617 gconf/gconftool.c:630
+#: gconf/gconftool.c:644 gconf/gconftool.c:657 gconf/gconftool.c:670
+#: gconf/gconftool.c:684
+#, c-format
+msgid "%s option must be used by itself.\n"
+msgstr "%s 选项必须单独使用。\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:603
-msgid "--dir-exists option must be used by itself.\n"
-msgstr "--dir-exists 选项必须单独使用。\n"
-
-# SUN NEW TRANSLATION
-#: gconf/gconftool.c:614
-msgid "--install-schema-file must be used by itself.\n"
-msgstr "--install-schema-file 必须单独使用。\n"
-
-# SUN NEW TRANSLATION
-#: gconf/gconftool.c:626
-msgid "--makefile-install-rule must be used by itself.\n"
-msgstr "--makefile-install-rule 必须单独使用。\n"
-
-# SUN NEW TRANSLATION
-#: gconf/gconftool.c:638
-msgid "--break-key must be used by itself.\n"
-msgstr "--break-key 必须单独使用。\n"
-
-# SUN NEW TRANSLATION
-#: gconf/gconftool.c:650
-msgid "--break-directory must be used by itself.\n"
-msgstr "--break-directory 必须单独使用。\n"
-
-# SUN NEW TRANSLATION
-#: gconf/gconftool.c:658
+#: gconf/gconftool.c:693
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr "当使用 --direct 时，必须用 --config-source 指定配置源\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:664
+#: gconf/gconftool.c:699
 msgid "You should use --direct when using a non-default configuration source\n"
 msgstr "当使用非默认配置源时，应该使用 --direct\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:670
+#: gconf/gconftool.c:705
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "无法初始化 GConf：%s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:699
+#: gconf/gconftool.c:734
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL 已设置，不在安装模式\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:712
+#: gconf/gconftool.c:741
+msgid ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
+msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL 已设置，不在卸载模式\n"
+
+# SUN NEW TRANSLATION
+#: gconf/gconftool.c:754
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "必须设置 GCONF_CONFIG_SOURCE 环境变量\n"
 
-#: gconf/gconftool.c:741
+#: gconf/gconftool.c:783
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "无法访问配置源：%s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1016
+#: gconf/gconftool.c:1068
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "关闭错误：%s\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:1059
+#: gconf/gconftool.c:1111
 msgid "Must specify one or more dirs to recursively list.\n"
 msgstr "必须要指定递归列出的一个或多个目录。\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1107
-#, fuzzy
+#: gconf/gconftool.c:1161
 msgid "Must specify one or more dirs to dump.\n"
-msgstr "必须指定一个或多个要取消设置的关键字。\n"
+msgstr "必须指定要转存的一个或多个目录。\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:1148 gconf/gconftool.c:1406
+#: gconf/gconftool.c:1202 gconf/gconftool.c:1460
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "列出“%s”中的条目时发生错误：%s\n"
 
-#: gconf/gconftool.c:1166
+#: gconf/gconftool.c:1220
 msgid "(no value set)"
 msgstr "(没有设置值)"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1464
+#: gconf/gconftool.c:1518
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "无法产生配置服务器 (gconfd)：%s\n"
 
-#: gconf/gconftool.c:1478
+#: gconf/gconftool.c:1532
 msgid "Must specify a key or keys to get\n"
 msgstr "必须指定要获取的键或多个键\n"
 
-#: gconf/gconftool.c:1513
+#: gconf/gconftool.c:1567
 #, c-format
 msgid "Type: %s\n"
 msgstr "类型：%s\n"
 
-#: gconf/gconftool.c:1514
+#: gconf/gconftool.c:1568
 #, c-format
 msgid "List Type: %s\n"
 msgstr "列表类型：%s\n"
 
-#: gconf/gconftool.c:1515
+#: gconf/gconftool.c:1569
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car 类型：%s\n"
 
-#: gconf/gconftool.c:1516
+#: gconf/gconftool.c:1570
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr 类型：%s\n"
 
-#: gconf/gconftool.c:1521
+#: gconf/gconftool.c:1575
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "默认值：%s\n"
 
-#: gconf/gconftool.c:1521 gconf/gconftool.c:1523 gconf/gconftool.c:1524
-#: gconf/gconftool.c:1525
+#: gconf/gconftool.c:1575 gconf/gconftool.c:1577 gconf/gconftool.c:1578
+#: gconf/gconftool.c:1579
 msgid "Unset"
 msgstr "清除"
 
-#: gconf/gconftool.c:1523
+#: gconf/gconftool.c:1577
 #, c-format
 msgid "Owner: %s\n"
-msgstr "属主：%s\n"
+msgstr "所有者：%s\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:1524
+#: gconf/gconftool.c:1578
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "简单说明：%s\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:1525
+#: gconf/gconftool.c:1579
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "详细说明：%s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1534 gconf/gconftool.c:1758 gconf/gconftool.c:1792
-#: gconf/gconftool.c:1837 gconf/gconftool.c:1982
+#: gconf/gconftool.c:1588 gconf/gconftool.c:1812 gconf/gconftool.c:1846
+#: gconf/gconftool.c:1891 gconf/gconftool.c:2036
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "没有为“%s”设置值\n"
 
-#: gconf/gconftool.c:1538 gconf/gconftool.c:1762 gconf/gconftool.c:1796
-#: gconf/gconftool.c:1841 gconf/gconftool.c:1986
+#: gconf/gconftool.c:1592 gconf/gconftool.c:1816 gconf/gconftool.c:1850
+#: gconf/gconftool.c:1895 gconf/gconftool.c:2040
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "无法获取“%s”的值：%s\n"
 
-#: gconf/gconftool.c:1581 gconf/gconftool.c:1593
+#: gconf/gconftool.c:1635 gconf/gconftool.c:1647
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "不理解类型“%s”\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1605
+#: gconf/gconftool.c:1659
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "必须将替代关键字/值指定为参数\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1625
+#: gconf/gconftool.c:1679
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "没有可为关键字“%s”设置的值\n"
 
-#: gconf/gconftool.c:1653
+#: gconf/gconftool.c:1707
 msgid "Cannot set schema as value\n"
 msgstr "无法将 schema 设置为值\n"
 
-#: gconf/gconftool.c:1663
+#: gconf/gconftool.c:1717
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "当设置列表时，您必须指定简单的 list-type\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1677
+#: gconf/gconftool.c:1731
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "当设置 pair 时，您必须指定基本的 car-type 和 cdr-type\n"
 
-#: gconf/gconftool.c:1692
+#: gconf/gconftool.c:1746
 #, c-format
 msgid "Error: %s\n"
 msgstr "错误：%s\n"
 
-#: gconf/gconftool.c:1705 gconf/gconftool.c:2731
+#: gconf/gconftool.c:1759 gconf/gconftool.c:2787
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "设置值时发生错误：%s\n"
 
-#: gconf/gconftool.c:1723
+#: gconf/gconftool.c:1777
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "同步时发生错误：%s\n"
 
-#: gconf/gconftool.c:1738
-#, fuzzy
+#: gconf/gconftool.c:1792
 msgid "Must specify a key or keys to get type\n"
-msgstr "必须指定要获取的键或多个键\n"
+msgstr "必须指定要获取类型的键\n"
 
-#: gconf/gconftool.c:1782
-#, fuzzy
+#: gconf/gconftool.c:1836
 msgid "Must specify a key to lookup size of.\n"
-msgstr "必须指定要获取的键或多个键\n"
+msgstr "必须指定要查阅大小的键。\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1807 gconf/gconftool.c:1852
-#, fuzzy, c-format
+#: gconf/gconftool.c:1861 gconf/gconftool.c:1906
+#, c-format
 msgid "Key %s is not a list.\n"
-msgstr "“%s”处的值不是模式\n"
+msgstr "键 %s 不是列表。\n"
 
-#: gconf/gconftool.c:1827
-#, fuzzy
+#: gconf/gconftool.c:1881
 msgid "Must specify a key from which to get list element.\n"
-msgstr "必须指定要获取的键或多个键\n"
+msgstr "必须指定要获取列表元素的键。\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1858
-#, fuzzy
+#: gconf/gconftool.c:1912
 msgid "Must specify list index.\n"
-msgstr "必须指定一些要破坏的关键字\n"
+msgstr "必须指定列表索引。\n"
 
-#: gconf/gconftool.c:1865
+#: gconf/gconftool.c:1919
 msgid "List index must be non-negative.\n"
-msgstr ""
+msgstr "列表索引必须是非负。\n"
 
-#: gconf/gconftool.c:1874
+#: gconf/gconftool.c:1928
 msgid "List index is out of bounds.\n"
-msgstr ""
+msgstr "列表索引超出范围。\n"
 
-#: gconf/gconftool.c:1900
+#: gconf/gconftool.c:1954
 msgid "Must specify a key or keys on the command line\n"
 msgstr "必须在命令行上指定一个或多个键\n"
 
-#: gconf/gconftool.c:1920
+#: gconf/gconftool.c:1974
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "没有已知的 schema 用于“%s”\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1953
+#: gconf/gconftool.c:2007
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "没有文档字符串存储在模式的“%s”处\n"
 
-#: gconf/gconftool.c:1958
+#: gconf/gconftool.c:2012
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "在“%s”获取 schema 时发生错误：%s\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:1965
+#: gconf/gconftool.c:2019
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "没有模式存储在“%s”\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:1968
+#: gconf/gconftool.c:2022
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "“%s”处的值不是模式\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2024 gconf/gconftool.c:2049
+#: gconf/gconftool.c:2078
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "必须指定模式名，后面跟着要应用该模式名的关键字名称\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2031
+#: gconf/gconftool.c:2085
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "将模式名“%s”与关键字名“%s”关联时出错：%s\n"
 
+#: gconf/gconftool.c:2103
+msgid "Must specify keys to unapply schema from\n"
+msgstr "必须指定要取消应用 schema 的键\n"
+
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:2059
+#: gconf/gconftool.c:2113
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "从“%s”删除模式名时出错：%s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2084
+#: gconf/gconftool.c:2138
 msgid "Must specify key (schema name) as the only argument\n"
-msgstr "必须将关键字（模式名）指定为唯一的参数\n"
+msgstr "必须将关键字(模式名)指定为唯一的参数\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2126
+#: gconf/gconftool.c:2180
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "List 类型必须是一种基本类型：string、int、float 或 bool\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2146
+#: gconf/gconftool.c:2200
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Pair car 类型必须是一种基本类型：string、int、float 或 bool\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2166
+#: gconf/gconftool.c:2220
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Pair cdr 类型必须是一种基本类型：string、int、float 或 bool\n"
 
-#: gconf/gconftool.c:2181
+#: gconf/gconftool.c:2235
 #, c-format
 msgid "Error setting value: %s"
 msgstr "设置值时发生错误：%s"
 
-#: gconf/gconftool.c:2195
+#: gconf/gconftool.c:2249
 #, c-format
 msgid "Error syncing: %s"
 msgstr "同步时发生错误：%s"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2210
+#: gconf/gconftool.c:2264
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr "必须指定一个或多个要从其中获得关键字/值对的目录。\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2224
+#: gconf/gconftool.c:2278
 msgid "Must specify one or more keys to unset.\n"
 msgstr "必须指定一个或多个要取消设置的关键字。\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:2235
+#: gconf/gconftool.c:2289
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "取消设置“%s”时出错：%s\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:2255
+#: gconf/gconftool.c:2309
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "必须指定一个或多个要递归取消设置的关键字。\n"
 
 # SUN CHANGED MESSAGE
-#: gconf/gconftool.c:2269
+#: gconf/gconftool.c:2323
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "在递归取消设置“%s”时失败：%s\n"
 
-#: gconf/gconftool.c:2287
+#: gconf/gconftool.c:2343
 msgid "Must specify one or more dirs to get subdirs from.\n"
 msgstr "必须指定获取子目录的一个或多个目录。\n"
 
-#: gconf/gconftool.c:2321
+#: gconf/gconftool.c:2377
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "列目录时错误：%s\n"
 
-#: gconf/gconftool.c:2457
+#: gconf/gconftool.c:2513
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
-msgstr ""
+msgstr "警告：必须在 <pair> 中同时指定 <car> 和 <cdr>\n"
 
-#: gconf/gconftool.c:2484
-#, fuzzy, c-format
+#: gconf/gconftool.c:2540
+#, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
-msgstr "警告：没有指定 schema 的键\n"
+msgstr "警告：在 <value> 下为 schema 指定的键(%s) - 忽略\n"
 
-#: gconf/gconftool.c:2517
+#: gconf/gconftool.c:2573
 msgid "WARNING: must have a child node under <value>\n"
-msgstr ""
+msgstr "警告：必须在 <value> 下有子节点\n"
 
-#: gconf/gconftool.c:2523
-#, fuzzy, c-format
+#: gconf/gconftool.c:2579
+#, c-format
 msgid "WARNING: node <%s> not understood\n"
-msgstr "警告：无法理解 <schema> 下的节点 <%s>\n"
+msgstr "警告：无法理解节点 <%s>\n"
 
-#: gconf/gconftool.c:2541
-#, fuzzy, c-format
+#: gconf/gconftool.c:2597
+#, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
-msgstr "警告：无法分析类型名“%s”\n"
+msgstr "警告：无法分析整数值“%s”\n"
 
-#: gconf/gconftool.c:2562
-#, fuzzy, c-format
+#: gconf/gconftool.c:2618
+#, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
-msgstr "警告：无法分析类型名“%s”\n"
+msgstr "警告：无法分析浮点值“%s”\n"
 
-#: gconf/gconftool.c:2584
-#, fuzzy, c-format
+#: gconf/gconftool.c:2640
+#, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
-msgstr "警告：无法分析类型名“%s”\n"
+msgstr "警告：无法处理字符串值“%s”\n"
 
-#: gconf/gconftool.c:2605
-#, fuzzy, c-format
+#: gconf/gconftool.c:2661
+#, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
-msgstr "警告：无法分析类型名“%s”\n"
+msgstr "警告：无法分析布尔值“%s”\n"
 
-#: gconf/gconftool.c:2721 gconf/gconftool.c:3253
+#: gconf/gconftool.c:2777 gconf/gconftool.c:3313
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "警告：无法将 schema “%s”关联到键“%s”：%s\n"
 
-#: gconf/gconftool.c:2826
+#: gconf/gconftool.c:2882
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "警告：schema (%s) 的类型无效或缺少\n"
 
-#: gconf/gconftool.c:2835
+#: gconf/gconftool.c:2891
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "警告：schema (%s) 的 list_type 无效或缺少\n"
 
-#: gconf/gconftool.c:2846 gconf/gconftool.c:2876 gconf/gconftool.c:2905
+#: gconf/gconftool.c:2902 gconf/gconftool.c:2932 gconf/gconftool.c:2961
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "警告：无法分析 schema (%s) 的默认值“%s”\n"
 
-#: gconf/gconftool.c:2864
+#: gconf/gconftool.c:2920
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "警告：schema (%s) car_type 或 cdr_type 无效或缺少 \n"
 
-#: gconf/gconftool.c:2889
+#: gconf/gconftool.c:2945
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "警告：您无法为 schema 设置默认值\n"
 
-#: gconf/gconftool.c:2918
+#: gconf/gconftool.c:2974
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "警告：gconftool 内部错误，未知的 GConfValueType\n"
 
-#: gconf/gconftool.c:2966 gconf/gconftool.c:2987 gconf/gconftool.c:3008
-#: gconf/gconftool.c:3029
+#: gconf/gconftool.c:3022 gconf/gconftool.c:3043 gconf/gconftool.c:3064
+#: gconf/gconftool.c:3085
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "警告：无法分析类型名“%s”\n"
 
-#: gconf/gconftool.c:2983
+#: gconf/gconftool.c:3039
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr "警告：list_type 只能是整型、浮点型、字符串或布尔型，不能是“%s”\n"
 
-#: gconf/gconftool.c:3004
+#: gconf/gconftool.c:3060
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr "警告：car_type 只能是整型、浮点型、字符串或布尔型，不能是“%s”\n"
 
-#: gconf/gconftool.c:3025
+#: gconf/gconftool.c:3081
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr "警告：cdr_type 只能是整型、浮点型、字符串或布尔型，不能是“%s”\n"
 
-#: gconf/gconftool.c:3065
+#: gconf/gconftool.c:3121
 msgid "WARNING: empty <applyto> node"
 msgstr "警告：空的 <applyto> 节点"
 
-#: gconf/gconftool.c:3068 gconf/gconftool.c:3326
+#: gconf/gconftool.c:3124 gconf/gconftool.c:3386
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "警告：无法理解 <schema> 下的节点 <%s>\n"
 
-#: gconf/gconftool.c:3079
+#: gconf/gconftool.c:3135
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "警告：没有指定列表类型模式的 <list_type> 键\n"
 
-#: gconf/gconftool.c:3085
+#: gconf/gconftool.c:3141
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "警告：没有指定成对类型模式的 <car_type> 键\n"
 
-#: gconf/gconftool.c:3091
+#: gconf/gconftool.c:3147
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "警告：没有指定成对类型模式的 <cdr_type> 键\n"
 
-#: gconf/gconftool.c:3120
+#: gconf/gconftool.c:3176
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "警告：<locale> 节点没有“name=\"locale\"”属性，忽略\n"
 
-#: gconf/gconftool.c:3126
+#: gconf/gconftool.c:3182
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr "警告：区域设置“%s”有多个 <locale> 节点，忽略第一个后的所有节点\n"
 
-#: gconf/gconftool.c:3224
+#: gconf/gconftool.c:3280
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "警告：<locale> 节点中的节点 <%s> 无效\n"
 
-#: gconf/gconftool.c:3261
+#: gconf/gconftool.c:3321
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "将 schema “%s” 关联到键“%s”上\n"
 
-#: gconf/gconftool.c:3335
+#: gconf/gconftool.c:3395
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "您在 <schema> 中必须至少有一个 <locale> 项\n"
 
-#: gconf/gconftool.c:3367
+#: gconf/gconftool.c:3427
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "警告：无法安装 schema “%s”，区域设置“%s”：%s\n"
 
-#: gconf/gconftool.c:3375
+#: gconf/gconftool.c:3435
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "安装 schema “%s”，区域设置“%s”\n"
 
-#: gconf/gconftool.c:3410
+#: gconf/gconftool.c:3459
+#, c-format
+msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
+msgstr "警告：无法卸载 schema “%s”，区域设置“%s”：%s\n"
+
+#: gconf/gconftool.c:3467
+#, c-format
+msgid "Uninstalled schema `%s' from locale `%s'\n"
+msgstr "已经从区域“%2$s”中卸载了 schema “%1$s”\n"
+
+#: gconf/gconftool.c:3505
 msgid "WARNING: no key specified for schema\n"
 msgstr "警告：没有指定 schema 的键\n"
 
-#: gconf/gconftool.c:3451
-#, fuzzy, c-format
+#: gconf/gconftool.c:3546
+#, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
-msgstr "警告：无法理解 <schema> 下的节点 <%s>\n"
+msgstr "警告：无法理解 <%2$s> 下的节点 <%1$s>\n"
 
-#: gconf/gconftool.c:3482
+#: gconf/gconftool.c:3577
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "无法打开“%s”：%s\n"
 
-#: gconf/gconftool.c:3489
+#: gconf/gconftool.c:3584
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "文档“%s”是空的？\n"
 
-#: gconf/gconftool.c:3501
-#, fuzzy, c-format
+#: gconf/gconftool.c:3596
+#, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
-msgstr "文档“%s”的根节点类型错误(<%s>，应该是 <gconfschemafile>)\n"
+msgstr "文档“%s”的根节点类型错误(<%s>，应该是 <%s>)\n"
 
-#: gconf/gconftool.c:3514
-#, fuzzy, c-format
+#: gconf/gconftool.c:3609
+#, c-format
 msgid "Document `%s' has no top level <%s> node\n"
-msgstr "文档“%s”没有顶层 <gconfschemafile> 节点\n"
+msgstr "文档“%s”没有顶层 <%s> 节点\n"
 
-#: gconf/gconftool.c:3528
-#, fuzzy, c-format
+#: gconf/gconftool.c:3623
+#, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
-msgstr "警告：无法理解位于 <gconfschemafile> 下的节点 <%s>\n"
+msgstr "警告：无法理解位于 <%2$s> 下的节点 <%1$s>\n"
 
-#: gconf/gconftool.c:3539 gconf/gconftool.c:3574
+#: gconf/gconftool.c:3634 gconf/gconftool.c:3669 gconf/gconftool.c:3701
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "在同步配置数据时发生错误：%s"
 
-#: gconf/gconftool.c:3558
+#: gconf/gconftool.c:3653
 msgid "Must specify some schema files to install\n"
 msgstr "必须指定要安装的 schema 文件\n"
 
+#: gconf/gconftool.c:3685
+msgid "Must specify some schema files to uninstall\n"
+msgstr "必须指定要卸载的 schema 文件\n"
+
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:3595
+#: gconf/gconftool.c:3722
 #, c-format
 msgid ""
 "\n"
@@ -2279,18 +2292,18 @@ msgstr ""
 "%s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:3615
+#: gconf/gconftool.c:3742
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "无法取消设置破坏关键字 %s：%s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:3741
+#: gconf/gconftool.c:3868
 msgid "Must specify some keys to break\n"
 msgstr "必须指定一些要破坏的关键字\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:3747
+#: gconf/gconftool.c:3874
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2300,12 +2313,12 @@ msgstr ""
 "  %s\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:3765
+#: gconf/gconftool.c:3892
 msgid "Must specify some directories to break\n"
 msgstr "必须指定一些要破坏的目录\n"
 
 # SUN NEW TRANSLATION
-#: gconf/gconftool.c:3784
+#: gconf/gconftool.c:3911
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2314,22 +2327,3 @@ msgid ""
 msgstr ""
 "正在试图通过为目录中的关键字设置不正确的值来破坏您的应用程序：\n"
 "  %s\n"
-
-#~ msgid "Unloading BerkeleyDB (BDB) backend module."
-#~ msgstr "卸载 BerkeleyDB (BDB) 后端模块。"
-
-#~ msgid "Opened BerkeleyDB source at root %s"
-#~ msgstr "打开 BerkeleyDB 数据源于根 %s"
-
-#~ msgid "Initializing BDB backend module"
-#~ msgstr "正在初始化 BDB 后端模块"
-
-#~ msgid "Couldn't find the root directory in the address \"%s\""
-#~ msgstr "无法找到地址“%s”中的根目录"
-
-#~ msgid "WARNING: node <%s> not understood below <schemalist>\n"
-#~ msgstr "警告：无法理解位于 <schemalist> 下的节点 <%s>\n"
-
-#, fuzzy
-#~ msgid "Error listing subdirs of '%s': %s\n"
-#~ msgstr "列出“%s”中的目录时发生错误：%s"
