@@ -1,4 +1,10 @@
-2004-11-02  Fernando Herrera  <set EMAIL_ADDRESS environment variable>
+2004-11-02  Fernando Herrera  <fherrera@onirica.com>
+
+	* backends/markup-tree.c: (markup_entry_get_value): Read the schema 
+	file until a matching locale is found and the C one. This solves 
+	bug #152175 when current locale is before the C.
+
+2004-11-02  Fernando Herrera  <fherrera@onirica.com>
 
 	* gconf/gconf-sources.c: (gconf_sources_all_entries): Get schema_name
 	also if we got a value from a previous source. Fix #131011

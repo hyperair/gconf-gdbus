@@ -1502,7 +1502,7 @@ markup_entry_get_value (MarkupEntry *entry,
             }
 
           /* Quit as soon as we have the best possible locale */
-          if (local_schemas[0] != NULL)
+          if (local_schemas[0] != NULL && c_local_schema != NULL)
             break;
 
           tmp = tmp->next;
