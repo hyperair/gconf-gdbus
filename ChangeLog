@@ -65,6 +65,23 @@
 	* gconf/gconf.c (gconf_server_broken): treat ConfigInShutdown 
 	as a broken server.
 	
+2000-10-06  Colm Smyth  <colm.smyth@sun.com>
+
+	* Committed BerkeleyDB back-end:-
+
+	  backends/bdb.c backends/bdb.h backends/bdb-backend.c
+	  backends/val-encode.c backends/val-encode.h
+	  backends/dir-utils.c backends/dir-utils.h backends/README.bdb
+
+	* Changes to make GConf build with an ISO C compiler:-
+
+	  configure.in backends/Makefile.am backends/xml-cache.c
+	  gconf/gconf-database.c gconf/gconf-sources.c gconf/gconfd.c
+	  tests/testchangeset.c tests/testencode.c tests/testgconf.c
+	  tests/testlisteners.c tests/testpersistence.c
+	  tests/testschemas.c
+
+
 2000-10-03  Robin * Slomkowski  <rslomkow@eazel.com>
 
 	* gconf.spec.in:/etc/etc is not a directory
