@@ -238,17 +238,19 @@ g_conf_value_to_string(GConfValue* value)
           retval = g_strdup("[]");
         else
           {
-            gchar* buf;
-            guint bufsize = 128;
+            gchar* buf = NULL;
+            guint bufsize = 64;
             guint cur = 0;
 
             g_assert(list != NULL);
             
-            buf = g_malloc(bufsize);
+            buf = g_malloc(bufsize+3); /* my +3 superstition */
             
             buf[0] = '[';
             ++cur;
 
+            g_assert(cur < bufsize);
+            
             while (list != NULL)
               {
                 gchar* elem;
@@ -260,24 +262,31 @@ g_conf_value_to_string(GConfValue* value)
 
                 len = strlen(elem);
 
-                if ((cur + len) >= bufsize)
+                if ((cur + len + 2) >= bufsize) /* +2 for '\0' and comma */
                   {
-                    bufsize *= 2;
-                    buf = g_realloc(buf, bufsize);
-                    buf[bufsize-1] = '\0'; /* paranoia */
+                    bufsize = MAX(bufsize*2, bufsize+len+4); 
+                    buf = g_realloc(buf, bufsize+3);
                   }
+
+                g_assert(cur < bufsize);
                 
                 strcpy(&buf[cur], elem);
                 cur += len;
 
+                g_assert(cur < bufsize);
+                
                 g_free(elem);
 
                 buf[cur] = ',';
                 ++cur;
+
+                g_assert(cur < bufsize);
                 
                 list = g_slist_next(list);
               }
 
+            g_assert(cur < bufsize);
+            
             buf[cur-1] = ']'; /* overwrites last comma */
             buf[cur] = '\0';
 

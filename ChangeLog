@@ -1,5 +1,13 @@
 1999-10-05  Havoc Pennington  <hp@pobox.com>
 
+	* tests/testgconf.c (check_list_storage): Add checks for empty
+	lists, and all the various list types.
+
+	* gconf/gconf-value.c (g_conf_value_to_string): Fix a segfault
+	(not always allocating a large enough buffer)
+
+1999-10-05  Havoc Pennington  <hp@pobox.com>
+
 	* configure.in: 0.3, bump soname
 
 1999-10-04  Havoc Pennington  <hp@pobox.com>

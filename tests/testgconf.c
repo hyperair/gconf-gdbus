@@ -630,9 +630,9 @@ compare_listvals(GConfValue* first, GConfValue* second)
                 g_conf_value_bool(val2));
           break;
         case G_CONF_VALUE_FLOAT:
-          check(fabs(g_conf_value_float(val1) - g_conf_value_float(val2)) < 1e-7,
-                "float values %g and %g are not equal", g_conf_value_float(val1),
-                g_conf_value_float(val2));
+          check(fabs(g_conf_value_float(val1) - g_conf_value_float(val2)) < 1e-5,
+                "float values %g and %g are not equal (epsilon %g)", g_conf_value_float(val1),
+                g_conf_value_float(val2), g_conf_value_float(val1) - g_conf_value_float(val2));
           break;
         case G_CONF_VALUE_STRING:
           check(strcmp(g_conf_value_string(val1), g_conf_value_string(val2)) == 0, 
@@ -684,17 +684,97 @@ list_of_intvals(void)
   return retval;
 }
 
+static GSList*
+list_of_stringvals(void)
+{
+  GSList* retval = NULL;
+  const gchar** stringp = some_strings;
+  while (*stringp)
+    {
+      GConfValue* val;
+
+      val = g_conf_value_new(G_CONF_VALUE_STRING);
+
+      g_conf_value_set_string(val, *stringp);
+      
+      retval = g_slist_prepend(retval, val);
+      
+      ++stringp;
+    }
+  return retval;
+}
+
+static GSList*
+list_of_boolvals(void)
+{
+  GSList* retval = NULL;
+  guint i = 0;
+  while (i < n_bools)
+    {
+      GConfValue* val;
+
+      val = g_conf_value_new(G_CONF_VALUE_BOOL);
+
+      g_conf_value_set_bool(val, bools[i]);
+      
+      retval = g_slist_prepend(retval, val);
+      
+      ++i;
+    }
+  return retval;
+}
+
+static GSList*
+list_of_floatvals(void)
+{
+  GSList* retval = NULL;
+  guint i = 0;
+  while (i < n_floats)
+    {
+      GConfValue* val;
+
+      val = g_conf_value_new(G_CONF_VALUE_FLOAT);
+
+      g_conf_value_set_float(val, floats[i]);
+      
+      retval = g_slist_prepend(retval, val);
+      
+      ++i;
+    }
+  return retval;
+}
+
+
 static void
 check_list_storage(GConfEngine* conf)
 {
   GConfError* err = NULL;
   const gchar** keyp = NULL;
-  GSList* list_of_lists = NULL;
-  GSList* intlist;
-  
-  intlist = list_of_intvals();
+  guint i;
+  GConfValueType list_types[] = { G_CONF_VALUE_INT, G_CONF_VALUE_INT,
+                                  G_CONF_VALUE_STRING, G_CONF_VALUE_STRING,
+                                  G_CONF_VALUE_FLOAT, G_CONF_VALUE_FLOAT,
+                                  G_CONF_VALUE_BOOL, G_CONF_VALUE_BOOL };
+  GSList* lists[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+  const guint n_lists = sizeof(lists)/sizeof(lists[0]);
 
-  list_of_lists = g_slist_prepend(list_of_lists, intlist);
+  /* List of integers */
+  lists[0] = list_of_intvals();
+
+  /* empty list of integers */
+  lists[1] = NULL;
+
+  /* lists of string */
+  lists[2] = list_of_stringvals();
+  lists[3] = NULL;
+
+  /* of float */
+  lists[4] = list_of_floatvals();
+  lists[5] = NULL;
+
+  /* of bool */
+  lists[6] = list_of_boolvals();
+  lists[7] = NULL;
   
   /* Loop over keys, storing all values at each then retrieving them */
   
@@ -702,18 +782,18 @@ check_list_storage(GConfEngine* conf)
 
   while (*keyp)
     {
-      GSList* tmp = list_of_lists;
-
-      while (tmp != NULL)
+      i = 0;
+      
+      while (i < n_lists)
         {
           GConfValue* gotten = NULL;
           GConfValue* thislist = NULL;
 
           thislist = g_conf_value_new(G_CONF_VALUE_LIST);
 
-          g_conf_value_set_list_type(thislist, G_CONF_VALUE_INT);
+          g_conf_value_set_list_type(thislist, list_types[i]);
 
-          g_conf_value_set_list(thislist, intlist); /* makes a copy */
+          g_conf_value_set_list(thislist, lists[i]); /* makes a copy */
           
           if (!g_conf_set(conf, *keyp, thislist, &err))
             {
@@ -743,17 +823,15 @@ check_list_storage(GConfEngine* conf)
             }
 
           g_conf_value_destroy(thislist);
-          
-          tmp = g_slist_next(tmp);
+
+          ++i;
         }
       
       ++keyp;
     }
 
-  free_value_list(intlist);
+  free_value_list(lists[0]);
 
-  g_slist_free(list_of_lists);
-  
   check_unset(conf);
 }
 
@@ -782,7 +860,6 @@ main (int argc, char** argv)
   conf = g_conf_engine_new();
 
   check(conf != NULL, "create the default conf engine");
-
 
   printf("\nChecking list storage:");
   
