@@ -1,3 +1,12 @@
+2000-02-15  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf-changeset.c (gconf_change_set_set): apply patch from 
+	Rusty Conover <rconover@zootweb.com> fixing an infinite recursion
+	typo
+
+	* gconf/gconfd.c (fast_cleanup): Don't bother to unregister with
+	OAF
+
 2000-02-01  Havoc Pennington  <hp@redhat.com>
 
 	* configure.in (GCONF_CONFIG_SOURCE): update default schema

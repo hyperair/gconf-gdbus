@@ -237,7 +237,7 @@ gconf_change_set_set (GConfChangeSet* cs, const gchar* key,
 {
   g_return_if_fail(value != NULL);
   
-  gconf_change_set_set(cs, key, gconf_value_copy(value));
+  gconf_change_set_set_nocopy(cs, key, gconf_value_copy(value));
 }
 
 void

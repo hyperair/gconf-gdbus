@@ -2039,11 +2039,17 @@ listener_destroy(Listener* l)
 static void 
 fast_cleanup(void)
 {
+#if 0
   /* first and foremost, remove the stale server registration */
   if (server != CORBA_OBJECT_NIL)
     oaf_active_server_unregister("", server);
-
-  
+#endif
+  /* OK we aren't going to unregister, because it can cause weird oafd
+     spawning. The problem is that we have a race condition because
+     we're going to destroy everything in shutdown_contexts and if we
+     get incoming connections we'll just segfault and crash
+     spectacularly. Should probably add a we_are_shut_down flag or
+     something. FIXME */
 }
 
 
