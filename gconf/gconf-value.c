@@ -969,6 +969,15 @@ gconf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
  * GConfEntry
  */
 
+GConfEntry*
+gconf_entry_new (const gchar *key,
+                 GConfValue  *val)
+{
+  return gconf_entry_new_nocopy (g_strdup (key),
+                                 val ? gconf_value_copy (val) : NULL);
+
+}
+
 GConfEntry* 
 gconf_entry_new_nocopy(gchar* key, GConfValue* val)
 {
@@ -999,6 +1008,14 @@ gconf_entry_steal_value (GConfEntry* entry)
   GConfValue* val = entry->value;
   entry->value = NULL;
   return val;
+}
+
+void
+gconf_entry_set_value (GConfEntry  *entry,
+                       GConfValue  *val)
+{
+  gconf_entry_set_value_nocopy (entry,
+                                val ? gconf_value_copy (val) : NULL);
 }
 
 void

@@ -162,13 +162,16 @@ struct _GConfEntry {
 #define     gconf_entry_schema_name(x) ((x)->schema_name)
 #define     gconf_entry_is_default(x)  ((x)->is_default)
 
-/* Pair takes memory ownership of both key and value */
+GConfEntry* gconf_entry_new              (const gchar *key,
+                                          GConfValue  *val);
 GConfEntry* gconf_entry_new_nocopy       (gchar       *key,
                                           GConfValue  *val);
 void        gconf_entry_free             (GConfEntry  *entry);
 
 /* Transfer ownership of value to the caller. */
 GConfValue* gconf_entry_steal_value      (GConfEntry  *entry);
+void        gconf_entry_set_value        (GConfEntry  *entry,
+                                          GConfValue  *val);
 void        gconf_entry_set_value_nocopy (GConfEntry  *entry,
                                           GConfValue  *val);
 void        gconf_entry_set_schema_name  (GConfEntry  *entry,
