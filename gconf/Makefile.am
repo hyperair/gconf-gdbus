@@ -30,7 +30,9 @@ BUILT_SOURCES = \
 	gconfmarshal.c
 
 CLEANFILES = \
-	$(BUILT_SOURCES)
+	$(BUILT_SOURCES)	\
+	stamp-gconfmarshal.h	\
+	stamp-gconfmarshal.c
 
 dist-hook:
 	cd $(distdir) ; rm -f $(CLEANFILES)
