@@ -372,6 +372,24 @@ gconf_sources_destroy(GConfSources* sources)
   g_free(sources);
 }
 
+void
+gconf_sources_clear_cache        (GConfSources  *sources)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* source = tmp->data;
+
+      if (source->backend->vtable->clear_cache)
+        (*source->backend->vtable->clear_cache)(source);
+      
+      tmp = g_list_next(tmp);
+    }
+}
+
 GConfValue*   
 gconf_sources_query_value (GConfSources* sources, 
                            const gchar* key,

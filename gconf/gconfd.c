@@ -163,6 +163,8 @@ static void          context_set_schema(GConfContext* ctx, const gchar* key,
                                         GConfError** err);
 static void          context_sync(GConfContext* ctx,
                                   GConfError** err);
+static void          context_clear_cache(GConfContext* ctx,
+                                         GConfError** err);
 static void          context_hibernate(GConfContext* ctx);
 static void          context_awaken(GConfContext* ctx, GConfError** err);
 
@@ -271,6 +273,12 @@ gconfd_sync(PortableServer_Servant servant,
             ConfigServer_Context ctx,
             CORBA_Environment *ev);
 
+static void 
+gconfd_clear_cache(PortableServer_Servant servant,
+                   ConfigServer_Context ctx,
+                   CORBA_Environment *ev);
+
+
 static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
 
@@ -301,7 +309,8 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_set_schema,
   gconfd_sync,
   gconfd_ping,
-  gconfd_shutdown
+  gconfd_shutdown,
+  gconfd_clear_cache
 };
 
 static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
@@ -774,6 +783,27 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 
   gconf_main_quit();
 }
+
+static void 
+gconfd_clear_cache(PortableServer_Servant servant,
+                   ConfigServer_Context ctx,
+                   CORBA_Environment *ev)
+{
+  GConfContext* gcc;
+  GConfError* error = NULL;
+
+  gconf_log(GCL_INFO, _("Received request to drop all cached data"));
+  
+  gcc = lookup_context(ctx, &error);
+
+  if (gconf_set_exception(&error, ev))
+    return;
+  
+  context_clear_cache(gcc, &error);
+
+  gconf_set_exception(&error, ev);
+}
+
 
 /*
  * Main code
@@ -1685,6 +1715,17 @@ context_sync(GConfContext* ctx, GConfError** err)
   gconf_log(GCL_DEBUG, "Received suggestion to sync all config data");
 
   context_sync_nowish(ctx);
+}
+
+static void
+context_clear_cache(GConfContext* ctx,
+                    GConfError** err)
+{
+  g_assert(ctx->listeners != NULL);
+
+  ctx->last_access = time(NULL);
+
+  gconf_sources_clear_cache(ctx->sources);
 }
 
 /*

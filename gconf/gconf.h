@@ -219,6 +219,11 @@ const gchar*   gconf_enum_to_string (GConfEnumStringPair lookup_table[],
                                      gint enum_value);
 
 
+/* No, you can't use this function. Bad application developer. Bad. */
+#ifdef GCONF_ENABLE_INTERNALS
+void gconf_clear_cache(GConfEngine* conf, GConfError** err);
+#endif
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

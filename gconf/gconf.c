@@ -1194,6 +1194,69 @@ gconf_suggest_sync(GConfEngine* conf, GConfError** err)
     ; /* nothing additional */
 }
 
+void 
+gconf_clear_cache(GConfEngine* conf, GConfError** err)
+{
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
+  CORBA_Environment ev;
+  ConfigServer cs;
+  gint tries = 0;
+
+  g_return_if_fail(conf != NULL);
+  g_return_if_fail(err == NULL || *err == NULL);
+
+  if (gconf_engine_is_local(conf))
+    {
+      GConfError* error = NULL;
+      
+      gconf_sources_clear_cache(priv->local_sources);
+      
+      if (error != NULL)
+        {
+          if (err)
+            *err = error;
+          else
+            {
+              gconf_error_destroy(error);
+            }
+          return;
+        }
+      
+      return;
+    }
+
+  g_assert(!gconf_engine_is_local(conf));
+  
+  CORBA_exception_init(&ev);
+
+ RETRY:
+  
+  cs = gconf_get_config_server(TRUE, err);
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_return_if_fail(err == NULL || *err != NULL);
+
+      return;
+    }
+
+  ConfigServer_clear_cache(cs, priv->context, &ev);
+
+  if (gconf_server_broken(&ev))
+    {
+      if (tries < MAX_RETRIES)
+        {
+          ++tries;
+          CORBA_exception_free(&ev);
+          gconf_detach_config_server();
+          goto RETRY;
+        }
+    }
+  
+  if (gconf_handle_corba_exception(&ev, err))  
+    ; /* nothing additional */
+}
+
 gboolean
 gconf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
 {

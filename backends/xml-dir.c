@@ -246,6 +246,12 @@ entry_sync_foreach(const gchar* name, Entry* e, gpointer data)
 }
 
 gboolean
+dir_sync_pending    (Dir          *d)
+{
+  return d->dirty;
+}
+
+gboolean
 dir_sync        (Dir* d, GConfError** err)
 {
   gboolean retval = TRUE;

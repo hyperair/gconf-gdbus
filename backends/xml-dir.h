@@ -32,6 +32,7 @@ Dir*           dir_load            (const gchar  *key,
                                     const gchar  *xml_root_dir,
                                     GConfError  **err);
 void           dir_destroy         (Dir          *d);
+void           dir_clear_cache     (Dir          *d);
 gboolean       dir_ensure_exists   (Dir          *d,
                                     GConfError  **err);
 gboolean       dir_sync            (Dir          *d,
@@ -67,7 +68,7 @@ void           dir_set_schema      (Dir          *d,
                                     GConfError  **err);
 GTime          dir_get_last_access (Dir          *d);
 
-
+gboolean       dir_sync_pending    (Dir          *d);
 
 /* Marks for deletion; dir cache really has to implement directory
    deletion, since it is recursive */

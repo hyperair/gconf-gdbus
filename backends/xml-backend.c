@@ -213,6 +213,8 @@ static gboolean      sync_all        (GConfSource* source,
 
 static void          destroy_source  (GConfSource* source);
 
+static void          clear_cache     (GConfSource* source);
+
 static GConfBackendVTable xml_vtable = {
   x_shutdown,
   resolve_address,
@@ -230,7 +232,8 @@ static GConfBackendVTable xml_vtable = {
   remove_dir,
   set_schema,
   sync_all,
-  destroy_source
+  destroy_source,
+  clear_cache
 };
 
 static void          
@@ -649,6 +652,15 @@ static void
 destroy_source  (GConfSource* source)
 {
   xs_destroy((XMLSource*)source);
+}
+
+static void
+clear_cache     (GConfSource* source)
+{
+  XMLSource* xs = (XMLSource*)source;
+
+  /* clean all entries older than 0 seconds */
+  cache_clean(xs->cache, 0);
 }
 
 /* Initializer */

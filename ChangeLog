@@ -1,3 +1,24 @@
+2000-01-21  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-cache.c (cache_clean): oops, this was broken
+	before; we need to check that the dir doesn't need a sync before
+	we destroy it.
+
+	* backends/xml-dir.c (dir_sync_pending): new function
+
+	* backends/xml-backend.c (clear_cache): implement clearing cache
+	for XML backend
+
+	* gconf/gconf.c (gconf_clear_cache): implement API here
+
+	* gconf/GConf.idl: add clear_cache method
+
+	* gconf/gconfd.c (context_clear_cache): add code to implement
+	clear_cache IDL 
+
+	* gconf/gconf-sources.c (gconf_sources_clear_cache): New function
+	for debugging purposes
+
 2000-01-20  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-entry.c (node_extract_value): Detect case where a

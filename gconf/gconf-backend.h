@@ -121,6 +121,9 @@ struct _GConfBackendVTable {
                                            GConfError** err);
 
   void                (* destroy_source)  (GConfSource* source);
+
+  /* This is basically used by the test suite */
+  void                (* clear_cache)     (GConfSource* source);
 };
 
 struct _GConfBackend {
