@@ -70,7 +70,7 @@ main(int argc, char** argv)
       return 1;
     }
 
-  if (!g_conf_init())
+  if (!g_conf_init(PACKAGE))
     {
       fprintf(stderr, _("Failed to init GConf\n"));
       return 1;
@@ -94,6 +94,9 @@ main(int argc, char** argv)
 
   gtk_widget_show(app);
 
+  gnome_warning_dialog_parented("This application hasn't been written yet",
+                                GTK_WINDOW(app));
+  
   gtk_main();
 
   g_assert(gtk_main_level() == 0);

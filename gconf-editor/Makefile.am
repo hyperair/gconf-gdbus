@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) \
-	-I$(includedir) $(GNOME_INCLUDEDIR) \
+	-I$(includedir) $(GNOME_CFLAGS) \
          -DG_LOG_DOMAIN=\"GConfEd\" -DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I../intl -I$(top_srcdir)/intl -I$(top_srcdir)/gconf
 
@@ -12,4 +12,4 @@ gconf_editor_SOURCES = 	\
 	menus.h		\
 	menus.c
 
-gconf_editor_LDADD = $(GNOMEUI_LIBS) $(GNOME_LIBDIR) $(INTLLIBS) $(ORBIT_LIBS) $(top_srcdir)/gconf/libgconf-client.la
+gconf_editor_LDADD = $(GNOME_LIBS) $(INTLLIBS) $(ORBIT_LIBS) $(top_srcdir)/gconf/libgconf-client.la

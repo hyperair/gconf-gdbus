@@ -8,8 +8,6 @@ AM_INIT_AUTOMAKE(GConf, 0.1)
 
 AM_MAINTAINER_MODE
 
-AM_ACLOCAL_INCLUDE(macros)
-
 AC_PROG_CC
 AC_PROG_CXX
 AC_ISC_POSIX
@@ -45,7 +43,16 @@ AC_SUBST(GCONF_AGE)
 
 AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib not found),gmodule)
 
-GNOME_INIT
+AC_PATH_PROG(GNOME_CONFIG,gnome-config,no)
+if test x$GNOME_CONFIG != xno; then
+  GNOME_LIBS=`$GNOME_CONFIG --libs gnomeui gnorba`
+  GNOME_CFLAGS=`$GNOME_CONFIG --cflags gnomeui gnorba`
+fi
+
+AC_SUBST(GNOME_LIBS)
+AC_SUBST(GNOME_CFLAGS)
+
+AM_CONDITIONAL(GNOME, test x$GNOME_CONFIG != xno)
 
 AC_PATH_PROG(XML_CONFIG,xml-config,no)
 if test x$XML_CONFIG = xno; then

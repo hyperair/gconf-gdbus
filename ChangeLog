@@ -1,5 +1,30 @@
 1999-09-19  Havoc Pennington  <hp@pobox.com>
 
+	* NEWS, README: put something in here
+
+	* Makefile.am: conditionally include gconf-editor if we have 
+	GNOME
+
+	* autogen.sh: make it more like "macros" autogen.sh
+	
+	* configure.in: manually check for GNOME instead of using
+	"macros"
+	
+	* macros, intl: remove these subdirs, autogen.sh now
+	generates intl
+
+	* gconf/gconf.c: fix array size for strerror messages
+
+	* gconf-editor/Makefile.am: use new GNOME variables
+
+	* gconf-editor/gconf-editor.c: use new g_conf_init() 
+	signature
+
+	* gconf-editor/menus.h, gconf-editor/menus.c: These 
+	hadn't been added
+	
+1999-09-19  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf.h: Add G_CONF_OVERRIDDEN error if you try to 
 	set a value which will have no effect due to a read-only
 	setting earlier in the path.
