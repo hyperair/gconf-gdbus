@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-08-19 16:51-0400\n"
-"PO-Revision-Date: 2000-07-11 11:35+01:00\n"
+"POT-Creation-Date: 2000-06-01 19:42-0400\n"
+"PO-Revision-Date: 2000-08-18 11:35+01:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -137,9 +137,9 @@ msgstr "Kunne ikke lukke filen `%s': %s"
 
 #. There was an error
 #: backends/xml-entry.c:162
-#, fuzzy, c-format
+#, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr "Ignorerer XML node `%s': %s"
+msgstr "Ignorerer XML-node med navn `%s': %s"
 
 #: backends/xml-entry.c:213 gconf/gconf-internals.c:2159
 #, c-format
@@ -155,9 +155,9 @@ msgstr "ignorerer skemanavn `%s', ugyldig: %s"
 #. * we improperly log an error here
 #.
 #: backends/xml-entry.c:386
-#, fuzzy, c-format
+#, c-format
 msgid "Ignoring XML node `%s', except for possible schema name: %s"
-msgstr "Ignorerer XML node `%s': %s"
+msgstr "Ignorerer XML-node `%s', bortset fra mulig skema navn:: %s"
 
 #: backends/xml-entry.c:713
 msgid "found <local_schema> with no locale setting"
@@ -554,44 +554,44 @@ msgid "Didn't understand `%s' (expected true or false)"
 msgstr "Forstod ikke `%s' (forventede sand eller falsk)"
 
 #: gconf/gconf-value.c:228
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
-msgstr "Forstod ikke `%s' (forventede sand eller falsk)"
+msgstr "Forstod ikke `%s' (listen skal starte med en '[')"
 
 #: gconf/gconf-value.c:241
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (list must end with a ']')"
-msgstr "Forstod ikke `%s' (forventede heltal)"
+msgstr "Forstod ikke `%s' (listen skal slutte med en ']')"
 
 #: gconf/gconf-value.c:292
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
-msgstr "Forstod ikke `%s' (forventede heltal)"
+msgstr "Forstod ikke `%s' (ekstra \"unescaped\" ']' fundet i listen)"
 
 #: gconf/gconf-value.c:323 gconf/gconf-value.c:476
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
-msgstr "Forstod ikke `%s' (forventede heltal)"
+msgstr "Forstod ikke `%s' (ekstra efterfølgende tegn)"
 
 #: gconf/gconf-value.c:362
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
-msgstr "Forstod ikke `%s' (forventede sand eller falsk)"
+msgstr "Forstod ikke `%s' (par skal starte med en '(')"
 
 #: gconf/gconf-value.c:375
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
-msgstr "Forstod ikke `%s' (forventede heltal)"
+msgstr "Forstod ikke `%s' (par skal slutte med en ')')"
 
 #: gconf/gconf-value.c:405 gconf/gconf-value.c:491
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
-msgstr "Forstod ikke `%s' (forventet flydendetal)"
+msgstr "Forstod ikke `%s' (galt antal elementer)"
 
 #: gconf/gconf-value.c:445
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
-msgstr "Forstod ikke `%s' (forventede heltal)"
+msgstr "Forstod ikke `%s' (ekstra \"unescaped\" ')' fundet inde i par)"
 
 #: gconf/gconf.c:69
 #, c-format
@@ -929,21 +929,19 @@ msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
-"Specificér typen af værdien som sættes, eller typen af værdien, et skema "
+"Specificér typen af værdien som sættes, eller typen af værdien som et skema "
 "beskriver. Unikke forkortelser er OK."
 
 #: gconf/gconftool.c:186
-#, fuzzy
 msgid "int|bool|float|string|list|pair"
-msgstr "heltal|boolsk|flydende|streng"
+msgstr "int|bool|float|string|liste|par"
 
 #: gconf/gconftool.c:194
-#, fuzzy
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Specificér typen af værdien som sættes, eller typen af værdien, et skema "
+"Specificér type listeværdi som sættes, eller typen for værdien som et skema "
 "beskriver. Unikke forkortelser er OK."
 
 #: gconf/gconftool.c:195 gconf/gconftool.c:204 gconf/gconftool.c:213
@@ -951,22 +949,20 @@ msgid "int|bool|float|string"
 msgstr "heltal|boolsk|flydende|streng"
 
 #: gconf/gconftool.c:203
-#, fuzzy
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Specificér typen af værdien som sættes, eller typen af værdien, et skema "
+"Specificér car-type værdi som sættes, eller typen for værdien som et skema "
 "beskriver. Unikke forkortelser er OK."
 
 #: gconf/gconftool.c:212
-#, fuzzy
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Specificér typen af værdien som sættes, eller typen af værdien, et skema "
-"beskriver. Unikke forkortelser er OK."
+"Specificér type værdi for cdr-par som sættes, eller typen for værdien som et "
+"skema beskriver. Unikke forkortelser er OK."
 
 #: gconf/gconftool.c:221
 msgid "Specify a short half-line description to go in a schema."
@@ -1183,19 +1179,19 @@ msgid "Type: %s\n"
 msgstr "Type: %s\n"
 
 #: gconf/gconftool.c:898
-#, fuzzy, c-format
+#, c-format
 msgid "List Type: %s\n"
-msgstr "Type: %s\n"
+msgstr "Listetype: %s\n"
 
 #: gconf/gconftool.c:899
-#, fuzzy, c-format
+#, c-format
 msgid "Car Type: %s\n"
-msgstr "Type: %s\n"
+msgstr "Car-type: %s\n"
 
 #: gconf/gconftool.c:900
-#, fuzzy, c-format
+#, c-format
 msgid "Cdr Type: %s\n"
-msgstr "Type: %s\n"
+msgstr "Cdr-type: %s\n"
 
 #: gconf/gconftool.c:901
 #, c-format
@@ -1242,16 +1238,16 @@ msgstr "Ingen værdi sat for nøgle: `%s'\n"
 
 #: gconf/gconftool.c:1031
 msgid "Cannot set schema as value\n"
-msgstr ""
+msgstr "Kan ikke sætte skema som værdi\n"
 
 #: gconf/gconftool.c:1041
 msgid "When setting a list you must specify a primitive list-type\n"
-msgstr ""
+msgstr "Når en liste sættes skal du angive en primitiv liste-type\n"
 
 #: gconf/gconftool.c:1055
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr ""
+msgstr "Når et par sættes skal du angive en primitiv car-type og cdr-type\n"
 
 #: gconf/gconftool.c:1070
 #, c-format
@@ -1274,15 +1270,17 @@ msgstr "Du skal angive nøgle (skemanavn) som eneste argument\n"
 
 #: gconf/gconftool.c:1161
 msgid "List type must be a primitive type: string, int, float or bool\n"
-msgstr ""
+msgstr "Listetype skal være en primitiv type: string, int, float eller bool\n"
 
 #: gconf/gconftool.c:1181
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
+"Parrets car-type skal være en primitiv type: string, int, float eller bool\n"
 
 #: gconf/gconftool.c:1201
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
+"Parrets cdr-type skal være en primitiv type: string, int, float eller bool\n"
 
 #: gconf/gconftool.c:1245
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
@@ -1316,9 +1314,9 @@ msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "ADVARSEL: ugyldig eller manglende type for skema (%s)\n"
 
 #: gconf/gconftool.c:1378
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
-msgstr "ADVARSEL: ugyldig eller manglende type for skema (%s)\n"
+msgstr "ADVARSEL: ugyldig eller manglende list_type for skema (%s)\n"
 
 #: gconf/gconftool.c:1389 gconf/gconftool.c:1419 gconf/gconftool.c:1448
 #, c-format
@@ -1326,14 +1324,13 @@ msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "ADVARSEL: Kunne ikke fortolke standardværdi `%s' for skema (%s)\n"
 
 #: gconf/gconftool.c:1407
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
-msgstr "ADVARSEL: ugyldig eller manglende type for skema (%s)\n"
+msgstr "ADVARSEL: ugyldig eller manglende car_type for skema (%s)\n"
 
 #: gconf/gconftool.c:1432
-#, fuzzy
 msgid "WARNING: You cannot set a default value for a schema\n"
-msgstr "ADVARSEL: Kunne ikke fortolke standardværdi `%s' for skema (%s)\n"
+msgstr "ADVARSEL: Du kan ikke sætte en standardværdi for et skema\n"
 
 #: gconf/gconftool.c:1461
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
@@ -1350,16 +1347,19 @@ msgstr "ADVARSEL: kunne ikke tolke typenavn '%s'\n"
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"ADVARSEL: list_type kan kun være int, float, string eller bool og ikke `%s'\n"
 
 #: gconf/gconftool.c:1547
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"ADVARSEL: car_type kan kun være int, float, string eller bool og ikke `%s'\n"
 
 #: gconf/gconftool.c:1568
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
+"ADVARSEL: cdr_type kan kun være int, float, string eller bool og ikke `%s'\n"
 
 #: gconf/gconftool.c:1595
 msgid "WARNING: empty <applyto> node"
