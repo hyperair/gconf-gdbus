@@ -63,6 +63,15 @@
   <!-- Introduction to GConf -->
   <chapter>
     <title>Introduction to GConf</title>
+
+    <para>
+      This chapter introduces GConf, including the basic terms and
+      concepts. After reading it, if you're a GNOME programmer looking
+      to dive in quickly, you might skip to <xref
+      linkend="gconfclient-example">. If you want to have
+      comprehensive knowledge of GConf, you might want to read the
+      whole manual.
+    </para>
     
     <!-- Motivation -->
     <sect1>
@@ -579,44 +588,16 @@
       <title>Initialization</title>
       
       <para>
-        The GConf client library must be initialized before use.  Initialization
-        establishes a connection to the ORB (because CORBA is currently used to
-        implement GConf, though clients never have to see this) and sets up some
-        global data structures. The only argument to
-        <function>gconf_init()</function> is a location to place any error that
-        occurs. <function>gconf_init()</function> returns <symbol>TRUE</symbol>
-        on success.
+        The GConf client library must be initialized before use.
+        Initialization establishes a connection to the ORB (because
+        CORBA is currently used to implement GConf, though clients
+        never have to see this) and sets up some global data
+        structures. The arguments to <function>gconf_init()</function>
+        are an argc/argv pair to check for CORBA-related command line
+        options, and a location to place any error that
+        occurs. <function>gconf_init()</function> returns
+        <symbol>TRUE</symbol> on success.
       </para>
-
-      <para>
-        Before initializing GConf, you can specify the ORB object reference to
-        use when connecting to the configuration database; call
-        <function>gconf_set_orb()</function>. You would normally use this if
-        you are writing a GNOME application, and you want to use
-        <function>gnome_CORBA_init()</function> to obtain your ORB reference. If
-        you specify an ORB reference you must also initialize all CORBA-related
-        stuff, such as the event loop integration and authentication. If you
-        don't call <function>gconf_set_orb()</function>, GConf will set up
-        these things for you. Note that GConf's default CORBA setup requires the
-        glib main loop to be running, which happens automatically in GTK+
-        programs.
-      </para>
-
-      <warning>
-        <title>Using GConf with GNOME</title>
-        <para>
-          If you use <function>gnome_CORBA_init()</function> to get your
-          ORB reference, CORBA connections to your application are
-          authenticated via <filename>libgnorba</filename>. If you let
-          GConf set up the ORB, connections are authenticated in a
-          GConf-specific way. Your authentication mechanism must match
-          the one used by the <application>gconfd</application> per-user
-          configuration daemon, which is never the GNOME way for
-          now. This will obviously change before GConf goes into
-          production in a GNOME environment, but it works great 
-          for non-GNOME apps right now. :-)
-        </para>
-      </warning>
 
       <para>
         You can check whether GConf is initialized with
@@ -640,6 +621,15 @@
         applications will not use this function&mdash;it's intended
         for system configuration tools and the like.        
       </para>
+
+      <note>
+      <para>
+        In a GNOME context, you should use
+        <structname>GConfClient</structname> instead of
+        <structname>GConfEngine</structname>.
+      </para>
+      </note>
+
       <para>
         <funcsynopsis>
           <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
@@ -856,12 +846,7 @@ print_value(GConfValue* value)
           There are also convenience functions that automatically convert
           <structname>GConfValue</structname> to primitive C types. These include
           <function>gconf_get_int()</function>,
-          <function>gconf_get_bool()</function>, and so on. There are no
-          convenience functions for the container types (lists and pairs) because
-          too many permutations and combinations are possible
-          (<function>gconf_get_list_of_int()</function>,
-          <function>gconf_get_pair_of_int_string()</function>,
-          <function>gconf_get_pair_of_string_int()</function>, ...).
+          <function>gconf_get_bool()</function>, and so on.
         </para>
 
       </sect2>
@@ -881,8 +866,35 @@ print_value(GConfValue* value)
     <title><structname>GtkObject</structname> Convenience Wrapper</title>
     
     <para>
-      
+      <structname>GConfClient</structname> is a
+      <structname>GtkObject</structname> subclass that replaces
+      <structname>GConfEngine</structname> in GNOME programs.
     </para>
+
+    <sect1 id="gconfclient-example">
+      <title>A Complete Example</title>
+      
+      
+
+    </sect1>
+
+  </chapter>
+
+  <chapter id="conventions">
+    <title>GConf Conventions</title>
+
+    <para>
+      This chapter describes <emphasis>conventions</emphasis> that
+      GConf clients should obey, though the library does not enforce
+      them.
+    </para>
+
+    <sect1>
+      <title>Namespace division</title>
+
+      
+
+    </sect1>
 
   </chapter>
 

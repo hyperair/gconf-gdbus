@@ -1,3 +1,19 @@
+1999-11-23  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/Makefile.am (libgconf_la_LDFLAGS): split off LIBADD
+
+	* wrappers/gtk/Makefile.am (libgconf_gtk_la_LIBADD): set shared
+	lib version
+	(libgconf_gtk_la_LDFLAGS): split LIBADD and LDFLAGS maybe properly.
+
+	* configure.in: remove gnorba cflags/libs
+
+	* gconf/Makefile.am (install-data-local): Create the
+	$(sysconfdir)/gconf directory.
+
+	* wrappers/Makefile.am: For now, always disable Guile wrapper
+	build.
+
 1999-11-22  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-backend.c (resolve_address): Check whether the XML

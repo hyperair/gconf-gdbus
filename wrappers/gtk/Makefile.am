@@ -10,10 +10,13 @@ gconfinclude_HEADERS =     \
 libgconf_gtk_la_SOURCES = \
 	gconf-client.c
 
-libgconf_gtk_la_LIBADD = $(ORBIT_LIBS) $(GNOME_LIBS)
+libgconf_gtk_la_LDFLAGS=-version-info $(GCONFGTK_CURRENT):$(GCONFGTK_REVISION):$(GCONFGTK_AGE)
+
+libgconf_gtk_la_LIBADD=$(OAF_LIBS) $(GNOME_LIBS)
 
 noinst_PROGRAMS= testgconfclient
 
 testgconfclient_SOURCES = testgconfclient.c
 
 testgconfclient_LDADD = $(ORBIT_LIBS) $(GNOME_LIBS) $(top_builddir)/gconf/libgconf.la $(top_builddir)/wrappers/gtk/libgconf-gtk.la
+

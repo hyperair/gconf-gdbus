@@ -21,8 +21,9 @@
 #include "gconf-client.h"
 
 #include <gnome.h>
-#include <libgnorba/gnorba.h>
 
+/* In real life these would be defined by configure.in, not in this
+   file. */
 #define PACKAGE "testgconfclient"
 #define GNOMELOCALEDIR "/blah"
 #define VERSION "0.0.0.0.0.0.1alpha"
@@ -32,14 +33,11 @@ static void create_controls(GConfClient* client);
 int
 main(int argc, char** argv)
 {
-  CORBA_Environment ev;
   GConfError* error = NULL;
   GConfClient* client = NULL;
   
   bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
   textdomain(PACKAGE);
-
-  CORBA_exception_init(&ev);
 
   gnome_init(PACKAGE, VERSION, argc, argv);
 
@@ -54,7 +52,7 @@ main(int argc, char** argv)
 
   client = gconf_client_new();
 
-  gconf_client_add_dir(client, "/testgconfclient", GCONF_CLIENT_PRELOAD_NONE, NULL);
+  gconf_client_add_dir(client, "/apps/gnome/testgconfclient", GCONF_CLIENT_PRELOAD_NONE, NULL);
 
   /* The main() function takes over the floating object */
   gtk_object_ref(GTK_OBJECT(client));
@@ -200,13 +198,13 @@ create_controls(GConfClient* client)
   
   gtk_box_pack_end(GTK_BOX(vbox), quit_button, FALSE, FALSE, 0);
   
-  entry = entry_attached_to(client, "/testgconfclient/blah");
+  entry = entry_attached_to(client, "/apps/gnome/testgconfclient/blah");
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
 
-  entry = entry_attached_to(client, "/testgconfclient/foo");
+  entry = entry_attached_to(client, "/apps/gnome/testgconfclient/foo");
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
 
-  entry = entry_attached_to(client, "/testgconfclient/bar");
+  entry = entry_attached_to(client, "/apps/gnome/testgconfclient/bar");
   gtk_box_pack_start(GTK_BOX(vbox), entry, FALSE, FALSE, 0);
   
   gtk_widget_show_all(win);
