@@ -92,7 +92,7 @@ libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
-EXTRA_DIST=GConf.idl gconfd.oafinfo.in default.path.in gconfmarshal.list
+EXTRA_DIST=GConf.idl gconfd.server.in default.path.in gconfmarshal.list
 
 install-exec-local:
 	(cd $(DESTDIR)$(bindir) && $(RM) gconftool && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
@@ -101,7 +101,7 @@ install-data-local:
 	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)
 	$(INSTALL_DATA) default.path $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)/path.example
 	-mkdir -p $(DESTDIR)$(datadir)/oaf
-	$(INSTALL_DATA) gconfd.oafinfo $(DESTDIR)$(datadir)/oaf/gconfd-$(MAJOR_VERSION).oafinfo
+	$(INSTALL_DATA) gconfd.server $(DESTDIR)$(datadir)/bonobo-activation/gconfd-$(MAJOR_VERSION).server
 
 gconfmarshal.h: @REBUILD@ stamp-gconfmarshal.h
 	@true
