@@ -159,6 +159,8 @@ BDB_CFLAGS=
 
 AC_CHECK_LIB(db-3, db_env_create, BDB_LIBS=-ldb-3)
 
+AC_CHECK_HEADERS(db3/db.h)
+
 if test "x$BDB_LIBS" = x; then
   AC_MSG_WARN(No db3 library found. Not building bdb backend.)
 fi

@@ -1,3 +1,13 @@
+2001-06-01  Peter Williams  <peterw@ximian.com>
+
+	* configure.in: Check if DB3 headers are in db3/db.h as well.
+
+	* acconfig.h: Add HAVE_DB3_DB_H
+
+	* backends/bdb.c: #include config.h to get HAVE_DB3_DB_H
+
+	* backends/bdb.h: Include the proper db.h
+
 2001-05-11  Tomas O Connor  <tomas.oconnor@ireland.sun.com>
 
 	* gconf/gconf-internals.h, gconf/gconf-value.h: move

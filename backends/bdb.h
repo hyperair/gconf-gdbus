@@ -116,7 +116,11 @@
 
 #ifndef BDB_H
 
+#ifdef HAVE_DB3_DB_H
+#include <db3/db.h>
+#else
 #include <db.h>
+#endif
 #include <glib.h>
 #include <gconf/gconf.h>
 

@@ -29,6 +29,7 @@
 #include <gconf/gconf.h>
 #include <gconf/gconf-internals.h>
 
+#include "config.h"
 #include "bdb.h"
 #include "dir-utils.h"
 #include "val-encode.h"
