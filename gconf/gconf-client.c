@@ -776,7 +776,6 @@ gconf_client_set_error_handling(GConfClient* client,
 static gboolean
 clear_cache_foreach (char* key, GConfEntry* entry, GConfClient* client)
 {
-  g_free (key);
   gconf_entry_free (entry);
 
   return TRUE;
