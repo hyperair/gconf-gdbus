@@ -35,7 +35,7 @@ maintainer-clean-local: clean
 	rm -rf sgml html $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt 
 
 install-data-local:
-	$(mkinstalldirs) $(TARGET_DIR) ## seems ok
+	$(mkinstalldirs) $(DESTDIR)$(TARGET_DIR) ## seems ok
 	-$(INSTALL_DATA) $(srcdir)/html/*.html $(DESTDIR)$(TARGET_DIR)
 	-$(INSTALL_DATA) $(srcdir)/html/index.sgml $(DESTDIR)$(TARGET_DIR)
 	-gtkdoc-fixxref --module=$(DOC_MODULE) --html-dir=$(DESTDIR)$(HTML_DIR)
