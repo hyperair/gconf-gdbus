@@ -63,6 +63,28 @@
 #define N_(x) x
 #endif
 
+/* This makes hash table safer when debugging */
+#if 0
+#define safe_g_hash_table_insert g_hash_table_insert
+#else
+static void
+safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
+{
+  gpointer oldkey = NULL, oldval = NULL;
+
+  if (g_hash_table_lookup_extended(ht, key, &oldkey, &oldval))
+    {
+      g_warning("Hash key `%s' is already in the table!",
+                (gchar*)key);
+      return;
+    }
+  else
+    {
+      g_hash_table_insert(ht, key, value);
+    }
+}
+#endif
+
 /*
  * Declarations
  */
@@ -70,53 +92,53 @@
 static void g_conf_main(void);
 static void g_conf_main_quit(void);
 
-static GConfSources* sources = NULL;
-
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
 */
 static void fast_cleanup(void);
 
-typedef struct _Listener Listener;
-
-struct _Listener {
-  ConfigListener obj; /* The CORBA object reference */
-  guint cnxn;
-};
-
-static Listener* listener_new(const ConfigListener obj);
-static void      listener_destroy(Listener* l);
-
-/* Data structure to store the listeners */
 typedef struct _LTable LTable;
+typedef struct _GConfContext GConfContext;
 
-struct _LTable {
-  GNode* tree; /* Represents the config "filesystem" namespace. 
-                *  Kept sorted. 
-                */
-  GPtrArray* listeners; /* Listeners are also kept in a flat array here, indexed by connection number */
+struct _GConfContext {
+  struct _LTable* ltable;
+  GConfSources* sources;
+  gchar* saved_address; /* if sources and ltable are NULL, then this is a
+                           "dormant" context removed from the cache
+                           and has to be re-instated.
+                        */
 };
 
-typedef struct _LTableEntry LTableEntry;
+static GConfContext* context_new(GConfSources* sources);
+static void          context_destroy(GConfContext* ctx);
+static CORBA_unsigned_long context_add_listener(GConfContext* ctx,
+                                                ConfigListener who,
+                                                const gchar* where);
+static void          context_remove_listener(GConfContext* ctx,
+                                             CORBA_unsigned_long cnxn);
 
-struct _LTableEntry {
-  gchar* name; /* The name of this "directory" */
-  GList* listeners; /* Each listener listening *exactly* here. You probably 
-                        want to notify all listeners *below* this node as well. 
-                     */
-};
+static GConfValue*   context_lookup_value(GConfContext* ctx,
+                                          const gchar* key);
 
-static LTable* ltable = NULL;
+static void          context_set(GConfContext* ctx, const gchar* key,
+                                 GConfValue* value, ConfigValue* cvalue);
+static void          context_unset(GConfContext* ctx, const gchar* key);
+static void          context_remove_dir(GConfContext* ctx, const gchar* dir);
+static GSList*       context_all_entries(GConfContext* ctx, const gchar* dir);
+static GSList*       context_all_dirs(GConfContext* ctx, const gchar* dir);
+static void          context_set_schema(GConfContext* ctx, const gchar* key,
+                                        const gchar* schema_key);
+static void          context_sync(GConfContext* ctx);
+static void          context_hibernate(GConfContext* ctx);
+static void          context_awaken(GConfContext* ctx);
 
-static LTable* ltable_new(void);
-static void    ltable_insert(LTable* ltable, const gchar* where, Listener* listener);
-static void    ltable_remove(LTable* ltable, guint cnxn);
-static void    ltable_destroy(LTable* ltable);
-static void    ltable_notify_listeners(LTable* ltable, const gchar* key, ConfigValue* value);
-static void    ltable_spew(LTable* ltable);
-
-static LTableEntry* ltable_entry_new(const gchar* name);
-static void         ltable_entry_destroy(LTableEntry* entry);
+static void                 init_contexts();
+static void                 shutdown_contexts(void);
+static void                 set_default_context(GConfContext* ctx);
+static ConfigServer_Context register_context(GConfContext* ctx);
+static void                 unregister_context(ConfigServer_Context ctx);
+static GConfContext*        lookup_context(ConfigServer_Context ctx);
+static ConfigServer_Context lookup_context_id_from_address(const gchar* address);
 
 /* 
  * CORBA goo
@@ -124,47 +146,69 @@ static void         ltable_entry_destroy(LTableEntry* entry);
 
 static ConfigServer server = CORBA_OBJECT_NIL;
 
+static ConfigServer_Context
+gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
+                   CORBA_Environment* ev);
+
 static CORBA_unsigned_long 
-gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where, 
+gconfd_add_listener(PortableServer_Servant servant, ConfigServer_Context ctx,
+                    CORBA_char * where, 
                     ConfigListener who, CORBA_Environment *ev);
 static void 
 gconfd_remove_listener(PortableServer_Servant servant,
+                       ConfigServer_Context ctx,
                        CORBA_unsigned_long cnxn,
                        CORBA_Environment *ev);
 static ConfigValue* 
-gconfd_lookup(PortableServer_Servant servant, CORBA_char * key, 
+gconfd_lookup(PortableServer_Servant servant, ConfigServer_Context ctx,
+              CORBA_char * key, 
               CORBA_Environment *ev);
 static void
-gconfd_set(PortableServer_Servant servant, CORBA_char * key, 
+gconfd_set(PortableServer_Servant servant, ConfigServer_Context ctx,
+           CORBA_char * key, 
            ConfigValue* value, CORBA_Environment *ev);
 
 static void 
-gconfd_unset(PortableServer_Servant servant, CORBA_char * key, 
+gconfd_unset(PortableServer_Servant servant,
+             ConfigServer_Context ctx,
+             CORBA_char * key, 
              CORBA_Environment *ev);
 
 static void 
-gconfd_remove_dir(PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_remove_dir(PortableServer_Servant servant,
+                  ConfigServer_Context ctx,
+                  CORBA_char * dir, 
                   CORBA_Environment *ev);
 
 static void 
-gconfd_nuke_dir(PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_nuke_dir(PortableServer_Servant servant,
+                ConfigServer_Context ctx,
+                CORBA_char * dir, 
                 CORBA_Environment *ev);
 
 static void 
-gconfd_all_entries (PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_all_entries (PortableServer_Servant servant,
+                    ConfigServer_Context ctx,
+                    CORBA_char * dir, 
                     ConfigServer_KeyList ** keys, 
                     ConfigServer_ValueList ** values, CORBA_Environment * ev);
 
 static void 
-gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_all_dirs (PortableServer_Servant servant,
+                 ConfigServer_Context ctx,
+                 CORBA_char * dir, 
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev);
 
 static void 
-gconfd_set_schema (PortableServer_Servant servant, CORBA_char * key,
+gconfd_set_schema (PortableServer_Servant servant,
+                   ConfigServer_Context ctx,
+                   CORBA_char * key,
                    CORBA_char* schema_key, CORBA_Environment * ev);
 
 static void 
-gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev);
+gconfd_sync(PortableServer_Servant servant,
+            ConfigServer_Context ctx,
+            CORBA_Environment *ev);
 
 static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
@@ -179,7 +223,8 @@ static PortableServer_ServantBase__epv base_epv = {
 };
 
 static POA_ConfigServer__epv server_epv = { 
-  NULL, 
+  NULL,
+  gconfd_get_context,
   gconfd_add_listener, 
   gconfd_remove_listener, 
   gconfd_lookup, 
@@ -198,44 +243,61 @@ static POA_ConfigServer__epv server_epv = {
 static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
 static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
+static ConfigServer_Context
+gconfd_get_context(PortableServer_Servant servant, CORBA_char * address,
+                   CORBA_Environment* ev)
+{
+
+  return ConfigServer_invalid_context;
+}
 
 static CORBA_unsigned_long
-gconfd_add_listener(PortableServer_Servant servant, CORBA_char * where, 
+gconfd_add_listener(PortableServer_Servant servant,
+                    ConfigServer_Context ctx,
+                    CORBA_char * where, 
                     const ConfigListener who, CORBA_Environment *ev)
 {
-  Listener* l;
+  GConfContext* gcc;
 
-  l = listener_new(who);
+  gcc = lookup_context(ctx);
 
-  ltable_insert(ltable, where, l);
-
-  syslog(LOG_DEBUG, "Added listener %u", (guint)l->cnxn);
-
-  return l->cnxn;
+  if (gcc != NULL)
+    {
+      return context_add_listener(gcc, who, where);
+    }
+  else
+    {
+      return 0;
+    }
 }
 
 static void 
-gconfd_remove_listener(PortableServer_Servant servant, CORBA_unsigned_long cnxn, CORBA_Environment *ev)
+gconfd_remove_listener(PortableServer_Servant servant,
+                       ConfigServer_Context ctx,
+                       CORBA_unsigned_long cnxn, CORBA_Environment *ev)
 {
-  syslog(LOG_DEBUG, "Removing listener %u", (guint)cnxn);
-  ltable_remove(ltable, cnxn);
+  GConfContext* gcc;
+  
+  gcc = lookup_context(ctx);
+
+  if (gcc != NULL)
+    context_remove_listener(gcc, cnxn);
 }
 
 static ConfigValue*
-gconfd_lookup(PortableServer_Servant servant, CORBA_char * key, 
+gconfd_lookup(PortableServer_Servant servant,
+              ConfigServer_Context ctx,
+              CORBA_char * key, 
               CORBA_Environment *ev)
 {
   GConfValue* val;
-      
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received lookup before initializing sources list; bug?");
-      return invalid_corba_value();
-    }
-
+  GConfContext* gcc;
+  
+  gcc = lookup_context(ctx);
+  
   g_conf_clear_error();
 
-  val = g_conf_sources_query_value(sources, key);
+  val = context_lookup_value(gcc, key);
 
   if (val != NULL)
     {
@@ -257,18 +319,15 @@ gconfd_lookup(PortableServer_Servant servant, CORBA_char * key,
 }
 
 static void
-gconfd_set(PortableServer_Servant servant, CORBA_char * key, 
+gconfd_set(PortableServer_Servant servant,
+           ConfigServer_Context ctx,
+           CORBA_char * key, 
            ConfigValue* value, CORBA_Environment *ev)
 {
   gchar* str;
   GConfValue* val;
-      
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received set request before initializing sources list; bug?");
-      return;
-    } 
-
+  GConfContext* gcc;
+  
   if (value->_d == InvalidVal)
     {
       syslog(LOG_ERR, "Received invalid value in set request");
@@ -283,95 +342,53 @@ gconfd_set(PortableServer_Servant servant, CORBA_char * key,
 
   g_free(str);
 
-  g_conf_clear_error();
-
-  g_conf_sources_set_value(sources, key, val);
-
-  if (g_conf_errno() != G_CONF_SUCCESS)
-    {
-      syslog(LOG_ERR, _("Error setting value for `%s': %s"),
-             key, g_conf_error());
-    }
-
-  ltable_notify_listeners(ltable, key, value);
+  gcc = lookup_context(ctx);
+  
+  context_set(gcc, key, val, value);
 }
 
 static void 
-gconfd_unset(PortableServer_Servant servant, CORBA_char * key, 
+gconfd_unset(PortableServer_Servant servant,
+             ConfigServer_Context ctx,
+             CORBA_char * key, 
              CORBA_Environment *ev)
 {
-  ConfigValue* val;
+  GConfContext* gcc;
 
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received unset request before initializing sources list; bug?");
-      return;
-    } 
-  
-  syslog(LOG_DEBUG, "Received request to unset key `%s'", key);
+  gcc = lookup_context(ctx);
 
-  g_conf_clear_error();
-
-  g_conf_sources_unset_value(sources, key);
-
-  if (g_conf_errno() != G_CONF_SUCCESS)
-    {
-      syslog(LOG_ERR, _("Error unsetting `%s': %s"),
-             key, g_conf_error());
-    }
-
-  val = invalid_corba_value();
-
-  ltable_notify_listeners(ltable, key, val);
-
-  CORBA_free(val);
+  context_unset(gcc, key);
 }
 
 static void 
-gconfd_remove_dir(PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_remove_dir(PortableServer_Servant servant,
+                  ConfigServer_Context ctx,
+                  CORBA_char * dir, 
                   CORBA_Environment *ev)
-{
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received rmdir request before initializing sources list; bug?");
-      return;
-    } 
-  
-  syslog(LOG_DEBUG, "Received request to remove dir `%s'", dir);
+{  
+  GConfContext* gcc;
 
-  g_conf_clear_error();
-  
-  g_conf_sources_remove_dir(sources, dir);
+  gcc = lookup_context(ctx);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
-    {
-      syslog(LOG_ERR, _("Error removing dir `%s': %s"),
-             dir, g_conf_error());
-    }
+  context_remove_dir(gcc, dir);  
 }
 
 static void 
-gconfd_nuke_dir(PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_nuke_dir(PortableServer_Servant servant,
+                ConfigServer_Context ctx,
+                CORBA_char * dir, 
                 CORBA_Environment *ev)
-{
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received rm -rf request before initializing sources list; bug?");
-      return;
-    } 
-  
+{  
   syslog(LOG_DEBUG, "Received request to nuke dir `%s'", dir);
 
   syslog(LOG_ERR, "Nuke dir isn't implemented");
 
   return;
-
-  g_conf_sources_nuke_dir(sources, dir);
-
 }
 
 static void 
-gconfd_all_entries (PortableServer_Servant servant, 
+gconfd_all_entries (PortableServer_Servant servant,
+                    ConfigServer_Context ctx,
                     CORBA_char * dir, 
                     ConfigServer_KeyList ** keys, 
                     ConfigServer_ValueList ** values,
@@ -381,23 +398,15 @@ gconfd_all_entries (PortableServer_Servant servant,
   guint n;
   GSList* tmp;
   guint i;
+  GConfContext* gcc;
 
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received pair listing request before initializing sources list; bug?");
-      return;
-    } 
+  gcc = lookup_context(ctx);
 
-  g_conf_clear_error();
-
-  pairs = g_conf_sources_all_entries(sources, dir);
-
-  if (g_conf_errno() != G_CONF_SUCCESS)
-    {
-      syslog(LOG_ERR, _("Failed to get all entries in `%s': %s"),
-             dir, g_conf_error());
-    }
-
+  if (gcc != NULL)
+    pairs = context_all_entries(gcc, dir);
+  else
+    pairs = NULL;
+  
   n = g_slist_length(pairs);
 
   *keys= ConfigServer_KeyList__alloc();
@@ -436,32 +445,24 @@ gconfd_all_entries (PortableServer_Servant servant,
 }
 
 static void 
-gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir, 
+gconfd_all_dirs (PortableServer_Servant servant,
+                 ConfigServer_Context ctx,
+                 CORBA_char * dir, 
                  ConfigServer_KeyList ** keys, CORBA_Environment * ev)
 {
   GSList* subdirs;
   guint n;
   GSList* tmp;
   guint i;
+  GConfContext* gcc;
 
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received subdirs list request before initializing sources list; bug?");
-      return;
-    } 
+  gcc = lookup_context(ctx);
 
-  syslog(LOG_DEBUG, "Received request to list all subdirs in `%s'", dir);
-
-  g_conf_clear_error();
-
-  subdirs = g_conf_sources_all_dirs(sources, dir);
-
-  if (g_conf_errno() != G_CONF_SUCCESS)
-    {
-      syslog(LOG_ERR, _("Error listing dirs in `%s': %s"),
-             dir, g_conf_error());
-    }
-
+  if (gcc != NULL)
+    subdirs = context_all_dirs(gcc, dir);
+  else
+    subdirs = NULL;
+  
   n = g_slist_length(subdirs);
 
   *keys= ConfigServer_KeyList__alloc();
@@ -490,37 +491,28 @@ gconfd_all_dirs (PortableServer_Servant servant, CORBA_char * dir,
 }
 
 static void 
-gconfd_set_schema (PortableServer_Servant servant, CORBA_char * key,
+gconfd_set_schema (PortableServer_Servant servant,
+                   ConfigServer_Context ctx,
+                   CORBA_char * key,
                    CORBA_char* schema_key, CORBA_Environment * ev)
 {
-  g_conf_clear_error();
+  GConfContext* gcc;
 
-  g_conf_sources_set_schema(sources, key, schema_key);
+  gcc = lookup_context(ctx);
 
-  if (g_conf_errno() != G_CONF_SUCCESS)
-    {
-      syslog(LOG_ERR, _("Error setting schema for `%s': %s"),
-             key, g_conf_error());
-    }
+  context_set_schema(gcc, key, schema_key); 
 }
 
 static void 
-gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
+gconfd_sync(PortableServer_Servant servant,
+            ConfigServer_Context ctx,
+            CORBA_Environment *ev)
 {
-  syslog(LOG_DEBUG, "Received request to sync all config data");
+  GConfContext* gcc;
 
-  if (sources == NULL)
-    {
-      syslog(LOG_ERR, "Received sync request before initializing sources list; bug?");
-      return;
-    } 
+  gcc = lookup_context(ctx);
 
-  if (!g_conf_sources_sync_all(sources))
-    {
-      syslog(LOG_ERR, _("Failed to sync one or more sources: %s"), 
-             g_conf_error());
-      return;
-    }
+  context_sync(gcc); 
 }
 
 static CORBA_long
@@ -552,7 +544,8 @@ g_conf_server_load_sources(void)
   GList* tmp;
   gboolean have_writeable = FALSE;
   gchar* conffile;
-
+  GConfSources* sources = NULL;
+  
   conffile = g_strconcat(GCONF_SYSCONFDIR, "/gconf/path", NULL);
 
   addresses = g_conf_load_source_path(conffile);
@@ -605,6 +598,9 @@ g_conf_server_load_sources(void)
 
   if (!have_writeable)
     syslog(LOG_WARNING, "No writeable config sources successfully resolved, won't be able to save configuration changes");
+
+  /* Install the sources as the default context */
+  set_default_context(context_new(sources));
 }
 
 /* From Stevens */
@@ -851,7 +847,7 @@ main(int argc, char** argv)
       syslog(LOG_DEBUG, "Will notify launcher client on fd %d", launcher_fd);
     }
 
-  ltable = ltable_new();
+  init_contexts();
 
   orb = g_conf_get_orb();
 
@@ -907,8 +903,7 @@ main(int argc, char** argv)
 
   fast_cleanup();
 
-  ltable_destroy(ltable);
-  ltable = NULL;
+  shutdown_contexts();
 
   return 0;
 }
@@ -941,6 +936,480 @@ g_conf_main_quit(void)
   g_return_if_fail(main_loops != NULL);
 
   g_main_quit(main_loops->data);
+}
+
+/*
+ * Declarations for listener handling
+ */
+
+
+typedef struct _Listener Listener;
+
+struct _Listener {
+  ConfigListener obj; /* The CORBA object reference */
+  guint cnxn;
+};
+
+static Listener* listener_new(const ConfigListener obj);
+static void      listener_destroy(Listener* l);
+
+/* Data structure to store the listeners */
+
+struct _LTable {
+  GNode* tree; /* Represents the config "filesystem" namespace. 
+                *  Kept sorted. 
+                */
+  GPtrArray* listeners; /* Listeners are also kept in a flat array here, indexed by connection number */
+  guint active_listeners; /* count of "alive" listeners */  
+};
+
+typedef struct _LTableEntry LTableEntry;
+
+struct _LTableEntry {
+  gchar* name; /* The name of this "directory" */
+  GList* listeners; /* Each listener listening *exactly* here. You probably 
+                        want to notify all listeners *below* this node as well. 
+                     */
+};
+
+static LTable* ltable_new(void);
+static void    ltable_insert(LTable* ltable, const gchar* where, Listener* listener);
+static void    ltable_remove(LTable* ltable, guint cnxn);
+static void    ltable_destroy(LTable* ltable);
+static void    ltable_notify_listeners(LTable* ltable, const gchar* key, ConfigValue* value);
+static void    ltable_spew(LTable* ltable);
+
+static LTableEntry* ltable_entry_new(const gchar* name);
+static void         ltable_entry_destroy(LTableEntry* entry);
+
+/*
+ * Contexts
+ */
+
+static GConfContext*
+context_new(GConfSources* sources)
+{
+  GConfContext* ctx;
+
+  ctx = g_new0(GConfContext, 1);
+
+  ctx->ltable = ltable_new();
+
+  ctx->sources = sources;
+
+  return ctx;
+}
+
+static void
+context_destroy(GConfContext* ctx)
+{
+  if (ctx->ltable != NULL)
+    {
+      g_assert(ctx->sources != NULL);
+      g_assert(ctx->saved_address == NULL);
+      
+      ltable_destroy(ctx->ltable);
+      g_conf_sources_destroy(ctx->sources);
+    }
+  else
+    {
+      g_assert(ctx->saved_address != NULL);
+      
+      g_free(ctx->saved_address);
+    }
+      
+  g_free(ctx);
+}
+
+static void
+context_hibernate(GConfContext* ctx)
+{
+  g_return_if_fail(ctx->ltable != NULL);
+  g_return_if_fail(ctx->ltable->active_listeners == 0);
+  
+  ltable_destroy(ctx->ltable);
+  ctx->ltable = NULL;
+
+  ctx->saved_address = g_strdup(((GConfSource*)ctx->sources->sources->data)->address);
+  
+  g_conf_sources_destroy(ctx->sources);
+  ctx->sources = NULL;  
+}
+
+static void
+context_awaken(GConfContext* ctx)
+{
+  gchar* addresses[2];
+
+  g_return_if_fail(ctx->ltable == NULL);
+  g_return_if_fail(ctx->sources == NULL);
+  g_return_if_fail(ctx->saved_address != NULL);
+
+  addresses[0] = ctx->saved_address;
+  addresses[1] = NULL;
+
+  ctx->sources = g_conf_sources_new(addresses);
+
+  if (ctx->sources == NULL)
+    {
+      g_conf_set_error(G_CONF_BAD_ADDRESS,
+                       _("Couldn't re-resolve hibernating configuration source `%s'"), ctx->saved_address);
+      return;
+    }
+
+  ctx->ltable = ltable_new();
+
+  g_free(ctx->saved_address);
+
+  ctx->saved_address = NULL;
+}
+
+static CORBA_unsigned_long
+context_add_listener(GConfContext* ctx,
+                     ConfigListener who,
+                     const gchar* where)
+{
+  Listener* l;
+
+  l = listener_new(who);
+
+  ltable_insert(ctx->ltable, where, l);
+
+  syslog(LOG_DEBUG, "Added listener %u", (guint)l->cnxn);
+
+  return l->cnxn;  
+}
+
+static void
+context_remove_listener(GConfContext* ctx,
+                        CORBA_unsigned_long cnxn)
+{  
+  syslog(LOG_DEBUG, "Removing listener %u", (guint)cnxn);
+  ltable_remove(ctx->ltable, cnxn);
+}
+
+static GConfValue*
+context_lookup_value(GConfContext* ctx,
+                     const gchar* key)
+{
+  GConfValue* val;
+  
+  val = g_conf_sources_query_value(ctx->sources, key);
+
+  return val;
+}
+
+static void
+context_set(GConfContext* ctx,
+            const gchar* key,
+            GConfValue* val,
+            ConfigValue* value)
+{
+  g_conf_clear_error();
+  g_conf_sources_set_value(ctx->sources, key, val);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error setting value for `%s': %s"),
+             key, g_conf_error());
+    }
+
+  ltable_notify_listeners(ctx->ltable, key, value);
+}
+
+static void
+context_unset(GConfContext* ctx,
+              const gchar* key)
+{
+  ConfigValue* val;
+  
+  syslog(LOG_DEBUG, "Received request to unset key `%s'", key);
+
+  g_conf_clear_error();
+
+  g_conf_sources_unset_value(ctx->sources, key);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error unsetting `%s': %s"),
+             key, g_conf_error());
+    }
+
+  val = invalid_corba_value();
+
+  ltable_notify_listeners(ctx->ltable, key, val);
+
+  CORBA_free(val);
+}
+
+static void
+context_remove_dir(GConfContext* ctx,
+                   const gchar* dir)
+{
+  syslog(LOG_DEBUG, "Received request to remove dir `%s'", dir);
+
+  g_conf_clear_error();
+  
+  g_conf_sources_remove_dir(ctx->sources, dir);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error removing dir `%s': %s"),
+             dir, g_conf_error());
+    }
+}
+
+static GSList*
+context_all_entries(GConfContext* ctx, const gchar* dir)
+{
+  GSList* entries;
+  
+  g_conf_clear_error();
+  
+  entries = g_conf_sources_all_entries(ctx->sources, dir);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Failed to get all entries in `%s': %s"),
+             dir, g_conf_error());
+    }
+
+  return entries;
+}
+
+static GSList*
+context_all_dirs(GConfContext* ctx, const gchar* dir)
+{
+  GSList* subdirs;  
+  syslog(LOG_DEBUG, "Received request to list all subdirs in `%s'", dir);
+
+  g_conf_clear_error();
+
+  subdirs = g_conf_sources_all_dirs(ctx->sources, dir);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error listing dirs in `%s': %s"),
+             dir, g_conf_error());
+    }
+  return subdirs;
+}
+
+static void
+context_set_schema(GConfContext* ctx, const gchar* key,
+                   const gchar* schema_key)
+{
+  
+  g_conf_clear_error();
+
+  g_conf_sources_set_schema(ctx->sources, key, schema_key);
+
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error setting schema for `%s': %s"),
+             key, g_conf_error());
+    }
+}
+
+static void
+context_sync(GConfContext* ctx)
+{
+  syslog(LOG_DEBUG, "Received request to sync all config data");
+  
+  if (!g_conf_sources_sync_all(ctx->sources))
+    {
+      syslog(LOG_ERR, _("Failed to sync one or more sources: %s"), 
+             g_conf_error());
+      return;
+    }
+}
+
+/*
+ * Context storage
+ */
+
+static GPtrArray* context_list = NULL;
+static GHashTable* contexts_by_address = NULL;
+
+static void
+init_contexts(void)
+{
+  g_assert(context_list == NULL);
+  g_assert(contexts_by_address == NULL);
+  
+  contexts_by_address = g_hash_table_new(g_str_hash, g_str_equal);
+
+  context_list = g_ptr_array_new();
+
+  g_ptr_array_add(context_list, NULL); /* Invalid context at index 0 */
+  g_ptr_array_add(context_list, NULL); /* default at 1 */
+
+  /* Default context isn't in the address hash since it has
+     multiple addresses in a stack
+  */
+}
+
+static void
+set_default_context(GConfContext* ctx)
+{
+  g_assert(context_list != NULL);
+  g_assert(contexts_by_address != NULL);
+
+  g_assert(context_list->pdata[ConfigServer_default_context] == NULL);
+
+  context_list->pdata[ConfigServer_default_context] = ctx;
+
+  /* Default context isn't in the address hash since it has
+     multiple addresses in a stack
+  */
+}
+
+static void
+shutdown_contexts(void)
+{
+  guint i;
+  
+  g_assert(context_list != NULL);
+  g_assert(contexts_by_address != NULL);
+  
+  i = context_list->len - 1;
+
+  while (i > 0)
+    {
+      if (context_list->pdata[i] != NULL)
+        {
+          context_destroy(context_list->pdata[i]);
+
+          context_list->pdata[i] = NULL;
+        }
+      
+      --i;
+    }
+  
+  g_ptr_array_free(context_list, TRUE);
+  context_list = NULL;
+
+  g_hash_table_destroy(contexts_by_address);
+
+  contexts_by_address = NULL;  
+}
+
+static ConfigServer_Context
+register_context(GConfContext* ctx)
+{
+  ConfigServer_Context next_id;
+  
+  g_assert(context_list != NULL);
+  g_assert(contexts_by_address != NULL);
+  g_return_val_if_fail(ctx->sources != NULL, ConfigServer_invalid_context);
+  g_return_val_if_fail(ctx->sources->sources != NULL, ConfigServer_invalid_context);
+  
+  next_id = context_list->len;
+
+  g_ptr_array_add(context_list, ctx);
+  
+  safe_g_hash_table_insert(contexts_by_address,
+                           ((GConfSource*)ctx->sources->sources->data)->address,
+                           GUINT_TO_POINTER(next_id));
+
+  return next_id;
+}
+
+static void
+unregister_context(ConfigServer_Context ctx)
+{
+  GConfContext* context;
+  
+  g_assert(context_list != NULL);
+  g_assert(contexts_by_address != NULL);
+
+  if (ctx == ConfigServer_invalid_context)
+    {
+      syslog(LOG_ERR, _("Attempt to unregister invalid context ID"));
+
+      return;
+    }
+  
+  if (ctx >= context_list->len)
+    {
+      syslog(LOG_ERR, _("Bad context ID %lu, request ignored"), (gulong)ctx);
+      return;
+    }
+
+  context = context_list->pdata[ctx];
+
+  if (context == NULL)
+    {
+      syslog(LOG_ERR, _("Already-unregistered context ID %lu, request ignored"),
+             (gulong)ctx);
+
+      return;
+    }
+  
+  context_list->pdata[ctx] = NULL;
+
+  g_hash_table_remove(contexts_by_address,
+                      ((GConfSource*)(context->sources->sources->data))->address);
+  
+  context_destroy(context);
+}
+
+static GConfContext*
+lookup_context(ConfigServer_Context ctx)
+{
+  GConfContext* gcc;
+  
+  g_assert(context_list != NULL);
+  g_assert(contexts_by_address != NULL);
+
+  if (ctx >= context_list->len || ctx == ConfigServer_invalid_context)
+    {
+      syslog(LOG_ERR, _("Attempt to use invalid context ID %lu"),
+             (gulong)ctx);
+      return NULL;
+    }
+  
+  gcc = context_list->pdata[ctx];
+
+  if (gcc == NULL)
+    {
+      syslog(LOG_ERR, _("Attempt to use already-unregistered context ID %lu"),
+             (gulong)ctx);
+      return NULL;
+    }
+
+  if (gcc->ltable == NULL)
+    {
+      context_awaken(gcc);
+      if (gcc->ltable == NULL)
+        {
+          /* Failed, error is now set. */
+          return NULL;
+        }
+    }
+  
+  return gcc;
+}
+
+static ConfigServer_Context
+lookup_context_id_from_address(const gchar* address)
+{
+  gpointer result;
+  
+  g_assert(context_list != NULL);
+  g_assert(contexts_by_address != NULL);
+
+  result = g_hash_table_lookup(contexts_by_address,
+                               address);
+
+  if (result != NULL)
+    {
+      return GPOINTER_TO_UINT(result);
+    }
+  else
+    {
+      return ConfigServer_invalid_context;
+    }
 }
 
 /*
@@ -996,6 +1465,8 @@ ltable_new(void)
 
   lt->tree = g_node_new(lte);
 
+  lt->active_listeners = 0;
+  
   return lt;
 }
 
@@ -1078,6 +1549,8 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
   g_ptr_array_set_size(lt->listeners, next_cnxn);
   g_ptr_array_index(lt->listeners, l->cnxn) = found;
 
+  lt->active_listeners += 1;
+  
   ltable_spew(lt);
 }
 
@@ -1147,12 +1620,33 @@ ltable_remove(LTable* lt, guint cnxn)
       ltable_entry_destroy(lte);
       g_node_destroy(node);
     }
+
+  lt->active_listeners -= 1;
 }
 
 static void    
 ltable_destroy(LTable* ltable)
 {
-  g_warning("Not bothering to destroy ltable for now");
+  guint i;
+
+  i = ltable->listeners->len - 1;
+
+  while (i > 0) /* 0 position in array is invalid */
+    {
+      if (g_ptr_array_index(ltable->listeners, i) != NULL)
+        {
+          listener_destroy(g_ptr_array_index(ltable->listeners, i));
+          g_ptr_array_index(ltable->listeners, i) = NULL;
+        }
+      
+      --i;
+    }
+  
+  g_ptr_array_free(ltable->listeners, TRUE);
+
+  g_node_destroy(ltable->tree);
+
+  g_free(ltable);
 }
 
 static void

@@ -55,7 +55,7 @@
 static gchar* last_details = NULL;
 static GConfErrNo last_errno = G_CONF_SUCCESS;
 
-static const gchar* err_msgs[9] = {
+static const gchar* err_msgs[10] = {
   N_("Success"),
   N_("Failed"),
   N_("Configuration server couldn't be contacted"),
@@ -128,7 +128,7 @@ g_conf_errno          (void)
 typedef struct _GConfPrivate GConfPrivate;
 
 struct _GConfPrivate {
-  gpointer dummy;
+  ConfigServer_Context context;
 
 };
 
@@ -184,7 +184,55 @@ g_conf_new            (void)
 
   priv = g_new0(GConfPrivate, 1);
 
+  priv->context = ConfigServer_default_context;
+  
   return (GConf*) priv;
+}
+
+GConf*
+g_conf_new_from_address(const gchar* address)
+{
+  GConf* gconf;
+  GConfPrivate* priv;
+  CORBA_Environment ev;
+  ConfigServer cs;
+  ConfigServer_Context ctx;
+  
+  cs = g_conf_get_config_server(TRUE);
+
+  if (cs == CORBA_OBJECT_NIL)
+    return NULL; /* Error should already be set */
+
+  CORBA_exception_init(&ev);
+  
+  ctx = ConfigServer_get_context(cs, (gchar*)address, &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
+
+      CORBA_exception_free(&ev);
+
+      return NULL;
+    }
+  
+  if (ctx == ConfigServer_invalid_context)
+    {
+      g_conf_set_error(G_CONF_BAD_ADDRESS,
+                       _("Server couldn't resolve the address `%s'"),
+                       address);
+
+      return NULL;
+    }
+  
+  gconf = g_conf_new();
+  
+  priv = (GConfPrivate*)gconf;
+
+  priv->context = ctx;
+  
+  return gconf;
 }
 
 void         
@@ -195,6 +243,7 @@ g_conf_destroy        (GConf* conf)
   GSList* tmp;
   CORBA_Environment ev;
   ConfigServer cs;
+  GConfPrivate* priv = (GConfPrivate*)conf;
 
   cs = g_conf_get_config_server(FALSE); /* don't restart it if down, since
                                            the new one won't have the connections
@@ -215,6 +264,7 @@ g_conf_destroy        (GConf* conf)
       if (cs != CORBA_OBJECT_NIL)
         {
           ConfigServer_remove_listener(cs,
+                                       priv->context,
                                        gcnxn->server_id,
                                        &ev);
           
@@ -262,7 +312,8 @@ g_conf_notify_add(GConf* conf,
   /* Should have aborted the program in this case probably */
   g_return_val_if_fail(cl != CORBA_OBJECT_NIL, 0);
 
-  id = ConfigServer_add_listener(cs, (gchar*)namespace_section, 
+  id = ConfigServer_add_listener(cs, priv->context,
+                                 (gchar*)namespace_section, 
                                  cl, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
@@ -289,6 +340,7 @@ void
 g_conf_notify_remove(GConf* conf,
                      guint client_id)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   GConfCnxn* gcnxn;
   CORBA_Environment ev;
   ConfigServer cs;
@@ -304,7 +356,7 @@ g_conf_notify_remove(GConf* conf,
 
   g_return_if_fail(gcnxn != NULL);
 
-  ConfigServer_remove_listener(cs,
+  ConfigServer_remove_listener(cs, priv->context,
                                gcnxn->server_id,
                                &ev);
 
@@ -327,6 +379,7 @@ g_conf_notify_remove(GConf* conf,
 GConfValue*  
 g_conf_get(GConf* conf, const gchar* key)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   GConfValue* val;
   ConfigValue* cv;
   CORBA_Environment ev;
@@ -349,7 +402,7 @@ g_conf_get(GConf* conf, const gchar* key)
 
   CORBA_exception_init(&ev);
   
-  cv = ConfigServer_lookup(cs, (gchar*)key, &ev);
+  cv = ConfigServer_lookup(cs, priv->context, (gchar*)key, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
@@ -374,6 +427,7 @@ g_conf_get(GConf* conf, const gchar* key)
 void
 g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   ConfigValue* cv;
   CORBA_Environment ev;
   ConfigServer cs;
@@ -398,7 +452,7 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 
   CORBA_exception_init(&ev);
 
-  ConfigServer_set(cs,
+  ConfigServer_set(cs, priv->context,
                    (gchar*)key, cv,
                    &ev);
 
@@ -416,6 +470,7 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 void         
 g_conf_unset(GConf* conf, const gchar* key)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
 
@@ -435,9 +490,9 @@ g_conf_unset(GConf* conf, const gchar* key)
 
   CORBA_exception_init(&ev);
 
-  ConfigServer_unset(cs,
-                   (gchar*)key,
-                   &ev);
+  ConfigServer_unset(cs, priv->context,
+                     (gchar*)key,
+                     &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
@@ -451,6 +506,7 @@ g_conf_unset(GConf* conf, const gchar* key)
 GSList*      
 g_conf_all_entries(GConf* conf, const gchar* dir)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   GSList* pairs = NULL;
   ConfigServer_ValueList* values;
   ConfigServer_KeyList* keys;
@@ -474,7 +530,8 @@ g_conf_all_entries(GConf* conf, const gchar* dir)
 
   CORBA_exception_init(&ev);
   
-  ConfigServer_all_entries(cs, (gchar*)dir, 
+  ConfigServer_all_entries(cs, priv->context,
+                           (gchar*)dir, 
                            &keys, &values,
                            &ev);
 
@@ -518,6 +575,7 @@ g_conf_all_entries(GConf* conf, const gchar* dir)
 GSList*      
 g_conf_all_dirs(GConf* conf, const gchar* dir)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   GSList* subdirs = NULL;
   ConfigServer_KeyList* keys;
   CORBA_Environment ev;
@@ -540,7 +598,8 @@ g_conf_all_dirs(GConf* conf, const gchar* dir)
 
   CORBA_exception_init(&ev);
   
-  ConfigServer_all_dirs(cs, (gchar*)dir, 
+  ConfigServer_all_dirs(cs, priv->context,
+                        (gchar*)dir, 
                         &keys,
                         &ev);
 
@@ -574,6 +633,7 @@ g_conf_all_dirs(GConf* conf, const gchar* dir)
 void 
 g_conf_sync(GConf* conf)
 {
+  GConfPrivate* priv = (GConfPrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
 
@@ -587,7 +647,7 @@ g_conf_sync(GConf* conf)
 
   CORBA_exception_init(&ev);
 
-  ConfigServer_sync(cs, &ev);
+  ConfigServer_sync(cs, priv->context, &ev);
 
   if (ev._major != CORBA_NO_EXCEPTION)
     {
@@ -682,7 +742,8 @@ try_to_contact_server(void)
   return server;
 }
 
-/* All errors set in here should be G_CONF_NO_SERVER */
+/* All errors set in here should be G_CONF_NO_SERVER; should
+   only set errors if start_if_not_found is TRUE */
 static ConfigServer
 g_conf_get_config_server(gboolean start_if_not_found)
 {

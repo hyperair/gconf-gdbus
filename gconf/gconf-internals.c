@@ -342,6 +342,7 @@ g_conf_resolve_address(const gchar* address)
       else
         {
           retval->backend = backend;
+          retval->address = g_strdup(address);
           
           /* Leave a ref on the backend, now held by the GConfSource */
           
@@ -945,6 +946,25 @@ g_conf_sources_new(gchar** addresses)
     }
 
   return sources;
+}
+
+void
+g_conf_sources_destroy(GConfSources* sources)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      g_conf_source_destroy(tmp->data);
+      
+      tmp = g_list_next(tmp);
+    }
+
+  g_list_free(sources->sources);
+
+  g_free(sources);
 }
 
 GConfValue*   

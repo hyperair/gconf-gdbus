@@ -3,7 +3,7 @@
 // client library. I reserve the right to change it whenever I feel 
 // like it. So there.
 
-enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal, BoolVal, SchemaVal };
+enum ConfigValueType { InvalidVal, IntVal, StringVal, FloatVal, BoolVal, SchemaVal };
 
 struct ConfigSchema {
   ConfigValueType value_type;
@@ -36,38 +36,50 @@ interface ConfigListener {
 interface ConfigServer {
   typedef sequence<string> KeyList;
   typedef sequence<ConfigValue> ValueList;
+  typedef unsigned long Context;
+  
+  const Context invalid_context = 0;
+  // user's preferred config database
+  const Context default_context = 1;
 
+  // Use a specific address instead of the default database;
+  // invalid_context returned on failure.
+  Context get_context(in string address);
+  
   // "where" is the portion of the namespace to listen to
   // Returns a connection ID for removal
-  unsigned long add_listener(in string where, in ConfigListener who);  
+  unsigned long add_listener(in Context ctx, in string where, in ConfigListener who);  
 
-  void remove_listener(in unsigned long cnxn);
+  void remove_listener(in Context ctx, in unsigned long cnxn);
   
-  ConfigValue lookup(in string key);
+  ConfigValue lookup(in Context ctx, in string key);
 
-  void set(in string key, in ConfigValue value);
+  void set(in Context ctx, in string key, in ConfigValue value);
 
-  void unset(in string key);
+  void unset(in Context ctx, in string key);
 
-  void remove_dir(in string dir);
+  void remove_dir(in Context ctx, in string dir);
 
-  void nuke_dir(in string dir);
+  void nuke_dir(in Context ctx, in string dir);
 
-  void all_entries(in string dir, 
+  void all_entries(in Context ctx,
+                   in string dir, 
                    out KeyList keys,
                    out ValueList values);
 
-  void all_dirs(in string dir,
+  void all_dirs(in Context ctx,
+                in string dir,
                 out KeyList subdirs);
 
   // if first arg is a key, second arg should be a key pointing
   //  to a schema. 
   // if first arg is a dir, second arg should be a key pointing 
   //  to a dir full of schemas.
-  void set_schema(in string key,
+  void set_schema(in Context ctx,
+                  in string key,
                   in string schema_key);
 
-  void sync();
+  void sync(in Context ctx);
 
   // Internal use
   long ping();

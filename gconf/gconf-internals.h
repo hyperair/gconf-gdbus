@@ -35,6 +35,7 @@ typedef struct _GConfSource GConfSource;
 
 struct _GConfSource {
   guint flags;
+  gchar* address;
   GConfBackend* backend;
 };
 
@@ -109,6 +110,7 @@ struct _GConfSources {
 };
 
 GConfSources* g_conf_sources_new(gchar** addresses);
+void          g_conf_sources_destroy(GConfSources* sources);
 GConfValue*   g_conf_sources_query_value (GConfSources* sources, 
                                           const gchar* key);
 void          g_conf_sources_set_value   (GConfSources* sources,
