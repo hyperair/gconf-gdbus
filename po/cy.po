@@ -177,7 +177,8 @@ msgstr "Cofnod heb enw yn y ffeil XML `%s', anwybyddu"
 #: backends/xml-dir.c:1138
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
-msgstr ""
+msgstr "Mae nôd lefel dop yn y ffeil XML `%s' yn <%s> yn hytrach na <entry>, "
+"anwybyddu"
 
 #: backends/xml-dir.c:1211
 #, c-format
@@ -199,7 +200,7 @@ msgstr "Methu gramadegu'r ffeil XML \"%s\""
 #: backends/xml-entry.c:154
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr "Anwybyddu nod XML â'r enw `%s': %s"
+msgstr "Anwybyddu nôd XML â'r enw `%s': %s"
 
 # EFALLAI (sgema?)
 #: backends/xml-entry.c:332
@@ -211,7 +212,7 @@ msgstr "Anwybyddu sgema â'r enw `%s', annillys: %s"
 #: backends/xml-entry.c:380
 #, c-format
 msgid "Ignoring XML node `%s': %s"
-msgstr "Anwybyddu nod XML `%s': %s"
+msgstr "Anwybyddu nôd XML `%s': %s"
 
 #: backends/xml-entry.c:732
 #, c-format
@@ -221,60 +222,61 @@ msgstr "Methwyd darllen gwerth rhagosodedig i'r sgema: %s"
 #: backends/xml-entry.c:952
 #, c-format
 msgid "No \"type\" attribute for <%s> node"
-msgstr "Dim priodoledd \"type\" i nod <%s>"
+msgstr "Dim priodoledd \"type\" i nôd <%s>"
 
 #: backends/xml-entry.c:966
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr "Mae gan nod briodoledd anhysbys `%s', anwybyddu"
+msgstr "Mae gan nôd briodoledd anhysbys `%s', anwybyddu"
 
 #: backends/xml-entry.c:981
 msgid "No \"value\" attribute for node"
-msgstr "Does gan nod ddim priodoledd \"value\""
+msgstr "Does gan nôd ddim priodoledd \"value\""
 
 #: backends/xml-entry.c:1029
 #: backends/xml-entry.c:1105
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
-msgstr "Ddim yn deall nod XML <%s> tu fewn i nod rhestr XML"
+msgstr "Ddim yn deall nôd XML <%s> tu fewn i nod rhestr XML"
 
 #: backends/xml-entry.c:1063
 msgid "Invalid type (list, pair, or unknown) in a list node"
-msgstr "Math annilys (rhestr, par, neu anhysbys) mewn nod rhestr"
+msgstr "Math annilys (rhestr, pâr, neu anhysbys) mewn nôd rhestr"
 
 #: backends/xml-entry.c:1086
 #, c-format
 msgid "Bad XML node: %s"
-msgstr "Nod XML gwael: %s"
+msgstr "Nôd XML gwael: %s"
 
+# EFALLAI
 #: backends/xml-entry.c:1094
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
-msgstr ""
+msgstr "Mae'r rhestr yn cynnwys nôd wedi ei cam-fathu (%s, dylai fod %s)"
 
 #: backends/xml-entry.c:1146
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
-msgstr "Anwybyddu CAR gwael o par XML: %s"
+msgstr "Anwybyddu CAR gwael o bâr XML: %s"
 
 #: backends/xml-entry.c:1155
 #: backends/xml-entry.c:1178
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
-msgstr ""
+msgstr "gramadegu ffeil XML: ni chair rhoi rhestri a parau o fewn pâr"
 
 #: backends/xml-entry.c:1168
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
-msgstr "Anwybyddu CDR gwael o par XML: %s"
+msgstr "Anwybyddu CDR gwael o bâr XML: %s"
 
 #: backends/xml-entry.c:1187
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML pair node"
-msgstr "Methu deall nod XML <%s> tu fewn i nod par XML"
+msgstr "Methu deall nôd XML <%s> tu fewn i nôd pâr XML"
 
 #: backends/xml-entry.c:1205
 msgid "Didn't find car and cdr for XML pair node"
-msgstr ""
+msgstr "Ni chanfodwyd CAR a CDR ar gyfer nôd pâr XML"
 
 #: backends/xml-entry.c:1211
 msgid "Missing cdr from pair of values in XML file"
@@ -450,7 +452,7 @@ msgstr "Dim caniatâd"
 
 #: gconf/gconf-error.c:29
 msgid "Couldn't resolve address for configuration source"
-msgstr ""
+msgstr "Methwyd gatrys cyfeiriad ar gyfer ffynhonell ffurfweddiad"
 
 #: gconf/gconf-error.c:30
 msgid "Bad key or directory name"
@@ -464,9 +466,10 @@ msgstr "Gwall gramadegu"
 msgid "Corrupt data in configuration source database"
 msgstr "Data llygredig yn y cronfa ddata ffynhonellau ffurfweddaid"
 
+# EFALLAI
 #: gconf/gconf-error.c:33
 msgid "Type mismatch"
-msgstr ""
+msgstr "Anghyfatebiad mathau"
 
 #: gconf/gconf-error.c:34
 msgid "Key operation on directory"
@@ -633,7 +636,7 @@ msgstr ""
 #: gconf/gconf-internals.c:2438
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr ""
+msgstr "mae gconftool neu rhyw broses arall nid gconf ydyw y ffeil clo '%s'"
 
 #: gconf/gconf-internals.c:2455
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -642,7 +645,7 @@ msgstr ""
 #: gconf/gconf-internals.c:2465
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
-msgstr ""
+msgstr "Methwyd trosi yr IOR '%s' i gyfeirnod gwrthrydd"
 
 #: gconf/gconf-internals.c:2515
 #, c-format
@@ -654,10 +657,11 @@ msgstr "methwyd creu cyfeiriadur `%s': %s"
 msgid "Can't write to file `%s': %s"
 msgstr "Methu ysgrifennu ar ffeil `%s': %s"
 
+# EFALLAI
 #: gconf/gconf-internals.c:2615
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
-msgstr ""
+msgstr "Nid oedd gennym clo ar y ffeil `%s', ond fe ddylwn"
 
 #: gconf/gconf-internals.c:2636
 #, c-format
@@ -690,15 +694,17 @@ msgstr "Methwyd datgysylltu ffeil clo %s: %s\n"
 msgid "Failed to create %s: %s"
 msgstr "Methwyd creu %s: %s"
 
+# EFALLAI
 #: gconf/gconf-internals.c:2878
 #, c-format
 msgid "Server ping error: %s"
-msgstr ""
+msgstr "Gwall ping y gweinydd: %s"
 
 #: gconf/gconf-internals.c:2899
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr ""
+msgstr "Methu creu piben er mwyn cyfathredu gyda'r daemon gconf fe grweyd: "
+"%s\n"
 
 #: gconf/gconf-internals.c:2923
 #, c-format
@@ -726,13 +732,18 @@ msgid ""
 "Error on option %s: %s.\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
+"Gwall ar yr opsiwn %s: %s.\n"
+"Defnyddiwch '%s --help' er mwyn gweld rhestr o'r holl opsiynau llinell\n"
+"gorchymyn sydd ar gael.\n"
 
 #: gconf/gconf-sanity-check.c:141
 #: gconf/gconf-sanity-check.c:166
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
-"Could not open or create the file \"%s\"; this indicates that there may be a problem with your configuration, as many programs will need to create files in your home directory. The error was \"%s\" (errno = %d)."
+"Could not open or create the file \"%s\"; this indicates that there may be a "
+"problem with your configuration, as many programs will need to create files "
+"in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
 
 #: gconf/gconf-sanity-check.c:180
@@ -802,12 +813,14 @@ msgstr "Mae'r sgema yn cynnwys UTF-8 annilys"
 #: gconf/gconf-schema.c:254
 msgid "Schema specifies type list but doesn't specify the type of the list "
 "elements"
-msgstr ""
+msgstr "Mae'r sgema yn penodi rhestr ond nid yw'n penodi math elfennau'r "
+"rhestr"
 
 #: gconf/gconf-schema.c:264
 msgid "Schema specifies type pair but doesn't specify the type of the "
 "car/cdr elements"
-msgstr ""
+msgstr "Mae'r sgema yn penodi pâr ond nid yw'n penodi math yr elfennau "
+"CAR/CDR"
 
 #: gconf/gconf-sources.c:319
 #, c-format
@@ -840,7 +853,8 @@ msgstr ""
 #: gconf/gconf-sources.c:584
 #, c-formatOB
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
-msgstr ""
+msgstr "Mae'r sgema `%s' a benodwyd ar gyfer `%s' yn dal gwerth nid yw'n "
+"sgema"
 
 #: gconf/gconf-sources.c:642
 msgid "The '/' name can only be a directory, not a key"
@@ -859,12 +873,12 @@ msgstr ""
 #: gconf/gconf-sources.c:1414
 #, c-format
 msgid "Error finding metainfo: %s"
-msgstr ""
+msgstr "Gwall wrth ganfod metagwybodaeth: %s"
 
 #: gconf/gconf-sources.c:1483
 #, c-format
 msgid "Error getting metainfo: %s"
-msgstr ""
+msgstr "Gwall wrth gyrchu metagwybodaeth: %s"
 
 #: gconf/gconf-sources.c:1507
 #, c-format
@@ -1776,12 +1790,12 @@ msgstr ""
 
 #: gconf/gconftool.c:2519
 msgid "WARNING: must have a child node under <value>\n"
-msgstr ""
+msgstr "RHYBUDD: rhaid cael nôd plentyn o dan <value>\n"
 
 #: gconf/gconftool.c:2525
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
-msgstr ""
+msgstr "RHYBUDD: methu daeall nôd <%s>\n"
 
 #: gconf/gconftool.c:2543
 #, c-format
@@ -1864,7 +1878,7 @@ msgstr ""
 
 #: gconf/gconftool.c:3067
 msgid "WARNING: empty <applyto> node"
-msgstr ""
+msgstr "RHYBUDD: nôd <applyto> gwag"
 
 #: gconf/gconftool.c:3070
 #: gconf/gconftool.c:3328
