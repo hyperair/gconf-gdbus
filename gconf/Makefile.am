@@ -15,6 +15,7 @@ gconfincludedir = $(includedir)/gconf
 gconfinclude_HEADERS =     \
 	gconf.h            \
 	gconf-backend.h		\
+	gconf-changeset.h	\
 	gconf-listeners.h  \
 	gconf-orbit.h      \
 	gconf-schema.h 	   \
@@ -51,6 +52,7 @@ libgconf_la_SOURCES = \
 	gconf-internals.c	\
 	gconf-internals.h	\
 	gconf-backend.c		\
+	gconf-changeset.c	\
 	gconf-error.c		\
 	gconf-listeners.c	\
 	gconf-schema.c		\

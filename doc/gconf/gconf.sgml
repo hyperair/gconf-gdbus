@@ -44,10 +44,12 @@
         <itemizedlist mark="bullet">
           <listitem>
             <para>
-              Users can select a variety of data storage backends, such as
-              XML text files, ACAP, or databases (LDAP, DB, etc.). This makes 
-              it easy to adapt GConf to local needs. It also avoids the
-              age-old "text files vs. binary registry" debate.
+              Users can select a variety of data storage backends, such as XML
+              text files, ACAP, or databases (LDAP, DB, etc.). This makes it
+              easy to adapt GConf to local needs. It also avoids the age-old
+              "text files vs. binary registry" debate. (Note: the current GConf
+              only has an XML backend implemented, other backends are easy to
+              write though.)
             </para>
           </listitem>
           <listitem>
@@ -127,13 +129,18 @@
           GConf can only store a small, fixed set of data types. This keeps the
           database implementation simple and efficient. GConf should
           <emphasis>not</emphasis> be used to store data files or any other
-          large amount of information; it is designed for simple configuration
-          data only.
+          large amount of information; <emphasis>it is designed for simple
+          configuration data only</emphasis>. There are any number of better
+          solutions available for storing documents and other large data
+          chunks. You might want to store a filename, URL, or Bonobo moniker in
+          GConf pointing to a larger piece of data, if you need the GConf
+          notification facilities.
         </para>
 
         <para>
           Here are the GConf datatypes:
           <variablelist>
+
             <varlistentry>
               <term>Integer</term>
               <listitem><para>
@@ -141,25 +148,29 @@
                   limited to 32 bits and can be positive or negative.
                 </para></listitem>
             </varlistentry>
+
             <varlistentry>
-              <term>String</term> 
-              <listitem><para>
-                  String values can contain any text you like,
-                  but not binary data (such as the nul character).
+              <term>String</term> <listitem><para> String values can contain any
+              text you like, but not binary data (such as the NULL character).
+              GConf should handle any string the C library string functions can
+              handle.  </para></listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>Float</term> <listitem><para> Float values are floating
+                  point numbers.  Given differences between machine architectures
+                  and C libraries, there is no guaranteed degree of precision, other
+                  than "a reasonable degree."
                 </para></listitem>
             </varlistentry>
-            <varlistentry>
-              <term>Float</term>
-              <listitem><para>
-                  Float values are double-precision floating point numbers. 
-                </para></listitem>
-            </varlistentry>
+
             <varlistentry>
               <term>Bool</term> 
               <listitem><para>
                   Boolean values are true or false.
                 </para></listitem>
             </varlistentry>
+
             <varlistentry>
               <term>Schema</term>
               <listitem><para>
@@ -168,22 +179,24 @@
                   as documentation and its type. 
                 </para></listitem>
             </varlistentry>
+
             <varlistentry>
-              <term>List</term>
-              <listitem><para>
-                  List values store a group of values. All values
-                  in a list must have the same primitive type. Lists of lists and lists of pairs 
-                  are not allowed.
+              <term>List</term> 
+              <listitem><para> List values store a group of
+                  values. All values in a list must have the same primitive
+                  type. Heterogeneous lists are not allowed. Lists of lists and
+                  lists of pairs are not allowed.
                 </para></listitem>
             </varlistentry>
+
             <varlistentry>
               <term>Pair</term> 
-              <listitem><para>
-                  Pairs store two primitive values. The two values do 
-                  not necessarily have the same type. Pairs can not contain pairs or lists, 
-                  only primitive types.
+              <listitem><para> Pairs store two primitive
+                  values. The two values do not necessarily have the same
+                  type. Pairs can not contain pairs or lists, only primitive types.
                 </para></listitem>
             </varlistentry>
+
           </variablelist>
         </para>
 
@@ -232,7 +245,7 @@
           some magic variables; you can use this to include a .gconf.path file
           from the user's home directory. Variables are placed in
           <symbol>$()</symbol>.  Two variables are built-in to GConf:
-          <symbol>$(HOME)</symbol> is user's home directory, and
+          <symbol>$(HOME)</symbol> is the user's home directory, and
           <symbol>$(USER)</symbol> is the username. You can also access any
           environment variable by prepending <symbol>ENV_</symbol> to the
           variable name. For example, <symbol>$(ENV_FOO)</symbol> will be
@@ -272,9 +285,9 @@
     </para>
 
     <para>
-      Convenience wrappers for the GConf client library may eventually 
-      be written. A wrapper which performed client-side caching
-      could also be useful; time will tell.      
+      Convenience wrappers for the GConf client library are possible.
+      Right now a nice wrapper based on the GTK+ object system exists;
+      see <xref linkend="gtk-wrapper">.
     </para>
 
     <!-- Error Handling -->
@@ -775,6 +788,16 @@ print_value(GConfValue* value)
       </para>
 
     </sect2>
+  </sect1>
+
+  <!-- GTK Object wrapper -->
+  <sect1 id="gtk-wrapper">
+    <title>GTK+ Object Convenience Wrapper</title>
+    
+    <para>
+      
+    </para>
+
   </sect1>
 
 </article>

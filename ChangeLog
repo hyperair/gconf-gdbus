@@ -1,5 +1,12 @@
 1999-11-11  Havoc Pennington  <hp@pobox.com>
 
+        * doc/gconf.sgml: tweaks
+	
+	* gconf/gconf-changeset.c, gconf/gconf-changeset.h: ChangeSet data
+	structure stores a bunch of changes to be committed in a block.
+	For now the gconf_commit_change_set() function is really naive
+	(iterates over the change set and sets each value)
+
 	* backends/xml-backend.c: Throughout, use accessor functions to 
 	access the "value" field in the cache entries; we're going to 
 	have to update the value field to match the proper locale
