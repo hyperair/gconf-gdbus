@@ -379,7 +379,7 @@ gconf_notify_add(GConfEngine* conf,
   GConfCnxn* cnxn;
   gint tries = 0;
 
-  g_return_val_if_fail(gconf_engine_is_local(conf), 0);
+  g_return_val_if_fail(!gconf_engine_is_local(conf), 0);
   
   if (gconf_engine_is_local(conf))
     {
