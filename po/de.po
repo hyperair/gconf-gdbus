@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gConf 0.5\n"
-"POT-Creation-Date: 2000-07-16 02:33+0200\n"
+"POT-Creation-Date: 2000-07-24 13:52+0200\n"
 "PO-Revision-Date: 2000-03-30 16:29+02:00\n"
 "Last-Translator: Matthias Warkus <mawa@iname.com>\n"
 "Language-Team: German <de@li.org>\n"
@@ -132,102 +132,109 @@ msgstr "Oberstes Element in der XML-Datei ist kein <entry>, ignoriere"
 msgid "Failed to create file `%s': %s"
 msgstr "Erstellen von Datei %s gescheitert: %s"
 
-#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2418
+#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2416
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Konnte Datei `%s' nicht schließen: %s"
 
 #. There was an error
-#: backends/xml-entry.c:162 backends/xml-entry.c:381
+#: backends/xml-entry.c:162
 #, c-format
-msgid "Ignoring XML node `%s': %s"
-msgstr "Ignoriere XML-Element %s: %s"
+msgid "Ignoring XML node with name `%s': %s"
+msgstr "Ignoriere XML-Element mit Namen %s: %s"
 
-#: backends/xml-entry.c:211 gconf/gconf-internals.c:2122
+#: backends/xml-entry.c:213 gconf/gconf-internals.c:2120
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: backends/xml-entry.c:338
+#: backends/xml-entry.c:340
 #, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
 msgstr "ignoriere Schema mit Namen %s, ungültig: %s"
 
-#: backends/xml-entry.c:683
+#. FIXME for nodes with no value stored, but containing a schema name,
+#. * we improperly log an error here
+#: backends/xml-entry.c:386
+#, c-format
+msgid "Ignoring XML node `%s', except for possible schema name: %s"
+msgstr "Ignoriere XML-Element %s, außer für das mögliche Schema: %s"
+
+#: backends/xml-entry.c:688
 msgid "found <local_schema> with no locale setting"
 msgstr "<local_schema> ohne lokale Einstellungen gefunden"
 
-#: backends/xml-entry.c:705
+#: backends/xml-entry.c:710
 #, c-format
 msgid "Failed reading default value for schema: %s"
 msgstr "Konnte voreingestellten Wert für Schema (%s) nicht lesen"
 
-#: backends/xml-entry.c:887
+#: backends/xml-entry.c:892
 #, c-format
 msgid "No \"type\" attribute for <%s> node"
 msgstr "Kein \"type\"-Attribut für <%s>-Element"
 
-#: backends/xml-entry.c:901
+#: backends/xml-entry.c:906
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
 msgstr "Ein Element hat unbekanntes \"type\"-Attribut, ignoriere"
 
-#: backends/xml-entry.c:916
+#: backends/xml-entry.c:921
 msgid "No \"value\" attribute for node"
 msgstr "Kein \"value\"-Attribut für Element"
 
-#: backends/xml-entry.c:964 backends/xml-entry.c:1040
+#: backends/xml-entry.c:969 backends/xml-entry.c:1045
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
 msgstr "Verstehe XML-Element <%s> in einem XML-Listen-Element nicht"
 
-#: backends/xml-entry.c:998
+#: backends/xml-entry.c:1003
 msgid "Invalid type (list, pair, or unknown) in a list node"
 msgstr "Ungültiger Typ (Liste, Paar oder unbekannt) in einem Listen-Element"
 
-#: backends/xml-entry.c:1021
+#: backends/xml-entry.c:1026
 #, c-format
 msgid "Bad XML node: %s"
 msgstr "Schlechtes XML-Element: %s"
 
-#: backends/xml-entry.c:1029
+#: backends/xml-entry.c:1034
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
 msgstr ""
 "Liste beinhaltet ein schlecht-geschriebenes Element (%s, sollte %s sein)"
 
-#: backends/xml-entry.c:1081
+#: backends/xml-entry.c:1086
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
 msgstr ""
 
-#: backends/xml-entry.c:1090 backends/xml-entry.c:1113
+#: backends/xml-entry.c:1095 backends/xml-entry.c:1118
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
 msgstr "parse XML-Datei: Liste und Paare sollen nicht in einem Paar sein"
 
-#: backends/xml-entry.c:1103
+#: backends/xml-entry.c:1108
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
 msgstr ""
 
-#: backends/xml-entry.c:1122
+#: backends/xml-entry.c:1127
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML pair node"
 msgstr "Verstehe XML-Element <%s> in einem XML-Paar-Element nicht"
 
-#: backends/xml-entry.c:1140
+#: backends/xml-entry.c:1145
 msgid "Didn't find car and cdr for XML pair node"
 msgstr ""
 
-#: backends/xml-entry.c:1146
+#: backends/xml-entry.c:1151
 msgid "Missing cdr from pair of values in XML file"
 msgstr ""
 
-#: backends/xml-entry.c:1153
+#: backends/xml-entry.c:1158
 msgid "Missing car from pair of values in XML file"
 msgstr ""
 
-#: backends/xml-entry.c:1158
+#: backends/xml-entry.c:1163
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr ""
 
@@ -354,84 +361,84 @@ msgstr "Füge Quelle `%s' hinzu\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Lesefehler auf Datei `%s': %s\n"
 
-#: gconf/gconf-internals.c:1284
+#: gconf/gconf-internals.c:1282
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Habe Liste erwartet, erhielt %s"
 
-#: gconf/gconf-internals.c:1294
+#: gconf/gconf-internals.c:1292
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Habe Liste von %s erwartet, erhielt Liste von %s"
 
-#: gconf/gconf-internals.c:1433
+#: gconf/gconf-internals.c:1431
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Habe Paar erwartet, erhielt %s"
 
-#: gconf/gconf-internals.c:1447
+#: gconf/gconf-internals.c:1445
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Habe Paar (%s,%s) erwartet, erhielt ein Paar, bei dem ein oder beide Werte "
 "fehlten"
 
-#: gconf/gconf-internals.c:1463
+#: gconf/gconf-internals.c:1461
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Habe Paar von Typ (%s,%s) erwartet, erhielt Typ (%s,%s)"
 
-#: gconf/gconf-internals.c:1579
+#: gconf/gconf-internals.c:1577
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Zeichenkette in Anführungszeichen beginnt nicht mit Anführungszeichen"
 
-#: gconf/gconf-internals.c:1641
+#: gconf/gconf-internals.c:1639
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Zeichenkette in Anführungszeichen endet nicht mit Anführungszeichen"
 
-#: gconf/gconf-internals.c:2107 gconf/gconf.c:2632
+#: gconf/gconf-internals.c:2105 gconf/gconf.c:2632
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-Fehler: %s"
 
-#: gconf/gconf-internals.c:2127
+#: gconf/gconf-internals.c:2125
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "Versuch, nicht aufgelistetes OAF-Objektverzeichnis zu entfernen"
 
-#: gconf/gconf-internals.c:2132
+#: gconf/gconf-internals.c:2130
 msgid "attempt to add already-listed OAF directory"
 msgstr "Versuch, bereits aufgelistetes OAF-Verzeichnis hinzuzufügen"
 
-#: gconf/gconf-internals.c:2139
+#: gconf/gconf-internals.c:2137
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "OAF-Parserfehler: %s"
 
-#: gconf/gconf-internals.c:2144
+#: gconf/gconf-internals.c:2142
 msgid "Unknown OAF error"
 msgstr "Unbekannter OAF-Fehler"
 
-#: gconf/gconf-internals.c:2227
+#: gconf/gconf-internals.c:2225
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Keine ior-Datei in `%s'"
 
-#: gconf/gconf-internals.c:2258
+#: gconf/gconf-internals.c:2256
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd erhält Sperre `%s' von einem anderen Prozess"
 
-#: gconf/gconf-internals.c:2269
+#: gconf/gconf-internals.c:2267
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Ein anderes Programm hat die Sperre `%s'"
 
-#: gconf/gconf-internals.c:2289
+#: gconf/gconf-internals.c:2287
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr ""
 "Konnte keinen Kontakt mit ORB aufnehmen, um existierenden gconfd zu pingen"
 
-#: gconf/gconf-internals.c:2297
+#: gconf/gconf-internals.c:2295
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
@@ -440,44 +447,45 @@ msgstr ""
 "Entferne verfallene Sperre `%s', da IOR nicht in Objektreferenz umgewandelt "
 "werden konnte, IOR `%s'"
 
-#: gconf/gconf-internals.c:2309
+#: gconf/gconf-internals.c:2307
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr ""
-"Entferne verfallene Sperre `%s' auf Grund Fehlers beim Pingen des Servers: %s"
+"Entferne verfallene Sperre `%s' auf Grund Fehlers beim Pingen des Servers: "
+"%s"
 
-#: gconf/gconf-internals.c:2321
+#: gconf/gconf-internals.c:2319
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "GConf-Konfigurationsdämon (gconfd) hat Sperre `%s'"
 
-#: gconf/gconf-internals.c:2335
+#: gconf/gconf-internals.c:2333
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "Konnte Verzeichnis `%s' nicht anlegen: %s"
 
-#: gconf/gconf-internals.c:2370
+#: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "Kann Sperre `%s' nicht anlegen: %s"
 
-#: gconf/gconf-internals.c:2406
+#: gconf/gconf-internals.c:2404
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Kann nicht in Datei `%s' schreiben: %s"
 
-#: gconf/gconf-internals.c:2449
+#: gconf/gconf-internals.c:2447
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr ""
 "Kann Sperrdatei `%s' nicht öffnen; nehme an, dass sie nicht Ihnen gehört: %s"
 
-#: gconf/gconf-internals.c:2466
+#: gconf/gconf-internals.c:2464
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr "Beschädigte Sperrdatei `%s', entferne sie sowieso"
 
-#: gconf/gconf-internals.c:2476
+#: gconf/gconf-internals.c:2474
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
@@ -486,7 +494,7 @@ msgstr ""
 "Habe Sperrdatei `%s' (Erzeuger-PID %u, unsere PID %u) nicht angelegt; nehme "
 "an, dass uns jemand die Sperre weggenommen hat"
 
-#: gconf/gconf-internals.c:2493
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Konnte Sperrverzeichnis `%s' nicht freigeben: %s"
@@ -496,38 +504,41 @@ msgstr "Konnte Sperrverzeichnis `%s' nicht freigeben: %s"
 msgid "Failed to load source `%s': %s"
 msgstr "Fehler beim Laden der Quelle %s: %s"
 
-#: gconf/gconf-sources.c:502
+#: gconf/gconf-sources.c:506
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr "Schema %s, abgegeben für %s speichert einen nicht-schematischen Wert"
 
-#: gconf/gconf-sources.c:551
+#: gconf/gconf-sources.c:555
 msgid "The '/' name can only be a directory, not a key"
 msgstr "Der Name '/' kann nur ein Verzeichnis sein, kein Schlüssel"
 
-#: gconf/gconf-sources.c:580
+#: gconf/gconf-sources.c:584
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path."
 msgstr ""
+"Wert für '%s' gesetzt in einem Read-Only Bereich am Anfang des "
+"Konfigurationspfades."
 
-#: gconf/gconf-sources.c:1067
+#: gconf/gconf-sources.c:1079
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Fehler beim Finden der Meta-Informationen: %s"
 
-#: gconf/gconf-sources.c:1132
+#: gconf/gconf-sources.c:1144
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Fehler beim Ermitteln der Meta-Informationen: %s"
 
-#: gconf/gconf-sources.c:1156
+#: gconf/gconf-sources.c:1168
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
+"Schlüssel '%s', gelistet als Schema für Schlüssel '%s' hat aktuell Typ '%s'"
 
-#: gconf/gconf-sources.c:1193 gconf/gconfd.c:1523
+#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Fehler beim Erhalten des Wertes für `%s': %s"
@@ -645,7 +656,8 @@ msgstr "Habe ungültigen Wert in Einstellungsanfrage erhalten"
 
 #: gconf/gconfd.c:519
 #, c-format
-msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
+msgid ""
+"Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
 "Konnte Sinn des CORBA-Wertes in Einstellungsanfrage für Schlüssel `%s' nicht "
 "ausmachen"
@@ -801,31 +813,31 @@ msgstr "Fehler beim Auflisten der Verzeichnisse in `%s': %s"
 msgid "Error setting schema for `%s': %s"
 msgstr "Fehler beim Einstellen des Schemas für `%s': %s"
 
-#: gconf/gconfd.c:1911
+#: gconf/gconfd.c:1913
 msgid "Attempt to unregister invalid context ID"
 msgstr "Versuch, ungültige Kontext-ID zu deregistrieren"
 
-#: gconf/gconfd.c:1918
+#: gconf/gconfd.c:1920
 #, c-format
 msgid "Bad context ID %lu, request ignored"
 msgstr "Ungültige Kontext-ID %lu, Anfrage ignoriert"
 
-#: gconf/gconfd.c:1926
+#: gconf/gconfd.c:1928
 #, c-format
 msgid "Already-unregistered context ID %lu, request ignored"
 msgstr "Bereits deregistrierte Kontext-ID %lu, Anfrage ignoriert"
 
-#: gconf/gconfd.c:1951
+#: gconf/gconfd.c:1953
 #, c-format
 msgid "Attempt to use invalid context ID %lu"
 msgstr "Versuch, ungültige Kontext-ID %lu zu benutzen"
 
-#: gconf/gconfd.c:1961
+#: gconf/gconfd.c:1963
 #, c-format
 msgid "Attempt to use already-unregistered context ID %lu"
 msgstr "Versuch, bereits deregistrierte Kontext-ID %lu zu benutzen"
 
-#: gconf/gconfd.c:2121
+#: gconf/gconfd.c:2123
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Gebe Ausnahmezustand zurück: %s"
@@ -1096,7 +1108,8 @@ msgstr "Fehler beim Herunterfahren: %s\n"
 #: gconf/gconftool.c:714
 msgid "Must specify one or more dirs to recursively list.\n"
 msgstr ""
-"Sie müssen ein oder mehrere Verzeichnisse zum rekursiven Auflisten angeben.\n"
+"Sie müssen ein oder mehrere Verzeichnisse zum rekursiven Auflisten "
+"angeben.\n"
 
 #: gconf/gconftool.c:748
 #, c-format
@@ -1390,3 +1403,4 @@ msgstr "GConf-Warnung: Fehler beim Auflisten von Paaren in `%s': %s"
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Erwartete %s, erhielt %s für den Schlüssel %s"
+
