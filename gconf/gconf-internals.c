@@ -1094,8 +1094,10 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
           g_assert_not_reached();
           break;
         }
-      
+
+#if 0      
       syslog(syslog_pri, "%s", msg);
+#endif
     }
   else
     {

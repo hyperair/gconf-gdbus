@@ -1,4 +1,6 @@
-INCLUDES=-I$(top_srcdir) -I$(top_srcdir)/gconf -I$(top_builddir)/gconf  -I$(top_srcdir)/wrappers/gtk $(GLIB_CFLAGS) $(OAF_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) $(GTK_CFLAGS)\
+INCLUDES=-I$(top_srcdir) -I$(top_srcdir)/gconf -I$(top_builddir)/gconf \
+	-I$(top_srcdir)/wrappers/gtk -I$(top_builddir)/wrappers/gtk \
+	$(GLIB_CFLAGS) $(OAF_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS) $(GTK_CFLAGS) \
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
 
 EFENCE=
