@@ -500,6 +500,10 @@ main(int argc, char** argv)
 	  dup2 (dev_null_fd, 2);
 	}
     }
+  else
+    {
+      gconf_log_debug_messages = TRUE;
+    }
   
   umask (022);
   
