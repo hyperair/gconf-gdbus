@@ -1,5 +1,11 @@
 2000-01-23  Havoc Pennington  <hp@pobox.com>
 
+	* backends/xml-entry.c (node_set_value): Store strings in a
+	sub-node and use xmlEncodeEntitiesReentrant() to encode it
+	(node_extract_value): Extract string from the subnode
+
+2000-01-23  Havoc Pennington  <hp@pobox.com>
+
 	* doc/gconf/gconf.sgml: Add schema file DTD from Mirko
 
 	* backends/xml-dir.c (dir_sync): pass the XML filename in to

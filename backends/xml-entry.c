@@ -20,6 +20,7 @@
 #include "xml-entry.h"
 #include <gconf/gconf-internals.h>
 #include <stdlib.h>
+#include <gnome-xml/entities.h>
 
 /* Quick hack so I can mark strings */
 
@@ -507,7 +508,6 @@ node_set_value(xmlNodePtr node, GConfValue* value)
     case GCONF_VALUE_INT:
     case GCONF_VALUE_FLOAT:
     case GCONF_VALUE_BOOL:
-    case GCONF_VALUE_STRING:
       free_childs(node);
       
       value_str = gconf_value_to_string(value);
@@ -516,6 +516,21 @@ node_set_value(xmlNodePtr node, GConfValue* value)
 
       g_free(value_str);
       break;
+    case GCONF_VALUE_STRING:
+      {
+        xmlNodePtr child;
+        gchar* encoded;
+        
+        free_childs(node);
+
+        encoded = xmlEncodeEntitiesReentrant(node->doc,
+                                             gconf_value_string(value));
+        
+        child = xmlNewChild(node, NULL, "stringvalue",
+                            encoded);
+        free(encoded);
+      }
+      break;      
     case GCONF_VALUE_SCHEMA:
       {
         node_set_schema_value(node, value);
@@ -888,7 +903,6 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
       }
       break;
     case GCONF_VALUE_INT:
-    case GCONF_VALUE_STRING:
     case GCONF_VALUE_BOOL:
     case GCONF_VALUE_FLOAT:
       {
@@ -915,6 +929,47 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
         return value;
       }
       break;
+    case GCONF_VALUE_STRING:
+      {
+        xmlNodePtr iter;
+        
+        iter = node->childs;
+
+        while (iter != NULL)
+          {
+            if (iter->type == XML_ELEMENT_NODE)
+              {
+                GConfValue* v = NULL;
+
+                if (strcmp(iter->name, "stringvalue") == 0)
+                  {
+                    gchar* s;
+
+                    s = xmlNodeGetContent(iter);
+
+                    v = gconf_value_new(GCONF_VALUE_STRING);
+
+                    /* strdup() caused purely by g_free()/free()
+                       difference */
+                    gconf_value_set_string(v, s ? s : "");
+                    if (s)
+                      free(s);
+                        
+                    return v;
+                  }
+                else
+                  {
+                    /* What the hell is this? */
+                    gconf_log(GCL_WARNING,
+                              _("Didn't understand XML node <%s> inside an XML list node"),
+                              iter->name ? iter->name : (guchar*)"???");
+                  }
+              }
+            iter = iter->next;
+          }
+        return NULL;
+      }
+      break;      
     case GCONF_VALUE_SCHEMA:
       return schema_node_extract_value(node, locales);
       break;
