@@ -2242,8 +2242,9 @@ ctable_new(void)
 
   ct = g_new(CnxnTable, 1);
 
-  ct->server_ids = g_hash_table_new(corba_unsigned_long_hash, corba_unsigned_long_equal);  
-  ct->client_ids = g_hash_table_new(g_int_hash, g_int_equal);
+  ct->server_ids = g_hash_table_new (corba_unsigned_long_hash,
+                                     corba_unsigned_long_equal);  
+  ct->client_ids = g_hash_table_new (g_int_hash, g_int_equal);
   
   return ct;
 }
@@ -2251,23 +2252,23 @@ ctable_new(void)
 static void
 ctable_destroy(CnxnTable* ct)
 {
-  g_hash_table_destroy(ct->server_ids);
-  g_hash_table_destroy(ct->client_ids);
+  g_hash_table_destroy (ct->server_ids);
+  g_hash_table_destroy (ct->client_ids);
   g_free(ct);
 }
 
 static void       
 ctable_insert(CnxnTable* ct, GConfCnxn* cnxn)
 {
-  g_hash_table_insert(ct->server_ids, &cnxn->server_id, cnxn);
-  g_hash_table_insert(ct->client_ids, &cnxn->client_id, cnxn);
+  g_hash_table_insert (ct->server_ids, &cnxn->server_id, cnxn);
+  g_hash_table_insert (ct->client_ids, &cnxn->client_id, cnxn);
 }
 
 static void       
 ctable_remove(CnxnTable* ct, GConfCnxn* cnxn)
 {
-  g_hash_table_remove(ct->server_ids, &cnxn->server_id);
-  g_hash_table_remove(ct->client_ids, &cnxn->client_id);
+  g_hash_table_remove (ct->server_ids, &cnxn->server_id);
+  g_hash_table_remove (ct->client_ids, &cnxn->client_id);
 }
 
 static void       
@@ -2275,11 +2276,11 @@ ctable_remove_by_client_id(CnxnTable* ct, guint client_id)
 {
   GConfCnxn* cnxn;
 
-  cnxn = ctable_lookup_by_client_id(ct, client_id);
+  cnxn = ctable_lookup_by_client_id (ct, client_id);
 
-  g_return_if_fail(cnxn != NULL);
+  g_return_if_fail (cnxn != NULL);
 
-  ctable_remove(ct, cnxn);
+  ctable_remove (ct, cnxn);
 }
 
 struct RemoveData {
@@ -2322,11 +2323,15 @@ ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf)
   rd.conf = conf;
   rd.save_removed = TRUE;
   
-  client_ids_removed = g_hash_table_foreach_remove(ct->server_ids, remove_by_conf, &rd);
+  client_ids_removed = g_hash_table_foreach_remove (ct->server_ids,
+                                                    remove_by_conf,
+                                                    &rd);
 
   rd.save_removed = FALSE;
 
-  server_ids_removed = g_hash_table_foreach_remove(ct->client_ids, remove_by_conf, &rd);
+  server_ids_removed = g_hash_table_foreach_remove(ct->client_ids,
+                                                   remove_by_conf,
+                                                   &rd);
 
   g_assert(client_ids_removed == server_ids_removed);
   g_assert(client_ids_removed == g_slist_length(rd.removed));
@@ -2343,7 +2348,7 @@ ctable_lookup_by_client_id(CnxnTable* ct, guint client_id)
 static GConfCnxn* 
 ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id)
 {
-  return g_hash_table_lookup(ct->server_ids, &server_id);
+  return g_hash_table_lookup (ct->server_ids, &server_id);
 }
 
 static void
@@ -2534,7 +2539,7 @@ gconf_engine_get_string(GConfEngine* conf, const gchar* key,
 
 gboolean     
 gconf_engine_get_bool  (GConfEngine* conf, const gchar* key,
-                 GError** err)
+                        GError** err)
 {
   GConfValue* val;
   static const gboolean deflt = FALSE;

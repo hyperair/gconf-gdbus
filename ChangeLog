@@ -1,3 +1,11 @@
+2000-09-29  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (ctable_reinstall): we were overwriting the hash
+	key before trying to remove the old server ID from the hash, so
+	the removal failed, leading to an assertion failure later (this
+	hopefully fixes one of the bugs reported by Ramiro, if not then
+	I'll keep looking)
+
 2000-09-26  Havoc Pennington  <hp@pobox.com>
 
 	* gconf/gconf-locale.c (gconf_locale_cache_expire): fix a
