@@ -34,15 +34,35 @@
 guint
 mode_t_to_mode(mode_t orig)
 {
-  /* I don't think this is portable. */
   guint mode = 0;
-  guint fullmask = S_IRWXG | S_IRWXU | S_IRWXO;
-  
 
-  mode = orig & fullmask;
-  
-  g_return_val_if_fail(mode <= 0777, 0700);
+  if (orig & S_IRUSR)
+    mode |= 0400;
 
+  if (orig & S_IWUSR)
+    mode |= 0200;
+
+  if (orig & S_IXUSR)
+    mode |= 0100;
+
+  if (orig & S_IRGRP)
+    mode |= 0040;
+
+  if (orig & S_IWGRP)
+    mode |= 0020;
+
+  if (orig & S_IXGRP)
+    mode |= 0010;
+
+  if (orig & S_IROTH)
+    mode |= 0004;
+
+  if (orig & S_IWOTH)
+    mode |= 0002;
+
+  if (orig & S_IXOTH)
+    mode |= 0001;
+  
   return mode;
 }
 

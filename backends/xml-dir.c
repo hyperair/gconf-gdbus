@@ -185,7 +185,12 @@ dir_load        (const gchar* key, const gchar* xml_root_dir, GError** err)
       }
     else
       {
-        dir_mode = mode_t_to_mode(s.st_mode);
+        /* Take directory mode from the xml_root_dir, if possible */
+        if (stat (xml_root_dir, &s) == 0)
+          {
+            dir_mode = mode_t_to_mode(s.st_mode);
+          }
+        
         file_mode = dir_mode & ~0111; /* turn off search bits */
       }
   }
@@ -347,6 +352,17 @@ dir_sync        (Dir* d, GError** err)
             }
         }
 
+      /* Set permissions on the new file */
+      if (chmod (tmp_filename, d->file_mode) != 0)
+        {
+          gconf_set_error(err, GCONF_ERROR_FAILED, 
+                          _("Failed to set mode on `%s': %s"),
+                          tmp_filename, strerror(errno));
+          
+          retval = FALSE;
+          goto failed_end_of_sync;
+        }
+      
       old_existed = gconf_file_exists(d->xml_filename);
 
       if (old_existed)

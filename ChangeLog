@@ -1,3 +1,22 @@
+2001-02-05  Havoc Pennington  <hp@redhat.com>
+
+        File permissions fixes, problem pointed out by Steve Fox.
+	
+	* backends/xml-dir.c (dir_sync): chmod() the XML file after
+	xmlSaveFile creates it
+
+	* gconf/gconfd.c (main): following Stevens advice for daemons, we
+	were calling umask(0), change to umask(022). We need a predictable
+	umask, but a safer one would be good since this is a per-user
+	daemon not a system daemon.
+	
+	* backends/dir-utils.c (mode_t_to_mode): make this more portable,
+	for paranoia
+
+	* backends/xml-dir.c (dir_load): We were getting directory
+	permissions from the %gconf.xml file, instead of from the XML root
+	directory. Fix.
+
 2001-01-23  Stanislav Visnovsky  <visnovsky@nenya.ms.mff.cuni.cz>
 
 	* configure.in: Add 'sk' to ALL_LINGUAS
