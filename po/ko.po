@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf 2.3.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-14 21:55-0500\n"
-"PO-Revision-Date: 2003-07-20 22:15+0900\n"
+"POT-Creation-Date: 2004-01-10 06:03+0900\n"
+"PO-Revision-Date: 2004-01-10 06:08+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,40 @@ msgstr "`%s'디렉토리를 만들 수가 없습니다: %s"
 msgid "Can't read from or write to the %s root directory in the address `%s'"
 msgstr ""
 "주소 `%2$s'의 %1$s 루트 디렉토리에서 읽거나 이 디렉토리로 쓸 수 없습니다"
+
+#: backends/gconf-merge-tree.c:78
+#, c-format
+msgid "Cannot find directory %s\n"
+msgstr "%s 디렉토리를 찾을 수 없습니다\n"
+
+#: backends/gconf-merge-tree.c:94
+#, c-format
+msgid "Error saving GConf tree to '%s': %s\n"
+msgstr "GConf 트리를 '%s'에 저장하는 데 오류가 발생했습니다: %s\n"
+
+#: backends/gconf-merge-tree.c:120
+#, c-format
+msgid "Usage: %s <dir>\n"
+msgstr "사용법: %s <디렉토리>\n"
+
+#: backends/gconf-merge-tree.c:126
+#, c-format
+msgid ""
+"Usage: %s <dir>\n"
+"  Merges a markup backend filesystem hierarchy like:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  to:\n"
+"    dir/%%gconf-tree.xml\n"
+msgstr ""
+"사용법: %s <디렉토리>\n"
+"  다음과 같은 마크업 백엔드 파일시스템을:\n"
+"    dir/%%gconf.xml\n"
+"        subdir1/%%gconf.xml\n"
+"        subdir2/%%gconf.xml\n"
+"  다음과 같이 합칩니다:\n"
+"    dir/%%gconf-tree.xml\n"
 
 #: backends/xml-backend.c:236
 msgid "Unloading XML backend module."
@@ -57,7 +91,6 @@ msgid "Error syncing the XML backend directory cache: %s"
 msgstr "XML 백엔드 디렉토리 캐쉬를 동기화하는 데 오류가 발생했습니다: %s"
 
 #: backends/xml-backend.c:684
-#, fuzzy
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -80,7 +113,7 @@ msgid "Initializing XML backend module"
 msgstr "XML 백엔드 모듈을 초기화합니다"
 
 #: backends/xml-backend.c:877
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "XML 디렉토리 \"%s\"에 잠금을 포기하는 데 실패했습니다: %s"
 
@@ -403,9 +436,9 @@ msgid "Error checking existence of `%s': %s"
 msgstr "`%s'의 존재유무를 검사하는 데 오류가 발생했습니다: %s"
 
 #: gconf/gconf-database.c:1520
-#, fuzzy, c-format
+#, c-format
 msgid "Error removing directory \"%s\": %s"
-msgstr "`%s' 디렉토리를 지우는 데 오류가 발생했습니다: %s"
+msgstr "\"%s\" 디렉토리를 지우는 데 오류가 발생했습니다: %s"
 
 #: gconf/gconf-database.c:1547
 #, c-format
@@ -1110,11 +1143,11 @@ msgstr "설정 파일을 찾을 수 ㅇ벗습니다. 기본 설정 소스 `%s'�
 #. request would result in another failed gconfd being spawned.
 #.
 #: gconf/gconfd.c:304
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit %s"
-msgstr "소스 경로에 설정 소스가 없습니다. 설정을 저장할 수 없습니다; "
+msgstr "소스 경로에 설정 소스가 없습니다. 설정을 저장할 수 없습니다; %s을(를) 편집하십시오"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1171,9 +1204,9 @@ msgid "Owner of %s is not the current user"
 msgstr "%s을(를) 가진 사람이 현재 사용자가 아닙니다"
 
 #: gconf/gconfd.c:504
-#, fuzzy, c-format
+#, c-format
 msgid "Bad permissions %lo on directory %s"
-msgstr "%2$s 디렉토리의 소유권이 %1$o(으)로 잘못되어 있습니다"
+msgstr "%2$s 디렉토리의 소유권이 %1$lo(으)로 잘못되었습니다"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
@@ -1660,12 +1693,10 @@ msgid "Shutdown error: %s\n"
 msgstr "끝마치는 데 오류가 발생했습니다: %s\n"
 
 #: gconf/gconftool.c:1120
-#, fuzzy
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "재귀적으로 열거하려면 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
 #: gconf/gconftool.c:1172
-#, fuzzy
 msgid "Must specify one or more directories to dump.\n"
 msgstr "덤프할 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
@@ -1893,7 +1924,6 @@ msgid "Error syncing: %s"
 msgstr "동기화에 실패했습니다: %s"
 
 #: gconf/gconftool.c:2283
-#, fuzzy
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr "키/값 쌍을 얻어낼 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
@@ -1916,7 +1946,6 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "\"%s\"의 재귀적으로 값 해제하는 중에 실패: %s\n"
 
 #: gconf/gconftool.c:2362
-#, fuzzy
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "하위 디렉토리를 얻어낼 한 개 이상의 디렉토리를 지정해야 합니다.\n"
 
@@ -2184,16 +2213,3 @@ msgid ""
 msgstr ""
 "디렉토리의 키에 잘못된 값을 설정하여 응용 프로그램을 중단하도록 시도합니다:\n"
 "  %s\n"
-
-#~ msgid ""
-#~ "%u items remain in the cache after cleaning already-synced items older "
-#~ "than %u seconds"
-#~ msgstr ""
-#~ "%u개의 항목이 캐쉬에 남아 있습니다.  이 때 %u초 보다 오래된 항목 중 이미 "
-#~ "쓰여진 항목들을 지웠습니다"
-
-#~ msgid "%s"
-#~ msgstr "%s"
-
-#~ msgid "/path"
-#~ msgstr "/path를 편집하십시오"
