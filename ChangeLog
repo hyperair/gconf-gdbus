@@ -1,5 +1,22 @@
 1999-09-02  Havoc Pennington  <hp@pobox.com>
 
+	* backends/Makefile.am: Install backends in $(libdir)/gconf
+
+	* gconf/Makefile.am: Look for backends in $(libdir)/gconf
+
+	* gconf/gconf-backend.c (g_conf_backend_file): Use
+	g_module_build_path() to build the module path
+
+        * gconf/gconf-orbit.c (g_conf_get_cookie_reliably): Make the 
+	~/.gconfd directory if necessary.
+
+	Lots of error-checking added.
+
+	* gconf/gconfd.c: Mark a lot of strings for translation; include 
+	username in the syslog spew.
+
+1999-09-02  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconfd.c (main): If the orb init fails, syslog the 
 	GConf error.
 

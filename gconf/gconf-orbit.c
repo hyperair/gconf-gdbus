@@ -159,6 +159,17 @@ g_conf_get_cookie_reliably (const char *setme)
 
   dir = g_conf_server_info_dir();
 
+  if (mkdir(dir, 0700) < 0)
+    {
+      if (errno != EEXIST)
+        {
+          g_conf_set_error(G_CONF_FAILED, _("Couldn't make directory `%s': %s"),
+                           dir, strerror(errno));
+          g_free(dir);
+          return NULL;
+        }
+    }
+  
   name = g_strconcat (dir, "/cookie", NULL);
 
   g_free(dir);

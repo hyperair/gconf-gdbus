@@ -50,6 +50,7 @@
 
 
 /* Quick hack so I can mark strings */
+/* Please don't mark LOG_DEBUG syslog messages */
 
 #ifdef _ 
 #warning "_ already defined"
@@ -590,7 +591,7 @@ g_conf_server_load_sources(void)
          request would result in another failed gconfd being spawned.  
       */
       gchar* empty_addr[] = { NULL };
-      syslog(LOG_ERR, "No configuration sources in the source path");
+      syslog(LOG_ERR, _("No configuration sources in the source path, configuration won't be saved; edit /etc/gconf/path"));
       sources = g_conf_sources_new(empty_addr);
       return;
     }
@@ -602,7 +603,7 @@ g_conf_server_load_sources(void)
   g_assert(sources != NULL);
 
   if (sources->sources == NULL)
-    syslog(LOG_ERR, "No config source addresses successfully resolved, can't load or store config data");
+    syslog(LOG_ERR, _("No config source addresses successfully resolved, can't load or store config data"));
     
   tmp = sources->sources;
 
@@ -618,7 +619,7 @@ g_conf_server_load_sources(void)
     }
 
   if (!have_writeable)
-    syslog(LOG_WARNING, "No writeable config sources successfully resolved, won't be able to save configuration changes");
+    syslog(LOG_WARNING, _("No writeable config sources successfully resolved, won't be able to save configuration changes"));
 
   /* Install the sources as the default context */
   set_default_context(context_new(sources));
@@ -674,7 +675,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
   if (fd < 0)
     {
-      syslog(LOG_ERR, "Failed to open info file: %s", strerror(errno));
+      syslog(LOG_ERR, _("Failed to open info file: %s"), strerror(errno));
       return FALSE;
     }
 
@@ -683,12 +684,12 @@ g_conf_server_write_info_file(const gchar* ior)
     {
       if (errno == EACCES || errno == EAGAIN)
         {
-          syslog(LOG_ERR, "Lock on info file is held by another process.");
+          syslog(LOG_ERR, _("Lock on info file is held by another process."));
           return FALSE;
         }
       else
         {
-          syslog(LOG_ERR, "Couldn't get lock on the info file: %s",
+          syslog(LOG_ERR, _("Couldn't get lock on the info file: %s"),
                  strerror(errno));
           return FALSE;
         }
@@ -696,7 +697,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
   if (ftruncate(fd, 0) < 0)
     {
-      syslog(LOG_ERR, "Couldn't truncate info file: %s",
+      syslog(LOG_ERR, _("Couldn't truncate info file: %s"),
              strerror(errno));
       return FALSE;
     }
@@ -723,7 +724,7 @@ g_conf_server_write_info_file(const gchar* ior)
           {
             if (errno != EINTR)
               {
-                syslog(LOG_ERR, "Failed to write info file: %s", strerror(errno));
+                syslog(LOG_ERR, _("Failed to write info file: %s"), strerror(errno));
                 return FALSE;
               }
             else
@@ -747,7 +748,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
     if (val < 0)
       {
-        syslog(LOG_ERR, "fcntl() F_GETFD failed for info file: %s", strerror(errno));
+        syslog(LOG_ERR, _("fcntl() F_GETFD failed for info file: %s"), strerror(errno));
         return FALSE;
       }
 
@@ -755,7 +756,7 @@ g_conf_server_write_info_file(const gchar* ior)
 
     if (fcntl(fd, F_SETFD, val) < 0)
       {
-        syslog(LOG_ERR, "fcntl() F_SETFD failed for info file: %s", strerror(errno));
+        syslog(LOG_ERR, _("fcntl() F_SETFD failed for info file: %s"), strerror(errno));
         return FALSE;
       }
   }
@@ -776,7 +777,7 @@ signal_handler (int signo)
   
   ++in_fatal;
   
-  syslog (LOG_ERR, "Received signal %d\nshutting down.", signo);
+  syslog (LOG_ERR, _("Received signal %d\nshutting down."), signo);
   
   fast_cleanup();
 
@@ -800,7 +801,10 @@ main(int argc, char** argv)
   CORBA_Environment ev;
   char *ior;
   CORBA_ORB orb;
-
+  gchar* logname;
+  const gchar* username;
+  guint len;
+  
   int launcher_fd = -1; /* FD passed from the client that spawned us */
 
   /* Following all Stevens' rules for daemons */
@@ -823,10 +827,18 @@ main(int argc, char** argv)
   chdir ("/");
 
   umask(0);
-  
+
   /* Logs */
-  openlog ("gconfd", LOG_NDELAY, LOG_USER);
-  syslog (LOG_INFO, "starting, pid %u user `%s'", 
+  username = g_get_user_name();
+  len = strlen(username) + strlen("gconfd") + 5;
+  logname = g_malloc(len);
+  g_snprintf(logname, len, "gconfd (%s)", username);
+
+  openlog (logname, LOG_NDELAY, LOG_USER);
+  /* openlog() does not copy logname - what total brokenness.
+     So we free it at the end of main() */
+  
+  syslog (LOG_INFO, _("starting, pid %u user `%s'"), 
           (guint)getpid(), g_get_user_name());
   
   /* Session setup */
@@ -847,13 +859,13 @@ main(int argc, char** argv)
 
   if (!g_conf_init_orb(&argc, argv)) /* must do before our own arg parsing */
     {
-      syslog(LOG_ERR, "Failed to init ORB: %s", g_conf_error());
+      syslog(LOG_ERR, _("Failed to init ORB: %s"), g_conf_error());
       exit(1);
     }
 
   if (argc > 2)
     {
-      syslog(LOG_ERR, "Invalid command line arguments");
+      syslog(LOG_ERR, _("Invalid command line arguments"));
       exit(1);
     }
   else if (argc == 2)
@@ -864,7 +876,7 @@ main(int argc, char** argv)
         {
           if (!isdigit(*s))
             {
-              syslog(LOG_ERR, "Command line arg should be a file descriptor, not `%s'",
+              syslog(LOG_ERR, _("Command line arg should be a file descriptor, not `%s'"),
                      argv[1]);
               exit(1);
             }
@@ -873,7 +885,7 @@ main(int argc, char** argv)
 
       launcher_fd = atoi(argv[1]);
 
-      syslog(LOG_DEBUG, "Will notify launcher client on fd %d", launcher_fd);
+      syslog(LOG_DEBUG, _("Will notify launcher client on fd %d"), launcher_fd);
     }
 
   init_contexts();
@@ -882,7 +894,7 @@ main(int argc, char** argv)
 
   if (orb == CORBA_OBJECT_NIL)
     {
-      syslog(LOG_ERR, "Failed to get ORB reference");
+      syslog(LOG_ERR, _("Failed to get ORB reference"));
       exit(1);
     }
 
@@ -898,7 +910,7 @@ main(int argc, char** argv)
                                                    &ev);
   if (server == CORBA_OBJECT_NIL) 
     {
-      syslog(LOG_ERR, "Failed to get object reference for ConfigServer");
+      syslog(LOG_ERR, _("Failed to get object reference for ConfigServer"));
       return 1;
     }
 
@@ -907,7 +919,7 @@ main(int argc, char** argv)
   /* Write IOR to a file (temporary hack, name server will be used eventually */
   if (!g_conf_server_write_info_file(ior))
     {
-      syslog(LOG_ERR, "Failed to write info file - maybe another gconfd is running. Exiting.");
+      syslog(LOG_ERR, _("Failed to write info file - maybe another gconfd is running. Exiting."));
       return 1;
     }
 
@@ -920,11 +932,11 @@ main(int argc, char** argv)
   if (launcher_fd >= 0)
     {
       if (write(launcher_fd, "g", 1) != 1)
-        syslog(LOG_ERR, "Failed to notify spawning parent of server liveness: %s",
+        syslog(LOG_ERR, _("Failed to notify spawning parent of server liveness: %s"),
                strerror(errno));
 
       if (close(launcher_fd) < 0)
-        syslog(LOG_ERR, "Failed to close pipe to spawning parent: %d", 
+        syslog(LOG_ERR, _("Failed to close pipe to spawning parent: %d"), 
                strerror(errno));
     }
 
@@ -934,6 +946,8 @@ main(int argc, char** argv)
 
   shutdown_contexts();
 
+  g_free(logname);
+  
   return 0;
 }
 

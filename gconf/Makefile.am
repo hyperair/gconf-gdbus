@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(ORBIT_CFLAGS) \
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(pkglibdir)"\"
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" -DGCONF_SYSCONFDIR=\""$(sysconfdir)"\" -DGCONF_BACKEND_DIR=\""$(libdir)/gconf"\"
 
 lib_LTLIBRARIES = libgconf-client.la
 

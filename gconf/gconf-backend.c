@@ -98,9 +98,9 @@ g_conf_backend_file(const gchar* address)
   if (back == NULL)
     return NULL;
 
-  file = g_strconcat("/libgconfbackend-", back, ".so", NULL);
+  file = g_strconcat("gconfbackend-", back, NULL);
   
-  retval = g_strconcat(GCONF_BACKEND_DIR, file, NULL);
+  retval = g_module_build_path(GCONF_BACKEND_DIR, file);
 
   g_free(back);
 
@@ -113,10 +113,15 @@ g_conf_backend_file(const gchar* address)
   else
     {
       /* -- debug only */
+      gchar* dir;
 
       g_free(retval);
-      retval = g_strconcat(GCONF_SRCDIR, "/backends/.libs/", file, NULL);
+      dir = g_strconcat(GCONF_SRCDIR, "/backends/.libs", NULL);
 
+      retval = g_module_build_path(dir, file);
+
+      g_free(dir);
+      
       if (g_conf_file_exists(retval))
         {
           g_free(file);

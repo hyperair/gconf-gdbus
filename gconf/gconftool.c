@@ -412,7 +412,7 @@ main (int argc, char** argv)
             {
               if (g_conf_errno() == G_CONF_SUCCESS)
                 {
-                  fprintf(stderr, _("No value set for `%s'\n"), *args); 
+                  fprintf(stderr, _("No value set for `%s'\n"), *args);
                 }
               else
                 fprintf(stderr, _("Failed to get value for `%s': %s\n"),
