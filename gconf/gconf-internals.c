@@ -2844,8 +2844,8 @@ gconf_activate_server (gboolean  start_if_not_found,
   g_free (gconfd_dir);
   
   lock_dir = gconf_get_lock_dir ();
-  
   server = gconf_get_current_lock_holder (lock_dir);
+  g_free (lock_dir);
 
   /* Confirm server exists */
   CORBA_exception_init (&ev);
@@ -2907,7 +2907,9 @@ gconf_activate_server (gboolean  start_if_not_found,
       /* Block until server starts up */
       read (p[0], buf, 1);
 
+      lock_dir = gconf_get_lock_dir ();
       server = gconf_get_current_lock_holder (lock_dir);
+      g_free (lock_dir);
     }
   
  out:
@@ -2922,6 +2924,5 @@ gconf_activate_server (gboolean  start_if_not_found,
   close (p[0]);
   close (p[1]);
   
-  g_free (lock_dir);
   return server;
 }
