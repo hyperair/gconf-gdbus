@@ -22,7 +22,7 @@
 #include "gconf-internals.h"
 #include "gconf-backend.h"
 #include "gconf-schema.h"
-#include <bonobo-activation/bonobo-activation.h>
+#include "gconf.h"
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -437,8 +437,7 @@ gconf_object_to_string (CORBA_Object obj,
   
   CORBA_exception_init (&ev);
 
-  ior = CORBA_ORB_object_to_string (
-	  bonobo_activation_orb_get (), obj, &ev);
+  ior = CORBA_ORB_object_to_string (gconf_orb_get (), obj, &ev);
 
   if (ior == NULL)
     {
@@ -2118,410 +2117,680 @@ gconf_value_encode (GConfValue* val)
   return retval;
 }
 
-gboolean
-gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err)
-{
-  switch (ev->_major)
-    {
-    case CORBA_NO_EXCEPTION:
-      CORBA_exception_free(ev);
-      return FALSE;
-      break;
-    case CORBA_SYSTEM_EXCEPTION:
-      if (err)
-        *err = gconf_error_new (GCONF_ERROR_NO_SERVER, _("CORBA error: %s"),
-                                CORBA_exception_id (ev));
-      CORBA_exception_free (ev);
-      return TRUE;
-      break;
-
-    case CORBA_USER_EXCEPTION:
-      {
-        const gchar* id = CORBA_exception_id(ev);
-
-        if (strcmp(id, "IDL:Bonobo/GeneralError:1.0") == 0)
-          {
-            Bonobo_GeneralError* ge = CORBA_exception_value(ev);
-
-            if (err)
-              *err = gconf_error_new (GCONF_ERROR_OAF_ERROR,
-                                      _("bonobo-activation problem description: '%s'"),
-                                      ge->description);
-          }
-        else if (strcmp (id,"IDL:Bonobo/ActivationContext/NotListed:1.0" ) == 0)
-          {
-            if (err)
-              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("attempt to remove not-listed OAF object directory"));
-          }
-        else if (strcmp (id,"IDL:Bonobo/ActivationContext/AlreadyListed:1.0" ) == 0)
-          {
-            if (err)
-              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("attempt to add already-listed OAF directory")); 
-          }
-        else if (strcmp (id,"IDL:Bonobo/ActivationContext/ParseFailed:1.0") == 0)
-          {
-            Bonobo_Activation_ParseFailed* pe = CORBA_exception_value(ev);
-            
-            if (err)
-              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("OAF parse error: %s"), pe->description);
-          }
-        else
-          {
-            if (err)
-              *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("Unknown OAF error"));
-          }
-        
-        CORBA_exception_free(ev);
-        return TRUE;
-      }
-      break;
-    default:
-      g_assert_not_reached();
-      return TRUE;
-      break;
-    }
-}
 
 /*
- * Locks using directories, to work on NFS (at least potentially)
+ * Locks
+ */
+
+/*
+ * Locks works as follows. We have a lock directory to hold the locking
+ * mess, and we have an IOR file inside the lock directory with the
+ * gconfd IOR, and we have an fcntl() lock on the IOR file. The IOR
+ * file is created atomically using a temporary file, then link()
  */
 
 struct _GConfLock {
-  gchar* lock_directory;
+  gchar *lock_directory;
+  gchar *iorfile;
+  int    lock_fd;
 };
 
 static void
-gconf_lock_destroy(GConfLock* lock)
+gconf_lock_destroy (GConfLock* lock)
 {
-  g_free(lock->lock_directory);
-  g_free(lock);
+  if (lock->lock_fd >= 0)
+    close (lock->lock_fd);
+  g_free (lock->iorfile);
+  g_free (lock->lock_directory);
+  g_free (lock);
 }
 
-GConfLock*
-gconf_get_lock_or_current_holder (const gchar*  lock_directory,
-                                  ConfigServer* current_server,
-                                  GError**      err)
+static void
+set_close_on_exec (int fd)
 {
-  GConfLock* lock;
-  gboolean got_it = FALSE;
-  gboolean error_occurred = FALSE;
-  gboolean stale = FALSE;
-  gchar* iorfile;
-  ConfigServer server;
-  
-  g_return_val_if_fail(lock_directory != NULL, NULL);
+  int val;
 
-  server = CORBA_OBJECT_NIL;
-  
-  lock = g_new(GConfLock, 1);
-
-  lock->lock_directory = g_strdup(lock_directory);
-
-  iorfile = g_strconcat(lock->lock_directory, "/ior", NULL);
-  
-  if (mkdir(lock->lock_directory, 0700) < 0)
+  val = fcntl (fd, F_GETFD, 0);
+  if (val < 0)
     {
-      if (errno == EEXIST)
-        {
-          /* Check the current IOR file and ping its daemon */
-          FILE* fp;
-          
-          fp = fopen(iorfile, "r");
-          
-          if (fp == NULL)
-            {
-              gconf_log(GCL_WARNING, _("No ior file in `%s'"),
-                        lock->lock_directory);
-              stale = TRUE;
-              got_it = TRUE;
-              goto out;
-            }
-          else
-            {
-              gchar buf[2048] = { '\0' };
-              gchar* str = NULL;
-              fgets(buf, 2047, fp);
-              fclose(fp);
+      gconf_log (GCL_DEBUG, "couldn't F_GETFD: %s\n", g_strerror (errno));
+      return;
+    }
 
-              /* The lockfile format is <pid>:<ior> for gconfd
-                 or <pid>:none for gconftool */
-              str = buf;
-              while (isdigit(*str))
-                ++str;
+  val |= FD_CLOEXEC;
 
-              if (*str == ':')
-                ++str;
-              
-              if (str[0] == 'n' &&
-                  str[1] == 'o' &&
-                  str[2] == 'n' &&
-                  str[3] == 'e')
-                {
-                  /* It's locked by gconftool, not a daemon;
-                     the daemon always "wins" the lock, with a warning */
-                  if (gconf_in_daemon_mode())
-                    {
-                      gconf_log(GCL_WARNING, _("gconfd taking lock `%s' from some other process"),
-                                lock->lock_directory);
-                      stale = TRUE;
-                      got_it = TRUE;
-                      goto out;
-                    }
-                  else
-                    {
-                      error_occurred = TRUE;
-                      gconf_set_error(err,
-                                      GCONF_ERROR_LOCK_FAILED,
-                                      _("Another program has lock `%s'"),
-                                      lock->lock_directory);
-                      goto out;
-                    }
-                }
-              else
-                {
-                  CORBA_ORB orb;
-                  CORBA_Environment ev;
+  if (fcntl (fd, F_SETFD, val) < 0)
+    gconf_log (GCL_DEBUG, "couldn't F_SETFD: %s\n", g_strerror (errno));
+}
 
-                  CORBA_exception_init(&ev);
-                  
-                  orb = bonobo_activation_orb_get();
+/* Your basic Stevens cut-and-paste */
+static int
+lock_reg (int fd, int cmd, int type, off_t offset, int whence, off_t len)
+{
+  struct flock lock;
 
-                  if (orb == NULL)
-                    {
-                      error_occurred = TRUE;
-                      gconf_set_error(err,
-                                      GCONF_ERROR_LOCK_FAILED,
-                                      _("couldn't contact ORB to ping existing gconfd"));
-                      goto out;
-                    }
-                  
-                  server = CORBA_ORB_string_to_object(orb, str, &ev);
+  lock.l_type = type; /* F_RDLCK, F_WRLCK, F_UNLCK */
+  lock.l_start = offset; /* byte offset relative to whence */
+  lock.l_whence = whence; /* SEEK_SET, SEEK_CUR, SEEK_END */
+  lock.l_len = len; /* #bytes, 0 for eof */
 
-                  if (CORBA_Object_is_nil(server, &ev))
-                    {
-                      gconf_log(GCL_WARNING, _("Removing stale lock `%s' because IOR couldn't be converted to object reference, IOR `%s'"),
-                                lock->lock_directory, str);
-                      stale = TRUE;
-                      got_it = TRUE;
-                      goto out;
-                    }
-                  else
-                    {
-                      ConfigServer_ping(server, &ev);
-      
-                      if (ev._major != CORBA_NO_EXCEPTION)
-                        {
-                          gconf_log(GCL_WARNING, _("Removing stale lock `%s' because of error pinging server: %s"),
-                                    lock->lock_directory, CORBA_exception_id(&ev));
-                          CORBA_exception_free(&ev);
-                          stale = TRUE;
-                          got_it = TRUE;
-                          goto out;
-                        }
-                      else
-                        {
-                          error_occurred = TRUE;
-                          gconf_set_error(err,
-                                          GCONF_ERROR_LOCK_FAILED,
-                                          _("GConf configuration daemon (gconfd) has lock `%s'"),
-                                          lock->lock_directory);
-                          goto out;
-                        }
-                    }
-                }
-            }
-        }
-      else
-        {
-          /* give up */
-          error_occurred = TRUE;
-          gconf_set_error(err,
-                          GCONF_ERROR_LOCK_FAILED,
-                          _("couldn't create directory `%s': %s"),
-                          lock->lock_directory, strerror(errno));
-          goto out;
-        }
+  return fcntl (fd, cmd, &lock);
+}
+
+#define lock_entire_file(fd) \
+  lock_reg ((fd), F_SETLK, F_WRLCK, 0, SEEK_SET, 0)
+#define unlock_entire_file(fd) \
+  lock_reg ((fd), F_SETLK, F_UNLCK, 0, SEEK_SET, 0)
+
+static gboolean
+file_locked_by_someone_else (int fd)
+{
+  struct flock lock;
+
+  lock.l_type = F_WRLCK;
+  lock.l_start = 0;
+  lock.l_whence = SEEK_SET;
+  lock.l_len = 0;
+
+  if (fcntl (fd, F_GETLK, &lock) < 0)
+    return TRUE; /* pretend it's locked */
+
+  if (lock.l_type == F_UNLCK)
+    return FALSE; /* we have the lock */
+  else
+    return TRUE; /* someone else has it */
+}
+
+static int
+create_new_locked_file (const gchar *directory,
+                        const gchar *filename,
+                        GError     **err)
+{
+  int fd;
+  char *uniquefile;
+  char *guid;
+  gboolean got_lock;
+  
+  got_lock = FALSE;
+  
+  guid = gconf_unique_key ();
+  uniquefile = g_strconcat (directory, "/", guid, NULL);
+  g_free (guid);
+
+  fd = open (uniquefile, O_WRONLY | O_CREAT, 0700);
+
+  /* Lock our temporary file, lock hopefully applies to the
+   * inode and so also counts once we link it to the new name
+   */
+  if (lock_entire_file (fd) < 0)
+    {
+      g_set_error (err,
+                   GCONF_ERROR,
+                   GCONF_ERROR_LOCK_FAILED,
+                   _("Could not lock temporary file '%s': %s"),
+                   uniquefile, g_strerror (errno));
+      goto out;
+    }
+  
+  /* Create lockfile as a link to unique file */
+  if (link (uniquefile, filename) == 0)
+    {
+      /* filename didn't exist before, and open succeeded, and we have the lock */
+      got_lock = TRUE;
+      goto out;
     }
   else
     {
-      got_it = TRUE;
+      /* see if the link really succeeded */
+      struct stat sb;
+      if (stat (uniquefile, &sb) == 0 &&
+          sb.st_nlink == 2)
+        {
+          got_lock = TRUE;
+          goto out;
+        }
+      else
+        {
+          g_set_error (err,
+                       GCONF_ERROR,
+                       GCONF_ERROR_LOCK_FAILED,
+                       _("Could not create file '%s', probably because it already exists"),
+                       filename);
+          goto out;
+        }
     }
   
  out:
+  if (got_lock)
+    set_close_on_exec (fd);
+  
+  unlink (uniquefile);
+  g_free (uniquefile);
 
-  if (error_occurred)
-    {      
-      g_assert(!got_it);
+  if (!got_lock)
+    {
+      if (fd >= 0)
+        close (fd);
+      fd = -1;
+    }
+  
+  return fd;
+}
 
-      g_free(iorfile);
-      gconf_lock_destroy(lock);
+static int
+open_empty_locked_file (const gchar *directory,
+                        const gchar *filename,
+                        GError     **err)
+{
+  int fd;
+
+  fd = create_new_locked_file (directory, filename, NULL);
+
+  if (fd >= 0)
+    return fd;
+  
+  /* We failed to create the file, most likely because it already
+   * existed; try to get the lock on the existing file, and if we can
+   * get that lock, delete it, then start over.
+   */
+  fd = open (filename, O_RDWR, 0700);
+  if (fd < 0)
+    {
+      /* File has gone away? */
+      g_set_error (err,
+                   GCONF_ERROR,
+                   GCONF_ERROR_LOCK_FAILED,
+                   _("Failed to create or open '%s'"),
+                   filename);
+      return -1;
+    }
+
+  if (lock_entire_file (fd) < 0)
+    {
+      g_set_error (err,
+                   GCONF_ERROR,
+                   GCONF_ERROR_LOCK_FAILED,
+                   _("Failed to lock '%s': another process has the lock"),
+                   filename);
+      close (fd);
+      return -1;
+    }
+
+  /* We have the lock on filename, so delete it */
+  unlink (filename);
+  close (fd);
+  fd = -1;
+
+  /* Now retry creating our file */
+  fd = create_new_locked_file (directory, filename, err);
+  
+  return fd;
+}
+
+static ConfigServer
+read_current_server (const gchar *iorfile,
+                     gboolean     warn_if_fail)
+{
+  FILE *fp;
+  
+  fp = fopen (iorfile, "r");
+          
+  if (fp == NULL)
+    {
+      if (warn_if_fail)
+        gconf_log (GCL_WARNING, _("IOR file '%s' not opened successfully, no gconfd located: %s"),
+                   iorfile, g_strerror (errno));
+
+      return CORBA_OBJECT_NIL;
+    }
+  else /* successfully opened IOR file */
+    {
+      char buf[2048] = { '\0' };
+      const char *str = NULL;
       
-      if (server != CORBA_OBJECT_NIL)
+      fgets (buf, sizeof (buf) - 2, fp);
+      fclose (fp);
+
+      /* The lockfile format is <pid>:<ior> for gconfd
+       * or <pid>:none for gconftool
+       */
+      str = buf;
+      while (isdigit(*str))
+        ++str;
+
+      if (*str == ':')
+        ++str;
+          
+      if (str[0] == 'n' &&
+          str[1] == 'o' &&
+          str[2] == 'n' &&
+          str[3] == 'e')
         {
-          if (current_server)
-            *current_server = server;
-          else
-            {
-              CORBA_Environment ev;
-              CORBA_exception_init (&ev);
-              CORBA_Object_release (server, &ev);
-              CORBA_exception_free (&ev);
-            }
+          if (warn_if_fail)
+            gconf_log (GCL_WARNING,
+                       _("gconftool or other non-gconfd process has the lock file '%s'"),
+                       iorfile);          
         }
+      else /* file contains daemon IOR */
+        {
+          CORBA_ORB orb;
+          CORBA_Environment ev;
+          ConfigServer server;
+          
+          CORBA_exception_init (&ev);
+                  
+          orb = gconf_orb_get ();
+
+          if (orb == NULL)
+            {
+              if (warn_if_fail)
+                gconf_log (GCL_WARNING,
+                           _("couldn't contact ORB to resolve existing gconfd object reference"));
+              return CORBA_OBJECT_NIL;
+            }
+                  
+          server = CORBA_ORB_string_to_object (orb, (char*) str, &ev);
+          CORBA_exception_free (&ev);
+
+          if (server == CORBA_OBJECT_NIL &&
+              warn_if_fail)
+            gconf_log (GCL_WARNING,
+                       _("Failed to convert IOR '%s' to an object reference"),
+                       str);
+          
+          return server;
+        }
+
+      return CORBA_OBJECT_NIL;
+    }
+}
+
+GConfLock*
+gconf_get_lock_or_current_holder (const gchar  *lock_directory,
+                                  ConfigServer *current_server,
+                                  GError      **err)
+{
+  ConfigServer server;
+  GConfLock* lock;
+  
+  g_return_val_if_fail(lock_directory != NULL, NULL);
+
+  if (current_server)
+    *current_server = CORBA_OBJECT_NIL;
+  
+  if (mkdir (lock_directory, 0700) < 0 &&
+      errno != EEXIST)
+    {
+      gconf_set_error (err,
+                       GCONF_ERROR_LOCK_FAILED,
+                       _("couldn't create directory `%s': %s"),
+                       lock_directory, g_strerror (errno));
 
       return NULL;
     }
 
-  g_assert(got_it);
+  server = CORBA_OBJECT_NIL;
+    
+  lock = g_new0 (GConfLock, 1);
+
+  lock->lock_directory = g_strdup (lock_directory);
+
+  lock->iorfile = g_strconcat (lock->lock_directory, "/ior", NULL);
+
+  /* Check the current IOR file and ping its daemon */
   
-  if (stale)
-    unlink(iorfile);
+  lock->lock_fd = open_empty_locked_file (lock->lock_directory,
+                                          lock->iorfile,
+                                          err);
+  
+  if (lock->lock_fd < 0)
+    {
+      /* We didn't get the lock. Read the old server, and provide
+       * it to the caller. Error is already set.
+       */
+      if (current_server)
+        *current_server = read_current_server (lock->iorfile, TRUE);
 
-  {
-    int fd = -1;
-
-    fd = open(iorfile, O_WRONLY | O_CREAT | O_TRUNC, 0700);
-
-    if (fd < 0)
-      {
-        gconf_set_error(err,
-                        GCONF_ERROR_LOCK_FAILED,
-                        _("Can't create lock `%s': %s"),
-                        iorfile, strerror(errno));
-        g_free(iorfile);
-        gconf_lock_destroy(lock);
-        return NULL;
-      }
-    else
-      {
-        const gchar* ior;
-        int retval;
-        gchar* s;
+      gconf_lock_destroy (lock);
+      
+      return NULL;
+    }
+  else
+    {
+      /* Write IOR to lockfile */
+      const gchar* ior;
+      int retval;
+      gchar* s;
+      
+      s = g_strdup_printf ("%u:", (guint) getpid ());
         
-        s = g_strdup_printf("%u:", (guint)getpid());
-        
-        retval = write(fd, s, strlen(s));
+      retval = write (lock->lock_fd, s, strlen (s));
 
-        g_free(s);
+      g_free (s);
         
-        if (retval >= 0)
-          {
-            ior = gconf_get_daemon_ior();
+      if (retval >= 0)
+        {
+          ior = gconf_get_daemon_ior();
             
-            if (ior == NULL)
-              {
-                retval = write(fd, "none", 4);
-              }
-            else
-              {
-                retval = write(fd, ior, strlen(ior));
-              }
-          }
+          if (ior == NULL)
+            retval = write (lock->lock_fd, "none", 4);
+          else
+            retval = write (lock->lock_fd, ior, strlen (ior));
+        }
 
-        if (retval < 0)
-          {
-            gconf_set_error(err,
-                            GCONF_ERROR_LOCK_FAILED,
-                            _("Can't write to file `%s': %s"),
-                            iorfile, strerror(errno));
-            close(fd);
-            g_free(iorfile);
-            gconf_lock_destroy(lock);            
-            return NULL;
-          }
+      if (retval < 0)
+        {
+          gconf_set_error (err,
+                           GCONF_ERROR_LOCK_FAILED,
+                           _("Can't write to file `%s': %s"),
+                           lock->iorfile, g_strerror (errno));
 
-        if (close(fd) < 0)
-          {
-            gconf_set_error(err,
-                            GCONF_ERROR_LOCK_FAILED,
-                            _("Failed to close file `%s': %s"),
-                            iorfile, strerror(errno));
-            g_free(iorfile);
-            gconf_lock_destroy(lock);            
-            return NULL;
-          }
-      }
-  }
-  
-  g_free(iorfile);
+          unlink (lock->iorfile);
+          gconf_lock_destroy (lock);
+
+          return NULL;
+        }
+    }
+
   return lock;
 }
 
 GConfLock*
-gconf_get_lock(const gchar* lock_directory,
-               GError** err)
+gconf_get_lock (const gchar *lock_directory,
+                GError     **err)
 {
   return gconf_get_lock_or_current_holder (lock_directory, NULL, err);
 }
 
 gboolean
-gconf_release_lock(GConfLock* lock,
-                   GError** err)
+gconf_release_lock (GConfLock *lock,
+                    GError   **err)
 {
-  gchar* iorfile;
-  FILE* fp;
-  gchar buf[256] = { '\0' };
-  gchar* str = NULL;
-  gulong pid;
-  
-  iorfile = g_strconcat(lock->lock_directory, "/ior", NULL);
-          
-  fp = fopen(iorfile, "r");
-  
-  if (fp == NULL)
+  gboolean retval;
+
+  retval = FALSE;
+
+  /* A paranoia check to avoid disaster if e.g.
+   * some random client code opened and closed the
+   * lockfile (maybe Nautilus checking its MIME type or
+   * something)
+   */
+  if (lock->lock_fd < 0 ||
+      file_locked_by_someone_else (lock->lock_fd))
     {
-      gconf_set_error(err,
-                      GCONF_ERROR_FAILED,
-                      _("Can't open lock file `%s'; assuming it isn't ours: %s"),
-                      iorfile, strerror(errno));
-      g_free(iorfile);
-      return FALSE;
+      g_set_error (err,
+                   GCONF_ERROR,
+                   GCONF_ERROR_FAILED,
+                   _("We didn't have the lock on file `%s', but we should have"),
+                   lock->iorfile);
+      goto out;
     }
 
-  fgets(buf, 255, fp);
-  fclose(fp);
-
-  /* The lockfile format is <pid>:<ior> for gconfd
-     or <pid>:none for gconftool */
-
-  /* get PID to see if it's ours */
-  pid = strtoul(buf, &str, 10);
-
-  if (buf == str)
+  /* Note that we unlink while still holding the lock */
+  if (unlink (lock->iorfile) < 0)
     {
-      gconf_log(GCL_WARNING, _("Corrupt lock file `%s', removing anyway"),
-                iorfile);
+      g_set_error(err,
+                  GCONF_ERROR,
+                  GCONF_ERROR_FAILED,
+                  _("Failed to remove lock file `%s': %s"),
+                  lock->iorfile,
+                  g_strerror (errno));
+      goto out;
+    }
+  
+  if (rmdir (lock->lock_directory) < 0)
+    {
+      g_set_error(err,
+                  GCONF_ERROR,
+                  GCONF_ERROR_FAILED,
+                  _("Failed to remove lock directory `%s': %s"),
+                  lock->lock_directory,
+                  g_strerror (errno));
+      goto out;
+    }
 
+  retval = TRUE;
+  
+ out:
+
+  gconf_lock_destroy (lock);
+  return retval;
+}
+
+/* This function doesn't try to see if the lock is valid or anything
+ * of the sort; it just reads it. It does do the object_to_string
+ */
+ConfigServer
+gconf_get_current_lock_holder  (const gchar *lock_directory)
+{
+  char *iorfile;
+  ConfigServer server;
+
+  iorfile = g_strconcat (lock_directory, "/ior", NULL);
+  server = read_current_server (iorfile, FALSE);
+  g_free (iorfile);
+  return server;
+}
+
+#include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+const char *
+get_hostname (void)
+{
+	static char *hostname = NULL;
+	char hn_tmp[65], ha_tmp[4];
+	struct hostent *hent;
+
+	if (!hostname) {
+		gethostname (hn_tmp, sizeof (hn_tmp) - 1);
+
+		hent = gethostbyname (hn_tmp);
+		if (hent) {
+			memcpy (ha_tmp, hent->h_addr, 4);
+			hent = gethostbyaddr (ha_tmp, 4, AF_INET);
+			if (hent)
+				hostname = g_strdup (hent->h_name);
+			else
+				hostname =
+					g_strdup (inet_ntoa
+						  (*
+						   ((struct in_addr *)
+						    ha_tmp)));
+		} else
+			hostname = g_strdup (hn_tmp);
+	}
+
+	return hostname;
+}
+
+CORBA_ORB
+gconf_orb_get (void)
+{
+  if (TRUE || gconf_in_daemon_mode ())
+    {
+      static CORBA_ORB gconf_orb = CORBA_OBJECT_NIL;      
+
+      if (gconf_orb == CORBA_OBJECT_NIL)
+        {
+          CORBA_Environment ev;
+          int argc = 1;
+          char *argv[] = { "gconf", NULL };
+          CORBA_Context context;
+          const char *hostname;
+      
+          CORBA_exception_init (&ev);
+      
+          gconf_orb = CORBA_ORB_init (&argc, argv, "orbit-local-orb", &ev);
+          g_assert (ev._major == CORBA_NO_EXCEPTION);
+
+          /* Set values in default context */
+          CORBA_ORB_get_default_context (gconf_orb, &context, &ev);
+          g_assert (ev._major == CORBA_NO_EXCEPTION);
+          
+          hostname = get_hostname ();
+          CORBA_Context_set_one_value (context, "hostname",
+                                       (char *) hostname, &ev);
+          CORBA_Context_set_one_value (context, "domain", "user", &ev);
+          CORBA_Context_set_one_value (context, "username",
+                                       g_get_user_name (), &ev);
+          
+          CORBA_exception_free (&ev);
+        }
+      
+      return gconf_orb;
     }
   else
     {
-      if (pid != getpid())
-        {
-          gconf_set_error(err,
-                          GCONF_ERROR_FAILED,
-                          _("Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone took our lock"),
-                          iorfile, (guint)pid, (guint)getpid());
-          g_free(iorfile);
-          return FALSE;
-        }
+      /* FIXME do we have to do this if an app is using bonobo activation? */
+#if 0
+      return bonobo_activation_orb_get ();
+#endif
     }
-  
-  /* Race condition here, someone could replace the lockfile
-     before we decide whether it's ours; oh well */
-  unlink(iorfile);
+}
 
-  g_free(iorfile);
+char*
+gconf_get_daemon_dir (void)
+{
+  return g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
+}
+
+char*
+gconf_get_lock_dir (void)
+{
+  char *gconfd_dir;
+  char *lock_dir;
   
-  if (rmdir(lock->lock_directory) < 0)
+  gconfd_dir = gconf_get_daemon_dir ();
+  lock_dir = g_strconcat (gconfd_dir, "/lock", NULL);
+
+  g_free (gconfd_dir);
+  return lock_dir;
+}
+
+static void
+set_cloexec (gint fd)
+{
+  fcntl (fd, F_SETFD, FD_CLOEXEC);
+}
+
+static void
+close_fd_func (gpointer data)
+{
+  int *pipes = data;
+  
+  gint open_max;
+  gint i;
+  
+  open_max = sysconf (_SC_OPEN_MAX);
+  for (i = 3; i < open_max; i++)
     {
-      gconf_set_error(err,
-                      GCONF_ERROR_FAILED,
-                      _("Failed to release lock directory `%s': %s"),
-                      lock->lock_directory,
-                      strerror(errno));
-      gconf_lock_destroy(lock);
-      return FALSE;
+      /* don't close our write pipe */
+      if (i != pipes[1])
+        set_cloexec (i);
     }
-  gconf_lock_destroy(lock);
-  return TRUE;
+}
+
+ConfigServer
+gconf_activate_server (gboolean  start_if_not_found,
+                       GError  **error)
+{
+  ConfigServer server;
+  int p[2] = { -1, -1 };
+  char buf[1];
+  GError *tmp_err;
+  char *argv[3];
+  char *gconfd_dir;
+  char *lock_dir;
+  CORBA_Environment ev;
+  
+  gconfd_dir = gconf_get_daemon_dir ();
+  
+  if (mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
+    gconf_log (GCL_WARNING, _("Failed to create %s: %s"),
+               gconfd_dir, g_strerror (errno));
+
+  g_free (gconfd_dir);
+  
+  lock_dir = gconf_get_lock_dir ();
+  
+  server = gconf_get_current_lock_holder (lock_dir);
+
+  /* Confirm server exists */
+  CORBA_exception_init (&ev);
+
+  if (!CORBA_Object_is_nil (server, &ev))
+    {
+      ConfigServer_ping (server, &ev);
+      
+      if (ev._major != CORBA_NO_EXCEPTION)
+        server = CORBA_OBJECT_NIL;
+    }
+
+  CORBA_exception_free (&ev);
+  
+  if (server != CORBA_OBJECT_NIL)
+    return server;
+  
+  if (start_if_not_found)
+    {
+      /* Spawn server */
+      if (pipe (p) < 0)
+        {
+          g_set_error (error,
+                       GCONF_ERROR,
+                       GCONF_ERROR_NO_SERVER,
+                       _("Failed to create pipe for communicating with spawned gconf daemon: %s\n"),
+                       g_strerror (errno));
+          goto out;
+        }
+
+      argv[0] = g_strconcat (GCONF_BINDIR, "/" GCONFD, NULL);
+      argv[1] = g_strdup_printf ("%d", p[1]);
+      argv[2] = NULL;
+  
+      tmp_err = NULL;
+      if (!g_spawn_async (NULL,
+                          argv,
+                          NULL,
+                          G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
+                          close_fd_func,
+                          p,
+                          NULL,
+                          &tmp_err))
+        {
+          g_free (argv[0]);
+          g_free (argv[1]);
+          g_set_error (error,
+                       GCONF_ERROR,
+                       GCONF_ERROR_NO_SERVER,
+                       _("Failed to launch configuration server: %s\n"),
+                       tmp_err->message);
+          g_error_free (tmp_err);
+          goto out;
+        }
+      
+      g_free (argv[0]);
+      g_free (argv[1]);
+  
+      /* Block until server starts up */
+      read (p[0], buf, 1);
+
+      server = gconf_get_current_lock_holder (lock_dir);
+    }
+  
+ out:
+  if (server == CORBA_OBJECT_NIL &&
+      error &&
+      *error == NULL)
+    g_set_error (error,
+                 GCONF_ERROR,
+                 GCONF_ERROR_NO_SERVER,
+                 _("Failed to contact configuration server (a likely cause of this is that you have an existing configuration server (gconfd) running, but it isn't reachable from here - if you're logged in from two machines at once, you may need to enable TCP networking for ORBit)\n"));
+
+  close (p[0]);
+  close (p[1]);
+  
+  g_free (lock_dir);
+  return server;
 }

@@ -30,8 +30,6 @@ extern "C" {
 #include <gconf/gconf-engine.h>
 #include <gconf/gconf-error.h>
 
-gboolean     gconf_is_initialized  (void);
-
 typedef void (*GConfNotifyFunc) (GConfEngine* conf,
                                  guint cnxn_id,
                                  GConfEntry *entry,
@@ -255,7 +253,11 @@ gboolean     gconf_string_to_enum (GConfEnumStringPair  lookup_table[],
 const gchar* gconf_enum_to_string (GConfEnumStringPair  lookup_table[],
                                    gint                 enum_value);
 
-gboolean     gconf_init        (int argc, char **argv, GError** err);
+
+#ifndef GCONF_DISABLE_DEPRECATED
+gboolean     gconf_init           (int argc, char **argv, GError** err);
+gboolean     gconf_is_initialized (void);
+#endif /* GCONF_DISABLE_DEPRECATED
 
 /* No, you can't use this stuff. Bad application developer. Bad. */
 #ifdef GCONF_ENABLE_INTERNALS
@@ -264,6 +266,7 @@ gboolean     gconf_init        (int argc, char **argv, GError** err);
  * release.
  */
 
+#ifndef GCONF_DISABLE_DEPRECATED
 /* For use by the Gnome module system */
 void gconf_preinit(gpointer app, gpointer mod_info);
 void gconf_postinit(gpointer app, gpointer mod_info);
@@ -278,6 +281,7 @@ extern const char gconf_version[];
 /* If people are using popt, then make the table available to them */
 extern struct poptOption gconf_options[];
 #endif
+#endif /* GCONF_DISABLE_DEPRECATED */
 
 void gconf_clear_cache(GConfEngine* conf, GError** err);
 void gconf_synchronous_sync(GConfEngine* conf, GError** err);
@@ -290,7 +294,7 @@ GConfValue * gconf_engine_get_full (GConfEngine *conf,
                                     gboolean *is_writable_p,
                                     GError **err);
 
-#endif
+#endif /* GCONF_ENABLE_INTERNALS */
 
 #ifdef __cplusplus
 }

@@ -252,10 +252,10 @@ cache_clean      (Cache        *cache,
   size = g_hash_table_size(cache->cache);
 
   if (size != 0)
-    gconf_log(GCL_INFO,
-              _("%u items remain in the cache after cleaning already-synced items older than %u seconds"),
-              size,
-              older_than);
+    gconf_log (GCL_DEBUG,
+               _("%u items remain in the cache after cleaning already-synced items older than %u seconds"),
+               size,
+               older_than);
 }
 
 static void

@@ -560,18 +560,7 @@ main (int argc, char** argv)
           /* Properly set, but set to nothing (use default source) */
           config_source = NULL;
         }
-      
-      if (gconf_ping_daemon())
-        {
-          /* Eventually you should be able to run gconfd as long as
-             you're installing to a different database from the one
-             it's using, but I don't trust the locking right now. */
-          fprintf(stderr, _("Shouldn't run gconfd while installing new schema files.\nUse gconftool --shutdown to shut down the daemon, most safely while no applications are running\n(though things theoretically work if apps are running).\n"));
-          return 1;
-        }
 
-      /* Race condition! gconfd could start up. But we do have locking
-         as a second line of defense. */
       use_local_source = TRUE;
     }
   

@@ -32,7 +32,6 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <bonobo-activation/bonobo-activation.h>
 
 /* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err);
@@ -287,7 +286,7 @@ gconf_engine_connect (GConfEngine *conf,
       if (err)
         *err = gconf_error_new(GCONF_ERROR_BAD_ADDRESS,
                                _("Server couldn't resolve the address `%s'"),
-                               conf->address);
+                               conf->address ? conf->address : "default");
           
       return FALSE;
     }
@@ -1842,20 +1841,18 @@ static ConfigServer   server = CORBA_OBJECT_NIL;
 
 /* errors in here should be GCONF_ERROR_NO_SERVER */
 static ConfigServer
-try_to_contact_server(gboolean start_if_not_found, GError** err)
+try_to_contact_server (gboolean start_if_not_found,
+                       GError **err)
 {
   CORBA_Environment ev;
-  Bonobo_ActivationFlags flags;
   
-  CORBA_exception_init(&ev);
+  /* Try to launch server */      
+  server = gconf_activate_server (start_if_not_found,
+                                  err);
+    
+  /* Try to ping server, by adding ourselves as a client */
+  CORBA_exception_init (&ev);   
 
-  flags = 0;
-  if (!start_if_not_found)
-    flags |= Bonobo_ACTIVATION_FLAG_EXISTING_ONLY;
-  
-  server = bonobo_activation_activate_from_id ("OAFAID:["IID"]", flags, NULL, &ev);
-
-  /* So try to ping server, by adding ourselves as a client */
   if (!CORBA_Object_is_nil (server, &ev))
     {
       ConfigServer_add_client (server,
@@ -1865,33 +1862,19 @@ try_to_contact_server(gboolean start_if_not_found, GError** err)
       if (ev._major != CORBA_NO_EXCEPTION)
 	{
 	  server = CORBA_OBJECT_NIL;
-	  if (err)
-	    *err = gconf_error_new(GCONF_ERROR_NO_SERVER,
-                                   _("Adding client to server's list failed, CORBA error: %s"),
-				   CORBA_exception_id(&ev));
+          g_set_error (err,
+                       GCONF_ERROR,
+                       GCONF_ERROR_NO_SERVER,
+                       _("Adding client to server's list failed, CORBA error: %s"),
+                       CORBA_exception_id (&ev));
 
           CORBA_exception_free(&ev);
 	}
     }
-  else
-    {
-      if (gconf_handle_oaf_exception(&ev, err))
-        {
-          /* Make the errno more specific */
-          if (err && *err)
-            (*err)->code = GCONF_ERROR_NO_SERVER;
-        }
-
-      if (err && *err == NULL)
-        *err = gconf_error_new(GCONF_ERROR_NO_SERVER,
-                               _("Error contacting configuration server: bonobo-activation returned nil from bonobo_activation_activate_from_id() and did not set an exception explaining the problem. This is a bug in the bonobo-activation package; something went wrong in bonobo-activation, and no error was reported. This is not a bug in the GConf package. Do not report a GConf bug unless you have information indicating what went wrong with bonobo-activation that was caused by GConf."));
-    }
 
 #ifdef GCONF_ENABLE_DEBUG      
   if (server == CORBA_OBJECT_NIL && start_if_not_found)
-    {
-      g_return_val_if_fail(err == NULL || *err != NULL, server);
-    }
+    g_return_val_if_fail (err == NULL || *err != NULL, server);
 #endif
   
   return server;
@@ -2113,32 +2096,22 @@ drop_all_caches (PortableServer_Servant     _servant,
 static ConfigListener 
 gconf_get_config_listener(void)
 {
-  return listener;
-}
-
-static gboolean have_initted = FALSE;
-
-void
-gconf_preinit(gpointer app, gpointer mod_info)
-{
-}
-
-void
-gconf_postinit(gpointer app, gpointer mod_info)
-{
+  static ConfigListener listener = CORBA_OBJECT_NIL;
+  
   if (listener == CORBA_OBJECT_NIL)
     {
       CORBA_Environment ev;
       PortableServer_ObjectId* objid;
       PortableServer_POA poa;
 
-      CORBA_exception_init(&ev);
-      POA_ConfigListener__init(&poa_listener_servant, &ev);
+      CORBA_exception_init (&ev);
+      POA_ConfigListener__init (&poa_listener_servant, &ev);
       
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(
-	      bonobo_activation_orb_get(), "RootPOA", &ev);
+      poa =
+        (PortableServer_POA) CORBA_ORB_resolve_initial_references (gconf_orb_get (),
+                                                                   "RootPOA", &ev);
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
@@ -2146,7 +2119,7 @@ gconf_postinit(gpointer app, gpointer mod_info)
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
 
-      objid = PortableServer_POA_activate_object(poa, &poa_listener_servant, &ev);
+      objid = PortableServer_POA_activate_object (poa, &poa_listener_servant, &ev);
 
       g_assert (ev._major == CORBA_NO_EXCEPTION);
       
@@ -2157,49 +2130,33 @@ gconf_postinit(gpointer app, gpointer mod_info)
       g_assert (listener != CORBA_OBJECT_NIL);
       g_assert (ev._major == CORBA_NO_EXCEPTION);
     }
-
-  have_initted = TRUE;
+  
+  return listener;
+}
+     
+void
+gconf_preinit (gpointer app, gpointer mod_info)
+{
+  /* Deprecated */
 }
 
+void
+gconf_postinit (gpointer app, gpointer mod_info)
+{
+  /* Deprecated */
+}
+
+/* All deprecated */
 const char gconf_version[] = VERSION;
 
 struct poptOption gconf_options[] = {
   {NULL}
 };
 
+/* Also deprecated */
 gboolean     
-gconf_init           (int argc, char **argv, GError** err)
+gconf_init (int argc, char **argv, GError** err)
 {
-  CORBA_ORB orb = CORBA_OBJECT_NIL;
-
-  if (have_initted)
-    {
-      g_warning("Attempt to init GConf a second time");
-      return FALSE;
-    }
-
-  gconf_preinit(NULL, NULL);
-
-  if (!bonobo_activation_is_initialized())
-    {
-      orb = bonobo_activation_init(argc, argv);
-    }
-  else
-    {
-      orb = bonobo_activation_orb_get();
-    }
-      
-  gconf_postinit(NULL, NULL);
-
-  if(!have_initted)
-    {
-      if (err == NULL)
-        {
-          fprintf(stderr, _("Failed to init GConf, exiting\n"));
-          exit (1);
-        }
-      return FALSE;
-    }
   
   return TRUE;
 }
@@ -2207,7 +2164,7 @@ gconf_init           (int argc, char **argv, GError** err)
 gboolean
 gconf_is_initialized (void)
 {
-  return have_initted;
+  return TRUE;
 }
 
 /* 
@@ -2764,7 +2721,7 @@ gconf_engine_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
 
 GSList*
 gconf_engine_get_list    (GConfEngine* conf, const gchar* key,
-                   GConfValueType list_type, GError** err)
+                          GConfValueType list_type, GError** err)
 {
   GConfValue* val;
 

@@ -20,6 +20,7 @@
 #include "gconf-locale.h"
 #include "gconf-internals.h"
 #include <sys/time.h>
+#include <time.h>
 #include <string.h>
 
 static void

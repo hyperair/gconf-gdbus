@@ -1,19 +1,22 @@
 NULL=
 
-INCLUDES=\
-	-I$(top_srcdir) \
-	-I$(top_builddir) \
-	$(DEPENDENT_CFLAGS) \
-	-DG_LOG_DOMAIN=\"GConf\"                   \
-	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"  \
-        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\" \
-	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\" \
-	-DGCONF_ETCDIR=\""$(sysconfdir)/gconf"\" \
-	-DGCONF_BUILDDIR=\""$(top_builddir)"\" 			\
-	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\" \
-	-DVERSION=\""$(VERSION)"\" \
-	-DIID=\""OAFIID:GNOME_Config_Daemon"\" \
-	-DGCONF_ENABLE_INTERNALS=1 \
+GCONFD_BINARY_NAME=gconfd-2
+
+INCLUDES=								\
+	-I$(top_srcdir)							\
+	-I$(top_builddir)						\
+	$(DEPENDENT_WITH_XML_CFLAGS)						\
+	-DG_LOG_DOMAIN=\"GConf\"					\
+	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"			\
+        -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\"			\
+	-DGCONF_CONFDIR=\""$(sysconfdir)/gconf/$(MAJOR_VERSION)"\"	\
+	-DGCONF_ETCDIR=\""$(sysconfdir)/gconf"\"			\
+	-DGCONF_BINDIR=\""$(bindir)"\"					\
+	-DGCONF_BUILDDIR=\""$(top_builddir)"\"				\
+	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\"		\
+	-DVERSION=\""$(VERSION)"\"					\
+	-DGCONF_ENABLE_INTERNALS=1					\
+	-DGCONFD=\""$(GCONFD_BINARY_NAME)"\"				\
 	$(NULL)
 
 EFENCE=
@@ -93,7 +96,7 @@ libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
-EXTRA_DIST=GConf.idl GNOME_Config.server.in default.path.in gconfmarshal.list
+EXTRA_DIST=GConf.idl default.path.in gconfmarshal.list
 
 install-exec-local:
 	(cd $(DESTDIR)$(bindir) && $(RM) gconftool && $(LN_S) -f gconftool-$(MAJOR_VERSION) gconftool)
@@ -101,8 +104,6 @@ install-exec-local:
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)
 	$(INSTALL_DATA) default.path $(DESTDIR)$(sysconfdir)/gconf/$(MAJOR_VERSION)/path
-	-mkdir -p $(DESTDIR)$(libdir)/bonobo/servers
-	$(INSTALL_DATA) GNOME_Config.server $(DESTDIR)$(libdir)/bonobo/servers/GNOME_Config-$(MAJOR_VERSION).server
 
 gconfmarshal.h: @REBUILD@ stamp-gconfmarshal.h
 	@true

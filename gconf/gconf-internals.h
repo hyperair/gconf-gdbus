@@ -175,8 +175,7 @@ gboolean   gconf_release_lock (GConfLock    *lock,
 GConfLock* gconf_get_lock_or_current_holder (const gchar  *lock_directory,
                                              ConfigServer *current_server,
                                              GError      **err);
-
-
+ConfigServer gconf_get_current_lock_holder  (const gchar *lock_directory);
 
 GError*  gconf_error_new  (GConfError en,
                            const gchar* format, ...) G_GNUC_PRINTF (2, 3);
@@ -187,6 +186,14 @@ void     gconf_set_error  (GError** err,
 
 /* merge two errors into a single message */
 GError*  gconf_compose_errors (GError* err1, GError* err2);
+
+CORBA_ORB gconf_orb_get (void);
+
+ConfigServer gconf_activate_server (gboolean  start_if_not_found,
+                                    GError  **error);
+
+char*     gconf_get_lock_dir (void);
+char*     gconf_get_daemon_dir (void);
 
 #ifdef ENABLE_NLS
 #    include <libintl.h>

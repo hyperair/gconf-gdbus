@@ -23,7 +23,6 @@
 #include "gconf-locale.h"
 #include "gconfd.h"
 #include <unistd.h>
-#include <bonobo-activation/bonobo-activation.h>
 #include <time.h>
 #include <stdlib.h>
 
@@ -1518,7 +1517,7 @@ listener_save_foreach (const gchar* location,
   g_free (s);
   g_string_append_c (fd->str, ' ');
   
-  orb = bonobo_activation_orb_get ();
+  orb = gconf_orb_get ();
 
   CORBA_exception_init (&ev);
   
