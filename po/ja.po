@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-16 15:30+0100\n"
-"PO-Revision-Date: 2004-07-10 13:26+0900\n"
+"POT-Creation-Date: 2004-08-17 22:30+0900\n"
+"PO-Revision-Date: 2004-08-17 22:29+0900\n"
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -178,9 +178,9 @@ msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "ltype \"%s\" (要素 <%s>) が間違っています"
 
 #: backends/markup-tree.c:2342
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
-msgstr "list_type \"%s\" (要素 <%s>) が間違っています"
+msgstr "first-element の種類 \"%s\" (要素 <%s>) が間違っています"
 
 #: backends/markup-tree.c:2356
 #, c-format
@@ -1089,25 +1089,25 @@ msgid "Failed to load source \"%s\": %s"
 msgstr "ソース \"%s\" の読み込みに失敗しました: %s"
 
 #: gconf/gconf-sources.c:408
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr ""
-"アドレス \"%s\" (%d 行目の変更可能な設定ソースに対する) を解決しました。"
+"書き込み可能な設定ソースに対するアドレス \"%s\" (%d 行目) を解決しました"
 
 #: gconf/gconf-sources.c:414
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr ""
-"アドレス \"%s\" (%d 行目の読み込み専用の設定ソースに対する) を解決しました。"
+"読み込み専用の設定ソースに対するアドレス \"%s\" (%d 行目) を解決しました"
 
 #: gconf/gconf-sources.c:421
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
-"アドレス \"%s' (%d 行目の一部変更可能な設定ソースに対する) を解決しました。"
+"一部変更可能な設定リソースに対するアドレス \"%s\" (%d 行目) を解決しました"
 
 #: gconf/gconf-sources.c:430
 msgid ""
@@ -1425,13 +1425,13 @@ msgstr ""
 "ん。"
 
 #: gconf/gconfd.c:729
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
 "s"
 msgstr ""
-"fd %d のパイプに対するバイト書き込みに失敗しました。クライアントアプリがハン"
-"グします: %s"
+"FD %d にパイプするためのバイトの書き込みに失敗したため、クライアント側がハン"
+"グするおそれがあります: %s"
 
 #: gconf/gconfd.c:739
 #, c-format
@@ -1613,33 +1613,26 @@ msgid "Print all subdirectories in a directory."
 msgstr "指定したディレクトリ中の全てのサブディレクトリを表示する"
 
 #: gconf/gconftool.c:161
-#, fuzzy
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
-msgstr ""
-"指定してディレクトリの下にある全てのエントリの XML ディスクリプションを再帰的"
-"に標準出力へ表示する"
+msgstr "指定したディレクトリにある全ての XML 記述を再帰的に標準出力へ表示する"
 
 #: gconf/gconftool.c:170
-#, fuzzy
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
 msgstr ""
-"指定したファイルから値の XML ディスクリプションを読み込み関連するディレクトリ"
-"にセットする"
+"指定したファイルから値の XML 記述を読み込んで関連するディレクトリにセットする"
 
 #: gconf/gconftool.c:179
 msgid "Unload a set of values described in an XML file."
 msgstr "XML ファイルに記述されている値のセットの読み込み解除"
 
 #: gconf/gconftool.c:188
-#, fuzzy
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr ""
-"指定したディレクトリの下にある全てのサブディレクトリとエントリを再帰的に表示"
-"する"
+"指定したディレクトリにある全てのサブディレクトリとエントリを再帰的に表示する"
 
 #: gconf/gconftool.c:197
 msgid "Return 0 if the directory exists, 2 if it does not."
@@ -1723,7 +1716,7 @@ msgstr "説明"
 
 #: gconf/gconftool.c:305
 msgid "Specify a several-line description to go in a schema."
-msgstr "スキーマの詳細な説明を指定する"
+msgstr "スキーマの詳細な複数行の説明を指定する"
 
 #: gconf/gconftool.c:314
 msgid "Specify the owner of a schema"
@@ -2442,6 +2435,3 @@ msgstr ""
 "ディレクトリのキーにおかしな値を設定する事によって アプリケーションを終了させ"
 "ようとしています:\n"
 "  %s\n"
-
-#~ msgid "Invalid car_type \"%s\" on <%s>"
-#~ msgstr "car_type \"%s\" (要素 <%s>) が間違っています"
