@@ -155,13 +155,17 @@ fi
 AC_SUBST(XML_LIBS)
 AC_SUBST(XML_CFLAGS)
 
-BDB_LIBS=-ldb-3
+BDB_LIBS=
 BDB_CFLAGS=
+
+AC_CHECK_LIB(db-3, db_env_create, BDB_LIBS=-ldb-3)
+
+if test "x$BDB_LIBS" = x; then
+  AC_MSG_WARN(No db3 library found. Not building bdb backend.)
+fi
+
 AM_CONDITIONAL(BDB, test -n "$BDB_LIBS")
-AC_CHECK_LIB(db-3, db_env_create, BDB_LIBS=-ldb-3,
-	[AC_CHECK_HEADER(db.h, , AC_MSG_ERROR([[
-*** Couldn't find db-3. Please download and install from
-*** http://www.sleepycat.com/download.html and try again.]]))])
+
 AC_SUBST(BDB_LIBS)
 AC_SUBST(BDB_CFLAGS)
 
@@ -201,6 +205,8 @@ AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
 
 AC_CHECK_FUNCS(nanosleep)
 AC_CHECK_FUNCS(usleep)
+
+AC_CHECK_FUNCS(flockfile)
 
 fi # docs_only
 

@@ -2896,6 +2896,9 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
     case ConfigNoWritableDatabase:
       return GCONF_ERROR_NO_WRITABLE_DATABASE;
       break;
+    case ConfigInShutdown:
+      return GCONF_ERROR_IN_SHUTDOWN;
+      break;
     default:
       g_assert_not_reached();
       return GCONF_ERROR_SUCCESS; /* warnings */
@@ -2911,6 +2914,17 @@ gconf_server_broken(CORBA_Environment* ev)
     case CORBA_SYSTEM_EXCEPTION:
       return TRUE;
       break;
+
+    case CORBA_USER_EXCEPTION:
+      {
+        ConfigException* ce;
+
+        ce = CORBA_exception_value(ev);
+
+        return ce->err_no == ConfigInShutdown;
+      }
+      break;
+      
     default:
       return FALSE;
       break;

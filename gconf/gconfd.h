@@ -42,6 +42,8 @@ gboolean gconfd_logfile_change_listener (GConfDatabase *db,
                                          const gchar *where,
                                          GError **err);
 
+gboolean gconfd_check_in_shutdown (CORBA_Environment *ev);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

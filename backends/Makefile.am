@@ -4,8 +4,13 @@ INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
 
 backenddir = $(pkglibdir)/$(MAJOR_VERSION)
 
-backend_LTLIBRARIES = libgconfbackend-xml.la
-#backend_LTLIBRARIES = libgconfbackend-xml.la libgconfbackend-bdb.la
+if BDB
+BDBBACKEND=libgconfbackend-bdb.la
+else
+BDBBACKEND=
+endif
+
+backend_LTLIBRARIES = libgconfbackend-xml.la $(BDBBACKEND)
 
 libgconfbackend_xml_la_SOURCES = \
 	xml-cache.h		\
@@ -19,7 +24,7 @@ libgconfbackend_xml_la_SOURCES = \
 libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
 libgconfbackend_xml_la_LIBADD  = $(GLIB_LIBS) $(XML_LIBS)
 
-libgconfbackend_bdb_la_SOURCES =  bdb.c bdb.h bdb-backend.c val-encode.c val-encode.h dir-utils.c dir-utils.h
+libgconfbackend_bdb_la_SOURCES = bdb.c bdb.h bdb-backend.c val-encode.c val-encode.h dir-utils.c dir-utils.h
 
 
 libgconfbackend_bdb_la_LDFLAGS = -avoid-version -module

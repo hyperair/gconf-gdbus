@@ -63,7 +63,6 @@ struct _Listener {
 static Listener* listener_new(ConfigListener obj);
 static void      listener_destroy(Listener* l);
 
-
 /*
  * CORBA implementation of ConfigDatabase
  */
@@ -76,6 +75,9 @@ impl_ConfigDatabase_add_listener(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
 
+  if (gconfd_check_in_shutdown (ev))
+    return 0;
+  
   return gconf_database_add_listener (db, who, where);
 }
 
@@ -85,6 +87,9 @@ impl_ConfigDatabase_remove_listener(PortableServer_Servant servant,
 				    CORBA_Environment * ev)
 {
   GConfDatabase *db = (GConfDatabase*) servant;
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
   
   gconf_database_remove_listener (db, cnxn);
 }
@@ -105,6 +110,9 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
   gboolean is_default = FALSE;
   gboolean is_writable = TRUE;
 
+  if (gconfd_check_in_shutdown (ev))
+    return invalid_corba_value ();
+  
   locale_list = locale_cache_lookup(locale);
   
   val = gconf_database_query_value(db, key, locale_list->list,
@@ -141,6 +149,9 @@ impl_ConfigDatabase_lookup(PortableServer_Servant servant,
                            const CORBA_char * key,
                            CORBA_Environment * ev)
 {
+  if (gconfd_check_in_shutdown (ev))
+    return invalid_corba_value ();
+  
   return impl_ConfigDatabase_lookup_with_locale (servant, key,
                                                  NULL, TRUE, NULL,
                                                  NULL, ev);
@@ -157,6 +168,9 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
   GError* error = NULL;
   GConfLocaleList* locale_list;  
 
+  if (gconfd_check_in_shutdown (ev))
+    return invalid_corba_value ();
+  
   locale_list = locale_cache_lookup(locale);
   
   val = gconf_database_query_default_value(db, key,
@@ -193,7 +207,9 @@ impl_ConfigDatabase_batch_lookup(PortableServer_Servant servant,
 				 ConfigDatabase_IsWritableList ** is_writables,
                                  CORBA_Environment * ev)
 {
-
+  if (gconfd_check_in_shutdown (ev))
+    return;
+    
 
 
 }
@@ -208,6 +224,9 @@ impl_ConfigDatabase_set(PortableServer_Servant servant,
   gchar* str;
   GConfValue* val;
   GError* error = NULL;
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
   
   if (value->_d == InvalidVal)
     {
@@ -245,6 +264,9 @@ impl_ConfigDatabase_unset_with_locale(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
   
   gconf_database_unset(db, key, locale, &error);
 
@@ -256,18 +278,22 @@ impl_ConfigDatabase_unset(PortableServer_Servant servant,
 			  const CORBA_char * key,
                           CORBA_Environment * ev)
 {
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   /* This is a cheat, since const CORBA_char* isn't normally NULL */
   impl_ConfigDatabase_unset_with_locale (servant, key, NULL, ev);
 }
 
 static void
-impl_ConfigDatabase_batch_change(PortableServer_Servant servant,
-                                 const CORBA_char * locale,
-                                 const ConfigDatabase_KeyList * keys,
-                                 const ConfigDatabase_ValueList * values,
-                                 CORBA_Environment * ev)
+impl_ConfigDatabase_batch_change (PortableServer_Servant servant,
+                                  const CORBA_char * locale,
+                                  const ConfigDatabase_KeyList * keys,
+                                  const ConfigDatabase_ValueList * values,
+                                  CORBA_Environment * ev)
 {
-
+  if (gconfd_check_in_shutdown (ev))
+    return;
 
 
 }
@@ -280,6 +306,9 @@ impl_ConfigDatabase_dir_exists(PortableServer_Servant servant,
   GConfDatabase *db = (GConfDatabase*) servant;
   CORBA_boolean retval;
   GError* error = NULL;  
+
+  if (gconfd_check_in_shutdown (ev))
+    return CORBA_FALSE;
   
   retval =
     gconf_database_dir_exists (db, dir, &error) ? CORBA_TRUE : CORBA_FALSE;
@@ -296,6 +325,9 @@ impl_ConfigDatabase_remove_dir(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;  
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
   
   gconf_database_remove_dir(db, dir, &error);
 
@@ -320,6 +352,9 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   GError* error = NULL;
   GConfLocaleList* locale_list;  
 
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   locale_list = locale_cache_lookup(locale);
   
   pairs = gconf_database_all_entries(db, dir, locale_list->list, &error);
@@ -397,6 +432,9 @@ impl_ConfigDatabase_all_dirs(PortableServer_Servant servant,
   guint i;
   GError* error = NULL;
 
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   subdirs = gconf_database_all_dirs (db, dir, &error);
 
   if (error != NULL)
@@ -443,6 +481,9 @@ impl_ConfigDatabase_set_schema(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
   
   gconf_database_set_schema(db, key, schema_key, &error);
 
@@ -455,6 +496,9 @@ impl_ConfigDatabase_sync(PortableServer_Servant servant,
 {
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
+
+  if (gconfd_check_in_shutdown (ev))
+    return;
   
   gconf_database_sync(db, &error);
 
@@ -468,6 +512,9 @@ impl_ConfigDatabase_clear_cache(PortableServer_Servant servant,
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
 
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   gconf_log(GCL_INFO, _("Received request to drop all cached data"));  
   
   gconf_database_clear_cache(db, &error);
@@ -482,6 +529,9 @@ impl_ConfigDatabase_synchronous_sync(PortableServer_Servant servant,
   GConfDatabase *db = (GConfDatabase*) servant;
   GError* error = NULL;
 
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   gconf_log(GCL_INFO, _("Received request to sync synchronously"));
   
   

@@ -1,3 +1,44 @@
+2000-10-06  Havoc Pennington  <hp@pobox.com>
+
+	* configure.in: check for flockfile.
+	Check for BDB, but don't make it fatal; do an AM_CONDITIONAL and
+	don't build the BDB backend if it's not found.
+
+	* gconf/gconfd.c (main): unregister with OAF after all shutdown is
+	complete.
+	(signal_handler): do the full, clean shutdown on SIGTERM; should
+	reduce the damage caused by those pesky killall gconfd scripts ;-)
+	Try to do the same on FPE and PIPE, though it's not likely to
+	work, it doesn't hurt to try.
+	(logfile_read): rewrite the logfile reading code; somewhat more
+	robust, possibly.
+
+	* gconf/gconf-database.c, gconf/gconfd.c: Make all CORBA
+	implementation return immediately with an error if we're currently
+	shutting down. We'd just unregister with OAF, or deactivate our
+	objects, but then another gconfd would start up before we finish
+	cleaning up our stuff and introduce a mess of race
+	conditions. Instead clients will automatically retry lots of times
+	if they get the IN_SHUTDOWN error. Actually this possibly
+	shouldn't even happen, since we aren't normally in the main loop
+	once we start to shut down, I don't think - not sure.
+	
+	* gconf/gconfd.c (gconf_set_exception): add ConfigInShutdown
+
+	* gconf/GConf.idl: add ConfigInShutdown error
+
+	* gconf/gconf.c (corba_errno_to_gconf_errno): add ConfigInShutdown
+
+	* gconf/gconf-error.h: two error codes had the same integer value.
+	Also, add GCONF_ERROR_IN_SHUTDOWN
+
+	* gconf/gconfd.c (gconfd_in_shutdown): Add a flag 
+	to indicate we're shutting down; all operations will 
+	return an error at that point.
+
+	* gconf/gconf.c (gconf_server_broken): treat ConfigInShutdown 
+	as a broken server.
+	
 2000-10-03  Robin * Slomkowski  <rslomkow@eazel.com>
 
 	* gconf.spec.in:/etc/etc is not a directory

@@ -96,7 +96,7 @@ static void    log_clients_to_string (GString              *str);
 static void    drop_old_clients      (void);
 static guint   client_count          (void);
 
-static void    fast_cleanup(void);
+static void    enter_shutdown          (void);
 
 static void                 init_databases (void);
 static void                 shutdown_databases (void);
@@ -108,6 +108,15 @@ static GConfDatabase*       obtain_database (const gchar *address,
                                              GError **err);
 static void                 drop_old_databases (void);
 static gboolean             no_databases_in_use (void);
+
+/*
+ * Flag indicating that we are shutting down, so return errors
+ * on any attempted operation. We do this instead of unregistering with
+ * OAF or deactivating the server object, because we want to avoid
+ * another gconfd starting up before we finish shutting down.
+ */
+
+static gboolean in_shutdown = FALSE;
 
 /* 
  * CORBA goo
@@ -166,6 +175,9 @@ gconfd_get_default_database(PortableServer_Servant servant,
 {
   GConfDatabase *db;
 
+  if (gconfd_check_in_shutdown (ev))
+    return CORBA_OBJECT_NIL;
+  
   db = lookup_database (NULL);
 
   if (db)
@@ -182,6 +194,9 @@ gconfd_get_database(PortableServer_Servant servant,
   GConfDatabase *db;
   GError* error = NULL;  
 
+  if (gconfd_check_in_shutdown (ev))
+    return CORBA_OBJECT_NIL;
+  
   db = obtain_database (address, &error);
 
   if (db != NULL)
@@ -197,6 +212,9 @@ gconfd_add_client (PortableServer_Servant servant,
                    const ConfigListener client,
                    CORBA_Environment *ev)
 {
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   add_client (client);
 }
 
@@ -205,18 +223,27 @@ gconfd_remove_client (PortableServer_Servant servant,
                       const ConfigListener client,
                       CORBA_Environment *ev)
 {
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   remove_client (client);
 }
 
 static CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
 {
+  if (gconfd_check_in_shutdown (ev))
+    return 0;
+  
   return getpid();
 }
 
 static void
 gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 {
+  if (gconfd_check_in_shutdown (ev))
+    return;
+  
   gconf_log(GCL_INFO, _("Shutdown request received"));
 
   gconf_main_quit();
@@ -343,28 +370,45 @@ signal_handler (int signo)
   case SIGSEGV:
   case SIGBUS:
   case SIGILL:
-    fast_cleanup();
-    gconf_log(GCL_ERR, _("Received signal %d, shutting down."), signo);
-    abort();
+    enter_shutdown ();
+    gconf_log(GCL_ERR,
+              _("Received signal %d, dumping core. Please report a GConf bug."),
+              signo);
+    abort ();
     break;
 
-    /* maybe it's more feasible to clean up more mess */
   case SIGFPE:
   case SIGPIPE:
-  case SIGTERM:
-    /* Slow cleanup cases */
-    fast_cleanup ();
-    /* remove lockfiles, etc. */
-    shutdown_databases ();
-    gconf_log(GCL_ERR, _("Received signal %d, shutting down."), signo);
-    exit (1);
-    break;
+    /* Go ahead and try the full cleanup on these,
+     * though it could well not work out very well.
+     */
+    enter_shutdown ();
+
+    /* let the fatal signals interrupt us */
+    --in_fatal;
     
-  case SIGHUP:
-    gconf_log(GCL_INFO, _("Received signal %d, shutting down cleanly"), signo);
+    gconf_log (GCL_ERR,
+               _("Received signal %d, shutting down abnormally. Please file a GConf bug report."),
+               signo);
+
+
     if (gconf_main_is_running ())
       gconf_main_quit ();
+    
+    break;
+
+  case SIGTERM:
+  case SIGHUP:
+    enter_shutdown ();
+
+    /* let the fatal signals interrupt us */
     --in_fatal;
+    
+    gconf_log (GCL_INFO,
+               _("Received signal %d, shutting down cleanly"), signo);
+
+    if (gconf_main_is_running ())
+      gconf_main_quit ();
     break;
     
   default:
@@ -392,6 +436,7 @@ main(int argc, char** argv)
   guint len;
   gchar* ior;
   OAF_RegistrationResult result;
+  int exit_code = 0;
   
   chdir ("/");
 
@@ -488,7 +533,7 @@ main(int argc, char** argv)
           gconf_log(GCL_ERR, _("Unknown error registering gconfd with OAF; exiting\n"));
           break;
         }
-      fast_cleanup ();
+      enter_shutdown ();
       shutdown_databases ();
       return 1;
     }
@@ -496,9 +541,15 @@ main(int argc, char** argv)
   /* Read saved log file, if any */
   logfile_read ();
   
-  gconf_main();
+  gconf_main ();
 
-  fast_cleanup ();
+  if (in_shutdown)
+    exit_code = 1; /* means someone already called enter_shutdown() */
+  
+  /* This starts bouncing all incoming requests (and we aren't running
+   * the main loop anyway, so they won't get processed)
+   */
+  enter_shutdown ();
 
   /* Save current state in logfile (may compress the logfile a good
    * bit)
@@ -508,12 +559,20 @@ main(int argc, char** argv)
   shutdown_databases ();
 
   gconfd_locale_cache_drop ();
+
+  /* Now we can unregister with OAF, after everything is fixed up. */  
+
+  if (server != CORBA_OBJECT_NIL)
+    {
+      oaf_active_server_unregister ("", server);
+      server = CORBA_OBJECT_NIL;
+    }
   
   gconf_log (GCL_INFO, _("Exiting"));
   
   g_free (logname);
   
-  return 0;
+  return exit_code;
 }
 
 /*
@@ -613,7 +672,7 @@ init_databases (void)
   g_assert(db_list == NULL);
   g_assert(dbs_by_address == NULL);
   
-  dbs_by_address = g_hash_table_new(g_str_hash, g_str_equal);
+  dbs_by_address = g_hash_table_new (g_str_hash, g_str_equal);
 
   /* Default database isn't in the address hash since it has
      multiple addresses in a stack
@@ -783,20 +842,10 @@ no_databases_in_use (void)
  * Cleanup
  */
 
-/* fast_cleanup() does the important parts, and is theoretically
-   re-entrant. I don't think it is anymore with OAF, so we should fix
-   that.
-*/
 static void 
-fast_cleanup(void)
+enter_shutdown(void)
 {
-#if 0
-  /* We can't do this because then OAF will spawn a new server before we
-   * finish shutting down.
-   */
-  if (server != CORBA_OBJECT_NIL)
-    oaf_active_server_unregister ("", server);
-#endif
+  in_shutdown = TRUE;
 }
 
 
@@ -858,7 +907,10 @@ gconf_set_exception(GError** error,
         ce->err_no = ConfigIsKey;
         break;
       case GCONF_ERROR_NO_WRITABLE_DATABASE:
-        ce->err_no = ConfigNoWritableDatabase;
+        ce->err_no = ConfigNoWritableDatabase;        
+        break;
+      case GCONF_ERROR_IN_SHUTDOWN:
+        ce->err_no = ConfigInShutdown;
         break;
         
       case GCONF_ERROR_NO_SERVER:
@@ -878,6 +930,27 @@ gconf_set_exception(GError** error,
     return TRUE;
   }
 }
+
+gboolean
+gconfd_check_in_shutdown (CORBA_Environment *ev)
+{
+  if (in_shutdown)
+    {
+      ConfigException* ce;
+      
+      ce = ConfigException__alloc();
+      ce->message = CORBA_string_dup("config server is currently shutting down");
+      ce->err_no = ConfigInShutdown;
+
+      CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
+                          ex_ConfigException, ce);
+
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
 
 /*
  * Logging
@@ -1142,7 +1215,7 @@ listener_logentry_equal (gconstpointer ap, gconstpointer bp)
 /* Return value indicates whether we "handled" this line of text */
 static gboolean
 parse_listener_entry (GHashTable *entries,
-                      gchar *text)
+                      gchar      *text)
 {
   gboolean add;
   gchar *p;
@@ -1179,7 +1252,8 @@ parse_listener_entry (GHashTable *entries,
   if (errno != 0)
     {
       gconf_log (GCL_WARNING,
-                 _("Failed to parse connection ID in saved state file"));                 
+                 _("Failed to parse connection ID in saved state file"));
+      
       return TRUE;
     }
 
@@ -1293,7 +1367,7 @@ parse_listener_entry (GHashTable *entries,
 /* Return value indicates whether we "handled" this line of text */
 static gboolean
 parse_client_entry (GHashTable *clients,
-                    gchar *text)
+                    gchar      *text)
 {
   gboolean add;
   gchar *ior;
@@ -1551,58 +1625,116 @@ restore_client_foreach (gpointer key,
   restore_client (key);
 }
 
+
+#ifndef HAVE_FLOCKFILE
+#  define flockfile(f) (void)1
+#  define funlockfile(f) (void)1
+#  define getc_unlocked(f) getc(f)
+#endif /* !HAVE_FLOCKFILE */
+
+static gchar*
+read_line (FILE *f)
+{
+  int c;
+  GString *str;
+  
+  str = g_string_new ("");
+  
+  flockfile (f);
+
+  while (TRUE)
+    {
+      c = getc_unlocked (f);
+
+      switch (c)
+        {
+        case EOF:
+          if (ferror (f))
+            {
+              gconf_log (GCL_ERR,
+                         _("Error reading saved state file: %s"),
+                         g_strerror (errno));
+            }
+
+          /* FALL THRU */
+        case '\n':
+          goto done;
+          break;
+
+        default:
+          g_string_append_c (str, c);
+          break;
+        }
+    }
+
+ done:
+  funlockfile (f);
+
+  if (str->len == 0)
+    {
+      g_string_free (str, TRUE);
+      return NULL;
+    }
+  else
+    {
+      gchar *ret;
+      
+      ret = str->str;
+      g_string_free (str, FALSE);
+      return ret;
+    }
+}
+
 static void
 logfile_read (void)
 {
   gchar *logfile;
   gchar *logdir;
-  GError *error;
-  gchar *str;
-  gchar **lines;
-  gchar **iter;
   GHashTable *entries;
   GHashTable *clients;
+  FILE *f;
+  gchar *line;
+  GSList *lines = NULL;
   
   /* Just for good form */
   close_append_handle ();
   
   get_log_names (&logdir, &logfile);
 
-  error = NULL;
-  str = g_file_get_contents (logfile, &error);
-  if (str == NULL)
+  f = fopen (logfile, "r");
+  
+  if (f == NULL)
     {
       gconf_log (GCL_ERR, _("Unable to open saved state file '%s': %s"),
-                 logfile, error->message);
-
-      g_error_free (error);
+                 logfile, g_strerror (errno));
 
       goto finished;
     }
 
-  lines = g_strsplit (str, "\n", -1);
-
-  g_free (str);
-
   entries = g_hash_table_new (listener_logentry_hash, listener_logentry_equal);
   clients = g_hash_table_new (g_str_hash, g_str_equal);
-  
-  iter = lines;
-  while (*iter)
+
+  line = read_line (f);
+  while (line)
     {
-      if (!parse_listener_entry (entries, *iter))
+      if (!parse_listener_entry (entries, line))
         {
-          if (!parse_client_entry (clients, *iter))
+          if (!parse_client_entry (clients, line))
             {
               gconf_log (GCL_WARNING,
                          _("Didn't understand line in saved state file: '%s'"), 
-                         *iter);
+                         line);
+              g_free (line);
+              line = NULL;
             }
         }
 
-      ++iter;
+      if (line)
+        lines = g_slist_prepend (lines, line);
+      
+      line = read_line (f);
     }
-
+  
   /* Restore clients first */
   g_hash_table_foreach (clients,
                         restore_client_foreach,
@@ -1623,7 +1755,8 @@ logfile_read (void)
    * finished, because we store pointers to them in the log entry
    * hash.
    */
-  g_strfreev (lines);
+  g_slist_foreach (lines, (GFunc)g_free, NULL);
+  g_slist_free (lines);
   
  finished:
   
