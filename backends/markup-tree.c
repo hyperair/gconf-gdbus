@@ -732,11 +732,10 @@ markup_dir_set_entries_need_save (MarkupDir *dir)
     }
 }
 
+/* Get rid of any local_schema that no longer apply */
 static void
-markup_entry_clean_old_local_schemas (MarkupEntry *entry)
+clean_old_local_schemas (MarkupEntry *entry)
 {
-
-  /* Get rid of any local_schema that no longer apply */
   GSList *tmp;
   GSList *kept_schemas;
 
@@ -779,6 +778,36 @@ markup_entry_clean_old_local_schemas (MarkupEntry *entry)
   entry->local_schemas = g_slist_reverse (kept_schemas);
 }
 
+static void
+clean_old_local_schemas_recurse (MarkupDir *dir,
+				 gboolean   recurse)
+{
+  GSList *tmp;
+
+  if (recurse)
+    {
+      tmp = dir->subdirs;
+      while (tmp)
+        {
+          MarkupDir *subdir = tmp->data;
+
+          clean_old_local_schemas_recurse (subdir, TRUE);
+
+          tmp = tmp->next;
+        }
+    }
+
+  tmp = dir->entries;
+  while (tmp != NULL)
+    {
+      MarkupEntry *entry = tmp->data;
+
+      clean_old_local_schemas (entry);
+
+      tmp = tmp->next;
+    }
+}
+
 static gboolean
 create_filesystem_dir (const char *name,
                        guint       dir_mode)
@@ -813,21 +842,16 @@ delete_useless_subdirs (MarkupDir *dir)
     {
       MarkupDir *subdir = tmp->data;
       
-      if (subdir->entries_loaded &&
-          subdir->subdirs_loaded &&
-          !subdir->some_subdir_needs_sync &&
-          !subdir->entries_need_save &&
-          subdir->entries == NULL &&
-          subdir->subdirs == NULL)
+      if (subdir->entries_loaded && subdir->entries == NULL &&
+          subdir->subdirs_loaded && subdir->subdirs == NULL)
         {
-
-	  if (!dir->not_in_filesystem)
+	  if (!subdir->not_in_filesystem)
 	    {
 	      char *fs_dirname;
 	      char *fs_filename;
           
 	      fs_dirname = markup_dir_build_dir_path (subdir, TRUE);
-	      fs_filename = markup_dir_build_file_path (subdir, dir->save_as_subtree);
+	      fs_filename = markup_dir_build_file_path (subdir, subdir->save_as_subtree);
 
 	      if (unlink (fs_filename) < 0)
 		{
@@ -876,7 +900,7 @@ delete_useless_subdirs_recurse (MarkupDir *dir)
     {
       MarkupDir *subdir = tmp->data;
 
-      if (delete_useless_subdirs (subdir))
+      if (delete_useless_subdirs_recurse (subdir))
 	retval = TRUE;
 
       tmp = tmp->next;
@@ -927,6 +951,29 @@ delete_useless_entries (MarkupDir *dir)
   return some_deleted;
 }
 
+static gboolean
+delete_useless_entries_recurse (MarkupDir *dir)
+{
+  GSList *tmp;
+  gboolean retval = FALSE;
+
+  tmp = dir->subdirs;
+  while (tmp)
+    {
+      MarkupDir *subdir = tmp->data;
+
+      if (delete_useless_entries_recurse (subdir))
+        retval = TRUE;
+
+      tmp = tmp->next;
+    }
+
+  if (delete_useless_entries (dir))
+    retval = TRUE;
+
+  return retval;
+}
+
 static void
 recursively_load_subtree (MarkupDir *dir)
 {
@@ -941,6 +988,7 @@ recursively_load_subtree (MarkupDir *dir)
       MarkupDir *subdir = tmp->data;
 
       recursively_load_subtree (subdir);
+      subdir->not_in_filesystem = TRUE;
 
       tmp = tmp->next;
     }
@@ -1007,7 +1055,6 @@ markup_dir_sync (MarkupDir *dir)
   char *fs_dirname;
   char *fs_filename;
   char *fs_subtree;
-  GSList *tmp;
   gboolean some_useless_entries;
   gboolean some_useless_subdirs;
 
@@ -1022,22 +1069,14 @@ markup_dir_sync (MarkupDir *dir)
   if (dir->not_in_filesystem)
     return TRUE;
 
-  /* Sanitize the entries */
-  tmp = dir->entries;
-  while (tmp != NULL)
-    {
-      MarkupEntry *entry = tmp->data;
-      
-      markup_entry_clean_old_local_schemas (entry);
-      
-      tmp = tmp->next;
-    }
-
   if (!dir->save_as_subtree && should_save_as_subtree (dir))
     {
       dir->save_as_subtree = TRUE;
       recursively_load_subtree (dir);
     }
+
+  /* Sanitize the entries */
+  clean_old_local_schemas_recurse (dir, dir->save_as_subtree);
   
   fs_dirname = markup_dir_build_dir_path (dir, TRUE);
   fs_filename = markup_dir_build_file_path (dir, FALSE);
@@ -1056,8 +1095,16 @@ markup_dir_sync (MarkupDir *dir)
       
       g_return_val_if_fail (dir->entries_loaded, FALSE);
 
-      if (delete_useless_entries (dir))
-        some_useless_entries = TRUE;
+      if (!dir->save_as_subtree)
+	{
+	  if (delete_useless_entries (dir))
+	    some_useless_entries = TRUE;
+	}
+      else
+	{
+	  if (delete_useless_entries_recurse (dir))
+	    some_useless_entries = TRUE;
+	}
       
       /* Be sure the directory exists */
       if (!dir->filesystem_dir_probably_exists)

@@ -1,5 +1,26 @@
 2004-07-02  Mark McLoughlin  <mark@skynet.ie>
 
+	Fixup some bugs with the merge files support which was
+	causing unset entries not to be completely wiped out.
+
+	* backends/markup-tree.c:
+	(clean_old_local_schemas): rename.
+	(clean_old_local_schemas_recurse): if we're saving as a subtree,
+	recurse down the tree.
+	(delete_useless_subdirs): ignore the some_subdir_needs_sync and
+	entries_need_save flags on the subdir - they're irrelevant if
+	there's no entries or subdirs. Also, check whether the subdir
+	is in a subtree file rather than current dir.
+	(delete_useless_subdirs_recurse): correctly recurse over subdirs.
+	(delete_useless_entries_recurse): implement recursively deleting
+	entries too.
+	(recursively_load_subtree): set the not_in_filesytem flag if we're
+	going to be saving as a subtree.
+	(markup_dir_sync): recusively clean schemas and delete entries
+	if we're saving as a subtree.
+
+2004-07-02  Mark McLoughlin  <mark@skynet.ie>
+
 	Based on a patch to add --unload option from
 	Julio M. Merino Vidal <jmmv@menta.net> in bug #130129.
 
