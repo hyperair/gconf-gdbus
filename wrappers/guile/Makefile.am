@@ -2,7 +2,7 @@
 gconfmoduledir = $(datadir)/guile/gconf
 
 # -I$(builddir) catches the .x files
-INCLUDES =  -I$(top_builddir)/wrappers/guile -I$(top_srcdir)/gconf -I$(includedir) $(GUILE_CFLAGS) $(OAF_CFLAGS) $(ORBIT_CFLAGS) $(GLIB_CFLAGS) \
+INCLUDES =  -I$(top_builddir)/wrappers/guile -I$(top_srcdir)/gconf $(GUILE_CFLAGS) $(OAF_CFLAGS) $(ORBIT_CFLAGS) $(GLIB_CFLAGS) \
 	 -DG_LOG_DOMAIN=\"libgconf-scm\" -DGCONF_GUILE_DIR=\""$(gconfmoduledir)"\"
 
 lib_LTLIBRARIES = libgconf-scm.la

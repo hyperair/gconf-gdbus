@@ -41,8 +41,7 @@
        was opened; it also resets the prefs dialog contents to those settings.
 */
 
-#include <gconf-client.h> /* Once GConf is installed, this should be
-                             <gconf/gconf-client.h> */
+#include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
 static GtkWidget* create_main_window(GConfClient* client);

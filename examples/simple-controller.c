@@ -21,8 +21,7 @@
 /* A very simple program that sets a single key value when you type
    it in an entry and press return */
 
-#include <gconf-client.h> /* Once GConf is installed, this should be
-                             <gconf/gconf-client.h> */
+#include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
 void

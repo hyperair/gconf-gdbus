@@ -20,8 +20,7 @@
 
 /* A very simple program that monitors a single key for changes. */
 
-#include <gconf-client.h> /* Once GConf is installed, this should be
-                             <gconf/gconf-client.h> */
+#include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
 void

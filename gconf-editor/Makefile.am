@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) \
-	-I$(includedir) $(GNOME_CFLAGS) $(OAF_CFLAGS) \
+	$(GNOME_CFLAGS) $(OAF_CFLAGS) \
          -DG_LOG_DOMAIN=\"GConfEd\" -DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
 	-I../intl -I$(top_srcdir)/intl -I$(top_srcdir)/gconf
 

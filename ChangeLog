@@ -1,3 +1,19 @@
+2001-08-25  Darin Adler  <darin@bentspoon.com>
+
+	* backends/Makefile.am:
+	* examples/Makefile.am:
+	* gconf-editor/Makefile.am:
+	* tests/Makefile.am:
+	* wrappers/guile/Makefile.am:
+	Got rid of extra unneeded -I directives.
+
+	* examples/basic-gconf-app.c:
+	* examples/simple-controller.c:
+	* examples/simple-view.c:
+	Changed includes to use the normal <gconf/*> format, because
+	that is both better for examples, and works fine when building
+	gconf too, without any special -I trickery.
+
 2001-08-19  Jesus Bravo Alvarez  <jba@pobox.com>
 
 	* configure.in: Added gl (Galician) to ALL_LINGUAS.
