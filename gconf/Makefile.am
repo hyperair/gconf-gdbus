@@ -13,7 +13,6 @@ INCLUDES=\
 	-DVERSION=\""$(VERSION)"\" \
 	-DIID=\""OAFIID:gconfd:19991118"\" \
 	-DGCONF_ENABLE_INTERNALS=1 \
-	-Wno-unused \
 	$(NULL)
 
 EFENCE=
