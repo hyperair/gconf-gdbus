@@ -2780,16 +2780,20 @@ gconf_orb_release (void)
 
 char*
 gconf_get_daemon_dir (void)
-{
-  static gboolean set_tmpdir = FALSE;
-  if (!set_tmpdir)
-    {
-      linc_set_tmpdir (g_get_tmp_dir ());
-      set_tmpdir = TRUE;
-    }
-  
+{  
   if (gconf_use_local_locks ())
-    return linc_get_tmpdir ();
+    {
+      char *s;
+      char *subdir;
+
+      subdir = g_strconcat ("gconfd-", g_get_user_name (), NULL);
+      
+      s = g_build_filename (g_get_tmp_dir (), subdir, NULL);
+
+      g_free (subdir);
+
+      return s;
+    }
   else
     return g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
 }

@@ -1,5 +1,11 @@
 2003-03-26  Havoc Pennington  <hp@pobox.com>
 
+	* gconf/gconf-internals.c (gconf_get_daemon_dir): we need
+	giop_tmpdir_init(), linc_get_tmpdir() isn't helpful. Revert to 
+	/tmp/gconfd-foo for now.
+
+2003-03-26  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/gconf-internals.c (gconf_get_daemon_dir): call
 	linc_set_tmpdir() to maybe make it work
 
