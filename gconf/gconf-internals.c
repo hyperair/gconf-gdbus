@@ -2160,7 +2160,7 @@ gconf_handle_oaf_exception(CORBA_Environment* ev, GError** err)
           }
         else if (strcmp (id,"IDL:Bonobo/ActivationContext/ParseFailed:1.0") == 0)
           {
-            Bonobo_ActivationContext_ParseFailed* pe = CORBA_exception_value(ev);
+            Bonobo_Activation_ParseFailed* pe = CORBA_exception_value(ev);
             
             if (err)
               *err = gconf_error_new(GCONF_ERROR_OAF_ERROR, _("OAF parse error: %s"), pe->description);
