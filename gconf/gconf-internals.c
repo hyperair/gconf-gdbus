@@ -2259,8 +2259,6 @@ gconf_get_lock(const gchar* lock_directory,
                                       _("couldn't contact ORB to ping existing gconfd"));
                       goto out;
                     }
-
-                  printf("IOR: `%s'\n", str);
                   
                   server = CORBA_ORB_string_to_object(orb, str, &ev);
 
@@ -2294,7 +2292,7 @@ gconf_get_lock(const gchar* lock_directory,
                                           lock->lock_directory);
                           goto out;
                         }
-                    }              
+                    }
                 }
             }
         }

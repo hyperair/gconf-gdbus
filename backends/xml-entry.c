@@ -1071,12 +1071,40 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GConfError** err)
             iter = iter->next;
           }
 
-        /* Return the pair */
-        value = gconf_value_new(GCONF_VALUE_PAIR);
-        gconf_value_set_car_nocopy(value, car);
-        gconf_value_set_cdr_nocopy(value, cdr);
+        /* Return the pair if we got both halves */
+        if (car && cdr)
+          {
+            value = gconf_value_new(GCONF_VALUE_PAIR);
+            gconf_value_set_car_nocopy(value, car);
+            gconf_value_set_cdr_nocopy(value, cdr);
 
-        return value;
+            return value;
+          }
+        else
+          {
+            gconf_log(GCL_WARNING, _("Didn't find car and cdr for XML pair node"));
+            if (car)
+              {
+                g_assert(cdr == NULL);
+                gconf_value_destroy(car);
+                gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
+                                _("Missing cdr from pair of values in XML file"));
+              }
+            else if (cdr)
+              {
+                g_assert(car == NULL);
+                gconf_value_destroy(cdr);
+                gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
+                                _("Missing car from pair of values in XML file"));
+              }
+            else
+              {
+                gconf_set_error(err, GCONF_ERROR_PARSE_ERROR,
+                                _("Missing both car and cdr values from pair in XML file"));
+              }
+
+            return NULL;
+          }
       }
       break;
     default:

@@ -60,6 +60,8 @@ static char* schema_file = NULL;
 static char* config_source = NULL;
 static int use_local_source = FALSE;
 static int makefile_install_mode = FALSE;
+static int break_key_mode = FALSE;
+static int break_dir_mode = FALSE;
 
 struct poptOption options[] = {
   { 
@@ -240,7 +242,25 @@ struct poptOption options[] = {
     POPT_ARG_NONE,
     &makefile_install_mode,
     0,
-    N_("Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source if any."),
+    N_("Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
+    NULL
+  },
+  {
+    "break-key",
+    '\0',
+    POPT_ARG_NONE,
+    &break_key_mode,
+    0,
+    N_("Torture-test an application by setting and unsetting a bunch of values of different types for keys on the command line."),
+    NULL
+  },
+  {
+    "break-directory",
+    '\0',
+    POPT_ARG_NONE,
+    &break_dir_mode,
+    0,
+    N_("Torture-test an application by setting and unsetting a bunch of keys inside the directories on the command line."),
     NULL
   },
   {
@@ -254,6 +274,8 @@ struct poptOption options[] = {
   }
 };
 
+static int do_break_key(GConfEngine* conf, const gchar** args);
+static int do_break_directory(GConfEngine* conf, const gchar** args);
 static int do_makefile_install(GConfEngine* conf, const gchar** args);
 static int do_recursive_list(GConfEngine* conf, const gchar** args);
 static int do_all_pairs(GConfEngine* conf, const gchar** args);
@@ -358,7 +380,8 @@ main (int argc, char** argv)
 
   if (ping_gconfd && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
-                      spawn_gconfd || dir_exists || schema_file || makefile_install_mode))
+                      spawn_gconfd || dir_exists || schema_file || makefile_install_mode ||
+                      break_key_mode || break_dir_mode))
     {
       fprintf(stderr, _("Ping option must be used by itself.\n"));
       return 1;
@@ -366,7 +389,8 @@ main (int argc, char** argv)
 
   if (dir_exists && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                      all_subdirs_mode || all_entries_mode || recursive_list || 
-                     spawn_gconfd || schema_file || makefile_install_mode))
+                     spawn_gconfd || schema_file || makefile_install_mode ||
+                     break_key_mode || break_dir_mode))
     {
       fprintf(stderr, _("--dir-exists option must be used by itself.\n"));
       return 1;
@@ -374,7 +398,8 @@ main (int argc, char** argv)
 
   if (schema_file && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                       all_subdirs_mode || all_entries_mode || recursive_list || 
-                      spawn_gconfd || dir_exists || makefile_install_mode))
+                      spawn_gconfd || dir_exists || makefile_install_mode ||
+                      break_key_mode || break_dir_mode))
     {
       fprintf(stderr, _("--install-schema-file must be used by itself.\n"));
       return 1;
@@ -383,11 +408,33 @@ main (int argc, char** argv)
 
   if (makefile_install_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
                                 all_subdirs_mode || all_entries_mode || recursive_list || 
-                                spawn_gconfd || dir_exists || schema_file))
+                                spawn_gconfd || dir_exists || schema_file ||
+                                break_key_mode || break_dir_mode))
     {
-      fprintf(stderr, _("--makefile-install-mode must be used by itself.\n"));
+      fprintf(stderr, _("--makefile-install-rule must be used by itself.\n"));
       return 1;
     }
+
+
+  if (break_key_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
+                                all_subdirs_mode || all_entries_mode || recursive_list || 
+                                spawn_gconfd || dir_exists || schema_file ||
+                                makefile_install_mode || break_dir_mode))
+    {
+      fprintf(stderr, _("--break-key must be used by itself.\n"));
+      return 1;
+    }
+
+  
+  if (break_dir_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
+                                all_subdirs_mode || all_entries_mode || recursive_list || 
+                                spawn_gconfd || dir_exists || schema_file ||
+                                break_key_mode || makefile_install_mode))
+    {
+      fprintf(stderr, _("--break-directory must be used by itself.\n"));
+      return 1;
+    }
+
   
   if (use_local_source && config_source == NULL)
     {
@@ -508,6 +555,26 @@ main (int argc, char** argv)
     {
       const gchar** args = poptGetArgs(ctx);
       gint retval = do_makefile_install(conf, args);
+
+      gconf_engine_unref(conf);
+
+      return retval;
+    }
+
+  if (break_key_mode)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      gint retval = do_break_key(conf, args);
+
+      gconf_engine_unref(conf);
+
+      return retval;
+    }
+  
+  if (break_dir_mode)
+    {
+      const gchar** args = poptGetArgs(ctx);
+      gint retval = do_break_directory(conf, args);
 
       gconf_engine_unref(conf);
 
@@ -1639,5 +1706,241 @@ do_makefile_install(GConfEngine* conf, const gchar** args)
       return 1;
     }
   
+  return 0;
+}
+
+typedef enum {
+  BreakageSetBadValues,
+  BreakageCleanup
+} BreakagePhase;
+
+static gboolean
+check_err(GConfError** err)
+{
+  printf(".");
+  
+  if (*err != NULL)
+    {
+      fprintf(stderr, _("\n%s\n"),
+              (*err)->str);
+      gconf_error_destroy(*err);
+      *err = NULL;
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
+static gboolean
+key_breakage(GConfEngine* conf, const gchar* key, BreakagePhase phase)
+{
+  GConfError* error = NULL;
+  
+  if (phase == BreakageCleanup)
+    {
+      gconf_unset(conf, key, &error);
+      if (error != NULL)
+        {
+          fprintf(stderr, _("Failed to unset breakage key %s: %s\n"),
+                  key, error->str);
+          gconf_error_destroy(error);
+          return FALSE;
+        }
+    }
+  else if (phase == BreakageSetBadValues)
+    {
+      gint an_int = 43;
+      gboolean a_bool = TRUE;
+      gdouble a_float = 43695.435;
+      const gchar* a_string = "Hello";
+      GConfValue* val;
+      GSList* list = NULL;
+      
+      printf("  +");
+      
+      gconf_set_string(conf, key, "", &error);
+      if (check_err(&error))
+        return FALSE;
+      
+      gconf_set_string(conf, key, "blah blah blah 93475028934670 @%^%$&%$&^%", &error);
+      if (check_err(&error))
+        return FALSE;
+      
+      gconf_set_bool(conf, key, TRUE, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_bool(conf, key, FALSE, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_float(conf, key, 100.0, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_float(conf, key, -100.0, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_float(conf, key, 0.0, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_int(conf, key, 0, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_int(conf, key, 5384750, &error);
+      if (check_err(&error))
+        return FALSE;
+      
+      gconf_set_int(conf, key, -11, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_list(conf, key, GCONF_VALUE_BOOL, list, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_pair(conf, key, GCONF_VALUE_INT, GCONF_VALUE_BOOL,
+                     &an_int, &a_bool, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      gconf_set_pair(conf, key, GCONF_VALUE_FLOAT, GCONF_VALUE_STRING,
+                     &a_float, &a_string, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      /* empty pair */
+      val = gconf_value_new(GCONF_VALUE_PAIR);
+      gconf_set(conf, key, val, &error);
+      gconf_value_destroy(val);
+      if (check_err(&error))
+        return FALSE;
+
+      list = NULL;
+      gconf_set_list(conf, key, GCONF_VALUE_STRING, list, &error);
+      if (check_err(&error))
+        return FALSE;
+      gconf_set_list(conf, key, GCONF_VALUE_INT, list, &error);
+      if (check_err(&error))
+        return FALSE;
+      gconf_set_list(conf, key, GCONF_VALUE_BOOL, list, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      list = g_slist_prepend(list, GINT_TO_POINTER(10));
+      list = g_slist_prepend(list, GINT_TO_POINTER(14));
+      list = g_slist_prepend(list, GINT_TO_POINTER(-93));
+      list = g_slist_prepend(list, GINT_TO_POINTER(1000000));
+      list = g_slist_prepend(list, GINT_TO_POINTER(32));
+      gconf_set_list(conf, key, GCONF_VALUE_INT, list, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      g_slist_free(list);
+      list = NULL;
+
+      list = g_slist_prepend(list, "");
+      list = g_slist_prepend(list, "blah");
+      list = g_slist_prepend(list, "");
+      list = g_slist_prepend(list, "\n\t\r\n     \n");
+      list = g_slist_prepend(list, "woo fooo s^%*^%&@^$@%&@%$");
+      gconf_set_list(conf, key, GCONF_VALUE_STRING, list, &error);
+      if (check_err(&error))
+        return FALSE;
+
+      g_slist_free(list);
+      list = NULL;
+      
+      printf("\n");
+    }
+  else
+    g_assert_not_reached();
+      
+  return TRUE;
+}
+
+static int
+do_break_key(GConfEngine* conf, const gchar** args)
+{
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify some keys to break\n"));
+      return 1;
+    }
+  
+  while (*args)
+    {
+      printf(_("Trying to break your application by setting bad values for key:\n  %s\n"), *args);
+      
+      if (!key_breakage(conf, *args, BreakageSetBadValues))
+        return 1;
+      if (!key_breakage(conf, *args, BreakageCleanup))
+        return 1;
+
+      ++args;
+    }
+
+  return 0;
+}
+
+static int
+do_break_directory(GConfEngine* conf, const gchar** args)
+{
+  if (args == NULL)
+    {
+      fprintf(stderr, _("Must specify some directories to break\n"));
+      return 1;
+    }
+  
+  while (*args)
+    {
+      gchar* keys[10] = { NULL };
+      gchar* full_keys[10] = { NULL };
+      int i;
+
+      i = 0;
+      while (i < 10)
+        {
+          keys[i] = gconf_unique_key();
+          full_keys[i] = gconf_concat_key_and_dir(*args, keys[i]);
+
+          ++i;
+        }
+
+      printf(_("Trying to break your application by setting bad values for keys in directory:\n  %s\n"), *args);
+
+      i = 0;
+      while (i < 10)
+        {
+          if (!key_breakage(conf, full_keys[i], BreakageSetBadValues))
+            return 1;
+
+          ++i;
+        }
+      
+      i = 0;
+      while (i < 10)
+        {
+          if (!key_breakage(conf, full_keys[i], BreakageCleanup))
+            return 1;
+          
+          ++i;
+        }
+
+      i = 0;
+      while (i < 10)
+        {
+          g_free(keys[i]);
+          g_free(full_keys[i]);
+
+          ++i;
+        }
+      
+      ++args;
+    }
+
   return 0;
 }

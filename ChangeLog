@@ -1,3 +1,20 @@
+2000-01-20  Havoc Pennington  <hp@pobox.com>
+
+	* backends/xml-entry.c (node_extract_value): Detect case where a
+	pair is missing car and/or cdr and do an error instead of
+	returning an invalid pair.
+
+	* gconf/gconf-internals.c (gconf_get_lock): remove IOR debug spew
+
+	* gconf/gconftool.c: Add --break-key and --break-directory, these
+	allow you to easily torture test your application and see if
+	you're robust against users setting your config keys to stupid
+	stuff.
+
+	* tests/testgconf.c: Include the empty string in the list 
+	of strings we test. I know this is currently broken if you 
+	exit gconfd or purge the cache between set and get.
+	
 2000-01-20  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/Makefile.am (EXTRA_DIST): fix EXTRA_DIST to have

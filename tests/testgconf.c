@@ -64,6 +64,7 @@ keys[] = {
 
 static const gchar*
 some_strings[] = {
+  "",
   "dkadfhg;ifb;klndfl;kghpaodigjhrekjt45u62%&@#&@#kl6$%76k@$%&L jk245L:Yj45&@$&KL #$^UY $5",
   "sdkjfkljg",
   "a",
