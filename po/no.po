@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.6\n"
-"POT-Creation-Date: 2000-07-15 23:57+0200\n"
-"PO-Revision-Date: 2000-07-10 23:24+02:00\n"
+"POT-Creation-Date: 2000-07-21 00:26+0200\n"
+"PO-Revision-Date: 2000-07-21 00:26+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -129,101 +129,109 @@ msgstr "Toppnivå-node i XML-fil `%s' er ikke en <oppføring>, ignorerer"
 msgid "Failed to create file `%s': %s"
 msgstr "Kunne ikke opprette fil `%s': %s"
 
-#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2418
+#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2416
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Kunne ikke lukke filen `%s': %s"
 
 #. There was an error
-#: backends/xml-entry.c:162 backends/xml-entry.c:381
+#: backends/xml-entry.c:162
 #, c-format
-msgid "Ignoring XML node `%s': %s"
-msgstr "Ignorerer XML-node `%s': %s"
+msgid "Ignoring XML node with name `%s': %s"
+msgstr "Ignorerer XML-node med navn `%s': %s"
 
-#: backends/xml-entry.c:211 gconf/gconf-internals.c:2122
+#: backends/xml-entry.c:213 gconf/gconf-internals.c:2120
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: backends/xml-entry.c:338
+#: backends/xml-entry.c:340
 #, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
 msgstr "Ignorerer schema-navn `%s', ugyldig: %s"
 
-#: backends/xml-entry.c:683
+#. FIXME for nodes with no value stored, but containing a schema name,
+#. * we improperly log an error here
+#.
+#: backends/xml-entry.c:386
+#, c-format
+msgid "Ignoring XML node `%s', except for possible schema name: %s"
+msgstr "Ignorerer XML-node `%s', bortsett fra mulig schema navn:: %s"
+
+#: backends/xml-entry.c:688
 msgid "found <local_schema> with no locale setting"
 msgstr "fant <local_schema> uten lokaleinnstilling"
 
-#: backends/xml-entry.c:705
+#: backends/xml-entry.c:710
 #, c-format
 msgid "Failed reading default value for schema: %s"
 msgstr "Kunne ikke lese standardverdi for schema: %s"
 
-#: backends/xml-entry.c:887
+#: backends/xml-entry.c:892
 #, c-format
 msgid "No \"type\" attribute for <%s> node"
 msgstr "Ingen \"type\" attributt for <%s> node"
 
-#: backends/xml-entry.c:901
+#: backends/xml-entry.c:906
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
 msgstr "En node har ukjent \"type\" attributt `%s', ignorerer"
 
-#: backends/xml-entry.c:916
+#: backends/xml-entry.c:921
 msgid "No \"value\" attribute for node"
 msgstr "Ingen \"verdi\" attributt for node"
 
-#: backends/xml-entry.c:964 backends/xml-entry.c:1040
+#: backends/xml-entry.c:969 backends/xml-entry.c:1045
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
 msgstr "Forsto ikke XML-node <%s> inne i en XML listenode"
 
-#: backends/xml-entry.c:998
+#: backends/xml-entry.c:1003
 msgid "Invalid type (list, pair, or unknown) in a list node"
 msgstr "Ugyldig type (liste, par, eller ukjent) i en listenode"
 
-#: backends/xml-entry.c:1021
+#: backends/xml-entry.c:1026
 #, c-format
 msgid "Bad XML node: %s"
 msgstr "Ugyldig XML-node: %s"
 
-#: backends/xml-entry.c:1029
+#: backends/xml-entry.c:1034
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
 msgstr "Listen inneholder en feilskrevet node (%s, skulle vært %s)"
 
-#: backends/xml-entry.c:1081
+#: backends/xml-entry.c:1086
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
 msgstr "Ignorerer ugyldig car fra XML-par: %s"
 
-#: backends/xml-entry.c:1090 backends/xml-entry.c:1113
+#: backends/xml-entry.c:1095 backends/xml-entry.c:1118
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
 msgstr "tolker XML-fil: lister og par kan ikke plasseres inne i et par"
 
-#: backends/xml-entry.c:1103
+#: backends/xml-entry.c:1108
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
 msgstr "Ignorerer ugyldig cdr fra XML-par: %s"
 
-#: backends/xml-entry.c:1122
+#: backends/xml-entry.c:1127
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML pair node"
 msgstr "Forsto ikke XML-node <%s> inne i en XML-parnode"
 
-#: backends/xml-entry.c:1140
+#: backends/xml-entry.c:1145
 msgid "Didn't find car and cdr for XML pair node"
 msgstr "Fant ikke car og cdr for XML-parnode"
 
-#: backends/xml-entry.c:1146
+#: backends/xml-entry.c:1151
 msgid "Missing cdr from pair of values in XML file"
 msgstr "Manglende cdr fra verdipar i XML-fil"
 
-#: backends/xml-entry.c:1153
+#: backends/xml-entry.c:1158
 msgid "Missing car from pair of values in XML file"
 msgstr "Manglende car fra verdipar i XML-fil"
 
-#: backends/xml-entry.c:1158
+#: backends/xml-entry.c:1163
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "Mangler både car og cdr verdier fra par i XML-fil"
 
@@ -349,82 +357,82 @@ msgstr "Legger til kilde `%s'\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Lesefeil på fil `%s': %s\n"
 
-#: gconf/gconf-internals.c:1284
+#: gconf/gconf-internals.c:1282
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Forventet liste, mottok %s"
 
-#: gconf/gconf-internals.c:1294
+#: gconf/gconf-internals.c:1292
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Forventet liste av %s, mottok liste av %s"
 
-#: gconf/gconf-internals.c:1433
+#: gconf/gconf-internals.c:1431
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Forventet par, mottok %s"
 
-#: gconf/gconf-internals.c:1447
+#: gconf/gconf-internals.c:1445
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Forventet (%s,%s) par, mottok et par hvor en eller begge verdiene mangler"
 
-#: gconf/gconf-internals.c:1463
+#: gconf/gconf-internals.c:1461
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Forventet par av type (%s,%s) mottok type (%s,%s)"
 
-#: gconf/gconf-internals.c:1579
+#: gconf/gconf-internals.c:1577
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Streng i sitattegn begynner ikke med et sitattegn"
 
-#: gconf/gconf-internals.c:1641
+#: gconf/gconf-internals.c:1639
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Streng i anførselstegn slutter ikke med et sitattegn"
 
-#: gconf/gconf-internals.c:2107 gconf/gconf.c:2632
+#: gconf/gconf-internals.c:2105 gconf/gconf.c:2632
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA feil: %s"
 
-#: gconf/gconf-internals.c:2127
+#: gconf/gconf-internals.c:2125
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "forsøk på å fjerne ikke listet OAF objekt katalog"
 
-#: gconf/gconf-internals.c:2132
+#: gconf/gconf-internals.c:2130
 msgid "attempt to add already-listed OAF directory"
 msgstr "forsøk på å legge til allerede listet OAF katalog"
 
-#: gconf/gconf-internals.c:2139
+#: gconf/gconf-internals.c:2137
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "OAF fortolkningsfeil: %s"
 
-#: gconf/gconf-internals.c:2144
+#: gconf/gconf-internals.c:2142
 msgid "Unknown OAF error"
 msgstr "Ukjent OAF feil"
 
-#: gconf/gconf-internals.c:2227
+#: gconf/gconf-internals.c:2225
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Ingen ior-fil i `%s'"
 
-#: gconf/gconf-internals.c:2258
+#: gconf/gconf-internals.c:2256
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd tar lås `%s' fra noen andre prosesser"
 
-#: gconf/gconf-internals.c:2269
+#: gconf/gconf-internals.c:2267
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Et annet program holder låsen `%s'"
 
-#: gconf/gconf-internals.c:2289
+#: gconf/gconf-internals.c:2287
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr "kunne ikke kontakte ORB for å pinge eksisterende gconfd"
 
-#: gconf/gconf-internals.c:2297
+#: gconf/gconf-internals.c:2295
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
@@ -433,42 +441,42 @@ msgstr ""
 "Fjerner utgått lås `%s' fordi IOR ikke kunne koverteres til objektreferanse, "
 "IOR `%s'"
 
-#: gconf/gconf-internals.c:2309
+#: gconf/gconf-internals.c:2307
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr "Fjerner utgått lås `%s' pga feil under pinging av tjener: %s"
 
-#: gconf/gconf-internals.c:2321
+#: gconf/gconf-internals.c:2319
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "GConf konfigurasjonsdaemon (gconfd) holder låsen `%s'"
 
-#: gconf/gconf-internals.c:2335
+#: gconf/gconf-internals.c:2333
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "kunne ikke opprette katalogen `%s': %s"
 
-#: gconf/gconf-internals.c:2370
+#: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "kunne ikke opprette lås `%s': %s"
 
-#: gconf/gconf-internals.c:2406
+#: gconf/gconf-internals.c:2404
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Kunne ikke skrive til fil `%s': %s"
 
-#: gconf/gconf-internals.c:2449
+#: gconf/gconf-internals.c:2447
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr "Kan ikke åpne lås-fil `%s'; antar at den ikke er vår: %s"
 
-#: gconf/gconf-internals.c:2466
+#: gconf/gconf-internals.c:2464
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr "Korrupt lås-fil `%s', fjerner den likevel"
 
-#: gconf/gconf-internals.c:2476
+#: gconf/gconf-internals.c:2474
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
@@ -477,7 +485,7 @@ msgstr ""
 "Opprettet ikke lås-fil `%s' (skapers pid %u, vår pid %u; antar at noen tok "
 "vår lås"
 
-#: gconf/gconf-internals.c:2493
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Kunne ikke slippe lås-katalogen `%s': %s"
@@ -487,17 +495,17 @@ msgstr "Kunne ikke slippe lås-katalogen `%s': %s"
 msgid "Failed to load source `%s': %s"
 msgstr "Kunne ikke lese kilde `%s': %s"
 
-#: gconf/gconf-sources.c:502
+#: gconf/gconf-sources.c:506
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
 "Schema `%s' spesifisert for  `%s' lagrer en verdi som ikke er for schema"
 
-#: gconf/gconf-sources.c:551
+#: gconf/gconf-sources.c:555
 msgid "The '/' name can only be a directory, not a key"
 msgstr "Navnet '/' kan kun være en katalog, ikke en nøkkel"
 
-#: gconf/gconf-sources.c:580
+#: gconf/gconf-sources.c:584
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -506,22 +514,22 @@ msgstr ""
 "Verdi for `%s' satt i en skrivebeskyttet kilde i begynnelsen av din "
 "konfigurasjonssti."
 
-#: gconf/gconf-sources.c:1067
+#: gconf/gconf-sources.c:1079
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Feil under søk etter metainfo: %s"
 
-#: gconf/gconf-sources.c:1132
+#: gconf/gconf-sources.c:1144
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Feil under henting av metainfo: %s"
 
-#: gconf/gconf-sources.c:1156
+#: gconf/gconf-sources.c:1168
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr "Nøkkel `%s' listet som schema for nøkkel `%s' lagrer type `%s'"
 
-#: gconf/gconf-sources.c:1193 gconf/gconfd.c:1523
+#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Feil under henting av verdi for `%s': %s"
@@ -790,31 +798,31 @@ msgstr "Feil under listing av kataloger i `%s': %s"
 msgid "Error setting schema for `%s': %s"
 msgstr "Feil under setting av schema for `%s': %s"
 
-#: gconf/gconfd.c:1911
+#: gconf/gconfd.c:1913
 msgid "Attempt to unregister invalid context ID"
 msgstr "Forsøk på å avregistrere ugyldig kontekst ID"
 
-#: gconf/gconfd.c:1918
+#: gconf/gconfd.c:1920
 #, c-format
 msgid "Bad context ID %lu, request ignored"
 msgstr "Ugyldig kontekst-ID %lu, forespørsel ignorert"
 
-#: gconf/gconfd.c:1926
+#: gconf/gconfd.c:1928
 #, c-format
 msgid "Already-unregistered context ID %lu, request ignored"
 msgstr "Allerede avregistrert kontekst-ID %lu, forespørsel ignorert"
 
-#: gconf/gconfd.c:1951
+#: gconf/gconfd.c:1953
 #, c-format
 msgid "Attempt to use invalid context ID %lu"
 msgstr "Forsøk på å bruke ugyldig kontekst-ID %lu"
 
-#: gconf/gconfd.c:1961
+#: gconf/gconfd.c:1963
 #, c-format
 msgid "Attempt to use already-unregistered context ID %lu"
 msgstr "Forsøk på å bruke allerede avregistrert kontekst-ID %lu"
 
-#: gconf/gconfd.c:2121
+#: gconf/gconfd.c:2123
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerer unntak: %s"
