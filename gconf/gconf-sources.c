@@ -1339,6 +1339,19 @@ gconf_sources_all_entries   (GConfSources* sources,
                   g_free (full);
                 }
               
+              if (gconf_entry_get_schema_name (previous) != NULL)
+                /* Discard this latest one */
+                ;
+              else
+                {
+                  /* Save the new schema name, previously we had an entry but no schema name*/
+                  if (gconf_entry_get_schema_name (pair) != NULL)
+                    {
+                      gconf_entry_set_schema_name (previous,
+                                                   gconf_entry_get_schema_name (pair));
+                    }
+                }
+
               gconf_entry_free(pair);
             }
           else
