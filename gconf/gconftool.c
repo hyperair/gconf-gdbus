@@ -855,7 +855,7 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
           
   if (err != NULL)
     {
-      fprintf(stderr, _("Failure listing pairs in `%s': %s"),
+      fprintf(stderr, _("Failure listing entries in `%s': %s\n"),
               dir, err->message);
       g_error_free(err);
       err = NULL;

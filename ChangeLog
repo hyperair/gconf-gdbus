@@ -1,3 +1,20 @@
+2001-07-23  Havoc Pennington  <hp@redhat.com>
+
+        Merge from stable.
+	
+	* gconf/gconfd.c (main): don't warn about failure to create
+	~/.gconfd if EEXIST
+
+	* gconf/gconf.c (gconf_engine_all_entries): convert empty string 
+	to NULL
+
+	* gconf/gconf-database.c
+	(impl_ConfigDatabase2_all_entries_with_schema_name): don't give
+	ORBit any NULL strings in the array, avoids a core dump
+
+	* gconf/gconftool.c (list_pairs_in_dir): put a newline after the
+	error message
+
 2001-07-16  Havoc Pennington  <hp@redhat.com>
 
         Merge from stable.

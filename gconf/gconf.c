@@ -1355,7 +1355,11 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
       pair->is_default = is_defaults->_buffer[i];
       pair->is_writable = is_writables->_buffer[i];
       if (schema_names)
-        pair->schema_name = g_strdup (schema_names->_buffer[i]);
+        {
+          /* empty string means no schema name */
+          if (*(schema_names->_buffer[i]) != '\0')
+            pair->schema_name = g_strdup (schema_names->_buffer[i]);
+        }
       
       pairs = g_slist_prepend(pairs, pair);
       

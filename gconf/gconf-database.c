@@ -686,6 +686,8 @@ impl_ConfigDatabase2_all_entries_with_schema_name(PortableServer_Servant servant
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
       (*schema_names)->_buffer[i] = CORBA_string_dup (gconf_entry_get_schema_name (p));
+      if ((*schema_names)->_buffer[i] == NULL)
+        (*schema_names)->_buffer[i] = CORBA_string_dup ("");
       (*is_defaults)->_buffer[i] = gconf_entry_get_is_default(p);
       (*is_writables)->_buffer[i] = gconf_entry_get_is_writable(p);
       

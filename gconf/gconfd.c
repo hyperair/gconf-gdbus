@@ -562,8 +562,8 @@ main(int argc, char** argv)
   gconfd_dir = g_strconcat (g_get_home_dir (), "/.gconfd", NULL);
   lock_dir = g_strconcat (gconfd_dir, "/lock", NULL);
 
-  if (mkdir (gconfd_dir, 0700) < 0)
-    gconf_log (GCL_ERR, _("Failed to create %s: %s"),
+  if (mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
+    gconf_log (GCL_WARNING, _("Failed to create %s: %s"),
                gconfd_dir, g_strerror (errno));
   
   err = NULL;
