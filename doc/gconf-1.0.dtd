@@ -1,0 +1,22 @@
+<!ELEMENT gconfschemafile (schemalist)>
+
+<!ELEMENT schemalist (schema)*>
+
+<!ELEMENT schema  (key,applyto*,owner?,type,default?,locale*)>
+
+<!ELEMENT key     (#PCDATA)>
+
+<!ELEMENT applyto (#PCDATA)>
+
+<!ELEMENT owner   (#PCDATA)>
+
+<!ELEMENT type    (#PCDATA)>
+
+<!ELEMENT default (#PCDATA)>
+
+<!ELEMENT locale  (default?,short?,long?)>
+<!ATTLIST locale  name CDATA #REQUIRED>
+
+<!ELEMENT short   (#PCDATA)>
+<!ELEMENT long    (#PCDATA)>
+        
