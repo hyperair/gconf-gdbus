@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-08-19 16:51-0400\n"
-"PO-Revision-Date: 2000-08-11 16:11+00:00\n"
+"POT-Creation-Date: 2000-08-30 19:13+0400\n"
+"PO-Revision-Date: 2000-08-30 19:44+04:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -389,7 +389,7 @@ msgstr "Строка в кавычках не начинается с кавычки"
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Строка в кавычках не заканчивается кавычкой"
 
-#: gconf/gconf-internals.c:2144 gconf/gconf.c:2643
+#: gconf/gconf-internals.c:2144 gconf/gconf.c:2624
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Ошибка CORBA: %s"
@@ -525,7 +525,7 @@ msgstr ""
 "Ключ \"%s\" указанный как схема для ключа \"%s\" в действительности хранит "
 "тип \"%s\""
 
-#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
+#: gconf/gconf-sources.c:1205
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Ошибка получения значения для \"%s\": %s"
@@ -595,7 +595,7 @@ msgstr "Не понято \"%s\" (лишняя \")\" найдена внутри пары)"
 msgid "`%s': %s"
 msgstr "\"%s\": %s"
 
-#: gconf/gconf.c:271
+#: gconf/gconf.c:269
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Сервер не смог распознать адрес '%s'"
@@ -619,83 +619,66 @@ msgstr ""
 "oaf_activate_from_id() и не установил исключения объясняющего проблему. "
 "Пожалуйста, отправьте сообщение об ошибке OAF."
 
-#: gconf/gconf.c:1677
+#: gconf/gconf.c:1753
 msgid "Failed to init GConf, exiting\n"
 msgstr "Не удалось инициализировать GConf, выход\n"
 
-#: gconf/gconf.c:1714
+#: gconf/gconf.c:1790
 msgid "Must begin with a slash (/)"
 msgstr "Должно начинаться с '/'"
 
-#: gconf/gconf.c:1736
+#: gconf/gconf.c:1812
 msgid "Can't have two slashes (/) in a row"
 msgstr "Не должно быть два '/' в строке"
 
-#: gconf/gconf.c:1738
+#: gconf/gconf.c:1814
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Недолжно быть точки после '/'"
 
-#: gconf/gconf.c:1759
+#: gconf/gconf.c:1835
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "'%c' недопустимый символ в названии ключа/каталога"
 
-#: gconf/gconf.c:1773
+#: gconf/gconf.c:1849
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Ключ/каталог не может заканчиваться на '/'"
 
-#: gconf/gconf.c:2115
+#: gconf/gconf.c:2096
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Сбой выключения конфигурационного сервера: %s"
 
-#: gconf/gconf.c:2176
+#: gconf/gconf.c:2157
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Ожидалось с плав.точкой, получено %s"
 
-#: gconf/gconf.c:2211
+#: gconf/gconf.c:2192
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Ожидалось целое, получено %s"
 
-#: gconf/gconf.c:2246
+#: gconf/gconf.c:2227
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Ожидалась строка, получено %s"
 
-#: gconf/gconf.c:2283
+#: gconf/gconf.c:2264
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Ожидалось булево, получено %s"
 
-#: gconf/gconf.c:2316
+#: gconf/gconf.c:2297
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Ожидалось schema, получено %s"
 
-#: gconf/gconfd.c:511
-msgid "Received invalid value in set request"
-msgstr "Получено неверное значение в запросе установки"
-
-#: gconf/gconfd.c:519
-#, c-format
-msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
-msgstr ""
-
-#: gconf/gconfd.c:789
+#: gconf/gconfd.c:200
 msgid "Shutdown request received"
 msgstr "Получен запрос на выключение"
 
-#: gconf/gconfd.c:802
-msgid "Received request to drop all cached data"
-msgstr "Получен запрос на сброс всех кэшированных данных"
-
-#: gconf/gconfd.c:822
-msgid "Received request to sync synchronously"
-msgstr "Получен запрос синхронизации"
-
-#: gconf/gconfd.c:861
+#: gconf/gconfd.c:232
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -703,7 +686,7 @@ msgstr ""
 "gconfd скомпилирован с отладкой; попробуйте загрузить gconf.path из "
 "исходного каталога"
 
-#: gconf/gconfd.c:879
+#: gconf/gconfd.c:250
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -711,7 +694,7 @@ msgstr ""
 "Файлы настроек не найдены, попытаемся использовать источник настроек по "
 "умолчанию \"%s\""
 
-#: gconf/gconfd.c:888
+#: gconf/gconfd.c:259
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -719,12 +702,12 @@ msgstr ""
 "Нет источников конфигурации в пути источников, конфигурация не была "
 "сохранена; отредактировать "
 
-#: gconf/gconfd.c:901
+#: gconf/gconfd.c:273
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Ошибка загрузки некоторых источников настроек: %s"
 
-#: gconf/gconfd.c:913
+#: gconf/gconfd.c:285
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -732,7 +715,7 @@ msgstr ""
 "Адрес конфигурации не был успешно распознан, невозможно загрузить или "
 "сохранить конфигурационные данные"
 
-#: gconf/gconfd.c:930
+#: gconf/gconfd.c:302
 msgid ""
 "No writeable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -740,24 +723,28 @@ msgstr ""
 "Не было успешно распознано записываемых источников конфигурации, возможно "
 "некоторые изменения конфигурации не удастся сохранить"
 
-#: gconf/gconfd.c:955 gconf/gconfd.c:967
+#: gconf/gconfd.c:327 gconf/gconfd.c:339
 #, c-format
 msgid "Received signal %d, shutting down."
 msgstr "Получен сигнал %d, выключение."
 
-#: gconf/gconfd.c:972
+#: gconf/gconfd.c:344
 #, c-format
 msgid "Received signal %d, ignoring"
 msgstr "Получен сигнал %d, игнорируется."
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:1013
+#: gconf/gconfd.c:390
 #, c-format
-msgid "starting, pid %u user `%s'"
-msgstr "запуск, pid %u пользователь \"%s\""
+msgid "starting (version %s), pid %u user '%s'"
+msgstr "запуск (версия %s), pid %u пользователь \"%s\""
 
-#: gconf/gconfd.c:1036
+#: gconf/gconfd.c:394
+msgid "GConf was built with debugging features enabled"
+msgstr "GConf был собран с включенной поддержкой отладки"
+
+#: gconf/gconfd.c:417
 msgid ""
 "Failed to init Object Activation Framework: please mail bug report to OAF "
 "maintainers"
@@ -765,103 +752,86 @@ msgstr ""
 "Не удалось инициализировать Object Activation Framework: пожалуйста, "
 "отправьте сообщение об ошибке разработчикам OAF"
 
-#: gconf/gconfd.c:1056
+#: gconf/gconfd.c:437
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Не удалось получить ссылку на объект для ConfigServer"
 
-#: gconf/gconfd.c:1075
+#: gconf/gconfd.c:457
 msgid ""
 "OAF doesn't know about our IID; indicates broken installation; can't "
 "register; exiting\n"
 msgstr ""
 
-#: gconf/gconfd.c:1079
+#: gconf/gconfd.c:461
 msgid "Another gconfd already registered with OAF; exiting\n"
 msgstr "Другой gconfd уже зарегистрирован с OAF; выход\n"
 
-#: gconf/gconfd.c:1084
+#: gconf/gconfd.c:466
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Неизвестная ошибка при регистрации gconfd c OAF; выход\n"
 
-#: gconf/gconfd.c:1100
+#: gconf/gconfd.c:487
 msgid "Exiting"
 msgstr "Завершение"
 
-#: gconf/gconfd.c:1194
-#, c-format
-msgid "Failed to sync one or more sources: %s"
-msgstr "Сбой синхронизации одного или более источников: %s"
-
-#: gconf/gconfd.c:1561
-#, c-format
-msgid "Error setting value for `%s': %s"
-msgstr "Ошибка установления значения для \"%s\": %s"
-
-#: gconf/gconfd.c:1593
-#, c-format
-msgid "Error unsetting `%s': %s"
-msgstr ""
-
-#: gconf/gconfd.c:1614
-#, c-format
-msgid "Error getting default value for `%s': %s"
-msgstr "Ошибка установки значения по умолчанию для \"%s\": %s"
-
-#: gconf/gconfd.c:1652
-#, c-format
-msgid "Error checking existence of `%s': %s"
-msgstr "Ошибка проверки существования \"%s\": %s"
-
-#: gconf/gconfd.c:1676
-#, c-format
-msgid "Error removing dir `%s': %s"
-msgstr "Ошибка удаления каталога '%s': %s"
-
-#: gconf/gconfd.c:1701
-#, c-format
-msgid "Failed to get all entries in `%s': %s"
-msgstr "Сбой получения всех записей в \"%s\": %s"
-
-#: gconf/gconfd.c:1725
-#, c-format
-msgid "Error listing dirs in `%s': %s"
-msgstr "Ошибка перечисления каталогов в \"%s\": %s"
-
-#: gconf/gconfd.c:1745
-#, c-format
-msgid "Error setting schema for `%s': %s"
-msgstr "Ошибка установки схемы для \"%s\": %s"
-
-#: gconf/gconfd.c:1913
-msgid "Attempt to unregister invalid context ID"
-msgstr ""
-
-#: gconf/gconfd.c:1920
-#, c-format
-msgid "Bad context ID %lu, request ignored"
-msgstr "Плохой идентификатор контекста %lu, запрос проигнорирован"
-
-#: gconf/gconfd.c:1928
-#, c-format
-msgid "Already-unregistered context ID %lu, request ignored"
-msgstr ""
-"Уже разрегистрированный идентификатор контекста %lu, запрос проигнорирован"
-
-#: gconf/gconfd.c:1953
-#, c-format
-msgid "Attempt to use invalid context ID %lu"
-msgstr "Попытка использовать неправильный идентификатор контекста %lu"
-
-#: gconf/gconfd.c:1963
-#, c-format
-msgid "Attempt to use already-unregistered context ID %lu"
-msgstr ""
-"Попытка использовать уже разрегистрированный идентификатор контекста %lu"
-
-#: gconf/gconfd.c:2123
+#: gconf/gconfd.c:814
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Возврат исключения: %s"
+
+#: gconf/gconfd.c:872
+#, c-format
+msgid "Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"
+msgstr "Не удалось создать ~/.gconfd/saved_state чтобы записать состояние gconfd: %s"
+
+#: gconf/gconfd.c:879
+#, c-format
+msgid "Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"
+msgstr "Не удалась запись в ~/.gconfd/saved_state состояния gconfd: %s"
+
+#: gconf/gconfd.c:907 gconf/gconfd.c:993
+#, c-format
+msgid "Didn't understand element '%s' in saved state file"
+msgstr "Не понято \"%s\" в файле сохраненного состояния"
+
+#: gconf/gconfd.c:918
+msgid "No location attribute on listener element in saved state file"
+msgstr ""
+
+#: gconf/gconfd.c:925
+msgid "No IOR attribute on listener element in saved state file"
+msgstr ""
+
+#: gconf/gconfd.c:932
+msgid "No connection ID attribute on listener element in saved state file"
+msgstr ""
+
+#: gconf/gconfd.c:1014
+msgid "Strange non-element node in saved state file"
+msgstr "Странный узел не являющийся элементом в файле сохраненного состояния"
+
+#: gconf/gconfd.c:1043
+#, c-format
+msgid "Unable to open saved state file '%s': %s"
+msgstr "Не удалось открыть сохраненный файл состояния \"%s\": %s"
+
+#: gconf/gconfd.c:1056
+#, c-format
+msgid "Failed to restore saved state from file '%s': %s"
+msgstr "Не удалось восстановить сохраненное состояние из файла \"%s\": %s"
+
+#: gconf/gconfd.c:1065
+msgid "Root node of saved state file should be an element"
+msgstr "Корневой узел в файле сохраненного состояния должен быть элементом"
+
+#: gconf/gconfd.c:1075
+#, c-format
+msgid "Root node of saved state file should be 'gconfd_logfile', not '%s'"
+msgstr "Корневой узел в файле сохраненного состояния должен быть \"gconfd_logfile\", а не \"%s\""
+
+#: gconf/gconfd.c:1088
+msgid "Funny non-element node under <gconfd_logfile> in saved state file"
+msgstr ""
 
 #: gconf/gconftool.c:76
 msgid "Help options"
