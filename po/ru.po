@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2002-04-29 01:37-0400\n"
-"PO-Revision-Date: 2002-05-03 16:21+0400\n"
+"POT-Creation-Date: 2002-05-19 08:21+0400\n"
+"PO-Revision-Date: 2002-05-10 13:38+0400\n"
 "Last-Translator: Dmitry G. Mastrukov <dmitry@taurussoft.org>\n"
 "Language-Team: Russian <gnome-cyr@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgstr "Сбой при выполнении stat для \"%s\": %s"
 
 # gconf/gconftool.c:2415
 #: backends/xml-dir.c:956
-#,  c-format
+#, c-format
 msgid "%s"
 msgstr "%s"
 
@@ -856,10 +856,8 @@ msgid ""
 msgstr ""
 "Сбой при контакте с сервером конфигурации; среди возможных причин то, что "
 "необходимо включить сетевые возможности TCP/IP для ORBit, или то, что "
-"остались старые блокировки NFS из-за краха системы. "
-"Для получения информации смотрите "
-"http://www.gnome.org/projects/gconf/ . "
-"(Подробно - %s)"
+"остались старые блокировки NFS из-за краха системы. Для получения информации "
+"смотрите http://www.gnome.org/projects/gconf/ . (Подробно - %s)"
 
 #: gconf/gconf-internals.c:2906
 msgid "none"
@@ -889,6 +887,12 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
+"Свяжитесь со своим системным администратором для разрешения следующей "
+"проблемы:\n"
+"Не удалось открыть или создать файл \"%s\"; Это означает, что возможно "
+"существует проблема с конфигурацией, так как многим программам потребуется "
+"создавать файлы в вашем домашнем каталоге. Произошедшая ошибка - \"%s"
+"\" (errno = %d)."
 
 #: gconf/gconf-sanity-check.c:143
 #, c-format
@@ -901,17 +905,14 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
-"Свяжитесь со своим системным администратором "
-"для разрешения следующей проблемы:\n"
-"Не удалось заблокировать файл \"%s\"; "
-"Это означает, что возможно существует проблема "
-"с конфигурацией вашей операционной системы. "
-"Если у вас есть смонтированный через NFS домашний каталог, "
-"возможно, либо сервер, либо клиент сконфигурированы неверно. "
-"Посмотрите документацию на rpc.statd and rpc.lockd. "
-"Общим случаем этой ошибки может быть то,"
-"что сервис \"nfslock\" был отключён. Произошедшая ошибка - \"%s\" "
-"(errno = %d)."
+"Свяжитесь со своим системным администратором для разрешения следующей "
+"проблемы:\n"
+"Не удалось заблокировать файл \"%s\"; Это означает, что возможно существует "
+"проблема с конфигурацией вашей операционной системы. Если у вас есть "
+"смонтированный через NFS домашний каталог, возможно, либо сервер, либо "
+"клиент сконфигурированы неверно. Посмотрите документацию на rpc.statd and "
+"rpc.lockd. Общим случаем этой ошибки может быть то,что сервис \"nfslock\" "
+"был отключён. Произошедшая ошибка - \"%s\" (errno = %d)."
 
 # gconf/gconf-internals.c:2569
 #: gconf/gconf-sanity-check.c:160
@@ -926,10 +927,10 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
-"Свяжитесь со своим системным администратором "
-"для разрешения следующей проблемы:\n"
-"Нет источников конфигурации в файле \"%s\"; Это значит, что "
-"настройки и иные установки не могут быть сохранены. %s%s"
+"Свяжитесь со своим системным администратором для разрешения следующей "
+"проблемы:\n"
+"Нет источников конфигурации в файле \"%s\"; Это значит, что настройки и иные "
+"установки не могут быть сохранены. %s%s"
 
 # gconf/gconfd.c:1836
 #: gconf/gconf-sanity-check.c:198
@@ -942,8 +943,8 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
-"Свяжитесь со своим системным администратором "
-"для разрешения следующей проблемы:\n"
+"Свяжитесь со своим системным администратором для разрешения следующей "
+"проблемы:\n"
 "Не удалось разрешить адрес \"%s\" в файле конфигурации \"%s\": %s"
 
 # gconf/gconf-schema.c:190 gconf/gconf-schema.c:198 gconf/gconf-schema.c:206
@@ -1258,8 +1259,8 @@ msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
-"gconfd скомпилирован с отладкой; попробуйте загрузить gconf.path из "
-"исходного каталога"
+"gconfd скомпилирован с отладочной информацией; попробуйте загрузить gconf."
+"path из исходного каталога"
 
 # gconf/gconfd.c:292
 #: gconf/gconfd.c:295
@@ -1516,8 +1517,8 @@ msgstr ""
 #: gconf/gconfd.c:2312
 msgid "Multiple segmentation faults occurred; can't display error dialog\n"
 msgstr ""
-"Возникли множественные ошибки сегментации; "
-"Невозможно отобразить диалог ошибки\n"
+"Возникли множественные ошибки сегментации; Невозможно отобразить диалог "
+"ошибки\n"
 
 #. Eeeek! Can't show dialog
 #: gconf/gconfd.c:2321
@@ -1527,7 +1528,7 @@ msgid ""
 "Cannot display crash dialog: %s\n"
 msgstr ""
 "Ошибка сегментации!\n"
-"Невозможно отобразить лиаог ошибки: %s\n"
+"Невозможно отобразить диалог ошибки: %s\n"
 
 # gconf/gconftool.c:80
 #: gconf/gconftool.c:81
