@@ -20,13 +20,7 @@
 
 #include "gconf-client.h"
 
-#include <gnome.h>
-
-/* In real life these would be defined by configure.in, not in this
-   file. */
-#define PACKAGE "testgconfclient"
-#define GNOMELOCALEDIR "/blah"
-#define VERSION "0.0.0.0.0.0.1alpha"
+#include <gtk/gtk.h>
 
 static void create_controls(GConfClient* client);
 
@@ -35,12 +29,9 @@ main(int argc, char** argv)
 {
   GConfError* error = NULL;
   GConfClient* client = NULL;
+
+  gtk_init(&argc, &argv);
   
-  bindtextdomain(PACKAGE, GNOMELOCALEDIR);  
-  textdomain(PACKAGE);
-
-  gnome_init(PACKAGE, VERSION, argc, argv);
-
   if (!gconf_init(argc, argv, &error))
     {
       g_assert(error != NULL);

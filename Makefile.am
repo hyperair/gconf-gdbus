@@ -1,11 +1,5 @@
 
-if GNOME
-GCONF_EDITOR=gconf-editor
-else
-GCONF_EDITOR=
-endif
-
-SUBDIRS = gconf backends wrappers po intl doc $(GCONF_EDITOR)
+SUBDIRS = gconf backends wrappers po intl doc
 
 bin_SCRIPTS = gconf-config
 

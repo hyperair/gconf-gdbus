@@ -67,17 +67,9 @@ fi
 
 AM_PATH_GLIB(1.2.0,,AC_MSG_ERROR(glib not found),gmodule)
 AM_PATH_OAF(0.1.0,,AC_MSG_ERROR([OAF not found]))
+AM_PATH_GTK(1.2.0,,HAVE_GTK=no)
 
-AC_PATH_PROG(GNOME_CONFIG,gnome-config,no)
-if test x$GNOME_CONFIG != xno; then
-  GNOME_LIBS=`$GNOME_CONFIG --libs gnomeui`
-  GNOME_CFLAGS=`$GNOME_CONFIG --cflags gnomeui`
-fi
-
-AC_SUBST(GNOME_LIBS)
-AC_SUBST(GNOME_CFLAGS)
-
-AM_CONDITIONAL(GNOME, test x$GNOME_CONFIG != xno)
+AM_CONDITIONAL(GTK, test x$HAVE_GTK != xno)
 
 AC_PATH_PROG(XML_CONFIG,xml-config,no)
 if test x$XML_CONFIG = xno; then
@@ -140,7 +132,6 @@ Makefile
 gconf-config
 gconf/Makefile
 backends/Makefile
-gconf-editor/Makefile
 wrappers/Makefile
 wrappers/guile/Makefile
 wrappers/gtk/Makefile

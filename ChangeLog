@@ -1,5 +1,19 @@
 1999-11-23  Havoc Pennington  <hp@pobox.com>
 
+	* wrappers/gtk/testgconfclient.c: remove GNOME dependency
+
+	* configure.in: don't build gconf-editor makefile.
+
+	* Makefile.am (SUBDIRS): never build gconf-editor, it will have to
+	go in a separate module (somewhat inconveniently, since I'll
+	probably end up installing gconf-internals.h for its use, blah)
+
+	* configure.in (GCONF_AGE): Check for plain GTK not GNOME
+
+	* wrappers/Makefile.am (SUBDIRS): change GNOME conditional to GTK
+
+1999-11-23  Havoc Pennington  <hp@pobox.com>
+
 	* gconf/Makefile.am (libgconf_la_LDFLAGS): split off LIBADD
 
 	* wrappers/gtk/Makefile.am (libgconf_gtk_la_LIBADD): set shared
