@@ -131,6 +131,7 @@ GSList*      gconf_get_list    (GConfEngine* conf, const gchar* key,
   int     gint*
   string  gchar**
   float   gdouble*
+  schema  GConfSchema**
  */
 gboolean     gconf_get_pair    (GConfEngine* conf, const gchar* key,
                                 GConfValueType car_type, GConfValueType cdr_type,

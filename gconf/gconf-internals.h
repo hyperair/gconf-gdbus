@@ -103,6 +103,29 @@ GConfValue* gconf_value_new_pair_from_string (GConfValueType car_type,
                                               GConfValueType cdr_type,
                                               const gchar* str);
 
+/*
+ * List/pair conversion stuff
+ */
+
+GConfValue* gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list);
+
+GConfValue* gconf_value_pair_from_primitive_pair(GConfValueType car_type,
+                                                 GConfValueType cdr_type,
+                                                 gconstpointer address_of_car,
+                                                 gconstpointer address_of_cdr);
+
+
+GSList*    gconf_value_list_to_primitive_list_destructive(GConfValue* val,
+                                                          GConfValueType list_type,
+                                                          GConfError** err);
+
+gboolean   gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
+                                                          GConfValueType car_type,
+                                                          GConfValueType cdr_type,
+                                                          gpointer car_retloc,
+                                                          gpointer cdr_retloc,
+                                                          GConfError** err);
+
 #endif
 
 

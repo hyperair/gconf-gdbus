@@ -279,6 +279,14 @@ gboolean     gconf_client_get_bool  (GConfClient* client, const gchar* key,
 GConfSchema* gconf_client_get_schema  (GConfClient* client,
                                        const gchar* key, GConfError** err);
 
+GSList*      gconf_client_get_list    (GConfClient* client, const gchar* key,
+                                       GConfValueType list_type, GConfError** err);
+
+gboolean     gconf_client_get_pair    (GConfClient* client, const gchar* key,
+                                       GConfValueType car_type, GConfValueType cdr_type,
+                                       gpointer car_retloc, gpointer cdr_retloc,
+                                       GConfError** err);
+
 /* No convenience functions for lists or pairs, since there are too
    many combinations of types possible
 */
@@ -299,6 +307,18 @@ gboolean     gconf_client_set_bool    (GConfClient* client, const gchar* key,
 
 gboolean     gconf_client_set_schema  (GConfClient* client, const gchar* key,
                                        GConfSchema* val, GConfError** err);
+
+/* List should be the same as the one gconf_client_get_list() would return */
+gboolean     gconf_client_set_list    (GConfClient* client, const gchar* key,
+                                       GConfValueType list_type,
+                                       GSList* list,
+                                       GConfError** err);
+
+gboolean     gconf_client_set_pair    (GConfClient* client, const gchar* key,
+                                       GConfValueType car_type, GConfValueType cdr_type,
+                                       gconstpointer address_of_car,
+                                       gconstpointer address_of_cdr,
+                                       GConfError** err);
 
 /*
  * Functions to emit signals

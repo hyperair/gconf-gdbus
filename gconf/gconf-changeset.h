@@ -85,6 +85,15 @@ void         gconf_change_set_set_bool    (GConfChangeSet* cs, const gchar* key,
 void         gconf_change_set_set_schema  (GConfChangeSet* cs, const gchar* key,
                                            GConfSchema* val);
 
+void         gconf_change_set_set_list    (GConfChangeSet* cs, const gchar* key,
+                                           GConfValueType list_type,
+                                           GSList* list);
+
+void         gconf_change_set_set_pair    (GConfChangeSet* cs, const gchar* key,
+                                           GConfValueType car_type, GConfValueType cdr_type,
+                                           gconstpointer address_of_car,
+                                           gconstpointer address_of_cdr);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

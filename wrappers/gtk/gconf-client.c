@@ -698,7 +698,7 @@ get(GConfClient* client, const gchar* key, GConfError** error)
   
   /* Check our client-side cache */
   if (gconf_client_lookup(client, key, &val))
-    return val; /* stored in cache, not necessarily set though */
+    return gconf_value_copy(val); /* stored in cache, not necessarily set though */
 
   g_assert(val == NULL); /* if it was in the cache we should have returned */
 
@@ -723,6 +723,7 @@ get(GConfClient* client, const gchar* key, GConfError** error)
 
           if (gconf_key_is_below(d->name, key))
             {
+              /* note that we cache a _copy_ */
               gconf_client_cache(client, key,
                                  val ? gconf_value_copy(val) : NULL);
               break;
@@ -742,6 +743,8 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
   GConfError* error = NULL;
   GConfValue* val;
 
+  g_return_val_if_fail(err == NULL || *err == NULL, 0.0);
+  
   val = get(client, key, &error);
 
   if (val != NULL)
@@ -774,6 +777,8 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
   GConfError* error = NULL;
   GConfValue* val;
 
+  g_return_val_if_fail(err == NULL || *err == NULL, 0);
+  
   val = get(client, key, &error);
 
   if (val != NULL)
@@ -807,6 +812,8 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
   GConfError* error = NULL;
   GConfValue* val;
 
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
   val = get(client, key, &error);
 
   if (val != NULL)
@@ -846,6 +853,8 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
   GConfError* error = NULL;
   GConfValue* val;
 
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
+  
   val = get(client, key, &error);
 
   if (val != NULL)
@@ -878,6 +887,8 @@ gconf_client_get_schema  (GConfClient* client,
   GConfError* error = NULL;
   GConfValue* val;
 
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
   val = get(client, key, &error);
 
   if (val != NULL)
@@ -906,6 +917,89 @@ gconf_client_get_schema  (GConfClient* client,
       return NULL;
     }
 }
+
+GSList*
+gconf_client_get_list    (GConfClient* client, const gchar* key,
+                          GConfValueType list_type, GConfError** err)
+{
+  GConfError* error = NULL;
+  GConfValue* val;
+
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  val = get(client, key, &error);
+
+  if (val != NULL)
+    {
+      GSList* retval;
+
+      g_assert(error == NULL);
+
+      /* This function checks the type and destroys "val" */
+      retval = gconf_value_list_to_primitive_list_destructive(val, list_type, &error);
+
+      if (error != NULL)
+        {
+          g_assert(retval == NULL);
+          handle_error(client, error, err);
+          return NULL;
+        }
+      else
+        return retval;
+    }
+  else
+    {
+      if (error != NULL)
+        handle_error(client, error, err);
+      return NULL;
+    }
+}
+
+gboolean
+gconf_client_get_pair    (GConfClient* client, const gchar* key,
+                          GConfValueType car_type, GConfValueType cdr_type,
+                          gpointer car_retloc, gpointer cdr_retloc,
+                          GConfError** err)
+{
+  GConfError* error = NULL;
+  GConfValue* val;
+
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  val = get(client, key, &error);
+
+  if (val != NULL)
+    {
+      g_assert(error == NULL);
+
+      /* This function checks the type and destroys "val" */
+      if (gconf_value_pair_to_primitive_pair_destructive(val, car_type, cdr_type,
+                                                         car_retloc, cdr_retloc,
+                                                         &error))
+        {
+          g_assert(error == NULL);
+          return TRUE;
+        }
+      else
+        {
+          g_assert(error != NULL);
+          handle_error(client, error, err);
+          return FALSE;
+        }
+    }
+  else
+    {
+      if (error != NULL)
+        {
+          handle_error(client, error, err);
+          return FALSE;
+        }
+      else
+        return TRUE;
+    }
+
+}
+
 
 /*
  * For the set functions, we just set normally, and wait for the
@@ -1018,6 +1112,51 @@ gconf_client_set_schema  (GConfClient* client, const gchar* key,
       return FALSE;
     }
 }
+
+gboolean
+gconf_client_set_list    (GConfClient* client, const gchar* key,
+                          GConfValueType list_type,
+                          GSList* list,
+                          GConfError** err)
+{
+  GConfError* error = NULL;
+  
+  g_return_val_if_fail(client != NULL, FALSE);
+  g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
+  g_return_val_if_fail(key != NULL, FALSE);
+  
+  if (gconf_set_list(client->engine, key, list_type, list, &error))
+    return TRUE;
+  else
+    {
+      handle_error(client, error, err);
+      return FALSE;
+    }
+}
+
+gboolean
+gconf_client_set_pair    (GConfClient* client, const gchar* key,
+                          GConfValueType car_type, GConfValueType cdr_type,
+                          gconstpointer address_of_car,
+                          gconstpointer address_of_cdr,
+                          GConfError** err)
+{
+  GConfError* error = NULL;
+  
+  g_return_val_if_fail(client != NULL, FALSE);
+  g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
+  g_return_val_if_fail(key != NULL, FALSE);
+  
+  if (gconf_set_pair(client->engine, key, car_type, cdr_type,
+                     address_of_car, address_of_car, &error))
+    return TRUE;
+  else
+    {
+      handle_error(client, error, err);
+      return FALSE;
+    }
+}
+
 
 /*
  * Functions to emit signals

@@ -1020,3 +1020,357 @@ gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
       
   g_free(msg);
 }
+
+/*
+ * List/pair conversion
+ */
+
+GConfValue*
+gconf_value_list_from_primitive_list(GConfValueType list_type, GSList* list)
+{
+  GSList* value_list;
+  GSList* tmp;
+
+  g_return_val_if_fail(list_type != GCONF_VALUE_INVALID, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_LIST, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, NULL);
+  
+  value_list = NULL;
+
+  tmp = list;
+
+  while (tmp != NULL)
+    {
+      GConfValue* val;
+
+      val = gconf_value_new(list_type);
+
+      switch (list_type)
+        {
+        case GCONF_VALUE_INT:
+          gconf_value_set_int(val, GPOINTER_TO_INT(tmp->data));
+          break;
+
+        case GCONF_VALUE_BOOL:
+          gconf_value_set_bool(val, GPOINTER_TO_INT(tmp->data));
+          break;
+
+        case GCONF_VALUE_FLOAT:
+          gconf_value_set_float(val, *((gdouble*)tmp->data));
+          break;
+
+        case GCONF_VALUE_STRING:
+          gconf_value_set_string(val, tmp->data);
+          break;
+
+        case GCONF_VALUE_SCHEMA:
+          gconf_value_set_schema(val, tmp->data);
+          break;
+          
+        default:
+          g_assert_not_reached();
+          break;
+        }
+
+      value_list = g_slist_prepend(value_list, val);
+
+      tmp = g_slist_next(tmp);
+    }
+
+  /* Get it in the right order. */
+  value_list = g_slist_reverse(value_list);
+
+  {
+    GConfValue* value_with_list;
+    
+    value_with_list = gconf_value_new(GCONF_VALUE_LIST);
+    gconf_value_set_list_type(value_with_list, list_type);
+    gconf_value_set_list_nocopy(value_with_list, value_list);
+
+    return value_with_list;
+  }
+}
+
+
+static GConfValue*
+from_primitive(GConfValueType type, gconstpointer address)
+{
+  GConfValue* val;
+
+  val = gconf_value_new(type);
+
+  switch (type)
+    {
+    case GCONF_VALUE_INT:
+      gconf_value_set_int(val, *((const gint*)address));
+      break;
+
+    case GCONF_VALUE_BOOL:
+      gconf_value_set_bool(val, *((const gboolean*)address));
+      break;
+
+    case GCONF_VALUE_STRING:
+      gconf_value_set_string(val, *((const gchar**)address));
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      gconf_value_set_float(val, *((const gdouble*)address));
+      break;
+
+    case GCONF_VALUE_SCHEMA:
+      gconf_value_set_schema(val, *((GConfSchema**)address));
+      break;
+      
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  return val;
+}
+
+GConfValue*
+gconf_value_pair_from_primitive_pair(GConfValueType car_type,
+                                     GConfValueType cdr_type,
+                                     gconstpointer address_of_car,
+                                     gconstpointer address_of_cdr)
+{
+  GConfValue* pair;
+  GConfValue* car;
+  GConfValue* cdr;
+  
+  g_return_val_if_fail(car_type != GCONF_VALUE_INVALID, NULL);
+  g_return_val_if_fail(car_type != GCONF_VALUE_LIST, NULL);
+  g_return_val_if_fail(car_type != GCONF_VALUE_PAIR, NULL);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_INVALID, NULL);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_LIST, NULL);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_PAIR, NULL);
+  g_return_val_if_fail(address_of_car != NULL, NULL);
+  g_return_val_if_fail(address_of_cdr != NULL, NULL);
+  
+  car = from_primitive(car_type, address_of_car);
+  cdr = from_primitive(cdr_type, address_of_cdr);
+
+  pair = gconf_value_new(GCONF_VALUE_PAIR);
+  gconf_value_set_car_nocopy(pair, car);
+  gconf_value_set_cdr_nocopy(pair, cdr);
+
+  return pair;
+}
+
+
+GSList*
+gconf_value_list_to_primitive_list_destructive(GConfValue* val,
+                                               GConfValueType list_type,
+                                               GConfError** err)
+{
+  GSList* retval;
+
+  g_return_val_if_fail(val != NULL, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_INVALID, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_LIST, NULL);
+  g_return_val_if_fail(list_type != GCONF_VALUE_PAIR, NULL);
+  g_return_val_if_fail(err == NULL || *err == NULL, NULL);
+  
+  if (val->type != GCONF_VALUE_LIST)
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                               _("Expected list, got %s"),
+                               gconf_value_type_to_string(val->type));
+      gconf_value_destroy(val);
+      return NULL;
+    }
+
+  if (gconf_value_list_type(val) != list_type)
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                               _("Expected list of %s, got list of %s"),
+                               gconf_value_type_to_string(list_type),
+                               gconf_value_type_to_string(val->type));
+      gconf_value_destroy(val);
+      return NULL;
+    }
+
+  g_assert(gconf_value_list_type(val) == list_type);
+      
+  retval = gconf_value_list(val);
+
+  /* Cheating the API to avoid a list copy; set this to NULL to
+         avoid destroying the list */
+  val->d.list_data.list = NULL;
+      
+  gconf_value_destroy(val);
+  val = NULL;
+      
+  {
+    /* map (typeChange, retval) */
+    GSList* tmp;
+
+    tmp = retval;
+
+    while (tmp != NULL)
+      {
+        GConfValue* elem = tmp->data;
+
+        g_assert(elem != NULL);
+        g_assert(elem->type == list_type);
+            
+        switch (list_type)
+          {
+          case GCONF_VALUE_INT:
+          case GCONF_VALUE_BOOL:
+            tmp->data = GINT_TO_POINTER(gconf_value_int(elem));
+            break;
+                
+          case GCONF_VALUE_FLOAT:
+            {
+              gdouble* d = g_new(gdouble, 1);
+              *d = gconf_value_float(elem);
+              tmp->data = d;
+            }
+            break;
+
+          case GCONF_VALUE_STRING:
+            {
+              /* Cheat again, and steal the string from the value */
+              tmp->data = elem->d.string_data;
+              elem->d.string_data = NULL;
+            }
+            break;
+
+          case GCONF_VALUE_SCHEMA:
+            {
+              /* and also steal the schema... */
+              tmp->data = elem->d.schema_data;
+              elem->d.schema_data = NULL;
+            }
+            break;
+                
+          default:
+            g_assert_not_reached();
+            break;
+          }
+
+        /* Clean up the value */
+        gconf_value_destroy(elem);
+            
+        tmp = g_slist_next(tmp);
+      }
+  } /* list conversion block */
+      
+  return retval;
+}
+
+
+static void
+primitive_value(gpointer retloc, GConfValue* val)
+{
+  switch (val->type)
+    {
+    case GCONF_VALUE_INT:
+      *((gint*)retloc) = gconf_value_int(val);
+      break;
+
+    case GCONF_VALUE_FLOAT:
+      *((gdouble*)retloc) = gconf_value_float(val);
+      break;
+
+    case GCONF_VALUE_STRING:
+      {
+        *((gchar**)retloc) = val->d.string_data;
+        /* cheat and steal the string to avoid a copy */
+        val->d.string_data = NULL;
+      }
+      break;
+
+    case GCONF_VALUE_BOOL:
+      *((gboolean*)retloc) = gconf_value_bool(val);
+      break;
+
+    case GCONF_VALUE_SCHEMA:
+      *((GConfSchema**)retloc) = gconf_value_schema(val);
+      break;
+      
+    default:
+      g_assert_not_reached();
+      break;
+    }
+}
+
+gboolean
+gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
+                                               GConfValueType car_type,
+                                               GConfValueType cdr_type,
+                                               gpointer car_retloc,
+                                               gpointer cdr_retloc,
+                                               GConfError** err)
+{
+  GConfValue* car;
+  GConfValue* cdr;
+
+  g_return_val_if_fail(val != NULL, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(car_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_INVALID, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_LIST, FALSE);
+  g_return_val_if_fail(cdr_type != GCONF_VALUE_PAIR, FALSE);
+  g_return_val_if_fail(car_retloc != NULL, FALSE);
+  g_return_val_if_fail(cdr_retloc != NULL, FALSE);
+  g_return_val_if_fail(err == NULL || *err == NULL, FALSE);  
+      
+  if (val->type != GCONF_VALUE_PAIR)
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                               _("Expected pair, got %s"),
+                               gconf_value_type_to_string(val->type));
+      gconf_value_destroy(val);
+      return FALSE;
+    }
+
+  car = gconf_value_car(val);
+  cdr = gconf_value_cdr(val);
+      
+  if (car == NULL ||
+      cdr == NULL)
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_TYPE_MISMATCH, 
+                               _("Expected (%s,%s) pair, got a pair with one or both values missing"),
+                               gconf_value_type_to_string(car_type),
+                               gconf_value_type_to_string(cdr_type));
+
+      gconf_value_destroy(val);
+      return FALSE;
+    }
+
+  g_assert(car != NULL);
+  g_assert(cdr != NULL);
+      
+  if (car->type != car_type ||
+      cdr->type != cdr_type)
+    {
+      if (err)
+        *err = gconf_error_new(GCONF_TYPE_MISMATCH,
+                               _("Expected pair of type (%s,%s) got type (%s,%s)"),
+                               gconf_value_type_to_string(car_type),
+                               gconf_value_type_to_string(cdr_type),
+                               gconf_value_type_to_string(car->type),
+                               gconf_value_type_to_string(cdr->type));
+      gconf_value_destroy(val);
+      return FALSE;
+    }
+
+  primitive_value(car_retloc, car);
+  primitive_value(cdr_retloc, cdr);
+
+  gconf_value_destroy(val);
+
+  return TRUE;
+}
+
+
+

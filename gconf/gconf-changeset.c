@@ -18,6 +18,7 @@
  */
 
 #include "gconf-changeset.h"
+#include "gconf-internals.h"
 
 typedef enum {
   CHANGE_INVALID,
@@ -293,6 +294,51 @@ gconf_change_set_set_schema  (GConfChangeSet* cs, const gchar* key,
   
   gconf_change_set_set_nocopy(cs, key, value);
 }
+
+void
+gconf_change_set_set_list    (GConfChangeSet* cs, const gchar* key,
+                              GConfValueType list_type,
+                              GSList* list)
+{
+  GConfValue* value_list;
+  
+  g_return_if_fail(cs != NULL);
+  g_return_if_fail(key != NULL);
+  g_return_if_fail(list_type != GCONF_VALUE_INVALID);
+  g_return_if_fail(list_type != GCONF_VALUE_LIST);
+  g_return_if_fail(list_type != GCONF_VALUE_PAIR);
+  
+  value_list = gconf_value_list_from_primitive_list(list_type, list);
+  
+  gconf_change_set_set_nocopy(cs, key, value_list);
+}
+
+
+void
+gconf_change_set_set_pair    (GConfChangeSet* cs, const gchar* key,
+                              GConfValueType car_type, GConfValueType cdr_type,
+                              gconstpointer address_of_car,
+                              gconstpointer address_of_cdr)
+{
+  GConfValue* pair;
+  
+  g_return_if_fail(cs != NULL);
+  g_return_if_fail(key != NULL);
+  g_return_if_fail(car_type != GCONF_VALUE_INVALID);
+  g_return_if_fail(car_type != GCONF_VALUE_LIST);
+  g_return_if_fail(car_type != GCONF_VALUE_PAIR);
+  g_return_if_fail(cdr_type != GCONF_VALUE_INVALID);
+  g_return_if_fail(cdr_type != GCONF_VALUE_LIST);
+  g_return_if_fail(cdr_type != GCONF_VALUE_PAIR);
+  g_return_if_fail(address_of_car != NULL);
+  g_return_if_fail(address_of_cdr != NULL);
+
+  pair = gconf_value_pair_from_primitive_pair(car_type, cdr_type,
+                                              address_of_car, address_of_cdr);
+  
+  gconf_change_set_set_nocopy(cs, key, pair);
+}
+
 
 /*
  * Change
