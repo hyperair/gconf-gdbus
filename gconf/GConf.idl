@@ -1,0 +1,9 @@
+
+interface Listener {
+  oneway void notify (in string value);
+
+};
+
+interface Notifier {
+  void add_listener(in string where, in Listener who);
+};

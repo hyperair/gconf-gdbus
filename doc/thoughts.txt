@@ -1,0 +1,231 @@
+
+GConf design notes
+==================
+
+Data Types
+===
+
+Must be able to store int, float, string. Also need a "record" or
+"struct" type, to store something like a printer; record has a fixed
+set of names and fixed types for the value at each name.  There is
+also a list type.
+
+Should lists of lists be allowed? Probably so, since you can do this
+via a record type anyway (a record containing a list) so it may as
+well be allowed in a non-ugly way.
+
+Namespace
+===
+
+The namespace will be a filesystem-style hierarchical namespace. By
+convention, the first two "levels" of the namespace will be a vendor
+name and an application or module name. Subsequent levels are defined
+by applications.
+
+Config Sources
+===
+
+A config source is something like a URL. It has two parts: a "protocol"
+(backend), such as Berkeley DB, flat text file, Oracle, LDAP; and an
+"address", which is a backend-specific string sufficient to locate the
+particular config source. Could be a hostname, filename, directory
+name, whatever makes sense.
+
+Each config source can respond to queries for any /vendor/appname/key
+values, if only with "no value set."
+
+Sources can be read-only or read-write with respect to a given user. 
+
+On the implementation side, backends will probably be implemented as
+loadable modules.
+
+Source Layering
+===
+
+Config sources can be layered in a search path. For example, you might
+configure your GConf to first check your user settings stored in flat
+files in ~/.gconf, then the systemwide Berkeley DB in /etc/gconf, then
+the network-wide LDAP configuration.
+
+System or network administrators can place a read-only config source
+at the beginning of your source search path. If the read-only source
+sets a value, then users can't modify it. (This is not intended to be
+a security measure, just a way to keep users from shooting themselves
+in the foot; you might lock IP addresses in place, for example, if
+users shouldn't be changing them.) Administrators can place a
+read-only source at the end of the source search path, to provide
+default values. User configuration is sandwiched between mandatory and
+default. For example, you might have:
+
+ /etc/gconf-mandatory:~/.gconf:/etc/gconf-defaults
+
+Layering is global; that is, you can't "mount" a layer only for a
+particular section of the namespace. However, layers can be "empty"
+except for a single namespace area; if a layer doesn't set a value for
+a given key or namespace area it's effectively nonexistent with
+respect to that key.
+
+There will be a master repository that stores metadata and information
+about the layers. Most likely this will be concealed by the API.
+
+Packages (debs/rpms) can also install a layer of defaults if they
+like, and uninstall the layer when the package is uninstalled.
+
+Notifier/Listener architecture
+===
+
+Apps should be able to register themselves as listeners for a given
+section of the namespace, to be notified whenever a config value in
+that namespace changes.
+
+A simple way to structure applications would listen for config
+changes; then when the app saves its own config, it gets a change
+notification back and updates itself. The app's internal config
+updating works as if an external tool or another instance of the app
+had changed the config; external changes are treated exactly the same
+as internal ones.
+
+This is the hardest thing to implement, it will require some kind of
+daemon and there are serious security and efficiency issues to work
+out. This is the main problem I'm not sure how to approach.
+
+We should have a nice GtkObject convenience layer to make it easy to
+implement this.
+
+Locking
+===
+
+Obviously the backends should have locking so multiple apps can edit
+the same key if needed.
+
+Key Metadata
+===
+
+Each key can be explicitly registered with the GConf system; on
+registration, a short and long description of the key's purpose should
+be stored. Also the key's type. It will then be an error to store the
+wrong type in that key. The description can be used in generic config
+tree browser/editor applications. This description of a key's type and
+purpose is called a "schema" or "template."
+
+Metadata will also include the time of the last change, and an
+arbitrary string identifying the software or person who made the
+change. Packages (deb/rpm) can use this to decide whether a key has
+been modified since the package was installed (by comparing the
+last modifier with their own modifier string).
+
+Comments
+===
+
+Administrators can attach comments to keys explaining what they
+changed and why, etc. if they like.
+
+
+Record Metadata
+===
+
+Record types are similarly pre-registered, along with descriptive
+metadata. Record types are referred to by name.
+
+Record types are stored in the namespace, just like other keys.
+Actually they are basically just a sub-namespace.
+
+Metadata Storage
+===
+
+Metadata is handled in source layers just like regular key-value
+pairs. That is, the first metadata found in a path takes precedence.
+
+Conventional Types
+===
+
+In addition to the primitive types, customary record types will be
+specified. For example, a record with four integers for an IP address.
+Some standard document will list the conventional types defined so
+far. The purpose of conventional types is compatibility, and so
+generic browser/editor apps can impose nice constraints on the value
+of the record members (such as 0-255 for each int in the IP address) -
+a Windows-style IP address entry box could be used.
+
+Conventional types will be ever-present and defined as global record
+types, since they aren't "owned" by any vendor or application.
+
+However, conventional types are only conventional; GConf itself isn't
+going to try to enforce their semantics or names.
+
+Iterators
+===
+
+You have to be able to iterate over everything: keys, appnames,
+vendors, record types, etc. in order to implement generic
+browser/editor applications
+
+Resource Limits
+===
+
+A configurable maximum value size should exist, to keep broken
+programs from bogging things down.
+
+"Fetch All Changes Since"
+===
+
+Clients should be able to fetch all entries with a mod time greater
+than a given time in a section of the namespace.
+
+Command line tool
+===
+
+A nice command line tool will be written to allow shell scripts to
+access config information. This is important for postinstalls and the
+like.
+
+So you'd say:
+
+gconf --set key value
+
+gconf --get key
+
+gconf --clear /vendor/appname/key
+
+gconf --list-sources
+
+etc., something like that
+
+The command line tool is also useful for writing a test suite.
+
+Change sets
+===
+
+This is primarily a matter of a convenient API. A change set will be
+an object that stores a series of changes to be made - key-value
+pairs.
+
+Change sets can be committed and reverted as a whole. So, you can
+build a change set as the user fiddles with a property box, then
+apply/revert it as they click the buttons.
+
+ACAP
+===
+
+I'm thinking ACAP will be a backend, I don't think it's the same thing
+as this tool. But maybe...
+
+
+
+What to do with gnome-config
+===
+
+gnome-config should remain unchanged for backward compatibility and
+stability; apps would gradually migrate to the new GConf API. I don't
+think it's feasible to implement gnome-config in terms of this more
+powerful system without breaking the more powerful system.
+But we'll see.
+
+
+
+
+
+
+
+
+

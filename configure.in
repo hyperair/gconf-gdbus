@@ -1,0 +1,38 @@
+AC_INIT(gconf/gconf.h)
+
+AM_CONFIG_HEADER(config.h)
+
+AM_INIT_AUTOMAKE(GConf, 0.1)
+
+AM_MAINTAINER_MODE
+
+AC_PROG_CC
+AC_ISC_POSIX
+AC_HEADER_STDC
+AC_ARG_PROGRAM
+AM_PROG_LIBTOOL
+
+AM_PATH_GLIB(1.2.0)
+GMODULE_CFLAGS=`glib-config --cflags gmodule`
+AC_SUBST(GMODULE_CFLAGS)
+GMODULE_LIBS=`glib-config --libs gmodule`
+AC_SUBST(GMODULE_LIBS)
+
+ALL_LINGUAS=""
+AM_GNU_GETTEXT
+
+CFLAGS="$CFLAGS -Wall"
+
+AC_SUBST(CFLAGS)
+AC_SUBST(CPPFLAGS)
+AC_SUBST(LDFLAGS)
+
+AC_OUTPUT([
+Makefile
+gconf/Makefile
+backends/Makefile
+intl/Makefile
+po/Makefile.in
+])
+
+
