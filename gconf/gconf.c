@@ -1011,7 +1011,7 @@ gconf_detach_config_server(void)
                     CORBA_exception_id(&ev));
           CORBA_exception_free(&ev);
         }
-          
+
       server = CORBA_OBJECT_NIL;
     }
 }
@@ -2019,7 +2019,6 @@ gconf_server_broken(CORBA_Environment* ev)
   switch (ev->_major)
     {
     case CORBA_SYSTEM_EXCEPTION:
-      CORBA_Object_release(server, ev);
       return TRUE;
       break;
     default:
