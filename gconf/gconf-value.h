@@ -28,7 +28,7 @@
  * A GConfValue is used to pass configuration values around
  */
 
-typedef enum {
+typedef enum { /*< prefix=GCONF_VALUE >*/
   GCONF_VALUE_INVALID,
   GCONF_VALUE_STRING,
   GCONF_VALUE_INT,

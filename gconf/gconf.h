@@ -29,6 +29,7 @@ extern "C" {
 #include <gconf/gconf-schema.h>
 #include <gconf/gconf-engine.h>
 #include <gconf/gconf-error.h>
+#include <gconf/gconf-enum-types.h>
 
 typedef void (*GConfNotifyFunc) (GConfEngine* conf,
                                  guint cnxn_id,

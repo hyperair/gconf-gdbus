@@ -56,13 +56,13 @@ extern "C" {
  * underneath it.
  */
 
-typedef enum {
+typedef enum { /*< prefix=GCONF_CLIENT >*/
   GCONF_CLIENT_PRELOAD_NONE,     /* don't preload anything */
   GCONF_CLIENT_PRELOAD_ONELEVEL, /* load entries directly under the directory. */
   GCONF_CLIENT_PRELOAD_RECURSIVE /* recurse the directory tree; possibly quite expensive! */
 } GConfClientPreloadType;
 
-typedef enum {
+typedef enum { /*< prefix=GCONF_CLIENT >*/
   GCONF_CLIENT_HANDLE_NONE,
   GCONF_CLIENT_HANDLE_UNRETURNED,
   GCONF_CLIENT_HANDLE_ALL

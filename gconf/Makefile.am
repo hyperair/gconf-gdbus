@@ -29,10 +29,12 @@ CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
 BUILT_SOURCES = \
 	$(CORBA_SOURCES)	\
+	gconf-enum-types.h	\
+	gconf-enum-types.c	\
 	gconfmarshal.h		\
 	gconfmarshal.c
 
-$(OBJECTS): $(BUILT_SOURCES)
+$(OBJECTS) $(libgconf_2_la_OBJECTS): $(BUILT_SOURCES)
 
 CLEANFILES = \
 	$(BUILT_SOURCES)	\
@@ -42,8 +44,7 @@ CLEANFILES = \
 dist-hook:
 	cd $(distdir) ; rm -f $(CLEANFILES)
 
-gconfincludedir = $(includedir)/gconf/$(MAJOR_VERSION)/gconf
-gconfinclude_HEADERS = \
+gconf_headers = 		\
 	gconf.h			\
 	gconf-changeset.h	\
 	gconf-listeners.h	\
@@ -52,6 +53,11 @@ gconfinclude_HEADERS = \
 	gconf-error.h		\
 	gconf-engine.h		\
 	gconf-client.h
+
+gconfincludedir = $(includedir)/gconf/$(MAJOR_VERSION)/gconf
+gconfinclude_HEADERS = 		\
+	$(gconf_headers) 	\
+	gconf-enum-types.h
 
 ## This is broken I know, I'm going to break the server/client up and have a library later
 
@@ -92,6 +98,7 @@ libgconf_2_la_SOURCES = \
 	gconf-value.c		\
 	gconf.c			\
 	gconf-client.c		\
+	gconf-enum-types.c	\
 	$(CORBA_SOURCES)
 
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
@@ -124,4 +131,36 @@ stamp-gconfmarshal.c: @REBUILD@ gconfmarshal.list
 	&& glib-genmarshal --prefix=gconf_marshal gconfmarshal.list --body >> xgen-gmc \
 	&& (cmp -s xgen-gmc gconfmarshal.c || cp xgen-gmc gconfmarshal.c) \
 	&& rm -f xgen-gmc xgen-gmc~
+
+
+gconf-enum-types.h: s-enum-types-h
+	@true
+
+FIX_ENUM_FILES=sed -e 's/g_conf/gconf/g' -e 's/TYPE_CONF/TYPE/g'
+
+s-enum-types-h: @REBUILD@ $(gconf_headers)
+	( cd $(srcdir) && glib-mkenums														\
+			--fhead "#ifndef __GCONF_ENUM_TYPES_H__\n#define __GCONF_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n"	\
+			--fprod "/* enumerations from \"@filename@\" */\n"									\
+			--vhead "GType @enum_name@_get_type (void);\n#define GCONF_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n"			\
+			--ftail "G_END_DECLS\n\n#endif /* __GCONF_ENUM_TYPES_H__ */"								\
+		$(gconf_headers) | $(FIX_ENUM_FILES) ) > tmp-gconf-enum-types.h									\
+	&& (cmp -s tmp-gconf-enum-types.h $(srcdir)/gconf-enum-types.h || cp tmp-gconf-enum-types.h $(srcdir)/gconf-enum-types.h )		\
+	&& rm -f tmp-gconf-enum-types.h														\
+	&& echo timestamp > $(@F)
+
+gconf-enum-types.c: s-enum-types-c
+	@true
+
+s-enum-types-c: @REBUILD@ $(gconf_headers)
+	( cd $(srcdir) && glib-mkenums																    \
+			--fhead "#include \"gconf-client.h\""														    \
+			--fprod "\n/* enumerations from \"@filename@\" */"											    \
+			--vhead "GType\n@enum_name@_get_type (void)\n{\n  static GType etype = 0;\n  if (etype == 0) {\n    static const G@Type@Value values[] = {" \
+			--vprod "      { @VALUENAME@, \"@VALUENAME@\", \"@valuenick@\" },"									    \
+			--vtail "      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static (\"@EnumName@\", values);\n  }\n  return etype;\n}\n"	    \
+		$(gconf_headers) ) | $(FIX_ENUM_FILES) > tmp-gconf-enum-types.c											    \
+	&& (cmp -s tmp-gconf-enum-types.c $(srcdir)/gconf-enum-types.c || cp tmp-gconf-enum-types.c $(srcdir)/gconf-enum-types.c )				    \
+	&& rm -f tmp-gconf-enum-types.c																    \
+	&& echo timestamp > $(@F)
 

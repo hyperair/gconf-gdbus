@@ -31,7 +31,7 @@ extern "C" {
 /* Error Numbers */
 
 /* Sync with ConfigErrorType in GConf.idl, and some switch statements in the code */
-typedef enum {
+typedef enum { /*< prefix=GCONF_ERROR >*/
   GCONF_ERROR_SUCCESS = 0,
   GCONF_ERROR_FAILED = 1,        /* Something didn't work, don't know why, probably unrecoverable
                                     so there's no point having a more specific errno */
