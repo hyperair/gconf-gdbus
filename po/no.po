@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 0.6\n"
-"POT-Creation-Date: 2000-09-08 22:04+0200\n"
-"PO-Revision-Date: 2000-09-04 12:44+02:00\n"
+"POT-Creation-Date: 2000-09-09 23:27+0200\n"
+"PO-Revision-Date: 2000-09-09 23:38+02:00\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -129,7 +129,7 @@ msgstr "Toppnivå-node i XML-fil `%s' er ikke en <oppføring>, ignorerer"
 msgid "Failed to create file `%s': %s"
 msgstr "Kunne ikke opprette fil `%s': %s"
 
-#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2455
+#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2483
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Kunne ikke lukke filen `%s': %s"
@@ -140,7 +140,7 @@ msgstr "Kunne ikke lukke filen `%s': %s"
 msgid "Ignoring XML node with name `%s': %s"
 msgstr "Ignorerer XML-node med navn `%s': %s"
 
-#: backends/xml-entry.c:213 gconf/gconf-internals.c:2159
+#: backends/xml-entry.c:213 gconf/gconf-internals.c:2187
 #, c-format
 msgid "%s"
 msgstr "%s"
@@ -286,52 +286,76 @@ msgstr "Mottok forespørsel om å utføre synkron synkronisering"
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr "Fatal feil: kunne ikke hente objektreferanse for ConfigDatabase"
 
-#: gconf/gconf-database.c:629
+#: gconf/gconf-database.c:633
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Kunne ikke synkronisere en eller flere kilder: %s"
 
-#: gconf/gconf-database.c:806 gconf/gconf-sources.c:1205
+#. This error is not fatal; we basically ignore it.
+#. * Because it's likely the right thing for the client
+#. * app to simply continue.
+#.
+#: gconf/gconf-database.c:715
+#, c-format
+msgid ""
+"Failed to log addition of listener (%s); will not be able to restore this "
+"listener on gconfd restart, resulting in unreliable notification of "
+"configuration changes."
+msgstr ""
+
+#: gconf/gconf-database.c:740
+#, c-format
+msgid "Listener ID %lu doesn't exist"
+msgstr "Lytter-ID %lu eksisterer ikke"
+
+#: gconf/gconf-database.c:749
+#, c-format
+msgid ""
+"Failed to log removal of listener to logfile (most likely harmless, may "
+"result in a notification weirdly reappearing): %s"
+msgstr ""
+
+#: gconf/gconf-database.c:854 gconf/gconf-sources.c:1205
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Feil under henting av verdi for `%s': %s"
 
-#: gconf/gconf-database.c:843
+#: gconf/gconf-database.c:891
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Feil under setting av verdi for `%s': %s"
 
-#: gconf/gconf-database.c:878
+#: gconf/gconf-database.c:926
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Feil under nullstilling av `%s': %s"
 
-#: gconf/gconf-database.c:899
+#: gconf/gconf-database.c:947
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Feil under henting av standardverdi for `%s': %s"
 
-#: gconf/gconf-database.c:937
+#: gconf/gconf-database.c:985
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Feil ved sjekking av eksisterende `%s': %s"
 
-#: gconf/gconf-database.c:961
+#: gconf/gconf-database.c:1009
 #, c-format
 msgid "Error removing dir `%s': %s"
 msgstr "Feil under fjerning av katalog `%s': %s"
 
-#: gconf/gconf-database.c:987
+#: gconf/gconf-database.c:1035
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Fikk ikke alle oppføringene i `%s': %s"
 
-#: gconf/gconf-database.c:1013
+#: gconf/gconf-database.c:1061
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Feil under listing av kataloger i `%s': %s"
 
-#: gconf/gconf-database.c:1034
+#: gconf/gconf-database.c:1082
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Feil under setting av schema for `%s': %s"
@@ -626,97 +650,101 @@ msgstr "Ugyldig type for listeelement i %s"
 msgid "Received list from gconfd with a bad list type"
 msgstr "Mottatt liste fra gconfd med ugyldig listetype"
 
-#: gconf/gconf-internals.c:798
+#: gconf/gconf-internals.c:460
+msgid "Failed to convert object to IOR"
+msgstr "Kunne ikke konvertere objekt til IOR"
+
+#: gconf/gconf-internals.c:826
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "Kunne ikke åpne stifilen `%s': %s\n"
 
-#: gconf/gconf-internals.c:853
+#: gconf/gconf-internals.c:881
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "Legger til kilde `%s'\n"
 
-#: gconf/gconf-internals.c:865
+#: gconf/gconf-internals.c:893
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "Lesefeil på fil `%s': %s\n"
 
-#: gconf/gconf-internals.c:1307
+#: gconf/gconf-internals.c:1335
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Forventet liste, mottok %s"
 
-#: gconf/gconf-internals.c:1317
+#: gconf/gconf-internals.c:1345
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Forventet liste av %s, mottok liste av %s"
 
-#: gconf/gconf-internals.c:1456
+#: gconf/gconf-internals.c:1484
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Forventet par, mottok %s"
 
-#: gconf/gconf-internals.c:1470
+#: gconf/gconf-internals.c:1498
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Forventet (%s,%s) par, mottok et par hvor en eller begge verdiene mangler"
 
-#: gconf/gconf-internals.c:1486
+#: gconf/gconf-internals.c:1514
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Forventet par av type (%s,%s) mottok type (%s,%s)"
 
-#: gconf/gconf-internals.c:1602
+#: gconf/gconf-internals.c:1630
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Streng i sitattegn begynner ikke med et sitattegn"
 
-#: gconf/gconf-internals.c:1664
+#: gconf/gconf-internals.c:1692
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Streng i anførselstegn slutter ikke med et sitattegn"
 
-#: gconf/gconf-internals.c:2144 gconf/gconf.c:2780
+#: gconf/gconf-internals.c:2172 gconf/gconf.c:2780
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA feil: %s"
 
-#: gconf/gconf-internals.c:2164
+#: gconf/gconf-internals.c:2192
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "forsøk på å fjerne ikke listet OAF objekt katalog"
 
-#: gconf/gconf-internals.c:2169
+#: gconf/gconf-internals.c:2197
 msgid "attempt to add already-listed OAF directory"
 msgstr "forsøk på å legge til allerede listet OAF katalog"
 
-#: gconf/gconf-internals.c:2176
+#: gconf/gconf-internals.c:2204
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "OAF fortolkningsfeil: %s"
 
-#: gconf/gconf-internals.c:2181
+#: gconf/gconf-internals.c:2209
 msgid "Unknown OAF error"
 msgstr "Ukjent OAF feil"
 
-#: gconf/gconf-internals.c:2264
+#: gconf/gconf-internals.c:2292
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Ingen ior-fil i `%s'"
 
-#: gconf/gconf-internals.c:2295
+#: gconf/gconf-internals.c:2323
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd tar lås `%s' fra noen andre prosesser"
 
-#: gconf/gconf-internals.c:2306
+#: gconf/gconf-internals.c:2334
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Et annet program holder låsen `%s'"
 
-#: gconf/gconf-internals.c:2326
+#: gconf/gconf-internals.c:2354
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr "kunne ikke kontakte ORB for å pinge eksisterende gconfd"
 
-#: gconf/gconf-internals.c:2334
+#: gconf/gconf-internals.c:2362
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
@@ -725,42 +753,42 @@ msgstr ""
 "Fjerner utgått lås `%s' fordi IOR ikke kunne koverteres til objektreferanse, "
 "IOR `%s'"
 
-#: gconf/gconf-internals.c:2346
+#: gconf/gconf-internals.c:2374
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr "Fjerner utgått lås `%s' pga feil under pinging av tjener: %s"
 
-#: gconf/gconf-internals.c:2358
+#: gconf/gconf-internals.c:2386
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "GConf konfigurasjonsdaemon (gconfd) holder låsen `%s'"
 
-#: gconf/gconf-internals.c:2372
+#: gconf/gconf-internals.c:2400
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "kunne ikke opprette katalogen `%s': %s"
 
-#: gconf/gconf-internals.c:2407
+#: gconf/gconf-internals.c:2435
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "kunne ikke opprette lås `%s': %s"
 
-#: gconf/gconf-internals.c:2443
+#: gconf/gconf-internals.c:2471
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Kunne ikke skrive til fil `%s': %s"
 
-#: gconf/gconf-internals.c:2486
+#: gconf/gconf-internals.c:2514
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr "Kan ikke åpne lås-fil `%s'; antar at den ikke er vår: %s"
 
-#: gconf/gconf-internals.c:2503
+#: gconf/gconf-internals.c:2531
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr "Korrupt lås-fil `%s', fjerner den likevel"
 
-#: gconf/gconf-internals.c:2513
+#: gconf/gconf-internals.c:2541
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
@@ -769,7 +797,7 @@ msgstr ""
 "Opprettet ikke lås-fil `%s' (skapers pid %u, vår pid %u; antar at noen tok "
 "vår lås"
 
-#: gconf/gconf-internals.c:2530
+#: gconf/gconf-internals.c:2558
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Kunne ikke slippe lås-katalogen `%s': %s"
@@ -1054,73 +1082,119 @@ msgstr "En annen gconfd er allerede registrert hos OAF; avslutter\n"
 msgid "Unknown error registering gconfd with OAF; exiting\n"
 msgstr "Ukjent feil ved registrering av gconfd hos OAF; avslutter\n"
 
-#: gconf/gconfd.c:487
+#: gconf/gconfd.c:490
 msgid "Exiting"
 msgstr "Avslutter"
 
-#: gconf/gconfd.c:811
+#: gconf/gconfd.c:817
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerer unntak: %s"
 
-#: gconf/gconfd.c:869
+#: gconf/gconfd.c:884
 #, c-format
-msgid "Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"
+msgid ""
+"Failed to open gconfd logfile; won't be able to restore listeners after "
+"gconfd shutdown (%s)"
 msgstr ""
-"Kunne ikke opprette ~/.gconfd/saved_state for å lagre gconfd's tilstand: %s"
 
-#: gconf/gconfd.c:876
+#: gconf/gconfd.c:907
 #, c-format
-msgid "Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"
+msgid ""
+"Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
-"Kunne ikke skrive til ~/.gconfd/saved_state for å lagre gconfd's tilstand: %s"
 
-#: gconf/gconfd.c:905 gconf/gconfd.c:997
+#: gconf/gconfd.c:965
 #, c-format
-msgid "Didn't understand element '%s' in saved state file"
-msgstr "Forsto ikke elementet '%s' i lagret tilstandsfil"
+msgid "Could not open saved state file '%s' for writing: %s"
+msgstr "Kunne ikke åpne lagret tilstandsfil '%s' for skriving: %s"
 
-#: gconf/gconfd.c:916
-msgid "No location attribute on listener element in saved state file"
-msgstr ""
-"Ingen lokasjonsattributt i lytter-elementet i den lagrede tilstandsfilen"
+#: gconf/gconfd.c:979
+#, c-format
+msgid "Could not write saved state file '%s' fd: %d: %s"
+msgstr "Kunne ikke skrive lagret tilstandsfil '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:923
-msgid "No IOR attribute on listener element in saved state file"
-msgstr "Ingen IOR-attributt i lytter-elementet i lagret tilstandsfil"
+#: gconf/gconfd.c:988
+#, c-format
+msgid "Failed to close new saved state file '%s': %s"
+msgstr "Kunne ikke lukke ny lagret tilstandsfil '%s': %s"
 
-#: gconf/gconfd.c:930
-msgid "No connection ID attribute on listener element in saved state file"
-msgstr "Ingen forbindelses-ID-attributt i lytter-element i lagret tilstandsfil"
+#: gconf/gconfd.c:1002
+#, c-format
+msgid "Could not move aside old saved state file '%s': %s"
+msgstr "Kunne ikke flytte gammel lagret tilstandsfil '%s': %s"
 
-#: gconf/gconfd.c:1018
-msgid "Strange non-element node in saved state file"
-msgstr "Underlig ikke-element node i lagret tilstandsfil"
+#: gconf/gconfd.c:1012
+#, c-format
+msgid "Failed to move new save state file into place: %s"
+msgstr "Kunne ikke flytte ny lagret tilstandsfil på plass: %s"
 
-#: gconf/gconfd.c:1047
+#: gconf/gconfd.c:1021
+#, c-format
+msgid ""
+"Failed to restore original saved state file that had been moved to '%s': %s"
+msgstr "Kunne ikke gjenopprette opprinnelig lagret tilstandsfil som har blitt flyttet til '%s': %s"
+
+#: gconf/gconfd.c:1109
+#, c-format
+msgid "Didn't understand line in saved state file: '%s'"
+msgstr "Forsto ikke linje i lagret tilstandsfil: '%s'"
+
+#: gconf/gconfd.c:1124
+msgid "Failed to parse connection ID in saved state file"
+msgstr "Kunne ikke tolke forbindelses-ID i lagret tilstandsfil"
+
+#: gconf/gconfd.c:1139
+#, c-format, fuzzy
+msgid "Failed to unquote config source address from saved state file: %s"
+msgstr "Kunne ikke gjenopprette lagret tilstandsfil fra fil '%s': %s"
+
+#: gconf/gconfd.c:1159
+#, fuzzy, c-format
+msgid "Failed to unquote listener location from saved state file: %s"
+msgstr "Kunne ikke gjenopprette lagret tilstandsfil fra fil '%s': %s"
+
+#: gconf/gconfd.c:1179
+#, fuzzy, c-format
+msgid "Failed to unquote IOR from saved state file: %s"
+msgstr "Kunne ikke gjenopprette lagret tilstandsfil fra fil '%s': %s"
+
+#: gconf/gconfd.c:1203
+msgid ""
+"Saved state file records the same listener added twice; ignoring the second "
+"instance"
+msgstr "Lagret tilstandsfil viser samme lytter lagt til to ganger; ignorerer instans nr. 2"
+
+#: gconf/gconfd.c:1224
+msgid ""
+"Saved state file had a removal of a listener that wasn't added; ignoring the "
+"removal."
+msgstr "Lagret tilstandsfil fikk fjernet en lytter som ikke var lagt til; ignorerer fjerning."
+
+#: gconf/gconfd.c:1345
+#, c-format
+msgid ""
+"Unable to restore a listener on address '%s', couldn't resolve the database"
+msgstr "Kunne ikke gjenopprette en lytter på adresse '%s', kunne ikke gjøre databaseoppslag"
+
+#: gconf/gconfd.c:1376
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil '%s': %s"
 
-#: gconf/gconfd.c:1060
+#: gconf/gconfd.c:1475
 #, c-format
-msgid "Failed to restore saved state from file '%s': %s"
-msgstr "Kunne ikke gjenopprette lagret tilstandsfil fra fil '%s': %s"
+msgid ""
+"Failed to log addition of listener to gconfd logfile; won't be able to "
+"re-add the listener if gconfd exits or shuts down (%s)"
+msgstr "Klarte ikke å logge tillegg av lytter til gconfd loggfilen; vil ikke kunne legge til lytteren hvis gconfd avslutter eller stenger ned (%s)"
 
-#: gconf/gconfd.c:1069
-msgid "Root node of saved state file should be an element"
-msgstr "Root-node av lagret tilstandsfil skulle vært et element"
-
-#: gconf/gconfd.c:1079
+#: gconf/gconfd.c:1480
 #, c-format
-msgid "Root node of saved state file should be 'gconfd_logfile', not '%s'"
-msgstr ""
-"Root-node i lagret tilstandsfil skulle vært 'gconfd_logfile', ikke '%s'"
-
-#: gconf/gconfd.c:1092
-msgid "Funny non-element node under <gconfd_logfile> in saved state file"
-msgstr ""
-"Underlig ikke-element node under <gconfd_logfile> i lagret tilstandsfil"
+msgid ""
+"Failed to log removal of listener to gconfd logfile; might erroneously "
+"re-add the listener if gconfd exits or shuts down (%s)"
+msgstr "Klarte ikke å logge fjerning av lytter i gconfd-loggfilen; kan medføre at lytter legges inn igjen hvis gconfd avsluttes eller maskinen stenges av (%s)."
 
 #: gconf/gconftool.c:76
 msgid "Help options"
@@ -1765,3 +1839,36 @@ msgstr "GConf advarsel: feil under listing av par i `%s': %s"
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Forventet`%s', mottok `%s' for nøkkel %s"
+
+#~ msgid "Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"
+#~ msgstr ""
+#~ "Kunne ikke opprette ~/.gconfd/saved_state for å lagre gconfd's tilstand: %s"
+
+#~ msgid "Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"
+#~ msgstr ""
+#~ "Kunne ikke skrive til ~/.gconfd/saved_state for å lagre gconfd's tilstand: %s"
+
+#~ msgid "No location attribute on listener element in saved state file"
+#~ msgstr ""
+#~ "Ingen lokasjonsattributt i lytter-elementet i den lagrede tilstandsfilen"
+
+#~ msgid "No IOR attribute on listener element in saved state file"
+#~ msgstr "Ingen IOR-attributt i lytter-elementet i lagret tilstandsfil"
+
+#~ msgid "No connection ID attribute on listener element in saved state file"
+#~ msgstr ""
+#~ "Ingen forbindelses-ID-attributt i lytter-element i lagret tilstandsfil"
+
+#~ msgid "Strange non-element node in saved state file"
+#~ msgstr "Underlig ikke-element node i lagret tilstandsfil"
+
+#~ msgid "Root node of saved state file should be an element"
+#~ msgstr "Root-node av lagret tilstandsfil skulle vært et element"
+
+#~ msgid "Root node of saved state file should be 'gconfd_logfile', not '%s'"
+#~ msgstr ""
+#~ "Root-node i lagret tilstandsfil skulle vært 'gconfd_logfile', ikke '%s'"
+
+#~ msgid "Funny non-element node under <gconfd_logfile> in saved state file"
+#~ msgstr ""
+#~ "Underlig ikke-element node under <gconfd_logfile> i lagret tilstandsfil"
