@@ -113,16 +113,16 @@ gconf_value_to_scm(GConfValue* val)
       /* EOL */
       break;
     case GCONF_VALUE_STRING:
-      retval = gh_str02scm(gconf_value_string(val));
+      retval = gh_str02scm(gconf_value_get_string(val));
       break;
     case GCONF_VALUE_INT:
-      retval = gh_int2scm(gconf_value_int(val));
+      retval = gh_int2scm(gconf_value_get_int(val));
       break;
     case GCONF_VALUE_FLOAT:
-      retval = gh_double2scm(gconf_value_float(val));
+      retval = gh_double2scm(gconf_value_get_float(val));
       break;
     case GCONF_VALUE_BOOL:
-      retval = gh_bool2scm(gconf_value_bool(val));
+      retval = gh_bool2scm(gconf_value_get_bool(val));
       break;
     case GCONF_VALUE_SCHEMA:
       /* FIXME this is more complicated, we need a smob or something */
@@ -131,8 +131,8 @@ gconf_value_to_scm(GConfValue* val)
       /* FIXME This is complicated too... */
       break;
     case GCONF_VALUE_PAIR:
-      retval = gh_cons(gconf_value_to_scm(gconf_value_car(val)),
-                       gconf_value_to_scm(gconf_value_cdr(val)));
+      retval = gh_cons(gconf_value_to_scm(gconf_value_get_car(val)),
+                       gconf_value_to_scm(gconf_value_get_cdr(val)));
       break;
     default:
       g_warning("Unhandled type in %s", __FUNCTION__);

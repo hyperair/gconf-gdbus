@@ -839,9 +839,9 @@ gconf_engine_set (GConfEngine* conf, const gchar* key,
   g_return_val_if_fail(value != NULL, FALSE);
   g_return_val_if_fail(value->type != GCONF_VALUE_INVALID, FALSE);
   g_return_val_if_fail( (value->type != GCONF_VALUE_STRING) ||
-                        (gconf_value_string(value) != NULL) , FALSE );
+                        (gconf_value_get_string(value) != NULL) , FALSE );
   g_return_val_if_fail( (value->type != GCONF_VALUE_LIST) ||
-                        (gconf_value_list_type(value) != GCONF_VALUE_INVALID), FALSE);
+                        (gconf_value_get_list_type(value) != GCONF_VALUE_INVALID), FALSE);
   g_return_val_if_fail(err == NULL || *err == NULL, FALSE);
   
   if (!gconf_key_check(key, err))
@@ -2287,7 +2287,7 @@ gconf_engine_get_float (GConfEngine* conf, const gchar* key,
           return deflt;
         }
 
-      retval = gconf_value_float(val);
+      retval = gconf_value_get_float(val);
 
       gconf_value_free(val);
 
@@ -2322,7 +2322,7 @@ gconf_engine_get_int   (GConfEngine* conf, const gchar* key,
           return deflt;
         }
 
-      retval = gconf_value_int(val);
+      retval = gconf_value_get_int(val);
 
       gconf_value_free(val);
 
@@ -2394,7 +2394,7 @@ gconf_engine_get_bool  (GConfEngine* conf, const gchar* key,
           return deflt;
         }
 
-      retval = gconf_value_bool(val);
+      retval = gconf_value_get_bool(val);
 
       gconf_value_free(val);
 
@@ -2427,7 +2427,7 @@ gconf_engine_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
           return NULL;
         }
 
-      retval = gconf_value_schema(val);
+      retval = gconf_value_get_schema(val);
 
       /* This is a cheat; don't copy */
       val->d.schema_data = NULL; /* don't delete the schema */

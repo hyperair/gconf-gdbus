@@ -142,7 +142,7 @@ configurable_widget_config_notify(GConfClient* client,
     }
   else if (value->type == GCONF_VALUE_STRING)
     {
-      gtk_label_set_text(GTK_LABEL(label), gconf_value_string(value));
+      gtk_label_set_text(GTK_LABEL(label), gconf_value_get_string(value));
     }
   else
     {
@@ -391,7 +391,7 @@ update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
             {
               if (def->type == GCONF_VALUE_STRING)
                 {
-                  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(def));
+                  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(def));
                 }
               else
                 g_warning("Wrong type for default value of %s", config_key);
@@ -403,7 +403,7 @@ update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
         }
       else if (value->type == GCONF_VALUE_STRING)
         {
-          gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(value));
+          gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(value));
         }
       else
         {
@@ -501,7 +501,7 @@ create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* c
 
   if (initial != NULL && initial->type == GCONF_VALUE_STRING)
     {
-      const gchar* str = gconf_value_string(initial);
+      const gchar* str = gconf_value_get_string(initial);
       gtk_entry_set_text(GTK_ENTRY(entry), str);
     }
 

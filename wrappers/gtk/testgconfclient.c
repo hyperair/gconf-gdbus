@@ -62,7 +62,7 @@ entry_notify_func(GConfClient* client, guint cnxn_id, const gchar* key, GConfVal
   g_return_if_fail(GTK_IS_ENTRY(entry));
 
   gtk_signal_handler_block_by_data(GTK_OBJECT(entry), client);
-  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(value));
+  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(value));
   gtk_signal_handler_unblock_by_data(GTK_OBJECT(entry), client);
 }
 

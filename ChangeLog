@@ -1,5 +1,38 @@
 2000-09-13  Havoc Pennington  <hp@redhat.com>
 
+	* More renaming:
+
+	s/gconf_meta_info_schema/gconf_meta_info_get_schema/g;
+	s/gconf_meta_info_mod_user/gconf_meta_info_get_mod_user/g;
+	s/gconf_meta_info_mod_time/gconf_meta_info_mod_time/g;
+
+	s/gconf_entry_key/gconf_entry_get_key/g;
+	s/gconf_entry_value/gconf_entry_get_value/g;
+	s/gconf_entry_schema_name/gconf_entry_get_schema_name/g;
+	s/gconf_entry_is_default/gconf_entry_get_is_default/g;
+
+	s/gconf_value_string/gconf_value_get_string/g;
+	s/gconf_value_int/gconf_value_get_int/g;
+	s/gconf_value_float/gconf_value_get_float/g;
+	s/gconf_value_list_type/gconf_value_get_list_type/g;
+	s/gconf_value_list/gconf_value_get_list/g;
+	s/gconf_value_car/gconf_value_get_car/g;
+	s/gconf_value_cdr/gconf_value_get_cdr/g;
+	s/gconf_value_bool/gconf_value_get_bool/g;
+	s/gconf_value_schema/gconf_value_get_schema/g;
+
+	s/gconf_schema_type/gconf_schema_get_type/g;
+	s/gconf_schema_list_type/gconf_schema_get_list_type/g;
+	s/gconf_schema_car_type/gconf_schema_get_car_type/g;
+	s/gconf_schema_cdr_type/gconf_schema_get_cdr_type/g;
+	s/gconf_schema_locale/gconf_schema_get_locale/g;
+	s/gconf_schema_short_desc/gconf_schema_get_short_desc/g;
+	s/gconf_schema_long_desc/gconf_schema_get_long_desc/g;
+	s/gconf_schema_owner/gconf_schema_get_owner/g;
+	s/gconf_schema_default_value/gconf_schema_get_default_value/g;
+
+2000-09-13  Havoc Pennington  <hp@redhat.com>
+
 	* gconf/gconf.c (gconf_engine_all_entries): Put full key in
 	GConfEntry (but we only get the relative key over the 
 	CORBA wire)

@@ -117,7 +117,7 @@ entry_get_value(Entry* e, const gchar** locales, GError** err)
 
   g_assert(e->cached_value->type == GCONF_VALUE_SCHEMA);
 
-  sl = gconf_schema_locale(gconf_value_schema(e->cached_value));
+  sl = gconf_schema_get_locale(gconf_value_get_schema(e->cached_value));
 
   /* optimize most common cases first */
   if (sl == NULL && (locales == NULL ||
@@ -437,7 +437,7 @@ node_set_schema_value(xmlNodePtr node,
   const gchar* type;
   xmlNodePtr found = NULL;
 
-  sc = gconf_value_schema(value);
+  sc = gconf_value_get_schema(value);
 
   /* Set the types */
   if (sc->list_type != GCONF_VALUE_INVALID)
@@ -466,7 +466,7 @@ node_set_schema_value(xmlNodePtr node,
   my_xmlSetProp(node, "stype", gconf_value_type_to_string(sc->type));
   my_xmlSetProp(node, "owner", sc->owner);
 
-  locale = gconf_schema_locale(sc);
+  locale = gconf_schema_get_locale(sc);
 
   gconf_log(GCL_DEBUG, "Setting XML node to schema with locale `%s'",
             locale);
@@ -536,7 +536,7 @@ node_set_value(xmlNodePtr node, GConfValue* value)
         free_childs(node);
 
         encoded = xmlEncodeEntitiesReentrant(node->doc,
-                                             gconf_value_string(value));
+                                             gconf_value_get_string(value));
         
         child = xmlNewChild(node, NULL, "stringvalue",
                             encoded);
@@ -555,10 +555,10 @@ node_set_value(xmlNodePtr node, GConfValue* value)
         free_childs(node);
 
         my_xmlSetProp(node, "ltype",
-                      gconf_value_type_to_string(gconf_value_list_type(value)));
+                      gconf_value_type_to_string(gconf_value_get_list_type(value)));
         
         /* Add a new child for each node */
-        list = gconf_value_list(value);
+        list = gconf_value_get_list(value);
 
         while (list != NULL)
           {
@@ -584,11 +584,11 @@ node_set_value(xmlNodePtr node, GConfValue* value)
         car = xmlNewChild(node, NULL, "car", NULL);
         cdr = xmlNewChild(node, NULL, "cdr", NULL);
 
-        g_return_if_fail(gconf_value_car(value) != NULL);
-        g_return_if_fail(gconf_value_cdr(value) != NULL);
+        g_return_if_fail(gconf_value_get_car(value) != NULL);
+        g_return_if_fail(gconf_value_get_cdr(value) != NULL);
         
-        node_set_value(car, gconf_value_car(value));
-        node_set_value(cdr, gconf_value_cdr(value));
+        node_set_value(car, gconf_value_get_car(value));
+        node_set_value(cdr, gconf_value_get_cdr(value));
       }
       break;
       

@@ -1132,40 +1132,40 @@ GConfSchema* sc, GConfValue* val
 GConfSchema* sc, GConfValue* val
 </FUNCTION>
 <MACRO>
-<NAME>gconf_schema_type</NAME>
-#define       gconf_schema_type(x) (x->type)
+<NAME>gconf_schema_get_type</NAME>
+#define       gconf_schema_get_type(x) (x->type)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_list_type</NAME>
-#define       gconf_schema_list_type(x) (x->list_type)
+<NAME>gconf_schema_get_list_type</NAME>
+#define       gconf_schema_get_list_type(x) (x->list_type)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_car_type</NAME>
-#define       gconf_schema_car_type(x) (x->car_type)
+<NAME>gconf_schema_get_car_type</NAME>
+#define       gconf_schema_get_car_type(x) (x->car_type)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_cdr_type</NAME>
-#define       gconf_schema_cdr_type(x) (x->cdr_type)
+<NAME>gconf_schema_get_cdr_type</NAME>
+#define       gconf_schema_get_cdr_type(x) (x->cdr_type)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_locale</NAME>
-#define       gconf_schema_locale(x)     ((const gchar*)(x)->locale)
+<NAME>gconf_schema_get_locale</NAME>
+#define       gconf_schema_get_locale(x)     ((const gchar*)(x)->locale)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_short_desc</NAME>
-#define       gconf_schema_short_desc(x) ((const gchar*)(x)->short_desc)
+<NAME>gconf_schema_get_short_desc</NAME>
+#define       gconf_schema_get_short_desc(x) ((const gchar*)(x)->short_desc)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_long_desc</NAME>
-#define       gconf_schema_long_desc(x)  ((const gchar*)(x)->long_desc)
+<NAME>gconf_schema_get_long_desc</NAME>
+#define       gconf_schema_get_long_desc(x)  ((const gchar*)(x)->long_desc)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_owner</NAME>
-#define       gconf_schema_owner(x)      ((const gchar*)(x)->owner)
+<NAME>gconf_schema_get_owner</NAME>
+#define       gconf_schema_get_owner(x)      ((const gchar*)(x)->owner)
 </MACRO>
 <MACRO>
-<NAME>gconf_schema_default_value</NAME>
-#define       gconf_schema_default_value(x) ((x)->default_value)
+<NAME>gconf_schema_get_default_value</NAME>
+#define       gconf_schema_get_default_value(x) ((x)->default_value)
 </MACRO>
 <STRUCT>
 <NAME>GConfBackend</NAME>
@@ -1345,40 +1345,40 @@ struct GConfValue {
 };
 </STRUCT>
 <MACRO>
-<NAME>gconf_value_string</NAME>
-#define gconf_value_string(x)    ((const gchar*)((x)->d.string_data))
+<NAME>gconf_value_get_string</NAME>
+#define gconf_value_get_string(x)    ((const gchar*)((x)->d.string_data))
 </MACRO>
 <MACRO>
-<NAME>gconf_value_int</NAME>
-#define gconf_value_int(x)       ((x)->d.int_data)
+<NAME>gconf_value_get_int</NAME>
+#define gconf_value_get_int(x)       ((x)->d.int_data)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_float</NAME>
-#define gconf_value_float(x)     ((x)->d.float_data)
+<NAME>gconf_value_get_float</NAME>
+#define gconf_value_get_float(x)     ((x)->d.float_data)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_list_type</NAME>
-#define gconf_value_list_type(x) ((x)->d.list_data.type)
+<NAME>gconf_value_get_list_type</NAME>
+#define gconf_value_get_list_type(x) ((x)->d.list_data.type)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_list</NAME>
-#define gconf_value_list(x)      ((x)->d.list_data.list)
+<NAME>gconf_value_get_list</NAME>
+#define gconf_value_get_list(x)      ((x)->d.list_data.list)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_car</NAME>
-#define gconf_value_car(x)       ((x)->d.pair_data.car)
+<NAME>gconf_value_get_car</NAME>
+#define gconf_value_get_car(x)       ((x)->d.pair_data.car)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_cdr</NAME>
-#define gconf_value_cdr(x)       ((x)->d.pair_data.cdr)
+<NAME>gconf_value_get_cdr</NAME>
+#define gconf_value_get_cdr(x)       ((x)->d.pair_data.cdr)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_bool</NAME>
-#define gconf_value_bool(x)      ((x)->d.bool_data)
+<NAME>gconf_value_get_bool</NAME>
+#define gconf_value_get_bool(x)      ((x)->d.bool_data)
 </MACRO>
 <MACRO>
-<NAME>gconf_value_schema</NAME>
-#define gconf_value_schema(x)    ((x)->d.schema_data)
+<NAME>gconf_value_get_schema</NAME>
+#define gconf_value_get_schema(x)    ((x)->d.schema_data)
 </MACRO>
 <FUNCTION>
 <NAME>gconf_value_new</NAME>
@@ -1477,12 +1477,12 @@ struct GConfMetaInfo {
 };
 </STRUCT>
 <MACRO>
-<NAME>gconf_meta_info_schema</NAME>
-#define gconf_meta_info_schema(x)    ((const gchar*)(x)->schema)
+<NAME>gconf_meta_info_get_schema</NAME>
+#define gconf_meta_info_get_schema(x)    ((const gchar*)(x)->schema)
 </MACRO>
 <MACRO>
-<NAME>gconf_meta_info_mod_user</NAME>
-#define gconf_meta_info_mod_user(x)  ((x)->mod_user)
+<NAME>gconf_meta_info_get_mod_user</NAME>
+#define gconf_meta_info_get_mod_user(x)  ((x)->mod_user)
 </MACRO>
 <MACRO>
 <NAME>gconf_meta_info_mod_time</NAME>
@@ -1526,20 +1526,20 @@ struct GConfEntry {
 };
 </STRUCT>
 <MACRO>
-<NAME>gconf_entry_key</NAME>
-#define     gconf_entry_key(x)      ((const gchar*)(x)->key)
+<NAME>gconf_entry_get_key</NAME>
+#define     gconf_entry_get_key(x)      ((const gchar*)(x)->key)
 </MACRO>
 <MACRO>
-<NAME>gconf_entry_value</NAME>
-#define     gconf_entry_value(x)    ((x)->value)
+<NAME>gconf_entry_get_value</NAME>
+#define     gconf_entry_get_value(x)    ((x)->value)
 </MACRO>
 <MACRO>
-<NAME>gconf_entry_schema_name</NAME>
-#define     gconf_entry_schema_name(x) ((x)->schema_name)
+<NAME>gconf_entry_get_schema_name</NAME>
+#define     gconf_entry_get_schema_name(x) ((x)->schema_name)
 </MACRO>
 <MACRO>
-<NAME>gconf_entry_is_default</NAME>
-#define     gconf_entry_is_default(x)  ((x)->is_default)
+<NAME>gconf_entry_get_is_default</NAME>
+#define     gconf_entry_get_is_default(x)  ((x)->is_default)
 </MACRO>
 <FUNCTION>
 <NAME>gconf_entry_new_nocopy</NAME>

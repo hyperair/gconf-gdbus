@@ -782,7 +782,7 @@ list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
                   s = g_strdup(_("(no value set)"));
           
           printf(" %s%s = %s\n", whitespace,
-                 gconf_key_key (gconf_entry_key (pair)),
+                 gconf_key_key (gconf_entry_get_key (pair)),
                  s);
 
           g_free(s);
@@ -873,14 +873,14 @@ do_get(GConfEngine* conf, const gchar** args)
             }
           else
             {
-              GConfSchema* sc = gconf_value_schema(value);
-              GConfValueType stype = gconf_schema_type(sc);
-              GConfValueType slist_type = gconf_schema_list_type(sc);
-              GConfValueType scar_type = gconf_schema_car_type(sc);
-              GConfValueType scdr_type = gconf_schema_cdr_type(sc);
-              const gchar* long_desc = gconf_schema_long_desc(sc);
-              const gchar* short_desc = gconf_schema_short_desc(sc);
-              const gchar* owner = gconf_schema_owner(sc);
+              GConfSchema* sc = gconf_value_get_schema(value);
+              GConfValueType stype = gconf_schema_get_type(sc);
+              GConfValueType slist_type = gconf_schema_get_list_type(sc);
+              GConfValueType scar_type = gconf_schema_get_car_type(sc);
+              GConfValueType scdr_type = gconf_schema_get_cdr_type(sc);
+              const gchar* long_desc = gconf_schema_get_long_desc(sc);
+              const gchar* short_desc = gconf_schema_get_short_desc(sc);
+              const gchar* owner = gconf_schema_get_owner(sc);
 
               printf(_("Type: %s\n"), gconf_value_type_to_string(stype));
               printf(_("List Type: %s\n"), gconf_value_type_to_string(slist_type));
@@ -1722,7 +1722,7 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
     }
 
   g_hash_table_insert(info->hash,
-                      (gchar*)gconf_schema_locale(schema), /* cheat to save copying this string */
+                      (gchar*)gconf_schema_get_locale(schema), /* cheat to save copying this string */
                       schema);
 
   return 0;
@@ -1743,7 +1743,7 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
       g_assert(error != NULL);
 
       fprintf(stderr, _("WARNING: failed to install schema `%s' locale `%s': %s\n"),
-              info->key, gconf_schema_locale(schema), error->message);
+              info->key, gconf_schema_get_locale(schema), error->message);
       g_error_free(error);
       error = NULL;
     }
@@ -1751,7 +1751,7 @@ hash_foreach(gpointer key, gpointer value, gpointer user_data)
     {
       g_assert(error == NULL);
       printf(_("Installed schema `%s' for locale `%s'\n"),
-             info->key, gconf_schema_locale(schema));
+             info->key, gconf_schema_get_locale(schema));
     }
       
   gconf_schema_free(schema);

@@ -71,15 +71,15 @@ void gconf_schema_set_default_value_nocopy (GConfSchema    *sc,
 
 
 
-#define       gconf_schema_type(x)          (x->type)
-#define       gconf_schema_list_type(x)     (x->list_type)
-#define       gconf_schema_car_type(x)      (x->car_type)
-#define       gconf_schema_cdr_type(x)      (x->cdr_type)
-#define       gconf_schema_locale(x)        ((const gchar*)(x)->locale)
-#define       gconf_schema_short_desc(x)    ((const gchar*)(x)->short_desc)
-#define       gconf_schema_long_desc(x)     ((const gchar*)(x)->long_desc)
-#define       gconf_schema_owner(x)         ((const gchar*)(x)->owner)
-#define       gconf_schema_default_value(x) ((x)->default_value)
+#define       gconf_schema_get_type(x)          (x->type)
+#define       gconf_schema_get_list_type(x)     (x->list_type)
+#define       gconf_schema_get_car_type(x)      (x->car_type)
+#define       gconf_schema_get_cdr_type(x)      (x->cdr_type)
+#define       gconf_schema_get_locale(x)        ((const gchar*)(x)->locale)
+#define       gconf_schema_get_short_desc(x)    ((const gchar*)(x)->short_desc)
+#define       gconf_schema_get_long_desc(x)     ((const gchar*)(x)->long_desc)
+#define       gconf_schema_get_owner(x)         ((const gchar*)(x)->owner)
+#define       gconf_schema_get_default_value(x) ((x)->default_value)
 
 #endif
 

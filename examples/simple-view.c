@@ -44,7 +44,7 @@ key_changed_callback(GConfClient* client,
     {
       if (value->type == GCONF_VALUE_STRING)
         {
-          gtk_label_set(GTK_LABEL(label), gconf_value_string(value));
+          gtk_label_set(GTK_LABEL(label), gconf_value_get_string(value));
         }
       else
         {

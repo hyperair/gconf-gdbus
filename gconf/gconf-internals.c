@@ -231,7 +231,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
             break;
           }
 
-        if (gconf_value_list_type(gval) != GCONF_VALUE_INVALID)
+        if (gconf_value_get_list_type(gval) != GCONF_VALUE_INVALID)
           {
             i = 0;
             while (i < value->_u.list_value.seq._length)
@@ -247,7 +247,7 @@ gconf_value_from_corba_value(const ConfigValue* value)
                 
                 if (val == NULL)
                   gconf_log(GCL_ERR, _("Couldn't interpret CORBA value for list element"));
-                else if (val->type != gconf_value_list_type(gval))
+                else if (val->type != gconf_value_get_list_type(gval))
                   gconf_log(GCL_ERR, _("Incorrect type for list element in %s"), __FUNCTION__);
                 else
                   list = g_slist_prepend(list, val);
@@ -298,23 +298,23 @@ fill_corba_value_from_gconf_value(GConfValue* value,
     {
     case GCONF_VALUE_INT:
       cv->_d = IntVal;
-      cv->_u.int_value = gconf_value_int(value);
+      cv->_u.int_value = gconf_value_get_int(value);
       break;
     case GCONF_VALUE_STRING:
       cv->_d = StringVal;
-      cv->_u.string_value = CORBA_string_dup((char*)gconf_value_string(value));
+      cv->_u.string_value = CORBA_string_dup((char*)gconf_value_get_string(value));
       break;
     case GCONF_VALUE_FLOAT:
       cv->_d = FloatVal;
-      cv->_u.float_value = gconf_value_float(value);
+      cv->_u.float_value = gconf_value_get_float(value);
       break;
     case GCONF_VALUE_BOOL:
       cv->_d = BoolVal;
-      cv->_u.bool_value = gconf_value_bool(value);
+      cv->_u.bool_value = gconf_value_get_bool(value);
       break;
     case GCONF_VALUE_SCHEMA:
       cv->_d = SchemaVal;
-      fill_corba_schema_from_gconf_schema(gconf_value_schema(value),
+      fill_corba_schema_from_gconf_schema(gconf_value_get_schema(value),
                                            &cv->_u.schema_value);
       break;
     case GCONF_VALUE_LIST:
@@ -324,7 +324,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
         
         cv->_d = ListVal;
 
-        list = gconf_value_list(value);
+        list = gconf_value_get_list(value);
 
         n = g_slist_length(list);
 
@@ -334,7 +334,7 @@ fill_corba_value_from_gconf_value(GConfValue* value,
         cv->_u.list_value.seq._maximum = n;
         CORBA_sequence_set_release(&cv->_u.list_value.seq, TRUE);
         
-        switch (gconf_value_list_type(value))
+        switch (gconf_value_get_list_type(value))
           {
           case GCONF_VALUE_INT:
             cv->_u.list_value.list_type = BIntVal;
@@ -385,9 +385,9 @@ fill_corba_value_from_gconf_value(GConfValue* value,
         CORBA_sequence_set_release(&cv->_u.pair_value, TRUE);
         
         /* dubious cast */
-        fill_corba_value_from_gconf_value(gconf_value_car(value),
+        fill_corba_value_from_gconf_value(gconf_value_get_car(value),
                                            (ConfigValue*)&cv->_u.pair_value._buffer[0]);
-        fill_corba_value_from_gconf_value(gconf_value_cdr(value),
+        fill_corba_value_from_gconf_value(gconf_value_get_cdr(value),
                                            (ConfigValue*)&cv->_u.pair_value._buffer[1]);
       }
       break;
@@ -526,7 +526,7 @@ fill_corba_schema_from_gconf_schema(GConfSchema* sc,
     gchar* encoded;
     GConfValue* default_val;
 
-    default_val = gconf_schema_default_value(sc);
+    default_val = gconf_schema_get_default_value(sc);
 
     if (default_val)
       {
@@ -1323,7 +1323,7 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
       return NULL;
     }
 
-  if (gconf_value_list_type(val) != list_type)
+  if (gconf_value_get_list_type(val) != list_type)
     {
       if (err)
         *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH,
@@ -1334,9 +1334,9 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
       return NULL;
     }
 
-  g_assert(gconf_value_list_type(val) == list_type);
+  g_assert(gconf_value_get_list_type(val) == list_type);
       
-  retval = gconf_value_list(val);
+  retval = gconf_value_get_list(val);
 
   /* Cheating the API to avoid a list copy; set this to NULL to
          avoid destroying the list */
@@ -1362,13 +1362,13 @@ gconf_value_list_to_primitive_list_destructive(GConfValue* val,
           {
           case GCONF_VALUE_INT:
           case GCONF_VALUE_BOOL:
-            tmp->data = GINT_TO_POINTER(gconf_value_int(elem));
+            tmp->data = GINT_TO_POINTER(gconf_value_get_int(elem));
             break;
                 
           case GCONF_VALUE_FLOAT:
             {
               gdouble* d = g_new(gdouble, 1);
-              *d = gconf_value_float(elem);
+              *d = gconf_value_get_float(elem);
               tmp->data = d;
             }
             break;
@@ -1411,11 +1411,11 @@ primitive_value(gpointer retloc, GConfValue* val)
   switch (val->type)
     {
     case GCONF_VALUE_INT:
-      *((gint*)retloc) = gconf_value_int(val);
+      *((gint*)retloc) = gconf_value_get_int(val);
       break;
 
     case GCONF_VALUE_FLOAT:
-      *((gdouble*)retloc) = gconf_value_float(val);
+      *((gdouble*)retloc) = gconf_value_get_float(val);
       break;
 
     case GCONF_VALUE_STRING:
@@ -1427,11 +1427,11 @@ primitive_value(gpointer retloc, GConfValue* val)
       break;
 
     case GCONF_VALUE_BOOL:
-      *((gboolean*)retloc) = gconf_value_bool(val);
+      *((gboolean*)retloc) = gconf_value_get_bool(val);
       break;
 
     case GCONF_VALUE_SCHEMA:
-      *((GConfSchema**)retloc) = gconf_value_schema(val);
+      *((GConfSchema**)retloc) = gconf_value_get_schema(val);
       break;
       
     default:
@@ -1472,8 +1472,8 @@ gconf_value_pair_to_primitive_pair_destructive(GConfValue* val,
       return FALSE;
     }
 
-  car = gconf_value_car(val);
-  cdr = gconf_value_cdr(val);
+  car = gconf_value_get_car(val);
+  cdr = gconf_value_get_cdr(val);
       
   if (car == NULL ||
       cdr == NULL)
@@ -2000,19 +2000,19 @@ gconf_value_encode (GConfValue* val)
   switch (val->type)
     {
     case GCONF_VALUE_INT:
-      retval = g_strdup_printf("i%d", gconf_value_int(val));
+      retval = g_strdup_printf("i%d", gconf_value_get_int(val));
       break;
         
     case GCONF_VALUE_BOOL:
-      retval = g_strdup_printf("b%c", gconf_value_bool(val) ? 't' : 'f');
+      retval = g_strdup_printf("b%c", gconf_value_get_bool(val) ? 't' : 'f');
       break;
 
     case GCONF_VALUE_FLOAT:
-      retval = g_strdup_printf("f%g", gconf_value_float(val));
+      retval = g_strdup_printf("f%g", gconf_value_get_float(val));
       break;
 
     case GCONF_VALUE_STRING:
-      retval = g_strdup_printf("s%s", gconf_value_string(val));
+      retval = g_strdup_printf("s%s", gconf_value_get_string(val));
       break;
 
     case GCONF_VALUE_SCHEMA:
@@ -2023,24 +2023,24 @@ gconf_value_encode (GConfValue* val)
         gchar* encoded;
         GConfSchema* sc;
 
-        sc = gconf_value_schema(val);
+        sc = gconf_value_get_schema(val);
         
         tmp = g_strdup_printf("c%c%c%c%c,",
-			      type_byte(gconf_schema_type(sc)),
-			      type_byte(gconf_schema_list_type(sc)),
-			      type_byte(gconf_schema_car_type(sc)),
-			      type_byte(gconf_schema_cdr_type(sc)));
+			      type_byte(gconf_schema_get_type(sc)),
+			      type_byte(gconf_schema_get_list_type(sc)),
+			      type_byte(gconf_schema_get_car_type(sc)),
+			      type_byte(gconf_schema_get_cdr_type(sc)));
 
-        quoted = gconf_quote_string(gconf_schema_locale(sc) ?
-                                    gconf_schema_locale(sc) : "");
+        quoted = gconf_quote_string(gconf_schema_get_locale(sc) ?
+                                    gconf_schema_get_locale(sc) : "");
         retval = g_strconcat(tmp, quoted, ",", NULL);
 
         g_free(tmp);
         g_free(quoted);
 
         tmp = retval;
-        quoted = gconf_quote_string(gconf_schema_short_desc(sc) ?
-                                    gconf_schema_short_desc(sc) : "");
+        quoted = gconf_quote_string(gconf_schema_get_short_desc(sc) ?
+                                    gconf_schema_get_short_desc(sc) : "");
 
         retval = g_strconcat(tmp, quoted, ",", NULL);
 
@@ -2049,8 +2049,8 @@ gconf_value_encode (GConfValue* val)
 
 
         tmp = retval;
-        quoted = gconf_quote_string(gconf_schema_long_desc(sc) ?
-                                    gconf_schema_long_desc(sc) : "");
+        quoted = gconf_quote_string(gconf_schema_get_long_desc(sc) ?
+                                    gconf_schema_get_long_desc(sc) : "");
 
         retval = g_strconcat(tmp, quoted, ",", NULL);
 
@@ -2058,8 +2058,8 @@ gconf_value_encode (GConfValue* val)
         g_free(quoted);
         
 
-        if (gconf_schema_default_value(sc) != NULL)
-          encoded = gconf_value_encode(gconf_schema_default_value(sc));
+        if (gconf_schema_get_default_value(sc) != NULL)
+          encoded = gconf_value_encode(gconf_schema_get_default_value(sc));
         else
           encoded = g_strdup("");
 
@@ -2079,9 +2079,9 @@ gconf_value_encode (GConfValue* val)
       {
         GSList* tmp;
 
-        retval = g_strdup_printf("l%c", type_byte(gconf_value_list_type(val)));
+        retval = g_strdup_printf("l%c", type_byte(gconf_value_get_list_type(val)));
         
-        tmp = gconf_value_list(val);
+        tmp = gconf_value_get_list(val);
 
         while (tmp != NULL)
           {
@@ -2119,8 +2119,8 @@ gconf_value_encode (GConfValue* val)
         gchar* car_quoted;
         gchar* cdr_quoted;
 
-        car_encoded = gconf_value_encode(gconf_value_car(val));
-        cdr_encoded = gconf_value_encode(gconf_value_cdr(val));
+        car_encoded = gconf_value_encode(gconf_value_get_car(val));
+        cdr_encoded = gconf_value_encode(gconf_value_get_cdr(val));
 
         car_quoted = gconf_quote_string(car_encoded);
         cdr_quoted = gconf_quote_string(cdr_encoded);

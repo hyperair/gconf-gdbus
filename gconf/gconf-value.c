@@ -498,22 +498,22 @@ gconf_value_to_string(GConfValue* value)
   switch (value->type)
     {
     case GCONF_VALUE_INT:
-      retval = g_strdup_printf("%d", gconf_value_int(value));
+      retval = g_strdup_printf("%d", gconf_value_get_int(value));
       break;
     case GCONF_VALUE_FLOAT:
-      retval = gconf_double_to_string(gconf_value_float(value));
+      retval = gconf_double_to_string(gconf_value_get_float(value));
       break;
     case GCONF_VALUE_STRING:
-      retval = g_strdup(gconf_value_string(value));
+      retval = g_strdup(gconf_value_get_string(value));
       break;
     case GCONF_VALUE_BOOL:
-      retval = gconf_value_bool(value) ? g_strdup("true") : g_strdup("false");
+      retval = gconf_value_get_bool(value) ? g_strdup("true") : g_strdup("false");
       break;
     case GCONF_VALUE_LIST:
       {
         GSList* list;
 
-        list = gconf_value_list(value);
+        list = gconf_value_get_list(value);
 
         if (list == NULL)
           retval = g_strdup("[]");
@@ -586,10 +586,10 @@ gconf_value_to_string(GConfValue* value)
         gchar* car;
         gchar* cdr;
 
-        tmp = gconf_value_to_string(gconf_value_car(value));
+        tmp = gconf_value_to_string(gconf_value_get_car(value));
 	car = escape_string(tmp, ",)");
 	g_free(tmp);
-        tmp = gconf_value_to_string(gconf_value_cdr(value));
+        tmp = gconf_value_to_string(gconf_value_get_cdr(value));
 	cdr = escape_string(tmp, ",)");
 	g_free(tmp);
         retval = g_strdup_printf("(%s,%s)", car, cdr);
@@ -609,11 +609,11 @@ gconf_value_to_string(GConfValue* value)
         const gchar* car_type;
         const gchar* cdr_type;
         
-        locale = gconf_schema_locale(gconf_value_schema(value));
-        type = gconf_value_type_to_string(gconf_schema_type(gconf_value_schema(value)));
-        list_type = gconf_value_type_to_string(gconf_schema_list_type(gconf_value_schema(value)));
-        car_type = gconf_value_type_to_string(gconf_schema_car_type(gconf_value_schema(value)));
-        cdr_type = gconf_value_type_to_string(gconf_schema_cdr_type(gconf_value_schema(value)));
+        locale = gconf_schema_get_locale(gconf_value_get_schema(value));
+        type = gconf_value_type_to_string(gconf_schema_get_type(gconf_value_get_schema(value)));
+        list_type = gconf_value_type_to_string(gconf_schema_get_list_type(gconf_value_get_schema(value)));
+        car_type = gconf_value_type_to_string(gconf_schema_get_car_type(gconf_value_get_schema(value)));
+        cdr_type = gconf_value_type_to_string(gconf_schema_get_cdr_type(gconf_value_get_schema(value)));
         
         retval = g_strdup_printf("Schema (type: `%s' list_type: '%s' "
 				 "car_type: '%s' cdr_type: '%s' locale: `%s')",

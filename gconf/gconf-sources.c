@@ -496,9 +496,9 @@ gconf_sources_query_value (GConfSources* sources,
         }
       else if (val != NULL)
         {
-          GConfValue* retval = gconf_value_schema(val)->default_value;
+          GConfValue* retval = gconf_value_get_schema(val)->default_value;
           /* cheat, "unparent" the value to avoid a copy */
-          gconf_value_schema(val)->default_value = NULL;
+          gconf_value_get_schema(val)->default_value = NULL;
           gconf_value_free(val);
 
           g_free(schema_name);
@@ -755,15 +755,15 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
   GConfSources *sources = dld->sources;
   const gchar** locales = dld->locales;
   
-  if (gconf_entry_value(entry) == NULL)
+  if (gconf_entry_get_value(entry) == NULL)
     {
-      if (gconf_entry_schema_name(entry) != NULL)
+      if (gconf_entry_get_schema_name(entry) != NULL)
         {
           GConfValue *val;
 
 
           val = gconf_sources_query_value(sources,
-                                          gconf_entry_schema_name(entry),
+                                          gconf_entry_get_schema_name(entry),
                                           locales,
                                           TRUE,
                                           NULL,
@@ -772,9 +772,9 @@ hash_lookup_defaults_func(gpointer key, gpointer value, gpointer user_data)
           if (val != NULL &&
               val->type == GCONF_VALUE_SCHEMA)
             {
-              GConfValue* defval = gconf_value_schema(val)->default_value;
+              GConfValue* defval = gconf_value_get_schema(val)->default_value;
               /* cheat, "unparent" the value to avoid a copy */
-              gconf_value_schema(val)->default_value = NULL;
+              gconf_value_get_schema(val)->default_value = NULL;
 
               gconf_entry_set_value_nocopy(entry, defval);
               gconf_entry_set_is_default(entry, TRUE);
@@ -855,7 +855,7 @@ gconf_sources_all_entries   (GConfSources* sources,
           
           if (previous != NULL)
             {
-              if (gconf_entry_value(previous) != NULL)
+              if (gconf_entry_get_value(previous) != NULL)
                 /* Discard this latest one */
                 ;
               else
@@ -1074,18 +1074,18 @@ gconf_sources_query_metainfo (GConfSources* sources,
             {
               /* Fill in any missing fields of "mi" found in "this_mi",
                  and pick the most recent mod time */
-              if (gconf_meta_info_schema(mi) == NULL &&
-                  gconf_meta_info_schema(this_mi) != NULL)
+              if (gconf_meta_info_get_schema(mi) == NULL &&
+                  gconf_meta_info_get_schema(this_mi) != NULL)
                 {
                   gconf_meta_info_set_schema(mi,
-                                             gconf_meta_info_schema(mi));
+                                             gconf_meta_info_get_schema(mi));
                 }
 
-              if (gconf_meta_info_mod_user(mi) == NULL &&
-                  gconf_meta_info_mod_user(this_mi) != NULL)
+              if (gconf_meta_info_get_mod_user(mi) == NULL &&
+                  gconf_meta_info_get_mod_user(this_mi) != NULL)
                 {
                   gconf_meta_info_set_mod_user(mi,
-                                               gconf_meta_info_mod_user(this_mi));
+                                               gconf_meta_info_get_mod_user(this_mi));
                 }
               
               if (gconf_meta_info_mod_time(mi) < gconf_meta_info_mod_time(this_mi))
@@ -1133,14 +1133,14 @@ gconf_sources_query_default_value(GConfSources* sources,
       return NULL;
     }
 
-  if (gconf_meta_info_schema(mi) == NULL)
+  if (gconf_meta_info_get_schema(mi) == NULL)
     {
       gconf_meta_info_free(mi);
       return NULL;
     }
       
   val = gconf_sources_query_value(sources,
-                                  gconf_meta_info_schema(mi), locales,
+                                  gconf_meta_info_get_schema(mi), locales,
                                   TRUE, NULL, &error);
   
   if (val != NULL)
@@ -1151,7 +1151,7 @@ gconf_sources_query_default_value(GConfSources* sources,
         {
           gconf_log(GCL_WARNING,
                     _("Key `%s' listed as schema for key `%s' actually stores type `%s'"),
-                    gconf_meta_info_schema(mi),
+                    gconf_meta_info_get_schema(mi),
                     key,
                     gconf_value_type_to_string(val->type));
 
@@ -1161,7 +1161,7 @@ gconf_sources_query_default_value(GConfSources* sources,
 
       gconf_meta_info_free(mi);
 
-      schema = gconf_value_schema(val);
+      schema = gconf_value_get_schema(val);
       val->d.schema_data = NULL; /* cheat, steal schema from the GConfValue */
       
       gconf_value_free(val); /* schema not destroyed due to our cheat */
@@ -1188,7 +1188,7 @@ gconf_sources_query_default_value(GConfSources* sources,
           else
             {
               gconf_log(GCL_ERR, _("Error getting value for `%s': %s"),
-                        gconf_meta_info_schema(mi),
+                        gconf_meta_info_get_schema(mi),
                         error->message);
               g_error_free(error);
             }

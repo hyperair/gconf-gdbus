@@ -713,27 +713,27 @@ print_value(GConfValue* value)
   switch (value->type)
     {
     case GCONF_VALUE_STRING:
-      printf("%s\n", gconf_value_string(value));
+      printf("%s\n", gconf_value_get_string(value));
       break;
     case GCONF_VALUE_INT:
-      printf("%d\n", gconf_value_int(value));
+      printf("%d\n", gconf_value_get_int(value));
       break;
     case GCONF_VALUE_FLOAT:
-      printf("%g\n", gconf_value_float(value));
+      printf("%g\n", gconf_value_get_float(value));
       break;
     case GCONF_VALUE_BOOL:
-      printf("%s", gconf_value_bool(value) ? "true" : "false");
+      printf("%s", gconf_value_get_bool(value) ? "true" : "false");
       break;
     case GCONF_VALUE_SCHEMA:
       {
-        GConfSchema* schema = gconf_value_schema(value);
+        GConfSchema* schema = gconf_value_get_schema(value);
 
         /* printing a schema would be complicated, you get the idea */
       }
       break;
     case GCONF_VALUE_LIST:
       {
-        GSList* iter = gconf_value_list(value);
+        GSList* iter = gconf_value_get_list(value);
 
         while (iter != NULL)
           {
@@ -746,8 +746,8 @@ print_value(GConfValue* value)
       }
       break;
     case GCONF_VALUE_PAIR:
-      print_value(gconf_value_car(value));
-      print_value(gconf_value_cdr(value));
+      print_value(gconf_value_get_car(value));
+      print_value(gconf_value_get_cdr(value));
       break;
     case GCONF_VALUE_INVALID:
       /* This is used internally by GConf, you can also
@@ -768,7 +768,7 @@ print_value(GConfValue* value)
           A special note about values of type <symbol>GCONF_VALUE_LIST</symbol>:
           the list contains <structname>GConfValue</structname> objects, and all
           objects in the list must have the same type. You can get the type of
-          the list with the <function>gconf_value_list_type()</function> macro.
+          the list with the <function>gconf_value_get_list_type()</function> macro.
         </para>
 
       </sect2>

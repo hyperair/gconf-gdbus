@@ -321,7 +321,7 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
 
       (*keys)->_buffer[i] = CORBA_string_dup(p->key);
       fill_corba_value_from_gconf_value(p->value, &((*values)->_buffer[i]));
-      (*is_defaults)->_buffer[i] = gconf_entry_is_default(p);
+      (*is_defaults)->_buffer[i] = gconf_entry_get_is_default(p);
       
       gconf_entry_free(p);
 

@@ -32,7 +32,7 @@ notify_func(GConf* conf, guint cnxn_id, const gchar* key, GConfValue* value, gpo
   int pid = getpid();
   printf("PID %d received notify on key `%s' connection %u\n", pid, key, cnxn_id);
   self_change = TRUE;
-  gtk_entry_set_text(GTK_ENTRY(user_data), gconf_value_string(value));
+  gtk_entry_set_text(GTK_ENTRY(user_data), gconf_value_get_string(value));
   self_change = FALSE;
 }
 
@@ -100,7 +100,7 @@ main(int argc, char* argv[])
 
   if (val != NULL)
     {
-      gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_string(val));
+      gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(val));
       gconf_value_free(val);
       val = NULL;
     }

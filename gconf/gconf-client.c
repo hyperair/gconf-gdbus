@@ -824,8 +824,8 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
           GConfEntry* pair = tmp->data;
           
           gconf_client_cache(client,
-                             gconf_entry_key (pair),
-                             gconf_entry_is_default(pair),
+                             gconf_entry_get_key (pair),
+                             gconf_entry_get_is_default(pair),
                              gconf_entry_steal_value(pair));
 
           gconf_entry_free(pair);
@@ -1159,7 +1159,7 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type(key, val, GCONF_VALUE_FLOAT, &error))
-        retval = gconf_value_float(val);
+        retval = gconf_value_get_float(val);
       else
         handle_error(client, error, err);
 
@@ -1194,7 +1194,7 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type(key, val, GCONF_VALUE_INT, &error))
-        retval = gconf_value_int(val);
+        retval = gconf_value_get_int(val);
       else
         handle_error(client, error, err);
 
@@ -1230,7 +1230,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
       
       if (check_type(key, val, GCONF_VALUE_STRING, &error))
 	/* we cheat here (look below) so we have to cast this */
-        retval = (gchar *)gconf_value_string(val);
+        retval = (gchar *)gconf_value_get_string(val);
       else
         handle_error(client, error, err);
 
@@ -1272,7 +1272,7 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
       g_assert(error == NULL);
       
       if (check_type(key, val, GCONF_VALUE_BOOL, &error))
-        retval = gconf_value_bool(val);
+        retval = gconf_value_get_bool(val);
       else
         handle_error(client, error, err);
 
@@ -1306,7 +1306,7 @@ gconf_client_get_schema  (GConfClient* client,
       g_assert(error == NULL);
       
       if (check_type(key, val, GCONF_VALUE_SCHEMA, &error))
-        retval = gconf_value_schema(val);
+        retval = gconf_value_get_schema(val);
       else
         handle_error(client, error, err);
 
