@@ -26,7 +26,7 @@
 typedef struct _AppInfo AppInfo;
 
 struct _AppInfo {
-  GConf* conf;
+  GConfEngine* conf;
   GtkWidget* tree;
   GtkWidget* details;
   GtkWidget* key_label;  
@@ -122,8 +122,7 @@ gce_app_new(const gchar* geometry)
 
   /* Setup config stuff */
 
-  ai->conf = g_conf_new();
-  
+  ai->conf = g_conf_engine_new();
 
   /* Show widgets */
 

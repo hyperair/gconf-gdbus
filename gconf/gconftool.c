@@ -211,16 +211,16 @@ struct poptOption options[] = {
   }
 };
 
-static void do_recursive_list(GConf* conf, const gchar** args);
-static void do_all_pairs(GConf* conf, const gchar** args);
-static void list_pairs_in_dir(GConf* conf, const gchar* dir, guint depth);
+static void do_recursive_list(GConfEngine* conf, const gchar** args);
+static void do_all_pairs(GConfEngine* conf, const gchar** args);
+static void list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth);
 
 /* FIXME um, break this function up... */
 /* FIXME do a single sync on exit */
 int 
 main (int argc, char** argv)
 {
-  GConf* conf;
+  GConfEngine* conf;
   poptContext ctx;
   gint nextopt;
   GConfError* err = NULL;
@@ -337,7 +337,7 @@ main (int argc, char** argv)
       return 1;
     }
 
-  conf = g_conf_new();
+  conf = g_conf_engine_new();
 
   g_assert(conf != NULL);
 
@@ -749,7 +749,7 @@ main (int argc, char** argv)
 
   poptFreeContext(ctx);
 
-  g_conf_unref(conf);
+  g_conf_engine_unref(conf);
 
   if (shutdown_gconfd)
     {
@@ -769,7 +769,7 @@ main (int argc, char** argv)
 }
 
 static void 
-recurse_subdir_list(GConf* conf, GSList* subdirs, const gchar* parent, guint depth)
+recurse_subdir_list(GConfEngine* conf, GSList* subdirs, const gchar* parent, guint depth)
 {
   GSList* tmp;
   gchar* whitespace;
@@ -800,7 +800,7 @@ recurse_subdir_list(GConf* conf, GSList* subdirs, const gchar* parent, guint dep
 }
 
 static void
-do_recursive_list(GConf* conf, const gchar** args)
+do_recursive_list(GConfEngine* conf, const gchar** args)
 {
   while (*args)
     {
@@ -817,7 +817,7 @@ do_recursive_list(GConf* conf, const gchar** args)
 }
 
 static void 
-list_pairs_in_dir(GConf* conf, const gchar* dir, guint depth)
+list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth)
 {
   GSList* pairs;
   GSList* tmp;
@@ -863,7 +863,7 @@ list_pairs_in_dir(GConf* conf, const gchar* dir, guint depth)
 }
 
 static void 
-do_all_pairs(GConf* conf, const gchar** args)
+do_all_pairs(GConfEngine* conf, const gchar** args)
 {      
   while (*args)
     {

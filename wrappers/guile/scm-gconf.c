@@ -25,7 +25,7 @@
 
 static long gconf_type_tag = 0;
 
-#define SCM_TO_GCONF(obj) ((GConf*)(SCM_CDR(obj)))
+#define SCM_TO_GCONF(obj) ((GConfEngine*)(SCM_CDR(obj)))
 #define GCONF_P(value)    (SCM_NIMP (value) && (SCM_CAR(value) == gconf_type_tag))
 
 gboolean
@@ -34,7 +34,7 @@ scm_gconfp (SCM obj)
   return GCONF_P(obj);
 }
 
-GConf* 
+GConfEngine* 
 scm2gconf (SCM obj)
 {
   if (!GCONF_P(obj))
@@ -43,7 +43,7 @@ scm2gconf (SCM obj)
 }
 
 SCM      
-gconf2scm (GConf* conf)
+gconf2scm (GConfEngine* conf)
 {
   SCM smob;
 
@@ -66,12 +66,12 @@ mark_gconf (SCM obj)
 static scm_sizet
 free_gconf (SCM obj)
 {
-  GConf* conf = SCM_TO_GCONF(obj);
+  GConfEngine* conf = SCM_TO_GCONF(obj);
 
-  static const scm_sizet size = sizeof(GConf);
+  static const scm_sizet size = sizeof(GConfEngine);
 
   gh_defer_ints();
-  g_conf_unref(conf);
+  g_conf_engine_unref(conf);
   gh_allow_ints();
 
   return size;
@@ -80,7 +80,7 @@ free_gconf (SCM obj)
 static int
 print_gconf (SCM obj, SCM port, scm_print_state *pstate)
 {
-  GConf* conf = SCM_TO_GCONF(obj);
+  GConfEngine* conf = SCM_TO_GCONF(obj);
 
   scm_puts ("#<GConf configuration object>", port);
 
@@ -161,10 +161,10 @@ GCONF_PROC(gconfp,"gconf?",1,0,0,(SCM conf))
 
 GCONF_PROC(make_gconf,"gconf-default",0,0,0,())
 {
-  GConf* conf;
+  GConfEngine* conf;
   gh_defer_ints();
-  conf = g_conf_new();
-  scm_done_malloc(sizeof(GConf));
+  conf = g_conf_engine_new();
+  scm_done_malloc(sizeof(GConfEngine));
   gh_allow_ints();
   return gconf2scm(conf);
 }

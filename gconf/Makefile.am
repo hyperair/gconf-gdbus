@@ -17,7 +17,7 @@ gconfinclude_HEADERS =     \
 	gconf-schema.h 	   \
 	gconf-value.h	   \
 	gconf-error.h	   \
-	gconf-conf.h	\
+	gconf-engine.h	\
 	gconf-sources.h
 
 ## This is broken I know, I'm going to break the server/client up and have a library later

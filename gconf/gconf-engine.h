@@ -17,8 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef GCONF_GCONF_CONF_H
-#define GCONF_GCONF_CONF_H
+#ifndef GCONF_GCONF_ENGINE_H
+#define GCONF_GCONF_ENGINE_H
 
 #include <glib.h>
 #include "gconf-error.h"
@@ -30,17 +30,17 @@ extern "C" {
 /* A configuration engine (stack of config sources); normally there's
  * just one of these on the system.  
  */
-typedef struct _GConf GConf;
+typedef struct _GConfEngine GConfEngine;
 
-struct _GConf {
+struct _GConfEngine {
   gpointer dummy;
 };
   
-GConf*       g_conf_new             (void); /* Default source stack */
+GConfEngine* g_conf_engine_new             (void); /* Default source stack */
 /* returns NULL on error; requests single specified source */
-GConf*       g_conf_new_from_address(const gchar* address, GConfError** err);
-void         g_conf_unref           (GConf* conf);
-void         g_conf_ref             (GConf* conf);
+GConfEngine* g_conf_engine_new_from_address(const gchar* address, GConfError** err);
+void         g_conf_engine_unref           (GConfEngine* conf);
+void         g_conf_engine_ref             (GConfEngine* conf);
 
 #ifdef __cplusplus
 }

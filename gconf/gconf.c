@@ -69,9 +69,9 @@ g_conf_key_check(const gchar* key, GConfError** err)
  * GConfPrivate
  */
 
-typedef struct _GConfPrivate GConfPrivate;
+typedef struct _GConfEnginePrivate GConfEnginePrivate;
 
-struct _GConfPrivate {
+struct _GConfEnginePrivate {
   ConfigServer_Context context;
   guint refcount;
 };
@@ -81,12 +81,12 @@ typedef struct _GConfCnxn GConfCnxn;
 struct _GConfCnxn {
   guint client_id;
   CORBA_unsigned_long server_id; /* id returned from server */
-  GConf* conf;     /* conf we're associated with */
+  GConfEngine* conf;     /* conf we're associated with */
   GConfNotifyFunc func;
   gpointer user_data;
 };
 
-static GConfCnxn* g_conf_cnxn_new(GConf* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data);
+static GConfCnxn* g_conf_cnxn_new(GConfEngine* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data);
 static void       g_conf_cnxn_destroy(GConfCnxn* cnxn);
 static void       g_conf_cnxn_notify(GConfCnxn* cnxn, const gchar* key, GConfValue* value);
 
@@ -112,7 +112,7 @@ static CnxnTable* ctable_new(void);
 static void       ctable_insert(CnxnTable* ct, GConfCnxn* cnxn);
 static void       ctable_remove(CnxnTable* ct, GConfCnxn* cnxn);
 static void       ctable_remove_by_client_id(CnxnTable* ct, guint client_id);
-static GSList*    ctable_remove_by_conf(CnxnTable* ct, GConf* conf);
+static GSList*    ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf);
 static GConfCnxn* ctable_lookup_by_client_id(CnxnTable* ct, guint client_id);
 static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long server_id);
 
@@ -121,24 +121,24 @@ static GConfCnxn* ctable_lookup_by_server_id(CnxnTable* ct, CORBA_unsigned_long 
  *  Public Interface
  */
 
-GConf*
-g_conf_new            (void)
+GConfEngine*
+g_conf_engine_new            (void)
 {
-  GConfPrivate* priv;
+  GConfEnginePrivate* priv;
 
-  priv = g_new0(GConfPrivate, 1);
+  priv = g_new0(GConfEnginePrivate, 1);
 
   priv->context = ConfigServer_default_context;
   priv->refcount = 1;
   
-  return (GConf*) priv;
+  return (GConfEngine*) priv;
 }
 
-GConf*
-g_conf_new_from_address(const gchar* address, GConfError** err)
+GConfEngine*
+g_conf_engine_new_from_address(const gchar* address, GConfError** err)
 {
-  GConf* gconf;
-  GConfPrivate* priv;
+  GConfEngine* gconf;
+  GConfEnginePrivate* priv;
   CORBA_Environment ev;
   ConfigServer cs;
   ConfigServer_Context ctx;
@@ -168,9 +168,9 @@ g_conf_new_from_address(const gchar* address, GConfError** err)
       return NULL;
     }
   
-  gconf = g_conf_new();
+  gconf = g_conf_engine_new();
   
-  priv = (GConfPrivate*)gconf;
+  priv = (GConfEnginePrivate*)gconf;
 
   priv->context = ctx;
   priv->refcount = 1;
@@ -179,9 +179,9 @@ g_conf_new_from_address(const gchar* address, GConfError** err)
 }
 
 void
-g_conf_ref             (GConf* conf)
+g_conf_engine_ref             (GConfEngine* conf)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
 
   g_return_if_fail(priv != NULL);
   g_return_if_fail(priv->refcount > 0);
@@ -190,9 +190,9 @@ g_conf_ref             (GConf* conf)
 }
 
 void         
-g_conf_unref        (GConf* conf)
+g_conf_engine_unref        (GConfEngine* conf)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   
   g_return_if_fail(priv != NULL);
   g_return_if_fail(priv->refcount > 0);
@@ -256,13 +256,13 @@ g_conf_unref        (GConf* conf)
 }
 
 guint
-g_conf_notify_add(GConf* conf,
+g_conf_notify_add(GConfEngine* conf,
                   const gchar* namespace_section, /* dir or key to listen to */
                   GConfNotifyFunc func,
                   gpointer user_data,
                   GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   ConfigServer cs;
   ConfigListener cl;
   gulong id;
@@ -302,10 +302,10 @@ g_conf_notify_add(GConf* conf,
 }
 
 void         
-g_conf_notify_remove(GConf* conf,
+g_conf_notify_remove(GConfEngine* conf,
                      guint client_id)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfCnxn* gcnxn;
   CORBA_Environment ev;
   ConfigServer cs;
@@ -339,9 +339,9 @@ g_conf_notify_remove(GConf* conf,
 }
 
 GConfValue*  
-g_conf_get(GConf* conf, const gchar* key, GConfError** err)
+g_conf_get(GConfEngine* conf, const gchar* key, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfValue* val;
   ConfigValue* cv;
   CORBA_Environment ev;
@@ -379,9 +379,9 @@ g_conf_get(GConf* conf, const gchar* key, GConfError** err)
 }
 
 void
-g_conf_set(GConf* conf, const gchar* key, GConfValue* value, GConfError** err)
+g_conf_set(GConfEngine* conf, const gchar* key, GConfValue* value, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   ConfigValue* cv;
   CORBA_Environment ev;
   ConfigServer cs;
@@ -416,9 +416,9 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value, GConfError** err)
 }
 
 void         
-g_conf_unset(GConf* conf, const gchar* key, GConfError** err)
+g_conf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
 
@@ -446,9 +446,9 @@ g_conf_unset(GConf* conf, const gchar* key, GConfError** err)
 }
 
 GSList*      
-g_conf_all_entries(GConf* conf, const gchar* dir, GConfError** err)
+g_conf_all_entries(GConfEngine* conf, const gchar* dir, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GSList* pairs = NULL;
   ConfigServer_ValueList* values;
   ConfigServer_KeyList* keys;
@@ -509,9 +509,9 @@ g_conf_all_entries(GConf* conf, const gchar* dir, GConfError** err)
 }
 
 GSList*      
-g_conf_all_dirs(GConf* conf, const gchar* dir, GConfError** err)
+g_conf_all_dirs(GConfEngine* conf, const gchar* dir, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GSList* subdirs = NULL;
   ConfigServer_KeyList* keys;
   CORBA_Environment ev;
@@ -562,9 +562,9 @@ g_conf_all_dirs(GConf* conf, const gchar* dir, GConfError** err)
 }
 
 void 
-g_conf_sync(GConf* conf, GConfError** err)
+g_conf_sync(GConfEngine* conf, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
 
@@ -587,9 +587,9 @@ g_conf_sync(GConf* conf, GConfError** err)
 }
 
 gboolean
-g_conf_dir_exists(GConf *conf, const gchar *dir, GConfError** err)
+g_conf_dir_exists(GConfEngine *conf, const gchar *dir, GConfError** err)
 {
-  GConfPrivate* priv = (GConfPrivate*)conf;
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   CORBA_Environment ev;
   ConfigServer cs;
   CORBA_boolean server_ret;
@@ -625,7 +625,7 @@ g_conf_dir_exists(GConf *conf, const gchar *dir, GConfError** err)
  */
 
 static GConfCnxn* 
-g_conf_cnxn_new(GConf* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data)
+g_conf_cnxn_new(GConfEngine* conf, CORBA_unsigned_long server_id, GConfNotifyFunc func, gpointer user_data)
 {
   GConfCnxn* cnxn;
   static guint next_id = 1;
@@ -1124,7 +1124,7 @@ ctable_remove_by_client_id(CnxnTable* ct, guint client_id)
 
 struct RemoveData {
   GSList* removed;
-  GConf* conf;
+  GConfEngine* conf;
   gboolean save_removed;
 };
 
@@ -1147,7 +1147,7 @@ remove_by_conf(gpointer key, gpointer value, gpointer user_data)
 
 /* We return a list of the removed GConfCnxn */
 static GSList*      
-ctable_remove_by_conf(CnxnTable* ct, GConf* conf)
+ctable_remove_by_conf(CnxnTable* ct, GConfEngine* conf)
 {
   guint client_ids_removed;
   guint server_ids_removed;
@@ -1248,7 +1248,7 @@ g_conf_spawn_daemon(GConfError** err)
  */
 
 gdouble      
-g_conf_get_float (GConf* conf, const gchar* key,
+g_conf_get_float (GConfEngine* conf, const gchar* key,
                   gdouble deflt, GConfError** err)
 {
   GConfValue* val;
@@ -1279,7 +1279,7 @@ g_conf_get_float (GConf* conf, const gchar* key,
 }
 
 gint         
-g_conf_get_int   (GConf* conf, const gchar* key,
+g_conf_get_int   (GConfEngine* conf, const gchar* key,
                   gint deflt, GConfError** err)
 {
   GConfValue* val;
@@ -1310,7 +1310,7 @@ g_conf_get_int   (GConf* conf, const gchar* key,
 }
 
 gchar*       
-g_conf_get_string(GConf* conf, const gchar* key,
+g_conf_get_string(GConfEngine* conf, const gchar* key,
                   const gchar* deflt, GConfError** err)
 {
   GConfValue* val;
@@ -1344,7 +1344,7 @@ g_conf_get_string(GConf* conf, const gchar* key,
 }
 
 gboolean     
-g_conf_get_bool  (GConf* conf, const gchar* key,
+g_conf_get_bool  (GConfEngine* conf, const gchar* key,
                   gboolean deflt, GConfError** err)
 {
   GConfValue* val;
@@ -1375,7 +1375,7 @@ g_conf_get_bool  (GConf* conf, const gchar* key,
 }
 
 GConfSchema* 
-g_conf_get_schema  (GConf* conf, const gchar* key, GConfError** err)
+g_conf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err)
 {
   GConfValue* val;
 
@@ -1412,7 +1412,7 @@ g_conf_get_schema  (GConf* conf, const gchar* key, GConfError** err)
  */
 
 static gboolean
-error_checked_set(GConf* conf, const gchar* key,
+error_checked_set(GConfEngine* conf, const gchar* key,
                   GConfValue* gval, GConfError** err)
 {
   GConfError* my_err = NULL;
@@ -1432,7 +1432,7 @@ error_checked_set(GConf* conf, const gchar* key,
 }
 
 gboolean
-g_conf_set_float   (GConf* conf, const gchar* key,
+g_conf_set_float   (GConfEngine* conf, const gchar* key,
                     gdouble val, GConfError** err)
 {
   GConfValue* gval;
@@ -1445,7 +1445,7 @@ g_conf_set_float   (GConf* conf, const gchar* key,
 }
 
 gboolean
-g_conf_set_int     (GConf* conf, const gchar* key,
+g_conf_set_int     (GConfEngine* conf, const gchar* key,
                     gint val, GConfError** err)
 {
   GConfValue* gval;
@@ -1458,7 +1458,7 @@ g_conf_set_int     (GConf* conf, const gchar* key,
 }
 
 gboolean
-g_conf_set_string  (GConf* conf, const gchar* key,
+g_conf_set_string  (GConfEngine* conf, const gchar* key,
                     const gchar* val, GConfError** err)
 {
   GConfValue* gval;
@@ -1471,7 +1471,7 @@ g_conf_set_string  (GConf* conf, const gchar* key,
 }
 
 gboolean
-g_conf_set_bool    (GConf* conf, const gchar* key,
+g_conf_set_bool    (GConfEngine* conf, const gchar* key,
                     gboolean val, GConfError** err)
 {
   GConfValue* gval;
@@ -1484,7 +1484,7 @@ g_conf_set_bool    (GConf* conf, const gchar* key,
 }
 
 gboolean
-g_conf_set_schema  (GConf* conf, const gchar* key,
+g_conf_set_schema  (GConfEngine* conf, const gchar* key,
                     GConfSchema* val, GConfError** err)
 {
   GConfValue* gval;

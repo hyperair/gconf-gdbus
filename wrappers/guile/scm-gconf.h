@@ -30,8 +30,8 @@
 
 void g_conf_init_scm(void);
 
-gboolean scm_gconfp (SCM obj);
-GConf*   scm2gconf  (SCM obj);
-SCM      gconf2scm  (GConf* conf);
+gboolean       scm_gconfp (SCM obj);
+GConfEngine*   scm2gconf  (SCM obj);
+SCM            gconf2scm  (GConfEngine* conf);
 
 #endif
