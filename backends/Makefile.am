@@ -16,16 +16,16 @@ libgconfbackend_xml_la_SOURCES = \
 	xml-entry.c		\
 	xml-backend.c
 
-libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
-libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS)
+libgconfbackend_xml_la_LDFLAGS = -avoid-version -module -no-undefined
+libgconfbackend_xml_la_LIBADD  = $(DEPENDENT_WITH_XML_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
 libgconfbackend_markup_la_SOURCES = 	\
 	markup-backend.c		\
 	markup-tree.h			\
 	markup-tree.c
 
-libgconfbackend_markup_la_LDFLAGS = -avoid-version -module
-libgconfbackend_markup_la_LIBADD  = $(DEPENDENT_LIBS)
+libgconfbackend_markup_la_LDFLAGS = -avoid-version -module -no-undefined
+libgconfbackend_markup_la_LIBADD  = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
 
 noinst_PROGRAMS = xml-test
 

@@ -1,3 +1,15 @@
+2003-04-26  Masahiro Sakai  <sakai@tom.sfc.keio.ac.jp>
+
+	* configure.in: call AC_LIBTOOL_WIN32_DLL.
+
+	* backends/Makefile.am: add -no-undefined to *_la_LDFLAGS.
+	add $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la to *_la_LIBADD.
+
+	* gconf/Makefile.am (libgconf_2_la_LDFLAGS): add -no-undefined.
+
+	* gconf/gconfd.c (main): use g_strdup_printf() instead of strlen() +
+	g_malloc() + g_snprintf().
+
 03-04-23  Muktha <muktha.narayan@wipro.com>
 	* gconf/gconfd.c
 	When reading the saved_state file, gconfd will not log message if 

@@ -519,7 +519,6 @@ main(int argc, char** argv)
   CORBA_ORB orb;
   gchar* logname;
   const gchar* username;
-  guint len;
   gchar* ior;
   int exit_code = 0;
   GError *err;
@@ -569,9 +568,7 @@ main(int argc, char** argv)
   
   /* Logs */
   username = g_get_user_name();
-  len = strlen(username) + strlen("gconfd") + 15;
-  logname = g_malloc(len);
-  g_snprintf(logname, len, "gconfd (%s-%u)", username, (guint)getpid());
+  logname = g_strdup_printf("gconfd (%s-%u)", username, (guint)getpid());
 
   openlog (logname, LOG_NDELAY, LOG_USER);
 
