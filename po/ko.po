@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf CVS-20000906\n"
-"POT-Creation-Date: 2002-06-13 14:49+0900\n"
-"PO-Revision-Date: 2002-07-21 20:38+0900\n"
+"POT-Creation-Date: 2002-07-27 03:03+0900\n"
+"PO-Revision-Date: 2002-07-27 03:04+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <gnome-kr-translation@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr "XML 파일 \"%s\"의 구문 분석이 실패했습니다"
 #: backends/xml-entry.c:154
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr "`%s'라는 이름을 가진 XML 노드를 무시합니다: %s"
+msgstr "`%s'(이)라는 이름을 가진 XML 노드를 무시합니다: %s"
 
 #: backends/xml-entry.c:332
 #, c-format
@@ -376,7 +376,7 @@ msgstr ""
 "리스너의 제거를 로그파일에 기록하는 데 실패했습니다 (대부분 해가 될 것은 없으"
 "나, 통고가 이상하게 다시 나타날 수도 있습니다): %s"
 
-#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1540
+#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "`%s'에 대한 값을 얻는 데 오류가 발생했습니다: %s"
@@ -681,7 +681,7 @@ msgstr "'%s' 파일을 지우는 데 실패했습니다: %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "`%s' 잠금 디렉토리를 지우는 데 실패했습니다: %s"
 
-#: gconf/gconf-internals.c:2815 gconf/gconfd.c:595
+#: gconf/gconf-internals.c:2815 gconf/gconfd.c:596
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "`%s' 파일을 만드는 데 실패했습니다: %s"
@@ -790,7 +790,7 @@ msgid ""
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
 "시스템 관리자에게 접촉해 다음 문제를 해결하십시오: \n"
-"설정 파일 \"%2$s\"의 주소 \"%1$s\"를 확인(resolve)할 수 없습니다: %3$s"
+"설정 파일 \"%2$s\"의 주소 \"%1$s\"(을)를 확인(resolve)할 수 없습니다: %3$s"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
@@ -882,17 +882,17 @@ msgstr ""
 "gconfd에 잠금 파일을 소유하고 있어야 하며 ~/.gcon와 같은 각각의 저장 위치에"
 "도 잠금 파일을 소유하고 있어야 합니다."
 
-#: gconf/gconf-sources.c:1413
+#: gconf/gconf-sources.c:1414
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "메타 정보를 찾는 데 오류가 생겼습니다: %s"
 
-#: gconf/gconf-sources.c:1482
+#: gconf/gconf-sources.c:1483
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "메타 정보를 얻어내는 데 오류가 생겼습니다: %s"
 
-#: gconf/gconf-sources.c:1506
+#: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
@@ -1044,11 +1044,11 @@ msgstr "스키마가 와야하나 대신에 %s을(를) 얻었습니다"
 msgid "CORBA error: %s"
 msgstr "코바 오류: %s"
 
-#: gconf/gconfd.c:249
+#: gconf/gconfd.c:250
 msgid "Shutdown request received"
 msgstr "끝내라는 요청을 받았습니다"
 
-#: gconf/gconfd.c:281
+#: gconf/gconfd.c:282
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1056,7 +1056,7 @@ msgstr ""
 "gconfd가 디버깅 용으로 컴파일되었습니다; 소스 디렉토리에서 gconf.path를 읽어"
 "들이도록 시도합니다"
 
-#: gconf/gconfd.c:295
+#: gconf/gconfd.c:296
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1065,22 +1065,22 @@ msgstr "설정 파일을 찾을 수 ㅇ벗습니다. 기본 설정 소스 `%s'�
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:303
+#: gconf/gconfd.c:304
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
 msgstr "소스 경로에 설정 소스가 없습니다. 설정을 저장할 수 없습니다; "
 
-#: gconf/gconfd.c:303
+#: gconf/gconfd.c:304
 msgid "/path"
 msgstr "/path를 편집하십시오"
 
-#: gconf/gconfd.c:316
+#: gconf/gconfd.c:317
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "설정 파일을 불러들이는 데 오류가 발생했습니다: %s"
 
-#: gconf/gconfd.c:328
+#: gconf/gconfd.c:329
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1088,7 +1088,7 @@ msgstr ""
 "설정 소스 주소를 확인하는 데 실패했습니다. 설정 데이타를 읽어들이거나 저장할 "
 "수 없습니다"
 
-#: gconf/gconfd.c:345
+#: gconf/gconfd.c:346
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1096,65 +1096,66 @@ msgstr ""
 "쓰기 가능한 설정 소스를 확인할 수 없습니다. 설정 사항의 변화를 저장하지 못할 "
 "것입니다"
 
-#: gconf/gconfd.c:371
+#: gconf/gconfd.c:372
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
-msgstr "시그날 %d을(를) 받아서 메모리를 덤프합니다. GConf 버그를 알려 주십시오."
+msgstr ""
+"시그날 %d을(를) 받아서 메모리를 덤프합니다. GConf 버그를 알려 주십시오."
 
-#: gconf/gconfd.c:389
+#: gconf/gconfd.c:390
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "시그날 %d을(를) 받아서 비정상적으로 끝마칩니다. GConf 버그를 보고해 주십시오."
 
-#: gconf/gconfd.c:406
+#: gconf/gconfd.c:407
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "시그날 %d을(를) 받아서, 올바르게 끝마칩니다"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:542
+#: gconf/gconfd.c:543
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "시작 (버전 %s), pid %u 사용자 '%s'"
 
-#: gconf/gconfd.c:582
+#: gconf/gconfd.c:583
 msgid "Failed to get object reference for ConfigServer"
 msgstr "ConfigServer에 대한 오브젝트 참조를 얻지 못했습니다"
 
-#: gconf/gconfd.c:620
+#: gconf/gconfd.c:621
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "바이트를 파이프 fd %d에 쓰는 데 실패하여 클라이언트 프로그램이 이상 종료할 "
 "수 있습니다: %s"
 
-#: gconf/gconfd.c:630
+#: gconf/gconfd.c:631
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "데몬에 대한 잠금을 얻는 데 실패했습니다. 끝냅니다: %s"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:669
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "잠금 파일을 해제하는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:677
 msgid "Exiting"
 msgstr "끝냄"
 
-#: gconf/gconfd.c:702
+#: gconf/gconfd.c:703
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf 서버가 사용중이 아니라, 끝마칩니다"
 
-#: gconf/gconfd.c:1067
+#: gconf/gconfd.c:1069
 #, c-format
 msgid "Returning exception: %s"
 msgstr "예외가 발생했습니다: %s"
 
-#: gconf/gconfd.c:1167
+#: gconf/gconfd.c:1169
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1163,7 +1164,7 @@ msgstr ""
 "gconfd 로그파일을 여는 데 실패했습니다; gconfd 셧다운 후에 리스너를 복구하지 "
 "못할 것입니다 (%s)"
 
-#: gconf/gconfd.c:1202
+#: gconf/gconfd.c:1204
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1171,38 +1172,38 @@ msgstr ""
 "gconfd 로그파일을 닫는 데 실패했습니다; 데이타를 올바르게 저장하지 못할 수도 "
 "있습니다 (%s)"
 
-#: gconf/gconfd.c:1271
+#: gconf/gconfd.c:1273
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "저장된 상태 파일 '%s'을(를) 쓰기로 열 수 없습니다: %s"
 
-#: gconf/gconfd.c:1285
+#: gconf/gconfd.c:1287
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "`%s' 파일에 저장된 상태를 쓸 수 없습니다. fd: %d: %s"
 
-#: gconf/gconfd.c:1294
+#: gconf/gconfd.c:1296
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "새로 저장된 상태 파일 '%s'을(를) 닫는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:1308
+#: gconf/gconfd.c:1310
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "과거에 저장된 상태 파일 `%s'을(를) 옮겨 놓을 수 없습니다: %s"
 
-#: gconf/gconfd.c:1318
+#: gconf/gconfd.c:1320
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "새로 저장된 상태 파일을 제 위치에 놓을 수 없습니다: %s"
 
-#: gconf/gconfd.c:1327
+#: gconf/gconfd.c:1329
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "'%s'(으)로 옮겨진 원래 저장된 상태 파일을 복구하는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:1798
+#: gconf/gconfd.c:1800
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1210,17 +1211,17 @@ msgstr ""
 "주소 '%s'의 리스너를 복구하는 데 실패했습니다. 데이타베이스를 확인할 수 없습"
 "니다"
 
-#: gconf/gconfd.c:1844
+#: gconf/gconfd.c:1846
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "저장된 상태 파일을 읽는 데 오류가 있습니다: %s"
 
-#: gconf/gconfd.c:1897
+#: gconf/gconfd.c:1899
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "저장된 상태 파일 '%s'을(를) 열 수 없습니다: %s"
 
-#: gconf/gconfd.c:2014
+#: gconf/gconfd.c:2018
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1229,7 +1230,7 @@ msgstr ""
 "리스너의 추가를 gconfd 로그파일에 기록하는 데 실패했습니다; gconfd나 끝나거"
 "나 셧다운할 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
 
-#: gconf/gconfd.c:2019
+#: gconf/gconfd.c:2023
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1238,49 +1239,32 @@ msgstr ""
 "리스너의 제거를 gconfd 로그파일에 기록하는 데 실패했습니다; gconfd나 끝나거"
 "나 셧다운할 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
 
-#: gconf/gconfd.c:2042 gconf/gconfd.c:2216
+#: gconf/gconfd.c:2046 gconf/gconfd.c:2220
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "클라이언트에 대한 IOR을 얻는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2057
+#: gconf/gconfd.c:2061
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "저장된 상태 파일을 닫는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2070
+#: gconf/gconfd.c:2074
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "클라이언트에 저장된 상태 파일에 추가하도록 쓰는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2078
+#: gconf/gconfd.c:2082
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "클라이언트에 저장된 상태 파일에 추가하도록 쓰기 실행하는 데 실패했습니다: %s"
 
-#: gconf/gconfd.c:2177
+#: gconf/gconfd.c:2181
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "어떤 클라이언트가 추가도 되기 전에 자기 자신을 GConf 서버에서 지웠습니다."
-
-#. dialog display isn't working out
-#: gconf/gconfd.c:2318
-msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr ""
-"여러 개의 세그멘테이션 오류가 발생했습니다; 오류 대화 상자를 표시할 수 없습니"
-"다\n"
-
-#. Eeeek! Can't show dialog
-#: gconf/gconfd.c:2327
-#, c-format
-msgid ""
-"Segmentation fault!\n"
-"Cannot display crash dialog: %s\n"
-msgstr ""
-"세그멘테이션 오류!\n"
-"이상 종료 대화 상자를 표시할 수 없습니다: %s\n"
 
 #: gconf/gconftool.c:82
 msgid "Set a key to a value and sync. Use with --type."
@@ -1842,17 +1826,23 @@ msgstr "경고: 타입 이름 `%s'을(를) 파싱하는 데 실패했습니다\n
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr "경고: list_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩니다.\n"
+msgstr ""
+"경고: list_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩"
+"니다.\n"
 
 #: gconf/gconftool.c:1944
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "경고: car_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩니다.\n"
+msgstr ""
+"경고: car_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩"
+"니다.\n"
 
 #: gconf/gconftool.c:1965
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "경고: cdr_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩니다.\n"
+msgstr ""
+"경고: cdr_type은 정수,실수, 문자열 또는 bool일수가 있습니다. `%s'은(는) 안됩"
+"니다.\n"
 
 #: gconf/gconftool.c:1993
 msgid "WARNING: empty <applyto> node"
@@ -1928,7 +1918,9 @@ msgstr "`%s' 문서가 비어있지 않나요?\n"
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
-msgstr "`%s'문서는 부적절한 최상위 노드(<%s>)를 가지고 있습니다(반드시<gconfschemafile>이어야 합니다\n"
+msgstr ""
+"`%s'문서는 부적절한 최상위 노드(<%s>)를 가지고 있습니다(반드시"
+"<gconfschemafile>이어야 합니다\n"
 
 #: gconf/gconftool.c:2358
 #, c-format
