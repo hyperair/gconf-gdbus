@@ -197,6 +197,10 @@ engine you want. If someone else is already using the default
 with the reference count incremented. So you have to unref either way.
 </para>
 
+<para>
+It's important to call g_type_init() before using this GObject, to initialize the type system.
+</para>
+
 @Returns: a new #GConfClient. g_object_unref() when you're done.
 
 
