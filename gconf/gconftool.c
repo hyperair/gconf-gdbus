@@ -2066,7 +2066,7 @@ do_associate_schema (GConfEngine *conf, const gchar **args)
 {
   GError *err;
   
-  if (args[0] == NULL || args[1] == NULL || args[2] != NULL)
+  if (!args || args[0] == NULL || args[1] == NULL || args[2] != NULL)
     {
       fprintf (stderr, _("Must specify a schema name followed by the key name to apply it to\n"));
       return 1;
@@ -2091,9 +2091,9 @@ do_dissociate_schema (GConfEngine *conf, const gchar **args)
   GError *err;
   gboolean failed;
   
-  if (args[0] == NULL)
+  if (!args || args[0] == NULL)
     {
-      fprintf (stderr, _("Must specify a schema name followed by the key name to apply it to\n"));
+      fprintf (stderr, _("Must specify keys to unapply schema from\n"));
       return 1;
     }
 
