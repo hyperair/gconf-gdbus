@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
-"POT-Creation-Date: 2000-07-15 23:07+0000\n"
-"PO-Revision-Date: 2000-07-15 23:12+00:00\n"
+"POT-Creation-Date: 2000-07-20 15:08+0000\n"
+"PO-Revision-Date: 2000-07-20 15:32+00:00\n"
 "Last-Translator: Valek Filippov <frob@df.ru>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -125,101 +125,109 @@ msgstr ""
 msgid "Failed to create file `%s': %s"
 msgstr "Не удалось создать файл \"%s\": %s"
 
-#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2418
+#: backends/xml-dir.c:1071 gconf/gconf-internals.c:2416
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "Не удалось закрыть файл '%s': %s"
 
 #. There was an error
-#: backends/xml-entry.c:162 backends/xml-entry.c:381
+#: backends/xml-entry.c:162
 #, c-format
-msgid "Ignoring XML node `%s': %s"
-msgstr "Игнорирование XML-узла \"%s\": %s"
+msgid "Ignoring XML node with name `%s': %s"
+msgstr "Игнорирование XML-узла с названием \"%s\": %s"
 
-#: backends/xml-entry.c:211 gconf/gconf-internals.c:2122
+#: backends/xml-entry.c:213 gconf/gconf-internals.c:2120
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: backends/xml-entry.c:338
+#: backends/xml-entry.c:340
 #, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
 msgstr ""
 
-#: backends/xml-entry.c:683
-msgid "found <local_schema> with no locale setting"
-msgstr ""
+#. FIXME for nodes with no value stored, but containing a schema name,
+#. * we improperly log an error here
+#.
+#: backends/xml-entry.c:386
+#, c-format
+msgid "Ignoring XML node `%s', except for possible schema name: %s"
+msgstr "Игнорирование XML-узла \"%s\", исключая возможные имена schema: %s"
 
-#: backends/xml-entry.c:705
+#: backends/xml-entry.c:688
+msgid "found <local_schema> with no locale setting"
+msgstr "найдено <local_schema> без установок locale"
+
+#: backends/xml-entry.c:710
 #, c-format
 msgid "Failed reading default value for schema: %s"
-msgstr ""
+msgstr "Не удалось прочесть значение по умолчанию для schema: %s"
 
-#: backends/xml-entry.c:887
+#: backends/xml-entry.c:892
 #, c-format
 msgid "No \"type\" attribute for <%s> node"
 msgstr "Нет аттрубута \"type\" для узла <%s>"
 
-#: backends/xml-entry.c:901
+#: backends/xml-entry.c:906
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
 msgstr "Узел имеет неизвестный аттрибут \"type\" \"%s\", игнорируется"
 
-#: backends/xml-entry.c:916
+#: backends/xml-entry.c:921
 msgid "No \"value\" attribute for node"
 msgstr "Нет аттрибута \"value\" для узла"
 
-#: backends/xml-entry.c:964 backends/xml-entry.c:1040
+#: backends/xml-entry.c:969 backends/xml-entry.c:1045
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML list node"
 msgstr ""
 
-#: backends/xml-entry.c:998
+#: backends/xml-entry.c:1003
 msgid "Invalid type (list, pair, or unknown) in a list node"
 msgstr ""
 
-#: backends/xml-entry.c:1021
+#: backends/xml-entry.c:1026
 #, c-format
 msgid "Bad XML node: %s"
 msgstr "Неправильный узел XML: %s"
 
-#: backends/xml-entry.c:1029
+#: backends/xml-entry.c:1034
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
-msgstr ""
+msgstr "Список содержит плохой узел (%s, должно быть %s)"
 
-#: backends/xml-entry.c:1081
+#: backends/xml-entry.c:1086
 #, c-format
 msgid "Ignoring bad car from XML pair: %s"
 msgstr ""
 
-#: backends/xml-entry.c:1090 backends/xml-entry.c:1113
+#: backends/xml-entry.c:1095 backends/xml-entry.c:1118
 msgid "parsing XML file: lists and pairs may not be placed inside a pair"
 msgstr ""
 
-#: backends/xml-entry.c:1103
+#: backends/xml-entry.c:1108
 #, c-format
 msgid "Ignoring bad cdr from XML pair: %s"
 msgstr ""
 
-#: backends/xml-entry.c:1122
+#: backends/xml-entry.c:1127
 #, c-format
 msgid "Didn't understand XML node <%s> inside an XML pair node"
 msgstr ""
 
-#: backends/xml-entry.c:1140
+#: backends/xml-entry.c:1145
 msgid "Didn't find car and cdr for XML pair node"
 msgstr ""
 
-#: backends/xml-entry.c:1146
+#: backends/xml-entry.c:1151
 msgid "Missing cdr from pair of values in XML file"
 msgstr ""
 
-#: backends/xml-entry.c:1153
+#: backends/xml-entry.c:1158
 msgid "Missing car from pair of values in XML file"
 msgstr ""
 
-#: backends/xml-entry.c:1158
+#: backends/xml-entry.c:1163
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr ""
 
@@ -290,11 +298,11 @@ msgstr "Несоответствие типа"
 
 #: gconf/gconf-error.c:48
 msgid "Key operation on directory"
-msgstr ""
+msgstr "Действие ключа на каталог"
 
 #: gconf/gconf-error.c:49
 msgid "Directory operation on key"
-msgstr ""
+msgstr "Действие каталога на ключ"
 
 #: gconf/gconf-error.c:50
 msgid "Can't overwrite existing read-only value"
@@ -347,131 +355,131 @@ msgstr "Добавление источника '%s'\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Ошибка чтения файла '%s': %s\n"
 
-#: gconf/gconf-internals.c:1284
+#: gconf/gconf-internals.c:1282
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Ожидался список, получен %s"
 
-#: gconf/gconf-internals.c:1294
+#: gconf/gconf-internals.c:1292
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Ожидался список %s, получен список %s"
 
-#: gconf/gconf-internals.c:1433
+#: gconf/gconf-internals.c:1431
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Ожидалась пара, получен %s"
 
-#: gconf/gconf-internals.c:1447
+#: gconf/gconf-internals.c:1445
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Ожидалась пара (%s,%s), получена пара с неверными одним или обоими значениями"
 
-#: gconf/gconf-internals.c:1463
+#: gconf/gconf-internals.c:1461
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Ожидалась пара типа (%s,%s) получена типа (%s,%s)"
 
-#: gconf/gconf-internals.c:1579
+#: gconf/gconf-internals.c:1577
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Строка в кавычках не начинается с кавычки"
 
-#: gconf/gconf-internals.c:1641
+#: gconf/gconf-internals.c:1639
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Строка в кавычках не заканчивается кавычкой"
 
-#: gconf/gconf-internals.c:2107 gconf/gconf.c:2632
+#: gconf/gconf-internals.c:2105 gconf/gconf.c:2632
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Ошибка CORBA: %s"
 
-#: gconf/gconf-internals.c:2127
+#: gconf/gconf-internals.c:2125
 msgid "attempt to remove not-listed OAF object directory"
 msgstr "попытка удалить не указанный в списке каталог объектов OAF"
 
-#: gconf/gconf-internals.c:2132
+#: gconf/gconf-internals.c:2130
 msgid "attempt to add already-listed OAF directory"
 msgstr "попытка добавить уже указанный в списке каталог OAF"
 
-#: gconf/gconf-internals.c:2139
+#: gconf/gconf-internals.c:2137
 #, c-format
 msgid "OAF parse error: %s"
 msgstr "Ошибка анализа OAF: %s"
 
-#: gconf/gconf-internals.c:2144
+#: gconf/gconf-internals.c:2142
 msgid "Unknown OAF error"
 msgstr "Неизвестная ошибка OAF"
 
-#: gconf/gconf-internals.c:2227
+#: gconf/gconf-internals.c:2225
 #, c-format
 msgid "No ior file in `%s'"
 msgstr "Нет ior-файла в '%s'"
 
-#: gconf/gconf-internals.c:2258
+#: gconf/gconf-internals.c:2256
 #, c-format
 msgid "gconfd taking lock `%s' from some other process"
 msgstr "gconfd заблокировал '%s' от некоторых других процессов"
 
-#: gconf/gconf-internals.c:2269
+#: gconf/gconf-internals.c:2267
 #, c-format
 msgid "Another program has lock `%s'"
 msgstr "Другая программа заблокировала '%s'"
 
-#: gconf/gconf-internals.c:2289
+#: gconf/gconf-internals.c:2287
 msgid "couldn't contact ORB to ping existing gconfd"
 msgstr "невозможно подключиться к ORB, чтобы проверить существующий gconfd"
 
-#: gconf/gconf-internals.c:2297
+#: gconf/gconf-internals.c:2295
 #, c-format
 msgid ""
 "Removing stale lock `%s' because IOR couldn't be converted to object "
 "reference, IOR `%s'"
 msgstr ""
 
-#: gconf/gconf-internals.c:2309
+#: gconf/gconf-internals.c:2307
 #, c-format
 msgid "Removing stale lock `%s' because of error pinging server: %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:2321
+#: gconf/gconf-internals.c:2319
 #, c-format
 msgid "GConf configuration daemon (gconfd) has lock `%s'"
 msgstr "Демон конфигурации GConf (gconfd) заблокировал '%s'"
 
-#: gconf/gconf-internals.c:2335
+#: gconf/gconf-internals.c:2333
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "не удалось создать каталог '%s': %s"
 
-#: gconf/gconf-internals.c:2370
+#: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Can't create lock `%s': %s"
 msgstr "Невозможно создать блокировку '%s': %s"
 
-#: gconf/gconf-internals.c:2406
+#: gconf/gconf-internals.c:2404
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Невозможно записать в файл '%s': %s"
 
-#: gconf/gconf-internals.c:2449
+#: gconf/gconf-internals.c:2447
 #, c-format
 msgid "Can't open lock file `%s'; assuming it isn't ours: %s"
 msgstr "Невозможно открыть файл блокировки \"%s\"; возможно он не наш: %s"
 
-#: gconf/gconf-internals.c:2466
+#: gconf/gconf-internals.c:2464
 #, c-format
 msgid "Corrupt lock file `%s', removing anyway"
 msgstr ""
 
-#: gconf/gconf-internals.c:2476
+#: gconf/gconf-internals.c:2474
 #, c-format
 msgid ""
 "Didn't create lock file `%s' (creator pid %u, our pid %u; assuming someone "
 "took our lock"
 msgstr ""
 
-#: gconf/gconf-internals.c:2493
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to release lock directory `%s': %s"
 msgstr "Не удалось освободить заблокированный каталог \"%s\": %s"
@@ -481,38 +489,38 @@ msgstr "Не удалось освободить заблокированный каталог \"%s\": %s"
 msgid "Failed to load source `%s': %s"
 msgstr "Не удалось закрыть источник \"%s\": %s"
 
-#: gconf/gconf-sources.c:502
+#: gconf/gconf-sources.c:506
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
 
-#: gconf/gconf-sources.c:551
+#: gconf/gconf-sources.c:555
 msgid "The '/' name can only be a directory, not a key"
 msgstr ""
 
-#: gconf/gconf-sources.c:580
+#: gconf/gconf-sources.c:584
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path."
 msgstr ""
 
-#: gconf/gconf-sources.c:1067
+#: gconf/gconf-sources.c:1079
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Ошибка поиска метаинформации: %s"
 
-#: gconf/gconf-sources.c:1132
+#: gconf/gconf-sources.c:1144
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Ошибка получения метаинформации: %s"
 
-#: gconf/gconf-sources.c:1156
+#: gconf/gconf-sources.c:1168
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
 
-#: gconf/gconf-sources.c:1193 gconf/gconfd.c:1523
+#: gconf/gconf-sources.c:1205 gconf/gconfd.c:1523
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Ошибка получения значения для \"%s\": %s"
@@ -549,7 +557,7 @@ msgstr "Сервер не смог распознать адрес '%s'"
 
 #: gconf/gconf.c:408
 msgid "Can't add notifications to a local configuration source"
-msgstr ""
+msgstr "Невозможно добавить замечание к локальному источнику конфигурации"
 
 #: gconf/gconf.c:1466
 #, c-format
@@ -703,7 +711,7 @@ msgstr ""
 
 #: gconf/gconfd.c:1056
 msgid "Failed to get object reference for ConfigServer"
-msgstr ""
+msgstr "Не удалось получить ссылку на объект для ConfigServer"
 
 #: gconf/gconfd.c:1075
 msgid ""
@@ -761,40 +769,40 @@ msgstr "Сбой получения всех записей в \"%s\": %s"
 #: gconf/gconfd.c:1725
 #, c-format
 msgid "Error listing dirs in `%s': %s"
-msgstr ""
+msgstr "Ошибка перечисления каталогов в \"%s\": %s"
 
 #: gconf/gconfd.c:1745
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Ошибка установки схемы для \"%s\": %s"
 
-#: gconf/gconfd.c:1911
+#: gconf/gconfd.c:1913
 msgid "Attempt to unregister invalid context ID"
 msgstr ""
 
-#: gconf/gconfd.c:1918
+#: gconf/gconfd.c:1920
 #, c-format
 msgid "Bad context ID %lu, request ignored"
 msgstr "Плохой идентификатор контекста %lu, запрос проигнорирован"
 
-#: gconf/gconfd.c:1926
+#: gconf/gconfd.c:1928
 #, c-format
 msgid "Already-unregistered context ID %lu, request ignored"
 msgstr ""
 "Уже разрегистрированный идентификатор контекста %lu, запрос проигнорирован"
 
-#: gconf/gconfd.c:1951
+#: gconf/gconfd.c:1953
 #, c-format
 msgid "Attempt to use invalid context ID %lu"
 msgstr "Попытка использовать неправильный идентификатор контекста %lu"
 
-#: gconf/gconfd.c:1961
+#: gconf/gconfd.c:1963
 #, c-format
 msgid "Attempt to use already-unregistered context ID %lu"
 msgstr ""
 "Попытка использовать уже разрегистрированный идентификатор контекста %lu"
 
-#: gconf/gconfd.c:2121
+#: gconf/gconfd.c:2123
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Возврат исключения: %s"
@@ -865,7 +873,7 @@ msgstr "целое|булево|плав.|строка"
 
 #: gconf/gconftool.c:191
 msgid "Specify a short half-line description to go in a schema."
-msgstr ""
+msgstr "Указать краткое (полстроки) описание для schema."
 
 #: gconf/gconftool.c:192 gconf/gconftool.c:201
 msgid "DESCRIPTION"
@@ -873,7 +881,7 @@ msgstr "ОПИСАНИЕ"
 
 #: gconf/gconftool.c:200
 msgid "Specify a several-line description to go in a schema."
-msgstr ""
+msgstr "Указать описание в несколько строк для schema."
 
 #: gconf/gconftool.c:209
 msgid "Specify the owner of a schema"
@@ -990,7 +998,7 @@ msgstr "параметр --install-schema-file должен использоваться сам.\n"
 
 #: gconf/gconftool.c:414
 msgid "--makefile-install-rule must be used by itself.\n"
-msgstr ""
+msgstr "параметр --makefile-install-rule должен использоваться сам.\n"
 
 #: gconf/gconftool.c:424
 msgid "--break-key must be used by itself.\n"
@@ -1003,9 +1011,9 @@ msgstr "параметр --break-directory должен быть использован сам.\n"
 #: gconf/gconftool.c:441
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
-msgstr ""
+msgstr "Вы должны указать источник конфигурации с помощью параметра --config-source, если используете параметр --direct\n"
 
-#: gconf-editor/gconf-editor.c:69 gconf/gconftool.c:447
+#: gconf/gconftool.c:447
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Не удалось инициализировать GConf: %s\n"
@@ -1037,7 +1045,7 @@ msgstr "Ошибка выключения: %s\n"
 
 #: gconf/gconftool.c:714
 msgid "Must specify one or more dirs to recursively list.\n"
-msgstr ""
+msgstr "Требуется указать один или более каталогов для рекурсивного списка.\n"
 
 #: gconf/gconftool.c:748
 #, c-format
@@ -1139,12 +1147,12 @@ msgstr ""
 
 #: gconf/gconftool.c:1146
 msgid "Must specify one or more dirs to get subdirs from.\n"
-msgstr ""
+msgstr "Требуется указать один или более каталогов для получения из них подкаталогов.\n"
 
 #: gconf/gconftool.c:1180
 #, c-format
 msgid "Error listing dirs: %s\n"
-msgstr ""
+msgstr "Ошибка перечисления каталогов: %s\n"
 
 #: gconf/gconftool.c:1219
 #, c-format
@@ -1175,12 +1183,12 @@ msgstr ""
 
 #: gconf/gconftool.c:1326
 msgid "WARNING: empty <applyto> node"
-msgstr ""
+msgstr "ВНИМАНИЕ: пустой узел <applyto>"
 
 #: gconf/gconftool.c:1329 gconf/gconftool.c:1574
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
-msgstr ""
+msgstr "ВНИМАНИЕ: узел <%s> не понят под <schema>\n"
 
 #: gconf/gconftool.c:1339
 msgid "WARNING: no key specified for schema\n"
@@ -1199,7 +1207,7 @@ msgstr ""
 #: gconf/gconftool.c:1450
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
-msgstr ""
+msgstr "ВНИМАНИЕ: Неправильный узел <%s> в узле <locale>\n"
 
 #: gconf/gconftool.c:1479
 #, c-format
@@ -1209,7 +1217,7 @@ msgstr ""
 #: gconf/gconftool.c:1487
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
-msgstr ""
+msgstr "Установлена схема \"%s\" для locale \"%s\"\n"
 
 #: gconf/gconftool.c:1509
 #, c-format
@@ -1219,11 +1227,11 @@ msgstr ""
 #: gconf/gconftool.c:1517
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
-msgstr ""
+msgstr "Присоединена схема \"%s\" к ключу \"%s\"\n"
 
 #: gconf/gconftool.c:1587
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr ""
+msgstr "У вас должна быть хотя бы одна запись <locale> в <schema>\n"
 
 #: gconf/gconftool.c:1616
 #, c-format
@@ -1308,55 +1316,6 @@ msgstr ""
 "каталоге:\n"
 "  %s\n"
 
-#: gconf-editor/app.c:53
-msgid "Key"
-msgstr ""
-
-#: gconf-editor/app.c:54
-msgid "Value"
-msgstr ""
-
-#. gnome_pixmap_file("gnome-hello-logo.png");
-#: gconf-editor/app.c:57 gconf-editor/menus.c:149
-msgid "Configuration Editor"
-msgstr ""
-
-#: gconf-editor/app.c:117
-msgid "Could not parse geometry string"
-msgstr ""
-
-#: gconf-editor/gconf-editor.c:41
-msgid "Specify the geometry of the main window"
-msgstr "Указать геометрию главного окна"
-
-#: gconf-editor/gconf-editor.c:42
-msgid "GEOMETRY"
-msgstr "ГЕОМЕТРИЯ"
-
-#: gconf-editor/menus.c:32
-msgid "_New Editor"
-msgstr "Новый редактор"
-
-#: gconf-editor/menus.c:33
-msgid "Edit a different configuration source"
-msgstr "Правка различных источников конфигурации"
-
-#: gconf-editor/menus.c:72
-msgid "Cut"
-msgstr "Вырезать"
-
-#: gconf-editor/menus.c:72
-msgid "Cut some text to the clipboard"
-msgstr "Вырезать некоторый текст в буфер обмена"
-
-#: gconf-editor/menus.c:95
-msgid "This feature isn't implemented yet! We're working on it."
-msgstr "Эта возможность еще не реализована! Мы работаем надо этим."
-
-#: gconf-editor/menus.c:152
-msgid "Used to edit values in the configuration database."
-msgstr "Использование для правки данных в базе данных конфигураций"
-
 #: wrappers/gtk/gconf-client.c:708
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
@@ -1367,7 +1326,29 @@ msgstr ""
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Ожидалось \"%s\" получено \"%s\" для ключа %s"
 
-#: wrappers/guile/gconf-guile.c:49
-#, c-format
-msgid "Failed to init gconf: %s\n"
-msgstr "Не удалось инициализировать GConf: %s\n"
+#~ msgid "Specify the geometry of the main window"
+#~ msgstr "Указать геометрию главного окна"
+
+#~ msgid "GEOMETRY"
+#~ msgstr "ГЕОМЕТРИЯ"
+
+#~ msgid "_New Editor"
+#~ msgstr "Новый редактор"
+
+#~ msgid "Edit a different configuration source"
+#~ msgstr "Правка различных источников конфигурации"
+
+#~ msgid "Cut"
+#~ msgstr "Вырезать"
+
+#~ msgid "Cut some text to the clipboard"
+#~ msgstr "Вырезать некоторый текст в буфер обмена"
+
+#~ msgid "This feature isn't implemented yet! We're working on it."
+#~ msgstr "Эта возможность еще не реализована! Мы работаем надо этим."
+
+#~ msgid "Used to edit values in the configuration database."
+#~ msgstr "Использование для правки данных в базе данных конфигураций"
+
+#~ msgid "Failed to init gconf: %s\n"
+#~ msgstr "Не удалось инициализировать GConf: %s\n"
