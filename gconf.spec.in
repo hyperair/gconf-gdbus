@@ -86,12 +86,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-, root, root)
 %doc AUTHORS COPYING ChangeLog NEWS README
-%{config} /etc/gconf/1/*.example
-%{config} /etc/gconf/gconf.xml.defaults/*.xml
-%{config} /etc/gconf/gconf.xml.defaults/schemas/*.xml
-%{config} /etc/gconf/gconf.xml.defaults/schemas/desktop/*.xml
-%{config} /etc/gconf/gconf.xml.defaults/schemas/desktop/standard/*.xml
-%{config} /etc/gconf/schemas/*.schemas
+%{config} %{sysconfdir}/gconf/1/*.example
+%{config} %{sysconfdir}/gconf/gconf.xml.defaults/*.xml
+%{config} %{sysconfdir}/gconf/gconf.xml.defaults/schemas/*.xml
+%{config} %{sysconfdir}/gconf/gconf.xml.defaults/schemas/desktop/*.xml
+%{config} %{sysconfdir}/gconf/gconf.xml.defaults/schemas/desktop/standard/*.xml
+%{config} %{sysconfdir}/gconf/schemas/*.schemas
 %{prefix}/bin/gconf-config
 %{prefix}/bin/gconf-config-1
 %{prefix}/bin/gconfd-1
