@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 0.12\n"
-"POT-Creation-Date: 2001-09-28 23:09+0200\n"
+"POT-Creation-Date: 2001-10-13 23:39+0200\n"
 "PO-Revision-Date: 2001-01-23 16:58-04:00\n"
 "Last-Translator: Héctor García Álvarez <hector@scouts-es.org>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -31,7 +31,7 @@ msgstr "Inicializando el módulo BDB"
 msgid "Couldn't find the %s root directory in the address `%s'"
 msgstr "No pude encontrar el directorio raíz %s en la dirección `%s'"
 
-#: backends/dir-utils.c:124 backends/xml-backend.c:301 backends/xml-dir.c:1051
+#: backends/dir-utils.c:124 backends/xml-backend.c:301 backends/xml-dir.c:1075
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "No pude crear el directorio `%s': %s"
@@ -106,73 +106,72 @@ msgstr "El archivo XML `%s' es un directorio"
 msgid "Failed to delete `%s': %s"
 msgstr "Error al borrar `%s': %s"
 
-#: backends/xml-dir.c:346
+#: backends/xml-dir.c:344
 #, c-format
 msgid "Failed to write file `%s': %s"
 msgstr "Error al escribir el archivo `%s': %s"
 
-#: backends/xml-dir.c:359
+#: backends/xml-dir.c:357
 #, c-format
 msgid "Failed to set mode on `%s': %s"
 msgstr "Error al poner el modo en `%s': %s"
 
-#: backends/xml-dir.c:373 backends/xml-dir.c:383
+#: backends/xml-dir.c:367
+msgid "Failed to write XML data to `%s': %s"
+msgstr "Error al escribir datos XML en `%s': %s"
+
+#: backends/xml-dir.c:377 backends/xml-dir.c:1099
+#, c-format
+msgid "Failed to close file `%s': %s"
+msgstr "Error al cerrar el archivo `%s': %s"
+
+#: backends/xml-dir.c:393 backends/xml-dir.c:403
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "Error al renombrar `%s' a `%s': %s"
 
-#: backends/xml-dir.c:389
+#: backends/xml-dir.c:409
 #, c-format
 msgid "Failed to restore `%s' from `%s': %s"
 msgstr "Fallo al recuperar `%s' de `%s': %s"
 
-#: backends/xml-dir.c:401
+#: backends/xml-dir.c:421
 #, c-format
 msgid "Failed to delete old file `%s': %s"
 msgstr "Error al borrar el archivo antiguo `%s': %s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:806
+#: backends/xml-dir.c:828
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "Error al pedir la información de `%s': %s"
 
-#: backends/xml-dir.c:950
+#: backends/xml-dir.c:972
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "Entrada duplicada `%s' en `%s', ignorándola"
 
-#: backends/xml-dir.c:972
+#: backends/xml-dir.c:994
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "Entrada sin nombre en el archivo XML `%s', ignorándola"
 
-#: backends/xml-dir.c:979
-#, c-format
-msgid "Toplevel node in XML file `%s' is not an <entry>, ignoring"
+#: backends/xml-dir.c:1002
+msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr ""
-"El nodo de alto nivel en el archivo XML `%s' no es un <entry>, ignorándolo"
+"Un nodo de alto nivel en el archivo XML `%s' es <%s> en lugar de <entry>, "
+"ignorándolo"
 
-#: backends/xml-dir.c:1067
+#: backends/xml-dir.c:1091
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "Error al crear el archivo `%s': %s"
-
-#: backends/xml-dir.c:1075
-#, c-format
-msgid "Failed to close file `%s': %s"
-msgstr "Error al cerrar el archivo `%s': %s"
 
 #. There was an error
 #: backends/xml-entry.c:150
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
 msgstr "Ignorando el nodo XML con nombre `%s': %s"
-
-#: backends/xml-entry.c:201
-#, c-format
-msgid "%s"
-msgstr "%s"
 
 #: backends/xml-entry.c:328
 #, c-format
@@ -458,164 +457,206 @@ msgstr "No hay bases de datos disponibles para guardar su configuración"
 msgid "No '/' in key `%s'"
 msgstr "No hay '/' en la clave `%s'"
 
-#: gconf/gconf-internals.c:250
+#: gconf/gconf-internals.c:199
+#, c-format
+msgid "Invalid UTF-8 in string value in '%s'"
+msgstr "UTF-8 inválido en el valor de la cadena en '%s'"
+
+#: gconf/gconf-internals.c:258
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "No pude interpretar el valor CORBA para el elemento lista"
 
-#: gconf/gconf-internals.c:252
+#: gconf/gconf-internals.c:260
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "Tipo incorrecto para el elemento lista en %s"
 
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:273
 msgid "Received list from gconfd with a bad list type"
 msgstr "Recibí una lista de gconfd con un tipo de lista erróneo"
 
-#: gconf/gconf-internals.c:446
+#: gconf/gconf-internals.c:454
 msgid "Failed to convert object to IOR"
 msgstr "Error al convertir el objeto a IOR"
 
-#: gconf/gconf-internals.c:810
+#: gconf/gconf-internals.c:591
+msgid "Invalid UTF-8 in locale for schema"
+msgstr "UTF-8 en locale no válido para el schema"
+
+#: gconf/gconf-internals.c:599
+msgid "Invalid UTF-8 in short description for schema"
+msgstr "UTF-8 en la descripción corta no válido para el schema"
+
+#: gconf/gconf-internals.c:607
+msgid "Invalid UTF-8 in long description for schema"
+msgstr "UTF-8 en la descripción larga no válido para el schema"
+
+#: gconf/gconf-internals.c:615
+msgid "Invalid UTF-8 in owner for schema"
+msgstr "UTF-8 en el dueño inválido para el schema"
+
+#: gconf/gconf-internals.c:838
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "No pude abrir el directorio del archivo `%s': %s\n"
 
-#: gconf/gconf-internals.c:859
+#: gconf/gconf-internals.c:887
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "Añadiendo la fuente `%s'\n"
 
-#: gconf/gconf-internals.c:871
+#: gconf/gconf-internals.c:899
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "Error de lectura en el archivo `%s': %s\n"
 
-#: gconf/gconf-internals.c:1294
+#: gconf/gconf-internals.c:1211 gconf/gconf-internals.c:1277
+#: gconf/gconf-value.c:125 gconf/gconf-value.c:224 gconf/gconf-value.c:366
+#: gconf/gconf-value.c:1084
+msgid "Text contains invalid UTF-8"
+msgstr "El texto contiene UTF-8 inválido"
+
+#: gconf/gconf-internals.c:1362
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Esperaba un lista, tengo %s"
 
-#: gconf/gconf-internals.c:1304
+#: gconf/gconf-internals.c:1372
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Esperaba una lista de %s, tengo una de %s"
 
-#: gconf/gconf-internals.c:1443
+#: gconf/gconf-internals.c:1511
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Esperaba un par, tengo %s"
 
-#: gconf/gconf-internals.c:1457
+#: gconf/gconf-internals.c:1525
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr "Esperaba el par (%s,%s), tengo un par sin uno o sin los dos valores"
 
-#: gconf/gconf-internals.c:1473
+#: gconf/gconf-internals.c:1541
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Esperaba un par del tipo (%s,%s) tengo uno del tipo (%s,%s)"
 
-#: gconf/gconf-internals.c:1589
+#: gconf/gconf-internals.c:1657
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Cadena entrecomillada no comienza con una marca de comillas"
 
-#: gconf/gconf-internals.c:1651
+#: gconf/gconf-internals.c:1719
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Cadena entrecomillada no finaliza con una marca de comillas"
 
-#: gconf/gconf-internals.c:2230
+#: gconf/gconf-internals.c:1855
+msgid "Encoded value is not valid UTF-8"
+msgstr "El valor codificado no es un UTF-8 válido"
+
+#: gconf/gconf-internals.c:2314
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "No pude bloquear el archivo temporal `%s': %s"
 
-#: gconf/gconf-internals.c:2257
+#: gconf/gconf-internals.c:2341
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "No pude crear el archivo '%s', probablemente porque ya existe"
 
-#: gconf/gconf-internals.c:2303
+#: gconf/gconf-internals.c:2387
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Error al crear o abrir '%s'"
 
-#: gconf/gconf-internals.c:2313
-#, c-format
-msgid "Failed to lock '%s': another process has the lock"
-msgstr "Error al bloquear '%s': otro proceso tiene el bloqueo"
+#: gconf/gconf-internals.c:2397
+msgid "Failed to lock '%s': another process has the lock (%s)"
+msgstr "Error al bloquear '%s': otro proceso tiene el bloqueo (%s)"
 
-#: gconf/gconf-internals.c:2341
+#: gconf/gconf-internals.c:2425
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr ""
-"El archivo IOR '%s' no se abrió satisfactoriamente, no se localizó a gconfd: %s"
+"El archivo IOR '%s' no se abrió satisfactoriamente, no se localizó a gconfd: "
+"%s"
 
-#: gconf/gconf-internals.c:2371
+#: gconf/gconf-internals.c:2455
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr "gconftool u otro proceso que no es gconfd tiene un bloqueo en el archivo '%s'"
+msgstr ""
+"gconftool u otro proceso que no es gconfd tiene un bloqueo en el archivo '%s'"
 
-#: gconf/gconf-internals.c:2388
+#: gconf/gconf-internals.c:2472
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "no pude contactar con ORB para resolver la referencia al objeto gconfd "
 "existente"
 
-#: gconf/gconf-internals.c:2398
+#: gconf/gconf-internals.c:2482
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Error al convertir IOR '%s' a una referencia a un objeto"
 
-#: gconf/gconf-internals.c:2426
+#: gconf/gconf-internals.c:2510
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "no pude crear el directorio `%s': %s"
 
-#: gconf/gconf-internals.c:2485
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "No pude escribir al archivo `%s': %s"
 
-#: gconf/gconf-internals.c:2524
+#: gconf/gconf-internals.c:2610
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
-msgstr "No teniamos un bloqueo en el archivo `%s', pero deberiamos haberlo tenido"
+msgstr ""
+"No teniamos un bloqueo en el archivo `%s', pero deberiamos haberlo tenido"
 
-#: gconf/gconf-internals.c:2535
+#: gconf/gconf-internals.c:2631
+msgid "Failed to link '%s' to '%s': %s"
+msgstr "Error al lincar `%s' a `%s': %s"
+
+#: gconf/gconf-internals.c:2643
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Error al eliminar el archivo de bloqueo `%s': %s"
 
-#: gconf/gconf-internals.c:2546
+#: gconf/gconf-internals.c:2662
+msgid "Failed to clean up file '%s': %s"
+msgstr "Error al borrar el archivo `%s': %s"
+
+#: gconf/gconf-internals.c:2676
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Error el eliminar el bloqueo al directorio `%s': %s"
 
-#: gconf/gconf-internals.c:2710 gconf/gconfd.c:576
+#: gconf/gconf-internals.c:2841 gconf/gconfd.c:576
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Error al crear %s: %s"
 
-#: gconf/gconf-internals.c:2743
+#: gconf/gconf-internals.c:2874
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "Error al crear una comunicación con el demonio gconfd: %s\n"
 
-#: gconf/gconf-internals.c:2767
+#: gconf/gconf-internals.c:2898
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Error al ejecutar el servidor de configuración: %s\n"
 
-#: gconf/gconf-internals.c:2789
+#: gconf/gconf-internals.c:2920
 msgid ""
 "Failed to contact configuration server (a likely cause of this is that you "
 "have an existing configuration server (gconfd) running, but it isn't "
 "reachable from here - if you're logged in from two machines at once, you may "
 "need to enable TCP networking for ORBit)\n"
 msgstr ""
-"Error al contactar con el servidor de configuraciones (una causa probable de esto "
-"es que tengas un servidor de configuraciones ejecutandose (gconfd), pero no se "
-"puede llegar haste el desde aquí - si estas conectado desde dos máquinas al "
-"mismo tiempo, puede que necesite habilitar el soporte TCP de ORBit\n"
+"Error al contactar con el servidor de configuraciones (una causa probable de "
+"esto es que tengas un servidor de configuraciones ejecutandose (gconfd), "
+"pero no se puede llegar haste el desde aquí - si estas conectado desde dos "
+"máquinas al mismo tiempo, puede que necesite habilitar el soporte TCP de "
+"ORBit\n"
 
 #: gconf/gconf-sources.c:320
 #, c-format
@@ -641,6 +682,7 @@ msgstr ""
 "superior de su configuración."
 
 #: gconf/gconf-sources.c:608
+#, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writable databases. There are two common causes of this problem: 1) your "
@@ -657,8 +699,8 @@ msgstr ""
 "configuraciones no tiene ninguna base de datos escribible. Hay dos causas "
 "comunes para este problema: 1) su ruta de configuración no contiene ninguna "
 "base de datos o no ha sido encontrada o 2) de alguna manera hemos creado "
-"erroneamente dos procesos gconfd. Si tiene dos procesos gconfd (o tenia "
-"dos en el momento en el que el segundo fue lanzado), salga, mate todas las "
+"erroneamente dos procesos gconfd. Si tiene dos procesos gconfd (o tenia dos "
+"en el momento en el que el segundo fue lanzado), salga, mate todas las "
 "copias de gconfd, y vuelva a entrar, esto puede solucionar el problema. "
 "Quizá el problema está en que intento usar GConf desde dos maquinas al mismo "
 "tiempo, y ORBit todavía tiene la configuración por defecto que previene las "
@@ -680,62 +722,62 @@ msgstr "Error obteniendo meta-información: %s"
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr "Clave `%s' listada como esquema por la clave `%s' es de tipo `%s'"
 
-#: gconf/gconf-value.c:82
+#: gconf/gconf-value.c:81
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
 msgstr "No entendí `%s' (esperaba un entero)"
 
-#: gconf/gconf-value.c:92
+#: gconf/gconf-value.c:91
 #, c-format
 msgid "Integer `%s' is too large or small"
 msgstr "El entero `%s' es demasiado grande o demasiado pequeño"
 
-#: gconf/gconf-value.c:113
+#: gconf/gconf-value.c:112
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
 msgstr "No entendí `%s' (esperaba un número real)"
 
-#: gconf/gconf-value.c:146
+#: gconf/gconf-value.c:156
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
 msgstr "No entendí `%s' (esperaba verdadero o falso)"
 
-#: gconf/gconf-value.c:214
+#: gconf/gconf-value.c:232
 #, c-format
 msgid "Didn't understand `%s' (list must start with a '[')"
 msgstr "No entendí `%s' (las lista deben comenzar con '[')"
 
-#: gconf/gconf-value.c:227
+#: gconf/gconf-value.c:245
 #, c-format
 msgid "Didn't understand `%s' (list must end with a ']')"
 msgstr "No entendí `%s' (las lista deben finalizar con ']')"
 
-#: gconf/gconf-value.c:278
+#: gconf/gconf-value.c:296
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ']' found inside list)"
 msgstr "No entendí `%s' (hay un ']' extra dentro de la lista)"
 
-#: gconf/gconf-value.c:309 gconf/gconf-value.c:462
+#: gconf/gconf-value.c:327 gconf/gconf-value.c:488
 #, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
 msgstr "No entendí `%s' (caracteres extra al final)"
 
-#: gconf/gconf-value.c:348
+#: gconf/gconf-value.c:374
 #, c-format
 msgid "Didn't understand `%s' (pair must start with a '(')"
 msgstr "No entendí `%s' (el par debe comenzar con '(')"
 
-#: gconf/gconf-value.c:361
+#: gconf/gconf-value.c:387
 #, c-format
 msgid "Didn't understand `%s' (pair must end with a ')')"
 msgstr "No entendí `%s' (el par debe finalizar con ')')"
 
-#: gconf/gconf-value.c:391 gconf/gconf-value.c:477
+#: gconf/gconf-value.c:417 gconf/gconf-value.c:503
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
 msgstr "No entendí `%s' (número de elementos erróneo)"
 
-#: gconf/gconf-value.c:431
+#: gconf/gconf-value.c:457
 #, c-format
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr "No entendí `%s' (hay un ')' extra dentro del par)"
@@ -745,72 +787,76 @@ msgstr "No entendí `%s' (hay un ')' extra dentro del par)"
 msgid "`%s': %s"
 msgstr "`%s': %s"
 
-#: gconf/gconf.c:288
+#: gconf/gconf.c:286
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "El servidor no pudo resolver la dirección `%s'"
 
-#: gconf/gconf.c:573
+#: gconf/gconf.c:571
 msgid "Can't add notifications to a local configuration source"
 msgstr "No puedo añadir notificaciones a una fuente de configuración local"
 
-#: gconf/gconf.c:1868
+#: gconf/gconf.c:1869
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Error al añadir el cliente a la lista del servidor, error CORBA: %s"
 
-#: gconf/gconf.c:2192
+#: gconf/gconf.c:2195
 msgid "Must begin with a slash (/)"
 msgstr "Debe comenzar con una barra (/)"
 
-#: gconf/gconf.c:2214
+#: gconf/gconf.c:2217
 msgid "Can't have two slashes (/) in a row"
 msgstr "No puede haber dos barras (/) en una fila"
 
-#: gconf/gconf.c:2216
+#: gconf/gconf.c:2219
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "No puede haber un punto (.) tras una barra (/)"
 
-#: gconf/gconf.c:2237
+#: gconf/gconf.c:2238
+msgid "'%c' is not an ASCII character, so isn't allowed in key names"
+msgstr "`%c' no es un carácter ASCII, no está permitido en nombres de claves"
+
+#: gconf/gconf.c:2248
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' es un carácter no válido en los nombres de claves/directorios"
 
-#: gconf/gconf.c:2251
+#: gconf/gconf.c:2262
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Las Claves/directorios no pueden terminar con una barra (/)"
 
-#: gconf/gconf.c:2504
+#: gconf/gconf.c:2619
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Fallo al terminar el servidor de configuraciones: %s"
 
-#: gconf/gconf.c:2565
+#: gconf/gconf.c:2680
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Esperaba un float, obtuve %s"
 
-#: gconf/gconf.c:2600
+#: gconf/gconf.c:2715
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Esperaba un entero, obtuve %s"
 
-#: gconf/gconf.c:2635
+#: gconf/gconf.c:2750
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Esperaba una cadena, obtuve %s"
 
-#: gconf/gconf.c:2672
+#: gconf/gconf.c:2787
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Esperaba un booleano, obtuve %s"
 
-#: gconf/gconf.c:2705
+#: gconf/gconf.c:2820
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Esperaba un esquema, obtuve %s"
 
-#: gconf/gconf.c:3049
+#: gconf/gconf.c:3181
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Error CORBA: %s"
@@ -906,16 +952,16 @@ msgstr "Fallo al obtener la referencia de un objeto para ConfigServer"
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
-"Error al escribir al conducto fd %d así que el programa cliente "
-"puede que se cuelge: %s"
+"Error al escribir al conducto fd %d así que el programa cliente puede que se "
+"cuelge: %s"
 
 #: gconf/gconfd.c:611
+#, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Error al obtener bloqueo para el demonio, terminando: %s"
 
 #: gconf/gconfd.c:649
-#, c-format
-msgid "Failed to release lockfile: %s"
+msgid "Error releasing lockfile: %s"
 msgstr "Error el liberar el bloqueo: %s"
 
 #: gconf/gconfd.c:657
@@ -1752,6 +1798,9 @@ msgstr "Aviso GConf: error al listar los pares en `%s': %s"
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Esperaba `%s' y obtuve `%s' para la clave %s"
+
+#~ msgid "%s"
+#~ msgstr "%s"
 
 #~ msgid "bonobo-activation problem description: '%s'"
 #~ msgstr "descripción del problema de activación de bonobo: `%s'"
