@@ -427,6 +427,9 @@ notify(PortableServer_Servant servant,
   GConfCnxn* cnxn;
   GConfValue* gvalue;
 
+  printf("Client GConf library received notify for ID %u key `%s'\n", 
+         (guint)server_id, key);
+
   cnxn = ctable_lookup_by_server_id(ctable, server_id);
   
   if (cnxn == NULL)
@@ -515,7 +518,7 @@ g_conf_init           (void)
                                                          &ev);
       if (listener == CORBA_OBJECT_NIL) 
         {
-          g_warning("Didn't get listener object ref");
+          g_warning("Didn't get listener object ref: %s", CORBA_exception_id(&ev));
           return FALSE;
         }
     }

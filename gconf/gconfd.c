@@ -583,8 +583,6 @@ main(int argc, char** argv)
 
   CORBA_free(ior);
 
-  CORBA_ORB_run(orb, &ev);
-
   g_conf_main();
 
   ltable_destroy(ltable);
@@ -829,7 +827,7 @@ ltable_destroy(LTable* ltable)
 }
 
 static void
-notify_listener_list(GList* list, const gchar* key, const ConfigValue* value)
+notify_listener_list(GList* list, const gchar* key, const ConfigValue* value, GList** dead)
 {
   CORBA_Environment ev;
   GList* tmp;
@@ -849,12 +847,10 @@ notify_listener_list(GList* list, const gchar* key, const ConfigValue* value)
         {
           syslog(LOG_WARNING, "Failed to notify listener %u: %s", 
                  (guint)l->cnxn, CORBA_exception_id(&ev));
-          /* FIXME FIXME remove these dead listeners */
-          /* FIXME Actually I think we won't get an error from oneway,
-             so we need to periodically ping all the listeners or something.
-          */
-
           CORBA_exception_free(&ev);
+
+          /* Dead listeners need to be forgotten */
+          *dead = g_list_prepend(*dead, GUINT_TO_POINTER(l->cnxn));
         }
       else
         {
@@ -874,9 +870,10 @@ ltable_notify_listeners(LTable* lt, const gchar* key, const ConfigValue* value)
   guint i;
   const gchar* noroot_key = key + 1;
   GNode* cur;
+  GList* dead = NULL;
 
   /* Notify "/" listeners */
-  notify_listener_list(((LTableEntry*)lt->tree->data)->listeners, key, value);
+  notify_listener_list(((LTableEntry*)lt->tree->data)->listeners, key, value, &dead);
 
   dirs = g_strsplit(noroot_key, "/", -1);
 
@@ -898,7 +895,7 @@ ltable_notify_listeners(LTable* lt, const gchar* key, const ConfigValue* value)
             {
               syslog(LOG_DEBUG, "Notifying listeners attached to `%s'",
                      lte->name);
-              notify_listener_list(lte->listeners, key, value);
+              notify_listener_list(lte->listeners, key, value, &dead);
               break;
             }
 
@@ -914,6 +911,26 @@ ltable_notify_listeners(LTable* lt, const gchar* key, const ConfigValue* value)
     }
   
   g_strfreev(dirs);
+
+  /* Clear the dead listeners */
+  {
+    GList* tmp;
+
+    tmp = dead;
+    
+    while (tmp != NULL)
+      {
+        guint cnxn = GPOINTER_TO_UINT(tmp->data);
+
+        syslog(LOG_DEBUG, "Removing dead listener %u", cnxn);
+
+        ltable_remove(lt, cnxn);
+
+        tmp = g_list_next(tmp);
+      }
+
+    g_list_free(dead);
+  }
 }
 
 static LTableEntry* 
