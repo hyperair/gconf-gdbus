@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 2.5.90\n"
+"Project-Id-Version: GConf 2.7.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-05-31 14:10+0100\n"
-"PO-Revision-Date: 2004-02-24 16:00+0100\n"
+"POT-Creation-Date: 2004-06-10 11:16+0200\n"
+"PO-Revision-Date: 2004-06-10 11:16+0200\n"
 "Last-Translator: Christian Neumair <chris@gnome-de.org>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -54,9 +54,8 @@ msgstr ""
 "    Verzeichnis/%%gconf-tree.xml\n"
 
 #: backends/markup-backend.c:163
-#, fuzzy
 msgid "Unloading text markup backend module."
-msgstr "Das XML-Backend-Modul wird aus dem Speicher entfernt."
+msgstr "Das Text-Markup-Backend-Modul wird aus dem Speicher entfernt."
 
 #: backends/markup-backend.c:226 backends/xml-backend.c:289
 #, c-format
@@ -105,9 +104,8 @@ msgid "Could not remove file %s: %s\n"
 msgstr "Die Datei %s konnte nicht entfernt werden: %s\n"
 
 #: backends/markup-backend.c:858
-#, fuzzy
 msgid "Initializing Markup backend module"
-msgstr "Das XML-Backend-Modul wird initialisiert"
+msgstr "Das Markup-Backend-Modul wird initialisiert"
 
 #: backends/markup-backend.c:930 backends/xml-backend.c:877
 #, c-format
@@ -115,10 +113,8 @@ msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Die Sperre für das XML-Verzeichnis »%s« konnte nicht gelöst werden: %s"
 
 #: backends/markup-tree.c:348
-#, fuzzy
 msgid "Failed to write some configuration data to disk\n"
-msgstr ""
-"Es konnte nicht auf die Konfigurationsquelle(n) zugegriffen werden: %s\n"
+msgstr "Schreiben von Konfigurationsdaten auf Platte gescheitert\n"
 
 #: backends/markup-tree.c:752 backends/xml-dir.c:1255
 #, c-format
@@ -126,29 +122,29 @@ msgid "Could not make directory \"%s\": %s"
 msgstr "Das Verzeichnis »%s« konnte nicht angelegt werden: %s"
 
 #: backends/markup-tree.c:795 backends/markup-tree.c:802
-#, fuzzy, c-format
+#, c-format
 msgid "Could not remove \"%s\": %s\n"
-msgstr "Die Datei %s konnte nicht entfernt werden: %s\n"
+msgstr "»%s« konnte nicht entfernt werden: %s\n"
 
 #: backends/markup-tree.c:955
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to write \"%s\": %s\n"
-msgstr "»%s« konnte nicht gelöscht werden: %s"
+msgstr "»%s« konnte nicht geschrieben werden: %s\n"
 
 #: backends/markup-tree.c:1633
-#, fuzzy, c-format
+#, c-format
 msgid "Line %d character %d: %s"
-msgstr "%s konnte nicht erzeugt werden: %s"
+msgstr "Zeile %d, Zeichen %d: %s"
 
 #: backends/markup-tree.c:1846
 #, c-format
 msgid "Attribute \"%s\" repeated twice on the same <%s> element"
-msgstr ""
+msgstr "Das Attribut »%s« kommt im selben Element <%s> zweimal vor"
 
 #: backends/markup-tree.c:1863 backends/markup-tree.c:1887
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
-msgstr ""
+msgstr "Das Attribut »%s« ist in diesem Zusammenhang im Element <%s> ungültg"
 
 #: backends/markup-tree.c:1912 gconf/gconf-value.c:110
 #, c-format
@@ -175,109 +171,112 @@ msgstr "»%s« konnte nicht interpretiert werden (Real-Zahl erwartet)"
 #: backends/markup-tree.c:2146 backends/markup-tree.c:2201
 #: backends/markup-tree.c:2266 backends/markup-tree.c:2374
 #: backends/markup-tree.c:2453 backends/markup-tree.c:2565
-#, fuzzy, c-format
+#, c-format
 msgid "No \"%s\" attribute on element <%s>"
-msgstr "Das <%s>-Element liefert kein \"type\"-Attribut"
+msgstr "Das Element <%2$s> stellt kein »%1$s«-Attribut bereit"
 
+# CHECK
 #: backends/markup-tree.c:2054
 #, c-format
 msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr ""
+"Der Wert »%1$s« des »%2$s«-Attributs ist bezüglich des Elements <%3$s> "
+"unbekannt"
 
 #: backends/markup-tree.c:2088
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
-msgstr ""
+msgstr "Ungültiger ltype »%s« in <%s>"
 
 #: backends/markup-tree.c:2168
 #, c-format
 msgid "Invalid car_type \"%s\" on <%s>"
-msgstr ""
+msgstr "Ungültiger car_type »%s« in <%s>"
 
 #: backends/markup-tree.c:2182
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
-msgstr ""
+msgstr "Ungültiger cdr_type »%s« in <%s>"
 
 #: backends/markup-tree.c:2218
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
-msgstr ""
+msgstr "Ungültiger list_type »%s« in <%s>"
 
 #: backends/markup-tree.c:2499
 msgid "Two <default> elements below a <local_schema>"
-msgstr ""
+msgstr "Zwei <default>-Elemente unterhalb von <local_schema>"
 
 #: backends/markup-tree.c:2514
 msgid "Two <longdesc> elements below a <local_schema>"
-msgstr ""
+msgstr "Zwei <longdesc>-Elemente unterhalb von <local_schema>"
 
 #: backends/markup-tree.c:2521
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
-msgstr ""
+msgstr "Das Element <%s> ist unterhalb von <%s> nicht zulässig"
 
 #: backends/markup-tree.c:2545 backends/markup-tree.c:2637
 #: backends/markup-tree.c:2691 backends/markup-tree.c:2739
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
-msgstr ""
+msgstr "<%s> übergeben, der Typ des derzeitigen Elements ist jedoch nicht %s"
 
 #: backends/markup-tree.c:2615
 msgid "Two <car> elements given for same pair"
-msgstr ""
+msgstr "Zwei <car>-Elemente für dasselbe Paar übergeben"
 
 #: backends/markup-tree.c:2629
 msgid "Two <cdr> elements given for same pair"
-msgstr ""
+msgstr "Zwei <cdr>-Elemente für dasselbe Paar übergeben"
 
 #: backends/markup-tree.c:2683
 #, c-format
 msgid "<li> has wrong type %s"
-msgstr ""
+msgstr "Der Typ %s von <li> ist falsch"
 
 #: backends/markup-tree.c:2712
 #, c-format
 msgid "<%s> provided but parent <entry> does not have a value"
-msgstr ""
+msgstr "<%s> übergeben, aber das Elternelement <entry> hat keinen Wert"
 
 #: backends/markup-tree.c:2752 backends/markup-tree.c:2774
 #: backends/markup-tree.c:2796 backends/markup-tree.c:2813
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
-msgstr ""
+msgstr "Das Element <%s> ist im derzeitigen Element nicht zulässig"
 
 #: backends/markup-tree.c:2845
 #, c-format
 msgid "Outermost element in menu file must be <gconf> not <%s>"
-msgstr ""
+msgstr "Das äußerste Element in Menüdateien muss <gconf> sein, nicht <%s>"
 
 #: backends/markup-tree.c:2865 backends/markup-tree.c:2887
 #: backends/markup-tree.c:2892
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
-msgstr ""
+msgstr "Das Element <%s> ist in einem <%s>-Element nicht zulässig"
 
 #: backends/markup-tree.c:2972
 #, c-format
 msgid "No text is allowed inside element <%s>"
-msgstr ""
+msgstr "Im Element <%s> ist kein Text zulässig"
 
 #: backends/markup-tree.c:3648 backends/markup-tree.c:3662
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open \"%s\": %s\n"
-msgstr "%s konnte nicht geöffnet werden: %s"
+msgstr "»%s« konnte nicht geöffnet werden: %s\n"
 
 #: backends/markup-tree.c:3736
-#, fuzzy, c-format
+#, c-format
 msgid "Error writing file \"%s\": %s"
-msgstr "Fehler beim Zurücksetzen von »%s«: %s"
+msgstr "Fehler beim Schreiben der Datei »%s«: %s"
 
 #: backends/markup-tree.c:3743
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
-"Die neue Status-Speicherdatei konnte nicht an den richtigen Platz verschoben "
+"Die Teporärdatei »%s« konnte nicht an den endgültigen Ort »%s« verschoben "
 "werden: %s"
 
 #: backends/xml-backend.c:240
@@ -488,10 +487,13 @@ msgid "Missing both car and cdr values from pair in XML file"
 msgstr ""
 "Bei einem Wertepaar in der XML-Datei fehlt sowohl ein car als auch ein cdr"
 
+# CHECK
 #: gconf/gconf-backend.c:57
-#, fuzzy, c-format
+#, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
-msgstr "Das Zeichen »%c« ist in Schlüssel- und Verzeichnisnamen nicht zulässig"
+msgstr ""
+"Das Zeichen »%c« ist in Adressen von Konfigurationsspeicherorten nicht "
+"zulässig"
 
 #. -- end debug only
 #: gconf/gconf-backend.c:207
@@ -502,17 +504,17 @@ msgstr "Die Datei »%s« existiert nicht\n"
 #: gconf/gconf-backend.c:252
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
-msgstr ""
+msgstr "Das Backend »%s« lieferte keine vtable-Tabelle\n"
 
 #: gconf/gconf-backend.c:267
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
-msgstr ""
+msgstr "Das Backend »%s« lieferte kein vtable-Tabellenmitglied namens »%s«\n"
 
 #: gconf/gconf-backend.c:293
-#, fuzzy, c-format
+#, c-format
 msgid "Bad address `%s': %s"
-msgstr "Ungültige Adresse »%s«"
+msgstr "Adresse »%s« fehlerhaft: %s"
 
 #: gconf/gconf-backend.c:303
 #, c-format
@@ -530,9 +532,9 @@ msgid "Error opening module `%s': %s\n"
 msgstr "Fehler beim Öffnen des Moduls »%s«: %s\n"
 
 #: gconf/gconf-backend.c:348
-#, fuzzy, c-format
+#, c-format
 msgid "Error initializing module `%s': %s\n"
-msgstr "Fehler beim Öffnen des Moduls »%s«: %s\n"
+msgstr "Fehler beim Initialisieren des Moduls »%s«: %s\n"
 
 #: gconf/gconf-backend.c:379
 #, c-format
@@ -594,6 +596,8 @@ msgid ""
 "Error obtaining new value for `%s' after change notification from backend `%"
 "s': %s"
 msgstr ""
+"Fehler beim Abrufen eines neuen Wertes für »%s« nach der "
+"Änderungsbenachrichtung durch das Backend »%s«: %s"
 
 #: gconf/gconf-database.c:1119
 #, c-format
@@ -950,19 +954,19 @@ msgstr "%s konnte nicht mit stat() untersucht werden: %s"
 msgid "Server ping error: %s"
 msgstr "Fehler beim Pingen des Servers: %s"
 
-#: gconf/gconf-internals.c:2984
+#: gconf/gconf-internals.c:2985
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Die Weiterleitung zur Kommunikation mit dem gconf-Dämon konnte nicht "
 "angelegt werden: %s\n"
 
-#: gconf/gconf-internals.c:3008
+#: gconf/gconf-internals.c:3009
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Der Konfigurationsserver konnte nicht gestartet werden: %s\n"
 
-#: gconf/gconf-internals.c:3033
+#: gconf/gconf-internals.c:3034
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -975,7 +979,7 @@ msgstr ""
 "eines Systemabsturzes alte NFS-Sperren gesetzt sind. Unter http://www.gnome."
 "org/projects/gconf/ erhalten Sie weitere Informationen (Details - %s)"
 
-#: gconf/gconf-internals.c:3034
+#: gconf/gconf-internals.c:3035
 msgid "none"
 msgstr "keiner"
 
@@ -1478,7 +1482,7 @@ msgstr ""
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Schreiben eines Bytes auf den Dateideskriptor der Weiterleitung %d "
-"fehlgeschlagen; das Client-Programm könnte hängen: %s"
+"gescheitert; das Client-Programm könnte hängen: %s"
 
 #: gconf/gconfd.c:727
 #, c-format
@@ -1501,7 +1505,7 @@ msgid "GConf server is not in use, shutting down."
 msgstr "Der GConf-Server wird nicht verwendet und daher beendet."
 
 #: gconf/gconfd.c:1116
-#, fuzzy, c-format
+#, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Fehler beim Abrufen des neuen Wertes für »%s«: %s"
 
@@ -1605,7 +1609,7 @@ msgstr ""
 #: gconf/gconfd.c:2215 gconf/gconfd.c:2389
 #, c-format
 msgid "Failed to get IOR for client: %s"
-msgstr "Empfangen des IOR für Client fehlgeschlagen: %s"
+msgstr "Empfangen des IOR für Client gescheitert: %s"
 
 #: gconf/gconfd.c:2230
 #, c-format
@@ -1883,7 +1887,7 @@ msgstr ""
 
 #: gconf/gconftool.c:419
 msgid "Ignore schema defaults when reading values."
-msgstr ""
+msgstr "Schemavorgaben beim Lesen von Werten ignorieren."
 
 #: gconf/gconftool.c:428
 msgid "Get the name of the default source"
@@ -1947,6 +1951,9 @@ msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
 msgstr ""
+"--ignore-schma-defaults ist ausschließlich in Verbindung mit --get, --all-"
+"entries, --dump, --recursive-list, --get-list-size oder --get-list-element "
+"relevant\n"
 
 # # CONTINUE HERE ##
 #: gconf/gconftool.c:631 gconf/gconftool.c:644 gconf/gconftool.c:657
@@ -2349,8 +2356,8 @@ msgstr ""
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
-"WARNUNG: Der Vorgabewert »%s« für das Schema (%s) konnte nicht "
-"verarbeitetwerden\n"
+"WARNUNG: Der Vorgabewert »%s« für das Schema (%s) konnte nicht verarbeitet "
+"werden\n"
 
 #: gconf/gconftool.c:2975
 #, c-format
@@ -2567,20 +2574,3 @@ msgstr ""
 "Es wird nun versucht, Ihre Anwendung durch Zuweisen fehlerhafter Werte für "
 "Schlüssel im Verzeichnis zu beschädigen:\n"
 "  %s\n"
-
-#~ msgid "Couldn't find the %s root directory in the address `%s'"
-#~ msgstr ""
-#~ "Das Wurzelverzeichnis %s konnte nicht unter der Adresse »%s« gefunden "
-#~ "werden"
-
-#~ msgid ""
-#~ "Can't read from or write to the %s root directory in the address `%s'"
-#~ msgstr ""
-#~ "Im Wurzelverzeichnis %s konnte nicht unter der Adresse »%s« gelesen oder "
-#~ "geschrieben werden"
-
-#~ msgid ""
-#~ "You should use --direct when using a non-default configuration source\n"
-#~ msgstr ""
-#~ "Falls Sie keine Standard-Konfigurationsquelle verwenden, sollten Sie --"
-#~ "direct übergeben\n"
