@@ -1059,6 +1059,25 @@ gconf_engine_associate_schema  (GConfEngine* conf, const gchar* key,
   return TRUE;
 }
 
+
+static void
+qualify_entries (GSList *entries, const char *dir)
+{
+  GSList *tmp = entries;
+  while (tmp != NULL)
+    {
+      GConfEntry *entry = tmp->data;
+      gchar *full;
+
+      full = gconf_concat_key_and_dir (dir, entry->key);
+
+      g_free (entry->key);
+      entry->key = full;
+
+      tmp = g_slist_next (tmp);
+    }
+}
+
 GSList*      
 gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 {
@@ -1108,6 +1127,8 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
           
           return NULL;
         }
+
+      qualify_entries (retval, dir);
       
       return retval;
     }
@@ -1218,6 +1239,8 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
           
           return NULL;
         }
+
+      qualify_entries (retval, dir);
       
       return retval;
     }
@@ -1261,7 +1284,7 @@ gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
     {
       gchar* s;
 
-      s = g_strdup(keys->_buffer[i]);
+      s = gconf_concat_key_and_dir (dir, keys->_buffer[i]);
       
       subdirs = g_slist_prepend(subdirs, s);
       

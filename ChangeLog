@@ -1,3 +1,14 @@
+2000-09-14  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (gconf_engine_all_dirs): Update to 
+	return fully qualified name in GConfEntry
+	(gconf_engine_all_entries): missed the local case
+	earlier when adapting it to use fully-qualified name
+
+	* acinclude.m4: Add never-use-included-gettext macro
+
+	* configure.in: Bump version to 0.9
+
 2000-09-14  Darin Adler  <darin@eazel.com>
 
 	* backends/xml-dir.c: (dir_load): Fixed code that set up file mode

@@ -4,7 +4,7 @@ AC_INIT(gconf/gconf.h)
 
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(GConf, 0.8)
+AM_INIT_AUTOMAKE(GConf, 0.9)
 
 AM_MAINTAINER_MODE
 
@@ -36,8 +36,8 @@ AC_SUBST(SCMGCONF_AGE)
 
 dnl libtool versioning for GConfClient wrapper
 
-GCONFGTK_CURRENT=0
-GCONFGTK_REVISION=1
+GCONFGTK_CURRENT=1
+GCONFGTK_REVISION=0
 GCONFGTK_AGE=0
 
 AC_SUBST(GCONFGTK_CURRENT)
@@ -47,11 +47,11 @@ AC_SUBST(GCONFGTK_AGE)
 dnl libtool versioning for libgconf
 
 dnl increment if the interface has additions, changes, removals.
-GCONF_CURRENT=0
+GCONF_CURRENT=1
 
 dnl increment any time the source changes; set to 
 dnl  0 if you increment CURRENT
-GCONF_REVISION=1
+GCONF_REVISION=0
 
 dnl increment if any interfaces have been added; set to 0
 dnl  if any interfaces have been removed. removal has 
@@ -174,7 +174,7 @@ fi # docs_only
 
 ALL_LINGUAS="ca cs da de el fi fr ga ja ko no pt_BR ru sv tr uk"
 
-AM_GNU_GETTEXT
+AM_GCONF_GNU_GETTEXT
 
 # AM_GNU_GETTEXT above substs $DATADIRNAME
 # this is the directory where the *.{mo,gmo} files are installed

@@ -104,7 +104,7 @@ check_dir_listing(GConfEngine* conf)
   iter2 = entries;
   while (iter2 != NULL)
     {
-      if (strcmp(iter2->data, "testing") == 0)
+      if (strcmp(iter2->data, "/testing") == 0)
         got_it = TRUE;
       
       iter2 = g_slist_next(iter2);
@@ -124,7 +124,7 @@ check_dir_listing(GConfEngine* conf)
   iter2 = entries;
   while (iter2 != NULL)
     {
-      if (strcmp(iter2->data, "foo") == 0)
+      if (strcmp(iter2->data, "/testing/foo") == 0)
         got_it = TRUE;
       
       iter2 = g_slist_next(iter2);
@@ -147,9 +147,12 @@ check_dir_listing(GConfEngine* conf)
       iter = keys_in_foo;
       while (*iter)
         {
-          if (strcmp(iter2->data, *iter) == 0)
+          gchar *full = gconf_concat_key_and_dir ("/testing/foo", *iter);
+          if (strcmp(iter2->data, full) == 0)
             found[i] = TRUE;
-              
+
+          g_free (full);
+          
           ++i;
           ++iter;
         }
