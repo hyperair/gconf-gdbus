@@ -136,7 +136,10 @@
         type="http">http://www.debian.org/~wakkerma/config6</ulink> for his
         specification. Other sources of ideas include the Windows registry, 
         the ACAP specification, and Emacs customize mode (try typing
-        <literal>M-x customize-browse</literal> in Emacs).
+        <literal>M-x customize-browse</literal> in Emacs). Windows
+        XP's registry has some features such as documentation that
+        GConf has as well - maybe they copied GConf - hey, it's
+        possible. ;-)
       </para>
 
     </sect1>
@@ -159,7 +162,9 @@
           slash-separated path. A full path is referred to as a
           <firstterm>key</firstterm>.  Characters in a path should be
           alphanumeric or underscore. Path components may not start with a
-          period.
+          period. You should follow the conventions outlined in 
+         <xref linkend="conventions"> when choosing what names to use
+          for your keys.
         </para>
       </sect2>
 
@@ -362,12 +367,6 @@
     </para>
 
     <para>
-      Convenience wrappers for the GConf client library are possible.
-      Right now a nice wrapper based on the GTK+ object system exists;
-      see <xref linkend="gtk-wrapper">.
-    </para>
-
-    <para>
       Note that this is only a brief tutorial-style introduction to
       the client library; have a look at <xref
       linkend="gconf-reference"> for a complete reference.
@@ -379,73 +378,19 @@
       
       <para>
         Error handling isn't exciting but it's unfortunately
-        necessary. Because even the initialization of the GConf
-        library can fail, we have to cover error handling first.
+        necessary. GConf uses the standard <symbol>GError</symbol>
+        feature from GLib; if you have never read the documentation 
+        on <symbol>GError</symbol>, you should do so right away.
       </para>
 
       <para>
-        Errors are returned in a <structname>GError</structname> object.
-        <structname>GError</structname> has two public fields:
-        <structfield>str</structfield> is an error message, and
-        <structfield>num</structfield> is an <symbol>errno</symbol>-style
-        enumerated value with type <symbol>GConfError</symbol>, useful for
-        switching on an error and taking different actions depending on the
-        exact error that occurred.
+        When using GConfClient routines, it's OK to pass NULL for the
+        error argument most of the time; it has a default error handler
+        that will be run.
       </para>
 
       <para>
-        GConf functions that potentially fail accept a
-        <symbol>GError**</symbol> argument, where they store a
-        <structname>GError</structname> object if the operation
-        fails. If no error occurs, the location pointed to by the
-        <symbol>GError**</symbol> is left unchanged. In all cases,
-        you can pass <symbol>NULL</symbol> as the
-        <symbol>GError**</symbol>, to ignore any errors.  Needless
-        to say, normally you should report errors instead of ignoring
-        them.
-      </para>
-
-      <para>
-        If an error is returned, you must free it with
-        <function>g_error_free()</function>:
-        <funcsynopsis>
-          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>void
-            <function>g_error_free</function>
-          </funcdef>
-          <paramdef>GError* <parameter>error</parameter></paramdef>          
-        </funcsynopsis>
-      </para>
-
-      <para>
-        Thus, a complete error-checking sequence might work like this:
-        <programlisting>
-          GError* err = NULL;
-
-          if (!gconf_init(&amp;err))
-            {
-              fprintf(stderr, _("Failed to init GConf: %s\n"), err->message);
-              g_error_free(err); 
-              err = NULL;
-            }
-        </programlisting>
-        Note that <function>gconf_init()</function> returns
-        <symbol>TRUE</symbol> on success and <symbol>FALSE</symbol> on failure,
-        other functions may have different ways of indicating
-        success/failure. Also note that the <symbol>err</symbol> variable is
-        initialized to <symbol>NULL</symbol>; this is
-        <emphasis>required</emphasis>.
-      </para>
-
-      <para>
-        Error checking is slightly inconvenient to use because we have to be
-        thread-safe; GConf originally had a system similar to
-        <symbol>errno</symbol>, but that doesn't work with threads.  GConf still
-        isn't thread-safe, but the API isn't inherently unsafe.
-      </para>
-
-      <para>
-        The available values for <symbol>GConfError</symbol> are:
+        The available error codes are:
         <variablelist>
           <varlistentry><term>GCONF_SUCCESS</term>
             <listitem>
@@ -566,72 +511,40 @@
         </variablelist>
       </para>
 
-      <para>
-        <function>gconf_error_new()</function> is used inside the
-        library and inside the library backends. It is typically not
-        useful to clients. It simply creates a new error, from a
-        <symbol>GConfError</symbol> and a
-        <function>printf()</function>-style format and variable
-        argument list.
-        <funcsynopsis>
-          <funcsynopsisinfo>#include &lt;gconf/gconf.h&gt;</funcsynopsisinfo>
-          <funcdef>void
-            <function>gconf_error_new</function>
-          </funcdef>
-          <paramdef>GConfError <parameter>en</parameter></paramdef>
-          <paramdef>const gchar*
-          <parameter>format</parameter></paramdef>
-          <paramdef><parameter>...</parameter></paramdef>
-        </funcsynopsis>
-      </para>
-
     </sect1>
 
-
-    <!-- Initialization -->
-    <sect1>
-      <title>Initialization</title>
-      
-      <para>
-        The GConf client library must be initialized before use.
-        Initialization establishes a connection to the ORB (because
-        CORBA is currently used to implement GConf, though clients
-        never have to see this) and sets up some global data
-        structures. The arguments to <function>gconf_init()</function>
-        are an argc/argv pair to check for CORBA-related command line
-        options, and a location to place any error that
-        occurs. <function>gconf_init()</function> returns
-        <symbol>TRUE</symbol> on success.
-      </para>
-
-      <para>
-        You can check whether GConf is initialized with
-        <function>gconf_initialized()</function>.
-      </para>
-
-    </sect1>
 
     <!-- GConfEngine object -->
     <sect1>
       <title>The <structname>GConfEngine</structname> object</title>
+
+      <para>
+        <structname>GConfClient</structname> should be used instead of 
+        <structname>GConfEngine</structname> in most applications.
+        See <xref linkend="gconf-client">.
+      </para>
+
       <para>
         A <structname>GConfEngine</structname> object represents your
         connection to a configuration database. Normally the database
         you're connecting to is the user's default database, defined
         by all the sources in their configuration source
-        path. <function>gconf_engine_get_default()</function> returns a handle to
-        this default
+        path. <function>gconf_engine_get_default()</function> returns
+        a handle to this default
         database. <function>gconf_engine_get_default_with_address()</function>
         returns a handle to a single configuration source; normally,
         applications will not use this function&mdash;it's intended
-        for system configuration tools and the like.        
+        for system configuration tools and the like.
       </para>
 
       <note>
       <para>
-        In a GNOME context, you should use
+        Nearly always, you should use
         <structname>GConfClient</structname> instead of
         <structname>GConfEngine</structname>.
+        <structname>GConfClient</structname> has a default handler for
+        errors, and keeps a client-side cache of configuration values
+        to avoid remote queries.
       </para>
       </note>
 
@@ -862,20 +775,27 @@ print_value(GConfValue* value)
   </chapter>
 
   <!-- GTK Object wrapper -->
-  <chapter id="gtk-wrapper">
-    <title><structname>GtkObject</structname> Convenience Wrapper</title>
+  <chapter id="gconf-client">
+    <title><structname>GConfClient</structname> higher-level API</title>
     
     <para>
       <structname>GConfClient</structname> is a
-      <structname>GtkObject</structname> subclass that replaces
-      <structname>GConfEngine</structname> in GNOME programs.
+      <structname>GObject</structname> subclass that should be used
+      instead of <structname>GConfEngine</structname> in most
+      applications. <structname>GConfClient</structname> tries to
+      minimize the need to make remote calls to the GConf daemon by
+      keeping more information on the client side. It also has a
+      default error handler that comes into play if you pass NULL 
+      for the <literal>GError**</literal> argument to any 
+      <structname>GConfClient</structname> methods.
     </para>
 
     <sect1 id="gconfclient-example">
       <title>A Complete Example</title>
       
       <para>
-
+        The example is in examples/basic-gconf-app.c in the GConf
+        tarball, but hasn't made it into this document yet.
       </para>
       
 

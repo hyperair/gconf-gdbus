@@ -1,6 +1,6 @@
 /* -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* GConf
- * Copyright (C) 1999, 2000 Red Hat Inc.
+ * Copyright (C) 1999 - 2001 Red Hat Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,667 +18,462 @@
  * Boston, MA 02111-1307, USA.
  */
 
-/* This program demonstrates how to use GConf in a GTK or GNOME
-   application.  The key thing is that the main window and the prefs
-   dialog have NO KNOWLEDGE of one another as far as configuration
-   values are concerned; they don't even have to be in the same
-   process. That is, the GConfClient acts as the data "model" for
-   configuration information; the main application is a "view" of the
-   model; and the prefs dialog is a "controller."
-*/
+/* This program demonstrates how to use GConf.  The key thing is that
+ * the main window and the prefs dialog have NO KNOWLEDGE of one
+ * another as far as configuration values are concerned; they don't
+ * even have to be in the same process. That is, the GConfClient acts
+ * as the data "model" for configuration information; the main
+ * application is a "view" of the model; and the prefs dialog is a
+ * "controller."
+ *
+ * You can tell if your application has done this correctly by
+ * using "gconftool" instead of your preferences dialog to set
+ * preferences. For example:
+ *
+ *   gconftool --type=string --set /apps/basic-gconf-app/foo "My string"
+ *
+ * If that doesn't work every bit as well as setting the value
+ * via the prefs dialog, then you aren't doing things right. ;-)
+ *
+ *
+ * If you really want to be mean to your app, make it survive
+ * this:
+ *
+ *   gconftool --break-key /apps/basic-gconf-app/foo
+ *
+ * Remember, the GConf database is just like an external file or
+ * the network - it may have bogus values in it. GConf admin
+ * tools will let people put in whatever they can think of.
+ *
+ * GConf does guarantee that string values will be valid UTF-8, for
+ * convenience.
+ *   
+ */
 
 /* Throughout, this program is letting GConfClient use its default
-   error handlers rather than checking for errors or attaching custom
-   handlers to the "unreturned_error" signal. Thus the last arg to
-   GConfClient functions is NULL.
-*/
-
-/* A word about Apply/Revert/OK/Cancel. These should work as follows:
-    - "Apply" installs the currently selected settings
-    - "OK" installs the currently selected settings, and closes the dialog
-    - "Cancel" reverts, and closes the dialog
-    - "Revert" reverts to the settings that were in effect when the dialog
-       was opened; it also resets the prefs dialog contents to those settings.
-*/
-
-/* NOTE NOTE NOTE NOTE NOTE
- *
- * This example is obsolete; current GNOME wisdom is that dialogs should be
- * "instant apply." That means you can drop all the stuff about using
- * GConfChangeSet. You need three basic steps in your app:
- *
- *  - call gconf_client_add_dir() to add the dirs you're interested in
- *  - call gconf_client_notify_add() to subscribe your views to notification
- *  - call gconf_client_set_*() to modify the model
- * 
- * For bonus points, support "mandatory" sysadmin settings by
- * turning off or desensitizing GUI according to gconf_client_key_is_writable().
- * 
- * You really shouldn't need to use much API beyond that.
+ * error handlers rather than checking for errors or attaching custom
+ * handlers to the "unreturned_error" signal. Thus the last arg to
+ * GConfClient functions is NULL.
  */
+
+/* Special mention of an idiom often used in GTK+ apps that does
+ * not work right with GConf but may appear to at first:
+ *
+ *  gboolean i_am_changing_value;
+ *
+ *  i_am_changing_value = TRUE;
+ *  change_value (value);
+ *  i_am_changing_value = FALSE;
+ *
+ * This breaks for several reasons: notification of changes
+ * may be asynchronous, you may get notifications that are not
+ * caused by change_value () while change_value () is running,
+ * since GConf will enter the main loop, and also if you need
+ * this code to work you are probably going to have issues
+ * when someone other than yourself sets the value.
+ *
+ * A robust solution in this case is often to compare the old
+ * and new values to see if they've really changed, thus avoiding
+ * whatever loop you were trying to avoid.
+ *
+ */ 
 
 #include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
-static GtkWidget* create_main_window(GConfClient* client);
-static GtkWidget* create_prefs_dialog(GtkWidget* parent, GConfClient* client);
+static GtkWidget* create_main_window  (GConfClient *client);
+static GtkWidget* create_prefs_dialog (GtkWidget   *parent,
+                                       GConfClient *client);
 
 int
-main(int argc, char** argv)
+main (int argc, char** argv)
 {
-  GError* error = NULL;
-  GConfClient* client = NULL;
-  GtkWidget* main_window;
+  GError *error;
+  GConfClient *client;
+  GtkWidget *main_window;
   
-  gtk_init(&argc, &argv);
+  gtk_init (&argc, &argv);
 
-  /* If you pass NULL for error, then gconf_init() will simply print
-     to stderr and exit if an error occurs. */
-  if (!gconf_init(argc, argv, &error))
-    {
-      g_assert(error != NULL);
-      g_warning("GConf init failed:\n  %s", error->message);
-      /* These next two lines would be important if we weren't going to
-         exit immediately */
-      g_error_free(error);
-      error = NULL;
-      return 1;
-    }
+  /* Get the default client */
+  client = gconf_client_get_default ();
 
-  g_assert(error == NULL);
+  /* Tell GConfClient that we're interested in the given directory.
+   * This means GConfClient will receive notification of changes
+   * to this directory, and cache keys under this directory.
+   * So _don't_ add "/" or something silly like that or you'll end
+   * up with a copy of the whole GConf database. ;-)
+   *
+   * We pass NULL for the error to use the default error handler;
+   * and use PRELOAD_NONE to avoid loading all config keys on
+   * startup. If your app pretty much reads all config keys
+   * on startup, then preloading the cache may make sense.
+   */
+   
+  gconf_client_add_dir (client, "/apps/basic-gconf-app",
+                        GCONF_CLIENT_PRELOAD_NONE, NULL);
 
-  client = gconf_client_get_default();
-
-  gconf_client_add_dir(client, "/apps/basic-gconf-app", GCONF_CLIENT_PRELOAD_NONE, NULL);
-
-  main_window = create_main_window(client);
+  main_window = create_main_window (client);
   
-  gtk_widget_show_all(main_window);
+  gtk_widget_show_all (main_window);
   
-  gtk_main();
+  gtk_main ();
 
   /* This ensures we cleanly detach from the GConf server (assuming
-   * we hold the last reference)
+   * we hold the last reference). It's purely a bit of cleanliness,
+   * the server does survive fine if we crash.
    */
-  g_object_unref(G_OBJECT(client));
+  g_object_unref (G_OBJECT (client));
   
   return 0;
 }
 
-static gint
-delete_event_callback(GtkWidget* window, GdkEventAny* event, gpointer data)
+/* Quit app when window is destroyed */
+static void
+destroy_callback (GtkWidget *window,
+                  gpointer   data)
 {
-  gtk_main_quit();
-
-  return TRUE;
+  gtk_main_quit ();  
 }
 
+/* Remove the notification callback when the widget monitoring
+ * notifications is destroyed
+ */
 static void
-configurable_widget_destroy_callback(GtkWidget* widget, gpointer data)
+configurable_widget_destroy_callback (GtkWidget *widget,
+                                      gpointer   data)
 {
   guint notify_id;
-  GConfClient* client;
+  GConfClient *client;
 
-  client = gtk_object_get_data(GTK_OBJECT(widget), "client");
-  notify_id = GPOINTER_TO_UINT(gtk_object_get_data(GTK_OBJECT(widget), "notify_id"));
+  client = g_object_get_data (G_OBJECT (widget), "client");
+  notify_id = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "notify_id"));
 
   if (notify_id != 0)
-    gconf_client_notify_remove(client, notify_id);
+    gconf_client_notify_remove (client, notify_id);
 }
 
+/* Notification callback for our label widgets that
+ * monitor the current value of a gconf key. i.e.
+ * we are conceptually "configuring" the label widgets
+ */
 static void
-configurable_widget_config_notify(GConfClient* client,
-                                  guint cnxn_id,
-                                  GConfEntry *entry,
-                                  gpointer user_data)
+configurable_widget_config_notify (GConfClient *client,
+                                   guint        cnxn_id,
+                                   GConfEntry  *entry,
+                                   gpointer     user_data)
 {
-  GtkWidget* label = user_data;
+  GtkWidget *label = user_data;
 
-  g_return_if_fail(label != NULL);
-  g_return_if_fail(GTK_IS_LABEL(label));
+  g_return_if_fail (GTK_IS_LABEL (label));
 
   /* Note that value can be NULL (unset) or it can have
-     the wrong type! */
+   * the wrong type! Need to check that to survive
+   * gconftool --break-key
+   */
   
   if (entry->value == NULL)
     {
-      gtk_label_set_text(GTK_LABEL(label), "");
+      gtk_label_set_text (GTK_LABEL (label), "");
     }
   else if (entry->value->type == GCONF_VALUE_STRING)
     {
-      gtk_label_set_text(GTK_LABEL(label),
-                         gconf_value_get_string(entry->value));
+      gtk_label_set_text (GTK_LABEL (label),
+                          gconf_value_get_string (entry->value));
     }
   else
     {
-      /* A real app would probably fall back to a reasonable default in this case.  */
-      gtk_label_set_text(GTK_LABEL(label), "!type error!");
+      /* A real app would probably fall back to a reasonable default
+       * in this case, instead of putting funky stuff in the GUI.
+       */
+      gtk_label_set_text (GTK_LABEL (label), "!type error!");
     }
 }
 
+/* Create a GtkLabel inside a frame, that we can "configure"
+ * (the label displays the value of the config key).
+ */
 static GtkWidget*
-create_configurable_widget(GConfClient* client, const gchar* config_key)
+create_configurable_widget (GConfClient *client,
+                            const gchar *config_key)
 {
-  GtkWidget* frame;
-  GtkWidget* label;
+  GtkWidget *frame;
+  GtkWidget *label;
   guint notify_id;
-  gchar* str;
-  
-  frame = gtk_frame_new(config_key);
+  gchar *str;
 
-  label = gtk_label_new("");
-
-  gtk_container_add(GTK_CONTAINER(frame), label);
+  str = g_strdup_printf ("Value of \"%s\"", config_key);
+  frame = gtk_frame_new (str);
+  g_free (str);
   
-  str = gconf_client_get_string(client, config_key, NULL);
+  label = gtk_label_new ("");
+
+  gtk_container_add (GTK_CONTAINER (frame), label);
+  
+  str = gconf_client_get_string (client, config_key, NULL);
 
   if (str != NULL)
     {
-      gtk_label_set_text(GTK_LABEL(label), str);
-      g_free(str);
+      gtk_label_set_text (GTK_LABEL (label), str);
+      g_free (str);
     }
 
-  notify_id = gconf_client_notify_add(client,
-                                      config_key,
-                                      configurable_widget_config_notify,
-                                      label,
-                                      NULL, NULL);
+  notify_id = gconf_client_notify_add (client,
+                                       config_key,
+                                       configurable_widget_config_notify,
+                                       label,
+                                       NULL, NULL);
 
   /* Note that notify_id will be 0 if there was an error,
-     so we handle that in our destroy callback. */
+   * so we handle that in our destroy callback.
+   */
   
-  gtk_object_set_data(GTK_OBJECT(label), "notify_id", GUINT_TO_POINTER(notify_id));
-  gtk_object_set_data(GTK_OBJECT(label), "client", client);
+  g_object_set_data (G_OBJECT (label), "notify_id", GUINT_TO_POINTER (notify_id));
+  g_object_set_data (G_OBJECT (label), "client", client);
 
-  gtk_signal_connect(GTK_OBJECT(label), "destroy",
-                     GTK_SIGNAL_FUNC(configurable_widget_destroy_callback),
-                     NULL);
+  g_signal_connect (G_OBJECT (label), "destroy",
+                    G_CALLBACK (configurable_widget_destroy_callback),
+                    NULL);
   
   return frame;
 }
 
 static void
-prefs_dialog_destroyed(GtkWidget* dialog, gpointer main_window)
+prefs_dialog_destroyed (GtkWidget *dialog,
+                        gpointer   main_window)
 {
-  gtk_object_set_data(GTK_OBJECT(main_window), "prefs", NULL);
+  g_object_set_data (G_OBJECT (main_window), "prefs", NULL);
 }
 
+/* prefs button clicked */
 static void
-prefs_clicked(GtkWidget* button, gpointer data)
+prefs_clicked (GtkWidget *button,
+               gpointer   data)
 {
-  GtkWidget* prefs_dialog;
-  GtkWidget* main_window = data;
-  GConfClient* client;
+  GtkWidget *prefs_dialog;
+  GtkWidget *main_window = data;
+  GConfClient *client;
 
-  prefs_dialog = gtk_object_get_data(GTK_OBJECT(main_window), "prefs");
+  prefs_dialog = g_object_get_data (G_OBJECT (main_window), "prefs");
 
   if (prefs_dialog == NULL)
     {
-      client = gtk_object_get_data(GTK_OBJECT(main_window), "client");
+      client = g_object_get_data (G_OBJECT (main_window), "client");
       
-      prefs_dialog = create_prefs_dialog(main_window, client);
+      prefs_dialog = create_prefs_dialog (main_window, client);
 
-      gtk_object_set_data(GTK_OBJECT(main_window), "prefs", prefs_dialog);
+      g_object_set_data (G_OBJECT (main_window), "prefs", prefs_dialog);
 
-      gtk_signal_connect(GTK_OBJECT(prefs_dialog), "destroy",
-                         GTK_SIGNAL_FUNC(prefs_dialog_destroyed),
-                         main_window);
+      g_signal_connect (G_OBJECT (prefs_dialog), "destroy",
+                        G_CALLBACK (prefs_dialog_destroyed),
+                        main_window);
       
-      gtk_widget_show_all(prefs_dialog);
+      gtk_widget_show_all (prefs_dialog);
     }
-  else if (GTK_WIDGET_REALIZED(prefs_dialog))
+  else 
     {
-      gdk_window_show(prefs_dialog->window);
-      gdk_window_raise(prefs_dialog->window);
+      /* show existing dialog */
+      gtk_window_present (GTK_WINDOW (prefs_dialog));
     }
 }
 
 static GtkWidget*
-create_main_window(GConfClient* client)
+create_main_window (GConfClient *client)
 {
-  GtkWidget* w;
-  GtkWidget* vbox;
-  GtkWidget* config;
-  GtkWidget* prefs;
+  GtkWidget *w;
+  GtkWidget *vbox;
+  GtkWidget *config;
+  GtkWidget *prefs;
   
-  w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  vbox = gtk_vbox_new(FALSE, 10);
-
-  gtk_container_add(GTK_CONTAINER(w), vbox);
+  gtk_window_set_title (GTK_WINDOW (w), "basic-gconf-app Main Window");
   
-  config = create_configurable_widget(client, "/apps/basic-gconf-app/foo");
-  gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, 5);
 
-  config = create_configurable_widget(client, "/apps/basic-gconf-app/bar");
-  gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (w), vbox);
+
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
   
-  config = create_configurable_widget(client, "/apps/basic-gconf-app/baz");
-  gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
+  /* Create labels that we can "configure" */
+  config = create_configurable_widget (client, "/apps/basic-gconf-app/foo");
+  gtk_box_pack_start (GTK_BOX (vbox), config, TRUE, TRUE, 0);
 
-  config = create_configurable_widget(client, "/apps/basic-gconf-app/blah");
-  gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
-
-  gtk_signal_connect(GTK_OBJECT(w), "delete_event",
-                     GTK_SIGNAL_FUNC(delete_event_callback),
-                     NULL);
-
-  gtk_object_set_data(GTK_OBJECT(w), "client", client);
+  config = create_configurable_widget (client, "/apps/basic-gconf-app/bar");
+  gtk_box_pack_start (GTK_BOX (vbox), config, TRUE, TRUE, 0);
   
-  prefs = gtk_button_new_with_label("Prefs");
-  gtk_box_pack_end(GTK_BOX(vbox), prefs, FALSE, FALSE, 0);
-  gtk_signal_connect(GTK_OBJECT(prefs), "clicked",
-                     GTK_SIGNAL_FUNC(prefs_clicked), w);
+  config = create_configurable_widget (client, "/apps/basic-gconf-app/baz");
+  gtk_box_pack_start (GTK_BOX (vbox), config, TRUE, TRUE, 0);
+
+  config = create_configurable_widget (client, "/apps/basic-gconf-app/blah");
+  gtk_box_pack_start (GTK_BOX (vbox), config, TRUE, TRUE, 0);
+
+  g_signal_connect (G_OBJECT (w), "destroy",
+                    G_CALLBACK (destroy_callback), NULL);
+
+  g_object_set_data (G_OBJECT (w), "client", client);
+  
+  prefs = gtk_button_new_with_mnemonic ("_Prefs");
+  gtk_box_pack_end (GTK_BOX (vbox), prefs, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (prefs), "clicked",
+                    G_CALLBACK (prefs_clicked), w);
   
   return w;
 }
 
 
-/****************************************/
+
 /*
  * Preferences dialog code. NOTE that the prefs dialog knows NOTHING
  * about the existence of the main window; it is purely a way to fool
- * with the GConf database.
+ * with the GConf database. It never does something like change
+ * the main window directly; it ONLY changes GConf keys via
+ * GConfClient. This is _important_, because people may configure
+ * your app without using your preferences dialog.
+ *
+ * This is an instant-apply prefs dialog. For a complicated
+ * apply/revert/cancel dialog as in GNOME 1, see the
+ * complex-gconf-app.c example. But don't actually copy that example
+ * in GNOME 2, thanks. ;-) complex-gconf-app.c does show how
+ * to use GConfChangeSet.
  */
 
-
-static GConfChangeSet*
-prefs_dialog_get_change_set(GtkWidget* dialog)
-{
-  return gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
-}
-
-
+/* Commit changes to the GConf database. */
 static void
-prefs_dialog_update_sensitivity(GtkWidget* dialog)
+config_entry_commit (GtkWidget *entry)
 {
-  GtkWidget* apply;
-  GtkWidget* revert;
-  GtkWidget* ok;
-  GtkWidget* cancel;
-  GConfChangeSet* cs;
-  GConfChangeSet* revert_cs;
+  gchar *text;
+  const gchar *key;
+  GConfClient *client;
   
-  apply = gtk_object_get_data(GTK_OBJECT(dialog), "apply");
-  revert = gtk_object_get_data(GTK_OBJECT(dialog), "revert");
-  ok = gtk_object_get_data(GTK_OBJECT(dialog), "ok");
-  cancel = gtk_object_get_data(GTK_OBJECT(dialog), "cancel");
+  client = g_object_get_data (G_OBJECT (entry), "client");  
 
-  g_assert(apply != NULL);
-  g_assert(revert != NULL);
-  
-  cs = prefs_dialog_get_change_set(dialog);
+  text = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
 
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
-
-  if (gconf_change_set_size(cs) > 0)
-    {
-      gtk_widget_set_sensitive(apply, TRUE);
-    }
-  else
-    {
-      gtk_widget_set_sensitive(apply, FALSE);
-    }
-      
-  if (revert_cs != NULL)
-    gtk_widget_set_sensitive(revert, TRUE);
-  else
-    gtk_widget_set_sensitive(revert, FALSE);
-}
-
-static void
-prefs_dialog_apply(GtkWidget* dialog)
-{
-  GConfChangeSet* cs;
-  GConfClient* client;
-  GConfChangeSet* revert_cs;
-  
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
-
-  /* Create the revert changeset on the first apply; this means
-     the revert button should now be sensitive */
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
-
-  if (revert_cs == NULL)
-    {
-      revert_cs = gconf_client_change_set_from_current(client,
-                                                              NULL,
-                                                              "/apps/basic-gconf-app/foo",
-                                                              "/apps/basic-gconf-app/bar",
-                                                              "/apps/basic-gconf-app/baz",
-                                                              "/apps/basic-gconf-app/blah",
-                                                              NULL);
-
-      gtk_object_set_data(GTK_OBJECT(dialog), "revert_changeset", revert_cs);
-    }
-      
-  cs = gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
-  
-  /* again, relying on default error handler. The third argument here
-     is whether to remove the successfully-committed items from the
-     change set; here we remove the already-committed stuff, so if the
-     user resolves the error, they can bang on "apply" some more and
-     commit the remaining items. The return value indicates whether an
-     error occurred. */
-  gconf_client_commit_change_set(client, cs, TRUE, NULL);
-  
-  prefs_dialog_update_sensitivity(dialog);
-}
-
-static void
-update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
-{
-  GConfValue* value = NULL;
-  GConfClient* client;
-
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
-  
-  if (gconf_change_set_check_value(cs, config_key,
-                                   &value))
-    {
-      GtkWidget* entry;
-
-      entry = gtk_object_get_data(GTK_OBJECT(dialog), config_key);
-
-      g_assert(entry != NULL);
-      
-      if (value == NULL)
-        {
-          /* We need to check for a default value,
-             since the revert set will unset the user setting */
-          GConfValue* def;
-
-          def = gconf_client_get_default_from_schema(client,
-                                                     config_key,
-                                                     NULL);
-
-          if (def)
-            {
-              if (def->type == GCONF_VALUE_STRING)
-                {
-                  gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(def));
-                }
-              else
-                g_warning("Wrong type for default value of %s", config_key);
-
-              gconf_value_free(def);
-            }
-          else
-            gtk_entry_set_text(GTK_ENTRY(entry), "");
-        }
-      else if (value->type == GCONF_VALUE_STRING)
-        {
-          gtk_entry_set_text(GTK_ENTRY(entry), gconf_value_get_string(value));
-        }
-      else
-        {
-          /* error, wrong type value in the config database */
-          g_warning("GConfChangeSet had wrong value type %d for key %s",
-                    value->type, config_key);
-          gtk_entry_set_text(GTK_ENTRY(entry), "");          
-        }
-    }
-}
-
-static void
-prefs_dialog_revert(GtkWidget* dialog)
-{
-  GConfChangeSet* cs;
-  GConfChangeSet* revert_cs;
-  GConfClient* client;
-
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
-
-  if (revert_cs == NULL)
-    return; /* happens on cancel, if no apply has been done */
-  
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
-  
-  cs = gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
-
-  /* When reverting, you want to discard any pending changes so
-     "apply" won't do anything */
-  gconf_change_set_clear(cs);
-
-  /* FALSE so we don't remove committed stuff from the revert set */
-  gconf_client_commit_change_set(client, revert_cs, FALSE, NULL);
-
-  /* Set the prefs dialog contents back to the
-     new values */
-  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/foo");
-  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/bar");
-  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/baz");
-  update_entry(dialog, revert_cs, "/apps/basic-gconf-app/blah");
-  
-  /* Update sensitivity of the dialog buttons */
-  prefs_dialog_update_sensitivity(dialog);
-}
-
-static void
-config_entry_destroy_callback(GtkWidget* entry, gpointer data)
-{
-  gchar* key;
-
-  key = gtk_object_get_data(GTK_OBJECT(entry), "key");
-
-  g_free(key);
-}
-
-static void
-config_entry_changed_callback(GtkWidget* entry, gpointer data)
-{
-  GtkWidget* prefs_dialog = data;
-  GConfChangeSet* cs;
-  gchar* text;
-  const gchar* key;
-  
-  cs = prefs_dialog_get_change_set(prefs_dialog);
-
-  text = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
-
-  key = gtk_object_get_data(GTK_OBJECT(entry), "key");
+  key = g_object_get_data (G_OBJECT (entry), "key");
 
   /* Unset if the string is zero-length, otherwise set */
   if (*text != '\0')
-    gconf_change_set_set_string(cs, key, text);
+    gconf_client_set_string (client, key, text, NULL);
   else
-    gconf_change_set_unset(cs, key);
+    gconf_client_unset (client, key, NULL);
   
-  g_free(text);
-  
-  prefs_dialog_update_sensitivity(prefs_dialog);
+  g_free (text);
 }
 
+/* Create an entry used to edit the given config key */
 static GtkWidget*
-create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* config_key)
+create_config_entry (GtkWidget   *prefs_dialog,
+                     GConfClient *client,
+                     const gchar *config_key,
+                     gboolean     focus)
 {
-  GtkWidget* frame;
-  GtkWidget* entry;
-  GConfValue* initial = NULL;
-  
-  frame = gtk_frame_new(config_key);
+  GtkWidget *hbox;
+  GtkWidget *entry;
+  GtkWidget *label;
+  char *str;
 
-  entry = gtk_entry_new();
-  
-  gtk_container_add(GTK_CONTAINER(frame), entry);
-  
-  initial = gconf_client_get(client, config_key, NULL);
+  hbox = gtk_hbox_new (FALSE, 5);
 
-  if (initial != NULL && initial->type == GCONF_VALUE_STRING)
+  label = gtk_label_new (config_key);
+  
+  entry = gtk_entry_new ();
+
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
+
+  /* this will print an error via default error handler
+   * if the key isn't set to a string
+   */
+  str = gconf_client_get_string (client, config_key, NULL);
+
+  if (str)
     {
-      const gchar* str = gconf_value_get_string(initial);
-      gtk_entry_set_text(GTK_ENTRY(entry), str);
+      gtk_entry_set_text (GTK_ENTRY (entry), str);
+      g_free (str);
     }
-
-  if (initial)
-    gconf_value_free(initial);
   
-  gtk_object_set_data(GTK_OBJECT(entry), "client", client);
-  gtk_object_set_data(GTK_OBJECT(entry), "key", g_strdup(config_key));
+  g_object_set_data (G_OBJECT (entry), "client", client);
+  g_object_set_data_full (G_OBJECT (entry), "key",
+                          g_strdup (config_key),
+                          (GDestroyNotify) g_free);
 
-  gtk_signal_connect(GTK_OBJECT(entry), "destroy",
-                     GTK_SIGNAL_FUNC(config_entry_destroy_callback),
-                     NULL);
+  /* Commit changes if the user focuses out, or hits enter; we don't
+   * do this on "changed" since it'd probably be a bit too slow to
+   * round-trip to the server on every "changed" signal.
+   */
+  g_signal_connect (G_OBJECT (entry), "focus_out_event",
+                    G_CALLBACK (config_entry_commit),
+                    NULL);
 
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-                     GTK_SIGNAL_FUNC(config_entry_changed_callback),
-                     prefs_dialog);
+  g_signal_connect (G_OBJECT (entry), "activate",
+                    G_CALLBACK (config_entry_commit),
+                    NULL);  
 
-  /* A dubious hack; set the entry as object data using its
-     config key as the key so we can find it in the prefs dialog
-     revert code */
-  gtk_object_set_data(GTK_OBJECT(prefs_dialog),
-                      config_key, entry);
-
-  /* Set the entry insensitive if the key it edits isn't writable */
+  /* Set the entry insensitive if the key it edits isn't writable.
+   * Technically, we should update this sensitivity if the key gets
+   * a change notify, but that's probably overkill.
+   */
   gtk_widget_set_sensitive (entry,
                             gconf_client_key_is_writable (client,
                                                           config_key, NULL));
+
+  if (focus)
+    gtk_widget_grab_focus (entry);
   
-  return frame;
-}
-
-static void
-apply_button_callback(GtkWidget* button, gpointer data)
-{
-  prefs_dialog_apply(data);
-}
-
-static void
-revert_button_callback(GtkWidget* button, gpointer data)
-{
-  prefs_dialog_revert(data);
-}
-
-static void
-ok_button_callback(GtkWidget* button, gpointer data)
-{
-  GtkWidget* dialog = data;
-  
-  prefs_dialog_apply(dialog);
-  gtk_widget_destroy(dialog);
-}
-
-static void
-cancel_button_callback(GtkWidget* button, gpointer data)
-{
-  GtkWidget* dialog = data;
-  
-  prefs_dialog_revert(dialog);
-  gtk_widget_destroy(dialog);
-}
-
-static void
-prefs_dialog_destroy_callback(GtkWidget* dialog, gpointer data)
-{
-  GConfChangeSet* cs;
-  GConfChangeSet* revert_cs;
-  GConfClient* client;
-
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
-  
-  cs = gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
-  
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
-
-  gconf_change_set_unref(cs);
-
-  if (revert_cs)
-    gconf_change_set_unref(revert_cs);
-
-  g_object_unref(G_OBJECT(client));
+  return hbox;
 }
 
 static GtkWidget*
-create_prefs_dialog(GtkWidget* parent, GConfClient* client)
+create_prefs_dialog (GtkWidget   *parent,
+                     GConfClient *client)
 {
-  GConfChangeSet* cs;
   GtkWidget* dialog;
-  GtkWidget* bbox;
-  GtkWidget* apply;
-  GtkWidget* revert;
-  GtkWidget* ok;
-  GtkWidget* cancel;
-  GtkWidget* vbox_outer;
-  GtkWidget* vbox_inner;
+  GtkWidget* vbox;
   GtkWidget* entry;
   
-  dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  dialog = gtk_dialog_new_with_buttons ("basic-gconf-app Preferences",
+                                        GTK_WINDOW (parent),
+                                        0,
+                                        GTK_STOCK_CLOSE,
+                                        GTK_RESPONSE_ACCEPT,
+                                        NULL);
 
-  apply = gtk_button_new_with_label("Apply");
-  revert = gtk_button_new_with_label("Revert");
+  /* destroy dialog on button press */
+  g_signal_connect (G_OBJECT (dialog), "response",
+                    G_CALLBACK (gtk_widget_destroy),
+                    NULL);
 
-  ok = gtk_button_new_with_label("OK");
-  cancel = gtk_button_new_with_label("Cancel");
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+
+  /* resizing doesn't grow the entries anyhow */
+  gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
   
-  gtk_object_set_data(GTK_OBJECT(dialog), "apply", apply);
-  gtk_object_set_data(GTK_OBJECT(dialog), "revert", revert);
-  gtk_object_set_data(GTK_OBJECT(dialog), "ok", ok);
-  gtk_object_set_data(GTK_OBJECT(dialog), "cancel", cancel);
+  vbox = gtk_vbox_new (FALSE, 5);
+
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
   
-  bbox = gtk_hbutton_box_new();
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+                      vbox, TRUE, TRUE, 0);
 
-  vbox_outer = gtk_vbox_new(FALSE, 10);
-
-  vbox_inner = gtk_vbox_new(FALSE, 10);
+  entry = create_config_entry (dialog, client, "/apps/basic-gconf-app/foo",
+                               TRUE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry, 
+                      FALSE, FALSE, 0);
   
-  gtk_container_add(GTK_CONTAINER(dialog), vbox_outer);
-
-  gtk_box_pack_start(GTK_BOX(vbox_outer), vbox_inner, TRUE, TRUE, 0);
-  gtk_box_pack_end(GTK_BOX(vbox_outer), bbox, FALSE, FALSE, 0);
-
-  gtk_container_add(GTK_CONTAINER(bbox), apply);
-  gtk_container_add(GTK_CONTAINER(bbox), revert);
-  gtk_container_add(GTK_CONTAINER(bbox), ok);
-  gtk_container_add(GTK_CONTAINER(bbox), cancel);
-
-  cs = gconf_change_set_new();
+  entry = create_config_entry (dialog, client, "/apps/basic-gconf-app/bar",
+                               FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry, 
+                      FALSE, FALSE, 0);
   
-  gtk_object_set_data(GTK_OBJECT(dialog), "changeset", cs);
-  gtk_object_set_data(GTK_OBJECT(dialog), "client", client);
+  entry = create_config_entry (dialog, client, "/apps/basic-gconf-app/baz",
+                               FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry, 
+                      FALSE, FALSE, 0);
 
-  /* Grab a reference */
-  g_object_ref(G_OBJECT(client));
-  
-  gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
-                     GTK_SIGNAL_FUNC(prefs_dialog_destroy_callback),
-                     NULL);
-
-  prefs_dialog_update_sensitivity(dialog);
-
-  gtk_signal_connect(GTK_OBJECT(apply), "clicked",
-                     GTK_SIGNAL_FUNC(apply_button_callback),
-                     dialog);
-
-  gtk_signal_connect(GTK_OBJECT(revert), "clicked",
-                     GTK_SIGNAL_FUNC(revert_button_callback),
-                     dialog);
-
-  gtk_signal_connect(GTK_OBJECT(ok), "clicked",
-                     GTK_SIGNAL_FUNC(ok_button_callback),
-                     dialog);
-
-  gtk_signal_connect(GTK_OBJECT(cancel), "clicked",
-                     GTK_SIGNAL_FUNC(cancel_button_callback),
-                     dialog);
-  
-  gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
-
-  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/foo");
-  gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
-                     FALSE, FALSE, 0);
-
-  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/bar");
-  gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
-                     FALSE, FALSE, 0);
-
-  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/baz");
-  gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
-                     FALSE, FALSE, 0);
-
-  entry = create_config_entry(dialog, client, "/apps/basic-gconf-app/blah");
-  gtk_box_pack_start(GTK_BOX(vbox_inner), entry, 
-                     FALSE, FALSE, 0);
+  entry = create_config_entry (dialog, client, "/apps/basic-gconf-app/blah",
+                               FALSE);
+  gtk_box_pack_start (GTK_BOX (vbox), entry, 
+                      FALSE, FALSE, 0);
   
   return dialog;
 }

@@ -5,7 +5,7 @@ INCLUDES=-I$(top_srcdir) -I$(top_builddir) \
 EFENCE=
 
 if GTK
-GTK_EXAMPLES=basic-gconf-app simple-view simple-controller
+GTK_EXAMPLES=basic-gconf-app simple-view simple-controller complex-gconf-app
 else
 GTK_EXAMPLES=
 endif
@@ -25,6 +25,10 @@ simple_view_LDADD = $(GTK_EXAMPLES_LINK)
 simple_controller_SOURCES = simple-controller.c
 
 simple_controller_LDADD = $(GTK_EXAMPLES_LINK)
+
+complex_gconf_app_SOURCES = basic-gconf-app.c
+
+complex_gconf_app_LDADD = $(GTK_EXAMPLES_LINK)
 
 
 

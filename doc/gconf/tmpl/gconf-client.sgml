@@ -698,18 +698,15 @@ Convenient varargs version of gconf_client_change_set_from_currentv().
 @Returns: 
 
 
-<!-- ##### SIGNAL GConfClient::value-changed ##### -->
+<!-- ##### SIGNAL GConfClient::error ##### -->
 <para>
-Emitted when a key below one of the directories added with
-gconf_client_add_dir() receives a new value or is unset. Because your signal
-handler will have to use strcmp() to decide whether it cares about the
-particular value that changed, it can be much more efficient to use
-gconf_client_notify_add().
+Emitted whenever an error occurs inside a #GConfClient function. Depending on
+the #GConfClientErrorHandlingMode, the default handler for this signal may or
+may not display an error dialog.
 </para>
 
 @gconfclient: the object which received the signal.
-@arg1: a const #gchar* representing the changed key name
-@arg2: a #GConfValue* representing the new value, or <symbol>NULL</symbol> for unset.
+@arg1: a #GError* (the error).
 
 <!-- ##### SIGNAL GConfClient::unreturned-error ##### -->
 <para>
@@ -722,13 +719,16 @@ not display an error dialog.
 @gconfclient: the object which received the signal.
 @arg1: a #GError* (the unhandled error).
 
-<!-- ##### SIGNAL GConfClient::error ##### -->
+<!-- ##### SIGNAL GConfClient::value-changed ##### -->
 <para>
-Emitted whenever an error occurs inside a #GConfClient function. Depending on
-the #GConfClientErrorHandlingMode, the default handler for this signal may or
-may not display an error dialog.
+Emitted when a key below one of the directories added with
+gconf_client_add_dir() receives a new value or is unset. Because your signal
+handler will have to use strcmp() to decide whether it cares about the
+particular value that changed, it can be much more efficient to use
+gconf_client_notify_add().
 </para>
 
 @gconfclient: the object which received the signal.
-@arg1: a #GError* (the error).
+@arg1: a const #gchar* representing the changed key name
+@arg2: a #GConfValue* representing the new value, or <symbol>NULL</symbol> for unset.
 

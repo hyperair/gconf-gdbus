@@ -159,10 +159,9 @@ gconf_listeners_remove  (GConfListeners* listeners,
 {
   LTable* lt = (LTable*)listeners;
 
-  g_return_if_fail(cnxn_id > 0);
-
-  /* This is a programmer error but we want to be robust even with
-     checks turned off */
+  /* Silently fail, since this can easily happen (e.g. adding the
+   * notify fails)
+   */
   if (cnxn_id == 0)
     return;
   
@@ -416,8 +415,9 @@ ltable_remove(LTable* lt, guint cnxn)
   GList* tmp;
   GNode* node;
   guint index = CNXN_ID_INDEX(cnxn);
-  
+
   g_return_if_fail(index < lt->listeners->len);
+  
   if (index >= lt->listeners->len) /* robust even with checks off */
     return;
   

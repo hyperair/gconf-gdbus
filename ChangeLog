@@ -1,3 +1,25 @@
+2001-12-06  Havoc Pennington  <hp@pobox.com>
+
+	* autogen.sh: fix up check for gettext to do glib-gettext instead
+
+	* configure.in: add gtk-doc checks and remove --docs-only
+	since I don't think --docs-only works and don't see how it could.
+
+	* doc/gconf/Makefile.am: make makefile use snazzy canonical
+	gtk-doc makefile from gtk
+
+	* doc/gconf/gconf.sgml: make it reflect current reality a bit
+	more.
+
+	* examples/basic-gconf-app.c: Update the example
+
+	* examples/complex-gconf-app.c: Move the old basic-gconf-app.c
+	into here.
+
+	* gconf/gconf-listeners.c (gconf_listeners_remove): remove
+	g_return_if_fail on 0 ID, since that will probably end up
+	happening from time to time
+
 2001-12-04  Havoc Pennington  <hp@redhat.com>
 
 	* gconf/gconf-internals.c (open_empty_locked_file): improve error
