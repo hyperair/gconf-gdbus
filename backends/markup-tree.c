@@ -105,7 +105,7 @@ static const char *save_as_subtree_dirs[] =
   "/apps/panel/profiles",
   "/apps",
   "/desktop/gnome",
-  "/system"
+  "/system",
   "/schemas/apps",
   "/schemas/desktop/gnome",
   "/schemas/system",
