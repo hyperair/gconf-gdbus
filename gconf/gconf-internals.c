@@ -1782,7 +1782,7 @@ g_conf_sources_sync_all    (GConfSources* sources)
  * Config files (yikes! we can't store our config in GConf!)
  */
 
-gchar*
+static gchar*
 unquote_string(gchar* s)
 {
   gchar* end;
@@ -1805,6 +1805,112 @@ unquote_string(gchar* s)
     }
 
   return s;
+}
+
+static const gchar*
+get_variable(const gchar* varname)
+{
+  /* These first two DO NOT use environment variables, which
+     makes things a bit more "secure" in some sense
+  */
+  if (strcmp(varname, "HOME") == 0)
+    {
+      return g_get_home_dir();
+    }
+  else if (strcmp(varname, "USER") == 0)
+    {
+      return g_get_user_name();
+    }
+  else if (varname[0] == 'E' &&
+           varname[1] == 'N' &&
+           varname[2] == 'V' &&
+           varname[3] == '_')
+    {
+      /* This is magic: if a variable called ENV_FOO is used,
+         then the environment variable FOO is checked */
+      gchar* envvar = getenv(&varname[4]);
+
+      if (envvar)
+        return envvar;
+      else
+        return "";
+    }
+  else
+    return "";
+}
+
+static gchar*
+subst_variables(const gchar* src)
+{
+  const gchar* iter;
+  gchar* retval;
+  guint retval_len;
+  guint pos;
+  
+  g_return_val_if_fail(src != NULL, NULL);
+
+  retval_len = strlen(src) + 1;
+  pos = 0;
+  
+  retval = g_malloc0(retval_len+3); /* add 3 just to avoid off-by-one
+                                       segvs - yeah I know it bugs
+                                       you, but C sucks */
+  
+  iter = src;
+
+  while (*iter)
+    {
+      gboolean performed_subst = FALSE;
+      
+      if (pos >= retval_len)
+        {
+          retval_len *= 2;
+          retval = g_realloc(retval, retval_len+3); /* add 3 for luck */
+        }
+      
+      if (*iter == '$' && *(iter+1) == '(')
+        {
+          const gchar* varstart = iter + 2;
+          const gchar* varend   = strchr(varstart, ')');
+
+          if (varend != NULL)
+            {
+              char* varname;
+              gchar* varval;
+              guint varval_len;
+
+              performed_subst = TRUE;
+
+              varname = g_strndup(varstart, varend - varstart);
+              
+              varval = get_variable(varname);
+              g_free(varname);
+
+              varval_len = strlen(varval);
+
+              if ((retval_len - pos) < varval_len)
+                {
+                  retval_len *= 2;
+                  retval = g_realloc(retval, retval_len+3);
+                }
+              
+              strcpy(&retval[pos], varval);
+              pos += varval_len;
+
+              iter = varend + 1;
+            }
+        }
+
+      if (!performed_subst)
+        {
+          retval[pos] = *iter;
+          ++pos;
+          ++iter;
+        }
+    }
+  retval[pos] = '\0';
+
+  return retval;
 }
 
 gchar**       
@@ -1870,14 +1976,17 @@ g_conf_load_source_path(const gchar* filename)
       else 
         {
           gchar* unq;
-
+          gchar* varsubst;
+          
           unq = unquote_string(buf);
-
-          if (*unq != '\0') /* Drop lines with just two quote marks or something */
+          varsubst = subst_variables(unq);
+          
+          if (*varsubst != '\0') /* Drop lines with just two quote marks or something */
             {
-              g_conf_log(GCL_INFO, _("Adding source `%s'\n"), unq);
-              l = g_slist_prepend(l, g_strdup(unq));
+              g_conf_log(GCL_INFO, _("Adding source `%s'\n"), varsubst);
+              l = g_slist_prepend(l, g_strdup(varsubst));
             }
+          g_free(varsubst);
         }
     }
 

@@ -84,15 +84,165 @@
       <title>Terms and Concepts</title>
 
       <para>
-        Fill me in!
+        This section introduces the basic GConf structure and terminology.
       </para>
+
+      <sect3>
+        <title>Namespace</title>          
+        <para>
+          The GConf namespace is almost exactly like the UNIX filesystem; that
+          is, a tree structured directory hierarchy. Each name is either a
+          "file" (a configuration key storing a value) or a "directory" (a list
+          of child configuration key names). A name is specified with a
+          slash-separated path. A full path is referred to as a
+          <firstterm>key</firstterm>.  Characters in a path should be
+          alphanumeric or underscore. Path components may not start with a
+          period.
+        </para>
+      </sect3>
 
       <!-- Data Types -->
       <sect3>
         <title>GConf Data Types</title>
 
-        
+        <para>
+          GConf can only store a small, fixed set of data types. This keeps the
+          database implementation simple and efficient. GConf should
+          <emphasis>not</emphasis> be used to store data files or any other
+          large amount of information; it is designed for simple configuration
+          data only.
+        </para>
 
+        <para>
+          Here are the GConf datatypes:
+          <variablelist>
+            <varlistentry>
+              <term>Integer</term>
+              <listitem><para>
+                  Integer values are simple C-style integers, that is, they are 
+                  limited to 32 bits and can be positive or negative.
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>String</term> 
+              <listitem><para>
+                  String values can contain any text you like,
+                  but not binary data (such as the nul character).
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Float</term>
+              <listitem><para>
+                  Float values are double-precision floating point numbers. 
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Bool</term> 
+              <listitem><para>
+                  Boolean values are true or false.
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Schema</term>
+              <listitem><para>
+                  Schemas store a <structname>GConfSchema</structname> 
+                  data type, which contains meta-information about a key, such 
+                  as documentation and its type. 
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>List</term>
+              <listitem><para>
+                  List values store a group of values. All values
+                  in a list must have the same primitive type. Lists of lists and lists of pairs 
+                  are not allowed.
+                </para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Pair</term> 
+              <listitem><para>
+                  Pairs store two primitive values. The two values do 
+                  not necessarily have the same type. Pairs can not contain pairs or lists, 
+                  only primitive types.
+                </para></listitem>
+            </varlistentry>
+          </variablelist>
+        </para>
+
+      </sect3>
+      
+      <!-- Sources -->
+      <sect3>
+        <title>Configuration Sources</title>
+
+        <para> 
+          Users can specify <firstterm>configuration sources</firstterm>
+          which will be used by the <command>gconfd</command> per-user
+          configuration server.  <command>gconfd</command> loads the file
+          <filename>/etc/gconf/path</filename> on startup; this file contains a
+          list of <firstterm>configuration source addresses</firstterm>.  A
+          source address is similar to a URL; it contains a "protocol" name (in
+          this case, the name of the backend to use), followed by a colon and
+          backend-specific information. For example, the address <filename>
+          xml:/home/hp/.gconf</filename> refers to an XML backend file tree
+          rooted at <filename>/home/hp/.gconf.xml</filename>:
+        </para>
+
+        <para>
+          <filename>/etc/gconf/path</filename> stores a list of addresses, which 
+          form a <firstterm>configuration source path</firstterm>. When looking up 
+          a value, GConf will begin with the first source in the path, and continue
+          checking each source until the value is found or there are no more sources.
+          When setting a value, GConf will use the first <emphasis>writeable</emphasis> source.
+          System administrators can impose <emphasis>mandatory</emphasis> settings on their
+          users by placing a read-only source at the front of the path (note that "mandatory" 
+          only means that existing programs won't let them change the value, users could
+          hack their own copy of GConf that ignored system settings). Administrators can provide
+          <emphasis>default</emphasis> values by placing a systemwide source at the end of the
+          configuration source path.
+        </para>
+        
+        <para>
+          The source configuration file can contain "include" statements; once variables like 
+          HOME are working, this feature can be used to include a .gconf.path file in the 
+          user's home directory.  
+        </para>
+
+        <para>
+          So once everything is working a <filename>/etc/gconf/path</filename> file might look 
+          like this:
+          <programlisting>
+            # GConf configuration path file with an include statement
+            xml:/etc/gconf.xml.mandatory
+            include "HOME/.gconf.path"
+            xml:/etc/gconf.xml.defaults
+          </programlisting>
+        </para>
+
+        <warning>
+          <title>GConf TODO Items: GUI feedback for mandatory settings, and variables in the path config file</title>
+          <para>
+            GConf is missing two important features:
+            <itemizedlist>
+              <listitem>
+                <para>
+                  When apps query a value, if GConf takes it from a read-only source it 
+                  needs to tell the app that the value is not modifiable, so they 
+                  can set the GUI element configuring that value insensitive and 
+                  refuse to change the value. Otherwise very confusing behavior results.
+                  This requires an API change to the client library. 
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  The config file should accept some special variables, such as 
+                  HOME, expanding to the user's home directory. This allows admins 
+                  to set up sources that depend on the current user.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </warning>
       </sect3>
 
     </sect2>
@@ -322,6 +472,15 @@
         </funcsynopsis>
       </para>
 
+      <warning>
+        <title>GConf FIXME: thread safety for error system</title>
+        <para>
+          Clearly this has the same thread-safety problems as <symbol>errno</symbol>,
+          I'm not sure what a good API to fix it would be however. Suggestions 
+          welcome.
+        </para>
+      </warning>
+
     </sect2>
 
 
@@ -350,16 +509,19 @@
       </para>
 
       <warning>
-        If you use <function>gnome_CORBA_init()</function> to get your
-        ORB reference, CORBA connections to your application are
-        authenticated via <filename>libgnorba</filename>. If you let
-        GConf set up the ORB, connections are authenticated in a
-        GConf-specific way. Your authentication mechanism must match
-        the one used by the <command>gconfd</command> per-user
-        configuration daemon, which is never the GNOME way for
-        now. This will obviously change before GConf goes into
-        production in a GNOME environment, but it works great 
-        for non-GNOME apps right now. :-)
+        <title>Using GConf with GNOME</title>
+        <para>
+          If you use <function>gnome_CORBA_init()</function> to get your
+          ORB reference, CORBA connections to your application are
+          authenticated via <filename>libgnorba</filename>. If you let
+          GConf set up the ORB, connections are authenticated in a
+          GConf-specific way. Your authentication mechanism must match
+          the one used by the <command>gconfd</command> per-user
+          configuration daemon, which is never the GNOME way for
+          now. This will obviously change before GConf goes into
+          production in a GNOME environment, but it works great 
+          for non-GNOME apps right now. :-)
+        </para>
       </warning>
 
       <para>
@@ -396,7 +558,12 @@
     <sect2>
       <title>Reading Configuration Values</title>
 
+      <para>
+        
+      </para>
+
     </sect2>
+  </sect1>
 
 </article>
 <!-- Keep this comment at the end of the file

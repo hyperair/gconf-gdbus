@@ -1,3 +1,15 @@
+1999-09-17  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf-internals.c (subst_variables): Add a new function to
+	perform variable substitution on addresses in the path file. 
+	Supports $(HOME), $(USER), and $(ENV_ANYENVVARNAME)
+
+	* Makefile.am: Add "doc" subdir
+
+	* doc/Makefile.am: Added
+
+	* doc/gconf.sgml: write more docs
+	
 1999-09-03  Havoc Pennington  <hp@pobox.com>
 
 	* configure.in: Set library version info variables, and locate

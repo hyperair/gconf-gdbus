@@ -824,7 +824,7 @@ main(int argc, char** argv)
   int launcher_fd = -1; /* FD passed from the client that spawned us */
 
   /* Following all Stevens' rules for daemons */
-
+  
   switch (fork())
     {
     case -1:
@@ -856,7 +856,7 @@ main(int argc, char** argv)
   
   g_conf_log(GCL_INFO, _("starting, pid %u user `%s'"), 
              (guint)getpid(), g_get_user_name());
-  
+
   /* Session setup */
   sigemptyset (&empty_mask);
   act.sa_handler = signal_handler;
