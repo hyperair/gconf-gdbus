@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
 "POT-Creation-Date: 2000-09-14 22:20-0400\n"
-"PO-Revision-Date: 2000-09-09 21:35+01:00\n"
+"PO-Revision-Date: 2000-09-27 21:35+01:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -303,11 +303,14 @@ msgid ""
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
+"Kunne ikke logge tilføjelse af lytter (%s); vil ikke kunne genoprette denne "
+"lytter ved genstart af gconfd, noget som vil resultere i upålidelig "
+"notifikation af konfigurationsændringer."
 
 #: gconf/gconf-database.c:724
 #, c-format
 msgid "Listener ID %lu doesn't exist"
-msgstr ""
+msgstr "Lytter-ID %lu eksisterer ikke"
 
 #: gconf/gconf-database.c:733
 #, c-format
@@ -315,6 +318,9 @@ msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
 msgstr ""
+"Kunne ikke logge fjernelse af lytter til logfil (højst sandsynligt "
+"harmløst, kan resultere i at notifikation genindtræffer på uforklarlig vis): "
+"%s"
 
 #: gconf/gconf-database.c:838 gconf/gconf-sources.c:1189
 #, c-format
@@ -652,9 +658,8 @@ msgid "Received list from gconfd with a bad list type"
 msgstr "Modtog liste fra gconfd med en ugyldig listetype"
 
 #: gconf/gconf-internals.c:445
-#, fuzzy
 msgid "Failed to convert object to IOR"
-msgstr "Fejlede ved synkronisering af en eller flere kilder: %s"
+msgstr "Kunne ikke konvertere objekt til IOR"
 
 #: gconf/gconf-internals.c:811
 #, c-format
@@ -918,7 +923,7 @@ msgstr "Kan ikke tilføje notifikationer til en lokal konfigurationskilde"
 #: gconf/gconf.c:1597
 #, c-format
 msgid "Pinging the server failed, CORBA error: %s"
-msgstr "Pingning af tjeneren fejlede, CORBA-fejl: %s"
+msgstr "Pinging af tjeneren mislykkedes, CORBA-fejl: %s"
 
 #: gconf/gconf.c:1613
 msgid ""
@@ -1027,12 +1032,11 @@ msgstr ""
 "eller gemme konfigurationsdata"
 
 #: gconf/gconfd.c:287
-#, fuzzy
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr ""
-"Ingen skrivbar konfigurationskilde fundet, kan ikke gemme dele af "
+"Ingen skrivbare konfigurationskilder fundet, kan ikke gemme dele af "
 "konfigurationsændringene"
 
 #: gconf/gconfd.c:312 gconf/gconfd.c:324
@@ -1041,9 +1045,9 @@ msgid "Received signal %d, shutting down."
 msgstr "Modtog signal %d, lukker ned."
 
 #: gconf/gconfd.c:329
-#, fuzzy, c-format
+#, c-format
 msgid "Received signal %d, shutting down cleanly"
-msgstr "Modtog signal %d, lukker ned."
+msgstr "Modtog signal %d, lukker ned på rigtig måde"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
@@ -1099,86 +1103,98 @@ msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr ""
+"Kunne ikke åbne gconfd logfil; vil ikke kunne genoprette lyttere efter "
+"nedlukning af gconfd (%s)"
 
 #: gconf/gconfd.c:908
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
+"Kunne ikke lukke gconfd logfil; data blev måske ikke gemt rigtigt (%s)"
 
 #: gconf/gconfd.c:966
-#, fuzzy, c-format
+#, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
-msgstr "Kunne ikke åbne gemt tilstandsfil '%s': %s"
+msgstr "Kunne ikke åbne gemt tilstandsfil '%s' for skriving: %s"
 
 #: gconf/gconfd.c:980
-#, fuzzy, c-format
+#, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
-msgstr "Kunne ikke genoprette gemt tilstandsfil fra fil '%s': %s"
+msgstr "Kunne ikke skrive gemt tilstandsfil '%s' fd: %d: %s"
 
 #: gconf/gconfd.c:989
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to close new saved state file '%s': %s"
-msgstr "Kunne ikke åbne gemt tilstandsfil '%s': %s"
+msgstr "Kunne ikke lukke ny gemt tilstandsfil '%s': %s"
 
 #: gconf/gconfd.c:1003
-#, fuzzy, c-format
+#, c-format
 msgid "Could not move aside old saved state file '%s': %s"
-msgstr "Kunne ikke åbne gemt tilstandsfil '%s': %s"
+msgstr "Kunne ikke flytte gammel gemt tilstandsfil '%s': %s"
 
 #: gconf/gconfd.c:1013
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to move new save state file into place: %s"
-msgstr "Kunne ikke åbne gemt tilstandsfil '%s': %s"
+msgstr "Kunne ikke flytte ny gemt tilstandsfil på plads: %s"
 
 #: gconf/gconfd.c:1022
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "Kunne ikke genoprette gemt tilstandsfil fra fil '%s': %s"
+msgstr ""
+"Kunne ikke genoprette oprindelig gemt tilstandsfil som er blevet "
+"flyttet til '%s': %s"
 
 #: gconf/gconfd.c:1110
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand line in saved state file: '%s'"
-msgstr "Forstod ikke elementet '%s' i gemt tilstandsfil"
+msgstr "Forstod ikke linje i gemt tilstandsfil: '%s'"
 
 #: gconf/gconfd.c:1125
-#, fuzzy
 msgid "Failed to parse connection ID in saved state file"
-msgstr "Kunne ikke genoprette gemt tilstandsfil fra fil '%s': %s"
+msgstr "Kunne ikke tolke forbindelses-ID i gemt tilstandsfil"
 
 #: gconf/gconfd.c:1140
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unquote config source address from saved state file: %s"
-msgstr "Kunne ikke genoprette gemt tilstandsfil fra fil '%s': %s"
+msgstr ""
+"Kunne ikke afcitere adresse for konfigurationskilde fra gemt tilstandsfil: "
+"%s"
 
 #: gconf/gconfd.c:1160
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unquote listener location from saved state file: %s"
-msgstr "Kunne ikke genoprette gemt tilstandsfil fra fil '%s': %s"
+msgstr "Kunne ikke afcitere placering af lytter fra gemt tilstandsfil: %s"
 
 #: gconf/gconfd.c:1180
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unquote IOR from saved state file: %s"
-msgstr "Kunne ikke genoprette gemt tilstandsfil fra fil '%s': %s"
+msgstr "Kunne ikke afcitere IOR fra gemt tilstandsfil: %s"
 
 #: gconf/gconfd.c:1204
 msgid ""
 "Saved state file records the same listener added twice; ignoring the second "
 "instance"
 msgstr ""
+"Gemt tilstandsfil viser samme lytter tilføjet to gange; ignorerer instans "
+"nr. 2"
 
 #: gconf/gconfd.c:1225
 msgid ""
 "Saved state file had a removal of a listener that wasn't added; ignoring the "
 "removal."
 msgstr ""
+"Gemt tilstandsfil fik fjernet en lytter som ikke var tilføjet; ignorerer "
+"fjernelse."
 
 #: gconf/gconfd.c:1346
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
+"Kunne ikke genoprette en lytter på adresse '%s', kunne ikke finde "
+"databasen"
 
 #: gconf/gconfd.c:1377
 #, c-format
@@ -1191,6 +1207,8 @@ msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to "
 "re-add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
+"Kunne ikke logge tilføjelse af lytter til gconfd logfilen; vil ikke kunne "
+"tilføje lytteren hvis gconfd afslutter eller lukker ned (%s)"
 
 #: gconf/gconfd.c:1481
 #, c-format
@@ -1198,6 +1216,8 @@ msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously "
 "re-add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
+"Kunne ikke logge fjernelse af lytter i gconfd-logfilen; kan medføre at "
+"lytter lægges ind igen hvis gconfd afsluttes eller maskinen lukkes ned (%s)."
 
 #: gconf/gconftool.c:62
 msgid "Help options"
@@ -1830,7 +1850,7 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Forsøgte at ødelægge din applikation ved at sætte forkerte værdier til "
+"Forsøger at ødelægge din applikation ved at sætte forkerte værdier til "
 "nøgler i katalog:\n"
 "  %s\n"
 
@@ -1844,37 +1864,8 @@ msgstr "GConf advarsel: fejl ved listning af par i `%s': %s"
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Forventede %s, fik %s for nøgle %s"
 
-#~ msgid "Received signal %d, ignoring"
-#~ msgstr "Modtog signal %d, ignorerer"
+msgid "No database available to save your configuration"
+msgstr "Ingen database tilgængelig for lagring af din konfiguration"
 
-#~ msgid "Failed to create ~/.gconfd/saved_state to record gconfd's state: %s"
-#~ msgstr ""
-#~ "Kunne ikke oprette ~/.gconfd/saved_state for at gemme gconfd's tilstand: %s"
-
-#~ msgid "Failed to write ~/.gconfd/saved_state to record gconfd's state: %s"
-#~ msgstr ""
-#~ "Kunne ikke skrive til ~/.gconfd/saved_state for at gemme gconfd's tilstand: "
-#~ "%s"
-
-#~ msgid "No location attribute on listener element in saved state file"
-#~ msgstr "Ingen lokationsattribut i lytter-elementet i den gemte tilstandsfil"
-
-#~ msgid "No IOR attribute on listener element in saved state file"
-#~ msgstr "Ingen IOR-attribut i lytter-elementet i gemt tilstandsfil"
-
-#~ msgid "No connection ID attribute on listener element in saved state file"
-#~ msgstr "Ingen forbindelses-ID-attribut i lytter-element i gemt tilstandsfil"
-
-#~ msgid "Strange non-element node in saved state file"
-#~ msgstr "Underligt ikke-element node i gemt tilstandsfil"
-
-#~ msgid "Root node of saved state file should be an element"
-#~ msgstr "Root-node af gemt tilstandsfil skulle vært et element"
-
-#~ msgid "Root node of saved state file should be 'gconfd_logfile', not '%s'"
-#~ msgstr ""
-#~ "Root-node i gemt tilstandsfil skulle være 'gconfd_logfile', ikke '%s'"
-
-#~ msgid "Funny non-element node under <gconfd_logfile> in saved state file"
-#~ msgstr ""
-#~ "Underligt ikke-element node under <gconfd_logfile> i gemt tilstandsfil"
+msgid "Unable to store a value at key '%s'"
+msgstr "Kunne ikke lagre værdi i nøgle '%s'"
