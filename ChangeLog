@@ -1,3 +1,18 @@
+2004-04-05  Mark McLoughlin  <mark@skynet.ie>
+
+	Revert the --dump behaviour change (not dumping schema defaults)
+	and add a --ignore-schema-defaults argument which applies to
+	all arguments which get the value of a key.
+
+	* gconf/gconftool.c:
+	(main): check that --ignore-schema-defaults is being used with
+	an option which gets a value.
+	(list_pairs_in_dir), (dump_entries_in_dir):
+	respect --ignore-schema-defaults.
+	(get_maybe_without_default): helper function.
+	(do_get), (do_get_type), (do_get_list_size), (do_get_list_element):
+	respect --ignore-schema-defaults.
+
 2004-04-02  Mark McLoughlin  <mark@skynet.ie>
 
 	* gconf/gconftool.c: (set_values), (process_entry): handle
