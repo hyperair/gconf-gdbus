@@ -999,7 +999,7 @@ dir_load_doc(Dir* d, GError** err)
       if (tmp_err != NULL)
         {
           gconf_log (GCL_WARNING,
-                     _("%s"), tmp_err->message);
+                     "%s", tmp_err->message);
 
           /* file errors are assumed to be some kind of
            * blowup, like out of file descriptors, so
