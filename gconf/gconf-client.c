@@ -837,14 +837,15 @@ gconf_client_dir_exists     (GConfClient* client,
 }
 
 static gboolean
-check_type(GConfValue* val, GConfValueType t, GConfError** err)
+check_type(const gchar* key, GConfValue* val, GConfValueType t, GConfError** err)
 {
   if (val->type != t)
     {
       gconf_set_error(err, GCONF_ERROR_TYPE_MISMATCH,
-                      _("Expected `%s' got `%s'"),
+                      _("Expected `%s' got `%s' for key %s"),
                       gconf_value_type_to_string(t),
-                      gconf_value_type_to_string(val->type));
+                      gconf_value_type_to_string(val->type),
+                      key);
       return FALSE;
     }
   else
@@ -1017,7 +1018,7 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(val, GCONF_VALUE_FLOAT, &error))
+      if (check_type(key, val, GCONF_VALUE_FLOAT, &error))
         retval = gconf_value_float(val);
       else
         handle_error(client, error, err);
@@ -1052,7 +1053,7 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(val, GCONF_VALUE_INT, &error))
+      if (check_type(key, val, GCONF_VALUE_INT, &error))
         retval = gconf_value_int(val);
       else
         handle_error(client, error, err);
@@ -1087,7 +1088,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(val, GCONF_VALUE_STRING, &error))
+      if (check_type(key, val, GCONF_VALUE_STRING, &error))
         retval = g_strdup(gconf_value_string(val));
       else
         handle_error(client, error, err);
@@ -1129,7 +1130,7 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
 
       g_assert(error == NULL);
       
-      if (check_type(val, GCONF_VALUE_BOOL, &error))
+      if (check_type(key, val, GCONF_VALUE_BOOL, &error))
         retval = gconf_value_bool(val);
       else
         handle_error(client, error, err);
@@ -1163,7 +1164,7 @@ gconf_client_get_schema  (GConfClient* client,
 
       g_assert(error == NULL);
       
-      if (check_type(val, GCONF_VALUE_SCHEMA, &error))
+      if (check_type(key, val, GCONF_VALUE_SCHEMA, &error))
         retval = gconf_value_schema(val);
       else
         handle_error(client, error, err);
