@@ -138,13 +138,65 @@ AC_SUBST(DEPENDENT_WITH_GTK_LIBS)
 AC_SUBST(DEPENDENT_WITH_GTK_CFLAGS)
 
 AC_ARG_ENABLE(bdbbackend, Enable BDB backend,,enable_bdbbackend=yes)
+AC_ARG_WITH(db3-includes, [  --with-db3-includes=PREFIX     Location of DB3 includes.],
+            with_db3_includes="$withval", with_db3_includes="/usr/include")
+AC_ARG_WITH(db3-libs, [  --with-db3-libs=PREFIX     Location of DB3 libs.],
+            with_db3_libs="$withval", with_db3_libs="/usr/lib")
 
 BDB_LIBS=
 BDB_CFLAGS=
 
 if test "x$enable_bdbbackend" = "xyes"; then
-   AC_CHECK_LIB(db-3, db_env_create, BDB_LIBS=-ldb-3)
-   AC_CHECK_HEADERS(db3/db.h,  , AC_MSG_ERROR([db3 library found but db3/db.h not found]))
+    have_db3_includes="no"
+    if test "x${with_db3_includes}" != "xno"; then
+        CPPFLAGS_save="$CPPFLAGS"
+	
+        AC_MSG_CHECKING(for DB3 includes in $with_db3_includes)
+        AC_MSG_RESULT("")
+	
+        CPPFLAGS="$CPPFLAGS -I$with_db3_includes"
+        AC_CHECK_HEADERS(db3/db.h, [ db3_includes="yes" ])
+        CPPFLAGS="$CPPFLAGS_save"
+	
+        if test "x{$db3_includes}" != "xno" -a "x{$db3_includes}" != "x" ; then
+                have_db3_includes="yes"
+                BDB_CFLAGS="-I$with_db3_includes"
+        fi
+    else
+        AC_MSG_CHECKING(for DB3 includes)
+        AC_MSG_RESULT(no)
+    fi
+
+    have_db3_libs="no"
+    if test "x${with_db3_libs}" != "xno" -a "x${have_db3_includes}" != "xno"; then
+	CFLAGS_save="$CFLAGS"
+	LIBS_save="$LDFLAGS"
+	
+	db3libs="-ldb-3"
+	AC_CACHE_CHECK([for DB3 libraries], db3_libs,
+	[
+		CFLAGS="$CFLAGS $NSPR_CFLAGS"
+		
+		if test "x${with_db3_libs}" != "x"; then
+			LIBS="$LIBS -L$with_db3_libs $db3libs"
+		else
+			LIBS="$LIBS $db3libs"
+		fi
+		
+		AC_TRY_LINK_FUNC(db_env_create, db3_libs="yes", db3_libs="no")
+		CFLAGS="$CFLAGS_save"
+		LIBS="$LIBS_save"
+	])
+	if test "x${db3_libs}" != "xno"; then
+		have_db3_libs="yes"
+		BDB_LIBS="-L$with_db3_libs $nsprlibs"
+	else
+		BDB_LIBS=""
+	fi
+   else
+	AC_MSG_CHECKING(for DB3 libraries)
+	AC_MSG_RESULT(no)
+   fi
 fi
 
 if test "x$BDB_LIBS" = x; then
