@@ -1,0 +1,108 @@
+<!DOCTYPE ARTICLE PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+]>
+
+<article id="index">
+  <artheader>
+    <authorgroup>
+      <author>
+	<firstname>Havoc</firstname>
+	<surname>Pennington</surname>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>1999</year>
+      <holder>Havoc Pennington</holder>
+    </copyright>
+
+    <!-- GConf -->
+    <title>GConf</title>
+    <abstract>
+      <para>
+      GConf is a system for storing configuration information, that
+      is, key-value pairs. GConf provides a notification service
+      so applications can be notified when a key's value is changed.
+      GConf also allows for pluggable storage mechanisms (text files,
+      databases, etc.) and allows administrators to install default 
+      values.
+      </para>
+      
+    </abstract>
+  </artheader>
+  
+  <!-- Introduction to GConf -->
+  <sect1>
+    <title>Introduction to GConf</title>
+    
+    <!-- Motivation -->
+    <sect2>
+      <title>Motivation</title>
+      
+      <para>   
+        GConf is intended to store key-value pairs, where keys are
+        located in an infinite tree-structured namespace (similar to the
+        UNIX filesystem). It offers several useful features:
+        <itemizedlist mark="bullet">
+          <listitem>
+            <para>
+              Users can select a variety of data storage backends, such as
+              XML text files, ACAP, or databases (LDAP, DB, etc.). This makes 
+              it easy to adapt GConf to local needs. It also avoids the
+              age-old "text files vs. binary registry" debate.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              GConf offers a notification service, so applications can 
+              ask to be notified when the value of a key changes. 
+              This allows settings to be applied to groups of
+              applications, without restarting them and without 
+              ugly hacks.
+            </para>
+          </listitem>
+          <listitem>
+            Each user has a "GConf search path" which is a list of 
+            configuration sources to scan for each value. 
+            For example, the configuration engine might look for 
+            values first in the local machine's database and 
+            then in a network-wide database.
+          </listitem>
+          <listitem>
+            GConf is implemented as a per-user daemon, which makes 
+            locking a non-issue and allows aggressive caching.
+          </listitem>
+        </itemizedlist>
+      </para>
+      
+    </sect2>
+
+    <!-- GConf Components -->
+    <sect2>
+      <title>Components</title>
+      
+      <para>
+        
+      </para>
+
+    </sect2>
+  </sect1>
+
+</article>
+<!-- Keep this comment at the end of the file
+Local variables:
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+sgml-auto-insert-required-elements:t
+sgml-balanced-tag-edit:t
+sgml-normalize-trims:t
+sgml-set-face:t
+sgml-parent-document:nil
+End:
+-->
+

@@ -53,6 +53,8 @@ libgconf_client_la_SOURCES = \
 libgconf_client_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE)
 libgconf_client_la_LIBADD = $(GLIB_LIBS) $(ORBIT_LIBS)
 
+EXTRA_DIST=GConf.idl
+
 ## This is totally broken, I just don't feel like doing the configure.in work to 
 ## detect Gnome, etc. Depends on the non-GUI testclient to suck in its dependencies.
 gnome-testclient: gnome-testclient.c gconf-testclient

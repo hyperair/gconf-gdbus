@@ -63,10 +63,10 @@ orb_handle_connection(GIOChannel *source, GIOCondition cond,
 {
 
   /* The best way to know about an fd exception is if select()/poll()
-	 * tells you about it, so we just relay that information on to ORBit
-	 * if possible
-	 */
-	
+   * tells you about it, so we just relay that information on to ORBit
+   * if possible
+   */
+  
   if(cond & (G_IO_HUP|G_IO_NVAL|G_IO_ERR))
     giop_main_handle_connection_exception(cnx);
   else
