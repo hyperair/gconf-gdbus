@@ -3,7 +3,7 @@
 // client library. I reserve the right to change it whenever I feel 
 // like it. So there.
 
-enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal };
+enum ConfigValueType { InvalidVal,  IntVal, StringVal, FloatVal, BoolVal };
 
 union ConfigValue switch (ConfigValueType) {
  case InvalidVal:
@@ -14,6 +14,8 @@ union ConfigValue switch (ConfigValueType) {
    string string_value;
  case FloatVal:
    float float_value;
+ case BoolVal:
+   boolean bool_value;
 };
 
 interface ConfigListener {

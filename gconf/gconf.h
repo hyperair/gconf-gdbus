@@ -28,9 +28,11 @@ typedef enum {
   G_CONF_VALUE_STRING,
   G_CONF_VALUE_INT,
   G_CONF_VALUE_FLOAT,
+  G_CONF_VALUE_BOOL,
   G_CONF_VALUE_LIST_OF_STRING,
   G_CONF_VALUE_LIST_OF_INT,
-  G_CONF_VALUE_LIST_OF_FLOAT
+  G_CONF_VALUE_LIST_OF_FLOAT,
+  G_CONF_VALUE_LIST_OF_BOOL
 } GConfValueType;
 
 /* 
@@ -44,6 +46,7 @@ struct _GConfValue {
   union {
     gchar* string_data;
     gint int_data;
+    gboolean bool_data;
     gdouble float_data;
     GSList* list_data;
   } d;
@@ -53,6 +56,7 @@ struct _GConfValue {
 #define g_conf_value_int(x)    ((x)->d.int_data)
 #define g_conf_value_float(x)  ((x)->d.float_data)
 #define g_conf_value_list(x)   ((x)->d.list_data)
+#define g_conf_value_bool(x)   ((x)->d.bool_data)
 
 GConfValue* g_conf_value_new(GConfValueType type);
 GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
@@ -62,6 +66,7 @@ void        g_conf_value_destroy(GConfValue* value);
 void        g_conf_value_set_int(GConfValue* value, gint the_int);
 void        g_conf_value_set_string(GConfValue* value, const gchar* the_str);
 void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
+void        g_conf_value_set_bool(GConfValue* value, gboolean the_bool);
 
 gchar*      g_conf_value_to_string(GConfValue* value);
 
@@ -98,12 +103,13 @@ void         g_conf_notify_remove(GConf* conf,
 
 
 /* We'll have higher-level versions that return a double or string instead of a GConfValue */
-GConfValue*  g_conf_lookup(GConf* conf, const gchar* key);
+GConfValue*  g_conf_get(GConf* conf, const gchar* key);
 
 /* ditto, higher-level version planned. */
 void         g_conf_set(GConf* conf, const gchar* key, GConfValue* value);
 
 
+gboolean     g_conf_valid_key      (const gchar* key);
 
 #endif
 

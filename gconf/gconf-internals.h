@@ -34,19 +34,23 @@ typedef struct _GConfBackend GConfBackend;
 typedef struct _GConfSource GConfSource;
 
 struct _GConfSource {
+  guint flags;
   GConfBackend* backend;
 };
 
-GConfSource* g_conf_resolve_address(const gchar* address);
+typedef enum {
+  G_CONF_SOURCE_WRITEABLE = 1 << 0,
+  G_CONF_SOURCE_ALL_FLAGS = ((1 << 0))
+} GConfSourceFlags;
+
+GConfSource*  g_conf_resolve_address         (const gchar* address);
 GConfValue*   g_conf_source_query_value      (GConfSource* source,
                                               const gchar* key);
 void          g_conf_source_set_value        (GConfSource* source,
                                               const gchar* key,
                                               GConfValue* value);
-gboolean      g_conf_source_sync_all         (GConfSource* source);
+gboolean     g_conf_source_sync_all          (GConfSource* source);
 void         g_conf_source_destroy (GConfSource* source);
-
-gboolean     g_conf_valid_key      (const gchar* key);
 
 gchar*       g_conf_key_directory  (const gchar* key);
 gchar*       g_conf_key_key        (const gchar* key);
@@ -68,6 +72,26 @@ gchar*   g_conf_read_server_ior(void);
 
 GConfValue* g_conf_value_from_corba_value(const ConfigValue* value);
 ConfigValue*  corba_value_from_g_conf_value(GConfValue* value);
+ConfigValue*  invalid_corba_value();
+
+/* This is the actual thing we want to talk to, the stack of sources */
+typedef struct _GConfSources GConfSources;
+
+struct _GConfSources {
+  GList* sources;
+  
+};
+
+GConfSources* g_conf_sources_new(gchar** addresses);
+GConfValue*   g_conf_sources_query_value (GConfSources* sources, 
+                                          const gchar* key);
+void          g_conf_sources_set_value   (GConfSources* sources,
+                                          const gchar* key,
+                                          GConfValue* value);
+void          g_conf_sources_sync_all    (GConfSources* sources);
+
+gchar**       g_conf_load_source_path(const gchar* filename);
 
 #endif
+
 

@@ -1,6 +1,6 @@
 INCLUDES=-I$(top_srcdir) $(GLIB_CFLAGS) $(GMODULE_CFLAGS) $(ORBIT_CFLAGS)
 
-bin_PROGRAMS = gconfd gconf-testclient
+bin_PROGRAMS = gconfd gconf-testclient gconftool
 
 CORBA_SOURCES = GConf-common.c GConf-skels.c GConf-stubs.c GConf.h
 
@@ -16,6 +16,7 @@ gconfd_SOURCES = \
 	gconf-backend.h		\
 	gconf-backend.c		\
 	gconf.h			\
+	gconf.c			\
 	gconfd.c		\
 	$(CORBA_SOURCES)
 
@@ -34,6 +35,20 @@ gconf_testclient_SOURCES = \
 	$(CORBA_SOURCES)
 
 gconf_testclient_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS)
+
+gconftool_SOURCES = \
+	gconf-orbit.c		\
+	gconf-orbit.h		\
+	gconf-internals.c	\
+	gconf-internals.h	\
+	gconf-backend.h		\
+	gconf-backend.c		\
+	gconf.h			\
+	gconf.c			\
+	gconftool.c		\
+	$(CORBA_SOURCES)
+
+gconftool_LDADD = $(GLIB_LIBS) $(GMODULE_LIBS) $(ORBIT_LIBS) -lpopt
 
 $(CORBA_SOURCES): GConf.idl
 	orbit-idl GConf.idl

@@ -69,6 +69,8 @@
 
 static void g_conf_main(void);
 
+static GConfSources* sources = NULL;
+
 /* fast_cleanup() nukes the info file,
    and is theoretically re-entrant.
 */
@@ -119,7 +121,7 @@ static void         ltable_entry_destroy(LTableEntry* entry);
  * CORBA goo
  */
 
-ConfigServer server = CORBA_OBJECT_NIL;
+static ConfigServer server = CORBA_OBJECT_NIL;
 
 CORBA_unsigned_long 
 gconfd_add_listener(PortableServer_Servant servant, const CORBA_char * where, 
@@ -141,22 +143,24 @@ CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev);
 
 
-PortableServer_ServantBase__epv base_epv = {
+static PortableServer_ServantBase__epv base_epv = {
   NULL,
   NULL,
   NULL
 };
 
-POA_ConfigServer__epv server_epv = { NULL, 
-                                     gconfd_add_listener, 
-                                     gconfd_remove_listener, 
-                                     gconfd_lookup, 
-                                     gconfd_set, 
-                                     gconfd_sync,
-                                     gconfd_ping
+static POA_ConfigServer__epv server_epv = { 
+  NULL, 
+  gconfd_add_listener, 
+  gconfd_remove_listener, 
+  gconfd_lookup, 
+  gconfd_set, 
+  gconfd_sync,
+  gconfd_ping
 };
-POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
-POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
+
+static POA_ConfigServer__vepv poa_server_vepv = { &base_epv, &server_epv };
+static POA_ConfigServer poa_server_servant = { NULL, &poa_server_vepv };
 
 
 CORBA_unsigned_long
@@ -185,17 +189,46 @@ ConfigValue*
 gconfd_lookup(PortableServer_Servant servant, const CORBA_char * key, 
               CORBA_Environment *ev)
 {
-  
-  return NULL; /* FIXME */
+  GConfValue* val;
+      
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received lookup before initializing sources list; bug?");
+      return invalid_corba_value();
+    }
+
+  val = g_conf_sources_query_value(sources, key);
+
+  if (val != NULL)
+    {
+      ConfigValue* cval = corba_value_from_g_conf_value(val);
+
+      g_conf_value_destroy(val);
+
+      return cval;
+    }
+  else
+    return invalid_corba_value();
 }
 
 void
 gconfd_set(PortableServer_Servant servant, const CORBA_char * key, 
            const ConfigValue* value, CORBA_Environment *ev)
 {
-  /* FIXME actually set. :-) */
   gchar* str;
   GConfValue* val;
+      
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received set request before initializing sources list; bug?");
+      return;
+    } 
+
+  if (value->_d == InvalidVal)
+    {
+      syslog(LOG_ERR, "Received invalid value in set request");
+      return;
+    }
 
   val = g_conf_value_from_corba_value(value);
 
@@ -205,20 +238,77 @@ gconfd_set(PortableServer_Servant servant, const CORBA_char * key,
 
   g_free(str);
 
+  g_conf_sources_set_value(sources, key, val);
+
   ltable_notify_listeners(ltable, key, value);
 }
 
 void 
 gconfd_sync(PortableServer_Servant servant, CORBA_Environment *ev)
 {
+  if (sources == NULL)
+    {
+      syslog(LOG_ERR, "Received sync request before initializing sources list; bug?");
+      return;
+    } 
 
-  
+  g_conf_sources_sync_all(sources);
 }
 
 CORBA_long
 gconfd_ping(PortableServer_Servant servant, CORBA_Environment *ev)
 {
   return getpid();
+}
+
+/*
+ * Main code
+ */
+
+/* This is called after we get the info file lock
+   but before we write the info file, to avoid 
+   client requests prior to source loading. 
+*/
+static void
+g_conf_server_load_sources(void)
+{
+  gchar** addresses;
+  GList* tmp;
+  gboolean have_writeable = FALSE;
+
+  addresses = g_conf_load_source_path("/cvs/gnome-cvs/gconf/gconf/gconf.path"); /* FIXME sysconfdir/something */
+  
+  if (addresses == NULL)
+    {
+      syslog(LOG_ERR, "No configuration sources in the source path");
+      return;
+    }
+  
+  sources = g_conf_sources_new(addresses);
+
+  g_free(addresses);
+
+  g_assert(sources != NULL);
+
+  if (sources->sources == NULL)
+    syslog(LOG_ERR, "No config source addresses successfully resolved, can't load or store config data");
+  
+  
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      if (((GConfSource*)tmp->data)->flags & G_CONF_SOURCE_WRITEABLE)
+        {
+          have_writeable = TRUE;
+          break;
+        }
+
+      tmp = g_list_next(tmp);
+    }
+
+  if (!have_writeable)
+    syslog(LOG_WARNING, "No writeable config sources successfully resolved, won't be able to save configuration changes");
 }
 
 /* From Stevens */
@@ -297,6 +387,12 @@ g_conf_server_write_info_file(const gchar* ior)
              strerror(errno));
       return FALSE;
     }
+
+  /* IMPORTANT this must be done here, after the lock, 
+     but before writing the file contents, so no one
+     tries to contact gconfd before we have sources 
+  */
+  g_conf_server_load_sources();
 
   /* This block writes the file contents */
   {
@@ -384,8 +480,6 @@ main(int argc, char** argv)
   char *ior;
   CORBA_ORB orb;
 
-  GConfSource* source;
-  GConfSource* source2;
   int launcher_fd = -1; /* FD passed from the client that spawned us */
 
   /* Following all Stevens' rules for daemons */
@@ -413,6 +507,8 @@ main(int argc, char** argv)
   openlog ("gconfd", LOG_NDELAY, LOG_USER);
   syslog (LOG_INFO, "starting, pid %u user `%s'", 
           (guint)getpid(), g_get_user_name());
+
+  sleep(5);
   
   /* Session setup */
   sigemptyset (&empty_mask);
@@ -470,7 +566,7 @@ main(int argc, char** argv)
       syslog(LOG_ERR, "Failed to get ORB reference");
       exit(1);
     }
-  
+
   POA_ConfigServer__init(&poa_server_servant, &ev);
   
   poa = (PortableServer_POA)CORBA_ORB_resolve_initial_references(orb, "RootPOA", &ev);
@@ -497,9 +593,12 @@ main(int argc, char** argv)
     }
 
   CORBA_free(ior);
+  
+
+  
 
   /* If we got a fd on the command line, write the magic byte 'g' 
-     to it to notify our spawning client. 
+     to it to notify our spawning client that we're ready.
   */
 
   if (launcher_fd >= 0)
@@ -514,6 +613,8 @@ main(int argc, char** argv)
     }
 
   g_conf_main();
+
+  fast_cleanup();
 
   ltable_destroy(ltable);
   ltable = NULL;

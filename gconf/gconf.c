@@ -67,7 +67,8 @@ g_conf_set_error(const gchar* str)
 typedef struct _GConfPrivate GConfPrivate;
 
 struct _GConfPrivate {
-  GSList* sources;
+  /* This object may be pointless... */
+  gpointer dummy;
 
 };
 
@@ -216,10 +217,50 @@ g_conf_notify_remove(GConf* conf,
 }
 
 GConfValue*  
-g_conf_lookup(GConf* conf, const gchar* key)
+g_conf_get(GConf* conf, const gchar* key)
 {
+  GConfValue* val;
+  ConfigValue* cv;
+  CORBA_Environment ev;
+  ConfigServer cs;
 
-  return NULL;
+  if (!g_conf_valid_key(key))
+    {
+      g_warning("Invalid key `%s'", key);
+      return NULL;
+    }
+
+  cs = g_conf_get_config_server();
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return NULL;
+    }
+
+  CORBA_exception_init(&ev);
+  
+  cv = ConfigServer_lookup(cs,
+                           key, &ev);
+
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_warning("Failure getting value from config server: %s",
+                CORBA_exception_id(&ev));
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+
+      CORBA_free(cv);
+
+      return NULL;
+    }
+  else
+    {
+      val = g_conf_value_from_corba_value(cv);
+      CORBA_free(cv);
+
+      return val;
+    }
 }
 
 void
@@ -227,12 +268,29 @@ g_conf_set(GConf* conf, const gchar* key, GConfValue* value)
 {
   ConfigValue* cv;
   CORBA_Environment ev;
+  ConfigServer cs;
+
+  g_return_if_fail(value->type != G_CONF_VALUE_INVALID);
+
+  if (!g_conf_valid_key(key))
+    {
+      g_warning("Invalid key `%s'", key);
+      return;
+    }
+
+  cs = g_conf_get_config_server();
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_warning("Couldn't get config server");
+      return;
+    }
 
   cv = corba_value_from_g_conf_value(value);
 
   CORBA_exception_init(&ev);
 
-  ConfigServer_set(g_conf_get_config_server(), 
+  ConfigServer_set(cs,
                    key, cv,
                    &ev);
 
@@ -287,7 +345,7 @@ g_conf_cnxn_notify(GConfCnxn* cnxn,
  *  CORBA glue
  */
 
-ConfigServer   server = CORBA_OBJECT_NIL;
+static ConfigServer   server = CORBA_OBJECT_NIL;
 
 static ConfigServer
 try_to_contact_server(void)
@@ -432,15 +490,15 @@ notify(PortableServer_Servant servant,
        const ConfigValue* value,
        CORBA_Environment *ev);
 
-PortableServer_ServantBase__epv base_epv = {
+static PortableServer_ServantBase__epv base_epv = {
   NULL,
   NULL,
   NULL
 };
 
-POA_ConfigListener__epv listener_epv = { NULL, notify };
-POA_ConfigListener__vepv poa_listener_vepv = { &base_epv, &listener_epv };
-POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
+static POA_ConfigListener__epv listener_epv = { NULL, notify };
+static POA_ConfigListener__vepv poa_listener_vepv = { &base_epv, &listener_epv };
+static POA_ConfigListener poa_listener_servant = { NULL, &poa_listener_vepv };
 
 static void 
 notify(PortableServer_Servant servant, 
@@ -524,6 +582,67 @@ g_conf_init           ()
   ctable = ctable_new();
 
   return TRUE;
+}
+
+
+/* 
+ * Ampersand and <> are not allowed due to the XML backend; shell
+ * special characters aren't allowed; others are just in case we need
+ * some magic characters someday.  hyphen, underscore, period, colon
+ * are allowed as separators. % disallowed to avoid printf confusion.
+ */
+
+static const gchar invalid_chars[] = "\"$&<>,+=#!()'|{}[]?~`;%\\";
+
+gboolean     
+g_conf_valid_key      (const gchar* key)
+{
+  const gchar* s = key;
+  gboolean just_saw_slash = FALSE;
+
+  /* Key must start with the root */
+  if (*key != '/')
+    return FALSE;
+
+  while (*s)
+    {
+      if (just_saw_slash)
+        {
+          /* Can't have two slashes in a row, since it would mean
+           * an empty spot.
+           * Can't have a period right after a slash,
+           * because it would be a pain for filesystem-based backends.
+           */
+          if (*s == '/' || *s == '.')
+            return FALSE;
+        }
+
+      if (*s == '/')
+        {
+          just_saw_slash = TRUE;
+        }
+      else
+        {
+          const gchar* inv = invalid_chars;
+
+          just_saw_slash = FALSE;
+
+          while (*inv)
+            {
+              if (*inv == *s)
+                return FALSE;
+              ++inv;
+            }
+        }
+
+      ++s;
+    }
+
+  /* Can't end with slash */
+  if (just_saw_slash)
+    return FALSE;
+  else
+    return TRUE;
 }
 
 /*

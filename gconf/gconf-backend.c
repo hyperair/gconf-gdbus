@@ -87,8 +87,8 @@ g_conf_address_resource(const gchar* address)
 const gchar* 
 g_conf_backend_dir(void)
 {
-  /* Obviously not permanent... :-) */
-  return "../backends/.libs/";
+  /* FIXME Obviously not permanent... :-) */
+  return "/cvs/gnome-cvs/gconf/backends/.libs/";
 }
 
 gchar*       
@@ -210,7 +210,7 @@ g_conf_get_backend(const gchar* address)
         }
       else
         {
-          g_warning("Couldn't locate file for `%s'", address);
+          g_warning("Couldn't locate backend module for `%s'", address);
           return NULL;
         }
     }

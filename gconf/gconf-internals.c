@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <ctype.h>
 
 
 /*
@@ -81,6 +82,18 @@ g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
     case G_CONF_VALUE_STRING:
       g_conf_value_set_string(value, value_str);
       break;
+    case G_CONF_VALUE_BOOL:
+      if (*value_str == 't' || *value_str == 'T' || *value_str == '1')
+        g_conf_value_set_bool(value, TRUE);
+      else if (*value_str == 'f' || *value_str == 'F' || *value_str == '0')
+        g_conf_value_set_bool(value, FALSE);
+      else
+        {
+          g_warning("Didn't understand `%s' (expected true or false)", value_str);
+          g_conf_value_destroy(value);
+          value = NULL;
+        }
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -107,6 +120,9 @@ g_conf_value_to_string(GConfValue* value)
     case G_CONF_VALUE_STRING:
       retval = g_strdup(g_conf_value_string(value));
       break;
+    case G_CONF_VALUE_BOOL:
+      retval = g_conf_value_bool(value) ? g_strdup("true") : g_strdup("false");
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -128,6 +144,7 @@ g_conf_value_copy(GConfValue* src)
     {
     case G_CONF_VALUE_INT:
     case G_CONF_VALUE_FLOAT:
+    case G_CONF_VALUE_BOOL:
       dest->d = src->d;
       break;
     case G_CONF_VALUE_STRING:
@@ -180,6 +197,15 @@ g_conf_value_set_float(GConfValue* value, gdouble the_float)
   g_return_if_fail(value->type == G_CONF_VALUE_FLOAT);
 
   value->d.float_data = the_float;
+}
+
+void        
+g_conf_value_set_bool(GConfValue* value, gboolean the_bool)
+{
+  g_return_if_fail(value != NULL);
+  g_return_if_fail(value->type == G_CONF_VALUE_BOOL);
+
+  value->d.bool_data = the_bool;
 }
 
 
@@ -257,66 +283,6 @@ g_conf_source_destroy (GConfSource* source)
 
   /* Remove ref held by the source. */
   g_conf_backend_unref(backend);
-}
-
-/* 
- * Ampersand and <> are not allowed due to the XML backend; shell
- * special characters aren't allowed; others are just in case we need
- * some magic characters someday.  hyphen, underscore, period, colon
- * are allowed as separators.  
- */
-
-static const gchar invalid_chars[] = "\"$&<>,+=#!()'|{}[]?~`;\\";
-
-gboolean     
-g_conf_valid_key      (const gchar* key)
-{
-  const gchar* s = key;
-  gboolean just_saw_slash = FALSE;
-
-  /* Key must start with the root */
-  if (*key != '/')
-    return FALSE;
-
-  while (*s)
-    {
-      if (just_saw_slash)
-        {
-          /* Can't have two slashes in a row, since it would mean
-           * an empty spot.
-           * Can't have a period right after a slash,
-           * because it would be a pain for filesystem-based backends.
-           */
-          if (*s == '/' || *s == '.')
-            return FALSE;
-        }
-
-      if (*s == '/')
-        {
-          just_saw_slash = TRUE;
-        }
-      else
-        {
-          const gchar* inv = invalid_chars;
-
-          just_saw_slash = FALSE;
-
-          while (*inv)
-            {
-              if (*inv == *s)
-                return FALSE;
-              ++inv;
-            }
-        }
-
-      ++s;
-    }
-
-  /* Can't end with slash */
-  if (just_saw_slash)
-    return FALSE;
-  else
-    return TRUE;
 }
 
 gchar*
@@ -401,23 +367,9 @@ g_conf_server_info_file(void)
 {
   gchar* info_dir;
   gchar* entire_file;
-  gchar buf[256];
   gchar* host_name = NULL;
 
   info_dir = g_conf_server_info_dir();
-
-  /* Decided different machines should share the same gconfd. */
-#if 0
-  if (gethostname(buf, 256) < 0)
-    {
-      g_warning("GConf failed to get host name; may cause trouble if you're using the same home dir on > 1 machines");
-      host_name = NULL;
-    }
-  else
-    {
-      host_name = buf;
-    }
-#endif  
 
   entire_file = g_strconcat(info_dir, "/.gconfd.info", host_name ? "." : NULL, host_name, NULL);
 
@@ -494,6 +446,9 @@ g_conf_value_from_corba_value(const ConfigValue* value)
   
   switch (value->_d)
     {
+    case InvalidVal:
+      return NULL;
+      break;
     case IntVal:
       type = G_CONF_VALUE_INT;
       break;
@@ -502,6 +457,9 @@ g_conf_value_from_corba_value(const ConfigValue* value)
       break;
     case FloatVal:
       type = G_CONF_VALUE_FLOAT;
+      break;
+    case BoolVal:
+      type = G_CONF_VALUE_BOOL;
       break;
     default:
       g_warning("Invalid type in %s", __FUNCTION__);
@@ -521,6 +479,9 @@ g_conf_value_from_corba_value(const ConfigValue* value)
     case G_CONF_VALUE_FLOAT:
       g_conf_value_set_float(gval, value->_u.float_value);
       break;
+    case G_CONF_VALUE_BOOL:
+      g_conf_value_set_bool(gval, value->_u.bool_value);
+      break;
     default:
       g_assert_not_reached();
       break;
@@ -536,6 +497,12 @@ corba_value_from_g_conf_value(GConfValue* value)
 
   cv = ConfigValue__alloc();
 
+  if (value == NULL)
+    {
+      cv->_d = InvalidVal;
+      return cv;
+    }
+
   switch (value->type)
     {
     case G_CONF_VALUE_INT:
@@ -550,6 +517,13 @@ corba_value_from_g_conf_value(GConfValue* value)
       cv->_d = FloatVal;
       cv->_u.float_value = g_conf_value_float(value);
       break;
+    case G_CONF_VALUE_BOOL:
+      cv->_d = BoolVal;
+      cv->_u.bool_value = g_conf_value_bool(value);
+      break;
+    case G_CONF_VALUE_INVALID:
+      cv->_d = InvalidVal;
+      break;
     default:
       g_warning("Unknown type in %s", __FUNCTION__);
       return NULL;
@@ -559,3 +533,244 @@ corba_value_from_g_conf_value(GConfValue* value)
   return cv;
 }
 
+ConfigValue*  
+invalid_corba_value()
+{
+  ConfigValue* cv;
+
+  cv = ConfigValue__alloc();
+
+  cv->_d = InvalidVal;
+
+  return cv;
+}
+
+/*
+ *   GConfSources
+ */
+
+GConfSources* 
+g_conf_sources_new(gchar** addresses)
+{
+  GConfSources* sources;
+
+  sources = g_new0(GConfSources, 1);
+
+  while (*addresses != NULL)
+    {
+      GConfSource* source;
+
+      source = g_conf_resolve_address(*addresses);
+
+      if (source != NULL)
+        sources->sources = g_list_prepend(sources->sources, source);
+      else
+        g_warning("Didn't resolve `%s'", *addresses); /* FIXME, better error reporting */
+
+      ++addresses;
+    }
+
+  sources->sources = g_list_reverse(sources->sources);
+
+  return sources;
+}
+
+GConfValue*   
+g_conf_sources_query_value (GConfSources* sources, 
+                            const gchar* key)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfValue* val;
+
+      val = g_conf_source_query_value(tmp->data, key);
+
+      if (val != NULL)
+        return val;
+
+      tmp = g_list_next(tmp);
+    }
+
+  return NULL;
+}
+
+
+void
+g_conf_sources_set_value   (GConfSources* sources,
+                            const gchar* key,
+                            GConfValue* value)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+
+      if (src->flags & G_CONF_SOURCE_WRITEABLE)
+        {
+          g_conf_source_set_value(src, key, value);
+          return;
+        }
+
+      tmp = g_list_next(tmp);
+    }
+}
+
+void
+g_conf_sources_sync_all    (GConfSources* sources)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* src = tmp->data;
+
+      g_conf_source_sync_all(src);
+
+      tmp = g_list_next(tmp);
+    }
+}
+
+/*
+ * Config files (yikes! we can't store our config in GConf!)
+ */
+
+gchar*
+unquote_string(gchar* s)
+{
+  gchar* end;
+
+  /* Strip whitespace and first quote from front of string */
+  while (*s && (isspace(*s) || (*s == '"')))
+    ++s;
+
+  end = s;
+  while (*end)
+    ++end;
+
+  --end; /* one back from '\0' */
+
+  /* Strip whitespace and last quote from end of string */
+  while ((end > s) && (isspace(*end) || (*end == '"')))
+    {
+      *end = '\0';
+      --end;
+    }
+
+  return s;
+}
+
+gchar**       
+g_conf_load_source_path(const gchar* filename)
+{
+  FILE* f;
+  GSList* l = NULL;
+  gchar** addresses;
+  gchar buf[512];
+  GSList* tmp;
+  guint n;
+
+  f = fopen(filename, "r");
+
+  if (f == NULL)
+    {
+      printf("Didn't open file `%s': %s", filename, strerror(errno));
+      /* FIXME better error */
+      return NULL;
+    }
+
+  while (fgets(buf, 512, f) != NULL)
+    {
+      gchar* s = buf;
+      
+      while (*s && isspace(*s))
+        ++s;
+
+      if (*s == '#')
+        {
+          /* Allow comments, why not */
+        }
+      else if (*s == '\0')
+        {
+          /* Blank line */
+        }
+      else if (strncmp("include", s, 7) == 0)
+        {
+          gchar* unq;
+          gchar** included;
+
+          s += 7;
+
+          unq = unquote_string(s);
+
+          included = g_conf_load_source_path(unq);
+
+          if (included != NULL)
+            {
+              gchar** iter = included;
+
+              printf("Including file `%s'\n", unq);
+
+              while (*iter)
+                {
+                  l = g_slist_prepend(l, *iter); /* Note that we won't free *included */
+                  ++iter;
+                }
+
+              g_free(included); /* Only the array, not the contained strings */
+            }
+        }
+      else 
+        {
+          gchar* unq;
+
+          unq = unquote_string(buf);
+
+          if (*unq != '\0') /* Drop lines with just two quote marks or something */
+            {
+              printf("Adding source `%s'\n", unq);
+              l = g_slist_prepend(l, g_strdup(unq));
+            }
+        }
+    }
+
+  fclose(f);  
+
+  /* This will make sense if you realize that we reversed the list 
+     as we loaded it, and are now reversing it to be correct again. 
+  */
+
+  if (l == NULL)
+    return NULL;
+
+  n = g_slist_length(l);
+
+  g_assert(n > 0);
+  
+  addresses = g_malloc0(sizeof(gchar*) * (n+1));
+
+  addresses[n] = NULL;
+
+  --n;
+  tmp = l;
+
+  while (tmp != NULL)
+    {
+      addresses[n] = tmp->data;
+
+      tmp = g_slist_next(tmp);
+      --n;
+    }
+  
+  g_assert(addresses[0] != NULL); /* since we used malloc0 this detects bad logic */
+
+  return addresses;
+}
