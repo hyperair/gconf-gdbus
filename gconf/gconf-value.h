@@ -161,6 +161,7 @@ struct _GConfEntry {
   gchar* schema_name;
   int pad1;
   gpointer pad2;
+  int refcount;
   guint is_default : 1;
   guint is_writable : 1;
   guint pad3 : 1;

@@ -1214,19 +1214,41 @@ gconf_entry_new_nocopy (char* key, GConfValue* val)
   pair->schema_name = NULL;
   pair->is_default = FALSE;
   pair->is_writable = TRUE;
+  pair->refcount = 1;
   
   return pair;
 }
 
 void
-gconf_entry_free (GConfEntry* pair)
+gconf_entry_ref (GConfEntry *entry)
 {
-  g_free (pair->key);
-  if (pair->value)
-    gconf_value_free (pair->value);
-  if (pair->schema_name)
-    g_free (pair->schema_name);
-  g_free(pair);
+  g_return_if_fail (entry != NULL);
+  entry->refcount += 1;
+}
+
+void
+gconf_entry_unref (GConfEntry *entry)
+{
+  g_return_if_fail (entry != NULL);
+  g_return_if_fail (entry->refcount > 0);
+
+  entry->refcount -= 1;
+
+  if (entry->refcount == 0)
+    {
+      g_free (entry->key);
+      if (entry->value)
+        gconf_value_free (entry->value);
+      if (entry->schema_name)
+        g_free (entry->schema_name);
+      g_free (entry);
+    }
+}
+
+void
+gconf_entry_free (GConfEntry *entry)
+{
+  gconf_entry_unref (entry);
 }
 
 GConfEntry*

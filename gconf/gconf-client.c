@@ -2355,6 +2355,9 @@ static void
 notify_one_entry (GConfClient *client,
                   GConfEntry  *entry)
 {
+  g_object_ref (G_OBJECT (client));
+  gconf_entry_ref (entry);
+  
   /* Emit the value_changed signal before notifying specific listeners;
    * I'm not sure there's a reason this matters though
    */
@@ -2375,6 +2378,9 @@ notify_one_entry (GConfClient *client,
                               notify_listeners_callback,
                               &cae);
     }
+
+  gconf_entry_unref (entry);
+  g_object_unref (G_OBJECT (client));
 }
 
 static void

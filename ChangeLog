@@ -1,3 +1,13 @@
+2002-02-26  Havoc Pennington  <hp@redhat.com>
+
+	* gconf/gconf-client.c (notify_one_entry): protect notify callback 
+	with a reference count around the entry, for reentrancy. Reported
+	by Rodrigo Moya and Alex Larsson.
+
+	* gconf/gconf-value.c (gconf_entry_unref, gconf_entry_ref): new
+	internal (for now) functions
+	(gconf_entry_free): just call gconf_entry_unref
+
 Sat Feb 16 01:27:29 2002  Jonathan Blandford  <jrb@redhat.com>
 
 	* gconf/gconftool.c (read_value_type): fix typo in reading args.
