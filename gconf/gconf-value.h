@@ -140,11 +140,11 @@ struct _GConfMetaInfo {
 GConfMetaInfo* gconf_meta_info_new         (void);
 void           gconf_meta_info_destroy     (GConfMetaInfo* gcmi);
 void           gconf_meta_info_set_schema  (GConfMetaInfo* gcmi,
-                                             const gchar* schema_name);
+                                            const gchar* schema_name);
 void           gconf_meta_info_set_mod_user(GConfMetaInfo* gcmi,
-                                             const gchar* mod_user);
+                                            const gchar* mod_user);
 void           gconf_meta_info_set_mod_time(GConfMetaInfo* gcmi,
-                                             GTime mod_time);
+                                            GTime mod_time);
 
 
 /* Key-value pairs; used to list the contents of
