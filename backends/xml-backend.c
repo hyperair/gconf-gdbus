@@ -275,7 +275,7 @@ static GSList*       all_entries    (GConfSource* source,
                                      const gchar* dir);
 
 static GSList*       all_subdirs     (GConfSource* source,
-                                     const gchar* dir);
+                                      const gchar* dir);
 
 static void          unset_value     (GConfSource* source,
                                       const gchar* key);
