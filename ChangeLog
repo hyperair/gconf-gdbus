@@ -1,3 +1,26 @@
+1999-08-31  Dave Camp  <campd@oit.edu>
+
+	* gconf/gconftool.c (options): Added "--dir-exists".
+	(main): If dir_exists is on the command line, check if the argument dir
+	exists.
+
+	* gconf/gconfd.c (server_epv): Added gconfd_dir_exists.
+	(gconfd_dir_exists): New function.
+	(context_dir_exists): New function.
+
+	* gconf/gconf.c (g_conf_dir_exists): New function.
+
+	* gconf/gconf-internals.c (g_conf_sources_dir_exists): New function.
+	(g_conf_source_dir_exists): New function.
+
+	* gconf/gconf-backend.h (GConfBackendVTable): Added a dir_exists 
+	entry. 
+
+	* gconf/GConf.idl (dir_exists): New function.
+
+	* backends/xml-backend.c (dir_exists): New function.
+	(xml_vtable): Added dir_exists.
+
 1999-08-30  Dave Camp  <campd@oit.edu>
 
 	* gconf/gconf.h: #include gconf-orbit.h.

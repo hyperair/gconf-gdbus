@@ -123,6 +123,7 @@ static GConfValue*   context_lookup_value(GConfContext* ctx,
 static void          context_set(GConfContext* ctx, const gchar* key,
                                  GConfValue* value, ConfigValue* cvalue);
 static void          context_unset(GConfContext* ctx, const gchar* key);
+static gboolean      context_dir_exists(GConfContext* ctx, const gchar* dir);
 static void          context_remove_dir(GConfContext* ctx, const gchar* dir);
 static GSList*       context_all_entries(GConfContext* ctx, const gchar* dir);
 static GSList*       context_all_dirs(GConfContext* ctx, const gchar* dir);
@@ -173,6 +174,12 @@ gconfd_unset(PortableServer_Servant servant,
              ConfigServer_Context ctx,
              CORBA_char * key, 
              CORBA_Environment *ev);
+
+static CORBA_boolean
+gconfd_dir_exists(PortableServer_Servant servant,
+                  ConfigServer_Context ctx,
+                  CORBA_char * dir,
+                  CORBA_Environment *ev);
 
 static void 
 gconfd_remove_dir(PortableServer_Servant servant,
@@ -230,6 +237,7 @@ static POA_ConfigServer__epv server_epv = {
   gconfd_lookup, 
   gconfd_set,
   gconfd_unset,
+  gconfd_dir_exists,
   gconfd_remove_dir,
   gconfd_nuke_dir,
   gconfd_all_entries,
@@ -359,6 +367,20 @@ gconfd_unset(PortableServer_Servant servant,
 
   context_unset(gcc, key);
 }
+
+static CORBA_boolean
+gconfd_dir_exists(PortableServer_Servant servant,
+                  ConfigServer_Context ctx,
+                  CORBA_char *dir,
+                  CORBA_Environment *ev)
+{
+  GConfContext *gcc;
+  
+  gcc = lookup_context(ctx);
+  
+  return context_dir_exists(gcc, dir) ? CORBA_TRUE : CORBA_FALSE;
+}
+
 
 static void 
 gconfd_remove_dir(PortableServer_Servant servant,
@@ -1148,6 +1170,28 @@ context_unset(GConfContext* ctx,
   ltable_notify_listeners(ctx->ltable, key, val);
 
   CORBA_free(val);
+}
+
+static gboolean
+context_dir_exists(GConfContext* ctx,
+                   const gchar* dir)
+{
+  gboolean ret;
+  
+  syslog(LOG_DEBUG, "Received dir_exists request for `%s'");
+  
+  g_conf_clear_error();
+  
+  ret = g_conf_sources_dir_exists(ctx->sources, dir);
+  
+  if (g_conf_errno() != G_CONF_SUCCESS)
+    {
+      syslog(LOG_ERR, _("Error checking existence of `%s': %s"),
+             dir, g_conf_error());
+      ret = FALSE;
+    }
+
+  return ret;
 }
 
 static void

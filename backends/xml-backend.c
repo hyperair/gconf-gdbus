@@ -250,7 +250,6 @@ static GConfValue*   query_value     (GConfSource* source, const gchar* key, gch
 static GConfMetaInfo*query_metainfo  (GConfSource* source, const gchar* key);
 
 static void          set_value       (GConfSource* source, const gchar* key, GConfValue* value);
-
 static GSList*       all_entries    (GConfSource* source,
                                      const gchar* dir);
 
@@ -259,7 +258,8 @@ static GSList*       all_subdirs     (GConfSource* source,
 
 static void          unset_value     (GConfSource* source,
                                       const gchar* key);
-
+static gboolean      dir_exists      (GConfSource *source,
+                                      const gchar *dir);
 static void          remove_dir      (GConfSource* source,
                                       const gchar* dir);
 
@@ -280,6 +280,7 @@ static GConfBackendVTable xml_vtable = {
   all_entries,
   all_subdirs,
   unset_value,
+  dir_exists,
   remove_dir,
   set_schema,
   sync_all,
@@ -469,6 +470,18 @@ unset_value     (GConfSource* source,
       dir_unset_value(dir, relative_key);
     }
 }
+
+static gboolean
+dir_exists      (GConfSource*source,
+                 const gchar* key)
+{
+  XMLSource *xs = (XMLSource*)source;
+  Dir* dir;
+  
+  dir = dir_cache_do_very_best_to_load_dir(xs->cache, key);
+  
+  return (dir != NULL);
+}  
 
 static void          
 remove_dir      (GConfSource* source,
@@ -952,7 +965,6 @@ static Entry* dir_make_new_entry(Dir* d, const gchar* relative_key);
 static gboolean dir_forget_entry_if_useless(Dir* d, Entry* e);
 
 /* dir implementations */
-
 static Dir*
 dir_load        (XMLSource* source, const gchar* key)
 {

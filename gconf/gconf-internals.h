@@ -62,6 +62,8 @@ void         g_conf_source_set_schema        (GConfSource* source,
                                               const gchar* key,
                                               const gchar* schema_key);
 
+gboolean     g_conf_source_dir_exists        (GConfSource* source,
+                                              const gchar* dir);
 void         g_conf_source_remove_dir        (GConfSource* source,
                                               const gchar* dir);
 
@@ -120,6 +122,8 @@ void          g_conf_sources_unset_value (GConfSources* sources,
 GSList*       g_conf_sources_all_entries   (GConfSources* sources,
                                             const gchar* dir);
 GSList*       g_conf_sources_all_dirs   (GConfSources* sources,
+                                         const gchar* dir);
+gboolean      g_conf_sources_dir_exists (GConfSources* sources,
                                          const gchar* dir);
 void          g_conf_sources_remove_dir (GConfSources* sources,
                                          const gchar* dir);

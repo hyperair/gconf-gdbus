@@ -59,6 +59,9 @@ struct _GConfBackendVTable {
   void                (* unset_value)     (GConfSource* source,
                                            const gchar* key);
 
+  gboolean            (* dir_exists)      (GConfSource* source,
+                                           const gchar* dir);
+        
   void                (* remove_dir)      (GConfSource* source,
                                            const gchar* dir);
   

@@ -658,6 +658,46 @@ g_conf_sync(GConf* conf)
     }
 }
 
+gboolean
+g_conf_dir_exists(GConf *conf, const gchar *dir)
+{
+  GConfPrivate* priv = (GConfPrivate*)conf;
+  CORBA_Environment ev;
+  ConfigServer cs;
+  CORBA_boolean server_ret;
+
+  g_return_val_if_fail(dir != NULL, FALSE);
+  
+  if (!g_conf_valid_key(dir))
+    {
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
+      return FALSE;
+    }
+  
+  cs = g_conf_get_config_server(TRUE);
+  
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_assert(g_conf_errno() == G_CONF_NO_SERVER);
+      return FALSE;
+    }
+  
+  CORBA_exception_init(&ev);
+  
+  server_ret = ConfigServer_dir_exists(cs, priv->context,
+                                       (gchar*)dir, &ev);
+  
+  if (ev._major != CORBA_NO_EXCEPTION)
+    {
+      g_conf_set_error(G_CONF_NO_SERVER, _("CORBA error: %s"), CORBA_exception_id(&ev));
+      
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      CORBA_exception_free(&ev);
+    }
+
+  return (server_ret == CORBA_TRUE);
+}
+
 /*
  * Connection maintenance
  */

@@ -735,6 +735,19 @@ g_conf_source_all_dirs          (GConfSource* source,
   return (*source->backend->vtable->all_subdirs)(source, dir);
 }
 
+gboolean
+g_conf_source_dir_exists        (GConfSource* source,
+                                 const gchar* dir)
+{
+  if (!g_conf_valid_key(dir)) /* keys and directories have the same validity rules */
+    {
+      g_conf_set_error(G_CONF_BAD_KEY, _("`%s'"), dir);
+      return FALSE;
+    }
+  
+  return (*source->backend->vtable->dir_exists)(source, dir);
+}
+
 void         
 g_conf_source_remove_dir        (GConfSource* source,
                                  const gchar* dir)
@@ -1510,6 +1523,27 @@ g_conf_sources_unset_value   (GConfSources* sources,
     }
 }
 
+gboolean
+g_conf_sources_dir_exists (GConfSources* sources,
+                           const gchar* dir)
+{
+  GList *tmp;
+  
+  tmp = sources->sources;
+  
+  while (tmp != NULL) 
+    {
+      GConfSource* src = tmp->data;
+      
+      if (g_conf_source_dir_exists (src, dir)) 
+        return TRUE;
+
+      tmp = g_list_next(tmp);
+    }
+  
+  return FALSE;
+}
+          
 void          
 g_conf_sources_remove_dir (GConfSources* sources,
                            const gchar* dir)

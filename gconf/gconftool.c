@@ -43,6 +43,7 @@ static int get_mode = FALSE;
 static int unset_mode = FALSE;
 static int all_entries_mode = FALSE;
 static int all_subdirs_mode = FALSE;
+static char* dir_exists = NULL;
 static int recursive_list = FALSE;
 static int set_schema_mode = FALSE;
 static char* value_type = NULL;
@@ -127,7 +128,15 @@ struct poptOption options[] = {
     N_("Print all subdirectories and entries under a dir, recursively."),
     NULL
   },
-  
+  { 
+    "dir-exists",
+    '\0',
+    POPT_ARG_STRING,
+    &dir_exists,
+    0,
+    N_("Determine if a directory exists in the database."),
+    NULL
+  },
   { 
     "shutdown",
     '\0',
@@ -684,6 +693,14 @@ main (int argc, char** argv)
         }
 
       do_recursive_list(conf, args);
+    }
+
+  if (dir_exists != NULL) 
+    {
+      gchar *format = 
+        g_conf_dir_exists(conf, dir_exists) ? N_("%s: Exists.\n") : 
+                                              N_("%s: Does not exist.\n");
+      printf(format, dir_exists);
     }
 
   poptFreeContext(ctx);

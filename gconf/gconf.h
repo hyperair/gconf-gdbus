@@ -137,7 +137,10 @@ GSList*      g_conf_all_dirs       (GConf* conf, const gchar* dir);
 
 void         g_conf_sync           (GConf* conf);
 
+gboolean     g_conf_dir_exists     (GConf *conf, const gchar* dir);
+
 gboolean     g_conf_valid_key      (const gchar* key);
+
 
 /* 
  * Higher-level stuff 

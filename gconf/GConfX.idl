@@ -81,6 +81,8 @@ interface ConfigServer {
 
   void unset(in Context ctx, in string key);
 
+  boolean dir_exists(in Context ctx, in string dir);
+
   void remove_dir(in Context ctx, in string dir);
 
   void nuke_dir(in Context ctx, in string dir);
