@@ -1,3 +1,9 @@
+2004-05-04  Morten Welinder  <terra@gnome.org>
+
+	* gconf/gconf-internals.c (gconf_activate_server): Delete stray
+	";" aka null statement.  (Valid only in C99 where it had no
+	effect.)
+
 2004-04-23  Mark McLoughlin  <mark@skynet.ie>
 
 	* gconf/gconf-sources.c: (gconf_sources_new_from_addresses): return
