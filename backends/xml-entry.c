@@ -680,7 +680,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
       free(locale_str);
     }
   else
-    gconf_log(GCL_WARNING, "found <local_schema> with no locale setting");
+    gconf_log(GCL_WARNING, _("found <local_schema> with no locale setting"));
   
   if (node->childs != NULL)
     {

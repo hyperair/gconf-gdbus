@@ -423,7 +423,7 @@ check_overlap(GConfClient* client, const gchar* dirname)
                        (gchar*)dirname);
 }
 #else
-#define check_overlap(x,x)
+#define check_overlap(x,y)
 #endif
 
 void
