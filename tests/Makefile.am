@@ -1,7 +1,9 @@
 
 EFENCE=
 
-INCLUDES = -I$(top_srcdir) -I$(top_builddir) -I$(includedir)  $(ORBIT_CFLAGS) $(GLIB_CFLAGS) \
+INCLUDES = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/gconf \
+	-I$(top_builddir)/gconf \
+	-I$(includedir) $(ORBIT_CFLAGS) $(GLIB_CFLAGS) \
 	 -DG_LOG_DOMAIN=\"GConf-Tests\" -DGCONF_ENABLE_INTERNALS=1
 
 noinst_PROGRAMS=testgconf testlisteners testschemas testchangeset testencode testunique testpersistence testdirlist testaddress

@@ -19,5 +19,5 @@ noinst_PROGRAMS= testgconfclient
 
 testgconfclient_SOURCES = testgconfclient.c
 
+testgconfclient_DEPS=$(top_builddir)/gconf/libgconf.la libgconf-gtk.la
 testgconfclient_LDADD = $(ORBIT_LIBS) $(GTK_LIBS) $(top_builddir)/gconf/libgconf.la $(top_builddir)/wrappers/gtk/libgconf-gtk.la
-
