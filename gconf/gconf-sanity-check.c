@@ -317,14 +317,15 @@ offer_delete_locks (void)
   const char *question;
 
   delete_locks = FALSE;
-  question = _("Your preferences files are currently in use. "
-               "(If you are logged in to this same account from "
-               "another computer, the other login session is probably using "
-               "your preferences files.) "
-               "You can choose to continue, but be aware that other login "
-               "sessions may become temporarily confused. "
-               "If you are not logged in elsewhere, it should be harmless to "
-               "continue.");
+  question = _("The files that contain your preference settings are "
+               "currently in use.\n\n"
+               "You might be logged in to a session from another computer, "
+               "and the other login session is using your preference "
+               "settings files.\n\n"
+               "You can continue to use the current session, but this "
+               "might cause temporary problems with the preference "
+               "settings in the other session.\n\n" 
+               "Do you want to continue?");
       
   if (ensure_gtk ())
     {
@@ -337,9 +338,9 @@ offer_delete_locks (void)
                                   "%s", question);
 
       gtk_dialog_add_buttons (GTK_DIALOG (d),
-                              GTK_STOCK_CANCEL,
+                              _("_Log Out"),
                               GTK_RESPONSE_REJECT,
-                              _("Continue"),
+                              _("_Continue"),
                               GTK_RESPONSE_ACCEPT,
                               NULL);
       
