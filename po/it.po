@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-13 19:49+0100\n"
-"PO-Revision-Date: 2004-01-13 21:54+0100\n"
+"POT-Creation-Date: 2004-02-16 15:24+0100\n"
+"PO-Revision-Date: 2004-02-16 23:41+0100\n"
 "Last-Translator: Alessio Frusciante <algol@firenze.linux.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -636,7 +636,7 @@ msgstr "La stringa quotata non inizia con il simbolo di quota"
 #: gconf/gconf-internals.c:1700
 #, fuzzy
 msgid "Quoted string doesn't end with a quotation mark"
-msgstr "La stringa quotata non termina con il simbolo di quota"
+msgstr "\"Installa correttamente i file schema in linea dei comandi nel database. La variabile d'ambiente GCONF_CONGIF_SOURCE dovrebbe essere impostata ad una fonte di configurazione non predefinita oppure ad una stringa nulla per usare quella predefinita.\"\n"
 
 #: gconf/gconf-internals.c:1836
 msgid "Encoded value is not valid UTF-8"
@@ -724,9 +724,9 @@ msgid "Failed to remove lock directory `%s': %s"
 msgstr "Errore nella cancellazione della directory di lock `%s': %s"
 
 #: gconf/gconf-internals.c:2723
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to unlink lock file %s: %s\n"
-msgstr "Errore nella cancellazione del file di lock `%s': %s"
+msgstr "Errore nella cancellazione del file di lock %s: %s\n"
 
 #: gconf/gconf-internals.c:2856 gconf/gconfd.c:639
 #, c-format
@@ -1045,9 +1045,9 @@ msgstr ""
 "lista)"
 
 #: gconf/gconf-value.c:356 gconf/gconf-value.c:517
-#, fuzzy, c-format
+#, c-format
 msgid "Didn't understand `%s' (extra trailing characters)"
-msgstr "Errore di interpretazione di `%s' (carattere di fine linea superfluo)"
+msgstr "Errore di interpretazione di `%s' (caratteri di fine linea superflui)"
 
 #: gconf/gconf-value.c:403
 #, c-format
@@ -1186,7 +1186,9 @@ msgstr ""
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit %s"
-msgstr "Nessuna fonte di configurazione nel percorso sorgente, la configurazione non sarà salvata; modificare %s"
+msgstr ""
+"Nessuna fonte di configurazione nel percorso sorgente, la configurazione non "
+"sarà salvata; modificare %s"
 
 #: gconf/gconfd.c:317
 #, c-format
@@ -1455,12 +1457,10 @@ msgid "Print all subdirectories in a directory."
 msgstr "Visualizza tutte le sotto-directory in una directory"
 
 #: gconf/gconftool.c:157
-#, fuzzy
 msgid ""
 "Dump to standard out an XML description of all entries under a dir, "
 "recursively."
-msgstr ""
-"Visualizza ricorsivamente tutte le voci e le sotto-directory in una directory"
+msgstr "Manda sullo standard output una descrizione XML di tutte le voci dentro una directory, ricorsivamente."
 
 #: gconf/gconftool.c:166
 msgid ""
@@ -1587,35 +1587,24 @@ msgid "SOURCE"
 msgstr "FONTE"
 
 #: gconf/gconftool.c:328
-#, fuzzy
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
-msgstr ""
-"Accede direttamente al database, by-passando il server, richiede che gconfd "
-"non sia attivo."
+msgstr "Accede direttamente al database di configurazione, by-passando il server, richiede che gconfd non sia attivo."
 
 #: gconf/gconftool.c:337
-#, fuzzy
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
-msgstr ""
-"Installa correttamente lo schema in linea dei comandi nel database. Se la "
-"variabile d'ambiente GCONF_CONGIF_SOURCE è impostata a una stringa nulla, "
-"viene utilizzata la fonte di configurazione di default."
+msgstr "Installa correttamente nel database i file schema in riga di comando. La variabile d'ambiente GCONF_CONGIF_SOURCE dovrebbe essere impostata ad una fonte di configurazione non predefinita oppure ad una stringa nulla per usare quella predefinita."
 
 #: gconf/gconftool.c:346
-#, fuzzy
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "config source or set to the empty string to use the default."
-msgstr ""
-"Installa correttamente lo schema in linea dei comandi nel database. Se la "
-"variabile d'ambiente GCONF_CONGIF_SOURCE è impostata a una stringa nulla, "
-"viene utilizzata la fonte di configurazione di default."
+msgstr "Disinstalla correttamente dal database i file schema in riga di comando. La variabile d'ambiente GCONF_CONGIF_SOURCE dovrebbe essere impostata ad una fonte di configurazione non predefinita oppure ad una stringa nulla per usare quella predefinita."
 
 #: gconf/gconftool.c:355
 msgid ""
@@ -1764,9 +1753,8 @@ msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Specificare una o più directory da enumerare ricorsivamente.\n"
 
 #: gconf/gconftool.c:1172
-#, fuzzy
 msgid "Must specify one or more directories to dump.\n"
-msgstr "Specificare una o più chiavi da annullare.\n"
+msgstr "Specificare una o più directory di cui fare il dump.\n"
 
 #: gconf/gconftool.c:1214 gconf/gconftool.c:1479
 #, c-format
@@ -2054,22 +2042,22 @@ msgid "WARNING: node <%s> not understood\n"
 msgstr "ATTENZIONE: il nodo <%s> risulta incomprensibile\n"
 
 #: gconf/gconftool.c:2616
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "ATTENZIONE: errore nell'analisi del valore int `%s'\n"
 
 #: gconf/gconftool.c:2637
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "ATTENZIONE: errore nell'analisi del valore float `%s'\n"
 
 #: gconf/gconftool.c:2659
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "ATTENZIONE: errore nell'analisi del valore string `%s'\n"
 
 #: gconf/gconftool.c:2680
-#, fuzzy, c-format
+#, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "ATTENZIONE: errore nell'analisi del nome del valore boolean `%s'\n"
 
