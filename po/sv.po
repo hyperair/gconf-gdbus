@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2002-06-02 22:33-0400\n"
-"PO-Revision-Date: 2002-06-03 11:24+0200\n"
+"POT-Creation-Date: 2002-07-27 18:56+0200\n"
+"PO-Revision-Date: 2002-07-27 18:57+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: backends/bdb-backend.c:215
 msgid "Unloading BerkeleyDB (BDB) backend module."
-msgstr "Glömmer BerkeleyDB-backendmodulen (BDB)."
+msgstr "Kopplar bort BerkeleyDB-backendmodulen (BDB)."
 
 #: backends/bdb-backend.c:238
 #, c-format
@@ -105,8 +105,8 @@ msgid ""
 "%u items remain in the cache after cleaning already-synced items older than %"
 "u seconds"
 msgstr ""
-"%u objekt återstår i cachen efter städning av objekt som redan synkats och "
-"som är äldre än %u sekunder"
+"%u objekt återstår i cachen efter städning av objekt som redan "
+"synkroniserats och som är äldre än %u sekunder"
 
 #: backends/xml-dir.c:171
 #, c-format
@@ -131,7 +131,7 @@ msgstr "Misslyckades med att skriva filen \"%s\": %s"
 #: backends/xml-dir.c:440
 #, c-format
 msgid "Failed to set mode on `%s': %s"
-msgstr "Misslyckades med att sätta läge på \"%s\": %s"
+msgstr "Misslyckades med att sätta rättigheter på \"%s\": %s"
 
 #: backends/xml-dir.c:450
 #, c-format
@@ -326,7 +326,7 @@ msgstr "GConf-varning: misslyckades med att lista par i \"%s\": %s"
 #: gconf/gconf-client.c:1150
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
-msgstr "Förväntade \"%s\", fick \"%s\" för nyckeln \"%s\""
+msgstr "\"%s\" förväntades, fick \"%s\" för nyckeln \"%s\""
 
 #: gconf/gconf-database.c:234
 msgid "Received invalid value in set request"
@@ -382,7 +382,7 @@ msgstr ""
 "Misslyckades med att logga borttagningen av lyssnare i loggfilen (troligtvis "
 "ofarligt, men kan resultera i att ett meddelande plötsligt återkommer): %s"
 
-#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1540
+#: gconf/gconf-database.c:1243 gconf/gconf-sources.c:1541
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Fel vid hämtning av värde för \"%s\": %s"
@@ -483,7 +483,7 @@ msgstr "Katalogoperation på nyckel"
 
 #: gconf/gconf-error.c:36
 msgid "Can't overwrite existing read-only value"
-msgstr "Kan inte skriva över ett existerande skrivskyddat värde"
+msgstr "Kan inte skriva över ett befintligt skrivskyddat värde"
 
 #: gconf/gconf-error.c:37
 msgid "Object Activation Framework error"
@@ -559,37 +559,38 @@ msgstr "Lägger till källan \"%s\"\n"
 msgid "Read error on file `%s': %s\n"
 msgstr "Fel vid läsning av filen \"%s\": %s\n"
 
+# SUN CHANGED MESSAGE
 #: gconf/gconf-internals.c:1195 gconf/gconf-internals.c:1261
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1681
 msgid "Text contains invalid UTF-8"
-msgstr "Text innehåller ogiltig UTF-8"
+msgstr "Texten innehåller ogiltig UTF-8"
 
 #: gconf/gconf-internals.c:1346
 #, c-format
 msgid "Expected list, got %s"
-msgstr "Förväntade lista, fick %s"
+msgstr "Lista förväntades, fick %s"
 
 #: gconf/gconf-internals.c:1356
 #, c-format
 msgid "Expected list of %s, got list of %s"
-msgstr "Förväntade lista med %s, fick lista med %s"
+msgstr "Lista med %s förväntades, fick lista med %s"
 
 #: gconf/gconf-internals.c:1484
 #, c-format
 msgid "Expected pair, got %s"
-msgstr "Förväntade par, fick %s"
+msgstr "Par förväntades, fick %s"
 
 #: gconf/gconf-internals.c:1498
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
-"Förväntade ett (%s,%s)-par, fick ett par där ett eller båda värdena saknades"
+"(%s,%s)-par förväntades, fick ett par där ett eller båda värdena saknades"
 
 #: gconf/gconf-internals.c:1514
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
-msgstr "Förväntade par av typen (%s,%s), men fick typen (%s,%s)"
+msgstr "Par av typen (%s,%s) förväntades, men fick typen (%s,%s)"
 
 #: gconf/gconf-internals.c:1630
 msgid "Quoted string doesn't begin with a quotation mark"
@@ -626,7 +627,7 @@ msgid ""
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
 "Misslyckades med att låsa \"%s\": en annan process har låset, eller så har "
-"operativsystemet felaktigt konfigurerad NFS-fillåsning (%s)"
+"operativsystemet en felaktigt konfigurerad NFS-fillåsning (%s)"
 
 #: gconf/gconf-internals.c:2399
 #, c-format
@@ -640,7 +641,7 @@ msgstr "gconftool eller en annan icke-gconfd-process har låsfilen \"%s\""
 
 #: gconf/gconf-internals.c:2446
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "kunde inte kontakta ORB för slå upp existerande gconfd-objektreferens"
+msgstr "kunde inte kontakta ORB för slå upp befintlig gconfd-objektreferens"
 
 #: gconf/gconf-internals.c:2456
 #, c-format
@@ -682,7 +683,7 @@ msgstr "Misslyckades med att städa filen \"%s\": %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Misslyckades med att ta bort låskatalogen \"%s\": %s"
 
-#: gconf/gconf-internals.c:2815 gconf/gconfd.c:595
+#: gconf/gconf-internals.c:2815 gconf/gconfd.c:596
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "Misslyckades med att skapa %s: %s"
@@ -712,7 +713,7 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
-"Misslyckades med att kontakta konfigurationsservern. En del möjliga orsaker "
+"Misslyckades med att kontakta konfigurationsservern. Några möjliga orsaker "
 "kan vara att du måste aktivera stöd för TCP/IP-nätverk i ORBit, eller att du "
 "har överblivna NFS-lås på grund av en systemkrasch. Se http://www.gnome.org/"
 "projects/gconf/ för mer information. (Detaljer - %s)"
@@ -874,12 +875,12 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 "Kan inte lagra ett värde på nyckeln \"%s\" eftersom konfigurationsservern "
-"inte har några skrivbara databaser. Det finns en del vanliga orsaker till "
+"inte har några skrivbara databaser. Det finns några vanliga orsaker till "
 "detta problem: 1) din konfigurationssökvägsfil %s/path innehöll inga "
 "databaser eller hittades inte, 2) alternativt så skapade vi av misstag två "
 "gconfd-processer, 3) ditt operativsystem är felkonfigurerat så att NFS-"
 "fillåsning inte fungerar i din hemkatalog eller 4) din NFS-klientmaskin "
-"kraschade och upplyste inte servern korrekt vid omstart att fillås skulle "
+"kraschade och upplyste inte servern korrekt vid omstart om att fillås skulle "
 "låsas upp. Om du har två gconfd-processer (eller hade två då den andra "
 "startades) kan det hjälpa att logga ut, döda alla kopior av gconfd, och "
 "logga in igen. Kanske beror problemet på att du försökte använda GConf "
@@ -890,17 +891,17 @@ msgstr ""
 "finnas en gconfd per hemkatalog, och den måste ha en låsfil i ~/.gconfd och "
 "även låsfiler i individuella lagringsplatser som ~/.gconf"
 
-#: gconf/gconf-sources.c:1413
+#: gconf/gconf-sources.c:1414
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Fel vid sökning av metainformation: %s"
 
-#: gconf/gconf-sources.c:1482
+#: gconf/gconf-sources.c:1483
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Fel vid hämtning av metainformation: %s"
 
-#: gconf/gconf-sources.c:1506
+#: gconf/gconf-sources.c:1507
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
@@ -1025,38 +1026,38 @@ msgstr "Misslyckades med att stänga ner konfigurationsservern: %s"
 #: gconf/gconf.c:2930
 #, c-format
 msgid "Expected float, got %s"
-msgstr "Förväntade flyttal, fick %s"
+msgstr "Flyttal förväntades, fick %s"
 
 #: gconf/gconf.c:2965
 #, c-format
 msgid "Expected int, got %s"
-msgstr "Förväntade heltal, fick %s"
+msgstr "Heltal förväntades, fick %s"
 
 #: gconf/gconf.c:3000
 #, c-format
 msgid "Expected string, got %s"
-msgstr "Förväntade sträng, fick %s"
+msgstr "Sträng förväntades, fick %s"
 
 #: gconf/gconf.c:3034
 #, c-format
 msgid "Expected bool, got %s"
-msgstr "Förväntade boolean, fick %s"
+msgstr "Boolean förväntades, fick %s"
 
 #: gconf/gconf.c:3067
 #, c-format
 msgid "Expected schema, got %s"
-msgstr "Förväntade schema, fick %s"
+msgstr "Schema förväntades, fick %s"
 
 #: gconf/gconf.c:3424
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-fel: %s"
 
-#: gconf/gconfd.c:249
+#: gconf/gconfd.c:250
 msgid "Shutdown request received"
 msgstr "Avstängningsbegäran mottagen"
 
-#: gconf/gconfd.c:281
+#: gconf/gconfd.c:282
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1064,7 +1065,7 @@ msgstr ""
 "gconfd kompilerades med felsökning; försök att läsa in gconf.path från "
 "källkatalogen"
 
-#: gconf/gconfd.c:295
+#: gconf/gconfd.c:296
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1075,7 +1076,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:303
+#: gconf/gconfd.c:304
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
 "edit "
@@ -1083,16 +1084,16 @@ msgstr ""
 "Inga konfigurationskällor i källsökvägen, konfigurationen kommer inte att  "
 "sparas; redigera "
 
-#: gconf/gconfd.c:303
+#: gconf/gconfd.c:304
 msgid "/path"
 msgstr "/sökväg"
 
-#: gconf/gconfd.c:316
+#: gconf/gconfd.c:317
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "Fel vid inläsning av vissa konfigurationskällor: %s"
 
-#: gconf/gconfd.c:328
+#: gconf/gconfd.c:329
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
@@ -1100,7 +1101,7 @@ msgstr ""
 "Inga konfigurationskällor kunde slås upp, kan inte läsa in eller spara "
 "konfigurationsdata"
 
-#: gconf/gconfd.c:345
+#: gconf/gconfd.c:346
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
@@ -1108,65 +1109,65 @@ msgstr ""
 "Inga skrivbara konfigurationskällor kunde slås upp korrekt, kommer kanske "
 "inte att kunna spara vissa konfigurationsändringar"
 
-#: gconf/gconfd.c:371
+#: gconf/gconfd.c:372
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr ""
 "Mottog signal %d, lämnar en core-fil. Rapportera gärna ett fel i GConf."
 
-#: gconf/gconfd.c:389
+#: gconf/gconfd.c:390
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr ""
 "Mottog signal %d, stänger ner onormalt. Skicka gärna in en GConf-felrapport."
 
-#: gconf/gconfd.c:406
+#: gconf/gconfd.c:407
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "Mottog signal %d, stänger ner snyggt"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:542
+#: gconf/gconfd.c:543
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "startar (version %s), pid %u användare \"%s\""
 
-#: gconf/gconfd.c:582
+#: gconf/gconfd.c:583
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Misslyckades med att få objektreferensen för konfigurationsservern"
 
-#: gconf/gconfd.c:620
+#: gconf/gconfd.c:621
 #, c-format
 msgid "Failed to write byte to pipe fd %d so client program may hang: %s"
 msgstr ""
 "Misslyckades med att skriva byte till rör-fh %d, så programmet kan hänga: %s"
 
-#: gconf/gconfd.c:630
+#: gconf/gconfd.c:631
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "Misslyckades med att få lås för demonen, avslutar: %s"
 
-#: gconf/gconfd.c:668
+#: gconf/gconfd.c:669
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Fel vid släppande av låsfil: %s"
 
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:677
 msgid "Exiting"
 msgstr "Avslutar"
 
-#: gconf/gconfd.c:702
+#: gconf/gconfd.c:703
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-servern används inte, stänger ner."
 
-#: gconf/gconfd.c:1067
+#: gconf/gconfd.c:1069
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerar undantag: %s"
 
-#: gconf/gconfd.c:1167
+#: gconf/gconfd.c:1169
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1175,7 +1176,7 @@ msgstr ""
 "Misslyckades med att öppna gconfd-loggfilen; kommer inte att kunna "
 "återställa lyssnare efter avslutning av gconfd (%s)"
 
-#: gconf/gconfd.c:1202
+#: gconf/gconfd.c:1204
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1183,32 +1184,32 @@ msgstr ""
 "Misslyckades med att stänga gconfd-loggfilen; data kanske inte har sparats "
 "korrekt (%s)"
 
-#: gconf/gconfd.c:1271
+#: gconf/gconfd.c:1273
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunde inte öppna tillståndsfilen \"%s\" för skrivning: %s"
 
-#: gconf/gconfd.c:1285
+#: gconf/gconfd.c:1287
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
-msgstr "Kunde inte skriva fildeskriptorn för tillståndsfilen \"%s\": %d: %s"
+msgstr "Kunde inte skriva filidentifieraren för tillståndsfilen \"%s\": %d: %s"
 
-#: gconf/gconfd.c:1294
+#: gconf/gconfd.c:1296
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Misslyckades med att stänga den nya tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1308
+#: gconf/gconfd.c:1310
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunde inte flytta undan den gamla tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:1318
+#: gconf/gconfd.c:1320
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Misslyckades med att flytta den nya tillståndsfilen på plats: %s"
 
-#: gconf/gconfd.c:1327
+#: gconf/gconfd.c:1329
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1216,7 +1217,7 @@ msgstr ""
 "Misslyckades med att återskapa den ursprungliga tillståndsfilen som hade "
 "flyttats till \"%s\": %s"
 
-#: gconf/gconfd.c:1798
+#: gconf/gconfd.c:1800
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1224,17 +1225,17 @@ msgstr ""
 "Kunde inte återställa lyssnaren på adress \"%s\", kunde inte slå upp "
 "databasen"
 
-#: gconf/gconfd.c:1844
+#: gconf/gconfd.c:1846
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Fel vid läsning av tillståndsfilen: %s"
 
-#: gconf/gconfd.c:1897
+#: gconf/gconfd.c:1899
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Misslyckades med att öppna tillståndsfilen \"%s\": %s"
 
-#: gconf/gconfd.c:2014
+#: gconf/gconfd.c:2018
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1244,7 +1245,7 @@ msgstr ""
 "kommer inte att kunna lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs av (%s)"
 
-#: gconf/gconfd.c:2019
+#: gconf/gconfd.c:2023
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1254,46 +1255,31 @@ msgstr ""
 "kan komma att felaktigt lägga in lyssnaren igen om gconfd avslutar eller "
 "stängs ner (%s)"
 
-#: gconf/gconfd.c:2042 gconf/gconfd.c:2216
+#: gconf/gconfd.c:2046 gconf/gconfd.c:2220
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Misslyckades med att få IOR för klienten: %s"
 
-#: gconf/gconfd.c:2057
+#: gconf/gconfd.c:2061
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Misslyckades med att öppna tillståndsfilen: %s"
 
-#: gconf/gconfd.c:2070
+#: gconf/gconfd.c:2074
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Misslyckades med att skriva klienttillägg till tillståndsfilen: %s"
 
-#: gconf/gconfd.c:2078
+#: gconf/gconfd.c:2082
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Misslyckades med att tömma klienttillägg till tillståndsfilen: %s"
 
-#: gconf/gconfd.c:2177
+#: gconf/gconfd.c:2181
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "Någon klient tog bort sig själv från GConf-servern när den inte var tillagd."
-
-#. dialog display isn't working out
-#: gconf/gconfd.c:2318
-msgid "Multiple segmentation faults occurred; can't display error dialog\n"
-msgstr "Flera segmenteringsfel inträffade; kan inte visa feldialogen\n"
-
-#. Eeeek! Can't show dialog
-#: gconf/gconfd.c:2327
-#, c-format
-msgid ""
-"Segmentation fault!\n"
-"Cannot display crash dialog: %s\n"
-msgstr ""
-"Segmenteringsfel!\n"
-"Kan inte visa kraschdialogen: %s\n"
 
 #: gconf/gconftool.c:82
 msgid "Set a key to a value and sync. Use with --type."
@@ -1892,7 +1878,7 @@ msgstr "VARNING: ingen nyckel angiven för schema\n"
 #: gconf/gconftool.c:2039
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
-"VARNING: <locale>-noden har inget `name=\"locale\"'-attribut, ignorerar\n"
+"VARNING: <locale>-noden har inget 'name=\"locale\"'-attribut, ignorerar\n"
 
 #: gconf/gconftool.c:2045
 #, c-format
@@ -1922,7 +1908,8 @@ msgstr "Installerade schemat \"%s\" för lokalen \"%s\"\n"
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr ""
-"VARNING: misslyckades med att associera schemat `%s' med nyckeln `%s': %s\n"
+"VARNING: misslyckades med att associera schemat \"%s\" med nyckeln \"%s\": %"
+"s\n"
 
 #: gconf/gconftool.c:2193
 #, c-format
@@ -1957,10 +1944,11 @@ msgstr ""
 "Dokumentet \"%s\" har fel typ av rotnod (<%s>, borde vara "
 "<gconfschemafile>)\n"
 
+# SUN CHANGED MESSAGE
 #: gconf/gconftool.c:2358
 #, c-format
 msgid "Document `%s' has no top level <gconfschemafile> node\n"
-msgstr "Dokumentet \"%s\" har ingen toppnivå <gconfschemafil> nod\n"
+msgstr "Dokumentet \"%s\" har ingen toppnivånod <gconfschemafil>\n"
 
 #: gconf/gconftool.c:2372
 #, c-format
@@ -2018,6 +2006,16 @@ msgstr ""
 "katalogen:\n"
 "  %s\n"
 
+#~ msgid "Multiple segmentation faults occurred; can't display error dialog\n"
+#~ msgstr "Flera segmenteringsfel inträffade; kan inte visa feldialogen\n"
+
+#~ msgid ""
+#~ "Segmentation fault!\n"
+#~ "Cannot display crash dialog: %s\n"
+#~ msgstr ""
+#~ "Segmenteringsfel!\n"
+#~ "Kan inte visa kraschdialogen: %s\n"
+
 #~ msgid ""
 #~ "Failed to contact configuration server; some possible causes are:\n"
 #~ "a) you have an existing configuration server (gconfd) running, but it "
@@ -2028,9 +2026,9 @@ msgstr ""
 #~ "system crash, try removing ~/.gconf/*.lock and ~/.gconfd/lock if you are "
 #~ "sure no gconfd processes are running on any machine using your home dir"
 #~ msgstr ""
-#~ "Misslyckades med att kontakta konfigurationsserver; en del möjliga "
-#~ "orsaker till detta är:\n"
-#~ "a) att du har en existerande konfigurationsserver (gconfd) körandes, men "
+#~ "Misslyckades med att kontakta konfigurationsserver; några möjliga orsaker "
+#~ "till detta är:\n"
+#~ "a) att du har en befintlig konfigurationsserver (gconfd) körandes, men "
 #~ "att den inte är nåbar härifrån - om du är inloggad från två maskiner "
 #~ "samtidigt kan du behöva aktivera TCP-nätverksstöd för ORBit genom att "
 #~ "stoppa raden \"ORBIIOPIPv4=1\" i /etc/orbitrc\n"
