@@ -946,6 +946,12 @@ gconf_string_to_gulong(const gchar* str)
   return retval;
 }
 
+const gchar*
+gconf_current_locale(void)
+{
+  return setlocale(LC_ALL, NULL);
+}
+
 /*
  * Log
  */

@@ -338,6 +338,13 @@ gconf_notify_remove(GConfEngine* conf,
 GConfValue*  
 gconf_get(GConfEngine* conf, const gchar* key, GConfError** err)
 {
+  return gconf_get_with_locale(conf, key, NULL, err);
+}
+
+GConfValue*
+gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale,
+                      GConfError** err)
+{
   GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
   GConfValue* val;
   ConfigValue* cv;
@@ -357,9 +364,13 @@ gconf_get(GConfEngine* conf, const gchar* key, GConfError** err)
     }
 
   CORBA_exception_init(&ev);
-  
-  cv = ConfigServer_lookup(cs, priv->context, (gchar*)key, &ev);
 
+  if (locale == NULL)
+    cv = ConfigServer_lookup(cs, priv->context, (gchar*)key, &ev);
+  else
+    cv = ConfigServer_lookup_with_locale(cs, priv->context,
+                                         (gchar*)key, (gchar*)locale, &ev);
+  
   if (gconf_handle_corba_exception(&ev, err))
     {
       /* FIXME we could do better here... maybe respawn the server if needed... */
@@ -443,6 +454,47 @@ gconf_unset(GConfEngine* conf, const gchar* key, GConfError** err)
   ConfigServer_unset(cs, priv->context,
                      (gchar*)key,
                      &ev);
+
+  if (gconf_handle_corba_exception(&ev, err))
+    {
+      /* FIXME we could do better here... maybe respawn the server if needed... */
+      return FALSE;
+    }
+
+  g_return_val_if_fail(*err == NULL, FALSE);
+  
+  return TRUE;
+}
+
+gboolean
+gconf_associate_schema  (GConfEngine* conf, const gchar* key,
+                         const gchar* schema_key, GConfError** err)
+{
+  GConfEnginePrivate* priv = (GConfEnginePrivate*)conf;
+  CORBA_Environment ev;
+  ConfigServer cs;
+
+  if (!gconf_key_check(key, err))
+    return FALSE;
+
+  if (!gconf_key_check(schema_key, err))
+    return FALSE;
+  
+  cs = gconf_get_config_server(TRUE, err);
+
+  if (cs == CORBA_OBJECT_NIL)
+    {
+      g_return_val_if_fail(err == NULL || *err != NULL, FALSE);
+
+      return FALSE;
+    }
+
+  CORBA_exception_init(&ev);
+
+  ConfigServer_set_schema(cs, priv->context,
+                          (gchar*)key,
+                          (gchar*)schema_key,
+                          &ev);
 
   if (gconf_handle_corba_exception(&ev, err))
     {
@@ -1419,7 +1471,7 @@ gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err)
 {
   GConfValue* val;
 
-  val = gconf_get(conf, key, err);
+  val = gconf_get_with_locale(conf, key, gconf_current_locale(), err);
 
   if (val == NULL)
     return NULL;

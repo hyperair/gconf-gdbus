@@ -190,7 +190,7 @@ struct poptOption options[] = {
     0,
     N_("Specify a several-line description to go in a schema."),
     N_("DESCRIPTION")
-  },  
+  },
   {
     "owner",
     '\0',

@@ -2186,39 +2186,48 @@ entry_fill    (Entry* e, const gchar* name)
 static GConfValue*
 entry_value (Entry* e, const gchar* locale)
 {
+  const gchar* sl;
+  
   g_return_val_if_fail(e != NULL, NULL);
   
   if (e->value == NULL)
     return NULL;
 
   /* only schemas have locales */
-  if (locale == NULL ||
-      e->value->type != GCONF_VALUE_SCHEMA)
+  if (e->value->type != GCONF_VALUE_SCHEMA)
     return e->value;
 
   g_assert(e->value->type == GCONF_VALUE_SCHEMA);
-  g_assert(locale != NULL);
-  
-  if (strcmp(gconf_schema_locale(gconf_value_schema(e->value)), locale) == 0)
+
+  sl = gconf_schema_locale(gconf_value_schema(e->value));
+
+  if (sl == NULL && locale == NULL)
+    return e->value;
+  else if (sl && locale &&
+           strcmp(sl, locale) == 0)
     return e->value;
   else
     {
+      /* We want a locale other than the currently-loaded one */
       GConfValue* newval;
       GConfError* error = NULL;
       
       newval = xentry_extract_value(e->node, locale, &error);
       if (newval != NULL)
         {
+          /* We found a schema with the right locale */
           gconf_value_destroy(e->value);
           e->value = newval;
           g_return_val_if_fail(error == NULL, e->value);
         }
       else if (error != NULL)
         {
+          /* There was an error */
           gconf_log(GCL_WARNING, _("Ignoring XML node `%s': %s"),
                     e->name, error->str);
           gconf_error_destroy(error);
         }
+      /* else fall back to the currently-loaded schema */
     }
 
   return e->value;

@@ -70,6 +70,8 @@ gchar*        gconf_concat_key_and_dir(const gchar* dir, const gchar* key);
 /* Returns 0 on failure */
 gulong        gconf_string_to_gulong(const gchar* str);
 
+const gchar*  gconf_current_locale(void);
+
 /* Log wrapper; we might want to not use syslog someday */
 typedef enum {
   GCL_EMERG,

@@ -1,3 +1,25 @@
+1999-11-07  Havoc Pennington  <hp@pobox.com>
+
+	* tests/testschemas.c (check_schema_storage): Properly consider
+	that schema fields can be NULL
+
+	* backends/xml-backend.c (entry_value): Properly consider that
+	a schema can have a NULL locale
+
+	* gconf/gconf.c (gconf_get_with_locale): New function
+	(gconf_get): just calls get_with_locale() with a NULL locale
+	(gconf_get_schema): Use get_with_locale()
+
+	* gconf/gconf-internals.c (gconf_current_locale): So I don't have
+	to think about setlocale()
+
+	* tests/testschemas.c: New test program for schema stuff
+	
+1999-11-06  Havoc Pennington  <hp@pobox.com>
+
+	* gconf/gconf.c (gconf_associate_schema): Add function to associate 
+	a schema name with a key.
+
 1999-10-28  Havoc Pennington  <hp@pobox.com>
 
 	* backends/xml-backend.c (query_value): Add locale

@@ -2,12 +2,13 @@
 
 export GCONFTOOL=`pwd`/../gconf/gconftool
 LOGFILE=runtests.log
+TESTS='testgconf testlisteners testschemas'
 
 echo "Logging to $LOGFILE"
 
-for I in testgconf testlisteners
+for I in $TESTS
 do
-    echo -n "Running test $I, please wait:"
+    echo -n "Running test program \"$I\", please wait:"
     if ./$I >$LOGFILE 2>&1; then
         echo " passed"
     else

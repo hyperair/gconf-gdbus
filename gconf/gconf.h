@@ -51,10 +51,21 @@ void         gconf_notify_remove  (GConfEngine* conf,
 /* Low-level interfaces */
 GConfValue*  gconf_get            (GConfEngine* conf, const gchar* key, GConfError** err);
 
+/* Locale only matters if you are expecting to get a schema, or if you don't know
+   what you are expecting and it might be a schema. */
+GConfValue*  gconf_get_with_locale(GConfEngine* conf, const gchar* key, const gchar* locale, GConfError** err);
+
 gboolean     gconf_set            (GConfEngine* conf, const gchar* key,
                                    GConfValue* value, GConfError** err);
 
 gboolean     gconf_unset          (GConfEngine* conf, const gchar* key, GConfError** err);
+
+/*
+ * schema_key should have a schema (if key stores a value) or a dir full of schemas
+ * (if key stores a directory name)
+ */
+gboolean     gconf_associate_schema  (GConfEngine* conf, const gchar* key,
+                                      const gchar* schema_key, GConfError** err);
 
 GSList*      gconf_all_entries    (GConfEngine* conf, const gchar* dir, GConfError** err);
 
@@ -99,7 +110,9 @@ gboolean     gconf_get_bool  (GConfEngine* conf, const gchar* key,
    sense; it returns NULL as a default, to indicate unset or error */
 /* free the retval */
 /* Note that this returns the schema stored at key, NOT
-   the schema that key conforms to. */
+   the schema associated with the key. */
+/* This automatically uses get_with_locale() with the current locale,
+   the other convenience wrappers do not */
 GConfSchema* gconf_get_schema  (GConfEngine* conf, const gchar* key, GConfError** err);
 
 /* No convenience functions for lists or pairs, since there are too
