@@ -871,7 +871,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
           g_free (varsubst);
           
           if (included != NULL)
-            g_slist_concat (l, included);
+            l = g_slist_concat (l, included);
         }
       else 
         {

@@ -1,3 +1,11 @@
+2005-01-18  Mark McLoughlin  <mark@skynet.ie>
+
+	Fixes problem where a path file which only includes
+	another path file wouldn't work.
+
+	* gconf/gconf-internals.c: (gconf_load_source_path):
+	assign the return value of g_slist_concat() to something.
+
 2005-01-17  Mark McLoughlin  <mark@skynet.ie>
 
 	Fix double free with gconf_client_clear_cache()
