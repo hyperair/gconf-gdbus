@@ -798,7 +798,7 @@ subst_variables(const gchar* src)
 
               if ((retval_len - pos) < varval_len)
                 {
-                  retval_len *= 2;
+                  retval_len = pos + varval_len;
                   retval = g_realloc(retval, retval_len+3);
                 }
               
