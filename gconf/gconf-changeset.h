@@ -68,7 +68,7 @@ void         gconf_change_set_set         (GConfChangeSet* cs, const gchar* key,
 void         gconf_change_set_set_nocopy  (GConfChangeSet* cs, const gchar* key,
                                            GConfValue* value);
 
-void         gconf_changet_set_unset      (GConfChangeSet* cs, const gchar* key);
+void         gconf_change_set_unset      (GConfChangeSet* cs, const gchar* key);
 
 void         gconf_change_set_set_float   (GConfChangeSet* cs, const gchar* key,
                                            gdouble val);

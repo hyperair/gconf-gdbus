@@ -201,7 +201,7 @@ gconf_change_set_set (GConfChangeSet* cs, const gchar* key,
 }
 
 void
-gconf_changet_set_unset      (GConfChangeSet* cs, const gchar* key)
+gconf_change_set_unset      (GConfChangeSet* cs, const gchar* key)
 {
   Change* c;
   
@@ -247,7 +247,9 @@ gconf_change_set_set_string  (GConfChangeSet* cs, const gchar* key,
   GConfValue* value;
   
   g_return_if_fail(cs != NULL);
-
+  g_return_if_fail(key != NULL);
+  g_return_if_fail(val != NULL);
+  
   value = gconf_value_new(GCONF_VALUE_STRING);
   gconf_value_set_string(value, val);
   
