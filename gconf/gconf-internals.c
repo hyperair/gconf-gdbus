@@ -20,6 +20,10 @@
 
 #include "gconf-internals.h"
 #include "gconf-backend.h"
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 GConfValue* 
 g_conf_value_new(GConfValueType type)
@@ -35,6 +39,74 @@ g_conf_value_new(GConfValueType type)
 }
 
 GConfValue* 
+g_conf_value_new_from_string(GConfValueType type, const gchar* value_str)
+{
+  GConfValue* value;
+
+  value = g_conf_value_new(type);
+
+  switch (type)
+    {
+    case G_CONF_VALUE_INT:
+      g_conf_value_set_int(value, atoi(value_str));
+      break;
+    case G_CONF_VALUE_FLOAT:
+      {
+        gchar* endptr = 0;
+        double num;
+        num = g_strtod(value_str, &endptr);
+        if (value_str != endptr)
+          {
+            g_conf_value_set_float(value, num);
+          }
+        else
+          {
+            g_warning("Didn't understand `%s' (expected real number)",
+                      value_str);
+            
+            g_conf_value_destroy(value);
+            value = NULL;
+          }
+      }
+      break;
+    case G_CONF_VALUE_STRING:
+      g_conf_value_set_string(value, value_str);
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  return value;
+}
+
+gchar*
+g_conf_value_to_string(GConfValue* value)
+{
+  gchar* retval = NULL;
+
+  switch (value->type)
+    {
+    case G_CONF_VALUE_INT:
+      retval = g_malloc(64);
+      g_snprintf(retval, 64, "%d", g_conf_value_int(value));
+      break;
+    case G_CONF_VALUE_FLOAT:
+      retval = g_malloc(64);
+      g_snprintf(retval, 64, "%g", g_conf_value_float(value));
+      break;
+    case G_CONF_VALUE_STRING:
+      retval = g_strdup(g_conf_value_string(value));
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
+  return retval;
+}
+
+GConfValue* 
 g_conf_value_copy(GConfValue* src)
 {
   GConfValue* dest;
@@ -47,10 +119,14 @@ g_conf_value_copy(GConfValue* src)
     {
     case G_CONF_VALUE_INT:
     case G_CONF_VALUE_FLOAT:
-      dest->d = src->d
+      dest->d = src->d;
       break;
     case G_CONF_VALUE_STRING:
-      dest->d.string_data = g_strdup(src->d.string_data);
+      if (src->d.string_data)
+        dest->d.string_data = g_strdup(src->d.string_data);
+      else 
+        dest->d.string_data = NULL;
+      break;
     default:
       g_assert_not_reached();
     }
@@ -137,7 +213,24 @@ GConfValue*
 g_conf_source_query_value      (GConfSource* source,
                                 const gchar* key)
 {
+  if (!g_conf_valid_key(key))
+    {
+      g_warning("Invalid key `%s'", key);
+      return NULL;
+    }
   return (*source->backend->vtable->query_value)(source, key);
+}
+
+void          
+g_conf_source_set_value        (GConfSource* source,
+                                const gchar* key,
+                                GConfValue* value)
+{
+  if (!g_conf_valid_key(key))
+    {
+      g_warning("Invalid key `%s'", key);
+    }
+  (*source->backend->vtable->set_value)(source, key, value);
 }
 
 void         
@@ -211,5 +304,70 @@ g_conf_valid_key      (const gchar* key)
     return TRUE;
 }
 
+gchar*
+g_conf_key_directory  (const gchar* key)
+{
+  const gchar* end;
+  gchar* retval;
+  int len;
 
+  end = strrchr(key, '/');
+
+  if (end == NULL)
+    {
+      g_warning("No '/' in key `%s'", key);
+      return NULL;
+    }
+
+  len = end-key+1;
+
+  retval = g_malloc(len);
+
+  strncpy(retval, key, len);
+  
+  retval[len-1] = '\0';
+
+  return retval;
+}
+
+gchar*
+g_conf_key_key        (const gchar* key)
+{
+  const gchar* end;
+  
+  end = strrchr(key, '/');
+
+  ++end;
+
+  return g_strdup(end);
+}
+
+/*
+ *  Random stuff 
+ */
+
+gboolean
+g_conf_file_exists (const gchar* filename)
+{
+  struct stat s;
+  
+  g_return_val_if_fail (filename != NULL,FALSE);
+  
+  return stat (filename, &s) == 0;
+}
+
+gboolean
+g_conf_file_test(const gchar* filename, int test)
+{
+  struct stat s;
+  if(stat (filename, &s) != 0)
+    return FALSE;
+  if(!(test & G_CONF_FILE_ISFILE) && S_ISREG(s.st_mode))
+    return FALSE;
+  if(!(test & G_CONF_FILE_ISLINK) && S_ISLNK(s.st_mode))
+    return FALSE;
+  if(!(test & G_CONF_FILE_ISDIR) && S_ISDIR(s.st_mode))
+    return FALSE;
+  return TRUE;
+}
 

@@ -56,6 +56,7 @@ struct _GConfValue {
 #define g_conf_value_list(x)   ((x)->d.list_data)
 
 GConfValue* g_conf_value_new(GConfValueType type);
+GConfValue* g_conf_value_new_from_string(GConfValueType type, const gchar* str);
 GConfValue* g_conf_value_copy(GConfValue* src);
 void        g_conf_value_destroy(GConfValue* value);
 
@@ -63,7 +64,7 @@ void        g_conf_value_set_int(GConfValue* value, gint the_int);
 void        g_conf_value_set_string(GConfValue* value, const gchar* the_str);
 void        g_conf_value_set_float(GConfValue* value, gdouble the_float);
 
-
+gchar*      g_conf_value_to_string(GConfValue* value);
 
 /* Sources are not interchangeable; different backend engines will return 
  * GConfSource with different private elements.
@@ -80,6 +81,9 @@ struct _GConfSource {
 GConfSource* g_conf_resolve_address(const gchar* address);
 GConfValue*   g_conf_source_query_value      (GConfSource* source,
                                               const gchar* key);
+void          g_conf_source_set_value        (GConfSource* source,
+                                              const gchar* key,
+                                              GConfValue* value);
 void         g_conf_source_destroy (GConfSource* source);
 
 const gchar* g_conf_error          (void);
@@ -88,4 +92,19 @@ void         g_conf_set_error      (const gchar* str);
 
 gboolean     g_conf_valid_key      (const gchar* key);
 
+gchar*       g_conf_key_directory  (const gchar* key);
+gchar*       g_conf_key_key        (const gchar* key);
+
+/* These file tests are in libgnome, I cut-and-pasted them */
+enum {
+  G_CONF_FILE_EXISTS=(1<<0)|(1<<1)|(1<<2), /*any type of file*/
+  G_CONF_FILE_ISFILE=1<<0,
+  G_CONF_FILE_ISLINK=1<<1,
+  G_CONF_FILE_ISDIR=1<<2
+};
+
+gboolean g_conf_file_test   (const gchar* filename, int test);
+gboolean g_conf_file_exists (const gchar* filename);
+
 #endif
+

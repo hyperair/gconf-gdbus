@@ -91,16 +91,6 @@ g_conf_backend_dir(void)
   return "../backends/.libs/";
 }
 
-static gboolean
-g_file_exists (const char *filename)
-{
-	struct stat s;
-
-	g_return_val_if_fail (filename != NULL,FALSE);
-	
-	return stat (filename, &s) == 0;
-}
-
 gchar*       
 g_conf_backend_file(const gchar* address)
 {
@@ -123,7 +113,7 @@ g_conf_backend_file(const gchar* address)
   g_free(file);
 
   if (retval != NULL && 
-      g_file_exists(retval))
+      g_conf_file_exists(retval))
     {
       return retval;
     }
@@ -163,7 +153,11 @@ g_conf_get_backend(const gchar* address)
   backend = g_hash_table_lookup(loaded_backends, name);
 
   if (backend != NULL)
-    return backend;
+    {
+      /* Returning a "copy" */
+      g_conf_backend_ref(backend);
+      return backend;
+    }
   else
     {
       gchar* file;

@@ -7,4 +7,4 @@ libgconfbackend_xml_la_SOURCES = \
 
 
 libgconfbackend_xml_la_LDFLAGS = -avoid-version -module
-libgconfbackend_xml_la_LIBADD  = $(GLIB_CFLAGS)
+libgconfbackend_xml_la_LIBADD  = $(GLIB_LIBS) $(XML_LIBS)
