@@ -39,9 +39,6 @@
   Or a protocol with oneway CORBA methods (client requests a value,
   gconfd calls back when it has the value)
 
-* Robustness against gconfd exit or crash; probably by logging
-  the current list of clients to a file
-
 * Life cycle management for gconfd (exit if no clients are alive, 
   maybe ping clients periodically)
 
@@ -70,4 +67,11 @@
   and also apply the changes given in the format)
 
 * Use a real DTD and a nicer structure for the XML backend format
+
+* Logfile is currently implemented in a stupid way, I thought of a better
+  way: append each listener add/remove to the file as we perform the add/
+  remove (so the file is something like "ADD 1234234
+  IOR:235442534\nREMOVE 1234234 IOR:235442534\n") then we can efficiently 
+  "replay" this by first stripping all obvious pairs out of the file.
+  Periodically "compress" the file by stripping pairs.
 
