@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2001-08-17 18:18+0200\n"
+"POT-Creation-Date: 2001-09-14 12:44-0400\n"
 "PO-Revision-Date: 2001-02-12 20:02+0100\n"
 "Last-Translator: Andraz Tori <andraz.tori1@guest.arnes.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
@@ -179,6 +179,7 @@ msgid "Ignoring schema name `%s', invalid: %s"
 msgstr "Ignoriram ime sheme `%s', neveljavno: %s"
 
 #: backends/xml-entry.c:376
+#, c-format
 msgid "Ignoring XML node `%s': %s"
 msgstr "Ignoriram vozli¹èe XML `%s': %s"
 
@@ -529,6 +530,7 @@ msgid "CORBA error: %s"
 msgstr "Napaka CORBA: %s"
 
 #: gconf/gconf-internals.c:2148
+#, c-format
 msgid "bonobo-activation problem description: '%s'"
 msgstr "opis problema pri aktivaciji bonobo: '%s'"
 
@@ -653,6 +655,7 @@ msgstr ""
 "nastavitvene poti. "
 
 #: gconf/gconf-sources.c:608
+#, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
 "writeable databases. There are two common causes of this problem: 1) your "
@@ -663,13 +666,15 @@ msgid ""
 "activation-server and gconfd, and logging back in may help. As always, check "
 "the user.* syslog for details on problems gconfd encountered."
 msgstr ""
-"Nisem mogel shraniti vrednosti pod kljuèem '%s', saj stre¾nik nastavitev nima "
-"nobene pisljive zbirke podatkov. Ta problem ima dva pogosta vzroka: 1) va¹a "
-"pot nastavitev ne vsebuje nobene zbirke podatkov ali ni bila najdena ali 2) "
-"je bonobo-activation je pomotoma ustvaril dva procesa gconfd. Èe imate dva procesa gconfd "
-"(ali ste imeli dva, ko se je pognal drugi), potem je to hro¹è v bonobo-activation in ne v "
-"GConf. Èe se odjavite, ubijete bonobo-activation-server in gconfd in znova prijavite, lahko "
-"problem izgine. Kot vedno, za podrobnosti o problemu na katerega je naletel gconfd preverite sistemski dnevnik user.* ."
+"Nisem mogel shraniti vrednosti pod kljuèem '%s', saj stre¾nik nastavitev "
+"nima nobene pisljive zbirke podatkov. Ta problem ima dva pogosta vzroka: 1) "
+"va¹a pot nastavitev ne vsebuje nobene zbirke podatkov ali ni bila najdena "
+"ali 2) je bonobo-activation je pomotoma ustvaril dva procesa gconfd. Èe "
+"imate dva procesa gconfd (ali ste imeli dva, ko se je pognal drugi), potem "
+"je to hro¹è v bonobo-activation in ne v GConf. Èe se odjavite, ubijete "
+"bonobo-activation-server in gconfd in znova prijavite, lahko problem izgine. "
+"Kot vedno, za podrobnosti o problemu na katerega je naletel gconfd preverite "
+"sistemski dnevnik user.* ."
 
 #: gconf/gconf-sources.c:1164
 #, c-format
@@ -775,11 +780,13 @@ msgid ""
 "the GConf package. Do not report a GConf bug unless you have information "
 "indicating what went wrong with bonobo-activation that was caused by GConf."
 msgstr ""
-"Napaka ob vzpostavljanju povezave z nastavitvenim stre¾nikom: bonobo-activation je vrnil "
-"nil iz bonobo_activation_activate_from_id() in ni nastavil izjeme, ki bi razlo¾ila "
-"problem. To je hro¹è v paketu bonobo-activation; v bonobo-activation je ¹lo nekaj narobe, a ni bila "
-"sporoèena nobena napaka. To ni hro¹è v paketu GConf. Ne oddajte poroèila o "
-"hro¹èu v GConf v kolikor nimate podatkov, da je GConf povzroèil napako v bonobo-activation."
+"Napaka ob vzpostavljanju povezave z nastavitvenim stre¾nikom: bonobo-"
+"activation je vrnil nil iz bonobo_activation_activate_from_id() in ni "
+"nastavil izjeme, ki bi razlo¾ila problem. To je hro¹è v paketu bonobo-"
+"activation; v bonobo-activation je ¹lo nekaj narobe, a ni bila sporoèena "
+"nobena napaka. To ni hro¹è v paketu GConf. Ne oddajte poroèila o hro¹èu v "
+"GConf v kolikor nimate podatkov, da je GConf povzroèil napako v bonobo-"
+"activation."
 
 #: gconf/gconf.c:2198
 msgid "Failed to init GConf, exiting\n"
@@ -947,7 +954,8 @@ msgid ""
 "Registering existing server with bonobo-activation-server, since we seem to "
 "have been leaked"
 msgstr ""
-"Registriram obstojeè stre¾nik pri bonobo-activation-server, ker izgleda, da nam pu¹èa"
+"Registriram obstojeè stre¾nik pri bonobo-activation-server, ker izgleda, da "
+"nam pu¹èa"
 
 #: gconf/gconfd.c:609
 msgid ""
@@ -975,8 +983,8 @@ msgid ""
 "bonobo-activation doesn't know about our IID; indicates broken installation; "
 "can't register; exiting\n"
 msgstr ""
-"bonobo-activation ne ve za na¹ IID; kar ka¾e na po¹kodovano namestitev; ne morem se "
-"registrirati; konèujem\n"
+"bonobo-activation ne ve za na¹ IID; kar ka¾e na po¹kodovano namestitev; ne "
+"morem se registrirati; konèujem\n"
 
 #: gconf/gconfd.c:649
 msgid "Another gconfd already registered with bonobo-activation; exiting\n"
@@ -984,7 +992,8 @@ msgstr "Drug gconfd je ¾e registrian pri bonobo-activation; konèujem\n"
 
 #: gconf/gconfd.c:654
 msgid "Unknown error registering gconfd with bonobo-activation; exiting\n"
-msgstr "Neznana napaka ob registriranju gconfd-ja pri bonobo-activation; konèujem\n"
+msgstr ""
+"Neznana napaka ob registriranju gconfd-ja pri bonobo-activation; konèujem\n"
 
 #: gconf/gconfd.c:698
 #, c-format
@@ -1336,14 +1345,16 @@ msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
 msgstr ""
-"--recursive-list ne bi smela biti uporabljena z --get, --set, --unset, --all-pairs, ali --all-dirs\n"
+"--recursive-list ne bi smela biti uporabljena z --get, --set, --unset, --all-"
+"pairs, ali --all-dirs\n"
 
 #: gconf/gconftool.c:441
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 msgstr ""
-"--set_schema ne bi smela biti uporabljena z --get, --set, --unset, --all-entries ali --all-dirs\n"
+"--set_schema ne bi smela biti uporabljena z --get, --set, --unset, --all-"
+"entries ali --all-dirs\n"
 
 #: gconf/gconftool.c:447
 msgid "Value type is only relevant when setting a value\n"

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
-"POT-Creation-Date: 2001-09-19 19:06+0000\n"
+"POT-Creation-Date: 2001-09-14 12:44-0400\n"
 "PO-Revision-Date: 2001-03-14 20:40+0800\n"
 "Last-Translator: Wang Jian <lark@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
@@ -84,8 +84,8 @@ msgstr ""
 #: backends/xml-cache.c:256
 #, c-format
 msgid ""
-"%u items remain in the cache after cleaning already-synced items older than "
-"%u seconds"
+"%u items remain in the cache after cleaning already-synced items older than %"
+"u seconds"
 msgstr ""
 
 #: backends/xml-dir.c:164
@@ -640,9 +640,9 @@ msgid ""
 "configuration path file doesn't contain any databases or wasn't found or 2) "
 "bonobo-activation mistakenly created two gconfd processes. If you have two "
 "gconfd processes (or had two at the time the second was launched), then it's "
-"an bonobo-activation bug, not a GConf issue. Logging out, killing "
-"bonobo-activation-server and gconfd, and logging back in may help. As "
-"always, check the user.* syslog for details on problems gconfd encountered."
+"an bonobo-activation bug, not a GConf issue. Logging out, killing bonobo-"
+"activation-server and gconfd, and logging back in may help. As always, check "
+"the user.* syslog for details on problems gconfd encountered."
 msgstr ""
 
 #: gconf/gconf-sources.c:1164
@@ -829,6 +829,10 @@ msgid ""
 "edit "
 msgstr ""
 
+#: gconf/gconfd.c:301
+msgid "/path"
+msgstr ""
+
 #: gconf/gconfd.c:314
 #, c-format
 msgid "Error loading some config sources: %s"
@@ -871,8 +875,8 @@ msgstr ""
 
 #: gconf/gconfd.c:546
 msgid ""
-"Failed to init Object Activation Framework: please mail bug report to "
-"bonobo-activation maintainers"
+"Failed to init Object Activation Framework: please mail bug report to bonobo-"
+"activation maintainers"
 msgstr ""
 
 #: gconf/gconfd.c:566
@@ -1009,15 +1013,15 @@ msgstr ""
 #: gconf/gconfd.c:2039
 #, c-format
 msgid ""
-"Failed to log addition of listener to gconfd logfile; won't be able to "
-"re-add the listener if gconfd exits or shuts down (%s)"
+"Failed to log addition of listener to gconfd logfile; won't be able to re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
 #: gconf/gconfd.c:2044
 #, c-format
 msgid ""
-"Failed to log removal of listener to gconfd logfile; might erroneously "
-"re-add the listener if gconfd exits or shuts down (%s)"
+"Failed to log removal of listener to gconfd logfile; might erroneously re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
 #: gconf/gconfd.c:2067 gconf/gconfd.c:2232
@@ -1059,8 +1063,8 @@ msgstr ""
 
 #: gconf/gconftool.c:96
 msgid ""
-"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
-"--type."
+"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
+"type."
 msgstr ""
 
 #: gconf/gconftool.c:106
@@ -1235,14 +1239,14 @@ msgstr ""
 
 #: gconf/gconftool.c:431
 msgid ""
-"--recursive-list should not be used with --get, --set, --unset, "
-"--all-entries, or --all-dirs\n"
+"--recursive-list should not be used with --get, --set, --unset, --all-"
+"entries, or --all-dirs\n"
 msgstr ""
 
 #: gconf/gconftool.c:441
 msgid ""
-"--set_schema should not be used with --get, --set, --unset, --all-entries, "
-"--all-dirs\n"
+"--set_schema should not be used with --get, --set, --unset, --all-entries, --"
+"all-dirs\n"
 msgstr ""
 
 #: gconf/gconftool.c:447
@@ -1588,8 +1592,7 @@ msgstr "警告：<locale> 节点没有“name=\"locale\"”属性，忽略\n"
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr ""
-"警告：区域设置“%s”有多个 <locale> 节点，忽略第一个后的所有节点\n"
+msgstr "警告：区域设置“%s”有多个 <locale> 节点，忽略第一个后的所有节点\n"
 
 #: gconf/gconftool.c:1994
 #, c-format
@@ -1640,8 +1643,7 @@ msgstr "文档“%s”是空的？\n"
 msgid ""
 "Document `%s' has the wrong type of root node (<%s>, should be "
 "<gconfschemafile>)\n"
-msgstr ""
-"文档“%s”的根节点类型错误(<%s>，应该是 <gconfschemafile>)\n"
+msgstr "文档“%s”的根节点类型错误(<%s>，应该是 <gconfschemafile>)\n"
 
 #: gconf/gconftool.c:2223
 #, c-format

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf 1.1.1\n"
-"POT-Creation-Date: 2001-09-18 20:14-0300\n"
+"POT-Creation-Date: 2001-09-14 12:44-0400\n"
 "PO-Revision-Date: 2001-09-18 20:22-03:00\n"
 "Last-Translator: Gustavo Maciel Dias Vieira <gdvieira@zaz.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -87,8 +87,8 @@ msgstr ""
 #: backends/xml-cache.c:256
 #, c-format
 msgid ""
-"%u items remain in the cache after cleaning already-synced items older than "
-"%u seconds"
+"%u items remain in the cache after cleaning already-synced items older than %"
+"u seconds"
 msgstr ""
 "%u itens continuam no cache após a limpeza dos itens já sincronizados mais "
 "antigos que %u segundos"
@@ -664,10 +664,20 @@ msgid ""
 "configuration path file doesn't contain any databases or wasn't found or 2) "
 "bonobo-activation mistakenly created two gconfd processes. If you have two "
 "gconfd processes (or had two at the time the second was launched), then it's "
-"an bonobo-activation bug, not a GConf issue. Logging out, killing "
-"bonobo-activation-server and gconfd, and logging back in may help. As "
-"always, check the user.* syslog for details on problems gconfd encountered."
-msgstr "Não é possível armazenar um valor na chave '%s', pois o servidor de configuração não possui bases de dados com possibilidade de escrita. Existem duas causas comuns para este problema: 1) o seu caminho de configuração não contém nenhuma base de dados ou não foi encontrado ou 2) bonobo-activation criou por engano dois processos gconfd. Se você possui dois processos gconfd (ou tinha dois quando o segundo foi lançado), então este é um erro do bonobo-activation, não um problema no GConf. Sair do sistema, matar bonobo-activation-server e gconfd e entrar no sistema de novo pode ajudar. Como sempre, verifique no syslog user.* detalhes sobre os problemas que o gconfd encontrou."
+"an bonobo-activation bug, not a GConf issue. Logging out, killing bonobo-"
+"activation-server and gconfd, and logging back in may help. As always, check "
+"the user.* syslog for details on problems gconfd encountered."
+msgstr ""
+"Não é possível armazenar um valor na chave '%s', pois o servidor de "
+"configuração não possui bases de dados com possibilidade de escrita. Existem "
+"duas causas comuns para este problema: 1) o seu caminho de configuração não "
+"contém nenhuma base de dados ou não foi encontrado ou 2) bonobo-activation "
+"criou por engano dois processos gconfd. Se você possui dois processos gconfd "
+"(ou tinha dois quando o segundo foi lançado), então este é um erro do bonobo-"
+"activation, não um problema no GConf. Sair do sistema, matar bonobo-"
+"activation-server e gconfd e entrar no sistema de novo pode ajudar. Como "
+"sempre, verifique no syslog user.* detalhes sobre os problemas que o gconfd "
+"encontrou."
 
 #: gconf/gconf-sources.c:1164
 #, c-format
@@ -773,7 +783,14 @@ msgid ""
 "wrong in bonobo-activation, and no error was reported. This is not a bug in "
 "the GConf package. Do not report a GConf bug unless you have information "
 "indicating what went wrong with bonobo-activation that was caused by GConf."
-msgstr "Erro ao contatar o servidor de configuração: bonobo-activation retornou nil para bonobo-activation_activate_from_id() e não configurou uma exceção para explicar o problema. Este é um erro do pacote bonobo-activation; algo errado aconteceu com o bonobo-activation e não foi relatado um erro. Este não é um erro do pacote GConf. Não relate um erro do GConf a não ser que você possua informação indicando o que aconteceu de errado com o bonobo-activation que foi causado pelo GConf."
+msgstr ""
+"Erro ao contatar o servidor de configuração: bonobo-activation retornou nil "
+"para bonobo-activation_activate_from_id() e não configurou uma exceção para "
+"explicar o problema. Este é um erro do pacote bonobo-activation; algo errado "
+"aconteceu com o bonobo-activation e não foi relatado um erro. Este não é um "
+"erro do pacote GConf. Não relate um erro do GConf a não ser que você possua "
+"informação indicando o que aconteceu de errado com o bonobo-activation que "
+"foi causado pelo GConf."
 
 #: gconf/gconf.c:2198
 msgid "Failed to init GConf, exiting\n"
@@ -861,6 +878,10 @@ msgstr ""
 "Nenhuma fonte de configuração no caminho de fontes, configuração não será "
 "salva; edite "
 
+#: gconf/gconfd.c:301
+msgid "/path"
+msgstr ""
+
 #: gconf/gconfd.c:314
 #, c-format
 msgid "Error loading some config sources: %s"
@@ -910,9 +931,11 @@ msgstr "iniciando (versão %s), pid %u usuário '%s'"
 
 #: gconf/gconfd.c:546
 msgid ""
-"Failed to init Object Activation Framework: please mail bug report to "
-"bonobo-activation maintainers"
-msgstr "Falha ao iniciar Object Activation Framework: por favor, envie relatório de erros para os resposáveis pelo bonobo-activation"
+"Failed to init Object Activation Framework: please mail bug report to bonobo-"
+"activation maintainers"
+msgstr ""
+"Falha ao iniciar Object Activation Framework: por favor, envie relatório de "
+"erros para os resposáveis pelo bonobo-activation"
 
 #: gconf/gconfd.c:566
 msgid "Failed to get object reference for ConfigServer"
@@ -935,7 +958,9 @@ msgstr "Falha ao obter bloqueio para daemon: %s"
 msgid ""
 "Registering existing server with bonobo-activation-server, since we seem to "
 "have been leaked"
-msgstr "Registrando servidor existente com bonobo-activation-server uma vez que aparentamos tê-lo perdido"
+msgstr ""
+"Registrando servidor existente com bonobo-activation-server uma vez que "
+"aparentamos tê-lo perdido"
 
 #: gconf/gconfd.c:609
 msgid ""
@@ -961,7 +986,9 @@ msgstr "Erro desconhecido registrado gconfd com o OAF; terminando"
 msgid ""
 "bonobo-activation doesn't know about our IID; indicates broken installation; "
 "can't register; exiting\n"
-msgstr "bonobo-activation não conhece nosso IID; indica uma instalação defeituosa; não é possível registrar; terminando\n"
+msgstr ""
+"bonobo-activation não conhece nosso IID; indica uma instalação defeituosa; "
+"não é possível registrar; terminando\n"
 
 #: gconf/gconfd.c:649
 msgid "Another gconfd already registered with bonobo-activation; exiting\n"
@@ -969,7 +996,8 @@ msgstr "Outro gconfd já registrado com o bonobo-activation; terminando\n"
 
 #: gconf/gconfd.c:654
 msgid "Unknown error registering gconfd with bonobo-activation; exiting\n"
-msgstr "Erro desconhecido registrado gconfd com o bonobo-activation; terminando\n"
+msgstr ""
+"Erro desconhecido registrado gconfd com o bonobo-activation; terminando\n"
 
 #: gconf/gconfd.c:698
 #, c-format
@@ -1059,8 +1087,8 @@ msgstr "Não é possível abrir arquivo de estado '%s': %s"
 #: gconf/gconfd.c:2039
 #, c-format
 msgid ""
-"Failed to log addition of listener to gconfd logfile; won't be able to "
-"re-add the listener if gconfd exits or shuts down (%s)"
+"Failed to log addition of listener to gconfd logfile; won't be able to re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 "Falha ao registrar inclusão de listener ao arquivo de registro do gconfd; "
 "não será possível re-incluir o listener se o gconfd for desligado (%s)"
@@ -1068,12 +1096,12 @@ msgstr ""
 #: gconf/gconfd.c:2044
 #, c-format
 msgid ""
-"Failed to log removal of listener to gconfd logfile; might erroneously "
-"re-add the listener if gconfd exits or shuts down (%s)"
+"Failed to log removal of listener to gconfd logfile; might erroneously re-"
+"add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 "Falha ao registrar remoção de listener do arquivo de registro do gconfd; "
-"pode ocorrer uma re-inclusão errada do listener se o gconfd for desligado "
-"(%s)"
+"pode ocorrer uma re-inclusão errada do listener se o gconfd for desligado (%"
+"s)"
 
 #: gconf/gconfd.c:2067 gconf/gconfd.c:2232
 #, c-format
@@ -1114,8 +1142,8 @@ msgstr "Imprime o valor de uma chave para a saída padrão."
 
 #: gconf/gconftool.c:96
 msgid ""
-"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and "
-"--type."
+"Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
+"type."
 msgstr ""
 "Atribui um schema e sincroniza. Use com --short-desc, --long-desc, --owner e "
 "--type."
@@ -1317,16 +1345,16 @@ msgstr "Não é possível usar --all-dirs com --get ou --set\n"
 
 #: gconf/gconftool.c:431
 msgid ""
-"--recursive-list should not be used with --get, --set, --unset, "
-"--all-entries, or --all-dirs\n"
+"--recursive-list should not be used with --get, --set, --unset, --all-"
+"entries, or --all-dirs\n"
 msgstr ""
 "--recursive-list não deve ser usado com --get, --set, --unset, --all-entries "
 "ou --all-dirs\n"
 
 #: gconf/gconftool.c:441
 msgid ""
-"--set_schema should not be used with --get, --set, --unset, --all-entries, "
-"--all-dirs\n"
+"--set_schema should not be used with --get, --set, --unset, --all-entries, --"
+"all-dirs\n"
 msgstr ""
 "--set_schema não deve ser usado com --get, --set, --unset, --all-entries ou "
 "--all-dirs\n"
@@ -1598,8 +1626,8 @@ msgstr "Erro ao sincronizar: %s"
 #: gconf/gconftool.c:1511
 msgid "Must specify one or more dirs to get key/value pairs from.\n"
 msgstr ""
-"Devem ser especificados um ou mais diretórios de onde obter pares "
-"chave/valor.\n"
+"Devem ser especificados um ou mais diretórios de onde obter pares chave/"
+"valor.\n"
 
 #: gconf/gconftool.c:1525
 msgid "Must specify one or more keys to unset.\n"
