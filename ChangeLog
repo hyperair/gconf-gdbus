@@ -1,3 +1,12 @@
+2003-07-07  Mark McLoughlin  <mark@skynet.ie>
+
+	* gconf/gconf-client.c:
+	(recurse_subdir_list): the subdir list contains full
+	paths, so don't append it to the full path. Fixes
+	recursive preloading.
+	(gconf_client_preload): don't get (and leak) the list
+	of subdirs if we're only doing onelevel preloading.
+
 2003-06-28  Dafydd Harries  <daf@parnassus.ath.cx>
 
 	* gconf/gconftool.c (main): Slight extra option tweaking.

@@ -799,7 +799,7 @@ static void
 cache_pairs_in_dir(GConfClient* client, const gchar* path);
 
 static void 
-recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
+recurse_subdir_list(GConfClient* client, GSList* subdirs)
 {
   GSList* tmp;
 
@@ -808,18 +808,15 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs, const gchar* parent)
   while (tmp != NULL)
     {
       gchar* s = tmp->data;
-      gchar* full = gconf_concat_dir_and_key(parent, s);
       
-      cache_pairs_in_dir(client, full);
+      cache_pairs_in_dir(client, s);
 
       PUSH_USE_ENGINE (client);
       recurse_subdir_list(client,
-                          gconf_engine_all_dirs (client->engine, full, NULL),
-                          full);
+                          gconf_engine_all_dirs (client->engine, s, NULL));
       POP_USE_ENGINE (client);
 
       g_free(s);
-      g_free(full);
       
       tmp = g_slist_next(tmp);
     }
@@ -932,13 +929,7 @@ gconf_client_preload    (GConfClient* client,
 
     case GCONF_CLIENT_PRELOAD_ONELEVEL:
       {
-        GSList* subdirs;
-
         trace ("Onelevel preload of '%s'\n", dirname);
-        
-        PUSH_USE_ENGINE (client);
-        subdirs = gconf_engine_all_dirs (client->engine, dirname, NULL);
-        POP_USE_ENGINE (client);
         
         cache_pairs_in_dir (client, dirname);
       }
@@ -956,7 +947,7 @@ gconf_client_preload    (GConfClient* client,
         
         cache_pairs_in_dir(client, dirname);
           
-        recurse_subdir_list(client, subdirs, dirname);
+        recurse_subdir_list(client, subdirs);
       }
       break;
 
