@@ -4,7 +4,11 @@ INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
 
 backenddir = $(pkglibdir)/$(MAJOR_VERSION)
 
-backend_LTLIBRARIES = libgconfbackend-xml.la libgconfbackend-oldxml.la
+if LDAP_SUPPORT
+EVOLDAP_BACKEND = libgconfbackend-evoldap.la
+endif
+
+backend_LTLIBRARIES = libgconfbackend-xml.la libgconfbackend-oldxml.la $(EVOLDAP_BACKEND)
 
 libgconfbackend_oldxml_la_SOURCES = \
 	xml-cache.h		\
@@ -37,3 +41,20 @@ xml_test_LDADD = \
 bin_PROGRAMS = gconf-merge-tree
 gconf_merge_tree_SOURCES = gconf-merge-tree.c
 gconf_merge_tree_LDADD = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la
+
+if LDAP_SUPPORT
+libgconfbackend_evoldap_la_SOURCES = evoldap-backend.c
+libgconfbackend_evoldap_la_LDFLAGS = -avoid-version -module -no-undefined
+libgconfbackend_evoldap_la_LIBADD  = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la $(INTLLIBS) $(LDAP_LIBS)
+
+backendconfdir   = $(sysconfdir)/gconf/2
+backendconf_DATA = evoldap.conf
+
+schemadir   = $(pkgdatadir)/schema
+schema_DATA = evoldap.schema
+endif
+
+EXTRA_DIST =		\
+	README.evoldap	\
+	evoldap.conf	\
+	evoldap.schema
