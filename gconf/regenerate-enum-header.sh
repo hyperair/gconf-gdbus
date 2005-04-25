@@ -2,7 +2,12 @@
 
 cd $GCONF_SRCDIR || exit 1
 
-glib-mkenums --fhead "#ifndef __GCONF_ENUM_TYPES_H__\n#define __GCONF_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n" --fprod "/* enumerations from \"@filename@\" */\n" --vhead "GType @enum_name@_get_type (void);\n#define GCONF_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n" --ftail "G_END_DECLS\n\n#endif /* __GCONF_ENUM_TYPES_H__ */" $* > tmp-unfixed-gconf-enum-types.h || exit 1
+glib-mkenums \
+	--fhead "#ifndef __GCONF_ENUM_TYPES_H__\n#define __GCONF_ENUM_TYPES_H__\n\n#include <glib-object.h>\n\nG_BEGIN_DECLS\n\n" \
+	--fprod "/* enumerations from \"@filename@\" */\n\n" \
+	--vhead "GType @enum_name@_get_type (void);\n#define GCONF_TYPE_@ENUMSHORT@ (@enum_name@_get_type())\n\n" \
+	--ftail "G_END_DECLS\n\n#endif /* __GCONF_ENUM_TYPES_H__ */" \
+	$* > tmp-unfixed-gconf-enum-types.h || exit 1
 
 cat tmp-unfixed-gconf-enum-types.h | sed -e 's/g_conf/gconf/g' -e 's/TYPE_CONF/TYPE/g' > tmp-gconf-enum-types.h || exit 1
 

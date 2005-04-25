@@ -25,6 +25,20 @@ gconf_value_type_get_type (void)
   return etype;
 }
 
+GType
+gconf_unset_flags_get_type (void)
+{
+  static GType etype = 0;
+  if (etype == 0) {
+    static const GFlagsValue values[] = {
+      { GCONF_UNSET_INCLUDING_SCHEMA_NAMES, "GCONF_UNSET_INCLUDING_SCHEMA_NAMES", "names" },
+      { 0, NULL, NULL }
+    };
+    etype = g_flags_register_static ("GConfUnsetFlags", values);
+  }
+  return etype;
+}
+
 
 /* enumerations from "gconf-error.h" */
 GType

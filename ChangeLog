@@ -1,3 +1,20 @@
+2005-04-25  Mark McLoughlin  <mark@skynet.ie>
+
+	Pointed out by Gustavo Carneiro <gjc@inescporto.pt> in
+	bug #300804
+
+	* gconf/gconf-enum-types.[ch]: run "make regenerate-built-sources"
+	so that we get GCONF_TYPE_UNSET_FLAGS.
+	
+	* gconf/gconf-error.h,
+	  gconf/gconf-value.h: remove unneccessary glib-mkenums options
+	from C comment.
+	
+	* gconf/regenerate-enum-footer.sh,
+	  gconf/regenerate-enum-header.sh: tweak the arguments to glib-mkenums
+	so that we get the same output that we were getting before and the
+	command line is a wee bit more readable.
+
 2005-04-18  Mark McLoughlin  <mark@skynet.ie>
 
 	* backends/evoldap-backend.c, backends/evoldap.conf,

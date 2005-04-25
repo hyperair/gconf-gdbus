@@ -32,7 +32,7 @@ extern "C" {
  * A GConfValue is used to pass configuration values around
  */
 
-typedef enum { /*< prefix=GCONF_VALUE >*/
+typedef enum {
   GCONF_VALUE_INVALID,
   GCONF_VALUE_STRING,
   GCONF_VALUE_INT,
