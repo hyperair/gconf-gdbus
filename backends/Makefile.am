@@ -45,7 +45,11 @@ gconf_merge_tree_LDADD = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJO
 if LDAP_SUPPORT
 libgconfbackend_evoldap_la_SOURCES = evoldap-backend.c
 libgconfbackend_evoldap_la_LDFLAGS = -avoid-version -module -no-undefined
-libgconfbackend_evoldap_la_LIBADD  = $(DEPENDENT_LIBS) $(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la $(INTLLIBS) $(LDAP_LIBS)
+libgconfbackend_evoldap_la_LIBADD  = \
+	$(DEPENDENT_WITH_XML_LIBS) \
+	$(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la \
+	$(INTLLIBS) \
+	$(LDAP_LIBS)
 
 backendconfdir   = $(sysconfdir)/gconf/2
 backendconf_DATA = evoldap.conf
