@@ -1,5 +1,12 @@
 2005-05-06  Mark McLoughlin  <mark@skynet.ie>
 
+	Small fix for previous commit.
+
+	* gconf/gconfd.c: (gconfd_notify_other_listeners):
+	Don't try and free a NULL GConfValue.
+
+2005-05-06  Mark McLoughlin  <mark@skynet.ie>
+
 	Fix for crasher based on patch from Josselin Mouette <joss@debian.org>
 	in bug #158917
 
