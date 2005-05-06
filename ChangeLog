@@ -1,3 +1,11 @@
+2005-05-06  Mark McLoughlin  <mark@skynet.ie>
+
+	Fix for crasher based on patch from Josselin Mouette <joss@debian.org>
+	in bug #158917
+
+	* gconf/gconfd.c: (gconfd_notify_other_listeners): if the
+	value is unset, create an InvalidVal ConfigValue.
+
 2005-04-27  Mark McLoughlin  <mark@skynet.ie>
 
 	* backends/Makefile.am: link the evoldap backend with libxml.

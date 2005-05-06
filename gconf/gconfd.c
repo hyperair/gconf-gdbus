@@ -1204,7 +1204,15 @@ gconfd_notify_other_listeners (GConfDatabase *modified_db,
 		      return;
 		    }
 
-		  cvalue = gconf_corba_value_from_gconf_value (value);
+		  if (value != NULL)
+		    {
+		      cvalue = gconf_corba_value_from_gconf_value (value);
+		    }
+		  else
+		    {
+		      cvalue = gconf_invalid_corba_value ();
+		    }
+
 		  gconf_database_notify_listeners (db,
 						   NULL,
 						   key,
