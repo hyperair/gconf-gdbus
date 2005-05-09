@@ -1,11 +1,12 @@
 # 
-# Red Hat OID value: 1.3.6.1.4.1.2312
+# GNOME OID value: 1.3.6.1.4.1.3317
 #
-# OID Base for Evolution is 1.3.6.1.4.1.2312.4.3.2
-# Attribute types are under 1.3.6.1.4.1.2312.4.3.2.1 
-# Object classes are under  1.3.6.1.4.1.2312.4.3.2.2 
+# OID Base for GConf is 1.3.6.1.4.1.3317.5.4
+# OID Base for evoldap is 1.3.6.1.4.1.3317.5.4.1
+# Attribute types are under 1.3.6.1.4.1.3317.5.4.1.1
+# Object classes are under  1.3.6.1.4.1.3317.5.4.1.2
 
-attributetype ( 1.3.6.1.4.1.2312.4.3.2.1.1 NAME 'evolutionMailSourceURI'
+attributetype ( 1.3.6.1.4.1.3317.5.4.1.1.1 NAME 'evolutionMailSourceURI'
 	DESC 'Evolution mail account source URI'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
@@ -13,7 +14,7 @@ attributetype ( 1.3.6.1.4.1.2312.4.3.2.1.1 NAME 'evolutionMailSourceURI'
 	SINGLE-VALUE
 	)
 
-attributetype ( 1.3.6.1.4.1.2312.4.3.2.1.2 NAME 'evolutionMailTransportURI'
+attributetype ( 1.3.6.1.4.1.3317.5.4.1.1.2 NAME 'evolutionMailTransportURI'
 	DESC 'Evolution mail account transport URI'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
@@ -21,7 +22,7 @@ attributetype ( 1.3.6.1.4.1.2312.4.3.2.1.2 NAME 'evolutionMailTransportURI'
 	SINGLE-VALUE
 	)
 
-objectclass ( 1.3.6.1.4.1.2312.4.3.2.2.1 NAME 'evolutionMailAccount' SUP top AUXILIARY
+objectclass ( 1.3.6.1.4.1.3317.5.4.1.2.1 NAME 'evolutionMailAccount' SUP top AUXILIARY
 	DESC 'Evolution mail account'
 	MAY ( evolutionMailSourceURI $ evolutionMailTransportURI )
 	)
