@@ -9,13 +9,78 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf 2.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-02-07 17:19+0000\n"
+"POT-Creation-Date: 2005-05-17 14:38+0100\n"
 "PO-Revision-Date: 2004-08-09 22:57+0800\n"
 "Last-Translator: Funda Wang <fundawang@linux.net.cn>\n"
 "Language-Team: zh_CN <i18n-translation@lists.linux.net.cn>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: backends/evoldap-backend.c:158
+#, fuzzy, c-format
+msgid "Failed to get configurion file path from '%s'"
+msgstr "将某些配置数据写入磁盘失败\n"
+
+#: backends/evoldap-backend.c:169
+#, c-format
+msgid "Created Evolution/LDAP source using configuration file '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:444
+#, fuzzy, c-format
+msgid "Unable to parse xml file '%s'"
+msgstr "无法解析 XML 文件“%s”"
+
+#: backends/evoldap-backend.c:453
+#, fuzzy, c-format
+msgid "Config file '%s' is empty"
+msgstr "文档“%s”是空的？\n"
+
+#: backends/evoldap-backend.c:464
+#, c-format
+msgid "Root node of '%s' must be <evoldap>, not <%s>"
+msgstr ""
+
+#: backends/evoldap-backend.c:502
+#, c-format
+msgid "No <template> specified in '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:509
+#, fuzzy, c-format
+msgid "No \"filter\" attribute specified on <template> in '%s'"
+msgstr "<%2$s> 元素没有“%1$s”属性"
+
+#: backends/evoldap-backend.c:570
+#, c-format
+msgid "No LDAP server or base DN specified in '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:576
+#, c-format
+msgid "Contacting LDAP server: host '%s', port '%d', base DN '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:582
+#, fuzzy, c-format
+msgid "Failed to contact LDAP server: %s"
+msgstr "查看 %s 失败：%s"
+
+#: backends/evoldap-backend.c:669
+#, c-format
+msgid "Searching for entries using filter: %s"
+msgstr ""
+
+#: backends/evoldap-backend.c:682
+#, fuzzy, c-format
+msgid "Error querying LDAP server: %s"
+msgstr "设置值时发生错误：%s"
+
+#: backends/evoldap-backend.c:692
+#, c-format
+msgid "Got %d entries using filter: %s"
+msgstr ""
 
 #: backends/gconf-merge-tree.c:79
 #, c-format
@@ -96,7 +161,7 @@ msgstr "无法删除文件 %s：%s\n"
 msgid "Initializing Markup backend module"
 msgstr "初始化标记语言后端模块"
 
-#: backends/markup-backend.c:933 backends/xml-backend.c:877
+#: backends/markup-backend.c:933 backends/xml-backend.c:886
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "无法放弃 XML 目录“%s”上的锁定：%s"
@@ -105,7 +170,7 @@ msgstr "无法放弃 XML 目录“%s”上的锁定：%s"
 msgid "Failed to write some configuration data to disk\n"
 msgstr "将某些配置数据写入磁盘失败\n"
 
-#: backends/markup-tree.c:800 backends/xml-dir.c:1255
+#: backends/markup-tree.c:800 backends/xml-dir.c:1274
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "无法创建目录“%s”：%s"
@@ -248,17 +313,17 @@ msgstr "不允许在 <%2$s> 元素内出现元素 <%1$s>"
 msgid "No text is allowed inside element <%s>"
 msgstr "不允许在元素 <%s> 内出现文字"
 
-#: backends/markup-tree.c:3720 backends/markup-tree.c:3734
+#: backends/markup-tree.c:3727 backends/markup-tree.c:3745
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "打开“%s”失败：%s\n"
 
-#: backends/markup-tree.c:3808
+#: backends/markup-tree.c:3819
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "写入文件“%s”出错：%s"
 
-#: backends/markup-tree.c:3815
+#: backends/markup-tree.c:3831
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "将临时文件“%s”移至最终位置“%s”失败：%s"
@@ -272,7 +337,7 @@ msgstr "正在卸载 XML 后端模块。"
 msgid "Error syncing the XML backend directory cache: %s"
 msgstr "在同步 XML 后端目录缓存时发生错误：%s"
 
-#: backends/xml-backend.c:809
+#: backends/xml-backend.c:815
 msgid "Initializing XML backend module"
 msgstr "正在初始化 XML 后端模块"
 
@@ -297,73 +362,73 @@ msgstr "无法查看“%s”：%s"
 msgid "XML filename `%s' is a directory"
 msgstr "XML 文件名“%s”是个目录"
 
-#: backends/xml-dir.c:416 backends/xml-dir.c:425
+#: backends/xml-dir.c:418 backends/xml-dir.c:427
 #, c-format
 msgid "Failed to delete \"%s\": %s"
 msgstr "无法删除“%s”：%s"
 
-#: backends/xml-dir.c:471
+#: backends/xml-dir.c:473
 #, c-format
 msgid "Failed to write file `%s': %s"
 msgstr "无法写文件“%s”：%s"
 
-#: backends/xml-dir.c:484
+#: backends/xml-dir.c:487 backends/xml-dir.c:522
 #, c-format
 msgid "Failed to set mode on `%s': %s"
 msgstr "无法设置“%s”的模式：%s"
 
-#: backends/xml-dir.c:494
+#: backends/xml-dir.c:498
 #, c-format
 msgid "Failed to write XML data to `%s': %s"
 msgstr "无法将 XML 数据写入“%s”：%s"
 
-#: backends/xml-dir.c:504 backends/xml-dir.c:1279
+#: backends/xml-dir.c:508 backends/xml-dir.c:1298
 #, c-format
 msgid "Failed to close file `%s': %s"
 msgstr "无法关闭文件“%s”：%s"
 
-#: backends/xml-dir.c:520 backends/xml-dir.c:530
+#: backends/xml-dir.c:537 backends/xml-dir.c:547
 #, c-format
 msgid "Failed to rename `%s' to `%s': %s"
 msgstr "无法将“%s”改名为“%s”：%s"
 
-#: backends/xml-dir.c:536
+#: backends/xml-dir.c:553
 #, c-format
 msgid "Failed to restore `%s' from `%s': %s"
 msgstr "无法恢复“%s”从“%s”：%s"
 
-#: backends/xml-dir.c:548
+#: backends/xml-dir.c:565
 #, c-format
 msgid "Failed to delete old file `%s': %s"
 msgstr "无法删除旧文件“%s”：%s"
 
 #. These are all fatal errors
-#: backends/xml-dir.c:978
+#: backends/xml-dir.c:997
 #, c-format
 msgid "Failed to stat `%s': %s"
 msgstr "无法查看“%s”：%s"
 
-#: backends/xml-dir.c:1152
+#: backends/xml-dir.c:1171
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
 msgstr "“%2$s”中存在重复项“%1$s”，忽略"
 
-#: backends/xml-dir.c:1174
+#: backends/xml-dir.c:1193
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
 msgstr "在 XML 文件“%s”中的项目没有名字，忽略"
 
-#: backends/xml-dir.c:1182
+#: backends/xml-dir.c:1201
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "XML 文件“%s”的顶层节点是 <%s> 而不是 <entry>，忽略"
 
-#: backends/xml-dir.c:1271
+#: backends/xml-dir.c:1290
 #, c-format
 msgid "Failed to create file `%s': %s"
 msgstr "无法创建文件“%s”：%s"
 
-#: backends/xml-dir.c:1370
+#: backends/xml-dir.c:1389
 #, c-format
 msgid "Failed to parse XML file \"%s\""
 msgstr "无法解析 XML 文件“%s”"
@@ -702,123 +767,123 @@ msgstr "无法获取锁定"
 msgid "No database available to save your configuration"
 msgstr "没有可用的数据库来保存您的配置"
 
-#: gconf/gconf-internals.c:86
+#: gconf/gconf-internals.c:91
 #, c-format
 msgid "No '/' in key \"%s\""
 msgstr "在键“%s”中没有“/”"
 
-#: gconf/gconf-internals.c:199
+#: gconf/gconf-internals.c:204
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "“%s”中有无效的 UTF-8 字符串值"
 
-#: gconf/gconf-internals.c:258
+#: gconf/gconf-internals.c:263
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "无法为列表元素解释 CORBA 值"
 
-#: gconf/gconf-internals.c:260
+#: gconf/gconf-internals.c:265
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "%s 中有不正确的列表元素类型"
 
-#: gconf/gconf-internals.c:273
+#: gconf/gconf-internals.c:278
 msgid "Received list from gconfd with a bad list type"
 msgstr "从 gconfd 接收到的列表的列表类型不正确"
 
-#: gconf/gconf-internals.c:454
+#: gconf/gconf-internals.c:459
 msgid "Failed to convert object to IOR"
 msgstr "无法转换对象到 IOR"
 
-#: gconf/gconf-internals.c:591
+#: gconf/gconf-internals.c:596
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "schema 的区域设置中有无效的 UTF-8 字符"
 
-#: gconf/gconf-internals.c:599
+#: gconf/gconf-internals.c:604
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "schema 的简短说明中有无效的 UTF-8 字符"
 
-#: gconf/gconf-internals.c:607
+#: gconf/gconf-internals.c:612
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "schema 的详细说明中有无效的 UTF-8 字符"
 
-#: gconf/gconf-internals.c:615
+#: gconf/gconf-internals.c:620
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "schema 的所有者中有无效的 UTF-8 字符"
 
-#: gconf/gconf-internals.c:837
+#: gconf/gconf-internals.c:894
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "无法打开路径文件“%s”：%s\n"
 
-#: gconf/gconf-internals.c:886
+#: gconf/gconf-internals.c:950
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "正在添加源“%s”\n"
 
-#: gconf/gconf-internals.c:901
+#: gconf/gconf-internals.c:965
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "文件“%s”上的读取错误：%s\n"
 
-#: gconf/gconf-internals.c:1228 gconf/gconf-internals.c:1294
+#: gconf/gconf-internals.c:1298 gconf/gconf-internals.c:1364
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1683
 msgid "Text contains invalid UTF-8"
 msgstr "文本包含无效的 UTF-8"
 
-#: gconf/gconf-internals.c:1379
+#: gconf/gconf-internals.c:1449
 #, c-format
 msgid "Expected list, got %s"
 msgstr "需要列表，得到的是 %s"
 
-#: gconf/gconf-internals.c:1389
+#: gconf/gconf-internals.c:1459
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "需要 %s 列表，得到的是 %s 列表"
 
-#: gconf/gconf-internals.c:1517
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "需要对，得到的是 %s"
 
-#: gconf/gconf-internals.c:1531
+#: gconf/gconf-internals.c:1601
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr "需要 (%s,%s) 对，得到的对仅有一个值或两个值都没有"
 
-#: gconf/gconf-internals.c:1547
+#: gconf/gconf-internals.c:1617
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "需要类型 (%s,%s) 对，得到的是类型 (%s,%s)"
 
-#: gconf/gconf-internals.c:1663
+#: gconf/gconf-internals.c:1733
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "引用的字符串不是以引号开始"
 
-#: gconf/gconf-internals.c:1725
+#: gconf/gconf-internals.c:1795
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "引用的字符串不是以引号结束"
 
-#: gconf/gconf-internals.c:1861
+#: gconf/gconf-internals.c:1931
 msgid "Encoded value is not valid UTF-8"
 msgstr "已编码的值不是有效的 UTF-8"
 
-#: gconf/gconf-internals.c:2320
+#: gconf/gconf-internals.c:2413
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "无法锁住临时文件“%s”：%s"
 
-#: gconf/gconf-internals.c:2347
+#: gconf/gconf-internals.c:2440
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "无法创建文件“%s”，也许它已经存在"
 
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2497
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "无法创建或打开“%s”"
 
-#: gconf/gconf-internals.c:2403
+#: gconf/gconf-internals.c:2507
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -827,86 +892,91 @@ msgstr ""
 "无法锁定“%s”：可能另一个进程已锁定它，或者您的操作系统的 NFS 文件锁定配置不正"
 "确 (%s)"
 
-#: gconf/gconf-internals.c:2433
+#: gconf/gconf-internals.c:2527
+#, fuzzy, c-format
+msgid "Failed to remove '%s': %s"
+msgstr "无法创建 %s：%s"
+
+#: gconf/gconf-internals.c:2551
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "IOR 文件“%s”没有成功打开，无 gconfd 位于：%s"
 
-#: gconf/gconf-internals.c:2463
+#: gconf/gconf-internals.c:2581
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool 或其它非 gconfd 进程的锁定文件为“%s”"
 
-#: gconf/gconf-internals.c:2480
+#: gconf/gconf-internals.c:2598
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "无法联系 ORB 以解决现有的 gconfd 对象引用"
 
-#: gconf/gconf-internals.c:2490
+#: gconf/gconf-internals.c:2608
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "无法将 IOR“%s”转换为对象引用"
 
-#: gconf/gconf-internals.c:2540
+#: gconf/gconf-internals.c:2658
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "无法创建目录“%s”：%s"
 
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2717
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "无法写入文件“%s”：%s"
 
-#: gconf/gconf-internals.c:2640
+#: gconf/gconf-internals.c:2758
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "我们没有锁定文件“%s”，但应该锁定"
 
-#: gconf/gconf-internals.c:2661
+#: gconf/gconf-internals.c:2781
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "无法将“%s”链接到“%s”：%s"
 
-#: gconf/gconf-internals.c:2673
+#: gconf/gconf-internals.c:2793
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "无法删除锁定文件“%s”：%s"
 
-#: gconf/gconf-internals.c:2692
+#: gconf/gconf-internals.c:2816
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "无法清除文件“%s”：%s"
 
-#: gconf/gconf-internals.c:2706
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "无法删除锁定目录“%s”：%s"
 
-#: gconf/gconf-internals.c:2748
+#: gconf/gconf-internals.c:2874
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "取消锁定文件 %s 失败：%s\n"
 
-#: gconf/gconf-internals.c:2887 gconf/gconfd.c:541
+#: gconf/gconf-internals.c:3028 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "查看 %s 失败：%s"
 
-#: gconf/gconf-internals.c:2909
+#: gconf/gconf-internals.c:3050
 #, c-format
 msgid "Server ping error: %s"
 msgstr "服务器 ping 错误：%s"
 
-#: gconf/gconf-internals.c:2934
+#: gconf/gconf-internals.c:3075
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "无法创建与产生的 gconf 守护进程通讯的管道：%s\n"
 
-#: gconf/gconf-internals.c:2958
+#: gconf/gconf-internals.c:3099
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "无法启动配置服务器：%s\n"
 
-#: gconf/gconf-internals.c:2983
+#: gconf/gconf-internals.c:3124
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -918,15 +988,11 @@ msgstr ""
 "崩溃，您的 NFS 锁定已失效。请访问 http://www.gnome.org/projects/gconf/ 了解详"
 "细信息。(详细信息 - %s)"
 
-#: gconf/gconf-internals.c:2984
+#: gconf/gconf-internals.c:3125
 msgid "none"
 msgstr "无"
 
-#: gconf/gconf-sanity-check.c:40 gconf/gconftool.c:88
-msgid "Help options"
-msgstr "帮助选项"
-
-#: gconf/gconf-sanity-check.c:76 gconf/gconftool.c:527
+#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1172,102 +1238,102 @@ msgstr "不理解“%s”(元素数不正确)"
 msgid "Didn't understand `%s' (extra unescaped ')' found inside pair)"
 msgstr "不理解“%s”(在 pair 中找到多余的非换码字符“)”)"
 
-#: gconf/gconf.c:55
+#: gconf/gconf.c:57
 #, c-format
 msgid "Key \"%s\" is NULL"
 msgstr "键“%s”为 NULL"
 
-#: gconf/gconf.c:62
+#: gconf/gconf.c:64
 #, c-format
 msgid "\"%s\": %s"
 msgstr "“%s”：%s"
 
-#: gconf/gconf.c:381
+#: gconf/gconf.c:383
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "服务器无法解析地址“%s”"
 
-#: gconf/gconf.c:759
+#: gconf/gconf.c:761
 msgid "Can't add notifications to a local configuration source"
 msgstr "无法将通知添加到本地配置源"
 
-#: gconf/gconf.c:2222
+#: gconf/gconf.c:2224
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "将客户机添加到服务器列表失败，CORBA 错误：%s"
 
-#: gconf/gconf.c:2585
+#: gconf/gconf.c:2587
 msgid "Must begin with a slash (/)"
 msgstr "必须以斜杠 (/) 开头"
 
-#: gconf/gconf.c:2607
+#: gconf/gconf.c:2609
 msgid "Can't have two slashes (/) in a row"
 msgstr "一行不能有两个斜杠 (/)"
 
-#: gconf/gconf.c:2609
+#: gconf/gconf.c:2611
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "斜杠 (/) 后不能紧跟句号 (.)"
 
-#: gconf/gconf.c:2628
+#: gconf/gconf.c:2630
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "“%c”不是 ASCII 字符，所以不允许出现在键名称中"
 
-#: gconf/gconf.c:2638
+#: gconf/gconf.c:2640
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "“%c”在键/目录名称中是无效字符"
 
-#: gconf/gconf.c:2652
+#: gconf/gconf.c:2654
 msgid "Key/directory may not end with a slash (/)"
 msgstr "键/目录不能以斜杠 (/) 结束"
 
-#: gconf/gconf.c:3021
+#: gconf/gconf.c:3027
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "关闭配置服务器时出现故障：%s"
 
-#: gconf/gconf.c:3082
+#: gconf/gconf.c:3088
 #, c-format
 msgid "Expected float, got %s"
 msgstr "需要浮点数，得到的值为 %s"
 
-#: gconf/gconf.c:3117
+#: gconf/gconf.c:3123
 #, c-format
 msgid "Expected int, got %s"
 msgstr "需要整数，得到的值为 %s"
 
-#: gconf/gconf.c:3152
+#: gconf/gconf.c:3158
 #, c-format
 msgid "Expected string, got %s"
 msgstr "需要字符串，得到的值为 %s"
 
-#: gconf/gconf.c:3186
+#: gconf/gconf.c:3192
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "需要布尔值，得到的值为 %s"
 
-#: gconf/gconf.c:3219
+#: gconf/gconf.c:3225
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "需要 schema ，得到的值为 %s"
 
-#: gconf/gconf.c:3576
+#: gconf/gconf.c:3582
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA 错误：%s"
 
-#: gconf/gconfd.c:298
+#: gconf/gconfd.c:302
 msgid "Shutdown request received"
 msgstr "已接收到关闭请求"
 
-#: gconf/gconfd.c:330
+#: gconf/gconfd.c:334
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr "gconfd 用调试编译；尝试从源目录载入gconf.path"
 
-#: gconf/gconfd.c:344
+#: gconf/gconfd.c:354
 #, c-format
 msgid ""
 "No configuration files found, trying to use the default config source `%s'"
@@ -1276,182 +1342,187 @@ msgstr "找不到配置文件，尝试使用默认配置源“%s”"
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:352
-#, c-format
+#: gconf/gconfd.c:362
+#, fuzzy, c-format
 msgid ""
 "No configuration sources in the source path, configuration won't be saved; "
-"edit %s"
+"edit %s%s"
 msgstr "该源路径中没有配置源，配置不会保存；请编辑 %s"
 
-#: gconf/gconfd.c:365
+#: gconf/gconfd.c:375
 #, c-format
 msgid "Error loading some config sources: %s"
 msgstr "载入某些配置源时出错：%s"
 
-#: gconf/gconfd.c:377
+#: gconf/gconfd.c:387
 msgid ""
 "No config source addresses successfully resolved, can't load or store config "
 "data"
 msgstr "配置源地址无一解析成功，无法载入或存储配置数据"
 
-#: gconf/gconfd.c:394
+#: gconf/gconfd.c:404
 msgid ""
 "No writable config sources successfully resolved, may not be able to save "
 "some configuration changes"
 msgstr "可写入配置源无一解析成功，可能无法保存某些配置更改"
 
-#: gconf/gconfd.c:420
+#: gconf/gconfd.c:433
 #, c-format
 msgid "Received signal %d, dumping core. Please report a GConf bug."
 msgstr "已接收到信号 %d，正在转储核心文件。请报告一个 GConf 问题。"
 
-#: gconf/gconfd.c:438
+#: gconf/gconfd.c:439
+#, fuzzy, c-format
+msgid "Received signal %d. Please report a GConf bug."
+msgstr "已接收到信号 %d，正在转储核心文件。请报告一个 GConf 问题。"
+
+#: gconf/gconfd.c:459
 #, c-format
 msgid ""
 "Received signal %d, shutting down abnormally. Please file a GConf bug report."
 msgstr "已接收到信号 %d，正在异常关闭。请将 GConf 问题记入报告。"
 
-#: gconf/gconfd.c:454
+#: gconf/gconfd.c:475
 #, c-format
 msgid "Received signal %d, shutting down cleanly"
 msgstr "已接收到信号 %d，正在干净地关闭"
 
-#: gconf/gconfd.c:534
+#: gconf/gconfd.c:563
 #, c-format
 msgid "Failed to open %s: %s"
 msgstr "打开 %s 失败：%s"
 
-#: gconf/gconfd.c:550
+#: gconf/gconfd.c:579
 #, c-format
 msgid "Owner of %s is not the current user"
 msgstr "%s 的所有者并非当前用户"
 
-#: gconf/gconfd.c:558
+#: gconf/gconfd.c:587
 #, c-format
 msgid "Bad permissions %lo on directory %s"
 msgstr "目录 %2$s 的权限 %1$lo 有错"
 
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
-#: gconf/gconfd.c:640
+#: gconf/gconfd.c:679
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "正在启动(版本 %s)，pid %u 用户“%s”"
 
-#: gconf/gconfd.c:680
+#: gconf/gconfd.c:736
 msgid "Failed to get object reference for ConfigServer"
 msgstr "无法获取 ConfigServer 的对象引用"
 
-#: gconf/gconfd.c:693
+#: gconf/gconfd.c:749
 #, c-format
 msgid "Failed to create %s: %s"
 msgstr "无法创建 %s：%s"
 
-#: gconf/gconfd.c:700
+#: gconf/gconfd.c:756
 #, c-format
 msgid "Directory %s has a problem, gconfd can't use it"
 msgstr "目录 %s 有问题，gconfd 无法使用它"
 
-#: gconf/gconfd.c:732
+#: gconf/gconfd.c:788
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
 "s"
 msgstr "无法将字节写入管道文件描述符 %d，所以客户端程序可能挂起：%s"
 
-#: gconf/gconfd.c:742
+#: gconf/gconfd.c:798
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
 msgstr "无法锁定守护进程，正在退出：%s"
 
-#: gconf/gconfd.c:780
+#: gconf/gconfd.c:836
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "释放锁定文件时出错：%s"
 
-#: gconf/gconfd.c:788
+#: gconf/gconfd.c:844
 msgid "Exiting"
 msgstr "退出"
 
-#: gconf/gconfd.c:809
+#: gconf/gconfd.c:865
 msgid "SIGHUP received, reloading all databases"
 msgstr "收到了 SIGHUP，重新装入全部数据库"
 
-#: gconf/gconfd.c:826
+#: gconf/gconfd.c:882
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf 服务器不在使用，正在关闭。"
 
-#: gconf/gconfd.c:1145
+#: gconf/gconfd.c:1201
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "获取“%s”的新值时发生错误：%s"
 
-#: gconf/gconfd.c:1265
+#: gconf/gconfd.c:1329
 #, c-format
 msgid "Returning exception: %s"
 msgstr "返回异常：%s"
 
-#: gconf/gconfd.c:1365
+#: gconf/gconfd.c:1435
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr "无法打开 gconfd 日志文件；无法在gconfd 关闭后恢复监听程序 (%s)"
 
-#: gconf/gconfd.c:1400
+#: gconf/gconfd.c:1470
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "无法关闭 gconfd 日志文件；数据可能没有正确保存 (%s)"
 
-#: gconf/gconfd.c:1462
+#: gconf/gconfd.c:1532
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "无法打开已保存的状态文件“%s”进行写入：%s"
 
-#: gconf/gconfd.c:1476
+#: gconf/gconfd.c:1546
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "无法写入已保存的状态文件“%s”fd：%d：%s"
 
-#: gconf/gconfd.c:1485
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "无法关闭已保存的新状态文件“%s”：%s"
 
-#: gconf/gconfd.c:1499
+#: gconf/gconfd.c:1569
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "无法移走已保存的旧状态文件“%s”：%s"
 
-#: gconf/gconfd.c:1509
+#: gconf/gconfd.c:1579
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "无法将新保存的状态文件移入位置：%s"
 
-#: gconf/gconfd.c:1518
+#: gconf/gconfd.c:1588
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "无法恢复已移动到“%s”的原保存的状态文件：%s"
 
-#: gconf/gconfd.c:1997
+#: gconf/gconfd.c:2067
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "无法恢复地址“%s”上的监听程序，不能解析该数据库"
 
-#: gconf/gconfd.c:2043
+#: gconf/gconfd.c:2113
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "读取已保存的状态文件时出错：%s"
 
-#: gconf/gconfd.c:2097
+#: gconf/gconfd.c:2167
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "无法打开已保存的状态文件“%s”：%s"
 
-#: gconf/gconfd.c:2216
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1460,7 +1531,7 @@ msgstr ""
 "无法向 gconfd 日志文件记录添加了监听程序；如果 gconfd 退出或关闭，将无法重新"
 "添加该监听程序 (%s)"
 
-#: gconf/gconfd.c:2221
+#: gconf/gconfd.c:2291
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1469,136 +1540,136 @@ msgstr ""
 "无法向 gconfd 日志文件记录删除了监听程序；如果 gconfd 退出或关闭，可能会错误"
 "地重新添加该监听程序 (%s)"
 
-#: gconf/gconfd.c:2244 gconf/gconfd.c:2418
+#: gconf/gconfd.c:2314 gconf/gconfd.c:2488
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "无法获得客户端的 IOR：%s"
 
-#: gconf/gconfd.c:2259
+#: gconf/gconfd.c:2329
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "无法打开已保存的状态文件：%s"
 
-#: gconf/gconfd.c:2272
+#: gconf/gconfd.c:2342
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "无法将客户端添加写入已保存的状态文件：%s"
 
-#: gconf/gconfd.c:2280
+#: gconf/gconfd.c:2350
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "无法将客户端添加刷新到已保存的状态文件：%s"
 
-#: gconf/gconfd.c:2379
+#: gconf/gconfd.c:2449
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "当某个客户端未被添加时，它将自己从 GConf 服务器中删除。"
 
-#: gconf/gconftool.c:97
+#: gconf/gconftool.c:89
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "将键设置为值和同步。使用 --type。"
 
-#: gconf/gconftool.c:106
+#: gconf/gconftool.c:98
 msgid "Print the value of a key to standard output."
 msgstr "将键的值显示到标准输出。"
 
-#: gconf/gconftool.c:115
+#: gconf/gconftool.c:107
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
 "设置 schema 和同步。使用 --short-desc、--long-desc、--owner 和 --type。"
 
-#: gconf/gconftool.c:125
+#: gconf/gconftool.c:117
 msgid "Unset the keys on the command line"
 msgstr "取消命令行上的键设置"
 
-#: gconf/gconftool.c:134
+#: gconf/gconftool.c:126
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr "递归取消设置命令行上该键/目录名称位置或以下的所有键"
 
-#: gconf/gconftool.c:143
+#: gconf/gconftool.c:135
 msgid "Print all key/value pairs in a directory."
 msgstr "显示某个目录中的所有键/值对。"
 
-#: gconf/gconftool.c:152
+#: gconf/gconftool.c:144
 msgid "Print all subdirectories in a directory."
 msgstr "显示某个目录下的所有子目录。"
 
-#: gconf/gconftool.c:161
+#: gconf/gconftool.c:153
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr "递归将目录下所有项的 XML 描述转存到标准输出。"
 
-#: gconf/gconftool.c:170
+#: gconf/gconftool.c:162
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
 msgstr "从指定文件中装入值的 XML 描述，并将其相对于目录进行设定。"
 
-#: gconf/gconftool.c:179
+#: gconf/gconftool.c:171
 msgid "Unload a set of values described in an XML file."
 msgstr "卸装 XML 文件中描述的值集。"
 
-#: gconf/gconftool.c:188
+#: gconf/gconftool.c:180
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "递归打印某个目录下的所有子目录和条目。"
 
-#: gconf/gconftool.c:197
+#: gconf/gconftool.c:189
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "如果该目录存在，返回 0，如果不存在，返回 2。"
 
-#: gconf/gconftool.c:206
+#: gconf/gconftool.c:198
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "关闭 gconfd。如无必要，请勿使用该选项。"
 
-#: gconf/gconftool.c:215
+#: gconf/gconftool.c:207
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "如果 gconfd 正在运行，返回 0，否则返回 2。"
 
-#: gconf/gconftool.c:224
+#: gconf/gconftool.c:216
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
 msgstr "启动该配置服务器 (gconfd)。(当需要时通常会自动启动。)"
 
-#: gconf/gconftool.c:233
+#: gconf/gconftool.c:225
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr "指定正在设置的值的类型，或 schema 描述的值的类型。可使用唯一的缩写词。"
 
-#: gconf/gconftool.c:234
+#: gconf/gconftool.c:226
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: gconf/gconftool.c:242
+#: gconf/gconftool.c:234
 msgid "Print the data type of a key to standard output."
 msgstr "将键的数据类型打印到标准输出。"
 
-#: gconf/gconftool.c:251
+#: gconf/gconftool.c:243
 msgid "Get the number of elements in a list key."
 msgstr "获取列表键的元素编号。"
 
-#: gconf/gconftool.c:260
+#: gconf/gconftool.c:252
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "从列表键中获取指定元素，以数字作为索引。"
 
-#: gconf/gconftool.c:269
+#: gconf/gconftool.c:261
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
 "指定正在设置的列表值的类型，或 schema 描述的值的类型。可使用唯一的缩写词。"
 
-#: gconf/gconftool.c:270 gconf/gconftool.c:279 gconf/gconftool.c:288
+#: gconf/gconftool.c:262 gconf/gconftool.c:271 gconf/gconftool.c:280
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: gconf/gconftool.c:278
+#: gconf/gconftool.c:270
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1606,7 +1677,7 @@ msgstr ""
 "指定正在设置的 car pair 值的类型，或 schema 描述的值的类型。可使用唯一的缩写"
 "词。"
 
-#: gconf/gconftool.c:287
+#: gconf/gconftool.c:279
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1614,49 +1685,49 @@ msgstr ""
 "指定正在设置的 cdr pair 值的类型，或 schema 描述的值的类型。可使用唯一的缩写"
 "词。"
 
-#: gconf/gconftool.c:296
+#: gconf/gconftool.c:288
 msgid "Specify a short half-line description to go in a schema."
 msgstr "指定 schema 中使用的一条简短的半行说明。"
 
-#: gconf/gconftool.c:297 gconf/gconftool.c:306
+#: gconf/gconftool.c:289 gconf/gconftool.c:298
 msgid "DESCRIPTION"
 msgstr "说明"
 
-#: gconf/gconftool.c:305
+#: gconf/gconftool.c:297
 msgid "Specify a several-line description to go in a schema."
 msgstr "指定 schema 中使用的一条多行说明。"
 
-#: gconf/gconftool.c:314
+#: gconf/gconftool.c:306
 msgid "Specify the owner of a schema"
 msgstr "指定 schema 的所有者"
 
-#: gconf/gconftool.c:315
+#: gconf/gconftool.c:307
 msgid "OWNER"
 msgstr "所有者"
 
-#: gconf/gconftool.c:323
+#: gconf/gconftool.c:315
 msgid "Specify a schema file to be installed"
 msgstr "指定要安装的 schema 文件"
 
-#: gconf/gconftool.c:324
+#: gconf/gconftool.c:316
 msgid "FILENAME"
 msgstr "文件名"
 
-#: gconf/gconftool.c:332
+#: gconf/gconftool.c:324
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "指定要使用的配置源，而不是默认路径"
 
-#: gconf/gconftool.c:333
+#: gconf/gconftool.c:325
 msgid "SOURCE"
 msgstr "源"
 
-#: gconf/gconftool.c:341
+#: gconf/gconftool.c:333
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
 msgstr "绕过服务器，直接访问配置数据库。要求 gconfd 不在运行。"
 
-#: gconf/gconftool.c:350
+#: gconf/gconftool.c:342
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1665,7 +1736,7 @@ msgstr ""
 "在命令行上将 schema 文件正确安装到数据库中。要使用默认值，"
 "GCONF_CONFIG_SOURCE 环境变量应设置为非默认配置源或设置为空字符串。"
 
-#: gconf/gconftool.c:359
+#: gconf/gconftool.c:351
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1674,73 +1745,73 @@ msgstr ""
 "在命令行上将 schema 文件正确从数据库中卸载。要使用默认值，"
 "GCONF_CONFIG_SOURCE 环境变量应设置为非默认配置源或设置为空字符串。"
 
-#: gconf/gconftool.c:368
+#: gconf/gconftool.c:360
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
 "通过在命令行上为键设置和取消设置各种不同类型的值，对应用程序进行严格的测试。"
 
-#: gconf/gconftool.c:377
+#: gconf/gconftool.c:369
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
 "通过在命令行上设置和取消设置目录中的一系列键，对应用程序进行严格的测试。"
 
-#: gconf/gconftool.c:386
+#: gconf/gconftool.c:378
 msgid "Get the short doc string for a key"
 msgstr "获取键的短文档字符串"
 
-#: gconf/gconftool.c:395
+#: gconf/gconftool.c:387
 msgid "Get the long doc string for a key"
 msgstr "获取键的长文档字符串"
 
-#: gconf/gconftool.c:404
+#: gconf/gconftool.c:396
 msgid "Get the name of the schema applied to this key"
 msgstr "获取要应用于此键的 schema 名称"
 
-#: gconf/gconftool.c:413
+#: gconf/gconftool.c:405
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "指定 schema 名，后面跟着要应用该 schema 名的键"
 
-#: gconf/gconftool.c:422
+#: gconf/gconftool.c:414
 msgid "Remove any schema name applied to the given keys"
 msgstr "删除所有已应用于指定键的 schema 名"
 
-#: gconf/gconftool.c:431
+#: gconf/gconftool.c:423
 msgid "Ignore schema defaults when reading values."
 msgstr "读取值示忽略 schema 默认值。"
 
-#: gconf/gconftool.c:440
+#: gconf/gconftool.c:432
 msgid "Get the name of the default source"
 msgstr "获取默认源的名称"
 
-#: gconf/gconftool.c:449
+#: gconf/gconftool.c:441
 msgid "Print version"
 msgstr "显示版本"
 
-#: gconf/gconftool.c:545
+#: gconf/gconftool.c:537
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "不能同时进行获取和设置/取消设置操作\n"
 
-#: gconf/gconftool.c:555
+#: gconf/gconftool.c:547
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "不能同时进行设置和获取/取消设置操作\n"
 
-#: gconf/gconftool.c:562
+#: gconf/gconftool.c:554
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "不能同时进行获取类型和设置/取消设置操作\n"
 
-#: gconf/gconftool.c:573
+#: gconf/gconftool.c:565
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "不能将 --all-entries 用于 --get 或 --set\n"
 
-#: gconf/gconftool.c:584
+#: gconf/gconftool.c:576
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "不能将 --all-dirs 用于 --get 或 --set\n"
 
-#: gconf/gconftool.c:597
+#: gconf/gconftool.c:589
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1748,22 +1819,22 @@ msgstr ""
 "--recursive-list 不应用于 --get、--set、--unset、--all-entries 或 --all-"
 "dirs\n"
 
-#: gconf/gconftool.c:610
+#: gconf/gconftool.c:602
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
 msgstr ""
 "--set_schema 不应用于 --get、--set、--unset、--all-entries、--all-dirs\n"
 
-#: gconf/gconftool.c:616
+#: gconf/gconftool.c:608
 msgid "Value type is only relevant when setting a value\n"
 msgstr "只有在设置值时，值类型才有关系\n"
 
-#: gconf/gconftool.c:622
+#: gconf/gconftool.c:614
 msgid "Must specify a type when setting a value\n"
 msgstr "当设置值时，必须指定值类型\n"
 
-#: gconf/gconftool.c:630
+#: gconf/gconftool.c:622
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
@@ -1771,506 +1842,506 @@ msgstr ""
 "--ignore-schema-defaults 只相对于 --get、--all-entries、--dump、--recursive-"
 "list、--get-list-size 或 --get-list-element\n"
 
-#: gconf/gconftool.c:642 gconf/gconftool.c:655 gconf/gconftool.c:668
-#: gconf/gconftool.c:682 gconf/gconftool.c:695 gconf/gconftool.c:708
-#: gconf/gconftool.c:722
+#: gconf/gconftool.c:634 gconf/gconftool.c:647 gconf/gconftool.c:660
+#: gconf/gconftool.c:674 gconf/gconftool.c:687 gconf/gconftool.c:700
+#: gconf/gconftool.c:714
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "%s 选项必须单独使用。\n"
 
-#: gconf/gconftool.c:731
+#: gconf/gconftool.c:723
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr "当使用 --direct 时，必须用 --config-source 指定配置源\n"
 
-#: gconf/gconftool.c:737
+#: gconf/gconftool.c:729
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "无法初始化 GConf：%s\n"
 
-#: gconf/gconftool.c:766
+#: gconf/gconftool.c:758
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL 已设置，不再安装 schema\n"
 
-#: gconf/gconftool.c:773
+#: gconf/gconftool.c:765
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL 已设置，不再卸载 schema\n"
 
-#: gconf/gconftool.c:786
+#: gconf/gconftool.c:778
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "必须设置 GCONF_CONFIG_SOURCE 环境变量\n"
 
-#: gconf/gconftool.c:821
+#: gconf/gconftool.c:813
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "无法访问配置源：%s\n"
 
-#: gconf/gconftool.c:1124
+#: gconf/gconftool.c:1116
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "关闭错误：%s\n"
 
-#: gconf/gconftool.c:1167
+#: gconf/gconftool.c:1159
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "必须要指定递归列出的一个或多个目录。\n"
 
-#: gconf/gconftool.c:1219
+#: gconf/gconftool.c:1211
 msgid "Must specify one or more directories to dump.\n"
 msgstr "必须指定要转存的一个或多个目录。\n"
 
-#: gconf/gconftool.c:1261 gconf/gconftool.c:1527
+#: gconf/gconftool.c:1253 gconf/gconftool.c:1519
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "列出“%s”中的条目时发生错误：%s\n"
 
-#: gconf/gconftool.c:1280
+#: gconf/gconftool.c:1272
 msgid "(no value set)"
 msgstr "(没有设置值)"
 
-#: gconf/gconftool.c:1586
+#: gconf/gconftool.c:1578
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "无法产生配置服务器 (gconfd)：%s\n"
 
-#: gconf/gconftool.c:1615
+#: gconf/gconftool.c:1607
 msgid "Must specify a key or keys to get\n"
 msgstr "必须指定要获取的键或多个键\n"
 
-#: gconf/gconftool.c:1650
+#: gconf/gconftool.c:1642
 #, c-format
 msgid "Type: %s\n"
 msgstr "类型：%s\n"
 
-#: gconf/gconftool.c:1651
+#: gconf/gconftool.c:1643
 #, c-format
 msgid "List Type: %s\n"
 msgstr "列表类型：%s\n"
 
-#: gconf/gconftool.c:1652
+#: gconf/gconftool.c:1644
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car 类型：%s\n"
 
-#: gconf/gconftool.c:1653
+#: gconf/gconftool.c:1645
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr 类型：%s\n"
 
-#: gconf/gconftool.c:1658
+#: gconf/gconftool.c:1650
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "默认值：%s\n"
 
-#: gconf/gconftool.c:1658 gconf/gconftool.c:1660 gconf/gconftool.c:1661
-#: gconf/gconftool.c:1662
+#: gconf/gconftool.c:1650 gconf/gconftool.c:1652 gconf/gconftool.c:1653
+#: gconf/gconftool.c:1654
 msgid "Unset"
 msgstr "清除"
 
-#: gconf/gconftool.c:1660
+#: gconf/gconftool.c:1652
 #, c-format
 msgid "Owner: %s\n"
 msgstr "所有者：%s\n"
 
-#: gconf/gconftool.c:1661
+#: gconf/gconftool.c:1653
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "简单说明：%s\n"
 
-#: gconf/gconftool.c:1662
+#: gconf/gconftool.c:1654
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "详细说明：%s\n"
 
-#: gconf/gconftool.c:1671 gconf/gconftool.c:1895 gconf/gconftool.c:1929
-#: gconf/gconftool.c:1974 gconf/gconftool.c:2119
+#: gconf/gconftool.c:1663 gconf/gconftool.c:1887 gconf/gconftool.c:1921
+#: gconf/gconftool.c:1966 gconf/gconftool.c:2111
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "没有为“%s”设置值\n"
 
-#: gconf/gconftool.c:1675 gconf/gconftool.c:1899 gconf/gconftool.c:1933
-#: gconf/gconftool.c:1978 gconf/gconftool.c:2123
+#: gconf/gconftool.c:1667 gconf/gconftool.c:1891 gconf/gconftool.c:1925
+#: gconf/gconftool.c:1970 gconf/gconftool.c:2115
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "无法获取“%s”的值：%s\n"
 
-#: gconf/gconftool.c:1718 gconf/gconftool.c:1730
+#: gconf/gconftool.c:1710 gconf/gconftool.c:1722
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "不理解类型“%s”\n"
 
-#: gconf/gconftool.c:1742
+#: gconf/gconftool.c:1734
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "必须将替代键/值指定为参数\n"
 
-#: gconf/gconftool.c:1762
+#: gconf/gconftool.c:1754
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "没有可为键“%s”设置的值\n"
 
-#: gconf/gconftool.c:1790
+#: gconf/gconftool.c:1782
 msgid "Cannot set schema as value\n"
 msgstr "无法将 schema 设置为值\n"
 
-#: gconf/gconftool.c:1800
+#: gconf/gconftool.c:1792
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "当设置列表时，您必须指定简单的 list-type\n"
 
-#: gconf/gconftool.c:1814
+#: gconf/gconftool.c:1806
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "当设置 pair 时，您必须指定基本的 car-type 和 cdr-type\n"
 
-#: gconf/gconftool.c:1829
+#: gconf/gconftool.c:1821
 #, c-format
 msgid "Error: %s\n"
 msgstr "错误：%s\n"
 
-#: gconf/gconftool.c:1842 gconf/gconftool.c:2874
+#: gconf/gconftool.c:1834 gconf/gconftool.c:2866
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "设置值时发生错误：%s\n"
 
-#: gconf/gconftool.c:1860
+#: gconf/gconftool.c:1852
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "同步时发生错误：%s\n"
 
-#: gconf/gconftool.c:1875
+#: gconf/gconftool.c:1867
 msgid "Must specify a key or keys to get type\n"
 msgstr "必须指定要获取类型的键\n"
 
-#: gconf/gconftool.c:1919
+#: gconf/gconftool.c:1911
 msgid "Must specify a key to lookup size of.\n"
 msgstr "必须指定要查阅大小的键。\n"
 
-#: gconf/gconftool.c:1944 gconf/gconftool.c:1989
+#: gconf/gconftool.c:1936 gconf/gconftool.c:1981
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "键 %s 不是列表。\n"
 
-#: gconf/gconftool.c:1964
+#: gconf/gconftool.c:1956
 msgid "Must specify a key from which to get list element.\n"
 msgstr "必须指定要获取列表元素的键。\n"
 
-#: gconf/gconftool.c:1995
+#: gconf/gconftool.c:1987
 msgid "Must specify list index.\n"
 msgstr "必须指定列表索引。\n"
 
-#: gconf/gconftool.c:2002
+#: gconf/gconftool.c:1994
 msgid "List index must be non-negative.\n"
 msgstr "列表索引必须是非负。\n"
 
-#: gconf/gconftool.c:2011
+#: gconf/gconftool.c:2003
 msgid "List index is out of bounds.\n"
 msgstr "列表索引超出范围。\n"
 
-#: gconf/gconftool.c:2037
+#: gconf/gconftool.c:2029
 msgid "Must specify a key or keys on the command line\n"
 msgstr "必须在命令行上指定一个或多个键\n"
 
-#: gconf/gconftool.c:2057
+#: gconf/gconftool.c:2049
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "没有已知的 schema 用于“%s”\n"
 
-#: gconf/gconftool.c:2090
+#: gconf/gconftool.c:2082
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "没有文档字符串存储在模式的“%s”处\n"
 
-#: gconf/gconftool.c:2095
+#: gconf/gconftool.c:2087
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "在“%s”获取 schema 时发生错误：%s\n"
 
-#: gconf/gconftool.c:2102
+#: gconf/gconftool.c:2094
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "没有模式存储在“%s”\n"
 
-#: gconf/gconftool.c:2105
+#: gconf/gconftool.c:2097
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "“%s”处的值不是模式\n"
 
-#: gconf/gconftool.c:2161
+#: gconf/gconftool.c:2153
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "必须指定模式名，后面跟着要应用该模式名的键名称\n"
 
-#: gconf/gconftool.c:2168
+#: gconf/gconftool.c:2160
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "将模式名“%s”与键名“%s”关联时出错：%s\n"
 
-#: gconf/gconftool.c:2186
+#: gconf/gconftool.c:2178
 msgid "Must specify keys to unapply schema from\n"
 msgstr "必须指定要取消应用 schema 的键\n"
 
-#: gconf/gconftool.c:2196
+#: gconf/gconftool.c:2188
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "从“%s”删除模式名时出错：%s\n"
 
-#: gconf/gconftool.c:2221
+#: gconf/gconftool.c:2213
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "必须将键(模式名)指定为唯一的参数\n"
 
-#: gconf/gconftool.c:2263
+#: gconf/gconftool.c:2255
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "List 类型必须是一种基本类型：string、int、float 或 bool\n"
 
-#: gconf/gconftool.c:2283
+#: gconf/gconftool.c:2275
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Pair car 类型必须是一种基本类型：string、int、float 或 bool\n"
 
-#: gconf/gconftool.c:2303
+#: gconf/gconftool.c:2295
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Pair cdr 类型必须是一种基本类型：string、int、float 或 bool\n"
 
-#: gconf/gconftool.c:2318
+#: gconf/gconftool.c:2310
 #, c-format
 msgid "Error setting value: %s"
 msgstr "设置值时发生错误：%s"
 
-#: gconf/gconftool.c:2332
+#: gconf/gconftool.c:2324
 #, c-format
 msgid "Error syncing: %s"
 msgstr "同步时发生错误：%s"
 
-#: gconf/gconftool.c:2347
+#: gconf/gconftool.c:2339
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr "必须指定一个或多个要从其中获得键/值对的目录。\n"
 
-#: gconf/gconftool.c:2361
+#: gconf/gconftool.c:2353
 msgid "Must specify one or more keys to unset.\n"
 msgstr "必须指定一个或多个要取消设置的键。\n"
 
-#: gconf/gconftool.c:2372
+#: gconf/gconftool.c:2364
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "取消设置“%s”时出错：%s\n"
 
-#: gconf/gconftool.c:2392
+#: gconf/gconftool.c:2384
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "必须指定一个或多个要递归取消设置的键。\n"
 
-#: gconf/gconftool.c:2406
+#: gconf/gconftool.c:2398
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "在递归取消设置“%s”时失败：%s\n"
 
-#: gconf/gconftool.c:2426
+#: gconf/gconftool.c:2418
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "必须指定要获取子目录的一个或多个目录。\n"
 
-#: gconf/gconftool.c:2460
+#: gconf/gconftool.c:2452
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "列目录时错误：%s\n"
 
-#: gconf/gconftool.c:2596
+#: gconf/gconftool.c:2588
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "警告：必须在 <pair> 中同时指定 <car> 和 <cdr>\n"
 
-#: gconf/gconftool.c:2623
+#: gconf/gconftool.c:2615
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr "警告：在 <value> 下为 schema 指定的键(%s) - 忽略\n"
 
-#: gconf/gconftool.c:2656
+#: gconf/gconftool.c:2648
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "警告：必须在 <value> 下有子节点\n"
 
-#: gconf/gconftool.c:2662
+#: gconf/gconftool.c:2654
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "警告：无法理解节点 <%s>\n"
 
-#: gconf/gconftool.c:2680
+#: gconf/gconftool.c:2672
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "警告：无法解析整数值“%s”\n"
 
-#: gconf/gconftool.c:2701
+#: gconf/gconftool.c:2693
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "警告：无法解析浮点值“%s”\n"
 
-#: gconf/gconftool.c:2723
+#: gconf/gconftool.c:2715
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "警告：无法处理字符串值“%s”\n"
 
-#: gconf/gconftool.c:2744
+#: gconf/gconftool.c:2736
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "警告：无法解析布尔值“%s”\n"
 
-#: gconf/gconftool.c:2853 gconf/gconftool.c:3395
+#: gconf/gconftool.c:2845 gconf/gconftool.c:3387
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "警告：无法将 schema “%s”关联到键“%s”：%s\n"
 
-#: gconf/gconftool.c:2968
+#: gconf/gconftool.c:2960
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "警告：schema (%s) 的类型无效或缺少\n"
 
-#: gconf/gconftool.c:2977
+#: gconf/gconftool.c:2969
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "警告：schema (%s) 的 list_type 无效或缺少\n"
 
-#: gconf/gconftool.c:2988 gconf/gconftool.c:3018 gconf/gconftool.c:3047
+#: gconf/gconftool.c:2980 gconf/gconftool.c:3010 gconf/gconftool.c:3039
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "警告：无法解析 schema (%s) 的默认值“%s”\n"
 
-#: gconf/gconftool.c:3006
+#: gconf/gconftool.c:2998
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "警告：schema (%s) car_type 或 cdr_type 无效或缺少 \n"
 
-#: gconf/gconftool.c:3031
+#: gconf/gconftool.c:3023
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "警告：您无法为 schema 设置默认值\n"
 
-#: gconf/gconftool.c:3060
+#: gconf/gconftool.c:3052
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "警告：gconftool 内部错误，未知的 GConfValueType\n"
 
-#: gconf/gconftool.c:3108 gconf/gconftool.c:3129 gconf/gconftool.c:3150
-#: gconf/gconftool.c:3171
+#: gconf/gconftool.c:3100 gconf/gconftool.c:3121 gconf/gconftool.c:3142
+#: gconf/gconftool.c:3163
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "警告：无法解析类型名“%s”\n"
 
-#: gconf/gconftool.c:3125
+#: gconf/gconftool.c:3117
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr "警告：list_type 只能是整型、浮点型、字符串或布尔型，不能是“%s”\n"
 
-#: gconf/gconftool.c:3146
+#: gconf/gconftool.c:3138
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr "警告：car_type 只能是整型、浮点型、字符串或布尔型，不能是“%s”\n"
 
-#: gconf/gconftool.c:3167
+#: gconf/gconftool.c:3159
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr "警告：cdr_type 只能是整型、浮点型、字符串或布尔型，不能是“%s”\n"
 
-#: gconf/gconftool.c:3207
+#: gconf/gconftool.c:3199
 msgid "WARNING: empty <applyto> node"
 msgstr "警告：空的 <applyto> 节点"
 
-#: gconf/gconftool.c:3210 gconf/gconftool.c:3468
+#: gconf/gconftool.c:3202 gconf/gconftool.c:3460
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "警告：无法理解 <schema> 下的节点 <%s>\n"
 
-#: gconf/gconftool.c:3221
+#: gconf/gconftool.c:3213
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "警告：没有指定列表类型模式的 <list_type> 键\n"
 
-#: gconf/gconftool.c:3227
+#: gconf/gconftool.c:3219
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "警告：没有指定成对类型模式的 <car_type> 键\n"
 
-#: gconf/gconftool.c:3233
+#: gconf/gconftool.c:3225
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "警告：没有指定成对类型模式的 <cdr_type> 键\n"
 
-#: gconf/gconftool.c:3262
+#: gconf/gconftool.c:3254
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "警告：<locale> 节点没有“name=\"locale\"”属性，忽略\n"
 
-#: gconf/gconftool.c:3268
+#: gconf/gconftool.c:3260
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr "警告：区域设置“%s”有多个 <locale> 节点，忽略第一个后的所有节点\n"
 
-#: gconf/gconftool.c:3366
+#: gconf/gconftool.c:3358
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "警告：<locale> 节点中的节点 <%s> 无效\n"
 
-#: gconf/gconftool.c:3403
+#: gconf/gconftool.c:3395
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "将 schema “%s” 关联到键“%s”上\n"
 
-#: gconf/gconftool.c:3477
+#: gconf/gconftool.c:3469
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "您在 <schema> 中必须至少有一个 <locale> 项\n"
 
-#: gconf/gconftool.c:3512
+#: gconf/gconftool.c:3504
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "警告：无法安装 schema “%s”，区域设置“%s”：%s\n"
 
-#: gconf/gconftool.c:3520
+#: gconf/gconftool.c:3512
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "安装 schema “%s”，区域设置“%s”\n"
 
-#: gconf/gconftool.c:3530
+#: gconf/gconftool.c:3522
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
 msgstr "警告：无法卸载 schema “%s”，区域设置“%s”：%s\n"
 
-#: gconf/gconftool.c:3538
+#: gconf/gconftool.c:3530
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "已经从区域“%2$s”中卸载了 schema “%1$s”\n"
 
-#: gconf/gconftool.c:3576
+#: gconf/gconftool.c:3568
 msgid "WARNING: no key specified for schema\n"
 msgstr "警告：没有指定 schema 的键\n"
 
-#: gconf/gconftool.c:3617
+#: gconf/gconftool.c:3609
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "警告：无法理解 <%2$s> 下的节点 <%1$s>\n"
 
-#: gconf/gconftool.c:3648
+#: gconf/gconftool.c:3640
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "无法打开“%s”：%s\n"
 
-#: gconf/gconftool.c:3655
+#: gconf/gconftool.c:3647
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "文档“%s”是空的？\n"
 
-#: gconf/gconftool.c:3667
+#: gconf/gconftool.c:3659
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr "文档“%s”的根节点类型错误(<%s>，应该是 <%s>)\n"
 
-#: gconf/gconftool.c:3680
+#: gconf/gconftool.c:3672
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "文档“%s”没有顶层 <%s> 节点\n"
 
-#: gconf/gconftool.c:3694
+#: gconf/gconftool.c:3686
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "警告：无法理解位于 <%2$s> 下的节点 <%1$s>\n"
 
-#: gconf/gconftool.c:3705 gconf/gconftool.c:3740
+#: gconf/gconftool.c:3697 gconf/gconftool.c:3732
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "在同步配置数据时发生错误：%s"
 
-#: gconf/gconftool.c:3724
+#: gconf/gconftool.c:3716
 msgid "Must specify some schema files to install\n"
 msgstr "必须指定要安装的 schema 文件\n"
 
-#: gconf/gconftool.c:3761
+#: gconf/gconftool.c:3753
 #, c-format
 msgid ""
 "\n"
@@ -2279,16 +2350,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:3781
+#: gconf/gconftool.c:3773
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "无法取消设置破坏键 %s：%s\n"
 
-#: gconf/gconftool.c:3907
+#: gconf/gconftool.c:3899
 msgid "Must specify some keys to break\n"
 msgstr "必须指定一些要破坏的键\n"
 
-#: gconf/gconftool.c:3913
+#: gconf/gconftool.c:3905
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2297,11 +2368,11 @@ msgstr ""
 "正在试图通过为键设置不正确的值来破坏您的应用程序:\n"
 "  %s\n"
 
-#: gconf/gconftool.c:3931
+#: gconf/gconftool.c:3923
 msgid "Must specify some directories to break\n"
 msgstr "必须指定一些要破坏的目录\n"
 
-#: gconf/gconftool.c:3950
+#: gconf/gconftool.c:3942
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
@@ -2310,3 +2381,6 @@ msgid ""
 msgstr ""
 "正在试图通过为目录中的键设置不正确的值来破坏您的应用程序：\n"
 "  %s\n"
+
+#~ msgid "Help options"
+#~ msgstr "帮助选项"

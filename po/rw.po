@@ -15,13 +15,78 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf 2.12\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-30 23:06-0700\n"
+"POT-Creation-Date: 2005-05-17 14:38+0100\n"
 "PO-Revision-Date: 2005-03-28 19:34-0700\n"
 "Last-Translator: Steve Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: backends/evoldap-backend.c:158
+#, fuzzy, c-format
+msgid "Failed to get configurion file path from '%s'"
+msgstr "Kuri Iboneza Ibyatanzwe Kuri"
+
+#: backends/evoldap-backend.c:169
+#, c-format
+msgid "Created Evolution/LDAP source using configuration file '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:444
+#, fuzzy, c-format
+msgid "Unable to parse xml file '%s'"
+msgstr "Kuri IDOSIYE"
+
+#: backends/evoldap-backend.c:453
+#, fuzzy, c-format
+msgid "Config file '%s' is empty"
+msgstr "ni ubusa"
+
+#: backends/evoldap-backend.c:464
+#, c-format
+msgid "Root node of '%s' must be <evoldap>, not <%s>"
+msgstr ""
+
+#: backends/evoldap-backend.c:502
+#, c-format
+msgid "No <template> specified in '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:509
+#, fuzzy, c-format
+msgid "No \"filter\" attribute specified on <template> in '%s'"
+msgstr "Ikiranga ku Ikigize:"
+
+#: backends/evoldap-backend.c:570
+#, c-format
+msgid "No LDAP server or base DN specified in '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:576
+#, c-format
+msgid "Contacting LDAP server: host '%s', port '%d', base DN '%s'"
+msgstr ""
+
+#: backends/evoldap-backend.c:582
+#, fuzzy, c-format
+msgid "Failed to contact LDAP server: %s"
+msgstr "Kuri"
+
+#: backends/evoldap-backend.c:669
+#, c-format
+msgid "Searching for entries using filter: %s"
+msgstr ""
+
+#: backends/evoldap-backend.c:682
+#, fuzzy, c-format
+msgid "Error querying LDAP server: %s"
+msgstr "Igenamiterere Agaciro"
+
+#: backends/evoldap-backend.c:692
+#, c-format
+msgid "Got %d entries using filter: %s"
+msgstr ""
 
 #: backends/gconf-merge-tree.c:79
 #, fuzzy, c-format
@@ -1443,106 +1508,106 @@ msgstr "Seriveri ni OYA in Gukoresha Hasi"
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Gishya Agaciro kugirango"
 
-#: gconf/gconfd.c:1321
+#: gconf/gconfd.c:1329
 #, fuzzy, c-format
 msgid "Returning exception: %s"
 msgstr "Irengayobora(-)"
 
-#: gconf/gconfd.c:1427
+#: gconf/gconfd.c:1435
 #, fuzzy, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr "Kuri Gufungura Kuri Kugarura Nyuma Zimya"
 
-#: gconf/gconfd.c:1462
+#: gconf/gconfd.c:1470
 #, fuzzy, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "Kuri Gufunga Ibyatanzwe Gicurasi OYA"
 
-#: gconf/gconfd.c:1524
+#: gconf/gconfd.c:1532
 #, fuzzy, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "OYA Gufungura Leta IDOSIYE kugirango"
 
-#: gconf/gconfd.c:1538
+#: gconf/gconfd.c:1546
 #, fuzzy, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "OYA Leta IDOSIYE"
 
-#: gconf/gconfd.c:1547
+#: gconf/gconfd.c:1555
 #, fuzzy, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Kuri Gufunga Gishya Leta IDOSIYE"
 
-#: gconf/gconfd.c:1561
+#: gconf/gconfd.c:1569
 #, fuzzy, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "OYA Kwimura ki/ bishaje Leta IDOSIYE"
 
-#: gconf/gconfd.c:1571
+#: gconf/gconfd.c:1579
 #, fuzzy, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Kuri Kwimura Gishya Kubika Leta IDOSIYE"
 
-#: gconf/gconfd.c:1580
+#: gconf/gconfd.c:1588
 #, fuzzy, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "Kuri Kugarura Umwimerere Leta IDOSIYE Kuri"
 
-#: gconf/gconfd.c:2059
+#: gconf/gconfd.c:2067
 #, fuzzy, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "Kuri Kugarura a ku Aderesi Ububikoshingiro"
 
-#: gconf/gconfd.c:2105
+#: gconf/gconfd.c:2113
 #, fuzzy, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Leta IDOSIYE"
 
-#: gconf/gconfd.c:2159
+#: gconf/gconfd.c:2167
 #, fuzzy, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Kuri Gufungura Leta IDOSIYE"
 
-#: gconf/gconfd.c:2278
+#: gconf/gconfd.c:2286
 #, fuzzy, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr "Kuri LOG Guteranya+ Bya Kuri Kuri Kongeramo NIBA Cyangwa Hasi"
 
-#: gconf/gconfd.c:2283
+#: gconf/gconfd.c:2291
 #, fuzzy, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr "Kuri LOG Bya Kuri Kongeramo NIBA Cyangwa Hasi"
 
-#: gconf/gconfd.c:2306 gconf/gconfd.c:2480
+#: gconf/gconfd.c:2314 gconf/gconfd.c:2488
 #, fuzzy, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Kuri Kubona kugirango Umukiriya"
 
-#: gconf/gconfd.c:2321
+#: gconf/gconfd.c:2329
 #, fuzzy, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Kuri Gufungura Leta IDOSIYE"
 
-#: gconf/gconfd.c:2334
+#: gconf/gconfd.c:2342
 #, fuzzy, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Kuri Umukiriya Kongeramo Kuri Leta IDOSIYE"
 
-#: gconf/gconfd.c:2342
+#: gconf/gconfd.c:2350
 #, fuzzy, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Kuri Umukiriya Kongeramo Kuri Leta IDOSIYE"
 
-#: gconf/gconfd.c:2441
+#: gconf/gconfd.c:2449
 #, fuzzy
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
