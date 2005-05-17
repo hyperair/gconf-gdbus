@@ -157,7 +157,7 @@ server using the base DN specified earlier. You can test the filter
 from the command line with:
 
 ---
-ldapsearch -x -h ldap.blaa.com -b ou=people,dc=blaa,dc=com "(& (uid=markmc)(objectClass=inetOrgPerson)(objectClass=evolutionMailAccount))"
+ldapsearch -x -h ldap.blaa.com -b ou=people,dc=blaa,dc=com "(& (uid=markmc)(objectClass=inetOrgPerson)(objectClass=evolutionMailAccount)(objectClass=evolutionAddressbookSource)(objectClass=evolutionCalendarSource)(objectClass=evolutionTasksSource))"
 ---
 
   (Note that you need to unescape the ampersand and use a valid
