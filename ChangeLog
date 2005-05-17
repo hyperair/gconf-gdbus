@@ -1,3 +1,27 @@
+2005-05-17  Mark McLoughlin  <mark@skynet.ie>
+
+	Re-work a bit so it now supports putting the addressbook,
+	calendar and task sources in LDAP.
+
+	* backends/evoldap-backend.c:
+	(get_evolution_uid), (get_variable): renamed the $(ACCOUNT_UID)
+	variable to $(EVOLUTION_UID)
+	(parse_conf_file): upd to lookup the new templates.
+	(subst_variables_into_template): allow substituing into
+	any template.
+	(build_value_from_entries): split out; constructs a list value
+	by munging the LDAP entries with a template.
+	(lookup_values_from_ldap): lookup the addressbook, calendar
+	and tasks sources too.
+	(query_value), (all_entries), (all_subdirs),
+	(dir_exists): upd. to handle addressbook, calendar and tasks.
+	(destroy_source): free new stuff.
+	
+	* backends/evoldap.conf: change the format slightly to add
+	templates for addressbook, calendar and tasks.
+	
+	* backends/evoldap.schema: add new schema.
+
 2005-05-09  Mark McLoughlin  <mark@skynet.ie>
 
 	Update to use GNOME OIDs as assigned by 

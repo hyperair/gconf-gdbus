@@ -46,12 +46,19 @@ typedef struct
 
   xmlDocPtr  xml_doc;
   xmlNodePtr template_account;
+  xmlNodePtr template_addressbook;
+  xmlNodePtr template_calendar;
+  xmlNodePtr template_tasks;
 
   LDAP *connection;
 
   GConfValue *accounts_value;
+  GConfValue *addressbook_value;
+  GConfValue *calendar_value;
+  GConfValue *tasks_value;
 
   guint conf_file_parsed : 1;
+  guint queried_ldap : 1;
 } EvoSource;
 
 static void           x_shutdown      (GError           **err);
@@ -198,7 +205,7 @@ writable (GConfSource  *source,
  * Taken from evolution/e-util/e-uid.c
  */
 static char *
-get_account_uid (void)
+get_evolution_uid (void)
 {
   static char *hostname;
   static int   serial;
@@ -233,8 +240,8 @@ get_variable (const char  *varname,
   if (strcmp (varname, "USER") == 0)
     return g_strdup (g_get_user_name ());
 
-  if (strcmp (varname, "ACCOUNT_UID") == 0)
-    return get_account_uid ();
+  if (strcmp (varname, "EVOLUTION_UID") == 0)
+    return get_evolution_uid ();
 
   if (connection == NULL || entry == NULL)
     return g_strdup ("");
@@ -511,17 +518,39 @@ parse_conf_file (EvoSource  *esource,
   while (node != NULL)
     {
       const char *node_name = (const char *) node->name;
+      xmlNodePtr  template_root;
 
-      if (strcmp (node_name, "account") == 0)
-	esource->template_account = node;
+      template_root = node->children;
+      while (template_root != NULL)
+	{
+	  if (template_root->type == XML_ELEMENT_NODE)
+	    break;
+
+	  template_root = template_root->next;
+	}
+
+      if (template_root != NULL)
+	{
+	  if (strcmp (node_name, "account_template") == 0)
+	    {
+	      esource->template_account = template_root;
+	    }
+	  else if (strcmp (node_name, "addressbook_template") == 0)
+	    {
+	      esource->template_addressbook = template_root;
+	    }
+	  else if (strcmp (node_name, "calendar_template") == 0)
+	    {
+	      esource->template_calendar = template_root;
+	    }
+	  else if (strcmp (node_name, "tasks_template") == 0)
+	    {
+	      esource->template_tasks = template_root;
+	    }
+	}
 
       node = node->next;
     }
-
-  if (esource->template_account == NULL)
-    gconf_log (GCL_ERR,
-	       _("No template <account> specified in '%s'"),
-	       esource->conf_file);
 
   return TRUE;
 }
@@ -561,46 +590,80 @@ get_ldap_connection (EvoSource  *esource,
 }
 
 static char *
-subst_variables_into_template_account (EvoSource   *esource,
-				       LDAP        *connection,
-				       LDAPMessage *entry)
+subst_variables_into_template (LDAP        *connection,
+			       LDAPMessage *entry,
+			       xmlNodePtr   template_node)
 {
   xmlDocPtr  new_doc;
   xmlChar   *template;
   char      *retval;
 
   new_doc = xmlNewDoc (NULL);
-  xmlDocSetRootElement (new_doc,
-			xmlCopyNode (esource->template_account, 1));
+  xmlDocSetRootElement (new_doc, xmlCopyNode (template_node, 1));
 
   xmlDocDumpMemory (new_doc, &template, NULL);
   xmlFreeDoc (new_doc);
 
-  retval =  subst_variables ((char *) template, connection, entry);
+  retval = subst_variables ((char *) template, connection, entry);
   xmlFree (template);
 
   return retval;
 }
 
 static GConfValue *
-lookup_value_from_ldap (EvoSource  *esource,
-			GError    **err)
+build_value_from_entries (LDAP        *connection,
+			  LDAPMessage *entries,
+			  xmlNodePtr   template_node)
+{
+  LDAPMessage *entry;
+  GConfValue  *retval;
+  GSList      *values;
+
+  values = NULL;
+
+  entry = ldap_first_entry (connection, entries);
+  while (entry != NULL)
+    {
+      GConfValue *value;
+      char       *str;
+
+      str = subst_variables_into_template (connection, entry, template_node);
+
+      value = gconf_value_new (GCONF_VALUE_STRING);
+      gconf_value_set_string_nocopy (value, str);
+
+      values = g_slist_append (values, value);
+
+      entry = ldap_next_entry (connection, entry);
+    }
+
+  retval = NULL;
+  if (values != NULL)
+    {
+      retval = gconf_value_new (GCONF_VALUE_LIST);
+      gconf_value_set_list_type (retval, GCONF_VALUE_STRING);
+      gconf_value_set_list_nocopy (retval, values);
+    }
+
+  return retval;
+}
+
+static void
+lookup_values_from_ldap (EvoSource   *esource,
+			 GError     **err)
 {
   LDAP        *connection;
   LDAPMessage *entries;
-  LDAPMessage *entry;
-  GConfValue  *retval;
-  GSList      *account_values;
   int          ret;
 
   if (!parse_conf_file (esource, err))
-    return FALSE;
+    return;
 
-  if (esource->filter_str == NULL || esource->template_account == NULL)
-    return NULL;
+  if (esource->filter_str == NULL)
+    return;
 
   if ((connection = get_ldap_connection (esource, err)) == NULL)
-    return NULL;
+    return;
 
   gconf_log (GCL_DEBUG,
 	     _("Searching for entries using filter: %s"),
@@ -618,8 +681,10 @@ lookup_value_from_ldap (EvoSource  *esource,
       gconf_log (GCL_ERR,
 		 _("Error querying LDAP server: %s"),
 		 ldap_err2string (ret));
-      return NULL;
+      return;
     }
+
+  esource->queried_ldap = TRUE;
 
   g_assert (entries != NULL);
 
@@ -628,35 +693,75 @@ lookup_value_from_ldap (EvoSource  *esource,
 	     ldap_count_entries (connection, entries),
 	     esource->filter_str);
 
-  account_values = NULL;
-
-  entry = ldap_first_entry (connection, entries);
-  while (entry != NULL)
+  if (esource->template_account != NULL)
     {
-      GConfValue *value;
-      char       *account_str;
-
-      account_str = subst_variables_into_template_account (esource, connection, entry);
-
-      value = gconf_value_new (GCONF_VALUE_STRING);
-      gconf_value_set_string_nocopy (value, account_str);
-
-      account_values = g_slist_append (account_values, value);
-
-      entry = ldap_next_entry (connection, entry);
+      esource->accounts_value = build_value_from_entries (connection,
+							  entries,
+							  esource->template_account);
     }
 
-  retval = NULL;
-  if (account_values != NULL)
+  if (esource->template_addressbook != NULL)
     {
-      retval = gconf_value_new (GCONF_VALUE_LIST);
-      gconf_value_set_list_type (retval, GCONF_VALUE_STRING);
-      gconf_value_set_list_nocopy (retval, account_values);
+      esource->addressbook_value = build_value_from_entries (connection,
+							     entries,
+							     esource->template_addressbook);
+    }
+
+  if (esource->template_calendar != NULL)
+    {
+      esource->calendar_value = build_value_from_entries (connection,
+							  entries,
+							  esource->template_calendar);
+    }
+
+  if (esource->template_tasks != NULL)
+    {
+      esource->tasks_value = build_value_from_entries (connection,
+						       entries,
+						       esource->template_tasks);
     }
 
   ldap_msgfree (entries);
+}
 
-  return retval;
+static inline GConfValue *
+query_accounts_value (EvoSource  *esource,
+		      GError    **err)
+{
+  if (!esource->queried_ldap)
+    lookup_values_from_ldap (esource, err);
+
+  return esource->accounts_value ? gconf_value_copy (esource->accounts_value) : NULL;
+}
+
+static inline GConfValue *
+query_addressbook_value (EvoSource  *esource,
+			 GError    **err)
+{
+  if (!esource->queried_ldap)
+    lookup_values_from_ldap (esource, err);
+
+  return esource->addressbook_value ? gconf_value_copy (esource->addressbook_value) : NULL;
+}
+
+static inline GConfValue *
+query_calendar_value (EvoSource  *esource,
+		      GError    **err)
+{
+  if (!esource->queried_ldap)
+    lookup_values_from_ldap (esource, err);
+
+  return esource->calendar_value ? gconf_value_copy (esource->calendar_value) : NULL;
+}
+
+static inline GConfValue *
+query_tasks_value (EvoSource  *esource,
+		   GError    **err)
+{
+  if (!esource->queried_ldap)
+    lookup_values_from_ldap (esource, err);
+
+  return esource->tasks_value ? gconf_value_copy (esource->tasks_value) : NULL;
 }
 
 static GConfValue *
@@ -666,18 +771,37 @@ query_value (GConfSource  *source,
 	     char        **schema_name,
 	     GError      **err)
 {
-  EvoSource *esource = (EvoSource *) source;
+  EvoSource  *esource = (EvoSource *) source;
+  GConfValue *retval;
 
-  if (strcmp (key, "/apps/evolution/mail/accounts") != 0)
+  if (strncmp (key, "/apps/evolution/", 16) != 0)
     return NULL;
+
+  key += 16;
 
   if (schema_name != NULL)
     *schema_name = NULL;
 
-  if (esource->accounts_value == NULL)
-    esource->accounts_value = lookup_value_from_ldap (esource, err);
+  retval = NULL;
 
-  return esource->accounts_value ? gconf_value_copy (esource->accounts_value): NULL;
+  if (strcmp (key, "mail/accounts") == 0)
+    {
+      retval = query_accounts_value (esource, err);
+    }
+  else if (strcmp (key, "addressbook/sources") == 0)
+    {
+      retval = query_addressbook_value (esource, err);
+    }
+  else if (strcmp (key, "calendar/sources") == 0)
+    {
+      retval = query_calendar_value (esource, err);
+    }
+  else if (strcmp (key, "tasks/sources") == 0)
+    {
+      retval = query_tasks_value (esource, err);
+    }
+
+  return retval != NULL ? gconf_value_copy (retval) : NULL;
 }
 
 static GConfMetaInfo *
@@ -702,17 +826,39 @@ all_entries (GConfSource  *source,
 	     const char  **locales,
 	     GError      **err)
 {
+  EvoSource  *esource = (EvoSource *) source;
   GConfValue *value;
+  const char *key;
 
-  if (strcmp (dir, "/apps/evolution/mail") != 0)
+  if (strncmp (dir, "/apps/evolution/", 16) != 0)
+    return NULL;
+
+  dir += 16;
+
+  value = NULL;
+
+  if (strcmp (dir, "mail") == 0)
     {
-      return NULL;
+      value = query_accounts_value (esource, err);
+      key = "/apps/evolution/mail/accounts";
+    }
+  else if (strcmp (dir, "addressbook") == 0)
+    {
+      value = query_addressbook_value (esource, err);
+      key = "/apps/evolution/addressbook/sources";
+    }
+  else if (strcmp (dir, "calendar") == 0)
+    {
+      value = query_calendar_value (esource, err);
+      key = "/apps/evolution/calendar/sources";
+    }
+  else if (strcmp (dir, "tasks") == 0)
+    {
+      value = query_tasks_value (esource, err);
+      key = "/apps/evolution/tasks/sources";
     }
 
-  value = query_value (source, "/apps/evolution/mail/accounts", NULL, NULL, NULL);
-
-  return g_slist_append (NULL,
-			 gconf_entry_new_nocopy ("/apps/evolution/mail/accounts", value));
+  return value ? g_slist_append (NULL, gconf_entry_new (key, value)) : NULL;
 }
 
 static GSList *
@@ -750,7 +896,14 @@ all_subdirs (GConfSource  *source,
   dir += 10;
   if (dir[0] == '\0')
     {
-      return g_slist_append (NULL, g_strdup ("mail"));
+      GSList *retval;
+
+      retval = g_slist_append (NULL,   g_strdup ("mail"));
+      retval = g_slist_append (retval, g_strdup ("addressbook"));
+      retval = g_slist_append (retval, g_strdup ("calendar"));
+      retval = g_slist_append (retval, g_strdup ("tasks"));
+
+      return retval;
     }
 
   return NULL;
@@ -769,8 +922,18 @@ dir_exists (GConfSource  *source,
 	    const char   *dir,
 	    GError      **err)
 {
-  if (strcmp (dir, "/apps/evolution/mail/local") == 0)
-    return TRUE;
+  if (strncmp (dir, "/apps/evolution/", 16) != 0)
+    return FALSE;
+
+  dir += 16;
+
+  if (strcmp (dir, "mail")        == 0 ||
+      strcmp (dir, "addressbook") == 0 ||
+      strcmp (dir, "calendar")    == 0 ||
+      strcmp (dir, "tasks")       == 0)
+    {
+      return TRUE;
+    }
 
   return FALSE;
 }
@@ -808,10 +971,26 @@ destroy_source (GConfSource *source)
     gconf_value_free (esource->accounts_value);
   esource->accounts_value = NULL;
 
+  if (esource->addressbook_value != NULL)
+    gconf_value_free (esource->addressbook_value);
+  esource->addressbook_value = NULL;
+
+  if (esource->calendar_value != NULL)
+    gconf_value_free (esource->calendar_value);
+  esource->calendar_value = NULL;
+
+  if (esource->tasks_value != NULL)
+    gconf_value_free (esource->tasks_value);
+  esource->tasks_value = NULL;
+
   if (esource->xml_doc != NULL)
     xmlFreeDoc (esource->xml_doc);
   esource->xml_doc = NULL;
-  esource->template_account = NULL;
+
+  esource->template_account     = NULL;
+  esource->template_addressbook = NULL;
+  esource->template_calendar    = NULL;
+  esource->template_tasks       = NULL;
 
   if (esource->filter_str != NULL)
     g_free (esource->filter_str);
