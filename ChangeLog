@@ -1,3 +1,30 @@
+2005-06-08  Tor Lillqvist  <tml@novell.com>
+
+	* configure.in: Require GLib 2.6.0 so we can use the "gstdio
+	wrappers".
+
+	* backends/*.c
+	* gconf/*.c: Use gstdio wrappers and gdir for better support of
+	non-ASCII pathnames on Windows. Use g_strerror() consistently in
+	error messages, as g_printerr() etc want UTF-8.
+
+	* gconf/Makefile.am: Append EXEEXT to gconfd's name.
+
+	* gconf/gconf-internals.h: Use functions instead of variables to
+	access the run-time pathnames on Win32. This enables us to have a
+	cleaner DllMain(). Add underscore prefix to the internal
+	Win32-only functions.
+
+	* gconf/dllmain.c (DllMain): Use minimalistic DllMain() that only
+	stores the handle to the DLL.
+	(setup): Do the real work here instead.
+	(_gconf_win32_get_locale_dir, etc): Functions to return the
+	run-time pathnames.
+
+	* gconf/gconf-internals.c (_gconf_win32_get_home_dir):
+	As g_get_home_dir() has now been fixed to never return NULL on
+	Windows, we don't have to bother checking that here.
+
 2005-05-17  Mark McLoughlin  <mark@skynet.ie>
 
 	* configure.in: post-release bump to 2.11.2.

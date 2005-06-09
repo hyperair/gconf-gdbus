@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <dirent.h>
 #include <limits.h>
 #include <stdio.h>
 #include <time.h>
@@ -457,8 +456,8 @@ load_entries (MarkupDir *dir)
 static gboolean
 load_subdirs (MarkupDir *dir)
 {  
-  DIR* dp;
-  struct dirent* dent;
+  GDir* dp;
+  const char* dent;
   struct stat statbuf;
   gchar* fullpath;
   gchar* fullpath_end;
@@ -484,7 +483,7 @@ load_subdirs (MarkupDir *dir)
 
   markup_dir = markup_dir_build_dir_path (dir, TRUE);
   
-  dp = opendir (markup_dir);
+  dp = g_dir_open (markup_dir, 0, NULL);
   
   if (dp == NULL)
     {
@@ -493,8 +492,7 @@ load_subdirs (MarkupDir *dir)
        */
       gconf_log (GCL_DEBUG,
                  "Could not open directory \"%s\": %s\n",
-                 /* strerror, in locale encoding */
-                 markup_dir, strerror (errno));
+                 markup_dir, g_strerror (errno));
       g_free (markup_dir);
       return FALSE;
     }
@@ -513,45 +511,45 @@ load_subdirs (MarkupDir *dir)
       ++fullpath_end;
     }
 
-  while ((dent = readdir (dp)) != NULL)
+  while ((dent = g_dir_read_name (dp)) != NULL)
     {
-      /* ignore ., .., and all dot-files */
-      if (dent->d_name[0] == '.')
+      /* ignore all dot-files */
+      if (dent[0] == '.')
         continue;
 
       /* ignore stuff starting with % as it's an invalid gconf
        * dir name, and probably %gconf.xml
        */
-      if (dent->d_name[0] == '%')
+      if (dent[0] == '%')
         continue;
       
-      len = strlen (dent->d_name);
+      len = strlen (dent);
       
       if (len < subdir_len)
         {
-          strcpy (fullpath_end, dent->d_name);
+          strcpy (fullpath_end, dent);
           strncpy (fullpath_end+len, "/%gconf.xml", subdir_len - len);
         }
       else
         continue; /* Shouldn't ever happen since PATH_MAX is available */
 
-      if (stat (fullpath, &statbuf) < 0)
+      if (g_stat (fullpath, &statbuf) < 0)
         {
           strncpy (fullpath_end+len, "/%gconf-tree.xml", subdir_len - len);
-          if (stat (fullpath, &statbuf) < 0)
+          if (g_stat (fullpath, &statbuf) < 0)
             {
               /* This is some kind of cruft, not an XML directory */
               continue;
             }
         }      
 
-      markup_dir_new (dir->tree, dir, dent->d_name);
+      markup_dir_new (dir->tree, dir, dent);
     }
 
   /* if this fails, we really can't do a thing about it
    * and it's not a meaningful error
    */
-  closedir (dp);
+  g_dir_close (dp);
 
   g_free (fullpath);
   g_free (markup_dir);
@@ -791,14 +789,14 @@ static gboolean
 create_filesystem_dir (const char *name,
                        guint       dir_mode)
 {
-  if (mkdir (name, dir_mode) < 0)
+  if (g_mkdir (name, dir_mode) < 0)
     {
       if (errno == EEXIST)
         return TRUE;
 
       gconf_log (GCL_WARNING,
                  _("Could not make directory \"%s\": %s"),
-                 name, strerror (errno));
+                 name, g_strerror (errno));
 
       return FALSE;
     }
@@ -832,18 +830,18 @@ delete_useless_subdirs (MarkupDir *dir)
 	      fs_dirname = markup_dir_build_dir_path (subdir, TRUE);
 	      fs_filename = markup_dir_build_file_path (subdir, subdir->save_as_subtree);
 
-	      if (unlink (fs_filename) < 0)
+	      if (g_unlink (fs_filename) < 0)
 		{
 		  gconf_log (GCL_WARNING,
 			     _("Could not remove \"%s\": %s\n"),
-			     fs_filename, strerror (errno));
+			     fs_filename, g_strerror (errno));
 		}
 
-	      if (rmdir (fs_dirname) < 0)
+	      if (g_rmdir (fs_dirname) < 0)
 		{
 		  gconf_log (GCL_WARNING,
 			     _("Could not remove \"%s\": %s\n"),
-			     fs_dirname, strerror (errno));
+			     fs_dirname, g_strerror (errno));
 		}
           
 	      g_free (fs_dirname);
@@ -3721,7 +3719,7 @@ save_tree (MarkupDir  *dir,
 #ifdef G_OS_WIN32
   tmp_filename = g_strconcat (filename, ".tmp", NULL);
 #endif
-  new_fd = open (new_filename, O_WRONLY | O_CREAT, file_mode);
+  new_fd = g_open (new_filename, O_WRONLY | O_CREAT, file_mode);
   if (new_fd < 0)
     {
       err_str = g_strdup_printf (_("Failed to open \"%s\": %s\n"),
@@ -3822,23 +3820,23 @@ save_tree (MarkupDir  *dir,
     }
   
 #ifdef G_OS_WIN32
-  remove (tmp_filename);
-  target_renamed = (rename (filename, tmp_filename) == 0);
+  g_remove (tmp_filename);
+  target_renamed = (g_rename (filename, tmp_filename) == 0);
 #endif
 
-  if (rename (new_filename, filename) < 0)
+  if (g_rename (new_filename, filename) < 0)
     {
       err_str = g_strdup_printf (_("Failed to move temporary file \"%s\" to final location \"%s\": %s"),                                 
                                  new_filename, filename, g_strerror (errno));
 #ifdef G_OS_WIN32
       if (target_renamed)
-	rename (tmp_filename, filename);
+	g_rename (tmp_filename, filename);
 #endif
       goto out;
     }
 #ifdef G_OS_WIN32
   if (target_renamed)
-    remove (tmp_filename);
+    g_remove (tmp_filename);
 #endif
   
  out:

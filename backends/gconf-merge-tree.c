@@ -68,7 +68,7 @@ merge_tree (const char *root_dir)
   MarkupTree *tree;
   GError *error;
 
-  if (stat (root_dir, &statbuf) == 0)
+  if (g_stat (root_dir, &statbuf) == 0)
     {
       dir_mode = _gconf_mode_t_to_mode (statbuf.st_mode);
       /* dir_mode without search bits */

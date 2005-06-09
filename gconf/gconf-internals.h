@@ -33,6 +33,7 @@
 #define N_(String) (String)
 
 #include <glib.h>
+#include <glib/gstdio.h>
 #include "gconf-error.h"
 #include "gconf-value.h"
 #include "gconf-engine.h"
@@ -44,9 +45,6 @@
 #define DEV_NULL "NUL:"
 
 #include <sys/stat.h>
-#include <io.h>
-
-#define mkdir(path, mode) _mkdir (path)
 
 #ifndef S_IRWXU
 #define S_IRWXU (_S_IREAD|_S_IWRITE|_S_IEXEC)
@@ -59,27 +57,27 @@
 #endif
 
 #undef GCONF_LOCALE_DIR
-extern const char *gconf_win32_locale_dir;
-#define GCONF_LOCALE_DIR gconf_win32_locale_dir
+const char *_gconf_win32_get_locale_dir (void) G_GNUC_CONST;
+#define GCONF_LOCALE_DIR _gconf_win32_get_locale_dir ()
 
 #undef GCONF_CONFDIR
-extern const char *gconf_win32_confdir;
-#define GCONF_CONFDIR gconf_win32_confdir
+const char *_gconf_win32_get_confdir (void) G_GNUC_CONST;
+#define GCONF_CONFDIR _gconf_win32_get_confdir ()
 
 #undef GCONF_ETCDIR
-extern const char *gconf_win32_etcdir;
-#define GCONF_ETCDIR gconf_win32_etcdir
+const char *_gconf_win32_get_etcdir (void) G_GNUC_CONST;
+#define GCONF_ETCDIR _gconf_win32_get_etcdir ()
 
 #undef GCONF_SERVERDIR
-extern const char *gconf_win32_serverdir;
-#define GCONF_SERVERDIR gconf_win32_serverdir
+const char *_gconf_win32_get_serverdir (void) G_GNUC_CONST;
+#define GCONF_SERVERDIR _gconf_win32_get_serverdir ()
 
 #undef GCONF_BACKEND_DIR
-extern const char *gconf_win32_backend_dir;
-#define GCONF_BACKEND_DIR gconf_win32_backend_dir
+const char *_gconf_win32_get_backend_dir (void) G_GNUC_CONST;
+#define GCONF_BACKEND_DIR _gconf_win32_get_backend_dir ()
 
-char *gconf_win32_replace_prefix (const char *configure_time_path);
-const char *gconf_win32_get_home_dir (void);
+char *_gconf_win32_replace_prefix (const char *configure_time_path);
+const char *_gconf_win32_get_home_dir (void);
 
 #else
 

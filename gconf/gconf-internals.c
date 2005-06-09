@@ -134,14 +134,14 @@ gconf_file_exists (const gchar* filename)
   
   g_return_val_if_fail (filename != NULL,FALSE);
   
-  return stat (filename, &s) == 0;
+  return g_stat (filename, &s) == 0;
 }
 
 gboolean
 gconf_file_test(const gchar* filename, int test)
 {
   struct stat s;
-  if(stat (filename, &s) != 0)
+  if(g_stat (filename, &s) != 0)
     return FALSE;
   if(!(test & GCONF_FILE_ISFILE) && S_ISREG(s.st_mode))
     return FALSE;
@@ -722,38 +722,18 @@ unquote_string(gchar* s)
 
 #ifdef G_OS_WIN32
 
-/* Return the home directory with forward slashes instead of backslashes,
- * also always return something, unlike g_get_home_dir(), which might return
- * NULL on odd Win32 boxes.
- */
+/* Return the home directory with forward slashes instead of backslashes */
 
 const char*
-gconf_win32_get_home_dir (void)
+_gconf_win32_get_home_dir (void)
 {
   static GQuark quark = 0;
-  const char *home;
   char *home_copy, *p;
 
   if (quark != 0)
     return g_quark_to_string (quark);
   
-  home = g_get_home_dir ();
-  if (home == NULL)
-    {
-      char windowsdir[1000];
-
-      if (!GetWindowsDirectory (windowsdir, sizeof (windowsdir)))
-	home = "C:\\";
-      else if (windowsdir[1] == ':' && windowsdir[2] == '\\')
-	{
-	  windowsdir[3] = '\0';
-	  home = windowsdir;
-	}
-      else
-	home = "C:\\";
-    }
-
-  home_copy = g_strdup (home);
+  home_copy = g_strdup (g_get_home_dir ());
 
   /* Replace backslashes with forward slashes */
   for (p = home_copy; *p; p++)
@@ -779,7 +759,7 @@ get_variable(const gchar* varname)
 #ifndef G_OS_WIN32
       return g_get_home_dir ();
 #else
-      return gconf_win32_get_home_dir ();
+      return _gconf_win32_get_home_dir ();
 #endif
     }
   else if (strcmp(varname, "USER") == 0)
@@ -793,7 +773,7 @@ get_variable(const gchar* varname)
     {
       /* This is magic: if a variable called ENV_FOO is used,
          then the environment variable FOO is checked */
-      gchar* envvar = getenv(&varname[4]);
+      const gchar* envvar = g_getenv(&varname[4]);
 
       if (envvar)
         return envvar;
@@ -885,7 +865,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
   GSList *l = NULL;
   gchar buf[512];
 
-  f = fopen(filename, "r");
+  f = g_fopen(filename, "r");
 
   if (f == NULL)
     {
@@ -893,7 +873,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
         *err = gconf_error_new(GCONF_ERROR_FAILED,
                                _("Couldn't open path file `%s': %s\n"), 
                                filename, 
-                               strerror(errno));
+                               g_strerror(errno));
       return NULL;
     }
 
@@ -927,7 +907,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
 #ifdef G_OS_WIN32
 	  {
 	    gchar *tem = varsubst;
-	    varsubst = gconf_win32_replace_prefix (varsubst);
+	    varsubst = _gconf_win32_replace_prefix (varsubst);
 	    g_free (tem);
 	  }
 #endif
@@ -964,7 +944,7 @@ gconf_load_source_path(const gchar* filename, GError** err)
         *err = gconf_error_new(GCONF_ERROR_FAILED,
                                _("Read error on file `%s': %s\n"), 
                                filename,
-                               strerror(errno));
+                               g_strerror(errno));
       /* don't return, we want to go ahead and return any 
          addresses we already loaded. */
     }
@@ -2452,7 +2432,18 @@ create_new_locked_file (const gchar *directory,
 
 #else
 
-  fd = _sopen (filename, O_WRONLY|O_CREAT|O_EXCL, SH_DENYWR, 0700);
+  if (G_WIN32_HAVE_WIDECHAR_API ())
+    {
+      wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
+      fd = _wsopen (wfilename, O_WRONLY|O_CREAT|O_EXCL, SH_DENYWR, 0700);
+      g_free (wfilename);
+    }
+  else
+    {
+      char *cpfilename = g_locale_from_utf8 (filename, -1, NULL, NULL, NULL);
+      fd = _sopen (cpfilename, O_WRONLY|O_CREAT|O_EXCL, SH_DENYWR, 0700);
+      g_free (cpfilename);
+    }
 
   got_lock = (fd >= 0);
 
@@ -2505,7 +2496,7 @@ open_empty_locked_file (const gchar *directory,
                    GCONF_ERROR,
                    GCONF_ERROR_LOCK_FAILED,
                    _("Failed to lock '%s': probably another process has the lock, or your operating system has NFS file locking misconfigured (%s)"),
-                   filename, strerror (errno));
+                   filename, g_strerror (errno));
       close (fd);
       return -1;
     }
@@ -2519,7 +2510,7 @@ open_empty_locked_file (const gchar *directory,
 #else
   /* Unlinking open files fail on Win32 */
 
-  if (remove (filename) == -1)
+  if (g_remove (filename) == -1)
     {
       g_set_error (err,
 		   GCONF_ERROR,
@@ -2542,7 +2533,7 @@ read_current_server_and_set_warning (const gchar *iorfile,
 {
   FILE *fp;
   
-  fp = fopen (iorfile, "r");
+  fp = g_fopen (iorfile, "r");
           
   if (fp == NULL)
     {
@@ -2650,7 +2641,7 @@ gconf_get_lock_or_current_holder (const gchar  *lock_directory,
   if (current_server)
     *current_server = CORBA_OBJECT_NIL;
   
-  if (mkdir (lock_directory, 0700) < 0 &&
+  if (g_mkdir (lock_directory, 0700) < 0 &&
       errno != EEXIST)
     {
       gconf_set_error (err,
@@ -2717,7 +2708,7 @@ gconf_get_lock_or_current_holder (const gchar  *lock_directory,
                            _("Can't write to file `%s': %s"),
                            lock->iorfile, g_strerror (errno));
 
-          unlink (lock->iorfile);
+          g_unlink (lock->iorfile);
           gconf_lock_destroy (lock);
 
           return NULL;
@@ -2824,7 +2815,7 @@ gconf_release_lock (GConfLock *lock,
   /* And finally clean up the directory - this would have failed if
    * we had .nfs323423423 junk
    */
-  if (rmdir (lock->lock_directory) < 0)
+  if (g_rmdir (lock->lock_directory) < 0)
     {
       g_set_error (err,
                    GCONF_ERROR,
@@ -2870,7 +2861,7 @@ gconf_daemon_blow_away_locks (void)
 
   iorfile = g_strconcat (lock_directory, "/ior", NULL);
 
-  if (unlink (iorfile) < 0)
+  if (g_unlink (iorfile) < 0)
     g_printerr (_("Failed to unlink lock file %s: %s\n"),
                 iorfile, g_strerror (errno));
 
@@ -2950,7 +2941,7 @@ gconf_get_daemon_dir (void)
 #ifndef G_OS_WIN32
       const char *home = g_get_home_dir ();
 #else
-      const char *home = gconf_win32_get_home_dir ();
+      const char *home = _gconf_win32_get_home_dir ();
 #endif
       return g_strconcat (home, "/.gconfd", NULL);
     }
@@ -3020,7 +3011,7 @@ gconf_activate_server (gboolean  start_if_not_found,
   
   gconfd_dir = gconf_get_daemon_dir ();
   
-  dir_accessible = stat (gconfd_dir, &statbuf) >= 0;
+  dir_accessible = g_stat (gconfd_dir, &statbuf) >= 0;
 
   if (!dir_accessible && errno != ENOENT)
     {
@@ -3077,7 +3068,7 @@ gconf_activate_server (gboolean  start_if_not_found,
           goto out;
         }
 
-      argv[0] = g_strconcat (GCONF_SERVERDIR, "/" GCONFD, NULL);
+      argv[0] = g_build_filename (GCONF_SERVERDIR, GCONFD, NULL);
       argv[1] = g_strdup_printf ("%d", p[1]);
       argv[2] = NULL;
   

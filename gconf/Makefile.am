@@ -18,7 +18,7 @@ INCLUDES=								\
 	-DGCONF_BACKEND_DIR=\""$(pkglibdir)/$(MAJOR_VERSION)"\"		\
 	-DVERSION=\""$(VERSION)"\"					\
 	-DGCONF_ENABLE_INTERNALS=1					\
-	-DGCONFD=\""$(GCONFD_BINARY_NAME)"\"				\
+	-DGCONFD=\""$(GCONFD_BINARY_NAME)$(EXEEXT)"\"			\
 	$(NULL)
 
 EFENCE=

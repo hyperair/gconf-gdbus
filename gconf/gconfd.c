@@ -345,7 +345,7 @@ gconf_server_load_sources(void)
 #ifndef G_OS_WIN32
       const char *home = g_get_home_dir ();
 #else
-      const char *home = gconf_win32_get_home_dir ();
+      const char *home = _gconf_win32_get_home_dir ();
 #endif
 
       /* Try using the default address xml:readwrite:$(HOME)/.gconf */
@@ -633,7 +633,7 @@ main(int argc, char** argv)
   if (chdir ("/") < 0)
     {
        g_printerr ("Could not change to root directory: %s\n",
-		g_strerror (errno));
+		   g_strerror (errno));
        exit (1);
     }
 
@@ -745,7 +745,7 @@ main(int argc, char** argv)
   gconfd_dir = gconf_get_daemon_dir ();
   lock_dir = gconf_get_lock_dir ();
   
-  if (mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
+  if (g_mkdir (gconfd_dir, 0700) < 0 && errno != EEXIST)
     gconf_log (GCL_WARNING, _("Failed to create %s: %s"),
                gconfd_dir, g_strerror (errno));
   
@@ -1390,7 +1390,7 @@ get_log_names (gchar **logdir, gchar **logfile)
 #ifndef G_OS_WIN32
       const char *home = g_get_home_dir ();
 #else
-      const char *home = gconf_win32_get_home_dir ();
+      const char *home = _gconf_win32_get_home_dir ();
 #endif
 
   *logdir = g_build_filename (home, ".gconfd", NULL);
@@ -1422,18 +1422,18 @@ open_append_handle (GError **err)
 
       get_log_names (&logdir, &logfile);
       
-      mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-                             * that matter on open()
-                             */
+      g_mkdir (logdir, 0700); /* ignore failure, we'll catch failures
+			       * that matter on open()
+			       */
       
-      append_handle = fopen (logfile, "a");
+      append_handle = g_fopen (logfile, "a");
 
       if (append_handle == NULL)
         {
           gconf_set_error (err,
                            GCONF_ERROR_FAILED,
                            _("Failed to open gconfd logfile; won't be able to restore listeners after gconfd shutdown (%s)"),
-                           strerror (errno));
+                           g_strerror (errno));
           
           g_free (logdir);
           g_free (logfile);
@@ -1468,7 +1468,7 @@ close_append_handle (void)
       if (fclose (append_handle) < 0)
         gconf_log (GCL_WARNING,
                    _("Failed to close gconfd logfile; data may not have been properly saved (%s)"),
-                   strerror (errno));
+                   g_strerror (errno));
 
       append_handle = NULL;
 
@@ -1499,9 +1499,9 @@ logfile_save (void)
   
   get_log_names (&logdir, &logfile);
 
-  mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-                         * that matter on open()
-                         */
+  g_mkdir (logdir, 0700); /* ignore failure, we'll catch failures
+			   * that matter on open()
+			   */
 
   saveme = g_string_new (NULL);
 
@@ -1524,13 +1524,13 @@ logfile_save (void)
   /* Now try saving the string to a temporary file */
   tmpfile = g_strconcat (logfile, ".tmp", NULL);
   
-  fd = open (tmpfile, O_WRONLY | O_CREAT | O_TRUNC, 0700);
+  fd = g_open (tmpfile, O_WRONLY | O_CREAT | O_TRUNC, 0700);
 
   if (fd < 0)
     {
       gconf_log (GCL_WARNING,
                  _("Could not open saved state file '%s' for writing: %s"),
-                 tmpfile, strerror (errno));
+                 tmpfile, g_strerror (errno));
       
       goto out;
     }
@@ -1544,7 +1544,7 @@ logfile_save (void)
       
       gconf_log (GCL_WARNING,
                  _("Could not write saved state file '%s' fd: %d: %s"),
-                 tmpfile, fd, strerror (errno));
+                 tmpfile, fd, g_strerror (errno));
 
       goto out;
     }
@@ -1553,7 +1553,7 @@ logfile_save (void)
     {
       gconf_log (GCL_WARNING,
                  _("Failed to close new saved state file '%s': %s"),
-                 tmpfile, strerror (errno));
+                 tmpfile, g_strerror (errno));
       goto out;
     }
 
@@ -1563,30 +1563,30 @@ logfile_save (void)
   if (gconf_file_exists (logfile))
     {
       tmpfile2 = g_strconcat (logfile, ".orig", NULL);
-      if (rename (logfile, tmpfile2) < 0)
+      if (g_rename (logfile, tmpfile2) < 0)
         {
           gconf_log (GCL_WARNING,
                      _("Could not move aside old saved state file '%s': %s"),
-                     logfile, strerror (errno));
+                     logfile, g_strerror (errno));
           goto out;
         }
     }
 
   /* Move the new saved state file into place */
-  if (rename (tmpfile, logfile) < 0)
+  if (g_rename (tmpfile, logfile) < 0)
     {
       gconf_log (GCL_WARNING,
                  _("Failed to move new save state file into place: %s"),
-                 strerror (errno));
+                 g_strerror (errno));
 
       /* Try to restore old file */
       if (tmpfile2)
         {
-          if (rename (tmpfile2, logfile) < 0)
+          if (g_rename (tmpfile2, logfile) < 0)
             {
               gconf_log (GCL_WARNING,
                          _("Failed to restore original saved state file that had been moved to '%s': %s"),
-                         tmpfile2, strerror (errno));
+                         tmpfile2, g_strerror (errno));
 
             }
         }
@@ -1596,7 +1596,7 @@ logfile_save (void)
 
   /* Get rid of original saved state file if everything succeeded */
   if (tmpfile2)
-    unlink (tmpfile2);
+    g_unlink (tmpfile2);
   
  out:
   if (saveme)
@@ -2159,7 +2159,7 @@ logfile_read (void)
   
   get_log_names (&logdir, &logfile);
 
-  f = fopen (logfile, "r");
+  f = g_fopen (logfile, "r");
   
   if (f == NULL)
     {
@@ -2340,7 +2340,7 @@ log_client_change (const ConfigListener client,
     {
       gconf_log (GCL_WARNING,
                  _("Failed to write client add to saved state file: %s"),
-                 strerror (errno));
+                 g_strerror (errno));
       goto error;
     }
 
@@ -2348,7 +2348,7 @@ log_client_change (const ConfigListener client,
     {
       gconf_log (GCL_WARNING,
                  _("Failed to flush client add to saved state file: %s"),
-                 strerror (errno));
+                 g_strerror (errno));
       goto error;
     }
 

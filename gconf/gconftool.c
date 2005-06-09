@@ -3630,7 +3630,9 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
   xmlDocPtr doc;
   xmlNodePtr iter;
   GError * err = NULL;
-  
+  /* file comes from the command line, is thus in locale charset */
+  gchar *utf8_file = g_locale_to_utf8 (file, -1, NULL, NULL, NULL);;
+
   errno = 0;
   doc = xmlParseFile(file);
 
@@ -3638,14 +3640,14 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
     {
       if (errno != 0)
         g_printerr (_("Failed to open `%s': %s\n"),
-		    file, strerror(errno));
+		    utf8_file, g_strerror(errno));
       return 1;
     }
 
   if (doc->xmlRootNode == NULL)
     {
       g_printerr (_("Document `%s' is empty?\n"),
-		  file);
+		  utf8_file);
       return 1;
     }
 
@@ -3657,7 +3659,7 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
           if (strcmp(iter->name, LOAD_TYPE_TO_ROOT(load_type)) != 0)
             {
               g_printerr (_("Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"),
-			  file, iter->name, LOAD_TYPE_TO_ROOT(load_type));
+			  utf8_file, iter->name, LOAD_TYPE_TO_ROOT(load_type));
               return 1;
             }
           else
@@ -3670,7 +3672,7 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
   if (iter == NULL)
     {
       g_printerr (_("Document `%s' has no top level <%s> node\n"),
-		  file, LOAD_TYPE_TO_ROOT(load_type));
+		  utf8_file, LOAD_TYPE_TO_ROOT(load_type));
       return 1;
     }
 
@@ -3983,8 +3985,8 @@ do_get_default_source (const gchar** args)
   FILE *f;
 
   /* Try with $sysgconfdir/schema-install-source */
-  filename = g_strconcat (GCONF_ETCDIR, "/schema-install-source", NULL);
-  f = fopen(filename, "r");
+  filename = g_build_filename (GCONF_ETCDIR, "schema-install-source", NULL);
+  f = g_fopen(filename, "r");
   g_free (filename);
 
   if (f != NULL)

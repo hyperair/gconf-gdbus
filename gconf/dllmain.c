@@ -22,15 +22,23 @@
 #include <mbstring.h>
 #include <glib.h>
 
+/* locale_dir uses system codepage as it is passed to the non-UTF8ified
+ * gettext library
+ */
+static const char *locale_dir;
+
+/* The others are in UTF-8 */
 static const char *runtime_prefix;
-const char *gconf_win32_locale_dir;
-const char *gconf_win32_confdir;
-const char *gconf_win32_etcdir;
-const char *gconf_win32_serverdir;
-const char *gconf_win32_backend_dir;
+static const char *confdir;
+static const char *etcdir;
+static const char *serverdir;
+static const char *backend_dir;
+
+static HMODULE hmodule;
+G_LOCK_DEFINE_STATIC (mutex);
 
 char *
-gconf_win32_replace_prefix (const char *configure_time_path)
+_gconf_win32_replace_prefix (const char *configure_time_path)
 {
   if (strncmp (configure_time_path, PREFIX "/", strlen (PREFIX) + 1) == 0)
     {
@@ -42,78 +50,118 @@ gconf_win32_replace_prefix (const char *configure_time_path)
     return g_strdup (configure_time_path);
 }
 
-/* DllMain function needed to fetch the DLL name and deduce the
- * installation directory from that, and then form the pathnames for
- * various directories relative to the installation directory.
- */
+/* Minimal DllMain used to only tuck away the libgconf DLL's HMODULE */
 BOOL WINAPI
 DllMain (HINSTANCE hinstDLL,
 	 DWORD     fdwReason,
 	 LPVOID    lpvReserved)
 {
-  wchar_t wcbfr[1000];
-  char cpbfr[1000];
-  char *dll_name = NULL;
-  
-  switch (fdwReason) {
-  case DLL_PROCESS_ATTACH:
-	  if (GLIB_CHECK_VERSION (2, 6, 0)) {
-		  /* GLib 2.6 uses UTF-8 file names */
-		  if (GetVersion () < 0x80000000) {
-			  /* NT-based Windows has wide char API */
-			  if (GetModuleFileNameW ((HMODULE) hinstDLL,
-						  wcbfr, G_N_ELEMENTS (wcbfr)))
-			      dll_name = g_utf16_to_utf8 (wcbfr, -1,
-							  NULL, NULL, NULL);
-		  } else {
-			  /* Win9x, yecch */
-			  if (GetModuleFileNameA ((HMODULE) hinstDLL,
-						  cpbfr, G_N_ELEMENTS (cpbfr)))
-				  dll_name = g_locale_to_utf8 (cpbfr, -1,
-							       NULL, NULL, NULL);
-		  }
-	  } else {
-		  /* Earlier GLibs use system codepage file names */
-		  if (GetModuleFileNameA ((HMODULE) hinstDLL,
-					  cpbfr, G_N_ELEMENTS (cpbfr)))
-			  dll_name = g_strdup (cpbfr);
-	  }
-
-	  if (dll_name) {
-		  gchar *p = strrchr (dll_name, '\\');
-		  
-		  if (p != NULL)
-			  *p = '\0';
-
-		  p = strrchr (dll_name, '\\');
-		  if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0 ||
-			    g_ascii_strcasecmp (p + 1, "lib") == 0))
-			  *p = '\0';
-		  
-		  runtime_prefix = dll_name;
-
-		  /* Replace backslashes with forward slashes to avoid
-		   * problems for instance in makefiles that use
-		   * gconftool-2 --get-default-source.
-		   */
-		  if (GLIB_CHECK_VERSION (2, 6, 0)) {
-			  while ((p = strrchr (runtime_prefix, '\\')) != NULL)
-				  *p = '/';
-		  } else {
-			  while ((p = _mbsrchr (runtime_prefix, '\\')) != NULL)
-				  *p = '/';
-		  }
-	  } else {
-		  runtime_prefix = g_strdup ("");
-	  }
-
-	  gconf_win32_locale_dir = gconf_win32_replace_prefix (GCONF_LOCALE_DIR);
-	  gconf_win32_confdir = gconf_win32_replace_prefix (GCONF_CONFDIR);
-	  gconf_win32_etcdir = gconf_win32_replace_prefix (GCONF_ETCDIR);
-	  gconf_win32_serverdir = gconf_win32_replace_prefix (GCONF_SERVERDIR);
-	  gconf_win32_backend_dir = gconf_win32_replace_prefix (GCONF_BACKEND_DIR);
-	  break;
-  }
-
+  switch (fdwReason)
+    {
+    case DLL_PROCESS_ATTACH:
+      hmodule = hinstDLL;
+      break;
+    }
   return TRUE;
 }
+
+static void
+setup (void)
+{
+  char *full_prefix;
+  char *cp_prefix; 
+
+  wchar_t wcbfr[1000];
+  char cpbfr[1000];
+  
+  G_LOCK (mutex);
+  if (locale_dir != NULL)
+    {
+      G_UNLOCK (mutex);
+      return;
+    }
+
+  if (G_WIN32_HAVE_WIDECHAR_API ())
+    {
+      /* NT-based Windows has wide char API */
+      if (GetModuleFileNameW (hmodule, wcbfr, G_N_ELEMENTS (wcbfr)))
+	{
+	  full_prefix = g_utf16_to_utf8 (wcbfr, -1, NULL, NULL, NULL);
+	  if (GetShortPathNameW (wcbfr, wcbfr, G_N_ELEMENTS (wcbfr)))
+	    cp_prefix = g_utf16_to_utf8 (wcbfr, -1, NULL, NULL, NULL);
+	  else if (full_prefix)
+	    cp_prefix = g_locale_from_utf8 (full_prefix, -1, NULL, NULL, NULL);
+	}
+    }
+  else
+    {
+      /* Win9x */
+      if (GetModuleFileNameA (hmodule, cpbfr, G_N_ELEMENTS (cpbfr)))
+	{
+	  full_prefix = g_locale_to_utf8 (cpbfr, -1, NULL, NULL, NULL);
+	  cp_prefix = g_strdup (cpbfr);
+	}
+    }
+
+  if (full_prefix != NULL)
+    {
+      gchar *p = strrchr (full_prefix, '\\');
+      if (p != NULL)
+	*p = '\0';
+
+      p = strrchr (full_prefix, '\\');
+      if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0))
+	*p = '\0';
+		  
+      /* Replace backslashes with forward slashes to avoid
+       * problems for instance in makefiles that use
+       * gconftool-2 --get-default-source.
+       */
+      while ((p = strchr (full_prefix, '\\')) != NULL)
+	*p = '/';
+
+      runtime_prefix = full_prefix;
+    }
+  else
+    {
+      runtime_prefix = g_strdup ("");
+    }
+
+  if (cp_prefix != NULL)
+    {
+      gchar *p = _mbsrchr (cp_prefix, '\\');
+      if (p != NULL)
+	*p = '\0';
+      
+      p = _mbsrchr (cp_prefix, '\\');
+      if (p && (g_ascii_strcasecmp (p + 1, "bin") == 0))
+	*p = '\0';
+    }
+  else
+    {
+      cp_prefix = g_strdup ("");
+    }
+
+  locale_dir = g_strconcat (cp_prefix, GCONF_LOCALE_DIR + strlen (PREFIX), NULL);
+
+  confdir = _gconf_win32_replace_prefix (GCONF_CONFDIR);
+  etcdir = _gconf_win32_replace_prefix (GCONF_ETCDIR);
+  serverdir = _gconf_win32_replace_prefix (GCONF_SERVERDIR);
+  backend_dir = _gconf_win32_replace_prefix (GCONF_BACKEND_DIR);
+
+  G_UNLOCK (mutex);
+}
+
+#define GETTER(varbl)				\
+const char *					\
+_gconf_win32_get_##varbl (void)		\
+{						\
+	setup ();				\
+        return varbl;				\
+}
+
+GETTER (locale_dir)
+GETTER (confdir)
+GETTER (etcdir)
+GETTER (serverdir)
+GETTER (backend_dir)

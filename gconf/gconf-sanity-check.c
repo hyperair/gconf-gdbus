@@ -169,7 +169,7 @@ check_file_locking (void)
                                      "that there may be a problem with your configuration, "
                                      "as many programs will need to create files in your "
                                      "home directory. The error was \"%s\" (errno = %d)."),
-                                   testfile, strerror (errno), errno);
+                                   testfile, g_strerror (errno), errno);
           
           goto out;
         }
@@ -186,7 +186,7 @@ check_file_locking (void)
                                  "See the rpc.statd and rpc.lockd documentation. "
                                  "A common cause of this error is that the \"nfslock\" service has been disabled."
                                  "The error was \"%s\" (errno = %d)."),
-                               testfile, strerror (errno), errno); 
+                               testfile, g_strerror (errno), errno); 
       goto out;
     }
 
@@ -195,7 +195,7 @@ check_file_locking (void)
  out:
   close (fd);
   if (unlink (testfile) < 0)
-    g_printerr (_("Can't remove file %s: %s\n"), testfile, strerror (errno));
+    g_printerr (_("Can't remove file %s: %s\n"), testfile, g_strerror (errno));
   g_free (testfile);
   
   return retval;
