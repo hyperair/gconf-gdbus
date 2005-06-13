@@ -1150,8 +1150,15 @@ no_databases_in_use (void)
   /* Only the default database still open, and
    * it has no listeners
    */
-  return db_list == NULL &&
-    gconf_listeners_count (default_db->listeners) == 0;
+
+  if (db_list == NULL)
+    return TRUE;
+
+  if (db_list->next == NULL &&
+      db_list->data == default_db)
+    return gconf_listeners_count (default_db->listeners) == 0;
+
+  return FALSE;
 }
 
 void

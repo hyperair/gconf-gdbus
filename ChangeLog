@@ -1,3 +1,12 @@
+2005-06-13  Mark McLoughlin  <mark@skynet.ie>
+
+	Fixes bug #306937 - gconfd-2 not shutting down when its
+	no longer in use.
+
+	* gconf/gconfd.c: (no_databases_in_use): account for the
+	fact that the default database is on the global list of
+	databases now too.
+
 2005-06-08  Tor Lillqvist  <tml@novell.com>
 
 	* configure.in: Require GLib 2.6.0 so we can use the "gstdio
