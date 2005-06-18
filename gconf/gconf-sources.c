@@ -73,15 +73,18 @@ void
 gconf_source_free (GConfSource* source)
 {
   GConfBackend* backend;
+  gchar* address;
   
   g_return_if_fail(source != NULL);
 
   backend = source->backend;
+  address = source->address;
 
   (*source->backend->vtable.destroy_source)(source);
   
   /* Remove ref held by the source. */
   gconf_backend_unref(backend);
+  g_free(address);
 }
 
 #define SOURCE_READABLE(source, key, err)                  \
