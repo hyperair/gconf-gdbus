@@ -383,7 +383,7 @@ GConfChangeSet* gconf_client_change_set_from_currentv (GConfClient* client,
 GConfChangeSet* gconf_client_change_set_from_current (GConfClient* client,
                                                              GError** err,
                                                              const gchar* first_key,
-                                                             ...);
+                                                             ...) G_GNUC_NULL_TERMINATED;
 
 #ifdef __cplusplus
 }

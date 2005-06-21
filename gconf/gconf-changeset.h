@@ -67,7 +67,7 @@ GConfChangeSet* gconf_engine_change_set_from_currentv (GConfEngine* conf,
 GConfChangeSet* gconf_engine_change_set_from_current (GConfEngine* conf,
                                                       GError** err,
                                                       const gchar* first_key,
-                                                      ...);
+                                                      ...) G_GNUC_NULL_TERMINATED;
 
 
 GType           gconf_change_set_get_type (void);
