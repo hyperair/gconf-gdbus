@@ -760,7 +760,7 @@ gconf_client_notify (GConfClient* client, const char* key)
   if (entry != NULL)
     {
       notify_one_entry (client, entry);
-      g_entry_unref (entry);
+      gconf_entry_unref (entry);
     }
 }
 
