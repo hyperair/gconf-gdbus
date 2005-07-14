@@ -2700,9 +2700,7 @@ gconf_escape_key (const char *arbitrary_text,
       if (*p == '/' || *p == '.' || *p == '@' || ((guchar) *p) > 127 ||
           strchr (invalid_chars, *p))
         {
-          g_string_append_c (retval, '@');
-          g_string_append_printf (retval, "%u", (guchar) *p);
-          g_string_append_c (retval, '@');
+          g_string_append_printf (retval, "@%u@", (guchar) *p);
         }
       else
         g_string_append_c (retval, *p);

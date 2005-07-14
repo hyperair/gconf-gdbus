@@ -206,7 +206,7 @@ AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
 
 AC_CHECK_HEADERS(syslog.h sys/wait.h)
 
-AC_CHECK_FUNCS(getuid sigaction flockfile fsync fchmod)
+AC_CHECK_FUNCS(getuid sigaction fsync fchmod)
 
 LDAP_LIBS=
 AC_CHECK_HEADER(ldap.h, [

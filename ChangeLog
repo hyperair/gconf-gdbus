@@ -1,3 +1,13 @@
+2005-07-14  Aivars Kalvans <aivars.kalvans@inbox.lv>
+
+	Reduce number g_string_append_c() calls (bug#309760)
+
+	* configure.in: flockfile is not used anymore
+	* gconf/gconf.c (gconf_escape_key): join two
+	g_string_append_c() and g_string_append_printf() call
+	* gconf/gconfd.c (read_line): use fgets() instead of getc_unlocked()
+	to read a line
+
 2005-07-13  Gustavo J. A. M. Carneiro  <gjc@inescporto.pt>
 
 	* gconf/gconf-client.c (gconf_client_notify):

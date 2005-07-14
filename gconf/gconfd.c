@@ -2091,63 +2091,49 @@ restore_client_foreach (gpointer key,
 }
 
 
-#ifndef HAVE_FLOCKFILE
-#  define flockfile(f) (void)1
-#  define funlockfile(f) (void)1
-#  define getc_unlocked(f) getc(f)
-#endif /* !HAVE_FLOCKFILE */
-
 static gchar*
 read_line (FILE *f)
 {
-  int c;
-  GString *str;
-  
-  str = g_string_new (NULL);
-  
-  flockfile (f);
+#define BUF_SIZE 2048
 
-  while (TRUE)
+  char  buf[BUF_SIZE] = { '\0' };
+  char *retval = NULL;
+  int   len = 0;
+
+  do
     {
-      c = getc_unlocked (f);
-
-      switch (c)
+      if (fgets (buf, BUF_SIZE, f) == NULL)
         {
-        case EOF:
           if (ferror (f))
             {
               gconf_log (GCL_ERR,
                          _("Error reading saved state file: %s"),
                          g_strerror (errno));
             }
-
-          /* FALL THRU */
-        case '\n':
-          goto done;
-          break;
-
-        default:
-          g_string_append_c (str, c);
           break;
         }
-    }
 
- done:
-  funlockfile (f);
+      len = strlen (buf);
+      if (buf[len - 1] == '\n')
+	buf[--len] = '\0';
 
-  if (str->len == 0)
-    {
-      g_string_free (str, TRUE);
-      return NULL;
+      if (retval == NULL)
+	{
+	  retval = g_strndup (buf, len);
+	}
+      else
+	{
+	  char *freeme = retval;
+
+	  retval = g_strconcat (retval, buf, NULL);
+	  g_free (freeme);
+	}
     }
-  else
-    {
-      gchar *ret;
-      
-      ret = str->str;
-      g_string_free (str, FALSE);
-      return ret;
-    }
+  while (len == BUF_SIZE - 1);
+
+  return retval;
+
+#undef BUF_SIZE
 }
 
 static void
