@@ -1,9 +1,9 @@
 # GConf'i eesti keele tõlge.
-# Estonian translation of GConf
-# 
+# Estonian translation of GConf.
+#
 # Copyright (C) 2005 the Gnome Foundation
 # This file is distributed under the same license as the gconf package.
-# 
+#
 # kitt <peroona@hot.ee>, 2005.
 # Ivar Smolin <okul@linux.ee>, 2005.
 #
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-15 05:55+0000\n"
+"POT-Creation-Date: 2005-07-21 05:52+0000\n"
 "PO-Revision-Date: 2005-06-10 08:22+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
@@ -21,9 +21,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../backends/evoldap-backend.c:158
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to get configurion file path from '%s'"
-msgstr "Tõrge seadistusandmete kirjutamisel kettale\n"
+msgstr "Tõrge seadistusfaili raja hankimisel '%s'-st"
 
 #: ../backends/evoldap-backend.c:169
 #, c-format
@@ -31,14 +31,14 @@ msgid "Created Evolution/LDAP source using configuration file '%s'"
 msgstr ""
 
 #: ../backends/evoldap-backend.c:444
-#, fuzzy, c-format
+#, c-format
 msgid "Unable to parse xml file '%s'"
-msgstr "Tõrge XML faili \"%s\" parsimisel"
+msgstr "XML faili '%s' pole võimalik analüüsida"
 
 #: ../backends/evoldap-backend.c:453
-#, fuzzy, c-format
+#, c-format
 msgid "Config file '%s' is empty"
-msgstr "Dokument `%s' on tühi?\n"
+msgstr "Seadistusfail '%s' on tühi"
 
 #: ../backends/evoldap-backend.c:464
 #, c-format
@@ -66,9 +66,9 @@ msgid "Contacting LDAP server: host '%s', port '%d', base DN '%s'"
 msgstr ""
 
 #: ../backends/evoldap-backend.c:582
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to contact LDAP server: %s"
-msgstr "Tõrge %s kohta teabe hankimisel: %s"
+msgstr "Tõrge LDAP serveriga ühendumisel: %s"
 
 #: ../backends/evoldap-backend.c:669
 #, c-format
@@ -76,9 +76,9 @@ msgid "Searching for entries using filter: %s"
 msgstr ""
 
 #: ../backends/evoldap-backend.c:682
-#, fuzzy, c-format
+#, c-format
 msgid "Error querying LDAP server: %s"
-msgstr "Viga väärtuse määramisel: %s"
+msgstr "Viga päringu tegemisel LDAP serverisse: %s"
 
 #: ../backends/evoldap-backend.c:692
 #, c-format
@@ -577,12 +577,12 @@ msgstr ""
 msgid "GConf Error: %s\n"
 msgstr "GConf Viga: %s\n"
 
-#: ../gconf/gconf-client.c:895
+#: ../gconf/gconf-client.c:896
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr ""
 
-#: ../gconf/gconf-client.c:1180
+#: ../gconf/gconf-client.c:1181
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr ""
@@ -640,7 +640,7 @@ msgid ""
 "result in a notification weirdly reappearing): %s"
 msgstr ""
 
-#: ../gconf/gconf-database.c:1299 ../gconf/gconf-sources.c:1694
+#: ../gconf/gconf-database.c:1299 ../gconf/gconf-sources.c:1697
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Viga väärtuse `%s' saamisel: %s"
@@ -883,9 +883,9 @@ msgid ""
 msgstr ""
 
 #: ../gconf/gconf-internals.c:2518
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to remove '%s': %s"
-msgstr "Tõrge %s loomisel: %s"
+msgstr "Tõrge '%s' eemaldamisel: %s"
 
 #: ../gconf/gconf-internals.c:2542
 #, c-format
@@ -1073,52 +1073,59 @@ msgid ""
 "elements"
 msgstr ""
 
-#: ../gconf/gconf-sources.c:368
+#: ../gconf/gconf-sources.c:371
 #, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "Tõrge allika \"%s\" laadimisel: %s"
 
-#: ../gconf/gconf-sources.c:408
+#: ../gconf/gconf-sources.c:411
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr ""
+"Aadress \"%s\" lahendati positsioonil %d kirjutatavaks seadistuste allikaks"
 
-#: ../gconf/gconf-sources.c:414
+#: ../gconf/gconf-sources.c:417
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr ""
+"Aadress \"%s\" lahendati positsioonil %d ainult lugemist võimaldavaks "
+"seadistuste allikaks"
 
-#: ../gconf/gconf-sources.c:421
+#: ../gconf/gconf-sources.c:424
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable config source at position %d"
 msgstr ""
+"Aadress \"%s\" lahendati positsioonil %d osaliselt kirjutatavaks seadistuste "
+"allikaks"
 
-#: ../gconf/gconf-sources.c:430
+#: ../gconf/gconf-sources.c:433
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
 msgstr ""
+"Lahendatud aadressidest pole ükski kirjutatav; sätete salvestamine pole "
+"võimalik"
 
-#: ../gconf/gconf-sources.c:647
+#: ../gconf/gconf-sources.c:650
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr ""
 
-#: ../gconf/gconf-sources.c:709
+#: ../gconf/gconf-sources.c:712
 msgid "The '/' name can only be a directory, not a key"
 msgstr "'/' nimi võib olla ainult kataloog, mitte võti"
 
-#: ../gconf/gconf-sources.c:751
+#: ../gconf/gconf-sources.c:754
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr ""
 
-#: ../gconf/gconf-sources.c:763
+#: ../gconf/gconf-sources.c:766
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
@@ -1139,17 +1146,17 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 
-#: ../gconf/gconf-sources.c:1567
+#: ../gconf/gconf-sources.c:1570
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Viga metainfo leidmisel: %s"
 
-#: ../gconf/gconf-sources.c:1636
+#: ../gconf/gconf-sources.c:1639
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Viga metainfo saamisel: %s"
 
-#: ../gconf/gconf-sources.c:1660
+#: ../gconf/gconf-sources.c:1663
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr ""
@@ -1244,37 +1251,37 @@ msgstr "`%c' on lubamatu sümbol võtme/kataloogi nimedes"
 msgid "Key/directory may not end with a slash (/)"
 msgstr ""
 
-#: ../gconf/gconf.c:3027
+#: ../gconf/gconf.c:3025
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Tõrge seadistusteserveri peatamisel: %s"
 
-#: ../gconf/gconf.c:3088
+#: ../gconf/gconf.c:3086
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Oodatud ujukomaarv, saadi %s"
 
-#: ../gconf/gconf.c:3123
+#: ../gconf/gconf.c:3121
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Oodatud täisarv, saadi %s"
 
-#: ../gconf/gconf.c:3158
+#: ../gconf/gconf.c:3156
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Oodatud string, saadi %s"
 
-#: ../gconf/gconf.c:3192
+#: ../gconf/gconf.c:3190
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Oodatud tõeväärtus, saadi %s"
 
-#: ../gconf/gconf.c:3225
+#: ../gconf/gconf.c:3223
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Oodatud schema, saadi %s"
 
-#: ../gconf/gconf.c:3582
+#: ../gconf/gconf.c:3580
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA viga: %s"
@@ -1363,7 +1370,7 @@ msgstr ""
 #: ../gconf/gconfd.c:679
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr ""
+msgstr "käivitamine (versioon %s), pid %u kasutaja '%s'"
 
 #: ../gconf/gconfd.c:736
 msgid "Failed to get object reference for ConfigServer"
@@ -1406,7 +1413,7 @@ msgstr ""
 
 #: ../gconf/gconfd.c:882
 msgid "GConf server is not in use, shutting down."
-msgstr "GConf server pole kasutusel, suletakse."
+msgstr "GConf server pole kasutusel ja suletakse."
 
 #: ../gconf/gconfd.c:1208
 #, c-format
@@ -1470,51 +1477,51 @@ msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 
-#: ../gconf/gconfd.c:2120
+#: ../gconf/gconfd.c:2110
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr ""
 
-#: ../gconf/gconfd.c:2174
+#: ../gconf/gconfd.c:2160
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr ""
 
-#: ../gconf/gconfd.c:2293
+#: ../gconf/gconfd.c:2279
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
-#: ../gconf/gconfd.c:2298
+#: ../gconf/gconfd.c:2284
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
-#: ../gconf/gconfd.c:2321 ../gconf/gconfd.c:2495
+#: ../gconf/gconfd.c:2307 ../gconf/gconfd.c:2481
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Tõrge IOR hankimisel kliendile: %s"
 
-#: ../gconf/gconfd.c:2336
+#: ../gconf/gconfd.c:2322
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr ""
 
-#: ../gconf/gconfd.c:2349
+#: ../gconf/gconfd.c:2335
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 
-#: ../gconf/gconfd.c:2357
+#: ../gconf/gconfd.c:2343
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 
-#: ../gconf/gconfd.c:2456
+#: ../gconf/gconfd.c:2442
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
