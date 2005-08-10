@@ -155,7 +155,7 @@ resolve_address (const char  *address,
     {
       g_set_error (err, GCONF_ERROR,
 		   GCONF_ERROR_BAD_ADDRESS,
-		   _("Failed to get configurion file path from '%s'"),
+		   _("Failed to get configuration file path from '%s'"),
 		   address);
       return NULL;
     }
@@ -441,7 +441,7 @@ parse_conf_file (EvoSource  *esource,
     {
       g_set_error (err, GCONF_ERROR,
 		   GCONF_ERROR_PARSE_ERROR,
-		   _("Unable to parse xml file '%s'"),
+		   _("Unable to parse XML file '%s'"),
 		   esource->conf_file);
       return FALSE;
     }
