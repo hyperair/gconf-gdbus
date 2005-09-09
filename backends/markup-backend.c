@@ -230,7 +230,7 @@ get_dir_from_address (const char *address,
   /* Chop trailing '/' to canonicalize */
   len = strlen (root_dir);
 
-  if (root_dir[len-1] == '/')
+  if (G_IS_DIR_SEPARATOR (root_dir[len-1]))
     root_dir[len-1] = '\0';
 
   return root_dir;

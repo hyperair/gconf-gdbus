@@ -21,6 +21,7 @@
 #include "gconf-internals.h"
 #include "gconf-sources.h"
 #include "gconf-backend.h"
+#include <glib/gstdio.h>
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -158,9 +159,9 @@ check_file_locking (void)
                                    NULL);
       
       /* keep the open from failing due to non-writable old file or something */
-      unlink (testfile);
+      g_unlink (testfile);
   
-      fd = open (testfile, O_WRONLY | O_CREAT, 0700);
+      fd = g_open (testfile, O_WRONLY | O_CREAT, 0700);
 
       if (fd < 0)
         {      
@@ -194,7 +195,7 @@ check_file_locking (void)
 
  out:
   close (fd);
-  if (unlink (testfile) < 0)
+  if (g_unlink (testfile) < 0)
     g_printerr (_("Can't remove file %s: %s\n"), testfile, g_strerror (errno));
   g_free (testfile);
   
@@ -223,7 +224,7 @@ check_gconf (gboolean display_errors)
       goto out;
     }
   
-  conffile = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+  conffile = g_build_filename (GCONF_CONFDIR, "path", NULL);
 
   error = NULL;
   addresses = gconf_load_source_path (conffile, &error);
@@ -370,7 +371,7 @@ offer_delete_locks (void)
       GSList* tmp;
       char *conffile;
       
-      conffile = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+      conffile = g_build_filename (GCONF_CONFDIR, "path", NULL);
       
       addresses = gconf_load_source_path (conffile, NULL);
 

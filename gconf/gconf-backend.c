@@ -110,7 +110,11 @@ gconf_address_resource(const gchar* address)
       else
         {
           ++start;
+#ifdef G_OS_WIN32
+	  return _gconf_win32_replace_prefix (start);
+#else
           return g_strdup(start);
+#endif
         }
     }
 }

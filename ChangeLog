@@ -1,3 +1,15 @@
+2005-09-10  Tor Lillqvist  <tml@novell.com>
+
+	* gconf/gconf-backend.c (gconf_address_resource): On Win32, do
+	_gconf_win32_replace_prefix() on the return value so that we
+	change configure-time prefix pathnames in the path file into
+	corresponding end-user installation prefix pathnames.
+
+	* gconf/gconf-sanity-check.c: Use gstdio wrappers here, too.
+
+	* backends/markup-backend.c (get_dir_from_address): Use
+	G_IS_DIR_SEPARATOR().
+
 2005-09-06  Mark McLoughlin  <mark@skynet.ie>
 
 	* configure.in: post-release bump to 2.12.1.
