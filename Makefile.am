@@ -3,17 +3,10 @@ SUBDIRS = gconf backends po doc examples
 DIST_SUBDIRS=tests $(SUBDIRS)
 
 EXTRA_DIST =            \
-	gconf-2.m4.in   \
-	gconf-zip.in	\
 	TODO            \
-	gconf-2.0.pc.in \
 	gtk-doc.make
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
-DISTCLEANFILES =                \
-	intltool-extract        \
-	intltool-merge          \
-	intltool-update
 
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysgconfdir)/gconf.xml.defaults

@@ -31,10 +31,9 @@ AC_DEFUN([AM_GCONF_SOURCE_2],
 
   AC_ARG_ENABLE(schemas-install,
      [  --disable-schemas-install	Disable the schemas installation],
-     [case "${enableval}" in
-       yes) schemas_install=true ;;
-       no)  schemas_install=false ;;
+     [case ${enableval} in
+       yes|no) ;;
        *) AC_MSG_ERROR(bad value ${enableval} for --enable-schemas-install) ;;
-     esac],[schemas_install=true])
-     AM_CONDITIONAL(GCONF_SCHEMAS_INSTALL, test x$schemas_install = xtrue)
+      esac])
+  AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL], [test "$enable_schemas_install" != no])
 ])
