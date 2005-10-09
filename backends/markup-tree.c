@@ -3137,34 +3137,59 @@ parse_tree (MarkupDir  *root,
   GError *error;
   ParseInfo info;
   char *filename;
-  char *text;
-  gsize length;
+  FILE *f;
 
   filename = markup_dir_build_file_path (root, parse_subtree);
   
   parse_info_init (&info, root, parse_subtree);
 
-  text = NULL;
-  length = 0;
   error = NULL;
-  if (!g_file_get_contents (filename, &text, &length, &error))
-    goto out;
 
-  /* Empty documents are OK */
-  if (length == 0)
-    goto out;
+  f = g_fopen (filename, "rb");
+  if (f == NULL)
+    {
+      char *str;
 
-  g_assert (text);
+      str = g_strdup_printf (_("Failed to open \"%s\": %s\n"),
+			     filename, g_strerror (errno));
+      error = g_error_new_literal (GCONF_ERROR,
+				   GCONF_ERROR_FAILED,
+				   str);
+      g_free (str);
+
+      goto out;
+    }
 
   context = g_markup_parse_context_new (&gconf_parser,
                                         0, &info, NULL);
 
-  error = NULL;
-  if (!g_markup_parse_context_parse (context,
-                                     text,
-                                     length,
-                                     &error))
-    goto out;
+  while (!feof (f))
+    {
+      char  text[4096];
+      gsize n_bytes;
+      
+      n_bytes = fread (text, 1, sizeof (text), f);
+      if (n_bytes > 0)
+	{
+	  error = NULL;
+	  if (!g_markup_parse_context_parse (context, text, n_bytes, &error))
+	    goto out;
+	}
+
+      if (ferror (f))
+	{
+	  char *str;
+
+	  str = g_strdup_printf (_("Error reading \"%s\": %s\n"),
+                                 filename, g_strerror (errno));
+	  error = g_error_new_literal (GCONF_ERROR,
+				       GCONF_ERROR_FAILED,
+				       str);
+	  g_free (str);
+
+	  goto out;
+	}
+    }
 
   error = NULL;
   if (!g_markup_parse_context_end_parse (context, &error))
@@ -3175,7 +3200,10 @@ parse_tree (MarkupDir  *root,
  out:
 
   g_free (filename);
-  g_free (text);
+
+  if (f != NULL)
+    fclose (f);
+
   parse_info_free (&info);
 
   if (error)
