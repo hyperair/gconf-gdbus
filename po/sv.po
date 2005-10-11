@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-29 00:33+0200\n"
-"PO-Revision-Date: 2005-09-25 11:45+0200\n"
+"POT-Creation-Date: 2005-10-11 21:13+0200\n"
+"PO-Revision-Date: 2005-10-11 21:13+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,8 @@ msgstr ""
 msgid "Unable to parse XML file '%s'"
 msgstr "Kan inte tolka XML-filen \"%s\""
 
-# FIXME: Detta borde buggrapporteras
+# FIXME: Detta är buggrapporterat:
+# http://bugzilla.gnome.org/show_bug.cgi?id=318600
 #
 #: ../backends/evoldap-backend.c:453
 #, c-format
@@ -321,17 +322,23 @@ msgstr "Elementet <%s> är inte tillåtet inuti ett <%s>-element"
 msgid "No text is allowed inside element <%s>"
 msgstr "Ingen text är tillåten inuti elementet <%s>"
 
-#: ../backends/markup-tree.c:3725 ../backends/markup-tree.c:3743
+#: ../backends/markup-tree.c:3153 ../backends/markup-tree.c:3753
+#: ../backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Misslyckades med att öppna \"%s\": %s\n"
 
-#: ../backends/markup-tree.c:3817
+#: ../backends/markup-tree.c:3183
+#, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "Fel vid läsning av \"%s\": %s\n"
+
+#: ../backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Fel vid skrivning av filen \"%s\": %s"
 
-#: ../backends/markup-tree.c:3829
+#: ../backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -2507,6 +2514,15 @@ msgstr ""
 "Försöker att knäcka ditt program genom att sätta felaktiga värden för "
 "nyckeln i katalogen:\n"
 "  %s\n"
+
+#~ msgid "Error restoring \"%s\": %s"
+#~ msgstr "Fel vid återställning av \"%s\": %s"
+
+#~ msgid "Error reading \"%s\": %s"
+#~ msgstr "Fel vid läsning av \"%s\": %s"
+
+#~ msgid "Error restoring \"%s\": %s\n"
+#~ msgstr "Fel vid återställning av \"%s\": %s\n"
 
 #~ msgid "Configuration file '%s' is empty"
 #~ msgstr "Konfigurationsfilen \"%s\" är tom"
