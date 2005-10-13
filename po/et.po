@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-15 06:03+0000\n"
-"PO-Revision-Date: 2005-10-04 10:12+0300\n"
+"POT-Creation-Date: 2005-10-10 21:15+0200\n"
+"PO-Revision-Date: 2005-10-11 10:01+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Tõrge seadistusfaili raja hankimisel '%s'-st"
 #: ../backends/evoldap-backend.c:169
 #, c-format
 msgid "Created Evolution/LDAP source using configuration file '%s'"
-msgstr ""
+msgstr "Evolution/LDAP allikas loodi seadistusfaili '%s' kasutades"
 
 #: ../backends/evoldap-backend.c:444
 #, c-format
@@ -58,12 +58,12 @@ msgstr ""
 #: ../backends/evoldap-backend.c:570
 #, c-format
 msgid "No LDAP server or base DN specified in '%s'"
-msgstr ""
+msgstr "LDAP server või baas-DN on '%s' poolt kirjeldamata"
 
 #: ../backends/evoldap-backend.c:576
 #, c-format
 msgid "Contacting LDAP server: host '%s', port '%d', base DN '%s'"
-msgstr ""
+msgstr "Ühendumine LDAP serverisse: host '%s', port '%d', baas-DN '%s'"
 
 #: ../backends/evoldap-backend.c:582
 #, c-format
@@ -131,6 +131,8 @@ msgstr "Kataloogi `%s': %s tegemine pole võimalik"
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
+"Aadressil \"%s\" pole võimalik XML juurkataloogist lugeda või pole sinna "
+"võimalik kirjutada"
 
 #: ../backends/markup-backend.c:394 ../backends/xml-backend.c:452
 #, c-format
@@ -142,6 +144,8 @@ msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
 msgstr ""
+"Kataloogi eemaldamise toiming pole enam toetatud, nüüd tuleb kataloogist "
+"lihtsatl kõik väärtused eemaldada"
 
 #: ../backends/markup-backend.c:819 ../backends/xml-backend.c:769
 #, c-format
@@ -309,17 +313,23 @@ msgstr "Element <%s> ei ole lubatud elemendi <%s> sees"
 msgid "No text is allowed inside element <%s>"
 msgstr "Teksti ei ole lubatud elemendi <%s> sees"
 
-#: ../backends/markup-tree.c:3725 ../backends/markup-tree.c:3743
+#: ../backends/markup-tree.c:3153 ../backends/markup-tree.c:3753
+#: ../backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Tõrge \"%s\" avamisel: %s\n"
 
-#: ../backends/markup-tree.c:3817
+#: ../backends/markup-tree.c:3183
+#, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "Viga \"%s\" lugemisel: %s\n"
+
+#: ../backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Viga faili \"%s\" kirjutamisel: %s"
 
-#: ../backends/markup-tree.c:3829
+#: ../backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "Tõrge ajutise faili \"%s\" tõstmisel sihtkohta \"%s\": %s"
@@ -524,51 +534,51 @@ msgid "`%c' is an invalid character in a configuration storage address"
 msgstr ""
 
 #. -- end debug only
-#: ../gconf/gconf-backend.c:207
+#: ../gconf/gconf-backend.c:211
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Faili `%s' pole olemas\n"
 
-#: ../gconf/gconf-backend.c:252
+#: ../gconf/gconf-backend.c:256
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr ""
 
-#: ../gconf/gconf-backend.c:267
+#: ../gconf/gconf-backend.c:271
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr ""
 
-#: ../gconf/gconf-backend.c:293
+#: ../gconf/gconf-backend.c:297
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "Vigane aadress `%s': %s"
 
-#: ../gconf/gconf-backend.c:303
+#: ../gconf/gconf-backend.c:307
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Vigane aadress `%s'"
 
-#: ../gconf/gconf-backend.c:328
+#: ../gconf/gconf-backend.c:332
 msgid "GConf won't work without dynamic module support (gmodule)"
-msgstr ""
+msgstr "GConf pole suuteline ilma dünaamiliste mooduliteta (gmodule) töötama"
 
-#: ../gconf/gconf-backend.c:337
+#: ../gconf/gconf-backend.c:341
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Viga mooduli `%s' mooduli avamisel: %s\n"
 
-#: ../gconf/gconf-backend.c:348
+#: ../gconf/gconf-backend.c:352
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Viga mooduli `%s' initialiseerimisel: %s\n"
 
-#: ../gconf/gconf-backend.c:379
+#: ../gconf/gconf-backend.c:383
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr ""
 
-#: ../gconf/gconf-backend.c:416
+#: ../gconf/gconf-backend.c:420
 msgid "Failed to shut down backend"
 msgstr ""
 
@@ -598,7 +608,7 @@ msgstr ""
 
 #: ../gconf/gconf-database.c:502
 msgid "Received request to drop all cached data"
-msgstr ""
+msgstr "Vastui võetud korraldus kõigi puhverdatud andmete minemaviskamiseks"
 
 #: ../gconf/gconf-database.c:519
 msgid "Received request to sync synchronously"
@@ -705,7 +715,7 @@ msgstr "Tõrge"
 
 #: ../gconf/gconf-error.c:27
 msgid "Configuration server couldn't be contacted"
-msgstr ""
+msgstr "Seadistusteserveriga pole võimalik ühendust saada"
 
 #: ../gconf/gconf-error.c:28
 msgid "Permission denied"
@@ -713,7 +723,7 @@ msgstr "Juurdepääs keelatud"
 
 #: ../gconf/gconf-error.c:29
 msgid "Couldn't resolve address for configuration source"
-msgstr ""
+msgstr "Seadistuste allika aadressi pole võimalik lahendada"
 
 #: ../gconf/gconf-error.c:30
 msgid "Bad key or directory name"
@@ -725,7 +735,7 @@ msgstr "Töötlemise viga"
 
 #: ../gconf/gconf-error.c:32
 msgid "Corrupt data in configuration source database"
-msgstr ""
+msgstr "Seadistuste allika andmebaasis on rikutud andmed"
 
 #: ../gconf/gconf-error.c:33
 msgid "Type mismatch"
@@ -745,7 +755,7 @@ msgstr "Kirjutamiskaitsega väärtuse ülekirjutamine pole võimalik"
 
 #: ../gconf/gconf-error.c:37
 msgid "Object Activation Framework error"
-msgstr ""
+msgstr "Objektiaktiveerimise raamistiku viga"
 
 #: ../gconf/gconf-error.c:38
 msgid "Operation not allowed without configuration server"
@@ -757,7 +767,7 @@ msgstr "Tõrge lukustuse hankimisel"
 
 #: ../gconf/gconf-error.c:40
 msgid "No database available to save your configuration"
-msgstr ""
+msgstr "Andmebaasi pole seadistuse salvestamiseks saadaval"
 
 #: ../gconf/gconf-internals.c:91
 #, c-format
@@ -784,7 +794,7 @@ msgstr ""
 
 #: ../gconf/gconf-internals.c:459
 msgid "Failed to convert object to IOR"
-msgstr ""
+msgstr "Tõrge objekti teisendamisel IOR-iks"
 
 #: ../gconf/gconf-internals.c:596
 msgid "Invalid UTF-8 in locale for schema"
@@ -858,7 +868,7 @@ msgstr ""
 
 #: ../gconf/gconf-internals.c:1911
 msgid "Encoded value is not valid UTF-8"
-msgstr ""
+msgstr "Kodeeritud väärtus pole UTF-8 kodeeringus"
 
 #: ../gconf/gconf-internals.c:2393
 #, c-format
@@ -881,6 +891,8 @@ msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
+"Tõrge '%s' lukustamisel: arvatavasti on mõni teine protsess juba selle "
+"lukustanud või on sinu operatsioonisüsteemil NFS-tugi valesti seadistatud (%s)"
 
 #: ../gconf/gconf-internals.c:2518
 #, c-format
@@ -895,7 +907,7 @@ msgstr ""
 #: ../gconf/gconf-internals.c:2572
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
-msgstr ""
+msgstr "gconftool või mõni muu mitte-gconfd protsess on faili '%s' lukustanud"
 
 #: ../gconf/gconf-internals.c:2589
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -979,14 +991,14 @@ msgstr ""
 msgid "none"
 msgstr "ei ükski"
 
-#: ../gconf/gconf-sanity-check.c:68 ../gconf/gconftool.c:519
+#: ../gconf/gconf-sanity-check.c:69 ../gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 
-#: ../gconf/gconf-sanity-check.c:142 ../gconf/gconf-sanity-check.c:167
+#: ../gconf/gconf-sanity-check.c:143 ../gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -995,7 +1007,7 @@ msgid ""
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
 
-#: ../gconf/gconf-sanity-check.c:181
+#: ../gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1007,12 +1019,12 @@ msgid ""
 "%d)."
 msgstr ""
 
-#: ../gconf/gconf-sanity-check.c:198
+#: ../gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Faili %s pole võimalik eemaldada: %s\n"
 
-#: ../gconf/gconf-sanity-check.c:234
+#: ../gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1020,18 +1032,18 @@ msgid ""
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
 
-#: ../gconf/gconf-sanity-check.c:237
+#: ../gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "Viga faili lugemisel:"
 
-#: ../gconf/gconf-sanity-check.c:260
+#: ../gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
 
-#: ../gconf/gconf-sanity-check.c:321
+#: ../gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1044,15 +1056,15 @@ msgid ""
 "Do you want to continue?"
 msgstr ""
 
-#: ../gconf/gconf-sanity-check.c:342
+#: ../gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_Logi välja"
 
-#: ../gconf/gconf-sanity-check.c:344
+#: ../gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_Jätka"
 
-#: ../gconf/gconf-sanity-check.c:357
+#: ../gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s jätka (y/n)?"
@@ -1396,12 +1408,12 @@ msgstr ""
 #: ../gconf/gconfd.c:798
 #, c-format
 msgid "Failed to get lock for daemon, exiting: %s"
-msgstr "Deemonile pole võimalik lukku seada, lõpetan: %s"
+msgstr "Deemonile pole võimalik lukku seada, lõpetamine: %s"
 
 #: ../gconf/gconfd.c:836
 #, c-format
 msgid "Error releasing lockfile: %s"
-msgstr ""
+msgstr "Viga lukufaili vabastamisel: %s"
 
 #: ../gconf/gconfd.c:844
 msgid "Exiting"
@@ -1409,7 +1421,7 @@ msgstr "Väljumine"
 
 #: ../gconf/gconfd.c:865
 msgid "SIGHUP received, reloading all databases"
-msgstr ""
+msgstr "Vastu võetud signaal SIGHUP, kõikide andmebaaside uuestilaadimine"
 
 #: ../gconf/gconfd.c:882
 msgid "GConf server is not in use, shutting down."
@@ -1480,12 +1492,12 @@ msgstr ""
 #: ../gconf/gconfd.c:2110
 #, c-format
 msgid "Error reading saved state file: %s"
-msgstr ""
+msgstr "Viga salvestatud oleku faili lugemisel: %s"
 
 #: ../gconf/gconfd.c:2160
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
-msgstr ""
+msgstr "Salvestatud oleku faili '%s' pole võimalik avada: %s"
 
 #: ../gconf/gconfd.c:2279
 #, c-format
@@ -1509,7 +1521,7 @@ msgstr "Tõrge IOR hankimisel kliendile: %s"
 #: ../gconf/gconfd.c:2322
 #, c-format
 msgid "Failed to open saved state file: %s"
-msgstr ""
+msgstr "Tõrge salvestatud oleku faili avamisel: %s"
 
 #: ../gconf/gconfd.c:2335
 #, c-format
@@ -1529,6 +1541,8 @@ msgstr ""
 #: ../gconf/gconftool.c:89
 msgid "Set a key to a value and sync. Use with --type."
 msgstr ""
+"Võtmele väärtuse andmine ja sünkroniseerimine. Kasutatakse koos võtmega "
+"--type."
 
 #: ../gconf/gconftool.c:98
 msgid "Print the value of a key to standard output."
@@ -1588,7 +1602,7 @@ msgstr "Gconfd sulgemine. HEA PÕHJUSE PUUDUMISEL ÄRA KASUTA SEDA VALIKUT."
 
 #: ../gconf/gconftool.c:207
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr "Gconfd töötamisel tagastatakse 0, vastasel juhul 2."
+msgstr "Kui Gconfd töötab, siis tagastatakse 0, vastasel juhul 2."
 
 #: ../gconf/gconftool.c:216
 msgid ""
@@ -1664,7 +1678,7 @@ msgstr "OMANIK"
 
 #: ../gconf/gconftool.c:315
 msgid "Specify a schema file to be installed"
-msgstr "Täpsusta paigaldatavat skeemifaili"
+msgstr "Paigaldatava skeemifaili määratlemine"
 
 #: ../gconf/gconftool.c:316
 msgid "FILENAME"
@@ -1757,10 +1771,12 @@ msgstr ""
 #: ../gconf/gconftool.c:565
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr ""
+"Võtit --all-entries pole võimalik koos võtmetega --get või --set kasutada\n"
 
 #: ../gconf/gconftool.c:576
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr ""
+"Võtit --all-dirs pole võimalik koos võtmetega --get või --set kasutada\n"
 
 #: ../gconf/gconftool.c:589
 msgid ""
@@ -1780,17 +1796,20 @@ msgstr ""
 
 #: ../gconf/gconftool.c:608
 msgid "Value type is only relevant when setting a value\n"
-msgstr ""
+msgstr "Väärtuse tüüp on asjakohane ainult väärtuse seadmisel\n"
 
 #: ../gconf/gconftool.c:614
 msgid "Must specify a type when setting a value\n"
-msgstr "Väärtuse seadmisel tuleb määrata ka tüüp\n"
+msgstr "Väärtuse seadmisel tuleb määratleda ka tüüp\n"
 
 #: ../gconf/gconftool.c:622
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
 msgstr ""
+"--ignore-schema-defaults on asjakohane ainult võtmetega --get, "
+"--all-entries, --dump, --recursive-list, --get-list-size või "
+"--get-list-element\n"
 
 #: ../gconf/gconftool.c:634 ../gconf/gconftool.c:647 ../gconf/gconftool.c:660
 #: ../gconf/gconftool.c:674 ../gconf/gconftool.c:687 ../gconf/gconftool.c:700
@@ -1820,7 +1839,7 @@ msgstr ""
 
 #: ../gconf/gconftool.c:778
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
-msgstr ""
+msgstr "Keskkonnamuutuja GCONF_CONFIG_SOURCE peab olema seatud\n"
 
 #: ../gconf/gconftool.c:813
 #, c-format
@@ -1852,7 +1871,7 @@ msgstr "(väärtus määramata)"
 #: ../gconf/gconftool.c:1578
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
-msgstr ""
+msgstr "Tõrge seadistusteserveri (gconfd) loomisel: %s\n"
 
 #: ../gconf/gconftool.c:1607
 msgid "Must specify a key or keys to get\n"
@@ -2076,7 +2095,8 @@ msgstr "Viga `%s' väärtusel eemaldamisel: %s\n"
 
 #: ../gconf/gconftool.c:2384
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Vähemalt üks võti tuleb määrata väärtuste rekursiivseks eemaldamiseks.\n"
+msgstr ""
+"Väärtuste rekursiivseks eemaldamiseks tuleb määratleda vähemalt üks võti.\n"
 
 #: ../gconf/gconftool.c:2398
 #, c-format
@@ -2330,4 +2350,3 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-
