@@ -31,7 +31,12 @@
  * The important one here is not to allow ';' because we use that
  * internally as a list delimiter. See GCONF_DATABASE_LIST_DELIM
  */
-static const char invalid_chars[] = " \t\r\n\"$&<>,+=#!()'|{}[]?~`;%\\";
+static const char invalid_chars[] = 
+#ifndef G_OS_WIN32
+  /* Space is common in user names (and thus home directories) on Windows */
+  " "
+#endif
+  "\t\r\n\"$&<>,+=#!()'|{}[]?~`;%\\";
 
 static gboolean
 gconf_address_valid (const char  *address,
