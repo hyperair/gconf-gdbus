@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-10-10 21:15+0200\n"
-"PO-Revision-Date: 2005-10-11 10:01+0300\n"
+"PO-Revision-Date: 2005-10-20 11:08+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -256,22 +256,22 @@ msgstr ""
 
 #: ../backends/markup-tree.c:2567
 msgid "Two <default> elements below a <local_schema>"
-msgstr ""
+msgstr "<local_schema> all on kaks <default> elementi"
 
 #: ../backends/markup-tree.c:2582
 msgid "Two <longdesc> elements below a <local_schema>"
-msgstr ""
+msgstr "<local_schema> all on kaks <longdesc> elementi"
 
 #: ../backends/markup-tree.c:2589
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
-msgstr "Element <%s> keelatud <%s> all"
+msgstr "Element <%s> pole <%s> all lubatud"
 
 #: ../backends/markup-tree.c:2613 ../backends/markup-tree.c:2705
 #: ../backends/markup-tree.c:2759 ../backends/markup-tree.c:2807
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
-msgstr "Toetatud <%s> , kuid praegune element ei oma %s tüüpi"
+msgstr "Toetatud <%s>, kuid praegune element ei oma %s tüüpi"
 
 #: ../backends/markup-tree.c:2683
 msgid "Two <car> elements given for same pair"
@@ -295,7 +295,7 @@ msgstr "Toetatud <%s> , kuid praegune <entry> ei oma väärtust"
 #: ../backends/markup-tree.c:2864 ../backends/markup-tree.c:2881
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
-msgstr "Element <%s> ei ole lubatud praeguse elemendi sees"
+msgstr "Element <%s> ei ole praeguse elemendi sees lubatud"
 
 #: ../backends/markup-tree.c:2913
 #, c-format
@@ -306,12 +306,12 @@ msgstr ""
 #: ../backends/markup-tree.c:2960
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
-msgstr "Element <%s> ei ole lubatud elemendi <%s> sees"
+msgstr "Element <%s> ei ole elemendi <%s> sees lubatud"
 
 #: ../backends/markup-tree.c:3040
 #, c-format
 msgid "No text is allowed inside element <%s>"
-msgstr "Teksti ei ole lubatud elemendi <%s> sees"
+msgstr "Tekst pole elemendi <%s> sees lubatud"
 
 #: ../backends/markup-tree.c:3153 ../backends/markup-tree.c:3753
 #: ../backends/markup-tree.c:3771
@@ -781,12 +781,12 @@ msgstr "Vigane UTF-8 stringiväärtuses asukohas '%s'"
 
 #: ../gconf/gconf-internals.c:263
 msgid "Couldn't interpret CORBA value for list element"
-msgstr ""
+msgstr "CORBA väärtust pole loendielemendi jaoks võimalik interpreteerida"
 
 #: ../gconf/gconf-internals.c:265
 #, c-format
 msgid "Incorrect type for list element in %s"
-msgstr ""
+msgstr "Vigane tüüp %s sees oleva loendi elemendile"
 
 #: ../gconf/gconf-internals.c:278
 msgid "Received list from gconfd with a bad list type"
@@ -1206,7 +1206,7 @@ msgstr "Arusaamatu `%s' (paar peab lõppema ')' sümboliga)"
 #: ../gconf/gconf-value.c:446 ../gconf/gconf-value.c:532
 #, c-format
 msgid "Didn't understand `%s' (wrong number of elements)"
-msgstr "Arusaamatu `%s' (vale arv elemente)"
+msgstr "Arusaamatu `%s' (vale elementide arv)"
 
 #: ../gconf/gconf-value.c:486
 #, c-format
@@ -1627,10 +1627,12 @@ msgid "Print the data type of a key to standard output."
 msgstr "Võtme andmetüübi printimine standardväljundisse."
 
 #: ../gconf/gconftool.c:243
+#, fuzzy
 msgid "Get the number of elements in a list key."
 msgstr "Elementide arvu loendis, hankimine."
 
 #: ../gconf/gconftool.c:252
+#, fuzzy
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "Nimekirivõtmest kindla elemendi hankimine, nummerdatud kujul."
 
