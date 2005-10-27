@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-07 13:08+0200\n"
+"POT-Creation-Date: 2005-10-27 18:55+0200\n"
 "PO-Revision-Date: 2005-05-21 12:04+0200\n"
 "Last-Translator: Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>\n"
 "Language-Team:  <itzulpena@euskalgnu.org>\n"
@@ -321,17 +321,23 @@ msgstr "<%s> elementua ez da <%s> elementuaren barruan onartzen"
 msgid "No text is allowed inside element <%s>"
 msgstr "Testurik ez da onartzen <%s> elementuaren barruan"
 
-#: ../backends/markup-tree.c:3725 ../backends/markup-tree.c:3743
+#: ../backends/markup-tree.c:3153 ../backends/markup-tree.c:3753
+#: ../backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Huts egin du \"%s\" irekitzean:  %s\n"
 
-#: ../backends/markup-tree.c:3817
+#: ../backends/markup-tree.c:3183
+#, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "Errorea \"%s\" irakurtzean:  %s\n"
+
+#: ../backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Errorea \"%s\" fitxategian idaztean:  %s"
 
-#: ../backends/markup-tree.c:3829
+#: ../backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -537,57 +543,57 @@ msgstr "XML fitxategian balio-bikoteak car falta du"
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "XML fitxategian bikoteak car eta cdr balioak falta ditu"
 
-#: ../gconf/gconf-backend.c:57
+#: ../gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "`%c' karaktere baliogabea da konfigurazioa gordetzeko helbidean"
 
 #. -- end debug only
-#: ../gconf/gconf-backend.c:207
+#: ../gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "`%s' fitxategia ez da existitzen\n"
 
-#: ../gconf/gconf-backend.c:252
+#: ../gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "Atzealdeko `%s'(e)k huts egin du, vtable itzuli da\n"
 
-#: ../gconf/gconf-backend.c:267
+#: ../gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "Atzealdeko `%s' falta da, `%s' vtable kidea behar da\n"
 
-#: ../gconf/gconf-backend.c:293
+#: ../gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "`%s' helbide okerra: %s"
 
-#: ../gconf/gconf-backend.c:303
+#: ../gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Helbide okerra: `%s'"
 
-#: ../gconf/gconf-backend.c:328
+#: ../gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "Gconf ez dabil modulu dinamikoen euskarririk gabe (gmodule) "
 
-#: ../gconf/gconf-backend.c:337
+#: ../gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Errorea `%s' modulua irekitzean:  %s\n"
 
-#: ../gconf/gconf-backend.c:348
+#: ../gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Errorea `%s' modulua abiaraztean:  %s\n"
 
-#: ../gconf/gconf-backend.c:379
+#: ../gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Ezin izan du `%s'(r)en euskarri-modulua lokalizatu"
 
-#: ../gconf/gconf-backend.c:416
+#: ../gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "Ezin izan da euskarria itxi"
 
@@ -1022,7 +1028,7 @@ msgstr ""
 msgid "none"
 msgstr "bat ere ez"
 
-#: ../gconf/gconf-sanity-check.c:68 ../gconf/gconftool.c:519
+#: ../gconf/gconf-sanity-check.c:69 ../gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1032,7 +1038,7 @@ msgstr ""
 "Exekutatu '%s --help' komando-lerroko aukera erabilgarrien zerrenda "
 "ikusteko.\n"
 
-#: ../gconf/gconf-sanity-check.c:142 ../gconf/gconf-sanity-check.c:167
+#: ../gconf/gconf-sanity-check.c:143 ../gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1046,7 +1052,7 @@ msgstr ""
 "fitxategiak zure etxeko direktorioan sortu beharko baitituzte. Errorea \"%s"
 "\" zen (errno = %d)."
 
-#: ../gconf/gconf-sanity-check.c:181
+#: ../gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1065,12 +1071,12 @@ msgstr ""
 "dokumentazioa. Errore horren ohiko arrazoia da\"nfslock\" zerbitzaria "
 "desgaitua izan dela. Errorea \"%s\" zen (errno = %d)."
 
-#: ../gconf/gconf-sanity-check.c:198
+#: ../gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Ezin da %s fitxategia kendu:  %s\n"
 
-#: ../gconf/gconf-sanity-check.c:234
+#: ../gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1083,11 +1089,11 @@ msgstr ""
 "direla gorde. %s%s"
 
 #
-#: ../gconf/gconf-sanity-check.c:237
+#: ../gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "Errorea fitxategia irakurtzean: "
 
-#: ../gconf/gconf-sanity-check.c:260
+#: ../gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1097,7 +1103,7 @@ msgstr ""
 "konpontzeko: ezin izan da \"%s\" helbidea ebatzi \"%s\" konfigurazio-"
 "fitxategian:  %s"
 
-#: ../gconf/gconf-sanity-check.c:321
+#: ../gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1120,15 +1126,15 @@ msgstr ""
 "\n"
 "Aurrera jarraitu nahi duzu?"
 
-#: ../gconf/gconf-sanity-check.c:342
+#: ../gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_Irten saiotik"
 
-#: ../gconf/gconf-sanity-check.c:344
+#: ../gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_Jarraitu"
 
-#: ../gconf/gconf-sanity-check.c:357
+#: ../gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s jarraitu (b/e)?"
