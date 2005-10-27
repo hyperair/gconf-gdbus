@@ -1801,23 +1801,23 @@ gconf_sources_is_affected (GConfSources *sources,
       tmp = tmp->next;
     }
 
-  if (tmp)
+  if (tmp == NULL)
+    return FALSE;
+  
+  tmp = tmp->prev;
+  while (tmp != NULL)
     {
-      tmp = tmp->prev;
-      while (tmp != NULL)
+      GConfValue *val;
+      
+      val = gconf_source_query_value (tmp->data, key, NULL, NULL, NULL);
+      if (val != NULL)
 	{
-	  GConfValue *val;
-
-	  val = gconf_source_query_value (tmp->data, key, NULL, NULL, NULL);
-	  if (val != NULL)
-	    {
-	      gconf_value_free (val);
-	      return FALSE;
-	    }
-
-	  tmp = tmp->prev;
+	  gconf_value_free (val);
+	  return FALSE;
 	}
+      
+      tmp = tmp->prev;
     }
-
+  
   return TRUE;
 }
