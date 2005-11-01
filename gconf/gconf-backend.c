@@ -336,7 +336,7 @@ gconf_get_backend(const gchar* address, GError** err)
           if (!g_module_supported())
             g_error(_("GConf won't work without dynamic module support (gmodule)"));
               
-          module = g_module_open(file, 0);
+          module = g_module_open(file, G_MODULE_BIND_LAZY);
               
           g_free(file);
           

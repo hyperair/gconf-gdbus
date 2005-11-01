@@ -2747,7 +2747,6 @@ gconf_unescape_key (const char *escaped_key,
           if (*p == '@')
             {
               /* *p is the @ that ends a seq */
-              char *end;
               guchar val;
               
               val = strtoul (start_seq, &end, 10);
@@ -3497,47 +3496,33 @@ corba_errno_to_gconf_errno(ConfigErrorType corba_err)
     {
     case ConfigFailed:
       return GCONF_ERROR_FAILED;
-      break;
     case ConfigNoPermission:
       return GCONF_ERROR_NO_PERMISSION;
-      break;
     case ConfigBadAddress:
       return GCONF_ERROR_BAD_ADDRESS;
-      break;
     case ConfigBadKey:
       return GCONF_ERROR_BAD_KEY;
-      break;
     case ConfigParseError:
       return GCONF_ERROR_PARSE_ERROR;
-      break;
     case ConfigCorrupt:
       return GCONF_ERROR_CORRUPT;
-      break;
     case ConfigTypeMismatch:
       return GCONF_ERROR_TYPE_MISMATCH;
-      break;
     case ConfigIsDir:
       return GCONF_ERROR_IS_DIR;
-      break;
     case ConfigIsKey:
       return GCONF_ERROR_IS_KEY;
-      break;
     case ConfigOverridden:
       return GCONF_ERROR_OVERRIDDEN;
-      break;
     case ConfigLockFailed:
       return GCONF_ERROR_LOCK_FAILED;
-      break;
     case ConfigNoWritableDatabase:
       return GCONF_ERROR_NO_WRITABLE_DATABASE;
-      break;
     case ConfigInShutdown:
       return GCONF_ERROR_IN_SHUTDOWN;
-      break;
     default:
       g_assert_not_reached();
       return GCONF_ERROR_SUCCESS; /* warnings */
-      break;
     }
 }
 
@@ -3548,7 +3533,6 @@ gconf_server_broken(CORBA_Environment* ev)
     {
     case CORBA_SYSTEM_EXCEPTION:
       return TRUE;
-      break;
 
     case CORBA_USER_EXCEPTION:
       {
@@ -3558,11 +3542,9 @@ gconf_server_broken(CORBA_Environment* ev)
 
         return ce->err_no == ConfigInShutdown;
       }
-      break;
       
     default:
       return FALSE;
-      break;
     }
 }
 
@@ -3574,14 +3556,12 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GError** err)
     case CORBA_NO_EXCEPTION:
       CORBA_exception_free (ev);
       return FALSE;
-      break;
     case CORBA_SYSTEM_EXCEPTION:
       if (err)
         *err = gconf_error_new (GCONF_ERROR_NO_SERVER, _("CORBA error: %s"),
                                 CORBA_exception_id (ev));
       CORBA_exception_free (ev);
       return TRUE;
-      break;
     case CORBA_USER_EXCEPTION:
       {        
         ConfigException* ce;
@@ -3594,11 +3574,9 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GError** err)
         CORBA_exception_free (ev);
         return TRUE;
       }
-      break;
     default:
       g_assert_not_reached();
       return TRUE;
-      break;
     }
 }
 

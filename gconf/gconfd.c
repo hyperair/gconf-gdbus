@@ -843,9 +843,11 @@ main(int argc, char** argv)
   
   gconf_log (GCL_INFO, _("Exiting"));
 
+  closelog ();
+
   /* Can't do this due to stupid atexit() handler that calls g_log stuff */
   /*   g_free (logname); */
-  
+
   return exit_code;
 }
 

@@ -1,3 +1,19 @@
+2005-11-01  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* gconf/gconf-backend.c: (gconf_get_backend): Use
+	G_MODULE_BIND_LAZY in g_module_open().
+	* gconf/gconf-internals.c: (gconf_value_from_corba_value),
+	(gconf_value_type_to_string), (gconf_unquote_string_inplace),
+	(type_byte), (byte_type), (gconf_value_encode),
+	(gconf_get_lock_or_current_holder): Remove unused and
+	unreachable code.
+	* gconf/gconf-listeners.c: (ltable_insert): Warning fix.
+	* gconf/gconf-value.c: (gconf_value_compare): Same here.
+	* gconf/gconf.c: (gconf_unescape_key),
+	(corba_errno_to_gconf_errno), (gconf_server_broken),
+	(gconf_handle_corba_exception): And here.
+	* gconf/gconfd.c: (main): Missing closelog() call.
+
 2005-10-28  Erdal Ronahi  <erdal.ronahi@gmail.com>
 
 	* configure.in: Added ku (Kurdish) to ALL_LINGUAS

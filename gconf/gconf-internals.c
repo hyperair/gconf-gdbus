@@ -162,7 +162,6 @@ gconf_value_from_corba_value(const ConfigValue* value)
     {
     case InvalidVal:
       return NULL;
-      break;
     case IntVal:
       type = GCONF_VALUE_INT;
       break;
@@ -641,32 +640,23 @@ gconf_value_type_to_string(GConfValueType type)
     {
     case GCONF_VALUE_INT:
       return "int";
-      break;
     case GCONF_VALUE_STRING:
       return "string";
-      break;
     case GCONF_VALUE_FLOAT:
       return "float";
-      break;
     case GCONF_VALUE_BOOL:
       return "bool";
-      break;
     case GCONF_VALUE_SCHEMA:
       return "schema";
-      break;
     case GCONF_VALUE_LIST:
       return "list";
-      break;
     case GCONF_VALUE_PAIR:
       return "pair";
-      break;
     case GCONF_VALUE_INVALID:
       return "*invalid*";
-      break;
     default:
       g_assert_not_reached();
       return NULL; /* for warnings */
-      break;
     }
 }
 
@@ -1730,7 +1720,6 @@ gconf_unquote_string_inplace (gchar* str, gchar** end, GError** err)
           ++s;
           *end = s;
           return;
-          break;
 
         case '\\':
           /* Possible escaped quote or \ */
@@ -1814,40 +1803,31 @@ static gchar type_byte(GConfValueType type)
     {
     case GCONF_VALUE_INT:
       return 'i';
-      break;
         
     case GCONF_VALUE_BOOL:
       return 'b';
-      break;
 
     case GCONF_VALUE_FLOAT:
       return 'f';
-      break;
 
     case GCONF_VALUE_STRING:
       return 's';
-      break;
 
     case GCONF_VALUE_SCHEMA:
       return 'c';
-      break;
 
     case GCONF_VALUE_LIST:
       return 'l';
-      break;
 
     case GCONF_VALUE_PAIR:
       return 'p';
-      break;
 
     case GCONF_VALUE_INVALID:
       return 'v';
-      break;
       
     default:
       g_assert_not_reached();
       return '\0';
-      break;
     }
 }
 
@@ -1858,39 +1838,30 @@ byte_type(gchar byte)
     {
     case 'i':
       return GCONF_VALUE_INT;
-      break;
 
     case 'b':
       return GCONF_VALUE_BOOL;
-      break;
 
     case 's':
       return GCONF_VALUE_STRING;
-      break;
 
     case 'c':
       return GCONF_VALUE_SCHEMA;
-      break;
 
     case 'f':
       return GCONF_VALUE_FLOAT;
-      break;
 
     case 'l':
       return GCONF_VALUE_LIST;
-      break;
 
     case 'p':
       return GCONF_VALUE_PAIR;
-      break;
       
     case 'v':
       return GCONF_VALUE_INVALID;
-      break;
 
     default:
       return GCONF_VALUE_INVALID;
-      break;
     }
 }
 
@@ -2122,7 +2093,6 @@ gconf_value_encode (GConfValue* val)
     case GCONF_VALUE_SCHEMA:
       {
         gchar* tmp;
-        gchar* retval;
         gchar* quoted;
         gchar* encoded;
         GConfSchema* sc;
@@ -2633,7 +2603,6 @@ gconf_get_lock_or_current_holder (const gchar  *lock_directory,
                                   ConfigServer *current_server,
                                   GError      **err)
 {
-  ConfigServer server;
   GConfLock* lock;
   
   g_return_val_if_fail(lock_directory != NULL, NULL);
@@ -2652,8 +2621,6 @@ gconf_get_lock_or_current_holder (const gchar  *lock_directory,
       return NULL;
     }
 
-  server = CORBA_OBJECT_NIL;
-    
   lock = g_new0 (GConfLock, 1);
 
   lock->lock_directory = g_strdup (lock_directory);

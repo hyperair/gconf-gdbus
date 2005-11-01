@@ -1190,7 +1190,6 @@ gconf_value_compare (const GConfValue *value_a,
         return 1;
       else
         return 0;
-      break;
     case GCONF_VALUE_FLOAT:
       if (gconf_value_get_float (value_a) < gconf_value_get_float (value_b))
         return -1;
@@ -1198,11 +1197,9 @@ gconf_value_compare (const GConfValue *value_a,
         return 1;
       else
         return 0;
-      break;
     case GCONF_VALUE_STRING:
       return strcmp (gconf_value_get_string (value_a),
                      gconf_value_get_string (value_b));
-      break;
     case GCONF_VALUE_BOOL:
       if (gconf_value_get_bool (value_a) == gconf_value_get_bool (value_b))
         return 0;
@@ -1211,7 +1208,6 @@ gconf_value_compare (const GConfValue *value_a,
         return 1;
       else
         return -1;
-      break;
     case GCONF_VALUE_LIST:
       {
         GSList *list_a;
@@ -1240,7 +1236,6 @@ gconf_value_compare (const GConfValue *value_a,
         else
           return 0;
       }
-      break;
     case GCONF_VALUE_PAIR:
       {
         GConfValue *a_car, *b_car, *a_cdr, *b_cdr;
@@ -1277,10 +1272,8 @@ gconf_value_compare (const GConfValue *value_a,
 
         return 0;
       }
-      break;
     case GCONF_VALUE_INVALID:
       return 0;
-      break;
     case GCONF_VALUE_SCHEMA:
       {
         const char *locale_a, *locale_b;
@@ -1355,7 +1348,6 @@ gconf_value_compare (const GConfValue *value_a,
 
         return 0;
       }
-      break;
     }
 
   g_assert_not_reached ();
