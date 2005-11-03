@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2005-05-08 10:36+0545\n"
 "Last-Translator: Sameer Rajbhandari <amit@mpp.org.np>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -316,17 +316,23 @@ msgstr "<%s>तत्वभित्र <%s>तत्वलाइ जाने �
 msgid "No text is allowed inside element <%s>"
 msgstr "<%s>तत्वभित्र कुनै पाठलाइ अनुमति छैन"
 
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "\"%s\": %s खोल्न असफल \n"
 
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "`%s': %s विस्थापन गल्ती"
+
+#: backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "\"%s\": %sमिसिल लेख्नेक्रममा गल्ती"
 
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "अस्थायी मिसिल\"%s\" अन्तिम स्थानसम्म \"%s\": %s सार्न असफल "
@@ -530,58 +536,58 @@ msgstr "एक्सएमएल मिसिलमा मूल्यको ज
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "एक्सएमएल मिसिलमा मूल्यको जोडा सिडिआर सिएआर हराइरहेको छ"
 
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "एउटा ढाँचा भण्डारण ठेगानाभित्र `%c' एउटा अमान्य वर्ण हो "
 
 #  -- end debug only
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "`%s' यस्तो फाइल छैन \n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "ब्याकेण्ड `%s' भी टेवलमा फर्कन सकेन \n"
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "हराइरहेको ब्याकेण्ड `%s'ले भी टेवल सदस्य `%s'को खोजी गर्दैछ \n"
 
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "`%s': %s खराब ठेगाना"
 
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "`%s' खराब ठेगाना"
 
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "घनीभूत नमुनाको सहयोगबेगर जीसमायोजनले काम गर्दैन (जीनमुना)"
 
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "`%s': %sनमुना खोल्ने क्रममा गल्ती \n"
 
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "सुरुआतको नमुना`%s': %sमा गल्ती\n"
 
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr " `%s'का लागि ब्याकेण्न्ड नमुना देखाउन सकेन"
 
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "ब्याकेण्न्ड बन्दगर्न असफल"
 
@@ -781,118 +787,118 @@ msgstr "तपाईको समायोजन बचत गर्न डा�
 msgid "No '/' in key \"%s\""
 msgstr "टीका \"%s\"मा '/' होइन"
 
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "'%s' को सूत्र मूल्यमा युटिएफ-८ अमान्य"
 
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "वस्तु सूचीको लागि कोर्बा मूल्य बुझ्न सकिदैन"
 
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "%s मा वस्तु सूचीका लागि गलत प्रकार"
 
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "जिकोन्फबाट सूची प्राप्त गरियो साथै खराब सूची प्रकार पनि"
 
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "आइओआर लाइ वस्तुमा परिवर्तन गर्न असफल"
 
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "स्थानीय योजनाभित्र युटिएफ-८ अमान्य"
 
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "योजनाको लागि छोटो प्रतिबेदनभित्र युटिएफ-८ अमान्य"
 
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "योजनाको लागि लामो प्रतिबेदनभित्र युटिएफ-८ अमान्य"
 
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "योजनाको लागि मालिकभित्र युटिएफ-८ अमान्य"
 
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "`%s': %sको फाइलमार्ग खोल्न सकिएन\n"
 
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "`%s' स्रोतहरु जोड \n"
 
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "`%s': %s फाइल पढ्नमा समस्या\n"
 
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "पाठसँग युटिएफ-८ अमान्य"
 
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr " आशा गरिएको, %sसूची पाईयो"
 
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "%s आशागरिएको सूची, %s पाइएको सूची"
 
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "जोडा आशा गरिएको ,%s पाइयो"
 
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr " आशागरिएको(%s,%s) जोडा, एउटा वा दुइटै मूल्य हराएको एक जोडा पाइयो"
 
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "(%s,%s)प्रकारको जोडा आशागरिएको, (%s,%s)प्रकारको पाइयो"
 
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "उद्धरणमार्कसँग उद्धरितसूत्र सुरुहुनसक्दैन "
 
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "उद्धरणमार्कसँगै उद्धरण गरिएको सूत्रको अन्त्य हुँदैन"
 
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "संकेतित मूल्य युटिएफ-८मा मान्य छैन"
 
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "'%s': %sअस्थायी फाइल सुरक्षित गर्न सकिएन"
 
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "'%s'लेखोट निर्माण गर्न सकेन,शायद यो पाहिलेदेखिनै छ"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "'%s' बनाउन वा खोल्न असफल "
 
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -901,91 +907,91 @@ msgstr ""
 "'%s'लाई थन्क्याउन सकिएन: संभवत यसलाई थन्क्याउने पद्धति अन्तै कतै छ वा तपाईँको सञ्चालन "
 "पद्धतिमा एनएफएस गलत तरिकाबाट समायोजन गरिएको छ (%s)"
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "असफल भयो मेटनलाई %s: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "आइओआर फाइल '%s' सफलतापूर्वक खुलेन,  %s जीकोन्फ्ड छुट्याएको छैन"
 
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "जीकोन्फ्ड उपकारण अथवा गैर-जीकोन्फ्ड पद्दतिसँग '%s' फाइल सुरक्षित छ "
 
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "प्रयोगमा आइरहेको जीकोन्फ वस्तुसन्दर्भलाई निकास दिनका लागि ओआरबी भेट्न सकिएन "
 
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "आईओआर '%s'लाई वस्तुसन्दर्भमा बदल्न सकिएन"
 
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "`%s': %s निर्देशिका बनाउन सकिएन"
 
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "`%s': %s फाइल लेख्न सकिएन"
 
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr " फाइल`%s' मा फाइल सुरक्षित गर्ने प्रावधान छैन, तर हामीले यो कामगर्न सक्नुपर्नेछ "
 
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "'%s' लाई '%s': %s सँग जोड्न असफल"
 
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "`%s': %s सुरक्षित फाइल हटाउन असफल"
 
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "`%s': %s फाइल पुरै मेट्न असफल"
 
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "`%s': %s सुरक्षित निर्देशिका हटाउन असफल"
 
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "`%s': %s सुरक्षित फाइल छुटाउन असफल\n"
 
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "%s: %s स्थिति असफल"
 
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "%s सेवाप्रदायक पिङ्गमा गल्ती"
 
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr " %s जीकोन्फ्डको निर्माणसँग वार्तालापका लागि लाईन बनाउन असफल \n"
 
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "%s समायोजन सेवाप्रदायक सुरुगर्न असफल\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -997,11 +1003,11 @@ msgstr ""
 "सक्रिय पार्नु वा पद्धतिगत खरावीले गर्दा पुरानो एनएफएस बन्द छ सूचना (विस्त्रित - %s)का "
 "लागि http://www.gnome.org/projects/gconf/ हेर्नुहोस्. "
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "केही छैन"
 
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1010,7 +1016,7 @@ msgstr ""
 "%s: %s विकल्पमा गल्ती .\n"
 "  प्राप्त आदेशहरुको विकल्पको सूची हेर्नलाई  '%s --सहयोगी' चालुगर.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1023,7 +1029,7 @@ msgstr ""
 "निर्देशिकामाफाइल निर्माण गर्न धेरै कार्यक्रमको आवस्यकता पर्छ त्यो गल्ती \"%s\" थियो "
 "(एर्नो = %d)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1040,12 +1046,12 @@ msgstr ""
 "lockd मिसिल हेर. यो गल्तीको साझा समस्या \"एनएफएस बन्द\" निस्क्रिय हुनु हो. त्यो गल्ती "
 "\"%s\" थियो (एर्नो = %d)."
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "फाइल %s: %s  हटाउन सकिँदैन \n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1056,11 +1062,11 @@ msgstr ""
 "समायोजन फाइल \"%s\" मा समायोजनको स्रोत छैन यसको मतलब प्राथमिकता र अन्य मिलानहरु "
 "सुरक्षण गर्न सकिँदैन %s%s"
 
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "फाइल पढ्नमा गल्ती"
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1069,7 +1075,7 @@ msgstr ""
 "तपसिलको गल्ती समाधान गर्न पद्भति प्रशासकसँग संपर्क गर:\n"
 " समायोजन फाइल \"%s\": %s मा  \"%s\" ठेगाना समाधान गर्न सकिएन"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1089,15 +1095,15 @@ msgstr ""
 " \n"
 "नियमित गर्न चाहने हो ?"
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_बाहिर जाउ"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_लगातार"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s लगातार (हो/होइन)"
@@ -1301,37 +1307,37 @@ msgstr "टीका/निर्देशिकाको नामहरुभ�
 msgid "Key/directory may not end with a slash (/)"
 msgstr "टीका/निर्देशिका छडके रेखा(/)सँगै अन्त्य हुन सक्दैन"
 
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "%s सेवाप्रदायक बन्दकार्य असफल "
 
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "तरङ्गित आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "तत्व आशा गरिएको %s पायो"
 
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "सूत्र आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "बुल आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "रुपरेखा आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "%s कोर्बा गल्ती"
@@ -1466,85 +1472,85 @@ msgstr "बन्दफाइल %s खोल्नेक्रममा गल�
 msgid "Exiting"
 msgstr "बाहिर जादैछ"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr "साइअप प्राप्त भयो, सबै डाडाबेस पुन लोड गर्नुस्"
 
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "जिकन्फ सेवाप्रदायक प्रयोगमा छैन,बन्द हुदैछ"
 
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "`%s': %sले नयाँ मूल्य प्राप्त गर्नेक्रममा गल्ती"
 
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "अपवाद %s खोज्दै"
 
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr "जीकन्फ लगफाइल खोल्न सकिएन; जीकन्फ बन्द(%s)भएपछि स्रोताहरु सुरक्षण हुन सकेन"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "जीकन्फ लगफाइल बन्दगर्न सकिएन; तथ्याङ्क राम्ररी सम्हाल्न सकिदैन(%s)"
 
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "%s लेख्नका लागि बचत गरेर राखिएको '%s' मिसिल खुल्न सकेन"
 
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "बचत गरेर राखिएको '%s' fd: %d: %s मिसिल लेख्न सकिएन"
 
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "बचत गरेर राखिएको '%s' : %s मिसिल बन्दगर्न सकिएन"
 
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "बचत गरेर राखिएको पुराना '%s' : %s मिसिल किनारा लाउन सकिएन"
 
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "बचत गरेर राखिएको नयाँ %s फाइल सार्न असफल "
 
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr " %s': %s मा लगिनुपर्ने सुरुदेखिनै बचत गरेर राखिएको मिसिल पुनसंरक्षण गर्न असफल"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr " ठेगाना '%s' मा स्रोतालाई पुनसंरक्षण गर्न सकिएन, तथ्याङ्क समाधानगर्न सकिएन"
 
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "बचत गरिएको स्थिति लेखोट %s पढ्नेक्रममा गल्ती"
 
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr " बचत गरिएको स्थितिको फाइल '%s': %s खोल्न असक्षम"
 
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1553,7 +1559,7 @@ msgstr ""
 "जीकन्फफ लगपाइलमा स्रोताको सम्बन्ध कायमगर्न सकिएन; अब जीकन्फ खुला वा बन्द जे भएपनि "
 "स्रोताको सम्बन्ध कायमगर्न सकिदैन (%s)"
 
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1562,27 +1568,27 @@ msgstr ""
 "जीकन्फफ लगफाइलमा स्रोताको सम्बन्ध छुटाउन सकिएन; अब जीकन्फ खुला वा बन्द जे भएपनि "
 "गलततवरले सम्बन्ध कायमगर्न सकिदैन (%s)"
 
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "ग्राहक %s का लागि आईओआर फेलापरेन"
 
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr " बचत गरिएको स्थिति लेखोट %s खोल्न असफल"
 
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "बचत गरिएको स्थिति फाइल %s मा ग्राहक ठेगाना जोडन असफल"
 
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "बचत गरिएको स्थिति फाइल %s मा ग्राहक ठेगाना प्रष्टपार्न सकिएन"
 
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "जीकन्फबाट केही फाइलहरू आफैँ हटे "

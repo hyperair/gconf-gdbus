@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2003-12-11 08:46EET\n"
 "Last-Translator: Ales Nyakhaychyk <nab@mail.by>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
@@ -338,19 +338,26 @@ msgid "No text is allowed inside element <%s>"
 msgstr ""
 
 # gconf/gconftool.c:2305
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, fuzzy, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Немагчыма адкрыць %s: %s"
 
 # gconf/gconf-database.c:1405
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "Памылка выдаленьня значэньня \"%s\": %s"
+
+# gconf/gconf-database.c:1405
+#: backends/markup-tree.c:3845
 #, fuzzy, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Памылка выдаленьня значэньня \"%s\": %s"
 
 # gconf/gconfd.c:1310
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, fuzzy, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -597,65 +604,65 @@ msgid "Missing both car and cdr values from pair in XML file"
 msgstr "Адсутнічае ключ і значэньне для пары ў файле ў фармаце XML"
 
 # gconf/gconf.c:2446
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, fuzzy, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "'%c' - недапушчальны сымбаль у назве ключа/каталёга"
 
 # gconf/gconf-backend.c:167
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Няма гэткага ключа '%s'\n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr ""
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr ""
 
 # gconf/gconf-backend.c:195
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, fuzzy, c-format
 msgid "Bad address `%s': %s"
 msgstr "Кепская адрэса \"%s\""
 
 # gconf/gconf-backend.c:195
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Кепская адрэса \"%s\""
 
 # gconf/gconf-backend.c:220
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "GConf ня можа працаваць бяз падтрымкі дынамічных модуляў (gmodule)"
 
 # gconf/gconf-backend.c:230
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Памылка адкрыцьця модулю '%s': %s\n"
 
 # gconf/gconf-backend.c:230
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, fuzzy, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Памылка адкрыцьця модулю '%s': %s\n"
 
 # gconf/gconf-backend.c:262
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Неатрымалася адшукаць модуль паслужніка для '%s'"
 
 # gconf/gconf-backend.c:299
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "Збой пад час выключэньня модулю паслужніка"
 
@@ -901,66 +908,66 @@ msgid "No '/' in key \"%s\""
 msgstr "Адсутнічае \"/\" у ключы \"%s\""
 
 # gconf/gconf-internals.c:199
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "Недапушчальная пасьлядоўнасьць UTF-8 у радковым значэньні \"%s\""
 
 # gconf/gconf-internals.c:258
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "Неатрымалася інтэрпрэтаваць значэньне CORBA для элемэнта сьпіса"
 
 # gconf/gconf-internals.c:260
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "Няправільны від для элемэнта сьпіса ў %s"
 
 # gconf/gconf-internals.c:273
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "Ад gconfd атрыманы сьпіс з кепскім відам сьпіса"
 
 # gconf/gconf-internals.c:454
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "Збой пад час пераўтварэньня аб'екта ў IOR"
 
 # gconf/gconf-internals.c:591
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "Недапушчальная пасьлядоўнасьць UTF-8 у мясцовасьці для схемы"
 
 # gconf/gconf-internals.c:599
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "Недапушчальная пасьлядоўнасьць UTF-8 у кароткім апісаньні схемы"
 
 # gconf/gconf-internals.c:607
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "Недапушчальная пасьлядоўнасьць UTF-8 у падрабязным апісаньні схемы"
 
 # gconf/gconf-internals.c:615
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "Недапушчальная пасьлядоўнасьць UTF-8 для ўладальніка схемы"
 
 # gconf/gconf-internals.c:838
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "Неатрымалася адчыніць файл шляха \"%s\": %s\n"
 
 # gconf/gconf-internals.c:887
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "Даданьне крыніцы \"%s\"\n"
 
 # gconf/gconf-internals.c:899
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "Памылка чытаньня файла '%s': %s\n"
@@ -968,32 +975,32 @@ msgstr "Памылка чытаньня файла '%s': %s\n"
 # gconf/gconf-internals.c:1211 gconf/gconf-internals.c:1277
 # gconf/gconf-value.c:125 gconf/gconf-value.c:224 gconf/gconf-value.c:366
 # gconf/gconf-value.c:1341
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "Тэкст утрымлівае недапушчальную пасьлядоўнасьць UTF-8"
 
 # gconf/gconf-internals.c:1362
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Чакаўся сьпіс, атрыманы %s"
 
 # gconf/gconf-internals.c:1372
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Чакаўся сьпіс %s, атрыманы сьпіс %s"
 
 # gconf/gconf-internals.c:1511
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Чакалася пара, атрымана %s"
 
 # gconf/gconf-internals.c:1525
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
@@ -1001,46 +1008,46 @@ msgstr ""
 "значэньнямі"
 
 # gconf/gconf-internals.c:1541
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Чакалася пара тыпа (%s,%s) атрымана тыпа (%s,%s)"
 
 # gconf/gconf-internals.c:1657
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Радок у двукосьсі ня пачынаецца з двукосься"
 
 # gconf/gconf-internals.c:1719
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Радок у двукосьсі ня сканчаецца двукосьсем"
 
 # gconf/gconf-internals.c:1855
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "Закадаванае значэньне ня зьяўляецца дапушчальнай пасьлядоўнасьцю UTF-8"
 
 # gconf/gconf-internals.c:2314
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Ня атрымаляся заблякаваць часовы файл \"%s\": %s"
 
 # gconf/gconf-internals.c:2341
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "Неатрымалася стварыць файл \"%s\",магчыма таму што ён ужо існуе"
 
 # gconf/gconf-internals.c:2387
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Неатрымалася стварыць ці адчыніць \"%s\""
 
 # gconf/gconf-internals.c:2397
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -1050,108 +1057,108 @@ msgstr ""
 "апэрацыйнае сыстэмы файлавае блякаваньне NFS неналаджана (%s)"
 
 # gconf/gconf-internals.c:2842 gconf/gconfd.c:583
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, fuzzy, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "Збой пад час стварэньня %s: %s"
 
 # gconf/gconf-internals.c:2425
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "Файл IOR \"%s\" ня быў пасьпяхова адчынены, gconfd ня адшуканы %s"
 
 # gconf/gconf-internals.c:2455
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool ці іншы ня-gconfd працэс заблякаваў файл \"%s\""
 
 # gconf/gconf-internals.c:2472
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "ня атрымалася зьвязацца з ORB для дазволу існуючай спасылкі на аб'ект"
 
 # gconf/gconf-internals.c:2482
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Збой пад час пераўтварэньня IOR \"%s\" у спасылку на аб'ект"
 
 # gconf/gconf-internals.c:2510
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "ня атрымалася стварыць каталёг '%s': %s"
 
 # gconf/gconf-internals.c:2569
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Немагчыма запісаць у файл '%s': %s"
 
 # gconf/gconf-internals.c:2610
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Няма блякаваньня на файл \"%s\", а павінна быць"
 
 # gconf/gconf-internals.c:2631
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Збой пад час злучэньня \"%s\" з \"%s\": %s"
 
 # gconf/gconf-internals.c:2643
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Збой пад час выдаленьня файла блякаваньня \"%s\": %s"
 
 # gconf/gconf-internals.c:2662
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Збой пад час ачысткі файла \"%s\": %s"
 
 # gconf/gconf-internals.c:2676
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Збой пад час выдаленьня блякаваньня каталёга \"%s\": %s"
 
 # gconf/gconf-internals.c:2643
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Немагчыма выдаліць (unlink) файл-замок %s: %s\n"
 
 # backends/xml-dir.c:929
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Немагчыма выканаць stat для %s: %s"
 
 # gconf/gconftool.c:851
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Памылка праверкі даступнасьці паслужніка: %s"
 
 # gconf/gconf-internals.c:2875
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Збой пад час стварэньня канала для сувязі з народжаным дэманам gconfd: %s\n"
 
 # gconf/gconf-internals.c:2899
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Збой пад час запуска паслужніка наладак: %s\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1164,12 +1171,12 @@ msgstr ""
 "старыя блякаваньні NFS з-за крушэньня сыстэмы. Для атрыманьня зьвестак "
 "глядзіце http://www.gnome.org/projects/gconf/ . (Падрабязна - %s)"
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "няма"
 
 # gconf/gconftool.c:408
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1178,7 +1185,7 @@ msgstr ""
 "Памылка ў ключох %s: %s.\n"
 "Запусьціце \"%s --help\" каб убачыць поўны сьпіс выбараў загаднага радка.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1191,7 +1198,7 @@ msgstr ""
 "існуе праблема з наладкамі, таму як шматлікім праграмам патрабуецца ствараць "
 "файлы ў вашай хатняй тэчке. Памылка, якая адбылася - \"%s\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1212,12 +1219,12 @@ msgstr ""
 "адключана. Адбылася памылка - \"%s\" (errno = %d)."
 
 # gconf/gconf-internals.c:2569
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Немагчыма выдаліць файл %s: %s\n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1230,11 +1237,11 @@ msgstr ""
 "усталёўкі ня могуць быць захаваныя. %s%s"
 
 # gconf/gconfd.c:1836
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "Памылка пад час чытаньня файла: "
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1244,7 +1251,7 @@ msgstr ""
 "праблемы:\n"
 "Неатрымалася вырашыць адрэсу \"%s\" у файле канфігурацыі \"%s\": %s"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1266,15 +1273,15 @@ msgstr ""
 "\n"
 "Вы жадаеце працягваць?"
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "В_ыйсьці"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_Працягваць"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s Працягваць (y/n)?"
@@ -1530,43 +1537,43 @@ msgid "Key/directory may not end with a slash (/)"
 msgstr "Ключ/каталёг ня можа сканчацца на '/'"
 
 # gconf/gconf.c:2829
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Збой пад час выключэньня паслужніка канфігурацыі: %s"
 
 # gconf/gconf.c:2890
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Чакалася значэньне з пл. пунктам, атрымана %s"
 
 # gconf/gconf.c:2925
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Чакалася цэлае, атрымана %s"
 
 # gconf/gconf.c:2960
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Чакаўся радок, атрымана %s"
 
 # gconf/gconf.c:2997
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Чакалася лягічнае значэньне, атрымана %s"
 
 # gconf/gconf.c:3030
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Чакалася схема, атрымана %s"
 
 # gconf/gconf.c:3391
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Памылка CORBA: %s"
@@ -1730,29 +1737,29 @@ msgstr "Памылка пад час вызваленьня файла бляк�
 msgid "Exiting"
 msgstr "Зявяршэньне"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr ""
 
 # gconf/gconfd.c:690
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "Паслужнік GConf ня выкарыстоўваецца, выключэньне."
 
 # gconf/gconf-database.c:1437
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, fuzzy, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Памылка атрыманьня новага значэньня для \"%s\": %s"
 
 # gconf/gconfd.c:1059
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Вяртаньне выключэньня: %s"
 
 # gconf/gconfd.c:1159
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1762,7 +1769,7 @@ msgstr ""
 "слухача пасьля спыненьня gconfd (%s)"
 
 # gconf/gconfd.c:1194
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1771,38 +1778,38 @@ msgstr ""
 "захаваныя (%s)"
 
 # gconf/gconfd.c:1263
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Неатрымалася адчыніць файл захаванага стану \"%s\" для запісу: %s"
 
 # gconf/gconfd.c:1277
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Неатрымалася запісаць у файл захаванага стану \"%s\" fd: %d: %s"
 
 # gconf/gconfd.c:1286
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Збой пад час закрыцьця новага файла захаванага стану \"%s\": %s"
 
 # gconf/gconfd.c:1300
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Неатрымалася перамясьціць стары файл захаванага стану \"%s\": %s"
 
 # gconf/gconfd.c:1310
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr ""
 "Неатрымалася перамясьціць новы файл захаванага стану на новае меёсца: %s"
 
 # gconf/gconfd.c:1319
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1811,7 +1818,7 @@ msgstr ""
 "s\": %s"
 
 # gconf/gconfd.c:1790
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1819,19 +1826,19 @@ msgstr ""
 "Немагчыма аднавіць слухача на адрэсе \"%s\", немагчыма дазволіць базу даньняў"
 
 # gconf/gconfd.c:1836
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Памылка пад час чытаньня файла захаванага стану: %s"
 
 # gconf/gconfd.c:1889
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Немагчыма адчыніць файл захаванага стану \"%s\": %s"
 
 # gconf/gconfd.c:2006
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1841,7 +1848,7 @@ msgstr ""
 "дадаць слухача нанова, калі gcofd завяршыцца ці спыніцца (%s)"
 
 # gconf/gconfd.c:2011
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1851,31 +1858,31 @@ msgstr ""
 "памылкова даданы нанова, калі gcofd завершыцца ці спыніцца (%s)"
 
 # gconf/gconfd.c:2034 gconf/gconfd.c:2199
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Збой пад час атрыманьня IOR для кліента: %s"
 
 # gconf/gconfd.c:2049
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Збой пад час адкрыцьця файла захаванага стану: %s"
 
 # gconf/gconfd.c:2062
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Збой пад час запісу даданьня кліента ў файл захаванага стану: %s"
 
 # gconf/gconfd.c:2070
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Збой пад час скіданьня даданьня кліента ў файл захаванага стану: %s"
 
 # gconf/gconfd.c:2160
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""

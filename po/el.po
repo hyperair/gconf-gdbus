@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: el\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2005-08-12 18:33+0300\n"
 "Last-Translator: Kostas Papadimas <pkst@gnome.org>\n"
 "Language-Team:  <nls@tux.hellug.gr>\n"
@@ -352,19 +352,26 @@ msgid "No text is allowed inside element <%s>"
 msgstr "Δεν επιτρέπεται κείμενο μέσα σε στοιχείο <%s>"
 
 # gconf/gconftool.c:1639
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Αποτυχία ανοίγματος \"%s\": %s\n"
 
 # gconf/gconfd.c:1593
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "Σφάλμα αποδέσμευσης  \"%s\": %s"
+
+# gconf/gconfd.c:1593
+#: backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Σφάλμα εγγραφής αρχείου \"%s\": %s"
 
 # gconf/gconf-internals.c:2416
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -591,66 +598,66 @@ msgid "Missing both car and cdr values from pair in XML file"
 msgstr "Λείπουν οι τιμές cdr και car από το ζεύγος στο αρχείο XML"
 
 # gconf/gconf.c:1734
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "`%c' δεν είναι έγκυρος χαρακτήρας σε διεύθυνση αποθήκευσης ρύθμισης"
 
 # gconf/gconf-backend.c:180
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Δεν υπάρχει αρχείο `%s'\n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "Backend `%s' απέτυχε να επιστρέψει vtable\n"
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "Backend `%s' missing required vtable member `%s'\n"
 
 # gconf/gconf-backend.c:208
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "Λάθος διεύθυνση `%s': %s"
 
 # gconf/gconf-backend.c:208
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Λάθος διεύθυνση `%s'"
 
 # gconf/gconf-backend.c:233
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr ""
 "Το GConf δε θα λειτουργήσει χωρίς υποστήριξη δυναμικών μονάδων (gmodule)"
 
 # gconf/gconf-backend.c:243
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Σφάλμα στο άνοιγμα της μονάδας `%s': %s\n"
 
 # gconf/gconf-backend.c:243
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Σφάλμα στο αρχικοποίησης μονάδας `%s': %s\n"
 
 # gconf/gconf-backend.c:275
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Αδύνατος ο εντοπισμός μονάδας υποστήριξης για `%s'"
 
 # gconf/gconf-backend.c:312
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "Αδυναμία κλεισίματος της υποστήριξης (backend)"
 
@@ -882,92 +889,92 @@ msgstr ""
 msgid "No '/' in key \"%s\""
 msgstr "Δεν υπάρχει '/' στο κλειδί \"%s\""
 
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "Μή έγκυρο UTF-8 στην τιμή αλφαριθμητικού σε  '%s'"
 
 # gconf/gconf-internals.c:264
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "Αδύνατη η διερμηνεία της τιμής CORBA για το στοιχείο της λίστας"
 
 # gconf/gconf-internals.c:266
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "Λάθος τύπος για το στοιχείο της λίστας στο %s"
 
 # gconf/gconf-internals.c:279
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "Παραληφθείσα λίστα από το gconfd με λανθασμένο τύπο λίστας"
 
 # gconf/gconfd.c:1194
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "Αποτυχία μετατροπής αντικειμένου σε IOR"
 
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "Μη έγκυρο UTF-8 στο locale για σχήμα "
 
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "Μη έγκυρο UTF-8 στη σύντομη περιγραφή για σχήμα"
 
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "Μη έγκυρο UTF-8 στη μακρά περιγραφή για σχήμα"
 
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "Μη έγκυρο UTF-8 στον ιδιοκτήτη για σχήμα"
 
 # gconf/gconf-internals.c:789
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "Αδύνατο το άνοιγμα του αρχείου διαδρομής `%s': %s\n"
 
 # gconf/gconf-internals.c:844
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "Προστίθεται πηγαίος κώδικας `%s'\n"
 
 # gconf/gconf-internals.c:856
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "Σφάλμα ανάγνωσης στο αρχείο `%s': %s\n"
 
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "Το κείμενο περιέχει μη έγκυρο UTF-8 "
 
 # gconf/gconf-internals.c:1282
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Αναμενόταν λίστα, λήφθηκε %s"
 
 # gconf/gconf-internals.c:1292
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "Αναμενόταν λίστα από %s, λήφθηκε λίστα από %s"
 
 # gconf/gconf-internals.c:1431
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Αναμενόταν ζεύγος, λήφθηκε %s"
 
 # gconf/gconf-internals.c:1445
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
@@ -975,44 +982,44 @@ msgstr ""
 "τιμές"
 
 # gconf/gconf-internals.c:1461
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "Αναμενόταν ζεύγος τύπου (%s,%s), λήφθηκε τύπος (%s,%s)"
 
 # gconf/gconf-internals.c:1577
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Το παρατιθέμενο αλφαριθμητικό δεν αρχίζει με εισαγωγικό σημείο"
 
 # gconf/gconf-internals.c:1639
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Το παρατιθέμενο αλφαριθμητικό δεν τελειώνει με εισαγωγικό σημείο"
 
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "Η κωδικοποιούμενη τιμή δεν είναι έγκυρο UTF-8 "
 
 # gconf/gconf-internals.c:789
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Αδυναμία κλειδώματος προσωρινού αρχείου '%s': %s"
 
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr ""
 "Δεν είναι δυνατή η δημιουργία του αρχείου '%s',  πιθανόν να υπάρχει ήδη"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Αδύνατη η δημιουργία ή το άνοιγμα '%s'"
 
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -1023,94 +1030,94 @@ msgstr ""
 "σύστημα (%s)"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "Αποτυχία απομάκρυνσης '%s': %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "Το αρχείο IOR '%s'  δεν ανοίχθηκε επιτυχώς, δεν εντοπίστηκε gconfd: %s"
 
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
 "Το gconftool  ή άλλη μή-gconfd διεργασία λεχει το αρχείο κλειδώματος '%s'"
 
 # gconf/gconf-internals.c:2287
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "αδύνατη η επαφή με το ORB για επίλυση υπάρχοντος αντικείμενου αναφοράς gconfd"
 
 # gconf/gconfd.c:1194
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Αποτυχία μετατροπής IOR '%s σε αντικειμένου αναφοράς"
 
 # gconf/gconf-internals.c:2333
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s': %s"
 
 # gconf/gconf-internals.c:2404
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Αδύνατη η εγγραφή στο αρχείο `%s': %s"
 
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Δεν έχουμε το κλείδωμα στο αρχείο  `%s', ενώ θα έπρεπε να το είχαμε"
 
 # gconf/gconftool.c:1639
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Αποτυχία δημιουργίας δεσμού '%s' σε '%s': %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Αδύνατη η απομάκρυνση αρχείου κλειδώματος  `%s': %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Αδυναμία εκκαθάρισης αρχείου  '%s': %s"
 
 # gconf/gconf-internals.c:2491
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Αδύνατη η απομάκρυνση κλειδώματος καταλόγου `%s': %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Αδύνατη η απομάκρυνση αρχείου κλειδώματος %s: %s\n"
 
 # gconf/gconftool.c:1639
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Αποτυχία προσπέλασης του `%s': %s"
 
 # gconf/gconf-internals.c:2137
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Σφάλμα ping εξυπηρετητή: %s"
 
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
@@ -1118,12 +1125,12 @@ msgstr ""
 "s\n"
 
 # gconf/gconftool.c:510
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Αποτυχία εκκίνησης εξυπηρετητή ρυθμίσεων: %s\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1137,12 +1144,12 @@ msgstr ""
 "πληροφορίες δείτε το  http://www.gnome.org/projects/gconf/. ΙΛεπτομέρειες - %"
 "s) "
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "κανένα"
 
 # gconf/gconftool.c:310
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1152,7 +1159,7 @@ msgstr ""
 "Εκτέλεση `%s --help' για μια πλήρη λίστα διαθέσιμων επιλογών γραμμής "
 "εντολών.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1167,7 +1174,7 @@ msgstr ""
 "προγράμματα  χρειάζονται να δημιουργού αρχεία στον αρχικό σας κατάλογο. Το "
 "σφάλμα ήταν  \"%s\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1188,12 +1195,12 @@ msgstr ""
 "\" (errno = %d)."
 
 # gconf/gconf-internals.c:2404
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Αδύνατη η απομάκρυνση αρχείου %s: %s\n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1206,11 +1213,11 @@ msgstr ""
 "προτιμήσεις και άλλες ρυθμίσεις δε μπορούν να αποθηκευτούν. %s%s"
 
 # gconf/gconfd.c:1676
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "Σφάλμα ανάγνωσης του αρχείου: "
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1221,7 +1228,7 @@ msgstr ""
 "Δεν είναι δυνατή η ανάλυση της διεύθυνσης  \"%s\" στο αρχείο ρυθμίσεων \"%s"
 "\": %s"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1245,15 +1252,15 @@ msgstr ""
 "\n"
 "Θέλετε να συνεχίσετε;"
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "Α_ποσύνδεση"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_Συνέχεια"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s Συνέχεια (y/n);"
@@ -1493,43 +1500,43 @@ msgid "Key/directory may not end with a slash (/)"
 msgstr "Το κλειδί/κατάλογος δεν μπορεί να τελειώνει με κάθετο (/)"
 
 # gconf/gconf.c:2079
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Αδύνατο το κλείσιμο του εξυπηρέτη διαμόρφωσης: %s"
 
 # gconf/gconf.c:2140
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Αναμενόταν αριθμός κινητής υποδιαστολής, λήφθηκε %s"
 
 # gconf/gconf.c:2175
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Αναμενόταν ακέραιος, λήφθηκε %s"
 
 # gconf/gconf.c:2210
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Αναμενόταν αλφαριθμητικό, λήφθηκε %s"
 
 # gconf/gconf.c:2247
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Αναμενόταν δυαδική τιμή, λήφθηκε %s"
 
 # gconf/gconf.c:2280
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Αναμενόταν σχήμα, λήφθηκε %s"
 
 # gconf/gconf-internals.c:2105 gconf/gconf.c:2607
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Σφάλμα CORBA: %s"
@@ -1688,28 +1695,28 @@ msgstr "Σφάλμα απελευθέρωσης αρχείου κλειδώμα�
 msgid "Exiting"
 msgstr "Κλείσιμο"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP λήφθηκε, επαναφόρτωση όλων των βάσεων δεδομένων"
 
 # gconf/gconfd.c:955 gconf/gconfd.c:967
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "Ο εξυπηρετητής GConf δεν είναι σε χρήση, τερματισμός."
 
 # gconf/gconfd.c:1523
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Σφάλμα λήψη νέας τιμής για `%s': %s"
 
 # gconf/gconfd.c:2115
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Επιστρέφεται εξαίρεση: %s"
 
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1718,7 +1725,7 @@ msgstr ""
 "Αποτυχία ανοίγματος αρχείου καταγραφής gconfd ; Δεν θα είναι δυνατή η "
 "επαναφορά listeners μετά τον τερματισμό του gconfd (%s)"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1727,14 +1734,14 @@ msgstr ""
 "αποθήκευση δεδομένων (%s)"
 
 # gconf/gconf-internals.c:789
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr ""
 "Αδύνατο το άνοιγμα αποθηκευμένου αρχείου κατάστασης `%s' για εγγραφή: %s"
 
 # gconf/gconf-internals.c:2404
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr ""
@@ -1742,13 +1749,13 @@ msgstr ""
 "s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Αποτυχία κλεισίματος νέου αποθηκευμένου αρχείου κατάστασης `%s': %s"
 
 # gconf/gconf-internals.c:789
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr ""
@@ -1756,12 +1763,12 @@ msgstr ""
 "%s': %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Αδύνατη η μεταφορά νέου αποθηκευμένου αρχείου κατάστασης στη θέση: %s"
 
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1769,7 +1776,7 @@ msgstr ""
 "Αποτυχία επαναφοράς αρχείου στην πρωτότυπη αποθηκευμένη κατάσταση που έχει "
 "μετακινηθεί στο '%s': %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1778,18 +1785,18 @@ msgstr ""
 "επίλυσης της βάσης δεδομένων"
 
 # gconf/gconfd.c:1676
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Σφάλμα ανάγνωσης αποθηκευμένου αρχείου κατάστασης: %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Αδύνατο το άνοιγμα αρχείου αποθηκευμένης κατάστασης `%s': %s"
 
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1799,7 +1806,7 @@ msgstr ""
 "να επαναπροστεθεί κατά λάθος ο listener αν το gconfd  κλείσει ή τερματιστεί "
 "(%s)"
 
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1810,19 +1817,19 @@ msgstr ""
 "τερματιστεί (%s)"
 
 # gconf/gconftool.c:881
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Αποτυχία λήψης IOR για το πελάτη: %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Αδύνατο το άνοιγμα αρχείου αποθηκευμένης κατάστασης: %s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
@@ -1830,14 +1837,14 @@ msgstr ""
 "s"
 
 # gconf/gconf-internals.c:2416
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Αποτυχία ολοκλήρωσης προσθήκης πελάτη στο αρχείο αποθηκευμένσης κατάστασης: %"
 "s"
 
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""

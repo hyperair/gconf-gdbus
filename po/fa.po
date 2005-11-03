@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2005-07-13 18:36+0430\n"
 "Last-Translator: Hamed Malek\t<hamed@farsiweb.info>\n"
 "Language-Team: Persian <farsi@lists.sharif.edu>\n"
@@ -307,17 +307,23 @@ msgstr "عنصر <%s> درون یک عنصر <%s> مجاز نیست"
 msgid "No text is allowed inside element <%s>"
 msgstr "هیچ متنی درون عنصر <%s> مجاز نیست"
 
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "شکست در باز کردن «%s»: %s\n"
 
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "خطا در صفر کردن «%s»: %s"
+
+#: backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "خطا در نوشتن پرونده‌ی «%s»: %s"
 
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "شکست در جابه‌جایی پرونده‌ی موقت «%s» به مکان نهایی «%s»: %s"
@@ -521,57 +527,57 @@ msgstr "car از زوج مقدار در پرونده‌ی XML مفقود است"
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "هر دو مقدار car و cdr از زوج مقدار در پرونده‌ی XML مفقود است"
 
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "«%c» در آدرس ذخیره‌ی پیکربندی یک نویسه‌ی نامعتبر است"
 
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "پرونده‌ی «%s» وجود ندارد\n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "پسانه‌ی «%s» در بازگرداندن یک vtable شکست خورد.\n"
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "پسانه‌ی «%s» «%s» را که عضو لازم vtable است، گم کرده \n"
 
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "نشانی غلط «%s»: %s"
 
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "نشانی غلط «%s»"
 
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "GConf بدون پشتیبابی پیمانه‌ی پویا (gmodule) کار نخواهد کرد"
 
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "خطا در بازکردن پیمانه‌ی «%s»: %s\n"
 
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "خطا در راه‌اندازی پیمانه‌ی «%s»: %s\n"
 
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "مکان‌یابی پیمانه‌ی پسانه برای «%s» ممکن نیست"
 
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "شکست در خاموش کردن پسانه"
 
@@ -771,118 +777,118 @@ msgstr "پایگاه‌داده‌ای برای ذخیره‌ی پیکربندی
 msgid "No '/' in key \"%s\""
 msgstr "کلید «%s»، «/»  ندارد"
 
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "UTF-8  نامعتبر در مقدار رشته‌ای در «%s»"
 
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "تفسیر مقدار CORBA برای عنصر فهرست ممکن نیست"
 
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "نوع اشتباه برای عنصر فهرست در %s"
 
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "فهرست با نوع فهرست اشتباه از gconfd دریافت شد"
 
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "شکست در تبدیل شیء به IOR"
 
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "UTF-8 نامعتبر در شرایط محلی شِما"
 
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "UTF-8 نامعتبر در شرح کوتاه شِما"
 
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "UTF-8 نامعتبر در شرح طولانی شِما"
 
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "UTF-8 نامعتبر در مالک شِما"
 
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "پرونده‌ی مسیر «%s» باز نشد: %s\n"
 
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "اضافه کردن مبداء «%s»\n"
 
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "خطای خواندن در پرونده‌ی %s: %s\n"
 
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "متن UTF-8 نامعتبر دارد"
 
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr "انتظار فهرست می‌رفت، «%s» دریافت شد"
 
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "فهرستی از %s انتظار می‌رفت، فهرستی از %s دریافت شد"
 
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "زوج انتظار می‌رفت، %s دریافت شد"
 
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr "زوج (%s،%s) انتظار می‌رفت، یک زوج با یک یا هر دو مقدار گم‌شده دریافت شد"
 
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "زوج از نوع (%s,%s) انتظار می‌رفت ولی نوع (%s,%s) دریافت شد"
 
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "رشته‌ی نقل قول شده با گیومه باز شروع نمی‌شود"
 
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "رشته‌ی نقل قول شده با گیومه بسته تمام نمی‌شود"
 
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "مقدار به رمز درآمده UTF-8 معتبری نیست"
 
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "قفل کردن پرونده‌ی موقت «%s» ممکن نبود: %s"
 
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "ایجاد پرونده‌ی «%s» ممکن نیست: احتمالاً به این دلیل که از قبل وجود دارد"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "شکست در ایجاد یا باز کردن «%s»"
 
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -891,92 +897,92 @@ msgstr ""
 "شکست در قفل کردن «%s»: احتمالاً فراروند دیگری قفل را در اختیار دارد یا قفل "
 "پرونده‌ی NFS در سیستم عامل شما درست پیکربندی نشده است(%s)"
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "شکست در حذف «%s»: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "پرونده‌ی IOR «%s» با موفقیت باز نشد، gconfd یافت نشد: %s"
 
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
 "gconftool یا فراروندی دیگری غیر از gconfd پرونده‌ی قفل «%s» را در اختیار دارد"
 
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "شکست در تبدیل IOR «%s» به یک ارجاع شیئی"
 
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "ایجاد شاخه‌ی «%s» ممکن نبود: %s"
 
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "نمی‌توان در پرونده‌ی «%s» نوشت: %s"
 
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "روی پرونده‌ی «%s» قفل نداشتیم، ولی باید داشته باشیم"
 
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "شکست در پیوند دادن «%s» به «%s»: %s"
 
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "شکست در حذف پرونده‌ی قفل «%s»: %s"
 
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "شکست در پاک‌سازی پرونده «%s»: %s"
 
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "شکست در حذف شاخه‌ی قفل «%s»: %s"
 
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr ""
 
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "شکست در تعیین وضعیت %s: %s"
 
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "خطا در پینگ کارگزار: %s"
 
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "شکست در ایجاد لوله برای ارتباط با شبح  gconf به وجود آمده: %s\n"
 
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "شکست در راه‌اندازی کارگزار پیکربندی: %s\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -989,11 +995,11 @@ msgstr ""
 "NFS دارید.برای اطلاعات بیشتر http://www.gnome.org/projects/gconf/ for "
 "information را ببینید.جزئیات - %s)"
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "هیچ‌کدام"
 
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1003,7 +1009,7 @@ msgstr ""
 "برای دیدن فهرست کامل گزینه‌های موجود برای سطر فرمان «%s --help» را اجرا "
 "کنید.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1016,7 +1022,7 @@ msgstr ""
 "احتمالاً پیکربندی شما اشکالی دارد؛ چرا که برنامه‌های زیادی نیاز به ایجاد "
 "پرونده در شاخه‌ی خانه‌ی شما دارند. خطا «%s» بود (شماره خطا = %Id)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1034,12 +1040,12 @@ msgstr ""
 "مراجعه کنید. دلیل معمول این خطا از کار انداخته شدن سرویس «nfslock» است.خطا «%"
 "s» بود (شماره‌ی خطا = %Id)."
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "حذف پرونده‌ی %s ممکن نیست: %s\n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1050,11 +1056,11 @@ msgstr ""
 "هیچ مرجع پیکربندی‌ای در پرونده‌ی پیکربندی «%s» وجود ندارد؛ این بدین معنی است "
 "که ذخیره‌ی ترجیحات و سایر تنظیمات ممکن نیست. %s%s"
 
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "خطا در خواندن پرونده: "
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1063,7 +1069,7 @@ msgstr ""
 "لطفا برای حل این مشکل با مدیر سیستمتان تماس بگیری:\n"
 "حل نشانی اینترنتی «%s»  در پرونده‌ی پیکربندی «%s» ممکن نیست: %s"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1085,15 +1091,15 @@ msgstr ""
 "\n"
 "آیا می‌خواهید ادامه دهید؟"
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_خروج از سیستم"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "ا_دامه"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s ادامه یابد؟ (ب/ن)"
@@ -1308,37 +1314,37 @@ msgstr "«%c» در نام کلیدها/شاخه‌ها یک نویسه‌ی ن�
 msgid "Key/directory may not end with a slash (/)"
 msgstr "کلید/شاخه نمی‌تواند به خط اریب (/) ختم شود"
 
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "شکست در خاموش کردن کارگزار پیکربندی: %s"
 
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "عدد اعشاری انتظار می‌رفت، %s دریافت شد"
 
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "عدد صحیح انتظار می‌رفت، %s دریافت شد"
 
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "رشته انتظار می‌رفت، %s دریافت شد"
 
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "بولی انتظار می‌رفت، %s دریافت شد"
 
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "شِما انتظار می‌رفت، %s دریافت شد"
 
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "خطای CORBA: %s"
@@ -1480,25 +1486,25 @@ msgstr "خطا در رها کردن پرونده‌ی قفل: %s"
 msgid "Exiting"
 msgstr "در حال خارج شدن"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP دریافت شد؛ در حال بار کردن همه‌ی پایگاه‌داده‌ها"
 
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "کارگزار GConf استفاده نمی‌شود؛ در حال خاموش کردن"
 
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "خطا در به دست آوردن مقدار جدید برای «%s»: %s"
 
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "بازگشت استثنا: %s"
 
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1507,7 +1513,7 @@ msgstr ""
 "شکست در بازکردن پرونده‌ی ثبت وقایع; امکان ترمیم شنونده‌ها پس از خاموش شدن "
 "gconfd (%s) وجود دارد"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1515,89 +1521,89 @@ msgstr ""
 "شکست در بستن پرونده‌ی ثبت وقایع gconfd؛ممکن است داده‌ها درست ذخیره نشده باشند "
 "(%s)"
 
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "باز کردن پرونده‌ی وضعیت ذخیره‌ شده‌ی «%s» برای نوشتن ممکن نبود: %s"
 
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "نوشتن پرونده‌ی وضعیت ذخیره شده «%s» fd: %Id: %s ممکن نبود"
 
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "شکست در بستن پرونده‌ی وضعیت ذخیره شده‌ی جدید «%s»: %s"
 
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "کنار گذاشتن پرونده‌ی وضعیت ذخیره شده‌ی قدیمی «%s» ممکن نبود : %s"
 
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "شکست در جابه‌جا کردن پرونده‌ی وضعیت ذخیره شده‌ی جدید به جایش: %s"
 
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "شکست در ترمیم پرونده‌ی وضعیت ذخیره شده اولیه که به «%s» منتقل شده بود: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "ترمیم شنونده در نشانی «%s» مقدور نبود، تحویل پایگاه‌داده ممکن نشد"
 
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "خطا در خواندن پرونده‌ی وضعیت ذخیره شده: %s"
 
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "بازکردن پرونده وضعیت ذخیره شده «%s» مقدور نبود; %s"
 
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "شکست در گرفتن IOR برای کارگیر: %s"
 
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "شکست در باز کردن پرونده‌ی وضعیت ذخیره شده: %s"
 
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "شکست در نوشتن اضافه شدن کارگیر در پرونده‌ی وضعیت ذخیره شده: %s"
 
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "شکست در خالی کردن اضافه شدن کارگیر در پرونده وضعیت ذخیره شده:  %s"
 
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""

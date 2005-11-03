@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2004-08-20 12:05+0530\n"
 "Last-Translator: Jayaradha N <jaya@pune.redhat.com>\n"
 "Language-Team: Tamil <zhakanini@yahoogroups.com>\n"
@@ -316,17 +316,23 @@ msgstr "உருப்பு <%s> இந்த உருப்புக்க�
 msgid "No text is allowed inside element <%s>"
 msgstr "இந்த உருப்புகுள் எந்த உரை அனுமதி கிடையாது <%s>"
 
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "\"%s\"  திறக்க முடியவில்லை: %s\n"
 
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "\"%s\" மதிப்பு அழிக்கும்போது பிழை: %s"
+
+#: backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "\"%s\"  மதிப்பு அழிக்கும்போது பிழை: %s"
 
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "தற்காலிக கோப்பை நகற்றுவதில் தொல்வி \"%s\" கடைசி இடம் \"%s\": %s"
@@ -527,57 +533,57 @@ msgstr "XML கோப்பின் ஜோடி மதிப்பில் �
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "XML கோப்பின் ஜோடியில் இருந்த car மற்றும் cdr மதிப்பு காணவில்லை"
 
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "உள்ளமை சேமி விலாசத்தில் `%c' ஒரு சேல்லாத ஏழுத்து "
 
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "`%s' கோப்பு கிரையாது\n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "பின்நிலை `%s' தொல்வி அடைந்து vtableஐ திருப்பியுள்ளது\n"
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "பின்நிலை `%s' காணவில்லை தேவை ஒரு vtable உறுப்பினர் `%s'\n"
 
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "கெட்ட முகவரி `%s': %s"
 
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "கெட்ட முகவரி `%s'"
 
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "Gஉள்ளமை இயங்குநிலை பக்தி அதறவு இல்லாமல் வேளை சேய்யாது (gபகுதி)"
 
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "`%s' தொகுதி திறக்கும்போது பிழை: %s\n"
 
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "`%s'  தொகுதி திறக்கும்போது பிழை: %s\n"
 
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "`%s'க்கான பின்நிலை பகுதி இடத்தை கண்டுபிடிக்க இயலவில்லை"
 
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "பின்நிலையை முடுவதில் தொல்வி"
 
@@ -779,118 +785,118 @@ msgstr "உங்கள் உள்ளமை சேமிக்க தரவு
 msgid "No '/' in key \"%s\""
 msgstr "\"%s\" விசையில் '/' இல்லை"
 
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "செல்லாத UTF-8 சர மதிப்பில் '%s'"
 
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "பட்டியல் உருப்புக்கான CORBA மதிப்பை குறுக்க முடியவில்லை"
 
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "%s தவறான வகை பட்டியலுக்கான உருப்பு"
 
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "கிடைத்த பட்டியலிருந்து ஜிகான்பெட்டுடன் ஒண்றினைந்த மொசமான பட்டியலின் வகையாகும்"
 
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "பொருளுக்காக IORயை மாற்றும் இயல்பு தவறாயிற்று "
 
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "திட்டமுறைக்கான உள்அனுமதிகாத UTF-8"
 
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "திட்டமுறைக்கான செல்லாத UTF-8 சிறு விவரக்குறிப்பு"
 
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "திட்டமுறைக்கான செல்லாத UTF-8 பெரிய விவரக்குறிப்பு"
 
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "திட்டமுறைக்கான செல்லாத UTF-8 உரிமையாளர்"
 
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "கோப்பு `%s' பாதையை திறக்க முடியவில்லை: %s\n"
 
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "`%s' மூலம் சேர்க்கப்படுகின்றது\n"
 
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "`%s' கோப்பில் வாசிப்பு பிழை: %s\n"
 
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "உரையில் தவரதலான UTF-8 வரியுருகள் உல்லன"
 
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr "எதிபார்த்தது பட்டியல், கிடைத்தது %s"
 
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "%s உடைய எதிர்பார்த்த பட்டியல், %s உடைய பட்டியலை பெற்றது"
 
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "எதிபார்த்தது ஜோடி, கிடைத்தது %s"
 
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr "எதிர்பார்த்த (%s,%s) ஜோடி, ஒரு அல்லது இரண்டு மதிப்பு இல்லாமல் ஜோடியை பெற்றது"
 
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "எதிர்பார்த்த ஜோடியின் வகை (%s,%s) பெற்ற வகை (%s,%s)"
 
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "மேற்கோளிட்ட சரங்கள் அடைப்புக்குறியோடு ஆரம்பிக்க கூடாது"
 
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "மேற்கோளிட்ட சரங்கள் அடைப்புக்குறியோடு முடிக்கக் கூடாது"
 
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "மறையாக்கம் செய்யப்பட்ட மதிப்பு செல்லுபடியான UTF-8 இல்லை"
 
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "தற்காலிக கோப்பு '%s' யை பூட்ட முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "கோப்பு '%s' யை உருவாக்க முடியவில்லை, ஏணெண்றால் இது பொதுவாக ஏற்க்கணவே இருக்கும்"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "'%s' படைக்கவோ திறக்கவோ முடியவில்லை"
 
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -899,92 +905,92 @@ msgstr ""
 " '%s':  பூட்ட முடியவில்லை.அனேகமாக வேறு செயலாக்கம் பூட்டை வைத்துள்ளது அல்லது உங்கள் "
 "இயக்க முறைமை  NFS கோப்பில் (%s) பூட்டு மாற்றி அமைக்கப்பட்டுள்ளது."
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, fuzzy, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "%s படைக்க முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "IOR கோப்பு '%s' யை வெற்றிகரமாக திறக்க முடியவில்லை, gconfd இடம் இல்லை: %s"
 
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "ஜிஉள்ளமைகருவி அல்லது ஜிஉள்ளமை அல்லாதச் செயலகத்தில் '%s'  கோப்பினைப் பூட்டு"
 
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "ஜிஉருவாமைப் பொருள் குறித்தல் வழியிலிருந்து ORB தொடர்புக் கொள்ளமுடியவில்லை"
 
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "IOR '%s' யை பொருள் குறிப்பாக மாற்ற தோல்வியுற்றது"
 
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "`%s' அடைவு படைக்க முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "`%s' கோப்புக்கு எழுத முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "எங்களிடம் கோப்பு '%s' யை பூட்டவில்லை, ஆணால் நாங்கள் கண்டிப்பாக இருக்கிண்றோம்"
 
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "இதனை '%s' இதட்கு '%s' இணைக்க முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "பூட்டுதல் கோப்பு `%s' கழட்ட முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "'%s' கோப்பு சுத்தம் செய்ய முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "பூட்டுதல் அடைவு `%s' கழட்ட முடியவில்லை: %s"
 
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "பூட்டிய கோப்பு %s ன் இணைப்பை நீக்க தோல்வியுற்றது: %s\n"
 
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "%s  புள்ளியலை தோல்வியுற்றது: %s"
 
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "சேவகன் பிங் பிழை: %s"
 
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "தவறிலிருந்து உருவாக்கியத் தேக்கி உள்ளமை வித்து மரைநிரலுடன் தொடர்வுக் கொள்\": %s\n"
 
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "உள்ளமைப்பு சேவகணை அடைய தோல்வியுற்றது: %s\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -997,11 +1003,11 @@ msgstr ""
 "உள்ளனhttp://www.gnome.org/projects/gconf/ for information. (Details - %s)யை "
 "பார்க்கவும் "
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "வெற்று"
 
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1010,7 +1016,7 @@ msgstr ""
 "தேர்வுகளில் பிழை உள்ளது %s: %s.\n"
 "கட்டளை வரி தேர்வுகளைப் பார்க்க '%s --help' கட்டளையை இயக்குக.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1023,7 +1029,7 @@ msgstr ""
 "உள்ளது என்பது தெரியவருகிறது.மிகுதியான நிரல்கள் கோப்பை கடை பதிவேட்டில் உருவாக்குகின்றன."
 "பிழை என்னவென்றால்,\"%s\" (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1041,12 +1047,12 @@ msgstr ""
 "காரணம் என்னவென்றால்\"nfslock\"  சேவகன் முடக்கப்பட்டுள்ளது பிழை என்னவென்றால்  \"%s"
 "\" (errno = %d). "
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "%s கோப்பு கழட்டமுடியவில்லை: %s\n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1057,11 +1063,11 @@ msgstr ""
 " \"%s\" கோப்பு அமைப்பில் அமைப்பு மூலங்கள் இல்லை.நயப்பு ம்ற்றும் பிற அமைப்புகள் "
 "சேமிக்கப்படாது %s%s"
 
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "கோப்பு வாசிக்கும் போது பிழை:"
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1070,7 +1076,7 @@ msgstr ""
 "கீழ்கண்ட சிக்கலுக்கு தீர்வுக்கான கனிணி நிர்வாகியை அனுகவும்:\n"
 " \"%s\": %sஅமைப்பு கோப்பின் முகவரியை \"%s\"  முரண் செய்ய முடியவில்லை"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1092,15 +1098,15 @@ msgstr ""
 "\n"
 "நீங்கள் இதை தொடர வேண்டுமா?"
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_விலகு"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_தொடர்ந்து"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s தொடருக (ஆ/இ)?"
@@ -1313,37 +1319,37 @@ msgstr "`%c' ஒரு விசை/அடைவு பெயர்களில�
 msgid "Key/directory may not end with a slash (/)"
 msgstr "விசை/அடைவு வகுத்தல் குறியோடு (/) முடிக்க முடியாது"
 
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "உள்ளமைப்பு சேவகன் நிறுத்த தோல்வியுற்றது: %s"
 
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "எதிபார்த்தது மிதவை, கிடைத்தது %s"
 
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "எதிபார்த்தது முழுஎண், கிடைத்தது %s"
 
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "எதிபார்த்தது சரம், கிடைத்தது %s"
 
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "எதிபார்த்தது பூலியன், கிடைத்தது %s"
 
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "எதிபார்த்தது schema, கிடைத்தது %s"
 
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA பிழை: %s"
@@ -1479,25 +1485,25 @@ msgstr "பூட்டிய கோப்பு வெளியிடுதல�
 msgid "Exiting"
 msgstr "வெளியேறுகின்றது"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP பெறப்பட்டது, எல்லா தரவுத்தளங்களையும் மீண்டும் ஏற்றுகிறது"
 
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf சேவகன் பயன்பாட்டில் இல்லை, நிறுத்துகிறது"
 
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "'%s' க்கு புதிய மதிப்பு பெறும்போதுப் பிழை: %s"
 
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "விதிவிளக்கை திரும்ப கொடுக்கும்: %s"
 
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1506,45 +1512,45 @@ msgstr ""
 "\"ஜிஉள்ளமைப் பதிவேடுக் கோப்பினைத் திறப்பதில் தவறு;கேட்பவரை (%s) ஜிஉள்ளமை மூடியப் பிறகு "
 "மறு அமைக்கக் கூடாது"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "ஜிஉள்ளமைப் பதிவேடுக் கோப்பினை மூடுவதில் தவறு: தரவு (%s)ல் முறையாகச் சேமிக்கப் படவில்லை"
 
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "சேமிக்கப்பட்ட நிலை கோப்பு '%s' யை எழுத திறக்க முடியவில்லை: %s "
 
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "'%s' எப்டி மாநிலக் கோப்பகத்தை எழுத முடியவில்லை: %d: %s"
 
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "புதியச் சேமித்த '%s' மாநிலக் கோப்பகத்தைத் தவறதலிருந்து மூடவும்: %s"
 
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "பழைய '%s' மாநிலக் கோப்பகத்தை நகற்ற முடியவில்லை: %s"
 
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "புதியச் சேமித்தக் கோப்பிலிருந்து இடத்திற்கு நகற்றுவதில் பிழை:%s"
 
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "மறுசேமித்த மூலபதிவு சேமித்தலின் தவறு மாநிலக் கோப்பு '%s'க்கு நகற்றவும்:%s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1552,17 +1558,17 @@ msgstr ""
 "'%s' முகவரியில் கேட்பானை மறுச்சேமித்தல் முடியவில்லை,தரவுத்தளத்தைச் சரிச்செய்தல் "
 "முடியவில்லை"
 
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "சேமித்த மாநிலக் கோப்பிலிருக்கும் பிழையைப் படித்தல்:%s"
 
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "சேமித்த மாநில '%s  கோப்பினைத் திறக்க முடியவில்லை. %s"
 
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1571,34 +1577,34 @@ msgstr ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr "தவறிலிருந்து கேட்பான் ஜிஉள்ளமைப் பதிவேடுகோப்பினை அகற்றுதல்;ஜிஉள்ள்மை வழிக (%s)"
 
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "கிளையனுக்காகத் தவறியாதிலிருந்து எடுத்த IOR:%s"
 
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "தவறியாதிலிருந்து மாநிலச் சேமித்தக் கோப்பினைத் திற: %s"
 
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "தவறியாதிலிருந்து கிளையனை எழுதி மாநிலக் கோப்பினைச் சேமித்தல்:%s"
 
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "தவறியாதிலிருந்து கிளையனை வழிதெடு மாநிலக் கோப்பினைச் சேமித்தல்:%s"
 
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "கூட்டும்பொழுது ஜிஉள்ளமையிலிருந்துச் சிலக் கிளையன் தானாக நீங்கி விடும்."

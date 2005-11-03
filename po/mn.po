@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD.mn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2004-08-09 00:14+0200\n"
 "Last-Translator: Sanlig Badral <badral@users.sourceforge.net>\n"
 "Language-Team: Mongolian <openmn-translation@lists.sourceforge.net>\n"
@@ -318,17 +318,23 @@ msgstr "<%s> элемент <%s> элемент дотор зөвшөөрөгд�
 msgid "No text is allowed inside element <%s>"
 msgstr "<%s> элемент дотор текст зөвшөөрөгдөөгүй"
 
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "»%s« нээгдсэнгүй: %s \n"
 
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "»%s« -г суллаж байхад алдаа: %s"
+
+#: backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "»%s« файл руу бичиж байхад алдаа: %s"
 
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "Түр хадгалагч файл \"%s\" төгсгөл байрлал \"%s\" рүү зөөгдсөнгүй: %s"
@@ -532,57 +538,57 @@ msgstr "XML-файлын хос утгаас car дутуу байна"
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "car- ба cdr-утгууд хоёулаа XML-файлын хосоос дутуу байна"
 
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "»%c« нь тохиргоо хадгалагч хаяг дах хүчингүй тэмдэгт"
 
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "»%s« файл алга\n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "Бакэнд `%s' нурж vtable буцаалаа\n"
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "Бакэнд `%s' шаардлагатай vtable гишүүн `%s' -д дутуу \n"
 
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "Хүчингүй хаяг »%s«: %s"
 
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Хүчингүй хаяг »%s«"
 
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "GConf динамик модулын (gmodule) дэмжилэггүйгээр ажиллаж чадахгүй"
 
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "»%s« модулыг нээж байхад алдаа гарлаа: %s\n"
 
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "»%s« модулыг инициацлаж байхад алдаа: %s\n"
 
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "»%s« -н backend-Модул олдсонгүй"
 
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "Backend хаагдахгүй (shut down) байна"
 
@@ -786,120 +792,120 @@ msgstr "Тохируулга хадгалах өгөгдлийн бааз олд
 msgid "No '/' in key \"%s\""
 msgstr "Түлхүүр »%s« т '/' байхгүй"
 
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "»%s« -н стринг утганд хүчингүй UTF-8 байна"
 
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "Жагсаалт элементийн CORBA-утга орчуулагдсангүй"
 
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "%s дотор жагсаалт элементийн хүчингүй төрөл"
 
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "gconfd -н жагсаалт буруу жагсаалтын төрөл хүлээн авлаа"
 
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "Объект IOR -уу хөрвөхгүй байна"
 
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "Схемийн локалд хүчингүй UTF-8 байна"
 
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "Схемийн хураангүй тодорхойлолтод хүчингүй UTF-8 байна"
 
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "Схемийн дэлгэрэнгүй тодорхойлолтод хүчингүй UTF-8 байна"
 
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "Схемийн эзэмшигчид хүчингүй UTF-8 байна"
 
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "Зам файл »%s« нээгдэхгүй байна: %s\n"
 
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "»%s« эх нэмэгдэж байна\n"
 
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "»%s« файлд уншилтын алдаа: %s\n"
 
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "Текст хүчингүй UTF-8 агуулж байна"
 
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Жагсаалт хүлээгдэж байна харин %s -г хүлээн авсан"
 
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "%s -н хүлээгдэж буй жагсаалт ба %s-н авсан жагсаалт"
 
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Хос хүлээгдэж байна харин %s -г авсан"
 
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "Хос (%s,%s) хүлээгдэж байна, харин нэг нь эсвэл хоёул дутуу утгатай нэгэн "
 "хос авлаа"
 
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "(%s,%s) төрлийн хос хүлээгдэж байна, харин төрөл (%s,%s) -г авсан"
 
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Хашилттай стринг хашилтын тэмдэгээр эхлээгүй байна"
 
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Хашилттай стринг хашилтын тэмдгээр төгсөөгүй байна"
 
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "Кодлогдсон утга хүчингүй UTF-8 тай байна"
 
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "»%s« түр файлд түгжээ хийж чадсангүй: %s"
 
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "»%s« файл үүссэнгүй, магадгүй энэ аль хэдийнэ үүссэн байж болох юм"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "»%s« -г нээх эсвэл үүсгэх бүтсэнгүй"
 
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -908,93 +914,93 @@ msgstr ""
 "»%s« -д түгжээ хийж чадсангүй: Магадгүй өөр процесс түлхүүр хийсэн эсвэлтаны "
 "үйлдлийн систем алдаатай NFS-тохируулгатай (%s) байна."
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, fuzzy, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "%s-г үүсгэх бүтсэнгүй: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "»%s« IOR-файл амжилттай нээгдсэнгүй, gconfd олдсонгүй: %s"
 
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
 "gconftool эсвэл өөр нэгэн non-gconfd процесс »%s« түлхүүр файл үүсгэлээ."
 
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "Оршин буй »gconfd« объект хамааралын задаргаа руу ORB холболт хийж чадсангүй"
 
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "IOR »%s« объект хамаарал руу хөрвөсөнгүй"
 
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "»%s« лавлах үүсгэгдсэнгүй: %s"
 
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "»%s« файл руу бичиж чадахгүй байна: %s"
 
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "»%s« файлд түгжээ байхгүй. уг нь байх хэрэгтэйсэн"
 
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "»%s« ээс »%s« рүү холбох бүтсэнгүй: %s"
 
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Түгжээ файл »%s« устгагдсангүй: %s"
 
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "»%s« файл цэвэрлэгдсэнгүй: %s"
 
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "»%s« түгжээ лавлах устгагдсанүй: %s"
 
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Түгжээ файл »%s« таслаж чадсангүй: %s\n"
 
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "»%s« stat() шинжлэгдэж чадахгүй: %s"
 
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Серверийн ping хийж байхад алдаа: %s"
 
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "gconf-Daemon тай холболтын шугам үүсгэх бүтсэнгүй:  %s\n"
 
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Тохируулгын сервер эхэлсэнгүй: %s\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1007,11 +1013,11 @@ msgstr ""
 "саатлын үндсэн дээр түгжих хэрэгтэй. Та http://www.gnome.org/projects/gconf/ "
 "руу орж илүү мэдээлл авч болно (дэлгэрэнгүй - %s)"
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "байхгүй"
 
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1021,7 +1027,7 @@ msgstr ""
 "Тушаалын мөрний сонголтын бүрэн жагсаалтыг харахын тулд `%s --help' "
 "ажиллууна уу.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1034,7 +1040,7 @@ msgstr ""
 "гарсныг зааж байна мөн олон программ таны хувийн лавлахад файл үүсгэх ёстой. "
 "Алдаа нь : »%s« (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1052,12 +1058,12 @@ msgstr ""
 "rpc.statd ба rpc.lockd баримтыг нягтлан харна уу. Энэ алдааны нэгэн шалтгаан "
 "бол »nfslock«-үйлчилгээ хаагдсан байдаг. Алдаа нь »%s« (errno = %d)."
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "%s файл устгагдсангүй: %s\n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1068,11 +1074,11 @@ msgstr ""
 "»%s« тохируулгын файлд тохируулгын эх олдсонгүй. Энэ нь тохируулга "
 "хадгалагдахгүй гэсэн үг. %s%s"
 
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "Файл уншиж байхад алдаа: "
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1081,7 +1087,7 @@ msgstr ""
 "Дараах асуудлыг шийдэхдээ та системийн зохион байгуулагчдаа хандана уу:\n"
 "»%s« хаяг (»%s« тохируулгын файлд байгаа) тогтоогдсонгүй: %s"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1101,15 +1107,15 @@ msgstr ""
 "Та идэвхитэй суултыг үргэлжлүүлэн хэрэглэж болох ба харин харин өөр суулт "
 "дах тохируулгатай холбоотой түр зуурын асуудал гарч болно."
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_Гарах"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "Ү_ргэлжлүүлэх"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s үргэлжлүүлэх үү (y/n)?"
@@ -1325,37 +1331,37 @@ msgstr "»%c« нь түлхүүр эсвэл лавлахын нэрэнд хү
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Түлхүүр/лавлах ташуу зураасаар (/) төгсөхгүй"
 
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Тохируулгын серверийг унтрааж байхад алдаа гарлаа: %s"
 
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "float хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "int хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Стринг хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "bool хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Схем хүлээгдэж байна, харин %s -г авсан"
 
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-алдаа: %s"
@@ -1495,25 +1501,25 @@ msgstr "Түгжээ файлыг чөлөөлж байхад алдаа: %s"
 msgid "Exiting"
 msgstr "Дуусгах"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr "Бүх өгөгдлийн баазыг эргэн ачаалж байхад SIGHUP хүлээн авлаа"
 
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-сервер хэрэглэгдээгүй байна, унтраах уу."
 
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "»%s« шинэ утгыг авч байхад алдаа: %s"
 
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Онцгой алдаа: %s"
 
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1522,7 +1528,7 @@ msgstr ""
 "gconfd-протоколл файл нээгдсэнгүй; Сонсогч gconfd -г унтарсаны дараа эргэж "
 "сэргэхгүй (%s)"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1530,55 +1536,55 @@ msgstr ""
 "gconfd-протоколл файл хаагдсангүй; Өгөгдөл ном ёсоороо хадгалагдаагүй байж "
 "болно (%s)"
 
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "»%s« төлөв хадгалагч файл бичихээр нээгдэхгүй байна: %s"
 
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "»%s« төлөв хадгалагч файл, FD %d, бичигдсэнгүй: %s"
 
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Шинэ »%s« төлөв хадгалагч файл хаагдсангүй: %s"
 
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Хуучин »%s« төлөв хадгалагч файл зөөгдсөнгүй: %s"
 
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Шинэ төлөв хадгалагч файл зөв байрлал руу зөөгдсөнгүй: %s"
 
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "»%s« рүү зөөгдсөн жинхэнэ төлөв хадгалагч файл эргэж сэргээгдсэнгүй: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "»%s« хаяг дахь сонсогч сэргээгдсэнгүй, өгөгдлийн бааз тайлж чадсангүй"
 
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Төлөв хадгалагч файлыг уншиж байхад алдаа: %s"
 
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "»%s« төлөв хадгалагч файлыг нээх боломжгүй: %s"
 
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1587,7 +1593,7 @@ msgstr ""
 "Сонсогч нэмэх гэтэл gconfd-протоколл файл руу бичигдсэнгүй; Сонсогч gconfd "
 "унтрах үед нэмэгдэх боломжгүй (%s)"
 
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1596,27 +1602,27 @@ msgstr ""
 "Сонсогч устгах гэтэл gconfd-протоколл файл руу бичигдсэнгүй; Сонсогч gconfd "
 "төгсөх үед магадгүй андуурлаар эргэж нэмэгдэж болно (%s)."
 
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Клиентийн IOR хүлээн авах бүтэлгүйтлээ: %s"
 
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Төлөв хагалагч файл нээгдэх боломжгүй: %s"
 
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Клиентийг төлөв хагалагч файл руу нэмж бичих бүтсэнгүй: %s"
 
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Клиентийн устгалыг төлөв хагалагч файл руу бичих бүтсэнгүй: %s"
 
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD.hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-22 09:06+0100\n"
+"POT-Creation-Date: 2005-11-03 17:30+0100\n"
 "PO-Revision-Date: 2005-08-14 10:00+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <gnome@gnome.hu>\n"
@@ -327,17 +327,23 @@ msgstr "A(z) <%s> elem nem engedélyezett egy <%s> elemen belül"
 msgid "No text is allowed inside element <%s>"
 msgstr "A(z) <%s> elemen belül nem használható szöveg"
 
-#: backends/markup-tree.c:3725 backends/markup-tree.c:3743
+#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
+#: backends/markup-tree.c:3771
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "A(z) \"%s\" megnyitása sikertelen: %s\n"
 
-#: backends/markup-tree.c:3817
+#: backends/markup-tree.c:3183
+#, fuzzy, c-format
+msgid "Error reading \"%s\": %s\n"
+msgstr "Hiba \"%s\" beállított értékének visszaállításakor: %s"
+
+#: backends/markup-tree.c:3845
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Hiba a(z) \"%s\" fájl írása közben: %s"
 
-#: backends/markup-tree.c:3829
+#: backends/markup-tree.c:3857
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -550,58 +556,58 @@ msgstr "Hiányzik a car érték az XML-fájl értékpárjaiból"
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "Hiányoznak a car és cdr értékek az XML-fájl értékpárjaiból"
 
-#: gconf/gconf-backend.c:57
+#: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "\"%c\" érvénytelen karakter egy konfigurációtárolási címben"
 
 #. -- end debug only
-#: gconf/gconf-backend.c:207
+#: gconf/gconf-backend.c:216
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Nincs ilyen fájl: \"%s\"\n"
 
-#: gconf/gconf-backend.c:252
+#: gconf/gconf-backend.c:261
 #, c-format
 msgid "Backend `%s' failed return a vtable\n"
 msgstr "A(z) \"%s\" háttér nem vtable típust adott vissza\n"
 
-#: gconf/gconf-backend.c:267
+#: gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "A(z) \"%s\" háttérből hiányzik a(z) \"%s\" vtable-tag\n"
 
-#: gconf/gconf-backend.c:293
+#: gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "\"%s\" rossz cím: %s"
 
-#: gconf/gconf-backend.c:303
+#: gconf/gconf-backend.c:312
 #, c-format
 msgid "Bad address `%s'"
 msgstr "\"%s\" rossz cím"
 
-#: gconf/gconf-backend.c:328
+#: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr ""
 "A GConf nem fog működni a dinamikus modulok támogatása (gmodule) nélkül"
 
-#: gconf/gconf-backend.c:337
+#: gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Hiba a(z) \"%s\" modul megnyitása közben: %s\n"
 
-#: gconf/gconf-backend.c:348
+#: gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Hiba a(z) \"%s\" modul inicializálása közben: %s\n"
 
-#: gconf/gconf-backend.c:379
+#: gconf/gconf-backend.c:388
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Nem található háttérmodul \"%s\" számára"
 
-#: gconf/gconf-backend.c:416
+#: gconf/gconf-backend.c:425
 msgid "Failed to shut down backend"
 msgstr "Nem sikerült a háttér leállítása"
 
@@ -806,121 +812,121 @@ msgstr "Nincs elérhető adatbázis a beállítások mentéséhez"
 msgid "No '/' in key \"%s\""
 msgstr "A(z) \"%s\" kulcsban nincs \"/\""
 
-#: gconf/gconf-internals.c:204
+#: gconf/gconf-internals.c:203
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
 msgstr "Érvénytelen UTF-8 kód \"%s\" karaktersorozat-értékében"
 
-#: gconf/gconf-internals.c:263
+#: gconf/gconf-internals.c:262
 msgid "Couldn't interpret CORBA value for list element"
 msgstr "Nem értelmezhető a listaelem CORBA-értéke"
 
-#: gconf/gconf-internals.c:265
+#: gconf/gconf-internals.c:264
 #, c-format
 msgid "Incorrect type for list element in %s"
 msgstr "%s listaeleme érvénytelen típusú "
 
-#: gconf/gconf-internals.c:278
+#: gconf/gconf-internals.c:277
 msgid "Received list from gconfd with a bad list type"
 msgstr "Rossz listatípussal érkezett a lista a gconfd-től"
 
-#: gconf/gconf-internals.c:459
+#: gconf/gconf-internals.c:458
 msgid "Failed to convert object to IOR"
 msgstr "Nem sikerült az objektum IOR-ré konvertálása"
 
-#: gconf/gconf-internals.c:596
+#: gconf/gconf-internals.c:595
 msgid "Invalid UTF-8 in locale for schema"
 msgstr "Érvénytelen UTF-8 kód a séma területi beállításai közt"
 
-#: gconf/gconf-internals.c:604
+#: gconf/gconf-internals.c:603
 msgid "Invalid UTF-8 in short description for schema"
 msgstr "Érvénytelen UTF-8 kód a séma rövid leírásában"
 
-#: gconf/gconf-internals.c:612
+#: gconf/gconf-internals.c:611
 msgid "Invalid UTF-8 in long description for schema"
 msgstr "Érvénytelen UTF-8 kód a séma hosszú leírásában"
 
-#: gconf/gconf-internals.c:620
+#: gconf/gconf-internals.c:619
 msgid "Invalid UTF-8 in owner for schema"
 msgstr "Érvénytelen UTF-8 kód a séma tulajdonosában"
 
-#: gconf/gconf-internals.c:874
+#: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
 msgstr "Nem lehet megnyitni a(z)\"%s\" útvonalfájlt: %s\n"
 
-#: gconf/gconf-internals.c:930
+#: gconf/gconf-internals.c:920
 #, c-format
 msgid "Adding source `%s'\n"
 msgstr "\"%s\" forrás hozzáadása\n"
 
-#: gconf/gconf-internals.c:945
+#: gconf/gconf-internals.c:935
 #, c-format
 msgid "Read error on file `%s': %s\n"
 msgstr "Olvasási hiba a(z) \"%s\" fájlnál: %s\n"
 
-#: gconf/gconf-internals.c:1278 gconf/gconf-internals.c:1344
+#: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1683
+#: gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "A szöveg érvénytelen UTF-8 kódot tartalmaz"
 
-#: gconf/gconf-internals.c:1429
+#: gconf/gconf-internals.c:1419
 #, c-format
 msgid "Expected list, got %s"
 msgstr "Listát várt a rendszer, de %s érkezett"
 
-#: gconf/gconf-internals.c:1439
+#: gconf/gconf-internals.c:1429
 #, c-format
 msgid "Expected list of %s, got list of %s"
 msgstr "%s listáját várta a rendszer, de %s listája érkezett"
 
-#: gconf/gconf-internals.c:1567
+#: gconf/gconf-internals.c:1557
 #, c-format
 msgid "Expected pair, got %s"
 msgstr "Párt várt a rendszer, de %s érkezett"
 
-#: gconf/gconf-internals.c:1581
+#: gconf/gconf-internals.c:1571
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr ""
 "(%s,%s) párt várt a rendszer, de olyan pár érkezett, amelyiknek legalább egy "
 "értéke hiányzik"
 
-#: gconf/gconf-internals.c:1597
+#: gconf/gconf-internals.c:1587
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
 msgstr "(%s,%s) típusú párt várt a rendszer, de (%s,%s) típus érkezett"
 
-#: gconf/gconf-internals.c:1713
+#: gconf/gconf-internals.c:1703
 msgid "Quoted string doesn't begin with a quotation mark"
 msgstr "Az idézett karaktersorozat nem idézőjellel kezdődik"
 
-#: gconf/gconf-internals.c:1775
+#: gconf/gconf-internals.c:1764
 msgid "Quoted string doesn't end with a quotation mark"
 msgstr "Az idézett karaktersorozat nem idézőjelre végződik"
 
-#: gconf/gconf-internals.c:1911
+#: gconf/gconf-internals.c:1882
 msgid "Encoded value is not valid UTF-8"
 msgstr "A kódolt érték nem érvényes UTF-8"
 
-#: gconf/gconf-internals.c:2393
+#: gconf/gconf-internals.c:2363
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Nem lehet zárolni a(z) \"%s\" átmeneti fájlt: %s"
 
-#: gconf/gconf-internals.c:2420
+#: gconf/gconf-internals.c:2390
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr ""
 "Nem lehet létrehozni a(z) \"%s\" fájlt, valószínűleg azért, mert már létezik"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2458
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "A(z) \"%s\" létrehozása vagy megnyitása sikertelen"
 
-#: gconf/gconf-internals.c:2498
+#: gconf/gconf-internals.c:2468
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -930,95 +936,95 @@ msgstr ""
 "zárolást, vagy az operációs rendszerben az NFS-fájlzárolás rosszul van "
 "beállítva (%s)"
 
-#: gconf/gconf-internals.c:2518
+#: gconf/gconf-internals.c:2488
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "A(z) \"%s\" eltávolítása sikertelen: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2512
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "A(z) \"%s\" IOR-fájl megnyitása nem sikerült, nem található gconfd: %s"
 
-#: gconf/gconf-internals.c:2572
+#: gconf/gconf-internals.c:2542
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "A gconftool vagy más nem gconfd folyamat fogja a(z) \"%s\" fájlt"
 
-#: gconf/gconf-internals.c:2589
+#: gconf/gconf-internals.c:2559
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "Nem sikerült kapcsolatot teremteni az ORB-vel egy meglévő gconfd-"
 "objektumhivatkozás feloldására"
 
-#: gconf/gconf-internals.c:2599
+#: gconf/gconf-internals.c:2569
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Nem sikerült a(z) \"%s\" IOR objektumhivatkozássá feloldása"
 
-#: gconf/gconf-internals.c:2649
+#: gconf/gconf-internals.c:2618
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "nem lehet létrehozni a(z) \"%s\" könyvtárat: %s"
 
-#: gconf/gconf-internals.c:2708
+#: gconf/gconf-internals.c:2675
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Nem lehet írni a(z) \"%s\" fájlba: %s"
 
-#: gconf/gconf-internals.c:2749
+#: gconf/gconf-internals.c:2716
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Nincs zárolás a(z) \"%s\" fájlon, pedig kellene, hogy legyen"
 
-#: gconf/gconf-internals.c:2772
+#: gconf/gconf-internals.c:2739
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Nem sikerült \"%s\" és \"%s\" összekapcsolása: %s"
 
-#: gconf/gconf-internals.c:2784
+#: gconf/gconf-internals.c:2751
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Nem sikerült a(z)\"%s\" zárolófájl eltávolítása: %s"
 
-#: gconf/gconf-internals.c:2807
+#: gconf/gconf-internals.c:2774
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Nem sikerült a(z) \"%s\" fájl kitakarítása: %s"
 
-#: gconf/gconf-internals.c:2823
+#: gconf/gconf-internals.c:2790
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Nem sikerült a(z)\"%s\" zárolókönyvtár eltávolítása: %s"
 
-#: gconf/gconf-internals.c:2865
+#: gconf/gconf-internals.c:2832
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Nem sikerült a(z)\"%s\" zárolófájl hivatkozásának eltávolítása: %s\n"
 
-#: gconf/gconf-internals.c:3019 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "%s elérése nem sikerült: %s"
 
-#: gconf/gconf-internals.c:3041
+#: gconf/gconf-internals.c:3008
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Kiszolgáló ping hiba: %s"
 
-#: gconf/gconf-internals.c:3066
+#: gconf/gconf-internals.c:3033
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Nem sikerült csővezetéket létrehozni a létrehozott gconf démonnal való "
 "kommunikációhoz: %s\n"
 
-#: gconf/gconf-internals.c:3090
+#: gconf/gconf-internals.c:3057
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Nem sikerült a konfigurációs kiszolgáló elindítása: %s\n"
 
-#: gconf/gconf-internals.c:3115
+#: gconf/gconf-internals.c:3082
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1031,11 +1037,11 @@ msgstr ""
 "számára, vagy NFS zárolások maradtak fent egy rendszerösszeomlás miatt. "
 "További információ: http://www.gnome.org/projects/gconf/. (Részletek - %s)"
 
-#: gconf/gconf-internals.c:3116
+#: gconf/gconf-internals.c:3083
 msgid "none"
 msgstr "nincs"
 
-#: gconf/gconf-sanity-check.c:68 gconf/gconftool.c:519
+#: gconf/gconf-sanity-check.c:69 gconf/gconftool.c:519
 #, c-format
 msgid ""
 "Error on option %s: %s.\n"
@@ -1045,7 +1051,7 @@ msgstr ""
 "A parancssori paraméterek teljes listája a \"%s --help\" paranccsal íratható "
 "ki.\n"
 
-#: gconf/gconf-sanity-check.c:142 gconf/gconf-sanity-check.c:167
+#: gconf/gconf-sanity-check.c:143 gconf/gconf-sanity-check.c:168
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1058,7 +1064,7 @@ msgstr ""
 "probléma lehet a konfigurációval, mivel számos programnak kell tudnia "
 "létrehoznia fájlokat a saját könyvtárban. A hiba: \"%s\" (hibaszám = %d)."
 
-#: gconf/gconf-sanity-check.c:181
+#: gconf/gconf-sanity-check.c:182
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1077,12 +1083,12 @@ msgstr ""
 "dokumentációját. A hiba oka általában az, hogy az \"nfslock\" szolgáltatás "
 "ki van kapcsolva. A hiba: \"%s\" (hibaszám = %d)."
 
-#: gconf/gconf-sanity-check.c:198
+#: gconf/gconf-sanity-check.c:199
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Nem lehet eltávolítani a(z) %s fájlt: %s\n"
 
-#: gconf/gconf-sanity-check.c:234
+#: gconf/gconf-sanity-check.c:235
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1093,11 +1099,11 @@ msgstr ""
 "Nincs megadva konfigurációs forrás a(z) \"%s\" konfigurációs fájlban. Ez azt "
 "jelenti, hogy a beállítások nem menthetők el. %s%s"
 
-#: gconf/gconf-sanity-check.c:237
+#: gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
 msgstr "Hiba a fájl olvasása közben: "
 
-#: gconf/gconf-sanity-check.c:260
+#: gconf/gconf-sanity-check.c:261
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1106,7 +1112,7 @@ msgstr ""
 "Keresse meg a rendszergazdát a következő hiba megoldása érdekében:\n"
 "Nem oldható fel a(z) \"%s\" cím a(z) \"%s\" konfigurációs fájlban: %s"
 
-#: gconf/gconf-sanity-check.c:321
+#: gconf/gconf-sanity-check.c:322
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1128,15 +1134,15 @@ msgstr ""
 "\n"
 "Kívánja folytatni?"
 
-#: gconf/gconf-sanity-check.c:342
+#: gconf/gconf-sanity-check.c:343
 msgid "_Log Out"
 msgstr "_Kijelentkezés"
 
-#: gconf/gconf-sanity-check.c:344
+#: gconf/gconf-sanity-check.c:345
 msgid "_Continue"
 msgstr "_Folytatás"
 
-#: gconf/gconf-sanity-check.c:357
+#: gconf/gconf-sanity-check.c:358
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s Folytatja (i/n)?"
@@ -1364,37 +1370,37 @@ msgstr "\"%c\" kulcs- és könyvtárnevekben érvénytelen karakter"
 msgid "Key/directory may not end with a slash (/)"
 msgstr "A kulcs- és könyvtárnevek nem fejeződhetnek be perjellel (/)"
 
-#: gconf/gconf.c:3025
+#: gconf/gconf.c:3024
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Nem sikerült a konfigurációs kiszolgáló leállítása: %s"
 
-#: gconf/gconf.c:3086
+#: gconf/gconf.c:3085
 #, c-format
 msgid "Expected float, got %s"
 msgstr "float értéknek kellett volna jönnie %s helyett"
 
-#: gconf/gconf.c:3121
+#: gconf/gconf.c:3120
 #, c-format
 msgid "Expected int, got %s"
 msgstr "int értéknek kellett volna jönnie %s helyett"
 
-#: gconf/gconf.c:3156
+#: gconf/gconf.c:3155
 #, c-format
 msgid "Expected string, got %s"
 msgstr "string értéknek kellett volna jönnie %s helyett"
 
-#: gconf/gconf.c:3190
+#: gconf/gconf.c:3189
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "bool értéknek kellett volna jönnie %s helyett"
 
-#: gconf/gconf.c:3223
+#: gconf/gconf.c:3222
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Sémaértéknek kellett volna jönnie %s helyett"
 
-#: gconf/gconf.c:3580
+#: gconf/gconf.c:3561
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA-hiba: %s"
@@ -1535,25 +1541,25 @@ msgstr "Hiba a zárolási fájl elengedése közben: %s"
 msgid "Exiting"
 msgstr "Kilépés"
 
-#: gconf/gconfd.c:865
+#: gconf/gconfd.c:867
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP érkezett, az összes adatbázis újratöltésre kerül"
 
-#: gconf/gconfd.c:882
+#: gconf/gconfd.c:884
 msgid "GConf server is not in use, shutting down."
 msgstr "A GConf-kiszolgáló nincs használatban, kilépés."
 
-#: gconf/gconfd.c:1208
+#: gconf/gconfd.c:1210
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Hiba történt \"%s\" új értékének kérése közben: %s"
 
-#: gconf/gconfd.c:1336
+#: gconf/gconfd.c:1338
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Kivétel kerül visszaadásra: %s"
 
-#: gconf/gconfd.c:1442
+#: gconf/gconfd.c:1444
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1562,7 +1568,7 @@ msgstr ""
 "Nem sikerült megnyitni a gconfd naplófájlt, nem lehet majd visszaállítani a "
 "figyelőket a gconfd leállítása után (%s)"
 
-#: gconf/gconfd.c:1477
+#: gconf/gconfd.c:1479
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1570,32 +1576,32 @@ msgstr ""
 "Nem sikerült lezárni a gconfd naplófájlt; lehet, hogy az adatok nem lettek "
 "tökéletesen elmentve (%s)"
 
-#: gconf/gconfd.c:1539
+#: gconf/gconfd.c:1541
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Nem sikerült megnyitni az elmentett \"%s\" állapotfájlt írásra: %s"
 
-#: gconf/gconfd.c:1553
+#: gconf/gconfd.c:1555
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Nem sikerült írni az elmentett \"%s\" állapotfájlt fd: %d: %s"
 
-#: gconf/gconfd.c:1562
+#: gconf/gconfd.c:1564
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Nem sikerült bezárni az új elmentett \"%s\" állapotfájlt: %s"
 
-#: gconf/gconfd.c:1576
+#: gconf/gconfd.c:1578
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Nem sikerült áthelyezni a régi elmentett \"%s\" állapotfájlt: %s"
 
-#: gconf/gconfd.c:1586
+#: gconf/gconfd.c:1588
 #, c-format
 msgid "Failed to move new save state file into place: %s"
 msgstr "Nem sikerült áthelyezni az új elmentett állapotfájlt a helyére: %s"
 
-#: gconf/gconfd.c:1595
+#: gconf/gconfd.c:1597
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1603,7 +1609,7 @@ msgstr ""
 "Nem sikerült visszaállítani a(z) \"%s\" helyre áthelyezett eredeti elmentett "
 "állapotfájlt: %s"
 
-#: gconf/gconfd.c:2074
+#: gconf/gconfd.c:2076
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1611,17 +1617,17 @@ msgstr ""
 "Nem sikerült visszaállítani egy figyelőt a(z) \"%s\" címen, nem oldható fel "
 "az adatbázis"
 
-#: gconf/gconfd.c:2110
+#: gconf/gconfd.c:2112
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Hiba az elmentett állapotfájl olvasása közben: %s"
 
-#: gconf/gconfd.c:2160
+#: gconf/gconfd.c:2162
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Nem lehet megnyitni az elmentett \"%s\" állapotfájlt: %s"
 
-#: gconf/gconfd.c:2279
+#: gconf/gconfd.c:2281
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1630,7 +1636,7 @@ msgstr ""
 "Nem sikerült naplózni a figyelő felvételét a gconfd naplófájlba; nem lehet "
 "majd újra felvenni a figyelőt, ha a gconfd kilép vagy leáll (%s)"
 
-#: gconf/gconfd.c:2284
+#: gconf/gconfd.c:2286
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1639,28 +1645,28 @@ msgstr ""
 "Nem sikerült naplózni a figyelő eltávolítását a gconfd naplófájlba; lehet, "
 "hogy majd újra felvételre kerül a figyelő, ha a gconfd kilép vagy leáll (%s)"
 
-#: gconf/gconfd.c:2307 gconf/gconfd.c:2481
+#: gconf/gconfd.c:2309 gconf/gconfd.c:2483
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Nem sikerült a kliens IOR-jének lekérése: %s"
 
-#: gconf/gconfd.c:2322
+#: gconf/gconfd.c:2324
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Nem sikerült az elmentett állapotfájl megnyitása: %s"
 
-#: gconf/gconfd.c:2335
+#: gconf/gconfd.c:2337
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Nem sikerült a kliens hozzáadása az elmentett állapotfájlhoz: %s"
 
-#: gconf/gconfd.c:2343
+#: gconf/gconfd.c:2345
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "Nem sikerült a klienshozzáadás véglegesítése az elmentett állapotfájlhoz: %s"
 
-#: gconf/gconfd.c:2442
+#: gconf/gconfd.c:2444
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
