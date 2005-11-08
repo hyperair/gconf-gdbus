@@ -366,8 +366,9 @@ ltable_insert(LTable* lt, const gchar* where, Listener* l)
 
       while (across != NULL)
         {
-          lte = across->data;
           int cmp;
+
+          lte = across->data;
 
           cmp = strcmp(lte->name, dirnames[i]);
 
