@@ -13,6 +13,7 @@ gconf_client_add_dir
 gconf_client_remove_dir
 gconf_client_notify_add
 gconf_client_notify_remove
+gconf_client_notify
 gconf_client_set_error_handling
 gconf_client_set_global_default_error_handler
 gconf_client_clear_cache
@@ -23,10 +24,12 @@ gconf_client_get_without_default
 gconf_client_get_entry
 gconf_client_get_default_from_schema
 gconf_client_unset
+gconf_client_recursive_unset
 gconf_client_all_entries
 gconf_client_all_dirs
 gconf_client_suggest_sync
 gconf_client_dir_exists
+gconf_client_key_is_writable
 gconf_client_get_float
 gconf_client_get_int
 gconf_client_get_string
@@ -44,10 +47,10 @@ gconf_client_set_pair
 gconf_client_error
 gconf_client_unreturned_error
 gconf_client_value_changed
+gconf_client_commit_change_set
 gconf_client_reverse_change_set
 gconf_client_change_set_from_currentv
 gconf_client_change_set_from_current
-gconf_client_commit_change_set
 <SUBSECTION Standard>
 GCONF_TYPE_CLIENT
 GCONF_IS_CLIENT
@@ -74,15 +77,20 @@ gconf_backend_resolve_address
 GConfEngine
 gconf_engine_get_default
 gconf_engine_get_for_address
-gconf_engine_get_local
+gconf_engine_get_for_addresses
 gconf_engine_unref
 gconf_engine_ref
+gconf_engine_get_local
+gconf_engine_get_local_for_addresses
+gconf_engine_set_user_data
+gconf_engine_get_user_data
 </SECTION>
 
 <SECTION>
 <FILE>gconf-error</FILE>
 GConfError
 gconf_error_new
+gconf_error_quark
 gconf_set_error
 gconf_compose_errors
 </SECTION>
@@ -106,13 +114,11 @@ gconf_load_source_path
 gconf_shutdown_daemon
 gconf_ping_daemon
 gconf_spawn_daemon
-gconf_concat_dir_and_key
 gconf_string_to_gulong
 gconf_current_locale
 GConfLogPriority
 gconf_log
 gconf_key_check
-gconf_value_new_from_string
 gconf_value_new_list_from_string
 gconf_value_new_pair_from_string
 gconf_quote_string
@@ -127,7 +133,6 @@ gconf_value_list_to_primitive_list_destructive
 gconf_value_pair_to_primitive_pair_destructive
 gconf_set_daemon_mode
 gconf_handle_oaf_exception
-gconf_engine_get_full
 </SECTION>
 
 <SECTION>
@@ -140,6 +145,9 @@ gconf_listeners_add
 gconf_listeners_remove
 gconf_listeners_notify
 gconf_listeners_count
+gconf_listeners_foreach
+gconf_listeners_get_data
+gconf_listeners_remove_if
 </SECTION>
 
 <SECTION>
@@ -197,9 +205,6 @@ gconf_sources_query_default_value
 GConfValueType
 GConfValue
 GCONF_VALUE_TYPE_VALID
-gconf_value_new
-gconf_value_copy
-gconf_value_free
 gconf_value_get_string
 gconf_value_get_int
 gconf_value_get_float
@@ -209,6 +214,10 @@ gconf_value_get_car
 gconf_value_get_cdr
 gconf_value_get_bool
 gconf_value_get_schema
+gconf_value_new
+gconf_value_new_from_string
+gconf_value_copy
+gconf_value_free
 gconf_value_set_int
 gconf_value_set_string
 gconf_value_set_float
@@ -233,16 +242,23 @@ gconf_meta_info_set_schema
 gconf_meta_info_set_mod_user
 gconf_meta_info_set_mod_time
 GConfEntry
-gconf_entry_new_nocopy
-gconf_entry_free
 gconf_entry_get_key
 gconf_entry_get_value
-gconf_entry_steal_value
-gconf_entry_get_is_default
 gconf_entry_get_schema_name
-gconf_entry_set_is_default
-gconf_entry_set_schema_name
+gconf_entry_get_is_default
+gconf_entry_get_is_writable
+gconf_entry_new
+gconf_entry_new_nocopy
+gconf_entry_copy
+gconf_entry_free
+gconf_entry_ref
+gconf_entry_unref
+gconf_entry_steal_value
+gconf_entry_set_value
 gconf_entry_set_value_nocopy
+gconf_entry_set_schema_name
+gconf_entry_set_is_default
+gconf_entry_set_is_writable
 </SECTION>
 
 <SECTION>
@@ -255,9 +271,9 @@ GConfNotifyFunc
 gconf_engine_notify_add
 gconf_engine_notify_remove
 gconf_engine_get
-gconf_engine_get_with_locale
 gconf_engine_get_without_default
 gconf_engine_get_entry
+gconf_engine_get_with_locale
 gconf_engine_get_default_from_schema
 gconf_engine_set
 gconf_engine_unset
@@ -266,8 +282,14 @@ gconf_engine_all_entries
 gconf_engine_all_dirs
 gconf_engine_suggest_sync
 gconf_engine_dir_exists
+gconf_engine_remove_dir
+gconf_engine_key_is_writable
 gconf_valid_key
 gconf_key_is_below
+gconf_concat_dir_and_key
+gconf_unique_key
+gconf_escape_key
+gconf_unescape_key
 gconf_engine_get_float
 gconf_engine_get_int
 gconf_engine_get_string
@@ -285,6 +307,9 @@ gconf_engine_set_pair
 GConfEnumStringPair
 gconf_string_to_enum
 gconf_enum_to_string
+gconf_clear_cache
+gconf_synchronous_sync
+gconf_engine_get_full
 </SECTION>
 
 <SECTION>
@@ -305,6 +330,9 @@ gconf_split_locale
 GConfChangeSet
 GConfChangeSetForeachFunc
 gconf_engine_commit_change_set
+gconf_engine_reverse_change_set
+gconf_engine_change_set_from_currentv
+gconf_engine_change_set_from_current
 gconf_change_set_new
 gconf_change_set_ref
 gconf_change_set_unref
@@ -312,6 +340,7 @@ gconf_change_set_clear
 gconf_change_set_size
 gconf_change_set_remove
 gconf_change_set_foreach
+gconf_change_set_check_value
 gconf_change_set_set
 gconf_change_set_set_nocopy
 gconf_change_set_unset
@@ -322,9 +351,7 @@ gconf_change_set_set_bool
 gconf_change_set_set_schema
 gconf_change_set_set_list
 gconf_change_set_set_pair
-gconf_change_set_check_value
-gconf_engine_change_set_from_currentv
-gconf_engine_change_set_from_current
-gconf_engine_reverse_change_set
+gconf_change_set_set_user_data
+gconf_change_set_get_user_data
 </SECTION>
 

@@ -81,6 +81,42 @@ occurred will have been removed from the set. If any error occurs,
 @Returns: <symbol>TRUE</symbol> on success, <symbol>FALSE</symbol> if an error occurs.
 
 
+<!-- ##### FUNCTION gconf_engine_reverse_change_set ##### -->
+<para>
+Creates a change set that would reverse @cs. That is, for each change in @cs,
+save the current state of that key in the returned change set.
+</para>
+
+@conf: a #GConfEngine.
+@cs: the #GConfChangeSet to be reverted.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: the modified #GConfChangeSet.
+
+
+<!-- ##### FUNCTION gconf_engine_change_set_from_currentv ##### -->
+<para>
+Creates a change set that will change the keys in 
+<symbol>NULL</symbol>terminated array @keys to their current state.
+</para>
+
+@conf: a #GConfEngine.
+@keys: <symbol>NULL</symbol>terminated array of key names.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: the newly allocated #GConfChangeSet.
+
+
+<!-- ##### FUNCTION gconf_engine_change_set_from_current ##### -->
+<para>
+Convenient Varags version of gconf_engine_change_set_from_current().
+</para>
+
+@conf: a #GConfEngine.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@first_key: the first key, a char* value.
+@Varargs: the keys to be set.
+@Returns: the newly allocated #GConfChangeSet.
+
+
 <!-- ##### FUNCTION gconf_change_set_new ##### -->
 <para>
 Creates a new, empty #GConfChangeSet. The caller assumes one reference
@@ -118,11 +154,11 @@ change set would have no effect.
 
 <!-- ##### FUNCTION gconf_change_set_size ##### -->
 <para>
-
+Returns the size of the changeset, a #guint value.
 </para>
 
-@cs: 
-@Returns: 
+@cs: a #GConfChangeSet.
+@Returns: the size, a #guint value.
 
 
 <!-- ##### FUNCTION gconf_change_set_remove ##### -->
@@ -148,6 +184,18 @@ confuse the internal data structures and cause memory corruption.
 @cs: a #GConfChangeSet.
 @func: function to call for each change in the change set.
 @user_data: user data to pass to the #GConfChangeSetForeachFunc.
+
+
+<!-- ##### FUNCTION gconf_change_set_check_value ##### -->
+<para>
+Looks up the hash table associated with the #GConfChangeSet for the key @key. If the key
+is found , the value is set in value_retloc.
+</para>
+
+@cs: a #GConfChangeSet.
+@key: the key to be searched in the changeset.
+@value_retloc: a #GConfValue ** to hold the key, if found.
+@Returns: <symbol>TRUE</symbol> on finding the key, <symbol>FALSE</symbol> if key is not found.
 
 
 <!-- ##### FUNCTION gconf_change_set_set ##### -->
@@ -243,70 +291,49 @@ unmodified.
 
 <!-- ##### FUNCTION gconf_change_set_set_list ##### -->
 <para>
-
+Adds a "set" operation; takes a #GList argument and the type of the
+list, so you can avoid creating a #GConfValue. This results in the 
+list of values being set for the key.  
 </para>
 
-@cs: 
-@key: 
-@list_type: 
-@list: 
+@cs: a #GConfChangeSet.
+@key: the key to set.
+@list_type: the type of the list.
+@list: a #GList containing the values to be set.
 
 
 <!-- ##### FUNCTION gconf_change_set_set_pair ##### -->
 <para>
-
+Adds a "set" operation; takes a pointer to the addresses of the pair
+of values, so you can avoid creating a #GConfValue. This results in 
+the pair of values being set for the key.
 </para>
 
-@cs: 
-@key: 
-@car_type: 
-@cdr_type: 
-@address_of_car: 
-@address_of_cdr: 
+@cs: a #GConfChangeSet.
+@key: the key to set.
+@car_type: the type of the pair's first field. (car)
+@cdr_type: the type of the pair's second field. (cdr)
+@address_of_car: address of the car.
+@address_of_cdr: address of the cdr.
 
 
-<!-- ##### FUNCTION gconf_change_set_check_value ##### -->
+<!-- ##### FUNCTION gconf_change_set_set_user_data ##### -->
 <para>
-
+Sets the user_data and the destroy notification function fields of the 
+#GConfChangeSet.
 </para>
 
-@cs: 
-@key: 
-@value_retloc: 
-@Returns: 
+@cs: a #GConfChangeSet.
+@data: a #gpointer.
+@dnotify: a pointer to the function to be called during destroy.
 
 
-<!-- ##### FUNCTION gconf_engine_change_set_from_currentv ##### -->
+<!-- ##### FUNCTION gconf_change_set_get_user_data ##### -->
 <para>
-
+Returns the user_data field of the #GConfChangeSet.
 </para>
 
-@conf: 
-@keys: 
-@err: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gconf_engine_change_set_from_current ##### -->
-<para>
-
-</para>
-
-@conf: 
-@err: 
-@first_key: 
-@Varargs: 
-@Returns: 
-
-
-<!-- ##### FUNCTION gconf_engine_reverse_change_set ##### -->
-<para>
-
-</para>
-
-@conf: 
-@cs: 
-@err: 
-@Returns: 
+@cs: a #GConfChangeSet.
+@Returns: a pointer to the user_data.
 
 

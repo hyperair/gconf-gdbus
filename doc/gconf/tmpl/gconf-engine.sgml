@@ -61,17 +61,16 @@ unreferenced by the caller of this function.
 @Returns: a #GConfEngine.
 
 
-<!-- ##### FUNCTION gconf_engine_get_local ##### -->
+<!-- ##### FUNCTION gconf_engine_get_for_addresses ##### -->
 <para>
-Obtain a local (non-process-transparent) #GConfEngine. Local engines
-do not support notification, and can only access config databases
-directly (they do not use the multiple sources in a path system
-supported by nonlocal engines).
+Similar to gconf_engine_get_for_address() , but takes a list of addresses 
+instead of a single address.
 </para>
 
-@address: address of local database
-@err: return location of an allocated #GError
-@Returns: a #GConfEngine
+@addresses: a list of configuration addresses.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: a #GConfEngine.
+@Since: 2.4
 
 
 <!-- ##### FUNCTION gconf_engine_unref ##### -->
@@ -89,5 +88,50 @@ Increases the reference count of a #GConfEngine by one.
 </para>
 
 @conf: a #GConfEngine.
+
+
+<!-- ##### FUNCTION gconf_engine_get_local ##### -->
+<para>
+Obtain a local (non-process-transparent) #GConfEngine. Local engines
+do not support notification, and can only access config databases
+directly (they do not use the multiple sources in a path system
+supported by nonlocal engines).
+</para>
+
+@address: address of local database.
+@err: return location of an allocated #GError.
+@Returns: a #GConfEngine.
+
+
+<!-- ##### FUNCTION gconf_engine_get_local_for_addresses ##### -->
+<para>
+Obtains a local #GConfEngine similar to gconf_engine_get_local ().
+Instead of taking the address of the local database, this function takes
+the addresses of the sources and gets the #GConfSources using gconf_sources_new_from_addresses ().
+</para>
+
+@addresses: a list of addresses of #GConfSources.
+@err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+@Returns: a #GConfEngine.
+@Since: 2.8
+
+
+<!-- ##### FUNCTION gconf_engine_set_user_data ##### -->
+<para>
+Sets the user_data and the destroy notification function fields of a #GConfEngine.
+</para>
+
+@engine: a #GConfEngine.
+@data: a #gpointer.
+@dnotify: a pointer to the function to be called during destroy.
+
+
+<!-- ##### FUNCTION gconf_engine_get_user_data ##### -->
+<para>
+Returns the user_data field of a #GConfEngine.
+</para>
+
+@engine: a #GConfEngine.
+@Returns: a pointer to the user_data.
 
 

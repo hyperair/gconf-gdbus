@@ -2295,7 +2295,9 @@ gconf_detach_config_server(void)
  * @void: 
  * 
  * Detach from the config server and release
- * all related resources
+ * all related resources.
+ *
+ * Returns: 1 if an exception occurs, 0 otherwise.
  **/
 int
 gconf_debug_shutdown (void)
