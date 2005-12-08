@@ -2749,10 +2749,11 @@ gconf_unescape_key (const char *escaped_key,
           if (*p == '@')
             {
               /* *p is the @ that ends a seq */
+              char *end_seq;
               guchar val;
               
-              val = strtoul (start_seq, &end, 10);
-              if (start_seq != end)
+              val = strtoul (start_seq, &end_seq, 10);
+              if (start_seq != end_seq)
                 g_string_append_c (retval, val);
               
               start_seq = NULL;
