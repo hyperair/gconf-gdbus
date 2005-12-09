@@ -281,13 +281,6 @@ gboolean gconf_CORBA_Object_equal (gconstpointer a,
                                    gconstpointer b);
 guint    gconf_CORBA_Object_hash  (gconstpointer key);
 
-
-/* FIXME move to public eventually */
-gboolean    gconf_entry_equal (const GConfEntry *a,
-                               const GConfEntry *b);
-int         gconf_value_compare (const GConfValue *value_a,
-                                 const GConfValue *value_b);
-
 GConfValue* gconf_schema_steal_default_value (GConfSchema *schema);
 
 void gconf_value_set_string_nocopy (GConfValue *value,

@@ -111,6 +111,9 @@ void        gconf_value_set_list             (GConfValue* value,
 
 gchar*      gconf_value_to_string            (const GConfValue* value);
 
+int         gconf_value_compare              (const GConfValue* value_a,
+                                              const GConfValue* value_b);
+
 /* Meta-information about a key. Not the same as a schema; this is
  * information stored on the key, the schema is a specification
  * that may apply to this key.
@@ -189,6 +192,9 @@ void        gconf_entry_set_is_default   (GConfEntry  *entry,
                                           gboolean     is_default);
 void        gconf_entry_set_is_writable  (GConfEntry  *entry,
                                           gboolean     is_writable);
+
+gboolean    gconf_entry_equal            (const GConfEntry *a,
+                                          const GConfEntry *b);
 
 #ifdef __cplusplus
 }
