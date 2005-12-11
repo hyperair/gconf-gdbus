@@ -91,7 +91,7 @@ merge_tree (const char *root_dir)
     {
       char *markup_file;
 
-      markup_file = markup_dir_build_file_path (tree->root, TRUE);
+      markup_file = markup_dir_build_file_path (tree->root, TRUE, NULL);
       fprintf (stderr, _("Error saving GConf tree to '%s': %s\n"),
 	       markup_file,
 	       error->message);

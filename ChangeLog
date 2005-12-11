@@ -1,3 +1,28 @@
+2005-12-11  Mark McLoughlin  <mark@skynet.ie>
+
+	* backends/markup-tree.c:
+	(markup_entry_get_value): re-work the logic for finding
+	the best schema for the given locales.
+	
+2005-12-11  Mark McLoughlin  <mark@skynet.ie>
+
+	* backends/markup-tree.c:
+	- Introduce the concept of a "subtree root" - a point
+	  in the tree where we save a subtree in a merged file.
+	- When loading a subtree (%gconf-tree.xml), take note of
+	  any available translations (%gconf-tree-$(locale).xml)
+	- When getting/setting/unsetting a schema, ensure that
+	  the appropriate translations are loaded
+	- When parsing a translations file, allow for missing
+	  attributes and elements and read the translations of
+	  descriptions
+	- When syncing a subtree, write out all translations
+	  of descriptions which are currently cached in memory
+	  to separate files.
+
+	* backends/gconf-merge-tree.c: (merge_tree): update for
+	markup_dir_build_file_path() change
+
 2005-12-09  Jorn Baayen  <jorn@openedhand.com>
 
 	* gconf/gconf-internals.h:
