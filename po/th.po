@@ -7,13 +7,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf 2.9.92\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-03 17:30+0100\n"
-"PO-Revision-Date: 2005-11-20 14:17+0700\n"
+"POT-Creation-Date: 2005-12-12 18:25+0700\n"
+"PO-Revision-Date: 2005-12-12 18:33+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <l10n@opentle.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bit"
 
 #: backends/evoldap-backend.c:158
 #, c-format
@@ -164,170 +164,176 @@ msgstr "กำลังเริ่มมอดูลแบ็กเอนด์
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "ปลดล็อคไดเรกทอรี XML \"%s\" ไม่สำเร็จ: %s"
 
-#: backends/markup-tree.c:362
+#: backends/markup-tree.c:391
 msgid "Failed to write some configuration data to disk\n"
 msgstr "เขียนค่าตั้งบางค่าลงดิสก์ไม่สำเร็จ\n"
 
-#: backends/markup-tree.c:798 backends/xml-dir.c:1273
+#: backends/markup-tree.c:914 backends/xml-dir.c:1273
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "ไม่สามารถสร้างไดเรกทอรี \"%s\": %s"
 
-#: backends/markup-tree.c:836 backends/markup-tree.c:843
+#: backends/markup-tree.c:954 backends/markup-tree.c:961
 #, c-format
 msgid "Could not remove \"%s\": %s\n"
 msgstr "ไม่สามารถลบ \"%s\": %s\n"
 
-#: backends/markup-tree.c:1018
+#: backends/markup-tree.c:1136
 #, c-format
 msgid "Failed to write \"%s\": %s\n"
 msgstr "ไม่สามารถเขียน \"%s\": %s\n"
 
-#: backends/markup-tree.c:1701
+#: backends/markup-tree.c:1344
+#, c-format
+msgid "Failed to load file \"%s\": %s"
+msgstr "ไม่สามารถโหลดแฟ้ม \"%s\": %s"
+
+#: backends/markup-tree.c:1936
 #, c-format
 msgid "Line %d character %d: %s"
 msgstr "บรรทัด %d อักขระ %d: %s"
 
-#: backends/markup-tree.c:1914
+#: backends/markup-tree.c:2155
 #, c-format
 msgid "Attribute \"%s\" repeated twice on the same <%s> element"
 msgstr "มีแอตทริบิวต์ \"%s\" ซ้ำกันสองครั้งในอิลิเมนต์ <%s> เดียวกัน"
 
-#: backends/markup-tree.c:1931 backends/markup-tree.c:1955
+#: backends/markup-tree.c:2172 backends/markup-tree.c:2196
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
 msgstr "แอตทริบิวต์ \"%s\" ใช้ไม่ได้ในอิลิเมนต์ <%s> ในบริบทนี้"
 
-#: backends/markup-tree.c:1980 gconf/gconf-value.c:110
+#: backends/markup-tree.c:2221 gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
 msgstr "ไม่เข้าใจ `%s' (ต้องการเลขจำนวนเต็ม)"
 
-#: backends/markup-tree.c:1987 gconf/gconf-value.c:120
+#: backends/markup-tree.c:2228 gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
 msgstr "เลขจำนวนเต็ม `%s' ใหญ่หรือเล็กเกินไป"
 
-#: backends/markup-tree.c:2019 gconf/gconf-value.c:185
+#: backends/markup-tree.c:2260 gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
 msgstr "ไม่เข้าใจ `%s' (ต้องการ true หรือ false)"
 
-#: backends/markup-tree.c:2043 gconf/gconf-value.c:141
+#: backends/markup-tree.c:2284 gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
 msgstr "ไม่เข้าใจ `%s' (ต้องการเลขจำนวนจริง)"
 
-#: backends/markup-tree.c:2113 backends/markup-tree.c:2142
-#: backends/markup-tree.c:2182 backends/markup-tree.c:2206
-#: backends/markup-tree.c:2214 backends/markup-tree.c:2269
-#: backends/markup-tree.c:2334 backends/markup-tree.c:2442
-#: backends/markup-tree.c:2521 backends/markup-tree.c:2633
+#: backends/markup-tree.c:2354 backends/markup-tree.c:2383
+#: backends/markup-tree.c:2423 backends/markup-tree.c:2447
+#: backends/markup-tree.c:2455 backends/markup-tree.c:2510
+#: backends/markup-tree.c:2575 backends/markup-tree.c:2687
+#: backends/markup-tree.c:2755 backends/markup-tree.c:2813
+#: backends/markup-tree.c:2963
 #, c-format
 msgid "No \"%s\" attribute on element <%s>"
 msgstr "ไม่มีแอตทริบิวต์ \"%s\" ในอิลิเมนต์ <%s>"
 
-#: backends/markup-tree.c:2122
+#: backends/markup-tree.c:2363
 #, c-format
 msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr "ไม่รู้จักค่า \"%s\" สำหรับแอตทริบิวต์ \"%s\" ในอิลิเมนต์ <%s>"
 
-#: backends/markup-tree.c:2156
+#: backends/markup-tree.c:2397
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "ltype \"%s\" ไม่ถูกต้องสำหรับ <%s>"
 
-#: backends/markup-tree.c:2236
+#: backends/markup-tree.c:2477
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr "ชนิด \"%s\" ของอิลิเมนต์แรกไม่ถูกต้องสำหรับ <%s>"
 
-#: backends/markup-tree.c:2250
+#: backends/markup-tree.c:2491
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
 msgstr "cdr_type \"%s\" ไม่ถูกต้องสำหรับ <%s>"
 
-#: backends/markup-tree.c:2286
+#: backends/markup-tree.c:2527
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
 msgstr "list_type \"%s\" ไม่ถูกต้องสำหรับ <%s>"
 
-#: backends/markup-tree.c:2567
+#: backends/markup-tree.c:2894
 msgid "Two <default> elements below a <local_schema>"
 msgstr "มีอิลิเมนต์ <default> ซ้ำกันใน <local_schema>"
 
-#: backends/markup-tree.c:2582
+#: backends/markup-tree.c:2909
 msgid "Two <longdesc> elements below a <local_schema>"
 msgstr "มีอิลิเมนต์ <longdesc> ซ้ำกันใน <local_schema>"
 
-#: backends/markup-tree.c:2589
+#: backends/markup-tree.c:2916
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
 msgstr "อิลิเมนต์ <%s> อยู่ใน <%s> ไม่ได้"
 
-#: backends/markup-tree.c:2613 backends/markup-tree.c:2705
-#: backends/markup-tree.c:2759 backends/markup-tree.c:2807
+#: backends/markup-tree.c:2941 backends/markup-tree.c:3046
+#: backends/markup-tree.c:3100 backends/markup-tree.c:3151
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
 msgstr "มี <%s> อยู่ แต่อิลิเมนต์ปัจจุบันไม่ได้เป็นชนิด %s"
 
-#: backends/markup-tree.c:2683
+#: backends/markup-tree.c:3024
 msgid "Two <car> elements given for same pair"
 msgstr "มีอิลิเมนต์ <car> ซ้ำกันในคู่เดียวกัน"
 
-#: backends/markup-tree.c:2697
+#: backends/markup-tree.c:3038
 msgid "Two <cdr> elements given for same pair"
 msgstr "มีอิลิเมนต์ <cdr> ซ้ำกันในคู่เดียวกัน"
 
-#: backends/markup-tree.c:2751
+#: backends/markup-tree.c:3092
 #, c-format
 msgid "<li> has wrong type %s"
 msgstr "<li> เป็นชนิด %s ซึ่งไม่ถูกต้อง"
 
-#: backends/markup-tree.c:2780
+#: backends/markup-tree.c:3123
 #, c-format
 msgid "<%s> provided but parent <entry> does not have a value"
 msgstr "มี <%s> อยู่ แต่ <entry> แม่ไม่มีค่า"
 
-#: backends/markup-tree.c:2820 backends/markup-tree.c:2842
-#: backends/markup-tree.c:2864 backends/markup-tree.c:2881
+#: backends/markup-tree.c:3164 backends/markup-tree.c:3187
+#: backends/markup-tree.c:3209 backends/markup-tree.c:3226
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
 msgstr "อิลิเมนต์ <%s> อยู่ในอิลิเมนต์ปัจจุบันไม่ได้"
 
-#: backends/markup-tree.c:2913
+#: backends/markup-tree.c:3258
 #, c-format
 msgid "Outermost element in menu file must be <gconf> not <%s>"
 msgstr "อิลิเมนต์ชั้นนอกสุดในแฟ้มเมนูต้องเป็น <gconf> ไม่ใช่ <%s>"
 
-#: backends/markup-tree.c:2933 backends/markup-tree.c:2955
-#: backends/markup-tree.c:2960
+#: backends/markup-tree.c:3278 backends/markup-tree.c:3300
+#: backends/markup-tree.c:3305
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
 msgstr "อิลิเมนต์ <%s> อยู่ในอิลิเมนต์ <%s> ไม่ได้"
 
-#: backends/markup-tree.c:3040
+#: backends/markup-tree.c:3449
 #, c-format
 msgid "No text is allowed inside element <%s>"
 msgstr "ไม่อนุญาตให้มีข้อความในอิลิเมนต์ <%s>"
 
-#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
-#: backends/markup-tree.c:3771
+#: backends/markup-tree.c:3566 backends/markup-tree.c:4345
+#: backends/markup-tree.c:4363
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "เปิด \"%s\" ไม่สำเร็จ: %s\n"
 
-#: backends/markup-tree.c:3183
+#: backends/markup-tree.c:3596
 #, c-format
 msgid "Error reading \"%s\": %s\n"
 msgstr "เกิดข้อผิดพลาดขณะอ่าน \"%s\": %s\n"
 
-#: backends/markup-tree.c:3845
+#: backends/markup-tree.c:4450
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "เกิดข้อผิดพลาดขณะเขียนแฟ้ม \"%s\": %s"
 
-#: backends/markup-tree.c:3857
+#: backends/markup-tree.c:4462
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "ไม่สามารถย้ายแฟ้มชั่วคราว \"%s\" ไปยังตำแหน่งปลายทาง \"%s\" ได้: %s"
@@ -815,7 +821,7 @@ msgstr "ข้อมูล UTF-8 ไม่ถูกต้องในส่ว�
 #: gconf/gconf-internals.c:864
 #, c-format
 msgid "Couldn't open path file `%s': %s\n"
-msgstr ""
+msgstr "ไม่สามารถเปิดแฟ้มพาธ `%s': %s\n"
 
 #: gconf/gconf-internals.c:920
 #, c-format
@@ -828,8 +834,8 @@ msgid "Read error on file `%s': %s\n"
 msgstr "เกิดข้อผิดพลาดขณะอ่านแฟ้ม `%s': %s\n"
 
 #: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
-#: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
-#: gconf/gconf-value.c:1675
+#: gconf/gconf-value.c:154 gconf/gconf-value.c:253
+#: gconf/gconf-value.c:395 gconf/gconf-value.c:1675
 msgid "Text contains invalid UTF-8"
 msgstr "ข้อความมีลำดับ UTF-8 ที่ไม่ถูกต้อง"
 
@@ -870,22 +876,22 @@ msgstr "ข้อความคำพูดไม่ได้ปิดด้ว
 msgid "Encoded value is not valid UTF-8"
 msgstr "ค่าที่ลงรหัสไม่ได้เป็น UTF-8 ที่ถูกต้อง"
 
-#: gconf/gconf-internals.c:2363
+#: gconf/gconf-internals.c:2368
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "ไม่สามารถล็อคแฟ้มชั่วคราว '%s': %s"
 
-#: gconf/gconf-internals.c:2390
+#: gconf/gconf-internals.c:2395
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "ไม่สามารถสร้างแฟ้ม '%s' เป็นไปได้ว่ามีแฟ้มชื่อนี้อยู่แล้ว"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2463
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "ไม่สามารถสร้างหรือเปิด '%s'"
 
-#: gconf/gconf-internals.c:2468
+#: gconf/gconf-internals.c:2473
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -894,91 +900,91 @@ msgstr ""
 "ไม่สามารถล็อค '%s' เป็นไปได้ว่าโพรเซสอื่นกำลังล็อคอยู่ หรือมิฉะนั้น "
 "ระบบปฏิบัติการของคุณอาจตั้งค่าการล็อคแฟ้ม NFS ไม่ถูกต้อง (%s)"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2493
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "ไม่สามารถลบแฟ้ม '%s': %s"
 
-#: gconf/gconf-internals.c:2512
+#: gconf/gconf-internals.c:2517
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr ""
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2547
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool หรือโพรเซสอื่นที่ไม่ใช่ gconfd กำลังล็อคแฟ้ม '%s' อยู่"
 
-#: gconf/gconf-internals.c:2559
+#: gconf/gconf-internals.c:2564
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "ไม่สามารถติดต่อ ORB เพื่อหาตัวอ้างอิงอ็อบเจกต์ gconfd ที่มีอยู่"
 
-#: gconf/gconf-internals.c:2569
+#: gconf/gconf-internals.c:2574
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr ""
 
-#: gconf/gconf-internals.c:2618
+#: gconf/gconf-internals.c:2623
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "ไม่สามารถสร้างไดเรกทอรี `%s': %s"
 
-#: gconf/gconf-internals.c:2675
+#: gconf/gconf-internals.c:2680
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "ไม่สามารถเขียนแฟ้ม `%s': %s"
 
-#: gconf/gconf-internals.c:2716
+#: gconf/gconf-internals.c:2721
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "เราไม่สามารถล็อคแฟ้ม `%s' ได้ แต่ความจริงควรจะได้"
 
-#: gconf/gconf-internals.c:2739
+#: gconf/gconf-internals.c:2744
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "ไม่สามารถสร้างลิงก์ '%s' ไปยัง '%s' ได้: %s"
 
-#: gconf/gconf-internals.c:2751
+#: gconf/gconf-internals.c:2756
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "ไม่สามาถลบแฟ้มล็อค `%s' ได้: %s"
 
-#: gconf/gconf-internals.c:2774
+#: gconf/gconf-internals.c:2779
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "ไม่สามารถเก็บกวาดแฟ้ม '%s': %s"
 
-#: gconf/gconf-internals.c:2790
+#: gconf/gconf-internals.c:2795
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "ไม่สามารถลบไดเรกทอรีล็อค `%s': %s"
 
-#: gconf/gconf-internals.c:2832
+#: gconf/gconf-internals.c:2837
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "ไม่สามารถลบแฟ้มล็อค %s: %s\n"
 
-#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2991 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "ไม่สามารถ stat %s ได้: %s"
 
-#: gconf/gconf-internals.c:3008
+#: gconf/gconf-internals.c:3013
 #, c-format
 msgid "Server ping error: %s"
 msgstr "ping เซิร์ฟเวอร์ไม่ได้: %s"
 
-#: gconf/gconf-internals.c:3033
+#: gconf/gconf-internals.c:3038
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr "ไม่สามารถสร้างไปป์เพื่อติดต่อกับดีมอน gconf ที่ spawn ออกไป: %s\n"
 
-#: gconf/gconf-internals.c:3057
+#: gconf/gconf-internals.c:3062
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "ไม่สามารถเรียกเซิร์ฟเวอร์ค่าตั้งขึ้นมาทำงาน: %s\n"
 
-#: gconf/gconf-internals.c:3082
+#: gconf/gconf-internals.c:3087
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -990,7 +996,7 @@ msgstr ""
 "ORBit ใช้ หรือคุณอาจมีการล็อคผ่าน NFS ค้างอยู่ เพราะระบบล่มไป กรุณาอ่าน http://www.gnome."
 "org/projects/gconf/ สำหรับข้อมูลเพิ่มเติม (รายละเอียด - %s)"
 
-#: gconf/gconf-internals.c:3083
+#: gconf/gconf-internals.c:3088
 msgid "none"
 msgstr "ไม่มี"
 
@@ -1096,8 +1102,8 @@ msgstr "ดำเนินการ_ต่อไป"
 msgid "%s Continue (y/n)?"
 msgstr "%s ดำเนินการต่อไปหรือไม่ (y/n)?"
 
-#: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
-#: gconf/gconf-schema.c:245
+#: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229
+#: gconf/gconf-schema.c:237 gconf/gconf-schema.c:245
 msgid "Schema contains invalid UTF-8"
 msgstr "schema มีข้อมูล UTF-8 ผิดลำดับ"
 
@@ -1110,8 +1116,7 @@ msgstr "schema กำหนดชนิดเป็นลิสต์ แต่�
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
-msgstr ""
-"schema กำหนดชนิดคู่ แต่ไม่ได้กำหนดชนิดของอิลิเมนต์ car/cdr"
+msgstr "schema กำหนดชนิดคู่ แต่ไม่ได้กำหนดชนิดของอิลิเมนต์ car/cdr"
 
 #: gconf/gconf-sources.c:371
 #, c-format
@@ -1272,63 +1277,63 @@ msgstr "ไม่สามารถเพิ่มการแจ้งเตื
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "ไม่สามารถเพิ่มไคลเอนต์ลงในลิสต์ของเซิร์ฟเวอร์ ข้อผิดพลาดของ CORBA: %s"
 
-#: gconf/gconf.c:2587
+#: gconf/gconf.c:2589
 msgid "Must begin with a slash (/)"
 msgstr "ต้องขึ้นต้นด้วยขีดทับ (/)"
 
-#: gconf/gconf.c:2609
+#: gconf/gconf.c:2611
 msgid "Can't have two slashes (/) in a row"
 msgstr "มีขีดทับ (/) ซ้อนกันสองตัวไม่ได้"
 
-#: gconf/gconf.c:2611
+#: gconf/gconf.c:2613
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "มีจุด (.) ต่อจากขีดทับ (/) ทันทีไม่ได้"
 
-#: gconf/gconf.c:2630
+#: gconf/gconf.c:2632
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "'%c' ไม่ใช่อักขระแอสกี จึงใช้ในชื่อคีย์ไม่ได้"
 
-#: gconf/gconf.c:2640
+#: gconf/gconf.c:2642
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "`%c' เป็นอักขระที่ใช้ในชื่อคีย์/ไดเรกทอรีไม่ได้"
 
-#: gconf/gconf.c:2654
+#: gconf/gconf.c:2656
 msgid "Key/directory may not end with a slash (/)"
 msgstr "คีย์/ไดเรกทอรีลงท้ายด้วยขีดทับ (/) ไม่ได้"
 
-#: gconf/gconf.c:3024
+#: gconf/gconf.c:3027
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "ไม่สามารถปิดเซิร์ฟเวอร์ค่าตั้งได้: %s"
 
-#: gconf/gconf.c:3085
+#: gconf/gconf.c:3088
 #, c-format
 msgid "Expected float, got %s"
 msgstr "ต้องการค่า float แต่พบ %s"
 
-#: gconf/gconf.c:3120
+#: gconf/gconf.c:3123
 #, c-format
 msgid "Expected int, got %s"
 msgstr "ต้องการค่า int แต่พบ %s"
 
-#: gconf/gconf.c:3155
+#: gconf/gconf.c:3158
 #, c-format
 msgid "Expected string, got %s"
 msgstr "ต้องการค่าสตริง แต่พบ %s"
 
-#: gconf/gconf.c:3189
+#: gconf/gconf.c:3192
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "ต้องการค่าบูลีน แต่พบ %s"
 
-#: gconf/gconf.c:3222
+#: gconf/gconf.c:3225
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "ต้องการ schema แต่พบ %s"
 
-#: gconf/gconf.c:3561
+#: gconf/gconf.c:3564
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA ผิดพลาด: %s"
@@ -1651,9 +1656,7 @@ msgstr ""
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
-msgstr ""
-"ระบุชนิดของค่าที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด "
-"อนุญาตให้ใช้ตัวย่อได้"
+msgstr "ระบุชนิดของค่าที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
 #: gconf/gconftool.c:226
 msgid "int|bool|float|string|list|pair"
@@ -1675,9 +1678,7 @@ msgstr "เจาะจงอ่านค่าสมาชิกของคี
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
-msgstr ""
-"ระบุชนิดของค่าของลิสต์ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด "
-"อนุญาตให้ใช้ตัวย่อได้"
+msgstr "ระบุชนิดของค่าของลิสต์ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
 #: gconf/gconftool.c:262 gconf/gconftool.c:271 gconf/gconftool.c:280
 msgid "int|bool|float|string"
@@ -1687,17 +1688,13 @@ msgstr "int|bool|float|string"
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
-msgstr ""
-"ระบุชนิดของค่า car ของคู่ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด "
-"อนุญาตให้ใช้ตัวย่อได้"
+msgstr "ระบุชนิดของค่า car ของคู่ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
 #: gconf/gconftool.c:279
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
-msgstr ""
-"ระบุชนิดของค่า cdr ของคู่ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด "
-"อนุญาตให้ใช้ตัวย่อได้"
+msgstr "ระบุชนิดของค่า cdr ของคู่ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
 #: gconf/gconftool.c:288
 msgid "Specify a short half-line description to go in a schema."
@@ -1948,8 +1945,8 @@ msgstr "ชนิดของ cdr: %s\n"
 msgid "Default Value: %s\n"
 msgstr "ค่าปริยาย: %s\n"
 
-#: gconf/gconftool.c:1650 gconf/gconftool.c:1652 gconf/gconftool.c:1653
-#: gconf/gconftool.c:1654
+#: gconf/gconftool.c:1650 gconf/gconftool.c:1652
+#: gconf/gconftool.c:1653 gconf/gconftool.c:1654
 msgid "Unset"
 msgstr "ไม่ได้กำหนด"
 
@@ -1968,14 +1965,16 @@ msgstr "คำอธิบายสังเขป: %s\n"
 msgid "Long Desc: %s\n"
 msgstr "คำอธิบายละเอียด: %s\n"
 
-#: gconf/gconftool.c:1663 gconf/gconftool.c:1887 gconf/gconftool.c:1921
-#: gconf/gconftool.c:1966 gconf/gconftool.c:2111
+#: gconf/gconftool.c:1663 gconf/gconftool.c:1887
+#: gconf/gconftool.c:1921 gconf/gconftool.c:1966
+#: gconf/gconftool.c:2111
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "ไม่มีค่าตั้งไว้สำหรับ `%s'\n"
 
-#: gconf/gconftool.c:1667 gconf/gconftool.c:1891 gconf/gconftool.c:1925
-#: gconf/gconftool.c:1970 gconf/gconftool.c:2115
+#: gconf/gconftool.c:1667 gconf/gconftool.c:1891
+#: gconf/gconftool.c:1925 gconf/gconftool.c:1970
+#: gconf/gconftool.c:2115
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "ไม่สามารถอ่านค่าสำหรับ `%s' ได้: %s\n"
@@ -2005,8 +2004,7 @@ msgstr "เมื่อจะตั้งค่าลิสต์ คุณต�
 #: gconf/gconftool.c:1806
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr ""
-"เมื่อจะกำหนดค่าให้กับคู่ คุณต้องระบุชนิดพื้นฐานของ car และ cdr ด้วย\n"
+msgstr "เมื่อจะกำหนดค่าให้กับคู่ คุณต้องระบุชนิดพื้นฐานของ car และ cdr ด้วย\n"
 
 #: gconf/gconftool.c:1821
 #, c-format
@@ -2209,7 +2207,8 @@ msgstr "คำเตือน: ไม่มีชนิดหรือชนิ�
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "คำเตือน: ไม่มีชนิดของลิสต์หรือชนิดของลิสต์ไม่ถูกต้องสำหรับ schema (%s)\n"
 
-#: gconf/gconftool.c:2980 gconf/gconftool.c:3010 gconf/gconftool.c:3039
+#: gconf/gconftool.c:2980 gconf/gconftool.c:3010
+#: gconf/gconftool.c:3039
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "คำเตือน: ไม่สามารถแจงค่าปริยาย `%s' ของ schema (%s)\n"
@@ -2227,8 +2226,8 @@ msgstr "คำเตือน: คุณไม่สามารถตั้ง�
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "คำเตือน: ข้อผิดพลาดภายในของ gconftool: ค่า GConfValueType ไม่รู้จัก\n"
 
-#: gconf/gconftool.c:3100 gconf/gconftool.c:3121 gconf/gconftool.c:3142
-#: gconf/gconftool.c:3163
+#: gconf/gconftool.c:3100 gconf/gconftool.c:3121
+#: gconf/gconftool.c:3142 gconf/gconftool.c:3163
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "คำเตือน: แจงชื่อชนิด `%s' ไม่สำเร็จ\n"
@@ -2243,12 +2242,14 @@ msgstr ""
 #: gconf/gconftool.c:3138
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "คำเตือน: ชนิดของ car สามารถเป็น int, float, string หรือ bool ได้เท่านั้น ไม่ใช่ `%s'\n"
+msgstr ""
+"คำเตือน: ชนิดของ car สามารถเป็น int, float, string หรือ bool ได้เท่านั้น ไม่ใช่ `%s'\n"
 
 #: gconf/gconftool.c:3159
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "คำเตือน: ชนิดของ cdr สามารถเป็น int, float, string หรือ bool ได้เท่านั้น ไม่ใช่ `%s'\n"
+msgstr ""
+"คำเตือน: ชนิดของ cdr สามารถเป็น int, float, string หรือ bool ได้เท่านั้น ไม่ใช่ `%s'\n"
 
 #: gconf/gconftool.c:3199
 msgid "WARNING: empty <applyto> node"
