@@ -1,7 +1,9 @@
-# Chinese (Taiwan) translation of gconf.
+# Chinese (Hong Kong) translation of gconf.
 # Copyright (C) 2002, 04, 05 Free Software Foundation, Inc.
 # Ben Wu <hpwu@redhat.com>, 2002.
 # Li-Jen Hsin <hsin@med.cgu.edu.tw>, 2004.
+# Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>, 2005.
+# Abel Cheung <abel@oaka.org>, 2005.
 #
 msgid ""
 msgstr ""
@@ -9,8 +11,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-12-30 22:16+0800\n"
 "PO-Revision-Date: 2005-12-30 22:17+0800\n"
-"Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
-"Language-Team: Chinese (Taiwan) <community@linuxhall.org>\n"
+"Last-Translator: Abel Cheung <abel@oaka.org>\n"
+"Language-Team: Chinese (Hong Kong) <community@linuxhall.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,12 +60,12 @@ msgstr "沒有在‘%s’中指定 LDAP 伺服器或 base DN"
 #: ../backends/evoldap-backend.c:576
 #, c-format
 msgid "Contacting LDAP server: host '%s', port '%d', base DN '%s'"
-msgstr "正在連絡 LDAP 伺服器：主機‘%s’，連接埠‘%d’，base DN‘%s’"
+msgstr "正在聯絡 LDAP 伺服器：主機‘%s’，連接埠‘%d’，base DN‘%s’"
 
 #: ../backends/evoldap-backend.c:582
 #, c-format
 msgid "Failed to contact LDAP server: %s"
-msgstr "無法連絡 LDAP 伺服器：%s"
+msgstr "無法聯絡 LDAP 伺服器：%s"
 
 #: ../backends/evoldap-backend.c:669
 #, c-format
@@ -635,7 +637,7 @@ msgstr "無法同步一個或更多的資料來源：%s"
 msgid ""
 "Error obtaining new value for `%s' after change notification from backend `%"
 "s': %s"
-msgstr "在後端模組‘%s’發出設定變更的通知之後，擷取‘%s’的新設定值時發生錯誤：%s"
+msgstr "在後端模組‘%s’發出設定更改的通知之後，擷取‘%s’的新設定值時發生錯誤：%s"
 
 #: ../gconf/gconf-database.c:1119
 #, c-format
@@ -645,7 +647,7 @@ msgid ""
 "configuration changes."
 msgstr ""
 "無法將加入 listener %s (%s) 的操作寫入至紀錄之內；這將導致無法在 gconfd 重新"
-"啟動後回復這個 listener，導致組態設定變更通知不再可靠。"
+"啟動後回復這個 listener，導致組態設定更改通知不再可靠。"
 
 #: ../gconf/gconf-database.c:1153
 #, c-format
@@ -728,7 +730,7 @@ msgstr "失敗"
 
 #: ../gconf/gconf-error.c:27
 msgid "Configuration server couldn't be contacted"
-msgstr "連繫不上設定伺服程式"
+msgstr "聯繫不上設定伺服程式"
 
 #: ../gconf/gconf-error.c:28
 msgid "Permission denied"
@@ -772,7 +774,7 @@ msgstr "物件啟動結構 (OAF) 錯誤"
 
 #: ../gconf/gconf-error.c:38
 msgid "Operation not allowed without configuration server"
-msgstr "缺少或無法連絡設定伺服程式的情況下不允許操作"
+msgstr "缺少或無法聯絡設定伺服程式的情況下不允許操作"
 
 #: ../gconf/gconf-error.c:39
 msgid "Failed to get a lock"
@@ -780,7 +782,7 @@ msgstr "無法取得鎖定檔"
 
 #: ../gconf/gconf-error.c:40
 msgid "No database available to save your configuration"
-msgstr "沒有資料庫可供寫入您的設定"
+msgstr "沒有資料庫可供寫入你的設定"
 
 #: ../gconf/gconf-internals.c:91
 #, c-format
@@ -925,7 +927,7 @@ msgstr "gconftool 或其他非 gconfd 的程序擁有鎖定檔‘%s’"
 
 #: ../gconf/gconf-internals.c:2564
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "無法連繫 ORB 以辨析既存的 gconfd object reference"
+msgstr "無法聯繫 ORB 以辨析既存的 gconfd object reference"
 
 #: ../gconf/gconf-internals.c:2574
 #, c-format
@@ -985,7 +987,7 @@ msgstr "ping 伺服程式時發生錯誤：%s"
 #: ../gconf/gconf-internals.c:3038
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
-msgstr "無法建立 pipe 以連繫 spawned gconf 伺服程式：%s\n"
+msgstr "無法建立 pipe 以聯繫 spawned gconf 伺服程式：%s\n"
 
 #: ../gconf/gconf-internals.c:3062
 #, c-format
@@ -1000,9 +1002,9 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
-"無法連繫設定伺服器；可能是您需要啟用 ORBit 的 TCP/IP 網路連線，或由於上次系統"
+"無法聯繫設定伺服器；可能是你需要啟用 ORBit 的 TCP/IP 網絡連線，或由於上次系統"
 "當機導致有殘留的 NFS 鎖定檔。 請參考 http://www.gnome.org/projects/gconf/ 以"
-"取得更多資訊。(詳情 - %s)"
+"取得更多資料。(詳情 - %s)"
 
 #: ../gconf/gconf-internals.c:3088
 msgid "none"
@@ -1025,8 +1027,8 @@ msgid ""
 "problem with your configuration, as many programs will need to create files "
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
-"請連絡系統管理員以解決下列的問題：\n"
-"無法開啟或建立檔案“%s”；這表示您的組態有問題，因為許多程式都需要在您的個人目"
+"請聯絡系統管理員以解決下列的問題：\n"
+"無法開啟或建立檔案“%s”；這表示你的組態有問題，因為許多程式都需要在你的個人目"
 "錄建立檔案。這個錯誤是“%s”(errno = %d)。"
 
 #: ../gconf/gconf-sanity-check.c:182
@@ -1040,8 +1042,8 @@ msgid ""
 "that the \"nfslock\" service has been disabled.The error was \"%s\" (errno = "
 "%d)."
 msgstr ""
-"請連絡系統管理員以解決下列的問題：\n"
-"無法鎖定檔案“%s”；這表示作業系統設定可能有問題。假如您有一個經 NFS 掛載的個人"
+"請聯絡系統管理員以解決下列的問題：\n"
+"無法鎖定檔案“%s”；這表示作業系統設定可能有問題。假如你有一個經 NFS 掛載的個人"
 "目錄，則是用戶端或伺服端的設定不正確。 請參考 rpc.statd 與 rpc.lockd 的說明文"
 "件。停用“nfslock”服務是導致這個錯誤的常見原因。這個錯誤是 “%s” (errno = %d)。"
 
@@ -1057,7 +1059,7 @@ msgid ""
 "No configuration sources in the configuration file \"%s\"; this means that "
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
-"請連絡系統管理員以解決下列的問題：\n"
+"請聯絡系統管理員以解決下列的問題：\n"
 "在設定檔“%s”中沒有指定設定來源；這表示無法儲存選項與其它設定。%s%s"
 
 #: ../gconf/gconf-sanity-check.c:238
@@ -1070,7 +1072,7 @@ msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
 "Could not resolve the address \"%s\" in the configuration file \"%s\": %s"
 msgstr ""
-"請連絡系統管理員以解決下列的問題：\n"
+"請聯絡系統管理員以解決下列的問題：\n"
 "無法解析設定檔“%2$s”中的位址“%1$s”：%3$s"
 
 #: ../gconf/gconf-sanity-check.c:322
@@ -1087,10 +1089,10 @@ msgid ""
 msgstr ""
 "載有目前的偏好設定的檔案正在使用中。\n"
 "\n"
-"您也許是自其他主機登入 session，而其他的登入 session 正在使用您的偏好設定"
+"你也許是自其他主機登入 session，而其他的登入 session 正在使用你的偏好設定"
 "檔。\n"
 "\n"
-"您可以繼續使用目前 session，但這樣可能暫時導致其他 session 的偏好設定發生問"
+"你可以繼續使用目前 session，但這樣可能暫時導致其他 session 的偏好設定發生問"
 "題\n"
 "\n"
 "是否繼續？"
@@ -1193,11 +1195,11 @@ msgstr ""
 "因有幾種：\n"
 "1) 組態設定路徑檔案 %s/path 沒有包含任何的資料庫或根本找不到\n"
 "2) 因某種因素不小心啟動了兩個 gconfd 程序\n"
-"3) 作業系統組態設定錯誤，導致 NFS 檔案鎖定功能無法在您的個人目錄使用，或\n"
+"3) 作業系統組態設定錯誤，導致 NFS 檔案鎖定功能無法在你的個人目錄使用，或\n"
 "4) NFS 用戶端機器已當機，而且並沒有在重新開機後通知伺服器應該停止檔案鎖定。\n"
 "假如有兩個 gconfd 程序 (或在第二個啟動後有兩個)，請登出後，終止所有的 gconfd "
 "程序並重新登入。\n"
-"假如有殘餘的鎖定檔，請移除 ~/.gconf*/*lock。或許問題是由於您想在兩部機器上\n"
+"假如有殘餘的鎖定檔，請移除 ~/.gconf*/*lock。或許問題是由於你想在兩部機器上\n"
 "同時使用 GConf， 而 ORBit 仍使用預設的組態設定以防止遠端的 CORBA 連線；請在 /"
 "etc/orbitrc 檔案中加入 \"ORBIIOPIPv4=1\"。\n"
 "在 gconfd 發生問題時，通常都應該檢查 user.* syslog 的詳細情況。每一個個人目錄"
@@ -1886,7 +1888,7 @@ msgstr "%s 選項必須單獨使用。\n"
 #: ../gconf/gconftool.c:723
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
-msgstr "當您使用 --direct 時，您必須用 --config-source 選項指定一個組態來源\n"
+msgstr "當你使用 --direct 時，你必須用 --config-source 選項指定一個組態來源\n"
 
 #: ../gconf/gconftool.c:729
 #, c-format
@@ -2021,12 +2023,12 @@ msgstr "無法設定 schema 為設定值\n"
 
 #: ../gconf/gconftool.c:1792
 msgid "When setting a list you must specify a primitive list-type\n"
-msgstr "當設定清單時，您必須指定一個初始的清單類型\n"
+msgstr "當設定清單時，你必須指定一個初始的清單類型\n"
 
 #: ../gconf/gconftool.c:1806
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "當設定配對 (pair) 時，您必須指定一個初始的 car-type 與 cdr-type\n"
+msgstr "當設定配對 (pair) 時，你必須指定一個初始的 car-type 與 cdr-type\n"
 
 #: ../gconf/gconftool.c:1821
 #, c-format
@@ -2242,7 +2244,7 @@ msgstr "警告： schema (%s) 有無效或遺失的 car_type 或 cdr_type\n"
 
 #: ../gconf/gconftool.c:3023
 msgid "WARNING: You cannot set a default value for a schema\n"
-msgstr "警告：您不能更改 schema 的預設值\n"
+msgstr "警告：你不能更改 schema 的預設值\n"
 
 #: ../gconf/gconftool.c:3052
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
@@ -2314,7 +2316,7 @@ msgstr "連接 schema ‘%s’至設定鍵‘%s’\n"
 
 #: ../gconf/gconftool.c:3469
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr "您必須至少在 <schema> 中有一個 <locale> 項目\n"
+msgstr "你必須至少在 <schema> 中有一個 <locale> 項目\n"
 
 #: ../gconf/gconftool.c:3504
 #, c-format
@@ -2405,7 +2407,7 @@ msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
-"嘗試藉著寫入不當的設定值來測試應用程式：\n"
+"嘗試寫入不當的設定值來測試應用程式：\n"
 "  %s\n"
 
 #: ../gconf/gconftool.c:3925
