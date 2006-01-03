@@ -1932,7 +1932,7 @@ gconf_value_decode (const gchar* encoded)
         gconf_schema_set_cdr_type(sc, byte_type(*s));
         ++s;
 
-        if (*end != ',')
+        if (*s != ',')
           g_warning("no comma after types in schema");
 
 	++s;
@@ -1963,7 +1963,6 @@ gconf_value_decode (const gchar* encoded)
         ++end;
         s = end;
 
-
         /* long */
         unquoted = gconf_unquote_string(s, &end, NULL);
 
@@ -1976,7 +1975,6 @@ gconf_value_decode (const gchar* encoded)
 
         ++end;
         s = end;
-        
         
         /* default value */
         unquoted = gconf_unquote_string(s, &end, NULL);
