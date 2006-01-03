@@ -93,6 +93,8 @@ struct _MarkupTree
   MarkupDir *root;
 
   guint refcount;
+
+  guint merged : 1;
 };
 
 static GHashTable *trees_by_root_dir = NULL;
@@ -100,7 +102,8 @@ static GHashTable *trees_by_root_dir = NULL;
 MarkupTree*
 markup_tree_get (const char *root_dir,
                  guint       dir_mode,
-                 guint       file_mode)
+                 guint       file_mode,
+                 gboolean    merged)
 {
   MarkupTree *tree = NULL;
 
@@ -112,6 +115,8 @@ markup_tree_get (const char *root_dir,
   if (tree != NULL)
     {
       tree->refcount += 1;
+      if (merged && !tree->merged)
+        tree->merged = TRUE;
       return tree;
     }
 
@@ -120,6 +125,7 @@ markup_tree_get (const char *root_dir,
   tree->dirname = g_strdup (root_dir);
   tree->dir_mode = dir_mode;
   tree->file_mode = file_mode;
+  tree->merged = merged != FALSE;
 
   tree->root = markup_dir_new (tree, NULL, "/");  
 
@@ -1069,6 +1075,26 @@ delete_useless_entries_recurse (MarkupDir *dir)
   return retval;
 }
 
+static void
+recursively_load_subtree (MarkupDir *dir)
+{
+  GSList *tmp;
+
+  load_entries (dir);
+  load_subdirs (dir);
+
+  tmp = dir->subdirs;
+  while (tmp != NULL)
+    {
+      MarkupDir *subdir = tmp->data;
+
+      recursively_load_subtree (subdir);
+      subdir->not_in_filesystem = TRUE;
+
+      tmp = tmp->next;
+    }
+}
+
 static gboolean
 markup_dir_sync (MarkupDir *dir)
 {
@@ -1091,6 +1117,12 @@ markup_dir_sync (MarkupDir *dir)
 
   /* Sanitize the entries */
   clean_old_local_schemas_recurse (dir, dir->save_as_subtree);
+
+  if (!dir->save_as_subtree && dir->tree->merged)
+    {
+      dir->save_as_subtree = TRUE;
+      recursively_load_subtree (dir);
+    }
   
   fs_dirname = markup_dir_build_dir_path (dir, TRUE);
   fs_filename = markup_dir_build_file_path (dir, FALSE, NULL);

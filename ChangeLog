@@ -1,5 +1,35 @@
 2006-01-03  Mark McLoughlin  <mark@skynet.ie>
 
+	Switch on "subtree merging" by default in the defaults
+	database.
+
+	* gconf/gconftool.c: (do_get_default_source): add the
+	"merged" flag to the default target for
+	--makefile-install-rule
+	
+	* backends/markup-backend.c:
+	(resolve_address), (ms_new): add a new "merged" flag
+	signalling that the entire tree should be saved as
+	a subtree.
+	
+	* backends/markup-tree.[ch]:
+	(markup_tree_get): add "merged" param and set flag
+	on MarkupTree struct
+	(recursively_load_subtree): copy function from
+	gconf-merge-tree.c
+	(markup_dir_sync): when saving the tree, save it as a
+	merged subtree if the "merged" flag is set
+	
+	* backends/gconf-merge-tree.c: (recursively_load_subtree):
+	remove; it's in markup-tree.c now
+	
+	* configure.in: remove --enable-gconf-source option which
+	was only used when we installed standard-schemas
+	
+	* standard-schemas: remove old cruft
+
+2006-01-03  Mark McLoughlin  <mark@skynet.ie>
+
 	Pointed out by Nicolas Peninguy <npeniguy@gmail.com>
 	in bug #323509
 

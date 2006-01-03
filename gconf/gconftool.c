@@ -4005,7 +4005,7 @@ do_get_default_source (const gchar** args)
     }
 
   /* Use default database */
-  source = g_strconcat("xml::", GCONF_ETCDIR, "/gconf.xml.defaults", NULL);
+  source = g_strconcat("xml:merged:", GCONF_ETCDIR, "/gconf.xml.defaults", NULL);
   g_print ("%s\n", source);
   g_free(source);
 

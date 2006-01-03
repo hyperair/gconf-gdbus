@@ -64,11 +64,13 @@ typedef struct
   MarkupTree *tree;
   guint dir_mode;
   guint file_mode;
+  guint merged : 1;
 } MarkupSource;
 
 static MarkupSource* ms_new     (const char   *root_dir,
                                  guint         dir_mode,
                                  guint         file_mode,
+                                 gboolean      merged,
                                  GConfLock    *lock);
 static void          ms_destroy (MarkupSource *source);
 
@@ -261,6 +263,7 @@ resolve_address (const char *address,
   char** address_flags;
   char** iter;
   gboolean force_readonly;
+  gboolean merged;
 
   root_dir = get_dir_from_address (address, err);
   if (root_dir == NULL)
@@ -285,6 +288,7 @@ resolve_address (const char *address,
     }
 
   force_readonly = FALSE;
+  merged = FALSE;
   
   address_flags = gconf_address_flags (address);  
   if (address_flags)
@@ -295,6 +299,10 @@ resolve_address (const char *address,
           if (strcmp (*iter, "readonly") == 0)
             {
               force_readonly = TRUE;
+            }
+          else if (strcmp (*iter, "merged") == 0)
+            {
+              merged = TRUE;
             }
 
           ++iter;
@@ -388,7 +396,7 @@ resolve_address (const char *address,
   
   /* Create the new source */
 
-  xsource = ms_new (root_dir, dir_mode, file_mode, lock);
+  xsource = ms_new (root_dir, dir_mode, file_mode, merged, lock);
 
   gconf_log (GCL_DEBUG,
              _("Directory/file permissions for XML source at root %s are: %o/%o"),
@@ -886,6 +894,7 @@ static MarkupSource*
 ms_new (const char* root_dir,
         guint       dir_mode,
         guint       file_mode,
+        gboolean    merged,
         GConfLock  *lock)
 {
   MarkupSource* ms;
@@ -904,10 +913,12 @@ ms_new (const char* root_dir,
 
   ms->dir_mode = dir_mode;
   ms->file_mode = file_mode;
+  ms->merged = merged != FALSE;
   
   ms->tree = markup_tree_get (ms->root_dir,
                               ms->dir_mode,
-                              ms->file_mode);
+                              ms->file_mode,
+                              ms->merged);
   
   return ms;
 }
