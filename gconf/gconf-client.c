@@ -644,6 +644,18 @@ foreach_add_notifies(gpointer key, gpointer value, gpointer user_data)
     }
 }
 
+static gboolean
+clear_dir_cache_foreach (char* key, GConfEntry* entry, char *dir)
+{
+  if (gconf_key_is_below (dir, key))
+    {
+      gconf_entry_free (entry);
+      return TRUE;
+    }
+  else
+    return FALSE;
+}
+
 static void
 gconf_client_real_remove_dir    (GConfClient* client,
                                  Dir* d,
@@ -667,6 +679,10 @@ gconf_client_real_remove_dir    (GConfClient* client,
       d->notify_id = 0;
     }
   
+  g_hash_table_foreach_remove (client->cache_hash,
+                               (GHRFunc)clear_dir_cache_foreach,
+                               d->name);
+
   dir_destroy(d);
 
   ad.client = client;

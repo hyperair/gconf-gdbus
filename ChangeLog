@@ -1,3 +1,11 @@
+2006-01-05  Vincent Untz  <vuntz@gnome.org>
+
+	* gconf/gconf-client.c: (clear_dir_cache_foreach): new, clears a cache
+	entry if it matches the directory
+	(gconf_client_real_remove_dir): remove from cache all entries that are
+	in this directory
+	Fix bug #127285.
+
 2006-01-05  Tor Lillqvist  <tml@novell.com>
 
 	* gconf-zip.in: Include the backend DLLs in the runtime zipfile.
