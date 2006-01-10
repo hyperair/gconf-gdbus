@@ -36,7 +36,7 @@ xml_test_SOURCES= xml-test.c
 xml_test_LDADD = \
 	$(DEPENDENT_WITH_XML_LIBS) \
 	$(top_builddir)/gconf/libgconf-$(MAJOR_VERSION).la \
-	$(top_builddir)/backends/libgconfbackend-oldxml.la
+	libgconfbackend-oldxml.la
 
 bin_PROGRAMS = gconf-merge-tree
 gconf_merge_tree_SOURCES = gconf-merge-tree.c
