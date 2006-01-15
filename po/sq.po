@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-03 17:30+0100\n"
+"POT-Creation-Date: 2006-01-15 19:21+0000\n"
 "PO-Revision-Date: 2005-10-28 17:19+0200\n"
 "Last-Translator: Laurent Dhima <laurenti@alblinux.net>\n"
 "Language-Team: Albanian <gnome-albanian-perkthyesit@lists.sourceforge.net>\n"
@@ -80,22 +80,22 @@ msgstr "Gabim gjatë komunikimit të kërkesës serverit LDAP: %s"
 msgid "Got %d entries using filter: %s"
 msgstr "U morën %d elementë duke përdorur filtrin: %s"
 
-#: backends/gconf-merge-tree.c:79
+#: backends/gconf-merge-tree.c:59
 #, c-format
 msgid "Cannot find directory %s\n"
 msgstr "E pamundur gjetja e directory %s\n"
 
-#: backends/gconf-merge-tree.c:95
+#: backends/gconf-merge-tree.c:75
 #, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
 msgstr "Gabim gjatë ruajtjes së degëzimit GConf tek '%s': %s\n"
 
-#: backends/gconf-merge-tree.c:121
+#: backends/gconf-merge-tree.c:101
 #, c-format
 msgid "Usage: %s <dir>\n"
 msgstr "Përdorimi: %s <dir>\n"
 
-#: backends/gconf-merge-tree.c:127
+#: backends/gconf-merge-tree.c:107
 #, c-format
 msgid ""
 "Usage: %s <dir>\n"
@@ -114,33 +114,34 @@ msgstr ""
 "  në:\n"
 "    dir/%%gconf-tree.xml\n"
 
-#: backends/markup-backend.c:162
+#: backends/markup-backend.c:164
 msgid "Unloading text markup backend module."
 msgstr "Duke shkarkuar modulin backend text markup."
 
-#: backends/markup-backend.c:225 backends/xml-backend.c:288
+#: backends/markup-backend.c:227 backends/xml-backend.c:288
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Nuk arrij të gjej directory rrënjë XML tek adresa `%s'"
 
-#: backends/markup-backend.c:281 backends/xml-backend.c:343
+#: backends/markup-backend.c:284 backends/xml-backend.c:343
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "I pamundur krijimi i directory `%s': %s"
 
-#: backends/markup-backend.c:383 backends/xml-backend.c:442
+#: backends/markup-backend.c:391 backends/xml-backend.c:442
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr ""
 "Nuk arrij të lexoj apo të shkruaj në directory rrënjë XML tek adresa \"%s\""
 
-#: backends/markup-backend.c:394 backends/xml-backend.c:452
+#: backends/markup-backend.c:402 backends/xml-backend.c:452
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Të drejtat directory/file për burimin XML në root %s janë: %o/%o"
 
-#: backends/markup-backend.c:733 backends/xml-backend.c:683
+#: backends/markup-backend.c:741 backends/xml-backend.c:683
+#, c-format
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -148,190 +149,197 @@ msgstr ""
 "Operacioni i eleminimit të directory nuk është më i suportuar, mjafton të "
 "eleminosh të gjitha vlerat në directory"
 
-#: backends/markup-backend.c:819 backends/xml-backend.c:769
+#: backends/markup-backend.c:827 backends/xml-backend.c:769
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr ""
 "E pamundur hapja e directory të lock për %s që të heqë files e locks: %s\n"
 
-#: backends/markup-backend.c:832 backends/xml-backend.c:782
+#: backends/markup-backend.c:840 backends/xml-backend.c:782
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "I pamundur eleminimi i file %s: %s\n"
 
-#: backends/markup-backend.c:853
+#: backends/markup-backend.c:861
 msgid "Initializing Markup backend module"
 msgstr "Duke filluar modulin backend Markup"
 
-#: backends/markup-backend.c:927 backends/xml-backend.c:880
+#: backends/markup-backend.c:938 backends/xml-backend.c:880
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Gabim gjatë krijimit të lock në dir XML \"%s\": %s"
 
-#: backends/markup-tree.c:362
+#: backends/markup-tree.c:397
+#, c-format
 msgid "Failed to write some configuration data to disk\n"
 msgstr "Gabim gjatë shkrimit në disk të disa prej të dhënave të konfigurimit\n"
 
-#: backends/markup-tree.c:798 backends/xml-dir.c:1273
+#: backends/markup-tree.c:920 backends/xml-dir.c:1273
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "Nuk arrij të krijoj directory \"%s\": %s"
 
-#: backends/markup-tree.c:836 backends/markup-tree.c:843
+#: backends/markup-tree.c:960 backends/markup-tree.c:967
 #, c-format
 msgid "Could not remove \"%s\": %s\n"
 msgstr "E pamundur heqja e \"%s\": %s\n"
 
-#: backends/markup-tree.c:1018
+#: backends/markup-tree.c:1168
 #, c-format
 msgid "Failed to write \"%s\": %s\n"
 msgstr "Gabim gjatë shkrimit të \"%s\": %s\n"
 
-#: backends/markup-tree.c:1701
+#: backends/markup-tree.c:1376
+#, fuzzy, c-format
+msgid "Failed to load file \"%s\": %s"
+msgstr "Gabim gjatë ngarkimit të burimit \"%s\": %s"
+
+#: backends/markup-tree.c:1968
 #, c-format
 msgid "Line %d character %d: %s"
 msgstr "Rreshti %d gërma %d: %s"
 
-#: backends/markup-tree.c:1914
+#: backends/markup-tree.c:2187
 #, c-format
 msgid "Attribute \"%s\" repeated twice on the same <%s> element"
 msgstr "Atributi \"%s\" është përsëritur dy herë tek i njëjti element <%s>"
 
-#: backends/markup-tree.c:1931 backends/markup-tree.c:1955
+#: backends/markup-tree.c:2204 backends/markup-tree.c:2228
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
 msgstr "Atributi \"%s\" tek elementi <%s> është i pavlefshëm për këtë kontekst"
 
-#: backends/markup-tree.c:1980 gconf/gconf-value.c:110
+#: backends/markup-tree.c:2253 gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
 msgstr "Gabim në interpretimin e `%s' (pritej një numër i plotë)"
 
-#: backends/markup-tree.c:1987 gconf/gconf-value.c:120
+#: backends/markup-tree.c:2260 gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
 msgstr "Numri i plotë `%s' është o shumë i madh o shumë i vogël"
 
-#: backends/markup-tree.c:2019 gconf/gconf-value.c:185
+#: backends/markup-tree.c:2292 gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
 msgstr "Gabim në interpretimin e `%s' (pritej e vërtetë ose fallso)"
 
-#: backends/markup-tree.c:2043 gconf/gconf-value.c:141
+#: backends/markup-tree.c:2316 gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
 msgstr "Gabim në interpretimin e `%s' (pritej një numër i real)"
 
-#: backends/markup-tree.c:2113 backends/markup-tree.c:2142
-#: backends/markup-tree.c:2182 backends/markup-tree.c:2206
-#: backends/markup-tree.c:2214 backends/markup-tree.c:2269
-#: backends/markup-tree.c:2334 backends/markup-tree.c:2442
-#: backends/markup-tree.c:2521 backends/markup-tree.c:2633
+#: backends/markup-tree.c:2386 backends/markup-tree.c:2415
+#: backends/markup-tree.c:2455 backends/markup-tree.c:2479
+#: backends/markup-tree.c:2487 backends/markup-tree.c:2542
+#: backends/markup-tree.c:2607 backends/markup-tree.c:2719
+#: backends/markup-tree.c:2787 backends/markup-tree.c:2845
+#: backends/markup-tree.c:2995
 #, c-format
 msgid "No \"%s\" attribute on element <%s>"
 msgstr "Asnjë atribut \"%s\" tek elementi <%s>"
 
-#: backends/markup-tree.c:2122
+#: backends/markup-tree.c:2395
 #, c-format
 msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr "Vlerë \"%s\" e panjohur për atributin \"%s\" tek elementi <%s>"
 
-#: backends/markup-tree.c:2156
+#: backends/markup-tree.c:2429
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "Lloj i pavlefshëm \"%s\" tek <%s>"
 
-#: backends/markup-tree.c:2236
+#: backends/markup-tree.c:2509
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr "Lloj i pavlefshëm first-element \"%s\" tek <%s>"
 
-#: backends/markup-tree.c:2250
+#: backends/markup-tree.c:2523
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
 msgstr "cdr_type \"%s\" i pavlefshëm tek <%s>"
 
-#: backends/markup-tree.c:2286
+#: backends/markup-tree.c:2559
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
 msgstr "list_type \"%s\" e pavlefshme tek <%s>"
 
-#: backends/markup-tree.c:2567
+#: backends/markup-tree.c:2926
 msgid "Two <default> elements below a <local_schema>"
 msgstr "Dy elementë <default> para një <local_schema>"
 
-#: backends/markup-tree.c:2582
+#: backends/markup-tree.c:2941
 msgid "Two <longdesc> elements below a <local_schema>"
 msgstr "Dy elementë <longdesc> para një <local_schema>"
 
-#: backends/markup-tree.c:2589
+#: backends/markup-tree.c:2948
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
 msgstr "Elementi <%s> nuk lejohet para <%s>"
 
-#: backends/markup-tree.c:2613 backends/markup-tree.c:2705
-#: backends/markup-tree.c:2759 backends/markup-tree.c:2807
+#: backends/markup-tree.c:2973 backends/markup-tree.c:3078
+#: backends/markup-tree.c:3132 backends/markup-tree.c:3183
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
 msgstr "<%s> është dhënë por elementi aktual nuk është i llojit %s"
 
-#: backends/markup-tree.c:2683
+#: backends/markup-tree.c:3056
 msgid "Two <car> elements given for same pair"
 msgstr "Janë dhënë dy elemente <car> për të njëjtin çift"
 
-#: backends/markup-tree.c:2697
+#: backends/markup-tree.c:3070
 msgid "Two <cdr> elements given for same pair"
 msgstr "Janë dhënë dy elemente <cdr> për të njëjtin çift"
 
-#: backends/markup-tree.c:2751
+#: backends/markup-tree.c:3124
 #, c-format
 msgid "<li> has wrong type %s"
 msgstr "<li> është i tipit të gabuar %s"
 
-#: backends/markup-tree.c:2780
+#: backends/markup-tree.c:3155
 #, c-format
 msgid "<%s> provided but parent <entry> does not have a value"
 msgstr "<%s> është dhënë por <entry> prind nuk ka asnjë vlerë"
 
-#: backends/markup-tree.c:2820 backends/markup-tree.c:2842
-#: backends/markup-tree.c:2864 backends/markup-tree.c:2881
+#: backends/markup-tree.c:3196 backends/markup-tree.c:3219
+#: backends/markup-tree.c:3241 backends/markup-tree.c:3258
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
 msgstr "Elementi <%s> nuk lejohet në brendësi të elementit aktual"
 
-#: backends/markup-tree.c:2913
+#: backends/markup-tree.c:3290
 #, c-format
 msgid "Outermost element in menu file must be <gconf> not <%s>"
 msgstr "Elementi i jashtëm tek file menu duhet të jetë <gconf> e jo <%s>"
 
-#: backends/markup-tree.c:2933 backends/markup-tree.c:2955
-#: backends/markup-tree.c:2960
+#: backends/markup-tree.c:3310 backends/markup-tree.c:3332
+#: backends/markup-tree.c:3337
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
 msgstr "Elementi <%s> nuk lejohet brenda një elementi <%s>"
 
-#: backends/markup-tree.c:3040
+#: backends/markup-tree.c:3481
 #, c-format
 msgid "No text is allowed inside element <%s>"
 msgstr "Nuk lejohet teksti në brendësi të elementit <%s>"
 
-#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
-#: backends/markup-tree.c:3771
+#: backends/markup-tree.c:3598 backends/markup-tree.c:4377
+#: backends/markup-tree.c:4395
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Gabim gjatë hapjes së \"%s\": %s\n"
 
-#: backends/markup-tree.c:3183
+#: backends/markup-tree.c:3628
 #, c-format
 msgid "Error reading \"%s\": %s\n"
 msgstr "Gabim gjatë leximit të \"%s\": %s\n"
 
-#: backends/markup-tree.c:3845
+#: backends/markup-tree.c:4482
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Gabim gjatë shkrimit të file \"%s\": %s"
 
-#: backends/markup-tree.c:3857
+#: backends/markup-tree.c:4494
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -599,12 +607,12 @@ msgstr "Përfundimi i backend dështoi"
 msgid "GConf Error: %s\n"
 msgstr "Gabim i GConf: %s\n"
 
-#: gconf/gconf-client.c:896
+#: gconf/gconf-client.c:912
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Paralajmërim i GCONF: gabim gjatë numërimit të çifteve në `%s': %s"
 
-#: gconf/gconf-client.c:1181
+#: gconf/gconf-client.c:1197
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Pritej vlera `%s' por u mor vlera `%s' për kyçin %s"
@@ -853,6 +861,7 @@ msgstr "Gabim leximi tek file `%s': %s\n"
 #: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1675
+#, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Teksti përmban UTF-8 të pavlefshme"
 
@@ -894,22 +903,22 @@ msgstr "Stringa e kuotuar nuk përfundon me simbolin e kuotimit"
 msgid "Encoded value is not valid UTF-8"
 msgstr "Vlera e kodifikuar nuk është UTF-8 e vlefshme"
 
-#: gconf/gconf-internals.c:2363
+#: gconf/gconf-internals.c:2366
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "E pamundur vendosja e bllokimit tek file i përkohshëm '%s': %s"
 
-#: gconf/gconf-internals.c:2390
+#: gconf/gconf-internals.c:2393
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "Nuk arrij të krijoj file '%s', ka mundësi që ky file të ekzistojë"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2461
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Dështoi krijimi apo hapja e '%s'"
 
-#: gconf/gconf-internals.c:2468
+#: gconf/gconf-internals.c:2471
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -919,96 +928,97 @@ msgstr ""
 "vendosur lock, ose sistemi operativ ka file locking NFS të konfiguruar gabim "
 "(%s)"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "Fshirja e '%s' dështoi: %s"
 
-#: gconf/gconf-internals.c:2512
+#: gconf/gconf-internals.c:2515
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "Gabim gjatë hapjes së file IOR '%s', gconfd nuk u gjet: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2545
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
 "gconftool apo një proces tjetër, që nuk është gconfd, ka file e lock '%s'"
 
-#: gconf/gconf-internals.c:2559
+#: gconf/gconf-internals.c:2562
+#, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "E pamundur vënia në kontakt me ORB për të zgjidhur riferimentin ekzistues me "
 "gconfd"
 
-#: gconf/gconf-internals.c:2569
+#: gconf/gconf-internals.c:2572
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Gabim në konvertimin e IOR '%s' në riferimentin e objektit"
 
-#: gconf/gconf-internals.c:2618
+#: gconf/gconf-internals.c:2621
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "nuk arrij të krijoj directory `%s': %s"
 
-#: gconf/gconf-internals.c:2675
+#: gconf/gconf-internals.c:2678
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Nuk arrij të shkruaj tek file `%s': %s"
 
-#: gconf/gconf-internals.c:2716
+#: gconf/gconf-internals.c:2719
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Lock tek file `%s' nuk është prezent, por duhet të ishte"
 
-#: gconf/gconf-internals.c:2739
+#: gconf/gconf-internals.c:2742
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Gabim në lidhjen e '%s' me '%s': %s"
 
-#: gconf/gconf-internals.c:2751
+#: gconf/gconf-internals.c:2754
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Heqja e file lock `%s' dështoi: %s"
 
-#: gconf/gconf-internals.c:2774
+#: gconf/gconf-internals.c:2777
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Pastrimi i file '%s' dështoi: %s"
 
-#: gconf/gconf-internals.c:2790
+#: gconf/gconf-internals.c:2793
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Eleminimi i directory të lock `%s' dështoi: %s"
 
-#: gconf/gconf-internals.c:2832
+#: gconf/gconf-internals.c:2835
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Gabim në fshirjen e file të lock %s: %s\n"
 
-#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2989 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Gabim gjatë analizimit të %s: %s"
 
-#: gconf/gconf-internals.c:3008
+#: gconf/gconf-internals.c:3011
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Gabim duke kryer ping serverit: %s"
 
-#: gconf/gconf-internals.c:3033
+#: gconf/gconf-internals.c:3036
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Gabim gjatë krijimit të pipe për komunikimin me demonin gconf të "
 "rigjeneruar: %s\n"
 
-#: gconf/gconf-internals.c:3057
+#: gconf/gconf-internals.c:3060
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Gabim në ekzekutimin e server-it të konfigurimit: %s\n"
 
-#: gconf/gconf-internals.c:3082
+#: gconf/gconf-internals.c:3085
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1021,7 +1031,7 @@ msgstr ""
 "NFS i vjetër si rezultat i një bllokimi të sistemit. Konsultoni http://www."
 "gnome.org/projects/gconf/ për informacione më të hollësishme (Detajet - %s)"
 
-#: gconf/gconf-internals.c:3083
+#: gconf/gconf-internals.c:3086
 msgid "none"
 msgstr "asnjë"
 
@@ -1137,10 +1147,12 @@ msgstr "%s Vazhdon (y/n)?"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
+#, c-format
 msgid "Schema contains invalid UTF-8"
 msgstr "Skema përmban UTF-8 të pavlefshme"
 
 #: gconf/gconf-schema.c:254
+#, c-format
 msgid ""
 "Schema specifies type list but doesn't specify the type of the list elements"
 msgstr ""
@@ -1148,6 +1160,7 @@ msgstr ""
 "listës"
 
 #: gconf/gconf-schema.c:264
+#, c-format
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
@@ -1329,64 +1342,64 @@ msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr ""
 "Gabim gjatë shtimit të klientit tek lista e server-it, gabimi CORBA: %s"
 
-#: gconf/gconf.c:2587
+#: gconf/gconf.c:2589
 msgid "Must begin with a slash (/)"
 msgstr "Duhet të fillojë me një slash (/)"
 
-#: gconf/gconf.c:2609
+#: gconf/gconf.c:2611
 msgid "Can't have two slashes (/) in a row"
 msgstr "Nuk lejohen dy slashes (/) njëri pas tjetrit "
 
-#: gconf/gconf.c:2611
+#: gconf/gconf.c:2613
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Nuk lejohet të ketë një pikë (.) menjëherë mbas një slash (/)"
 
-#: gconf/gconf.c:2630
+#: gconf/gconf.c:2632
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "'%c' nuk është një simbol ASCII, prandaj nuk lejohet në emrat e kyçeve"
 
-#: gconf/gconf.c:2640
+#: gconf/gconf.c:2642
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr ""
 "`%c' nuk është një simbol i vlefshëm për emrat e kyçeve dhe të directory"
 
-#: gconf/gconf.c:2654
+#: gconf/gconf.c:2656
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Emrat e kyçeve dhe directory nuk mund të përfundojnë me një slash (/)"
 
-#: gconf/gconf.c:3024
+#: gconf/gconf.c:3027
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Gabim gjatë ndalimit të server-it të konfigurimit: %s"
 
-#: gconf/gconf.c:3085
+#: gconf/gconf.c:3088
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Pritej një float, u mor një %s"
 
-#: gconf/gconf.c:3120
+#: gconf/gconf.c:3123
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Pritej një int, u mor një %s"
 
-#: gconf/gconf.c:3155
+#: gconf/gconf.c:3158
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Pritej një string, u mor një %s"
 
-#: gconf/gconf.c:3189
+#: gconf/gconf.c:3192
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Pritej një bool, u mor një %s"
 
-#: gconf/gconf.c:3222
+#: gconf/gconf.c:3225
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Pritej një skemë, u mor një %s"
 
-#: gconf/gconf.c:3561
+#: gconf/gconf.c:3564
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Gabim CORBA: %s"
@@ -1914,26 +1927,32 @@ msgid "Print version"
 msgstr "Printo versionin"
 
 #: gconf/gconftool.c:537
+#, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "I pamundur leximi dhe vendosja apo anullimi i njëkohshëm\n"
 
 #: gconf/gconftool.c:547
+#, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "I pamundur vendosja dhe leximi apo anullimi i njëkohshëm\n"
 
 #: gconf/gconftool.c:554
+#, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "I pamundur leximi i tipit dhe vendosja apo anullimi i njëkohshëm\n"
 
 #: gconf/gconftool.c:565
+#, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "I pamundur përdorimi i --all-entries me --get apo --set njëkohësisht\n"
 
 #: gconf/gconftool.c:576
+#, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "I pamundur përdorimi i --all-dirs me --get apo --set njëkohësisht\n"
 
 #: gconf/gconftool.c:589
+#, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1942,6 +1961,7 @@ msgstr ""
 "all-entries, ose --all-dirs\n"
 
 #: gconf/gconftool.c:602
+#, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1950,14 +1970,17 @@ msgstr ""
 "entries, --all-dirs\n"
 
 #: gconf/gconftool.c:608
+#, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Lloji është i konsiderueshëm vetëm kur vendoset një vlerë\n"
 
 #: gconf/gconftool.c:614
+#, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "Duhet specifikuar lloji kur vendoset një vlerë\n"
 
 #: gconf/gconftool.c:622
+#, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
@@ -1973,6 +1996,7 @@ msgid "%s option must be used by itself.\n"
 msgstr "Opcioni %s duhet përdorur i pashoqëruar.\n"
 
 #: gconf/gconftool.c:723
+#, c-format
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
@@ -1985,12 +2009,14 @@ msgid "Failed to init GConf: %s\n"
 msgstr "Gabim gjatë nisjes së GConf: %s\n"
 
 #: gconf/gconftool.c:758
+#, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL rezulton e përcaktuar, skemat nuk do "
 "të instalohen\n"
 
 #: gconf/gconftool.c:765
+#, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
@@ -1998,6 +2024,7 @@ msgstr ""
 "të ç'instalohen\n"
 
 #: gconf/gconftool.c:778
+#, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr ""
 "E ndryshueshmja e ambientit GCONF_CONFIG_SOURCE duhet të jetë e përcaktuar\n"
@@ -2013,10 +2040,12 @@ msgid "Shutdown error: %s\n"
 msgstr "Gabim gjatë ndalesës: %s\n"
 
 #: gconf/gconftool.c:1159
+#, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Specifiko një ose më shumë directories për të listuar.\n"
 
 #: gconf/gconftool.c:1211
+#, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Specifiko një ose më shumë directories për të anulluar.\n"
 
@@ -2035,6 +2064,7 @@ msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Gabim gjatë rigjenerimit të server-it të konfigurimit (gconfd): %s\n"
 
 #: gconf/gconftool.c:1607
+#, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "Specifikoni një apo më shumë kyçe për t'u marrë\n"
 
@@ -2101,6 +2131,7 @@ msgid "Don't understand type `%s'\n"
 msgstr "Nuk arrij të kuptoj llojin `%s'\n"
 
 #: gconf/gconftool.c:1734
+#, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Specifiko si argumentë kyçe dhe vlera të alternuara\n"
 
@@ -2110,15 +2141,18 @@ msgid "No value to set for key: `%s'\n"
 msgstr "Asnjë vlerë e përcaktuar për kyçin: `%s'\n"
 
 #: gconf/gconftool.c:1782
+#, c-format
 msgid "Cannot set schema as value\n"
 msgstr "I pamundur përcaktimi i skemës si vlerë\n"
 
 #: gconf/gconftool.c:1792
+#, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr ""
 "Kur përcaktohet një listë duhet specifikuar një listë e llojit primitiv\n"
 
 #: gconf/gconftool.c:1806
+#, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr ""
@@ -2140,10 +2174,12 @@ msgid "Error syncing: %s\n"
 msgstr "Gabim gjatë sinkronizimit: %s\n"
 
 #: gconf/gconftool.c:1867
+#, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "Specifiko një o më shumë kyçe të cilëve u duhet marrë lloji\n"
 
 #: gconf/gconftool.c:1911
+#, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Specifiko një kyç nga ku të merret madhësia.\n"
 
@@ -2153,22 +2189,27 @@ msgid "Key %s is not a list.\n"
 msgstr "Kyçi %s nuk është një listë.\n"
 
 #: gconf/gconftool.c:1956
+#, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Specifiko një kyç nga ku të merret një element i listës.\n"
 
 #: gconf/gconftool.c:1987
+#, c-format
 msgid "Must specify list index.\n"
 msgstr "Specifiko indeksin e listës.\n"
 
 #: gconf/gconftool.c:1994
+#, c-format
 msgid "List index must be non-negative.\n"
 msgstr "Indeksi i listës duhet të jetë jo-negativ.\n"
 
 #: gconf/gconftool.c:2003
+#, c-format
 msgid "List index is out of bounds.\n"
 msgstr "Treguesi i listës është jashtë limiteve.\n"
 
 #: gconf/gconftool.c:2029
+#, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Specifiko një apo më shumë kyçe në rreshtin e komandës\n"
 
@@ -2198,6 +2239,7 @@ msgid "Value at '%s' is not a schema\n"
 msgstr "Vlera tek '%s' nuk është një skemë\n"
 
 #: gconf/gconftool.c:2153
+#, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "Specifiko emrin e skemës ndjekur nga emri i kyçit ku duhet aplikuar\n"
 
@@ -2208,6 +2250,7 @@ msgstr ""
 "Gabim gjatë shoqërimit të emrit '%s' të skemës me emrin '%s' të kyçit: %s\n"
 
 #: gconf/gconftool.c:2178
+#, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Duhet të specifikosh kyçet nga të cilët do të anullohet skema\n"
 
@@ -2217,21 +2260,25 @@ msgid "Error removing schema name from '%s': %s\n"
 msgstr "Gabim gjatë heqjes së emrit të skemës nga '%s': %s\n"
 
 #: gconf/gconftool.c:2213
+#, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Duhet specifikuar si argument i vetëm kyçi (emri i skemës)\n"
 
 #: gconf/gconftool.c:2255
+#, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Lloji i listës duhet të jetë një lloj primitiv: string, int, float ose bool\n"
 
 #: gconf/gconftool.c:2275
+#, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Lloji i çiftit car duhet të jetë një lloj primitiv: string, int, float ose "
 "bool\n"
 
 #: gconf/gconftool.c:2295
+#, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Lloji i çiftit cdr duhet të jetë një tip primitiv: string, int, float ose "
@@ -2248,11 +2295,13 @@ msgid "Error syncing: %s"
 msgstr "Gabim gjatë sinkronizimit: %s"
 
 #: gconf/gconftool.c:2339
+#, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Specifiko një ose më shumë directories nga ku të merren çiftet kyç/vlerë.\n"
 
 #: gconf/gconftool.c:2353
+#, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Specifiko një o më shumë kyçe për t'u anulluar.\n"
 
@@ -2262,6 +2311,7 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Gabim duke anulluar `%s': %s\n"
 
 #: gconf/gconftool.c:2384
+#, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr ""
 "Duhen specifikuar një o më shumë kyçe që duhen anulluar rekursivisht.\n"
@@ -2272,6 +2322,7 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Gabim duke anulluar rekursivisht \"%s\": %s\n"
 
 #: gconf/gconftool.c:2418
+#, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Specifiko një ose më shumë directories nga ku të merren nën-directories.\n"
@@ -2282,6 +2333,7 @@ msgid "Error listing dirs: %s\n"
 msgstr "Gabim gjatë numërimit të directories: %s\n"
 
 #: gconf/gconftool.c:2588
+#, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr ""
 "KUJDES: duhet specifikuar si një <car> ashtu dhe një <cdr> në një <çift>\n"
@@ -2294,6 +2346,7 @@ msgstr ""
 "shpërfillet\n"
 
 #: gconf/gconftool.c:2648
+#, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "KUJDES: duhet të ekzistojë një nyjë bir nën <value>\n"
 
@@ -2351,10 +2404,12 @@ msgstr ""
 "KUJDES: car_type apo cdr_type për skemën (%s) mungon ose është i pasaktë\n"
 
 #: gconf/gconftool.c:3023
+#, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "KUJDES: Ti nuk mund të përcaktosh vlerën e prezgjedhur për skemën\n"
 
 #: gconf/gconftool.c:3052
+#, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "KUJDES: gabim i brendshëm i gconftool, GConfValueType i panjohur\n"
 
@@ -2385,6 +2440,7 @@ msgstr ""
 "KUJDES: cdr_type mund të jetë vetëm int, float, string ose bool dhe jo `%s'\n"
 
 #: gconf/gconftool.c:3199
+#, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "KUJDES: nyje <applyto> boshe"
 
@@ -2394,19 +2450,23 @@ msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "KUJDES: nyja <%s> rezulton e pakuptueshme nën <schema>\n"
 
 #: gconf/gconftool.c:3213
+#, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr ""
 "KUJDES: <list_type> nuk është e specifikuar për skemën e lloji i listës\n"
 
 #: gconf/gconftool.c:3219
+#, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "KUJDES: <car_type> e pa specifikuar për skemën e lloji i çiftit\n"
 
 #: gconf/gconftool.c:3225
+#, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "KUJDES: <cdr_type> e pa specifikuar për skemën e lloji i çiftit\n"
 
 #: gconf/gconftool.c:3254
+#, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "KUJDES: nyja <locale> nuk ka vlerën `name=\"locale\"', do të shpërfillet\n"
@@ -2430,6 +2490,7 @@ msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Skema `%s' ju bashkangjit kyçit `%s'\n"
 
 #: gconf/gconftool.c:3469
+#, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Duhet të keni të paktën një zë <locale> në një <schema>\n"
 
@@ -2454,6 +2515,7 @@ msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "U ç'instalua skema `%s' për lokalen `%s'\n"
 
 #: gconf/gconftool.c:3568
+#, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "KUJDES: nuk është specifikuar asnjë kyç për skemën\n"
 
@@ -2495,6 +2557,7 @@ msgid "Error syncing config data: %s"
 msgstr "Gabim gjatë sinkronizimit të të dhënave të konfigurimit: %s"
 
 #: gconf/gconftool.c:3718
+#, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "Specifiko files skema që duhen instaluar\n"
 
@@ -2513,6 +2576,7 @@ msgid "Failed to unset breakage key %s: %s\n"
 msgstr "I pamundur anullimi i kyçit të ndërprerjes %s: %s\n"
 
 #: gconf/gconftool.c:3901
+#, c-format
 msgid "Must specify some keys to break\n"
 msgstr "Specifiko disa kyçe që duhen thyer\n"
 
@@ -2527,6 +2591,7 @@ msgstr ""
 "  %s\n"
 
 #: gconf/gconftool.c:3925
+#, c-format
 msgid "Must specify some directories to break\n"
 msgstr "Duhet të specifikoni disa directory që duhen thyer\n"
 

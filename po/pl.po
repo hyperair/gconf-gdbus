@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-03 17:30+0100\n"
+"POT-Creation-Date: 2006-01-15 19:21+0000\n"
 "PO-Revision-Date: 2003-10-26 22:46+0100\n"
 "Last-Translator: Gnome PL Team <translators@gnomepl.org>\n"
 "Language-Team: GNOME PL Team <translation-team-pl@lists.sourceforge.net>\n"
@@ -85,22 +85,22 @@ msgstr "Błąd przy odpytywaniu serwera LDAP: %s"
 msgid "Got %d entries using filter: %s"
 msgstr "Uzyskano %d elementów przy użyciu filtra: %s"
 
-#: backends/gconf-merge-tree.c:79
+#: backends/gconf-merge-tree.c:59
 #, c-format
 msgid "Cannot find directory %s\n"
 msgstr "Nie można znaleźć katalogu %s\n"
 
-#: backends/gconf-merge-tree.c:95
+#: backends/gconf-merge-tree.c:75
 #, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
 msgstr "Błąd podczas zapisu drzewa GConf do \"%s\": %s\n"
 
-#: backends/gconf-merge-tree.c:121
+#: backends/gconf-merge-tree.c:101
 #, c-format
 msgid "Usage: %s <dir>\n"
 msgstr "Użycie: %s <katalog>\n"
 
-#: backends/gconf-merge-tree.c:127
+#: backends/gconf-merge-tree.c:107
 #, c-format
 msgid ""
 "Usage: %s <dir>\n"
@@ -119,21 +119,21 @@ msgstr ""
 "  do postaci:\n"
 "    katalog/%%gconf-tree.xml\n"
 
-#: backends/markup-backend.c:162
+#: backends/markup-backend.c:164
 msgid "Unloading text markup backend module."
 msgstr "Usuwanie z pamięci modułu oznaczania tekstu."
 
-#: backends/markup-backend.c:225 backends/xml-backend.c:288
+#: backends/markup-backend.c:227 backends/xml-backend.c:288
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Nie można znaleźć katalogu głównego XML pod adresem \"%s\""
 
-#: backends/markup-backend.c:281 backends/xml-backend.c:343
+#: backends/markup-backend.c:284 backends/xml-backend.c:343
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Nie można utworzyć katalogu \"%s\": %s"
 
-#: backends/markup-backend.c:383 backends/xml-backend.c:442
+#: backends/markup-backend.c:391 backends/xml-backend.c:442
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
@@ -141,12 +141,13 @@ msgstr ""
 "Nie można odczytać lub zapisywać do katalogu głównego XML-a pod adresem \"%s"
 "\""
 
-#: backends/markup-backend.c:394 backends/xml-backend.c:452
+#: backends/markup-backend.c:402 backends/xml-backend.c:452
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Uprawnienia do katalogu/pliku dla źródła XML dla roota %s są: %o/%o"
 
-#: backends/markup-backend.c:733 backends/xml-backend.c:683
+#: backends/markup-backend.c:741 backends/xml-backend.c:683
+#, c-format
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -154,190 +155,197 @@ msgstr ""
 "Operacja usuwania katalogu nie jest już obsługiwana, należy po prostu usunąć "
 "wszystkie wartości z katalogu"
 
-#: backends/markup-backend.c:819 backends/xml-backend.c:769
+#: backends/markup-backend.c:827 backends/xml-backend.c:769
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr ""
 "Nie można otworzyć katalogu blokad dla %s w celu usunięcia blokad: %s\n"
 
-#: backends/markup-backend.c:832 backends/xml-backend.c:782
+#: backends/markup-backend.c:840 backends/xml-backend.c:782
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Nie można usunąć pliku %s: %s\n"
 
-#: backends/markup-backend.c:853
+#: backends/markup-backend.c:861
 msgid "Initializing Markup backend module"
 msgstr "Inicjowanie modułu odznaczania"
 
-#: backends/markup-backend.c:927 backends/xml-backend.c:880
+#: backends/markup-backend.c:938 backends/xml-backend.c:880
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Nieudana próba zwolnienia blokady na katalogu XML \"%s\": %s"
 
-#: backends/markup-tree.c:362
+#: backends/markup-tree.c:397
+#, c-format
 msgid "Failed to write some configuration data to disk\n"
 msgstr "Nie można zapisać pewnych danych konfiguracyjnych na dysk\n"
 
-#: backends/markup-tree.c:798 backends/xml-dir.c:1273
+#: backends/markup-tree.c:920 backends/xml-dir.c:1273
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "Nie można utworzyć katalogu \"%s\": %s"
 
-#: backends/markup-tree.c:836 backends/markup-tree.c:843
+#: backends/markup-tree.c:960 backends/markup-tree.c:967
 #, c-format
 msgid "Could not remove \"%s\": %s\n"
 msgstr "Nie można usunąć pliku \"%s\": %s\n"
 
-#: backends/markup-tree.c:1018
+#: backends/markup-tree.c:1168
 #, c-format
 msgid "Failed to write \"%s\": %s\n"
 msgstr "Nie można zapisać \"%s\": %s\n"
 
-#: backends/markup-tree.c:1701
+#: backends/markup-tree.c:1376
+#, fuzzy, c-format
+msgid "Failed to load file \"%s\": %s"
+msgstr "Nie można wczytać źródła \"%s\": %s"
+
+#: backends/markup-tree.c:1968
 #, c-format
 msgid "Line %d character %d: %s"
 msgstr "Wiersz %d znak %d: %s"
 
-#: backends/markup-tree.c:1914
+#: backends/markup-tree.c:2187
 #, c-format
 msgid "Attribute \"%s\" repeated twice on the same <%s> element"
 msgstr "Atrybut \"%s\" powtórzony dwukrotnie dla tego samego elementu <%s>"
 
-#: backends/markup-tree.c:1931 backends/markup-tree.c:1955
+#: backends/markup-tree.c:2204 backends/markup-tree.c:2228
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
 msgstr "Atrybut \"%s\" jest nieprawidłowy dla elementu <%s> w tym kontekście"
 
-#: backends/markup-tree.c:1980 gconf/gconf-value.c:110
+#: backends/markup-tree.c:2253 gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
 msgstr "Niezrozumiała wartość \"%s\" (oczekiwano liczby całkowitej)"
 
-#: backends/markup-tree.c:1987 gconf/gconf-value.c:120
+#: backends/markup-tree.c:2260 gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
 msgstr "Wartość całkowita \"%s\" jest zbyt duża lub zbyt mała"
 
-#: backends/markup-tree.c:2019 gconf/gconf-value.c:185
+#: backends/markup-tree.c:2292 gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
 msgstr "Niezrozumiała wartość \"%s\" (oczekiwano wartości logicznej)"
 
-#: backends/markup-tree.c:2043 gconf/gconf-value.c:141
+#: backends/markup-tree.c:2316 gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
 msgstr "Niezrozumiała wartość \"%s\" (oczekiwano liczby rzeczywistej)"
 
-#: backends/markup-tree.c:2113 backends/markup-tree.c:2142
-#: backends/markup-tree.c:2182 backends/markup-tree.c:2206
-#: backends/markup-tree.c:2214 backends/markup-tree.c:2269
-#: backends/markup-tree.c:2334 backends/markup-tree.c:2442
-#: backends/markup-tree.c:2521 backends/markup-tree.c:2633
+#: backends/markup-tree.c:2386 backends/markup-tree.c:2415
+#: backends/markup-tree.c:2455 backends/markup-tree.c:2479
+#: backends/markup-tree.c:2487 backends/markup-tree.c:2542
+#: backends/markup-tree.c:2607 backends/markup-tree.c:2719
+#: backends/markup-tree.c:2787 backends/markup-tree.c:2845
+#: backends/markup-tree.c:2995
 #, c-format
 msgid "No \"%s\" attribute on element <%s>"
 msgstr "Brak atrybutu \"%s\" dla elementu <%s>"
 
-#: backends/markup-tree.c:2122
+#: backends/markup-tree.c:2395
 #, c-format
 msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr "Nieznana wartość \"%s\" dla atrubutu \"%s\" elementu <%s>"
 
-#: backends/markup-tree.c:2156
+#: backends/markup-tree.c:2429
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "Nieprawidłowa wartość ltype \"%s\" dla <%s>"
 
-#: backends/markup-tree.c:2236
+#: backends/markup-tree.c:2509
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr "Nieprawidłowy rodzaj wartości first-element \"%s\" dla <%s>"
 
-#: backends/markup-tree.c:2250
+#: backends/markup-tree.c:2523
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
 msgstr "Nieprawidłowa wartość cdr_type \"%s\" dla <%s>"
 
-#: backends/markup-tree.c:2286
+#: backends/markup-tree.c:2559
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
 msgstr "Nieprawidłowa wartość list_type \"%s\" dla <%s>"
 
-#: backends/markup-tree.c:2567
+#: backends/markup-tree.c:2926
 msgid "Two <default> elements below a <local_schema>"
 msgstr "Dwa elementy <default> poniżej <local_schema>"
 
-#: backends/markup-tree.c:2582
+#: backends/markup-tree.c:2941
 msgid "Two <longdesc> elements below a <local_schema>"
 msgstr "Dwa elementy <longdesc> poniżej <local_schema>"
 
-#: backends/markup-tree.c:2589
+#: backends/markup-tree.c:2948
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
 msgstr "Element <%s> nie jest dozwolony poniżej <%s>"
 
-#: backends/markup-tree.c:2613 backends/markup-tree.c:2705
-#: backends/markup-tree.c:2759 backends/markup-tree.c:2807
+#: backends/markup-tree.c:2973 backends/markup-tree.c:3078
+#: backends/markup-tree.c:3132 backends/markup-tree.c:3183
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
 msgstr "Podano <%s> lecz aktualny element nie posiada typu %s"
 
-#: backends/markup-tree.c:2683
+#: backends/markup-tree.c:3056
 msgid "Two <car> elements given for same pair"
 msgstr "Dwa elementy <car> podano dla tej samej pary"
 
-#: backends/markup-tree.c:2697
+#: backends/markup-tree.c:3070
 msgid "Two <cdr> elements given for same pair"
 msgstr "Dwa elementy <cdr> podane dla tej samej pary"
 
-#: backends/markup-tree.c:2751
+#: backends/markup-tree.c:3124
 #, c-format
 msgid "<li> has wrong type %s"
 msgstr "<li> posiada nieprawidłowy typ %s"
 
-#: backends/markup-tree.c:2780
+#: backends/markup-tree.c:3155
 #, c-format
 msgid "<%s> provided but parent <entry> does not have a value"
 msgstr "Dostarczono <%s> lecz rodzic <entry> nie posiada wartości"
 
-#: backends/markup-tree.c:2820 backends/markup-tree.c:2842
-#: backends/markup-tree.c:2864 backends/markup-tree.c:2881
+#: backends/markup-tree.c:3196 backends/markup-tree.c:3219
+#: backends/markup-tree.c:3241 backends/markup-tree.c:3258
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
 msgstr "Element <%s> jest niedozwolony wewnątrz bieżącego elementu"
 
-#: backends/markup-tree.c:2913
+#: backends/markup-tree.c:3290
 #, c-format
 msgid "Outermost element in menu file must be <gconf> not <%s>"
 msgstr "Skrajnym elementem w pliku menu musi być <gconf> nie <%s>"
 
-#: backends/markup-tree.c:2933 backends/markup-tree.c:2955
-#: backends/markup-tree.c:2960
+#: backends/markup-tree.c:3310 backends/markup-tree.c:3332
+#: backends/markup-tree.c:3337
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
 msgstr "Element <%s> jest niedozwolony wewnątrz elementu <%s>"
 
-#: backends/markup-tree.c:3040
+#: backends/markup-tree.c:3481
 #, c-format
 msgid "No text is allowed inside element <%s>"
 msgstr "Tekst jest niedozwolony wewnątrz elementu <%s>"
 
-#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
-#: backends/markup-tree.c:3771
+#: backends/markup-tree.c:3598 backends/markup-tree.c:4377
+#: backends/markup-tree.c:4395
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Nie można otworzyć pliku \"%s\": %s\n"
 
-#: backends/markup-tree.c:3183
+#: backends/markup-tree.c:3628
 #, fuzzy, c-format
 msgid "Error reading \"%s\": %s\n"
 msgstr "Błąd przy czyszczeniu \"%s\": %s"
 
-#: backends/markup-tree.c:3845
+#: backends/markup-tree.c:4482
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Błąd przy zapisywaniu pliku \"%s\": %s"
 
-#: backends/markup-tree.c:3857
+#: backends/markup-tree.c:4494
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -602,12 +610,12 @@ msgstr "Błąd przy zamykaniu modułu przechowującego"
 msgid "GConf Error: %s\n"
 msgstr "Błąd GConfa: %s\n"
 
-#: gconf/gconf-client.c:896
+#: gconf/gconf-client.c:912
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Ostrzeżenie GConfa: błąd przy wypisywaniu par w \"%s\": %s"
 
-#: gconf/gconf-client.c:1181
+#: gconf/gconf-client.c:1197
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Oczekiwano \"%s\", otrzymano \"%s\" dla klucza %s"
@@ -854,6 +862,7 @@ msgstr "Błąd przy odczycie pliku \"%s\": %s\n"
 #: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1675
+#, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Tekst zawiera niepoprawną sekwencję UTF-8"
 
@@ -896,22 +905,22 @@ msgstr "Zacytowany napis nie kończy się znakiem cytowania"
 msgid "Encoded value is not valid UTF-8"
 msgstr "Zakodowana wartość nie jest poprawnym napisem UTF-8"
 
-#: gconf/gconf-internals.c:2363
+#: gconf/gconf-internals.c:2366
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Nie można zablokować tymczasowego pliku \"%s\": %s"
 
-#: gconf/gconf-internals.c:2390
+#: gconf/gconf-internals.c:2393
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "Nie można utworzyć pliku \"%s\", prawdopodobnie już on istnieje"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2461
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Nie można utworzyć lub otworzyć \"%s\""
 
-#: gconf/gconf-internals.c:2468
+#: gconf/gconf-internals.c:2471
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -920,94 +929,95 @@ msgstr ""
 "Nie można zablokować \"%s\": prawdopodobnie blokadę przetrzymuje inny proces "
 "lub w systemie zostało niepoprawnie skonfigurowane blokowanie po NFS-ie (%s)"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "Nie można usunąć \"%s\": %s"
 
-#: gconf/gconf-internals.c:2512
+#: gconf/gconf-internals.c:2515
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "nie udało się otworzyć pliku \"%s\" z IOR, nie odnaleziono gconfd: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2545
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr ""
 "plik blokady \"%s\" jest przetrzymywany przez gconftool lub inny proces (nie "
 "gconfd)"
 
-#: gconf/gconf-internals.c:2559
+#: gconf/gconf-internals.c:2562
+#, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "nie można uzyskać od ORB-a odwołania do istniejącego obiektu gconfd"
 
-#: gconf/gconf-internals.c:2569
+#: gconf/gconf-internals.c:2572
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Nie można przekonwertować IOR-a \"%s\" na odwołanie do obiektu"
 
-#: gconf/gconf-internals.c:2618
+#: gconf/gconf-internals.c:2621
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "Nie można utworzyć katalogu \"%s\": %s"
 
-#: gconf/gconf-internals.c:2675
+#: gconf/gconf-internals.c:2678
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Nie można zapisać do pliku \"%s\": %s"
 
-#: gconf/gconf-internals.c:2716
+#: gconf/gconf-internals.c:2719
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Program nie posiada blokady na plik \"%s\", choć powinien"
 
-#: gconf/gconf-internals.c:2739
+#: gconf/gconf-internals.c:2742
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Nie można dowiązać \"%s\" do \"%s\": %s"
 
-#: gconf/gconf-internals.c:2751
+#: gconf/gconf-internals.c:2754
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Nie można usunąć pliku blokady \"%s\": %s"
 
-#: gconf/gconf-internals.c:2774
+#: gconf/gconf-internals.c:2777
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Nie można wyczyścić pliku \"%s\": %s"
 
-#: gconf/gconf-internals.c:2790
+#: gconf/gconf-internals.c:2793
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Nie można usunąć katalogu blokady \"%s\": %s"
 
-#: gconf/gconf-internals.c:2832
+#: gconf/gconf-internals.c:2835
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Nie można usunąć pliku blokady %s: %s\n"
 
-#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2989 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Nie można uzyskać informacji o %s: %s"
 
-#: gconf/gconf-internals.c:3008
+#: gconf/gconf-internals.c:3011
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Brak odpowiedzi serwera przy sprawdzeniu aktywności: %s"
 
-#: gconf/gconf-internals.c:3033
+#: gconf/gconf-internals.c:3036
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Nie można utworzyć potoku do komunikacji z uruchomionym demonem gconf: %s\n"
 
-#: gconf/gconf-internals.c:3057
+#: gconf/gconf-internals.c:3060
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Nie można uruchomić serwera konfiguracji: %s\n"
 
-#: gconf/gconf-internals.c:3082
+#: gconf/gconf-internals.c:3085
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1021,7 +1031,7 @@ msgstr ""
 "informacji, odwiedź stronę http://www.gnome.org/projects/gconf/ (szczegóły - "
 "%s)."
 
-#: gconf/gconf-internals.c:3083
+#: gconf/gconf-internals.c:3086
 msgid "none"
 msgstr "brak"
 
@@ -1138,15 +1148,18 @@ msgstr "%s Kontynuować (t/n)?"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
+#, c-format
 msgid "Schema contains invalid UTF-8"
 msgstr "Schemat zawiera niepoprawną sekwencję UTF-8"
 
 #: gconf/gconf-schema.c:254
+#, c-format
 msgid ""
 "Schema specifies type list but doesn't specify the type of the list elements"
 msgstr "Schemat określa typ jako listę, lecz nie określa typu elementów listy"
 
 #: gconf/gconf-schema.c:264
+#, c-format
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
@@ -1331,64 +1344,64 @@ msgstr "Nie można dodać powiadomień do lokalnego źródła konfiguracji"
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Nie można dodać klienta do listy na serwerze. Błąd Corby: %s"
 
-#: gconf/gconf.c:2587
+#: gconf/gconf.c:2589
 msgid "Must begin with a slash (/)"
 msgstr "Musi się rozpoczynać ukośnikiem (/)"
 
-#: gconf/gconf.c:2609
+#: gconf/gconf.c:2611
 msgid "Can't have two slashes (/) in a row"
 msgstr "Dwa ukośniki nie mogą występować bezpośrednio po sobie (/)"
 
-#: gconf/gconf.c:2611
+#: gconf/gconf.c:2613
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Kropka (.) nie może być umieszczona bezpośrednio po ukośniku (/)"
 
-#: gconf/gconf.c:2630
+#: gconf/gconf.c:2632
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr ""
 "Znak \"%c\" nie jest znakiem ASCII, więc nie jest dozwolony w nazwach kluczy"
 
-#: gconf/gconf.c:2640
+#: gconf/gconf.c:2642
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "Znak \"%c\" jest niedozwolony w nazwach kluczy lub katalogów"
 
-#: gconf/gconf.c:2654
+#: gconf/gconf.c:2656
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Klucz lub katalog nie może kończyć się ukośnikiem (/)"
 
-#: gconf/gconf.c:3024
+#: gconf/gconf.c:3027
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Błąd przy kończeniu pracy serwera konfiguracji: %s"
 
-#: gconf/gconf.c:3085
+#: gconf/gconf.c:3088
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Oczekiwano liczby zmiennoprzecinkowej, otrzymano %s"
 
-#: gconf/gconf.c:3120
+#: gconf/gconf.c:3123
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Oczekiwano liczby całkowitej, otrzymano %s"
 
-#: gconf/gconf.c:3155
+#: gconf/gconf.c:3158
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Oczekiwano napisu, otrzymano %s"
 
-#: gconf/gconf.c:3189
+#: gconf/gconf.c:3192
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Oczekiwano wartości logicznej, otrzymano %s"
 
-#: gconf/gconf.c:3222
+#: gconf/gconf.c:3225
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Oczekiwano schematu, otrzymano %s"
 
-#: gconf/gconf.c:3561
+#: gconf/gconf.c:3564
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Błąd Corby: %s"
@@ -1910,26 +1923,32 @@ msgid "Print version"
 msgstr "Wypisuje wersję programu"
 
 #: gconf/gconftool.c:537
+#, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Nie można jednocześnie pobrać i ustawić wartości\n"
 
 #: gconf/gconftool.c:547
+#, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Nie można jednocześnie ustawić i pobrać wartości\n"
 
 #: gconf/gconftool.c:554
+#, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Nie można jednocześnie pobrać i ustawić typu\n"
 
 #: gconf/gconftool.c:565
+#, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Nie można używać --all-entries wraz z --get lub --set\n"
 
 #: gconf/gconftool.c:576
+#, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Nie można używać --all-pairs wraz z --get lub --set\n"
 
 #: gconf/gconftool.c:589
+#, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1938,6 +1957,7 @@ msgstr ""
 "entries lub --all-dirs\n"
 
 #: gconf/gconftool.c:602
+#, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1946,14 +1966,17 @@ msgstr ""
 "entries, --all-dirs\n"
 
 #: gconf/gconftool.c:608
+#, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Typ wartości ma sens tylko przy ustawianiu wartości\n"
 
 #: gconf/gconftool.c:614
+#, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "Przy ustawianiu wartości należy określić typ\n"
 
 #: gconf/gconftool.c:622
+#, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
@@ -1969,6 +1992,7 @@ msgid "%s option must be used by itself.\n"
 msgstr "Opcja %s musi występować samodzielnie.\n"
 
 #: gconf/gconftool.c:723
+#, c-format
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
@@ -1981,12 +2005,14 @@ msgid "Failed to init GConf: %s\n"
 msgstr "Inicjacja GConfa nie powiodła się: %s\n"
 
 #: gconf/gconftool.c:758
+#, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "Ustawione jest GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL, zaniechano instalacji "
 "schematów\n"
 
 #: gconf/gconftool.c:765
+#, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
@@ -1994,6 +2020,7 @@ msgstr ""
 "odinstalowywania schematów\n"
 
 #: gconf/gconftool.c:778
+#, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "Należy ustawić zmienną środowiskową GCONF_CONFIG_SOURCE\n"
 
@@ -2008,12 +2035,14 @@ msgid "Shutdown error: %s\n"
 msgstr "Błąd przy zamykaniu: %s\n"
 
 #: gconf/gconftool.c:1159
+#, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr ""
 "Należy podać jeden lub więcej katalogów przeznaczonych do rekurencyjnego "
 "wypisania.\n"
 
 #: gconf/gconftool.c:1211
+#, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Należy podać co najmniej jeden katlog przeznaczony do wypisania.\n"
 
@@ -2032,6 +2061,7 @@ msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Uruchomienie serwera konfiguracji (gconfd) nie powiodło się: %s\n"
 
 #: gconf/gconftool.c:1607
+#, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "Należy podać klucz lub klucze przeznaczone do pobrania\n"
 
@@ -2098,6 +2128,7 @@ msgid "Don't understand type `%s'\n"
 msgstr "Niezrozumiały typ \"%s\"\n"
 
 #: gconf/gconftool.c:1734
+#, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Jako argumenty należy podać alternatywne klucze/wartości\n"
 
@@ -2107,14 +2138,17 @@ msgid "No value to set for key: `%s'\n"
 msgstr "Nie ustawiono wartości dla klucza: \"%s\"\n"
 
 #: gconf/gconftool.c:1782
+#, c-format
 msgid "Cannot set schema as value\n"
 msgstr "Nie można ustawić schematu jako wartości\n"
 
 #: gconf/gconftool.c:1792
+#, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Przy ustawianiu listy należy podać typ podstawowy list-type\n"
 
 #: gconf/gconftool.c:1806
+#, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr ""
@@ -2136,10 +2170,12 @@ msgid "Error syncing: %s\n"
 msgstr "Błąd przy synchronizacji: %s\n"
 
 #: gconf/gconftool.c:1867
+#, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "Należy podać klucz lub klucze do pobrania typu\n"
 
 #: gconf/gconftool.c:1911
+#, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Należy podać klucz którego rozmiar jest wyszukiwany.\n"
 
@@ -2149,22 +2185,27 @@ msgid "Key %s is not a list.\n"
 msgstr "Klucz %s nie jest listą.\n"
 
 #: gconf/gconftool.c:1956
+#, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Należy podać klucz z którego można pobrac element listy.\n"
 
 #: gconf/gconftool.c:1987
+#, c-format
 msgid "Must specify list index.\n"
 msgstr "Należy podać indeks listy.\n"
 
 #: gconf/gconftool.c:1994
+#, c-format
 msgid "List index must be non-negative.\n"
 msgstr "Indeks listy musi być nieujemny.\n"
 
 #: gconf/gconftool.c:2003
+#, c-format
 msgid "List index is out of bounds.\n"
 msgstr "Indeks listy wykracza poza zakres.\n"
 
 #: gconf/gconftool.c:2029
+#, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Należy podać w wierszy poleceń klucz lub klucze\n"
 
@@ -2194,6 +2235,7 @@ msgid "Value at '%s' is not a schema\n"
 msgstr "Wartość pod \"%s\" nie jest schematem\n"
 
 #: gconf/gconftool.c:2153
+#, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Należy podać nazwę schematu i występującą po nim nazwę klucza, do którego "
@@ -2205,6 +2247,7 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Błąd przy wiązaniu schematu \"%s\" z kluczem \"%s\": %s\n"
 
 #: gconf/gconftool.c:2178
+#, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Należy podać klucze które zostaną usunięte ze schematu.\n"
 
@@ -2214,20 +2257,24 @@ msgid "Error removing schema name from '%s': %s\n"
 msgstr "Błąd przy usuwaniu schematu spod \"%s\": %s\n"
 
 #: gconf/gconftool.c:2213
+#, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Należy podać klucz (nazwę schematu) jako jedyny argument\n"
 
 #: gconf/gconftool.c:2255
+#, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "Typ listy musi być typem podstawowym: string, int, float lub bool\n"
 
 #: gconf/gconftool.c:2275
+#, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Typ pierwszego elementu pary musi być typem podstawowym: string, int, float "
 "lub bool\n"
 
 #: gconf/gconftool.c:2295
+#, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Typ drugiego elementu pary musi być typem podstawowym: string, int, float "
@@ -2244,12 +2291,14 @@ msgid "Error syncing: %s"
 msgstr "Błąd przy synchronizacji: %s"
 
 #: gconf/gconftool.c:2339
+#, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Należy podać co najmniej jeden katalog, z którego powinny być pobrane pary "
 "klucz/wartość.\n"
 
 #: gconf/gconftool.c:2353
+#, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Należy podać co najmniej jeden klucz przeznaczony do wyczyszczenia.\n"
 
@@ -2259,6 +2308,7 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Błąd przy czyszczeniu \"%s\": %s\n"
 
 #: gconf/gconftool.c:2384
+#, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr ""
 "Należy podać jeden lub więcej kluczy, przeznaczonych do rekurencyjnego "
@@ -2270,6 +2320,7 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Błąd przy rekurencyjnym czyszczeniu \"%s\": %s\n"
 
 #: gconf/gconftool.c:2418
+#, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Należy podać co najmniej jeden katalog, z którego powinny być pobrane "
@@ -2281,6 +2332,7 @@ msgid "Error listing dirs: %s\n"
 msgstr "Błąd przy wypisywaniu katalogów: %s\n"
 
 #: gconf/gconftool.c:2588
+#, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "UWAGA: Należy podać zarówno <car> jak i <cdr> w <pair>\n"
 
@@ -2290,6 +2342,7 @@ msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr "UWAGA: Klucz określony (%s) dla schematu pod <value> - zignorowany\n"
 
 #: gconf/gconftool.c:2648
+#, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "UWAGA: Musi istnieć węzeł potomny pod <value>\n"
 
@@ -2347,10 +2400,12 @@ msgstr ""
 "s)\n"
 
 #: gconf/gconftool.c:3023
+#, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "UWAGA: Nie można ustawić domyślnej wartości schematu\n"
 
 #: gconf/gconftool.c:3052
+#, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "UWAGA: wewnętrzny błąd gconftoola, nieznany GConfValueType\n"
 
@@ -2383,6 +2438,7 @@ msgstr ""
 "zaś \"%s\"\n"
 
 #: gconf/gconftool.c:3199
+#, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "UWAGA: Pusty węzeł <applyto>"
 
@@ -2392,18 +2448,22 @@ msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "UWAGA: Węzeł <%s> nie jest zrozumiały wewnątrz <schema>\n"
 
 #: gconf/gconftool.c:3213
+#, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "UWAGA: nie określono <list_type> dla schematu o typie \"lista\"\n"
 
 #: gconf/gconftool.c:3219
+#, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "UWAGA: nie określono <car_type> dla schematu o typie \"para\"\n"
 
 #: gconf/gconftool.c:3225
+#, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "UWAGA: nie określono <cdr_type> dla schematu o typie \"para\"\n"
 
 #: gconf/gconftool.c:3254
+#, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "UWAGA: Węzeł <locale> nie zawiera atrybutu name=\"locale\", zignorowano\n"
@@ -2427,6 +2487,7 @@ msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Schemat \"%s\" został przyłączony do klucza \"%s\"\n"
 
 #: gconf/gconftool.c:3469
+#, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Wewnątrz <schema> musi występować co najmniej jedno <locale>\n"
 
@@ -2455,6 +2516,7 @@ msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "Odinstalowano schemat \"%s\" dla ustawień narodowych \"%s\"\n"
 
 #: gconf/gconftool.c:3568
+#, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "UWAGA: nie określono klucza dla schematu\n"
 
@@ -2495,6 +2557,7 @@ msgid "Error syncing config data: %s"
 msgstr "Błąd przy synchronizacji danych konfiguracji: %s"
 
 #: gconf/gconftool.c:3718
+#, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "Należy podać jakieś pliki schematów do zainstalowania\n"
 
@@ -2513,6 +2576,7 @@ msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Nie można wyczyścić klucza %s: %s\n"
 
 #: gconf/gconftool.c:3901
+#, c-format
 msgid "Must specify some keys to break\n"
 msgstr "Należy podać klucze przeznaczone do uszkodzenia\n"
 
@@ -2527,6 +2591,7 @@ msgstr ""
 "  %s\n"
 
 #: gconf/gconftool.c:3925
+#, c-format
 msgid "Must specify some directories to break\n"
 msgstr "Należy podać katalogi przeznaczone do uszkodzenia\n"
 

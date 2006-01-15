@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-03 17:30+0100\n"
+"POT-Creation-Date: 2006-01-15 19:21+0000\n"
 "PO-Revision-Date: 2005-05-08 10:36+0545\n"
 "Last-Translator: Sameer Rajbhandari <amit@mpp.org.np>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -82,22 +82,22 @@ msgstr "LDAP सर्वरले सोध्दै गर्दा त्र�
 msgid "Got %d entries using filter: %s"
 msgstr "फिल्टर गर्रे %d प्रबिष्ट पायो: %s"
 
-#: backends/gconf-merge-tree.c:79
+#: backends/gconf-merge-tree.c:59
 #, c-format
 msgid "Cannot find directory %s\n"
 msgstr "पत्ता लागाउन सकिएन निर्देशिका %s\n"
 
-#: backends/gconf-merge-tree.c:95
+#: backends/gconf-merge-tree.c:75
 #, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
 msgstr "जि कन्फ ट्रि बाट %s': मा भण्डारभ गर्द त्रटि %s\n"
 
-#: backends/gconf-merge-tree.c:121
+#: backends/gconf-merge-tree.c:101
 #, c-format
 msgid "Usage: %s <dir>\n"
 msgstr "प्रयोग गर्दा: %s <dir>\n"
 
-#: backends/gconf-merge-tree.c:127
+#: backends/gconf-merge-tree.c:107
 #, c-format
 msgid ""
 "Usage: %s <dir>\n"
@@ -116,33 +116,34 @@ msgstr ""
 "  to:\n"
 "    dir/%%gconf-tree.xml\n"
 
-#: backends/markup-backend.c:162
+#: backends/markup-backend.c:164
 msgid "Unloading text markup backend module."
 msgstr "मार्कअप ब्याकेण्ड नमुनाको पाठ अनलोड हुँदैछ"
 
-#: backends/markup-backend.c:225 backends/xml-backend.c:288
+#: backends/markup-backend.c:227 backends/xml-backend.c:288
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "`%s'ठेगानामा  एक्सएमएल  निर्देशिका पत्ता लागाउन सकिएन"
 
-#: backends/markup-backend.c:281 backends/xml-backend.c:343
+#: backends/markup-backend.c:284 backends/xml-backend.c:343
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "`%s': %s निर्देशिका बानाउन सकिएन"
 
-#: backends/markup-backend.c:383 backends/xml-backend.c:442
+#: backends/markup-backend.c:391 backends/xml-backend.c:442
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
 msgstr "\"%s\"ठेगानामा भएको एक्सएमएल मुख्य निर्देशिका पढ्न अथवा लेख्न सकिएन"
 
-#: backends/markup-backend.c:394 backends/xml-backend.c:452
+#: backends/markup-backend.c:402 backends/xml-backend.c:452
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr ""
 "एक्सएमएल स्रोतका लागि निर्देशिका/फाइल अनुमतिका लागि मुख्य %sसम्बन्ध :  %o/%o हुन। "
 
-#: backends/markup-backend.c:733 backends/xml-backend.c:683
+#: backends/markup-backend.c:741 backends/xml-backend.c:683
+#, c-format
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -150,189 +151,196 @@ msgstr ""
 "निर्देशिका संचालन हटाउनेले लामो समयसम्म सहयोग नगर्ने हुदा निर्देशिकामा भएका सबै मूल्यहरु "
 "तत्काल हटाऊ"
 
-#: backends/markup-backend.c:819 backends/xml-backend.c:769
+#: backends/markup-backend.c:827 backends/xml-backend.c:769
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr "%s का लागि बन्द निर्देशिका खुलेन : %s लक हटाऊ\n"
 
-#: backends/markup-backend.c:832 backends/xml-backend.c:782
+#: backends/markup-backend.c:840 backends/xml-backend.c:782
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "%s: %s मिसिल हटाउन सकेन\n"
 
-#: backends/markup-backend.c:853
+#: backends/markup-backend.c:861
 msgid "Initializing Markup backend module"
 msgstr "मार्कअप ब्याकेण्ड नमुना सुरुआत क्रममा छ"
 
-#: backends/markup-backend.c:927 backends/xml-backend.c:880
+#: backends/markup-backend.c:938 backends/xml-backend.c:880
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "एक्सएमएल निर्देशिका\"%s\": %s मा लक त्याग्न असफल भयो"
 
-#: backends/markup-tree.c:362
+#: backends/markup-tree.c:397
+#, c-format
 msgid "Failed to write some configuration data to disk\n"
 msgstr "केही डाटा संरचना डिस्केटमा लेख्न असफल भयो \n"
 
-#: backends/markup-tree.c:798 backends/xml-dir.c:1273
+#: backends/markup-tree.c:920 backends/xml-dir.c:1273
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "\"%s\": %s निर्देशिका बनाउन सकिएन"
 
-#: backends/markup-tree.c:836 backends/markup-tree.c:843
+#: backends/markup-tree.c:960 backends/markup-tree.c:967
 #, c-format
 msgid "Could not remove \"%s\": %s\n"
 msgstr "\"%s\": %s हटाउन सकेन \n"
 
-#: backends/markup-tree.c:1018
+#: backends/markup-tree.c:1168
 #, c-format
 msgid "Failed to write \"%s\": %s\n"
 msgstr "\"%s\": %s लेख्नको लागि असफल\n"
 
-#: backends/markup-tree.c:1701
+#: backends/markup-tree.c:1376
+#, fuzzy, c-format
+msgid "Failed to load file \"%s\": %s"
+msgstr "\"%s\": %s स्रोत राख्न असफल "
+
+#: backends/markup-tree.c:1968
 #, c-format
 msgid "Line %d character %d: %s"
 msgstr "रेखा %d वर्ण %d: %s"
 
-#: backends/markup-tree.c:1914
+#: backends/markup-tree.c:2187
 #, c-format
 msgid "Attribute \"%s\" repeated twice on the same <%s> element"
 msgstr "प्रारुप \"%s\" गुण उस्तै<%s>तत्वमा दुइ पटक दोहोरियो "
 
-#: backends/markup-tree.c:1931 backends/markup-tree.c:1955
+#: backends/markup-tree.c:2204 backends/markup-tree.c:2228
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
 msgstr "यो स्थितिमा <%s> तत्वमा \"%s\"गुण अमान्य छ "
 
-#: backends/markup-tree.c:1980 gconf/gconf-value.c:110
+#: backends/markup-tree.c:2253 gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
 msgstr "`%s'बुझिएन (इच्छाईएको संख्या)"
 
-#: backends/markup-tree.c:1987 gconf/gconf-value.c:120
+#: backends/markup-tree.c:2260 gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
 msgstr "संख्या `%s' धेरै ठूलो अथवा सानो छ"
 
-#: backends/markup-tree.c:2019 gconf/gconf-value.c:185
+#: backends/markup-tree.c:2292 gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
 msgstr "`%s' बुझिएन (ईच्छाएको सत्य अथवा झूठ)"
 
-#: backends/markup-tree.c:2043 gconf/gconf-value.c:141
+#: backends/markup-tree.c:2316 gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
 msgstr "`%s' बुझिएन (ईच्छाएको वास्तविक संख्या)"
 
-#: backends/markup-tree.c:2113 backends/markup-tree.c:2142
-#: backends/markup-tree.c:2182 backends/markup-tree.c:2206
-#: backends/markup-tree.c:2214 backends/markup-tree.c:2269
-#: backends/markup-tree.c:2334 backends/markup-tree.c:2442
-#: backends/markup-tree.c:2521 backends/markup-tree.c:2633
+#: backends/markup-tree.c:2386 backends/markup-tree.c:2415
+#: backends/markup-tree.c:2455 backends/markup-tree.c:2479
+#: backends/markup-tree.c:2487 backends/markup-tree.c:2542
+#: backends/markup-tree.c:2607 backends/markup-tree.c:2719
+#: backends/markup-tree.c:2787 backends/markup-tree.c:2845
+#: backends/markup-tree.c:2995
 #, c-format
 msgid "No \"%s\" attribute on element <%s>"
 msgstr "<%s>तत्वमा प्रारुप\"%s\"  छैन"
 
-#: backends/markup-tree.c:2122
+#: backends/markup-tree.c:2395
 #, c-format
 msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr "<%s> तत्वमा प्रारुप \"%s\"का लागि \"%s\"अज्ञात मूल्य हो "
 
-#: backends/markup-tree.c:2156
+#: backends/markup-tree.c:2429
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "<%s>मा \"%s\"अमान्य प्रकार"
 
-#: backends/markup-tree.c:2236
+#: backends/markup-tree.c:2509
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr "अमान्य पहिला तत्व प्रकार \"%s\" <%s>मा"
 
-#: backends/markup-tree.c:2250
+#: backends/markup-tree.c:2523
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
 msgstr "<%s>मा \"%s\"अमान्य सिडिआर_प्रकार"
 
-#: backends/markup-tree.c:2286
+#: backends/markup-tree.c:2559
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
 msgstr "<%s>मा \"%s\"अमान्य सूची_प्रकार"
 
-#: backends/markup-tree.c:2567
+#: backends/markup-tree.c:2926
 msgid "Two <default> elements below a <local_schema>"
 msgstr "<स्थानीय_रुपरेखा>का मुनिपट्टि दुइटा <पूर्वनिर्धारित> तत्वहरु"
 
-#: backends/markup-tree.c:2582
+#: backends/markup-tree.c:2941
 msgid "Two <longdesc> elements below a <local_schema>"
 msgstr "<स्थानीय_रुपरेखा>का मुनिपट्टि दुइटा <पूर्वनिर्धारित> तत्वहरु"
 
-#: backends/markup-tree.c:2589
+#: backends/markup-tree.c:2948
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
 msgstr "<%s>को तल <%s> तत्वलाइ अनुमति छैन"
 
-#: backends/markup-tree.c:2613 backends/markup-tree.c:2705
-#: backends/markup-tree.c:2759 backends/markup-tree.c:2807
+#: backends/markup-tree.c:2973 backends/markup-tree.c:3078
+#: backends/markup-tree.c:3132 backends/markup-tree.c:3183
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
 msgstr "<%s> उपलब्ध गराइयो तर हालको तत्वसँग %s प्रकार छैन"
 
-#: backends/markup-tree.c:2683
+#: backends/markup-tree.c:3056
 msgid "Two <car> elements given for same pair"
 msgstr "उस्तै जोडिको लागि दुइटा <स्वन> तत्व दिइयो"
 
-#: backends/markup-tree.c:2697
+#: backends/markup-tree.c:3070
 msgid "Two <cdr> elements given for same pair"
 msgstr "उस्तै जोडिको लागि दुइटा <स्वन> तत्व दिइयो"
 
-#: backends/markup-tree.c:2751
+#: backends/markup-tree.c:3124
 #, c-format
 msgid "<li> has wrong type %s"
 msgstr "<एलआइ> सँग  गलत %s प्रकार छ"
 
-#: backends/markup-tree.c:2780
+#: backends/markup-tree.c:3155
 #, c-format
 msgid "<%s> provided but parent <entry> does not have a value"
 msgstr "<%s> उपलब्ध गराइयो तर मूल <प्रविष्टि>को महत्व छैन"
 
-#: backends/markup-tree.c:2820 backends/markup-tree.c:2842
-#: backends/markup-tree.c:2864 backends/markup-tree.c:2881
+#: backends/markup-tree.c:3196 backends/markup-tree.c:3219
+#: backends/markup-tree.c:3241 backends/markup-tree.c:3258
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
 msgstr "हालको तत्व भित्र  <%s>तत्वलाइ अनुमति छैऩ"
 
-#: backends/markup-tree.c:2913
+#: backends/markup-tree.c:3290
 #, c-format
 msgid "Outermost element in menu file must be <gconf> not <%s>"
 msgstr "मिसिल सूचीको टाढाको तत्वभित्र <%s> नभएर <जीकन्फ> हुनु पर्छ"
 
-#: backends/markup-tree.c:2933 backends/markup-tree.c:2955
-#: backends/markup-tree.c:2960
+#: backends/markup-tree.c:3310 backends/markup-tree.c:3332
+#: backends/markup-tree.c:3337
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
 msgstr "<%s>तत्वभित्र <%s>तत्वलाइ जाने अनुमति छैन"
 
-#: backends/markup-tree.c:3040
+#: backends/markup-tree.c:3481
 #, c-format
 msgid "No text is allowed inside element <%s>"
 msgstr "<%s>तत्वभित्र कुनै पाठलाइ अनुमति छैन"
 
-#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
-#: backends/markup-tree.c:3771
+#: backends/markup-tree.c:3598 backends/markup-tree.c:4377
+#: backends/markup-tree.c:4395
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "\"%s\": %s खोल्न असफल \n"
 
-#: backends/markup-tree.c:3183
+#: backends/markup-tree.c:3628
 #, fuzzy, c-format
 msgid "Error reading \"%s\": %s\n"
 msgstr "`%s': %s विस्थापन गल्ती"
 
-#: backends/markup-tree.c:3845
+#: backends/markup-tree.c:4482
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "\"%s\": %sमिसिल लेख्नेक्रममा गल्ती"
 
-#: backends/markup-tree.c:3857
+#: backends/markup-tree.c:4494
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "अस्थायी मिसिल\"%s\" अन्तिम स्थानसम्म \"%s\": %s सार्न असफल "
@@ -596,12 +604,12 @@ msgstr "ब्याकेण्न्ड बन्दगर्न असफल"
 msgid "GConf Error: %s\n"
 msgstr "%s जीसमायोजन गल्ती \n"
 
-#: gconf/gconf-client.c:896
+#: gconf/gconf-client.c:912
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "जीसमायोजन चेतावनी:`%s': %s भित्र जोडामिल्न असफल"
 
-#: gconf/gconf-client.c:1181
+#: gconf/gconf-client.c:1197
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr " टीका %s का लागि %s आश गरेको थियो `%s' पायो"
@@ -843,6 +851,7 @@ msgstr "`%s': %s फाइल पढ्नमा समस्या\n"
 #: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1675
+#, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "पाठसँग युटिएफ-८ अमान्य"
 
@@ -883,22 +892,22 @@ msgstr "उद्धरणमार्कसँगै उद्धरण गर�
 msgid "Encoded value is not valid UTF-8"
 msgstr "संकेतित मूल्य युटिएफ-८मा मान्य छैन"
 
-#: gconf/gconf-internals.c:2363
+#: gconf/gconf-internals.c:2366
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "'%s': %sअस्थायी फाइल सुरक्षित गर्न सकिएन"
 
-#: gconf/gconf-internals.c:2390
+#: gconf/gconf-internals.c:2393
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "'%s'लेखोट निर्माण गर्न सकेन,शायद यो पाहिलेदेखिनै छ"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2461
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "'%s' बनाउन वा खोल्न असफल "
 
-#: gconf/gconf-internals.c:2468
+#: gconf/gconf-internals.c:2471
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -907,91 +916,92 @@ msgstr ""
 "'%s'लाई थन्क्याउन सकिएन: संभवत यसलाई थन्क्याउने पद्धति अन्तै कतै छ वा तपाईँको सञ्चालन "
 "पद्धतिमा एनएफएस गलत तरिकाबाट समायोजन गरिएको छ (%s)"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "असफल भयो मेटनलाई %s: %s"
 
-#: gconf/gconf-internals.c:2512
+#: gconf/gconf-internals.c:2515
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "आइओआर फाइल '%s' सफलतापूर्वक खुलेन,  %s जीकोन्फ्ड छुट्याएको छैन"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2545
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "जीकोन्फ्ड उपकारण अथवा गैर-जीकोन्फ्ड पद्दतिसँग '%s' फाइल सुरक्षित छ "
 
-#: gconf/gconf-internals.c:2559
+#: gconf/gconf-internals.c:2562
+#, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr "प्रयोगमा आइरहेको जीकोन्फ वस्तुसन्दर्भलाई निकास दिनका लागि ओआरबी भेट्न सकिएन "
 
-#: gconf/gconf-internals.c:2569
+#: gconf/gconf-internals.c:2572
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "आईओआर '%s'लाई वस्तुसन्दर्भमा बदल्न सकिएन"
 
-#: gconf/gconf-internals.c:2618
+#: gconf/gconf-internals.c:2621
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "`%s': %s निर्देशिका बनाउन सकिएन"
 
-#: gconf/gconf-internals.c:2675
+#: gconf/gconf-internals.c:2678
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "`%s': %s फाइल लेख्न सकिएन"
 
-#: gconf/gconf-internals.c:2716
+#: gconf/gconf-internals.c:2719
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr " फाइल`%s' मा फाइल सुरक्षित गर्ने प्रावधान छैन, तर हामीले यो कामगर्न सक्नुपर्नेछ "
 
-#: gconf/gconf-internals.c:2739
+#: gconf/gconf-internals.c:2742
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "'%s' लाई '%s': %s सँग जोड्न असफल"
 
-#: gconf/gconf-internals.c:2751
+#: gconf/gconf-internals.c:2754
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "`%s': %s सुरक्षित फाइल हटाउन असफल"
 
-#: gconf/gconf-internals.c:2774
+#: gconf/gconf-internals.c:2777
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "`%s': %s फाइल पुरै मेट्न असफल"
 
-#: gconf/gconf-internals.c:2790
+#: gconf/gconf-internals.c:2793
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "`%s': %s सुरक्षित निर्देशिका हटाउन असफल"
 
-#: gconf/gconf-internals.c:2832
+#: gconf/gconf-internals.c:2835
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "`%s': %s सुरक्षित फाइल छुटाउन असफल\n"
 
-#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2989 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "%s: %s स्थिति असफल"
 
-#: gconf/gconf-internals.c:3008
+#: gconf/gconf-internals.c:3011
 #, c-format
 msgid "Server ping error: %s"
 msgstr "%s सेवाप्रदायक पिङ्गमा गल्ती"
 
-#: gconf/gconf-internals.c:3033
+#: gconf/gconf-internals.c:3036
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr " %s जीकोन्फ्डको निर्माणसँग वार्तालापका लागि लाईन बनाउन असफल \n"
 
-#: gconf/gconf-internals.c:3057
+#: gconf/gconf-internals.c:3060
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "%s समायोजन सेवाप्रदायक सुरुगर्न असफल\n"
 
-#: gconf/gconf-internals.c:3082
+#: gconf/gconf-internals.c:3085
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1003,7 +1013,7 @@ msgstr ""
 "सक्रिय पार्नु वा पद्धतिगत खरावीले गर्दा पुरानो एनएफएस बन्द छ सूचना (विस्त्रित - %s)का "
 "लागि http://www.gnome.org/projects/gconf/ हेर्नुहोस्. "
 
-#: gconf/gconf-internals.c:3083
+#: gconf/gconf-internals.c:3086
 msgid "none"
 msgstr "केही छैन"
 
@@ -1110,15 +1120,18 @@ msgstr "%s लगातार (हो/होइन)"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
+#, c-format
 msgid "Schema contains invalid UTF-8"
 msgstr "रुपरेखासँग अमान्य युटिएफ-८ छ"
 
 #: gconf/gconf-schema.c:254
+#, c-format
 msgid ""
 "Schema specifies type list but doesn't specify the type of the list elements"
 msgstr "सूचीको प्रकारमा रुपरेखा चिनिनु पर्ने हो तर तत्वहरुको सूचीको किसिम चिनिदैन"
 
 #: gconf/gconf-schema.c:264
+#, c-format
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
@@ -1281,63 +1294,63 @@ msgstr "एउटा स्थानीय ढाँचाको स्रोत
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "ग्राहकसँग सेवाप्रदायकको सूची जोडने क्रम असफल भयो . कोर्बा गल्ती : %s"
 
-#: gconf/gconf.c:2587
+#: gconf/gconf.c:2589
 msgid "Must begin with a slash (/)"
 msgstr "छडके रेखाबाट सुरु हुनुपर्छ"
 
-#: gconf/gconf.c:2609
+#: gconf/gconf.c:2611
 msgid "Can't have two slashes (/) in a row"
 msgstr "पंक्तिमा दुइटा छडके रेखा हुन सक्दैन"
 
-#: gconf/gconf.c:2611
+#: gconf/gconf.c:2613
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "(/)पछि (.)सयम छैन"
 
-#: gconf/gconf.c:2630
+#: gconf/gconf.c:2632
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "'%c' आस्की अक्षर होइन त्यसैले यो टीकाको नाम हुन सक्दैन"
 
-#: gconf/gconf.c:2640
+#: gconf/gconf.c:2642
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "टीका/निर्देशिकाको नामहरुभित्र `%c'एउटा अमान्य पात्र हो "
 
-#: gconf/gconf.c:2654
+#: gconf/gconf.c:2656
 msgid "Key/directory may not end with a slash (/)"
 msgstr "टीका/निर्देशिका छडके रेखा(/)सँगै अन्त्य हुन सक्दैन"
 
-#: gconf/gconf.c:3024
+#: gconf/gconf.c:3027
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "%s सेवाप्रदायक बन्दकार्य असफल "
 
-#: gconf/gconf.c:3085
+#: gconf/gconf.c:3088
 #, c-format
 msgid "Expected float, got %s"
 msgstr "तरङ्गित आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3120
+#: gconf/gconf.c:3123
 #, c-format
 msgid "Expected int, got %s"
 msgstr "तत्व आशा गरिएको %s पायो"
 
-#: gconf/gconf.c:3155
+#: gconf/gconf.c:3158
 #, c-format
 msgid "Expected string, got %s"
 msgstr "सूत्र आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3189
+#: gconf/gconf.c:3192
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "बुल आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3222
+#: gconf/gconf.c:3225
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "रुपरेखा आशा गरिएको %s पाइयो"
 
-#: gconf/gconf.c:3561
+#: gconf/gconf.c:3564
 #, c-format
 msgid "CORBA error: %s"
 msgstr "%s कोर्बा गल्ती"
@@ -1829,26 +1842,32 @@ msgid "Print version"
 msgstr "छाप्ने पाठ"
 
 #: gconf/gconftool.c:537
+#, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "समानान्तर रुपमा जडान/फुकाल पाउन सकिँदैन \n"
 
 #: gconf/gconftool.c:547
+#, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "समानान्तर रुपमा प्राप्ती /फुकाल जडान गर्न सकिँदैन \n"
 
 #: gconf/gconftool.c:554
+#, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "समानान्तर रुपमा जडान/फुकालको प्रकार पाउन सकिँदैन\n"
 
 #: gconf/gconftool.c:565
+#, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "--प्राप्ती वा --समूहले  --सबै प्रर्विष्टि प्रयोग गर्न सक्दैन \n"
 
 #: gconf/gconftool.c:576
+#, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "--प्राप्ती वा --समूहले  --सबै निर्देशिका प्रयोग गर्न सक्दैन \n"
 
 #: gconf/gconftool.c:589
+#, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1857,6 +1876,7 @@ msgstr ""
 "प्रयोग हुनु हँदैन \n"
 
 #: gconf/gconftool.c:602
+#, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1865,14 +1885,17 @@ msgstr ""
 "प्रयोग हुनु हँदैन \n"
 
 #: gconf/gconftool.c:608
+#, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "मूल्य प्रकारको उपयुक्तता त्यतिबेर थाहा हुन्छ जब मूल्य जडान गरिन्छ\n"
 
 #: gconf/gconftool.c:614
+#, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "मूल्य जडानगर्दा यसको प्रकार छुट्याउनै पर्छ \n"
 
 #: gconf/gconftool.c:622
+#, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
@@ -1888,6 +1911,7 @@ msgid "%s option must be used by itself.\n"
 msgstr "%s विकल्प आफैँ प्रयोग हुनसक्नुपर्छ\n"
 
 #: gconf/gconftool.c:723
+#, c-format
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr "--निर्देशिका प्रयोगक्रममा --कन्फिग-स्रोतसँग निश्चित कन्फिग स्रोत तय गरिनुपर्छ \n"
@@ -1898,15 +1922,18 @@ msgid "Failed to init GConf: %s\n"
 msgstr "GConf: %s सुरूगर्न असफल\n"
 
 #: gconf/gconftool.c:758
+#, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr "जीकन्फ_अपाङ्ग_फाइल निर्माण_रूपरेखा_जडान एउटा समूह हो जडान रूपरेखा होइन \n"
 
 #: gconf/gconftool.c:765
+#, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr "जीकन्फ_अपाङ्ग_फाइल निर्माण_रूपरेखा_छुटान एउटा समूह हो छुटान रूपरेखा होइन \n"
 
 #: gconf/gconftool.c:778
+#, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "जीकन्फ_कन्फिग_स्रोत वातावरण विविधता जडान हुनुपर्छ \n"
 
@@ -1921,10 +1948,12 @@ msgid "Shutdown error: %s\n"
 msgstr "बन्द गर्दा %s  त्रुटि \n"
 
 #: gconf/gconftool.c:1159
+#, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "पुनरावृत्तिक सूचीका लागि एक वा अधिक निर्देशिकाहरू तय गरिनु पर्छ \n"
 
 #: gconf/gconftool.c:1211
+#, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "निक्षेपका लागि एक वा अधिक निर्देशिका तय गर्नुपर्छ \n"
 
@@ -1943,6 +1972,7 @@ msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "समायोजन सेवाप्रदायक (gconfd): %s पुनर्दृद्धि गर्न असफल\n"
 
 #: gconf/gconftool.c:1607
+#, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "प्राप्तीका लागि टीका वा व्याख्या टीका निश्चित हुनुपर्छ \n"
 
@@ -2009,6 +2039,7 @@ msgid "Don't understand type `%s'\n"
 msgstr " `%s' को प्रकार बुझिएन \n"
 
 #: gconf/gconftool.c:1734
+#, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "तर्कका रूपमा वैकल्पिक टीका/मानहरू निश्चित हुनुपर्छ \n"
 
@@ -2018,14 +2049,17 @@ msgid "No value to set for key: `%s'\n"
 msgstr "`%s' टीकाका लागि मूल्य जडान गरिएको छैन \n"
 
 #: gconf/gconftool.c:1782
+#, c-format
 msgid "Cannot set schema as value\n"
 msgstr "रूपरेखा मानका रूपमा जडान हुनसकेन \n"
 
 #: gconf/gconftool.c:1792
+#, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "जब सूची मिलान गर्नुछ तपाईँले मौलिक सूची-प्रकार तय गर्नैगर्छ\n"
 
 #: gconf/gconftool.c:1806
+#, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "जब युग्म मिलान गर्नुछ तपाईँले मौलिक कार-प्रकार र सिडिआर-प्रकार तय गर्नैगर्छ\n"
@@ -2046,10 +2080,12 @@ msgid "Error syncing: %s\n"
 msgstr "%s  समकालीनकरणमा समस्या\n"
 
 #: gconf/gconftool.c:1867
+#, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "प्रकार प्राप्तीका लागि टीका वा व्याख्या टीकाहरू निश्चित हुनुपर्छ\n"
 
 #: gconf/gconftool.c:1911
+#, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "आकार हेर्नका लागि टीका निश्चित हुनुपर्छ \n"
 
@@ -2059,22 +2095,27 @@ msgid "Key %s is not a list.\n"
 msgstr "टीका %s सूची होईन \n"
 
 #: gconf/gconftool.c:1956
+#, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "कहाँबाट सूची तत्व प्राप्तगर्ने हो कुनै टीकाको तय हुनुपर्‍यो\n"
 
 #: gconf/gconftool.c:1987
+#, c-format
 msgid "Must specify list index.\n"
 msgstr "विवरणसूची तय हनैपर्छ\n"
 
 #: gconf/gconftool.c:1994
+#, c-format
 msgid "List index must be non-negative.\n"
 msgstr "विवरण सूची नकारात्मक हुनुहुदँदैन \n"
 
 #: gconf/gconftool.c:2003
+#, c-format
 msgid "List index is out of bounds.\n"
 msgstr "विवरण सूची सीमा बाहिर छ\n"
 
 #: gconf/gconftool.c:2029
+#, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "आदेश हरफमा टीका वा टीकाहरूको तय गरिनु पर्‍यो \n"
 
@@ -2104,6 +2145,7 @@ msgid "Value at '%s' is not a schema\n"
 msgstr "'%s' मा रुपरेखाको मूल्य छैन\n"
 
 #: gconf/gconftool.c:2153
+#, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "यसलाई प्रयोग गर्न टीकाको नामसँग रूपरेखाको नाम तय गरिनु पर्छ \n"
 
@@ -2113,6 +2155,7 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "'%s': %s टीकाको नामसँग '%s' रुपरेखाको नाम जोड्न समस्या\n"
 
 #: gconf/gconftool.c:2178
+#, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr " बाट रुपरेखालाई मान्यता नदिन टीका चिन्नु पर्छ\n"
 
@@ -2122,18 +2165,22 @@ msgid "Error removing schema name from '%s': %s\n"
 msgstr "'%s': %s बाट रुपरेखा नाम हटाउन समस्या\n"
 
 #: gconf/gconftool.c:2213
+#, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "टीका (रूपरेखा नाम)  तर्कका रूपमा तय गरिनुपर्छ\n"
 
 #: gconf/gconftool.c:2255
+#, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "सूत्र, ईन्ट, फ्लोट वा बुल योजकसूची मान्यप्रकारको  हुनै पर्छ: \n"
 
 #: gconf/gconftool.c:2275
+#, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "सूत्र, ईन्ट, फ्लोट वा बुल जोडा अक्षर मान्यप्रकारको  हुनै पर्छ: \n"
 
 #: gconf/gconftool.c:2295
+#, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "सूत्र, ईन्ट, फ्लोट वा बुल जोडी सिडिआर मान्यप्रकारको  हुनै पर्छ:\n"
 
@@ -2148,10 +2195,12 @@ msgid "Error syncing: %s"
 msgstr "%s  समकालीनकरणमा समस्या"
 
 #: gconf/gconftool.c:2339
+#, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr " बाट चाबी /मूल्य जोडा पाउनलाई एक वा धेरै निर्देशिकाहरु चिन्नु पर्छ.\n"
 
 #: gconf/gconftool.c:2353
+#, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr " विस्थापित हुनालाई एक वा धेरै साँचोहरु चिन्नु पर्छ\n"
 
@@ -2161,6 +2210,7 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "`%s': %s विस्थापित गर्न समस्या\n"
 
 #: gconf/gconftool.c:2384
+#, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "पुनरावृत्तिक छुटानका लागि एक वा अधिक टीकाहरू तय गरिनु पर्छ \n"
 
@@ -2170,6 +2220,7 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr " \"%s\": %s  को पुनरावृत्ति छुटानक्रम असफल\n"
 
 #: gconf/gconftool.c:2418
+#, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "बाट उपनिर्देशिका पाउनको लागि एक वा धेरै निर्देशिकाहरु चिन्नु पर्छ\n"
 
@@ -2179,6 +2230,7 @@ msgid "Error listing dirs: %s\n"
 msgstr "%s निर्देशिका सूचीमा समस्या\n"
 
 #: gconf/gconftool.c:2588
+#, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "चेतावनी: <युग्म>मा <car> र <cdr> तय गरिनु पर्छ \n"
 
@@ -2189,6 +2241,7 @@ msgstr ""
 "चेतावनी <मान>को मुनि एउटा रूपरेखाका लागि तय गरिएको टीका (%s)  ले बहिष्कार गर्छ \n"
 
 #: gconf/gconftool.c:2648
+#, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "चेतावनी <मूल्य>को मुनि एउटा अपरिपक्व नोड हुनै पर्छ\n"
 
@@ -2243,10 +2296,12 @@ msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "चेतावनि:(%s) रूपरेखाका लागि कार_किसिम वा सिडिआर_किसिम अमान्य अथवा हरायो\n"
 
 #: gconf/gconftool.c:3023
+#, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "चेतावनि: तपाइ एउटा रुपरेखाको लागि पुर्वनिर्धारित मूल्य राख्न सक्नुहुन्न\n"
 
 #: gconf/gconftool.c:3052
+#, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "चेतावनी जीकन्फ औजारमा आन्तरिक गल्ती,जीकन्फ मानको प्रकार अज्ञात \n"
 
@@ -2276,6 +2331,7 @@ msgstr ""
 "चेतावनी सिडिआर_प्रकार एउटा पूर्ण अङ्क, उत्प्लावन शृङ्खला बुलअंकमात्र हुनसक्छ `%s' होइन \n"
 
 #: gconf/gconftool.c:3199
+#, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "चेतावनि:  <लागु गर्नु> नोड खाली छ"
 
@@ -2285,18 +2341,22 @@ msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "चेतावनी  <रूपरेखा>को मुनि <%s> नोड बुझिएन \n"
 
 #: gconf/gconftool.c:3213
+#, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "चेतावनी रूपरेखा प्रकार सूचीका लागि <सूची_प्रकार> तय गरिएको छैन\n"
 
 #: gconf/gconftool.c:3219
+#, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "चेतावनी:  युग्मप्रकारको रूपरेखाका लागि <कार_प्रकार>  तय गरिएको छैन \n"
 
 #: gconf/gconftool.c:3225
+#, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "चेतावनी:  युग्म प्रकार रूपरेखाका लागि<सिडिआर_प्रकार> तय गरिएको छैन\n"
 
 #: gconf/gconftool.c:3254
+#, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "चेतावनी:  <स्थानीय> नोडसँग प्रारुप `नाम=\"स्थानीय\"' को परित्याग \n"
 
@@ -2317,6 +2377,7 @@ msgid "Attached schema `%s' to key `%s'\n"
 msgstr " `%s' चाबीमा`%s'रुपरेखा जोडिएको छ\n"
 
 #: gconf/gconftool.c:3469
+#, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr " एउटा<रुपरेखा>मा प्रविष्टि गर्न जे भएपनि तपाईसँग एउटा<स्थानीय>हुनैपर्छ\n"
 
@@ -2341,6 +2402,7 @@ msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "स्थानीय-कक्ष`%s' बाट रुपरेखा`%s'विस्थापित गरियो \n"
 
 #: gconf/gconftool.c:3568
+#, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "चेतावनी: रुपरेखाका लागि कुनै टीका तय गरिएन \n"
 
@@ -2380,6 +2442,7 @@ msgid "Error syncing config data: %s"
 msgstr "%s डाटा ढाँचामा सिङ्किङ समस्या"
 
 #: gconf/gconftool.c:3718
+#, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "जडान गर्न केही संकल्पित मिसिल चिन्नुपर्छ \n"
 
@@ -2398,6 +2461,7 @@ msgid "Failed to unset breakage key %s: %s\n"
 msgstr "तोडिएका %s: %s टीकाहरु विस्थापित गर्न असफल \n"
 
 #: gconf/gconftool.c:3901
+#, c-format
 msgid "Must specify some keys to break\n"
 msgstr "रोक्नका लागि केही टीकाहरु चिन्नुपर्छ \n"
 
@@ -2411,6 +2475,7 @@ msgstr ""
 "  \n"
 
 #: gconf/gconftool.c:3925
+#, c-format
 msgid "Must specify some directories to break\n"
 msgstr " रोक्नका लागि केही निर्देशिकाहरु चिन्नुपर्छ\n"
 

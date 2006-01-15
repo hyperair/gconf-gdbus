@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-11-03 17:30+0100\n"
+"POT-Creation-Date: 2006-01-15 19:21+0000\n"
 "PO-Revision-Date: 2005-08-12 10:24+0300\n"
 "Last-Translator: Maxim Dziumanenko <mvd@mylinux.com.ua>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -84,22 +84,22 @@ msgstr "Помилка запиту до сервера LDAP: %s"
 msgid "Got %d entries using filter: %s"
 msgstr "Отримано %d елементів з використанням фільтру: %s"
 
-#: backends/gconf-merge-tree.c:79
+#: backends/gconf-merge-tree.c:59
 #, c-format
 msgid "Cannot find directory %s\n"
 msgstr "Не вдається знайти каталог %s\n"
 
-#: backends/gconf-merge-tree.c:95
+#: backends/gconf-merge-tree.c:75
 #, c-format
 msgid "Error saving GConf tree to '%s': %s\n"
 msgstr "Помилка збереження схеми у \"%s\": %s\n"
 
-#: backends/gconf-merge-tree.c:121
+#: backends/gconf-merge-tree.c:101
 #, c-format
 msgid "Usage: %s <dir>\n"
 msgstr "Використання: %s <каталог>\n"
 
-#: backends/gconf-merge-tree.c:127
+#: backends/gconf-merge-tree.c:107
 #, c-format
 msgid ""
 "Usage: %s <dir>\n"
@@ -118,21 +118,21 @@ msgstr ""
 "  у:\n"
 "    каталог/%%gconf-tree.xml\n"
 
-#: backends/markup-backend.c:162
+#: backends/markup-backend.c:164
 msgid "Unloading text markup backend module."
 msgstr "Вивантаження серверного модуля розмітки."
 
-#: backends/markup-backend.c:225 backends/xml-backend.c:288
+#: backends/markup-backend.c:227 backends/xml-backend.c:288
 #, c-format
 msgid "Couldn't find the XML root directory in the address `%s'"
 msgstr "Не вдається знайти кореневий каталог XML за адресою \"%s\""
 
-#: backends/markup-backend.c:281 backends/xml-backend.c:343
+#: backends/markup-backend.c:284 backends/xml-backend.c:343
 #, c-format
 msgid "Could not make directory `%s': %s"
 msgstr "Не вдається створити каталог \"%s\": %s"
 
-#: backends/markup-backend.c:383 backends/xml-backend.c:442
+#: backends/markup-backend.c:391 backends/xml-backend.c:442
 #, c-format
 msgid ""
 "Can't read from or write to the XML root directory in the address \"%s\""
@@ -140,12 +140,13 @@ msgstr ""
 "Не вдається виконати зчитування чи запис у кореневому каталозі XML за "
 "адресою \"%s\""
 
-#: backends/markup-backend.c:394 backends/xml-backend.c:452
+#: backends/markup-backend.c:402 backends/xml-backend.c:452
 #, c-format
 msgid "Directory/file permissions for XML source at root %s are: %o/%o"
 msgstr "Права каталогу чи файлу для джерела XML з коренем %s: %o/%o"
 
-#: backends/markup-backend.c:733 backends/xml-backend.c:683
+#: backends/markup-backend.c:741 backends/xml-backend.c:683
+#, c-format
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
@@ -153,190 +154,197 @@ msgstr ""
 "Операція видалення каталогу більше не підтримується, просто видаліть всі "
 "значення в каталозі"
 
-#: backends/markup-backend.c:819 backends/xml-backend.c:769
+#: backends/markup-backend.c:827 backends/xml-backend.c:769
 #, c-format
 msgid "Could not open lock directory for %s to remove locks: %s\n"
 msgstr ""
 "Не вдається відкрити каталог блокувань для %s, щоб видалити блокування: %s\n"
 
-#: backends/markup-backend.c:832 backends/xml-backend.c:782
+#: backends/markup-backend.c:840 backends/xml-backend.c:782
 #, c-format
 msgid "Could not remove file %s: %s\n"
 msgstr "Не вдається видалити файл %s: %s\n"
 
-#: backends/markup-backend.c:853
+#: backends/markup-backend.c:861
 msgid "Initializing Markup backend module"
 msgstr "Ініціалізація серверного модуля розмітки"
 
-#: backends/markup-backend.c:927 backends/xml-backend.c:880
+#: backends/markup-backend.c:938 backends/xml-backend.c:880
 #, c-format
 msgid "Failed to give up lock on XML directory \"%s\": %s"
 msgstr "Не вдається зняти блокування з каталогу XML \"%s\": %s"
 
-#: backends/markup-tree.c:362
+#: backends/markup-tree.c:397
+#, c-format
 msgid "Failed to write some configuration data to disk\n"
 msgstr "Помилка запису конфігураційних даних на диск\n"
 
-#: backends/markup-tree.c:798 backends/xml-dir.c:1273
+#: backends/markup-tree.c:920 backends/xml-dir.c:1273
 #, c-format
 msgid "Could not make directory \"%s\": %s"
 msgstr "Не вдається створити каталог \"%s\": %s"
 
-#: backends/markup-tree.c:836 backends/markup-tree.c:843
+#: backends/markup-tree.c:960 backends/markup-tree.c:967
 #, c-format
 msgid "Could not remove \"%s\": %s\n"
 msgstr "Не вдається видалити \"%s\": %s\n"
 
-#: backends/markup-tree.c:1018
+#: backends/markup-tree.c:1168
 #, c-format
 msgid "Failed to write \"%s\": %s\n"
 msgstr "Не вдається записати \"%s\": %s\n"
 
-#: backends/markup-tree.c:1701
+#: backends/markup-tree.c:1376
+#, fuzzy, c-format
+msgid "Failed to load file \"%s\": %s"
+msgstr "Помилка при завантаженні джерела \"%s\": %s"
+
+#: backends/markup-tree.c:1968
 #, c-format
 msgid "Line %d character %d: %s"
 msgstr "Рядок %d, символ %d: %s"
 
-#: backends/markup-tree.c:1914
+#: backends/markup-tree.c:2187
 #, c-format
 msgid "Attribute \"%s\" repeated twice on the same <%s> element"
 msgstr "Ознака \"%s\" повторюється двічі в одному елементі <%s>"
 
-#: backends/markup-tree.c:1931 backends/markup-tree.c:1955
+#: backends/markup-tree.c:2204 backends/markup-tree.c:2228
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
 msgstr "Ознака \"%s\" є неправильною для елемента <%s> у цьому контексті"
 
-#: backends/markup-tree.c:1980 gconf/gconf-value.c:110
+#: backends/markup-tree.c:2253 gconf/gconf-value.c:110
 #, c-format
 msgid "Didn't understand `%s' (expected integer)"
 msgstr "Незрозуміло \"%s\" (очікувалось ціле число)"
 
-#: backends/markup-tree.c:1987 gconf/gconf-value.c:120
+#: backends/markup-tree.c:2260 gconf/gconf-value.c:120
 #, c-format
 msgid "Integer `%s' is too large or small"
 msgstr "Ціле число \"%s\" надто велике чи мале"
 
-#: backends/markup-tree.c:2019 gconf/gconf-value.c:185
+#: backends/markup-tree.c:2292 gconf/gconf-value.c:185
 #, c-format
 msgid "Didn't understand `%s' (expected true or false)"
 msgstr "Незрозуміло \"%s\" (очікувалось логічне значення)"
 
-#: backends/markup-tree.c:2043 gconf/gconf-value.c:141
+#: backends/markup-tree.c:2316 gconf/gconf-value.c:141
 #, c-format
 msgid "Didn't understand `%s' (expected real number)"
 msgstr "Незрозуміло \"%s\" (очікувалось дійсне число)"
 
-#: backends/markup-tree.c:2113 backends/markup-tree.c:2142
-#: backends/markup-tree.c:2182 backends/markup-tree.c:2206
-#: backends/markup-tree.c:2214 backends/markup-tree.c:2269
-#: backends/markup-tree.c:2334 backends/markup-tree.c:2442
-#: backends/markup-tree.c:2521 backends/markup-tree.c:2633
+#: backends/markup-tree.c:2386 backends/markup-tree.c:2415
+#: backends/markup-tree.c:2455 backends/markup-tree.c:2479
+#: backends/markup-tree.c:2487 backends/markup-tree.c:2542
+#: backends/markup-tree.c:2607 backends/markup-tree.c:2719
+#: backends/markup-tree.c:2787 backends/markup-tree.c:2845
+#: backends/markup-tree.c:2995
 #, c-format
 msgid "No \"%s\" attribute on element <%s>"
 msgstr "Немає ознаки \"%s\" у елементі <%s>"
 
-#: backends/markup-tree.c:2122
+#: backends/markup-tree.c:2395
 #, c-format
 msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr "Невідоме значення \"%s\" ознаки \"%s\" елемента <%s>"
 
-#: backends/markup-tree.c:2156
+#: backends/markup-tree.c:2429
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
 msgstr "Неправильний тип \"%s\" у <%s>"
 
-#: backends/markup-tree.c:2236
+#: backends/markup-tree.c:2509
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr "Неправильний тип першого елементу \"%s\" у <%s>"
 
-#: backends/markup-tree.c:2250
+#: backends/markup-tree.c:2523
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
 msgstr "Неправильне значення cdr_type \"%s\" у <%s>"
 
-#: backends/markup-tree.c:2286
+#: backends/markup-tree.c:2559
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
 msgstr "Неправильне значення list_type \"%s\" у <%s>"
 
-#: backends/markup-tree.c:2567
+#: backends/markup-tree.c:2926
 msgid "Two <default> elements below a <local_schema>"
 msgstr "Два елементи <default> під <local_schema>"
 
-#: backends/markup-tree.c:2582
+#: backends/markup-tree.c:2941
 msgid "Two <longdesc> elements below a <local_schema>"
 msgstr "Два елементи <longdesc> під <local_schema>"
 
-#: backends/markup-tree.c:2589
+#: backends/markup-tree.c:2948
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
 msgstr "Не дозволяється <%s> після <%s>"
 
-#: backends/markup-tree.c:2613 backends/markup-tree.c:2705
-#: backends/markup-tree.c:2759 backends/markup-tree.c:2807
+#: backends/markup-tree.c:2973 backends/markup-tree.c:3078
+#: backends/markup-tree.c:3132 backends/markup-tree.c:3183
 #, c-format
 msgid "<%s> provided but current element does not have type %s"
 msgstr "Вказано <%s>, але тип поточного елементу не %s"
 
-#: backends/markup-tree.c:2683
+#: backends/markup-tree.c:3056
 msgid "Two <car> elements given for same pair"
 msgstr "Два елементи <car> у одній парі"
 
-#: backends/markup-tree.c:2697
+#: backends/markup-tree.c:3070
 msgid "Two <cdr> elements given for same pair"
 msgstr "Два елементи <cdr> у одній парі"
 
-#: backends/markup-tree.c:2751
+#: backends/markup-tree.c:3124
 #, c-format
 msgid "<li> has wrong type %s"
 msgstr "<li> має неправильний тип %s"
 
-#: backends/markup-tree.c:2780
+#: backends/markup-tree.c:3155
 #, c-format
 msgid "<%s> provided but parent <entry> does not have a value"
 msgstr "Вказано <%s>, але батьківський елемент не має значення"
 
-#: backends/markup-tree.c:2820 backends/markup-tree.c:2842
-#: backends/markup-tree.c:2864 backends/markup-tree.c:2881
+#: backends/markup-tree.c:3196 backends/markup-tree.c:3219
+#: backends/markup-tree.c:3241 backends/markup-tree.c:3258
 #, c-format
 msgid "Element <%s> is not allowed inside current element"
 msgstr "Не дозволяється елемент <%s> у поточному"
 
-#: backends/markup-tree.c:2913
+#: backends/markup-tree.c:3290
 #, c-format
 msgid "Outermost element in menu file must be <gconf> not <%s>"
 msgstr "Зовнішнім елементом у файлі меню має бути <gconf>, а не <%s>"
 
-#: backends/markup-tree.c:2933 backends/markup-tree.c:2955
-#: backends/markup-tree.c:2960
+#: backends/markup-tree.c:3310 backends/markup-tree.c:3332
+#: backends/markup-tree.c:3337
 #, c-format
 msgid "Element <%s> is not allowed inside a <%s> element"
 msgstr "Елемент <%s> не може бути в елементі <%s>"
 
-#: backends/markup-tree.c:3040
+#: backends/markup-tree.c:3481
 #, c-format
 msgid "No text is allowed inside element <%s>"
 msgstr "Не може бути тексту в елементі <%s>"
 
-#: backends/markup-tree.c:3153 backends/markup-tree.c:3753
-#: backends/markup-tree.c:3771
+#: backends/markup-tree.c:3598 backends/markup-tree.c:4377
+#: backends/markup-tree.c:4395
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Не вдається відкрити \"%s\": %s\n"
 
-#: backends/markup-tree.c:3183
+#: backends/markup-tree.c:3628
 #, c-format
 msgid "Error reading \"%s\": %s\n"
 msgstr "Помилка читання \"%s\": %s\n"
 
-#: backends/markup-tree.c:3845
+#: backends/markup-tree.c:4482
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Помилка запису файлу \"%s\": %s"
 
-#: backends/markup-tree.c:3857
+#: backends/markup-tree.c:4494
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -602,12 +610,12 @@ msgstr "Не вдається вимкнути сервер"
 msgid "GConf Error: %s\n"
 msgstr "Помилка GConf: %s\n"
 
-#: gconf/gconf-client.c:896
+#: gconf/gconf-client.c:912
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Попередження GConf: Не вдається отримати список пар в \"%s\": %s"
 
-#: gconf/gconf-client.c:1181
+#: gconf/gconf-client.c:1197
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Очікувалось \"%s\", отримано \"%s\" для ключа %s"
@@ -855,6 +863,7 @@ msgstr "Помилка зчитування з файлу \"%s\": %s\n"
 #: gconf/gconf-internals.c:1268 gconf/gconf-internals.c:1334
 #: gconf/gconf-value.c:154 gconf/gconf-value.c:253 gconf/gconf-value.c:395
 #: gconf/gconf-value.c:1675
+#, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Текст містить неправильну послідовність UTF-8"
 
@@ -897,22 +906,22 @@ msgstr "Рядок в лапках не закінчується знаком л
 msgid "Encoded value is not valid UTF-8"
 msgstr "Закодоване значення не є правильною послідовністю UTF-8"
 
-#: gconf/gconf-internals.c:2363
+#: gconf/gconf-internals.c:2366
 #, c-format
 msgid "Could not lock temporary file '%s': %s"
 msgstr "Не вдається заблокувати тимчасовий файл \"%s\": %s"
 
-#: gconf/gconf-internals.c:2390
+#: gconf/gconf-internals.c:2393
 #, c-format
 msgid "Could not create file '%s', probably because it already exists"
 msgstr "Не вдається створити \"%s\", можливо тому, що він вже існує"
 
-#: gconf/gconf-internals.c:2458
+#: gconf/gconf-internals.c:2461
 #, c-format
 msgid "Failed to create or open '%s'"
 msgstr "Не вдається створити чи відкрити \"%s\""
 
-#: gconf/gconf-internals.c:2468
+#: gconf/gconf-internals.c:2471
 #, c-format
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
@@ -921,93 +930,94 @@ msgstr ""
 "Помилка блокування \"%s\": можливо вже заблоковано іншим процесом, чи в "
 "операційній системі неправильно налаштовано файли блокування NFS (%s)"
 
-#: gconf/gconf-internals.c:2488
+#: gconf/gconf-internals.c:2491
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "Помилка при видаленні \"%s\": %s"
 
-#: gconf/gconf-internals.c:2512
+#: gconf/gconf-internals.c:2515
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
 msgstr "Файл IOR \"%s\" не було успішно відкрито, gconfd не виявлено: %s"
 
-#: gconf/gconf-internals.c:2542
+#: gconf/gconf-internals.c:2545
 #, c-format
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool чи інший процес (не gconfd) заблокував файл \"%s\""
 
-#: gconf/gconf-internals.c:2559
+#: gconf/gconf-internals.c:2562
+#, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "Не вдається зв'язатись з ORB для розв'язання дійсного посилання на об'єкт"
 
-#: gconf/gconf-internals.c:2569
+#: gconf/gconf-internals.c:2572
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Помилка на перетворенні IOR \"%s\" в посилання на об'єкт"
 
-#: gconf/gconf-internals.c:2618
+#: gconf/gconf-internals.c:2621
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "Не вдається створити каталог \"%s\": %s"
 
-#: gconf/gconf-internals.c:2675
+#: gconf/gconf-internals.c:2678
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Не вдається записати у файл \"%s\": %s"
 
-#: gconf/gconf-internals.c:2716
+#: gconf/gconf-internals.c:2719
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr "Блокування на файл \"%s\" відсутнє, а має бути"
 
-#: gconf/gconf-internals.c:2739
+#: gconf/gconf-internals.c:2742
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Не вдається пов'язати \"%s\" з \"%s\": %s"
 
-#: gconf/gconf-internals.c:2751
+#: gconf/gconf-internals.c:2754
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Помилка при видалені файлу блокування \"%s\": %s"
 
-#: gconf/gconf-internals.c:2774
+#: gconf/gconf-internals.c:2777
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Помилка при очищені файлу \"%s\": %s"
 
-#: gconf/gconf-internals.c:2790
+#: gconf/gconf-internals.c:2793
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Помилка при зніманні блокування каталогу \"%s\": %s"
 
-#: gconf/gconf-internals.c:2832
+#: gconf/gconf-internals.c:2835
 #, c-format
 msgid "Failed to unlink lock file %s: %s\n"
 msgstr "Помилка при зніманні посилання файлу блокування %s: %s\n"
 
-#: gconf/gconf-internals.c:2986 gconf/gconfd.c:570
+#: gconf/gconf-internals.c:2989 gconf/gconfd.c:570
 #, c-format
 msgid "Failed to stat %s: %s"
 msgstr "Помилка при виконанні stat для \"%s\": %s"
 
-#: gconf/gconf-internals.c:3008
+#: gconf/gconf-internals.c:3011
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Помилка перевірки доступності сервера: %s"
 
-#: gconf/gconf-internals.c:3033
+#: gconf/gconf-internals.c:3036
 #, c-format
 msgid "Failed to create pipe for communicating with spawned gconf daemon: %s\n"
 msgstr ""
 "Помилка при створенні каналу зв'язку з породженим процесом gconfd: %s\n"
 
-#: gconf/gconf-internals.c:3057
+#: gconf/gconf-internals.c:3060
 #, c-format
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Помилка запуску сервера конфігурації: %s\n"
 
-#: gconf/gconf-internals.c:3082
+#: gconf/gconf-internals.c:3085
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1020,7 +1030,7 @@ msgstr ""
 "старі блокування NFS через збій в системі. Для отримання інформації дивіться "
 "http://www.gnome.org/projects/gconf/ . (Докладніше - %s)."
 
-#: gconf/gconf-internals.c:3083
+#: gconf/gconf-internals.c:3086
 msgid "none"
 msgstr "немає"
 
@@ -1135,15 +1145,18 @@ msgstr "%s Продовжити (y - так, n - ні)?"
 
 #: gconf/gconf-schema.c:221 gconf/gconf-schema.c:229 gconf/gconf-schema.c:237
 #: gconf/gconf-schema.c:245
+#, c-format
 msgid "Schema contains invalid UTF-8"
 msgstr "Схема містить неправильну послідовність UTF-8"
 
 #: gconf/gconf-schema.c:254
+#, c-format
 msgid ""
 "Schema specifies type list but doesn't specify the type of the list elements"
 msgstr "Схема визначає тип списку, але не визначає тип елементів списку"
 
 #: gconf/gconf-schema.c:264
+#, c-format
 msgid ""
 "Schema specifies type pair but doesn't specify the type of the car/cdr "
 "elements"
@@ -1322,63 +1335,63 @@ msgstr "Не можна додавати звістки до локальног�
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Помилка при додаванні клієнта у серверний список, помилка CORBA: %s"
 
-#: gconf/gconf.c:2587
+#: gconf/gconf.c:2589
 msgid "Must begin with a slash (/)"
 msgstr "Мусить починатися з \"/\""
 
-#: gconf/gconf.c:2609
+#: gconf/gconf.c:2611
 msgid "Can't have two slashes (/) in a row"
 msgstr "Не може бути два \"/\" в рядку"
 
-#: gconf/gconf.c:2611
+#: gconf/gconf.c:2613
 msgid "Can't have a period (.) right after a slash (/)"
 msgstr "Не може бути крапки після \"/\""
 
-#: gconf/gconf.c:2630
+#: gconf/gconf.c:2632
 #, c-format
 msgid "'%c' is not an ASCII character, so isn't allowed in key names"
 msgstr "\"%c\" — неправильний символ в назві ключів"
 
-#: gconf/gconf.c:2640
+#: gconf/gconf.c:2642
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "\"%c\" — неправильний символ в назві ключів/каталогів"
 
-#: gconf/gconf.c:2654
+#: gconf/gconf.c:2656
 msgid "Key/directory may not end with a slash (/)"
 msgstr "Ключ/каталог не може закінчуватись косою (/)"
 
-#: gconf/gconf.c:3024
+#: gconf/gconf.c:3027
 #, c-format
 msgid "Failure shutting down config server: %s"
 msgstr "Не вдається вимкнути сервер конфігурації: %s"
 
-#: gconf/gconf.c:3085
+#: gconf/gconf.c:3088
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Очікувалось число з рухомою комою, отримано %s"
 
-#: gconf/gconf.c:3120
+#: gconf/gconf.c:3123
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Очікувалось ціле, отримано %s"
 
-#: gconf/gconf.c:3155
+#: gconf/gconf.c:3158
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Очікувався рядок, отримано %s"
 
-#: gconf/gconf.c:3189
+#: gconf/gconf.c:3192
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Очікувалось логічне значення, отримано %s"
 
-#: gconf/gconf.c:3222
+#: gconf/gconf.c:3225
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Очікувалась схема, отримано %s"
 
-#: gconf/gconf.c:3561
+#: gconf/gconf.c:3564
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Помилка CORBA: %s"
@@ -1897,28 +1910,34 @@ msgid "Print version"
 msgstr "Вивести версію"
 
 #: gconf/gconftool.c:537
+#, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Не можна зчитувати та встановлювати/знімати значення одночасно\n"
 
 #: gconf/gconftool.c:547
+#, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Не можна встановлювати та зчитувати/знімати значення одночасно\n"
 
 #: gconf/gconftool.c:554
+#, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Не можна отримувати та встановлювати/знімати значення одночасно\n"
 
 #: gconf/gconftool.c:565
+#, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr ""
 "Не можна використовувати параметр --all-entries разом з параметрами --get чи "
 "--set\n"
 
 #: gconf/gconftool.c:576
+#, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Не можна використовувати --all-dirs з --get чи --set\n"
 
 #: gconf/gconftool.c:589
+#, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, or --all-dirs\n"
@@ -1927,6 +1946,7 @@ msgstr ""
 "entries чи --all-dirs\n"
 
 #: gconf/gconftool.c:602
+#, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs\n"
@@ -1935,14 +1955,17 @@ msgstr ""
 "чи --all-dirs\n"
 
 #: gconf/gconftool.c:608
+#, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Тип доречний лише при встановленні значення\n"
 
 #: gconf/gconftool.c:614
+#, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "Потрібно вказувати тип при встановленні значення\n"
 
 #: gconf/gconftool.c:622
+#, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
@@ -1958,6 +1981,7 @@ msgid "%s option must be used by itself.\n"
 msgstr "Параметр %s повинен використовуватись сам по собі.\n"
 
 #: gconf/gconftool.c:723
+#, c-format
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
@@ -1970,18 +1994,21 @@ msgid "Failed to init GConf: %s\n"
 msgstr "Помилка при ініціалізації GConf: %s\n"
 
 #: gconf/gconftool.c:758
+#, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "Змінну середовища GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL встановлено, схеми "
 "не встановлюються\n"
 
 #: gconf/gconftool.c:765
+#, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL встановлено, схеми не вилучаються\n"
 
 #: gconf/gconftool.c:778
+#, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "Необхідно встановити змінну середовища GCONF_CONFIG_SOURCE\n"
 
@@ -1996,10 +2023,12 @@ msgid "Shutdown error: %s\n"
 msgstr "Помилка вимкнення: %s\n"
 
 #: gconf/gconftool.c:1159
+#, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Необхідно вказати принаймні один каталог для рекурсивного списку.\n"
 
 #: gconf/gconftool.c:1211
+#, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Потрібно вказати принаймні один каталог для виводу.\n"
 
@@ -2018,6 +2047,7 @@ msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Не вдається породити сервер конфігурації (gconfd): %s\n"
 
 #: gconf/gconftool.c:1607
+#, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "Потрібно вказати ключ або ключі для отримання\n"
 
@@ -2084,6 +2114,7 @@ msgid "Don't understand type `%s'\n"
 msgstr "Незрозумілий тип \"%s\"\n"
 
 #: gconf/gconftool.c:1734
+#, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Потрібно вказати змінювані ключі й значення як аргументи\n"
 
@@ -2093,14 +2124,17 @@ msgid "No value to set for key: `%s'\n"
 msgstr "Немає значення для ключа: \"%s\"\n"
 
 #: gconf/gconftool.c:1782
+#, c-format
 msgid "Cannot set schema as value\n"
 msgstr "Не вдається встановити схему як значення\n"
 
 #: gconf/gconftool.c:1792
+#, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Потрібно вказувати примітивний тип-список\n"
 
 #: gconf/gconftool.c:1806
+#, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Потрібно вказувати примітивні типи для значення і ключа\n"
@@ -2121,10 +2155,12 @@ msgid "Error syncing: %s\n"
 msgstr "Помилка синхронізації: %s\n"
 
 #: gconf/gconftool.c:1867
+#, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "Потрібно вказати ключ або ключі для отримання типу\n"
 
 #: gconf/gconftool.c:1911
+#, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Потрібно вказати ключ для отримання розміру\n"
 
@@ -2134,22 +2170,27 @@ msgid "Key %s is not a list.\n"
 msgstr "Ключ \"%s\" не є списком\n"
 
 #: gconf/gconftool.c:1956
+#, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Потрібно вказати ключ, з якого отримати елемент списку\n"
 
 #: gconf/gconftool.c:1987
+#, c-format
 msgid "Must specify list index.\n"
 msgstr "Потрібно вказати індекс в списку.\n"
 
 #: gconf/gconftool.c:1994
+#, c-format
 msgid "List index must be non-negative.\n"
 msgstr "Індекс в списку не може мати від'ємне значення.\n"
 
 #: gconf/gconftool.c:2003
+#, c-format
 msgid "List index is out of bounds.\n"
 msgstr "Індекс в списку виходить за межі діапазону.\n"
 
 #: gconf/gconftool.c:2029
+#, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Необхідно вказати ключ або ключі в командному рядку\n"
 
@@ -2179,6 +2220,7 @@ msgid "Value at '%s' is not a schema\n"
 msgstr "Значення на \"%s\" не є схемою\n"
 
 #: gconf/gconftool.c:2153
+#, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "Необхідно вказати назву схеми і ключа, до якого застосувати схему\n"
 
@@ -2188,6 +2230,7 @@ msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Помилка пов'язування назви схеми \"%s\" з назвою ключа \"%s\": %s\n"
 
 #: gconf/gconftool.c:2178
+#, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Потрібно вказати ключ для скасування застосування схеми з\n"
 
@@ -2197,18 +2240,22 @@ msgid "Error removing schema name from '%s': %s\n"
 msgstr "Помилка видалення назви схеми з \"%s\": %s\n"
 
 #: gconf/gconftool.c:2213
+#, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Потрібно вказати ключ (назву схеми), як єдиний аргумент\n"
 
 #: gconf/gconftool.c:2255
+#, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "Список має мати простий тип: string, int, float чи bool\n"
 
 #: gconf/gconftool.c:2275
+#, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Тип ключа пари має бути простим: string, int, float чи bool\n"
 
 #: gconf/gconftool.c:2295
+#, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Тип значення пари має бути простим: string, int, float чи bool\n"
 
@@ -2223,12 +2270,14 @@ msgid "Error syncing: %s"
 msgstr "Помилка синхронізації: %s"
 
 #: gconf/gconftool.c:2339
+#, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Потрібно вказати принаймні один каталог для отримання звідти пар \"ключ-"
 "значення\".\n"
 
 #: gconf/gconftool.c:2353
+#, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Потрібно вказати один або більше ключів для зняття значення.\n"
 
@@ -2238,6 +2287,7 @@ msgid "Error unsetting `%s': %s\n"
 msgstr "Помилка зняття значення \"%s\": %s\n"
 
 #: gconf/gconftool.c:2384
+#, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Необхідно вказати один чи більше ключів для рекурсивного видалення.\n"
 
@@ -2247,6 +2297,7 @@ msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Помилка під час рекурсивного видалення \"%s\": %s\n"
 
 #: gconf/gconftool.c:2418
+#, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Потрібно вказати принаймні один каталог для отримання звідти підкаталогів.\n"
@@ -2257,6 +2308,7 @@ msgid "Error listing dirs: %s\n"
 msgstr "Помилка отримання списку каталогів: %s\n"
 
 #: gconf/gconftool.c:2588
+#, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "УВАГА: потрібно задати як <car>, так і <cdr> в <pair>\n"
 
@@ -2267,6 +2319,7 @@ msgstr ""
 "УВАГА: вказано ключ (%s) для схеми зі значенням  <value>, проігноровано\n"
 
 #: gconf/gconftool.c:2648
+#, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "УВАГА: потрібна наявність підпорядкованого вузла для <value>\n"
 
@@ -2323,10 +2376,12 @@ msgstr ""
 "УВАГА: неправильний чи відсутній тип car_type чи cdr_type для схеми (%s)\n"
 
 #: gconf/gconftool.c:3023
+#, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "УВАГА: не вказано типового значення ключа для схеми\n"
 
 #: gconf/gconftool.c:3052
+#, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "УВАГА: внутрішня помилка gconftool, невідомий тип GConfValueType\n"
 
@@ -2356,6 +2411,7 @@ msgstr ""
 "УВАГА: cdr_type може бути лише int, float, string чи bool, а не \"%s\"\n"
 
 #: gconf/gconftool.c:3199
+#, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "УВАГА: порожній вузол <applyto>"
 
@@ -2365,18 +2421,22 @@ msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "УВАГА: вузол <%s> незрозумілий у <schema>\n"
 
 #: gconf/gconftool.c:3213
+#, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "УВАГА: не вказано вузол <list_type> для схеми типу \"список\"\n"
 
 #: gconf/gconftool.c:3219
+#, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "УВАГА: не вказано вузол <car_type> для схеми типу \"пара\"\n"
 
 #: gconf/gconftool.c:3225
+#, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "УВАГА: не вказано вузол <cdr_type> для схеми типу \"пара\"\n"
 
 #: gconf/gconftool.c:3254
+#, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "УВАГА: вузол <locale> не має ознаки \"name=\"locale\"\", проігноровано\n"
@@ -2400,6 +2460,7 @@ msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Долучено схему \"%s\" до ключа \"%s\"\n"
 
 #: gconf/gconftool.c:3469
+#, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Необхідно, щоб було хоча б один елемент <locale> в <schema>\n"
 
@@ -2424,6 +2485,7 @@ msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "Вилучено схему \"%s\" для локалі \"%s\"\n"
 
 #: gconf/gconftool.c:3568
+#, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "УВАГА: не вказано ключ для схеми\n"
 
@@ -2464,6 +2526,7 @@ msgid "Error syncing config data: %s"
 msgstr "Помилка синхронізації даних конфігурації: %s"
 
 #: gconf/gconftool.c:3718
+#, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "Потрібно вказати декілька файлів схеми для встановлення\n"
 
@@ -2482,6 +2545,7 @@ msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Помилка при на знятті значення ключа ушкодження %s: %s\n"
 
 #: gconf/gconftool.c:3901
+#, c-format
 msgid "Must specify some keys to break\n"
 msgstr "Потрібно вказати деякі ключі для ушкодження\n"
 
@@ -2496,6 +2560,7 @@ msgstr ""
 "  %s\n"
 
 #: gconf/gconftool.c:3925
+#, c-format
 msgid "Must specify some directories to break\n"
 msgstr "Необхідно вказати деякі каталоги для ушкодження\n"
 
