@@ -1,3 +1,9 @@
+2006-01-27  Tor Lillqvist  <tml@novell.com>
+
+	* gconf-zip.in: Include backend DLLs only in the runtime zipfile.
+
+	* gconf/gconfd.c (main): Don't call closelog() unless we HAVE_SYSLOG_H.
+
 2006-01-15  Mark McLoughlin  <mark@skynet.ie>
 
 	* configure.in: post-release bump to 2.13.6.
