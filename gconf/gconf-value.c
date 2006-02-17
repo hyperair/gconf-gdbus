@@ -73,8 +73,7 @@ gconf_value_new(GConfValueType type)
       initted = TRUE;
     }
   
-  /* Probably want to use mem chunks here eventually. */
-  value = (GConfValue*) g_new0 (GConfRealValue, 1);
+  value = (GConfValue*) g_slice_new0 (GConfRealValue);
 
   value->type = type;
 
@@ -827,7 +826,7 @@ gconf_value_free(GConfValue* value)
       break;
     }
   
-  g_free(value);
+  g_slice_free(GConfRealValue, real);
 }
 
 const char*
@@ -1451,7 +1450,7 @@ gconf_entry_new_nocopy (char* key, GConfValue* val)
 {
   GConfRealEntry* real;
 
-  real = g_new (GConfRealEntry, 1);
+  real = g_slice_new (GConfRealEntry);
 
   real->key   = key;
   real->value = val;
@@ -1490,7 +1489,7 @@ gconf_entry_unref (GConfEntry *entry)
         gconf_value_free (real->value);
       if (real->schema_name)
         g_free (real->schema_name);
-      g_free (real);
+      g_slice_free (GConfRealEntry, real);
     }
 }
 
