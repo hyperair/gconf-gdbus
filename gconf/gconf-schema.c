@@ -35,10 +35,6 @@ typedef struct {
   gchar* short_desc;   /* 40 char or less description, no newlines */
   gchar* long_desc;    /* could be a paragraph or so */
   GConfValue* default_value; /* Default value of the key */
-  gpointer pad1;
-  gpointer pad2;
-  gpointer pad3;
-  int pad4;
 } GConfRealSchema;
 
 #define REAL_SCHEMA(schema) ((GConfRealSchema*)(schema))

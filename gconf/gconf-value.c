@@ -1430,16 +1430,9 @@ typedef struct {
   char *key;
   GConfValue *value;
   char *schema_name;
-  int pad1;
-  gpointer pad2;
-  gpointer pad3;
-  GTime pad4;
   int refcount;
   guint is_default : 1;
   guint is_writable : 1;
-  guint pad5 : 1;
-  guint pad6 : 1;
-  guint pad7 : 1;
 } GConfRealEntry;
 
 #define REAL_ENTRY(x) ((GConfRealEntry*)(x))
