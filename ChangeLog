@@ -1,5 +1,16 @@
 2006-03-06  Mark McLoughlin  <mark@skynet.ie>
 
+	Based on patch from Josselin Mouette <joss@debian.org>
+	in bug #333353 to speed up the install of multiple
+	schem files
+
+	* gconf/gconftool.c: 
+	(do_load_file): split do_sync() out of here
+	(main), (do_makefile_install): call do_sync()
+	after calling do_load_file()
+
+2006-03-06  Mark McLoughlin  <mark@skynet.ie>
+
 	Patch from Christopher.Hanna@sun.com
 
 	* doc/gconftool-2.1: improved man page

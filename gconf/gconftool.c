@@ -476,6 +476,7 @@ static int do_unset(GConfEngine* conf, const gchar** args);
 static int do_recursive_unset (GConfEngine* conf, const gchar** args);
 static int do_all_subdirs(GConfEngine* conf, const gchar** args);
 static int do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar* file, const gchar** base_dirs);
+static int do_sync(GConfEngine* conf);
 static int do_short_docs (GConfEngine *conf, const gchar **args);
 static int do_long_docs (GConfEngine *conf, const gchar **args);
 static int do_get_schema_name (GConfEngine *conf, const gchar **args);
@@ -841,6 +842,8 @@ main (int argc, char** argv)
       gint retval;
 
       retval = do_load_file(conf, LOAD_SCHEMA_FILE, FALSE, schema_file, NULL);
+      if (!retval)
+	retval = do_sync(conf);
 
       gconf_engine_unref(conf);
 
@@ -853,6 +856,8 @@ main (int argc, char** argv)
       gint retval;
 
       retval = do_load_file(conf, LOAD_ENTRY_FILE, FALSE, entry_file, args);
+      if (!retval)
+	retval = do_sync(conf);
 
       gconf_engine_unref(conf);
 
@@ -865,6 +870,8 @@ main (int argc, char** argv)
       gint retval;
 
       retval = do_load_file(conf, LOAD_ENTRY_FILE, TRUE, unload_entry_file, args);
+      if (!retval)
+	retval = do_sync(conf);
 
       gconf_engine_unref(conf);
 
@@ -3629,7 +3636,6 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
 
   xmlDocPtr doc;
   xmlNodePtr iter;
-  GError * err = NULL;
   /* file comes from the command line, is thus in locale charset */
   gchar *utf8_file = g_locale_to_utf8 (file, -1, NULL, NULL, NULL);;
 
@@ -3691,7 +3697,17 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
           
       iter = iter->next;
     }
+  
+  return 0;
+#undef LOAD_TYPE_TO_LIST
+#undef LOAD_TYPE_TO_ROOT
+}
 
+static int
+do_sync(GConfEngine* conf)
+{
+  GError *err = NULL;
+  
   gconf_engine_suggest_sync(conf, &err);
 
   if (err != NULL)
@@ -3703,16 +3719,11 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
     }
   
   return 0;
-
-#undef LOAD_TYPE_TO_LIST
-#undef LOAD_TYPE_TO_ROOT
 }
 
 static int
 do_makefile_install(GConfEngine* conf, const gchar** args, gboolean unload)
 {
-  GError* err = NULL;
-  
   if (args == NULL)
     {
       g_printerr (_("Must specify some schema files to install\n"));
@@ -3727,17 +3738,7 @@ do_makefile_install(GConfEngine* conf, const gchar** args, gboolean unload)
       ++args;
     }
 
-  gconf_engine_suggest_sync(conf, &err);
-
-  if (err != NULL)
-    {
-      g_printerr (_("Error syncing config data: %s"),
-		  err->message);
-      g_error_free(err);
-      return 1;
-    }
-  
-  return 0;
+  return do_sync (conf);
 }
 
 typedef enum {
