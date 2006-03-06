@@ -3640,10 +3640,9 @@ parse_tree (MarkupDir   *root,
   if (!g_markup_parse_context_end_parse (context, &error))
     goto out;
 
-  g_markup_parse_context_free (context);
-
  out:
 
+  g_markup_parse_context_free (context);
   g_free (filename);
 
   if (f != NULL)
