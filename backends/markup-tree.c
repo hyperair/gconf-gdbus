@@ -3575,7 +3575,7 @@ parse_tree (MarkupDir   *root,
             const char  *locale,
             GError     **err)
 {
-  GMarkupParseContext *context;
+  GMarkupParseContext *context = NULL;
   GError *error;
   ParseInfo info;
   char *filename;
@@ -3642,7 +3642,8 @@ parse_tree (MarkupDir   *root,
 
  out:
 
-  g_markup_parse_context_free (context);
+  if (context)
+    g_markup_parse_context_free (context);
   g_free (filename);
 
   if (f != NULL)
