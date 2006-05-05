@@ -2495,7 +2495,7 @@ parse_value_element (GMarkupParseContext  *context,
             else
               car_vtype = GCONF_VALUE_INVALID;
 
-            if (cdr_vtype)
+            if (cdr_type)
               cdr_vtype = gconf_value_type_from_string (cdr_type);
             else
               cdr_vtype = GCONF_VALUE_INVALID;
