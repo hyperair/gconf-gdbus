@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <popt.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
 #include <libxml/globals.h>
@@ -31,6 +30,7 @@
 #include <locale.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <glib.h>
 
 typedef enum {
   LOAD_SCHEMA_FILE,
@@ -77,377 +77,422 @@ static int ignore_schema_defaults = FALSE;
 static int default_source_mode = FALSE;
 static int recursive_unset_mode = FALSE;
 static int do_version = FALSE;
+static const gchar **args = NULL;
 
-struct poptOption options[] = {
-  POPT_AUTOHELP
+static const GOptionEntry client_entries[] = {
   {
     "set",
     's',
-    POPT_ARG_NONE,
+    0, 
+    G_OPTION_ARG_NONE,
     &set_mode,
-    0,
     N_("Set a key to a value and sync. Use with --type."),
     NULL
   },
   { 
     "get",
     'g',
-    POPT_ARG_NONE,
+    0,
+    G_OPTION_ARG_NONE,
     &get_mode,
-    0,
     N_("Print the value of a key to standard output."),
-    NULL
-  },
-  {
-    "set-schema",
-    '\0',
-    POPT_ARG_NONE,
-    &set_schema_mode,
-    0,
-    N_("Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --type."),
     NULL
   },
   {
 
     "unset",
     'u',
-    POPT_ARG_NONE,
+    0,
+    G_OPTION_ARG_NONE,
     &unset_mode,
-    0, 
     N_("Unset the keys on the command line"),
     NULL
   },
   {
     "recursive-unset",
     '\0',
-    POPT_ARG_NONE,
+    0,
+    G_OPTION_ARG_NONE,
     &recursive_unset_mode,
-    0, 
     N_("Recursively unset all keys at or below the key/directory names on the command line"),
     NULL
   },
   { 
     "all-entries",
     'a',
-    POPT_ARG_NONE,
-    &all_entries_mode,
     0,
+    G_OPTION_ARG_NONE,
+    &all_entries_mode,
     N_("Print all key/value pairs in a directory."),
     NULL
   },
   {
     "all-dirs",
     '\0',
-    POPT_ARG_NONE,
+    0,
+    G_OPTION_ARG_NONE,
     &all_subdirs_mode,
-    0,
     N_("Print all subdirectories in a directory."),
-    NULL
-  },
-  {
-    "dump",
-    '\0',
-    POPT_ARG_NONE,
-    &dump_values,
-    0,
-    N_("Dump to standard output an XML description of all entries under a directory, recursively."),
-    NULL
-  },
-  {
-    "load",
-    '\0',
-    POPT_ARG_STRING,
-    &entry_file,
-    0,
-    N_("Load from the specified file an XML description of values and set them relative to a directory."),
-    NULL
-  },
-  {
-    "unload",
-    '\0',
-    POPT_ARG_STRING,
-    &unload_entry_file,
-    0,
-    N_("Unload a set of values described in an XML file."),
     NULL
   },
   {
     "recursive-list",
     'R',
-    POPT_ARG_NONE,
+    0,
+    G_OPTION_ARG_NONE,
     &recursive_list,
-    0,
     N_("Print all subdirectories and entries under a directory, recursively."),
-    NULL
-  },
-  { 
-    "dir-exists",
-    '\0',
-    POPT_ARG_STRING,
-    &dir_exists,
-    0,
-    N_("Return 0 if the directory exists, 2 if it does not."),
-    NULL
-  },
-  { 
-    "shutdown",
-    '\0',
-    POPT_ARG_NONE,
-    &shutdown_gconfd,
-    0,
-    N_("Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."),
-    NULL
-  },
-  { 
-    "ping",
-    'p',
-    POPT_ARG_NONE,
-    &ping_gconfd,
-    0,
-    N_("Return 0 if gconfd is running, 2 if not."),
-    NULL
-  },
-  { 
-    "spawn",
-    '\0',
-    POPT_ARG_NONE,
-    &spawn_gconfd,
-    0,
-    N_("Launch the config server (gconfd). (Normally happens automatically when needed.)"),
-    NULL
-  },
-  { 
-    "type",
-    't',
-    POPT_ARG_STRING,
-    &value_type,
-    0,
-    N_("Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."),
-    N_("int|bool|float|string|list|pair")
-  },
-  {
-    "get-type",
-    'T',
-    POPT_ARG_NONE,
-    &get_type_mode,
-    0,
-    N_("Print the data type of a key to standard output."),
-    NULL
-  },
-  {
-    "get-list-size",
-    '\0',
-    POPT_ARG_NONE,
-    &get_list_size_mode,
-    0,
-    N_("Get the number of elements in a list key."),
-    NULL
-  },
-  {
-    "get-list-element",
-    '\0',
-    POPT_ARG_NONE,
-    &get_list_element_mode,
-    0,
-    N_("Get a specific element from a list key, numerically indexed."),
-    NULL
-  },
-  { 
-    "list-type",
-    '\0',
-    POPT_ARG_STRING,
-    &value_list_type,
-    0,
-    N_("Specify the type of the list value being set, or the type of the value a schema describes. Unique abbreviations OK."),
-    N_("int|bool|float|string")
-  },  
-  { 
-    "car-type",
-    '\0',
-    POPT_ARG_STRING,
-    &value_car_type,
-    0,
-    N_("Specify the type of the car pair value being set, or the type of the value a schema describes. Unique abbreviations OK."),
-    N_("int|bool|float|string")
-  },  
-  { 
-    "cdr-type",
-    '\0',
-    POPT_ARG_STRING,
-    &value_cdr_type,
-    0,
-    N_("Specify the type of the cdr pair value being set, or the type of the value a schema describes. Unique abbreviations OK."),
-    N_("int|bool|float|string")
-  },  
-  { 
-    "short-desc",
-    '\0',
-    POPT_ARG_STRING,
-    &short_desc,
-    0,
-    N_("Specify a short half-line description to go in a schema."),
-    N_("DESCRIPTION")
-  },
-  { 
-    "long-desc",
-    '\0',
-    POPT_ARG_STRING,
-    &long_desc,
-    0,
-    N_("Specify a several-line description to go in a schema."),
-    N_("DESCRIPTION")
-  },
-  {
-    "owner",
-    '\0',
-    POPT_ARG_STRING,
-    &owner,
-    0,
-    N_("Specify the owner of a schema"),
-    N_("OWNER")
-  },
-  {
-    "install-schema-file",
-    '\0',
-    POPT_ARG_STRING,
-    &schema_file,
-    0,
-    N_("Specify a schema file to be installed"),
-    N_("FILENAME")
-  },
-  {
-    "config-source",
-    '\0',
-    POPT_ARG_STRING,
-    &config_source,
-    0,
-    N_("Specify a configuration source to use rather than the default path"),
-    N_("SOURCE")
-  },
-  {
-    "direct",
-    '\0',
-    POPT_ARG_NONE,
-    &use_local_source,
-    0,
-    N_("Access the config database directly, bypassing server. Requires that gconfd is not running."),
-    NULL
-  },
-  {
-    "makefile-install-rule",
-    '\0',
-    POPT_ARG_NONE,
-    &makefile_install_mode,
-    0,
-    N_("Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
-    NULL
-  },
-  {
-    "makefile-uninstall-rule",
-    '\0',
-    POPT_ARG_NONE,
-    &makefile_uninstall_mode,
-    0,
-    N_("Properly uninstalls schema files on the command line from the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
-    NULL
-  },
-  {
-    "break-key",
-    '\0',
-    POPT_ARG_NONE,
-    &break_key_mode,
-    0,
-    N_("Torture-test an application by setting and unsetting a bunch of values of different types for keys on the command line."),
-    NULL
-  },
-  {
-    "break-directory",
-    '\0',
-    POPT_ARG_NONE,
-    &break_dir_mode,
-    0,
-    N_("Torture-test an application by setting and unsetting a bunch of keys inside the directories on the command line."),
     NULL
   },
   {
     "short-docs",
     '\0',
-    POPT_ARG_NONE,
-    &short_docs_mode,
     0,
+    G_OPTION_ARG_NONE,
+    &short_docs_mode,
     N_("Get the short doc string for a key"),
     NULL
   },
   {
     "long-docs",
     '\0',
-    POPT_ARG_NONE,
-    &long_docs_mode,
     0,
+    G_OPTION_ARG_NONE,
+    &long_docs_mode,
     N_("Get the long doc string for a key"),
     NULL
+  },
+  { 
+    "dir-exists",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &dir_exists,
+    N_("Return 0 if the directory exists, 2 if it does not."),
+    NULL
+  },
+  {
+    "ignore-schema-defaults",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &ignore_schema_defaults,
+    N_("Ignore schema defaults when reading values."),
+    NULL
+  },
+  {
+    NULL
+  }
+};
+
+static const GOptionEntry load_entries[] = {
+  {
+    "dump",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &dump_values,
+    N_("Dump to standard output an XML description of all entries under a directory, recursively."),
+    NULL
+  },
+  {
+    "load",
+    '\0',
+    0,
+    G_OPTION_ARG_FILENAME,
+    &entry_file,
+    N_("Load from the specified file an XML description of values and set them relative to a directory."),
+    NULL
+  },
+  {
+    "unload",
+    '\0',
+    0,
+    G_OPTION_ARG_FILENAME,
+    &unload_entry_file,
+    N_("Unload a set of values described in an XML file."),
+    NULL
+  },
+  {
+    NULL
+  }
+};
+
+static const GOptionEntry server_entries[] = {
+  {
+    "get-default-source",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &default_source_mode,
+    N_("Get the name of the default source"),
+    NULL
+  },
+  { 
+    "shutdown",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &shutdown_gconfd,
+    N_("Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."),
+    NULL
+  },
+  { 
+    "ping",
+    'p',
+    0,
+    G_OPTION_ARG_NONE,
+    &ping_gconfd,
+    N_("Return 0 if gconfd is running, 2 if not."),
+    NULL
+  },
+  { 
+    "spawn",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &spawn_gconfd,
+    N_("Launch the config server (gconfd). (Normally happens automatically when needed.)"),
+    NULL
+  },
+  {
+    NULL
+  }
+};
+
+static const GOptionEntry type_entries[] = {
+  { 
+    "type",
+    't',
+    0,
+    G_OPTION_ARG_STRING,
+    &value_type,
+    N_("Specify the type of the value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string|list|pair")
+  },
+  {
+    "get-type",
+    'T',
+    0,
+    G_OPTION_ARG_NONE,
+    &get_type_mode,
+    N_("Print the data type of a key to standard output."),
+    NULL
+  },
+  {
+    "get-list-size",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &get_list_size_mode,
+    N_("Get the number of elements in a list key."),
+    NULL
+  },
+  {
+    "get-list-element",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &get_list_element_mode,
+    N_("Get a specific element from a list key, numerically indexed."),
+    NULL
+  },
+  { 
+    "list-type",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &value_list_type,
+    N_("Specify the type of the list value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string")
+  },  
+  { 
+    "car-type",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &value_car_type,
+    N_("Specify the type of the car pair value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string")
+  },  
+  { 
+    "cdr-type",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &value_cdr_type,
+    N_("Specify the type of the cdr pair value being set, or the type of the value a schema describes. Unique abbreviations OK."),
+    N_("int|bool|float|string")
+  },  
+  {
+    NULL
+  }
+};
+
+static const GOptionEntry install_entries[] = {
+  {
+    "install-schema-file",
+    '\0',
+    0,
+    G_OPTION_ARG_FILENAME,
+    &schema_file,
+    N_("Specify a schema file to be installed"),
+    N_("FILENAME")
+  },
+  {
+    "config-source",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &config_source,
+    N_("Specify a configuration source to use rather than the default path"),
+    N_("SOURCE")
+  },
+  {
+    "direct",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &use_local_source,
+    N_("Access the config database directly, bypassing server. Requires that gconfd is not running."),
+    NULL
+  },
+  {
+    "makefile-install-rule",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &makefile_install_mode,
+    N_("Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
+    NULL
+  },
+  {
+    "makefile-uninstall-rule",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &makefile_uninstall_mode,
+    N_("Properly uninstalls schema files on the command line from the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
+    NULL
+  },
+  {
+    NULL
+  }
+};
+
+static const GOptionEntry test_entries[] = {
+  {
+    "break-key",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &break_key_mode,
+    N_("Torture-test an application by setting and unsetting a bunch of values of different types for keys on the command line."),
+    NULL
+  },
+  {
+    "break-directory",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &break_dir_mode,
+    N_("Torture-test an application by setting and unsetting a bunch of keys inside the directories on the command line."),
+    NULL
+  },
+  {
+    NULL
+  }
+};
+
+static const GOptionEntry schema_entries[] = {
+  {
+    "set-schema",
+    '\0',
+    0,
+    G_OPTION_ARG_NONE,
+    &set_schema_mode,
+    N_("Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --type."),
+    NULL
+  },
+  { 
+    "short-desc",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &short_desc,
+    N_("Specify a short half-line description to go in a schema."),
+    N_("DESCRIPTION")
+  },
+  { 
+    "long-desc",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &long_desc,
+    N_("Specify a several-line description to go in a schema."),
+    N_("DESCRIPTION")
+  },
+  {
+    "owner",
+    '\0',
+    0,
+    G_OPTION_ARG_STRING,
+    &owner,
+    N_("Specify the owner of a schema"),
+    N_("OWNER")
   },
   {
     "get-schema-name",
     '\0',
-    POPT_ARG_NONE,
-    &schema_name_mode,
     0,
+    G_OPTION_ARG_NONE,
+    &schema_name_mode,
     N_("Get the name of the schema applied to this key"),
     NULL
   },
   {
     "apply-schema",
     '\0',
-    POPT_ARG_NONE,
-    &associate_schema_mode,
     0,
+    G_OPTION_ARG_NONE,
+    &associate_schema_mode,
     N_("Specify the schema name followed by the key to apply the schema name to"),
     NULL
   },
   {
     "unapply-schema",
     '\0',
-    POPT_ARG_NONE,
-    &dissociate_schema_mode,
     0,
+    G_OPTION_ARG_NONE,
+    &dissociate_schema_mode,
     N_("Remove any schema name applied to the given keys"),
     NULL
   },
   {
-    "ignore-schema-defaults",
-    '\0',
-    POPT_ARG_NONE,
-    &ignore_schema_defaults,
-    0,
-    N_("Ignore schema defaults when reading values."),
     NULL
-  },
-  {
-    "get-default-source",
-    '\0',
-    POPT_ARG_NONE,
-    &default_source_mode,
-    0,
-    N_("Get the name of the default source"),
-    NULL
-  },
+  }
+};
+
+static const GOptionEntry main_entries[] = {
   {
     "version",
     'v',
-    POPT_ARG_NONE,
-    &do_version,
     0,
+    G_OPTION_ARG_NONE,
+    &do_version,
     N_("Print version"),
     NULL
   },
   {
-    NULL,
+    G_OPTION_REMAINING,
     '\0',
     0,
-    NULL,
-    0,
-    NULL,
+    G_OPTION_ARG_STRING_ARRAY,
+    &args,
+    N_("[FILE...]|[KEY...]|[DIR...]"),
+    NULL
+  },
+  {
     NULL
   }
 };
@@ -488,8 +533,8 @@ int
 main (int argc, char** argv)
 {
   GConfEngine* conf;
-  poptContext ctx;
-  gint nextopt;
+  GOptionContext *context;
+  GOptionGroup *group;
   GError* err = NULL;
 
   LIBXML_TEST_VERSION;
@@ -498,33 +543,60 @@ main (int argc, char** argv)
   setlocale (LC_ALL, "");
   bindtextdomain (GETTEXT_PACKAGE,GCONF_LOCALE_DIR);
   textdomain (GETTEXT_PACKAGE);
+  _gconf_init_i18n ();
   
-  ctx = poptGetContext("gconftool", argc, (const char **) argv, options, 0);
+  context = g_option_context_new (_("- Tool to manipulate a GConf configuration"));
 
-  poptReadDefaultConfig(ctx, TRUE);
+  group = g_option_group_new ("client", _("Client options"), _("Show client options"), NULL, NULL);
+  g_option_group_add_entries (group, client_entries);
+  g_option_context_add_group (context, group);
+
+  group = g_option_group_new ("key-type", _("Key type options"), _("Show key type options"), NULL, NULL);
+  g_option_group_add_entries (group, type_entries);
+  g_option_context_add_group (context, group);
+
+  group = g_option_group_new ("load", _("Load/Save options"), _("Show load/save options"), NULL, NULL);
+  g_option_group_add_entries (group, load_entries);
+  g_option_context_add_group (context, group);
+
+  group = g_option_group_new ("server", _("Server options"), _("Show server options"), NULL, NULL);
+  g_option_group_add_entries (group, server_entries);
+  g_option_context_add_group (context, group);
+
+  group = g_option_group_new ("install", _("Installation options"), _("Show installation options"), NULL, NULL);
+  g_option_group_add_entries (group, install_entries);
+  g_option_context_add_group (context, group);
+
+  group = g_option_group_new ("test", _("Test options"), _("Show test options"), NULL, NULL);
+  g_option_group_add_entries (group, test_entries);
+  g_option_context_add_group (context, group);
+
+  group = g_option_group_new ("schema", _("Schema options"), _("Show schema options"), NULL, NULL);
+  g_option_group_add_entries (group, schema_entries);
+  g_option_context_add_group (context, group);
+
+  g_option_context_add_main_entries (context, main_entries, GETTEXT_PACKAGE);
 
   if (argc < 2) 
     {
-      poptPrintUsage (ctx, stdout, 0);
+      g_printerr (_("Run '%s --help' to see a full list of available command line options.\n"),
+                  argv[0]);
       return 1;
     } 
 
-  while((nextopt = poptGetNextOpt(ctx)) > 0)
-    /*nothing*/;
+  g_option_context_parse (context, &argc, &argv, &err);
+  g_option_context_free (context);
 
-  /* delay bind_textdomain_codeset call after popt has handled --help and --usage */
-  _gconf_init_i18n ();
-
-  if(nextopt != -1) 
+  if (err)
     {
-      g_printerr (_("Error on option %s: %s.\nRun '%s --help' to see a full list of available command line options.\n"),
-		  poptBadOption(ctx, 0),
-		  poptStrerror(nextopt),
-		  argv[0]);
+      g_printerr (_("Error while parsing options: %s.\nRun '%s --help' to see a full list of available command line options.\n"),
+                  err->message,
+                  argv[0]);
+      g_error_free (err);
       return 1;
     }
 
-  /* Um, this is a mess. Not using popt right? */
+  /* Um, this is a mess. Not using compatible options? */
 
   if (do_version)
     {
@@ -746,7 +818,6 @@ main (int argc, char** argv)
   /* Before creating engine */
   if (default_source_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_get_default_source (args)  == 1)
         return 1;
       else
@@ -852,7 +923,6 @@ main (int argc, char** argv)
 
   if (entry_file != NULL)
     {
-      const gchar** args = poptGetArgs(ctx);
       gint retval;
 
       retval = do_load_file(conf, LOAD_ENTRY_FILE, FALSE, entry_file, args);
@@ -866,7 +936,6 @@ main (int argc, char** argv)
   
   if (unload_entry_file != NULL)
     {
-      const gchar** args = poptGetArgs(ctx);
       gint retval;
 
       retval = do_load_file(conf, LOAD_ENTRY_FILE, TRUE, unload_entry_file, args);
@@ -887,7 +956,6 @@ main (int argc, char** argv)
 
   if (makefile_install_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       gint retval;
 
       umask (022);
@@ -900,7 +968,6 @@ main (int argc, char** argv)
 
   if (makefile_uninstall_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       gint retval;
 
       umask (022);
@@ -913,7 +980,6 @@ main (int argc, char** argv)
 
   if (break_key_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       gint retval = do_break_key(conf, args);
 
       gconf_engine_unref(conf);
@@ -923,7 +989,6 @@ main (int argc, char** argv)
   
   if (break_dir_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       gint retval = do_break_directory(conf, args);
 
       gconf_engine_unref(conf);
@@ -933,7 +998,6 @@ main (int argc, char** argv)
   
   if (get_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_get(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
@@ -944,7 +1008,6 @@ main (int argc, char** argv)
   
   if (set_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_set(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -954,7 +1017,6 @@ main (int argc, char** argv)
 
   if (get_type_mode)
     {
-      const gchar** args = poptGetArgs (ctx);
       if (do_get_type (conf, args) == 1)
         {
           gconf_engine_unref (conf);
@@ -964,7 +1026,6 @@ main (int argc, char** argv)
 
   if (get_list_size_mode)
     {
-      const gchar** args = poptGetArgs (ctx);
       if (do_get_list_size (conf, args) == 1)
         {
           gconf_engine_unref (conf);
@@ -974,7 +1035,6 @@ main (int argc, char** argv)
 
   if (get_list_element_mode)
     {
-      const gchar** args = poptGetArgs (ctx);
       if (do_get_list_element (conf, args) == 1)
         {
           gconf_engine_unref (conf);
@@ -984,7 +1044,6 @@ main (int argc, char** argv)
 
   if (set_schema_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_set_schema(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -994,7 +1053,6 @@ main (int argc, char** argv)
 
   if (short_docs_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_short_docs(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
@@ -1004,7 +1062,6 @@ main (int argc, char** argv)
 
   if (long_docs_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_long_docs(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
@@ -1014,7 +1071,6 @@ main (int argc, char** argv)
 
   if (schema_name_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_get_schema_name(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
@@ -1024,7 +1080,6 @@ main (int argc, char** argv)
 
   if (associate_schema_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
       if (do_associate_schema(conf, args)  == 1)
         {
           gconf_engine_unref(conf);
@@ -1034,7 +1089,6 @@ main (int argc, char** argv)
 
   if (dissociate_schema_mode)
     {
-      const gchar** args = poptGetArgs (ctx);
       if (do_dissociate_schema (conf, args)  == 1)
         {
           gconf_engine_unref (conf);
@@ -1044,8 +1098,6 @@ main (int argc, char** argv)
   
   if (all_entries_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
-
       if (do_all_entries(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -1055,8 +1107,6 @@ main (int argc, char** argv)
 
   if (unset_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
-
       if (do_unset(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -1066,8 +1116,6 @@ main (int argc, char** argv)
 
   if (recursive_unset_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
-
       if (do_recursive_unset(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -1077,8 +1125,6 @@ main (int argc, char** argv)
   
   if (all_subdirs_mode)
     {
-      const gchar** args = poptGetArgs(ctx);
-
       if (do_all_subdirs(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -1088,8 +1134,6 @@ main (int argc, char** argv)
 
   if (recursive_list)
     {
-      const gchar** args = poptGetArgs(ctx);
-      
       if (do_recursive_list(conf, args) == 1)
         {
           gconf_engine_unref(conf);
@@ -1099,16 +1143,12 @@ main (int argc, char** argv)
 
   if (dump_values)
     {
-      const gchar** args = poptGetArgs(ctx);
-
       if (do_dump_values(conf, args) == 1)
         {
           gconf_engine_unref(conf);
           return 1;
         }
     }
-
-  poptFreeContext(ctx);
 
   gconf_engine_unref(conf);
 

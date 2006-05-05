@@ -82,12 +82,12 @@ gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) libgconf-$(MAJOR_VERSIO
 gconftool_2_SOURCES = \
 	gconftool.c
 
-gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
+gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS) libgconf-$(MAJOR_VERSION).la
 
 gconf_sanity_check_2_SOURCES = \
 	gconf-sanity-check.c
 
-gconf_sanity_check_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_LIBS) $(POPT_LIBS) libgconf-$(MAJOR_VERSION).la
+gconf_sanity_check_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_LIBS) libgconf-$(MAJOR_VERSION).la
 
 $(CORBA_SOURCECODE): $(srcdir)/GConfX.idl $(ORBIT_IDL)
 	$(ORBIT_IDL) $(srcdir)/GConfX.idl
