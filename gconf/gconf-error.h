@@ -22,9 +22,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 #define GCONF_ERROR gconf_error_quark ()
 
@@ -56,9 +54,7 @@ typedef enum {
 
 GQuark gconf_error_quark (void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

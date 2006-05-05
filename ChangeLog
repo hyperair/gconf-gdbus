@@ -1,5 +1,21 @@
 2006-05-05  Kjartan Maraas  <kmaraas@gnome.org>
 
+	* gconf/gconf-changeset.h:
+	* gconf/gconf-client.h:
+	* gconf/gconf-database.h:
+	* gconf/gconf-engine.h:
+	* gconf/gconf-error.h:
+	* gconf/gconf-listeners.h:
+	* gconf/gconf-locale.h:
+	* gconf/gconf-schema.h:
+	* gconf/gconf-value.h:
+	* gconf/gconf.h:
+	* gconf/gconfd.h: Use G_BEGIN/END_DECLS instead
+	of a lot of #ifdef __cplusplus stuff. Closes bug 306313.
+	Patch from Fabrício Barros Cebral.
+
+2006-05-05  Kjartan Maraas  <kmaraas@gnome.org>
+
 	* backends/markup-tree.c: (parse_value_element):
 	Use the right variable in test. Closes coverity #1238
 	and GNOME bug #338195.

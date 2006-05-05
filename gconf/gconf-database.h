@@ -22,9 +22,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 #include "gconf-error.h"
 #include "GConfX.h"
@@ -146,9 +144,7 @@ void gconf_database_log_listeners_to_string (GConfDatabase *db,
                                              gboolean is_default,
                                              GString *str);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

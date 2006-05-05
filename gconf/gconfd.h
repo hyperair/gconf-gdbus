@@ -22,9 +22,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 #include "gconf-error.h"
 #include "GConfX.h"
@@ -50,9 +48,7 @@ void gconfd_notify_other_listeners (GConfDatabase *modified_db,
 
 void gconfd_need_log_cleanup (void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

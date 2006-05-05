@@ -22,9 +22,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /*
  * The listeners object is used to store listeners who want notification
@@ -85,9 +83,7 @@ void     gconf_listeners_remove_if (GConfListeners         *listeners,
                                     GConfListenersPredicate predicate,
                                     gpointer                user_data);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

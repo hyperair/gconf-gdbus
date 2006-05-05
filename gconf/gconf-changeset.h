@@ -22,9 +22,7 @@
 
 #include <gconf/gconf.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /*
  * A GConfChangeSet is basically a hash from keys to "changes in value,"
@@ -136,9 +134,7 @@ gpointer gconf_change_set_get_user_data (GConfChangeSet *cs);
 
 
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

@@ -26,9 +26,7 @@
 #include <gconf/gconf-listeners.h>
 #include <gconf/gconf-changeset.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /*
  * This is a wrapper for the client-side GConf API which provides several
@@ -385,9 +383,7 @@ GConfChangeSet* gconf_client_change_set_from_current (GConfClient* client,
                                                              const gchar* first_key,
                                                              ...) G_GNUC_NULL_TERMINATED;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

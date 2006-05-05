@@ -24,9 +24,7 @@
 #include <glib.h>
 #include "gconf-error.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /* 
  * A GConfValue is used to pass configuration values around
@@ -196,9 +194,7 @@ void        gconf_entry_set_is_writable  (GConfEntry  *entry,
 gboolean    gconf_entry_equal            (const GConfEntry *a,
                                           const GConfEntry *b);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

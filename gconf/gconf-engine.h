@@ -23,9 +23,7 @@
 #include <glib.h>
 #include <gconf/gconf-error.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /* A configuration engine (stack of config sources); normally there's
  * just one of these on the system.  
@@ -57,9 +55,7 @@ void         gconf_engine_set_user_data  (GConfEngine   *engine,
 gpointer     gconf_engine_get_user_data  (GConfEngine   *engine);
 
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

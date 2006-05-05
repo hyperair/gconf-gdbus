@@ -25,9 +25,7 @@
 
 #include <gconf/gconf-value.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /*
  *  A "schema" is a value that describes a key-value pair.
@@ -73,9 +71,7 @@ const char*    gconf_schema_get_owner         (const GConfSchema *schema);
 GConfValue*    gconf_schema_get_default_value (const GConfSchema *schema);
 
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 

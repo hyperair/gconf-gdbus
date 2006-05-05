@@ -22,9 +22,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 #include <gconf/gconf-schema.h>
 #include <gconf/gconf-engine.h>
@@ -304,8 +302,6 @@ GConfValue * gconf_engine_get_full (GConfEngine *conf,
 
 #endif /* GCONF_ENABLE_INTERNALS */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif

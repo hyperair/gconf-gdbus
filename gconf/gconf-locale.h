@@ -22,9 +22,7 @@
 
 #include <glib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+G_BEGIN_DECLS
 
 /*
  * This thing caches the fallback list for a locale string.
@@ -63,9 +61,7 @@ GConfLocaleList*  gconf_locale_cache_get_list      (GConfLocaleCache* cache,
 /* Use this if you don't care about the locale cache */
 gchar**           gconf_split_locale               (const gchar* locale);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+G_END_DECLS
 
 #endif
 
