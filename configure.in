@@ -100,10 +100,11 @@ fi
 AC_ARG_WITH(sysconfsubdir, AC_HELP_STRING([--with-sysconfsubdir],
             [directory name used under sysconfdir, default=gconf]),
             sysconfsubdir=${withval}, sysconfsubdir=gconf)
+AC_SUBST(sysconfsubdir)
 if test x"${sysconfsubdir}" != x; then
-    sysgconfdir="${sysconfdir}/${sysconfsubdir}"
+    sysgconfdir='${sysconfdir}/${sysconfsubdir}'
 else
-    sysgconfdir="${sysconfdir}"
+    sysgconfdir='${sysconfdir}'
 fi
 AC_SUBST(sysgconfdir)
 
