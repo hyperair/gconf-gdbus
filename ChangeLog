@@ -1,5 +1,11 @@
 2006-05-05  Kjartan Maraas  <kmaraas@gnome.org>
 
+	* gconf/gconf-internals.c: (read_current_server): Fix a
+	NULL pointer deref reported by Coverity. Patch from Pascal
+	Terjan. Closes bug #338617.
+
+2006-05-05  Kjartan Maraas  <kmaraas@gnome.org>
+
 	* configure.in: Move to the new LINGUAS handling.
 	* po/LINGUAS: Patch from Luis Menina. Closes bug #338036.
 

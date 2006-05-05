@@ -2593,10 +2593,13 @@ read_current_server (const gchar *iorfile,
 
   server = read_current_server_and_set_warning (iorfile, warning);
 
-  if (warning->len > 0)
-    gconf_log (GCL_WARNING, "%s", warning->str);
+  if (warning)
+    {
+      if (warning->len > 0)
+	gconf_log (GCL_WARNING, "%s", warning->str);
 
-  g_string_free (warning, TRUE);
+      g_string_free (warning, TRUE);
+    }
 
   return server;
 }
