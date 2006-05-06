@@ -508,6 +508,7 @@ dir_sync (Dir      *d,
                            tmp_filename, g_strerror (errno));
           
           retval = FALSE;
+          outfile = NULL;
           goto failed_end_of_sync;
         }
 
