@@ -2,9 +2,17 @@
 SUBDIRS = gconf backends po doc examples
 DIST_SUBDIRS=tests $(SUBDIRS)
 
-EXTRA_DIST =            \
-	TODO            \
-	gtk-doc.make
+EXTRA_DIST =                \
+	TODO                \
+	gtk-doc.make        \
+	intltool-update.in  \
+	intltool-extract.in \
+	intltool-merge.in
+
+DISTCLEANFILES =          \
+	intltool-update   \
+	intltool-merge    \
+	intltool-extract
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 

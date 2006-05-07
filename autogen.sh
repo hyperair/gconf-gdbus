@@ -134,6 +134,10 @@ do
 	echo "Running gtkdocize..."
 	gtkdocize
       fi
+      if grep "^IT_PROG_INTLTOOL" configure.in >/dev/null; then
+        echo "Running intltoolize..."
+        intltoolize --force --copy
+      fi
       echo "Running $ACLOCAL $aclocalinclude ..."
       $ACLOCAL $aclocalinclude
       if grep "^AM_CONFIG_HEADER" configure.in >/dev/null; then
