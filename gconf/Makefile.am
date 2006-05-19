@@ -121,7 +121,11 @@ libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
 EXTRA_DIST=GConfX.idl default.path.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
 
-install-data-local:
+default.path: $(srcdir)/default.path.in
+	sed -e 's,[@]sysgconfdir[@],$(sysgconfdir),g' \
+		<$(srcdir)/default.path.in >default.path
+
+install-data-local: default.path
 	$(mkinstalldirs) $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)
 	$(INSTALL_DATA) default.path $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)/path
 

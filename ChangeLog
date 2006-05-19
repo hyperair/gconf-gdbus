@@ -1,3 +1,13 @@
+2006-05-12  Julio M. Merino Vidal  <jmmv@NetBSD.org>
+
+	* configure.in:
+	* gconf/Makefile.am:
+	* gconf/default.path.in: Generate the default.path file during the
+	build instead of doing it from configure.ac so that we get the correct
+	expanded value for sysgconfdir.  According to Autoconf documentation
+	this is the canonical way to access *dir variables.  Addresses
+	problems introduced by #336019.
+
 2006-05-07  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* Makefile.am: Add intltool files to EXTRA_DIST and

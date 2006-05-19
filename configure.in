@@ -108,15 +108,6 @@ else
 fi
 AC_SUBST(sysgconfdir)
 
-# Have to go $sysgconfdir->$prefix/etc->/usr/local/etc   
-# if you actually know how to code shell then fix this :-)
-SYSGCONFDIR_TMP="$sysgconfdir"
-old_prefix=$prefix
-prefix=$REAL_PREFIX
-EXPANDED_SYSGCONFDIR=`eval echo $SYSGCONFDIR_TMP`
-prefix=$old_prefix
-AC_SUBST(EXPANDED_SYSGCONFDIR)
-
 dnl Save flags to aclocal
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
 
@@ -250,7 +241,6 @@ Makefile
 gconf-2.m4
 gconf-zip
 gconf/Makefile
-gconf/default.path
 backends/Makefile
 po/Makefile.in
 doc/Makefile
