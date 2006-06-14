@@ -251,7 +251,8 @@ interface ConfigServer {
 
   // Use a specific address instead of the default database;
   // invalid_context returned on failure.
-  ConfigDatabase get_database (in string address);
+  ConfigDatabase get_database (in string address)
+    raises (ConfigException);
 
   void add_client (in ConfigListener client);
   void remove_client (in ConfigListener client);
