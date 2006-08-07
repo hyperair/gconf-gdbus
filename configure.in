@@ -170,10 +170,9 @@ AC_SUBST(DEPENDENT_WITH_XML_AND_GTK_CFLAGS)
 ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
 AC_SUBST(ORBIT_IDL)
 
-AC_CHECK_LIB(popt, poptGetArg, ,
-	[AC_CHECK_HEADER(popt.h, , AC_MSG_ERROR([[
+AC_CHECK_HEADER(popt.h, , AC_MSG_ERROR([[
 *** Couldn't find popt. Please download and install from
-*** ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.0.x/ and try again.]]))])
+*** ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.0.x/ and try again.]]))
 
 AC_CHECK_HEADER(pthread.h, have_pthreads=yes)
 AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
