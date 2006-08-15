@@ -181,6 +181,7 @@ AC_CHECK_HEADERS(syslog.h sys/wait.h)
 
 AC_CHECK_FUNCS(getuid sigaction fsync fchmod)
 
+
 LDAP_LIBS=
 AC_CHECK_HEADER(ldap.h, [
     AC_CHECK_LIB(ldap, ldap_init, [LDAP_LIBS="-lldap"])
@@ -188,7 +189,30 @@ AC_CHECK_HEADER(ldap.h, [
 AC_SUBST(LDAP_LIBS)
 AM_CONDITIONAL(LDAP_SUPPORT, test -n "$LDAP_LIBS")
 
-IT_PROG_INTLTOOL([0.34.90])
+dnl **************************************************
+dnl LDAP support.
+dnl **************************************************
+if test "$os_win32" != yes; then
+
+SAVE_CFLAGS="$CFLAGS"
+SAVE_LIBS="$LIBS"
+LDAP_CFLAGS="-DLDAP_DEPRECATED"
+CFLAGS="$CFLAGS $LDAP_CFLAGS"
+LIBS="$LIBS $LDAP_LIBS"
+AC_CHECK_FUNCS(ldap_ntlm_bind)
+CFLAGS="$SAVE_CFLAGS"
+LIBS="$SAVE_LIBS"
+
+else # Win32
+LDAP_CFLAGS="-DLDAP_DEPRECATED"
+LDAP_LIBS="-lwldap32"
+AC_SUBST(LDAP_CFLAGS)
+AC_SUBST(LDAP_LIBS)
+AC_DEFINE(HAVE_LDAP,1,[Define if you have LDAP support])
+msg_ldap="yes"
+fi # Win32
+
+IT_PROG_INTLTOOL([0.35.0])
 
 AM_GLIB_GNU_GETTEXT
 
