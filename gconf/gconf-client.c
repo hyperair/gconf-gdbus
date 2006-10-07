@@ -1413,7 +1413,7 @@ gconf_client_get_float (GConfClient* client, const gchar* key,
 
   g_return_val_if_fail (err == NULL || *err == NULL, 0.0);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
@@ -1448,7 +1448,7 @@ gconf_client_get_int   (GConfClient* client, const gchar* key,
 
   g_return_val_if_fail (err == NULL || *err == NULL, 0);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
@@ -1482,7 +1482,7 @@ gconf_client_get_string(GConfClient* client, const gchar* key,
 
   g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
@@ -1518,7 +1518,7 @@ gconf_client_get_bool  (GConfClient* client, const gchar* key,
 
   g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
@@ -1552,7 +1552,7 @@ gconf_client_get_schema  (GConfClient* client,
 
   g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
@@ -1586,7 +1586,7 @@ gconf_client_get_list    (GConfClient* client, const gchar* key,
 
   g_return_val_if_fail (err == NULL || *err == NULL, NULL);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
@@ -1625,7 +1625,7 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
 
   g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
-  val = gconf_client_get (client, key, err);
+  val = gconf_client_get (client, key, error);
 
   if (val != NULL)
     {
