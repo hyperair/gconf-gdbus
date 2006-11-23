@@ -335,6 +335,7 @@ subst_variables (const char  *src,
                 }
               
               strcpy (&retval[pos], varval);
+              g_free(varval);
               pos += varval_len;
 
               iter = varend + 1;
