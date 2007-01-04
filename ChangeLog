@@ -1,3 +1,8 @@
+2007-01-04  Tom Tromey  <tromey@redhat.com>
+
+	* gconf/gconf-internals.c (gconf_activate_server): Close write end
+	of pipe in parent process.  Bug #365416.
+
 2006-11-23  Pascal Terjan  <pterjan@linuxfr.org>
 
 	* backends/evoldap-backend.c: Fix small leak (#345297, coverity #2742)

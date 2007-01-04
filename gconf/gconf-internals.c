@@ -3068,7 +3068,12 @@ gconf_activate_server (gboolean  start_if_not_found,
       
       g_free (argv[0]);
       g_free (argv[1]);
-  
+
+      /* If the server dies, we don't want to block indefinitely in
+	 the read. */
+      close (p[1]);
+      p[1] = -1;
+
       /* Block until server starts up */
       read (p[0], buf, 1);
 
