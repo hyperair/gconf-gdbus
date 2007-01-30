@@ -23,6 +23,7 @@
 #include <libintl.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <string.h>
 #include <time.h>
 #include <ldap.h>
 #include <libxml/parser.h>
@@ -315,9 +316,9 @@ subst_variables (const char  *src,
 
           if (varend != NULL)
             {
-              char       *varname;
-              const char *varval;
-              guint       varval_len;
+              char *varname;
+              char *varval;
+              guint varval_len;
 
               performed_subst = TRUE;
 
