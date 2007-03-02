@@ -17,7 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <popt.h>
 #include "GConfX.h"
 #include "gconf.h"
 #include "gconf-internals.h"
@@ -2531,9 +2530,16 @@ gconf_postinit (gpointer app, gpointer mod_info)
 /* All deprecated */
 const char gconf_version[] = VERSION;
 
-struct poptOption gconf_options[] = {
-  {NULL}
-};
+struct 
+{
+    const char * longName;
+    char shortName;
+    int argInfo;
+    void * arg;
+    int val;
+    const char * descrip;
+    const char * argDescrip;
+} gconf_options[] = { { NULL } };
 
 /* Also deprecated */
 gboolean     
