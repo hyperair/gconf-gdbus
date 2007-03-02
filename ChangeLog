@@ -1,5 +1,15 @@
 2007-03-02  Ray Strode  <rstrode@redhat.com>
 
+	Patch from
+	Padraig O'Briain <padraig.obriain@sun.com>
+
+	* configure.in:
+	* gconf/gconf-internals.c (close_fd_func):
+	use fdwalk() to only close open file descriptors
+	if available (bug 357206)
+
+2007-03-02  Ray Strode  <rstrode@redhat.com>
+
 	Patch from 
 	Paolo Borelli <pborelli@katamail.com>
 

@@ -2910,17 +2910,31 @@ gconf_get_lock_dir (void)
 
 #if defined (F_SETFD) && defined (FD_CLOEXEC)
 
+#ifndef HAVE_FDWALK
 static void
 set_cloexec (gint fd)
 {
   fcntl (fd, F_SETFD, FD_CLOEXEC);
+#else
+static int
+set_cloexec (void *data, int fd)
+{
+  int *pipes = (int *)data;
+
+  if (fd != pipes[1] && fd > 2)
+    fcntl (fd, F_SETFD, FD_CLOEXEC);
+
+  return 0;
+#endif
 }
+
 
 static void
 close_fd_func (gpointer data)
 {
   int *pipes = data;
   
+#ifndef HAVE_FDWALK
   gint open_max;
   gint i;
   
@@ -2931,6 +2945,9 @@ close_fd_func (gpointer data)
       if (i != pipes[1])
         set_cloexec (i);
     }
+#else
+  (void) fdwalk(set_cloexec, (void *)pipes);
+#endif
 }
 
 #else

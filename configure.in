@@ -179,7 +179,7 @@ AM_CONDITIONAL(PTHREADS, test -n "$have_pthreads")
 
 AC_CHECK_HEADERS(syslog.h sys/wait.h)
 
-AC_CHECK_FUNCS(getuid sigaction fsync fchmod)
+AC_CHECK_FUNCS(getuid sigaction fsync fchmod fdwalk)
 
 
 LDAP_LIBS=
