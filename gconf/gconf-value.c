@@ -1376,6 +1376,8 @@ gconf_meta_info_new(void)
 void
 gconf_meta_info_free(GConfMetaInfo* gcmi)
 {
+  set_string(&gcmi->schema, NULL);
+  set_string(&gcmi->mod_user, NULL);
   g_free(gcmi);
 }
 

@@ -1,5 +1,12 @@
 2007-03-02  Ray Strode  <rstrode@redhat.com>
 
+	* gconf/gconf-value.c (gconf_meta_info_free):
+	free schema and mod_user fields before freeing
+	struct.  Based on patch by 
+	Richard Hult <richard@imendio.com>
+
+2007-03-02  Ray Strode  <rstrode@redhat.com>
+
 	* configure.in:
 	* gconf/gconf.c:
 	drop as much of the legacy popt stuff as we can,
