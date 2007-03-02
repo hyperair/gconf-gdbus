@@ -44,6 +44,45 @@ static void gconf_detach_config_server(void);
 /* Maximum number of times to try re-spawning the server if it's down. */
 #define MAX_RETRIES 1
 
+/* copied from gutf8.c where it exists as a (unfortunately) non-exported function */
+static gchar *
+utf8_make_valid (const gchar *name)
+{
+  GString *string;
+  const gchar *remainder, *invalid;
+  gint remaining_bytes, valid_bytes;
+  
+  string = NULL;
+  remainder = name;
+  remaining_bytes = strlen (name);
+  
+  while (remaining_bytes != 0) 
+    {
+      if (g_utf8_validate (remainder, remaining_bytes, &invalid)) 
+        break;
+      valid_bytes = invalid - remainder;
+    
+      if (string == NULL) 
+        string = g_string_sized_new (remaining_bytes);
+
+      g_string_append_len (string, remainder, valid_bytes);
+      /* append U+FFFD REPLACEMENT CHARACTER */
+      g_string_append (string, "\357\277\275");
+      
+      remaining_bytes -= valid_bytes + 1;
+      remainder = invalid + 1;
+    }
+  
+  if (string == NULL)
+    return g_strdup (name);
+  
+  g_string_append (string, remainder);
+
+  g_assert (g_utf8_validate (string->str, -1, NULL));
+  
+  return g_string_free (string, FALSE);
+}
+
 gboolean
 gconf_key_check(const gchar* key, GError** err)
 {
@@ -53,15 +92,17 @@ gconf_key_check(const gchar* key, GError** err)
     {
       if (err)
         *err = gconf_error_new (GCONF_ERROR_BAD_KEY,
-                                _("Key \"%s\" is NULL"),
-                                key);
+				_("Key \"%s\" is NULL"), "(null)");
       return FALSE;
     }
   else if (!gconf_valid_key (key, &why))
     {
-      if (err)
+      if (err) {
+        gchar *utf8_key = utf8_make_valid (key);
         *err = gconf_error_new (GCONF_ERROR_BAD_KEY, _("\"%s\": %s"),
-                                key, why);
+                                utf8_key, why);
+        g_free (utf8_key);
+      }
       g_free(why);
       return FALSE;
     }
@@ -2616,14 +2657,17 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
       else
         {
           const gchar* inv = invalid_chars;
+          guchar c = (unsigned char) *s;
 
           just_saw_slash = FALSE;
           
-          if (((unsigned char)*s) > 127)
+          if (c > 127)
             {
               if (why_invalid != NULL)
-                *why_invalid = g_strdup_printf (_("'%c' is not an ASCII character, so isn't allowed in key names"),
-                                                *s);
+/*                *why_invalid = g_strdup_printf (_("'\\%o' is not an ASCII character, so isn't allowed in key names"),
+                                                (guint) c);*/
+                *why_invalid = g_strdup_printf (_("'%c' is not an ASCII character, so isn't allowed in key names"), (char) '?');
+
               return FALSE;
             }
           
