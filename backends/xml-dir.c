@@ -34,7 +34,6 @@
 #include <limits.h>
 
 #include <gconf/gconf-internals.h>
-#include "xml-entry.h"
 
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG
