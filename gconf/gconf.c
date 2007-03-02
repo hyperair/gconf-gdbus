@@ -1897,20 +1897,7 @@ gconf_clear_cache(GConfEngine* conf, GError** err)
   
   if (gconf_engine_is_local(conf))
     {
-      GError* error = NULL;
-      
       gconf_sources_clear_cache(conf->local_sources);
-      
-      if (error != NULL)
-        {
-          if (err)
-            *err = error;
-          else
-            {
-              g_error_free(error);
-            }
-          return;
-        }
       
       return;
     }
