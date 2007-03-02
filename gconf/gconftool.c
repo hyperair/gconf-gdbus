@@ -3764,6 +3764,8 @@ do_sync(GConfEngine* conf)
 static int
 do_makefile_install(GConfEngine* conf, const gchar** args, gboolean unload)
 {
+  int retval = 0;
+
   if (args == NULL)
     {
       g_printerr (_("Must specify some schema files to install\n"));
@@ -3773,12 +3775,13 @@ do_makefile_install(GConfEngine* conf, const gchar** args, gboolean unload)
   while (*args)
     {
       if (do_load_file(conf, LOAD_SCHEMA_FILE, unload, *args, NULL) != 0)
-        return 1;
+        retval |= 1;
 
       ++args;
     }
 
-  return do_sync (conf);
+  retval |= do_sync (conf);
+  return retval;
 }
 
 typedef enum {
