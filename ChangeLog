@@ -1,5 +1,14 @@
 2007-03-02  Ray Strode  <rstrode@redhat.com>
 
+	Patch from 
+	Narayana Pattipati <narayana.pattipati@wipro.com>
+
+	* backends/markup-tree.c (save_tree):
+	transfer the file permissions and ownership after 
+	rename (bug 314343).
+
+2007-03-02  Ray Strode  <rstrode@redhat.com>
+
 	* gconf/gconf-value.c (gconf_value_new_from_string):
 	Check that type isn't a container type, since there
 	would be no way to know what the type of its elements
