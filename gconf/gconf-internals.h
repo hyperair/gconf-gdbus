@@ -90,17 +90,6 @@ const char *_gconf_win32_get_home_dir (void);
 gchar*       gconf_key_directory  (const gchar* key);
 const gchar* gconf_key_key        (const gchar* key);
 
-/* These file tests are in libgnome, I cut-and-pasted them */
-enum {
-  GCONF_FILE_EXISTS=(1<<0)|(1<<1)|(1<<2), /*any type of file*/
-  GCONF_FILE_ISFILE=1<<0,
-  GCONF_FILE_ISLINK=1<<1,
-  GCONF_FILE_ISDIR=1<<2
-};
-
-gboolean gconf_file_test   (const gchar* filename, int test);
-gboolean gconf_file_exists (const gchar* filename);
-
 GConfValue*  gconf_value_from_corba_value            (const ConfigValue *value);
 ConfigValue* gconf_corba_value_from_gconf_value      (const GConfValue  *value);
 void         gconf_fill_corba_value_from_gconf_value (const GConfValue  *value,

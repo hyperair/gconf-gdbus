@@ -454,7 +454,7 @@ dir_sync (Dir      *d,
       if (outfile == NULL)
         {
           /* Try to solve the problem by creating the FS dir */
-          if (!gconf_file_exists(d->fs_dirname))
+          if (!g_file_test (d->fs_dirname, G_FILE_TEST_EXISTS))
             {
               if (create_fs_dir(d->fs_dirname, d->xml_filename,
                                 d->root_dir_len,
@@ -527,7 +527,7 @@ dir_sync (Dir      *d,
         }
 #endif
 
-      old_existed = gconf_file_exists (d->xml_filename);
+      old_existed = g_file_test (d->xml_filename, G_FILE_TEST_EXISTS);
 
       if (old_existed)
         {
@@ -1219,8 +1219,8 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
   g_return_val_if_fail(xml_filename != NULL, FALSE);
   
   gconf_log(GCL_DEBUG, "Enter create_fs_dir: %s", dir);
-  
-  if (gconf_file_test(xml_filename, GCONF_FILE_ISFILE))
+
+  if (g_file_test(xml_filename, G_FILE_TEST_IS_REGULAR))
     {
       gconf_log(GCL_DEBUG, "XML backend file %s already exists", xml_filename);
       return TRUE;

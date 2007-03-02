@@ -3,6 +3,21 @@
 	Patch from 
 	Paolo Borelli <pborelli@katamail.com>
 
+	* backends/markup-tree.c:
+	* backends/xml-dir.c:
+	* doc/gconf/gconf-sections.txt:
+	* doc/gconf/tmpl/gconf-internals.sgml:
+	* gconf/gconf-backend.c:
+	* gconf/gconf-internals.[ch]:
+	* gconf/gconfd.c:
+	use g_file_test instead of home brew
+	gconf_file_test and gconf_file_exists functions
+
+2007-03-02  Ray Strode  <rstrode@redhat.com>
+
+	Patch from 
+	Paolo Borelli <pborelli@katamail.com>
+
 	* gconf/gconf.c (gconf_clear_cache):
 	Drop dead code (coverity 2208, bug 341724)
 

@@ -1571,7 +1571,7 @@ logfile_save (void)
   fd = -1;
   
   /* Move the main saved state file aside, if it exists */
-  if (gconf_file_exists (logfile))
+  if (g_file_test(logfile, G_FILE_TEST_EXISTS))
     {
       tmpfile2 = g_strconcat (logfile, ".orig", NULL);
       if (g_rename (logfile, tmpfile2) < 0)

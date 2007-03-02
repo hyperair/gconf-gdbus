@@ -185,7 +185,7 @@ gconf_backend_file(const gchar* address)
 
   g_free(back);
 
-  if (gconf_file_exists(retval))
+  if (g_file_test(retval, G_FILE_TEST_EXISTS))
     {
       g_free(file);
 
@@ -205,7 +205,7 @@ gconf_backend_file(const gchar* address)
 
       g_free(dir);
       
-      if (gconf_file_exists(retval))
+      if (g_file_test(retval, G_FILE_TEST_EXISTS))
         {
           g_free(file);
           return retval;

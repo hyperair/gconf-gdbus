@@ -495,7 +495,7 @@ load_subtree (MarkupDir *dir)
   char *markup_file;
 
   markup_file = markup_dir_build_file_path (dir, TRUE, NULL);
-  if (!gconf_file_exists (markup_file))
+  if (!g_file_test (markup_file, G_FILE_TEST_EXISTS))
     {
       g_free (markup_file);
       return FALSE;

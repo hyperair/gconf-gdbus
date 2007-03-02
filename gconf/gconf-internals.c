@@ -127,31 +127,6 @@ gconf_key_key        (const gchar* key)
  *  Random stuff 
  */
 
-gboolean
-gconf_file_exists (const gchar* filename)
-{
-  struct stat s;
-  
-  g_return_val_if_fail (filename != NULL,FALSE);
-  
-  return g_stat (filename, &s) == 0;
-}
-
-gboolean
-gconf_file_test(const gchar* filename, int test)
-{
-  struct stat s;
-  if(g_stat (filename, &s) != 0)
-    return FALSE;
-  if(!(test & GCONF_FILE_ISFILE) && S_ISREG(s.st_mode))
-    return FALSE;
-  if(!(test & GCONF_FILE_ISLINK) && S_ISLNK(s.st_mode))
-    return FALSE;
-  if(!(test & GCONF_FILE_ISDIR) && S_ISDIR(s.st_mode))
-    return FALSE;
-  return TRUE;
-}
-
 GConfValue* 
 gconf_value_from_corba_value(const ConfigValue* value)
 {
