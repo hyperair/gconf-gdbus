@@ -90,6 +90,9 @@ gconf_value_new_from_string(GConfValueType type, const gchar* value_str,
 {
   GConfValue* value;
 
+  g_return_val_if_fail (type != GCONF_VALUE_LIST, NULL);
+  g_return_val_if_fail (type != GCONF_VALUE_PAIR, NULL);
+
   value = gconf_value_new(type);
 
   switch (type)
