@@ -1,3 +1,26 @@
+2.18.0
+======
+
+ Misc
+  - Make sure error strings are utf-8 (Christian Persch)
+  - don't include xml-entry.h twice (Kjartan Maraas)
+  - fix leak in gconf meta info code (Richard Hult, Ray Strode)
+  - remove more popt gunk (Chris Wilson, Ray)
+  - when installing a batch of schema files, don't abort
+    the entire transaction if one fails (Laszlo Peter)
+  - don't close already closed file descriptors if fdwalk()
+    is available (Padraig O'Briain) 
+  - use g_file_test instead of gconf_file_test or
+    gconf_file_exists (Paolo Borelli)
+  - remove dead code found from coverity scan (Paolo Borelli)
+  - retain file permissions on gconf database files when
+    syncing a tree to disk (Narayana Pattipati)
+  - Add g_return_val_if_fail checks on type inputs for 
+    gconf_value_new_from_string (Kjartan Maraas, Ray)
+
+ Translators
+  - Gintautas Miliauskas (lt)
+
 2.16.1
 ======
 
