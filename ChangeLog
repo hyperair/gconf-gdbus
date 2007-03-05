@@ -1,3 +1,13 @@
+2007-03-05  Ray Strode  <rstrode@redhat.com>
+
+	Patch from Loïc Minier to take care of fallout from 
+	bug 314343.
+
+	* gconf/backends/markup-tree.c (save_tree): 
+	Rename markup file to its final destination, even if
+	there wasn't an original file to copy file attributes
+	from (bug 414916).
+
 2007-03-02  Ray Strode  <rstrode@redhat.com>
 
 	* configure.in: Post release bump

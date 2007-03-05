@@ -4490,8 +4490,22 @@ save_tree_with_locale (MarkupDir  *dir,
   target_renamed = (g_rename (filename, tmp_filename) == 0);
 #endif
 
-  if (g_stat (filename, &st) != 0) 
-    goto out;
+#ifndef G_OS_WIN32
+  if (g_stat (filename, &st) == 0) {
+      /* Restore permissions. There is not much error checking we can do
+       * here. The final data is saved anyways. Note the order:
+       * mode, uid+gid, gid, uid, mode.
+       */
+      chmod (new_filename, st.st_mode);
+      if (chown (new_filename, st.st_uid, st.st_gid) < 0)
+        {
+          /* We cannot set both. Maybe we can set one.  */
+          chown (new_filename, -1, st.st_gid);
+          chown (new_filename, st.st_uid, -1);
+        }
+        chmod (new_filename, st.st_mode);
+    }
+#endif 
 
   if (g_rename (new_filename, filename) < 0)
     {
@@ -4503,23 +4517,6 @@ save_tree_with_locale (MarkupDir  *dir,
 #endif
       goto out;
     }
-#ifndef G_OS_WIN32
-  else
-    {
-      /* Restore permissions. There is not much error checking we can do
-       * here. The final data is saved anyways. Note the order:
-       * mode, uid+gid, gid, uid, mode.
-       */
-      chmod (filename, st.st_mode);
-      if (chown (filename, st.st_uid, st.st_gid) < 0)
-        {
-          /* We cannot set both. Maybe we can set one.  */
-          chown (filename, -1, st.st_gid);
-          chown (filename, st.st_uid, -1);
-        }
-        chmod (filename, st.st_mode);
-    }
-#endif 
 
 #ifdef G_OS_WIN32
   if (target_renamed)
