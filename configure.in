@@ -180,7 +180,7 @@ AC_CHECK_FUNCS(getuid sigaction fsync fchmod fdwalk)
 
 LDAP_LIBS=
 AC_CHECK_HEADER(ldap.h, [
-    AC_CHECK_LIB(ldap, ldap_init, [LDAP_LIBS="-lldap"])
+    AC_CHECK_LIB(ldap, ldap_init, AC_CHECK_LIB(lber, ber_free, [LDAP_LIBS="-lldap -llber"]))
   ])
 AC_SUBST(LDAP_LIBS)
 AM_CONDITIONAL(LDAP_SUPPORT, test -n "$LDAP_LIBS")
