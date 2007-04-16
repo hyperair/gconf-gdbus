@@ -92,7 +92,7 @@ gconf_key_check(const gchar* key, GError** err)
     {
       if (err)
         *err = gconf_error_new (GCONF_ERROR_BAD_KEY,
-				_("Key \"%s\" is NULL"), "(null)");
+				_("Key is NULL"));
       return FALSE;
     }
   else if (!gconf_valid_key (key, &why))
@@ -2664,10 +2664,8 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
           if (c > 127)
             {
               if (why_invalid != NULL)
-/*                *why_invalid = g_strdup_printf (_("'\\%o' is not an ASCII character, so isn't allowed in key names"),
-                                                (guint) c);*/
-                *why_invalid = g_strdup_printf (_("'%c' is not an ASCII character, so isn't allowed in key names"), (char) '?');
-
+                *why_invalid = g_strdup_printf (_("'\\%o' is not an ASCII character, so isn't allowed in key names"),
+                                                (guint) c);
               return FALSE;
             }
           
