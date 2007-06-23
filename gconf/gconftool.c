@@ -44,6 +44,7 @@ static int all_entries_mode = FALSE;
 static int all_subdirs_mode = FALSE;
 static char* dir_exists = NULL;
 static int recursive_list = FALSE;
+static int search_key = FALSE;
 static int dump_values = FALSE;
 static int set_schema_mode = FALSE;
 static char* value_type = NULL;
@@ -142,6 +143,15 @@ static const GOptionEntry client_entries[] = {
     G_OPTION_ARG_NONE,
     &recursive_list,
     N_("Print all subdirectories and entries under a directory, recursively."),
+    NULL
+  },
+    {
+    "search-key",
+    'S',
+    0,
+    G_OPTION_ARG_NONE,
+    &search_key,
+    N_("Search for a key, recursively."),
     NULL
   },
   {
@@ -501,6 +511,7 @@ static int do_break_key(GConfEngine* conf, const gchar** args);
 static int do_break_directory(GConfEngine* conf, const gchar** args);
 static int do_makefile_install(GConfEngine* conf, const gchar** args, gboolean unload);
 static int do_recursive_list(GConfEngine* conf, const gchar** args);
+static int do_search_key(GConfEngine* conf, const gchar** args);
 static int do_dump_values(GConfEngine* conf, const gchar** args);
 static int do_all_pairs(GConfEngine* conf, const gchar** args);
 static void list_pairs_in_dir(GConfEngine* conf, const gchar* dir, guint depth);
@@ -670,9 +681,10 @@ main (int argc, char** argv)
       (recursive_list && get_list_size_mode) ||
       (recursive_list && get_list_element_mode) ||
       (recursive_list && all_entries_mode) ||
-      (recursive_list && all_subdirs_mode))
+      (recursive_list && all_subdirs_mode) ||
+      (recursive_list && search_key))
     {
-      g_printerr (_("--recursive-list should not be used with --get, --set, --unset, --all-entries, or --all-dirs\n"));
+      g_printerr (_("--recursive-list should not be used with --get, --set, --unset, --all-entries, --all-dirs, or --search-key\n"));
       return 1;
     }
 
@@ -683,9 +695,10 @@ main (int argc, char** argv)
       (set_schema_mode && get_list_size_mode) ||
       (set_schema_mode && get_list_element_mode) ||
       (set_schema_mode && all_entries_mode) ||
-      (set_schema_mode && all_subdirs_mode))
+      (set_schema_mode && all_subdirs_mode) ||
+      (set_schema_mode && search_key))
     {
-      g_printerr (_("--set_schema should not be used with --get, --set, --unset, --all-entries, --all-dirs\n"));
+      g_printerr (_("--set_schema should not be used with --get, --set, --unset, --all-entries, --all-dirs, or --search-key\n"));
       return 1;
     }
 
@@ -723,7 +736,7 @@ main (int argc, char** argv)
     }
 
   if (dir_exists && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
-                     all_subdirs_mode || all_entries_mode || recursive_list || 
+                     all_subdirs_mode || all_entries_mode || recursive_list || search_key ||
                      get_type_mode || get_list_size_mode || get_list_element_mode ||
                      spawn_gconfd || schema_file ||
                      makefile_install_mode || makefile_uninstall_mode ||
@@ -736,7 +749,7 @@ main (int argc, char** argv)
     }
 
   if (schema_file && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
-                      all_subdirs_mode || all_entries_mode || recursive_list || 
+                      all_subdirs_mode || all_entries_mode || recursive_list || search_key ||
                       get_type_mode || get_list_size_mode || get_list_element_mode ||
                       spawn_gconfd || dir_exists ||
                       makefile_install_mode || makefile_uninstall_mode ||
@@ -750,7 +763,7 @@ main (int argc, char** argv)
 
 
   if (makefile_install_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
-                                all_subdirs_mode || all_entries_mode || recursive_list || 
+                                all_subdirs_mode || all_entries_mode || recursive_list || search_key ||
                                 get_type_mode || get_list_size_mode || get_list_element_mode ||
                                 makefile_uninstall_mode ||
                                 spawn_gconfd || dir_exists || schema_file ||
@@ -764,7 +777,7 @@ main (int argc, char** argv)
   
   if (makefile_uninstall_mode && (shutdown_gconfd || set_mode || get_mode ||
                                   unset_mode || all_subdirs_mode ||
-                                  all_entries_mode || recursive_list || 
+                                  all_entries_mode || recursive_list || search_key ||
                                   makefile_install_mode ||
                                   spawn_gconfd || dir_exists || schema_file ||
                                   break_key_mode || break_dir_mode || short_docs_mode ||
@@ -776,7 +789,7 @@ main (int argc, char** argv)
     }
   
   if (break_key_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
-                                all_subdirs_mode || all_entries_mode || recursive_list || 
+                                all_subdirs_mode || all_entries_mode || recursive_list || search_key ||
                                 get_type_mode || get_list_size_mode || get_list_element_mode ||
                                 spawn_gconfd || dir_exists || schema_file ||
                                 makefile_install_mode || makefile_uninstall_mode ||
@@ -790,7 +803,7 @@ main (int argc, char** argv)
 
   
   if (break_dir_mode && (shutdown_gconfd || set_mode || get_mode || unset_mode ||
-                                all_subdirs_mode || all_entries_mode || recursive_list || 
+                                all_subdirs_mode || all_entries_mode || recursive_list || search_key ||
                                 get_type_mode || get_list_size_mode || get_list_element_mode ||
                                 spawn_gconfd || dir_exists || schema_file ||
                                 break_key_mode || makefile_install_mode ||
@@ -1154,6 +1167,15 @@ main (int argc, char** argv)
         }
     }
 
+    if (search_key)
+    {
+      if (do_search_key(conf, args) == 1)
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
+    }
+
   if (dump_values)
     {
       if (do_dump_values(conf, args) == 1)
@@ -1232,6 +1254,104 @@ do_recursive_list(GConfEngine* conf, const gchar** args)
  
       ++args;
     }
+
+  return 0;
+}
+
+static void 
+search_key_in_dir(GConfEngine* conf, const gchar* dir, GPatternSpec *pattern)
+{
+  GSList* pairs;
+  GSList* tmp;
+  GError* err = NULL;
+  
+  pairs = gconf_engine_all_entries(conf, dir, &err);
+          
+  if (err != NULL)
+    {
+      g_printerr (_("Failure listing entries in `%s': %s\n"),
+              dir, err->message);
+      g_error_free(err);
+      err = NULL;
+    }
+
+  if (pairs != NULL)
+    {
+      tmp = pairs;
+
+      while (tmp != NULL)
+        {
+          GConfEntry* pair = tmp->data;
+          gchar* s;
+	  const gchar *k;
+
+          if (gconf_entry_get_value (pair) && 
+	      (!ignore_schema_defaults || !gconf_entry_get_is_default (pair)))
+            s = gconf_value_to_string (gconf_entry_get_value (pair));
+          else
+            s = g_strdup(_("(no value set)"));
+
+	  k = gconf_key_key (gconf_entry_get_key (pair));
+
+	  if (g_pattern_match_string (pattern, k))
+	    g_print (" %s/%s = %s\n", dir, k, s);
+
+          g_free(s);
+                  
+          gconf_entry_free(pair);
+
+          tmp = g_slist_next(tmp);
+        }
+
+      g_slist_free(pairs);
+    }
+}
+
+static void 
+recurse_subdir_search(GConfEngine* conf, GSList* subdirs, const gchar* parent,
+		      GPatternSpec *pattern)
+{
+  GSList* tmp;
+
+  tmp = subdirs;
+  
+  while (tmp != NULL)
+    {
+      gchar* s = tmp->data;
+
+      search_key_in_dir(conf, s, pattern);
+
+      recurse_subdir_search(conf, gconf_engine_all_dirs(conf, s, NULL), s, pattern);
+
+      g_free(s);
+      
+      tmp = g_slist_next(tmp);
+    }
+  
+  g_slist_free(subdirs);
+}
+
+static int
+do_search_key(GConfEngine* conf, const gchar** args)
+{
+  GSList* subdirs;
+  GPatternSpec* pattern;
+  
+  if (args == NULL)
+    {
+      g_printerr (_("Must specify a key pattern to search for.\n"));
+      return 1;
+    }
+
+  pattern = g_pattern_spec_new (*args);
+
+  subdirs = gconf_engine_all_dirs(conf, "/", NULL);
+
+  search_key_in_dir(conf, "/", pattern);
+          
+  recurse_subdir_search(conf, subdirs, "/", pattern);
+
+  g_pattern_spec_free (pattern);
 
   return 0;
 }
