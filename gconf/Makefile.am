@@ -8,7 +8,7 @@ INCLUDES=								\
 	$(DEPENDENT_WITH_XML_AND_GTK_CFLAGS) 				\
 	-DG_LOG_DOMAIN=\"GConf\"					\
 	-DPREFIX=\""$(prefix)"\"					\
-	-DGCONF_LOCALE_DIR=\""$(gconflocaledir)"\"			\
+	-DGCONF_LOCALE_DIR=\""$(datadir)/locale"\"			\
         -DGCONF_SRCDIR=\""$(absolute_top_srcdir)"\"			\
 	-DGCONF_CONFDIR=\""$(sysgconfdir)/$(MAJOR_VERSION)"\"		\
 	-DGCONF_ETCDIR=\""$(sysgconfdir)"\"				\

@@ -1,12 +1,11 @@
+AC_INIT([GConf],[2.19.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=GConf],[GConf])
+
 AC_DEFUN([AC_FYI], [echo "FYI: " $1])
 
-AC_INIT(gconf/gconf.h)
-
+AC_CONFIG_SRCDIR([gconf/gconf.h])
 AM_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE(GConf, 2.18.1)
-
-AM_MAINTAINER_MODE
+AM_INIT_AUTOMAKE([1.9 no-dist-gzip dist-bzip2])
 
 AC_CANONICAL_HOST
 case "$host" in
@@ -36,7 +35,6 @@ AC_PROG_CXX
 AC_ISC_POSIX
 AM_PROG_CC_STDC
 AC_HEADER_STDC
-AC_ARG_PROGRAM
 AC_LIBTOOL_WIN32_DLL
 AM_PROG_LIBTOOL
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
@@ -212,11 +210,6 @@ IT_PROG_INTLTOOL([0.35.0])
 
 AM_GLIB_GNU_GETTEXT
 
-# AM_GNU_GETTEXT above substs $DATADIRNAME
-# this is the directory where the *.{mo,gmo} files are installed
-gconflocaledir='${prefix}/${DATADIRNAME}/locale'
-AC_SUBST(gconflocaledir)
-
 AC_CHECK_FUNCS(bind_textdomain_codeset)
 
 AC_SUBST(CFLAGS)
@@ -255,7 +248,7 @@ if test $_found_perl -eq 1; then
 fi
 AC_SUBST(REBUILD)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 gconf-2.m4
 gconf-zip
@@ -269,3 +262,4 @@ tests/Makefile
 gconf-2.0.pc
 ])
 
+AC_OUTPUT
