@@ -543,35 +543,48 @@ main (int argc, char** argv)
   setlocale (LC_ALL, "");
   bindtextdomain (GETTEXT_PACKAGE,GCONF_LOCALE_DIR);
   textdomain (GETTEXT_PACKAGE);
+
+  g_thread_init (NULL);
+
   _gconf_init_i18n ();
   
-  context = g_option_context_new (_("- Tool to manipulate a GConf configuration"));
+  context = g_option_context_new (N_("- Tool to manipulate a GConf configuration"));
+#if GLIB_CHECK_VERSION (2, 12, 0)
+  g_option_context_set_translation_domain (context, GETTEXT_PACKAGE);
+#endif
 
-  group = g_option_group_new ("client", _("Client options"), _("Show client options"), NULL, NULL);
+  group = g_option_group_new ("client", N_("Client options:"), N_("Show client options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, client_entries);
   g_option_context_add_group (context, group);
 
-  group = g_option_group_new ("key-type", _("Key type options"), _("Show key type options"), NULL, NULL);
+  group = g_option_group_new ("key-type", N_("Key type options:"), N_("Show key type options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, type_entries);
   g_option_context_add_group (context, group);
 
-  group = g_option_group_new ("load", _("Load/Save options"), _("Show load/save options"), NULL, NULL);
+  group = g_option_group_new ("load", N_("Load/Save options:"), N_("Show load/save options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, load_entries);
   g_option_context_add_group (context, group);
 
-  group = g_option_group_new ("server", _("Server options"), _("Show server options"), NULL, NULL);
+  group = g_option_group_new ("server", N_("Server options:"), N_("Show server options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, server_entries);
   g_option_context_add_group (context, group);
 
-  group = g_option_group_new ("install", _("Installation options"), _("Show installation options"), NULL, NULL);
+  group = g_option_group_new ("install", N_("Installation options:"), N_("Show installation options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, install_entries);
   g_option_context_add_group (context, group);
 
-  group = g_option_group_new ("test", _("Test options"), _("Show test options"), NULL, NULL);
+  group = g_option_group_new ("test", N_("Test options:"), N_("Show test options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, test_entries);
   g_option_context_add_group (context, group);
 
-  group = g_option_group_new ("schema", _("Schema options"), _("Show schema options"), NULL, NULL);
+  group = g_option_group_new ("schema", N_("Schema options:"), N_("Show schema options"), NULL, NULL);
+  g_option_group_set_translation_domain (group, GETTEXT_PACKAGE);
   g_option_group_add_entries (group, schema_entries);
   g_option_context_add_group (context, group);
 
