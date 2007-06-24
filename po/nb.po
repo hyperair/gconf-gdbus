@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf 2.13.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-05-08 12:56+0200\n"
-"PO-Revision-Date: 2007-04-29 01:48+0100\n"
+"POT-Creation-Date: 2007-06-24 14:12+0200\n"
+"PO-Revision-Date: 2007-06-24 14:14+0200\n"
 "Last-Translator: Espen Stefansen <espenas@gmail.com>\n"
 "Language-Team: Norwegian <i18n-nb@lister.ping.uio.no>\n"
 "MIME-Version: 1.0\n"
@@ -1017,11 +1017,11 @@ msgstr ""
 msgid "none"
 msgstr "ingen"
 
-#: ../gconf/gconf-sanity-check.c:46
+#: ../gconf/gconf-sanity-check.c:48
 msgid "- Sanity checks for GConf"
 msgstr "- Program for å sjekke GConf innstillinger"
 
-#: ../gconf/gconf-sanity-check.c:55 ../gconf/gconftool.c:592
+#: ../gconf/gconf-sanity-check.c:57 ../gconf/gconftool.c:616
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1031,7 +1031,7 @@ msgstr ""
 "Kjør «%s --help» for å se en full liste over tilgjengelige "
 "kommandolinjeflagg.\n"
 
-#: ../gconf/gconf-sanity-check.c:126 ../gconf/gconf-sanity-check.c:151
+#: ../gconf/gconf-sanity-check.c:128 ../gconf/gconf-sanity-check.c:153
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1044,7 +1044,7 @@ msgstr ""
 "problemer med din konfigurasjon, siden mange programmer trenger å kunne "
 "opprette filer i din hjemmekatalog. Feilen var «%s» (errno = %d)."
 
-#: ../gconf/gconf-sanity-check.c:165
+#: ../gconf/gconf-sanity-check.c:167
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1062,12 +1062,12 @@ msgstr ""
 "dokumentasjonen for rpc.statd og rpc.lockd. En vanlig årsak til dette er at "
 "«nfslock»-tjenesten er deaktivert. Feilen var «%s» (errno = %d)."
 
-#: ../gconf/gconf-sanity-check.c:182
+#: ../gconf/gconf-sanity-check.c:184
 #, c-format
 msgid "Can't remove file %s: %s\n"
 msgstr "Kunne ikke fjerne fil %s: %s\n"
 
-#: ../gconf/gconf-sanity-check.c:218
+#: ../gconf/gconf-sanity-check.c:220
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1078,11 +1078,11 @@ msgstr ""
 "Ingen konfigurasjonskilder i konfigurasjonsfil «%s»; dette betyr at "
 "brukervalg og andre innstillinger ikke kan lagres. %s%s"
 
-#: ../gconf/gconf-sanity-check.c:221
+#: ../gconf/gconf-sanity-check.c:223
 msgid "Error reading the file: "
 msgstr "Feil under lesing av fil: "
 
-#: ../gconf/gconf-sanity-check.c:244
+#: ../gconf/gconf-sanity-check.c:246
 #, c-format
 msgid ""
 "Please contact your system administrator to resolve the following problem:\n"
@@ -1091,7 +1091,7 @@ msgstr ""
 "Vennligst kontakt din systemadministrator for å løse følgende problem:\n"
 "Kunne ikke slå opp adresse «%s» i konfigurasjonsfil «%s»: %s"
 
-#: ../gconf/gconf-sanity-check.c:305
+#: ../gconf/gconf-sanity-check.c:307
 msgid ""
 "The files that contain your preference settings are currently in use.\n"
 "\n"
@@ -1113,15 +1113,15 @@ msgstr ""
 "\n"
 "Vil du fortsette?"
 
-#: ../gconf/gconf-sanity-check.c:326
+#: ../gconf/gconf-sanity-check.c:328
 msgid "_Log Out"
 msgstr "_Logg ut"
 
-#: ../gconf/gconf-sanity-check.c:328
+#: ../gconf/gconf-sanity-check.c:330
 msgid "_Continue"
 msgstr "_Fortsett"
 
-#: ../gconf/gconf-sanity-check.c:341
+#: ../gconf/gconf-sanity-check.c:343
 #, c-format
 msgid "%s Continue (y/n)?"
 msgstr "%s fortsett (j/n)"
@@ -1636,19 +1636,19 @@ msgid ""
 msgstr ""
 "En klient fjernet seg selv fra GConf-tjeneren uten at den var lagt til."
 
-#: ../gconf/gconftool.c:89
+#: ../gconf/gconftool.c:90
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "Sett en nøkkel til en verdi ok synkroniser. Bruk med --type."
 
-#: ../gconf/gconftool.c:98
+#: ../gconf/gconftool.c:99
 msgid "Print the value of a key to standard output."
 msgstr "Skriv ut verdien for en nøkkel til standard ut."
 
-#: ../gconf/gconftool.c:108
+#: ../gconf/gconftool.c:109
 msgid "Unset the keys on the command line"
 msgstr "Nullstill nøklene fra kommandolinjen"
 
-#: ../gconf/gconftool.c:117
+#: ../gconf/gconftool.c:118
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1656,36 +1656,40 @@ msgstr ""
 "Nullstill alle nøkler rekursivt ved eller under nøkkel/katalognavn på "
 "kommandolinjen"
 
-#: ../gconf/gconftool.c:126
+#: ../gconf/gconftool.c:127
 msgid "Print all key/value pairs in a directory."
 msgstr "Skriv ut alle nøkkel/verdi par i en  katalog."
 
-#: ../gconf/gconftool.c:135
+#: ../gconf/gconftool.c:136
 msgid "Print all subdirectories in a directory."
 msgstr "Skriv ut alle underkataloger i en katalog."
 
-#: ../gconf/gconftool.c:144
+#: ../gconf/gconftool.c:145
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr ""
 "Skriv ut alle underkataloger og oppføringer under en katalog, rekursivt."
 
-#: ../gconf/gconftool.c:153
+#: ../gconf/gconftool.c:154
+msgid "Search for a key, recursively."
+msgstr "Rekursivt søk etter en nøkkel."
+
+#: ../gconf/gconftool.c:163
 msgid "Get the short doc string for a key"
 msgstr "Hent kort dokumentstreng for en nøkkel"
 
-#: ../gconf/gconftool.c:162
+#: ../gconf/gconftool.c:172
 msgid "Get the long doc string for a key"
 msgstr "Hent lang dokumentstreng for en nøkkel"
 
-#: ../gconf/gconftool.c:171
+#: ../gconf/gconftool.c:181
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "Returner 0 hvis katalogen eksisterer, 2 hvis ikke."
 
-#: ../gconf/gconftool.c:180
+#: ../gconf/gconftool.c:190
 msgid "Ignore schema defaults when reading values."
 msgstr "Ignorer forvalgte verdier i schema ved lesing av verdier."
 
-#: ../gconf/gconftool.c:195
+#: ../gconf/gconftool.c:205
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
@@ -1693,7 +1697,7 @@ msgstr ""
 "Dump en XML-beskrivelse av alle oppføringer under en katalog rekursivt til "
 "standard ut."
 
-#: ../gconf/gconftool.c:204
+#: ../gconf/gconftool.c:214
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
@@ -1701,23 +1705,23 @@ msgstr ""
 "Last en XML-beskrivelse for verdier fra spesifisert fil og sett dem relativt "
 "til en katalog."
 
-#: ../gconf/gconftool.c:213
+#: ../gconf/gconftool.c:223
 msgid "Unload a set of values described in an XML file."
 msgstr "Last ut et sett med verdier beskrevet i en XML-fil."
 
-#: ../gconf/gconftool.c:228
+#: ../gconf/gconftool.c:238
 msgid "Get the name of the default source"
 msgstr "Hent navn på forvalgt kilde"
 
-#: ../gconf/gconftool.c:237
+#: ../gconf/gconftool.c:247
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "Steng ned gconfd. IKKE BRUK DETTE VALGET UTEN GOD GRUNN."
 
-#: ../gconf/gconftool.c:246
+#: ../gconf/gconftool.c:256
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "Returner 0 hvis gconfd kjører, 2 hvis ikke."
 
-#: ../gconf/gconftool.c:255
+#: ../gconf/gconftool.c:265
 msgid ""
 "Launch the config server (gconfd). (Normally happens automatically when "
 "needed.)"
@@ -1725,7 +1729,7 @@ msgstr ""
 "Start konfigurasjonstjeneren (gconfd). (Skjer normalt automatisk når det er "
 "nødvendig.)"
 
-#: ../gconf/gconftool.c:270
+#: ../gconf/gconftool.c:280
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1733,23 +1737,23 @@ msgstr ""
 "Spesifiser typen verdi som settes, eller typen for verdien et schema "
 "beskriver. Unike forkortelser er OK."
 
-#: ../gconf/gconftool.c:271
+#: ../gconf/gconftool.c:281
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|liste|par"
 
-#: ../gconf/gconftool.c:279
+#: ../gconf/gconftool.c:289
 msgid "Print the data type of a key to standard output."
 msgstr "Skriv ut datatypen for en nøkkel til standard ut."
 
-#: ../gconf/gconftool.c:288
+#: ../gconf/gconftool.c:298
 msgid "Get the number of elements in a list key."
 msgstr "Hent antall elementer i en listenøkkel."
 
-#: ../gconf/gconftool.c:297
+#: ../gconf/gconftool.c:307
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "Hent et numerisk indeksert spesifikt element fra en listenøkkel."
 
-#: ../gconf/gconftool.c:306
+#: ../gconf/gconftool.c:316
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1757,11 +1761,11 @@ msgstr ""
 "Spesifiser type listeverdi som settes, eller typen for verdien et schema "
 "beskriver. Unike forkortelser er OK."
 
-#: ../gconf/gconftool.c:307 ../gconf/gconftool.c:316 ../gconf/gconftool.c:325
+#: ../gconf/gconftool.c:317 ../gconf/gconftool.c:326 ../gconf/gconftool.c:335
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: ../gconf/gconftool.c:315
+#: ../gconf/gconftool.c:325
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1769,7 +1773,7 @@ msgstr ""
 "Spesifiser car-type verdi som settes, eller typen for verdien et schema "
 "beskriver. Unike forkortelser er OK."
 
-#: ../gconf/gconftool.c:324
+#: ../gconf/gconftool.c:334
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1777,24 +1781,24 @@ msgstr ""
 "Spesifiser type verdi for cdr-par som settes, eller typen for verdien et "
 "schema beskriver. Unike forkortelser er OK."
 
-#: ../gconf/gconftool.c:339
+#: ../gconf/gconftool.c:349
 msgid "Specify a schema file to be installed"
 msgstr "Spesifiser en schema fil som skal installeres"
 
-#: ../gconf/gconftool.c:340
+#: ../gconf/gconftool.c:350
 msgid "FILENAME"
 msgstr "FILNAVN"
 
-#: ../gconf/gconftool.c:348
+#: ../gconf/gconftool.c:358
 msgid "Specify a configuration source to use rather than the default path"
 msgstr ""
 "Spesifiser en konfigurasjonskilde som skal brukes i stedet for standard sti"
 
-#: ../gconf/gconftool.c:349
+#: ../gconf/gconftool.c:359
 msgid "SOURCE"
 msgstr "KILDE"
 
-#: ../gconf/gconftool.c:357
+#: ../gconf/gconftool.c:367
 msgid ""
 "Access the config database directly, bypassing server. Requires that gconfd "
 "is not running."
@@ -1802,7 +1806,7 @@ msgstr ""
 "Aksepter konfigurasjonsdatabasen direkte, går utenom tjeneren. Det kreves at "
 "gconfd ikke kjører."
 
-#: ../gconf/gconftool.c:366
+#: ../gconf/gconftool.c:376
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1813,7 +1817,7 @@ msgstr ""
 "standardverdien for konfigurasjonskilde eller være tom for at "
 "standardverdien skal brukes."
 
-#: ../gconf/gconftool.c:375
+#: ../gconf/gconftool.c:385
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1824,7 +1828,7 @@ msgstr ""
 "standardverdien for konfigurasjonskilde eller være tom for at "
 "standardverdien skal brukes."
 
-#: ../gconf/gconftool.c:390
+#: ../gconf/gconftool.c:400
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1832,7 +1836,7 @@ msgstr ""
 "Utfør en torturtest av en applikasjon ved å sette og tømme en rekke verdier "
 "av forskjellige typer for nøkler fra kommandolinjen."
 
-#: ../gconf/gconftool.c:399
+#: ../gconf/gconftool.c:409
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1840,7 +1844,7 @@ msgstr ""
 "Utfør en torturtest av en applikasjon ved å sette og tømme en rekke nøkler "
 "inne i katalogene fra kommandolinjen."
 
-#: ../gconf/gconftool.c:414
+#: ../gconf/gconftool.c:424
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1848,159 +1852,155 @@ msgstr ""
 "Sett et schema og synkroniser. Bruk med --short-desc, --long-desc, --owner, "
 "og --type."
 
-#: ../gconf/gconftool.c:423
+#: ../gconf/gconftool.c:433
 msgid "Specify a short half-line description to go in a schema."
 msgstr ""
 "Spesifiser en kort beskrivelse på en halv linje som skal brukes i et schema."
 
-#: ../gconf/gconftool.c:424 ../gconf/gconftool.c:433
+#: ../gconf/gconftool.c:434 ../gconf/gconftool.c:443
 msgid "DESCRIPTION"
 msgstr "BESKRIVELSE"
 
-#: ../gconf/gconftool.c:432
+#: ../gconf/gconftool.c:442
 msgid "Specify a several-line description to go in a schema."
 msgstr "Spesifiser en beskrivelse på flere linjer som skal brukes i et schema."
 
-#: ../gconf/gconftool.c:441
+#: ../gconf/gconftool.c:451
 msgid "Specify the owner of a schema"
 msgstr "Spesifiser eieren av et schema"
 
-#: ../gconf/gconftool.c:442
+#: ../gconf/gconftool.c:452
 msgid "OWNER"
 msgstr "EIER"
 
-#: ../gconf/gconftool.c:450
+#: ../gconf/gconftool.c:460
 msgid "Get the name of the schema applied to this key"
 msgstr "Hent navn på skjema som brukes på denne nøkkelen"
 
-#: ../gconf/gconftool.c:459
+#: ../gconf/gconftool.c:469
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "Spesifiser skjemanavn fulgt av nøkkel som skal bruke skjemanavnet"
 
-#: ../gconf/gconftool.c:468
+#: ../gconf/gconftool.c:478
 msgid "Remove any schema name applied to the given keys"
 msgstr "Fjern ethvert skjemanavn som brukes på disse nøklene"
 
-#: ../gconf/gconftool.c:483
+#: ../gconf/gconftool.c:493
 msgid "Print version"
 msgstr "Vis versjonsnummer"
 
-#: ../gconf/gconftool.c:492
+#: ../gconf/gconftool.c:502
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FIL...]|[NØKKEL...]|[KATALOG...]"
 
-#: ../gconf/gconftool.c:548
+#: ../gconf/gconftool.c:562
 msgid "- Tool to manipulate a GConf configuration"
 msgstr "- Verktøy for manipulering av GConf-konfigurasjon"
 
-#: ../gconf/gconftool.c:550
-msgid "Client options"
-msgstr "Alternativer for klient"
+#: ../gconf/gconftool.c:567
+msgid "Client options:"
+msgstr "Alternativer for klient:"
 
-#: ../gconf/gconftool.c:550
+#: ../gconf/gconftool.c:567
 msgid "Show client options"
 msgstr "Vis alternativer for klient"
 
-#: ../gconf/gconftool.c:554
-msgid "Key type options"
-msgstr "Alternativer for nøkkeltype"
+#: ../gconf/gconftool.c:572
+msgid "Key type options:"
+msgstr "Alternativer for nøkkeltype:"
 
-#: ../gconf/gconftool.c:554
+#: ../gconf/gconftool.c:572
 msgid "Show key type options"
 msgstr "Vis alternativer for nøkkeltype"
 
-#: ../gconf/gconftool.c:558
-msgid "Load/Save options"
-msgstr "Alternativer for lasting/lagring"
+#: ../gconf/gconftool.c:577
+msgid "Load/Save options:"
+msgstr "Alternativer for lasting/lagring:"
 
-#: ../gconf/gconftool.c:558
+#: ../gconf/gconftool.c:577
 msgid "Show load/save options"
 msgstr "Vis alternativer for lasting/lagring"
 
-#: ../gconf/gconftool.c:562
-msgid "Server options"
-msgstr "Flagg for tjener"
+#: ../gconf/gconftool.c:582
+msgid "Server options:"
+msgstr "Flagg for tjener:"
 
-#: ../gconf/gconftool.c:562
+#: ../gconf/gconftool.c:582
 msgid "Show server options"
 msgstr "Vis flagg for tjener"
 
-#: ../gconf/gconftool.c:566
-msgid "Installation options"
-msgstr "Alternativer for installasjon"
+#: ../gconf/gconftool.c:587
+msgid "Installation options:"
+msgstr "Alternativer for installasjon:"
 
-#: ../gconf/gconftool.c:566
+#: ../gconf/gconftool.c:587
 msgid "Show installation options"
 msgstr "Vis alternativer for installasjon"
 
-#: ../gconf/gconftool.c:570
-msgid "Test options"
-msgstr "Alternativer for test"
+#: ../gconf/gconftool.c:592
+msgid "Test options:"
+msgstr "Alternativer for test:"
 
-#: ../gconf/gconftool.c:570
+#: ../gconf/gconftool.c:592
 msgid "Show test options"
 msgstr "Vis testalternativer"
 
-#: ../gconf/gconftool.c:574
-msgid "Schema options"
-msgstr "Alternativer for skjema"
+#: ../gconf/gconftool.c:597
+msgid "Schema options:"
+msgstr "Alternativer for skjema:"
 
-#: ../gconf/gconftool.c:574
+#: ../gconf/gconftool.c:597
 msgid "Show schema options"
 msgstr "Vis alternativer for skjema"
 
-#: ../gconf/gconftool.c:582
+#: ../gconf/gconftool.c:606
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Kjør «%s --help» for å se en full liste over tilgjengelige "
 "kommandolinjeflagg.\n"
 
-#: ../gconf/gconftool.c:610
+#: ../gconf/gconftool.c:634
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Kan ikke hente og sette/nullstille samtidig\n"
 
-#: ../gconf/gconftool.c:620
+#: ../gconf/gconftool.c:644
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Kan ikke sette og hente/nullstille samtidig\n"
 
-#: ../gconf/gconftool.c:627
+#: ../gconf/gconftool.c:651
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Kan ikke hente type og sette/nullstille samtidig\n"
 
-#: ../gconf/gconftool.c:638
+#: ../gconf/gconftool.c:662
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Kan ikke bruke --all-entries sammen med --get eller --set\n"
 
-#: ../gconf/gconftool.c:649
+#: ../gconf/gconftool.c:673
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Kan ikke bruke --all-dirs sammen med --get eller --set\n"
 
-#: ../gconf/gconftool.c:662
+#: ../gconf/gconftool.c:687
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
-"entries, or --all-dirs\n"
-msgstr ""
-"--recursive-list bør ikke brukes sammen med --get, --set, --unset, --all-"
-"entries, eller --all-dirs\n"
+"entries, --all-dirs, or --search-key\n"
+msgstr "--recursive-list bør ikke brukes sammen med --get, --set, --unset, --all-entries, --all-dirs eller --search-key\n"
 
-#: ../gconf/gconftool.c:675
+#: ../gconf/gconftool.c:701
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
-"all-dirs\n"
-msgstr ""
-"--set_schema bør ikke brukes sammen med --get, --set, --unset, --all-"
-"entries, eller --all-dirs\n"
+"all-dirs, or --search-key\n"
+msgstr "--set_schema bør ikke brukes sammen med --get, --set, --unset, --all-entries, --all-dirs eller --search-key\n"
 
-#: ../gconf/gconftool.c:681
+#: ../gconf/gconftool.c:707
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Verditypen er kun relevant når en verdi settes\n"
 
-#: ../gconf/gconftool.c:687
+#: ../gconf/gconftool.c:713
 msgid "Must specify a type when setting a value\n"
 msgstr "Må spesifisere en type når en verdi settes\n"
 
-#: ../gconf/gconftool.c:695
+#: ../gconf/gconftool.c:721
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
@@ -2008,442 +2008,447 @@ msgstr ""
 "--ignore-schema-defaults er kun relevant med --get, --all-entries, --dump, --"
 "recursive-list, --get-list-size eller --get-list-element\n"
 
-#: ../gconf/gconftool.c:707 ../gconf/gconftool.c:720 ../gconf/gconftool.c:733
-#: ../gconf/gconftool.c:747 ../gconf/gconftool.c:760 ../gconf/gconftool.c:773
-#: ../gconf/gconftool.c:787
+#: ../gconf/gconftool.c:733 ../gconf/gconftool.c:746 ../gconf/gconftool.c:759
+#: ../gconf/gconftool.c:773 ../gconf/gconftool.c:786 ../gconf/gconftool.c:799
+#: ../gconf/gconftool.c:813
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "Flagget %s må brukes alene.\n"
 
-#: ../gconf/gconftool.c:796
+#: ../gconf/gconftool.c:822
 msgid ""
 "You must specify a config source with --config-source when using --direct\n"
 msgstr ""
 "Du må spesifisere en konfigurasjonskilde med --config-source når du bruker --"
 "direct\n"
 
-#: ../gconf/gconftool.c:802
+#: ../gconf/gconftool.c:828
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Kunne ikke initialisere GConf: %s\n"
 
-#: ../gconf/gconftool.c:830
+#: ../gconf/gconftool.c:856
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL er satt, installerer ikke schema\n"
 
-#: ../gconf/gconftool.c:837
+#: ../gconf/gconftool.c:863
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL er satt, avinstallerer ikke schema\n"
 
-#: ../gconf/gconftool.c:850
+#: ../gconf/gconftool.c:876
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "GCONF_CONFIG_SOURCE miljøvariabelen må være satt\n"
 
-#: ../gconf/gconftool.c:885
+#: ../gconf/gconftool.c:911
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Kunne ikke aksessere konfigurasjonskilden(e): %s\n"
 
-#: ../gconf/gconftool.c:1163
+#: ../gconf/gconftool.c:1198
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Feil ved nedstenging: %s\n"
 
-#: ../gconf/gconftool.c:1206
+#: ../gconf/gconftool.c:1241
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Må spesifisere en eller flere kataloger som skal vises rekursivt.\n"
 
-#: ../gconf/gconftool.c:1258
-msgid "Must specify one or more directories to dump.\n"
-msgstr "Må spesifisere en eller flere kataloger som skal dumpes.\n"
-
-#: ../gconf/gconftool.c:1300 ../gconf/gconftool.c:1566
+#: ../gconf/gconftool.c:1272 ../gconf/gconftool.c:1433
+#: ../gconf/gconftool.c:1699
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "Feil under listing av oppføringer i «%s»: %s\n"
 
-#: ../gconf/gconftool.c:1319
+#: ../gconf/gconftool.c:1292 ../gconf/gconftool.c:1452
 msgid "(no value set)"
 msgstr "(ingen verdi satt)"
 
-#: ../gconf/gconftool.c:1625
+#: ../gconf/gconftool.c:1342
+msgid "Must specify a key pattern to search for.\n"
+msgstr "Du må oppgi en nøkkel å søke etter.\n"
+
+#: ../gconf/gconftool.c:1391
+msgid "Must specify one or more directories to dump.\n"
+msgstr "Må spesifisere en eller flere kataloger som skal dumpes.\n"
+
+#: ../gconf/gconftool.c:1758
 #, c-format
 msgid "Failed to spawn the config server (gconfd): %s\n"
 msgstr "Feil under splitting av konfigurasjonstjeneren (gconfd): %s\n"
 
-#: ../gconf/gconftool.c:1654
+#: ../gconf/gconftool.c:1787
 msgid "Must specify a key or keys to get\n"
 msgstr "Må spesifisere en eller flere nøkler som skal hentes\n"
 
-#: ../gconf/gconftool.c:1689
+#: ../gconf/gconftool.c:1822
 #, c-format
 msgid "Type: %s\n"
 msgstr "Type: %s\n"
 
-#: ../gconf/gconftool.c:1690
+#: ../gconf/gconftool.c:1823
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Listetype: %s\n"
 
-#: ../gconf/gconftool.c:1691
+#: ../gconf/gconftool.c:1824
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car-type: %s\n"
 
-#: ../gconf/gconftool.c:1692
+#: ../gconf/gconftool.c:1825
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr-type: %s\n"
 
-#: ../gconf/gconftool.c:1697
+#: ../gconf/gconftool.c:1830
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Standardverdi: %s\n"
 
-#: ../gconf/gconftool.c:1697 ../gconf/gconftool.c:1699
-#: ../gconf/gconftool.c:1700 ../gconf/gconftool.c:1701
+#: ../gconf/gconftool.c:1830 ../gconf/gconftool.c:1832
+#: ../gconf/gconftool.c:1833 ../gconf/gconftool.c:1834
 msgid "Unset"
 msgstr "Nullstill"
 
-#: ../gconf/gconftool.c:1699
+#: ../gconf/gconftool.c:1832
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Eier: %s\n"
 
-#: ../gconf/gconftool.c:1700
+#: ../gconf/gconftool.c:1833
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Kort beskrivelse: %s\n"
 
-#: ../gconf/gconftool.c:1701
+#: ../gconf/gconftool.c:1834
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Lang beskrivelse: %s\n"
 
-#: ../gconf/gconftool.c:1710 ../gconf/gconftool.c:1934
-#: ../gconf/gconftool.c:1968 ../gconf/gconftool.c:2013
-#: ../gconf/gconftool.c:2158
+#: ../gconf/gconftool.c:1843 ../gconf/gconftool.c:2067
+#: ../gconf/gconftool.c:2101 ../gconf/gconftool.c:2146
+#: ../gconf/gconftool.c:2291
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Ingen verdi satt for «%s»\n"
 
-#: ../gconf/gconftool.c:1714 ../gconf/gconftool.c:1938
-#: ../gconf/gconftool.c:1972 ../gconf/gconftool.c:2017
-#: ../gconf/gconftool.c:2162
+#: ../gconf/gconftool.c:1847 ../gconf/gconftool.c:2071
+#: ../gconf/gconftool.c:2105 ../gconf/gconftool.c:2150
+#: ../gconf/gconftool.c:2295
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Kunne ikke hente verdi for «%s»: %s\n"
 
-#: ../gconf/gconftool.c:1757 ../gconf/gconftool.c:1769
+#: ../gconf/gconftool.c:1890 ../gconf/gconftool.c:1902
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "Forstår ikke type «%s»\n"
 
-#: ../gconf/gconftool.c:1781
+#: ../gconf/gconftool.c:1914
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Må spesifisere vekselvis nøkler/verdier som argumenter\n"
 
-#: ../gconf/gconftool.c:1801
+#: ../gconf/gconftool.c:1934
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "Ingen verdi satt for nøkkel: «%s»\n"
 
-#: ../gconf/gconftool.c:1829
+#: ../gconf/gconftool.c:1962
 msgid "Cannot set schema as value\n"
 msgstr "Kan ikke sette schema som verdi\n"
 
-#: ../gconf/gconftool.c:1839
+#: ../gconf/gconftool.c:1972
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Når en liste settes må du spesifisere en primitiv liste-type\n"
 
-#: ../gconf/gconftool.c:1853
+#: ../gconf/gconftool.c:1986
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Når et par settes må du spesifisere en primitiv car-type og cdr-type\n"
 
-#: ../gconf/gconftool.c:1868
+#: ../gconf/gconftool.c:2001
 #, c-format
 msgid "Error: %s\n"
 msgstr "Feil: %s\n"
 
-#: ../gconf/gconftool.c:1881 ../gconf/gconftool.c:2913
+#: ../gconf/gconftool.c:2014 ../gconf/gconftool.c:3046
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Feil under setting av verdi: %s\n"
 
-#: ../gconf/gconftool.c:1899
+#: ../gconf/gconftool.c:2032
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Feil under synkronisering: %s\n"
 
-#: ../gconf/gconftool.c:1914
+#: ../gconf/gconftool.c:2047
 msgid "Must specify a key or keys to get type\n"
 msgstr "Må spesifisere en eller flere nøkler som det skal hentes type for\n"
 
-#: ../gconf/gconftool.c:1958
+#: ../gconf/gconftool.c:2091
 msgid "Must specify a key to lookup size of.\n"
 msgstr ""
 "En eller flere nøkler som størrelsen skal slås opp for må spesifiseres.\n"
 
-#: ../gconf/gconftool.c:1983 ../gconf/gconftool.c:2028
+#: ../gconf/gconftool.c:2116 ../gconf/gconftool.c:2161
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "Nøkkel %s er ikke en liste.\n"
 
-#: ../gconf/gconftool.c:2003
+#: ../gconf/gconftool.c:2136
 msgid "Must specify a key from which to get list element.\n"
 msgstr "En nøkkel hvor listeelement skal hentes fra må oppgis.\n"
 
-#: ../gconf/gconftool.c:2034
+#: ../gconf/gconftool.c:2167
 msgid "Must specify list index.\n"
 msgstr "Listeindeks må spesifiseres.\n"
 
-#: ../gconf/gconftool.c:2041
+#: ../gconf/gconftool.c:2174
 msgid "List index must be non-negative.\n"
 msgstr "Listeindeksen må ikke være negativ.\n"
 
-#: ../gconf/gconftool.c:2050
+#: ../gconf/gconftool.c:2183
 msgid "List index is out of bounds.\n"
 msgstr "Listeindeksen går utenfor grensene.\n"
 
-#: ../gconf/gconftool.c:2076
+#: ../gconf/gconftool.c:2209
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Må spesifisere en eller flere nøkler på kommandolinjen\n"
 
-#: ../gconf/gconftool.c:2096
+#: ../gconf/gconftool.c:2229
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "Ingen kjente skjema for «%s»\n"
 
-#: ../gconf/gconftool.c:2129
+#: ../gconf/gconftool.c:2262
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "Ingen doc-streng lagret i skjema i «%s»\n"
 
-#: ../gconf/gconftool.c:2134
+#: ../gconf/gconftool.c:2267
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "Feil under henting av schema i «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2141
+#: ../gconf/gconftool.c:2274
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "Ingen skjema lagret i «%s»\n"
 
-#: ../gconf/gconftool.c:2144
+#: ../gconf/gconftool.c:2277
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "Verdi i «%s» er ikke et skjema\n"
 
-#: ../gconf/gconftool.c:2200
+#: ../gconf/gconftool.c:2333
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Skjemanavn fulgt av navn på nøkkel det skal brukes på må spesifiseres\n"
 
-#: ../gconf/gconftool.c:2207
+#: ../gconf/gconftool.c:2340
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Feil under assosiering av skjemanavn «%s» med nøkkelnavn «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2225
+#: ../gconf/gconftool.c:2358
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Nøkler schema skal avinstalleres fra må oppgis\n"
 
-#: ../gconf/gconftool.c:2235
+#: ../gconf/gconftool.c:2368
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "Feil under fjerning av schemanavn fra «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2260
+#: ../gconf/gconftool.c:2393
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Nøkkel (schema navn) må spesifiseres som eneste argument\n"
 
-#: ../gconf/gconftool.c:2302
+#: ../gconf/gconftool.c:2435
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "Listetyp må være en primitiv type: string, int, float eller bool\n"
 
-#: ../gconf/gconftool.c:2322
+#: ../gconf/gconftool.c:2455
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Parets car-type må være en primitiv type: string, int, float eller bool\n"
 
-#: ../gconf/gconftool.c:2342
+#: ../gconf/gconftool.c:2475
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "Parets cdr-type må være en primitiv type: string, int, float eller bool\n"
 
-#: ../gconf/gconftool.c:2357
+#: ../gconf/gconftool.c:2490
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Feil under setting av verdi: %s"
 
-#: ../gconf/gconftool.c:2371
+#: ../gconf/gconftool.c:2504
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Feil under synkronisering: %s"
 
-#: ../gconf/gconftool.c:2386
+#: ../gconf/gconftool.c:2519
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "En eller flere kataloger å hente nøkkel/verdi par fra må spesifiseres.\n"
 
-#: ../gconf/gconftool.c:2400
+#: ../gconf/gconftool.c:2533
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Det må spesifiseres en eller flere nøkler som skal nullstilles.\n"
 
-#: ../gconf/gconftool.c:2411
+#: ../gconf/gconftool.c:2544
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "Feil under nullstilling av «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2431
+#: ../gconf/gconftool.c:2564
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Må spesifisere en eller flere nøkler som skal nullstilles rekursivt.\n"
 
-#: ../gconf/gconftool.c:2445
+#: ../gconf/gconftool.c:2578
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Feil under rekursiv fjerning av verdier i «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2465
+#: ../gconf/gconftool.c:2598
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "En eller flere kataloger som det skal hentes underkataloger fra må oppgis.\n"
 
-#: ../gconf/gconftool.c:2499
+#: ../gconf/gconftool.c:2632
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Feil ved vising av kataloger: %s\n"
 
-#: ../gconf/gconftool.c:2635
+#: ../gconf/gconftool.c:2768
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "ADVARSEL: du må oppgi både en <car> og en <cdr> i et <pair>\n"
 
-#: ../gconf/gconftool.c:2662
+#: ../gconf/gconftool.c:2795
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "ADVARSEL: nøkkel (%s) spesifisert for schema under en <value> - overser\n"
 
-#: ../gconf/gconftool.c:2695
+#: ../gconf/gconftool.c:2828
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "ADVARSEL: en undernode må finnes under <value>\n"
 
-#: ../gconf/gconftool.c:2701
+#: ../gconf/gconftool.c:2834
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "ADVARSEL: node <%s> ikke forstått\n"
 
-#: ../gconf/gconftool.c:2719
+#: ../gconf/gconftool.c:2852
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "ADVARSEL: kunne ikke lese heltallsverdi «%s»\n"
 
-#: ../gconf/gconftool.c:2740
+#: ../gconf/gconftool.c:2873
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "ADVARSEL: kunne ikke lese flyttallsverdi «%s»\n"
 
-#: ../gconf/gconftool.c:2762
+#: ../gconf/gconftool.c:2895
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "ADVARSEL: kunne ikke lese strengverdi «%s»\n"
 
-#: ../gconf/gconftool.c:2783
+#: ../gconf/gconftool.c:2916
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "ADVARSEL: kunne ikke lese bolsk verdi «%s»\n"
 
-#: ../gconf/gconftool.c:2892 ../gconf/gconftool.c:3434
+#: ../gconf/gconftool.c:3025 ../gconf/gconftool.c:3567
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "ADVARSEL: kunne ikke assosiere schema «%s» med nøkkel «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3007
+#: ../gconf/gconftool.c:3140
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "ADVARSEL: ugyldig eller manglende type for schema (%s)\n"
 
-#: ../gconf/gconftool.c:3016
+#: ../gconf/gconftool.c:3149
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "ADVARSEL: ugyldig eller manglende list_type for schema (%s)\n"
 
-#: ../gconf/gconftool.c:3027 ../gconf/gconftool.c:3057
-#: ../gconf/gconftool.c:3086
+#: ../gconf/gconftool.c:3160 ../gconf/gconftool.c:3190
+#: ../gconf/gconftool.c:3219
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "ADVARSEL: Kunne ikke fortolke standardverdi «%s» for schema (%s)\n"
 
-#: ../gconf/gconftool.c:3045
+#: ../gconf/gconftool.c:3178
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "ADVARSEL: ugyldig eller manglende car_type for schema (%s)\n"
 
-#: ../gconf/gconftool.c:3070
+#: ../gconf/gconftool.c:3203
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "ADVARSEL: Du kan ikke sette en standardverdi for et schema\n"
 
-#: ../gconf/gconftool.c:3099
+#: ../gconf/gconftool.c:3232
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "ADVARSEL: gconftool, intern feil, ukjent GConfValueType\n"
 
-#: ../gconf/gconftool.c:3147 ../gconf/gconftool.c:3168
-#: ../gconf/gconftool.c:3189 ../gconf/gconftool.c:3210
+#: ../gconf/gconftool.c:3280 ../gconf/gconftool.c:3301
+#: ../gconf/gconftool.c:3322 ../gconf/gconftool.c:3343
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "ADVARSEL: kunne ikke forstå typenavnet «%s»\n"
 
-#: ../gconf/gconftool.c:3164
+#: ../gconf/gconftool.c:3297
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "ADVARSEL: list_type kan kun være int, float, string eller bool og ikke «%s»\n"
 
-#: ../gconf/gconftool.c:3185
+#: ../gconf/gconftool.c:3318
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "ADVARSEL: car_type kan kun være int, float, string eller bool og ikke «%s»\n"
 
-#: ../gconf/gconftool.c:3206
+#: ../gconf/gconftool.c:3339
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "ADVARSEL: cdr_type kan kun være int, float, string eller bool og ikke «%s»\n"
 
-#: ../gconf/gconftool.c:3246
+#: ../gconf/gconftool.c:3379
 msgid "WARNING: empty <applyto> node"
 msgstr "ADVARSEL: tom <applyto> node"
 
-#: ../gconf/gconftool.c:3249 ../gconf/gconftool.c:3507
+#: ../gconf/gconftool.c:3382 ../gconf/gconftool.c:3640
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "ADVARSEL: node <%s> ikke forstått under <schema>\n"
 
-#: ../gconf/gconftool.c:3260
+#: ../gconf/gconftool.c:3393
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr ""
 "ADVARSEL: ingen <list_type>-nøkkel spesifisert for schema av type liste\n"
 
-#: ../gconf/gconftool.c:3266
+#: ../gconf/gconftool.c:3399
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "ADVARSEL: ingen <car_type>-nøkkel spesifisert for schema av type par\n"
 
-#: ../gconf/gconftool.c:3272
+#: ../gconf/gconftool.c:3405
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "ADVARSEL: ingen <cdr_type>-nøkkel spesifisert for schema av type par\n"
 
-#: ../gconf/gconftool.c:3301
+#: ../gconf/gconftool.c:3434
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "ADVARSEL: <locale> node har ingen `navn=\"locale\"' attributt, ignorerer\n"
 
-#: ../gconf/gconftool.c:3307
+#: ../gconf/gconftool.c:3440
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -2451,84 +2456,84 @@ msgstr ""
 "ADVARSEL: flere <locale> noder for locale `%s', ignorerer alle etter den "
 "første\n"
 
-#: ../gconf/gconftool.c:3405
+#: ../gconf/gconftool.c:3538
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "ADVARSEL: Ugyldig node <%s> i en <locale> node\n"
 
-#: ../gconf/gconftool.c:3442
+#: ../gconf/gconftool.c:3575
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "Lagt ved schema «%s» til nøkkel «%s»\n"
 
-#: ../gconf/gconftool.c:3516
+#: ../gconf/gconftool.c:3649
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Du må ha minst en <locale> oppføring i et <schema>\n"
 
-#: ../gconf/gconftool.c:3551
+#: ../gconf/gconftool.c:3684
 #, c-format
 msgid "WARNING: failed to install schema `%s' locale `%s': %s\n"
 msgstr "ADVARSEL: kunne ikke installere schema «%s» locale «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3559
+#: ../gconf/gconftool.c:3692
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "Installert schema «%s» for locale «%s»\n"
 
-#: ../gconf/gconftool.c:3569
+#: ../gconf/gconftool.c:3702
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s' locale `%s': %s\n"
 msgstr "ADVARSEL: kunne ikke avinstallere schema «%s» locale «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3577
+#: ../gconf/gconftool.c:3710
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "Avinstallert schema «%s» for locale «%s»\n"
 
-#: ../gconf/gconftool.c:3615
+#: ../gconf/gconftool.c:3748
 msgid "WARNING: no key specified for schema\n"
 msgstr "ADVARSEL: ingen nøkkel spesifisert for schema\n"
 
-#: ../gconf/gconftool.c:3656
+#: ../gconf/gconftool.c:3789
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "ADVARSEL: node <%s> ikke forstått under <%s>\n"
 
-#: ../gconf/gconftool.c:3688
+#: ../gconf/gconftool.c:3821
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Kunne ikke åpne «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3695
+#: ../gconf/gconftool.c:3828
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Dokument «%s» er tomt?\n"
 
-#: ../gconf/gconftool.c:3707
+#: ../gconf/gconftool.c:3840
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr "Dokumentet «%s» har feil type rot-node (<%s>, skulle vært <%s>)\n"
 
-#: ../gconf/gconftool.c:3720
+#: ../gconf/gconftool.c:3853
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "Dokumentet «%s» har ingen topp-nivå <%s>-node\n"
 
-#: ../gconf/gconftool.c:3734
+#: ../gconf/gconftool.c:3867
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "ADVARSEL: node <%s> under <%s> ikke forstått\n"
 
-#: ../gconf/gconftool.c:3755
+#: ../gconf/gconftool.c:3888
 #, c-format
 msgid "Error syncing config data: %s"
 msgstr "Feil under synkronisering av konfigurasjonsdata: %s"
 
-#: ../gconf/gconftool.c:3771
+#: ../gconf/gconftool.c:3904
 msgid "Must specify some schema files to install\n"
 msgstr "Spesifiser schema filer som skal installeres\n"
 
-#: ../gconf/gconftool.c:3799
+#: ../gconf/gconftool.c:3932
 #, c-format
 msgid ""
 "\n"
@@ -2537,16 +2542,16 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: ../gconf/gconftool.c:3819
+#: ../gconf/gconftool.c:3952
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Kunne ikke nullstille brytningsnøkkel %s: %s\n"
 
-#: ../gconf/gconftool.c:3945
+#: ../gconf/gconftool.c:4078
 msgid "Must specify some keys to break\n"
 msgstr "Må spesifisere nøkler som skal brytes\n"
 
-#: ../gconf/gconftool.c:3951
+#: ../gconf/gconftool.c:4084
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2555,11 +2560,11 @@ msgstr ""
 "Prøver å knekke din applikasjon ved å sette ugyldige verdier for nøkkel:\n"
 "  %s\n"
 
-#: ../gconf/gconftool.c:3969
+#: ../gconf/gconftool.c:4102
 msgid "Must specify some directories to break\n"
 msgstr "Må spesifisere kataloger som skal brytes\n"
 
-#: ../gconf/gconftool.c:3988
+#: ../gconf/gconftool.c:4121
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
