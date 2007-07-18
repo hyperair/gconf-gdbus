@@ -484,7 +484,7 @@ node_set_schema_value(xmlNodePtr node,
   found = find_schema_subnode_by_locale(node, locale);
   
   if (found == NULL)
-    found = xmlNewChild(node, NULL, "local_schema", NULL);
+    found = xmlNewChild(node, NULL, (xmlChar *)"local_schema", NULL);
   
   /* OK if these are set to NULL, since that unsets the property */
   my_xmlSetProp(found, "locale", gconf_schema_get_locale (sc));
@@ -495,7 +495,7 @@ node_set_schema_value(xmlNodePtr node,
   if (gconf_schema_get_default_value (sc) != NULL)
     {
       xmlNodePtr default_value_node;
-      default_value_node = xmlNewChild(found, NULL, "default", NULL);
+      default_value_node = xmlNewChild(found, NULL, (xmlChar *)"default", NULL);
       node_set_value(default_value_node, gconf_schema_get_default_value (sc));
     }
   
@@ -503,7 +503,8 @@ node_set_schema_value(xmlNodePtr node,
     {
       xmlNodePtr ld_node;
       
-      ld_node = xmlNewChild(found, NULL, "longdesc", gconf_schema_get_long_desc (sc));
+      ld_node = xmlNewChild(found, NULL, (xmlChar *)"longdesc", 
+                            (xmlChar *)gconf_schema_get_long_desc (sc));
     }
 }
 
@@ -539,14 +540,14 @@ node_set_value(xmlNodePtr node, GConfValue* value)
     case GCONF_VALUE_STRING:
       {
         xmlNodePtr child;
-        gchar* encoded;
+        xmlChar* encoded;
         
         free_childs(node);
 
         encoded = xmlEncodeEntitiesReentrant(node->doc,
-                                             gconf_value_get_string(value));
+                                             (xmlChar *)gconf_value_get_string(value));
         
-        child = xmlNewChild(node, NULL, "stringvalue",
+        child = xmlNewChild(node, NULL, (xmlChar *)"stringvalue",
                             encoded);
         xmlFree(encoded);
       }
@@ -572,7 +573,7 @@ node_set_value(xmlNodePtr node, GConfValue* value)
           {
             xmlNodePtr child;
             /* this is O(1) because libxml saves the list tail */
-            child = xmlNewChild(node, NULL, "li", NULL);
+            child = xmlNewChild(node, NULL, (xmlChar *)"li", NULL);
 
             g_return_if_fail(list->data != NULL);
             
@@ -589,8 +590,8 @@ node_set_value(xmlNodePtr node, GConfValue* value)
 
         free_childs(node);
 
-        car = xmlNewChild(node, NULL, "car", NULL);
-        cdr = xmlNewChild(node, NULL, "cdr", NULL);
+        car = xmlNewChild(node, NULL, (xmlChar *)"car", NULL);
+        cdr = xmlNewChild(node, NULL, (xmlChar *)"cdr", NULL);
 
         g_return_if_fail(gconf_value_get_car(value) != NULL);
         g_return_if_fail(gconf_value_get_cdr(value) != NULL);
@@ -617,7 +618,7 @@ find_schema_subnode_by_locale(xmlNodePtr node, const gchar* locale)
   while (iter != NULL)
     {
       if (iter->type == XML_ELEMENT_NODE &&
-          strcmp(iter->name, "local_schema") == 0)
+          strcmp((char *)iter->name, "local_schema") == 0)
         {
           char* this_locale = my_xmlGetProp(iter, "locale");
           
@@ -712,7 +713,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
   if (node->xmlChildrenNode != NULL)
     {
       GConfValue* default_value = NULL;
-      gchar* ld_str = NULL;
+      xmlChar* ld_str = NULL;
       GSList* bad_nodes = NULL;
       xmlNodePtr iter = node->xmlChildrenNode;
 
@@ -721,7 +722,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
           if (iter->type == XML_ELEMENT_NODE)
             {
               if (default_value == NULL &&
-                  strcmp(iter->name, "default") == 0)
+                  strcmp((char *)iter->name, "default") == 0)
                 {
                   default_value = node_extract_value(iter, NULL, &error);
 
@@ -738,7 +739,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
                     }
                 }
               else if (ld_str == NULL &&
-                       strcmp(iter->name, "longdesc") == 0)
+                       strcmp((char *)iter->name, "longdesc") == 0)
                 {
                   ld_str = xmlNodeGetContent(iter);
                 }
@@ -775,7 +776,7 @@ schema_subnode_extract_data(xmlNodePtr node, GConfSchema* sc)
 
       if (ld_str)
         {
-          gconf_schema_set_long_desc(sc, ld_str);
+          gconf_schema_set_long_desc(sc, (char *)ld_str);
           xmlFree(ld_str);
         }
     }
@@ -859,7 +860,7 @@ schema_node_extract_value(xmlNodePtr node, const gchar** locales)
       while (iter != NULL)
         {
           if (iter->type == XML_ELEMENT_NODE &&
-              strcmp(iter->name, "local_schema") == 0)
+              strcmp((char *)iter->name, "local_schema") == 0)
             {
               char* locale_name;
               
@@ -1006,11 +1007,11 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
               {
                 GConfValue* v = NULL;
 
-                if (strcmp(iter->name, "stringvalue") == 0)
+                if (strcmp((char *)iter->name, "stringvalue") == 0)
                   {
                     gchar* s;
 
-                    s = xmlNodeGetContent(iter);
+                    s = (gchar *)xmlNodeGetContent(iter);
 
                     v = gconf_value_new(GCONF_VALUE_STRING);
 
@@ -1074,7 +1075,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
             if (iter->type == XML_ELEMENT_NODE)
               {
                 GConfValue* v = NULL;
-                if (strcmp(iter->name, "li") == 0)
+                if (strcmp((char*)iter->name, "li") == 0)
                   {
                     
                     v = node_extract_value(iter, locales, err);
@@ -1135,7 +1136,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
           {
             if (iter->type == XML_ELEMENT_NODE)
               {
-                if (car == NULL && strcmp(iter->name, "car") == 0)
+                if (car == NULL && strcmp((char *)iter->name, "car") == 0)
                   {
                     car = node_extract_value(iter, locales, err);
                     if (car == NULL)
@@ -1157,7 +1158,7 @@ node_extract_value(xmlNodePtr node, const gchar** locales, GError** err)
                         car = NULL;
                       }
                   }
-                else if (cdr == NULL && strcmp(iter->name, "cdr") == 0)
+                else if (cdr == NULL && strcmp((char *)iter->name, "cdr") == 0)
                   {
                     cdr = node_extract_value(iter, locales, err);
                     if (cdr == NULL)
@@ -1247,7 +1248,7 @@ my_xmlSetProp(xmlNodePtr node,
 {
   xmlAttrPtr prop;
 
-  prop = xmlSetProp(node, name, str);
+  prop = xmlSetProp(node, (xmlChar *)name, (xmlChar *)str);
 
   if (str == NULL || *str == '\0')
     {
@@ -1280,9 +1281,9 @@ char*
 my_xmlGetProp(xmlNodePtr node,
               const gchar* name)
 {
-  char* prop;
+  xmlChar* prop;
 
-  prop = xmlGetProp(node, name);
+  prop = xmlGetProp(node, (xmlChar *)name);
 
   if (prop && *prop == '\0')
     {

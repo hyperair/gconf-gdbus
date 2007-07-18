@@ -1,3 +1,20 @@
+2007-07-18  Jaap Haitsma  <jaap@haitsma.org>
+
+	Reviewed by: Ray Strode
+
+	* backends/xml-dir.c: (dir_load_doc), (dir_make_new_entry),
+	(dir_fill_cache_from_doc):
+	* backends/xml-entry.c: (node_set_schema_value), (node_set_value),
+	(find_schema_subnode_by_locale), (schema_subnode_extract_data),
+	(schema_node_extract_value), (node_extract_value), (my_xmlSetProp),
+	(my_xmlGetProp):
+	* gconf/gconftool.c: (get_list_value_from_xml),
+	(get_car_cdr_value), (get_pair_value_from_xml),
+	(get_values_from_xml), (process_entry), (extract_global_info),
+	(process_locale_info), (get_schema_from_xml), (process_list),
+	(do_load_file): Remove a bunch of compiler warnings by performing casts.
+	Fixes bug #452372
+
 2007-07-05  Sven Herzberg  <herzi@gnome-de.org>
 
 	Reviewed by Christian Persch.

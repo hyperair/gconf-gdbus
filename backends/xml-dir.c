@@ -1055,7 +1055,7 @@ dir_load_doc(Dir* d, GError** err)
           
       /* Create a new doc */
       
-      d->doc = xmlNewDoc("1.0");
+      d->doc = xmlNewDoc((xmlChar *)"1.0");
     }
   
   if (d->doc->xmlRootNode == NULL)
@@ -1063,11 +1063,11 @@ dir_load_doc(Dir* d, GError** err)
       /* fill it in */
       d->doc->xmlRootNode = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
     }
-  else if (strcmp(d->doc->xmlRootNode->name, "gconf") != 0)
+  else if (strcmp((char*)d->doc->xmlRootNode->name, "gconf") != 0)
     {
       xmlFreeDoc(d->doc);
-      d->doc = xmlNewDoc("1.0");
-      d->doc->xmlRootNode = xmlNewDocNode(d->doc, NULL, "gconf", NULL);
+      d->doc = xmlNewDoc((xmlChar*)"1.0");
+      d->doc->xmlRootNode = xmlNewDocNode(d->doc, NULL, (xmlChar *)"gconf", NULL);
       need_backup = TRUE; /* save broken stuff */
     }
   else
@@ -1113,7 +1113,7 @@ dir_make_new_entry(Dir* d, const gchar* relative_key)
   
   e = entry_new(relative_key);
 
-  entry_set_node(e, xmlNewChild(d->doc->xmlRootNode, NULL, "entry", NULL));
+  entry_set_node(e, xmlNewChild(d->doc->xmlRootNode, NULL, (xmlChar *)"entry", NULL));
   
   safe_g_hash_table_insert(d->entry_cache, (gchar*)entry_get_name(e), e);
   
@@ -1158,7 +1158,7 @@ dir_fill_cache_from_doc(Dir* d)
   while (node != NULL)
     {
       if (node->type == XML_ELEMENT_NODE && 
-          (strcmp(node->name, "entry") == 0))
+          (strcmp((xmlChar *)node->name, "entry") == 0))
         {
           gchar* attr = my_xmlGetProp(node, "name");
 

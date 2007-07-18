@@ -2668,7 +2668,7 @@ get_list_value_from_xml(xmlNodePtr node, GConfValue** ret_value)
   GSList* list = NULL;
   char* list_type_str;
 
-  list_type_str = xmlGetProp(node, "type");
+  list_type_str = (char *)xmlGetProp(node, (xmlChar *)"type");
   if (!list_type_str)
     {
       g_printerr ("WARNING: must specify a list type for using <list type=\"type\">\n");
@@ -2689,7 +2689,7 @@ get_list_value_from_xml(xmlNodePtr node, GConfValue** ret_value)
 
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "value") == 0) 
+      if (strcmp((char *)iter->name, "value") == 0) 
         {
           GConfValue* element = NULL;
 
@@ -2727,7 +2727,7 @@ get_car_cdr_value(xmlNodePtr node, GConfValue** ret_value)
   iter = node->xmlChildrenNode;
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "value") == 0)
+      if (strcmp((char *)iter->name, "value") == 0)
         get_first_value_from_xml(iter, ret_value);
 
       iter = iter->next;
@@ -2747,10 +2747,10 @@ get_pair_value_from_xml(xmlNodePtr node, GConfValue** ret_value)
 
   while (iter != NULL)
     {
-      if (strcmp(iter->name, "car") == 0)
+      if (strcmp((char *)iter->name, "car") == 0)
         get_car_cdr_value(iter, &car);
 
-      else if (strcmp(iter->name, "cdr") == 0)
+      else if (strcmp((char *)iter->name, "cdr") == 0)
         get_car_cdr_value(iter, &cdr);
 
       iter = iter->next;
@@ -2829,7 +2829,7 @@ get_values_from_xml(xmlNodePtr node, GSList** ret_values)
       return 1;
     }
 
-  if (strcmp(node->name, "value") != 0)
+  if (strcmp((char *)node->name, "value") != 0)
     {
       g_printerr (_("WARNING: node <%s> not understood\n"), node->name);
       return 1;
@@ -2840,9 +2840,9 @@ get_values_from_xml(xmlNodePtr node, GSList** ret_values)
       GError* error = NULL;
       char* content;
 
-      if (strcmp(iter->name, "int") == 0)
+      if (strcmp((char *)iter->name, "int") == 0)
         {
-          if ((content = xmlNodeGetContent(iter)) != NULL)
+          if ((content = (char *)xmlNodeGetContent(iter)) != NULL)
             {
               value = gconf_value_new_from_string(GCONF_VALUE_INT, content, &error);
               if (value == NULL)
@@ -2861,9 +2861,9 @@ get_values_from_xml(xmlNodePtr node, GSList** ret_values)
               xmlFree(content);
             }
         }
-      else if (strcmp(iter->name, "float") == 0)
+      else if (strcmp((char *)iter->name, "float") == 0)
         {
-          if ((content = xmlNodeGetContent(iter)) != NULL)
+          if ((content = (char *)xmlNodeGetContent(iter)) != NULL)
             {
               value = gconf_value_new_from_string(GCONF_VALUE_FLOAT, content, &error);
               if (value == NULL)
@@ -2883,9 +2883,9 @@ get_values_from_xml(xmlNodePtr node, GSList** ret_values)
             }
     
         }
-      else if (strcmp(iter->name, "string") == 0)
+      else if (strcmp((char *)iter->name, "string") == 0)
         {
-          if ((content = xmlNodeGetContent(iter)) != NULL)
+          if ((content = (char *)xmlNodeGetContent(iter)) != NULL)
             {
               value = gconf_value_new_from_string(GCONF_VALUE_STRING, content, &error);
               if (value == NULL)
@@ -2904,9 +2904,9 @@ get_values_from_xml(xmlNodePtr node, GSList** ret_values)
               xmlFree(content);
             }
         }
-      else if (strcmp(iter->name, "bool") == 0)
+      else if (strcmp((char *)iter->name, "bool") == 0)
         {
-          if ((content = xmlNodeGetContent(iter)) != NULL)
+          if ((content = (char *)xmlNodeGetContent(iter)) != NULL)
             {
               value = gconf_value_new_from_string(GCONF_VALUE_BOOL, content, &error);
               if (value == NULL)
@@ -2925,13 +2925,13 @@ get_values_from_xml(xmlNodePtr node, GSList** ret_values)
               xmlFree(content);
             }
         }
-      else if (strcmp(iter->name, "list") == 0)
+      else if (strcmp((char *)iter->name, "list") == 0)
         get_list_value_from_xml(iter, &value);
 
-      else if (strcmp(iter->name, "pair") == 0)
+      else if (strcmp((char *)iter->name, "pair") == 0)
         get_pair_value_from_xml(iter, &value);
 
-      else if (strcmp(iter->name, "schema") == 0)
+      else if (strcmp((char *)iter->name, "schema") == 0)
         get_schema_values_from_xml(iter, &values);
 
       iter = iter->next;
@@ -3067,14 +3067,14 @@ process_entry(GConfEngine* conf, gboolean unload, xmlNodePtr node, const gchar**
   iter = node->xmlChildrenNode;
   while (iter)
     {
-      if (strcmp(iter->name, "key") == 0)
-        key = xmlNodeGetContent(iter);
+      if (strcmp((char *)iter->name, "key") == 0)
+        key = (char *)xmlNodeGetContent(iter);
 
-      else if (strcmp(iter->name, "value") == 0)
+      else if (strcmp((char *)iter->name, "value") == 0)
         get_values_from_xml(iter, &values);
 
-      else if (strcmp(iter->name, "schema_key") == 0)
-        schema_key = xmlNodeGetContent(iter);
+      else if (strcmp((char *)iter->name, "schema_key") == 0)
+        schema_key = (char *)xmlNodeGetContent(iter);
 
       iter = iter->next;
     }
@@ -3252,27 +3252,27 @@ extract_global_info(xmlNodePtr node,
         {
           char* tmp;
       
-          if (strcmp(iter->name, "key") == 0)
+          if (strcmp((char *)iter->name, "key") == 0)
             {
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp)
                 {
                   info->key = g_strdup(tmp);
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "owner") == 0)
+          else if (strcmp((char *)iter->name, "owner") == 0)
             {
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp)
                 {
                   info->owner = g_strdup(tmp);
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "type") == 0)
+          else if (strcmp((char *)iter->name, "type") == 0)
             {
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp)
                 {
                   info->type = gconf_value_type_from_string(tmp);
@@ -3282,9 +3282,9 @@ extract_global_info(xmlNodePtr node,
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "list_type") == 0)
+          else if (strcmp((char *)iter->name, "list_type") == 0)
             {
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp)
                 {
                   info->list_type = gconf_value_type_from_string(tmp);
@@ -3303,9 +3303,9 @@ extract_global_info(xmlNodePtr node,
     		  xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "car_type") == 0)
+          else if (strcmp((char *)iter->name, "car_type") == 0)
             {
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp)
                 {
                   info->car_type = gconf_value_type_from_string(tmp);
@@ -3324,9 +3324,9 @@ extract_global_info(xmlNodePtr node,
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "cdr_type") == 0)
+          else if (strcmp((char *)iter->name, "cdr_type") == 0)
             {
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp)
                 {
                   info->cdr_type = gconf_value_type_from_string(tmp);
@@ -3345,30 +3345,30 @@ extract_global_info(xmlNodePtr node,
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "default") == 0)
+          else if (strcmp((char *)iter->name, "default") == 0)
             {
-              default_value = xmlNodeGetContent(iter);
+              default_value = (char *)xmlNodeGetContent(iter);
             }
-          else if (strcmp(iter->name, "default_value") == 0)
+          else if (strcmp((char *)iter->name, "default_value") == 0)
             {
               xmlNodePtr tmp_node = iter->xmlChildrenNode;
 
               while (tmp_node)
                 {
-                  if (strcmp(tmp_node->name, "value") == 0)
+                  if (strcmp((char *)tmp_node->name, "value") == 0)
                     default_value_node = tmp_node;
 
                   tmp_node = tmp_node->next;
                 }
             }
-          else if (strcmp(iter->name, "locale") == 0)
+          else if (strcmp((char *)iter->name, "locale") == 0)
             {
               ; /* ignore, this is parsed later after we have the global info */
             }
-          else if (strcmp(iter->name, "applyto") == 0)
+          else if (strcmp((char *)iter->name, "applyto") == 0)
             {
               /* Add the contents to the list of nodes to apply to */
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
 
               if (tmp)
                 {
@@ -3427,7 +3427,7 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
   GConfSchema* schema;
   xmlNodePtr iter;
   
-  name = xmlGetProp(node, "name");
+  name = (char *)xmlGetProp(node, (xmlChar *)"name");
 
   if (name == NULL)
     {
@@ -3476,7 +3476,7 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
     {
       if (iter->type == XML_ELEMENT_NODE)
         {
-          if (strcmp(iter->name, "default_value") == 0)
+          if (strcmp((char *)iter->name, "default_value") == 0)
             {
               GConfValue* val = NULL;
               xmlNodePtr tmp_node;
@@ -3484,7 +3484,7 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
               tmp_node = iter->xmlChildrenNode;
               while (tmp_node)
                 {
-                  if (strcmp(tmp_node->name, "value") == 0)
+                  if (strcmp((char *)tmp_node->name, "value") == 0)
                     {
                       get_first_value_from_xml(tmp_node, &val);
                       if (val)
@@ -3494,12 +3494,12 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
                   tmp_node = tmp_node->next;
                 }
             }
-          else if (strcmp(iter->name, "default") == 0)
+          else if (strcmp((char *)iter->name, "default") == 0)
             {
               GConfValue* val = NULL;
               char* tmp;
 
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
               if (tmp != NULL)
                 {
                   fill_default_from_string(info, tmp, &val);
@@ -3509,11 +3509,11 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "short") == 0)
+          else if (strcmp((char *)iter->name, "short") == 0)
             {
               char* tmp;
 
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
 
               if (tmp != NULL)
                 {
@@ -3521,11 +3521,11 @@ process_locale_info(xmlNodePtr node, SchemaInfo* info)
                   xmlFree(tmp);
                 }
             }
-          else if (strcmp(iter->name, "long") == 0)
+          else if (strcmp((char *)iter->name, "long") == 0)
             {
               char* tmp;
 
-              tmp = xmlNodeGetContent(iter);
+              tmp = (char *)xmlNodeGetContent(iter);
 
               if (tmp != NULL)
                 {
@@ -3616,23 +3616,23 @@ get_schema_from_xml(xmlNodePtr node, gchar **schema_key, GHashTable** schemas_ha
     {
       if (iter->type == XML_ELEMENT_NODE)
         {
-          if (strcmp(iter->name, "key") == 0)
+          if (strcmp((char *)iter->name, "key") == 0)
             ; /* nothing */
-          else if (strcmp(iter->name, "owner") == 0)
+          else if (strcmp((char *)iter->name, "owner") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "type") == 0)
+          else if (strcmp((char *)iter->name, "type") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "list_type") == 0)
+          else if (strcmp((char *)iter->name, "list_type") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "car_type") == 0)
+          else if (strcmp((char *)iter->name, "car_type") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "cdr_type") == 0)
+          else if (strcmp((char *)iter->name, "cdr_type") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "default") == 0)
+          else if (strcmp((char *)iter->name, "default") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "applyto") == 0)
+          else if (strcmp((char *)iter->name, "applyto") == 0)
             ;  /* nothing */
-          else if (strcmp(iter->name, "locale") == 0)
+          else if (strcmp((char *)iter->name, "locale") == 0)
             {
               process_locale_info(iter, &info);
             }
@@ -3775,15 +3775,15 @@ process_list(GConfEngine* conf, LoadType load_type, gboolean unload, xmlNodePtr 
   iter = node->xmlChildrenNode;
 
   if (load_type == LOAD_ENTRY_FILE)
-    orig_base = xmlGetProp(node, "base");
+    orig_base = (char *)xmlGetProp(node, (xmlChar *)"base");
 
   while (iter != NULL)
     {
       if (iter->type == XML_ELEMENT_NODE)
         {
-          if (load_type == LOAD_SCHEMA_FILE && strcmp(iter->name, "schema") == 0)
+          if (load_type == LOAD_SCHEMA_FILE && strcmp((char *)iter->name, "schema") == 0)
             process_schema(conf, unload, iter);
-          else if (load_type == LOAD_ENTRY_FILE && strcmp(iter->name, "entry") == 0)
+          else if (load_type == LOAD_ENTRY_FILE && strcmp((char *)iter->name, "entry") == 0)
             process_entry(conf, unload, iter, base_dirs, orig_base);
           else
             g_printerr (_("WARNING: node <%s> not understood below <%s>\n"),
@@ -3835,7 +3835,7 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
     {
       if (iter->type == XML_ELEMENT_NODE)
         { 
-          if (strcmp(iter->name, LOAD_TYPE_TO_ROOT(load_type)) != 0)
+          if (strcmp((char *)iter->name, LOAD_TYPE_TO_ROOT(load_type)) != 0)
             {
               g_printerr (_("Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"),
 			  utf8_file, iter->name, LOAD_TYPE_TO_ROOT(load_type));
@@ -3861,7 +3861,7 @@ do_load_file(GConfEngine* conf, LoadType load_type, gboolean unload, const gchar
     {
       if (iter->type == XML_ELEMENT_NODE)
         {
-          if (strcmp(iter->name, LOAD_TYPE_TO_LIST(load_type)) == 0)
+          if (strcmp((char *)iter->name, LOAD_TYPE_TO_LIST(load_type)) == 0)
             process_list(conf, load_type, unload, iter, base_dirs);
           else
             g_printerr (_("WARNING: node <%s> below <%s> not understood\n"),
