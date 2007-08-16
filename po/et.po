@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-24 03:28+0100\n"
-"PO-Revision-Date: 2007-07-16 00:15+0300\n"
+"PO-Revision-Date: 2007-08-15 11:57+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +53,7 @@ msgstr "<template> pole '%s' sees määratud"
 #: ../backends/evoldap-backend.c:511
 #, c-format
 msgid "No \"filter\" attribute specified on <template> in '%s'"
-msgstr ""
+msgstr "'%s' sees pole <template> jaoks määratud \"filter\" atribuuti"
 
 #: ../backends/evoldap-backend.c:572
 #, c-format
@@ -342,16 +342,16 @@ msgstr "Tõrge ajutise faili \"%s\" tõstmisel sihtkohta \"%s\": %s"
 
 #: ../backends/xml-backend.c:239
 msgid "Unloading XML backend module."
-msgstr ""
+msgstr "XML-i taustaprogrammi mooduli väljalaadimine"
 
 #: ../backends/xml-backend.c:618
 #, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr ""
+msgstr "Viga XML-i taustaprogrammi kataloogipuhvri sünkroniseerimisel: %s"
 
 #: ../backends/xml-backend.c:809
 msgid "Initializing XML backend module"
-msgstr ""
+msgstr "XML-i taustaprogrammimooduli lähtestamine"
 
 #: ../backends/xml-cache.c:286
 msgid "Failed to sync XML cache contents to disk"
@@ -363,6 +363,8 @@ msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
 msgstr ""
+"Kataloogi `%s' pole võimalik XML-i taustaprogrammi puhvrist kustutada kuna "
+"seda pole suudetud edukalt kettale sünkroniseerida"
 
 #: ../backends/xml-dir.c:169
 #, c-format
@@ -1272,7 +1274,7 @@ msgstr "Kaks kaldkriipsu (/) järjest pole võimalik"
 
 #: ../gconf/gconf.c:2647
 msgid "Can't have a period (.) right after a slash (/)"
-msgstr "Punkt (.) kohe peale kaldkriipsu (/) pole võimalik"
+msgstr "Punkt (.) kohe pärast kaldkriipsu (/) pole võimalik"
 
 #: ../gconf/gconf.c:2667
 #, c-format
@@ -1561,7 +1563,7 @@ msgstr "Tõrge salvestatud olekufaili avamisel: %s"
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Tõrge kliendi lisamise kirjutamisel olekufaili: %s"
 
-# peale kliendi lisamist fflush() funktsiooni tõrge
+# pärast kliendi lisamist fflush() funktsiooni tõrge
 #: ../gconf/gconfd.c:2347
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
@@ -1867,11 +1869,11 @@ msgstr "Käsureavõtmete täieliku nimekirja jaoks käivita '%s --help'.\n"
 
 #: ../gconf/gconftool.c:634
 msgid "Can't get and set/unset simultaneously\n"
-msgstr ""
+msgstr "Rööbiti pole võimalik väärtust hankida ja määrata/kustutada\n"
 
 #: ../gconf/gconftool.c:644
 msgid "Can't set and get/unset simultaneously\n"
-msgstr ""
+msgstr "Rööbiti pole võimalik väärtust määrata ja hankida/kustutada\n"
 
 #: ../gconf/gconftool.c:651
 msgid "Can't get type and set/unset simultaneously\n"
