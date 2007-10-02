@@ -226,7 +226,8 @@ preload its contents; see #GConfClientPreloadType for details.
 Added directories may not overlap. That is, if you add "/foo", you may not add
 "/foo/bar". However you can add "/foo" and "/bar". You can also add "/foo"
 multiple times; if you add a directory multiple times, it will not be removed
-until you call gconf_client_remove_dir() an equal number of times.
+until you call gconf_client_remove_dir() an equal number of times. The directory
+name must not have a trailing slash.
 </para>
 
 @client: a #GConfClient.
