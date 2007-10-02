@@ -30,5 +30,5 @@ complex_gconf_app_SOURCES = basic-gconf-app.c
 
 complex_gconf_app_LDADD = $(GTK_EXAMPLES_LINK)
 
-
+EXTRA_DIST = basic-gconf-app.schemas
 
