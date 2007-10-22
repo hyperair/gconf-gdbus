@@ -129,7 +129,11 @@ default.path: $(srcdir)/default.path.in
 
 install-data-local: default.path
 	$(mkinstalldirs) $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)
-	$(INSTALL_DATA) default.path $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)/path
+	if test -f $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)/path; then				\
+		echo "Existing path configuration file not changed";				\
+	else 											\
+		$(INSTALL_DATA) default.path $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)/path;	\
+	fi
 
 uninstall-local:
 	rm -f $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)/path
