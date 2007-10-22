@@ -46,7 +46,7 @@ main (int argc, char** argv)
   g_thread_init (NULL);
 
   context = g_option_context_new (_("- Sanity checks for GConf"));
-  g_option_context_add_group (context, gtk_get_option_group (TRUE));
+  g_option_context_add_group (context, gtk_get_option_group (FALSE));
 
   error = NULL;
   g_option_context_parse (context, &argc, &argv, &error);
