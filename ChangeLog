@@ -1,3 +1,11 @@
+2007-11-08  Brian Cameron  <brian.cameron@sun.com>
+
+	* gconf/gconfd.c: Remove calls to gconf_log from signal_handler
+	  function since it is not safe to print debug messages in
+	  non-reentrant signal handler functions.  This fixes problems we
+	  were seeing on Solaris where GConf would hang on exit.  Reviewed
+	  by Havoc Pennington and Ray Strode.  Refer to bug #466745.
+
 2007-10-22  Owen Taylor  <otaylor@redhat.com>
 
 	* gconf/Makefile.am (install-data-local): If there is an existing

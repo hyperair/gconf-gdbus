@@ -409,6 +409,10 @@ gconf_server_load_sources(void)
     }
 }
 
+/*
+ * Signal handlers should not log debug messages as this code is non-reentrant.
+ * Please avoid calling gconf_log in this function.
+ */
 static void
 signal_handler (int signo)
 {
@@ -429,15 +433,9 @@ signal_handler (int signo)
   case SIGILL:
     enter_shutdown ();
 #ifndef G_OS_WIN32
-    gconf_log (GCL_ERR,
-               _("Received signal %d, dumping core. Please report a GConf bug."),
-               signo);
     if (g_getenv ("DISPLAY"))
       gconf_handle_segv (signo);
 #else
-    gconf_log (GCL_ERR,
-               _("Received signal %d. Please report a GConf bug."),
-               signo);
     gconf_handle_segv (signo);
 #endif
     abort ();
@@ -455,11 +453,6 @@ signal_handler (int signo)
     /* let the fatal signals interrupt us */
     --in_fatal;
     
-    gconf_log (GCL_ERR,
-               _("Received signal %d, shutting down abnormally. Please file a GConf bug report."),
-               signo);
-
-
     if (gconf_main_is_running ())
       gconf_main_quit ();
     
@@ -471,9 +464,6 @@ signal_handler (int signo)
     /* let the fatal signals interrupt us */
     --in_fatal;
     
-    gconf_log (GCL_INFO,
-               _("Received signal %d, shutting down cleanly"), signo);
-
     if (gconf_main_is_running ())
       gconf_main_quit ();
     break;
