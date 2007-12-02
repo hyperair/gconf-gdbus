@@ -118,7 +118,8 @@ gconf_key_key        (const gchar* key)
   
   end = strrchr(key, '/');
 
-  ++end;
+  if (end != NULL)
+    ++end;
 
   return end;
 }
