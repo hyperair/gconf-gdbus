@@ -263,6 +263,7 @@ markup_dir_free (MarkupDir *dir)
 
       tmp = tmp->next;
     }
+  g_slist_free (dir->entries);
 
   tmp = dir->subdirs;
   while (tmp)
@@ -273,6 +274,7 @@ markup_dir_free (MarkupDir *dir)
 
       tmp = tmp->next;
     }
+  g_slist_free (dir->subdirs);
 
   g_free (dir->name);
 

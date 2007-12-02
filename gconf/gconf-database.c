@@ -1259,6 +1259,8 @@ gconf_database_notify_listeners (GConfDatabase       *db,
       tmp = g_slist_next(tmp);
     }
 
+  g_slist_free (closure.dead);
+
   if (notify_others)
     {
       g_return_if_fail (modified_sources != NULL);

@@ -1,3 +1,17 @@
+2007-12-02  Ray Strode  <halfline@gnome.org>
+
+	Plug a few leaks found and fixed by Matthias Clasen 
+	(bug 475970)
+
+	* gconf/gconf-database.c (gconf_database_notify_listeners):
+	Clean up list of dead listeners
+
+	* backends/xml-cache.c (cache_sync): clean up temporary list
+	of syncs when we're done with it.
+
+	* backends/markup-tree.c (markup_dir_free): free markup dir's
+	list of entries before freeing the markup dir
+
 2007-11-22  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* gconf/gconf-internals.c (gconf_key_key): Add check

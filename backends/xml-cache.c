@@ -272,6 +272,7 @@ cache_sync (Cache    *cache,
 
   /* sync it all */
   g_slist_foreach (list, (GFunc) cache_sync_foreach, &sd);
+  g_slist_free (list);
 
   /* If we deleted some subdirs, we may now be able to delete
    * more parent dirs. So go ahead and do the sync again.
