@@ -258,7 +258,7 @@ gconf_backend_verify_vtable (GConfBackendVTable  *vtable,
   if (!vtable)
     {
       gconf_set_error(err,
-		      GCONF_ERROR_FAILED, _("Backend `%s' failed return a vtable\n"),
+		      GCONF_ERROR_FAILED, _("Backend `%s' failed to return a vtable\n"),
 		      backend_name);
       return FALSE;
     }

@@ -1116,7 +1116,7 @@ gconf_database_add_listener    (GConfDatabase       *db,
        * app to simply continue.
        */
       gconf_log (GCL_WARNING,
-		 _("Failed to log addition of listener %s (%s);"
+		 _("Failed to log addition of listener %s (%s); "
 		   "will not be able to restore this listener on "
 		   "gconfd restart, resulting in unreliable "
 		   "notification of configuration changes."),

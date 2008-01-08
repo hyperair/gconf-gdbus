@@ -3681,7 +3681,7 @@ hash_install_foreach(gpointer key, gpointer value, gpointer user_data)
 	{
 	  g_assert(error != NULL);
 
-	  g_printerr (_("WARNING: failed to install schema `%s' locale `%s': %s\n"),
+	  g_printerr (_("WARNING: failed to install schema `%s', locale `%s': %s\n"),
 		      info->key, gconf_schema_get_locale(schema), error->message);
 	  g_error_free(error);
 	  error = NULL;
@@ -3699,7 +3699,7 @@ hash_install_foreach(gpointer key, gpointer value, gpointer user_data)
 	{
 	  g_assert(error != NULL);
 
-	  g_printerr (_("WARNING: failed to uninstall schema `%s' locale `%s': %s\n"),
+	  g_printerr (_("WARNING: failed to uninstall schema `%s', locale `%s': %s\n"),
 		      info->key, gconf_schema_get_locale(schema), error->message);
 	  g_error_free(error);
 	  error = NULL;

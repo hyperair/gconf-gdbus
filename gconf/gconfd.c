@@ -1577,7 +1577,7 @@ logfile_save (void)
   if (g_rename (tmpfile, logfile) < 0)
     {
       gconf_log (GCL_WARNING,
-                 _("Failed to move new save state file into place: %s"),
+                 _("Failed to move new saved state file into place: %s"),
                  g_strerror (errno));
 
       /* Try to restore old file */
@@ -1928,7 +1928,7 @@ restore_client (const gchar *ior)
   
   if (ev._major != CORBA_NO_EXCEPTION)
     {
-      gconf_log (GCL_DEBUG, "Failed to update client in saved state file, probably the client no longer exists");
+      gconf_log (GCL_DEBUG, "Failed to update client in saved state file, the client probably no longer exists");
 
       goto finished;
     }
