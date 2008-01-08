@@ -57,7 +57,7 @@ struct _Listener {
 typedef struct _LTable LTable;
 
 struct _LTable {
-  GNode* tree; /* Represents the config "filesystem" namespace. 
+  GNode* tree; /* Represents the configuration "filesystem" namespace. 
                 *  Kept sorted. 
                 */
   GPtrArray* listeners; /* Listeners are also kept in a flat array here, indexed by connection number */

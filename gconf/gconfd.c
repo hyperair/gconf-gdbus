@@ -351,7 +351,7 @@ gconf_server_load_sources(void)
       /* Try using the default address xml:readwrite:$(HOME)/.gconf */
       addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", home, "/.gconf", NULL));
 
-      gconf_log(GCL_DEBUG, _("No configuration files found, trying to use the default config source `%s'"), (char *)addresses->data);
+      gconf_log(GCL_DEBUG, _("No configuration files found. Trying to use the default configuration source `%s'"), (char *)addresses->data);
     }
   
   if (addresses == NULL)
@@ -359,7 +359,7 @@ gconf_server_load_sources(void)
       /* We want to stay alive but do nothing, because otherwise every
          request would result in another failed gconfd being spawned.  
       */
-      gconf_log(GCL_ERR, _("No configuration sources in the source path, configuration won't be saved; edit %s%s"), GCONF_CONFDIR, "/path");
+      gconf_log(GCL_ERR, _("No configuration sources in the source path. Configuration won't be saved; edit %s%s"), GCONF_CONFDIR, "/path");
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(NULL, NULL);
 
@@ -372,7 +372,7 @@ gconf_server_load_sources(void)
 
       if (error != NULL)
         {
-          gconf_log(GCL_ERR, _("Error loading some config sources: %s"),
+          gconf_log(GCL_ERR, _("Error loading some configuration sources: %s"),
                     error->message);
 
           g_error_free(error);
@@ -384,7 +384,7 @@ gconf_server_load_sources(void)
       g_assert(sources != NULL);
 
       if (sources->sources == NULL)
-        gconf_log(GCL_ERR, _("No config source addresses successfully resolved, can't load or store config data"));
+        gconf_log(GCL_ERR, _("No configuration source addresses successfully resolved. Can't load or store configuration data"));
     
       tmp = sources->sources;
 
@@ -401,7 +401,7 @@ gconf_server_load_sources(void)
 
       /* In this case, some sources may still return TRUE from their writable() function */
       if (!have_writable)
-        gconf_log(GCL_WARNING, _("No writable config sources successfully resolved, may not be able to save some configuration changes"));
+        gconf_log(GCL_WARNING, _("No writable configuration sources successfully resolved. May be unable to save some configuration changes"));
 
         
       /* Install the sources as the default database */
@@ -1344,7 +1344,7 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
       ConfigException* ce;
       
       ce = ConfigException__alloc();
-      ce->message = CORBA_string_dup("config server is currently shutting down");
+      ce->message = CORBA_string_dup("Configuration server is currently shutting down");
       ce->err_no = ConfigInShutdown;
 
       CORBA_exception_set(ev, CORBA_USER_EXCEPTION,
@@ -1709,7 +1709,7 @@ parse_listener_entry (GHashTable *entries,
   if (err != NULL)
     {
       gconf_log (GCL_DEBUG,
-                 "Failed to unquote config source address from saved state file: %s",
+                 "Failed to unquote configuration source address from saved state file: %s",
                  err->message);
 
       g_error_free (err);

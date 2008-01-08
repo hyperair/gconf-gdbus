@@ -262,7 +262,7 @@ static const GOptionEntry server_entries[] = {
     0,
     G_OPTION_ARG_NONE,
     &spawn_gconfd,
-    N_("Launch the config server (gconfd). (Normally happens automatically when needed.)"),
+    N_("Launch the configuration server (gconfd). (Normally happens automatically when needed.)"),
     NULL
   },
   {
@@ -364,7 +364,7 @@ static const GOptionEntry install_entries[] = {
     0,
     G_OPTION_ARG_NONE,
     &use_local_source,
-    N_("Access the config database directly, bypassing server. Requires that gconfd is not running."),
+    N_("Bypass server, and access the configuration database directly. Requires that gconfd is not running."),
     NULL
   },
   {
@@ -373,7 +373,7 @@ static const GOptionEntry install_entries[] = {
     0,
     G_OPTION_ARG_NONE,
     &makefile_install_mode,
-    N_("Properly installs schema files on the command line into the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
+    N_("Properly installs schema files on the command line into the database. Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment variable, or set set the variable to an empty string to use the default configuration source."),
     NULL
   },
   {
@@ -382,7 +382,7 @@ static const GOptionEntry install_entries[] = {
     0,
     G_OPTION_ARG_NONE,
     &makefile_uninstall_mode,
-    N_("Properly uninstalls schema files on the command line from the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default config source or set to the empty string to use the default."),
+    N_("Properly uninstalls schema files on the command line from the database. GCONF_CONFIG_SOURCE environment variable should be set to a non-default configuration source or set to the empty string to use the default."),
     NULL
   },
   {
@@ -819,7 +819,7 @@ main (int argc, char** argv)
   
   if (use_local_source && config_source == NULL)
     {
-      g_printerr (_("You must specify a config source with --config-source when using --direct\n"));
+      g_printerr (_("You must specify a configuration source with --config-source when using --direct\n"));
       return 1;
     }
 
@@ -1755,7 +1755,7 @@ do_spawn_daemon(GConfEngine* conf)
 
   if (!gconf_spawn_daemon(&err))
     {
-      g_printerr (_("Failed to spawn the config server (gconfd): %s\n"), 
+      g_printerr (_("Failed to spawn the configuration server (gconfd): %s\n"), 
 		  err->message);
       g_error_free(err);
       err = NULL;
@@ -3885,7 +3885,7 @@ do_sync(GConfEngine* conf)
 
   if (err != NULL)
     {
-      g_printerr (_("Error syncing config data: %s"),
+      g_printerr (_("Error syncing configuration data: %s"),
 		  err->message);
       g_error_free(err);
       return 1;

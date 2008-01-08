@@ -1684,7 +1684,7 @@ gconf_database_sync (GConfDatabase  *db,
   
   db->last_access = time(NULL);
   
-  gconf_log(GCL_DEBUG, "Received suggestion to sync all config data");
+  gconf_log(GCL_DEBUG, "Received suggestion to sync all configuration data");
 
   gconf_database_sync_nowish(db);
 }

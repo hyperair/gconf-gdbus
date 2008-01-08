@@ -658,7 +658,7 @@ gconf_value_type_from_string(const gchar* type_str)
 }
 
 /*
- * Config files (yikes! we can't store our config in GConf!)
+ * Configuration files (yikes! we can't store our configuration in GConf!)
  */
 
 static gchar*

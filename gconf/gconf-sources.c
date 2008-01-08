@@ -421,7 +421,7 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
           {
             some_writable = TRUE;
             gconf_log (GCL_INFO,
-                       _("Resolved address \"%s\" to a partially writable config source at position %d"),
+                       _("Resolved address \"%s\" to a partially writable configuration source at position %d"),
                        source->address, i);
           }
 

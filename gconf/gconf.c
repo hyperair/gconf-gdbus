@@ -710,7 +710,7 @@ gconf_engine_unref(GConfEngine* conf)
                       /* Don't set error because realistically this
                          doesn't matter to clients */
 #ifdef GCONF_ENABLE_DEBUG
-                      g_warning("Failure removing listener %u from the config server: %s",
+                      g_warning("Failure removing listener %u from the configuration server: %s",
                                 (guint)gcnxn->server_id,
                                 err->message);
 #endif
@@ -2321,7 +2321,7 @@ gconf_detach_config_server(void)
  * gconf_debug_shutdown:
  * @void: 
  * 
- * Detach from the config server and release
+ * Detach from the configuration server and release
  * all related resources.
  *
  * Returns: 1 if an exception occurs, 0 otherwise.
@@ -3059,7 +3059,7 @@ gconf_shutdown_daemon (GError** err)
   if (ev._major != CORBA_NO_EXCEPTION)
     {
       if (err)
-        *err = gconf_error_new (GCONF_ERROR_FAILED, _("Failure shutting down config server: %s"),
+        *err = gconf_error_new (GCONF_ERROR_FAILED, _("Failure shutting down configuration server: %s"),
                                 CORBA_exception_id (&ev));
 
       CORBA_exception_free(&ev);

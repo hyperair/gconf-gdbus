@@ -1,5 +1,18 @@
 2008-01-08  Kjartan Maraas  <kmaraas@gnome.org>
 
+	* gconf/gconf-database.c: (gconf_database_sync):
+	* gconf/gconf-internals.c:
+	* gconf/gconf-listeners.c:
+	* gconf/gconf-sources.c: (gconf_sources_new_from_addresses):
+	* gconf/gconf.c: (gconf_engine_unref), (gconf_shutdown_daemon):
+	* gconf/gconfd.c: (gconf_server_load_sources),
+	(gconfd_check_in_shutdown), (parse_listener_entry):
+	* gconf/gconftool.c: (main), (do_spawn_daemon), (do_sync):
+	More string reviews from Christian Rose and Adam Weinberger.
+	Closes bug #318600.
+
+2008-01-08  Kjartan Maraas  <kmaraas@gnome.org>
+
 	* gconf/gconf-backend.c: (gconf_backend_verify_vtable):
 	* gconf/gconf-database.c: (gconf_database_add_listener):
 	* gconf/gconfd.c: (logfile_save), (restore_client):
