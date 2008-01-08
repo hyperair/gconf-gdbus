@@ -8,6 +8,7 @@ gconf_serverdir=@libexecdir@
 Name: gconf
 Description: GNOME Config System.
 Version: @VERSION@
-Requires: ORBit-2.0
+Requires: glib
+Requires.private: ORBit-2.0
 Libs: -L${libdir} -lgconf-@MAJOR_VERSION@
 Cflags: -I${includedir}/gconf/@MAJOR_VERSION@

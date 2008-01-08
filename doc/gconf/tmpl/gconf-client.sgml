@@ -155,11 +155,11 @@ documentation, g_signal_stop_emission_by_name() for example).
 <!-- ##### USER_FUNCTION GConfClientNotifyFunc ##### -->
 <para>
 This is the signature of a user function added with gconf_client_notify_add().
-The notify function is invoked when the value of a key changes. The @value
-argument is the new value, or <symbol>NULL</symbol> if the key was unset.  The
-@value argument should not be modified, and should be copied if you want to keep
-it around (the #GConfClient will destroy it sometime after your notify function
-is called).
+The notify function is invoked when the value of a key changes. The @entry
+argument holds the new value, or <symbol>NULL</symbol> if the key was unset. The
+value in the @entry argument should not be modified, and should be copied if you
+want to keep it around (the #GConfClient will destroy it sometime after your
+notify function is called).
 </para>
 
 @client: the #GConfClient notifying us.
