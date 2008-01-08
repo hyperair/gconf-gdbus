@@ -2620,7 +2620,7 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
   if (*key != '/')
     {
       if (why_invalid != NULL)
-        *why_invalid = g_strdup(_("Must begin with a slash (/)"));
+        *why_invalid = g_strdup(_("Must begin with a slash '/'"));
       return FALSE;
     }
   
@@ -2642,9 +2642,9 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
               if (why_invalid != NULL)
                 {
                   if (*s == '/')
-                    *why_invalid = g_strdup(_("Can't have two slashes (/) in a row"));
+                    *why_invalid = g_strdup(_("Can't have two slashes '/' in a row"));
                   else
-                    *why_invalid = g_strdup(_("Can't have a period (.) right after a slash (/)"));
+                    *why_invalid = g_strdup(_("Can't have a period '.' right after a slash '/'"));
                 }
               return FALSE;
             }
@@ -2664,7 +2664,7 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
           if (c > 127)
             {
               if (why_invalid != NULL)
-                *why_invalid = g_strdup_printf (_("'\\%o' is not an ASCII character, so isn't allowed in key names"),
+                *why_invalid = g_strdup_printf (_("'\\%o' is not an ASCII character and thus isn't allowed in key names"),
                                                 (guint) c);
               return FALSE;
             }
@@ -2688,7 +2688,7 @@ gconf_valid_key      (const gchar* key, gchar** why_invalid)
   if (just_saw_slash)
     {
       if (why_invalid != NULL)
-        *why_invalid = g_strdup(_("Key/directory may not end with a slash (/)"));
+        *why_invalid = g_strdup(_("Key/directory may not end with a slash '/'"));
       return FALSE;
     }
   else
