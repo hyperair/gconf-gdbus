@@ -3182,7 +3182,7 @@ gconf_engine_get_string(GConfEngine* conf, const gchar* key,
   val = gconf_engine_get (conf, key, err);
 
   if (val == NULL)
-    return deflt ? g_strdup(deflt) : NULL;
+    return g_strdup(deflt);
   else
     {
       gchar* retval;
@@ -3193,7 +3193,7 @@ gconf_engine_get_string(GConfEngine* conf, const gchar* key,
             *err = gconf_error_new(GCONF_ERROR_TYPE_MISMATCH, _("Expected string, got %s"),
                                     gconf_value_type_to_string(val->type));
           gconf_value_free(val);
-          return deflt ? g_strdup(deflt) : NULL;
+          return g_strdup(deflt);
         }
 
       retval = gconf_value_steal_string (val);

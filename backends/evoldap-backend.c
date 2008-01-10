@@ -377,8 +377,7 @@ parse_server_info (xmlNodePtr   node,
 
 	  host_value = xmlNodeGetContent (node);
 
-	  if (*host != NULL)
-	    g_free (*host);
+	  g_free (*host);
 	  *host = g_strdup ((char *) host_value);
 
 	  xmlFree (host_value);
@@ -406,8 +405,7 @@ parse_server_info (xmlNodePtr   node,
 
 	  base_dn_value = xmlNodeGetContent (node);
 
-	  if (*base_dn != NULL)
-	    g_free (*base_dn);
+	  g_free (*base_dn);
 	  *base_dn = g_strdup ((char *) base_dn_value);
 
 	  if (base_dn_value != NULL)
@@ -994,20 +992,16 @@ destroy_source (GConfSource *source)
   esource->template_calendar    = NULL;
   esource->template_tasks       = NULL;
 
-  if (esource->filter_str != NULL)
-    g_free (esource->filter_str);
+  g_free (esource->filter_str);
   esource->filter_str = NULL;
 
-  if (esource->ldap_host != NULL)
-    g_free (esource->ldap_host);
+  g_free (esource->ldap_host);
   esource->ldap_host = NULL;
 
-  if (esource->base_dn != NULL)
-    g_free (esource->base_dn);
+  g_free (esource->base_dn);
   esource->base_dn = NULL;
 
-  if (esource->conf_file != NULL)
-    g_free (esource->conf_file);
+  g_free (esource->conf_file);
   esource->conf_file = NULL;
 
   g_free (esource);

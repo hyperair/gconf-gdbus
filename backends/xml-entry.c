@@ -64,14 +64,12 @@ entry_new (const gchar* relative_name)
 void
 entry_destroy (Entry* e)
 {
-  if (e->name)
-    g_free(e->name);
+  g_free(e->name);
 
   if (e->cached_value)
     gconf_value_free(e->cached_value);
 
-  if (e->mod_user)
-    g_free(e->mod_user);
+  g_free(e->mod_user);
 
   if (e->node != NULL)
     {
@@ -259,10 +257,9 @@ void
 entry_set_schema_name (Entry        *e,
                        const gchar  *name)
 {
-  if (e->schema_name)
-    g_free(e->schema_name);
+  g_free(e->schema_name);
 
-  e->schema_name = name ? g_strdup(name) : NULL;
+  e->schema_name = g_strdup(name);
   
   e->dirty = TRUE;
 }
@@ -283,8 +280,7 @@ entry_set_mod_user (Entry *e,
 {
   g_return_if_fail(e != NULL);
   
-  if (e->mod_user)
-    g_free(e->mod_user);
+  g_free(e->mod_user);
   e->mod_user = g_strdup(user);
 
   e->dirty = TRUE;

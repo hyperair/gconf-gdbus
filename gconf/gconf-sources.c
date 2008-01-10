@@ -580,8 +580,7 @@ gconf_sources_query_value (GConfSources* sources,
           if (val)
             gconf_value_free (val);
 
-          if (schema_name)
-            g_free (schema_name);
+          g_free (schema_name);
           
           return NULL;
         }

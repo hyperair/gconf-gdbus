@@ -1540,10 +1540,8 @@ markup_entry_set_value (MarkupEntry       *entry,
             g_slist_prepend (entry->local_schemas, local_schema);
         }
 
-      if (local_schema->short_desc)
-        g_free (local_schema->short_desc);
-      if (local_schema->long_desc)
-        g_free (local_schema->long_desc);
+      g_free (local_schema->short_desc);
+      g_free (local_schema->long_desc);
       if (local_schema->default_value)
         gconf_value_free (local_schema->default_value);
 

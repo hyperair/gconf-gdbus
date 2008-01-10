@@ -59,17 +59,10 @@ gconf_schema_free (GConfSchema* sc)
 {
   GConfRealSchema *real = REAL_SCHEMA (sc);
   
-  if (real->locale)
-    g_free (real->locale);
-
-  if (real->short_desc)
-    g_free (real->short_desc);
-
-  if (real->long_desc)
-    g_free (real->long_desc);
-
-  if (real->owner)
-    g_free (real->owner);
+  g_free (real->locale);
+  g_free (real->short_desc);
+  g_free (real->long_desc);
+  g_free (real->owner);
 
   if (real->default_value)
     gconf_value_free (real->default_value);
@@ -91,13 +84,13 @@ gconf_schema_copy (const GConfSchema* sc)
   dest->car_type = real->car_type;
   dest->cdr_type = real->cdr_type;
 
-  dest->locale = real->locale ? g_strdup (real->locale) : NULL;
+  dest->locale = g_strdup (real->locale);
   
-  dest->short_desc = real->short_desc ? g_strdup (real->short_desc) : NULL;
+  dest->short_desc = g_strdup (real->short_desc);
 
-  dest->long_desc = real->long_desc ? g_strdup (real->long_desc) : NULL;
+  dest->long_desc = g_strdup (real->long_desc);
 
-  dest->owner = real->owner ? g_strdup (real->owner) : NULL;
+  dest->owner = g_strdup (real->owner);
 
   dest->default_value = real->default_value ? gconf_value_copy (real->default_value) : NULL;
   

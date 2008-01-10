@@ -49,10 +49,8 @@ typedef struct {
 static void
 set_string(gchar** dest, const gchar* src)
 {
-  if (*dest != NULL)
-    g_free(*dest);
-
-  *dest = src ? g_strdup(src) : NULL;
+  g_free(*dest);
+  *dest = g_strdup(src);
 }
 
 /*
@@ -808,8 +806,7 @@ gconf_value_free(GConfValue* value)
   switch (real->type)
     {
     case GCONF_VALUE_STRING:
-      if (real->d.string_data != NULL)
-        g_free(real->d.string_data);
+      g_free(real->d.string_data);
       break;
     case GCONF_VALUE_SCHEMA:
       if (real->d.schema_data != NULL)
@@ -1492,8 +1489,7 @@ gconf_entry_unref (GConfEntry *entry)
       g_free (real->key);
       if (real->value)
         gconf_value_free (real->value);
-      if (real->schema_name)
-        g_free (real->schema_name);
+      g_free (real->schema_name);
       g_slice_free (GConfRealEntry, real);
     }
 }
@@ -1630,10 +1626,9 @@ void
 gconf_entry_set_schema_name(GConfEntry* entry,
                             const gchar* name)
 {
-  if (REAL_ENTRY (entry)->schema_name)
-    g_free (REAL_ENTRY (entry)->schema_name);
+  g_free (REAL_ENTRY (entry)->schema_name);
 
-  REAL_ENTRY (entry)->schema_name = name ? g_strdup(name) : NULL;
+  REAL_ENTRY (entry)->schema_name = g_strdup(name);
 }
 
 void

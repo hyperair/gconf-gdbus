@@ -1245,8 +1245,7 @@ create_fs_dir(const gchar* dir, const gchar* xml_filename,
             gconf_log(GCL_DEBUG, "failed parent: %s", parent);
           
           g_free(parent);
-          if (parent_xml)
-            g_free(parent_xml);
+          g_free(parent_xml);
           
           if (!success)
             return FALSE;

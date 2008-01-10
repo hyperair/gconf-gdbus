@@ -71,8 +71,7 @@ main(int argc, char** argv)
   
   label = gtk_label_new(str ? str : "<unset>");
 
-  if (str)
-    g_free(str);
+  g_free(str);
   
   gtk_container_add(GTK_CONTAINER(window), label);
 

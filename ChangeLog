@@ -1,5 +1,22 @@
 2008-01-10  Kjartan Maraas  <kmaraas@gnome.org>
 
+	* backends/evoldap-backend.c: (parse_server_info),
+	(destroy_source):
+	* backends/markup-tree.c: (markup_entry_set_value):
+	* backends/xml-dir.c: (create_fs_dir):
+	* backends/xml-entry.c: (entry_destroy), (entry_set_schema_name),
+	(entry_set_mod_user):
+	* examples/simple-view.c: (main):
+	* gconf/gconf-schema.c: (gconf_schema_free), (gconf_schema_copy):
+	* gconf/gconf-sources.c: (gconf_sources_query_value):
+	* gconf/gconf-value.c: (set_string), (gconf_value_free),
+	(gconf_entry_unref), (gconf_entry_set_schema_name):
+	* gconf/gconf.c: (gconf_engine_get_string):
+	g_free and friends handles NULL just fine.
+	Closes bug #371087 reported by Morten Welinder.
+
+2008-01-10  Kjartan Maraas  <kmaraas@gnome.org>
+
 	* configure.in: Bump version
 	* backends/xml-dir.c:
 	* examples/basic-gconf-app.schemas:
