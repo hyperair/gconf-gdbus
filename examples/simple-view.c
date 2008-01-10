@@ -23,7 +23,7 @@
 #include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
-void
+static void
 key_changed_callback(GConfClient* client,
                      guint cnxn_id,
                      GConfEntry *entry,

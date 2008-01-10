@@ -2280,9 +2280,9 @@ gconf_get_config_server(gboolean start_if_not_found, GError** err)
   return server; /* return what we have, NIL or not */
 }
 
-ConfigListener listener = CORBA_OBJECT_NIL;
+static ConfigListener listener = CORBA_OBJECT_NIL;
 
-void
+static void
 gconf_detach_config_server(void)
 {  
   CORBA_Environment ev;

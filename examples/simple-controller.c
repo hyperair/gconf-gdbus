@@ -24,7 +24,7 @@
 #include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
 
-void
+static void
 entry_activated_callback(GtkWidget* entry, gpointer user_data)
 {
   GConfClient* client;

@@ -409,7 +409,7 @@ gconf_change_set_set_pair    (GConfChangeSet* cs, const gchar* key,
  * Change
  */
 
-Change*
+static Change*
 change_new    (const gchar* key)
 {
   Change* c;
@@ -423,7 +423,7 @@ change_new    (const gchar* key)
   return c;
 }
 
-void
+static void
 change_destroy(Change* c)
 {
   g_return_if_fail(c != NULL);
@@ -436,7 +436,7 @@ change_destroy(Change* c)
   g_free(c);
 }
 
-void
+static void
 change_set    (Change* c, GConfValue* value)
 {
   g_return_if_fail(value == NULL ||
@@ -453,7 +453,7 @@ change_set    (Change* c, GConfValue* value)
   c->value = value;
 }
 
-void
+static void
 change_unset  (Change* c)
 {
   c->type = CHANGE_UNSET;

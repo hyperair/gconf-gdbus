@@ -956,12 +956,6 @@ dir_set_schema  (Dir         *d,
     dir_forget_entry_if_useless (d, e);
 }
 
-GTime
-dir_last_access (Dir* d)
-{
-  return d->last_access;
-}
-
 /* private Dir functions */
 
 static void
