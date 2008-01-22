@@ -21,7 +21,11 @@ lib/GConf/2/libgconfbackend-oldxml.dll
 lib/GConf/2/libgconfbackend-xml.dll
 EOF
 
-zip $ZIP lib/locale/*/LC_MESSAGES/GConf2.mo
+if [ -f share/locale/de/LC_MESSAGES/GConf2.mo ]; then
+  zip $ZIP share/locale/*/LC_MESSAGES/GConf2.mo
+else
+  zip $ZIP lib/locale/*/LC_MESSAGES/GConf2.mo
+fi
 
 rm $DEVZIP
 zip -r $DEVZIP -@ <<EOF
