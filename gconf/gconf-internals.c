@@ -39,6 +39,7 @@
 #ifdef G_OS_WIN32
 #include <windows.h>
 #include <share.h>
+#define pipe(fds) _pipe(fds, 4096, _O_BINARY)
 #endif
 
 gboolean gconf_log_debug_messages = FALSE;
