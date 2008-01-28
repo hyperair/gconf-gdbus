@@ -1,3 +1,11 @@
+2008-01-28  Christian Persch  <chpe@gnome.org>
+
+	* gconf/gconf-internals.c: (gconf_value_from_corba_value),
+	(gconf_fill_corba_value_from_gconf_value), (gconf_value_decode):
+	* gconf/gconf.c: (gconf_engine_all_entries):
+	* wrappers/guile/scm-gconf.c: (gconf_value_to_scm): Use G_STRFUNC
+	instead of the deprecated G_GNUC_FUNCTION.
+
 2008-01-22  Tor Lillqvist  <tml@novell.com>
 
 	* gconf-zip.in: Look for catalogs in share/locale first, as that

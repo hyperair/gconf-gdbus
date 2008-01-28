@@ -189,7 +189,7 @@ static ConfigDatabase gconf_engine_get_database (GConfEngine     *conf,
 
 #define CHECK_OWNER_USE(engine)   \
   do { if ((engine)->owner && (engine)->owner_use_count == 0) \
-     g_warning ("%s: You can't use a GConfEngine that has an active GConfClient wrapper object. Use GConfClient API instead.", G_GNUC_FUNCTION);  \
+     g_warning ("%s: You can't use a GConfEngine that has an active GConfClient wrapper object. Use GConfClient API instead.", G_STRFUNC);  \
   } while (0)
 
 static void         register_engine           (GConfEngine    *conf);
@@ -1700,7 +1700,7 @@ gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
   if (keys->_length != values->_length)
     {
       g_warning("Received unmatched key/value sequences in %s",
-                G_GNUC_FUNCTION);
+                G_STRFUNC);
       return NULL;
     }
 
