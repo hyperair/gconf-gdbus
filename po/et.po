@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-08 14:48+0000\n"
-"PO-Revision-Date: 2008-02-03 18:14+0200\n"
+"PO-Revision-Date: 2008-02-04 17:38+0200\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -451,7 +451,7 @@ msgstr "Tõrge XML faili \"%s\" parsimisel"
 #: ../backends/xml-entry.c:154
 #, c-format
 msgid "Ignoring XML node with name `%s': %s"
-msgstr ""
+msgstr "XML-sõlme nimega `%s' eiratakse: %s"
 
 #: ../backends/xml-entry.c:332
 #, c-format
@@ -461,7 +461,7 @@ msgstr "Vigast skeeminime `%s' eiratakse: %s"
 #: ../backends/xml-entry.c:380
 #, c-format
 msgid "Ignoring XML node `%s': %s"
-msgstr ""
+msgstr "XML-sõlme `%s' eiratakse: %s"
 
 #: ../backends/xml-entry.c:733
 #, c-format
@@ -476,11 +476,11 @@ msgstr ""
 #: ../backends/xml-entry.c:967
 #, c-format
 msgid "A node has unknown \"type\" attribute `%s', ignoring"
-msgstr ""
+msgstr "Sõlmel on tundmatu \"type\" atribuut `%s', eiratakse"
 
 #: ../backends/xml-entry.c:982
 msgid "No \"value\" attribute for node"
-msgstr ""
+msgstr "Sõlmel puudub \"value\" atribuut"
 
 #: ../backends/xml-entry.c:1030 ../backends/xml-entry.c:1106
 #, c-format
@@ -494,7 +494,7 @@ msgstr ""
 #: ../backends/xml-entry.c:1087
 #, c-format
 msgid "Bad XML node: %s"
-msgstr ""
+msgstr "Vigane XML-sõlm: %s"
 
 #: ../backends/xml-entry.c:1095
 #, c-format
@@ -1968,7 +1968,7 @@ msgid "Must specify one or more directories to dump.\n"
 msgstr "Dump'iks vajalik ühe või enamakataloogi täpsustamine.\n"
 
 #: ../gconf/gconftool.c:1758
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "Tõrge seadistusteserveri (gconfd) loomisel: %s\n"
 
@@ -2222,12 +2222,12 @@ msgstr ""
 
 #: ../gconf/gconftool.c:2828
 msgid "WARNING: must have a child node under <value>\n"
-msgstr ""
+msgstr "HOIATUS: <value> all peab olema alamsõlm\n"
 
 #: ../gconf/gconftool.c:2834
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
-msgstr ""
+msgstr "HOIATUS: sõlm <%s> on mõistetamatu\n"
 
 #: ../gconf/gconftool.c:2852
 #, c-format
@@ -2307,12 +2307,12 @@ msgstr ""
 
 #: ../gconf/gconftool.c:3379
 msgid "WARNING: empty <applyto> node"
-msgstr ""
+msgstr "HOIATUS: tühi <applyto> sõlm"
 
 #: ../gconf/gconftool.c:3382 ../gconf/gconftool.c:3640
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
-msgstr ""
+msgstr "HOIATUS: <schema> all olev sõlm <%s> on mõistetamatu\n"
 
 #: ../gconf/gconftool.c:3393
 msgid "WARNING: no <list_type> specified for schema of type list\n"
@@ -2329,17 +2329,20 @@ msgstr ""
 #: ../gconf/gconftool.c:3434
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
+"HOIATUS: sõlm <locale> pole sama `name=\"locale\"' atribuudiga, eiratakse\n"
 
 #: ../gconf/gconftool.c:3440
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
+"HOIATUS: lokaadi `%s' kohta on mitu <locale> sõlme, kõiki peale esimese "
+"eiratakse\n"
 
 #: ../gconf/gconftool.c:3538
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
-msgstr ""
+msgstr "HOIATUS: <locale> sõlme all on vigane sõlm <%s>\n"
 
 #: ../gconf/gconftool.c:3575
 #, c-format
@@ -2378,7 +2381,7 @@ msgstr ""
 #: ../gconf/gconftool.c:3789
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
-msgstr ""
+msgstr "HOIATUS: <%2$s> all olev sõlm <%1$s> on mõistetamatu\n"
 
 #: ../gconf/gconftool.c:3821
 #, c-format
@@ -2393,17 +2396,17 @@ msgstr "Dokument `%s' on tühi?\n"
 #: ../gconf/gconftool.c:3840
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
-msgstr ""
+msgstr "Dokumendi `%s' ülemise taseme sõlm on vale (<%s>, aga peaks olema <%s>\n"
 
 #: ../gconf/gconftool.c:3853
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
-msgstr ""
+msgstr "Dokumendil `%s' puudub ülemise taseme sõlm <%s>\n"
 
 #: ../gconf/gconftool.c:3867
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
-msgstr ""
+msgstr "HOIATUS: <%2$s> all olev sõlm <%1$s> on mõistetamatu\n"
 
 #: ../gconf/gconftool.c:3888
 #, c-format
