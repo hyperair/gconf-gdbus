@@ -258,14 +258,14 @@ get_variable (const char  *varname,
   attr = ldap_first_attribute (connection, entry, &berptr);
   while (attr != NULL && retval == NULL)
     {
-      char **values;
+      struct berval **values;
 
       if (strcmp (attr, varname) == 0)
 	{
-	  values = ldap_get_values (connection, entry, attr);
-	  if (values != NULL)
-	    retval = g_strdup (values[0]);
-	  ldap_value_free (values);
+	  values = ldap_get_values_len (connection, entry, attr);
+	  if (values != NULL && values[0] != NULL)
+	    retval = g_strdup (values[0]->bv_val);
+	  ldap_value_free_len (values);
 	}
 
       attr = ldap_next_attribute (connection, entry, berptr);
@@ -560,6 +560,7 @@ get_ldap_connection (EvoSource  *esource,
 		     GError    **err)
 {
   LDAP *connection;
+  char *url;
 
   g_assert (esource->conf_file_parsed);
 
@@ -576,13 +577,15 @@ get_ldap_connection (EvoSource  *esource,
 	     _("Contacting LDAP server: host '%s', port '%d', base DN '%s'"),
 	     esource->ldap_host, esource->ldap_port, esource->base_dn);
 
-  if ((connection = ldap_init (esource->ldap_host, esource->ldap_port)) == NULL)
+  url = g_strdup_printf ("ldap://%s:%i", esource->ldap_host, esource->ldap_port);
+  if (ldap_initialize (&connection, url) != LDAP_SUCCESS)
     {
       gconf_log (GCL_ERR,
 		 _("Failed to contact LDAP server: %s"),
 		 g_strerror (errno));
       return NULL;
     }
+  g_free (url);
 
   esource->connection = connection;
 
@@ -670,12 +673,13 @@ lookup_values_from_ldap (EvoSource   *esource,
 	     esource->filter_str);
 
   entries = NULL;
-  ret = ldap_search_s (connection,
-		       esource->base_dn,
-		       LDAP_SCOPE_ONELEVEL,
-		       esource->filter_str,
-		       NULL, 0,
-		       &entries);
+  ret = ldap_search_ext_s (connection,
+			   esource->base_dn,
+			   LDAP_SCOPE_ONELEVEL,
+			   esource->filter_str,
+			   NULL, 0,
+			   NULL, NULL, NULL, 0,
+			   &entries);
   if (ret != LDAP_SUCCESS)
     {
       gconf_log (GCL_ERR,
