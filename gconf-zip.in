@@ -13,6 +13,7 @@ current_minus_age=`expr @GCONF_CURRENT@ - @GCONF_AGE@`
 
 zip $ZIP -@ <<EOF
 etc/gconf/2/path
+bin/gconfd-2.exe
 bin/gconftool-2.exe
 bin/libgconf-2-$current_minus_age.dll
 libexec/gconfd-2.exe
