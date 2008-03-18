@@ -1,4 +1,4 @@
-# Përkthimi i mesazheve të gconf në shqip.
+# Përkthimi i gconf në shqip.
 # This file is distributed under the same license as the GConf package.
 # Copyright (C) 2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
 #
@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-05 20:49+0100\n"
-"PO-Revision-Date: 2008-03-07 09:56+0100\n"
+"POT-Creation-Date: 2008-03-17 17:24+0100\n"
+"PO-Revision-Date: 2008-03-18 16:45+0100\n"
 "Last-Translator: Laurent Dhima <laurenti@alblinux.net>\n"
 "Language-Team: albanian <gnome-albanian-perkthyesit@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -19,12 +19,12 @@ msgstr ""
 #: ../backends/evoldap-backend.c:159
 #, c-format
 msgid "Failed to get configuration file path from '%s'"
-msgstr "Marrja e pozicionit të file me konfigurimin nga '%s' dështoi"
+msgstr "Marrja e file të konfigurimin nga pozicioni '%s' dështoi"
 
 #: ../backends/evoldap-backend.c:170
 #, c-format
 msgid "Created Evolution/LDAP source using configuration file '%s'"
-msgstr "U krijua burimi Evolution/LDAP nga përdorimi i file '%s'"
+msgstr "U krijua burimi Evolution/LDAP nga përdorimi i file të konfigurimit '%s'"
 
 #: ../backends/evoldap-backend.c:444
 #, c-format
@@ -36,10 +36,11 @@ msgstr "I pamundur analizimi i file XML '%s'"
 msgid "Config file '%s' is empty"
 msgstr "File i konfigurimit '%s' është bosh"
 
+# (pofilter) endwhitespace: checks whether whitespace at the end of the strings matches
 #: ../backends/evoldap-backend.c:464
 #, c-format
 msgid "Root node of '%s' must be <evoldap>, not <%s>"
-msgstr "Nyja prind e '%s' duhet të jetë <evoldap>, e jo <%s> "
+msgstr "Nyja prind e '%s' duhet të jetë <evoldap>, e jo <%s>"
 
 #: ../backends/evoldap-backend.c:502
 #, c-format
@@ -187,6 +188,7 @@ msgstr "E pamundur heqja e \"%s\": %s\n"
 msgid "Failed to write \"%s\": %s\n"
 msgstr "Gabim gjatë shkrimit të \"%s\": %s\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/markup-tree.c:1378
 #, c-format
 msgid "Failed to load file \"%s\": %s"
@@ -252,15 +254,17 @@ msgstr "Lloj i pavlefshëm \"%s\" tek <%s>"
 msgid "Invalid first-element type \"%s\" on <%s>"
 msgstr "Lloj i pavlefshëm first-element \"%s\" tek <%s>"
 
+# (pofilter) startcaps: checks that the message starts with the correct capitalisation
 #: ../backends/markup-tree.c:2523
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
 msgstr "cdr_type \"%s\" i pavlefshëm tek <%s>"
 
+# (pofilter) startcaps: checks that the message starts with the correct capitalisation
 #: ../backends/markup-tree.c:2559
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
-msgstr "list_type \"%s\" e pavlefshme tek <%s>"
+msgstr "list_type \"%s\" i pavlefshëm tek <%s>"
 
 #: ../backends/markup-tree.c:2926
 msgid "Two <default> elements below a <local_schema>"
@@ -273,7 +277,7 @@ msgstr "Dy elementë <longdesc> para një <local_schema>"
 #: ../backends/markup-tree.c:2948
 #, c-format
 msgid "Element <%s> is not allowed below <%s>"
-msgstr "Elementi <%s> nuk lejohet para <%s>"
+msgstr "Nuk lejohet përdorimi i elementit <%s> mbas <%s>"
 
 #: ../backends/markup-tree.c:2973 ../backends/markup-tree.c:3078
 #: ../backends/markup-tree.c:3132 ../backends/markup-tree.c:3183
@@ -348,10 +352,11 @@ msgstr ""
 msgid "Unloading XML backend module."
 msgstr "Duke shkarkuar modulin backend XML."
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/xml-backend.c:618
 #, c-format
 msgid "Error syncing the XML backend directory cache: %s"
-msgstr "Gabim gjatë sinkronizimit të directory të cache të backend XML:%s"
+msgstr "Gabim gjatë sinkronizimit të directory të cache të backend XML: %s"
 
 #: ../backends/xml-backend.c:809
 msgid "Initializing XML backend module"
@@ -390,16 +395,20 @@ msgstr "Gabim gjatë fshirjes së \"%s\": %s"
 msgid "Failed to write file `%s': %s"
 msgstr "Gabim gjatë shkrimit të file `%s': %s"
 
+# (pofilter) doublewords: The word 'së' is repeated
 #: ../backends/xml-dir.c:485 ../backends/xml-dir.c:521
 #, c-format
 msgid "Failed to set mode on `%s': %s"
-msgstr "Gabim gjatë vendosjes së së drejtave tek `%s': %s"
+msgstr "Gabim gjatë vendosjes të së drejtave tek `%s': %s"
 
+# (pofilter) singlequoting: checks whether singlequoting is consistent between the two strings
+# (pofilter) doublewords: The word 'të' is repeated
 #: ../backends/xml-dir.c:496
 #, c-format
 msgid "Failed to write XML data to `%s': %s"
-msgstr "Gabim gjatë shkrimit të të dhënave XML tek `%s`: %s"
+msgstr "Gabim gjatë shkrimit të së dhënave XML tek `%s': %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/xml-dir.c:506 ../backends/xml-dir.c:1290
 #, c-format
 msgid "Failed to close file `%s': %s"
@@ -415,6 +424,7 @@ msgstr "Gabim gjatë ndryshimit të emrit `%s' në `%s': %s"
 msgid "Failed to restore `%s' from `%s': %s"
 msgstr "Gabim gjatë rekuperimit të `%s' nga `%s': %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/xml-dir.c:564
 #, c-format
 msgid "Failed to delete old file `%s': %s"
@@ -426,21 +436,24 @@ msgstr "Fshirja e file të vjetër `%s' dështoi: %s"
 msgid "Failed to stat `%s': %s"
 msgstr "Gabim në analizimin e `%s': %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/xml-dir.c:1164
 #, c-format
 msgid "Duplicate entry `%s' in `%s', ignoring"
-msgstr "Zëri i duplikuar `%s' në `%s' nuk u përfill"
+msgstr "Zë i duplikuar `%s' në `%s', nuk u përfill"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/xml-dir.c:1186
 #, c-format
 msgid "Entry with no name in XML file `%s', ignoring"
-msgstr "Zëri pa emër tek file XML `%s' nuk u përfill"
+msgstr "Zë pa emër tek file XML `%s', nuk u përfill"
 
 #: ../backends/xml-dir.c:1194
 #, c-format
 msgid "A toplevel node in XML file `%s' is <%s> rather than <entry>, ignoring"
 msgstr "Një nyjë parësore tek file XML `%s' është <%s> në vend të <entry>, injorohet"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../backends/xml-dir.c:1282
 #, c-format
 msgid "Failed to create file `%s': %s"
@@ -526,9 +539,10 @@ msgstr "U injorua cdr e gabuar nga çifti XML: %s"
 msgid "Didn't understand XML node <%s> inside an XML pair node"
 msgstr "Nyja XML <%s> në brendësi të një nyje XML kopje rezultoi e pakuptueshme"
 
+# (pofilter) endwhitespace: checks whether whitespace at the end of the strings matches
 #: ../backends/xml-entry.c:1202
 msgid "Didn't find car and cdr for XML pair node"
-msgstr "Car dhe cdr për çiftin XML nuk u gjetën "
+msgstr "Car dhe cdr për çiftin XML nuk u gjetën"
 
 #: ../backends/xml-entry.c:1208
 msgid "Missing cdr from pair of values in XML file"
@@ -547,6 +561,7 @@ msgstr "Car dhe cdr mungojnë tek çifti i vlerave tek file XML"
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "`%c' nuk është një simbol i vlefshëm në një adresë magazinimi të konfigurimit"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #. -- end debug only
 #: ../gconf/gconf-backend.c:216
 #, c-format
@@ -558,15 +573,17 @@ msgstr "File `%s' nuk u gjet\n"
 msgid "Backend `%s' failed to return a vtable\n"
 msgstr "Backend `%s' dështoi kthimin e një vtable\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-backend.c:276
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "Tek backend `%s' mungon anëtari `%s' i kërkuar i vtable\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-backend.c:302
 #, c-format
 msgid "Bad address `%s': %s"
-msgstr "Adresë `%s' e pavlefshme; %s"
+msgstr "Adresë `%s' e pavlefshme: %s"
 
 #: ../gconf/gconf-backend.c:312
 #, c-format
@@ -611,16 +628,18 @@ msgstr "Paralajmërim i GCONF: gabim gjatë numërimit të çifteve në `%s': %s
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Pritej vlera `%s' por u mor vlera `%s' për kyçin %s"
 
+# (pofilter) brackets: translation has extra '(', ')'
 #: ../gconf/gconf-database.c:211
 msgid "Received invalid value in set request"
-msgstr "U mor një vlerë e pavlefshme gjatë kërkesës së përcaktimit (set)"
+msgstr "U mor një vlerë e pavlefshme gjatë kërkesës së përcaktimit"
 
+# (pofilter) brackets: translation has extra '(', ')'
 #: ../gconf/gconf-database.c:219
 #, c-format
 msgid "Couldn't make sense of CORBA value received in set request for key `%s'"
 msgstr ""
 "I pamundur interpretimi i vlerës CORBA marrë si rezultat i kërkesës së "
-"përcaktimit (set), për kyçin `%s'"
+"përcaktimit, për kyçin `%s'"
 
 #: ../gconf/gconf-database.c:502
 msgid "Received request to drop all cached data"
@@ -657,9 +676,9 @@ msgid ""
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
 msgstr ""
-"Gabim gjatë regjistrimit të shtimit të listener %s (%s); nuk do të jetë i mundur "
-"rikthimi i këtij listener në rinisjen e ardhshme të gconfd, prandaj njoftimi "
-"i ndryshimeve në konfigurim nuk do të jetë i besueshëm."
+"Gabim gjatë regjistrimit të shtimit të listener %s (%s); nuk do të jetë i "
+"mundur rikthimi i këtij listener në rinisjen e ardhshme të gconfd, prandaj "
+"njoftimi i ndryshimeve në konfigurim nuk do të jetë i besueshëm."
 
 #: ../gconf/gconf-database.c:1153
 #, c-format
@@ -774,6 +793,7 @@ msgstr "Operacion për kyç në directory"
 msgid "Directory operation on key"
 msgstr "Operacion për directory në kyç"
 
+# (pofilter) brackets: translation has extra '(', ')'
 #: ../gconf/gconf-error.c:36
 msgid "Can't overwrite existing read-only value"
 msgstr "I pamundur mbishkrimi i vlerës ekzistuese (vetëm në lexim)"
@@ -874,11 +894,13 @@ msgstr "Pritej lista e %s, u mor lista e %s"
 msgid "Expected pair, got %s"
 msgstr "Pritej çifti, u mor %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:1548
 #, c-format
 msgid "Expected (%s,%s) pair, got a pair with one or both values missing"
 msgstr "Pritej çifti (%s,%s), u mor një çift me njërën apo të dyja vlerat mangut"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:1564
 #, c-format
 msgid "Expected pair of type (%s,%s) got type (%s,%s)"
@@ -921,11 +943,13 @@ msgstr ""
 "vendosur lock, ose sistemi operativ ka file locking NFS të konfiguruar gabim "
 "(%s)"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:2468
 #, c-format
 msgid "Failed to remove '%s': %s"
 msgstr "Fshirja e '%s' dështoi: %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:2492
 #, c-format
 msgid "IOR file '%s' not opened successfully, no gconfd located: %s"
@@ -936,6 +960,7 @@ msgstr "Gabim gjatë hapjes së file IOR '%s', gconfd nuk u gjet: %s"
 msgid "gconftool or other non-gconfd process has the lock file '%s'"
 msgstr "gconftool apo një proces tjetër, që nuk është gconfd, ka file e lock '%s'"
 
+# (pofilter) startcaps: checks that the message starts with the correct capitalisation
 #: ../gconf/gconf-internals.c:2539
 #, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -968,20 +993,23 @@ msgstr "Lock tek file `%s' nuk është prezent, por duhet të ishte"
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Gabim në lidhjen e '%s' me '%s': %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:2734
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
-msgstr "Heqja e file lock `%s' dështoi: %s"
+msgstr "Heqja e file të bllokimit `%s' dështoi: %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:2757
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Pastrimi i file '%s' dështoi: %s"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-internals.c:2773
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
-msgstr "Eleminimi i directory të lock `%s' dështoi: %s"
+msgstr "Eleminimi i directory të bllokimit `%s' dështoi: %s"
 
 #: ../gconf/gconf-internals.c:2815
 #, c-format
@@ -1010,6 +1038,7 @@ msgstr ""
 msgid "Failed to launch configuration server: %s\n"
 msgstr "Gabim në ekzekutimin e server-it të konfigurimit: %s\n"
 
+# (pofilter) sentencecount: The number of sentences differ: 3 versus 2
 #: ../gconf/gconf-internals.c:3087
 #, c-format
 msgid ""
@@ -1018,10 +1047,11 @@ msgid ""
 "to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
-"Gabim gjatë vënies në kontakt me server-in e konfigurimit; ndoshta do t'ju "
-"duhet të aktivoni suportin TCP/IP për ORBit ose që akoma ekziston një lock "
-"NFS i vjetër si rezultat i një bllokimi të sistemit. Konsultoni http://www."
-"gnome.org/projects/gconf/ për informacione më të hollësishme (Detajet - %s)"
+"Gabim gjatë vënies në kontakt me serverin e konfigurimit; ndoshta do t'ju "
+"duhet të aktivoni suportin TCP/IP për ORBit, ose ekziston akoma një bllokim "
+"NFS i vjetër si rezultat i një problemi në sistem. Konsultoni "
+"http://www.gnome.org/projects/gconf/ për informacione më të hollësishme "
+"(Detajet - %s)"
 
 #: ../gconf/gconf-internals.c:3088
 msgid "none"
@@ -1055,6 +1085,7 @@ msgstr ""
 "të kenë mundësi të krijojnë files në directory home. Gabimi \"%s\" (errno = %"
 "d)."
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconf-sanity-check.c:167
 #, c-format
 msgid ""
@@ -1068,12 +1099,12 @@ msgid ""
 msgstr ""
 "Vihu në kontakt me administratorin e sistemit për zgjidhjen e problemit në "
 "vazhdim:\n"
-"Vendosja e lock tek file \"%s\" është e pamundur; kjo do të thotë që mund të "
-"ekzistojë një problem me konfigurimin aktual të sistemit operativ. Nëse "
+"Vendosja e bllokimit tek file \"%s\" është e pamundur; kjo do të thotë që mund "
+"të ekzistojë një problem me konfigurimin aktual të sistemit operativ. Nëse "
 "directory home është e montuar me anë të NFS, si klienti ashtu dhe serveri "
-"mund të kenë konfigurime të gabuara.Konsultoni dokumentet në lidhje me rpc."
-"statd dhe rpc.lockd. Një shkak i zakonshëm i këtij gabimi është mos qenia "
-"aktive e shërbimit \"nfslock\" . Gabimi \"%s\" (errno = %d)."
+"mund të kenë konfigurime të gabuara. Konsultoni dokumentet në lidhje me "
+"rpc.statd dhe rpc.lockd. Një shkak i zakonshëm i këtij gabimi është mos "
+"qenia aktive e shërbimit \"nfslock\" . Gabimi \"%s\" (errno = %d)."
 
 #: ../gconf/gconf-sanity-check.c:184
 #, c-format
@@ -1130,7 +1161,7 @@ msgstr ""
 
 #: ../gconf/gconf-sanity-check.c:328
 msgid "_Log Out"
-msgstr "_Dil"
+msgstr "_Dil jashtë"
 
 #: ../gconf/gconf-sanity-check.c:330
 msgid "_Continue"
@@ -1215,6 +1246,9 @@ msgstr ""
 "Vlera për `%s' e vendosur në një burim vetëm i lexueshëm në krye të "
 "pozicionit të konfigurimit tuaj"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) sentencecount: The number of sentences differ: 7 versus 8
+# (pofilter) doublewords: The word 'të' is repeated
 #: ../gconf/gconf-sources.c:765
 #, c-format
 msgid ""
@@ -1236,23 +1270,23 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 "I pamundur shtimi i një vlere kyçit '%s' sepse serveri i konfigurimit nuk ka "
-"databaza të shkruajtshme. Shkaqet e mundëshme janë: 1) file juaj i "
-"konfigurimit në pozicionin %s/path nuk përmban asnjë databazë ose nuk u "
-"gjet; 2) janë aktivë gabimisht dy proçese gconfd; 3) sistemi operativ ka një "
-"konfigurim të gabuar që nuk mundëson funksionimin e file locking NFS në home "
-"directory; 4) klienti NFS ka shkuar në crash dhe nuk i ka bërë të ditur, në "
-"mënyrë korrekte, server-it që të rilëshonte lock në files gjatë rinisjes. "
-"Nëse ekzistojnë dy procese aktivë gconfd, provoni të kryeni logout, të "
-"përfundoni (kill) të gjithë proceset gconfd dhe të kryeni përsëri login. "
-"Nëse ekziston një file i një lock të vjetër, eleminoni ~/.gconf*/*lock. Ka "
-"shumë mundësi që problemi të jetë që është kryer një përpjekje për të "
-"përdorur GConf nga dy makina njëkohësisht dhe konfigurimi i ORBit të jetë i "
-"prezgjedhuri që nuk lejon lidhje CORBA në remot. Shtoni \"ORBIIOPIPv4=1\" "
-"tek file /etc/orbitrc. Verifikoni log-et e sistemit përdorues.* për të marrë "
+"bazë të shkruajtshme të dhënash. Shkaqet e mundëshme janë: 1) file juaj i "
+"konfigurimit në pozicionin %s/path nuk përmban asnjë bazë të dhënash ose nuk "
+"u gjet; 2) janë aktivë gabimisht dy proçese gconfd; 3) sistemi operativ ka "
+"një konfigurim të gabuar që nuk mundëson funksionimin e bllokimit të file "
+"NFS në home directory; 4) klienti NFS është bllokuar dhe nuk ka njoftuar, në "
+"mënyrë korrekte, serverin që të rilëshonte lock në file gjatë rinisjes. "
+"Nëse ekzistojnë dy proçese aktivë gconfd, provoni të dilni, të përfundoni "
+"(kill) të gjithë proçeset gconfd dhe të futeni përsëri. Nëse ekziston një "
+"file i vjetër bllokimi, eleminoni ~/.gconf*/*lock. Ka shumë mundësi që "
+"problemi të jetë që është kryer një përpjekje për të përdorur GConf nga dy "
+"makina njëkohësisht dhe konfigurimi i ORBit të jetë i prezgjedhuri që nuk "
+"lejon lidhje CORBA në distancë. Shtoni \"ORBIIOPIPv4=1\" tek file "
+"/etc/orbitrc. Verifikoni mesazhet e sistemit user.* për të marrë "
 "informacione të hollësishme mbi problemet e ndeshura nga gconfd. Mund të "
-"ekzistojë vetëm një gconfd për directory home, duhet të ketë një file lock ~/"
-"gconfd dhe files të tjerë lock në pozicionet e magazinimit të të dhënave "
-"personale si ~/.gconf"
+"ekzistojë vetëm një gconfd për directory home, duhet të ketë një file "
+"bllokimi në ~/.gconfd dhe file të tjerë bllokimi në pozicionet e magazinimit "
+"të të dhënave personale si p.sh. ~/.gconf"
 
 #: ../gconf/gconf-sources.c:1569
 #, c-format
@@ -1414,6 +1448,7 @@ msgstr ""
 "Nuk u gjet asnjë file konfigurimi. Përpjekje për të përdorur burimin e "
 "konfigurimit të paracaktuar `%s'"
 
+# (pofilter) sentencecount: The number of sentences differ: 2 versus 1
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
@@ -1423,7 +1458,7 @@ msgid ""
 "No configuration sources in the source path. Configuration won't be saved; "
 "edit %s%s"
 msgstr ""
-"Asnjë burim konfigurimi tek pozicioni i buruesit, konfigurimi nuk do të "
+"Asnjë burim konfigurimi tek pozicioni i buruesit. Konfigurimi nuk do të "
 "ruhet; ndrysho %s%s"
 
 #: ../gconf/gconfd.c:375
@@ -1462,12 +1497,13 @@ msgstr "Pronari i %s nuk është përdoruesi aktual"
 msgid "Bad permissions %lo on directory %s"
 msgstr "Të drejta të gabuar %lo tek directory %s"
 
+# (pofilter) startcaps: checks that the message starts with the correct capitalisation
 #. openlog() does not copy logname - what total brokenness.
 #. So we free it at the end of main()
 #: ../gconf/gconfd.c:669
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
-msgstr "Duke filluar (versioni %s), pid %u përdoruesi '%s'"
+msgstr "duke filluar (versioni %s), pid %u përdoruesi '%s'"
 
 #: ../gconf/gconfd.c:726
 msgid "Failed to get object reference for ConfigServer"
@@ -1687,6 +1723,7 @@ msgstr "Kthen 0 nëqoftëse directory ekziston, 2 po të mos ekzistojë."
 msgid "Ignore schema defaults when reading values."
 msgstr "Injoro vlerat e prezgjedhura të skemës kur lexohen vlerat."
 
+# (pofilter) doublewords: The word 'të' is repeated
 #: ../gconf/gconftool.c:205
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
@@ -1711,9 +1748,10 @@ msgstr "Shkarko vlerat e përshkruara në një file XML."
 msgid "Get the name of the default source"
 msgstr "Lexon emrin e burimit të prezgjedhur"
 
+# (pofilter) acronyms: acronyms should not be translated: DON'T, USE, THIS, OPTION, WITHOUT, GOOD, REASON
 #: ../gconf/gconftool.c:247
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
-msgstr "Ndalon gconfd. MOS E PËRDOR KËTË OPCION PA PATUR NJË ARSYE TË FORTË."
+msgstr "Ndalon gconfd. MOS E PËRDOR KËTË OPSION PA PATUR NJË ARSYE TË FORTË."
 
 #: ../gconf/gconftool.c:256
 msgid "Return 0 if gconfd is running, 2 if not."
@@ -1724,17 +1762,19 @@ msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
 msgstr ""
-"Fillon serverin e konfigurimit (gconfd). (Normalisht ndodh automatikisht "
-"kur shfaqet nevoja.)"
+"Fillon serverin e konfigurimit (gconfd). (Normalisht ndodh automatikisht kur "
+"shfaqet nevoja.)"
 
+# (pofilter) acronyms: acronyms should not be translated: OK
 #: ../gconf/gconftool.c:280
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr ""
-"Specifiko llojin e vlerësh që duhet vendosur ose llojin e vlerës së "
+"Specifiko llojin e vlerës që duhet vendosur ose llojin e vlerës së "
 "përshkruar nga një skemë. Pranohen shkurtimet e vetme."
 
+# (pofilter) unchanged: please translate
 #: ../gconf/gconftool.c:281
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
@@ -1751,38 +1791,43 @@ msgstr "Lexon numrin e elementëve në kyçin e një liste."
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "Merr një element të veçantë nga një kyç liste, të indeksuar numerikisht."
 
+# (pofilter) acronyms: acronyms should not be translated: OK
 #: ../gconf/gconftool.c:316
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Specifiko llojin e vlerës listë që duhet vendosur ose llojin e vlerës së "
+"Specifiko llojin e vlerës listë që duhet caktuar ose llojin e vlerës së "
 "përshkruar nga një skemë. Pranohen shkurtimet e vetme."
 
+# (pofilter) unchanged: please translate
 #: ../gconf/gconftool.c:317 ../gconf/gconftool.c:326 ../gconf/gconftool.c:335
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
+# (pofilter) acronyms: acronyms should not be translated: OK
 #: ../gconf/gconftool.c:325
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Specifiko llojin e vlerës së çiftit car që duhet vendosur ose llojin e "
-"vlerës së përshkruar nga një skemë. Pranohen shkurtimet e vetme."
+"Specifiko llojin e vlerës së çiftit car që duhet caktuar ose llojin e vlerës "
+"së përshkruar nga një skemë. Pranohen shkurtimet e vetme."
 
+# (pofilter) acronyms: acronyms should not be translated: OK
 #: ../gconf/gconftool.c:334
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
-"Specifiko llojin e vlerës së çiftit cdr që duhet vendosur ose llojin e "
-"vlerës së përshkruar nga një skemë. Pranohen shkurtimet e vetme."
+"Specifiko llojin e vlerës së çiftit cdr që duhet caktuar ose llojin e vlerës "
+"së përshkruar nga një skemë. Pranohen shkurtimet e vetme."
 
 #: ../gconf/gconftool.c:349
 msgid "Specify a schema file to be installed"
 msgstr "Specifiko file skemë që duhet instaluar"
 
+# (pofilter) acronyms: acronyms should not be translated: FILENAME
 #: ../gconf/gconftool.c:350
 msgid "FILENAME"
 msgstr "EMRIFILE"
@@ -1793,18 +1838,21 @@ msgstr ""
 "Specifiko një burim konfigurimi që duhet të përdoret në vend të pozicionit "
 "të prezgjedhur"
 
+# (pofilter) acronyms: acronyms should not be translated: SOURCE
 #: ../gconf/gconftool.c:359
 msgid "SOURCE"
 msgstr "BURIMI"
 
+# (pofilter) sentencecount: The number of sentences differ: 2 versus 1
 #: ../gconf/gconftool.c:367
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
 msgstr ""
-"Futje direkte në databazën e konfigurimeve, duke kapërcyer serverin. gconfd "
-"nuk duhet të jetë në funksionim."
+"Futje direkte në bazën me të dhënat e konfigurimeve, duke kapërcyer "
+"serverin. gconfd nuk duhet të jetë në funksionim."
 
+# (pofilter) acronyms: acronyms should not be translated: GCONFCONFIGSOURCE
 #: ../gconf/gconftool.c:376
 msgid ""
 "Properly installs schema files on the command line into the database. "
@@ -1812,37 +1860,40 @@ msgid ""
 "variable, or set set the variable to an empty string to use the default "
 "configuration source."
 msgstr ""
-"Instalon korrektësisht skemën në databazë duke përdorur rreshtin e "
-"komandave. Përcakto një burim të personalizuar konfigurimi tek e ndryshueshmja "
-"e mjedisit GCONF_CONGIF_SOURCE, ose përcakto të ndryshueshmen tek "
-"një vlerë boshe për të përdorur burimin e paracaktuar të konfigurimit."
+"Instalon korrektësisht skemën në bazën e të dhënave duke përdorur rreshtin e "
+"komandave. Përcakto një burim të personalizuar konfigurimi tek e "
+"ndryshueshmja e mjedisit GCONF_CONGIF_SOURCE, ose përcakto të ndryshueshmen "
+"tek një vlerë boshe për të përdorur burimin e paracaktuar të konfigurimit."
 
+# (pofilter) acronyms: acronyms should not be translated: GCONFCONFIGSOURCE
 #: ../gconf/gconftool.c:385
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "configuration source or set to the empty string to use the default."
 msgstr ""
-"Çinstalon korrektësisht files e skemës në databazë duke përdorur rreshtin e "
-"komandave. E ndryshueshmja e mjedisit GCONF_CONGIF_SOURCE duhet të jetë "
-"vendosur tek buruesi jo i paracaktuar i konfigurimit ose vendosur tek një "
-"vlerë boshe për të përdorur burimin e konfigurimit të paracaktuar."
+"Çinstalon korrektësisht files e skemës në bazën e të dhënave duke përdorur "
+"rreshtin e komandave. E ndryshueshmja e mjedisit GCONF_CONGIF_SOURCE duhet "
+"të jetë vendosur tek buruesi jo i paracaktuar i konfigurimit ose vendosur "
+"tek një vlerë boshe për të përdorur burimin e konfigurimit të paracaktuar."
 
+# (pofilter) doublequoting: checks whether doublequoting is consistent between the two strings
 #: ../gconf/gconftool.c:400
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
-"Kryen \"torture-test\" e një programi duke vendosur dhe anulluar një shumicë "
+"Kryen \"torture-test\" e një programi duke vendosur dhe anulluar një sërë "
 "vlerash të llojeve të ndryshme për kyçet në rreshtin e komandave."
 
+# (pofilter) doublequoting: checks whether doublequoting is consistent between the two strings
 #: ../gconf/gconftool.c:409
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
-"Kryen \"torture-test\" e një programi duke vendosur dhe anulluar një shumicë "
-"vlerash në brendësi të directories në rreshtin e komandave."
+"Kryen \"torture-test\" e një programi duke vendosur dhe anulluar një shërë "
+"vlerash në brendësi të kartelave në rreshtin e komandave."
 
 #: ../gconf/gconftool.c:424
 msgid ""
@@ -1856,6 +1907,7 @@ msgstr ""
 msgid "Specify a short half-line description to go in a schema."
 msgstr "Specifiko një përshkrim të shkurtër për skemën."
 
+# (pofilter) acronyms: acronyms should not be translated: DESCRIPTION
 #: ../gconf/gconftool.c:434 ../gconf/gconftool.c:443
 msgid "DESCRIPTION"
 msgstr "PËRSHKRIMI"
@@ -1868,6 +1920,7 @@ msgstr "Specifiko një përshkrim shumë rreshtësh për një skemë."
 msgid "Specify the owner of a schema"
 msgstr "Specifiko pronarin e skemës"
 
+# (pofilter) acronyms: acronyms should not be translated: OWNER
 #: ../gconf/gconftool.c:452
 msgid "OWNER"
 msgstr "PRONARI"
@@ -1888,6 +1941,7 @@ msgstr "Eleminon çdo emër skeme të aplikuar tek kyçi i dhënë"
 msgid "Print version"
 msgstr "Printo versionin"
 
+# (pofilter) acronyms: acronyms should not be translated: FILE...]|[KEY...]|[DIR
 #: ../gconf/gconftool.c:502
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FILE...]|[KYÇI...]|[DIR...]"
@@ -1955,7 +2009,7 @@ msgstr "Shfaq opsionet e skemës"
 #: ../gconf/gconftool.c:606
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
-msgstr "Zbato '%s --help' për të shikuar listën e plotë të opcioneve të komandës.\n"
+msgstr "Zbato '%s --help' për të shikuar listën e plotë të opsioneve të komandës.\n"
 
 #: ../gconf/gconftool.c:634
 #, c-format
@@ -2019,12 +2073,13 @@ msgstr ""
 "--ignore-schema-defaults është relativ vetëm për --get, --all-entries, --"
 "dump, --recursive-list, --get-list-size or --get-list-element\n"
 
+# (pofilter) startcaps: checks that the message starts with the correct capitalisation
 #: ../gconf/gconftool.c:733 ../gconf/gconftool.c:746 ../gconf/gconftool.c:759
 #: ../gconf/gconftool.c:773 ../gconf/gconftool.c:786 ../gconf/gconftool.c:799
 #: ../gconf/gconftool.c:813
 #, c-format
 msgid "%s option must be used by itself.\n"
-msgstr "Opcioni %s duhet përdorur i pashoqëruar.\n"
+msgstr "Opsioni %s duhet përdorur i pashoqëruar.\n"
 
 #: ../gconf/gconftool.c:822
 #, c-format
@@ -2032,8 +2087,8 @@ msgid ""
 "You must specify a configuration source with --config-source when using --"
 "direct\n"
 msgstr ""
-"Duhet të përcaktohet burimi i konfigurimit me --config-source kur përdoret "
-"--direct\n"
+"Duhet të përcaktohet burimi i konfigurimit me --config-source kur përdoret --"
+"direct\n"
 
 #: ../gconf/gconftool.c:828
 #, c-format
@@ -2059,6 +2114,8 @@ msgstr ""
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "E ndryshueshmja e ambientit GCONF_CONFIG_SOURCE duhet të jetë e përcaktuar\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) simpleplurals: checks for English style plural(s) for you to review
 #: ../gconf/gconftool.c:911
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
@@ -2094,6 +2151,7 @@ msgstr "Duhet përcaktuar një model kyçi për t'u kërkuar.\n"
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Specifiko një ose më shumë directories për të anulluar.\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconftool.c:1758
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
@@ -2201,7 +2259,7 @@ msgstr "Gabim: %s\n"
 #: ../gconf/gconftool.c:2014 ../gconf/gconftool.c:3046
 #, c-format
 msgid "Error setting value: %s\n"
-msgstr "Gabim duke caktuar vlerën: %s\n"
+msgstr "Gabim gjatë caktimit të vlerës: %s\n"
 
 #: ../gconf/gconftool.c:2032
 #, c-format
@@ -2278,6 +2336,7 @@ msgstr "Vlera tek '%s' nuk është një skemë\n"
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "Specifiko emrin e skemës ndjekur nga emri i kyçit ku duhet aplikuar\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconftool.c:2340
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
@@ -2293,6 +2352,7 @@ msgstr "Duhet të specifikosh kyçet nga të cilët do të anullohet skema\n"
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "Gabim gjatë heqjes së emrit të skemës nga '%s': %s\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconftool.c:2393
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
@@ -2320,7 +2380,7 @@ msgstr ""
 #: ../gconf/gconftool.c:2490
 #, c-format
 msgid "Error setting value: %s"
-msgstr "Gabim gjatë vendosjes së vlerës: %s"
+msgstr "Gabim gjatë caktimit të vlerës: %s"
 
 #: ../gconf/gconftool.c:2504
 #, c-format
@@ -2340,7 +2400,7 @@ msgstr "Specifiko një o më shumë kyçe për t'u anulluar.\n"
 #: ../gconf/gconftool.c:2544
 #, c-format
 msgid "Error unsetting `%s': %s\n"
-msgstr "Gabim duke anulluar `%s': %s\n"
+msgstr "Gabim gjatë anullimit të `%s': %s\n"
 
 #: ../gconf/gconftool.c:2564
 #, c-format
@@ -2363,11 +2423,14 @@ msgid "Error listing dirs: %s\n"
 msgstr "Gabim gjatë numërimit të directories: %s\n"
 
 # (pofilter) xmltags: checks that XML/HTML tags have not been translated
+# (pofilter) isreview: Check if the unit has been marked review.
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2768
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "KUJDES: duhet specifikuar si një <car> ashtu dhe një <cdr> në një <pair>\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2795
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
@@ -2375,81 +2438,98 @@ msgstr ""
 "KUJDES: kyçi i specifikuar (%s) për një skemë nën një <value> - do të "
 "shpërfillet\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2828
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "KUJDES: duhet të ekzistojë një nyjë bir nën <value>\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2834
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "KUJDES: nyja <%s> nuk është e kuptueshme\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2852
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "KUJDES: gabim gjatë analizimit të vlerës së plotë `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2873
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "KUJDES: gabim gjatë analizimit të vlerës float `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2895
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "KUJDES: gabim gjatë analizimit të vlerës string `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:2916
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "KUJDES: gabim gjatë analizimit të vlerës boolean `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3025 ../gconf/gconftool.c:3567
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "KUJDES: gabim gjatë shoqërimit të skemës `%s' me kyçin `%s': %s\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3140
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
-msgstr "KUJDES: lloji i skemës (%s) është i pasaktë apo mungon\n"
+msgstr "KUJDES: lloji i skemës (%s) është i pasaktë ose mungon\n"
 
 # (pofilter) accelerators: accelerator _ is missing from translation
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) isreview: Check if the unit has been marked review.
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3149
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "KUJDES: list_type për skemën (%s) është i pasaktë ose mungon\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3160 ../gconf/gconftool.c:3190
 #: ../gconf/gconftool.c:3219
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
-msgstr ""
-"KUJDES: Gabim gjatë analizimit të vlerës së prezgjedhur `%s' për skemën (%"
-"s)\n"
+msgstr "KUJDES: Gabim gjatë analizimit të vlerës së paracaktuar `%s' për skemën (%s)\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3178
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "KUJDES: car_type apo cdr_type për skemën (%s) mungon ose është i pasaktë\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3203
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
-msgstr "KUJDES: Ti nuk mund të përcaktosh vlerën e prezgjedhur për skemën\n"
+msgstr "KUJDES: nuk mund të përcaktosh vlerën e paracaktuar për një skemë\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3232
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "KUJDES: gabim i brendshëm i gconftool, GConfValueType i panjohur\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3280 ../gconf/gconftool.c:3301
 #: ../gconf/gconftool.c:3322 ../gconf/gconftool.c:3343
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "KUJDES: gabim gjatë analizimit të emrit të llojit `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3297
 #, c-format
 msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
@@ -2457,53 +2537,66 @@ msgstr ""
 "KUJDES: list_type mund të jetë vetëm int, float, string ose bool dhe jo `%"
 "s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3318
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr "KUJDES: car_type mund të jetë vetëm int, float, string ose bool dhe jo `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3339
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr "KUJDES: cdr_type mund të jetë vetëm int, float, string ose bool dhe jo `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3379
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "KUJDES: nyje <applyto> boshe"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3382 ../gconf/gconftool.c:3640
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "KUJDES: nyja <%s> rezulton e pakuptueshme nën <schema>\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3393
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
-msgstr "KUJDES: <list_type> nuk është e specifikuar për skemën e lloji i listës\n"
+msgstr "KUJDES: <list_type> nuk është e specifikuar për skemën e llojit të listës\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3399
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
-msgstr "KUJDES: <car_type> e pa specifikuar për skemën e lloji i çiftit\n"
+msgstr "KUJDES: <car_type> nuk është specifikuar për skemën e llojit të çiftit\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3405
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
-msgstr "KUJDES: <cdr_type> e pa specifikuar për skemën e lloji i çiftit\n"
+msgstr "KUJDES: <cdr_type> nuk është specifikuar për skemën e llojit të çiftit\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3434
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "KUJDES: nyja <locale> nuk ka vlerën `name=\"locale\"', do të shpërfillet\n"
 
+# (pofilter) endpunc: checks whether punctuation at the end of the strings match
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3440
 #, c-format
 msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
-"KUJDES: nyje <locale> të shumfishta për lokalen `%s', do të konsiderohet "
-"vetëm i pari.\n"
+"KUJDES: nyje <locale> të shumfishta për gjuhën `%s', do të konsiderohet "
+"vetëm e para.\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3538
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
@@ -2519,16 +2612,20 @@ msgstr "Skema `%s' ju bashkangjit kyçit `%s'\n"
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Duhet të keni të paktën një zë <locale> në një <schema>\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3684
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
-msgstr "KUJDES: instalimi i skemës `%s' për gjuhën `%s' dështoi: %s\n"
+msgstr "KUJDES: instalimi i skemës `%s', gjuha `%s' dështoi: %s\n"
 
 #: ../gconf/gconftool.c:3692
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "U instalua skema `%s' për lokalen `%s'\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3702
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
@@ -2539,11 +2636,13 @@ msgstr "KUJDES: çinstalimi i skemës `%s', gjuha `%s' dështoi: %s\n"
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "U ç'instalua skema `%s' për lokalen `%s'\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3748
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "KUJDES: nuk është specifikuar asnjë kyç për skemën\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3789
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
@@ -2571,21 +2670,24 @@ msgstr ""
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "Dokumenti `%s' nuk ka asnjë nyjë <%s> të nivelit të parë\n"
 
+# (pofilter) acronyms: acronyms should not be translated: WARNING
 #: ../gconf/gconftool.c:3867
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "KUJDES: nyja <%s> nën <%s> rezulton e pakuptueshme\n"
 
+# (pofilter) doublewords: The word 'të' is repeated
 #: ../gconf/gconftool.c:3888
 #, c-format
 msgid "Error syncing configuration data: %s"
-msgstr "Gabim gjatë sinkronizimit të të dhënave të konfigurimit: %s"
+msgstr "Gabim gjatë sinkronizimit të së dhënave të konfigurimit: %s"
 
 #: ../gconf/gconftool.c:3904
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "Specifiko files skema që duhen instaluar\n"
 
+# (pofilter) unchanged: please translate
 #: ../gconf/gconftool.c:3932
 #, c-format
 msgid ""
@@ -2605,13 +2707,14 @@ msgstr "I pamundur anullimi i kyçit të ndërprerjes %s: %s\n"
 msgid "Must specify some keys to break\n"
 msgstr "Specifiko disa kyçe që duhen thyer\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconftool.c:4084
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
 "  %s\n"
 msgstr ""
-"Duke u zhvilluar një përpjekje thyerje të programit duke vendosur vlera të "
+"Duke u kryer një përpjekje thyerje të programit duke vendosur vlera të "
 "gabuara për kyçin: \n"
 "  %s\n"
 
@@ -2620,6 +2723,7 @@ msgstr ""
 msgid "Must specify some directories to break\n"
 msgstr "Duhet të specifikoni disa directory që duhen thyer\n"
 
+# (pofilter) puncspacing: checks for bad spacing after punctuation
 #: ../gconf/gconftool.c:4121
 #, c-format
 msgid ""
@@ -2627,7 +2731,7 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
-"Duke u zhvilluar një përpjekje thyerje të programit duke vendosur vlera të "
+"Duke u kryer një përpjekje thyerje të programit duke vendosur vlera të "
 "gabuara për kyçet në directory: \n"
 "  %s\n"
 
