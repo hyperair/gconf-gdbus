@@ -594,6 +594,7 @@ main(int argc, char** argv)
 #ifdef HAVE_SIGACTION
   struct sigaction act;
   sigset_t empty_mask;
+  sigset_t full_mask;
 #endif
   CORBA_Environment ev;
   CORBA_ORB orb;
@@ -675,6 +676,9 @@ main(int argc, char** argv)
   
   /* Session setup */
 #ifdef HAVE_SIGACTION
+  sigfillset (&full_mask);
+  sigprocmask (SIG_UNBLOCK, &full_mask, NULL);
+
   sigemptyset (&empty_mask);
   act.sa_handler = signal_handler;
   act.sa_mask    = empty_mask;

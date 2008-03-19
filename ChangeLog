@@ -1,3 +1,12 @@
+2008-03-19  Vincent Untz  <vuntz@gnome.org>
+
+	Unblock signals when starting gconfd, since we might inherit some
+	blocked signals from the parent process.
+	Fix bug #505488.
+	Patch by Javier Uruen Val <juruen@warp.es>
+
+	* gconf/gconfd.c: (main): unblock all signals
+
 2008-03-10  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Post release version bump
