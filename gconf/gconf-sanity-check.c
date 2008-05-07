@@ -119,9 +119,23 @@ check_file_locking (void)
       GError *err;
 
       err = NULL;
-      fd = g_file_open_tmp ("gconf-test-locking-file-XXXXXX",
-                            &testfile,
-                            &err);
+      if (g_getenv ("GCONF_TMPDIR")) {
+	testfile = g_build_filename(g_getenv ("GCONF_TMPDIR"), "gconf-test-locking-file-XXXXXX", NULL);
+	fd = g_mkstemp (testfile);
+	if (fd == -1)
+	    {
+	      g_set_error (&err,
+        	           G_FILE_ERROR,
+                	   g_file_error_from_errno (errno),
+	                   "Failed to create file '%s': %s",
+			   testfile, g_strerror (errno));
+	    }
+    	}
+      else {
+	      fd = g_file_open_tmp ("gconf-test-locking-file-XXXXXX",
+        	                    &testfile,
+                	            &err);
+      }
 
       if (err != NULL)
         {

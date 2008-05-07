@@ -2818,10 +2818,17 @@ gconf_get_daemon_dir (void)
     {
       char *s;
       char *subdir;
+      char *tmpdir;
 
       subdir = g_strconcat ("gconfd-", g_get_user_name (), NULL);
       
-      s = g_build_filename (g_get_tmp_dir (), subdir, NULL);
+      if (g_getenv ("GCONF_TMPDIR")) {
+	tmpdir = g_getenv ("GCONF_TMPDIR");
+      } else {
+	tmpdir = g_get_tmp_dir ();
+      }
+      
+      s = g_build_filename (tmpdir, subdir, NULL);
 
       g_free (subdir);
 
