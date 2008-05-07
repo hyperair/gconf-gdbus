@@ -49,9 +49,6 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <ctype.h>
-#ifdef HAVE_SYSLOG_H
-#include <syslog.h>
-#endif
 #include <time.h>
 #ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
@@ -500,41 +497,6 @@ gconf_get_poa (void)
   return the_poa;
 }
 
-static void
-log_handler (const gchar   *log_domain,
-             GLogLevelFlags log_level,
-             const gchar   *message,
-             gpointer       user_data)
-{
-  GConfLogPriority pri = GCL_WARNING;
-  
-  switch (log_level & G_LOG_LEVEL_MASK)
-    {
-    case G_LOG_LEVEL_ERROR:
-    case G_LOG_LEVEL_CRITICAL:
-      pri = GCL_ERR;
-      break;
-
-    case G_LOG_LEVEL_WARNING:
-      pri = GCL_WARNING;
-      break;
-
-    case G_LOG_LEVEL_MESSAGE:
-    case G_LOG_LEVEL_INFO:
-      pri = GCL_INFO;
-      break;
-
-    case G_LOG_LEVEL_DEBUG:
-      pri = GCL_DEBUG;
-      break;
-
-    default:
-      break;
-    }
-
-  gconf_log (pri, "%s", message);
-}
-
 /* From ORBit2 */
 /* There is a DOS attack if another user creates
  * the given directory and keeps us from creating
@@ -598,8 +560,6 @@ main(int argc, char** argv)
 #endif
   CORBA_Environment ev;
   CORBA_ORB orb;
-  gchar* logname;
-  const gchar* username;
   gchar* ior;
   int exit_code = 0;
   GError *err;
@@ -647,27 +607,7 @@ main(int argc, char** argv)
   
   gconf_set_daemon_mode(TRUE);
   
-  /* Logs */
-  username = g_get_user_name();
-  logname = g_strdup_printf("gconfd (%s-%u)", username, (guint)getpid());
-
-#ifdef HAVE_SYSLOG_H
-  openlog (logname, LOG_NDELAY, LOG_USER);
-#endif
-
-  g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
-                     log_handler, NULL);
-
-  g_log_set_handler ("GLib", G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
-                     log_handler, NULL);
-
-  g_log_set_handler ("GLib-GObject", G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION,
-                     log_handler, NULL);
-  
-  /* openlog() does not copy logname - what total brokenness.
-     So we free it at the end of main() */
-  
-  gconf_log (GCL_INFO, _("starting (version %s), pid %u user '%s'"), 
+  gconf_log (GCL_DEBUG, _("starting (version %s), pid %u user '%s'"), 
              VERSION, (guint)getpid(), g_get_user_name());
 
 #ifdef GCONF_ENABLE_DEBUG
@@ -835,14 +775,7 @@ main(int argc, char** argv)
 
   daemon_lock = NULL;
   
-  gconf_log (GCL_INFO, _("Exiting"));
-
-#ifdef HAVE_SYSLOG_H
-  closelog ();
-#endif
-
-  /* Can't do this due to stupid atexit() handler that calls g_log stuff */
-  /*   g_free (logname); */
+  gconf_log (GCL_DEBUG, _("Exiting"));
 
   return exit_code;
 }

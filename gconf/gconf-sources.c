@@ -407,20 +407,20 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
         if (source->flags & GCONF_SOURCE_ALL_WRITEABLE)
           {
             some_writable = TRUE;
-            gconf_log (GCL_INFO,
+            gconf_log (GCL_DEBUG,
                        _("Resolved address \"%s\" to a writable configuration source at position %d"),
                        source->address, i);
           }
         else if (source->flags & GCONF_SOURCE_NEVER_WRITEABLE)
           {
-            gconf_log (GCL_INFO,
+            gconf_log (GCL_DEBUG,
                        _("Resolved address \"%s\" to a read-only configuration source at position %d"),
                        source->address, i);
           }
         else
           {
             some_writable = TRUE;
-            gconf_log (GCL_INFO,
+            gconf_log (GCL_DEBUG,
                        _("Resolved address \"%s\" to a partially writable configuration source at position %d"),
                        source->address, i);
           }

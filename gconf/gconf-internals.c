@@ -1097,105 +1097,46 @@ gconf_current_locale(void)
  * Log
  */
 
-#ifdef HAVE_SYSLOG_H
-#include <syslog.h>
-#endif
-
 void
 gconf_log(GConfLogPriority pri, const gchar* fmt, ...)
 {
-  gchar* msg;
   va_list args;
-#ifdef HAVE_SYSLOG_H
-  gchar* convmsg;
-  int syslog_pri = LOG_DEBUG;
-#endif
+  GLogLevelFlags loglevel;
 
   if (!gconf_log_debug_messages && 
       pri == GCL_DEBUG)
     return;
-  
+
+  switch (pri)
+    {
+    case GCL_EMERG:
+    case GCL_ALERT:
+    case GCL_CRIT:
+      loglevel = G_LOG_LEVEL_ERROR;
+      break;
+    case GCL_ERR:
+      loglevel = G_LOG_LEVEL_CRITICAL;
+      break;
+    case GCL_WARNING:
+      loglevel = G_LOG_LEVEL_WARNING;
+      break;
+    case GCL_NOTICE:
+      loglevel = G_LOG_LEVEL_MESSAGE;
+      break;
+    case GCL_INFO:
+      loglevel = G_LOG_LEVEL_INFO;
+      break;
+    case GCL_DEBUG:
+      loglevel = G_LOG_LEVEL_DEBUG;
+      break;
+    default:
+      g_assert_not_reached();
+      break;
+    }
+
   va_start (args, fmt);
-  msg = g_strdup_vprintf(fmt, args);
+  g_logv (G_LOG_DOMAIN, loglevel, fmt, args);
   va_end (args);
-
-#ifdef HAVE_SYSLOG_H
-  if (gconf_daemon_mode)
-    {
-      switch (pri)
-        {
-        case GCL_EMERG:
-          syslog_pri = LOG_EMERG;
-          break;
-      
-        case GCL_ALERT:
-          syslog_pri = LOG_ALERT;
-          break;
-      
-        case GCL_CRIT:
-          syslog_pri = LOG_CRIT;
-          break;
-      
-        case GCL_ERR:
-          syslog_pri = LOG_ERR;
-          break;
-      
-        case GCL_WARNING:
-          syslog_pri = LOG_WARNING;
-          break;
-      
-        case GCL_NOTICE:
-          syslog_pri = LOG_NOTICE;
-          break;
-      
-        case GCL_INFO:
-          syslog_pri = LOG_INFO;
-          break;
-      
-        case GCL_DEBUG:
-          syslog_pri = LOG_DEBUG;
-          break;
-
-        default:
-          g_assert_not_reached();
-          break;
-        }
-
-      convmsg = g_locale_from_utf8 (msg, -1, NULL, NULL, NULL);
-      if (!convmsg)
-        syslog (syslog_pri, "%s", msg);
-      else
-        {
-	  syslog (syslog_pri, "%s", convmsg);
-	  g_free (convmsg);
-	}
-    }
-  else
-#endif
-    {
-      switch (pri)
-        {
-        case GCL_EMERG:
-        case GCL_ALERT:
-        case GCL_CRIT:
-        case GCL_ERR:
-        case GCL_WARNING:
-          g_printerr ("%s\n", msg);
-          break;
-      
-        case GCL_NOTICE:
-        case GCL_INFO:
-        case GCL_DEBUG:
-          g_print ("%s\n", msg);
-          break;
-
-        default:
-          g_assert_not_reached();
-          break;
-        }
-    }
-  
-  g_free(msg);
 }
 
 /*
