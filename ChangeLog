@@ -1,3 +1,10 @@
+2008-05-07  Richard Hult  <richard@imendio.com>
+
+	* gconf/gconf-database.c (gconf_database_notify_listeners): Get
+	rid of critical warning (and crash when built with
+	--disable-debug), when unsetting a key that has no writable
+	sources.
+
 2008-05-07  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* backends/markup-backend.c: (cleanup_timeout), (ms_new):
