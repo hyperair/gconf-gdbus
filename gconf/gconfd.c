@@ -847,12 +847,12 @@ gconf_main(void)
 
   if (main_loops == NULL)
     {
-      gulong timeout_len = 1000*60*0.5; /* 1 sec * 60 s/min * .5 min */
+      gulong timeout_len = 60*0.5; /* 60 s/min * .5 min */
       
       g_assert(timeout_id == 0);
-      timeout_id = g_timeout_add (timeout_len,
-                                  periodic_cleanup_timeout,
-                                  NULL);
+      timeout_id = g_timeout_add_seconds (timeout_len,
+                                          periodic_cleanup_timeout,
+                                          NULL);
 
     }
   
@@ -1384,14 +1384,14 @@ open_append_handle (GError **err)
 
 
       {
-        const gulong timeout_len = 1000*60*0.5; /* 1 sec * 60 s/min * 0.5 min */
+        const gulong timeout_len = 60*0.5; /* 60 s/min * 0.5 min */
 
         if (append_handle_timeout != 0)
           g_source_remove (append_handle_timeout);
         
-        append_handle_timeout = g_timeout_add (timeout_len,
-                                               close_append_handle_timeout,
-                                               NULL);
+        append_handle_timeout = g_timeout_add_seconds (timeout_len,
+                                                       close_append_handle_timeout,
+                                                       NULL);
       }
     }
 

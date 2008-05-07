@@ -1,5 +1,13 @@
 2008-05-07  Kjartan Maraas  <kmaraas@gnome.org>
 
+	* backends/markup-backend.c: (cleanup_timeout), (ms_new):
+	* gconf/gconf-database.c: (gconf_database_schedule_sync):
+	* gconf/gconfd.c: (gconf_main), (open_append_handle):
+	Use new glib api to batch timeouts. Patch from Matthias
+	Clasen. Closes bug #531063.
+
+2008-05-07  Kjartan Maraas  <kmaraas@gnome.org>
+
 	* gconf/gconf-internals.c: (gconf_log):
 	* gconf/gconf-sources.c: (gconf_sources_new_from_addresses):
 	* gconf/gconfd.c: (main): Merge the desyslogification patch

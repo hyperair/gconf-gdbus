@@ -878,17 +878,17 @@ gconf_backend_get_vtable (void)
 /* This timeout periodically unloads
  * data that hasn't been used in a while.
  */
+#if 0
 static gboolean
 cleanup_timeout (gpointer data)
 {
-#if 0
   MarkupSource* ms = (MarkupSource*)data;
 
   cache_clean(ms->cache, 60*5 /* 5 minutes */);
-#endif
   
   return TRUE;
 }
+#endif
 
 static MarkupSource*
 ms_new (const char* root_dir,
@@ -903,9 +903,11 @@ ms_new (const char* root_dir,
 
   ms = g_new0(MarkupSource, 1);
 
+#if 0
   ms->timeout_id = g_timeout_add (1000*60*5, /* 1 sec * 60 s/min * 5 min */
                                   cleanup_timeout,
                                   ms);
+#endif
 
   ms->root_dir = g_strdup (root_dir);
   
