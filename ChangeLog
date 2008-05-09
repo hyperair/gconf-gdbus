@@ -1,3 +1,28 @@
+2008-05-09  Ray Strode  <rstrode@redhat.com>
+
+	Tie gconf daemon to session bus and drop use daemon
+	GetIOR() method instead of /tmp/something/ior to
+	tell clients about ior (bugs 141138 and 507310)
+
+	* configure.in: depend on dbus
+	* gconf/gconfd.c (get_introspection_xml),
+	(bus_message_handler), (get_on_d_bus), (main):
+	Connect to message bus, take org.gnome.GConf name,
+	and export GetIOR() method.  Quit, when session quits.
+	* Makefile.am:
+	* gconf/org.gnome.GConf.server.in: new service file to
+	support session bus activation
+	* gconf/gconf-sanity-check.c (offer_delete_locks):
+	Daemon doesn't have a lock anymore, so need to try to
+	blow it away.
+	* gconf/gcon-internals.c (read_current_server_and_set_warning),
+	(read_current_server), (gconf_get_current_lock_holder),
+	(gconf_daemon_blow_away_locks), (set_cloexec),
+	(close_fd_func): dropped functions dealing with files in /tmp
+	(get_ior), (gconf_get_server), (gconf_get_lock_or_current_holder),
+	(gconf_activate_server: call GetIOR method instead of of reading
+	 /tmp/gconf-$USER/ior
+
 2008-05-07  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* gconf/gconf-internals.c: (gconf_get_daemon_dir):

@@ -121,11 +121,17 @@ libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
-EXTRA_DIST=GConfX.idl default.path.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
+EXTRA_DIST=GConfX.idl default.path.in org.gnome.GConf.service gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
 
 default.path: $(srcdir)/default.path.in
 	sed -e 's,[@]sysgconfdir[@],$(sysgconfdir),g' \
 		<$(srcdir)/default.path.in >default.path
+org.gnome.GConf.service:  $(srcdir)/org.gnome.GConf.service.in
+	sed -e 's,[@]libexecdir[@],$(libexecdir),g' \
+		<$(srcdir)/org.gnome.GConf.service.in >org.gnome.GConf.service
+
+servicedir = $(datadir)/dbus-1/services
+service_DATA = org.gnome.GConf.service
 
 install-data-local: default.path
 	$(mkinstalldirs) $(DESTDIR)$(sysgconfdir)/$(MAJOR_VERSION)

@@ -395,8 +395,6 @@ offer_delete_locks (void)
 
       g_slist_free (addresses);
       
-      gconf_daemon_blow_away_locks ();
-
       return TRUE;
     }
 
