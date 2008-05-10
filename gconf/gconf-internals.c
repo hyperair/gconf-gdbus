@@ -2465,7 +2465,7 @@ get_ior (gboolean start_if_not_found,
                                     &ior, DBUS_TYPE_INVALID)) {
                 if (failure_log)
                     g_string_append_printf (failure_log,
-                                            _("daemon gave errnoneous reply: %s"),
+                                            _("daemon gave erroneous reply: %s"),
                                             bus_error.message);
                 dbus_error_free (&bus_error);
                 return NULL;
