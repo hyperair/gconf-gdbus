@@ -2429,6 +2429,16 @@ get_ior (gboolean start_if_not_found,
         DBusError bus_error;
         char *ior;
 
+        /* if the bus isn't running and we don't want to start gconfd then
+         * we don't want to autolaunch the bus either, so bail early.
+         */
+        if (g_getenv ("DBUS_SESSION_BUS_ADDRESS") == NULL && !start_if_not_found) {
+                if (failure_log)
+                    g_string_append_printf (failure_log,
+                                            _("Not running within active session"));
+                return NULL;
+        }
+
         dbus_error_init (&bus_error);
         connection = dbus_bus_get (DBUS_BUS_SESSION, &bus_error);
 
