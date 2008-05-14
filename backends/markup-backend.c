@@ -59,7 +59,6 @@ typedef struct
 {
   GConfSource source; /* inherit from GConfSource */
   char *root_dir;
-  guint timeout_id;
   GConfLock* lock;
   MarkupTree *tree;
   guint dir_mode;
@@ -875,21 +874,6 @@ gconf_backend_get_vtable (void)
  *  MarkupSource
  */ 
 
-/* This timeout periodically unloads
- * data that hasn't been used in a while.
- */
-#if 0
-static gboolean
-cleanup_timeout (gpointer data)
-{
-  MarkupSource* ms = (MarkupSource*)data;
-
-  cache_clean(ms->cache, 60*5 /* 5 minutes */);
-  
-  return TRUE;
-}
-#endif
-
 static MarkupSource*
 ms_new (const char* root_dir,
         guint       dir_mode,
@@ -902,12 +886,6 @@ ms_new (const char* root_dir,
   g_return_val_if_fail(root_dir != NULL, NULL);
 
   ms = g_new0(MarkupSource, 1);
-
-#if 0
-  ms->timeout_id = g_timeout_add (1000*60*5, /* 1 sec * 60 s/min * 5 min */
-                                  cleanup_timeout,
-                                  ms);
-#endif
 
   ms->root_dir = g_strdup (root_dir);
   
@@ -943,12 +921,6 @@ ms_destroy (MarkupSource* ms)
       error = NULL;
     }
   
-  if (!g_source_remove (ms->timeout_id))
-    {
-      /* should not happen, don't translate */
-      gconf_log (GCL_ERR, "timeout not found to remove?");
-    }
-
   markup_tree_unref (ms->tree);
 
   g_free (ms->root_dir);

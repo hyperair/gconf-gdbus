@@ -1,3 +1,11 @@
+2008-05-14  Ray Strode  <rstrode@redhat.com>
+
+	* configure.in: bump glib require to 2.14
+	* backends/markup-backend.c (cleanup_timeout),
+	(ms_new), (ms_destroy): remove some if 0'd code,
+	and drop g_source_remove on non-existant timeout
+	to prevent warning
+
 2008-05-12  Ray Strode  <rstrode@redhat.com>
 
 	* gconf/gconf-internals.c (get_ior):
