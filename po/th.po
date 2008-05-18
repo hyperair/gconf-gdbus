@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: GConf 2.9.92\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-25 14:27+0700\n"
-"PO-Revision-Date: 2008-01-25 14:52+0700\n"
+"PO-Revision-Date: 2008-05-18 12:18+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -144,7 +144,7 @@ msgstr "การกำหนดสิทธิ์ของไดเรกทอ
 msgid ""
 "Remove directory operation is no longer supported, just remove all the "
 "values in the directory"
-msgstr "ไม่สนับสนุนการลบไดเรกทอรีอีกต่อไป คุณอาจลบค่าทั้งหมดในไดเรกทอรีแทน"
+msgstr "ไม่รองรับการลบไดเรกทอรีอีกต่อไป คุณอาจลบค่าทั้งหมดในไดเรกทอรีแทน"
 
 #: backends/markup-backend.c:827 backends/xml-backend.c:769
 #, c-format
@@ -569,7 +569,7 @@ msgstr "ที่อยู่ `%s' ใช้ไม่ได้"
 
 #: gconf/gconf-backend.c:337
 msgid "GConf won't work without dynamic module support (gmodule)"
-msgstr "GConf ไม่สามารถทำงานได้ถ้าไม่มีการสนับสนุนมอดูลพลวัต (gmodule)"
+msgstr "GConf ไม่สามารถทำงานได้ถ้าไม่มีการรองรับมอดูลพลวัต (gmodule)"
 
 #: gconf/gconf-backend.c:346
 #, c-format
@@ -659,7 +659,7 @@ msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
 msgstr ""
-"ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มบันทึกปฏิบัติการได้ (โดยมากมักไม่มีอันตราย "
+"ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มปูมได้ (โดยมากมักไม่มีอันตราย "
 "แต่อาจทำให้เกิดการแจ้งขึ้นใหม่แบบแปลกๆ): %s"
 
 #: gconf/gconf-database.c:1301 gconf/gconf-sources.c:1696
@@ -1209,8 +1209,8 @@ msgstr ""
 "แล้วจึงเข้าระบบใหม่ อาจทำให้ปัญหาหายไปได้  แต่ถ้าคุณมีการล็อคค้าง ก็ให้ลบแฟ้ม ~/.gconf*/"
 "*lock เสีย เป็นไปได้ว่าปัญหาคือคุณอาจพยายามใช้ GConf จากสองเครื่องพร้อมกัน และ ORBit "
 "ยังคงใช้ค่าตั้งปริยาย ซึ่งไม่ยอมรับการติดต่อผ่าน CORBA จากเครื่องอื่น - ในกรณีนี้ให้ใส่ "
-"\"ORBIIOPIPv4=1\" ใน /etc/orbitrc  และเช่นเคย คุณอาจตรวจสอบบันทึกปฏิบัติการระบบ "
-"user.* เพื่อดูรายละเอียดของปัญหาที่ gconfd พบ  สำหรับแต่ละไดเรกทอรีบ้าน จะมี gconfd "
+"\"ORBIIOPIPv4=1\" ใน /etc/orbitrc  และเช่นเคย คุณอาจตรวจสอบปูมระบบ user.* "
+"เพื่อดูรายละเอียดของปัญหาที่ gconfd พบ  สำหรับแต่ละไดเรกทอรีบ้าน จะมี gconfd "
 "ได้เพียงหนึ่งตัวเท่านั้น และต้องเป็นเจ้าของแฟ้มล็อคใน ~/.gconfd รวมทั้งแฟ้มล็อคในแหล่งเก็บต่างๆ "
 "เช่น ~/.gconf ด้วย"
 
@@ -1482,14 +1482,14 @@ msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr ""
-"ไม่สามารถเปิดแฟ้มบันทึกปฏิบัติการของ gconfd ได้ และจะไม่สามารถสร้างผู้คอยฟังต่างๆ คืนได้ "
-"หลังจากที่ gconfd ปิดตัวลง (%s)"
+"ไม่สามารถเปิดแฟ้มปูมของ gconfd ได้ และจะไม่สามารถสร้างผู้คอยฟังต่างๆ กลับคืนได้ หลังจากที่ "
+"gconfd ปิดตัวลง (%s)"
 
 #: gconf/gconfd.c:1471
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr "ไม่สามารถปิดแฟ้มบันทึกปฏิบัติการของ gconfd ได้ ข้อมูลอาจถูกบันทึกไม่ถูกต้อง (%s)"
+msgstr "ไม่สามารถปิดแฟ้มปูมของ gconfd ได้ ข้อมูลอาจถูกบันทึกไม่ถูกต้อง (%s)"
 
 #: gconf/gconfd.c:1533
 #, c-format
@@ -1544,7 +1544,7 @@ msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
-"ไม่สามารถบันทึกการเพิ่มผู้คอยฟังลงในแฟ้มบันทึกปฏิบัติการของ gconfd ได้ "
+"ไม่สามารถบันทึกการเพิ่มผู้คอยฟังลงในแฟ้มปูมของ gconfd ได้ "
 "และจะไม่สามารถเพิ่มผู้คอยฟังดังกล่าวคืนได้อีกถ้า gconfd ตายหรือปิดตัวลง (%s)"
 
 #: gconf/gconfd.c:2278
@@ -1553,7 +1553,7 @@ msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
-"ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มบันทึกปฏิบัติการของ gconfd ได้ "
+"ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มปูมของ gconfd ได้ "
 "และอาจทำให้มีการเพิ่มผู้คอยฟังดังกล่าวคืนอีกอย่างผิดๆ ถ้า gconfd ตายหรือปิดตัวลง (%s)"
 
 #: gconf/gconfd.c:2301 gconf/gconfd.c:2475
