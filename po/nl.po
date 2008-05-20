@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-09 14:44+0000\n"
-"PO-Revision-Date: 2008-05-10 04:26+0200\n"
+"POT-Creation-Date: 2008-05-13 16:12+0000\n"
+"PO-Revision-Date: 2008-05-20 01:59+0200\n"
 "Last-Translator: Tino Meinen <a.t.meinen@chello.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -941,88 +941,89 @@ msgstr "Fout bij maken of openen van bestand ‘%s’"
 msgid ""
 "Failed to lock '%s': probably another process has the lock, or your "
 "operating system has NFS file locking misconfigured (%s)"
-msgstr ""
-"Niet gelukt om '%s' te blokkeren. Waarschijnlijk heeft een ander proces de "
-"blokkering, of heeft uw besturingssysteem NFS bestands blokkering niet goed "
-"geconfigureerd (%s)"
+msgstr "Niet gelukt om ‘%s’ te blokkeren. Waarschijnlijk heeft een ander proces de blokkering, of heeft uw besturingssysteem NFS bestands blokkering niet goed geconfigureerd (%s)"
 
 #: ../gconf/gconf-internals.c:2411
 #, c-format
 msgid "Failed to remove '%s': %s"
-msgstr "Verwijderen van '%s' is mislukt: %s"
+msgstr "Verwijderen van ‘%s’ is mislukt: %s"
+
+# niet lopend binnen de actieve sessie/draaiend-huidige/opgestart-actieve
+#: ../gconf/gconf-internals.c:2438
+#, c-format
+msgid "Not running within active session"
+msgstr "Niet actief binnen de lopende sessie"
 
 # Kon geen verbinding krijgen met de sessie
-#: ../gconf/gconf-internals.c:2438
+#: ../gconf/gconf-internals.c:2448
 #, c-format
 msgid "Failed to get connection to session: %s"
 msgstr "Verbinding maken met de sessie is mislukt: %s"
 
-#: ../gconf/gconf-internals.c:2457
+#: ../gconf/gconf-internals.c:2467
 #, c-format
 msgid "Could not send message to gconf daemon: %s"
 msgstr "Kon bericht niet naar de gconf-daemon verzenden: %s"
 
-# BUG:
-# http://bugzilla.gnome.org/show_bug.cgi?id=532435
-#: ../gconf/gconf-internals.c:2468
+#: ../gconf/gconf-internals.c:2478
 #, c-format
-msgid "daemon gave errnoneous reply: %s"
+msgid "daemon gave erroneous reply: %s"
 msgstr "daemon gaf een foutief antwoord: %s"
 
-#: ../gconf/gconf-internals.c:2505
+#: ../gconf/gconf-internals.c:2515
 #, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
 msgstr ""
 "Kon geen contact opnemen met ORB om de bestaande gconfd objectreferentie te "
 "vinden"
 
-#: ../gconf/gconf-internals.c:2515
+#: ../gconf/gconf-internals.c:2525
 #, c-format
 msgid "Failed to convert IOR '%s' to an object reference"
 msgstr "Converteren van IOR ‘%s’ naar een objectreferentie is mislukt"
 
-#: ../gconf/gconf-internals.c:2538
+#: ../gconf/gconf-internals.c:2548
 #, c-format
 msgid "couldn't create directory `%s': %s"
 msgstr "kan map ‘%s’ niet aanmaken: %s"
 
-#: ../gconf/gconf-internals.c:2595
+#: ../gconf/gconf-internals.c:2605
 #, c-format
 msgid "Can't write to file `%s': %s"
 msgstr "Kan niet schrijven naar bestand ‘%s’: %s"
 
-#: ../gconf/gconf-internals.c:2636
+#: ../gconf/gconf-internals.c:2646
 #, c-format
 msgid "We didn't have the lock on file `%s', but we should have"
 msgstr ""
 "We hadden geen blokkering op bestand ‘%s’, maar we zouden het moeten hebben"
 
-#: ../gconf/gconf-internals.c:2659
+#: ../gconf/gconf-internals.c:2669
 #, c-format
 msgid "Failed to link '%s' to '%s': %s"
 msgstr "Fout bij het verwijzen van ‘%s’ naar ‘%s’: %s"
 
-#: ../gconf/gconf-internals.c:2671
+#: ../gconf/gconf-internals.c:2681
 #, c-format
 msgid "Failed to remove lock file `%s': %s"
 msgstr "Verwijderen blokkeringsbestand ‘%s’ mislukt: %s"
 
-#: ../gconf/gconf-internals.c:2694
+#: ../gconf/gconf-internals.c:2704
 #, c-format
 msgid "Failed to clean up file '%s': %s"
 msgstr "Opschonen van bestand ‘%s’ mislukt: %s"
 
-#: ../gconf/gconf-internals.c:2710
+#: ../gconf/gconf-internals.c:2720
 #, c-format
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Vrijgegeven van vergrendelingsmap ‘%s’ mislukt: %s"
 
-#: ../gconf/gconf-internals.c:2849
+#: ../gconf/gconf-internals.c:2859
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Server ping-fout: %s"
 
-#: ../gconf/gconf-internals.c:2869
+#: ../gconf/gconf-internals.c:2879
 #, c-format
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
@@ -1036,7 +1037,7 @@ msgstr ""
 "org/projects/gconf/ voor informatie. (Details - %s) "
 
 # niets/geen/geen enkel
-#: ../gconf/gconf-internals.c:2870
+#: ../gconf/gconf-internals.c:2880
 msgid "none"
 msgstr "geen"
 
@@ -1419,7 +1420,9 @@ msgstr "Afsluitverzoek ontvangen"
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
-msgstr "gconfd gecompileerd met debug-informatie; bezig met proberen laden van gconf.path uit de broncode-map"
+msgstr ""
+"gconfd gecompileerd met debug-informatie; bezig met proberen laden van gconf."
+"path uit de broncode-map"
 
 #: ../gconf/gconfd.c:353
 #, c-format
