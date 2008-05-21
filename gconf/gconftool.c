@@ -890,7 +890,27 @@ main (int argc, char** argv)
     }
 
   if (config_source == NULL)
-    conf = gconf_engine_get_default();
+    {
+        /* If we aren't running from within a session,
+         * assume we'll be touching the database locally
+         */
+      conf = NULL;
+      if (g_getenv ("DBUS_SESSION_BUS_ADDRESS") == NULL)
+        {
+          char *conffile;
+          GSList *addresses;
+
+          conffile = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+          addresses = gconf_load_source_path (conffile, NULL);
+          g_free(conffile);
+
+          conf = gconf_engine_get_local_for_addresses (addresses, &err);
+          gconf_address_list_free (addresses);
+        }
+
+      if (conf == NULL)
+        conf = gconf_engine_get_default();
+    }
   else
     {
       GSList *addresses;

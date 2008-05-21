@@ -2432,7 +2432,8 @@ get_ior (gboolean start_if_not_found,
         /* if the bus isn't running and we don't want to start gconfd then
          * we don't want to autolaunch the bus either, so bail early.
          */
-        if (g_getenv ("DBUS_SESSION_BUS_ADDRESS") == NULL && !start_if_not_found) {
+        if (g_getenv ("DBUS_SESSION_BUS_ADDRESS") == NULL &&
+           (!start_if_not_found || g_getenv ("DISPLAY") == NULL)) {
                 if (failure_log)
                     g_string_append_printf (failure_log,
                                             _("Not running within active session"));
