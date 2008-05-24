@@ -2512,8 +2512,11 @@ gconf_get_server (gboolean  start_if_not_found,
   if (orb == NULL)
     {
       if (failure_log)
-        g_string_append_printf (failure_log,
+        {
+          g_string_append_printf (failure_log,
                                 _("couldn't contact ORB to resolve existing gconfd object reference"));
+          g_free (ior);
+        }
       return CORBA_OBJECT_NIL;
     }
 
@@ -2525,6 +2528,8 @@ gconf_get_server (gboolean  start_if_not_found,
     g_string_append_printf (failure_log,
                             _("Failed to convert IOR '%s' to an object reference"),
                             ior);
+
+  g_free (ior);
 
   return server;
 }
