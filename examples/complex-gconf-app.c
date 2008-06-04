@@ -123,8 +123,8 @@ configurable_widget_destroy_callback(GtkWidget* widget, gpointer data)
   guint notify_id;
   GConfClient* client;
 
-  client = gtk_object_get_data(GTK_OBJECT(widget), "client");
-  notify_id = GPOINTER_TO_UINT(gtk_object_get_data(GTK_OBJECT(widget), "notify_id"));
+  client = g_object_get_data(widget, "client");
+  notify_id = GPOINTER_TO_UINT(g_object_get_data(widget, "notify_id"));
 
   if (notify_id != 0)
     gconf_client_notify_remove(client, notify_id);
@@ -191,12 +191,11 @@ create_configurable_widget(GConfClient* client, const gchar* config_key)
   /* Note that notify_id will be 0 if there was an error,
      so we handle that in our destroy callback. */
   
-  gtk_object_set_data(GTK_OBJECT(label), "notify_id", GUINT_TO_POINTER(notify_id));
-  gtk_object_set_data(GTK_OBJECT(label), "client", client);
+  g_object_set_data(label, "notify_id", GUINT_TO_POINTER(notify_id));
+  g_object_set_data(label, "client", client);
 
-  gtk_signal_connect(GTK_OBJECT(label), "destroy",
-                     GTK_SIGNAL_FUNC(configurable_widget_destroy_callback),
-                     NULL);
+  g_signal_connect(label, "destroy",
+                   G_CALLBACK(configurable_widget_destroy_callback), NULL);
   
   return frame;
 }
@@ -204,7 +203,7 @@ create_configurable_widget(GConfClient* client, const gchar* config_key)
 static void
 prefs_dialog_destroyed(GtkWidget* dialog, gpointer main_window)
 {
-  gtk_object_set_data(GTK_OBJECT(main_window), "prefs", NULL);
+  g_object_set_data(main_window, "prefs", NULL);
 }
 
 static void
@@ -214,19 +213,19 @@ prefs_clicked(GtkWidget* button, gpointer data)
   GtkWidget* main_window = data;
   GConfClient* client;
 
-  prefs_dialog = gtk_object_get_data(GTK_OBJECT(main_window), "prefs");
+  prefs_dialog = g_object_get_data(main_window, "prefs");
 
   if (prefs_dialog == NULL)
     {
-      client = gtk_object_get_data(GTK_OBJECT(main_window), "client");
+      client = g_object_get_data(main_window, "client");
       
       prefs_dialog = create_prefs_dialog(main_window, client);
 
-      gtk_object_set_data(GTK_OBJECT(main_window), "prefs", prefs_dialog);
+      g_object_set_data(G_OBJECT(main_window), "prefs", prefs_dialog);
 
-      gtk_signal_connect(GTK_OBJECT(prefs_dialog), "destroy",
-                         GTK_SIGNAL_FUNC(prefs_dialog_destroyed),
-                         main_window);
+      g_signal_connect(prefs_dialog, "destroy",
+                       G_CALLBACK(prefs_dialog_destroyed),
+                       main_window);
       
       gtk_widget_show_all(prefs_dialog);
     }
@@ -263,16 +262,16 @@ create_main_window(GConfClient* client)
   config = create_configurable_widget(client, "/apps/basic-gconf-app/blah");
   gtk_box_pack_start(GTK_BOX(vbox), config, FALSE, FALSE, 0);
 
-  gtk_signal_connect(GTK_OBJECT(w), "delete_event",
-                     GTK_SIGNAL_FUNC(delete_event_callback),
-                     NULL);
+  g_signal_connect(w, "delete_event",
+                   G_CALLBACK(delete_event_callback),
+                   NULL);
 
-  gtk_object_set_data(GTK_OBJECT(w), "client", client);
+  g_object_set_data(w, "client", client);
   
   prefs = gtk_button_new_with_label("Prefs");
   gtk_box_pack_end(GTK_BOX(vbox), prefs, FALSE, FALSE, 0);
-  gtk_signal_connect(GTK_OBJECT(prefs), "clicked",
-                     GTK_SIGNAL_FUNC(prefs_clicked), w);
+  g_signal_connect(prefs, "clicked",
+                   G_CALLBACK(prefs_clicked), w);
   
   return w;
 }
@@ -289,7 +288,7 @@ create_main_window(GConfClient* client)
 static GConfChangeSet*
 prefs_dialog_get_change_set(GtkWidget* dialog)
 {
-  return gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
+  return g_object_get_data(dialog, "changeset");
 }
 
 
@@ -303,17 +302,17 @@ prefs_dialog_update_sensitivity(GtkWidget* dialog)
   GConfChangeSet* cs;
   GConfChangeSet* revert_cs;
   
-  apply = gtk_object_get_data(GTK_OBJECT(dialog), "apply");
-  revert = gtk_object_get_data(GTK_OBJECT(dialog), "revert");
-  ok = gtk_object_get_data(GTK_OBJECT(dialog), "ok");
-  cancel = gtk_object_get_data(GTK_OBJECT(dialog), "cancel");
+  apply = g_object_get_data(dialog, "apply");
+  revert = g_object_get_data(dialog, "revert");
+  ok = g_object_get_data(dialog, "ok");
+  cancel = g_object_get_data(dialog, "cancel");
 
   g_assert(apply != NULL);
   g_assert(revert != NULL);
   
   cs = prefs_dialog_get_change_set(dialog);
 
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
+  revert_cs = g_object_get_data(dialog, "revert_changeset");
 
   if (gconf_change_set_size(cs) > 0)
     {
@@ -337,11 +336,11 @@ prefs_dialog_apply(GtkWidget* dialog)
   GConfClient* client;
   GConfChangeSet* revert_cs;
   
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
+  client = g_object_get_data(dialog, "client");
 
   /* Create the revert changeset on the first apply; this means
      the revert button should now be sensitive */
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
+  revert_cs = g_object_get_data(dialog, "revert_changeset");
 
   if (revert_cs == NULL)
     {
@@ -353,10 +352,10 @@ prefs_dialog_apply(GtkWidget* dialog)
                                                               "/apps/basic-gconf-app/blah",
                                                               NULL);
 
-      gtk_object_set_data(GTK_OBJECT(dialog), "revert_changeset", revert_cs);
+      g_object_set_data(dialog, "revert_changeset", revert_cs);
     }
       
-  cs = gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
+  cs = g_object_get_data(dialog, "changeset");
   
   /* again, relying on default error handler. The third argument here
      is whether to remove the successfully-committed items from the
@@ -375,14 +374,14 @@ update_entry(GtkWidget* dialog, GConfChangeSet* cs, const gchar* config_key)
   GConfValue* value = NULL;
   GConfClient* client;
 
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
+  client = g_object_get_data(dialog, "client");
   
   if (gconf_change_set_check_value(cs, config_key,
                                    &value))
     {
       GtkWidget* entry;
 
-      entry = gtk_object_get_data(GTK_OBJECT(dialog), config_key);
+      entry = g_object_get_data(dialog, config_key);
 
       g_assert(entry != NULL);
       
@@ -431,14 +430,14 @@ prefs_dialog_revert(GtkWidget* dialog)
   GConfChangeSet* revert_cs;
   GConfClient* client;
 
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
+  revert_cs = g_object_get_data(dialog, "revert_changeset");
 
   if (revert_cs == NULL)
     return; /* happens on cancel, if no apply has been done */
   
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
+  client = g_object_get_data(dialog, "client");
   
-  cs = gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
+  cs = g_object_get_data(dialog, "changeset");
 
   /* When reverting, you want to discard any pending changes so
      "apply" won't do anything */
@@ -463,7 +462,7 @@ config_entry_destroy_callback(GtkWidget* entry, gpointer data)
 {
   gchar* key;
 
-  key = gtk_object_get_data(GTK_OBJECT(entry), "key");
+  key = g_object_get_data(entry, "key");
 
   g_free(key);
 }
@@ -480,7 +479,7 @@ config_entry_changed_callback(GtkWidget* entry, gpointer data)
 
   text = gtk_editable_get_chars(GTK_EDITABLE(entry), 0, -1);
 
-  key = gtk_object_get_data(GTK_OBJECT(entry), "key");
+  key = g_object_get_data(entry, "key");
 
   /* Unset if the string is zero-length, otherwise set */
   if (*text != '\0')
@@ -517,22 +516,21 @@ create_config_entry(GtkWidget* prefs_dialog, GConfClient* client, const gchar* c
   if (initial)
     gconf_value_free(initial);
   
-  gtk_object_set_data(GTK_OBJECT(entry), "client", client);
-  gtk_object_set_data(GTK_OBJECT(entry), "key", g_strdup(config_key));
+  g_object_set_data(entry, "client", client);
+  g_object_set_data(entry, "key", g_strdup(config_key));
 
-  gtk_signal_connect(GTK_OBJECT(entry), "destroy",
-                     GTK_SIGNAL_FUNC(config_entry_destroy_callback),
-                     NULL);
+  g_signal_connect(entry, "destroy",
+                   G_CALLBACK(config_entry_destroy_callback),
+                   NULL);
 
-  gtk_signal_connect(GTK_OBJECT(entry), "changed",
-                     GTK_SIGNAL_FUNC(config_entry_changed_callback),
-                     prefs_dialog);
+  g_signal_connect(entry, "changed",
+                   G_CALLBACK(config_entry_changed_callback),
+                   prefs_dialog);
 
   /* A dubious hack; set the entry as object data using its
      config key as the key so we can find it in the prefs dialog
      revert code */
-  gtk_object_set_data(GTK_OBJECT(prefs_dialog),
-                      config_key, entry);
+  g_object_set_data(prefs_dialog, config_key, entry);
 
   /* Set the entry insensitive if the key it edits isn't writable */
   gtk_widget_set_sensitive (entry,
@@ -579,11 +577,11 @@ prefs_dialog_destroy_callback(GtkWidget* dialog, gpointer data)
   GConfChangeSet* revert_cs;
   GConfClient* client;
 
-  client = gtk_object_get_data(GTK_OBJECT(dialog), "client");
+  client = g_object_get_data(dialog, "client");
   
-  cs = gtk_object_get_data(GTK_OBJECT(dialog), "changeset");
+  cs = g_object_get_data(dialog, "changeset");
   
-  revert_cs = gtk_object_get_data(GTK_OBJECT(dialog), "revert_changeset");
+  revert_cs = g_object_get_data(dialog, "revert_changeset");
 
   gconf_change_set_unref(cs);
 
@@ -615,10 +613,10 @@ create_prefs_dialog(GtkWidget* parent, GConfClient* client)
   ok = gtk_button_new_with_label("OK");
   cancel = gtk_button_new_with_label("Cancel");
   
-  gtk_object_set_data(GTK_OBJECT(dialog), "apply", apply);
-  gtk_object_set_data(GTK_OBJECT(dialog), "revert", revert);
-  gtk_object_set_data(GTK_OBJECT(dialog), "ok", ok);
-  gtk_object_set_data(GTK_OBJECT(dialog), "cancel", cancel);
+  g_object_set_data(dialog, "apply", apply);
+  g_object_set_data(dialog, "revert", revert);
+  g_object_set_data(dialog, "ok", ok);
+  g_object_set_data(dialog, "cancel", cancel);
   
   bbox = gtk_hbutton_box_new();
 
@@ -638,33 +636,33 @@ create_prefs_dialog(GtkWidget* parent, GConfClient* client)
 
   cs = gconf_change_set_new();
   
-  gtk_object_set_data(GTK_OBJECT(dialog), "changeset", cs);
-  gtk_object_set_data(GTK_OBJECT(dialog), "client", client);
+  g_object_set_data(dialog, "changeset", cs);
+  g_object_set_data(dialog, "client", client);
 
   /* Grab a reference */
   g_object_ref(G_OBJECT(client));
   
-  gtk_signal_connect(GTK_OBJECT(dialog), "destroy",
-                     GTK_SIGNAL_FUNC(prefs_dialog_destroy_callback),
-                     NULL);
+  g_signal_connect(dialog, "destroy",
+                   G_CALLBACK(prefs_dialog_destroy_callback),
+                   NULL);
 
   prefs_dialog_update_sensitivity(dialog);
 
-  gtk_signal_connect(GTK_OBJECT(apply), "clicked",
-                     GTK_SIGNAL_FUNC(apply_button_callback),
-                     dialog);
+  g_signal_connect(apply, "clicked",
+                   G_CALLBACK(apply_button_callback),
+                   dialog);
 
-  gtk_signal_connect(GTK_OBJECT(revert), "clicked",
-                     GTK_SIGNAL_FUNC(revert_button_callback),
-                     dialog);
+  g_signal_connect(revert, "clicked",
+                   G_CALLBACK(revert_button_callback),
+                   dialog);
 
-  gtk_signal_connect(GTK_OBJECT(ok), "clicked",
-                     GTK_SIGNAL_FUNC(ok_button_callback),
-                     dialog);
+  g_signal_connect(ok, "clicked",
+                   G_CALLBACK(ok_button_callback),
+                   dialog);
 
-  gtk_signal_connect(GTK_OBJECT(cancel), "clicked",
-                     GTK_SIGNAL_FUNC(cancel_button_callback),
-                     dialog);
+  g_signal_connect(cancel, "clicked",
+                   G_CALLBACK(cancel_button_callback),
+                   dialog);
   
   gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
 

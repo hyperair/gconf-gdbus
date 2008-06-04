@@ -1,3 +1,21 @@
+2008-06-04  Kjartan Maraas  <kmaraas@gnome.org>
+
+	* configure.in: Bump version after tagging.
+	* examples/complex-gconf-app.c:
+	(configurable_widget_destroy_callback),
+	(create_configurable_widget), (prefs_dialog_destroyed),
+	(prefs_clicked), (create_main_window),
+	(prefs_dialog_get_change_set), (prefs_dialog_update_sensitivity),
+	(prefs_dialog_apply), (update_entry), (prefs_dialog_revert),
+	(config_entry_destroy_callback), (config_entry_changed_callback),
+	(create_config_entry), (prefs_dialog_destroy_callback),
+	(create_prefs_dialog):
+	* gconf/testgconfclient.c: (entry_notify_func),
+	(entry_destroyed_callback), (entry_changed_callback),
+	(entry_attached_to), (addsub_callback), (removesub_callback),
+	(addmain_callback), (removemain_callback), (create_controls):
+	Remove uses of deprecated gtk_signal* and gtk_object* functions.
+
 2008-06-03  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* configure.in: Bump again.
