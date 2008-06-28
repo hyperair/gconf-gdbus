@@ -17,10 +17,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
-
-#include <gconf/gconf-backend.h>
-#include <gconf/gconf-internals.h>
-#include <gconf/gconf.h>
+#include "config.h"
+#include "gconf/gconf-backend.h"
+#include "gconf/gconf-internals.h"
+#include "gconf/gconf.h"
 
 #include <stdio.h>
 #include <time.h>

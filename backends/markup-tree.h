@@ -21,7 +21,7 @@
 #define MARKUP_TREE_H
 
 #include <glib.h>
-#include <gconf/gconf-value.h>
+#include "gconf/gconf-value.h"
 
 typedef struct _MarkupTree  MarkupTree;
 typedef struct _MarkupDir   MarkupDir;

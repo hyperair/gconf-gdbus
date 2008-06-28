@@ -23,7 +23,7 @@
 
 #include <glib.h>
 
-#include <gconf/gconf-value.h>
+#include "gconf/gconf-value.h"
 
 G_BEGIN_DECLS
 

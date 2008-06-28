@@ -20,7 +20,7 @@
 #ifndef GCONF_XML_CACHE_H
 #define GCONF_XML_CACHE_H
 
-#include <gconf/gconf.h>
+#include "gconf/gconf.h"
 #include <libxml/tree.h>
 #include "xml-dir.h"
 

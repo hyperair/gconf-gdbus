@@ -30,9 +30,9 @@
 #include <libxml/xpath.h>
 #include <glib.h>
 
-#include <gconf/gconf.h>
-#include <gconf/gconf-backend.h>
-#include <gconf/gconf-internals.h>
+#include "gconf/gconf.h"
+#include "gconf/gconf-backend.h"
+#include "gconf/gconf-internals.h"
 
 typedef struct
 {

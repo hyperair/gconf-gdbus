@@ -21,9 +21,9 @@
 #ifndef GCONF_GCONFBACKEND_H
 #define GCONF_GCONFBACKEND_H
 
-#include <gconf/gconf-internals.h>
+#include "gconf/gconf-internals.h"
 #include <gmodule.h>
-#include <gconf/gconf-sources.h>
+#include "gconf/gconf-sources.h"
 
 /*
  * This vtable is more complicated than strictly necessary, hoping

@@ -17,8 +17,9 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
 #include "xml-cache.h"
-#include <gconf/gconf-internals.h>
+#include "gconf/gconf-internals.h"
 
 #include <string.h>
 #include <time.h>

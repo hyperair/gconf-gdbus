@@ -21,7 +21,7 @@
 #define GCONF_GCONF_ENGINE_H
 
 #include <glib.h>
-#include <gconf/gconf-error.h>
+#include "gconf/gconf-error.h"
 
 G_BEGIN_DECLS
 

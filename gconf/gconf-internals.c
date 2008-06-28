@@ -18,7 +18,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include <config.h>
+#include "config.h"
 #include "gconf-internals.h"
 #include "gconf-backend.h"
 #include "gconf-schema.h"
@@ -2796,7 +2796,7 @@ gconf_get_daemon_dir (void)
     {
       char *s;
       char *subdir;
-      char *tmpdir;
+      const char *tmpdir;
 
       subdir = g_strconcat ("gconfd-", g_get_user_name (), NULL);
       
@@ -2841,7 +2841,6 @@ gconf_activate_server (gboolean  start_if_not_found,
                        GError  **error)
 {
   ConfigServer server = CORBA_OBJECT_NIL;
-  GError *tmp_err;
   GString *failure_log;
   CORBA_Environment ev;
 
@@ -2875,7 +2874,6 @@ gconf_activate_server (gboolean  start_if_not_found,
       return server;
     }
 
- out:
   if (server == CORBA_OBJECT_NIL &&
       error &&
       *error == NULL)

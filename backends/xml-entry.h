@@ -20,7 +20,7 @@
 #ifndef GCONF_XML_ENTRY_H
 #define GCONF_XML_ENTRY_H
 
-#include <gconf/gconf.h>
+#include "gconf/gconf.h"
 #include <libxml/tree.h>
 
 /* Entry stores all the information about a given key */

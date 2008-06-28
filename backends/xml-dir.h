@@ -20,7 +20,7 @@
 #ifndef GCONF_XML_DIR_H
 #define GCONF_XML_DIR_H
 
-#include <gconf/gconf.h>
+#include "gconf/gconf.h"
 #include <libxml/tree.h>
 
 /* Dir stores the information about a given directory */

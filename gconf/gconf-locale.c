@@ -17,6 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
 #include "gconf-locale.h"
 #include "gconf-internals.h"
 #include <sys/time.h>

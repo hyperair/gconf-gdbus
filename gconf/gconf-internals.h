@@ -29,11 +29,9 @@
 #include <config.h>
 #include <libintl.h>
 
-#define _(String) dgettext (GETTEXT_PACKAGE, String)
-#define N_(String) (String)
-
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n-lib.h>
 #include "gconf-error.h"
 #include "gconf-value.h"
 #include "gconf-engine.h"

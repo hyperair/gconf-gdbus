@@ -17,6 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include "config.h"
 #include "xml-dir.h"
 #include "xml-entry.h"
 
@@ -33,7 +34,7 @@
 #include <errno.h>
 #include <limits.h>
 
-#include <gconf/gconf-internals.h>
+#include "gconf/gconf-internals.h"
 
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG

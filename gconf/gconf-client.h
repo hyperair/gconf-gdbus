@@ -22,9 +22,9 @@
 #define GCONF_GCONF_CLIENT_H
 
 #include <glib-object.h>
-#include <gconf/gconf.h>
-#include <gconf/gconf-listeners.h>
-#include <gconf/gconf-changeset.h>
+#include "gconf/gconf.h"
+#include "gconf/gconf-listeners.h"
+#include "gconf/gconf-changeset.h"
 
 G_BEGIN_DECLS
 
