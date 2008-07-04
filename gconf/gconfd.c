@@ -647,7 +647,7 @@ main(int argc, char** argv)
   /* This is so we don't prevent unmounting of devices. We divert
    * all messages to syslog
    */
-  if (chdir ("/") < 0)
+  if (g_chdir ("/") < 0)
     {
        g_printerr ("Could not change to root directory: %s\n",
 		   g_strerror (errno));
