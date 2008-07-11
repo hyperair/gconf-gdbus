@@ -521,7 +521,7 @@ get_introspection_xml (void)
 static DBusHandlerResult
 bus_message_handler (DBusConnection *connection,
                      DBusMessage    *message,
-                     GMainLoop      *loop)
+                     void           *user_data)
 {
   DBusMessage *reply;
 
@@ -616,6 +616,102 @@ get_on_d_bus (void)
 
   return connection;
 }
+
+#ifdef ENABLE_DEFAULTS_SERVICE
+/* listen on system bus for defaults changes */
+
+static DBusHandlerResult
+system_bus_message_handler (DBusConnection *connection,
+			    DBusMessage    *message,
+			    void           *user_data)
+{
+  DBusMessage *reply;
+
+  reply = NULL;
+
+  if (dbus_message_is_signal (message,
+			      "org.gnome.GConf.Defaults",
+                              "SystemSet"))
+    {
+      DBusError bus_error;
+      char **keys;
+      int n_keys;
+
+      dbus_error_init (&bus_error);
+      if (dbus_message_get_args (message, &bus_error,
+				 DBUS_TYPE_ARRAY, DBUS_TYPE_STRING, &keys, &n_keys,
+				 DBUS_TYPE_INVALID))
+	{
+	  char **key;
+	  GConfSources *system_sources;
+	  GSList addresses;
+
+	  gconf_log (GCL_DEBUG, "System defaults changed.  Notifying.");
+
+	  addresses.data = "xml:merged:/etc/gconf/gconf.xml.system";
+	  addresses.next = NULL;
+	  system_sources = gconf_sources_new_from_addresses (&addresses, NULL);
+
+	  gconfd_clear_cache_for_sources (system_sources);
+
+	  for (key = keys; *key; key++)
+	    gconfd_notify_other_listeners (NULL, system_sources, *key);
+
+	  gconf_sources_free (system_sources);
+
+	  dbus_free_string_array (keys);
+	}
+      else
+        {
+	  gconf_log (GCL_DEBUG, "SystemSet signal received, but error getting message: %s", bus_error.message);
+	}
+      dbus_error_free (&bus_error);
+
+      return DBUS_HANDLER_RESULT_HANDLED;
+    }
+
+  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+static DBusConnection *
+get_on_system_bus (void)
+{
+  DBusConnection *connection;
+  DBusError bus_error;
+  int result;
+
+  dbus_error_init (&bus_error);
+  connection = dbus_bus_get (DBUS_BUS_SYSTEM, &bus_error);
+
+  if (dbus_error_is_set (&bus_error))
+    {
+      gconf_log (GCL_ERR, _("Could not connect to system bus: %s"), bus_error.message);
+      dbus_error_free (&bus_error);
+      return NULL;
+    }
+
+  dbus_connection_setup_with_g_main (connection, NULL);
+
+  dbus_bus_add_match (connection, "type='signal',interface='org.gnome.GConf.Defaults'", &bus_error);
+  dbus_connection_flush(connection);
+  if (dbus_error_is_set (&bus_error))
+    {
+      gconf_log (GCL_DEBUG, "Failed to add signal match to system bus: %s", bus_error.message);
+      dbus_connection_unref (connection);
+      return NULL;
+    }
+
+  if (!dbus_connection_add_filter (connection, (DBusHandleMessageFunction)
+                                   system_bus_message_handler, NULL, NULL))
+    {
+      gconf_log (GCL_DEBUG, "Failed to add message filter to system bus.");
+      dbus_connection_unref (connection);
+      return NULL;
+    }
+
+  return connection;
+}
+#endif  /* ENABLE_DEFAULTS_SERVICE */
 
 int 
 main(int argc, char** argv)
@@ -778,7 +874,11 @@ main(int argc, char** argv)
 
   /* Read saved log file, if any */
   logfile_read ();
-  
+ 
+#ifdef ENABLE_DEFAULTS_SERVICE 
+  get_on_system_bus ();
+#endif
+
   gconf_main ();
 
   if (in_shutdown)
@@ -1202,6 +1302,22 @@ gconfd_notify_other_listeners (GConfDatabase *modified_db,
 	      tmp2 = tmp2->next;
 	    }
 	}
+
+      tmp = tmp->next;
+    }
+}
+
+void
+gconfd_clear_cache_for_sources (GConfSources *sources)
+{
+  GList *tmp;
+
+  tmp = db_list;
+  while (tmp != NULL)
+    {
+      GConfDatabase *db = tmp->data;
+
+      gconf_database_clear_cache_for_sources (db, sources, NULL);
 
       tmp = tmp->next;
     }

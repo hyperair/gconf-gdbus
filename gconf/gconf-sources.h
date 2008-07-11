@@ -82,6 +82,8 @@ GConfSources* gconf_sources_new_from_addresses (GSList* addresses,
 GConfSources* gconf_sources_new_from_source    (GConfSource   *source);
 void          gconf_sources_free               (GConfSources  *sources);
 void          gconf_sources_clear_cache        (GConfSources  *sources);
+void          gconf_sources_clear_cache_for_sources (GConfSources  *sources,
+						     GConfSources  *affected);
 GConfValue*   gconf_sources_query_value        (GConfSources  *sources,
                                                 const gchar   *key,
                                                 const gchar  **locales,

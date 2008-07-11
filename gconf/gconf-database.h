@@ -133,6 +133,9 @@ gboolean gconf_database_synchronous_sync (GConfDatabase  *db,
                                           GError    **err);
 void     gconf_database_clear_cache      (GConfDatabase  *db,
                                           GError    **err);
+void     gconf_database_clear_cache_for_sources (GConfDatabase  *db,
+						 GConfSources   *sources,
+						 GError        **err);
 
 
 void gconfd_locale_cache_expire (void);

@@ -34,6 +34,8 @@
 #include <errno.h>
 #include <ctype.h>
 
+static const char * get_address_resource (const char *address);
+
 /* 
  *  Sources
  */
@@ -482,6 +484,44 @@ gconf_sources_clear_cache        (GConfSources  *sources)
 
       if (source->backend->vtable.clear_cache)
         (*source->backend->vtable.clear_cache)(source);
+      
+      tmp = g_list_next(tmp);
+    }
+}
+
+void
+gconf_sources_clear_cache_for_sources (GConfSources  *sources,
+				       GConfSources  *affected)
+{
+  GList* tmp;
+
+  tmp = sources->sources;
+
+  while (tmp != NULL)
+    {
+      GConfSource* source = tmp->data;
+      const char *source_resource = get_address_resource (source->address);
+
+      GList* tmp2;
+
+      if (source->backend->vtable.clear_cache == NULL)
+        continue;
+
+      tmp2 = affected->sources;
+
+      while (tmp2 != NULL)
+	{
+	  GConfSource* affected_source = tmp2->data;
+
+	  if (source->backend == affected_source->backend &&
+	      strcmp (source_resource, get_address_resource (affected_source->address)) == 0)
+	    {
+	      if (source->backend->vtable.clear_cache)
+		(*source->backend->vtable.clear_cache)(source);
+	    }
+
+	  tmp2 = g_list_next(tmp2);
+	}
       
       tmp = g_list_next(tmp);
     }

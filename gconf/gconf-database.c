@@ -1722,6 +1722,18 @@ gconf_database_clear_cache (GConfDatabase  *db,
   gconf_sources_clear_cache(db->sources);
 }
 
+void
+gconf_database_clear_cache_for_sources (GConfDatabase  *db,
+					GConfSources   *sources,
+					GError        **err)
+{
+  g_assert(db->listeners != NULL);
+
+  db->last_access = time(NULL);
+
+  gconf_sources_clear_cache_for_sources(db->sources, sources);
+}
+
 const gchar *
 gconf_database_get_persistent_name (GConfDatabase *db)
 {

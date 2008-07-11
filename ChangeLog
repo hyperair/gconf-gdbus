@@ -1,3 +1,28 @@
+2008-07-11  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 531169 – A mechanism for setting defaults
+
+	The cache-clearing part of this patch is thanks
+	to Behdad Esfahbod.
+
+	* defaults/*: A DBus system bus service that can copy a 
+	subtree of GConf values from the callers db to a system-wide
+	db, using PolicyKit to control access.
+
+	* configure.in: Add --enable-defaults-service to optionally
+	build the defaults service.
+
+	* gconf/gconf-database.[hc]: Add
+	gconf_database_clear_cache_for_sources.
+
+	* gconf/gconf-sources.[hc]: Add gconf_sources_clear_cache_for_sources.
+
+	* gconf/gconfd.c: Listen for changes in the system-wide
+	databases by the defaults service, and clear the cache.
+
+	* po/POTFILES.in: Glue
+	* Makefile.am: Glue
+
 2008-07-04  Kjartan Maraas  <kmaraas@gnome.org>
 
 	* gconf/gconfd.c: (main): Use g_chdir() instead of plain
