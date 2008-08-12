@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf 2.9.92\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-04 16:25+0700\n"
-"PO-Revision-Date: 2008-07-04 16:34+0700\n"
+"POT-Creation-Date: 2008-08-12 18:18+0700\n"
+"PO-Revision-Date: 2008-08-12 18:23+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -536,6 +536,22 @@ msgstr "ไม่มี car ในคู่ของค่าในแฟ้ม 
 msgid "Missing both car and cdr values from pair in XML file"
 msgstr "ไม่มีทั้งค่า car และ cdr ในคู่ในแฟ้ม XML"
 
+#: defaults/org.gnome.gconf.defaults.policy.in.h:1
+msgid "Change GConf mandatory values"
+msgstr "เปลี่ยนค่า GConf บังคับ"
+
+#: defaults/org.gnome.gconf.defaults.policy.in.h:2
+msgid "Change GConf system values"
+msgstr "เปลี่ยนค่า GConf สำหรับระบบ"
+
+#: defaults/org.gnome.gconf.defaults.policy.in.h:3
+msgid "Privileges are required to change GConf mandatory values"
+msgstr "ต้องมีสิทธิพิเศษจึงจะเปลี่ยนค่า GConf บังคับได้"
+
+#: defaults/org.gnome.gconf.defaults.policy.in.h:4
+msgid "Privileges are required to change GConf system values"
+msgstr "ต้องมีสิทธิพิเศษจึงจะเปลี่ยนค่า GConf สำหรับระบบได้"
+
 #: gconf/gconf-backend.c:62
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
@@ -662,7 +678,7 @@ msgstr ""
 "ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มปูมได้ (โดยมากมักไม่มีอันตราย "
 "แต่อาจทำให้เกิดการแจ้งขึ้นใหม่แบบแปลกๆ): %s"
 
-#: gconf/gconf-database.c:1301 gconf/gconf-sources.c:1697
+#: gconf/gconf-database.c:1301 gconf/gconf-sources.c:1737
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "เกิดข้อผิดพลาดขณะถามค่าของ `%s': %s"
@@ -1123,53 +1139,53 @@ msgid ""
 "elements"
 msgstr "schema กำหนดชนิดคู่ แต่ไม่ได้กำหนดชนิดของอิลิเมนต์ car/cdr"
 
-#: gconf/gconf-sources.c:372
+#: gconf/gconf-sources.c:374
 #, c-format
 msgid "Failed to load source \"%s\": %s"
 msgstr "ไม่สามารถโหลดแหล่ง \"%s\": %s"
 
-#: gconf/gconf-sources.c:412
+#: gconf/gconf-sources.c:414
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a writable configuration source at position %d"
 msgstr "หาที่อยู่ \"%s\" พบ เป็นแหล่งค่าตั้งที่เขียนได้ที่ตำแหน่ง %d"
 
-#: gconf/gconf-sources.c:418
+#: gconf/gconf-sources.c:420
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a read-only configuration source at position %d"
 msgstr "หาที่อยู่ \"%s\" พบ เป็นแหล่งค่าตั้งที่อ่านได้เท่านั้นที่ตำแหน่ง %d"
 
-#: gconf/gconf-sources.c:425
+#: gconf/gconf-sources.c:427
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable configuration source at "
 "position %d"
 msgstr "หาที่อยู่ \"%s\" พบ เป็นแหล่งค่าตั้งที่เขียนได้บางส่วนที่ตำแหน่ง %d"
 
-#: gconf/gconf-sources.c:434
+#: gconf/gconf-sources.c:436
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
 msgstr "หาที่อยู่ที่เขียนได้ไม่พบสักแหล่ง จึงไม่สามารถบันทึกการเปลี่ยนแปลงค่าตั้งได้"
 
-#: gconf/gconf-sources.c:650
+#: gconf/gconf-sources.c:690
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr "schema `%s' ที่กำหนดไว้สำหรับ `%s' กลับเก็บค่าที่ไม่ใช่ schema"
 
-#: gconf/gconf-sources.c:712
+#: gconf/gconf-sources.c:752
 msgid "The '/' name can only be a directory, not a key"
 msgstr "ชื่อ '/' เป็นไดเรกทอรีได้เท่านั้น ไม่สามารถเป็นคีย์ได้"
 
-#: gconf/gconf-sources.c:754
+#: gconf/gconf-sources.c:794
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
 "path"
 msgstr "ค่าของ `%s' ถูกเขียนค่าในแหล่งที่อ่านได้เท่านั้น โดยเขียนที่ชั้นนอกของพาธค่าตั้งของคุณ"
 
-#: gconf/gconf-sources.c:766
+#: gconf/gconf-sources.c:806
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
@@ -1204,17 +1220,17 @@ msgstr ""
 "ได้เพียงหนึ่งตัวเท่านั้น และต้องเป็นเจ้าของแฟ้มล็อคใน ~/.gconfd รวมทั้งแฟ้มล็อคในแหล่งเก็บต่างๆ "
 "เช่น ~/.gconf ด้วย"
 
-#: gconf/gconf-sources.c:1570
+#: gconf/gconf-sources.c:1610
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "เกิดข้อผิดพลาดขณะหา metainfo: %s"
 
-#: gconf/gconf-sources.c:1639
+#: gconf/gconf-sources.c:1679
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "เกิดข้อผิดพลาดขณะอ่าน metainfo: %s"
 
-#: gconf/gconf-sources.c:1663
+#: gconf/gconf-sources.c:1703
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr "คีย์ `%s' ซึ่งกำหนดไว้เป็น schema สำหรับคีย `%s' กลับเก็บค่าเป็นชนิด `%s'"
@@ -1400,16 +1416,21 @@ msgstr "ไม่สามารถติดต่อไปยังบัสข
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "ไม่สามารถอ่านชื่อบัสสำหรับดีมอน และจะปิดโปรแกรม: %s"
 
-#: gconf/gconfd.c:676
+#: gconf/gconfd.c:688
+#, c-format
+msgid "Could not connect to system bus: %s"
+msgstr "ไม่สามารถติดต่อไปยังบัสของระบบ: %s"
+
+#: gconf/gconfd.c:772
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "กำลังเริ่มทำงาน (รุ่น %s) pid %u ผู้ใช้ '%s'"
 
-#: gconf/gconfd.c:736
+#: gconf/gconfd.c:832
 msgid "Failed to get object reference for ConfigServer"
 msgstr "ไม่สามารถอ้างอิงอ็อบเจกต์สำหรับ ConfigServer มาใช้ได้"
 
-#: gconf/gconfd.c:765
+#: gconf/gconfd.c:861
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1417,34 +1438,34 @@ msgid ""
 msgstr ""
 "ไม่สามารถเขียนข้อมูลไบต์ลง file descriptor %d ของไปป์ได้ โปรแกรมไคลเอนต์จึงอาจค้าง: %s"
 
-#: gconf/gconfd.c:807
+#: gconf/gconfd.c:907
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "เกิดข้อผิดพลาดขณะปลดล็อคแฟ้ม: %s"
 
-#: gconf/gconfd.c:815
+#: gconf/gconfd.c:915
 msgid "Exiting"
 msgstr "กำลังออก"
 
-#: gconf/gconfd.c:833
+#: gconf/gconfd.c:933
 msgid "SIGHUP received, reloading all databases"
 msgstr "ได้รับ SIGHUP จะโหลดฐานข้อมูลใหม่หมด"
 
-#: gconf/gconfd.c:850
+#: gconf/gconfd.c:950
 msgid "GConf server is not in use, shutting down."
 msgstr "เซิร์ฟเวอร์ GConf ไม่ได้ใช้งาน จะปิดโปรแกรม"
 
-#: gconf/gconfd.c:1176
+#: gconf/gconfd.c:1276
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "ไม่สามารถอ่านค่าใหม่สำหรับ `%s' ได้: %s"
 
-#: gconf/gconfd.c:1304
+#: gconf/gconfd.c:1420
 #, c-format
 msgid "Returning exception: %s"
 msgstr "กำลังคืนค่าความผิดปกติ: %s"
 
-#: gconf/gconfd.c:1410
+#: gconf/gconfd.c:1526
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1453,60 +1474,60 @@ msgstr ""
 "ไม่สามารถเปิดแฟ้มปูมของ gconfd ได้ และจะไม่สามารถสร้างผู้คอยฟังต่างๆ กลับคืนได้ หลังจากที่ "
 "gconfd ปิดตัวลง (%s)"
 
-#: gconf/gconfd.c:1445
+#: gconf/gconfd.c:1561
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "ไม่สามารถปิดแฟ้มปูมของ gconfd ได้ ข้อมูลอาจถูกบันทึกไม่ถูกต้อง (%s)"
 
-#: gconf/gconfd.c:1507
+#: gconf/gconfd.c:1623
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "ไม่สามารถเปิดแฟ้มบันทึกสถานะ '%s' เพื่อเขียน: %s"
 
-#: gconf/gconfd.c:1521
+#: gconf/gconfd.c:1637
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "ไม่สามารถเขียนแฟ้มบันทึกสถานะ '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1530
+#: gconf/gconfd.c:1646
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "ไม่สามารถปิดแฟ้มบันทึกสถานะอันใหม่ '%s': %s"
 
-#: gconf/gconfd.c:1544
+#: gconf/gconfd.c:1660
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "ไม่สามารถย้ายแฟ้มบันทึกสถานะอันเก่า '%s' ออกไป: %s"
 
-#: gconf/gconfd.c:1554
+#: gconf/gconfd.c:1670
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "ไม่สามารถย้ายแฟ้มบันทึกสถานะอันใหม่เข้ามาแทน: %s"
 
-#: gconf/gconfd.c:1563
+#: gconf/gconfd.c:1679
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "ไม่สามารถย้ายแฟ้มบันทึกสถานะเดิมซึ่งถูกย้ายไปที่ '%s' กลับมาได้: %s"
 
-#: gconf/gconfd.c:2042
+#: gconf/gconfd.c:2158
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "ไม่สามารถสร้างผู้คอยฟังคืนที่ที่อยู่ '%s' ได้ เนื่องจากไม่สามารถเปิดหาฐานข้อมูลได้"
 
-#: gconf/gconfd.c:2078
+#: gconf/gconfd.c:2194
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "เกิดข้อผิดพลาดขณะอ่านแฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2128
+#: gconf/gconfd.c:2244
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "ไม่สามารถเปิดแฟ้มบันทึกสถานะ '%s' ได้: %s"
 
-#: gconf/gconfd.c:2247
+#: gconf/gconfd.c:2363
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1515,7 +1536,7 @@ msgstr ""
 "ไม่สามารถบันทึกการเพิ่มผู้คอยฟังลงในแฟ้มปูมของ gconfd ได้ "
 "และจะไม่สามารถเพิ่มผู้คอยฟังดังกล่าวคืนได้อีกถ้า gconfd ตายหรือปิดตัวลง (%s)"
 
-#: gconf/gconfd.c:2252
+#: gconf/gconfd.c:2368
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1524,27 +1545,27 @@ msgstr ""
 "ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มปูมของ gconfd ได้ "
 "และอาจทำให้มีการเพิ่มผู้คอยฟังดังกล่าวคืนอีกอย่างผิดๆ ถ้า gconfd ตายหรือปิดตัวลง (%s)"
 
-#: gconf/gconfd.c:2275 gconf/gconfd.c:2449
+#: gconf/gconfd.c:2391 gconf/gconfd.c:2565
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "ไม่สามารถอ่านค่า IOR สำหรับไคลเอนต์: %s"
 
-#: gconf/gconfd.c:2290
+#: gconf/gconfd.c:2406
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "ไม่สามารถเปิดแฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2303
+#: gconf/gconfd.c:2419
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "ไม่สามารถบันทึกการเพิ่มไคลเอนต์ลงในแฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2311
+#: gconf/gconfd.c:2427
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "ไม่สามารถ flush บันทึกการเพิ่มไคลเอนต์ลงสู่แฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2410
+#: gconf/gconfd.c:2526
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "ไคลเอนต์บางตัวได้ลบตัวเองออกจากเซิร์ฟเวอร์ GConf โดยที่ไม่ได้เพิ่มเข้ามาก่อน"
