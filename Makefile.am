@@ -1,10 +1,11 @@
 
 SUBDIRS = gconf backends po doc examples 
-DIST_SUBDIRS=tests defaults $(SUBDIRS) 
 
 if ENABLE_DEFAULTS_SERVICE
 SUBDIRS += defaults
 endif
+
+DIST_SUBDIRS=tests $(SUBDIRS) 
 
 EXTRA_DIST =                \
 	TODO                \
