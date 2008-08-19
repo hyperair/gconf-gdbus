@@ -189,6 +189,12 @@ if test "x$enable_defaults_service" != "xno" ; then
   AC_DEFINE(ENABLE_DEFAULTS_SERVICE, 1, [enable defaults DBus service])
 fi
 
+AC_CHECK_PROG([POLKIT_POLICY_FILE_VALIDATE],
+              [polkit-policy-file-validate], [polkit-policy-file-validate])
+if test -z "$POLKIT_POLICY_FILE_VALIDATE"; then
+    AC_MSG_ERROR([polkit-policy-file-validate not found])
+fi
+
 AM_CONDITIONAL(ENABLE_DEFAULTS_SERVICE, [test "x$enable_defaults_service" != "xno"])
 
 ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
