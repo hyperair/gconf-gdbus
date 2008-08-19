@@ -678,7 +678,6 @@ get_on_system_bus (void)
 {
   DBusConnection *connection;
   DBusError bus_error;
-  int result;
 
   dbus_error_init (&bus_error);
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &bus_error);

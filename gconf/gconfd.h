@@ -46,6 +46,9 @@ void gconfd_notify_other_listeners (GConfDatabase *modified_db,
 				    GConfSources  *modified_sources,
                                     const char    *key);
 
+void
+gconfd_clear_cache_for_sources (GConfSources *sources);
+
 void gconfd_need_log_cleanup (void);
 
 G_END_DECLS

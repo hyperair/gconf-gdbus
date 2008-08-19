@@ -54,3 +54,5 @@ CLEANFILES =			\
 	$(polkit_DATA)		\
 	$(dbus_services_DATA)
 
+DISTCLEANFILES = org.gnome.gconf.defaults.policy
+
