@@ -568,9 +568,9 @@ cleanup:
 
 	if (error) {
 		g_print ("failed to set GConf values:  %s\n", error->message);
-		error2 = g_error_new (GCONF_DEFAULTS_ERROR,
-				      GCONF_DEFAULTS_ERROR_GENERAL,
-				      error->message);
+		error2 = g_error_new_literal (GCONF_DEFAULTS_ERROR,
+					      GCONF_DEFAULTS_ERROR_GENERAL,
+					      error->message);
 		g_error_free (error);
 
 		dbus_g_method_return_error (context, error2);
@@ -738,9 +738,9 @@ gconf_defaults_unset_mandatory (GConfDefaults          *mechanism,
 		     includes, excludes, &error);
 
 	if (error) {
-		error2 = g_error_new (GCONF_DEFAULTS_ERROR,
-				      GCONF_DEFAULTS_ERROR_GENERAL,
-				      error->message);
+		error2 = g_error_new_literal (GCONF_DEFAULTS_ERROR,
+					      GCONF_DEFAULTS_ERROR_GENERAL,
+					      error->message);
 		g_error_free (error);
 
 		dbus_g_method_return_error (context, error2);
