@@ -1639,7 +1639,7 @@ logfile_save (void)
       goto out;
     }
 
-  if (fdatasync (fd) < 0)
+  if (fsync (fd) < 0)
     {
       gconf_log (GCL_WARNING,
                  _("Could not flush saved state file '%s' to disk: %s"),

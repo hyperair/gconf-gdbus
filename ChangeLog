@@ -1,3 +1,12 @@
+2008-12-08  Ray Strode  <rstrode@redhat.com>
+
+	* gconf/gconfd.c: (logfile_save):
+	Use fsync instead of fdatasync for portability
+	(bug 563401).
+	* backends/markup-tree.c (save_tree_with_locale):
+	Also flush and sync here before closing (Patch
+	from Richard Hult, bug 562976)
+
 2008-12-02  Ray Strode  <rstrode@redhat.com>
 
 	* gconf/gconfd.c: (logfile_save):

@@ -4386,6 +4386,7 @@ save_tree_with_locale (MarkupDir  *dir,
    */
   if (dir->entries == NULL && (!save_as_subtree || dir->subdirs == NULL))
     {
+      fsync (new_fd);
       close (new_fd);
       new_fd = -1;
       goto done_writing;
@@ -4464,6 +4465,13 @@ save_tree_with_locale (MarkupDir  *dir,
     {
       write_failed = TRUE;
       goto done_writing;
+    }
+
+  if (fflush (f) != 0 || fsync (fileno (f)) < 0)
+    {
+      gconf_log (GCL_WARNING,
+                 _("Could not flush file '%s' to disk: %s"),
+                 new_filename, g_strerror (errno));
     }
 
   if (fclose (f) < 0)
