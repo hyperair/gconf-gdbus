@@ -8,9 +8,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-07 11:20+0100\n"
-"PO-Revision-Date: 2008-11-08 13:02+0100\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=gconf&amp;component=general\n"
+"POT-Creation-Date: 2008-12-08 15:41+0000\n"
+"PO-Revision-Date: 2008-12-15 21:17+0100\n"
 "Last-Translator: Jorge González <jorgegonz@svn.gnome.org>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -334,7 +335,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "No se permite texto dentro del elemento <%s>"
 
 #: ../backends/markup-tree.c:3599 ../backends/markup-tree.c:4379
-#: ../backends/markup-tree.c:4397
+#: ../backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Falló al abrir «%s»: %s\n"
@@ -344,12 +345,17 @@ msgstr "Falló al abrir «%s»: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "Error al leer «%s»: %s\n"
 
-#: ../backends/markup-tree.c:4484
+#: ../backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "No se pudo volcar el archivo «%s» al disco: %s"
+
+#: ../backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Error al escribir el archivo «%s»: %s"
 
-#: ../backends/markup-tree.c:4513
+#: ../backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "Falló al mover el archivo temporal «%s» a la ubicación final «%s»: %s"
@@ -1565,20 +1571,25 @@ msgstr "No puede escribir en el archivo de estado guardado «%s» fd: %d: %s"
 
 #: ../gconf/gconfd.c:1645
 #, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "No se pudo volcar el estado guardado del archivo «%s» al disco: %s"
+
+#: ../gconf/gconfd.c:1652
+#, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Falló al cerrar el nuevo archivo de estado «%s»: %s"
 
-#: ../gconf/gconfd.c:1659
+#: ../gconf/gconfd.c:1666
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "No se puede apartar el antiguo archivo de estado «%s»: %s"
 
-#: ../gconf/gconfd.c:1669
+#: ../gconf/gconfd.c:1676
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "Falló al mover el nuevo archivo de estado a su sitio: %s"
 
-#: ../gconf/gconfd.c:1678
+#: ../gconf/gconfd.c:1685
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1586,7 +1597,7 @@ msgstr ""
 "Falló al reponer el archivo de estado original que había sido movido a «%s»: %"
 "s"
 
-#: ../gconf/gconfd.c:2157
+#: ../gconf/gconfd.c:2164
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1594,17 +1605,17 @@ msgstr ""
 "No se puede reponer un servicio en la dirección «%s», no se encuentra la base "
 "de datos"
 
-#: ../gconf/gconfd.c:2193
+#: ../gconf/gconfd.c:2200
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Falló al leer el archivo de estado: %s"
 
-#: ../gconf/gconfd.c:2243
+#: ../gconf/gconfd.c:2250
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "No se puede abrir el archivo de estado «%s»: %s"
 
-#: ../gconf/gconfd.c:2362
+#: ../gconf/gconfd.c:2369
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1613,7 +1624,7 @@ msgstr ""
 "Falló al anotar la adición de un servicio al archivo de registro de gconfd. "
 "No será posible restaurar el servicio si se cierra gconfd (%s)"
 
-#: ../gconf/gconfd.c:2367
+#: ../gconf/gconfd.c:2374
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1622,28 +1633,28 @@ msgstr ""
 "Error al anotar la sustracción de un servicio al archivo de registro de "
 "gconfd. Puede que restaure erróneamente el servicio si se cierra gconfd (%s)"
 
-#: ../gconf/gconfd.c:2390 ../gconf/gconfd.c:2564
+#: ../gconf/gconfd.c:2397 ../gconf/gconfd.c:2571
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Falló al obtener el IOR para el cliente: %s"
 
-#: ../gconf/gconfd.c:2405
+#: ../gconf/gconfd.c:2412
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "No puede abrir el archivo de estado guardado: %s"
 
-#: ../gconf/gconfd.c:2418
+#: ../gconf/gconfd.c:2425
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Falló al escribir la adición del cliente al archivo de estado guardado: %s"
 
-#: ../gconf/gconfd.c:2426
+#: ../gconf/gconfd.c:2433
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Falló al volcar los datos del cliente al archivo de estado: %s"
 
-#: ../gconf/gconfd.c:2525
+#: ../gconf/gconfd.c:2532
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
