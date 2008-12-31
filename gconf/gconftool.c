@@ -41,6 +41,7 @@ typedef enum {
 static int set_mode = FALSE;
 static int get_mode = FALSE;
 static int unset_mode = FALSE;
+static int toggle_mode = FALSE;
 static int all_entries_mode = FALSE;
 static int all_subdirs_mode = FALSE;
 static char* dir_exists = NULL;
@@ -118,6 +119,15 @@ static const GOptionEntry client_entries[] = {
     G_OPTION_ARG_NONE,
     &recursive_unset_mode,
     N_("Recursively unset all keys at or below the key/directory names on the command line"),
+    NULL
+  },
+  {
+    "toggle",
+    '\0',
+    0, 
+    G_OPTION_ARG_NONE,
+    &toggle_mode,
+    N_("Toggles a boolean key."),
     NULL
   },
   { 
@@ -535,6 +545,7 @@ static gboolean do_dir_exists(GConfEngine* conf, const gchar* dir);
 static void do_spawn_daemon(GConfEngine* conf);
 static int do_get(GConfEngine* conf, const gchar** args);
 static int do_set(GConfEngine* conf, const gchar** args);
+static int do_toggle(GConfEngine* conf, const gchar** args);
 static int do_get_type(GConfEngine* conf, const gchar** args);
 static int do_get_list_size(GConfEngine* conf, const gchar** args);
 static int do_get_list_element(GConfEngine* conf, const gchar** args);
@@ -661,6 +672,14 @@ main (int argc, char** argv)
       (get_type_mode && unset_mode))
     {
       g_printerr (_("Can't get type and set/unset simultaneously\n"));
+      return 1;
+    }
+
+  if ((toggle_mode && set_mode) ||
+      (toggle_mode && get_mode) ||
+      (toggle_mode && unset_mode)) 
+    {
+      g_printerr (_("Can't toggle and get/set/unset simultaneously\n"));
       return 1;
     }
 
@@ -1067,6 +1086,15 @@ main (int argc, char** argv)
   if (set_mode)
     {
       if (do_set(conf, args) == 1)
+        {
+          gconf_engine_unref(conf);
+          return 1;
+        }
+    }
+
+  if (toggle_mode)
+    {
+      if (do_toggle(conf, args) == 1)
         {
           gconf_engine_unref(conf);
           return 1;
@@ -2123,6 +2151,57 @@ do_set(GConfEngine* conf, const gchar** args)
     }
 
   return 0;
+}
+
+static int
+do_toggle(GConfEngine* conf, const gchar** args)
+{
+  GError* err = NULL;
+  
+  if (args == NULL)
+    {
+      g_printerr (_("Must specify one or more keys as arguments\n"));
+      return 1;
+    }
+
+  while (*args)
+    {
+      const gchar* key;
+      GConfValue* value;
+
+      key = *args;
+      err = NULL;
+
+      value = get_maybe_without_default (conf, key, &err);
+
+      if (value == NULL)
+        {
+          g_printerr (_("No value found for key %s\n"), key);
+          return 1;
+        }
+
+      if (value->type != GCONF_VALUE_BOOL)
+        {
+          g_printerr (_("Not a boolean value: %s\n"), key);
+          return 1;
+        }
+
+      gconf_value_set_bool (value, !gconf_value_get_bool (value));
+
+      gconf_engine_set (conf, key, value, &err);
+
+      if (err != NULL)
+        {
+          g_printerr (_("Error setting value: %s\n"), err->message);
+          g_error_free(err);
+          err = NULL;
+          return 1;
+        }
+
+      gconf_value_free (value);
+
+      ++args;     
+    }
 }
 
 static int
