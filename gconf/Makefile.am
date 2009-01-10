@@ -76,11 +76,6 @@ gconfd_2_SOURCES = \
 
 gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) libgconf-$(MAJOR_VERSION).la
 
-# gconf_testclient_SOURCES = \
-# 	testclient.c
-
-# gconf_testclient_LDADD = $(GLIB_LIBS) $(OAF_LIBS) libgconf-client.la
-
 gconftool_2_SOURCES = \
 	gconftool.c
 

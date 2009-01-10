@@ -91,15 +91,15 @@ testclient_main(void)
 {
   GMainLoop* loop;
 
-  loop = g_main_new(TRUE);
+  loop = g_main_loop_new(NULL, TRUE);
 
   main_loops = g_slist_prepend(main_loops, loop);
 
-  g_main_run(loop);
+  g_main_loop_run(loop);
 
   main_loops = g_slist_remove(main_loops, loop);
 
-  g_main_destroy(loop);
+  g_main_loop_unref(loop);
 }
 
 
