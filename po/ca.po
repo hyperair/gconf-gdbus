@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-04 21:15+0200\n"
-"PO-Revision-Date: 2008-08-10 13:10+0200\n"
+"POT-Creation-Date: 2009-01-12 16:42+0100\n"
+"PO-Revision-Date: 2009-01-14 00:47+0100\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "MIME-Version: 1.0\n"
@@ -336,7 +336,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "No es permet text dins d'un element <%s>"
 
 #: ../backends/markup-tree.c:3599 ../backends/markup-tree.c:4379
-#: ../backends/markup-tree.c:4397
+#: ../backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "No s'ha pogut obrir «%s»: %s\n"
@@ -346,12 +346,17 @@ msgstr "No s'ha pogut obrir «%s»: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "S'ha produït un error en llegir «%s»: %s\n"
 
-#: ../backends/markup-tree.c:4484
+#: ../backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "No s'ha pogut buidar el fitxer «%s» al disc: %s"
+
+#: ../backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "S'ha produït un error en escriure el fitxer «%s»: %s"
 
-#: ../backends/markup-tree.c:4513
+#: ../backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "No s'ha pogut moure el fitxer «%s» a l'emplaçament final «%s»: %s"
@@ -571,7 +576,8 @@ msgstr "Canvia els valors de sistema del GConf"
 
 #: ../defaults/org.gnome.gconf.defaults.policy.in.h:3
 msgid "Privileges are required to change GConf mandatory values"
-msgstr "Es necessiten privilegis per a canviar els valors obligatoris del GConf"
+msgstr ""
+"Es necessiten privilegis per a canviar els valors obligatoris del GConf"
 
 #: ../defaults/org.gnome.gconf.defaults.policy.in.h:4
 msgid "Privileges are required to change GConf system values"
@@ -1063,7 +1069,7 @@ msgstr "cap"
 msgid "- Sanity checks for GConf"
 msgstr "- Comprovacions de seguretat del GConf"
 
-#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:617
+#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:639
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1504,21 +1510,21 @@ msgstr "No s'ha pogut connectar al bus de la sessió: %s"
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "No s'ha pogut obtenir el nom del bus per al dimoni, s'està sortint: %s"
 
-#: ../gconf/gconfd.c:688
+#: ../gconf/gconfd.c:687
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "No s'ha pogut connectar al bus del sistema: %s"
 
-#: ../gconf/gconfd.c:772
+#: ../gconf/gconfd.c:771
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "s'està iniciant (versió %s), pid %u usuari «%s»"
 
-#: ../gconf/gconfd.c:832
+#: ../gconf/gconfd.c:831
 msgid "Failed to get object reference for ConfigServer"
 msgstr "No s'ha pogut obtenir la referència d'objecte per al ConfigServer"
 
-#: ../gconf/gconfd.c:861
+#: ../gconf/gconfd.c:860
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1527,35 +1533,35 @@ msgstr ""
 "No s'ha pogut escriure el byte al descriptor de fitxer del conducte %d per "
 "tant és possible que el programa client es pengi: %s"
 
-#: ../gconf/gconfd.c:907
+#: ../gconf/gconfd.c:906
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "S'ha produït un error en alliberar el fitxer de blocatge: %s"
 
-#: ../gconf/gconfd.c:915
+#: ../gconf/gconfd.c:914
 msgid "Exiting"
 msgstr "S'està sortint"
 
-#: ../gconf/gconfd.c:933
+#: ../gconf/gconfd.c:932
 msgid "SIGHUP received, reloading all databases"
 msgstr ""
 "S'ha rebut un SIGHUP, s'estan tornant a carregar totes les bases de dades"
 
-#: ../gconf/gconfd.c:950
+#: ../gconf/gconfd.c:949
 msgid "GConf server is not in use, shutting down."
 msgstr "No s'està utilitzant el servidor GConf, s'està tancant."
 
-#: ../gconf/gconfd.c:1276
+#: ../gconf/gconfd.c:1275
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "S'ha produït un error en obtenir un valor nou per a «%s»: %s"
 
-#: ../gconf/gconfd.c:1420
+#: ../gconf/gconfd.c:1419
 #, c-format
 msgid "Returning exception: %s"
 msgstr "S'està retornant l'excepció: %s"
 
-#: ../gconf/gconfd.c:1526
+#: ../gconf/gconfd.c:1525
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1564,7 +1570,7 @@ msgstr ""
 "No s'ha pogut obrir el fitxer de registre del gconfd; no es podran restaurar "
 "els oients després d'aturar el gconfd (%s)"
 
-#: ../gconf/gconfd.c:1561
+#: ../gconf/gconfd.c:1560
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1572,32 +1578,37 @@ msgstr ""
 "No s'ha pogut tancar el fitxer de registre del gconfd; potser no s'han desat "
 "les dades correctament (%s)"
 
-#: ../gconf/gconfd.c:1623
+#: ../gconf/gconfd.c:1622
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "No s'ha pogut obrir el fitxer d'estat desat «%s» per a escriure: %s"
 
-#: ../gconf/gconfd.c:1637
+#: ../gconf/gconfd.c:1636
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "No s'ha pogut escriure el fitxer d'estat desat «%s» fd: %d: %s"
 
-#: ../gconf/gconfd.c:1646
+#: ../gconf/gconfd.c:1645
+#, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "No s'ha pogut buidar al disc el fitxer d'estat desat «%s»: %s"
+
+#: ../gconf/gconfd.c:1652
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "No s'ha pogut tancar el fitxer d'estat desat nou «%s»: %s"
 
-#: ../gconf/gconfd.c:1660
+#: ../gconf/gconfd.c:1666
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "No s'ha pogut moure a part el fitxer d'estat desat antic «%s»: %s"
 
-#: ../gconf/gconfd.c:1670
+#: ../gconf/gconfd.c:1676
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "No s'ha pogut moure el nou fitxer d'estat desat a l'emplaçament: %s"
 
-#: ../gconf/gconfd.c:1679
+#: ../gconf/gconfd.c:1685
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1605,7 +1616,7 @@ msgstr ""
 "No s'ha pogut restaurar el fitxer d'estat desat original que havia estat "
 "mogut a «%s»: %s"
 
-#: ../gconf/gconfd.c:2158
+#: ../gconf/gconfd.c:2164
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1613,17 +1624,17 @@ msgstr ""
 "No s'ha pogut restaurar un oient a l'adreça «%s», no s'ha pogut resoldre la "
 "base de dades"
 
-#: ../gconf/gconfd.c:2194
+#: ../gconf/gconfd.c:2200
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "S'ha produït un error en llegir el fitxer d'estat desat: %s"
 
-#: ../gconf/gconfd.c:2244
+#: ../gconf/gconfd.c:2250
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "No s'ha pogut obrir el fitxer d'estat desat «%s»: %s"
 
-#: ../gconf/gconfd.c:2363
+#: ../gconf/gconfd.c:2369
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1632,7 +1643,7 @@ msgstr ""
 "No s'ha pogut registrar l'addició de l'oient al fitxer de registre del "
 "gconfd; no es podrà tornar a afegir l'oient si el gconfd surt o es tanca (%s)"
 
-#: ../gconf/gconfd.c:2368
+#: ../gconf/gconfd.c:2374
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1642,50 +1653,50 @@ msgstr ""
 "gconfd; potser es tornarà a afegir per error l'orient si el gconfd surt o es "
 "tanca (%s)"
 
-#: ../gconf/gconfd.c:2391 ../gconf/gconfd.c:2565
+#: ../gconf/gconfd.c:2397 ../gconf/gconfd.c:2571
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "No s'ha pogut obtenir l'IOR per al client: %s"
 
-#: ../gconf/gconfd.c:2406
+#: ../gconf/gconfd.c:2412
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "No s'ha pogut obrir el fitxer d'estat desat: %s"
 
-#: ../gconf/gconfd.c:2419
+#: ../gconf/gconfd.c:2425
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "No s'ha pogut escriure l'afegiment del client al fitxer d'estat desat: %s"
 
 # FIXME
-#: ../gconf/gconfd.c:2427
+#: ../gconf/gconfd.c:2433
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr ""
 "No s'ha pogut buidar l'afegiment del client al fitxer d'estat desat: %s"
 
-#: ../gconf/gconfd.c:2526
+#: ../gconf/gconfd.c:2532
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "Algun client s'ha suprimit a si mateix del servidor Gconf quan encara no "
 "s'hi havia afegit."
 
-#: ../gconf/gconftool.c:91
+#: ../gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr ""
 "Defineix una clau per a un valor i sincronitza. Utilitzeu-ho amb --type."
 
-#: ../gconf/gconftool.c:100
+#: ../gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "Imprimeix el valor d'una clau a la sortida estàndard."
 
-#: ../gconf/gconftool.c:110
+#: ../gconf/gconftool.c:112
 msgid "Unset the keys on the command line"
 msgstr "Esborra el valor de les claus a la línia d'ordres"
 
-#: ../gconf/gconftool.c:119
+#: ../gconf/gconftool.c:121
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1693,41 +1704,45 @@ msgstr ""
 "Esborra recursivament el valor de totes les claus a o sota el nom de clau o "
 "directori a la línia d'ordres"
 
-#: ../gconf/gconftool.c:128
+#: ../gconf/gconftool.c:130
+msgid "Toggles a boolean key."
+msgstr "Commuta una clau booleana."
+
+#: ../gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "Imprimeix totes les parelles clau/valor d'un directori."
 
-#: ../gconf/gconftool.c:137
+#: ../gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "Imprimeix tots els subdirectoris d'un directori."
 
-#: ../gconf/gconftool.c:146
+#: ../gconf/gconftool.c:157
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr ""
 "Imprimeix recursivament tots els subdirectoris i les entrades dins d'un "
 "directori."
 
-#: ../gconf/gconftool.c:155
+#: ../gconf/gconftool.c:166 ../gconf/gconftool.c:175
 msgid "Search for a key, recursively."
 msgstr "Cerca recursivament una clau."
 
-#: ../gconf/gconftool.c:164
+#: ../gconf/gconftool.c:184
 msgid "Get the short doc string for a key"
 msgstr "Obtén la cadena de document curta per a una clau"
 
-#: ../gconf/gconftool.c:173
+#: ../gconf/gconftool.c:193
 msgid "Get the long doc string for a key"
 msgstr "Obtén la cadena de document llarga per a una clau"
 
-#: ../gconf/gconftool.c:182
+#: ../gconf/gconftool.c:202
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "Retorna 0 si el directori existeix, i 2 si no existeix."
 
-#: ../gconf/gconftool.c:191
+#: ../gconf/gconftool.c:211
 msgid "Ignore schema defaults when reading values."
 msgstr "Ignora els predeterminats dels esquemes quan es llegeixin els valors."
 
-#: ../gconf/gconftool.c:206
+#: ../gconf/gconftool.c:226
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
@@ -1735,7 +1750,7 @@ msgstr ""
 "Bolca recursivament a la sortida estàndard una descripció XML de totes les "
 "entrades dins d'un directori."
 
-#: ../gconf/gconftool.c:215
+#: ../gconf/gconftool.c:235
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
@@ -1743,23 +1758,23 @@ msgstr ""
 "Carrega des del fitxer especificat una descripció XML de valors i estableix-"
 "los relatius a un directori."
 
-#: ../gconf/gconftool.c:224
+#: ../gconf/gconftool.c:244
 msgid "Unload a set of values described in an XML file."
 msgstr "Descarrega un conjunt de valors descrits a un fitxer XML."
 
-#: ../gconf/gconftool.c:239
+#: ../gconf/gconftool.c:259
 msgid "Get the name of the default source"
 msgstr "Obtén el nom de la font predeterminada"
 
-#: ../gconf/gconftool.c:248
+#: ../gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "Apaga el gconfd. NO UTILITZEU AQUESTA OPCIÓ SENSE UN BON MOTIU."
 
-#: ../gconf/gconftool.c:257
+#: ../gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "Retorna 0 si s'està executant el gconfd, i 2 si no és així."
 
-#: ../gconf/gconftool.c:266
+#: ../gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
@@ -1767,7 +1782,7 @@ msgstr ""
 "Executa el servidor de configuració (gconfd). (Normalment ja es fa "
 "automàticament quan és necessari.)"
 
-#: ../gconf/gconftool.c:281
+#: ../gconf/gconftool.c:301
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1775,24 +1790,24 @@ msgstr ""
 "Especifiqueu el tipus de valor que s'ha de definir, o el tipus de valor que "
 "un esquema descriu. S'accepten les abreviacions úniques."
 
-#: ../gconf/gconftool.c:282
+#: ../gconf/gconftool.c:302
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: ../gconf/gconftool.c:290
+#: ../gconf/gconftool.c:310
 msgid "Print the data type of a key to standard output."
 msgstr "Imprimeix el tipus de dades d'una clau a la sortida estàndard."
 
-#: ../gconf/gconftool.c:299
+#: ../gconf/gconftool.c:319
 msgid "Get the number of elements in a list key."
 msgstr "Obtén el nombre d'elements en una clau de llista."
 
-#: ../gconf/gconftool.c:308
+#: ../gconf/gconftool.c:328
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr ""
 "Obtén un element específic d'una clau de llista, indexada numèricament."
 
-#: ../gconf/gconftool.c:317
+#: ../gconf/gconftool.c:337
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1800,11 +1815,11 @@ msgstr ""
 "Especifiqueu el tipus del valor de la llista que s'està definint, o el tipus "
 "del valor que descriu un esquema. S'accepten les abreviacions úniques."
 
-#: ../gconf/gconftool.c:318 ../gconf/gconftool.c:327 ../gconf/gconftool.c:336
+#: ../gconf/gconftool.c:338 ../gconf/gconftool.c:347 ../gconf/gconftool.c:356
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: ../gconf/gconftool.c:326
+#: ../gconf/gconftool.c:346
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1812,7 +1827,7 @@ msgstr ""
 "Especifiqueu el tipus del valor de la parella car que s'està definint, o el "
 "tipus del valor que descriu un esquema. S'accepten les abreviacions úniques."
 
-#: ../gconf/gconftool.c:335
+#: ../gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1821,25 +1836,25 @@ msgstr ""
 "el tipus del valor que descriu un esquema. S'accepten les abreviacions "
 "úniques."
 
-#: ../gconf/gconftool.c:350
+#: ../gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
 msgstr "Especifiqueu un fitxer d'esquema per a instal·lar"
 
-#: ../gconf/gconftool.c:351
+#: ../gconf/gconftool.c:371
 msgid "FILENAME"
 msgstr "NOM DEL FITXER"
 
-#: ../gconf/gconftool.c:359
+#: ../gconf/gconftool.c:379
 msgid "Specify a configuration source to use rather than the default path"
 msgstr ""
 "Especifiqueu una font de configuració per a utilitzar en comptes del camí "
 "predeterminat"
 
-#: ../gconf/gconftool.c:360
+#: ../gconf/gconftool.c:380
 msgid "SOURCE"
 msgstr "FONT"
 
-#: ../gconf/gconftool.c:368
+#: ../gconf/gconftool.c:388
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
@@ -1847,7 +1862,7 @@ msgstr ""
 "Accedeix a la base de dades de configuració directament, evitant el "
 "servidor. Això requereix que el gconfd no estigui funcionant."
 
-#: ../gconf/gconftool.c:377
+#: ../gconf/gconftool.c:397
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment "
@@ -1859,7 +1874,7 @@ msgstr ""
 "una font de configuració no predeterminada o col·locar-hi la cadena buida "
 "per tal d'utilitzar la predeterminada."
 
-#: ../gconf/gconftool.c:386
+#: ../gconf/gconftool.c:406
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1870,7 +1885,7 @@ msgstr ""
 "una font de configuració no predeterminada o col·locar-hi la cadena buida "
 "per tal d'utilitzar la predeterminada."
 
-#: ../gconf/gconftool.c:401
+#: ../gconf/gconftool.c:421
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1878,7 +1893,7 @@ msgstr ""
 "Realitza una prova d'estrès a una aplicació assignant i esborrant un conjunt "
 "de valors de diferents tipus a les claus a la línia d'ordres."
 
-#: ../gconf/gconftool.c:410
+#: ../gconf/gconftool.c:430
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1886,7 +1901,7 @@ msgstr ""
 "Realitza una prova d'estrès a una aplicació assignant i esborrant un conjunt "
 "de claus dins dels directoris a la línia d'ordres."
 
-#: ../gconf/gconftool.c:425
+#: ../gconf/gconftool.c:445
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1894,144 +1909,149 @@ msgstr ""
 "Defineix un esquema i sincronitza. Utilitzeu-ho amb --short-desc, --long-"
 "desc, --owner, i --type."
 
-#: ../gconf/gconftool.c:434
+#: ../gconf/gconftool.c:454
 msgid "Specify a short half-line description to go in a schema."
 msgstr ""
 "Especifiqueu una descripció curta de mitja línia per a col·locar a un "
 "esquema."
 
-#: ../gconf/gconftool.c:435 ../gconf/gconftool.c:444
+#: ../gconf/gconftool.c:455 ../gconf/gconftool.c:464
 msgid "DESCRIPTION"
 msgstr "DESCRIPCIÓ"
 
-#: ../gconf/gconftool.c:443
+#: ../gconf/gconftool.c:463
 msgid "Specify a several-line description to go in a schema."
 msgstr ""
 "Especifiqueu una descripció de vàries línies per a col·locar a un esquema."
 
-#: ../gconf/gconftool.c:452
+#: ../gconf/gconftool.c:472
 msgid "Specify the owner of a schema"
 msgstr "Especifiqueu el propietari d'un esquema"
 
-#: ../gconf/gconftool.c:453
+#: ../gconf/gconftool.c:473
 msgid "OWNER"
 msgstr "PROPIETARI"
 
-#: ../gconf/gconftool.c:461
+#: ../gconf/gconftool.c:481
 msgid "Get the name of the schema applied to this key"
 msgstr "Obtén el nom de l'esquema aplicat a aquesta clau"
 
-#: ../gconf/gconftool.c:470
+#: ../gconf/gconftool.c:490
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
 "Especifiqueu el nom d'esquema seguit de la clau a la que se li ha d'aplicar "
 "el nom d'esquema"
 
-#: ../gconf/gconftool.c:479
+#: ../gconf/gconftool.c:499
 msgid "Remove any schema name applied to the given keys"
 msgstr "Suprimeix qualsevol nom d'esquema aplicat a les claus donades"
 
-#: ../gconf/gconftool.c:494
+#: ../gconf/gconftool.c:514
 msgid "Print version"
 msgstr "Mostra la versió"
 
-#: ../gconf/gconftool.c:503
+#: ../gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FITXER...]|[CLAU...]|[DIRECTORI...]"
 
-#: ../gconf/gconftool.c:563
+#: ../gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
 msgstr "- Una eina per a manipular la configuració del GConf"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Client options:"
 msgstr "Opcions del client:"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Show client options"
 msgstr "Mostra les opcions del client"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Key type options:"
 msgstr "Opcions de tipus de claus:"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Show key type options"
 msgstr "Mostra les opcions de tipus de claus"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Load/Save options:"
 msgstr "Opcions per a carregar/desar:"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Show load/save options"
 msgstr "Mostra les opcions per a carregar/desar"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Server options:"
 msgstr "Opcions del servidor:"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Show server options"
 msgstr "Mostra les opcions del servidor"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Installation options:"
 msgstr "Opcions d'instal·lació:"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Show installation options"
 msgstr "Mostra les opcions d'instal·lació"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Test options:"
 msgstr "Opcions de prova:"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Show test options"
 msgstr "Mostra les opcions de prova"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Schema options:"
 msgstr "Opcions d'esquema:"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Show schema options"
 msgstr "Mostra les opcions d'esquema"
 
-#: ../gconf/gconftool.c:607
+#: ../gconf/gconftool.c:629
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Executeu «%s --help» per a veure una llista completa d'opcions disponibles de "
 "la línia d'ordres.\n"
 
-#: ../gconf/gconftool.c:635
+#: ../gconf/gconftool.c:657
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "No es pot obtenir i assignar/esborrar simultàniament\n"
 
-#: ../gconf/gconftool.c:645
+#: ../gconf/gconftool.c:667
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "No es pot assignar i obtenir/esborrar simultàniament\n"
 
-#: ../gconf/gconftool.c:652
+#: ../gconf/gconftool.c:674
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "No es pot obtenir el tipus i assignar/esborrar simultàniament\n"
 
-#: ../gconf/gconftool.c:663
+#: ../gconf/gconftool.c:682
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "No es pot commutar i obtenir/assignar/esborrar simultàniament\n"
+
+#: ../gconf/gconftool.c:693
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "No es pot utilitzar --all-entries amb --get o --set\n"
 
-#: ../gconf/gconftool.c:674
+#: ../gconf/gconftool.c:704
 #, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "No es pot utilitzar --all-dirs amb --get o --set\n"
 
-#: ../gconf/gconftool.c:688
+#: ../gconf/gconftool.c:718
 #, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
@@ -2040,7 +2060,7 @@ msgstr ""
 "--recursive-list no s'hauria d'utilitzar amb --get, --set, --unset, --all-"
 "entries, --all-dirs o --search-key\n"
 
-#: ../gconf/gconftool.c:702
+#: ../gconf/gconftool.c:732
 #, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
@@ -2049,17 +2069,17 @@ msgstr ""
 "--set-schema no s'hauria d'utilitzar amb --get, --set, --unset, --all-"
 "entries, --all-dirs o --search-key\n"
 
-#: ../gconf/gconftool.c:708
+#: ../gconf/gconftool.c:738
 #, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "El tipus de valor només és rellevant quan es defineix un valor\n"
 
-#: ../gconf/gconftool.c:714
+#: ../gconf/gconftool.c:744
 #, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "S'ha d'especificar un tipus en assignar un valor\n"
 
-#: ../gconf/gconftool.c:722
+#: ../gconf/gconftool.c:752
 #, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
@@ -2068,14 +2088,14 @@ msgstr ""
 "--ignore-schema-defaults només és rellevant amb --get, --all-entries, --"
 "dump, --recursive-list, --get-list-size o --get-list-element\n"
 
-#: ../gconf/gconftool.c:734 ../gconf/gconftool.c:747 ../gconf/gconftool.c:760
-#: ../gconf/gconftool.c:774 ../gconf/gconftool.c:787 ../gconf/gconftool.c:800
-#: ../gconf/gconftool.c:814
+#: ../gconf/gconftool.c:764 ../gconf/gconftool.c:777 ../gconf/gconftool.c:790
+#: ../gconf/gconftool.c:804 ../gconf/gconftool.c:817 ../gconf/gconftool.c:830
+#: ../gconf/gconftool.c:844
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "L'opció %s ha de ser utilitzada per ella mateixa.\n"
 
-#: ../gconf/gconftool.c:823
+#: ../gconf/gconftool.c:853
 #, c-format
 msgid ""
 "You must specify a configuration source with --config-source when using --"
@@ -2084,19 +2104,19 @@ msgstr ""
 "Quan s'utilitza --direct heu d'especificar una font de configuració amb --"
 "config-source\n"
 
-#: ../gconf/gconftool.c:829
+#: ../gconf/gconftool.c:859
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "No s'ha pogut iniciar el GConf: %s\n"
 
-#: ../gconf/gconftool.c:857
+#: ../gconf/gconftool.c:887
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL està activat, no s'instal·laran els "
 "esquemes\n"
 
-#: ../gconf/gconftool.c:864
+#: ../gconf/gconftool.c:894
 #, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
@@ -2104,142 +2124,152 @@ msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL està activat, no es desinstal·laran "
 "els esquemes\n"
 
-#: ../gconf/gconftool.c:877
+#: ../gconf/gconftool.c:907
 #, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "S'ha de definir la variable d'entorn GCONF_CONFIG_SOURCE\n"
 
-#: ../gconf/gconftool.c:932
+#: ../gconf/gconftool.c:962
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "No s'ha pogut accedir a les fonts de configuració: %s\n"
 
-#: ../gconf/gconftool.c:1219
+#: ../gconf/gconftool.c:1267
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "S'ha produït un error en tancar: %s\n"
 
-#: ../gconf/gconftool.c:1262
+#: ../gconf/gconftool.c:1310
 #, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "S'ha d'especificar un o més directoris per a llistar recursivament.\n"
 
-#: ../gconf/gconftool.c:1293 ../gconf/gconftool.c:1454
-#: ../gconf/gconftool.c:1720
+#: ../gconf/gconftool.c:1355 ../gconf/gconftool.c:1549
+#: ../gconf/gconftool.c:1815
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "S'ha produït un error en llistar les entrades a «%s»: %s\n"
 
-#: ../gconf/gconftool.c:1313 ../gconf/gconftool.c:1473
+#: ../gconf/gconftool.c:1375 ../gconf/gconftool.c:1568
 msgid "(no value set)"
 msgstr "(sense valor definit)"
 
-#: ../gconf/gconftool.c:1363
+#: ../gconf/gconftool.c:1438
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
 msgstr "S'ha d'especificar un patró de per a cercar.\n"
 
-#: ../gconf/gconftool.c:1412
+#: ../gconf/gconftool.c:1457
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "S'ha d'especificar un patró d'expressió regular (PCRE) a cercar.\n"
+
+#: ../gconf/gconftool.c:1464
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "S'ha produït un error en compilar l'expressió regular: %s\n"
+
+#: ../gconf/gconftool.c:1507
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "S'ha d'especificar un o més directoris a bolcar.\n"
 
-#: ../gconf/gconftool.c:1779
+#: ../gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "No s'ha pogut engendrar el servidor de configuració (gconfd): %s\n"
 
-#: ../gconf/gconftool.c:1808
+#: ../gconf/gconftool.c:1903
 #, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "S'ha d'especificar una clau o claus a obtenir\n"
 
-#: ../gconf/gconftool.c:1843
+#: ../gconf/gconftool.c:1938
 #, c-format
 msgid "Type: %s\n"
 msgstr "Tipus: %s\n"
 
-#: ../gconf/gconftool.c:1844
+#: ../gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Tipus de llista: %s\n"
 
-#: ../gconf/gconftool.c:1845
+#: ../gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Tipus de car: %s\n"
 
-#: ../gconf/gconftool.c:1846
+#: ../gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Tipus de cdr: %s\n"
 
-#: ../gconf/gconftool.c:1851
+#: ../gconf/gconftool.c:1946
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Valor predeterminat: %s\n"
 
-#: ../gconf/gconftool.c:1851 ../gconf/gconftool.c:1853
-#: ../gconf/gconftool.c:1854 ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1946 ../gconf/gconftool.c:1948
+#: ../gconf/gconftool.c:1949 ../gconf/gconftool.c:1950
 msgid "Unset"
 msgstr "No definit"
 
-#: ../gconf/gconftool.c:1853
+#: ../gconf/gconftool.c:1948
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Propietari: %s\n"
 
-#: ../gconf/gconftool.c:1854
+#: ../gconf/gconftool.c:1949
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Descripció curta: %s\n"
 
-#: ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1950
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Descripció llarga: %s\n"
 
-#: ../gconf/gconftool.c:1864 ../gconf/gconftool.c:2088
-#: ../gconf/gconftool.c:2122 ../gconf/gconftool.c:2167
-#: ../gconf/gconftool.c:2312
+#: ../gconf/gconftool.c:1959 ../gconf/gconftool.c:2234
+#: ../gconf/gconftool.c:2268 ../gconf/gconftool.c:2313
+#: ../gconf/gconftool.c:2458
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "No s'ha especificat cap valor per a «%s»\n"
 
-#: ../gconf/gconftool.c:1868 ../gconf/gconftool.c:2092
-#: ../gconf/gconftool.c:2126 ../gconf/gconftool.c:2171
-#: ../gconf/gconftool.c:2316
+#: ../gconf/gconftool.c:1963 ../gconf/gconftool.c:2238
+#: ../gconf/gconftool.c:2272 ../gconf/gconftool.c:2317
+#: ../gconf/gconftool.c:2462
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "No s'ha pogut obtenir el valor de «%s»: %s\n"
 
-#: ../gconf/gconftool.c:1911 ../gconf/gconftool.c:1923
+#: ../gconf/gconftool.c:2006 ../gconf/gconftool.c:2018
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "No es comprèn el tipus «%s»\n"
 
-#: ../gconf/gconftool.c:1935
+#: ../gconf/gconftool.c:2030
 #, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "S'han d'especificar claus/valors alternats com a arguments\n"
 
-#: ../gconf/gconftool.c:1955
+#: ../gconf/gconftool.c:2050
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "No hi ha cap valor a assignar per a la clau: «%s»\n"
 
-#: ../gconf/gconftool.c:1983
+#: ../gconf/gconftool.c:2078
 #, c-format
 msgid "Cannot set schema as value\n"
 msgstr "No és possible definir un esquema com a valor\n"
 
-#: ../gconf/gconftool.c:1993
+#: ../gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr ""
 "Quan es defineix una llista heu d'especificar un tipus de llista primitiu\n"
 
-#: ../gconf/gconftool.c:2007
+#: ../gconf/gconftool.c:2102
 #, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
@@ -2247,278 +2277,294 @@ msgstr ""
 "Quan es defineix una parella heu d'especificar un tipus de car i un tipus de "
 "cdr primitiu\n"
 
-#: ../gconf/gconftool.c:2022
+#: ../gconf/gconftool.c:2117
 #, c-format
 msgid "Error: %s\n"
 msgstr "Error: %s\n"
 
-#: ../gconf/gconftool.c:2035 ../gconf/gconftool.c:3067
+#: ../gconf/gconftool.c:2130 ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:3213
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "S'ha produït un error en definir un valor: %s\n"
 
-#: ../gconf/gconftool.c:2053
+#: ../gconf/gconftool.c:2148
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "S'ha produït un error en sincronitzar: %s\n"
 
-#: ../gconf/gconftool.c:2068
+#: ../gconf/gconftool.c:2163
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "S'han d'especificar una clau, o més, per a esborrar el valor.\n"
+
+#: ../gconf/gconftool.c:2179
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "No hi ha cap valor per a la clau %s\n"
+
+#: ../gconf/gconftool.c:2185
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "No és un valor booleà: %s\n"
+
+#: ../gconf/gconftool.c:2214
 #, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "S'ha d'especificar una clau o claus a obtenir el tipus\n"
 
-#: ../gconf/gconftool.c:2112
+#: ../gconf/gconftool.c:2258
 #, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr ""
 "S'ha d'especificar una clau o claus de les quals consultar-ne la mida.\n"
 
-#: ../gconf/gconftool.c:2137 ../gconf/gconftool.c:2182
+#: ../gconf/gconftool.c:2283 ../gconf/gconftool.c:2328
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "La clau %s no és una llista.\n"
 
-#: ../gconf/gconftool.c:2157
+#: ../gconf/gconftool.c:2303
 #, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr ""
 "S'ha d'especificar una clau de la qual obtenir un element de la llista.\n"
 
-#: ../gconf/gconftool.c:2188
+#: ../gconf/gconftool.c:2334
 #, c-format
 msgid "Must specify list index.\n"
 msgstr "S'ha d'especificar l'índex de la llista.\n"
 
-#: ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:2341
 #, c-format
 msgid "List index must be non-negative.\n"
 msgstr "L'índex de la llista no pot ser negatiu.\n"
 
-#: ../gconf/gconftool.c:2204
+#: ../gconf/gconftool.c:2350
 #, c-format
 msgid "List index is out of bounds.\n"
 msgstr "L'índex de la llista està fora dels límits.\n"
 
-#: ../gconf/gconftool.c:2230
+#: ../gconf/gconftool.c:2376
 #, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "S'ha d'especificar una clau o claus a la línia d'ordres\n"
 
-#: ../gconf/gconftool.c:2250
+#: ../gconf/gconftool.c:2396
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "No es coneix cap esquema per a «%s»\n"
 
-#: ../gconf/gconftool.c:2283
+#: ../gconf/gconftool.c:2429
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "No hi ha cap cadena de document emmagatzemada en un esquema a «%s»\n"
 
-#: ../gconf/gconftool.c:2288
+#: ../gconf/gconftool.c:2434
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "S'ha produït un error en obtenir un esquema a «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2295
+#: ../gconf/gconftool.c:2441
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "No hi ha cap esquema emmagatzemat a «%s»\n"
 
-#: ../gconf/gconftool.c:2298
+#: ../gconf/gconftool.c:2444
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "El valor a «%s» no és un esquema\n"
 
-#: ../gconf/gconftool.c:2354
+#: ../gconf/gconftool.c:2500
 #, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "S'ha d'especificar un nom d'esquema seguit del nom de la clau a la qual se "
 "li ha d'aplicar\n"
 
-#: ../gconf/gconftool.c:2361
+#: ../gconf/gconftool.c:2507
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr ""
 "S'ha produït un error en associar el nom d'esquema «%s» amb el nom de clau «%"
 "s»: %s\n"
 
-#: ../gconf/gconftool.c:2379
+#: ../gconf/gconftool.c:2525
 #, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "S'ha d'especificar les claus de les quals desaplicar els esquemes\n"
 
-#: ../gconf/gconftool.c:2389
+#: ../gconf/gconftool.c:2535
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "S'ha produït un error en suprimir el nom d'esquema de «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2414
+#: ../gconf/gconftool.c:2560
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "S'ha d'especificar una clau (nom d'esquema) com a únic argument\n"
 
-#: ../gconf/gconftool.c:2456
+#: ../gconf/gconftool.c:2602
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "El tipus de llista ha de ser un tipus primitiu: cadena, enter, coma flotant "
 "o booleà\n"
 
-#: ../gconf/gconftool.c:2476
+#: ../gconf/gconftool.c:2622
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "El tipus de car de parella ha de ser un tipus primitiu: cadena, enter, coma "
 "flotant o booleà\n"
 
-#: ../gconf/gconftool.c:2496
+#: ../gconf/gconftool.c:2642
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "El tipus de cdr de parella ha de ser un tipus primitiu: cadena, enter, coma "
 "flotant o booleà\n"
 
-#: ../gconf/gconftool.c:2511
+#: ../gconf/gconftool.c:2657
 #, c-format
 msgid "Error setting value: %s"
 msgstr "S'ha produït un error en assignar el valor: %s"
 
-#: ../gconf/gconftool.c:2525
+#: ../gconf/gconftool.c:2671
 #, c-format
 msgid "Error syncing: %s"
 msgstr "S'ha produït un error en sincronitzar: %s"
 
-#: ../gconf/gconftool.c:2540
+#: ../gconf/gconftool.c:2686
 #, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "S'ha d'especificar un o més directoris dels que obtenir-ne parelles clau/"
 "valor.\n"
 
-#: ../gconf/gconftool.c:2554
+#: ../gconf/gconftool.c:2700
 #, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "S'ha d'especificar una o més claus per a esborrar el valor.\n"
 
-#: ../gconf/gconftool.c:2565
+#: ../gconf/gconftool.c:2711
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "S'ha produït un error en esborrar el valor de «%s»: %s\n"
 
 #
-#: ../gconf/gconftool.c:2585
+#: ../gconf/gconftool.c:2731
 #, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr ""
 "S'ha d'especificar una o més claus per a esborrar el valor recursivament.\n"
 
-#: ../gconf/gconftool.c:2599
+#: ../gconf/gconftool.c:2745
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr ""
 "S'ha produït una errada en esborrar recursivament el valor de «%s»: %s\n"
 
-#: ../gconf/gconftool.c:2619
+#: ../gconf/gconftool.c:2765
 #, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "S'ha d'especificar un o més directoris per tal d'obtenir-ne els seus "
 "subdirectoris.\n"
 
-#: ../gconf/gconftool.c:2653
+#: ../gconf/gconftool.c:2799
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "S'ha produït un error en llistar els directoris: %s\n"
 
-#: ../gconf/gconftool.c:2789
+#: ../gconf/gconftool.c:2935
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "AVÍS: s'ha d'especificar tan un <car> i un <cdr> a un <pair>\n"
 
-#: ../gconf/gconftool.c:2816
+#: ../gconf/gconftool.c:2962
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "AVÍS: la clau especificada (%s) per a l'esquema sota un <valor> - s'ignora\n"
 
-#: ../gconf/gconftool.c:2849
+#: ../gconf/gconftool.c:2995
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "AVÍS: hi ha d'haver un node fill sota <value>\n"
 
-#: ../gconf/gconftool.c:2855
+#: ../gconf/gconftool.c:3001
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "AVÍS: no es comprèn el node <%s>\n"
 
-#: ../gconf/gconftool.c:2873
+#: ../gconf/gconftool.c:3019
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "AVÍS: no es pot processar el valor enter «%s»\n"
 
-#: ../gconf/gconftool.c:2894
+#: ../gconf/gconftool.c:3040
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "AVÍS: no es pot processar el valor de coma flotant «%s»\n"
 
-#: ../gconf/gconftool.c:2916
+#: ../gconf/gconftool.c:3062
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "AVÍS: no es pot processar el valor de cadena «%s»\n"
 
-#: ../gconf/gconftool.c:2937
+#: ../gconf/gconftool.c:3083
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "AVÍS: no es pot processar el valor booleà «%s»\n"
 
-#: ../gconf/gconftool.c:3046 ../gconf/gconftool.c:3588
+#: ../gconf/gconftool.c:3192 ../gconf/gconftool.c:3734
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "AVÍS: no s'ha pogut associar l'esquema «%s» amb la clau «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3161
+#: ../gconf/gconftool.c:3307
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "AVÍS: el tipus d'esquema no és vàlid o manca (%s)\n"
 
-#: ../gconf/gconftool.c:3170
+#: ../gconf/gconftool.c:3316
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "AVÍS: el tipus de llista per a l'esquema no és vàlid o manca (%s)\n"
 
-#: ../gconf/gconftool.c:3181 ../gconf/gconftool.c:3211
-#: ../gconf/gconftool.c:3240
+#: ../gconf/gconftool.c:3327 ../gconf/gconftool.c:3357
+#: ../gconf/gconftool.c:3386
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
 "AVÍS: No s'ha pogut processar el valor predeterminat «%s» per a l'esquema (%"
 "s)\n"
 
-#: ../gconf/gconftool.c:3199
+#: ../gconf/gconftool.c:3345
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "AVÍS: el tipus de car o el tipus de cdr per a l'esquema no és vàlid o manca "
 "(%s)\n"
 
-#: ../gconf/gconftool.c:3224
+#: ../gconf/gconftool.c:3370
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "AVÍS: No podeu definir un valor predeterminat per a un esquema\n"
 
-#: ../gconf/gconftool.c:3253
+#: ../gconf/gconftool.c:3399
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "AVÍS: error intern del gconftool, el desconeix el GconfValueType\n"
 
-#: ../gconf/gconftool.c:3301 ../gconf/gconftool.c:3322
-#: ../gconf/gconftool.c:3343 ../gconf/gconftool.c:3364
+#: ../gconf/gconftool.c:3447 ../gconf/gconftool.c:3468
+#: ../gconf/gconftool.c:3489 ../gconf/gconftool.c:3510
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "AVÍS: no s'ha pogut processar el nom del tipus «%s»\n"
 
-#: ../gconf/gconftool.c:3318
+#: ../gconf/gconftool.c:3464
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
@@ -2526,54 +2572,54 @@ msgstr ""
 "AVÍS: el tipus de llista només pot ser enter, coma flotant, cadena o booleà "
 "i no pas «%s»\n"
 
-#: ../gconf/gconftool.c:3339
+#: ../gconf/gconftool.c:3485
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "AVÍS: el tipus de car només pot ser enter, coma flotant, cadena o booleà, i "
 "no pas «%s»\n"
 
-#: ../gconf/gconftool.c:3360
+#: ../gconf/gconftool.c:3506
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "AVÍS: el tipus de cdr només pot ser enter, coma flotant, cadena o booleà, i "
 "no pas «%s»\n"
 
-#: ../gconf/gconftool.c:3400
+#: ../gconf/gconftool.c:3546
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "AVÍS: node <applyto> buit"
 
-#: ../gconf/gconftool.c:3403 ../gconf/gconftool.c:3661
+#: ../gconf/gconftool.c:3549 ../gconf/gconftool.c:3807
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "AVÍS: no es comprèn el node <%s> sota <schema>\n"
 
-#: ../gconf/gconftool.c:3414
+#: ../gconf/gconftool.c:3560
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr ""
 "AVÍS: no s'ha especificat un <list_type> per a l'esquema de tipus llista\n"
 
-#: ../gconf/gconftool.c:3420
+#: ../gconf/gconftool.c:3566
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr ""
 "AVÍS: no s'ha especificat un <car_type> per a l'esquema de tipus parella\n"
 
-#: ../gconf/gconftool.c:3426
+#: ../gconf/gconftool.c:3572
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr ""
 "AVÍS: no s'ha especificat un <cdr_type> per a l'esquema de tipus parella\n"
 
-#: ../gconf/gconftool.c:3455
+#: ../gconf/gconftool.c:3601
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "AVÍS: el node <locale> no té l'atribut «name=\"locale\"», s'ignora\n"
 
-#: ../gconf/gconftool.c:3461
+#: ../gconf/gconftool.c:3607
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -2581,89 +2627,89 @@ msgstr ""
 "AVÍS: hi ha múltiples nodes <locale> per a «%s» local, s'ignoraran tots els "
 "següents al primer\n"
 
-#: ../gconf/gconftool.c:3559
+#: ../gconf/gconftool.c:3705
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "AVÍS: Node <%s> no vàlid en un node <locale>\n"
 
-#: ../gconf/gconftool.c:3596
+#: ../gconf/gconftool.c:3742
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "S'ha adjuntat l'esquema «%s» a la clau «%s»\n"
 
-#: ../gconf/gconftool.c:3670
+#: ../gconf/gconftool.c:3816
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Heu de tenir com a mínim una entrada <locale> a un <schema>\n"
 
-#: ../gconf/gconftool.c:3705
+#: ../gconf/gconftool.c:3851
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
 msgstr "AVÍS: no s'ha pogut instal·lar l'esquema «%s», locale «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3713
+#: ../gconf/gconftool.c:3859
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "S'ha instal·lat l'esquema «%s» per al locale «%s»\n"
 
-#: ../gconf/gconftool.c:3723
+#: ../gconf/gconftool.c:3869
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
 msgstr "AVÍS: no es pot desinstal·lar l'esquema «%s», locale «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3731
+#: ../gconf/gconftool.c:3877
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "S'ha desinstal·lat l'esquema «%s» per al locale «%s»\n"
 
-#: ../gconf/gconftool.c:3769
+#: ../gconf/gconftool.c:3915
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "AVÍS: no s'ha especificat cap clau per a l'esquema\n"
 
-#: ../gconf/gconftool.c:3810
+#: ../gconf/gconftool.c:3956
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "AVÍS: no es comprèn el node <%s> sota <%s>\n"
 
-#: ../gconf/gconftool.c:3842
+#: ../gconf/gconftool.c:3988
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "No s'ha pogut obrir «%s»: %s\n"
 
-#: ../gconf/gconftool.c:3849
+#: ../gconf/gconftool.c:3995
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "Està buit el document «%s»?\n"
 
-#: ../gconf/gconftool.c:3861
+#: ../gconf/gconftool.c:4007
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "El document «%s» té un tipus de node arrel incorrecte (<%s>, hauria de ser <%"
 "s>)\n"
 
-#: ../gconf/gconftool.c:3874
+#: ../gconf/gconftool.c:4020
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "El document «%s» no té cap node <%s> de nivell superior\n"
 
-#: ../gconf/gconftool.c:3888
+#: ../gconf/gconftool.c:4034
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "AVÍS: no es comprèn el node <%s> sota <%s>\n"
 
-#: ../gconf/gconftool.c:3909
+#: ../gconf/gconftool.c:4055
 #, c-format
 msgid "Error syncing configuration data: %s"
 msgstr "S'ha produït un error en sincronitzar les dades de configuració: %s"
 
-#: ../gconf/gconftool.c:3925
+#: ../gconf/gconftool.c:4071
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "S'ha d'especificar alguns fitxers d'esquema per a instal·lar\n"
 
-#: ../gconf/gconftool.c:3953
+#: ../gconf/gconftool.c:4099
 #, c-format
 msgid ""
 "\n"
@@ -2672,17 +2718,17 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: ../gconf/gconftool.c:3973
+#: ../gconf/gconftool.c:4119
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "No s'ha pogut esborrar el valor de la clau de trencament %s: %s\n"
 
-#: ../gconf/gconftool.c:4099
+#: ../gconf/gconftool.c:4245
 #, c-format
 msgid "Must specify some keys to break\n"
 msgstr "S'ha d'especificar algunes claus per trencar\n"
 
-#: ../gconf/gconftool.c:4105
+#: ../gconf/gconftool.c:4251
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2692,12 +2738,12 @@ msgstr ""
 "clau:\n"
 "  %s\n"
 
-#: ../gconf/gconftool.c:4123
+#: ../gconf/gconftool.c:4269
 #, c-format
 msgid "Must specify some directories to break\n"
 msgstr "S'ha d'especificar alguns directoris per trencar\n"
 
-#: ../gconf/gconftool.c:4142
+#: ../gconf/gconftool.c:4288
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
