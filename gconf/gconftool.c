@@ -2202,6 +2202,8 @@ do_toggle(GConfEngine* conf, const gchar** args)
 
       ++args;     
     }
+
+  return 0;
 }
 
 static int
