@@ -797,7 +797,7 @@ blow_away_locks (const char *address)
 
 /* Initializer */
 
-#ifndef G_OS_WIN32
+#ifndef G_PLATFORM_WIN32
 /* If we use G_MODULE_EXPORT, *only* thusly marked functions will be
  * exported, and xml-test uses other ones, too.
  */
@@ -814,7 +814,7 @@ g_module_check_init (GModule *module)
   return NULL;
 }
 
-#ifndef G_OS_WIN32
+#ifndef G_PLATFORM_WIN32
 G_MODULE_EXPORT
 #endif
 GConfBackendVTable* 

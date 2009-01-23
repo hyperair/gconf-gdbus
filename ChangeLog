@@ -1,5 +1,12 @@
 2009-01-23  Vincent Untz  <vuntz@gnome.org>
 
+	* backends/xml-backend.c: cygwin needs the same stuff as mingw, so use
+	G_PLATFORM_WIN32
+	Patch by <yselkowitz@users.sourceforge.net>
+	Fix bug #563801.
+
+2009-01-23  Vincent Untz  <vuntz@gnome.org>
+
 	* gconf/gconftool.c: (do_toggle): return value at the end of the
 	function.
 	Patch by Magnus Boman <captain.magnus@gmail.com>. Fix bug #567334
