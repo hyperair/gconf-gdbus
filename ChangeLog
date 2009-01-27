@@ -1,3 +1,15 @@
+2009-01-27  Tor Lillqvist  <tml@novell.com>
+
+	* gconf/Makefile.am (gconfd_2_LDFLAGS): Use the -mwindows flag
+	when linking on Windows, so that we build a "GUI" executable.
+
+	* gconf/gconfd.c (main): On Windows, with GCONF_DEBUG_OUTPUT set,
+	make sure stdout and stderr go somewhere. Use the parent's console
+	window if possible, otherwise open an own console window. If we
+	had to open an own console window, give the user a chance to read
+	the output when exiting. Same idea that has been successfully used
+	in GIMP for a while.
+
 2009-01-23  Vincent Untz  <vuntz@gnome.org>
 
 	* backends/xml-backend.c: cygwin needs the same stuff as mingw, so use

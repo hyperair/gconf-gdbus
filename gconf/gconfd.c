@@ -57,6 +57,13 @@
 
 #include <dbus/dbus-glib-lowlevel.h>
 
+#ifdef G_OS_WIN32
+#include <io.h>
+#include <conio.h>
+#define _WIN32_WINNT 0x0500 
+#include <windows.h>
+#endif
+
 /* This makes hash table safer when debugging */
 #ifndef GCONF_ENABLE_DEBUG
 #define safe_g_hash_table_insert g_hash_table_insert
@@ -712,6 +719,19 @@ get_on_system_bus (void)
 }
 #endif  /* ENABLE_DEFAULTS_SERVICE */
 
+#ifdef G_OS_WIN32
+
+static void
+wait_console_window (void)
+{
+  SetConsoleTitle ("GConf daemon exiting. Type any character to close this window.");
+  printf ("\n"
+	  "(GConf daemon exiting. Type any character to close this window)\n");
+  _getch ();
+}
+
+#endif
+
 int 
 main(int argc, char** argv)
 {
@@ -762,6 +782,45 @@ main(int argc, char** argv)
   else
     {
       gconf_log_debug_messages = TRUE;
+#ifdef G_OS_WIN32
+      if (fileno (stdout) != -1 &&
+	  _get_osfhandle (fileno (stdout)) != -1)
+	{
+	  /* stdout is fine, presumably redirected to a file or pipe */
+	}
+      else
+	{
+	  int allocated_new_console = FALSE;
+
+	  typedef BOOL (* WINAPI AttachConsole_t) (DWORD);
+
+	  AttachConsole_t p_AttachConsole =
+	    (AttachConsole_t) GetProcAddress (GetModuleHandle ("kernel32.dll"), "AttachConsole");
+
+	  if (p_AttachConsole != NULL)
+	    {
+	      if (!AttachConsole (ATTACH_PARENT_PROCESS))
+		{
+		  if (AllocConsole ())
+		    allocated_new_console = TRUE;
+		}
+
+	      freopen ("CONOUT$", "w", stdout);
+	      dup2 (fileno (stdout), 1);
+	      freopen ("CONOUT$", "w", stderr);
+	      dup2 (fileno (stderr), 2);
+
+	      if (allocated_new_console)
+		{
+		  SetConsoleTitle ("GConf daemon debugging output. You can minimize this window, but don't close it.");
+		  printf ("You asked for debugging output by setting the GCONF_DEBUG_OUTPUT\n"
+			  "environment variable, so here it is.\n"
+			  "\n");
+		  atexit (wait_console_window);
+		}
+	    }
+	}
+#endif
     }
   
   umask (022);

@@ -74,6 +74,10 @@ gconfd_2_SOURCES = \
 	gconfd.h		\
 	gconfd.c
 
+if OS_WIN32
+gconfd_2_LDFLAGS = -mwindows
+endif
+
 gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) libgconf-$(MAJOR_VERSION).la
 
 gconftool_2_SOURCES = \
