@@ -3,20 +3,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 #
 # Subhransu Behera <arya_subhransu@yahoo.co.in>, 2006, 2007.
-# Manoj Kumar Giri <mgiri@redhat.com>, 2008.
+# Manoj Kumar Giri <mgiri@redhat.com>, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: or\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-11 16:34+0000\n"
-"PO-Revision-Date: 2008-09-08 19:59+0530\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gconf&component=general\n"
+"POT-Creation-Date: 2008-12-31 03:03+0000\n"
+"PO-Revision-Date: 2009-01-28 17:19+0530\n"
 "Last-Translator: Manoj Kumar Giri <mgiri@redhat.com>\n"
-"Language-Team: Oriya\n"
+"Language-Team: Oriya <oriya-it@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2;plural=(n!=1)\n"
+"Plural-Forms:  nplurals=2; plural=(n!=1);\n\n"
 "\n"
 "\n"
 
@@ -324,7 +324,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "<%s> ତତ୍ବ ଭିତରେ କୌଣସି ପାଠ୍ଯ ସ୍ବୀକାର୍ଯ୍ଯ ନୁହେଁ "
 
 #: ../backends/markup-tree.c:3599 ../backends/markup-tree.c:4379
-#: ../backends/markup-tree.c:4397
+#: ../backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "\"%s\"କୁ ଖୋଲିବାରେ ବିଫଳ: %s\n"
@@ -334,12 +334,17 @@ msgstr "\"%s\"କୁ ଖୋଲିବାରେ ବିଫଳ: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "\"%s\"କୁ ଧାରଣ କରିବା ସମୟରେ ତ୍ରୁଟି: %s\n"
 
-#: ../backends/markup-tree.c:4484
+#: ../backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "ଫାଇଲ '%s' କୁ ଡ଼ିସ୍କରେ ଫ୍ଲାସ କରି ପାରିଲା ନାହିଁ: %s"
+
+#: ../backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "\"%s\" ଫାଇଲରେ ଲେଖିବା ସମୟରେ ତ୍ରୁଟିି: %s"
 
-#: ../backends/markup-tree.c:4513
+#: ../backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "\"%s\" ଅସ୍ଥାୟୀ ଫାଇଲକୁ \"%s\" ଅନ୍ତିମ ଅବସ୍ଥାନକୁ ପଠାଇବାରେ ବିଫଳ: %s"
@@ -1019,7 +1024,7 @@ msgstr "କିଛି ନାହିଁ"
 msgid "- Sanity checks for GConf"
 msgstr "- GConf ପାଇଁ Sanity ପରୀକ୍ଷଣ"
 
-#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:617
+#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:639
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1143,7 +1148,9 @@ msgstr "ଗୋଟିଏ ଆଂଶିକ ଲିଖନୀୟ ବିନ୍ଯାସ
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
-msgstr "ସମାଧାନ କରାଯାଇଥିବା ଠିକଣାଗୁଡ଼ିକ ମଧ୍ଯରୁ କୌଣସିଟି ଲେଖାଯୋଗ୍ୟ ନୁହଁ; ରୂପରେଖ ବିନ୍ୟାସକୁ ସଂରକ୍ଷଣ କରିବା ସମ୍ଭବ ହେବନାହିଁ"
+msgstr ""
+"ସମାଧାନ କରାଯାଇଥିବା ଠିକଣାଗୁଡ଼ିକ ମଧ୍ଯରୁ କୌଣସିଟି ଲେଖାଯୋଗ୍ୟ ନୁହଁ; ରୂପରେଖ ବିନ୍ୟାସକୁ ସଂରକ୍ଷଣ କରିବା "
+"ସମ୍ଭବ ହେବନାହିଁ"
 
 #: ../gconf/gconf-sources.c:690
 #, c-format
@@ -1377,302 +1384,317 @@ msgstr "ଅଧିବେଶନ ପରିପଥ ସହିତ ସଂଯୁକ୍ତ
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "ଡେମନ ପାଇଁ ପରିପଥ ନାମ ନିରୁପଣ କରିପାରିଲା ନାହିଁ, ପ୍ରସ୍ଥାନ କରୁଅଛି: %s"
 
-#: ../gconf/gconfd.c:688
+#: ../gconf/gconfd.c:687
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "ତନ୍ତ୍ର ପରିପଥ ସହିତ ସଂଯୁକ୍ତ ହୋଇପାରିଲା ନାହିଁ: %s"
 
-#: ../gconf/gconfd.c:772
+#: ../gconf/gconfd.c:771
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "(ସଂସ୍କରଣ %s), pid %u ଚାଳକ '%s' କୁ ଆରମ୍ଭକରାଯାଉଛି"
 
-#: ../gconf/gconfd.c:832
+#: ../gconf/gconfd.c:831
 msgid "Failed to get object reference for ConfigServer"
-msgstr ""
+msgstr "ConfigServer ପାଇଁ ବସ୍ତୁ ସନ୍ଦର୍ଭ ପାଇବାରେ ଅସମର୍ଥ"
 
-#: ../gconf/gconfd.c:861
+#: ../gconf/gconfd.c:860
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
 "s"
 msgstr ""
+"ବାଇଟରୁ ଫାଇଲ ବର୍ଣ୍ଣନାକାରୀ %d କୁ ଲେଖିବାରେ ଅସଫଳ, ତେଣୁ କ୍ଲାଏଣ୍ଟ ପ୍ରଗ୍ରାମ ଅଚଳ ହୋଇପାରେ: %"
+"s"
 
-#: ../gconf/gconfd.c:907
+#: ../gconf/gconfd.c:906
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "lockfile କୁ ଜାରୀକରିବା ସମୟରେ ତ୍ରୁଟି: %s"
 
-#: ../gconf/gconfd.c:915
+#: ../gconf/gconfd.c:914
 msgid "Exiting"
 msgstr "ପ୍ରସ୍ଥାନକରୁଅଛି"
 
-#: ../gconf/gconfd.c:933
+#: ../gconf/gconfd.c:932
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP କୁ ଗ୍ରହଣକରାସରିଛି, ସମସ୍ତ ତଥ୍ୟାବଳୀକୁ ପୁନର୍ଧାରଣ କରାଯାଉଛି"
 
-#: ../gconf/gconfd.c:950
+#: ../gconf/gconfd.c:949
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf ସର୍ଭରଟି ବ୍ୟବହାର ହେଉନାହିଁ, ତେଣୁ ବନ୍ଦକରାଯାଉଅଛି."
 
-#: ../gconf/gconfd.c:1276
+#: ../gconf/gconfd.c:1275
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "`%s' ପାଇଁ ନୂତନ ମୂଲ୍ୟ ପାଇବାରେ ତ୍ରୁଟି: %s"
 
-#: ../gconf/gconfd.c:1420
+#: ../gconf/gconfd.c:1419
 #, c-format
 msgid "Returning exception: %s"
 msgstr "ବ୍ୟତିକ୍ରମ ଫେରାଉଅଛି: %s"
 
-#: ../gconf/gconfd.c:1526
+#: ../gconf/gconfd.c:1525
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
 msgstr ""
+"gconfd ଲଗ ଫାଇଲ ଖୋଲିବାରେ ବିଫଳ ହୋଇଛି; gconfd ବନ୍ଦ ହୋଇଗଲା ପରେ ଶ୍ରୋତାମାନଙ୍କୁ ପୁନଃସ୍ଥାପନ "
+"କରିବାରେ ସମର୍ଥ ହୋଇନପାରେ (%s)"
 
-#: ../gconf/gconfd.c:1561
+#: ../gconf/gconfd.c:1560
 #, c-format
 msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr ""
+msgstr "gconfd ଲଗ ଫାଇଲ ବନ୍ଦ କରିବାରେ ବିଫଳ; ତଥ୍ୟ ସଠିକ ଭାବରେ ସଂରକ୍ଷିତ ହୋଇନଥାଇପାରେ (%s)"
 
-#: ../gconf/gconfd.c:1623
+#: ../gconf/gconfd.c:1622
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "ଲେଖିବା ପାଇଁ ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲ '%s' କୁ ଖୋଲିହେଲା ନାହିଁ: %s"
 
-#: ../gconf/gconfd.c:1637
+#: ../gconf/gconfd.c:1636
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲ '%s' fd: %d: %s କୁ ଲେଖିପାରିଲା ନାହିଁ"
 
-#: ../gconf/gconfd.c:1646
+#: ../gconf/gconfd.c:1645
+#, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲ '%s' କୁ ଫ୍ଲାସ କରିପାରିଲା ନାହିଁ: %s"
+
+#: ../gconf/gconfd.c:1652
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "ନୂତନ ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲ '%s' କୁ ବନ୍ଦକରିବାରେ ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:1660
+#: ../gconf/gconfd.c:1666
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "ପୁରୁଣା ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲ '%s' କୁ ଗୋଟିଏ ପାଖକୁ ଘୁଞ୍ଚାଇହେଲା ନାହିଁ: %s"
 
-#: ../gconf/gconfd.c:1670
+#: ../gconf/gconfd.c:1676
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "ନୂତନ ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲକୁ ସଠିକ ସ୍ଥାନକୁ ଘୁଞ୍ଚାଇବାରେ ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:1679
+#: ../gconf/gconfd.c:1685
 #, c-format
 msgid "Failed to restore original saved state file that had been moved to '%s': %s"
-msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ପ୍ରକୃତ ଫାଇଲ ଯାହାକି '%s' ସ୍ଥାନକୁ ପଠାଯାଇଥିଲା ତାକୁ ପୁନଃସ୍ଥାପନ କରିବାରେ ବିଫଳ: %s"
+msgstr ""
+"ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ପ୍ରକୃତ ଫାଇଲ ଯାହାକି '%s' ସ୍ଥାନକୁ ପଠାଯାଇଥିଲା ତାକୁ ପୁନଃସ୍ଥାପନ କରିବାରେ "
+"ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:2158
+#: ../gconf/gconfd.c:2164
 #, c-format
 msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "ଗୋଟିଏ ଶ୍ରୋତାକୁ ଠିକଣା '%s' ରେ ପୁନଃସ୍ଥାପନ କରିବାରେ ଅସମର୍ଥ, ତଥ୍ୟାବଳୀକୁ ସମାଧାନ କରିହେଲା ନାହିଁ"
 
-#: ../gconf/gconfd.c:2194
+#: ../gconf/gconfd.c:2200
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲକୁ ପଢ଼ିବାରେ ତ୍ରୁଟି: %s"
 
-#: ../gconf/gconfd.c:2244
+#: ../gconf/gconfd.c:2250
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲ '%s'କୁ ଖୋଲିବାରେ ଅସମର୍ଥ: %s"
 
-#: ../gconf/gconfd.c:2363
+#: ../gconf/gconfd.c:2369
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
-#: ../gconf/gconfd.c:2368
+#: ../gconf/gconfd.c:2374
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
 msgstr ""
 
-#: ../gconf/gconfd.c:2391 ../gconf/gconfd.c:2565
+#: ../gconf/gconfd.c:2397 ../gconf/gconfd.c:2571
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "ଗ୍ରାହକ ପାଇଁ IOR ପାଇବାରେ ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:2406
+#: ../gconf/gconfd.c:2412
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲକୁ ଖୋଲିବାରେ ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:2419
+#: ../gconf/gconfd.c:2425
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲରେ ଗ୍ରାହକ ଠିକଣା ଲେଖିବାରେ ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:2427
+#: ../gconf/gconfd.c:2433
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "ସଂରକ୍ଷିତ ଅବସ୍ଥାରେ ଥିବା ଫାଇଲରେ ଗ୍ରାହକ ଠିକଣା ବାହାର କରିବାରେ ବିଫଳ: %s"
 
-#: ../gconf/gconfd.c:2526
+#: ../gconf/gconfd.c:2532
 msgid "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 
-#: ../gconf/gconftool.c:91
+#: ../gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "ଗୋଟିଏ ମୂଲ୍ୟ ପାଇଁ ଗୋଟିଏ କି ସେଟକରନ୍ତୁ ଏବଂ sync କରନ୍ତୁ. --type ସହିତ ବ୍ୟବହାର କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:100
+#: ../gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "ଗୋଟିଏ କିର ମୂଲ୍ୟ ମାନକ ଫଳାଫଳରେ ମୁଦ୍ରଣକରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:110
+#: ../gconf/gconftool.c:112
 msgid "Unset the keys on the command line"
 msgstr "ନିର୍ଦ୍ଦେଶ ନାମାରେ କିଗୁଡ଼ିକୁ ଅବିନ୍ୟାସ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:119
+#: ../gconf/gconftool.c:121
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr ""
 
-#: ../gconf/gconftool.c:128
+#: ../gconf/gconftool.c:130
+msgid "Toggles a boolean key."
+msgstr "ଗୋଟିଏ ବୁଲିଆନ କି କୁ ଆଗପଛ କରିଥାଏ।"
+
+#: ../gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "ଗୋଟିଏ ଡିରେକ୍ଟୋରୀରେ ଥିବା ସମସ୍ତ କି/ମୂଲ୍ୟ ଯୋଡ଼ାକୁ ମୁଦ୍ରଣକରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:137
+#: ../gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "ଗୋଟିଏ ଡିରେକ୍ଟୋରୀରେ ଥିବା ସମସ୍ତ ଉପଡିରେକ୍ଟୋରୀଗୁଡ଼ିକୁ ମୁଦ୍ରଣକରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:146
+#: ../gconf/gconftool.c:157
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "ଗୋଟିଏ ଡିରେକ୍ଟୋରୀରେ ଥିବା ସମସ୍ତ ଉପଡିରେକ୍ଟୋରୀ ଏବଂ ଭରଣଗୁଡ଼ିକୁ ପୁନରାବର୍ତ୍ତୀ ଭାବରେ ମୁଦ୍ରଣକରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:155
+#: ../gconf/gconftool.c:166 ../gconf/gconftool.c:175
 msgid "Search for a key, recursively."
 msgstr "ଗୋଟିଏ କି କୁ ପୁନରାବର୍ତ୍ତୀ ଭାବରେ ଖୋଜନ୍ତୁ."
 
-#: ../gconf/gconftool.c:164
+#: ../gconf/gconftool.c:184
 msgid "Get the short doc string for a key"
 msgstr "ଗୋଟିଏ କି ପାଇଁ ସଂକ୍ଷିପ୍ତ ତଥ୍ୟ ବାକ୍ୟଖଣ୍ଡ ଆଣନ୍ତୁ"
 
-#: ../gconf/gconftool.c:173
+#: ../gconf/gconftool.c:193
 msgid "Get the long doc string for a key"
 msgstr "ଗୋଟିଏ କି ପାଇଁ ବିସ୍ତୃତ ତଥ୍ୟ ବାକ୍ୟଖଣ୍ଡ ଆଣନ୍ତୁ"
 
-#: ../gconf/gconftool.c:182
+#: ../gconf/gconftool.c:202
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "ଯଦି ଡିରେକ୍ଟୋରୀ ଅବସ୍ଥିତ ଅଛି ତେବେ 0 ଫେରାନ୍ତୁ, ଯଦି ନାହିଁ ତେବେ 2 ଫେରାନ୍ତୁ."
 
-#: ../gconf/gconftool.c:191
+#: ../gconf/gconftool.c:211
 msgid "Ignore schema defaults when reading values."
 msgstr "ମୂଲ୍ୟଗୁଡ଼ିକୁ ପଢ଼ିବା ସମୟରେ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ବିବରଣିକାକୁ ଅଗ୍ରାହ୍ୟ କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:206
+#: ../gconf/gconftool.c:226
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr ""
 
-#: ../gconf/gconftool.c:215
+#: ../gconf/gconftool.c:235
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
 msgstr ""
 
-#: ../gconf/gconftool.c:224
+#: ../gconf/gconftool.c:244
 msgid "Unload a set of values described in an XML file."
 msgstr "XML ଫାଇଲରେ ବର୍ଣ୍ଣନା କରାଯାଇଥିବା ମୂଲ୍ୟଗୁଡ଼ିକର ଗୋଟିଏ ସେଟକୁ ଅପସାରଣ କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:239
+#: ../gconf/gconftool.c:259
 msgid "Get the name of the default source"
 msgstr "ପୂର୍ବନିର୍ଦ୍ଧାରିତ ଉତ୍ସର ନାମ ଖୋଜନ୍ତୁ"
 
-#: ../gconf/gconftool.c:248
+#: ../gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "gconfd କୁ ବନ୍ଦକରନ୍ତୁ. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 
-#: ../gconf/gconftool.c:257
+#: ../gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "ଯଦି gconfd ଚାଲୁଅଛି ତେବେ 0 ଫେରାନ୍ତୁ, ଯଦି ନାହିଁ ତେବେ 2 ଫେରାନ୍ତୁ."
 
-#: ../gconf/gconftool.c:266
+#: ../gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
-msgstr ""
-"ବିନ୍ୟାସ ସର୍ଭର (gconfd) କୁ ଆରମ୍ଭକରନ୍ତୁ. "
-"(ସାଧାରଣତଃ ଆବଶ୍ୟକ ହେଲେ ସ୍ୱୟଂଚାଳିତ ଭାବରେ ଘଟିଥାଏ)"
+msgstr "ବିନ୍ୟାସ ସର୍ଭର (gconfd) କୁ ଆରମ୍ଭକରନ୍ତୁ. (ସାଧାରଣତଃ ଆବଶ୍ୟକ ହେଲେ ସ୍ୱୟଂଚାଳିତ ଭାବରେ ଘଟିଥାଏ)"
 
-#: ../gconf/gconftool.c:281
+#: ../gconf/gconftool.c:301
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
-msgstr "ନିର୍ଦ୍ଧାରିତ ମୂଲ୍ୟର ପ୍ରକାର, କିମ୍ବା ବିବରଣିକା ବର୍ଣ୍ଣନା କରୁଥିବା ମୂଲ୍ୟର ପ୍ରକାର ଉଲ୍ଲେଖ କରନ୍ତୁ. ଅନନ୍ୟ ସଂଙ୍କେତାକ୍ଷର OK."
+msgstr ""
+"ନିର୍ଦ୍ଧାରିତ ମୂଲ୍ୟର ପ୍ରକାର, କିମ୍ବା ବିବରଣିକା ବର୍ଣ୍ଣନା କରୁଥିବା ମୂଲ୍ୟର ପ୍ରକାର ଉଲ୍ଲେଖ କରନ୍ତୁ. ଅନନ୍ୟ "
+"ସଂଙ୍କେତାକ୍ଷର OK."
 
-#: ../gconf/gconftool.c:282
+#: ../gconf/gconftool.c:302
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: ../gconf/gconftool.c:290
+#: ../gconf/gconftool.c:310
 msgid "Print the data type of a key to standard output."
 msgstr "ମାନକ ଫଳାଫଳ ପାଇଁ ଗୋଟିଏ କି ର ତଥ୍ୟ ପ୍ରକାରକୁ ମୁଦ୍ରଣକରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:299
+#: ../gconf/gconftool.c:319
 msgid "Get the number of elements in a list key."
 msgstr "ତାଲିକା କିରେ ଥିବା ଉପାଦାନମାନଙ୍କର ସଂଖ୍ଯା ନିରୁପଣ କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:308
+#: ../gconf/gconftool.c:328
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "ତାଲିକା କିରୁ ସଂଖ୍ୟାତ୍ମକ ଭାବରେ ଅନୁକ୍ରମିତ ଗୋଟିଏ ନିର୍ଦ୍ଦିଷ୍ଟ ଉପାଦାନ ଆଣନ୍ତୁ."
 
-#: ../gconf/gconftool.c:317
+#: ../gconf/gconftool.c:337
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
 
-#: ../gconf/gconftool.c:318 ../gconf/gconftool.c:327 ../gconf/gconftool.c:336
+#: ../gconf/gconftool.c:338 ../gconf/gconftool.c:347 ../gconf/gconftool.c:356
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: ../gconf/gconftool.c:326
+#: ../gconf/gconftool.c:346
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
 
-#: ../gconf/gconftool.c:335
+#: ../gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr ""
 
-#: ../gconf/gconftool.c:350
+#: ../gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
 msgstr "ସ୍ଥାପନ କରିବା ପାଇଁ ଗୋଟିଏ ବିବରଣିକା ଫାଇଲ ଉଲ୍ଲେଖ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:351
+#: ../gconf/gconftool.c:371
 msgid "FILENAME"
 msgstr "FILENAME"
 
-#: ../gconf/gconftool.c:359
+#: ../gconf/gconftool.c:379
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "ବ୍ୟବହାର କରିବା ପାଇଁ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ପଥ ପରିବର୍ତ୍ତେ ଗୋଟିଏ ରୂପରେଖ ଉତ୍ସ ଉଲ୍ଲେଖ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:360
+#: ../gconf/gconftool.c:380
 msgid "SOURCE"
 msgstr "SOURCE"
 
-#: ../gconf/gconftool.c:368
+#: ../gconf/gconftool.c:388
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
 msgstr ""
 
-#: ../gconf/gconftool.c:377
+#: ../gconf/gconftool.c:397
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment "
@@ -1680,748 +1702,798 @@ msgid ""
 "configuration source."
 msgstr ""
 
-#: ../gconf/gconftool.c:386
+#: ../gconf/gconftool.c:406
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
 "configuration source or set to the empty string to use the default."
 msgstr ""
+"ତଥ୍ୟାବଳୀରୁ ନିର୍ଦ୍ଦେଶ ନାମାରେ ବିବରଣିକା ଫାଇଲଗୁଡ଼ିକୁ ସଠିକ ଭାବରେ ସ୍ଥାପିତ କରିଥାଏ। "
+"GCONF_CONFIG_SOURCE ପରିବେଶ ପ୍ରାଚଳ ଗୋଟିଏ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ହୋଇନଥିବା ବିନ୍ୟାସ "
+"ଉତ୍ସରେ ବିନ୍ୟାସ କରାଯାଇଥାଏ କିମ୍ବା ପୂର୍ବନିର୍ଦ୍ଧାରିତ ଖାଲି ବାକ୍ୟଖଣ୍ଡରେ ବିନ୍ୟାସ କରାଯାଇଥାଏ।"
 
-#: ../gconf/gconftool.c:401
+#: ../gconf/gconftool.c:421
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr ""
 
-#: ../gconf/gconftool.c:410
+#: ../gconf/gconftool.c:430
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
 
-#: ../gconf/gconftool.c:425
+#: ../gconf/gconftool.c:445
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
-"ଗୋଟିଏ ବିବରଣିକା ବିନ୍ୟାସ କରନ୍ତୁ ଏବଂ sync କରନ୍ତୁ. --short-desc, --long-desc, --owner, ଏବଂ --"
-"type ସହିତ ବ୍ୟବହାର କରନ୍ତୁ."
+"ଗୋଟିଏ ବିବରଣିକା ବିନ୍ୟାସ କରନ୍ତୁ ଏବଂ sync କରନ୍ତୁ. --short-desc, --long-desc, --owner, "
+"ଏବଂ --type ସହିତ ବ୍ୟବହାର କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:434
+#: ../gconf/gconftool.c:454
 msgid "Specify a short half-line description to go in a schema."
 msgstr "ବିବରଣିକା ଭିତରକୁ ଯିବା ପାଇଁ ଗୋଟିଏ ସଂକ୍ଷିପ୍ତ ଅଧା-ଧାଡ଼ି ବିଶିଷ୍ଟ ବର୍ଣ୍ଣନା ଉଲ୍ଲେଖ କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:435 ../gconf/gconftool.c:444
+#: ../gconf/gconftool.c:455 ../gconf/gconftool.c:464
 msgid "DESCRIPTION"
 msgstr "DESCRIPTION"
 
-#: ../gconf/gconftool.c:443
+#: ../gconf/gconftool.c:463
 msgid "Specify a several-line description to go in a schema."
 msgstr "ବିବରଣିକା ଭିତରକୁ ଯିବା ପାଇଁ କିଛି ଧାଡ଼ି ବିଶିଷ୍ଟ ବର୍ଣ୍ଣନା ଉଲ୍ଲେଖ କରନ୍ତୁ."
 
-#: ../gconf/gconftool.c:452
+#: ../gconf/gconftool.c:472
 msgid "Specify the owner of a schema"
 msgstr "ବିବରଣିକାର ମାଲିକଙ୍କୁ ଉଲ୍ଲେଖ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:453
+#: ../gconf/gconftool.c:473
 msgid "OWNER"
 msgstr "OWNER"
 
-#: ../gconf/gconftool.c:461
+#: ../gconf/gconftool.c:481
 msgid "Get the name of the schema applied to this key"
 msgstr "ଏହି କି ରେ ପ୍ରୟୋଗ କରାଯାଇଥିବା ବିବରଣିକା ନାମକୁ ନିରୁପଣ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:470
+#: ../gconf/gconftool.c:490
 msgid "Specify the schema name followed by the key to apply the schema name to"
-msgstr ""
+msgstr "ବିବରଣିକା ନାମ ପ୍ରୟୋଗ କରିବା ପାଇଁ ପ୍ରୟୋଗ କରିବାକୁ ଥିବା କି ପୂର୍ବରୁ ବିବରଣିକା ନାମ ଉଲ୍ଲେଖ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:479
+#: ../gconf/gconftool.c:499
 msgid "Remove any schema name applied to the given keys"
 msgstr "ପ୍ରଦତ୍ତ କି ରେ ପ୍ରୟୋଗ କରାଯାଇଥିବା ଯେକୌଣସି ବିବରଣିକା ନାମକୁ ଅପସାରଣ କରନ୍ତୁ"
 
-#: ../gconf/gconftool.c:494
+#: ../gconf/gconftool.c:514
 msgid "Print version"
 msgstr "ମୁଦ୍ରଣ ସଂସ୍କରଣ"
 
-#: ../gconf/gconftool.c:503
+#: ../gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FILE...]|[KEY...]|[DIR...]"
 
-#: ../gconf/gconftool.c:563
+#: ../gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
 msgstr "- GConf ବିନ୍ୟାସକୁ ପ୍ରକଳନ କରିବା ପାଇଁ ସାଧନ"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Client options:"
 msgstr "ଗ୍ରାହକ ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Show client options"
 msgstr "ଗ୍ରାହକ ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Key type options:"
 msgstr "କି ପ୍ରକାର ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Show key type options"
 msgstr "କି ପ୍ରକାର ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Load/Save options:"
 msgstr "ଧାରଣକରନ୍ତୁ/ସଂରକ୍ଷଣକରନ୍ତୁ ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Show load/save options"
 msgstr "ଧାରଣକରନ୍ତୁ/ସଂରକ୍ଷଣକରନ୍ତୁ ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Server options:"
 msgstr "ସର୍ଭର ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Show server options"
 msgstr "ସର୍ଭର ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Installation options:"
 msgstr "ସ୍ଥାପନ ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Show installation options"
 msgstr "ସ୍ଥାପନ ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Test options:"
 msgstr "ପରୀକ୍ଷଣ ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Show test options"
 msgstr "ପରୀକ୍ଷଣ ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Schema options:"
 msgstr "ବିବରଣିକା ବିକଳ୍ପଗୁଡ଼ିକ:"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Show schema options"
 msgstr "ବିବରଣିକା ବିକଳ୍ପଗୁଡ଼ିକୁ ଦର୍ଶାନ୍ତୁ"
 
-#: ../gconf/gconftool.c:607
+#: ../gconf/gconftool.c:629
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr "ଉପଲବ୍ଧ ପାଠ୍ଯ ନିର୍ଦ୍ଦେଶ ବିକଳ୍ପର ସମ୍ପୂର୍ଣ୍ଣ ତାଲିକା ପାଇଁ '%s --help' ଚଳାନ୍ତୁ.\n"
 
-#: ../gconf/gconftool.c:635
+#: ../gconf/gconftool.c:657
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "getଏବଂ set/unset ଏକସଙ୍ଗରେ ପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:645
+#: ../gconf/gconftool.c:667
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "set ଏବଂ get/unset ଏକସଙ୍ଗରେ ପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:652
+#: ../gconf/gconftool.c:674
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "ପ୍ରକାର ଏବଂ ବିନ୍ୟାସ/ଅବିନ୍ୟାସ ଏକସଙ୍ଗରେ ପାଇପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:663
+#: ../gconf/gconftool.c:682
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "ଏକସଙ୍ଗରେ ଆଗପଛ ଏବଂ get/set/unset କରିପାରିବେ ନାହିଁ\n"
+
+#: ../gconf/gconftool.c:693
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "--get କିମ୍ବା --set ସହିତ --all-entriesକୁ ବ୍ୟବହାର କରିପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:674
+#: ../gconf/gconftool.c:704
 #, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "--get କିମ୍ବା --set ସହିତ --all-dirs ବ୍ୟବହାର କରିପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:688
+#: ../gconf/gconftool.c:718
 #, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
 "entries, --all-dirs, or --search-key\n"
 msgstr ""
-"--get, --set, --unset, --all-entries, --all-dirs, କିମ୍ବା --search-key ସହିତ "
-"--recursive-list ବ୍ୟବହାର ହେବା ଉଚିତ ନୁହଁ\n"
+"--get, --set, --unset, --all-entries, --all-dirs, କିମ୍ବା --search-key ସହିତ --"
+"recursive-list ବ୍ୟବହାର ହେବା ଉଚିତ ନୁହଁ\n"
 
-#: ../gconf/gconftool.c:702
+#: ../gconf/gconftool.c:732
 #, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
 "all-dirs, or --search-key\n"
 msgstr ""
-"--get, --set, --unset, --all-entries, --all-dirs, କିମ୍ବା --search-key "
-"ସହିତ --set_schema ବ୍ୟବହାର ହେବା ଉଚିତ ନୁହଁ \n"
+"--get, --set, --unset, --all-entries, --all-dirs, କିମ୍ବା --search-key ସହିତ --"
+"set_schema ବ୍ୟବହାର ହେବା ଉଚିତ ନୁହଁ \n"
 
-#: ../gconf/gconftool.c:708
+#: ../gconf/gconftool.c:738
 #, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "ମୂଲ୍ୟର ପ୍ରକାର କେବଳ ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ କରିବା ସମୟରେ ହିଁ ପ୍ରାସଙ୍ଗୋଚିତ ହୋଇଥାଏ\n"
 
-#: ../gconf/gconftool.c:714
+#: ../gconf/gconftool.c:744
 #, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ କରିବା ସମୟରେ ଗୋଟିଏ ପ୍ରକାର ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:722
+#: ../gconf/gconftool.c:752
 #, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
 "--recursive-list, --get-list-size or --get-list-element\n"
 msgstr ""
-"--ignore-schema-defaults ଟି --get, --all-entries, --dump, "
-"--recursive-list, --get-list-size କିମ୍ବା --get-list-element ସହିତ ପ୍ରାସଙ୍ଗିକ\n"
+"--ignore-schema-defaults ଟି --get, --all-entries, --dump, --recursive-list, --"
+"get-list-size କିମ୍ବା --get-list-element ସହିତ ପ୍ରାସଙ୍ଗିକ\n"
 
-#: ../gconf/gconftool.c:734 ../gconf/gconftool.c:747 ../gconf/gconftool.c:760
-#: ../gconf/gconftool.c:774 ../gconf/gconftool.c:787 ../gconf/gconftool.c:800
-#: ../gconf/gconftool.c:814
+#: ../gconf/gconftool.c:764 ../gconf/gconftool.c:777 ../gconf/gconftool.c:790
+#: ../gconf/gconftool.c:804 ../gconf/gconftool.c:817 ../gconf/gconftool.c:830
+#: ../gconf/gconftool.c:844
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "%s ବିକଳ୍ପ ନିଜ ଦ୍ୱାରା ବ୍ୟବହୃତ ହେଉନାହିଁ.\n"
 
-#: ../gconf/gconftool.c:823
+#: ../gconf/gconftool.c:853
 #, c-format
 msgid ""
 "You must specify a configuration source with --config-source when using --"
 "direct\n"
 msgstr ""
+"--direct ବ୍ୟବହାର କରିବ ସମୟରେ ଆପଣଙ୍କୁ --config-source ସହିତ ଗୋଟିଏ ବିନ୍ୟାସ ଉତ୍ସ ଉଲ୍ଲେଖ "
+"କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:829
+#: ../gconf/gconftool.c:859
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "init GConf ରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:857
+#: ../gconf/gconftool.c:887
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL ଟି ବିନ୍ୟାସିତ, ବିବରଣିକାଗୁଡ଼ିକୁ ବିସ୍ଥାପନ କରାଯାଉନାହିଁ\n"
 
-#: ../gconf/gconftool.c:864
+#: ../gconf/gconftool.c:894
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
-msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL ଟି ବିନ୍ୟାସିତ, ବିବରଣିକାଗୁଡ଼ିକୁ ବିସ୍ଥାପନ କରାଯାଉନାହିଁ\n"
+msgstr ""
+"GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL ଟି ବିନ୍ୟାସିତ, ବିବରଣିକାଗୁଡ଼ିକୁ ବିସ୍ଥାପନ "
+"କରାଯାଉନାହିଁ\n"
 
-#: ../gconf/gconftool.c:877
+#: ../gconf/gconftool.c:907
 #, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "GCONF_CONFIG_SOURCE ପରିବେଶ ଚଳ ବିନ୍ୟାସ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:932
+#: ../gconf/gconftool.c:962
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "ବିନ୍ଯାସ ଉତ୍ସକୁ(ମାନଙ୍କୁ) ଅଭିଗମ କରିବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:1219
+#: ../gconf/gconftool.c:1267
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "ବନ୍ଦକରିବା ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:1262
+#: ../gconf/gconftool.c:1310
 #, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "ପୁନରାବର୍ତ୍ତୀ ତାଲିକା ପାଇଁ ଏକ ବା ଏକାଧିକ ଡିରେକ୍ଟୋରୀ ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:1293 ../gconf/gconftool.c:1454
-#: ../gconf/gconftool.c:1720
+#: ../gconf/gconftool.c:1355 ../gconf/gconftool.c:1549
+#: ../gconf/gconftool.c:1815
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "`%s'ରେ ଭରଣଗୁଡ଼ିକୁ ତାଲିକାଭୁକ୍ତ କରିବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:1313 ../gconf/gconftool.c:1473
+#: ../gconf/gconftool.c:1375 ../gconf/gconftool.c:1568
 msgid "(no value set)"
 msgstr "(କୌଣସି ମୂଲ୍ୟ ସେଟକରାଯାଇନାହିଁ)"
 
-#: ../gconf/gconftool.c:1363
+#: ../gconf/gconftool.c:1438
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
 msgstr "ଖୋଜିବା ପାଇଁ କିଛି କି ନମୁନା ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:1412
+#: ../gconf/gconftool.c:1457
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "ଖୋଜିବା ପାଇଁ କିଛି PCRE regex ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ।\n"
+
+#: ../gconf/gconftool.c:1464
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "regex କୁ ସଙ୍କକଳନ କରିିବାରେ ତ୍ରୁଟି: %s\n"
+
+#: ../gconf/gconftool.c:1507
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "ଡମ୍ପ କରିବା ପାଇଁ ଏକ ବା ଏକାଧିକ ଡିରେକ୍ଟୋରୀ ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:1779
+#: ../gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "ବିନ୍ଯାସ ସର୍ଭର(gconfd)କୁ ବହୁସଂଖ୍ୟାରେ ଜନ୍ମଦେବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:1808
+#: ../gconf/gconftool.c:1903
 #, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "ପାଇବା ପାଇଁ କି କିମ୍ବା କିଗୁଡ଼ିକୁ ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:1843
+#: ../gconf/gconftool.c:1938
 #, c-format
 msgid "Type: %s\n"
 msgstr "ପ୍ରକାର: %s\n"
 
-#: ../gconf/gconftool.c:1844
+#: ../gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
 msgstr "ତାଲିକା ପ୍ରକାର: %s\n"
 
-#: ../gconf/gconftool.c:1845
+#: ../gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "ଅକ୍ଷର ପ୍ରକାର: %s\n"
 
-#: ../gconf/gconftool.c:1846
+#: ../gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr ପ୍ରକାର: %s\n"
 
-#: ../gconf/gconftool.c:1851
+#: ../gconf/gconftool.c:1946
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "ପୂର୍ବନିର୍ଦ୍ଧାରିତ ମୂଲ୍ଯ: %s\n"
 
-#: ../gconf/gconftool.c:1851 ../gconf/gconftool.c:1853
-#: ../gconf/gconftool.c:1854 ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1946 ../gconf/gconftool.c:1948
+#: ../gconf/gconftool.c:1949 ../gconf/gconftool.c:1950
 msgid "Unset"
 msgstr "ଅବିନ୍ୟାସିତ"
 
-#: ../gconf/gconftool.c:1853
+#: ../gconf/gconftool.c:1948
 #, c-format
 msgid "Owner: %s\n"
 msgstr "ମାଲିକ: %s\n"
 
-#: ../gconf/gconftool.c:1854
+#: ../gconf/gconftool.c:1949
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "ସଂକ୍ଷିପ୍ତ ବିବରଣୀ: %s\n"
 
-#: ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1950
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "ବିସ୍ତୃତ ବିବରଣୀ: %s\n"
 
-#: ../gconf/gconftool.c:1864 ../gconf/gconftool.c:2088
-#: ../gconf/gconftool.c:2122 ../gconf/gconftool.c:2167
-#: ../gconf/gconftool.c:2312
+#: ../gconf/gconftool.c:1959 ../gconf/gconftool.c:2234
+#: ../gconf/gconftool.c:2268 ../gconf/gconftool.c:2313
+#: ../gconf/gconftool.c:2458
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "`%s' ପାଇଁ କୌଣସି ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ କରାଯାଇ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:1868 ../gconf/gconftool.c:2092
-#: ../gconf/gconftool.c:2126 ../gconf/gconftool.c:2171
-#: ../gconf/gconftool.c:2316
+#: ../gconf/gconftool.c:1963 ../gconf/gconftool.c:2238
+#: ../gconf/gconftool.c:2272 ../gconf/gconftool.c:2317
+#: ../gconf/gconftool.c:2462
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "`%s' ପାଇଁ ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:1911 ../gconf/gconftool.c:1923
+#: ../gconf/gconftool.c:2006 ../gconf/gconftool.c:2018
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "`%s'ର ପ୍ରକାରକୁ ବୁଝିହେଲା ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:1935
+#: ../gconf/gconftool.c:2030
 #, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "ସ୍ୱତନ୍ତ୍ରଚର ପରି ବୈକଳ୍ପିକ କି/ମୂଲ୍ୟ ଗୁଡ଼ିକୁ ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:1955
+#: ../gconf/gconftool.c:2050
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "କି: `%s' ପାଇଁ ସେଟକରିବାକୁ କୌଣସି ମୂଲ୍ୟ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:1983
+#: ../gconf/gconftool.c:2078
 #, c-format
 msgid "Cannot set schema as value\n"
 msgstr "ବିବରଣିକାକୁ ମୂଲ୍ୟ ଆକାରରେ ସେଟ କରିପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:1993
+#: ../gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "ତାଲିକା ସେଟକରିବା ସମୟରେ ଆପଣଙ୍କୁ ଗୋଟିଏ ପ୍ରାରମ୍ଭିକ ତାଲିକା-ପ୍ରକାର ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2007
+#: ../gconf/gconftool.c:2102
 #, c-format
 msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "ଯୋଡ଼ା ବିନ୍ୟାସ କରିବା ସମୟରେ ଆପଣଙ୍କୁ ଗୋଟିଏ ପ୍ରାରମ୍ଭିକ ଅକ୍ଷର-ପ୍ରକାର ଏବଂ cdr-ପ୍ରକାର ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
+msgstr ""
+"ଯୋଡ଼ା ବିନ୍ୟାସ କରିବା ସମୟରେ ଆପଣଙ୍କୁ ଗୋଟିଏ ପ୍ରାରମ୍ଭିକ ଅକ୍ଷର-ପ୍ରକାର ଏବଂ cdr-ପ୍ରକାର ଉଲ୍ଲେଖ କରିବା "
+"ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2022
+#: ../gconf/gconftool.c:2117
 #, c-format
 msgid "Error: %s\n"
 msgstr "ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2035 ../gconf/gconftool.c:3067
+#: ../gconf/gconftool.c:2130 ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:3213
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣକରିବାରେ ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2053
+#: ../gconf/gconftool.c:2148
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "ଏକକାଳୀନ କରିବାରେ ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2068
+#: ../gconf/gconftool.c:2163
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "ଗୋଟିଏ କିମ୍ବା ଏକାଧିକ କି କୁ ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ\n"
+
+#: ../gconf/gconftool.c:2179
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "କି %s ପାଇଁ କୌଣସି ମୂଲ୍ୟ ମିଳିଲା ନାହିଁ\n"
+
+#: ../gconf/gconftool.c:2185
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "ଗୋଟିଏ ବୁଲିଆନ ମୂଲ୍ୟ ନୁହଁ: %s\n"
+
+#: ../gconf/gconftool.c:2214
 #, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "ପ୍ରକାର ପାଇବା ପାଇଁ କି କିମ୍ବା କିଗୁଡ଼ିକୁ ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2112
+#: ../gconf/gconftool.c:2258
 #, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "ର ଆକାର ଅବଲୋକନ କରବାପାଇଁ ଗୋଟିଏ କି ଉଲ୍ଲେଖ କରିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:2137 ../gconf/gconftool.c:2182
+#: ../gconf/gconftool.c:2283 ../gconf/gconftool.c:2328
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "କି %s ଟି ଗୋଟିଏ ତାଲିକା ନୁହଁ.\n"
 
-#: ../gconf/gconftool.c:2157
+#: ../gconf/gconftool.c:2303
 #, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "ଗୋଟିଏ କି ଉଲ୍ଲେଖ କରିବା ଉଚିତ ଯେଉଁଥିରୁ ତାଲିକା ଉପାଦାନ ମିଳିବ.\n"
 
-#: ../gconf/gconftool.c:2188
+#: ../gconf/gconftool.c:2334
 #, c-format
 msgid "Must specify list index.\n"
 msgstr "ତାଲିକା ଅନୁକ୍ରମଣିକା ଉଲ୍ଲେଖ କରିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:2341
 #, c-format
 msgid "List index must be non-negative.\n"
 msgstr "ତାଲିକା ଅନୁକ୍ରମଣିକାଟି ଅଣ-ଋଣାତ୍ମକ ହୋଇଥିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:2204
+#: ../gconf/gconftool.c:2350
 #, c-format
 msgid "List index is out of bounds.\n"
 msgstr "ତାଲିକା ଅନୁକ୍ରମଣିକାଟି ସୀମାରୁ ବାହାରେ.\n"
 
-#: ../gconf/gconftool.c:2230
+#: ../gconf/gconftool.c:2376
 #, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "ନିର୍ଦ୍ଦେଶନାମା ଉପରେକି କିମ୍ବା କିଗୁଡ଼ିକୁ ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2250
+#: ../gconf/gconftool.c:2396
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "`%s' ପାଇଁ କୌଣସି ବିବରଣିକା ଜଣାନାହିଁ\n"
 
-#: ../gconf/gconftool.c:2283
+#: ../gconf/gconftool.c:2429
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "'%s' ରେ ବିବରଣିକାରେ କୌଣସି ତଥ୍ୟ ବାକ୍ୟଖଣ୍ଡ ସଂରକ୍ଷଣ କରାଯାଇନାହିଁ\n"
 
-#: ../gconf/gconftool.c:2288
+#: ../gconf/gconftool.c:2434
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "'%s'ରେ ବିବରଣିକା ପାଇବାରେ ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2295
+#: ../gconf/gconftool.c:2441
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "'%s'ରେ କୌଣସି ବିବରଣିକା ସଂରକ୍ଷିତ ହୋଇନାହିଁ\n"
 
-#: ../gconf/gconftool.c:2298
+#: ../gconf/gconftool.c:2444
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "'%s'ରେ ଥିବା ମୂଲ୍ୟଟି ଗୋଟିଏ ବିବରଣିକା ନୁହଁ\n"
 
-#: ../gconf/gconftool.c:2354
+#: ../gconf/gconftool.c:2500
 #, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
-msgstr ""
+msgstr "ଏଥିରେ ପ୍ରୟୋଗ କରିବା ପାଇଁ କି ନାମ ପରେ ଗୋଟିଏ ବିବରଣିକା ନାମ ଉଲ୍ଲେଖ କରନ୍ତୁ\n"
 
-#: ../gconf/gconftool.c:2361
+#: ../gconf/gconftool.c:2507
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "କି ନାମ '%s' ସହିତ ବିବରଣିକା ନାମ '%s'କୁ ସଂଯୁକ୍ତ କରିବାରେ ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2379
+#: ../gconf/gconftool.c:2525
 #, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "ଅପ୍ରୟୋଗ ବିବରଣିକା ପାଇଁ କି ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2389
+#: ../gconf/gconftool.c:2535
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "'%s'ରୁ ବିବରଣିକା ନାମକୁ ହଟାଇବାରେ ତ୍ରୁଟି : %s\n"
 
-#: ../gconf/gconftool.c:2414
+#: ../gconf/gconftool.c:2560
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "କି (ବିବରଣିକା ନାମ)କୁ ଏକମାତ୍ର ସ୍ୱତନ୍ତ୍ରଚର ଆକାରରେ ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2456
+#: ../gconf/gconftool.c:2602
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
-msgstr "ତାଲିକା ପ୍ରକାରଟି ନିଶ୍ଚିତରୂପେ ଗୋଟିଏ ପ୍ରରମ୍ଭିକ ପ୍ରକାର ହୋଇଥିବା ଉଚିତ: string, int, float or bool\n"
+msgstr ""
+"ତାଲିକା ପ୍ରକାରଟି ନିଶ୍ଚିତରୂପେ ଗୋଟିଏ ପ୍ରରମ୍ଭିକ ପ୍ରକାର ହୋଇଥିବା ଉଚିତ: string, int, float or "
+"bool\n"
 
-#: ../gconf/gconftool.c:2476
+#: ../gconf/gconftool.c:2622
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "ଯୋଡ଼ା ଅକ୍ଷର ପ୍ରକାରଟି ଗୋଟିଏ ପ୍ରରମ୍ଭିକ ପ୍ରକାର ହୋଇଥିବା ଉଚିତ: string, int, float or bool\n"
 
-#: ../gconf/gconftool.c:2496
+#: ../gconf/gconftool.c:2642
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
-msgstr "ଯୋଡ଼ା cdr ପ୍ରକାର ନିଶ୍ଚିତ ରୂପେ ଗୋଟିଏ ପ୍ରାରମ୍ଭିକ ପ୍ରକାର ହୋଇଥିବା ଉଚିତ: string, int, float or bool\n"
+msgstr ""
+"ଯୋଡ଼ା cdr ପ୍ରକାର ନିଶ୍ଚିତ ରୂପେ ଗୋଟିଏ ପ୍ରାରମ୍ଭିକ ପ୍ରକାର ହୋଇଥିବା ଉଚିତ: string, int, float or "
+"bool\n"
 
-#: ../gconf/gconftool.c:2511
+#: ../gconf/gconftool.c:2657
 #, c-format
 msgid "Error setting value: %s"
 msgstr "ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ କରିବାରେ ତ୍ରୁଟି: %s"
 
-#: ../gconf/gconftool.c:2525
+#: ../gconf/gconftool.c:2671
 #, c-format
 msgid "Error syncing: %s"
 msgstr "ଏକକାଳୀନ କରିବାରେ ତ୍ରୁଟି: %s"
 
-#: ../gconf/gconftool.c:2540
+#: ../gconf/gconftool.c:2686
 #, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr "ରୁ କି/ମୂଲ୍ୟ ଯୋଡ଼ା ପାଇବା ପାଇଁ ଏକ ବା ଏକାଧିକ ଡ଼ିରେକ୍ଟୋରୀ ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ:\n"
 
-#: ../gconf/gconftool.c:2554
+#: ../gconf/gconftool.c:2700
 #, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "ଅବିନ୍ୟାସ ପାଇଁ ଏକ ବା ଏକାଧିକ କି ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ:\n"
 
-#: ../gconf/gconftool.c:2565
+#: ../gconf/gconftool.c:2711
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "`%s'କୁ ଅବିନ୍ୟାସ କରିବାରେ ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2585
+#: ../gconf/gconftool.c:2731
 #, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "ପୁନରାବର୍ତ୍ତୀ ଅବିନ୍ୟାସ ପାଇଁ ଏକ ବା ଏକାଧିକ କି ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ:\n"
 
-#: ../gconf/gconftool.c:2599
+#: ../gconf/gconftool.c:2745
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "\"%s\"ର ପୁନରାବର୍ତ୍ତୀ ଅବିନ୍ୟାସ ସମୟରେ ବିଫଳତା: %s\n"
 
-#: ../gconf/gconftool.c:2619
+#: ../gconf/gconftool.c:2765
 #, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "ରୁ subdir ଗୁଡ଼ିକୁ ପାଇବା ପାଇଁ ଏକ ଅବା ଏକାଧିକ ଡିରେକ୍ଟୋରୀଗୁଡ଼ିକୁ ଉଲ୍ଲେଖ କରିଯିବା ଉଚିତ.\n"
 
-#: ../gconf/gconftool.c:2653
+#: ../gconf/gconftool.c:2799
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "dirs କୁ ତାଲିକାଭୁକ୍ତ କରିବାରେ ତ୍ରୁଟି: %s\n"
 
-#: ../gconf/gconftool.c:2789
+#: ../gconf/gconftool.c:2935
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "WARNING: <ଯୋଡ଼ା>ରେ ଉଭୟ <car> ଏବଂ <cdr> ଉଲ୍ଲେଖ କରାଯିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2816
+#: ../gconf/gconftool.c:2962
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr "WARNING: <ମୂଲ୍ୟ> ତଳେ ବିବରଣିକା ପାଇଁ ଉଲ୍ଲେଖିତ କି (%s)- ଅଗ୍ରାହ୍ୟ କରୁଅଛି\n"
 
-#: ../gconf/gconftool.c:2849
+#: ../gconf/gconftool.c:2995
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "WARNING: <ମୂଲ୍ୟ> ତଳେ ଗୋଟିଏ ଉପନୋଡ ଥିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:2855
+#: ../gconf/gconftool.c:3001
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "WARNING: ନୋଡ <%s> ବୁଝିହେଉନାହିଁ\n"
 
-#: ../gconf/gconftool.c:2873
+#: ../gconf/gconftool.c:3019
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "WARNING: int ମୂଲ୍ୟ`%s'କୁ ବିଶ୍ଳେଷଣ କରିବାରେ ତ୍ରୁଟି\n"
 
-#: ../gconf/gconftool.c:2894
+#: ../gconf/gconftool.c:3040
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "WARNING: float ମୂଲ୍ୟ`%s'କୁ ବିଶ୍ଳେଷଣ କରିବାରେ ତ୍ରୁଟି\n"
 
-#: ../gconf/gconftool.c:2916
+#: ../gconf/gconftool.c:3062
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "WARNING: string ମୂଲ୍ୟ`%s'କୁ ବିଶ୍ଳେଷଣ କରିବାରେ ତ୍ରୁଟି\n"
 
-#: ../gconf/gconftool.c:2937
+#: ../gconf/gconftool.c:3083
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "WARNING: ବୁଲିଆନ ମୂଲ୍ୟ`%s'କୁ ବିଶ୍ଳେଷଣ କରିବାରେ ତ୍ରୁଟି\n"
 
-#: ../gconf/gconftool.c:3046 ../gconf/gconftool.c:3588
+#: ../gconf/gconftool.c:3192 ../gconf/gconftool.c:3734
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "WARNING: ବିବରଣିକା `%s' ସହିତ କି `%s'କୁ ସଂଯୋଗ କରିବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:3161
+#: ../gconf/gconftool.c:3307
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "WARNING: ବିବରଣିକା (%s) ପାଇଁ ଅବୈଧ କିମ୍ବା ଅନୁପସ୍ଥିତ ପ୍ରକାର\n"
 
-#: ../gconf/gconftool.c:3170
+#: ../gconf/gconftool.c:3316
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "WARNING: ବିବରଣିକା (%s) ପାଇଁ ଅବୈଧ କିମ୍ବା ଅନୁପସ୍ଥିତ list_type\n"
 
-#: ../gconf/gconftool.c:3181 ../gconf/gconftool.c:3211
-#: ../gconf/gconftool.c:3240
+#: ../gconf/gconftool.c:3327 ../gconf/gconftool.c:3357
+#: ../gconf/gconftool.c:3386
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "WARNING: ବିବରଣିକା (%s) ପାଇଁ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ମୂଲ୍ୟ`%s' ବିଶ୍ଳେଷଣ କରିବାରେ ବିଫଳ \n"
 
-#: ../gconf/gconftool.c:3199
+#: ../gconf/gconftool.c:3345
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "WARNING: ବିବରଣିକା (%s) ପାଇଁ ଅବୈଧ କିମ୍ବା ଅନୁପସ୍ଥିତ car_type କିମ୍ବା cdr_type\n"
 
-#: ../gconf/gconftool.c:3224
+#: ../gconf/gconftool.c:3370
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "WARNING: ଗୋଟିଏ ବିବରଣିକା ପାଇଁ ଆପଣ ପୂର୍ବନିର୍ଦ୍ଧାରିତ ମୂଲ୍ୟ ନିର୍ଦ୍ଧାରଣ କରିପାରିବେ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3253
+#: ../gconf/gconftool.c:3399
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "WARNING: gconftool ଆଭ୍ୟନ୍ତରୀଣ ତ୍ରୁଟି, ଅଜଣା GConfValueType\n"
 
-#: ../gconf/gconftool.c:3301 ../gconf/gconftool.c:3322
-#: ../gconf/gconftool.c:3343 ../gconf/gconftool.c:3364
+#: ../gconf/gconftool.c:3447 ../gconf/gconftool.c:3468
+#: ../gconf/gconftool.c:3489 ../gconf/gconftool.c:3510
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "WARNING: ପ୍ରକାର ନାମ `%s'କୁ ବିଶ୍ଳେଷଣ କରିବାରେ ବିଫଳ\n"
 
-#: ../gconf/gconftool.c:3318
+#: ../gconf/gconftool.c:3464
 #, c-format
 msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
-msgstr "WARNING: list_type ଟି କେବଳ int, float, string କିମ୍ବା bool ହୋଇପାରିବ ଏବଂ `%s' ହୋଇପାରିବ ନାହିଁ\n"
+msgstr ""
+"WARNING: list_type ଟି କେବଳ int, float, string କିମ୍ବା bool ହୋଇପାରିବ ଏବଂ `%s' "
+"ହୋଇପାରିବ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3339
+#: ../gconf/gconftool.c:3485
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
-msgstr "WARNING: car_type ଟି କେବଳ int, float, string କିମ୍ବା bool ହୋଇପାରିବ ଏବଂ `%s' ହୋଇପାରିବ ନାହିଁ\n"
+msgstr ""
+"WARNING: car_type ଟି କେବଳ int, float, string କିମ୍ବା bool ହୋଇପାରିବ ଏବଂ `%s' "
+"ହୋଇପାରିବ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3360
+#: ../gconf/gconftool.c:3506
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
-msgstr "WARNING: cdr_type ଟି କେବଳ int, float, string କିମ୍ବା bool ହୋଇପାରିବ ଏବଂ `%s' ହୋଇପାରିବ ନାହିଁ\n"
+msgstr ""
+"WARNING: cdr_type ଟି କେବଳ int, float, string କିମ୍ବା bool ହୋଇପାରିବ ଏବଂ `%s' "
+"ହୋଇପାରିବ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3400
+#: ../gconf/gconftool.c:3546
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "WARNING: ଖାଲି <applyto> ନୋଡ"
 
-#: ../gconf/gconftool.c:3403 ../gconf/gconftool.c:3661
+#: ../gconf/gconftool.c:3549 ../gconf/gconftool.c:3807
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "WARNING: ନୋଡ <%s> <ବିବରଣିକା> ତଳକୁ ବୁଝିପାରୁନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3414
+#: ../gconf/gconftool.c:3560
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "WARNING: ତାଲିକା ପ୍ରକାର ବିବରଣିକା ପାଇଁ କୌଣସି <car_type> ଉଲ୍ଲେଖ ହୋଇନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3420
+#: ../gconf/gconftool.c:3566
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "WARNING: ଯୋଡ଼ା ପ୍ରକାର ବିବରଣିକା ପାଇଁ କୌଣସି <car_type> ଉଲ୍ଲେଖ ହୋଇନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3426
+#: ../gconf/gconftool.c:3572
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "ଚେତାବନୀ: ଯୋଡି ପ୍ରକାରର ବିବରଣୀକା ପାଇଁ କୌଣସି <cdr_type> ଉଲ୍ଲେଖ କରାଯାଇ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3455
+#: ../gconf/gconftool.c:3601
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "ଚେତାବନୀ: <locale> ନୋଡର କୌଣସି `name=\"locale\"' ବିଶେଷ ସୂଚକ ନାହିଁ, ଆଗ୍ରହ୍ଯ କରୁଅଛି\n"
 
-#: ../gconf/gconftool.c:3461
+#: ../gconf/gconftool.c:3607
 #, c-format
 msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "ଚେତାବନୀ: %s ଲୋକେଲ ପାଇଁ ଏକାଧିକ <locale> ନୋଡ, ସମସ୍ତ ପୂର୍ବବର୍ତ୍ତୀ ନୋଡ ମାନଙ୍କୁ ପ୍ରଥମେ "
 "ଆଗ୍ରହ୍ଯ କରୁଅଛି\n"
 
-#: ../gconf/gconftool.c:3559
+#: ../gconf/gconftool.c:3705
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "ଚେତାବନୀ: ଗୋଟିଏ <locale> ନୋଡରେ ଅବୈଧ <%s> ନୋଡ\n"
 
-#: ../gconf/gconftool.c:3596
+#: ../gconf/gconftool.c:3742
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "ସଂଲଗ୍ନିତ ବିବରଣୀକା `%s' `%s' ଚାବି ପାଇଁ\n"
 
-#: ../gconf/gconftool.c:3670
+#: ../gconf/gconftool.c:3816
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "ଆପଣଙ୍କ ନିକଟରେ ଗୋଟିଏ <schema> ରେ ଅତିକମରେ ଗୋଟିଏ <locale> ପ୍ରବିଷ୍ଟି ଥିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:3705
+#: ../gconf/gconftool.c:3851
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
 msgstr "WARNING: ବିବରଣୀକା `%s,' ଲୋକେଲ `%s'କୁ ସ୍ଥାପନ କରାବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:3713
+#: ../gconf/gconftool.c:3859
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "`%s' ବିବରଣୀକାକୁ `%s' ଲୋକେଲ ପାଇଁ ସ୍ଥାପନ କରାଯାଇଛି\n"
 
-#: ../gconf/gconftool.c:3723
+#: ../gconf/gconftool.c:3869
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
 msgstr "WARNING: ବିବରଣୀକା`%s', ଲୋକେଲ `%s'କୁ ବିସ୍ଥାପନ କରାବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:3731
+#: ../gconf/gconftool.c:3877
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "`%s' ବିବରଣୀକାକୁ `%s' ଲୋକେଲରୁ ବିସ୍ଥାପନ କରାଯାଇଛି\n"
 
-#: ../gconf/gconftool.c:3769
+#: ../gconf/gconftool.c:3915
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "ଚେତାବନୀ: ବିବରଣୀକା ପାଇଁ କୌଣସି ଚାବି ଉଲ୍ଲେଖ କରାଯାଇ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3810
+#: ../gconf/gconftool.c:3956
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "ଚେତାବନୀ: <%s> ନୋଡକୁ <%s> ତଳେ ବୁଝିହେଲା ନାହିଁ \n"
 
-#: ../gconf/gconftool.c:3842
+#: ../gconf/gconftool.c:3988
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "`%s' କୁ ଖୋଲିବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:3849
+#: ../gconf/gconftool.c:3995
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "`%s' ଦଲିଲଟି ଖାଲି ଅଛି?\n"
 
-#: ../gconf/gconftool.c:3861
+#: ../gconf/gconftool.c:4007
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr "`%s' ଦଲିଲରେ ରୁଟ ନୋଡର ଭୂଲ ପ୍ରକାର ଅଛି (<%s>, <%s> ହେବା ଉଚିତ)\n"
 
-#: ../gconf/gconftool.c:3874
+#: ../gconf/gconftool.c:4020
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "`%s' ଦଲିଲର କୌଣସି ଉଚ୍ଚସ୍ତରୀୟ <%s> ନୋଡ ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3888
+#: ../gconf/gconftool.c:4034
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "ଚେତାବନୀ: <%s> ନୋଡ <%s> ତଳେ ବୁଝିହେଲା ନାହିଁ\n"
 
-#: ../gconf/gconftool.c:3909
+#: ../gconf/gconftool.c:4055
 #, c-format
 msgid "Error syncing configuration data: %s"
 msgstr "ବିନ୍ଯାସ ତଥ୍ଯକୁ ଏକକାଳୀନ କରିବା ସମୟରେ ତ୍ରୁଟି: %s"
 
-#: ../gconf/gconftool.c:3925
+#: ../gconf/gconftool.c:4071
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "ସ୍ଥାପନ କରିବା ପାଇଁ କିଛି ବିବରଣୀକା ଫାଇଲ ମାନଙ୍କୁ ଉଲ୍ଲେଖ କରିବା ଉଚିତ\n"
 
-#: ../gconf/gconftool.c:3953
+#: ../gconf/gconftool.c:4099
 #, c-format
 msgid ""
 "\n"
@@ -2430,17 +2502,17 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: ../gconf/gconftool.c:3973
+#: ../gconf/gconftool.c:4119
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "%s ଭଗ୍ନ ଚାବିକୁ ଅବିନ୍ଯସ୍ତ କରିବାରେ ବିଫଳ: %s\n"
 
-#: ../gconf/gconftool.c:4099
+#: ../gconf/gconftool.c:4245
 #, c-format
 msgid "Must specify some keys to break\n"
 msgstr "ନଷ୍ଟ କରାଯିବା କିଛି ଚାବି ମାନଙ୍କୁ ଆପଣ ଉଲ୍ଲେଖ କରିବା ଉଟିତ\n"
 
-#: ../gconf/gconftool.c:4105
+#: ../gconf/gconftool.c:4251
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2449,12 +2521,12 @@ msgstr ""
 "ଚାବି ପାଇଁ ଖରାପ ମୂଲ୍ଯ ବିନ୍ୟାସ କରି ଆପଣଙ୍କ ପ୍ରୟୋଗକୁ ନଷ୍ଟ କରିବାକୁ ପ୍ରଚେଷ୍ଟା କରୁଅଛି:\n"
 "  %s\n"
 
-#: ../gconf/gconftool.c:4123
+#: ../gconf/gconftool.c:4269
 #, c-format
 msgid "Must specify some directories to break\n"
 msgstr "ନଷ୍ଟ କରାଯିବା କିଛି ଡିରେକ୍ଟୋରି ମାନଙ୍କୁ ଆପଣ ଉଲ୍ଲେଖ କରିବା ଉଟିତ\n"
 
-#: ../gconf/gconftool.c:4142
+#: ../gconf/gconftool.c:4288
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
