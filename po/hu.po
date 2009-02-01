@@ -1,19 +1,19 @@
 # translation of gconf to Hungarian
 # Hungarian translation of gconf.
-# Copyright (C) 2001, 2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gconf package.
 #
 # Gabor Laszlo Kiss <docy@levele.com>, 2001.
 # Andras Timar <timar@gnome.hu>, 2003.
 # Laszlo Dvornik <dvornik@gnome.hu>, 2004.
 # Szabolcs Varga <shirokuma@shirokuma.hu>, 2005.
-# Gabor Kelemen <kelemeng@gnome.hu>, 2005, 2006, 2007, 2008.
+# Gabor Kelemen <kelemeng@gnome.hu>, 2005, 2006, 2007, 2008, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf.HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-11 16:34+0000\n"
-"PO-Revision-Date: 2008-09-21 13:43+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gconf&component=general\n"
+"POT-Creation-Date: 2008-12-31 03:03+0000\n"
+"PO-Revision-Date: 2009-02-01 01:47+0100\n"
 "Last-Translator: Gabor Kelemen <kelemeng@gnome.hu>\n"
 "Language-Team: Hungarian <gnome@fsf.hu>\n"
 "MIME-Version: 1.0\n"
@@ -331,7 +331,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "A(z) <%s> elemen belül nem használható szöveg"
 
 #: ../backends/markup-tree.c:3599 ../backends/markup-tree.c:4379
-#: ../backends/markup-tree.c:4397
+#: ../backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "A(z) „%s” megnyitása sikertelen: %s\n"
@@ -341,12 +341,17 @@ msgstr "A(z) „%s” megnyitása sikertelen: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "Hiba „%s” olvasásakor: %s\n"
 
-#: ../backends/markup-tree.c:4484
+#: ../backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "Nem írható ki a(z) %s fájl a lemezre: %s"
+
+#: ../backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Hiba a(z) „%s” fájl írása közben: %s"
 
-#: ../backends/markup-tree.c:4513
+#: ../backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "Nem sikerült a(z) „%s” ideiglenes fájl áthelyezése a végső helyére („%s”): %s"
@@ -374,8 +379,9 @@ msgid ""
 "Unable to remove directory `%s' from the XML backend cache, because it has "
 "not been successfully synced to disk"
 msgstr ""
-"Nem sikerült eltávolítani a(z) „%s” könyvtárat az XML-háttérprogram"
-"gyorsítótárából, mert nem lett sikeresen szinkronizálva a lemezzel"
+"Nem sikerült eltávolítani a(z) „%s” könyvtárat az XML-"
+"háttérprogramgyorsítótárából, mert nem lett sikeresen szinkronizálva a "
+"lemezzel"
 
 #: ../backends/xml-dir.c:170
 #, c-format
@@ -662,7 +668,7 @@ msgstr "Végzetes hiba: nem sikerült a ConfigDatabase objektumhivatkozását le
 #: ../gconf/gconf-database.c:974
 #, c-format
 msgid "Failed to sync one or more sources: %s"
-msgstr "Egy vagy több forrás szinkronizálása sikertelen: %s"
+msgstr "Legalább egy forrás szinkronizálása sikertelen: %s"
 
 #: ../gconf/gconf-database.c:1047
 #, c-format
@@ -670,8 +676,8 @@ msgid ""
 "Error obtaining new value for `%s' after change notification from backend `%"
 "s': %s"
 msgstr ""
-"Hiba „%s” új értékének kérésekor, miután a(z) „%s” háttérprogramtól értesítés "
-"érkezett a módosításról: %s"
+"Hiba „%s” új értékének kérésekor, miután a(z) „%s” háttérprogramtól "
+"értesítés érkezett a módosításról: %s"
 
 #: ../gconf/gconf-database.c:1120
 #, c-format
@@ -1044,7 +1050,7 @@ msgstr "nincs"
 msgid "- Sanity checks for GConf"
 msgstr "– GConf integritás-ellenőrzések"
 
-#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:617
+#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:639
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1465,21 +1471,21 @@ msgstr "Nem sikerült kapcsolódni a munkamenetbuszhoz: %s"
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "Nem sikerült lekérni a démon busznevét, kilépés: %s"
 
-#: ../gconf/gconfd.c:688
+#: ../gconf/gconfd.c:687
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "Nem lehet csatlakozni a rendszerbuszhoz: %s"
 
-#: ../gconf/gconfd.c:772
+#: ../gconf/gconfd.c:771
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "indulás (%s verzió), pid: %u, felhasználó: „%s”"
 
-#: ../gconf/gconfd.c:832
+#: ../gconf/gconfd.c:831
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Nem sikerült a ConfigServer objektumhivatkozásának lekérése"
 
-#: ../gconf/gconfd.c:861
+#: ../gconf/gconfd.c:860
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1488,34 +1494,34 @@ msgstr ""
 "Nem sikerült a bájt írása a(z) %d csővezetékfájl-leíróba, így lehet, hogy a "
 "kliensprogram le fog fagyni: %s"
 
-#: ../gconf/gconfd.c:907
+#: ../gconf/gconfd.c:906
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Hiba a zárolási fájl elengedése közben: %s"
 
-#: ../gconf/gconfd.c:915
+#: ../gconf/gconfd.c:914
 msgid "Exiting"
 msgstr "Kilépés"
 
-#: ../gconf/gconfd.c:933
+#: ../gconf/gconfd.c:932
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP érkezett, az összes adatbázis újratöltésre kerül"
 
-#: ../gconf/gconfd.c:950
+#: ../gconf/gconfd.c:949
 msgid "GConf server is not in use, shutting down."
 msgstr "A GConf kiszolgáló nincs használatban, kilépés."
 
-#: ../gconf/gconfd.c:1276
+#: ../gconf/gconfd.c:1275
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Hiba történt „%s” új értékének kérése közben: %s"
 
-#: ../gconf/gconfd.c:1420
+#: ../gconf/gconfd.c:1419
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Kivétel kerül visszaadásra: %s"
 
-#: ../gconf/gconfd.c:1526
+#: ../gconf/gconfd.c:1525
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1524,63 +1530,68 @@ msgstr ""
 "Nem sikerült megnyitni a gconfd naplófájlt, nem lehet majd visszaállítani a "
 "figyelőket a gconfd leállítása után (%s)"
 
-#: ../gconf/gconfd.c:1561
+#: ../gconf/gconfd.c:1560
 #, c-format
 msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Nem sikerült lezárni a gconfd naplófájlt; lehet, hogy az adatok nem lettek "
 "tökéletesen elmentve (%s)"
 
-#: ../gconf/gconfd.c:1623
+#: ../gconf/gconfd.c:1622
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Nem sikerült megnyitni az elmentett „%s” állapotfájlt írásra: %s"
 
-#: ../gconf/gconfd.c:1637
+#: ../gconf/gconfd.c:1636
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Nem sikerült írni az elmentett „%s” állapotfájlt fd: %d: %s"
 
-#: ../gconf/gconfd.c:1646
+#: ../gconf/gconfd.c:1645
+#, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "Nem írható ki az elmentett „%s” állapotfájl a lemezre: %s"
+
+#: ../gconf/gconfd.c:1652
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Nem sikerült bezárni az új elmentett „%s” állapotfájlt: %s"
 
-#: ../gconf/gconfd.c:1660
+#: ../gconf/gconfd.c:1666
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Nem sikerült áthelyezni a régi elmentett „%s” állapotfájlt: %s"
 
-#: ../gconf/gconfd.c:1670
+#: ../gconf/gconfd.c:1676
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "Nem sikerült áthelyezni az új elmentett állapotfájlt a helyére: %s"
 
-#: ../gconf/gconfd.c:1679
+#: ../gconf/gconfd.c:1685
 #, c-format
 msgid "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "Nem sikerült visszaállítani a(z) „%s” helyre áthelyezett eredeti elmentett "
 "állapotfájlt: %s"
 
-#: ../gconf/gconfd.c:2158
+#: ../gconf/gconfd.c:2164
 #, c-format
 msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Nem sikerült visszaállítani egy figyelőt a(z) „%s” címen, nem oldható fel az "
 "adatbázis"
 
-#: ../gconf/gconfd.c:2194
+#: ../gconf/gconfd.c:2200
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Hiba az elmentett állapotfájl olvasása közben: %s"
 
-#: ../gconf/gconfd.c:2244
+#: ../gconf/gconfd.c:2250
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Nem nyitható meg a mentett „%s” állapotfájlt: %s"
 
-#: ../gconf/gconfd.c:2363
+#: ../gconf/gconfd.c:2369
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1589,7 +1600,7 @@ msgstr ""
 "Nem sikerült naplózni a figyelő felvételét a gconfd naplófájlba; nem lehet "
 "majd újra felvenni a figyelőt, ha a gconfd kilép vagy leáll (%s)"
 
-#: ../gconf/gconfd.c:2368
+#: ../gconf/gconfd.c:2374
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1598,47 +1609,47 @@ msgstr ""
 "Nem sikerült naplózni a figyelő eltávolítását a gconfd naplófájlba; lehet, "
 "hogy majd újra felvételre kerül a figyelő, ha a gconfd kilép vagy leáll (%s)"
 
-#: ../gconf/gconfd.c:2391 ../gconf/gconfd.c:2565
+#: ../gconf/gconfd.c:2397 ../gconf/gconfd.c:2571
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Nem sikerült a kliens IOR-jének lekérése: %s"
 
-#: ../gconf/gconfd.c:2406
+#: ../gconf/gconfd.c:2412
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Nem sikerült az elmentett állapotfájl megnyitása: %s"
 
-#: ../gconf/gconfd.c:2419
+#: ../gconf/gconfd.c:2425
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Nem sikerült a kliens hozzáadása az elmentett állapotfájlhoz: %s"
 
-#: ../gconf/gconfd.c:2427
+#: ../gconf/gconfd.c:2433
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Nem sikerült a klienshozzáadás véglegesítése az elmentett állapotfájlhoz: %s"
 
-#: ../gconf/gconfd.c:2526
+#: ../gconf/gconfd.c:2532
 msgid "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "Valamelyik kliens eltávolította magát a GConf kiszolgálóról, pedig fel sem "
 "lett véve."
 
-#: ../gconf/gconftool.c:91
+#: ../gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr ""
 "Egy kulcs beállítása egy értékre és szinkronizálás. A --type paraméterrel "
 "használható."
 
-#: ../gconf/gconftool.c:100
+#: ../gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "Kulcs értékének kiírása a szabványos kimenetre."
 
-#: ../gconf/gconftool.c:110
+#: ../gconf/gconftool.c:112
 msgid "Unset the keys on the command line"
 msgstr "A kulcsok értékének visszaállítása a parancssorban."
 
-#: ../gconf/gconftool.c:119
+#: ../gconf/gconftool.c:121
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1646,39 +1657,43 @@ msgstr ""
 "Az összes kulcs értékének rekurzív visszaállítása a kulcs-/könyvtárnevek "
 "alatt a parancssorban"
 
-#: ../gconf/gconftool.c:128
+#: ../gconf/gconftool.c:130
+msgid "Toggles a boolean key."
+msgstr "Átvált egy logikai kulcsot."
+
+#: ../gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "Egy könyvtár összes kulcs-érték párjának kiírása."
 
-#: ../gconf/gconftool.c:137
+#: ../gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "Egy könyvtár összes alkönyvtárának kiírása."
 
-#: ../gconf/gconftool.c:146
+#: ../gconf/gconftool.c:157
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "Egy könyvtár alatti összes alkönyvtár és bejegyzés kiírása, rekurzívan."
 
-#: ../gconf/gconftool.c:155
+#: ../gconf/gconftool.c:166 ../gconf/gconftool.c:175
 msgid "Search for a key, recursively."
 msgstr "Kulcs rekurzív keresése."
 
-#: ../gconf/gconftool.c:164
+#: ../gconf/gconftool.c:184
 msgid "Get the short doc string for a key"
 msgstr "Egy kulcs rövid leírásának lekérése"
 
-#: ../gconf/gconftool.c:173
+#: ../gconf/gconftool.c:193
 msgid "Get the long doc string for a key"
 msgstr "Egy kulcs hosszú leírásának lekérése"
 
-#: ../gconf/gconftool.c:182
+#: ../gconf/gconftool.c:202
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "0 értéket ad vissza, ha a könyvtár létezik, 2-t, ha nem."
 
-#: ../gconf/gconftool.c:191
+#: ../gconf/gconftool.c:211
 msgid "Ignore schema defaults when reading values."
 msgstr "A séma alapértelmezéseinek figyelmen kívül hagyása az értékek olvasásakor."
 
-#: ../gconf/gconftool.c:206
+#: ../gconf/gconftool.c:226
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
@@ -1686,7 +1701,7 @@ msgstr ""
 "Egy könyvtár összes bejegyzéséről XML-leírás kiírása a standard kimenetre, "
 "rekurzívan."
 
-#: ../gconf/gconftool.c:215
+#: ../gconf/gconftool.c:235
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
@@ -1694,23 +1709,23 @@ msgstr ""
 "Értékek XML-leírásának beolvasása egy megadott fájlból és beállításuk egy "
 "könyvtárhoz képest."
 
-#: ../gconf/gconftool.c:224
+#: ../gconf/gconftool.c:244
 msgid "Unload a set of values described in an XML file."
 msgstr "Egy XML-fájlban leírt értékek halmazának eltávolítása."
 
-#: ../gconf/gconftool.c:239
+#: ../gconf/gconftool.c:259
 msgid "Get the name of the default source"
 msgstr "Az alapértelmezett forrás nevének lekérése"
 
-#: ../gconf/gconftool.c:248
+#: ../gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "A gconfd leállítása. SOHA NE HASZNÁLJA OK NÉLKÜL EZT A LEHETŐSÉGET."
 
-#: ../gconf/gconftool.c:257
+#: ../gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "0 értéket ad vissza, ha a gconfd fut, 2-t, ha nem."
 
-#: ../gconf/gconftool.c:266
+#: ../gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
@@ -1718,7 +1733,7 @@ msgstr ""
 "A konfigurációs kiszolgáló (gconfd) elindítása. (Normális esetben szükség "
 "szerint automatikusan megtörténik.)"
 
-#: ../gconf/gconftool.c:281
+#: ../gconf/gconftool.c:301
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1726,23 +1741,23 @@ msgstr ""
 "Adja meg az éppen beállított érték, vagy a séma által leírt érték típusát. "
 "Egyedi rövidítéseket használhat."
 
-#: ../gconf/gconftool.c:282
+#: ../gconf/gconftool.c:302
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: ../gconf/gconftool.c:290
+#: ../gconf/gconftool.c:310
 msgid "Print the data type of a key to standard output."
 msgstr "Egy kulcs adattípusának kiíratása a standard kimenetre."
 
-#: ../gconf/gconftool.c:299
+#: ../gconf/gconftool.c:319
 msgid "Get the number of elements in a list key."
 msgstr "Egy listakulcs elemeinek számát kérdezi le."
 
-#: ../gconf/gconftool.c:308
+#: ../gconf/gconftool.c:328
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "Egy listakulcs adott elemét kérdezi le, numerikusan indexelve."
 
-#: ../gconf/gconftool.c:317
+#: ../gconf/gconftool.c:337
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1750,11 +1765,11 @@ msgstr ""
 "Adja meg az éppen beállított listaérték, vagy a séma által leírt érték "
 "típusát. Egyedi rövidítéseket használhat."
 
-#: ../gconf/gconftool.c:318 ../gconf/gconftool.c:327 ../gconf/gconftool.c:336
+#: ../gconf/gconftool.c:338 ../gconf/gconftool.c:347 ../gconf/gconftool.c:356
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: ../gconf/gconftool.c:326
+#: ../gconf/gconftool.c:346
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1762,7 +1777,7 @@ msgstr ""
 "Megadja az éppen beállított car-párérték, vagy a séma által leírt érték "
 "típusát. Egyedi rövidítéseket használhat."
 
-#: ../gconf/gconftool.c:335
+#: ../gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1770,25 +1785,25 @@ msgstr ""
 "Megadja az éppen beállított cdr-párérték, vagy a séma által leírt érték "
 "típusát. Egyedi rövidítéseket használhat."
 
-#: ../gconf/gconftool.c:350
+#: ../gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
 msgstr "Megadja a telepíteni kívánt sémafájlt"
 
-#: ../gconf/gconftool.c:351
+#: ../gconf/gconftool.c:371
 msgid "FILENAME"
 msgstr "FÁJLNÉV"
 
-#: ../gconf/gconftool.c:359
+#: ../gconf/gconftool.c:379
 msgid "Specify a configuration source to use rather than the default path"
 msgstr ""
 "Megadja az alapértelmezett elérési út helyett használni kívánt konfigurációs "
 "forrást"
 
-#: ../gconf/gconftool.c:360
+#: ../gconf/gconftool.c:380
 msgid "SOURCE"
 msgstr "FORRÁS"
 
-#: ../gconf/gconftool.c:368
+#: ../gconf/gconftool.c:388
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
@@ -1796,7 +1811,7 @@ msgstr ""
 "A konfigurációs adatbázis közvetlen elérése, a kiszolgáló kihagyásával. "
 "Ekkor a gconfd nem futhat."
 
-#: ../gconf/gconftool.c:377
+#: ../gconf/gconftool.c:397
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment "
@@ -1808,7 +1823,7 @@ msgstr ""
 "alapértelmezett konfigurációs forrásra, vagy az alapértelmezés használata "
 "esetén üresen kell hagyni."
 
-#: ../gconf/gconftool.c:386
+#: ../gconf/gconftool.c:406
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1819,7 +1834,7 @@ msgstr ""
 "alapértelmezett konfigurációs forrásra, vagy az alapértelmezés használata "
 "esetén üresen kell hagyni."
 
-#: ../gconf/gconftool.c:401
+#: ../gconf/gconftool.c:421
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1827,7 +1842,7 @@ msgstr ""
 "Nyúzótesztel egy alkalmazást: beállítja és visszaállítja parancssorban "
 "megadott különféle típusú kulcsok értékeit."
 
-#: ../gconf/gconftool.c:410
+#: ../gconf/gconftool.c:430
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1835,7 +1850,7 @@ msgstr ""
 "Nyúzótesztel egy alkalmazást: beállítja és visszaállítja a parancssorban "
 "megadott könyvtárban található különféle kulcsok értékeit."
 
-#: ../gconf/gconftool.c:425
+#: ../gconf/gconftool.c:445
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1843,139 +1858,144 @@ msgstr ""
 "Egy séma beállítása és szinkronizálás. A --short-desc, --long-desc, --owner, "
 "és --type paraméterekkel használható."
 
-#: ../gconf/gconftool.c:434
+#: ../gconf/gconftool.c:454
 msgid "Specify a short half-line description to go in a schema."
 msgstr "Egy rövid, félsoros leírást ad meg a sémába."
 
-#: ../gconf/gconftool.c:435 ../gconf/gconftool.c:444
+#: ../gconf/gconftool.c:455 ../gconf/gconftool.c:464
 msgid "DESCRIPTION"
 msgstr "LEÍRÁS"
 
-#: ../gconf/gconftool.c:443
+#: ../gconf/gconftool.c:463
 msgid "Specify a several-line description to go in a schema."
 msgstr "Egy több soros leírást ad meg a sémába."
 
-#: ../gconf/gconftool.c:452
+#: ../gconf/gconftool.c:472
 msgid "Specify the owner of a schema"
 msgstr "Megadja a séma tulajdonosát"
 
-#: ../gconf/gconftool.c:453
+#: ../gconf/gconftool.c:473
 msgid "OWNER"
 msgstr "TULAJDONOS"
 
-#: ../gconf/gconftool.c:461
+#: ../gconf/gconftool.c:481
 msgid "Get the name of the schema applied to this key"
 msgstr "Egy kulcshoz rendelt séma nevének lekérése"
 
-#: ../gconf/gconftool.c:470
+#: ../gconf/gconftool.c:490
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "Megadja a séma nevét, majd a kulcsot, amelyre a séma nevét alkalmazni kívánja"
 
-#: ../gconf/gconftool.c:479
+#: ../gconf/gconftool.c:499
 msgid "Remove any schema name applied to the given keys"
 msgstr "Az adott kulcsokhoz rendelt sémanevek törlése"
 
-#: ../gconf/gconftool.c:494
+#: ../gconf/gconftool.c:514
 msgid "Print version"
 msgstr "Verzió kinyomtatása"
 
-#: ../gconf/gconftool.c:503
+#: ../gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FÁJL...]|[KULCS...]|[KÖNYVTÁR...]"
 
-#: ../gconf/gconftool.c:563
+#: ../gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
 msgstr "- Eszköz a GConf beállítások kezeléséhez"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Client options:"
 msgstr "Klienskapcsolók:"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Show client options"
 msgstr "Klienskapcsolók megjelenítése"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Key type options:"
 msgstr "Kulcstípuskapcsolók:"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Show key type options"
 msgstr "Kulcstípus-kapcsolók megjelenítése"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Load/Save options:"
 msgstr "Mentés/betöltés kapcsolói:"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Show load/save options"
 msgstr "Mentés/betöltés kapcsolóinak megjelenítése"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Server options:"
 msgstr "Kiszolgálókapcsolók:"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Show server options"
 msgstr "Kiszolgálókapcsolók megjelenítése"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Installation options:"
 msgstr "Telepítési kapcsolók:"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Show installation options"
 msgstr "Telepítési kapcsolók megjelenítése"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Test options:"
 msgstr "Tesztkapcsolók:"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Show test options"
 msgstr "Tesztkapcsolók megjelenítése"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Schema options:"
 msgstr "Sémakapcsolók:"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Show schema options"
 msgstr "Sémakapcsolók megjelenítése"
 
-#: ../gconf/gconftool.c:607
+#: ../gconf/gconftool.c:629
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "A parancssori paraméterek teljes listája a „%s --help” paranccsal íratható "
 "ki.\n"
 
-#: ../gconf/gconftool.c:635
+#: ../gconf/gconftool.c:657
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Nem lehet egyszerre lekérni és be/visszaállítani\n"
 
-#: ../gconf/gconftool.c:645
+#: ../gconf/gconftool.c:667
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Nem lehet egyszerre beállítani és lekérni/visszaállítani\n"
 
-#: ../gconf/gconftool.c:652
+#: ../gconf/gconftool.c:674
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Nem lehet egyszerre lekérni a típust és be/visszaállítani\n"
 
-#: ../gconf/gconftool.c:663
+#: ../gconf/gconftool.c:682
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "Nem lehet egyszerre átváltani és lekérni/be/visszaállítani\n"
+
+#: ../gconf/gconftool.c:693
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Nem használható egyszerre az --all-entries és a --get vagy --set\n"
 
-#: ../gconf/gconftool.c:674
+#: ../gconf/gconftool.c:704
 #, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Nem használható egyszerre az --all-dirs és a --get vagy --set\n"
 
-#: ../gconf/gconftool.c:688
+#: ../gconf/gconftool.c:718
 #, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
@@ -1984,7 +2004,7 @@ msgstr ""
 "A --recursive-list nem használható egyszerre a --get, --set, --unset, --all-"
 "entries, all-dirs vagy ----search-key paraméterekkel\n"
 
-#: ../gconf/gconftool.c:702
+#: ../gconf/gconftool.c:732
 #, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
@@ -1993,17 +2013,17 @@ msgstr ""
 "A --set_schema nem használható egyszerre a --get, --set, --unset, --all-"
 "entries, --all-dirs vagy --search-key paraméterekkel\n"
 
-#: ../gconf/gconftool.c:708
+#: ../gconf/gconftool.c:738
 #, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Az érték típusa csak érték megadásakor számít\n"
 
-#: ../gconf/gconftool.c:714
+#: ../gconf/gconftool.c:744
 #, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "Érték megadásakor meg kell adni egy típust is\n"
 
-#: ../gconf/gconftool.c:722
+#: ../gconf/gconftool.c:752
 #, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
@@ -2012,14 +2032,14 @@ msgstr ""
 "Az --ignore-schema-defaults csak a --get, --all-entries, --dump, --recursive-"
 "list, --get-list-size és --get-list-element paraméterek esetében számít\n"
 
-#: ../gconf/gconftool.c:734 ../gconf/gconftool.c:747 ../gconf/gconftool.c:760
-#: ../gconf/gconftool.c:774 ../gconf/gconftool.c:787 ../gconf/gconftool.c:800
-#: ../gconf/gconftool.c:814
+#: ../gconf/gconftool.c:764 ../gconf/gconftool.c:777 ../gconf/gconftool.c:790
+#: ../gconf/gconftool.c:804 ../gconf/gconftool.c:817 ../gconf/gconftool.c:830
+#: ../gconf/gconftool.c:844
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "%s: a paramétert magában kell használni.\n"
 
-#: ../gconf/gconftool.c:823
+#: ../gconf/gconftool.c:853
 #, c-format
 msgid ""
 "You must specify a configuration source with --config-source when using --"
@@ -2028,578 +2048,604 @@ msgstr ""
 "A --config-source után meg is kell adni egy konfigurációs forrást, ha a --"
 "direct paramétert használja\n"
 
-#: ../gconf/gconftool.c:829
+#: ../gconf/gconftool.c:859
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Nem sikerült a GConf előkészítése: %s\n"
 
-#: ../gconf/gconftool.c:857
+#: ../gconf/gconftool.c:887
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "A GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL be van állítva, a sémák nem kerülnek "
 "telepítésre\n"
 
-#: ../gconf/gconftool.c:864
+#: ../gconf/gconftool.c:894
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "A GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL be van állítva, a sémák nem "
 "kerülnek eltávolításra\n"
 
-#: ../gconf/gconftool.c:877
+#: ../gconf/gconftool.c:907
 #, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "Be kell állítani a GCONF_CONFIG_SOURCE környezeti változót\n"
 
-#: ../gconf/gconftool.c:932
+#: ../gconf/gconftool.c:962
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Nem érhetők el a konfigurációs források: %s\n"
 
-#: ../gconf/gconftool.c:1219
+#: ../gconf/gconftool.c:1267
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Leállítási hiba: %s\n"
 
-#: ../gconf/gconftool.c:1262
+#: ../gconf/gconftool.c:1310
 #, c-format
 msgid "Must specify one or more directories to recursively list.\n"
-msgstr "Egy vagy több könyvtárat meg kell adni a rekurzív listázáshoz.\n"
+msgstr "Legalább egy könyvtárat meg kell adni a rekurzív listázáshoz.\n"
 
-#: ../gconf/gconftool.c:1293 ../gconf/gconftool.c:1454
-#: ../gconf/gconftool.c:1720
+#: ../gconf/gconftool.c:1355 ../gconf/gconftool.c:1549
+#: ../gconf/gconftool.c:1815
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "Nem sikerült „%s” elemeinek kilistázása: %s\n"
 
-#: ../gconf/gconftool.c:1313 ../gconf/gconftool.c:1473
+#: ../gconf/gconftool.c:1375 ../gconf/gconftool.c:1568
 msgid "(no value set)"
 msgstr "(nincs beállítva érték)"
 
-#: ../gconf/gconftool.c:1363
+#: ../gconf/gconftool.c:1438
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
 msgstr "Meg kell adni a keresendő kulcsmintát.\n"
 
-#: ../gconf/gconftool.c:1412
+#: ../gconf/gconftool.c:1457
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "Meg kell adni a keresendő PCRE szabályos kifejezést.\n"
+
+#: ../gconf/gconftool.c:1464
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "Hiba a szabályos kifejezés fordítása közben: %s\n"
+
+#: ../gconf/gconftool.c:1507
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
-msgstr "Egy vagy több könyvtárat meg kell adni a kiíratáshoz.\n"
+msgstr "Legalább egy könyvtárat meg kell adni a kiíratáshoz.\n"
 
-#: ../gconf/gconftool.c:1779
+#: ../gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "Nem sikerült elindítani a konfigurációs kiszolgálót (gconfd): %s\n"
 
-#: ../gconf/gconftool.c:1808
+#: ../gconf/gconftool.c:1903
 #, c-format
 msgid "Must specify a key or keys to get\n"
-msgstr "Meg kell adni egy vagy több lekérendő kulcsot\n"
+msgstr "Meg kell adni legalább egy lekérendő kulcsot\n"
 
-#: ../gconf/gconftool.c:1843
+#: ../gconf/gconftool.c:1938
 #, c-format
 msgid "Type: %s\n"
 msgstr "Típus: %s\n"
 
-#: ../gconf/gconftool.c:1844
+#: ../gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Listatípus: %s\n"
 
-#: ../gconf/gconftool.c:1845
+#: ../gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car típus: %s\n"
 
-#: ../gconf/gconftool.c:1846
+#: ../gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr típus: %s\n"
 
-#: ../gconf/gconftool.c:1851
+#: ../gconf/gconftool.c:1946
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Alapértelmezett érték: %s\n"
 
-#: ../gconf/gconftool.c:1851 ../gconf/gconftool.c:1853
-#: ../gconf/gconftool.c:1854 ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1946 ../gconf/gconftool.c:1948
+#: ../gconf/gconftool.c:1949 ../gconf/gconftool.c:1950
 msgid "Unset"
 msgstr "Visszaállítás"
 
-#: ../gconf/gconftool.c:1853
+#: ../gconf/gconftool.c:1948
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Tulajdonos: %s\n"
 
-#: ../gconf/gconftool.c:1854
+#: ../gconf/gconftool.c:1949
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Rövid leírás: %s\n"
 
-#: ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1950
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Hosszú leírás: %s\n"
 
-#: ../gconf/gconftool.c:1864 ../gconf/gconftool.c:2088
-#: ../gconf/gconftool.c:2122 ../gconf/gconftool.c:2167
-#: ../gconf/gconftool.c:2312
+#: ../gconf/gconftool.c:1959 ../gconf/gconftool.c:2234
+#: ../gconf/gconftool.c:2268 ../gconf/gconftool.c:2313
+#: ../gconf/gconftool.c:2458
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Nincs „%s” értéke beállítva\n"
 
-#: ../gconf/gconftool.c:1868 ../gconf/gconftool.c:2092
-#: ../gconf/gconftool.c:2126 ../gconf/gconftool.c:2171
-#: ../gconf/gconftool.c:2316
+#: ../gconf/gconftool.c:1963 ../gconf/gconftool.c:2238
+#: ../gconf/gconftool.c:2272 ../gconf/gconftool.c:2317
+#: ../gconf/gconftool.c:2462
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Nem sikerült „%s” értékét lekérdezni: %s\n"
 
-#: ../gconf/gconftool.c:1911 ../gconf/gconftool.c:1923
+#: ../gconf/gconftool.c:2006 ../gconf/gconftool.c:2018
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "A(z) „%s” típus nem értelmezhető\n"
 
-#: ../gconf/gconftool.c:1935
+#: ../gconf/gconftool.c:2030
 #, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Váltakozó kulcs-érték párokat kell megadni argumentumként\n"
 
-#: ../gconf/gconftool.c:1955
+#: ../gconf/gconftool.c:2050
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "Nincs beállítandó érték megadva a kulcshoz: „%s”\n"
 
-#: ../gconf/gconftool.c:1983
+#: ../gconf/gconftool.c:2078
 #, c-format
 msgid "Cannot set schema as value\n"
 msgstr "Nem állítható be a séma értékként\n"
 
-#: ../gconf/gconftool.c:1993
+#: ../gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Egy lista beállításakor meg kell adni egy primitív listatípust\n"
 
-#: ../gconf/gconftool.c:2007
+#: ../gconf/gconftool.c:2102
 #, c-format
 msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Egy pár beállításakor meg kell adni egy primitív car- és cdr-típust\n"
 
-#: ../gconf/gconftool.c:2022
+#: ../gconf/gconftool.c:2117
 #, c-format
 msgid "Error: %s\n"
 msgstr "Hiba: %s\n"
 
-#: ../gconf/gconftool.c:2035 ../gconf/gconftool.c:3067
+#: ../gconf/gconftool.c:2130 ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:3213
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Hiba az érték beállításakor: %s\n"
 
-#: ../gconf/gconftool.c:2053
+#: ../gconf/gconftool.c:2148
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Hiba szinkronizálás közben: %s\n"
 
-#: ../gconf/gconftool.c:2068
+#: ../gconf/gconftool.c:2163
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "Meg kell adni legalább egy kulcsot paraméterként.\n"
+
+#: ../gconf/gconftool.c:2179
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "Nem található érték a %s kulcshoz\n"
+
+#: ../gconf/gconftool.c:2185
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "Nem logikai érték: %s\n"
+
+#: ../gconf/gconftool.c:2214
 #, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "Meg kell adni egy kulcsot vagy kulcsokat a típus lekéréséhez\n"
 
-#: ../gconf/gconftool.c:2112
+#: ../gconf/gconftool.c:2258
 #, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Meg kell adni egy kulcsot a méret kikereséséhez.\n"
 
-#: ../gconf/gconftool.c:2137 ../gconf/gconftool.c:2182
+#: ../gconf/gconftool.c:2283 ../gconf/gconftool.c:2328
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "A(z) %s kulcs nem lista.\n"
 
-#: ../gconf/gconftool.c:2157
+#: ../gconf/gconftool.c:2303
 #, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Meg kell adni egy kulcsot, amelyből a listaelem lekérdezhető.\n"
 
-#: ../gconf/gconftool.c:2188
+#: ../gconf/gconftool.c:2334
 #, c-format
 msgid "Must specify list index.\n"
 msgstr "Meg kell adni a lista indexét.\n"
 
-#: ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:2341
 #, c-format
 msgid "List index must be non-negative.\n"
 msgstr "A listaindex nem lehet negatív.\n"
 
-#: ../gconf/gconftool.c:2204
+#: ../gconf/gconftool.c:2350
 #, c-format
 msgid "List index is out of bounds.\n"
 msgstr "A listaindex a tartományon kívülre esik.\n"
 
-#: ../gconf/gconftool.c:2230
+#: ../gconf/gconftool.c:2376
 #, c-format
 msgid "Must specify a key or keys on the command line\n"
-msgstr "Meg kell adni egy vagy több kulcsot a parancssorban.\n"
+msgstr "Meg kell adni legalább egy kulcsot a parancssorban.\n"
 
-#: ../gconf/gconftool.c:2250
+#: ../gconf/gconftool.c:2396
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "„%s” sémája ismeretlen\n"
 
-#: ../gconf/gconftool.c:2283
+#: ../gconf/gconftool.c:2429
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "Nincs leírás tárolva a sémában a(z) „%s” helyen\n"
 
-#: ../gconf/gconftool.c:2288
+#: ../gconf/gconftool.c:2434
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "Hiba a séma „%s” helyen való lekérése közben: %s\n"
 
-#: ../gconf/gconftool.c:2295
+#: ../gconf/gconftool.c:2441
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "Nincs séma tárolva a(z) „%s” helyen\n"
 
-#: ../gconf/gconftool.c:2298
+#: ../gconf/gconftool.c:2444
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "A(z) „%s” helyen található érték nem séma\n"
 
-#: ../gconf/gconftool.c:2354
+#: ../gconf/gconftool.c:2500
 #, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Meg kell adni egy sémanevet, amelyet a kulcs neve kell, hogy kövessen, "
 "amelyre vonatkozni fog\n"
 
-#: ../gconf/gconftool.c:2361
+#: ../gconf/gconftool.c:2507
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Hiba a(z) „%s” sémanév a(z) „%s” kulcshoz rendelése során: %s\n"
 
-#: ../gconf/gconftool.c:2379
+#: ../gconf/gconftool.c:2525
 #, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Meg kell adni a kulcsokat, amelyekről eltávolítja a hozzájuk rendelt sémát\n"
 
-#: ../gconf/gconftool.c:2389
+#: ../gconf/gconftool.c:2535
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "Hiba a séma nevének a(z) „%s” kulcsról eltávolítása közben: %s\n"
 
-#: ../gconf/gconftool.c:2414
+#: ../gconf/gconftool.c:2560
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "A kulcsot (sémanevet) kell megadni egyetlen argumentumként\n"
 
-#: ../gconf/gconftool.c:2456
+#: ../gconf/gconftool.c:2602
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "A listatípus primitív típus kell, hogy legyen: string, int, float vagy bool\n"
 
-#: ../gconf/gconftool.c:2476
+#: ../gconf/gconftool.c:2622
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "A pár car-típusa primitív típus kell, hogy legyen: string, int, float vagy "
 "bool\n"
 
-#: ../gconf/gconftool.c:2496
+#: ../gconf/gconftool.c:2642
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "A pár cdr-típusa primitív típus kell, hogy legyen: string, int, float vagy "
 "bool\n"
 
-#: ../gconf/gconftool.c:2511
+#: ../gconf/gconftool.c:2657
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Hiba az érték beállításakor: %s"
 
-#: ../gconf/gconftool.c:2525
+#: ../gconf/gconftool.c:2671
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Hiba szinkronizálás közben: %s"
 
-#: ../gconf/gconftool.c:2540
+#: ../gconf/gconftool.c:2686
 #, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
-"Meg kell adni egy vagy több könyvtárat, ahonnan a kulcs-érték párok "
+"Meg kell adni legalább egy könyvtárat, ahonnan a kulcs-érték párok "
 "kiolvasásra kerülnek.\n"
 
-#: ../gconf/gconftool.c:2554
+#: ../gconf/gconftool.c:2700
 #, c-format
 msgid "Must specify one or more keys to unset.\n"
-msgstr "Meg kell adni egy vagy több kulcsot a visszaállításhoz.\n"
+msgstr "Meg kell adni legalább egy kulcsot a visszaállításhoz.\n"
 
-#: ../gconf/gconftool.c:2565
+#: ../gconf/gconftool.c:2711
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "Hiba „%s” visszaállítása közben: %s\n"
 
-#: ../gconf/gconftool.c:2585
+#: ../gconf/gconftool.c:2731
 #, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
-msgstr "Meg kell adni egy vagy több kulcsot a rekurzív visszaállításhoz.\n"
+msgstr "Meg kell adni legalább egy kulcsot a rekurzív visszaállításhoz.\n"
 
-#: ../gconf/gconftool.c:2599
+#: ../gconf/gconftool.c:2745
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Hiba „%s” rekurzív visszaállítása közben: %s\n"
 
-#: ../gconf/gconftool.c:2619
+#: ../gconf/gconftool.c:2765
 #, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
-"Meg kell adni egy vagy több könyvtárat, amelyben az alkönyvtárak "
+"Meg kell adni legalább egy könyvtárat, amelyben az alkönyvtárak "
 "találhatók.\n"
 
-#: ../gconf/gconftool.c:2653
+#: ../gconf/gconftool.c:2799
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Hiba a könyvtárak listázása közben: %s\n"
 
-#: ../gconf/gconftool.c:2789
+#: ../gconf/gconftool.c:2935
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr ""
 "FIGYELMEZTETÉS: egy <pair> a <car> és <cdr> értékeket egyaránt kell, hogy "
 "tartalmazza\n"
 
-#: ../gconf/gconftool.c:2816
+#: ../gconf/gconftool.c:2962
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "FIGYELMEZTETÉS: a séma kulcsa (%s) egy <value> címke alatt van megadva - "
 "figyelmen kívül marad\n"
 
-#: ../gconf/gconftool.c:2849
+#: ../gconf/gconftool.c:2995
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "FIGYELMEZTETÉS: a <value> elem alatt lennie kell leszármazott csomópontnak\n"
 
-#: ../gconf/gconftool.c:2855
+#: ../gconf/gconftool.c:3001
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "FIGYELMEZTETÉS: a(z) <%s> nem értelmezhető\n"
 
-#: ../gconf/gconftool.c:2873
+#: ../gconf/gconftool.c:3019
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "FIGYELMEZTETÉS: nem sikerült a(z) „%s” int érték feldolgozása\n"
 
-#: ../gconf/gconftool.c:2894
+#: ../gconf/gconftool.c:3040
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "FIGYELMEZTETÉS: nem sikerült a(z) „%s” float érték feldolgozása\n"
 
-#: ../gconf/gconftool.c:2916
+#: ../gconf/gconftool.c:3062
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "FIGYELMEZTETÉS: nem sikerült a(z) „%s” string érték feldolgozása\n"
 
-#: ../gconf/gconftool.c:2937
+#: ../gconf/gconftool.c:3083
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "FIGYELMEZTETÉS: nem sikerült a(z) „%s” logikai érték feldolgozása\n"
 
-#: ../gconf/gconftool.c:3046 ../gconf/gconftool.c:3588
+#: ../gconf/gconftool.c:3192 ../gconf/gconftool.c:3734
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr ""
 "FIGYELMEZTETÉS: nem sikerült a(z) „%s” sémának a(z) „%s” kulcshoz társítása: "
 "%s\n"
 
-#: ../gconf/gconftool.c:3161
+#: ../gconf/gconftool.c:3307
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "FIGYELMEZTETÉS: érvénytelen vagy hiányzó type elem a sémához („%s”)\n"
 
-#: ../gconf/gconftool.c:3170
+#: ../gconf/gconftool.c:3316
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "FIGYELMEZTETÉS: érvénytelen vagy hiányzó list_type elem a sémához („%s”)\n"
 
-#: ../gconf/gconftool.c:3181 ../gconf/gconftool.c:3211
-#: ../gconf/gconftool.c:3240
+#: ../gconf/gconftool.c:3327 ../gconf/gconftool.c:3357
+#: ../gconf/gconftool.c:3386
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr ""
 "FIGYELMEZTETÉS: Nem sikerült a(z) „%s” alapértelmezett érték feldolgozása a "
 "sémához (%s)\n"
 
-#: ../gconf/gconftool.c:3199
+#: ../gconf/gconftool.c:3345
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "FIGYELMEZTETÉS: érvénytelen vagy hiányzó car_type vagy cdr_type elem a "
 "sémához („%s”)\n"
 
-#: ../gconf/gconftool.c:3224
+#: ../gconf/gconftool.c:3370
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "FIGYELMEZTETÉS: nem állíthatja be a séma alapértelmezett értékét\n"
 
-#: ../gconf/gconftool.c:3253
+#: ../gconf/gconftool.c:3399
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "FIGYELMEZTETÉS: gconftool belső hiba, ismeretlen GConfValueType\n"
 
-#: ../gconf/gconftool.c:3301 ../gconf/gconftool.c:3322
-#: ../gconf/gconftool.c:3343 ../gconf/gconftool.c:3364
+#: ../gconf/gconftool.c:3447 ../gconf/gconftool.c:3468
+#: ../gconf/gconftool.c:3489 ../gconf/gconftool.c:3510
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "FIGYELMEZTETÉS: nem sikerült a(z) „%s” típusnév ellenőrzése\n"
 
-#: ../gconf/gconftool.c:3318
+#: ../gconf/gconftool.c:3464
 #, c-format
 msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "FIGYELMEZTETÉS: a list_type csak int, float, string vagy bool típusú lehet, "
 "„%s” nem\n"
 
-#: ../gconf/gconftool.c:3339
+#: ../gconf/gconftool.c:3485
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "FIGYELMEZTETÉS: a car_type csak int, float, string vagy bool típusú lehet, „%"
 "s” nem\n"
 
-#: ../gconf/gconftool.c:3360
+#: ../gconf/gconftool.c:3506
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "FIGYELMEZTETÉS: a cdr_type csak int, float, string vagy bool típusú lehet, „%"
 "s” nem\n"
 
-#: ../gconf/gconftool.c:3400
+#: ../gconf/gconftool.c:3546
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "FIGYELMEZTETÉS: üres <applyto> csomópont"
 
-#: ../gconf/gconftool.c:3403 ../gconf/gconftool.c:3661
+#: ../gconf/gconftool.c:3549 ../gconf/gconftool.c:3807
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "FIGYELMEZTETÉS: a(z) <%s> nem értelmezhető a <schema> alatt\n"
 
-#: ../gconf/gconftool.c:3414
+#: ../gconf/gconftool.c:3560
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "FIGYELMEZTETÉS: nincs megadva <list_type> a lista típus sémájához\n"
 
-#: ../gconf/gconftool.c:3420
+#: ../gconf/gconftool.c:3566
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "FIGYELMEZTETÉS: nincs megadva <car_type> a pár típus sémájához\n"
 
-#: ../gconf/gconftool.c:3426
+#: ../gconf/gconftool.c:3572
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "FIGYELMEZTETÉS: nincs megadva <cdr_type> a pár típus sémájához\n"
 
-#: ../gconf/gconftool.c:3455
+#: ../gconf/gconftool.c:3601
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "FIGYELMEZTETÉS: a <locale> csomópontból hiányzik a „name=\"locale\"” "
 "attribútum, figyelmen kívül marad\n"
 
-#: ../gconf/gconftool.c:3461
+#: ../gconf/gconftool.c:3607
 #, c-format
 msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "FIGYELMEZTETÉS: több <locale> csomópont is létezik a(z) „%s” területi "
 "beállításhoz, az első utáni összes figyelmen kívül marad\n"
 
-#: ../gconf/gconftool.c:3559
+#: ../gconf/gconftool.c:3705
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "FIGYELMEZTETÉS: érvénytelen „%s” csomópont egy <locale> csomópontban\n"
 
-#: ../gconf/gconftool.c:3596
+#: ../gconf/gconftool.c:3742
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "A(z) „%s” séma a(z) „%s” kulcshoz lett rendelve\n"
 
-#: ../gconf/gconftool.c:3670
+#: ../gconf/gconftool.c:3816
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Egy <schema> elemben legalább egy <locale> elemnek lennie kell\n"
 
-#: ../gconf/gconftool.c:3705
+#: ../gconf/gconftool.c:3851
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
 msgstr ""
 "FIGYELMEZTETÉS: nem sikerült a(z) „%s” séma telepítése a(z) „%s” területi "
 "beállításához: %s\n"
 
-#: ../gconf/gconftool.c:3713
+#: ../gconf/gconftool.c:3859
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "A(z) „%s” séma telepítésre került a(z) „%s” területi beállításhoz\n"
 
-#: ../gconf/gconftool.c:3723
+#: ../gconf/gconftool.c:3869
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
 msgstr ""
 "FIGYELMEZTETÉS: nem sikerült a(z) „%s” séma eltávolítása a(z) „%s” területi "
 "beállításából: %s\n"
 
-#: ../gconf/gconftool.c:3731
+#: ../gconf/gconftool.c:3877
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "A(z) „%s” séma eltávolításra került a(z) „%s” területi beállításból\n"
 
-#: ../gconf/gconftool.c:3769
+#: ../gconf/gconftool.c:3915
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "FIGYELMEZTETÉS: nincs kulcs megadva a sémához\n"
 
-#: ../gconf/gconftool.c:3810
+#: ../gconf/gconftool.c:3956
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "FIGYELMEZTETÉS: a(z) <%s> nem értelmezhető <%s> alatt\n"
 
-#: ../gconf/gconftool.c:3842
+#: ../gconf/gconftool.c:3988
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "„%s” nem nyitható meg: %s\n"
 
-#: ../gconf/gconftool.c:3849
+#: ../gconf/gconftool.c:3995
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "A(z) „%s” dokumentum üres?\n"
 
-#: ../gconf/gconftool.c:3861
+#: ../gconf/gconftool.c:4007
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "A(z) „%s” dokumentum gyökér csomópontjának rossz a típusa (<%s>, pedig <%s> "
 "kellene, hogy legyen)\n"
 
-#: ../gconf/gconftool.c:3874
+#: ../gconf/gconftool.c:4020
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "A(z) „%s” dokumentumnak nincs legfelső szintű <%s> csomópontja\n"
 
-#: ../gconf/gconftool.c:3888
+#: ../gconf/gconftool.c:4034
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "FIGYELMEZTETÉS: a(z) <%s> csomópont nem értelmezhető <%s> alatt\n"
 
-#: ../gconf/gconftool.c:3909
+#: ../gconf/gconftool.c:4055
 #, c-format
 msgid "Error syncing configuration data: %s"
 msgstr "Hiba a konfigurációs adatok szinkronizálása közben: %s"
 
-#: ../gconf/gconftool.c:3925
+#: ../gconf/gconftool.c:4071
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "Meg kell adni valamilyen telepítendő sémafájlt\n"
 
-#: ../gconf/gconftool.c:3953
+#: ../gconf/gconftool.c:4099
 #, c-format
 msgid ""
 "\n"
@@ -2608,17 +2654,17 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: ../gconf/gconftool.c:3973
+#: ../gconf/gconftool.c:4119
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Nem sikerült a(z) %s megtörendő kulcs visszaállítása: %s\n"
 
-#: ../gconf/gconftool.c:4099
+#: ../gconf/gconftool.c:4245
 #, c-format
 msgid "Must specify some keys to break\n"
 msgstr "Meg kell adni néhány megtörendő kulcsot\n"
 
-#: ../gconf/gconftool.c:4105
+#: ../gconf/gconftool.c:4251
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2628,12 +2674,12 @@ msgstr ""
 "beállításával\n"
 "  %s\n"
 
-#: ../gconf/gconftool.c:4123
+#: ../gconf/gconftool.c:4269
 #, c-format
 msgid "Must specify some directories to break\n"
 msgstr "Meg kell adni néhány megtörendő könyvtárat\n"
 
-#: ../gconf/gconftool.c:4142
+#: ../gconf/gconftool.c:4288
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
