@@ -1,14 +1,14 @@
 # Thai translation of GConf.
-# Copyright (C) 2005-2007 Free Software Foundation, Inc.
+# Copyright (C) 2005-2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the GConf package.
-# Theppitak Karoonboonyanan <thep@linux.thai.net>, 2005-2007.
+# Theppitak Karoonboonyanan <thep@linux.thai.net>, 2005-2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: GConf 2.9.92\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-12 18:18+0700\n"
-"PO-Revision-Date: 2008-08-12 18:23+0700\n"
+"POT-Creation-Date: 2009-02-06 17:22+0700\n"
+"PO-Revision-Date: 2009-02-06 17:38+0700\n"
 "Last-Translator: Theppitak Karoonboonyanan <thep@linux.thai.net>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -320,7 +320,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "ไม่อนุญาตให้มีข้อความในอิลิเมนต์ <%s>"
 
 #: backends/markup-tree.c:3599 backends/markup-tree.c:4379
-#: backends/markup-tree.c:4397
+#: backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "เปิด \"%s\" ไม่สำเร็จ: %s\n"
@@ -330,12 +330,17 @@ msgstr "เปิด \"%s\" ไม่สำเร็จ: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "เกิดข้อผิดพลาดขณะอ่าน \"%s\": %s\n"
 
-#: backends/markup-tree.c:4484
+#: backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "ไม่สามารถปล่อยข้อมูลคงค้างของแฟ้ม '%s' ลงดิสก์: %s"
+
+#: backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "เกิดข้อผิดพลาดขณะเขียนแฟ้ม \"%s\": %s"
 
-#: backends/markup-tree.c:4513
+#: backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "ไม่สามารถย้ายแฟ้มชั่วคราว \"%s\" ไปยังตำแหน่งปลายทาง \"%s\" ได้: %s"
@@ -1018,7 +1023,7 @@ msgstr "ไม่มี"
 msgid "- Sanity checks for GConf"
 msgstr "- ตรวจสอบความเรียบร้อยของ GConf"
 
-#: gconf/gconf-sanity-check.c:58 gconf/gconftool.c:617
+#: gconf/gconf-sanity-check.c:58 gconf/gconftool.c:639
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1359,18 +1364,18 @@ msgstr "ต้องการ schema แต่พบ %s"
 msgid "CORBA error: %s"
 msgstr "CORBA ผิดพลาด: %s"
 
-#: gconf/gconfd.c:301
+#: gconf/gconfd.c:308
 msgid "Shutdown request received"
 msgstr "ได้รับการร้องขอให้ปิดบริการ"
 
-#: gconf/gconfd.c:333
+#: gconf/gconfd.c:340
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
 "gconfd ถูกคอมไพล์โดยเปิดการดีบักไว้ จะพยายามโหลด gconf.path จากไดเรกทอรีซอร์สโค้ด"
 
-#: gconf/gconfd.c:353
+#: gconf/gconfd.c:360
 #, c-format
 msgid ""
 "No configuration files found. Trying to use the default configuration source "
@@ -1380,25 +1385,25 @@ msgstr "ไม่พบแฟ้มค่าตั้ง จะพยายา�
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: gconf/gconfd.c:361
+#: gconf/gconfd.c:368
 #, c-format
 msgid ""
 "No configuration sources in the source path. Configuration won't be saved; "
 "edit %s%s"
 msgstr "ไม่มีแหล่งค่าตั้งในพาธของแหล่ง ดังนั้น จะไม่มีการบันทึกค่าตั้ง กรุณาแก้ไข %s%s"
 
-#: gconf/gconfd.c:374
+#: gconf/gconfd.c:381
 #, c-format
 msgid "Error loading some configuration sources: %s"
 msgstr "เกิดข้อผิดพลาดขณะโหลดแหล่งค่าตั้ง: %s"
 
-#: gconf/gconfd.c:386
+#: gconf/gconfd.c:393
 msgid ""
 "No configuration source addresses successfully resolved. Can't load or store "
 "configuration data"
 msgstr "เปิดหาที่อยู่ของแหล่งค่าตั้งไม่พบสักแหล่ง จึงไม่สามารถโหลดหรือเก็บข้อมูลค่าตั้งได้"
 
-#: gconf/gconfd.c:403
+#: gconf/gconfd.c:410
 msgid ""
 "No writable configuration sources successfully resolved. May be unable to "
 "save some configuration changes"
@@ -1406,31 +1411,31 @@ msgstr ""
 "เปิดหาที่อยู่ของแหล่งค่าตั้งที่เขียนได้ไม่พบสักแหล่ง "
 "จึงอาจไม่สามารถบันทึกการเปลี่ยนแปลงค่าตั้งบางอย่างได้"
 
-#: gconf/gconfd.c:584
+#: gconf/gconfd.c:591
 #, c-format
 msgid "Could not connect to session bus: %s"
 msgstr "ไม่สามารถติดต่อไปยังบัสของวาระ: %s"
 
-#: gconf/gconfd.c:606
+#: gconf/gconfd.c:613
 #, c-format
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "ไม่สามารถอ่านชื่อบัสสำหรับดีมอน และจะปิดโปรแกรม: %s"
 
-#: gconf/gconfd.c:688
+#: gconf/gconfd.c:694
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "ไม่สามารถติดต่อไปยังบัสของระบบ: %s"
 
-#: gconf/gconfd.c:772
+#: gconf/gconfd.c:830
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "กำลังเริ่มทำงาน (รุ่น %s) pid %u ผู้ใช้ '%s'"
 
-#: gconf/gconfd.c:832
+#: gconf/gconfd.c:890
 msgid "Failed to get object reference for ConfigServer"
 msgstr "ไม่สามารถอ้างอิงอ็อบเจกต์สำหรับ ConfigServer มาใช้ได้"
 
-#: gconf/gconfd.c:861
+#: gconf/gconfd.c:919
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1438,34 +1443,34 @@ msgid ""
 msgstr ""
 "ไม่สามารถเขียนข้อมูลไบต์ลง file descriptor %d ของไปป์ได้ โปรแกรมไคลเอนต์จึงอาจค้าง: %s"
 
-#: gconf/gconfd.c:907
+#: gconf/gconfd.c:965
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "เกิดข้อผิดพลาดขณะปลดล็อคแฟ้ม: %s"
 
-#: gconf/gconfd.c:915
+#: gconf/gconfd.c:973
 msgid "Exiting"
 msgstr "กำลังออก"
 
-#: gconf/gconfd.c:933
+#: gconf/gconfd.c:991
 msgid "SIGHUP received, reloading all databases"
 msgstr "ได้รับ SIGHUP จะโหลดฐานข้อมูลใหม่หมด"
 
-#: gconf/gconfd.c:950
+#: gconf/gconfd.c:1008
 msgid "GConf server is not in use, shutting down."
 msgstr "เซิร์ฟเวอร์ GConf ไม่ได้ใช้งาน จะปิดโปรแกรม"
 
-#: gconf/gconfd.c:1276
+#: gconf/gconfd.c:1334
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "ไม่สามารถอ่านค่าใหม่สำหรับ `%s' ได้: %s"
 
-#: gconf/gconfd.c:1420
+#: gconf/gconfd.c:1478
 #, c-format
 msgid "Returning exception: %s"
 msgstr "กำลังคืนค่าความผิดปกติ: %s"
 
-#: gconf/gconfd.c:1526
+#: gconf/gconfd.c:1584
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1474,60 +1479,65 @@ msgstr ""
 "ไม่สามารถเปิดแฟ้มปูมของ gconfd ได้ และจะไม่สามารถสร้างผู้คอยฟังต่างๆ กลับคืนได้ หลังจากที่ "
 "gconfd ปิดตัวลง (%s)"
 
-#: gconf/gconfd.c:1561
+#: gconf/gconfd.c:1619
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr "ไม่สามารถปิดแฟ้มปูมของ gconfd ได้ ข้อมูลอาจถูกบันทึกไม่ถูกต้อง (%s)"
 
-#: gconf/gconfd.c:1623
+#: gconf/gconfd.c:1681
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "ไม่สามารถเปิดแฟ้มบันทึกสถานะ '%s' เพื่อเขียน: %s"
 
-#: gconf/gconfd.c:1637
+#: gconf/gconfd.c:1695
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "ไม่สามารถเขียนแฟ้มบันทึกสถานะ '%s' fd: %d: %s"
 
-#: gconf/gconfd.c:1646
+#: gconf/gconfd.c:1704
+#, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "ไม่สามารถปล่อยข้อมูลคงค้างของแฟ้มบันทึกสถานะ '%s' ลงดิสก์: %s"
+
+#: gconf/gconfd.c:1711
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "ไม่สามารถปิดแฟ้มบันทึกสถานะอันใหม่ '%s': %s"
 
-#: gconf/gconfd.c:1660
+#: gconf/gconfd.c:1725
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "ไม่สามารถย้ายแฟ้มบันทึกสถานะอันเก่า '%s' ออกไป: %s"
 
-#: gconf/gconfd.c:1670
+#: gconf/gconfd.c:1735
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "ไม่สามารถย้ายแฟ้มบันทึกสถานะอันใหม่เข้ามาแทน: %s"
 
-#: gconf/gconfd.c:1679
+#: gconf/gconfd.c:1744
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "ไม่สามารถย้ายแฟ้มบันทึกสถานะเดิมซึ่งถูกย้ายไปที่ '%s' กลับมาได้: %s"
 
-#: gconf/gconfd.c:2158
+#: gconf/gconfd.c:2223
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr "ไม่สามารถสร้างผู้คอยฟังคืนที่ที่อยู่ '%s' ได้ เนื่องจากไม่สามารถเปิดหาฐานข้อมูลได้"
 
-#: gconf/gconfd.c:2194
+#: gconf/gconfd.c:2259
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "เกิดข้อผิดพลาดขณะอ่านแฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2244
+#: gconf/gconfd.c:2309
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "ไม่สามารถเปิดแฟ้มบันทึกสถานะ '%s' ได้: %s"
 
-#: gconf/gconfd.c:2363
+#: gconf/gconfd.c:2428
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1536,7 +1546,7 @@ msgstr ""
 "ไม่สามารถบันทึกการเพิ่มผู้คอยฟังลงในแฟ้มปูมของ gconfd ได้ "
 "และจะไม่สามารถเพิ่มผู้คอยฟังดังกล่าวคืนได้อีกถ้า gconfd ตายหรือปิดตัวลง (%s)"
 
-#: gconf/gconfd.c:2368
+#: gconf/gconfd.c:2433
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1545,183 +1555,187 @@ msgstr ""
 "ไม่สามารถบันทึกการลบผู้คอยฟังลงในแฟ้มปูมของ gconfd ได้ "
 "และอาจทำให้มีการเพิ่มผู้คอยฟังดังกล่าวคืนอีกอย่างผิดๆ ถ้า gconfd ตายหรือปิดตัวลง (%s)"
 
-#: gconf/gconfd.c:2391 gconf/gconfd.c:2565
+#: gconf/gconfd.c:2456 gconf/gconfd.c:2630
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "ไม่สามารถอ่านค่า IOR สำหรับไคลเอนต์: %s"
 
-#: gconf/gconfd.c:2406
+#: gconf/gconfd.c:2471
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "ไม่สามารถเปิดแฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2419
+#: gconf/gconfd.c:2484
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "ไม่สามารถบันทึกการเพิ่มไคลเอนต์ลงในแฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2427
+#: gconf/gconfd.c:2492
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "ไม่สามารถ flush บันทึกการเพิ่มไคลเอนต์ลงสู่แฟ้มบันทึกสถานะ: %s"
 
-#: gconf/gconfd.c:2526
+#: gconf/gconfd.c:2591
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr "ไคลเอนต์บางตัวได้ลบตัวเองออกจากเซิร์ฟเวอร์ GConf โดยที่ไม่ได้เพิ่มเข้ามาก่อน"
 
-#: gconf/gconftool.c:91
+#: gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "ตั้งค่าคีย์แล้ว sync  ใช้คู่กับ --type"
 
-#: gconf/gconftool.c:100
+#: gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "พิมพ์ค่าของคีย์ออกทางเอาต์พุตมาตรฐาน"
 
-#: gconf/gconftool.c:110
+#: gconf/gconftool.c:112
 msgid "Unset the keys on the command line"
 msgstr "ล้างค่าคีย์ที่กำหนดในบรรทัดคำสั่ง"
 
-#: gconf/gconftool.c:119
+#: gconf/gconftool.c:121
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
 msgstr "ล้างค่าคีย์ทั้งยวงที่อยู่ใต้คีย์/ไดเรกทอรีที่กำหนดในบรรทัดคำสั่ง"
 
-#: gconf/gconftool.c:128
+#: gconf/gconftool.c:130
+msgid "Toggles a boolean key."
+msgstr "กลับค่าคีย์บูลีน"
+
+#: gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "พิมพ์คู่ คีย์-ค่า ทุกคู่ในไดเรกทอรี"
 
-#: gconf/gconftool.c:137
+#: gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "พิมพ์ไดเรกทอรีย่อยทั้งหมดในไดเรกทอรี"
 
-#: gconf/gconftool.c:146
+#: gconf/gconftool.c:157
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr "พิมพ์ไดเรกทอรีย่อยและรายการทั้งหมดในลำดับชั้นภายใต้ไดเรกทอรี"
 
-#: gconf/gconftool.c:155
+#: gconf/gconftool.c:166 gconf/gconftool.c:175
 msgid "Search for a key, recursively."
 msgstr "ค้นหาคีย์แบบซอกซอน"
 
-#: gconf/gconftool.c:164
+#: gconf/gconftool.c:184
 msgid "Get the short doc string for a key"
 msgstr "อ่านคำอธิบายสังเขปของคีย์"
 
-#: gconf/gconftool.c:173
+#: gconf/gconftool.c:193
 msgid "Get the long doc string for a key"
 msgstr "อ่านคำอธิบายละเอียดของคีย์"
 
-#: gconf/gconftool.c:182
+#: gconf/gconftool.c:202
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "คืนค่า 0 ถ้าไดเรกทอรีมีอยู่ หรือ 2 ถ้าไม่มีอยู่"
 
-#: gconf/gconftool.c:191
+#: gconf/gconftool.c:211
 msgid "Ignore schema defaults when reading values."
 msgstr "ไม่ต้องสนใจค่าปริยายใน schema เมื่ออ่านค่า"
 
-#: gconf/gconftool.c:206
+#: gconf/gconftool.c:226
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr "แสดงข้อมูลของทุกรายการในลำดับชั้นภายใต้ไดเรกทอรีที่กำหนดออกทางเอาต์พุตมาตรฐาน"
 
-#: gconf/gconftool.c:215
+#: gconf/gconftool.c:235
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
 msgstr "โหลดค่าต่างๆ ในรูป XML จากแฟ้มที่กำหนด แล้วเซ็ตค่าโดยสัมพัทธ์กับไดเรกทอรี"
 
-#: gconf/gconftool.c:224
+#: gconf/gconftool.c:244
 msgid "Unload a set of values described in an XML file."
 msgstr "ล้างค่าต่างๆ ที่กำหนดไว้ในแฟ้ม XML"
 
-#: gconf/gconftool.c:239
+#: gconf/gconftool.c:259
 msgid "Get the name of the default source"
 msgstr "อ่านชื่อของแหล่งปริยาย"
 
-#: gconf/gconftool.c:248
+#: gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "ปิดบริการ gconfd *** อย่าใช้ตัวเลือกนี้โดยไม่มีเหตุอันควร ***"
 
-#: gconf/gconftool.c:257
+#: gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "คืนค่า 0 ถ้า gconfd กำลังทำงานอยู่ หรือ 2 ถ้าไม่ได้ทำงานอยู่"
 
-#: gconf/gconftool.c:266
+#: gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
 msgstr ""
 "เรียกเซิร์ฟเวอร์ค่าตั้ง (gconfd) ขึ้นมาทำงาน (โดยปกติจะเรียกโดยอัตโนมัติเมื่อต้องใช้อยู่แล้ว)"
 
-#: gconf/gconftool.c:281
+#: gconf/gconftool.c:301
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
 msgstr "ระบุชนิดของค่าที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
-#: gconf/gconftool.c:282
+#: gconf/gconftool.c:302
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: gconf/gconftool.c:290
+#: gconf/gconftool.c:310
 msgid "Print the data type of a key to standard output."
 msgstr "พิมพ์ชนิดข้อมูลของคีย์ออกทางเอาต์พุตมาตรฐาน"
 
-#: gconf/gconftool.c:299
+#: gconf/gconftool.c:319
 msgid "Get the number of elements in a list key."
 msgstr "อ่านค่าจำนวนสมาชิกของคีย์แบบลิสต์"
 
-#: gconf/gconftool.c:308
+#: gconf/gconftool.c:328
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "เจาะจงอ่านค่าสมาชิกของคีย์แบบลิสต์ อ้างสมาชิกด้วยตัวเลขลำดับที่"
 
-#: gconf/gconftool.c:317
+#: gconf/gconftool.c:337
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr "ระบุชนิดของค่าของลิสต์ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
-#: gconf/gconftool.c:318 gconf/gconftool.c:327 gconf/gconftool.c:336
+#: gconf/gconftool.c:338 gconf/gconftool.c:347 gconf/gconftool.c:356
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: gconf/gconftool.c:326
+#: gconf/gconftool.c:346
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr "ระบุชนิดของค่า car ของคู่ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
-#: gconf/gconftool.c:335
+#: gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
 msgstr "ระบุชนิดของค่า cdr ของคู่ที่จะกำหนด หรือชนิดของค่าที่ schema กำหนด อนุญาตให้ใช้ตัวย่อได้"
 
-#: gconf/gconftool.c:350
+#: gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
 msgstr "กำหนดแฟ้ม schema ที่จะติดตั้ง"
 
-#: gconf/gconftool.c:351
+#: gconf/gconftool.c:371
 msgid "FILENAME"
 msgstr "FILENAME"
 
-#: gconf/gconftool.c:359
+#: gconf/gconftool.c:379
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "กำหนดแหล่งค่าตั้งที่จะใช้แทนที่จะเป็นพาธปริยาย"
 
-#: gconf/gconftool.c:360
+#: gconf/gconftool.c:380
 msgid "SOURCE"
 msgstr "SOURCE"
 
-#: gconf/gconftool.c:368
+#: gconf/gconftool.c:388
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
 msgstr "ลัดข้ามเซิร์ฟเวอร์ และเข้าถึงฐานข้อมูลค่าตั้งโดยตรง ใช้เมื่อ gconfd ไม่ได้ทำงานอยู่เท่านั้น"
 
-#: gconf/gconftool.c:377
+#: gconf/gconftool.c:397
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment "
@@ -1732,7 +1746,7 @@ msgstr ""
 "โดยระบุแหล่งค่าตั้งกำหนดเองในตัวแปรสภาพแวดล้อม GCONF_CONFIG_SOURCE "
 "หรือไม่ก็กำหนดเป็นสตริงว่างถ้าจะใช้แหล่งปริยาย"
 
-#: gconf/gconftool.c:386
+#: gconf/gconftool.c:406
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1742,157 +1756,162 @@ msgstr ""
 "โดยระบุแหล่งค่าตั้งกำหนดเองในตัวแปรสภาพแวดล้อม GCONF_CONFIG_SOURCE "
 "หรือไม่ก็กำหนดเป็นสตริงว่างถ้าจะใช้แหล่งปริยาย"
 
-#: gconf/gconftool.c:401
+#: gconf/gconftool.c:421
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
 msgstr "ทดสอบโปรแกรมแบบทารุณ โดยตั้งและล้างค่าต่างชนิดจำนวนหนึ่งในคีย์ที่กำหนดในบรรทัดคำสั่ง"
 
-#: gconf/gconftool.c:410
+#: gconf/gconftool.c:430
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
 msgstr ""
 "ทดสอบโปรแกรมแบบทารุณ โดยตั้งและล้างค่าคีย์จำนวนหนึ่ง ภายใต้ไดเรกทอรีที่กำหนดในบรรทัดคำสั่ง"
 
-#: gconf/gconftool.c:425
+#: gconf/gconftool.c:445
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
 msgstr ""
 "กำหนด schema แล้ว sync  ใช้คู่กับ --short-desc, --long-desc, --owner และ --type"
 
-#: gconf/gconftool.c:434
+#: gconf/gconftool.c:454
 msgid "Specify a short half-line description to go in a schema."
 msgstr "กำหนดคำอธิบายสังเขปที่จะใช้ใน schema"
 
-#: gconf/gconftool.c:435 gconf/gconftool.c:444
+#: gconf/gconftool.c:455 gconf/gconftool.c:464
 msgid "DESCRIPTION"
 msgstr "DESCRIPTION"
 
-#: gconf/gconftool.c:443
+#: gconf/gconftool.c:463
 msgid "Specify a several-line description to go in a schema."
 msgstr "กำหนดคำอธิบายละเอียดที่จะใช้ใน schema"
 
-#: gconf/gconftool.c:452
+#: gconf/gconftool.c:472
 msgid "Specify the owner of a schema"
 msgstr "กำหนดเจ้าของให้กับ schema"
 
-#: gconf/gconftool.c:453
+#: gconf/gconftool.c:473
 msgid "OWNER"
 msgstr "OWNER"
 
-#: gconf/gconftool.c:461
+#: gconf/gconftool.c:481
 msgid "Get the name of the schema applied to this key"
 msgstr "อ่านชื่อ schema ที่ใช้กับคีย์นี้"
 
-#: gconf/gconftool.c:470
+#: gconf/gconftool.c:490
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "กำหนดชื่อ schema และตามด้วยคีย์ที่จะกำหนด schema ให้"
 
-#: gconf/gconftool.c:479
+#: gconf/gconftool.c:499
 msgid "Remove any schema name applied to the given keys"
 msgstr "ลบชื่อ schema ใดๆ ที่ใช้กับคีย์ที่กำหนดอยู่"
 
-#: gconf/gconftool.c:494
+#: gconf/gconftool.c:514
 msgid "Print version"
 msgstr "พิมพ์เลขรุ่น"
 
-#: gconf/gconftool.c:503
+#: gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FILE...]|[KEY...]|[DIR...]"
 
-#: gconf/gconftool.c:563
+#: gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
 msgstr "- เครื่องมือดำเนินการกับค่าตั้ง GConf"
 
-#: gconf/gconftool.c:568
+#: gconf/gconftool.c:590
 msgid "Client options:"
 msgstr "ตัวเลือกไคลเอนต์:"
 
-#: gconf/gconftool.c:568
+#: gconf/gconftool.c:590
 msgid "Show client options"
 msgstr "แสดงตัวเลือกสำหรับไคลเอนต์"
 
-#: gconf/gconftool.c:573
+#: gconf/gconftool.c:595
 msgid "Key type options:"
 msgstr "ตัวเลือกของชนิดของคีย์:"
 
-#: gconf/gconftool.c:573
+#: gconf/gconftool.c:595
 msgid "Show key type options"
 msgstr "แสดงตัวเลือกของชนิดของคีย์"
 
-#: gconf/gconftool.c:578
+#: gconf/gconftool.c:600
 msgid "Load/Save options:"
 msgstr "ตัวเลือกการอ่าน/บันทึกตัวเลือกต่างๆ:"
 
-#: gconf/gconftool.c:578
+#: gconf/gconftool.c:600
 msgid "Show load/save options"
 msgstr "แสดงตัวเลือกการอ่าน/บันทึกตัวเลือกต่างๆ"
 
-#: gconf/gconftool.c:583
+#: gconf/gconftool.c:605
 msgid "Server options:"
 msgstr "ตัวเลือกของเซิร์ฟเวอร์:"
 
-#: gconf/gconftool.c:583
+#: gconf/gconftool.c:605
 msgid "Show server options"
 msgstr "แสดงตัวเลือกสำหรับเซิร์ฟเวอร์"
 
-#: gconf/gconftool.c:588
+#: gconf/gconftool.c:610
 msgid "Installation options:"
 msgstr "ตัวเลือกการติดตั้ง:"
 
-#: gconf/gconftool.c:588
+#: gconf/gconftool.c:610
 msgid "Show installation options"
 msgstr "แสดงตัวเลือกการติดตั้ง"
 
-#: gconf/gconftool.c:593
+#: gconf/gconftool.c:615
 msgid "Test options:"
 msgstr "ตัวเลือกการทดสอบค่า:"
 
-#: gconf/gconftool.c:593
+#: gconf/gconftool.c:615
 msgid "Show test options"
 msgstr "แสดงตัวเลือกการทดสอบค่า"
 
-#: gconf/gconftool.c:598
+#: gconf/gconftool.c:620
 msgid "Schema options:"
 msgstr "ตัวเลือก schema:"
 
-#: gconf/gconftool.c:598
+#: gconf/gconftool.c:620
 msgid "Show schema options"
 msgstr "แสดงตัวเลือก schema"
 
-#: gconf/gconftool.c:607
+#: gconf/gconftool.c:629
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr "กรุณาเรียก '%s --help' เพื่อดูตัวเลือกบรรทัดคำสั่งที่เป็นไปได้ทั้งหมด\n"
 
-#: gconf/gconftool.c:635
+#: gconf/gconftool.c:657
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "ไม่สามารถตั้งและล้างค่าในเวลาเดียวกัน\n"
 
-#: gconf/gconftool.c:645
+#: gconf/gconftool.c:667
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "ไม่สามารถอ่านและล้างค่าในเวลาเดียวกัน\n"
 
-#: gconf/gconftool.c:652
+#: gconf/gconftool.c:674
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "ไม่สามารถอ่านชนิดและตั้งหรือล้างค่าในเวลาเดียวกัน\n"
 
-#: gconf/gconftool.c:663
+#: gconf/gconftool.c:682
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "ไม่สามารถกลับค่าพร้อมกับอ่านหรือตั้งหรือล้างค่าในเวลาเดียวกัน\n"
+
+#: gconf/gconftool.c:693
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "ไม่สามารถใช้ --all-entries กับ --get หรือ --set\n"
 
-#: gconf/gconftool.c:674
+#: gconf/gconftool.c:704
 #, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "ไม่สามารถใช้ --all-dirs กับ --get หรือ --set\n"
 
-#: gconf/gconftool.c:688
+#: gconf/gconftool.c:718
 #, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
@@ -1901,7 +1920,7 @@ msgstr ""
 "--recursive-list ไม่ควรใช้กับ --get, --set, --unset, --all-entries, --all-dirs "
 "หรือ --search-key\n"
 
-#: gconf/gconftool.c:702
+#: gconf/gconftool.c:732
 #, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
@@ -1910,17 +1929,17 @@ msgstr ""
 "--set-schema ไม่ควรใช้กับ --get, --set, --unset, --all-entries, --all-dirs หรือ "
 "--search-key\n"
 
-#: gconf/gconftool.c:708
+#: gconf/gconftool.c:738
 #, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "ระบุชนิดของค่าเมื่อจะตั้งค่าได้เท่านั้น\n"
 
-#: gconf/gconftool.c:714
+#: gconf/gconftool.c:744
 #, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "ต้องกำหนดชนิดเมื่อจะตั้งค่าด้วย\n"
 
-#: gconf/gconftool.c:722
+#: gconf/gconftool.c:752
 #, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
@@ -1929,560 +1948,586 @@ msgstr ""
 "ใช้ --ignore-schema-defaults กับ --get, --all-entries, --dump, --recursive-"
 "list, --get-list-size หรือ --get-list-element ได้เท่านั้น\n"
 
-#: gconf/gconftool.c:734 gconf/gconftool.c:747 gconf/gconftool.c:760
-#: gconf/gconftool.c:774 gconf/gconftool.c:787 gconf/gconftool.c:800
-#: gconf/gconftool.c:814
+#: gconf/gconftool.c:764 gconf/gconftool.c:777 gconf/gconftool.c:790
+#: gconf/gconftool.c:804 gconf/gconftool.c:817 gconf/gconftool.c:830
+#: gconf/gconftool.c:844
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "ตัวเลือก %s ต้องใช้เพียงลำพังเท่านั้น\n"
 
-#: gconf/gconftool.c:823
+#: gconf/gconftool.c:853
 #, c-format
 msgid ""
 "You must specify a configuration source with --config-source when using --"
 "direct\n"
 msgstr "คุณต้องกำหนดแหล่งค่าตั้งด้วย --config-source ด้วย เมื่อใช้ --direct\n"
 
-#: gconf/gconftool.c:829
+#: gconf/gconftool.c:859
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "เริ่ม GConf ไม่สำเร็จ: %s\n"
 
-#: gconf/gconftool.c:857
+#: gconf/gconftool.c:887
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL กำหนดค่าไว้ จะไม่ติดตั้ง schema\n"
 
-#: gconf/gconftool.c:864
+#: gconf/gconftool.c:894
 #, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL กำหนดค่าไว้ จะไม่ถอดถอน schema\n"
 
-#: gconf/gconftool.c:877
+#: gconf/gconftool.c:907
 #, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "คุณต้องกำหนดตัวแปรสภาพแวดล้อม GCONF_CONFIG_SOURCE ด้วยi\n"
 
-#: gconf/gconftool.c:932
+#: gconf/gconftool.c:962
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "ไม่สามารถเข้าถึงแหล่งค่าตั้ง (ทั้งหลาย) ได้: %s\n"
 
-#: gconf/gconftool.c:1219
+#: gconf/gconftool.c:1267
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "เกิดข้อผิดพลาดระหว่างปิดบริการ: %s\n"
 
-#: gconf/gconftool.c:1262
+#: gconf/gconftool.c:1310
 #, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "ต้องระบุไดเรกทอรีที่จะแสดงเนื้อหาแบบเรียกตัวเองด้วย\n"
 
-#: gconf/gconftool.c:1293 gconf/gconftool.c:1454
-#: gconf/gconftool.c:1720
+#: gconf/gconftool.c:1355 gconf/gconftool.c:1549
+#: gconf/gconftool.c:1815
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "ไม่สามารถแสดงรายการใน `%s': %s\n"
 
-#: gconf/gconftool.c:1313 gconf/gconftool.c:1473
+#: gconf/gconftool.c:1375 gconf/gconftool.c:1568
 msgid "(no value set)"
 msgstr "(ไม่มีค่าตั้ง)"
 
-#: gconf/gconftool.c:1363
+#: gconf/gconftool.c:1438
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
 msgstr "ต้องระบุแพตเทิร์นของคีย์ที่จะค้นหาด้วย\n"
 
-#: gconf/gconftool.c:1412
+#: gconf/gconftool.c:1457
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "ต้องระบุนิพจน์เรกิวลาร์แบบ PCRE ที่จะค้นหาด้วย\n"
+
+#: gconf/gconftool.c:1464
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "เกิดข้อผิดพลาดขณะแปลนิพจน์เรกิวลาร์: %s\n"
+
+#: gconf/gconftool.c:1507
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "ต้องระบุไดเรกทอรีที่จะแสดงข้อมูลด้วย\n"
 
-#: gconf/gconftool.c:1779
+#: gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "ไม่สามารถ spawn เซิร์ฟเวอร์ค่าตั้ง (gconfd) ได้: %s\n"
 
-#: gconf/gconftool.c:1808
+#: gconf/gconftool.c:1903
 #, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "ต้องระบุคีย์ที่จะอ่านด้วย\n"
 
-#: gconf/gconftool.c:1843
+#: gconf/gconftool.c:1938
 #, c-format
 msgid "Type: %s\n"
 msgstr "ชนิด: %s\n"
 
-#: gconf/gconftool.c:1844
+#: gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
 msgstr "ชนิดของลิสต์: %s\n"
 
-#: gconf/gconftool.c:1845
+#: gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "ชนิดของ car: %s\n"
 
-#: gconf/gconftool.c:1846
+#: gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "ชนิดของ cdr: %s\n"
 
-#: gconf/gconftool.c:1851
+#: gconf/gconftool.c:1946
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "ค่าปริยาย: %s\n"
 
-#: gconf/gconftool.c:1851 gconf/gconftool.c:1853
-#: gconf/gconftool.c:1854 gconf/gconftool.c:1855
+#: gconf/gconftool.c:1946 gconf/gconftool.c:1948
+#: gconf/gconftool.c:1949 gconf/gconftool.c:1950
 msgid "Unset"
 msgstr "ไม่ได้กำหนด"
 
-#: gconf/gconftool.c:1853
+#: gconf/gconftool.c:1948
 #, c-format
 msgid "Owner: %s\n"
 msgstr "เจ้าของคีย์: %s\n"
 
-#: gconf/gconftool.c:1854
+#: gconf/gconftool.c:1949
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "คำอธิบายสังเขป: %s\n"
 
-#: gconf/gconftool.c:1855
+#: gconf/gconftool.c:1950
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "คำอธิบายละเอียด: %s\n"
 
-#: gconf/gconftool.c:1864 gconf/gconftool.c:2088
-#: gconf/gconftool.c:2122 gconf/gconftool.c:2167
-#: gconf/gconftool.c:2312
+#: gconf/gconftool.c:1959 gconf/gconftool.c:2236
+#: gconf/gconftool.c:2270 gconf/gconftool.c:2315
+#: gconf/gconftool.c:2460
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "ไม่มีค่าตั้งไว้สำหรับ `%s'\n"
 
-#: gconf/gconftool.c:1868 gconf/gconftool.c:2092
-#: gconf/gconftool.c:2126 gconf/gconftool.c:2171
-#: gconf/gconftool.c:2316
+#: gconf/gconftool.c:1963 gconf/gconftool.c:2240
+#: gconf/gconftool.c:2274 gconf/gconftool.c:2319
+#: gconf/gconftool.c:2464
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "ไม่สามารถอ่านค่าสำหรับ `%s' ได้: %s\n"
 
-#: gconf/gconftool.c:1911 gconf/gconftool.c:1923
+#: gconf/gconftool.c:2006 gconf/gconftool.c:2018
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "ไม่เข้าใจชนิด `%s'\n"
 
-#: gconf/gconftool.c:1935
+#: gconf/gconftool.c:2030
 #, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "ต้องระบุ คีย์/ค่า สลับกันไปเป็นอาร์กิวเมนต์ด้วย\n"
 
-#: gconf/gconftool.c:1955
+#: gconf/gconftool.c:2050
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "ไม่มีค่าตั้งไว้สำหรับคีย์: `%s'\n"
 
-#: gconf/gconftool.c:1983
+#: gconf/gconftool.c:2078
 #, c-format
 msgid "Cannot set schema as value\n"
 msgstr "ไม่สามารถกำหนด schema ให้เป็นค่าของคีย์ได้\n"
 
-#: gconf/gconftool.c:1993
+#: gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "เมื่อจะตั้งค่าลิสต์ คุณต้องระบุชนิดพื้นฐานของลิสต์\n"
 
-#: gconf/gconftool.c:2007
+#: gconf/gconftool.c:2102
 #, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "เมื่อจะกำหนดค่าให้กับคู่ คุณต้องระบุชนิดพื้นฐานของ car และ cdr ด้วย\n"
 
-#: gconf/gconftool.c:2022
+#: gconf/gconftool.c:2117
 #, c-format
 msgid "Error: %s\n"
 msgstr "ผิดพลาด: %s\n"
 
-#: gconf/gconftool.c:2035 gconf/gconftool.c:3067
+#: gconf/gconftool.c:2130 gconf/gconftool.c:2195
+#: gconf/gconftool.c:3215
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "เกิดข้อผิดพลาดขณะตั้งค่า: %s\n"
 
-#: gconf/gconftool.c:2053
+#: gconf/gconftool.c:2148
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "เกิดข้อผิดพลาดขณะ sync: %s\n"
 
-#: gconf/gconftool.c:2068
+#: gconf/gconftool.c:2163
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "ต้องระบุคีย์อย่างน้อยหนึ่งคีย์เป็นอาร์กิวเมนต์ด้วย\n"
+
+#: gconf/gconftool.c:2179
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "ไม่พบค่าสำหรับคีย์ %s\n"
+
+#: gconf/gconftool.c:2185
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "ไม่ใช่ค่าบูลีน: %s\n"
+
+#: gconf/gconftool.c:2216
 #, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "ต้องระบุคีย์ที่จะอ่านชนิดด้วย\n"
 
-#: gconf/gconftool.c:2112
+#: gconf/gconftool.c:2260
 #, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "ต้องระบุคีย์ที่จะอ่านขนาดด้วย\n"
 
-#: gconf/gconftool.c:2137 gconf/gconftool.c:2182
+#: gconf/gconftool.c:2285 gconf/gconftool.c:2330
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "คีย์ %s ไม่ใช่ลิสต์\n"
 
-#: gconf/gconftool.c:2157
+#: gconf/gconftool.c:2305
 #, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "ต้องระบุคีย์ที่จะอ่านสมาชิกของลิสต์ด้วย\n"
 
-#: gconf/gconftool.c:2188
+#: gconf/gconftool.c:2336
 #, c-format
 msgid "Must specify list index.\n"
 msgstr "ต้องระบุดัชนีของลิสต์ด้วย\n"
 
-#: gconf/gconftool.c:2195
+#: gconf/gconftool.c:2343
 #, c-format
 msgid "List index must be non-negative.\n"
 msgstr "ดัชนีของลิสต์ต้องไม่เป็นค่าลบ\n"
 
-#: gconf/gconftool.c:2204
+#: gconf/gconftool.c:2352
 #, c-format
 msgid "List index is out of bounds.\n"
 msgstr "ดัชนีของลิสต์มีค่าออกนอกช่วง\n"
 
-#: gconf/gconftool.c:2230
+#: gconf/gconftool.c:2378
 #, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "ต้องระบุคีย์ในบรรทัดคำสั่งด้วย\n"
 
-#: gconf/gconftool.c:2250
+#: gconf/gconftool.c:2398
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "ไม่รู้จัก schema สำหรับ `%s'\n"
 
-#: gconf/gconftool.c:2283
+#: gconf/gconftool.c:2431
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "ไม่มีสตริงคำอธิบายเก็บไว้ใน schema ที่ '%s'\n"
 
-#: gconf/gconftool.c:2288
+#: gconf/gconftool.c:2436
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "เกิดข้อผิดพลาดขณะอ่าน schema ที่ '%s': %s\n"
 
-#: gconf/gconftool.c:2295
+#: gconf/gconftool.c:2443
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "ไม่มี schema เก็บไว้ที่ '%s'\n"
 
-#: gconf/gconftool.c:2298
+#: gconf/gconftool.c:2446
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "ค่าที่ '%s' ไม่ใช่ schema\n"
 
-#: gconf/gconftool.c:2354
+#: gconf/gconftool.c:2502
 #, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "ต้องระบุชื่อ schema ตามด้วยชื่อคีย์ที่จะกำหนด schema ให้ด้วย\n"
 
-#: gconf/gconftool.c:2361
+#: gconf/gconftool.c:2509
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "เกิดข้อผิดพลาดขณะเชื่อมโยงชื่อ schema '%s' กับชื่อคีย์ '%s': %s\n"
 
-#: gconf/gconftool.c:2379
+#: gconf/gconftool.c:2527
 #, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "ต้องระบุคีย์ที่จะเลิกใช้ schema ด้วย\n"
 
-#: gconf/gconftool.c:2389
+#: gconf/gconftool.c:2537
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "เกิดข้อผิดพลาดขณะลบชื่อ schema จาก '%s': %s\n"
 
-#: gconf/gconftool.c:2414
+#: gconf/gconftool.c:2562
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "ต้องระบุอาร์กิวเมนต์เป็นชื่อคีย์ (หรือชื่อ schema) เพียงอาร์กิวเมนต์เดียวเท่านั้น\n"
 
-#: gconf/gconftool.c:2456
+#: gconf/gconftool.c:2604
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "ชนิดของลิสต์ต้องเป็นชนิดพื้นฐาน: string, int, float หรือ bool เท่านั้น\n"
 
-#: gconf/gconftool.c:2476
+#: gconf/gconftool.c:2624
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "ชนิดของ car ในคู่ ต้องเป็นชนิดพื้นฐาน คือ string, int, float หรือ bool\n"
 
-#: gconf/gconftool.c:2496
+#: gconf/gconftool.c:2644
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "ชนิดของ cdr ในคู่ ต้องเป็นชนิดพื้นฐาน คือ string, int, float หรือ bool\n"
 
-#: gconf/gconftool.c:2511
+#: gconf/gconftool.c:2659
 #, c-format
 msgid "Error setting value: %s"
 msgstr "เกิดข้อผิดพลาดระหว่างตั้งค่า: %s"
 
-#: gconf/gconftool.c:2525
+#: gconf/gconftool.c:2673
 #, c-format
 msgid "Error syncing: %s"
 msgstr "เกิดข้อผิดพลาดขณะ sync: %s"
 
-#: gconf/gconftool.c:2540
+#: gconf/gconftool.c:2688
 #, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr "ต้องระบุไดเรกทอรีอย่างน้อยหนึ่งไดเรกทอรีที่จะอ่านคู่ คีย์-ค่า\n"
 
-#: gconf/gconftool.c:2554
+#: gconf/gconftool.c:2702
 #, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "ต้องระบุคีย์อย่างน้อยหนึ่งคีย์ที่จะล้างค่า\n"
 
-#: gconf/gconftool.c:2565
+#: gconf/gconftool.c:2713
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "เกิดข้อผิดพลาดขณะล้างค่า `%s': %s\n"
 
-#: gconf/gconftool.c:2585
+#: gconf/gconftool.c:2733
 #, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "ต้องระบุคีย์อย่างน้อยหนึ่งคีย์ที่จะล้างค่าแบบเรียกตัวเอง\n"
 
-#: gconf/gconftool.c:2599
+#: gconf/gconftool.c:2747
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "เกิดข้อผิดพลาดขณะล้างค่า \"%s\" แบบเรียกตัวเอง: %s\n"
 
-#: gconf/gconftool.c:2619
+#: gconf/gconftool.c:2767
 #, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "ต้องระบุไดเรกทอรีอย่างน้อยหนึ่งไดเรกทอรีที่จะอ่านไดเรกทอรีย่อย\n"
 
-#: gconf/gconftool.c:2653
+#: gconf/gconftool.c:2801
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "เกิดข้อผิดพลาดระหว่างแสดงรายการในไดเรกทอรี: %s\n"
 
-#: gconf/gconftool.c:2789
+#: gconf/gconftool.c:2937
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "คำเตือน: ต้องระบุทั้ง <car> และ <cdr> ใน <pair>\n"
 
-#: gconf/gconftool.c:2816
+#: gconf/gconftool.c:2964
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr "คำเตือน: มีคีย์ (%s) สำหรับ schema อยู่ใต้โหนด <value> - ขออ่านข้าม\n"
 
-#: gconf/gconftool.c:2849
+#: gconf/gconftool.c:2997
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "คำเตือน: ต้องมีโหนดลูกภายใต้ <value>\n"
 
-#: gconf/gconftool.c:2855
+#: gconf/gconftool.c:3003
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "คำเตือน: ไม่เข้าใจโหนด <%s>\n"
 
-#: gconf/gconftool.c:2873
+#: gconf/gconftool.c:3021
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "คำเตือน: แจงค่า int `%s' ไม่สำเร็จ\n"
 
-#: gconf/gconftool.c:2894
+#: gconf/gconftool.c:3042
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "คำเตือน: แจงค่า float `%s' ไม่สำเร็จ\n"
 
-#: gconf/gconftool.c:2916
+#: gconf/gconftool.c:3064
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "คำเตือน: แจงค่าสตริง `%s' ไม่สำเร็จ\n"
 
-#: gconf/gconftool.c:2937
+#: gconf/gconftool.c:3085
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "คำเตือน: แจงค่าบูลีน `%s' ไม่สำเร็จ\n"
 
-#: gconf/gconftool.c:3046 gconf/gconftool.c:3588
+#: gconf/gconftool.c:3194 gconf/gconftool.c:3736
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "คำเตือน: เชื่อมโยง schema `%s' กับคีย์ `%s' ไม่สำเร็จ: %s\n"
 
-#: gconf/gconftool.c:3161
+#: gconf/gconftool.c:3309
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "คำเตือน: ไม่มีชนิดหรือชนิดไม่ถูกต้องสำหรับ schema (%s)\n"
 
-#: gconf/gconftool.c:3170
+#: gconf/gconftool.c:3318
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "คำเตือน: ไม่มีชนิดของลิสต์หรือชนิดของลิสต์ไม่ถูกต้องสำหรับ schema (%s)\n"
 
-#: gconf/gconftool.c:3181 gconf/gconftool.c:3211
-#: gconf/gconftool.c:3240
+#: gconf/gconftool.c:3329 gconf/gconftool.c:3359
+#: gconf/gconftool.c:3388
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "คำเตือน: ไม่สามารถแจงค่าปริยาย `%s' ของ schema (%s)\n"
 
-#: gconf/gconftool.c:3199
+#: gconf/gconftool.c:3347
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "คำเตือน: ชนิด car หรือชนิด cdr ไม่ถูกต้องหรือขาดหายใน schema (%s)\n"
 
-#: gconf/gconftool.c:3224
+#: gconf/gconftool.c:3372
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "คำเตือน: คุณไม่สามารถตั้งค่าปริยายให้กับ schema ได้\n"
 
-#: gconf/gconftool.c:3253
+#: gconf/gconftool.c:3401
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "คำเตือน: ข้อผิดพลาดภายในของ gconftool: ค่า GConfValueType ไม่รู้จัก\n"
 
-#: gconf/gconftool.c:3301 gconf/gconftool.c:3322
-#: gconf/gconftool.c:3343 gconf/gconftool.c:3364
+#: gconf/gconftool.c:3449 gconf/gconftool.c:3470
+#: gconf/gconftool.c:3491 gconf/gconftool.c:3512
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "คำเตือน: แจงชื่อชนิด `%s' ไม่สำเร็จ\n"
 
-#: gconf/gconftool.c:3318
+#: gconf/gconftool.c:3466
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "คำเตือน: list_type เป็น int, float, string หรือ bool ได้เท่านั้น และไม่ใช่ `%s'\n"
 
-#: gconf/gconftool.c:3339
+#: gconf/gconftool.c:3487
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "คำเตือน: ชนิดของ car สามารถเป็น int, float, string หรือ bool ได้เท่านั้น ไม่ใช่ `%s'\n"
 
-#: gconf/gconftool.c:3360
+#: gconf/gconftool.c:3508
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "คำเตือน: ชนิดของ cdr สามารถเป็น int, float, string หรือ bool ได้เท่านั้น ไม่ใช่ `%s'\n"
 
-#: gconf/gconftool.c:3400
+#: gconf/gconftool.c:3548
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "คำเตือน: พบโหนด <applyto> ว่างเปล่า"
 
-#: gconf/gconftool.c:3403 gconf/gconftool.c:3661
+#: gconf/gconftool.c:3551 gconf/gconftool.c:3809
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "คำเตือน: ไม่เข้าใจโหนด <%s> ที่อยู่ภายใต้ <schema>\n"
 
-#: gconf/gconftool.c:3414
+#: gconf/gconftool.c:3562
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "คำเตือน: ไม่ได้ระบุ <list_type> ใน schema ที่มีชนิดเป็นลิสต์\n"
 
-#: gconf/gconftool.c:3420
+#: gconf/gconftool.c:3568
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "คำเตือน: ไม่ได้ระบุ <car_type> ใน schema ที่มีชนิดเป็นคู่\n"
 
-#: gconf/gconftool.c:3426
+#: gconf/gconftool.c:3574
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "คำเตือน: ไม่ได้ระบุ <cdr_type> ใน schema ที่มีชนิดเป็นคู่\n"
 
-#: gconf/gconftool.c:3455
+#: gconf/gconftool.c:3603
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "คำเตือน: โหนด <locale> ไม่มีแอตทริบิวต์ `name=\"โลแคล\"' ดังนั้น จะอ่านข้ามไป\n"
 
-#: gconf/gconftool.c:3461
+#: gconf/gconftool.c:3609
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "คำเตือน: มีโหนด <locale> หลายโหนดสำหรับโลแคล `%s' ดังนั้น จะใช้เฉพาะโหนดแรกเท่านั้น\n"
 
-#: gconf/gconftool.c:3559
+#: gconf/gconftool.c:3707
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "คำเตือน: พบโหนด <%s> ที่ใช้ไม่ได้ในโหนด <locale>\n"
 
-#: gconf/gconftool.c:3596
+#: gconf/gconftool.c:3744
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "แนบ schema `%s' เข้ากับคีย์ `%s' แล้ว\n"
 
-#: gconf/gconftool.c:3670
+#: gconf/gconftool.c:3818
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "คุณต้องมีรายการ <locale> อย่างน้อยหนึ่งรายการใน <schema>\n"
 
-#: gconf/gconftool.c:3705
+#: gconf/gconftool.c:3853
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
 msgstr "คำเตือน: ไม่สามารถติดตั้ง schema `%s', โลแคล `%s': %s\n"
 
-#: gconf/gconftool.c:3713
+#: gconf/gconftool.c:3861
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "ติดตั้ง schema `%s' สำหรับโลแคล `%s' แล้ว\n"
 
-#: gconf/gconftool.c:3723
+#: gconf/gconftool.c:3871
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
 msgstr "คำเตือน: ไม่สามารถถอดถอน schema `%s', โลแคล `%s': %s\n"
 
-#: gconf/gconftool.c:3731
+#: gconf/gconftool.c:3879
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "ถอดถอน schema `%s' ออกจากโลแคล `%s' แล้ว\n"
 
-#: gconf/gconftool.c:3769
+#: gconf/gconftool.c:3917
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "คำเตือน: ไม่มีคีย์ระบุไว้สำหรับ schema\n"
 
-#: gconf/gconftool.c:3810
+#: gconf/gconftool.c:3958
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "คำเตือน: ไม่เข้าใจโหนด <%s> ที่อยู่ภายใต้ <%s>\n"
 
-#: gconf/gconftool.c:3842
+#: gconf/gconftool.c:3990
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "ไม่สามารถเปิด `%s' ได้: %s\n"
 
-#: gconf/gconftool.c:3849
+#: gconf/gconftool.c:3997
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "เอกสาร `%s' ว่างเปล่า?\n"
 
-#: gconf/gconftool.c:3861
+#: gconf/gconftool.c:4009
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr "เอกสาร `%s' มีชนิดของโหนดรากไม่ถูกต้อง (<%s> ซึ่งควรเป็น <%s>)\n"
 
-#: gconf/gconftool.c:3874
+#: gconf/gconftool.c:4022
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "เอกสาร `%s' ไม่มีโหนด <%s> ระดับบนสุด\n"
 
-#: gconf/gconftool.c:3888
+#: gconf/gconftool.c:4036
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "คำเตือน: ไม่เข้าใจโหนด <%s> ที่อยู่ภายใต้ <%s>\n"
 
-#: gconf/gconftool.c:3909
+#: gconf/gconftool.c:4057
 #, c-format
 msgid "Error syncing configuration data: %s"
 msgstr "เกิดข้อผิดพลาดขณะ sync ข้อมูลค่าตั้ง: %s"
 
-#: gconf/gconftool.c:3925
+#: gconf/gconftool.c:4073
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "ต้องระบุแฟ้ม schema ที่จะติดตั้งด้วย\n"
 
-#: gconf/gconftool.c:3953
+#: gconf/gconftool.c:4101
 #, c-format
 msgid ""
 "\n"
@@ -2491,17 +2536,17 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: gconf/gconftool.c:3973
+#: gconf/gconftool.c:4121
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "ไม่สามารถยกเลิกการตั้งค่าคีย์ขยะ %s: %s\n"
 
-#: gconf/gconftool.c:4099
+#: gconf/gconftool.c:4247
 #, c-format
 msgid "Must specify some keys to break\n"
 msgstr "ต้องระบุคีย์ที่จะทำลายด้วย\n"
 
-#: gconf/gconftool.c:4105
+#: gconf/gconftool.c:4253
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2510,12 +2555,12 @@ msgstr ""
 "กำลังจะพยายามทำลายโปรแกรมของคุณ ด้วยการตั้งค่าขยะให้กับคีย์:\n"
 " %s\n"
 
-#: gconf/gconftool.c:4123
+#: gconf/gconftool.c:4271
 #, c-format
 msgid "Must specify some directories to break\n"
 msgstr "คุณต้องกำหนดไดเรกทอรีที่จะทำลายด้วย\n"
 
-#: gconf/gconftool.c:4142
+#: gconf/gconftool.c:4290
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
