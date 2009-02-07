@@ -1,6 +1,6 @@
 # GConf ja.po.
-# Copyright (C) 2000-2008 Free Software Foundation, Inc.
-# Takeshi AIHANA <takeshi.aihana@gmail.com>, 2000-2008.
+# Copyright (C) 2000-2009 Free Software Foundation, Inc.
+# Takeshi AIHANA <takeshi.aihana@gmail.com>, 2000-2009.
 # KAMAGASAKO Masatoshi <emerald@gnome.gr.jp>, 2003
 # Satoru SATOH <ss@gnome.gr.jp>, 2006
 #
@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gconf trunk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-27 23:36+0900\n"
-"PO-Revision-Date: 2008-07-27 23:36+0900\n"
+"POT-Creation-Date: 2009-02-07 22:14+0900\n"
+"PO-Revision-Date: 2009-02-07 22:14+0900\n"
 "Last-Translator: Takeshi AIHANA <takeshi.aihana@gmail.com>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
@@ -326,7 +326,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "要素 <%s> の内側にテキストを格納できません"
 
 #: ../backends/markup-tree.c:3599 ../backends/markup-tree.c:4379
-#: ../backends/markup-tree.c:4397
+#: ../backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "\"%s\" のオープンに失敗しました: %s\n"
@@ -336,12 +336,17 @@ msgstr "\"%s\" のオープンに失敗しました: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "\"%s\" の読み込みでエラー: %s\n"
 
-#: ../backends/markup-tree.c:4484
+#: ../backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "ファイル '%s' をディスクに書き出せませんでした: %s"
+
+#: ../backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "ファイル \"%s\" の書き込みでエラー: %s"
 
-#: ../backends/markup-tree.c:4513
+#: ../backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr "作業ファイル \"%s\" を最終格納場所 \"%s\" へ移動できませんでした: %s"
@@ -1044,7 +1049,7 @@ msgstr "なし"
 msgid "- Sanity checks for GConf"
 msgstr "- GConf の妥当性を確認する"
 
-#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:617
+#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:639
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1405,11 +1410,11 @@ msgstr "'schema' 型を期待していたものの実際に得られたのは %s
 msgid "CORBA error: %s"
 msgstr "CORBA エラー: %s"
 
-#: ../gconf/gconfd.c:301
+#: ../gconf/gconfd.c:308
 msgid "Shutdown request received"
 msgstr "シャットダウン要求を受け取りました"
 
-#: ../gconf/gconfd.c:333
+#: ../gconf/gconfd.c:340
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1417,7 +1422,7 @@ msgstr ""
 "デバッグ情報付きでコンパイルされた gconfd; ソースディレクトリから gconf.path "
 "を読み込もうとしています"
 
-#: ../gconf/gconfd.c:353
+#: ../gconf/gconfd.c:360
 #, c-format
 msgid ""
 "No configuration files found. Trying to use the default configuration source "
@@ -1429,7 +1434,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: ../gconf/gconfd.c:361
+#: ../gconf/gconfd.c:368
 #, c-format
 msgid ""
 "No configuration sources in the source path. Configuration won't be saved; "
@@ -1438,12 +1443,12 @@ msgstr ""
 "ソースパスの中に設定ソースがありません (設定は保存されません; %s%s を編集して"
 "下さい)"
 
-#: ../gconf/gconfd.c:374
+#: ../gconf/gconfd.c:381
 #, c-format
 msgid "Error loading some configuration sources: %s"
 msgstr "幾つかの設定ファイルの読み込みに失敗しました: %s"
 
-#: ../gconf/gconfd.c:386
+#: ../gconf/gconfd.c:393
 msgid ""
 "No configuration source addresses successfully resolved. Can't load or store "
 "configuration data"
@@ -1451,7 +1456,7 @@ msgstr ""
 "設定ソースのアドレスが解決されていないので、データの読み込みや保存ができませ"
 "ん"
 
-#: ../gconf/gconfd.c:403
+#: ../gconf/gconfd.c:410
 msgid ""
 "No writable configuration sources successfully resolved. May be unable to "
 "save some configuration changes"
@@ -1459,31 +1464,31 @@ msgstr ""
 "設定ファイルが書き込み可能ではないので、幾つかの設定を保存できないかもしれま"
 "せん"
 
-#: ../gconf/gconfd.c:584
+#: ../gconf/gconfd.c:591
 #, c-format
 msgid "Could not connect to session bus: %s"
 msgstr "セッション・バスに接続できませんでした: %s"
 
-#: ../gconf/gconfd.c:606
+#: ../gconf/gconfd.c:613
 #, c-format
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "デーモンのバス名の取得に失敗したので強制終了します: %s"
 
-#: ../gconf/gconfd.c:688
+#: ../gconf/gconfd.c:694
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "システム・バスに接続できませんでした: %s"
 
-#: ../gconf/gconfd.c:772
+#: ../gconf/gconfd.c:830
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "起動中 (バージョン %s), PID %u ユーザ '%s'"
 
-#: ../gconf/gconfd.c:832
+#: ../gconf/gconfd.c:890
 msgid "Failed to get object reference for ConfigServer"
 msgstr "設定サーバ用のオブジェクト・リファレンスの取得に失敗しました"
 
-#: ../gconf/gconfd.c:861
+#: ../gconf/gconfd.c:919
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1492,34 +1497,34 @@ msgstr ""
 "FD %d にパイプするためのバイトの書き込みに失敗したため、クライアント側がハン"
 "グするおそれがあります: %s"
 
-#: ../gconf/gconfd.c:907
+#: ../gconf/gconfd.c:965
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "ロックファイルの解放でエラー: %s"
 
-#: ../gconf/gconfd.c:915
+#: ../gconf/gconfd.c:973
 msgid "Exiting"
 msgstr "終了します"
 
-#: ../gconf/gconfd.c:933
+#: ../gconf/gconfd.c:991
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP を受け取ったので全てのデータベースを再度読み込みます"
 
-#: ../gconf/gconfd.c:950
+#: ../gconf/gconfd.c:1008
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf サーバが使用されていないのでシャットダウンします"
 
-#: ../gconf/gconfd.c:1276
+#: ../gconf/gconfd.c:1334
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "'%s' の新しい値を取得する際にエラー: %s"
 
-#: ../gconf/gconfd.c:1420
+#: ../gconf/gconfd.c:1478
 #, c-format
 msgid "Returning exception: %s"
 msgstr "返された例外: %s"
 
-#: ../gconf/gconfd.c:1526
+#: ../gconf/gconfd.c:1584
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1528,7 +1533,7 @@ msgstr ""
 "gconfd ログファイルのオープンに失敗しました: gconf をシャットダウンした後にロ"
 "グを復活することはできません (%s)"
 
-#: ../gconf/gconfd.c:1561
+#: ../gconf/gconfd.c:1619
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1536,38 +1541,43 @@ msgstr ""
 "gconfd ログファイルのクローズに失敗しました: おそらくデータは保存されません "
 "(%s)"
 
-#: ../gconf/gconfd.c:1623
+#: ../gconf/gconfd.c:1681
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "状態保持ファイル '%s' を書き込みモードで開けませんでした: %s"
 
-#: ../gconf/gconfd.c:1637
+#: ../gconf/gconfd.c:1695
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "状態保持ファイル '%s' に書き込めませんでした　fd: %d: %s"
 
-#: ../gconf/gconfd.c:1646
+#: ../gconf/gconfd.c:1704
+#, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "状態保持ファイル '%s' の内容をディスクに書き出せませんでした: %s"
+
+#: ../gconf/gconfd.c:1711
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "新しい状態保持ファイル '%s' を閉じるのに失敗しました: %s"
 
-#: ../gconf/gconfd.c:1660
+#: ../gconf/gconfd.c:1725
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "古い状態保持ファイル '%s' を別の場所に移動できませんでした: %s"
 
-#: ../gconf/gconfd.c:1670
+#: ../gconf/gconfd.c:1735
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "新しい状態保持ファイルの移動に失敗しました: %s"
 
-#: ../gconf/gconfd.c:1679
+#: ../gconf/gconfd.c:1744
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr "'%s' に移動した状態保持ファイルの復帰に失敗しました: %s"
 
-#: ../gconf/gconfd.c:2158
+#: ../gconf/gconfd.c:2223
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1575,17 +1585,17 @@ msgstr ""
 "アドレス '%s' のリスナーの復帰ができません。データベースを解決できませんでし"
 "た"
 
-#: ../gconf/gconfd.c:2194
+#: ../gconf/gconfd.c:2259
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "状態保持ファイルの読み込みでエラー: %s"
 
-#: ../gconf/gconfd.c:2244
+#: ../gconf/gconfd.c:2309
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "状態保持ファイル '%s' のオープンに失敗しました: %s"
 
-#: ../gconf/gconfd.c:2363
+#: ../gconf/gconfd.c:2428
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1594,7 +1604,7 @@ msgstr ""
 "gconfd ログファイルへのログの追加に失敗しました。gconfd を終了またはシャット"
 "ダウンしたらリスナーの追加はできません (%s)"
 
-#: ../gconf/gconfd.c:2368
+#: ../gconf/gconfd.c:2433
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1603,46 +1613,47 @@ msgstr ""
 "gconfd ログファイルへのログの削除に失敗しました。gconfd を終了またはシャット"
 "ダウンしたらリスナーの再追加はエラーになるかもしれません (%s)"
 
-#: ../gconf/gconfd.c:2391 ../gconf/gconfd.c:2565
+#: ../gconf/gconfd.c:2456 ../gconf/gconfd.c:2630
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "クライアントの IOR 取得に失敗しました: %s"
 
-#: ../gconf/gconfd.c:2406
+#: ../gconf/gconfd.c:2471
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "状態保持ファイルのオープンに失敗しました: %s"
 
-#: ../gconf/gconfd.c:2419
+#: ../gconf/gconfd.c:2484
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "状態保持ファイルへのクライアントの追加に失敗しました: %s"
 
-#: ../gconf/gconfd.c:2427
+#: ../gconf/gconfd.c:2492
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "状態保持ファイルへの追加クライアントのフラッシュに失敗しました: %s"
 
-#: ../gconf/gconfd.c:2526
+#: ../gconf/gconfd.c:2591
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "幾つかのクライアントは追加されなかったので、GConf サーバから自分自身を削除し"
 "ました"
 
-#: ../gconf/gconftool.c:91
+# コマンドラインのオプションは可能な限り短くなるように文言を工夫すること
+#: ../gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr "キーに値をセットして同期する ('--type' と一緒に使用すること)"
 
-#: ../gconf/gconftool.c:100
+#: ../gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "キーの値を標準出力に表示する"
 
-#: ../gconf/gconftool.c:110
+#: ../gconf/gconftool.c:112
 msgid "Unset the keys on the command line"
 msgstr "指定したキーを無効にする"
 
-#: ../gconf/gconftool.c:119
+#: ../gconf/gconftool.c:121
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1650,77 +1661,81 @@ msgstr ""
 "指定した場所、または指定したキー/ディレクトリにある全てのキーを再帰的に無効に"
 "する"
 
-#: ../gconf/gconftool.c:128
+#: ../gconf/gconftool.c:130
+msgid "Toggles a boolean key."
+msgstr "指定した論理値の TRUE/FALSE を切り替える"
+
+#: ../gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "指定したディレクトリにある全てのキーと値のペアを表示する"
 
-#: ../gconf/gconftool.c:137
+#: ../gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "指定したディレクトリにある全てのサブディレクトリを表示する"
 
-#: ../gconf/gconftool.c:146
+#: ../gconf/gconftool.c:157
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr ""
 "指定したディレクトリにある全てのサブディレクトリとエントリを再帰的に表示する"
 
-#: ../gconf/gconftool.c:155
+#: ../gconf/gconftool.c:166 ../gconf/gconftool.c:175
 msgid "Search for a key, recursively."
 msgstr "キーを再帰的に検索する"
 
-#: ../gconf/gconftool.c:164
+#: ../gconf/gconftool.c:184
 msgid "Get the short doc string for a key"
 msgstr "キーに対する短い doc 文字列を取得する"
 
-#: ../gconf/gconftool.c:173
+#: ../gconf/gconftool.c:193
 msgid "Get the long doc string for a key"
 msgstr "キーに対する長い doc 文字列を取得する"
 
-#: ../gconf/gconftool.c:182
+#: ../gconf/gconftool.c:202
 msgid "Return 0 if the directory exists, 2 if it does not."
-msgstr "指定したディレクトリが存在したら 0を返し、存在しなければ 2を返す"
+msgstr "指定したディレクトリが存在したら 0 を、存在しなければ 2 を返す"
 
-#: ../gconf/gconftool.c:191
+#: ../gconf/gconftool.c:211
 msgid "Ignore schema defaults when reading values."
 msgstr "値を読む際にスキーマのデフォルト値を無視する"
 
-#: ../gconf/gconftool.c:206
+#: ../gconf/gconftool.c:226
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
 msgstr "指定したディレクトリにある全ての XML 記述を再帰的に標準出力へ表示する"
 
-#: ../gconf/gconftool.c:215
+#: ../gconf/gconftool.c:235
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
 msgstr ""
 "指定したファイルから値の XML 記述を読み込んで関連するディレクトリにセットする"
 
-#: ../gconf/gconftool.c:224
+#: ../gconf/gconftool.c:244
 msgid "Unload a set of values described in an XML file."
 msgstr "XML ファイルに記述されている値のセットの読み込み解除"
 
-#: ../gconf/gconftool.c:239
+#: ../gconf/gconftool.c:259
 msgid "Get the name of the default source"
 msgstr "デフォルトの設定ソースの名前を取得する"
 
-#: ../gconf/gconftool.c:248
+#: ../gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr ""
 "gconfd をシャットダウンする (**正当な理由無しにこのオプションを使用しないこと"
 "**)"
 
-#: ../gconf/gconftool.c:257
+#: ../gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr "gconfd が起動中ならば 0を返し、起動していなければ 2を返す"
+msgstr "gconfd が起動中ならば 0 を、起動していなければ 2 を返す"
 
-#: ../gconf/gconftool.c:266
+#: ../gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
 msgstr "gcnofd 設定サーバを起動する (通常は必要に応じて自動的に起動される)"
 
-#: ../gconf/gconftool.c:281
+#: ../gconf/gconftool.c:301
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1728,23 +1743,23 @@ msgstr ""
 "セットする値の型または記述するスキーマの型を指定する (重複しなければ省略形も"
 "可)"
 
-#: ../gconf/gconftool.c:282
+#: ../gconf/gconftool.c:302
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
-#: ../gconf/gconftool.c:290
+#: ../gconf/gconftool.c:310
 msgid "Print the data type of a key to standard output."
 msgstr "キーのデータ型を標準出力に表示する"
 
-#: ../gconf/gconftool.c:299
+#: ../gconf/gconftool.c:319
 msgid "Get the number of elements in a list key."
 msgstr "リスト・キーの中にある要素の数を取得する"
 
-#: ../gconf/gconftool.c:308
+#: ../gconf/gconftool.c:328
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr "リスト・キーから指定した (番号が付与された) 要素を取得する"
 
-#: ../gconf/gconftool.c:317
+#: ../gconf/gconftool.c:337
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1752,11 +1767,11 @@ msgstr ""
 "セットするリストの型または記述するスキーマの型を指定する (重複しなければ省略"
 "形も可)"
 
-#: ../gconf/gconftool.c:318 ../gconf/gconftool.c:327 ../gconf/gconftool.c:336
+#: ../gconf/gconftool.c:338 ../gconf/gconftool.c:347 ../gconf/gconftool.c:356
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: ../gconf/gconftool.c:326
+#: ../gconf/gconftool.c:346
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1764,7 +1779,7 @@ msgstr ""
 "セットする car ペアの型または記述するスキーマの型を指定する (重複しなければ省"
 "略形も可)"
 
-#: ../gconf/gconftool.c:335
+#: ../gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1772,23 +1787,23 @@ msgstr ""
 "セットする cdr ペアの型または記述するスキーマの型を指定する (重複しなければ省"
 "略形も可)"
 
-#: ../gconf/gconftool.c:350
+#: ../gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
 msgstr "インストールするスキーマ・ファイルを指定する"
 
-#: ../gconf/gconftool.c:351
+#: ../gconf/gconftool.c:371
 msgid "FILENAME"
 msgstr "ファイル名"
 
-#: ../gconf/gconftool.c:359
+#: ../gconf/gconftool.c:379
 msgid "Specify a configuration source to use rather than the default path"
 msgstr "デフォルト・パス以外の設定ソースを指定する"
 
-#: ../gconf/gconftool.c:360
+#: ../gconf/gconftool.c:380
 msgid "SOURCE"
 msgstr "ソース"
 
-#: ../gconf/gconftool.c:368
+#: ../gconf/gconftool.c:388
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
@@ -1796,7 +1811,7 @@ msgstr ""
 "サーバを経由して設定データベースに直接アクセスする (gconfd が起動していないこ"
 "とが条件)"
 
-#: ../gconf/gconftool.c:377
+#: ../gconf/gconftool.c:397
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment "
@@ -1807,7 +1822,7 @@ msgstr ""
 "GCONF_CONFIG_SOURCE にはデフォルトではない設定ソースをセットしておくか、デ"
 "フォルト値を使用するために空をセットしておくこと)"
 
-#: ../gconf/gconftool.c:386
+#: ../gconf/gconftool.c:406
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1817,7 +1832,7 @@ msgstr ""
 "の GCONF_CONFIG_SOURCE にはデフォルトではない設定ソースをセットしておくか、デ"
 "フォルト値を使用するために空をセットしておくこと)"
 
-#: ../gconf/gconftool.c:401
+#: ../gconf/gconftool.c:421
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1825,7 +1840,7 @@ msgstr ""
 "指定した複数のキーの型をセット/セットしないにすることでアプリケーションの負荷"
 "テストを行う"
 
-#: ../gconf/gconftool.c:410
+#: ../gconf/gconftool.c:430
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1833,7 +1848,7 @@ msgstr ""
 "指定したディレクトリ内部にある複数のキーをセット/セットしないにすることでアプ"
 "リケーションのテストを行う"
 
-#: ../gconf/gconftool.c:425
+#: ../gconf/gconftool.c:445
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1841,139 +1856,145 @@ msgstr ""
 "スキーマをセットして同期する ('--short-desc', '--long-desc', '--owner', '--"
 "type' と一緒に使用すること)"
 
-#: ../gconf/gconftool.c:434
+#: ../gconf/gconftool.c:454
 msgid "Specify a short half-line description to go in a schema."
 msgstr "スキーマの短い説明を指定する"
 
-#: ../gconf/gconftool.c:435 ../gconf/gconftool.c:444
+#: ../gconf/gconftool.c:455 ../gconf/gconftool.c:464
 msgid "DESCRIPTION"
 msgstr "説明"
 
-#: ../gconf/gconftool.c:443
+#: ../gconf/gconftool.c:463
 msgid "Specify a several-line description to go in a schema."
 msgstr "スキーマの詳細な複数行の説明を指定する"
 
-#: ../gconf/gconftool.c:452
+#: ../gconf/gconftool.c:472
 msgid "Specify the owner of a schema"
 msgstr "スキーマの所有者を指定する"
 
-#: ../gconf/gconftool.c:453
+#: ../gconf/gconftool.c:473
 msgid "OWNER"
 msgstr "所有者"
 
-#: ../gconf/gconftool.c:461
+#: ../gconf/gconftool.c:481
 msgid "Get the name of the schema applied to this key"
 msgstr "指定したキーに対応するスキーマ名を取得する"
 
-#: ../gconf/gconftool.c:470
+#: ../gconf/gconftool.c:490
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr "キーに指定したスキーマ名を適用する"
 
-#: ../gconf/gconftool.c:479
+#: ../gconf/gconftool.c:499
 msgid "Remove any schema name applied to the given keys"
 msgstr "指定したキーのスキーマ名を削除する"
 
-#: ../gconf/gconftool.c:494
+#: ../gconf/gconftool.c:514
 msgid "Print version"
 msgstr "バージョンを表示する"
 
-#: ../gconf/gconftool.c:503
+#: ../gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FILE...]|[KEY...]|[DIR...]"
 
-#: ../gconf/gconftool.c:563
+#: ../gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
 msgstr "- GConf 設定データベースを操作するためのツール"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Client options:"
 msgstr "クライアントのオプション:"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Show client options"
 msgstr "クライアントのオプションを表示する"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Key type options:"
 msgstr "キーの種類に関するオプション:"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Show key type options"
 msgstr "キーの種類に関するオプションを表示する"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Load/Save options:"
 msgstr "読み込み/保存に関するオプション:"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Show load/save options"
 msgstr "読み込み/保存に関するオプションを表示する"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Server options:"
 msgstr "サーバのオプション:"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Show server options"
 msgstr "サーバのオプションを表示する"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Installation options:"
 msgstr "インストールのオプション:"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Show installation options"
 msgstr "インストールのオプションを表示する"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Test options:"
 msgstr "テストに関するオプション:"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Show test options"
 msgstr "テストに関するオプションを表示する"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Schema options:"
 msgstr "スキーマのオプション:"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Show schema options"
 msgstr "スキーマのオプションを表示する"
 
-#: ../gconf/gconftool.c:607
+#: ../gconf/gconftool.c:629
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "'%s --help' を実行して利用可能なコマンドライン・オプションの一覧を参照して下"
 "さい\n"
 
-#: ../gconf/gconftool.c:635
+# "実行できない" または "利用できない" よりも "使えない" の方が短くて済む
+#: ../gconf/gconftool.c:657
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
-msgstr "取得と設定/未設定を同時には実行できません\n"
+msgstr "--get と --set/--unset を同時には使えません\n"
 
-#: ../gconf/gconftool.c:645
+#: ../gconf/gconftool.c:667
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
-msgstr "設定と取得/未設定を同時には実行できません\n"
+msgstr "--set と --get/--unset を同時には使えません\n"
 
-#: ../gconf/gconftool.c:652
+#: ../gconf/gconftool.c:674
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
-msgstr "取得と設定/未設定を同時には実行できません\n"
+msgstr "--get-type と --set/--unset を同時には使えません\n"
 
-#: ../gconf/gconftool.c:663
+#: ../gconf/gconftool.c:682
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "--toggle と --get/--set/--unset を同時には使えません\n"
+
+#: ../gconf/gconftool.c:693
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "--get または --set と一緒に --all-entries は使えません\n"
 
-#: ../gconf/gconftool.c:674
+#: ../gconf/gconftool.c:704
 #, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "--get または --set と一緒に --all-dirs は使えません\n"
 
-#: ../gconf/gconftool.c:688
+#: ../gconf/gconftool.c:718
 #, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
@@ -1982,7 +2003,7 @@ msgstr ""
 "--recursive-list は --get, --set, --set, --unset, --all-entries または --all-"
 "dirs または --search-key と一緒に指定しないで下さい\n"
 
-#: ../gconf/gconftool.c:702
+#: ../gconf/gconftool.c:732
 #, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
@@ -1991,17 +2012,17 @@ msgstr ""
 "--set_schema は --get, --set, --unset, --all-entries, --all-dirs, または --"
 "search-key と一緒に指定していないで下さい\n"
 
-#: ../gconf/gconftool.c:708
+#: ../gconf/gconftool.c:738
 #, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "値を設定する場合は値の型が関連しているだけで良いです\n"
 
-#: ../gconf/gconftool.c:714
+#: ../gconf/gconftool.c:744
 #, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "値を設定する場合は型を指定する必要があります\n"
 
-#: ../gconf/gconftool.c:722
+#: ../gconf/gconftool.c:752
 #, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
@@ -2011,14 +2032,14 @@ msgstr ""
 "recursive-list, --get-list-size or --get-list-element と一緒に指定して下さ"
 "い\n"
 
-#: ../gconf/gconftool.c:734 ../gconf/gconftool.c:747 ../gconf/gconftool.c:760
-#: ../gconf/gconftool.c:774 ../gconf/gconftool.c:787 ../gconf/gconftool.c:800
-#: ../gconf/gconftool.c:814
+#: ../gconf/gconftool.c:764 ../gconf/gconftool.c:777 ../gconf/gconftool.c:790
+#: ../gconf/gconftool.c:804 ../gconf/gconftool.c:817 ../gconf/gconftool.c:830
+#: ../gconf/gconftool.c:844
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "%s オプションはそれ自身で使われる必要があります\n"
 
-#: ../gconf/gconftool.c:823
+#: ../gconf/gconftool.c:853
 #, c-format
 msgid ""
 "You must specify a configuration source with --config-source when using --"
@@ -2026,12 +2047,12 @@ msgid ""
 msgstr ""
 "--direct を使用する場合は --config-source で設定ファイルを指定して下さい\n"
 
-#: ../gconf/gconftool.c:829
+#: ../gconf/gconftool.c:859
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "GConf の初期化に失敗: %s\n"
 
-#: ../gconf/gconftool.c:857
+#: ../gconf/gconftool.c:887
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
@@ -2039,7 +2060,7 @@ msgstr ""
 "ストールされていません\n"
 "\n"
 
-#: ../gconf/gconftool.c:864
+#: ../gconf/gconftool.c:894
 #, c-format
 msgid ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
@@ -2047,452 +2068,478 @@ msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL がセットされていますが、スキーマはイン"
 "ストールされていません\n"
 
-#: ../gconf/gconftool.c:877
+#: ../gconf/gconftool.c:907
 #, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "環境変数 GCONF_CONFIG_SOURCE をセットする必要があります\n"
 
-#: ../gconf/gconftool.c:932
+#: ../gconf/gconftool.c:962
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "設定ファイルのアクセスに失敗: %s\n"
 
-#: ../gconf/gconftool.c:1219
+#: ../gconf/gconftool.c:1267
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "シャットダウンエラー: %s\n"
 
-#: ../gconf/gconftool.c:1262
+#: ../gconf/gconftool.c:1310
 #, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "再帰的にリスト表示するディレクトリを一つ以上指定して下さい\n"
 
-#: ../gconf/gconftool.c:1293 ../gconf/gconftool.c:1454
-#: ../gconf/gconftool.c:1720
+#: ../gconf/gconftool.c:1355 ../gconf/gconftool.c:1549
+#: ../gconf/gconftool.c:1815
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "'%s' の中にあるエントリの読み込みでエラー: %s\n"
 
-#: ../gconf/gconftool.c:1313 ../gconf/gconftool.c:1473
+#: ../gconf/gconftool.c:1375 ../gconf/gconftool.c:1568
 msgid "(no value set)"
 msgstr "(何もセットされていません)"
 
-#: ../gconf/gconftool.c:1363
+#: ../gconf/gconftool.c:1438
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
 msgstr "検索するキーのパターンを指定して下さい\n"
 
-#: ../gconf/gconftool.c:1412
+#: ../gconf/gconftool.c:1457
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "検索するキーの正規表現パターンを指定して下さい\n"
+
+#: ../gconf/gconftool.c:1464
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "正規表現をコンパイルできません: %s\n"
+
+#: ../gconf/gconftool.c:1507
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "ダンプするディレクトリを一つ以上指定して下さい\n"
 
-#: ../gconf/gconftool.c:1779
+#: ../gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "gconf 設定サーバの起動に失敗しました: %s\n"
 
-#: ../gconf/gconftool.c:1808
+#: ../gconf/gconftool.c:1903
 #, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "一つのキーまたは取得するためのキーを指定する必要があります\n"
 
-#: ../gconf/gconftool.c:1843
+#: ../gconf/gconftool.c:1938
 #, c-format
 msgid "Type: %s\n"
 msgstr "型: %s\n"
 
-#: ../gconf/gconftool.c:1844
+#: ../gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
 msgstr "リスト型: %s\n"
 
-#: ../gconf/gconftool.c:1845
+#: ../gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car 型: %s\n"
 
-#: ../gconf/gconftool.c:1846
+#: ../gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr 型: %s\n"
 
-#: ../gconf/gconftool.c:1851
+#: ../gconf/gconftool.c:1946
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "初期値: %s\n"
 
-#: ../gconf/gconftool.c:1851 ../gconf/gconftool.c:1853
-#: ../gconf/gconftool.c:1854 ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1946 ../gconf/gconftool.c:1948
+#: ../gconf/gconftool.c:1949 ../gconf/gconftool.c:1950
 msgid "Unset"
 msgstr "未設定"
 
-#: ../gconf/gconftool.c:1853
+#: ../gconf/gconftool.c:1948
 #, c-format
 msgid "Owner: %s\n"
 msgstr "オーナー: %s\n"
 
-#: ../gconf/gconftool.c:1854
+#: ../gconf/gconftool.c:1949
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "ショートDesc: %s\n"
 
-#: ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1950
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "ロングDesc: %s\n"
 
-#: ../gconf/gconftool.c:1864 ../gconf/gconftool.c:2088
-#: ../gconf/gconftool.c:2122 ../gconf/gconftool.c:2167
-#: ../gconf/gconftool.c:2312
+#: ../gconf/gconftool.c:1959 ../gconf/gconftool.c:2236
+#: ../gconf/gconftool.c:2270 ../gconf/gconftool.c:2315
+#: ../gconf/gconftool.c:2460
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "'%s' に何も値が設定されていません\n"
 
-#: ../gconf/gconftool.c:1868 ../gconf/gconftool.c:2092
-#: ../gconf/gconftool.c:2126 ../gconf/gconftool.c:2171
-#: ../gconf/gconftool.c:2316
+#: ../gconf/gconftool.c:1963 ../gconf/gconftool.c:2240
+#: ../gconf/gconftool.c:2274 ../gconf/gconftool.c:2319
+#: ../gconf/gconftool.c:2464
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "'%s' の値の取得に失敗: %s\n"
 
-#: ../gconf/gconftool.c:1911 ../gconf/gconftool.c:1923
+#: ../gconf/gconftool.c:2006 ../gconf/gconftool.c:2018
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "'%s' の型が不明です\n"
 
-#: ../gconf/gconftool.c:1935
+#: ../gconf/gconftool.c:2030
 #, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "引数でキー/値の交換を指定する必要があります\n"
 
-#: ../gconf/gconftool.c:1955
+#: ../gconf/gconftool.c:2050
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "キーに何も値がセットされていません: '%s'\n"
 
-#: ../gconf/gconftool.c:1983
+#: ../gconf/gconftool.c:2078
 #, c-format
 msgid "Cannot set schema as value\n"
 msgstr "値としてスキーマをセットできません\n"
 
-#: ../gconf/gconftool.c:1993
+#: ../gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "リストの設定では、古いリスト型を指定する必要があります\n"
 
-#: ../gconf/gconftool.c:2007
+#: ../gconf/gconftool.c:2102
 #, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "ペアの設定では、古い car 型と cdr 型を指定する必要があります\n"
 
-#: ../gconf/gconftool.c:2022
+#: ../gconf/gconftool.c:2117
 #, c-format
 msgid "Error: %s\n"
 msgstr "エラー: %s\n"
 
-#: ../gconf/gconftool.c:2035 ../gconf/gconftool.c:3067
+#: ../gconf/gconftool.c:2130 ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:3215
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "値の設定エラー: %s\n"
 
-#: ../gconf/gconftool.c:2053
+#: ../gconf/gconftool.c:2148
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "同期中にエラー: %s\n"
 
-#: ../gconf/gconftool.c:2068
+#: ../gconf/gconftool.c:2163
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "引数に１つ以上のキーを指定して下さい\n"
+
+#: ../gconf/gconftool.c:2179
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "%s というキーには値はありません\n"
+
+#: ../gconf/gconftool.c:2185
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "論理値ではありません: %s\n"
+
+#: ../gconf/gconftool.c:2216
 #, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "型を取得するキーを一つ以上指定して下さい\n"
 
-#: ../gconf/gconftool.c:2112
+#: ../gconf/gconftool.c:2260
 #, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "サイズを検索するキーを指定して下さい\n"
 
-#: ../gconf/gconftool.c:2137 ../gconf/gconftool.c:2182
+#: ../gconf/gconftool.c:2285 ../gconf/gconftool.c:2330
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "キー %s はリストではありません\n"
 
-#: ../gconf/gconftool.c:2157
+#: ../gconf/gconftool.c:2305
 #, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "どのキーからリストの要素を取得するか指定して下さい\n"
 
-#: ../gconf/gconftool.c:2188
+#: ../gconf/gconftool.c:2336
 #, c-format
 msgid "Must specify list index.\n"
 msgstr "リストの番号を指定して下さい\n"
 
-#: ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:2343
 #, c-format
 msgid "List index must be non-negative.\n"
 msgstr "リストの番号は正の値にして下さい\n"
 
-#: ../gconf/gconftool.c:2204
+#: ../gconf/gconftool.c:2352
 #, c-format
 msgid "List index is out of bounds.\n"
 msgstr "リストの番号が上限を越えています\n"
 
-#: ../gconf/gconftool.c:2230
+#: ../gconf/gconftool.c:2378
 #, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "コマンドライン上で一つのキーまたは複数のキーを指定して下さい\n"
 
-#: ../gconf/gconftool.c:2250
+#: ../gconf/gconftool.c:2398
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "'%s' に対する既知のスキーマではありません\n"
 
-#: ../gconf/gconftool.c:2283
+#: ../gconf/gconftool.c:2431
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "'%s' にあるスキーマの中に格納されている doc 文字列がありません\n"
 
-#: ../gconf/gconftool.c:2288
+#: ../gconf/gconftool.c:2436
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "'%s' でスキーマの取得のエラー: %s\n"
 
-#: ../gconf/gconftool.c:2295
+#: ../gconf/gconftool.c:2443
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "スキーマが '%s' に格納されていません\n"
 
-#: ../gconf/gconftool.c:2298
+#: ../gconf/gconftool.c:2446
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "'%s' の値はスキーマではありません\n"
 
-#: ../gconf/gconftool.c:2354
+#: ../gconf/gconftool.c:2502
 #, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr "キーに適用するためのキー名に従うスキーマ名を指定して下さい\n"
 
-#: ../gconf/gconftool.c:2361
+#: ../gconf/gconftool.c:2509
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "警告: スキーマ '%s' の連結に失敗(キーは'%s'): %s\n"
 
-#: ../gconf/gconftool.c:2379
+#: ../gconf/gconftool.c:2527
 #, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "適用しないスキーマのキーを指定して下さい\n"
 
-#: ../gconf/gconftool.c:2389
+#: ../gconf/gconftool.c:2537
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "'%s' からスキーマ名の削除でエラー: %s\n"
 
-#: ../gconf/gconftool.c:2414
+#: ../gconf/gconftool.c:2562
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "引数でのみキー(スキーマ名)を指定する必要があります\n"
 
-#: ../gconf/gconftool.c:2456
+#: ../gconf/gconftool.c:2604
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "リスト型は古い型にする必要があります: string, int, float または bool\n"
 
-#: ../gconf/gconftool.c:2476
+#: ../gconf/gconftool.c:2624
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "car 型のペアは古い型にする必要があります: string, int, float または bool\n"
 
-#: ../gconf/gconftool.c:2496
+#: ../gconf/gconftool.c:2644
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr ""
 "cdr 型のペアは古い型にする必要があります: string, int, float または bool\n"
 
-#: ../gconf/gconftool.c:2511
+#: ../gconf/gconftool.c:2659
 #, c-format
 msgid "Error setting value: %s"
 msgstr "値の設定エラー: %s"
 
-#: ../gconf/gconftool.c:2525
+#: ../gconf/gconftool.c:2673
 #, c-format
 msgid "Error syncing: %s"
 msgstr "同期中にエラー: %s"
 
-#: ../gconf/gconftool.c:2540
+#: ../gconf/gconftool.c:2688
 #, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "キー/値のペアを取得するためのディレクトリを一つ以上指定する必要があります\n"
 
-#: ../gconf/gconftool.c:2554
+#: ../gconf/gconftool.c:2702
 #, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "無効にするために一つ以上のキーを指定する必要があります\n"
 
-#: ../gconf/gconftool.c:2565
+#: ../gconf/gconftool.c:2713
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "'%s' 未設定中にエラー: %s\n"
 
-#: ../gconf/gconftool.c:2585
+#: ../gconf/gconftool.c:2733
 #, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "再帰的に解放するために一つ以上のキーを指定して下さい\n"
 
-#: ../gconf/gconftool.c:2599
+#: ../gconf/gconftool.c:2747
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "\"%s\" の再帰的な解放中にエラー: %s\n"
 
-#: ../gconf/gconftool.c:2619
+#: ../gconf/gconftool.c:2767
 #, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr "サブディレクトリを取得するためのディレクトリを一つ以上指定して下さい\n"
 
-#: ../gconf/gconftool.c:2653
+#: ../gconf/gconftool.c:2801
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "ディレクトリのリスト化中にエラー: %s\n"
 
-#: ../gconf/gconftool.c:2789
+#: ../gconf/gconftool.c:2937
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "警告: <pair> に <car> と <cdr> の両方を指定して下さい\n"
 
-#: ../gconf/gconftool.c:2816
+#: ../gconf/gconftool.c:2964
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "警告: <value> の下にあるスキーマのキー (%s) が指定されました - 無視します\n"
 
-#: ../gconf/gconftool.c:2849
+#: ../gconf/gconftool.c:2997
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "警告: <value> の下に子ノードを追加して下さい\n"
 
-#: ../gconf/gconftool.c:2855
+#: ../gconf/gconftool.c:3003
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "警告: ノード <%s> を解読できません\n"
 
-#: ../gconf/gconftool.c:2873
+#: ../gconf/gconftool.c:3021
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "警告: int 型の値 '%s' の解析に失敗しました\n"
 
-#: ../gconf/gconftool.c:2894
+#: ../gconf/gconftool.c:3042
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "警告: float 型の値 '%s' の解析に失敗しました\n"
 
-#: ../gconf/gconftool.c:2916
+#: ../gconf/gconftool.c:3064
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "警告: string 型の値 '%s' の解析に失敗しました\n"
 
-#: ../gconf/gconftool.c:2937
+#: ../gconf/gconftool.c:3085
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "警告: bool 型の値 '%s' の解析に失敗しました\n"
 
-#: ../gconf/gconftool.c:3046 ../gconf/gconftool.c:3588
+#: ../gconf/gconftool.c:3194 ../gconf/gconftool.c:3736
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "警告: スキーマ '%s' (キーは '%s') の連結に失敗しました: %s\n"
 
-#: ../gconf/gconftool.c:3161
+#: ../gconf/gconftool.c:3309
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "警告: 不正もしくは型の無いスキーマ (%s) です\n"
 
-#: ../gconf/gconftool.c:3170
+#: ../gconf/gconftool.c:3318
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "警告: 不正もしくはリスト型の無いスキーマ (%s) です\n"
 
-#: ../gconf/gconftool.c:3181 ../gconf/gconftool.c:3211
-#: ../gconf/gconftool.c:3240
+#: ../gconf/gconftool.c:3329 ../gconf/gconftool.c:3359
+#: ../gconf/gconftool.c:3388
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "警告: デフォルト値 '%s' (スキーマは %s) の解析に失敗しました\n"
 
-#: ../gconf/gconftool.c:3199
+#: ../gconf/gconftool.c:3347
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr ""
 "警告: スキーマ %s の car_type または cdr_type がおかしいか存在しません\n"
 
-#: ../gconf/gconftool.c:3224
+#: ../gconf/gconftool.c:3372
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "警告: スキーマのデフォルト値に設定できません\n"
 
-#: ../gconf/gconftool.c:3253
+#: ../gconf/gconftool.c:3401
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "警告: gconftool の内部エラーです (GConfValueType が不明)\n"
 
-#: ../gconf/gconftool.c:3301 ../gconf/gconftool.c:3322
-#: ../gconf/gconftool.c:3343 ../gconf/gconftool.c:3364
+#: ../gconf/gconftool.c:3449 ../gconf/gconftool.c:3470
+#: ../gconf/gconftool.c:3491 ../gconf/gconftool.c:3512
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "警告: 型名 '%s' の解析に失敗しました\n"
 
-#: ../gconf/gconftool.c:3318
+#: ../gconf/gconftool.c:3466
 #, c-format
 msgid ""
 "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"警告: list_type は '%s' ではなく、int, float, string または bool だけになれま"
-"す\n"
+"警告: list_type は '%s' ではなく、int, float, string または bool だけ指定でき"
+"ます\n"
 
-#: ../gconf/gconftool.c:3339
+#: ../gconf/gconftool.c:3487
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"警告: car_type は '%s' ではなく、int, float, string または bool だけになれま"
-"す\n"
+"警告: car_type は '%s' ではなく、int, float, string または bool だけ指定でき"
+"ます\n"
 
-#: ../gconf/gconftool.c:3360
+#: ../gconf/gconftool.c:3508
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
-"警告: cdr_type は '%s' ではなく int, float, string または bool にだけなれま"
+"警告: cdr_type は '%s' ではなく int, float, string または bool だけ指定できま"
 "す\n"
 
-#: ../gconf/gconftool.c:3400
+#: ../gconf/gconftool.c:3548
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "警告: 空の <applyto> ノード"
 
-#: ../gconf/gconftool.c:3403 ../gconf/gconftool.c:3661
+#: ../gconf/gconftool.c:3551 ../gconf/gconftool.c:3809
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "警告: ノード <%s> はスキーマでは解読できません\n"
 
-#: ../gconf/gconftool.c:3414
+#: ../gconf/gconftool.c:3562
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "警告: 型リストのスキーマを指定した <list_type> ではありません\n"
 
-#: ../gconf/gconftool.c:3420
+#: ../gconf/gconftool.c:3568
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "警告: 型ペアのスキーマを指定した <car_type> ではありません\n"
 
-#: ../gconf/gconftool.c:3426
+#: ../gconf/gconftool.c:3574
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "警告: 型ペアのスキーマを指定した <cdr_type> ではありません\n"
 
-#: ../gconf/gconftool.c:3455
+#: ../gconf/gconftool.c:3603
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr ""
 "警告: <locale> ノードには 属性 'name = \"ロケール名\" がないので無視します\n"
 
-#: ../gconf/gconftool.c:3461
+#: ../gconf/gconftool.c:3609
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
@@ -2500,89 +2547,89 @@ msgstr ""
 "警告: ロケール '%s' 用の多重 <locale> ノードになっているので全ての最初を無視"
 "します\n"
 
-#: ../gconf/gconftool.c:3559
+#: ../gconf/gconftool.c:3707
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "警告: <locale>ノード中に不正なノード <%s> があります\n"
 
-#: ../gconf/gconftool.c:3596
+#: ../gconf/gconftool.c:3744
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "スキーマ '%s' の連結 (キーは '%s')\n"
 
-#: ../gconf/gconftool.c:3670
+#: ../gconf/gconftool.c:3818
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "一つの <schema> につき、一つ <locale> エントリが必要です\n"
 
-#: ../gconf/gconftool.c:3705
+#: ../gconf/gconftool.c:3853
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
 msgstr "警告: スキーマ '%s' のインストールに失敗(ロケールは '%s'): %s\n"
 
-#: ../gconf/gconftool.c:3713
+#: ../gconf/gconftool.c:3861
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "スキーマ '%s' のインストール (ロケール '%s'用)\n"
 
-#: ../gconf/gconftool.c:3723
+#: ../gconf/gconftool.c:3871
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
 msgstr "警告: スキーマ '%s' のアンインストールに失敗 (ロケールは '%s'): %s\n"
 
-#: ../gconf/gconftool.c:3731
+#: ../gconf/gconftool.c:3879
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "スキーマ '%s' のアンインストール (ロケール '%s'用)\n"
 
-#: ../gconf/gconftool.c:3769
+#: ../gconf/gconftool.c:3917
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "警告: スキーマに指定されたキーはありません\n"
 
-#: ../gconf/gconftool.c:3810
+#: ../gconf/gconftool.c:3958
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "警告: ノード <%s> は次の <%s> を解読できません\n"
 
-#: ../gconf/gconftool.c:3842
+#: ../gconf/gconftool.c:3990
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "'%s' が開けませんでした: %s\n"
 
-#: ../gconf/gconftool.c:3849
+#: ../gconf/gconftool.c:3997
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "ドキュメント '%s' は空ですか？\n"
 
-#: ../gconf/gconftool.c:3861
+#: ../gconf/gconftool.c:4009
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr ""
 "ドキュメント '%s' のルートノード (<%s> は <%s> のはず) の型が間違っています\n"
 
-#: ../gconf/gconftool.c:3874
+#: ../gconf/gconftool.c:4022
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "ドキュメント '%s' にはトップレベル <%s> ノードがありません\n"
 
-#: ../gconf/gconftool.c:3888
+#: ../gconf/gconftool.c:4036
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "警告: ノード <%s> (<%s> の下) を解析できませんでした\n"
 
-#: ../gconf/gconftool.c:3909
+#: ../gconf/gconftool.c:4057
 #, c-format
 msgid "Error syncing configuration data: %s"
 msgstr "設定データを同期する際にエラー: %s"
 
-#: ../gconf/gconftool.c:3925
+#: ../gconf/gconftool.c:4073
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr ""
 "インストールするために幾つかのスキーマファイルを指定する必要があります\n"
 
-#: ../gconf/gconftool.c:3953
+#: ../gconf/gconftool.c:4101
 #, c-format
 msgid ""
 "\n"
@@ -2591,17 +2638,17 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: ../gconf/gconftool.c:3973
+#: ../gconf/gconftool.c:4121
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "不完全なキー '%s' の無効化に失敗: %s\n"
 
-#: ../gconf/gconftool.c:4099
+#: ../gconf/gconftool.c:4247
 #, c-format
 msgid "Must specify some keys to break\n"
 msgstr "終了するためには幾つかのキーを指定する必要があります\n"
 
-#: ../gconf/gconftool.c:4105
+#: ../gconf/gconftool.c:4253
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2611,12 +2658,12 @@ msgstr ""
 "す:\n"
 "  %s\n"
 
-#: ../gconf/gconftool.c:4123
+#: ../gconf/gconftool.c:4271
 #, c-format
 msgid "Must specify some directories to break\n"
 msgstr "終了するためには幾つかのディレクトリを指定する必要があります\n"
 
-#: ../gconf/gconftool.c:4142
+#: ../gconf/gconftool.c:4290
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
