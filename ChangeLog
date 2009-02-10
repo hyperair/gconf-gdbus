@@ -1,5 +1,8 @@
 2009-02-10  Michael Meeks  <michael.meeks@novell.com>
 
+	* backends/markup-tree.c (write_value_element): close empty
+	value elements immediately to save parsing time.
+
 	* backends/markup-tree.c: instead of indenting with spaces, use
 	tabs for a 50% size saving in the generated XML, and a nice
 	parsing speedup. Also accelerate writing by avoiding lots of

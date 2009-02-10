@@ -3809,10 +3809,7 @@ write_value_element (GConfValue *value,
     case GCONF_VALUE_PAIR:
       break;
     }
-  
-  if (fputs (">\n", f) < 0)
-    return FALSE;
-  
+    
   switch (value->type)
     {
     case GCONF_VALUE_STRING:
@@ -3821,7 +3818,7 @@ write_value_element (GConfValue *value,
         
         s = g_markup_escape_text (gconf_value_get_string (value),
                                   -1);
-        if (fprintf (f, "%s<stringvalue>%s</stringvalue>\n",
+        if (fprintf (f, ">\n%s<stringvalue>%s</stringvalue>\n",
                      make_whitespace (indent + INDENT_SPACES), s) < 0)
           {
             g_free (s);
@@ -3833,16 +3830,22 @@ write_value_element (GConfValue *value,
       break;
       
     case GCONF_VALUE_LIST:
+      if (fputs (">\n", f) < 0)
+	return FALSE;
       if (!write_list_children (value, f, indent + INDENT_SPACES))
         return FALSE;
       break;
       
     case GCONF_VALUE_PAIR:
+      if (fputs (">\n", f) < 0)
+	return FALSE;
       if (!write_pair_children (value, f, indent + INDENT_SPACES))
         return FALSE;
       break;
       
     case GCONF_VALUE_SCHEMA:
+      if (fputs (">\n", f) < 0)
+	return FALSE;
       if (!write_schema_children (value,
                                   f,
                                   indent + INDENT_SPACES,
@@ -3855,10 +3858,14 @@ write_value_element (GConfValue *value,
     case GCONF_VALUE_BOOL:
     case GCONF_VALUE_FLOAT:
     case GCONF_VALUE_INVALID:
+      if (fputs ("/>\n", f) < 0)
+	return FALSE;
+      single_element = TRUE;
       break;
     }
 
-  if (fprintf (f, "%s</%s>\n", make_whitespace (indent), closing_element) < 0)
+  if (!single_element)
+    if (fprintf (f, "%s</%s>\n", make_whitespace (indent), closing_element) < 0)
       return FALSE;
 
   return TRUE;
