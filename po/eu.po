@@ -1,22 +1,22 @@
 # translation of eu.po to Basque
-# Copyright (C) 2001, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation, Inc.
 #
 # Hizkuntza Politikarako Sailburuordetza <hizkpol@ej-gv.es>, 2005.
-# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2006, 2008.
+# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2006, 2008, 2009.
 # Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2007, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-12 10:21+0200\n"
-"PO-Revision-Date: 2008-08-12 10:26+0200\n"
+"POT-Creation-Date: 2009-02-10 14:19+0100\n"
+"PO-Revision-Date: 2009-02-10 16:44+0100\n"
 "Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: Basque <itzulpena@euskalgnu.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 "\n"
 
 #: ../backends/evoldap-backend.c:159
@@ -329,7 +329,7 @@ msgid "No text is allowed inside element <%s>"
 msgstr "Testurik ez da onartzen <%s> elementuaren barruan"
 
 #: ../backends/markup-tree.c:3599 ../backends/markup-tree.c:4379
-#: ../backends/markup-tree.c:4397
+#: ../backends/markup-tree.c:4398
 #, c-format
 msgid "Failed to open \"%s\": %s\n"
 msgstr "Huts egin du \"%s\" irekitzean: %s\n"
@@ -339,12 +339,17 @@ msgstr "Huts egin du \"%s\" irekitzean: %s\n"
 msgid "Error reading \"%s\": %s\n"
 msgstr "Errorea \"%s\" irakurtzean: %s\n"
 
-#: ../backends/markup-tree.c:4484
+#: ../backends/markup-tree.c:4473
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "Ezin izan da %s fitxategia diskoan idatzi: %s"
+
+#: ../backends/markup-tree.c:4492
 #, c-format
 msgid "Error writing file \"%s\": %s"
 msgstr "Errorea \"%s\" fitxategian idaztean: %s"
 
-#: ../backends/markup-tree.c:4513
+#: ../backends/markup-tree.c:4521
 #, c-format
 msgid "Failed to move temporary file \"%s\" to final location \"%s\": %s"
 msgstr ""
@@ -1038,7 +1043,7 @@ msgstr "bat ere ez"
 msgid "- Sanity checks for GConf"
 msgstr "- GConf-en osotasunaren egiaztaketa"
 
-#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:617
+#: ../gconf/gconf-sanity-check.c:58 ../gconf/gconftool.c:639
 #, c-format
 msgid ""
 "Error while parsing options: %s.\n"
@@ -1406,11 +1411,11 @@ msgstr "Eskema espero zen, baina %s eskuratu da"
 msgid "CORBA error: %s"
 msgstr "CORBA errorea: %s"
 
-#: ../gconf/gconfd.c:301
+#: ../gconf/gconfd.c:308
 msgid "Shutdown request received"
 msgstr "Ixteko eskaera jaso da"
 
-#: ../gconf/gconfd.c:333
+#: ../gconf/gconfd.c:340
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1418,7 +1423,7 @@ msgstr ""
 "gconfd akatsak garbitzeko aukerarekin konpilatuta; gconf.path iturburu-"
 "direktoriotik kargatzen"
 
-#: ../gconf/gconfd.c:353
+#: ../gconf/gconfd.c:360
 #, c-format
 msgid ""
 "No configuration files found. Trying to use the default configuration source "
@@ -1430,7 +1435,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: ../gconf/gconfd.c:361
+#: ../gconf/gconfd.c:368
 #, c-format
 msgid ""
 "No configuration sources in the source path. Configuration won't be saved; "
@@ -1439,12 +1444,12 @@ msgstr ""
 "Konfigurazio-iturririk ez dago iturburuko bidean: konfigurazioa ez da "
 "gordeko; editatu %s%s"
 
-#: ../gconf/gconfd.c:374
+#: ../gconf/gconfd.c:381
 #, c-format
 msgid "Error loading some configuration sources: %s"
 msgstr "Errorea konfigurazio-iturburu batzuk kargatzean: %s"
 
-#: ../gconf/gconfd.c:386
+#: ../gconf/gconfd.c:393
 msgid ""
 "No configuration source addresses successfully resolved. Can't load or store "
 "configuration data"
@@ -1452,7 +1457,7 @@ msgstr ""
 "Konfigurazio-iturburuko helbideak ez dira ondo ebatzi. Ezingo du "
 "konfigurazio-daturik kargatu edo gorde"
 
-#: ../gconf/gconfd.c:403
+#: ../gconf/gconfd.c:410
 msgid ""
 "No writable configuration sources successfully resolved. May be unable to "
 "save some configuration changes"
@@ -1460,31 +1465,31 @@ msgstr ""
 "Idazteko aukera duten konfigurazio-iturburuak ez dira ondo ebatzi. Ezingo "
 "dira konfigurazio-aldaketa batzuk gorde"
 
-#: ../gconf/gconfd.c:584
+#: ../gconf/gconfd.c:591
 #, c-format
 msgid "Could not connect to session bus: %s"
 msgstr "Ezin izan da saioaren bus-arekin konektatu: %s"
 
-#: ../gconf/gconfd.c:606
+#: ../gconf/gconfd.c:613
 #, c-format
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "Huts egin du daemon-erako bus-aren izena lortzean, ixten: %s"
 
-#: ../gconf/gconfd.c:688
+#: ../gconf/gconfd.c:694
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "Ezin izan da sistemako bus-arekin konektatu: %s"
 
-#: ../gconf/gconfd.c:772
+#: ../gconf/gconfd.c:830
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "hasieratzen (%s bertsioa), %u erabiltzailearen pid-a: '%s"
 
-#: ../gconf/gconfd.c:832
+#: ../gconf/gconfd.c:890
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Huts egin du ConfigServer-ren objektu-erreferentzia lortzean"
 
-#: ../gconf/gconfd.c:861
+#: ../gconf/gconfd.c:919
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1493,34 +1498,34 @@ msgstr ""
 "Ezin izan da bytea %d fitxategi-deskriptorean kanalizazioan idatzi. Beraz,"
 "badaiteke programa esekitzea:  %s"
 
-#: ../gconf/gconfd.c:907
+#: ../gconf/gconfd.c:965
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Errorea blokeo-fitxategi hau askatzean: %s"
 
-#: ../gconf/gconfd.c:915
+#: ../gconf/gconfd.c:973
 msgid "Exiting"
 msgstr "Irteten"
 
-#: ../gconf/gconfd.c:933
+#: ../gconf/gconfd.c:991
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP jaso da, datu-base guztiak berriro kargatzen"
 
-#: ../gconf/gconfd.c:950
+#: ../gconf/gconfd.c:1008
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf zerbitzaria ez dago martxan, ixten."
 
-#: ../gconf/gconfd.c:1276
+#: ../gconf/gconfd.c:1334
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Errorea '%s'(r)en balio berria lortzean: %s"
 
-#: ../gconf/gconfd.c:1420
+#: ../gconf/gconfd.c:1478
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Salbuespena itzultzen: %s"
 
-#: ../gconf/gconfd.c:1526
+#: ../gconf/gconfd.c:1584
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1529,63 +1534,68 @@ msgstr ""
 "Ezin izan da gconfd egunkari-fitxategia ireki; ezingo dira entzungailuak "
 "leheneratu gconfd itxi ondoren (%s)"
 
-#: ../gconf/gconfd.c:1561
+#: ../gconf/gconfd.c:1619
 #, c-format
 msgid "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Ezin izan da gconfd egunkari-fitxategia itxi; datuak ez ziren ondo gordeko (%"
 "s)"
 
-#: ../gconf/gconfd.c:1623
+#: ../gconf/gconfd.c:1681
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Ezin izan da gordetako '%s' egoera-fitxategia idazteko ireki: %s"
 
-#: ../gconf/gconfd.c:1637
+#: ../gconf/gconfd.c:1695
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Ezin izan da gordetako '%s' fd egoera-fitxategian idatzi: %d: %s"
 
-#: ../gconf/gconfd.c:1646
+#: ../gconf/gconfd.c:1704
+#, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr "Ezin izan da gordetako '%s' egoera-fitxategia diskoan idatzi: %s"
+
+#: ../gconf/gconfd.c:1711
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Huts egin du gordetako '%s' egoera-fitxategi berria ixtean: %s"
 
-#: ../gconf/gconfd.c:1660
+#: ../gconf/gconfd.c:1725
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Ezin izan da gordetako '%s' egoera-fitxategi zaharra lekuz aldatu: %s"
 
-#: ../gconf/gconfd.c:1670
+#: ../gconf/gconfd.c:1735
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "Huts egin du gordetako egoera-fitxategi berria hona mugitzean: %s"
 
-#: ../gconf/gconfd.c:1679
+#: ../gconf/gconfd.c:1744
 #, c-format
 msgid "Failed to restore original saved state file that had been moved to '%s': %s"
 msgstr ""
 "Ezin izan da '%s'(e)ra eramandako jatorrizko egoera-fitxategia berreskuratu: "
 "%s"
 
-#: ../gconf/gconfd.c:2158
+#: ../gconf/gconfd.c:2223
 #, c-format
 msgid "Unable to restore a listener on address '%s', couldn't resolve the database"
 msgstr ""
 "Ezin da '%s' helbideko entzungailu bat leheneratu, ezin izan da datu-basea "
 "ebatzi"
 
-#: ../gconf/gconfd.c:2194
+#: ../gconf/gconfd.c:2259
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Errorea gordetako egoera-fitxategia irakurtzean: %s"
 
-#: ../gconf/gconfd.c:2244
+#: ../gconf/gconfd.c:2309
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Ezin izan da gordetako '%s' egoera-fitxategia ireki: %s"
 
-#: ../gconf/gconfd.c:2363
+#: ../gconf/gconfd.c:2428
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1595,7 +1605,7 @@ msgstr ""
 "erregistratu; ezingo du entzungailua berriro gehitu gconfd existitzen bada "
 "edo ixten bada (%s)"
 
-#: ../gconf/gconfd.c:2368
+#: ../gconf/gconfd.c:2433
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1605,48 +1615,48 @@ msgstr ""
 "erregistratu; entzungailua gaizki gehituko da gconfd existitzen bada edo "
 "ixten bada (%s)"
 
-#: ../gconf/gconfd.c:2391 ../gconf/gconfd.c:2565
+#: ../gconf/gconfd.c:2456 ../gconf/gconfd.c:2630
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Huts egin du bezeroaren IOR lortzean: %s"
 
-#: ../gconf/gconfd.c:2406
+#: ../gconf/gconfd.c:2471
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Huts egin du gordetako egoera-fitxategia irekitzean: %s"
 
-#: ../gconf/gconfd.c:2419
+#: ../gconf/gconfd.c:2484
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Huts egin du gehitutako bezeroa gordetako egoera-fitxategian idaztean: %s"
 
-#: ../gconf/gconfd.c:2427
+#: ../gconf/gconfd.c:2492
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Huts egin du gehitutako bezeroa gordetako egoera-fitxategian iraultzean: %s"
 
-#: ../gconf/gconfd.c:2526
+#: ../gconf/gconfd.c:2591
 msgid "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
 "Bezero batzuek beren burua kendu dute GConf zerbitzaritik, baina gehitu gabe "
 "zeuden."
 
-#: ../gconf/gconftool.c:91
+#: ../gconf/gconftool.c:93
 msgid "Set a key to a value and sync. Use with --type."
 msgstr ""
 "Gako bat balio bati esleitzen dio eta sinkronizatu egiten du. Erabili --type "
 "aukerarekin."
 
-#: ../gconf/gconftool.c:100
+#: ../gconf/gconftool.c:102
 msgid "Print the value of a key to standard output."
 msgstr "Gakoaren balioa modu estandarrean inprimatzen du."
 
-#: ../gconf/gconftool.c:110
+#: ../gconf/gconftool.c:112
 msgid "Unset the keys on the command line"
 msgstr "Komando-lerroko gakoen esleipena kentzen du"
 
 #
-#: ../gconf/gconftool.c:119
+#: ../gconf/gconftool.c:121
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
@@ -1654,42 +1664,46 @@ msgstr ""
 "Errekurtsiboki gako guztiak kentzen ditu komando-lerroko gako/direktorio-"
 "izenetatik edo barrutik"
 
-#: ../gconf/gconftool.c:128
+#: ../gconf/gconftool.c:130
+msgid "Toggles a boolean key."
+msgstr "Gako boolear bat txandakatzen du."
+
+#: ../gconf/gconftool.c:139
 msgid "Print all key/value pairs in a directory."
 msgstr "Direktorioko gako/balio bikote guztiak inprimatzen ditu."
 
-#: ../gconf/gconftool.c:137
+#: ../gconf/gconftool.c:148
 msgid "Print all subdirectories in a directory."
 msgstr "Direktorio bateko azpidirektorio guztiak inprimatzen ditu."
 
-#: ../gconf/gconftool.c:146
+#: ../gconf/gconftool.c:157
 msgid "Print all subdirectories and entries under a directory, recursively."
 msgstr ""
 "Direktorioko azpidirektorio eta sarrera guztiak inprimatzen ditu, "
 "errekurtsiboki."
 
-#: ../gconf/gconftool.c:155
+#: ../gconf/gconftool.c:166 ../gconf/gconftool.c:175
 msgid "Search for a key, recursively."
 msgstr "Bilatu gakoa, errekurtsiboki."
 
-#: ../gconf/gconftool.c:164
+#: ../gconf/gconftool.c:184
 msgid "Get the short doc string for a key"
 msgstr "Lortu gakoaren dokumentu-kate laburra"
 
-#: ../gconf/gconftool.c:173
+#: ../gconf/gconftool.c:193
 msgid "Get the long doc string for a key"
 msgstr "Lortu gakoaren dokumentu-kate luzea"
 
-#: ../gconf/gconftool.c:182
+#: ../gconf/gconftool.c:202
 msgid "Return 0 if the directory exists, 2 if it does not."
 msgstr "Direktorioa existitzen bada, 0 emango du, eta bestela, 2."
 
-#: ../gconf/gconftool.c:191
+#: ../gconf/gconftool.c:211
 msgid "Ignore schema defaults when reading values."
 msgstr "Ez ikusi egin eskema-lehenespenei balioak irakurtzean."
 
 #
-#: ../gconf/gconftool.c:206
+#: ../gconf/gconftool.c:226
 msgid ""
 "Dump to standard output an XML description of all entries under a directory, "
 "recursively."
@@ -1697,7 +1711,7 @@ msgstr ""
 "Irauli direktorio bateko sarrera guztien XML azalpen bat irteera "
 "estandarrera errekurtsiboki."
 
-#: ../gconf/gconftool.c:215
+#: ../gconf/gconftool.c:235
 msgid ""
 "Load from the specified file an XML description of values and set them "
 "relative to a directory."
@@ -1705,23 +1719,23 @@ msgstr ""
 "Kargatu balioen XML azalpen bat zehaztutako fitxategitik eta ezarri balioak "
 "direktorio batekiko erlatiboki."
 
-#: ../gconf/gconftool.c:224
+#: ../gconf/gconftool.c:244
 msgid "Unload a set of values described in an XML file."
 msgstr "Deskargatu XML fitxategian azaltzen den balio multzoa"
 
-#: ../gconf/gconftool.c:239
+#: ../gconf/gconftool.c:259
 msgid "Get the name of the default source"
 msgstr "Lortu iturburu lehenetsiaren izena"
 
-#: ../gconf/gconftool.c:248
+#: ../gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
 msgstr "Itxi gconfd. EZ ERABILI AUKERA HAU BEHAR-BEHARREZKOA EZ BADA."
 
-#: ../gconf/gconftool.c:257
+#: ../gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
 msgstr "Gconfd martxan baldin badago, 0 ematen du, eta bestela, 2."
 
-#: ../gconf/gconftool.c:266
+#: ../gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
@@ -1729,7 +1743,7 @@ msgstr ""
 "Abiarazi konfigurazio-zerbitzaria (gconfd). Normalean automatikoki egiten da "
 "beharrezkoa denean."
 
-#: ../gconf/gconftool.c:281
+#: ../gconf/gconftool.c:301
 msgid ""
 "Specify the type of the value being set, or the type of the value a schema "
 "describes. Unique abbreviations OK."
@@ -1737,27 +1751,27 @@ msgstr ""
 "Zehaztu ezarritako balio-mota edo eskemak deskribatzen duen balio-mota. "
 "Laburdura esklusiboak onartzen dira."
 
-#: ../gconf/gconftool.c:282
+#: ../gconf/gconftool.c:302
 msgid "int|bool|float|string|list|pair"
 msgstr "int|bool|float|string|list|pair"
 
 #
-#: ../gconf/gconftool.c:290
+#: ../gconf/gconftool.c:310
 msgid "Print the data type of a key to standard output."
 msgstr "Gakoaren datu-mota modu estandarrean inprimatzen du."
 
 #
-#: ../gconf/gconftool.c:299
+#: ../gconf/gconftool.c:319
 msgid "Get the number of elements in a list key."
 msgstr "Eskuratu gako-zerrenda bateko elementu-kopurua."
 
-#: ../gconf/gconftool.c:308
+#: ../gconf/gconftool.c:328
 msgid "Get a specific element from a list key, numerically indexed."
 msgstr ""
 "Eskuratu elementu jakin bat gako-zerrenda batetik, zenbakiaren arabera "
 "ordenatuta."
 
-#: ../gconf/gconftool.c:317
+#: ../gconf/gconftool.c:337
 msgid ""
 "Specify the type of the list value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1765,11 +1779,11 @@ msgstr ""
 "Zehaztu ezarritako balio-zerrendaren mota edo eskemak deskribatzen duen "
 "balio-mota. Laburdura esklusiboak onartzen dira."
 
-#: ../gconf/gconftool.c:318 ../gconf/gconftool.c:327 ../gconf/gconftool.c:336
+#: ../gconf/gconftool.c:338 ../gconf/gconftool.c:347 ../gconf/gconftool.c:356
 msgid "int|bool|float|string"
 msgstr "int|bool|float|string"
 
-#: ../gconf/gconftool.c:326
+#: ../gconf/gconftool.c:346
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1777,7 +1791,7 @@ msgstr ""
 "Zehaztu ezarritako 'car' bikotearen mota edo eskemak deskribatzen duen balio-"
 "mota. Laburdura esklusiboak onartzen dira."
 
-#: ../gconf/gconftool.c:335
+#: ../gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
@@ -1785,25 +1799,25 @@ msgstr ""
 "Zehaztu ezarritako 'cdr' bikotearen mota edo eskemak deskribatzen duen balio-"
 "mota. Laburdura esklusiboak onartzen dira."
 
-#: ../gconf/gconftool.c:350
+#: ../gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
 msgstr "Zehaztu instalatu beharreko eskema-fitxategia"
 
-#: ../gconf/gconftool.c:351
+#: ../gconf/gconftool.c:371
 msgid "FILENAME"
 msgstr "FITXATEGI-IZENA"
 
-#: ../gconf/gconftool.c:359
+#: ../gconf/gconftool.c:379
 msgid "Specify a configuration source to use rather than the default path"
 msgstr ""
 "Zehaztu bide-izen lehenetsiaren ordez erabili beharreko konfigurazio-"
 "iturburua"
 
-#: ../gconf/gconftool.c:360
+#: ../gconf/gconftool.c:380
 msgid "SOURCE"
 msgstr "ITURBURUA"
 
-#: ../gconf/gconftool.c:368
+#: ../gconf/gconftool.c:388
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
@@ -1811,7 +1825,7 @@ msgstr ""
 "Sartu konfigurazioko datu-basean zuzenan, zerbitzaritik pasa gabe. "
 "Horretarako, gconfd-ek ezin du martxan egon."
 
-#: ../gconf/gconftool.c:377
+#: ../gconf/gconftool.c:397
 msgid ""
 "Properly installs schema files on the command line into the database. "
 "Specify a custom configuration source in the GCONF_CONFIG_SOURCE environment "
@@ -1824,7 +1838,7 @@ msgstr ""
 "iturburu lehenetsia erabiltzeko."
 
 #
-#: ../gconf/gconftool.c:386
+#: ../gconf/gconftool.c:406
 msgid ""
 "Properly uninstalls schema files on the command line from the database. "
 "GCONF_CONFIG_SOURCE environment variable should be set to a non-default "
@@ -1835,7 +1849,7 @@ msgstr ""
 "konfigurazio-iturburu batean ezarri behar da, edo kate hutsa ezarri behar "
 "da, lehenetsia erabiltzeko."
 
-#: ../gconf/gconftool.c:401
+#: ../gconf/gconftool.c:421
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
@@ -1843,7 +1857,7 @@ msgstr ""
 "Aplikazioaren proba sakona egiten du komando-lerroko gako-mota "
 "desberdinetarako balioak ezarriz eta aldatuz."
 
-#: ../gconf/gconftool.c:410
+#: ../gconf/gconftool.c:430
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of keys inside "
 "the directories on the command line."
@@ -1851,7 +1865,7 @@ msgstr ""
 "Aplikazioaren proba sakona egiten du komando-lerroko direktorioen "
 "barruangakoak ezarriz eta aldatuz."
 
-#: ../gconf/gconftool.c:425
+#: ../gconf/gconftool.c:445
 msgid ""
 "Set a schema and sync. Use with --short-desc, --long-desc, --owner, and --"
 "type."
@@ -1859,143 +1873,148 @@ msgstr ""
 "Eskema bat ezartzen eta sinkronizatzen du. Hauekin erabili: --short-desc, --"
 "long- desc, --owner, eta --type."
 
-#: ../gconf/gconftool.c:434
+#: ../gconf/gconftool.c:454
 msgid "Specify a short half-line description to go in a schema."
 msgstr "Idatzi eskeman azaldu beharreko lerro-erdiko azalpen laburra."
 
-#: ../gconf/gconftool.c:435 ../gconf/gconftool.c:444
+#: ../gconf/gconftool.c:455 ../gconf/gconftool.c:464
 msgid "DESCRIPTION"
 msgstr "AZALPENA"
 
-#: ../gconf/gconftool.c:443
+#: ../gconf/gconftool.c:463
 msgid "Specify a several-line description to go in a schema."
 msgstr "Idatzi eskeman azaldu beharreko hainbat lerrotako azalpena."
 
-#: ../gconf/gconftool.c:452
+#: ../gconf/gconftool.c:472
 msgid "Specify the owner of a schema"
 msgstr "Zehaztu eskemaren jabea"
 
-#: ../gconf/gconftool.c:453
+#: ../gconf/gconftool.c:473
 msgid "OWNER"
 msgstr "JABEA"
 
-#: ../gconf/gconftool.c:461
+#: ../gconf/gconftool.c:481
 msgid "Get the name of the schema applied to this key"
 msgstr "Lortu gako honi ezarri zaion eskemaren izena"
 
-#: ../gconf/gconftool.c:470
+#: ../gconf/gconftool.c:490
 msgid "Specify the schema name followed by the key to apply the schema name to"
 msgstr ""
 "Zehaztu eskema-izena eta, ondoren, eskema-izen hori zein gakori esleitu "
 "behar zaion"
 
 #
-#: ../gconf/gconftool.c:479
+#: ../gconf/gconftool.c:499
 msgid "Remove any schema name applied to the given keys"
 msgstr "Kendu aipatutako gakoei aplikatzen zaien eskema-izena"
 
-#: ../gconf/gconftool.c:494
+#: ../gconf/gconftool.c:514
 msgid "Print version"
 msgstr "Bertsioa inprimatu"
 
-#: ../gconf/gconftool.c:503
+#: ../gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
 msgstr "[FITXATEGIA...][GAKOA...][DIR...]"
 
-#: ../gconf/gconftool.c:563
+#: ../gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
 msgstr " - GConf konfigurazio bat kudeatzeko tresna"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Client options:"
 msgstr "Bezeroaren aukerak:"
 
-#: ../gconf/gconftool.c:568
+#: ../gconf/gconftool.c:590
 msgid "Show client options"
 msgstr "Erakutsi bezeroaren aukerak"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Key type options:"
 msgstr "Gako-moten aukerak:"
 
-#: ../gconf/gconftool.c:573
+#: ../gconf/gconftool.c:595
 msgid "Show key type options"
 msgstr "Erakutsi gako-moten aukerak"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Load/Save options:"
 msgstr "Kargatzeko/Gordetzeko aukerak:"
 
-#: ../gconf/gconftool.c:578
+#: ../gconf/gconftool.c:600
 msgid "Show load/save options"
 msgstr "Erakutsi kargatzeko/gordetzeko aukerak"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Server options:"
 msgstr "Zerbitzariaren aukerak:"
 
-#: ../gconf/gconftool.c:583
+#: ../gconf/gconftool.c:605
 msgid "Show server options"
 msgstr "Erakutsi zerbitzariaren aukerak"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Installation options:"
 msgstr "Instalazioaren aukerak:"
 
-#: ../gconf/gconftool.c:588
+#: ../gconf/gconftool.c:610
 msgid "Show installation options"
 msgstr "Erakutsi instalazioaren aukerak"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Test options:"
 msgstr "Probako aukerak:"
 
-#: ../gconf/gconftool.c:593
+#: ../gconf/gconftool.c:615
 msgid "Show test options"
 msgstr "Erakutsi probako aukerak"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Schema options:"
 msgstr "Eskemaren aukerak:"
 
-#: ../gconf/gconftool.c:598
+#: ../gconf/gconftool.c:620
 msgid "Show schema options"
 msgstr "Erakutsi eskemaren aukerak"
 
-#: ../gconf/gconftool.c:607
+#: ../gconf/gconftool.c:629
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 "Exekutatu '%s --help' komando-lerroko aukera erabilgarrien zerrenda "
 "ikusteko.\n"
 
-#: ../gconf/gconftool.c:635
+#: ../gconf/gconftool.c:657
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
 msgstr "Ezin da aldi berean lortu eta esleitu/ezabatu\n"
 
-#: ../gconf/gconftool.c:645
+#: ../gconf/gconftool.c:667
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
 msgstr "Ezin da aldi berean esleitu eta lortu/ezabatu\n"
 
 #
-#: ../gconf/gconftool.c:652
+#: ../gconf/gconftool.c:674
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr "Ezin da aldi berean mota lortu eta esleitu/ezabatu\n"
 
-#: ../gconf/gconftool.c:663
+#: ../gconf/gconftool.c:682
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "Ezin da aldi berean txandakatu eta lortu/esleitu/kendu\n"
+
+#: ../gconf/gconftool.c:693
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
 msgstr "Ezin da erabili --all-entries aukera --get edo --set aukerarekin\n"
 
-#: ../gconf/gconftool.c:674
+#: ../gconf/gconftool.c:704
 #, c-format
 msgid "Can't use --all-dirs with --get or --set\n"
 msgstr "Ezin da erabili --all-dirs aukera --get edo --set aukerarekin\n"
 
-#: ../gconf/gconftool.c:688
+#: ../gconf/gconftool.c:718
 #, c-format
 msgid ""
 "--recursive-list should not be used with --get, --set, --unset, --all-"
@@ -2004,7 +2023,7 @@ msgstr ""
 "--recursive-list ez litzateke hauekin erabili behar: --get, --set, --unset, "
 "--all-entries, --all-dirs edo --search-key\n"
 
-#: ../gconf/gconftool.c:702
+#: ../gconf/gconftool.c:732
 #, c-format
 msgid ""
 "--set_schema should not be used with --get, --set, --unset, --all-entries, --"
@@ -2013,17 +2032,17 @@ msgstr ""
 "--set_schema ez litzateke hauekin erabili behar: --get, --set, --unset, -- "
 "all-entries, --all-dirs edo --search-key\n"
 
-#: ../gconf/gconftool.c:708
+#: ../gconf/gconftool.c:738
 #, c-format
 msgid "Value type is only relevant when setting a value\n"
 msgstr "Balio-mota balioa ezartzean soilik da garrantzizkoa\n"
 
-#: ../gconf/gconftool.c:714
+#: ../gconf/gconftool.c:744
 #, c-format
 msgid "Must specify a type when setting a value\n"
 msgstr "Balioa ezartzean mota ere zehaztu behar da\n"
 
-#: ../gconf/gconftool.c:722
+#: ../gconf/gconftool.c:752
 #, c-format
 msgid ""
 "--ignore-schema-defaults is only relevant with --get, --all-entries, --dump, "
@@ -2032,14 +2051,14 @@ msgstr ""
 "--ignore-schema-defaults aukerak hauekin bakarrik balio du: --get, --all-"
 "entries, --dump, --recursive-list, --get-list-size eta --get-list-element\n"
 
-#: ../gconf/gconftool.c:734 ../gconf/gconftool.c:747 ../gconf/gconftool.c:760
-#: ../gconf/gconftool.c:774 ../gconf/gconftool.c:787 ../gconf/gconftool.c:800
-#: ../gconf/gconftool.c:814
+#: ../gconf/gconftool.c:764 ../gconf/gconftool.c:777 ../gconf/gconftool.c:790
+#: ../gconf/gconftool.c:804 ../gconf/gconftool.c:817 ../gconf/gconftool.c:830
+#: ../gconf/gconftool.c:844
 #, c-format
 msgid "%s option must be used by itself.\n"
 msgstr "%s aukera bera bakarrik erabili behar da.\n"
 
-#: ../gconf/gconftool.c:823
+#: ../gconf/gconftool.c:853
 #, c-format
 msgid ""
 "You must specify a configuration source with --config-source when using --"
@@ -2048,569 +2067,596 @@ msgstr ""
 "Konfigurazio-iturburua zehaztu --config-source erabiliz, --direct "
 "erabiltzean\n"
 
-#: ../gconf/gconftool.c:829
+#: ../gconf/gconftool.c:859
 #, c-format
 msgid "Failed to init GConf: %s\n"
 msgstr "Huts egin du Gconf hasieratzean: %s\n"
 
-#: ../gconf/gconftool.c:857
+#: ../gconf/gconftool.c:887
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL is set, not installing schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL ezarri da, ez du eskemarik "
 "instalatuko\n"
 
-#: ../gconf/gconftool.c:864
+#: ../gconf/gconftool.c:894
 #, c-format
 msgid "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL is set, not uninstalling schemas\n"
 msgstr ""
 "GCONF_DISABLE_MAKEFILE_SCHEMA_UNINSTALL ezarri da, ez du eskemarik "
 "desinstalatuko\n"
 
-#: ../gconf/gconftool.c:877
+#: ../gconf/gconftool.c:907
 #, c-format
 msgid "Must set the GCONF_CONFIG_SOURCE environment variable\n"
 msgstr "GCONF_CONFIG_SOURCE ingurune-aldagaia ezarri behar da\n"
 
-#: ../gconf/gconftool.c:932
+#: ../gconf/gconftool.c:962
 #, c-format
 msgid "Failed to access configuration source(s): %s\n"
 msgstr "Ezin izan dira konfigurazio-iturburu hauek atzitu: %s\n"
 
-#: ../gconf/gconftool.c:1219
+#: ../gconf/gconftool.c:1267
 #, c-format
 msgid "Shutdown error: %s\n"
 msgstr "Errorea gertatu da ixtean: %s\n"
 
-#: ../gconf/gconftool.c:1262
+#: ../gconf/gconftool.c:1310
 #, c-format
 msgid "Must specify one or more directories to recursively list.\n"
 msgstr "Direktorio bat edo gehiago zehaztu behar dira errekurtsiboki zerrendatzeko.\n"
 
-#: ../gconf/gconftool.c:1293 ../gconf/gconftool.c:1454
-#: ../gconf/gconftool.c:1720
+#: ../gconf/gconftool.c:1355 ../gconf/gconftool.c:1549
+#: ../gconf/gconftool.c:1815
 #, c-format
 msgid "Failure listing entries in `%s': %s\n"
 msgstr "Ezin izan dira '%s'(e)ko sarrerak zerrendatu: %s\n"
 
-#: ../gconf/gconftool.c:1313 ../gconf/gconftool.c:1473
+#: ../gconf/gconftool.c:1375 ../gconf/gconftool.c:1568
 msgid "(no value set)"
 msgstr "(ez da baliorik sartu)"
 
 #
-#: ../gconf/gconftool.c:1363
+#: ../gconf/gconftool.c:1438
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
 msgstr "Bilaketa egiteko gako bat zehaztu behar da.\n"
 
 #
-#: ../gconf/gconftool.c:1412
+#: ../gconf/gconftool.c:1457
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "PCRE adierazpen erregular bat zehaztu behar da bilatzeko.\n"
+
+#: ../gconf/gconftool.c:1464
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "Errorea regex konpilatzean: %s\n"
+
+#
+#: ../gconf/gconftool.c:1507
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
 msgstr "Direktorio bat edo gehiago zehaztu behar dira iraultzeko.\n"
 
-#: ../gconf/gconftool.c:1779
+#: ../gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
 msgstr "Huts egin du konfigurazio-zerbitzaria (gconfd) abiaraztean: %s\n"
 
-#: ../gconf/gconftool.c:1808
+#: ../gconf/gconftool.c:1903
 #, c-format
 msgid "Must specify a key or keys to get\n"
 msgstr "Lortu nahi den gakoa edo gakoak zehaztu behar dira\n"
 
-#: ../gconf/gconftool.c:1843
+#: ../gconf/gconftool.c:1938
 #, c-format
 msgid "Type: %s\n"
 msgstr "Mota: %s\n"
 
-#: ../gconf/gconftool.c:1844
+#: ../gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
 msgstr "Zerrenda-mota: %s\n"
 
-#: ../gconf/gconftool.c:1845
+#: ../gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
 msgstr "Car mota: %s\n"
 
-#: ../gconf/gconftool.c:1846
+#: ../gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
 msgstr "Cdr mota: %s\n"
 
-#: ../gconf/gconftool.c:1851
+#: ../gconf/gconftool.c:1946
 #, c-format
 msgid "Default Value: %s\n"
 msgstr "Balio lehenetsia: %s\n"
 
-#: ../gconf/gconftool.c:1851 ../gconf/gconftool.c:1853
-#: ../gconf/gconftool.c:1854 ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1946 ../gconf/gconftool.c:1948
+#: ../gconf/gconftool.c:1949 ../gconf/gconftool.c:1950
 msgid "Unset"
 msgstr "Ezarri gabe"
 
-#: ../gconf/gconftool.c:1853
+#: ../gconf/gconftool.c:1948
 #, c-format
 msgid "Owner: %s\n"
 msgstr "Jabea: %s\n"
 
-#: ../gconf/gconftool.c:1854
+#: ../gconf/gconftool.c:1949
 #, c-format
 msgid "Short Desc: %s\n"
 msgstr "Azalpen laburra: %s\n"
 
-#: ../gconf/gconftool.c:1855
+#: ../gconf/gconftool.c:1950
 #, c-format
 msgid "Long Desc: %s\n"
 msgstr "Azalpen luzea: %s\n"
 
-#: ../gconf/gconftool.c:1864 ../gconf/gconftool.c:2088
-#: ../gconf/gconftool.c:2122 ../gconf/gconftool.c:2167
-#: ../gconf/gconftool.c:2312
+#: ../gconf/gconftool.c:1959 ../gconf/gconftool.c:2236
+#: ../gconf/gconftool.c:2270 ../gconf/gconftool.c:2315
+#: ../gconf/gconftool.c:2460
 #, c-format
 msgid "No value set for `%s'\n"
 msgstr "Ez da '%s'(r)en baliorik ezarri\n"
 
-#: ../gconf/gconftool.c:1868 ../gconf/gconftool.c:2092
-#: ../gconf/gconftool.c:2126 ../gconf/gconftool.c:2171
-#: ../gconf/gconftool.c:2316
+#: ../gconf/gconftool.c:1963 ../gconf/gconftool.c:2240
+#: ../gconf/gconftool.c:2274 ../gconf/gconftool.c:2319
+#: ../gconf/gconftool.c:2464
 #, c-format
 msgid "Failed to get value for `%s': %s\n"
 msgstr "Huts egin du '%s'(r)en balioa lortzean: %s\n"
 
-#: ../gconf/gconftool.c:1911 ../gconf/gconftool.c:1923
+#: ../gconf/gconftool.c:2006 ../gconf/gconftool.c:2018
 #, c-format
 msgid "Don't understand type `%s'\n"
 msgstr "Ez da '%s' mota ulertzen\n"
 
-#: ../gconf/gconftool.c:1935
+#: ../gconf/gconftool.c:2030
 #, c-format
 msgid "Must specify alternating keys/values as arguments\n"
 msgstr "Gakoak/balioak txandaka zehaztu behar dira argumentu gisa\n"
 
-#: ../gconf/gconftool.c:1955
+#: ../gconf/gconftool.c:2050
 #, c-format
 msgid "No value to set for key: `%s'\n"
 msgstr "Gako honi ez zaio baliorik ezarri: '%s'\n"
 
-#: ../gconf/gconftool.c:1983
+#: ../gconf/gconftool.c:2078
 #, c-format
 msgid "Cannot set schema as value\n"
 msgstr "Ezin da eskema balio gisa ezarri\n"
 
-#: ../gconf/gconftool.c:1993
+#: ../gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
 msgstr "Zerrenda ezartzean jatorrizko zerrenda-mota zehaztu behar da\n"
 
-#: ../gconf/gconftool.c:2007
+#: ../gconf/gconftool.c:2102
 #, c-format
 msgid "When setting a pair you must specify a primitive car-type and cdr-type\n"
 msgstr "Bikotea ezartzean jatorrizko car-type eta cdr-type zehaztu behar dira\n"
 
-#: ../gconf/gconftool.c:2022
+#: ../gconf/gconftool.c:2117
 #, c-format
 msgid "Error: %s\n"
 msgstr "Errorea: %s\n"
 
-#: ../gconf/gconftool.c:2035 ../gconf/gconftool.c:3067
+#: ../gconf/gconftool.c:2130 ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:3215
 #, c-format
 msgid "Error setting value: %s\n"
 msgstr "Errorea balioa ezartzean: %s\n"
 
-#: ../gconf/gconftool.c:2053
+#: ../gconf/gconftool.c:2148
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Errorea sinkronizatzean: %s\n"
 
+#: ../gconf/gconftool.c:2163
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "Gako bat edo gehiago zehaztu behar dira argumentu gisa.\n"
+
+#: ../gconf/gconftool.c:2179
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "Ez da baliorik aurkitu %s gakoarentzako\n"
+
+#: ../gconf/gconftool.c:2185
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "Ez da balio boolearra: %s\n"
+
 #
-#: ../gconf/gconftool.c:2068
+#: ../gconf/gconftool.c:2216
 #, c-format
 msgid "Must specify a key or keys to get type\n"
 msgstr "Lortu nahi den gakoa edo gakoak zehaztu behar dira\n"
 
 #
-#: ../gconf/gconftool.c:2112
+#: ../gconf/gconftool.c:2260
 #, c-format
 msgid "Must specify a key to lookup size of.\n"
 msgstr "Tamaina bilatzeko gako bat zehaztu behar da.\n"
 
-#: ../gconf/gconftool.c:2137 ../gconf/gconftool.c:2182
+#: ../gconf/gconftool.c:2285 ../gconf/gconftool.c:2330
 #, c-format
 msgid "Key %s is not a list.\n"
 msgstr "%s gakoa ez da zerrenda.\n"
 
 #
-#: ../gconf/gconftool.c:2157
+#: ../gconf/gconftool.c:2305
 #, c-format
 msgid "Must specify a key from which to get list element.\n"
 msgstr "Elementu-zerrenda zein gakotatik eskuratu behar den zehaztu behar da.\n"
 
 #
-#: ../gconf/gconftool.c:2188
+#: ../gconf/gconftool.c:2336
 #, c-format
 msgid "Must specify list index.\n"
 msgstr "Zerrenda-indizea zehaztu behar da.\n"
 
-#: ../gconf/gconftool.c:2195
+#: ../gconf/gconftool.c:2343
 #, c-format
 msgid "List index must be non-negative.\n"
 msgstr "Zerrenda-indizeak ezin du negatiboa izan.\n"
 
-#: ../gconf/gconftool.c:2204
+#: ../gconf/gconftool.c:2352
 #, c-format
 msgid "List index is out of bounds.\n"
 msgstr "Zerrenda-indizea mugaz kanpo dago.\n"
 
-#: ../gconf/gconftool.c:2230
+#: ../gconf/gconftool.c:2378
 #, c-format
 msgid "Must specify a key or keys on the command line\n"
 msgstr "Komando-lerroan gakoa edo gakoak zehaztu behar dira\n"
 
-#: ../gconf/gconftool.c:2250
+#: ../gconf/gconftool.c:2398
 #, c-format
 msgid "No schema known for `%s'\n"
 msgstr "Ez da '%s'(r)en eskemarik ezagutzen\n"
 
-#: ../gconf/gconftool.c:2283
+#: ../gconf/gconftool.c:2431
 #, c-format
 msgid "No doc string stored in schema at '%s'\n"
 msgstr "Eskemak ez du '%s'(e)n gordetako dokumentu-katerik\n"
 
-#: ../gconf/gconftool.c:2288
+#: ../gconf/gconftool.c:2436
 #, c-format
 msgid "Error getting schema at '%s': %s\n"
 msgstr "Errorea '%s'(e)n eskema lortzean: %s\n"
 
-#: ../gconf/gconftool.c:2295
+#: ../gconf/gconftool.c:2443
 #, c-format
 msgid "No schema stored at '%s'\n"
 msgstr "'%s'(e)n ez da eskemarik gorde\n"
 
-#: ../gconf/gconftool.c:2298
+#: ../gconf/gconftool.c:2446
 #, c-format
 msgid "Value at '%s' is not a schema\n"
 msgstr "'%s'(e)ko balioa ez da eskema\n"
 
-#: ../gconf/gconftool.c:2354
+#: ../gconf/gconftool.c:2502
 #, c-format
 msgid "Must specify a schema name followed by the key name to apply it to\n"
 msgstr ""
 "Eskema-izena zehaztu behar da eta, ondoren, hari esleitu beharreko gako-"
 "izena\n"
 
-#: ../gconf/gconftool.c:2361
+#: ../gconf/gconftool.c:2509
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr "Errorea '%s' eskema-izena '%s' gako-izenarekin elkartzean: %s\n"
 
 #
-#: ../gconf/gconftool.c:2379
+#: ../gconf/gconftool.c:2527
 #, c-format
 msgid "Must specify keys to unapply schema from\n"
 msgstr "Eskema zein gakoei ez zaien aplikatu behar zehaztu behar da\n"
 
-#: ../gconf/gconftool.c:2389
+#: ../gconf/gconftool.c:2537
 #, c-format
 msgid "Error removing schema name from '%s': %s\n"
 msgstr "Errorea '%s'(e)tik eskema-izena kentzean: %s\n"
 
-#: ../gconf/gconftool.c:2414
+#: ../gconf/gconftool.c:2562
 #, c-format
 msgid "Must specify key (schema name) as the only argument\n"
 msgstr "Gakoa (eskema-izena) zehaztu behar da argumentu bakar gisa\n"
 
-#: ../gconf/gconftool.c:2456
+#: ../gconf/gconftool.c:2604
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
 msgstr "Zerrenda-motak primitiboa izan behar du: string, int, float edo bool\n"
 
-#: ../gconf/gconftool.c:2476
+#: ../gconf/gconftool.c:2624
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
 msgstr "Car bikoteak primitiboa izan behar du: string, int, float edo bool\n"
 
-#: ../gconf/gconftool.c:2496
+#: ../gconf/gconftool.c:2644
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
 msgstr "Cdr bikoteak primitiboa izan behar du: string, int, float edo bool\n"
 
-#: ../gconf/gconftool.c:2511
+#: ../gconf/gconftool.c:2659
 #, c-format
 msgid "Error setting value: %s"
 msgstr "Errorea balioa ezartzean: %s"
 
-#: ../gconf/gconftool.c:2525
+#: ../gconf/gconftool.c:2673
 #, c-format
 msgid "Error syncing: %s"
 msgstr "Errorea sinkronizatzean: %s"
 
-#: ../gconf/gconftool.c:2540
+#: ../gconf/gconftool.c:2688
 #, c-format
 msgid "Must specify one or more directories to get key/value pairs from.\n"
 msgstr ""
 "Direktorio bat edo gehiago zehaztu behar dira handik gako-/balio-bikoteak "
 "lortzeko.\n"
 
-#: ../gconf/gconftool.c:2554
+#: ../gconf/gconftool.c:2702
 #, c-format
 msgid "Must specify one or more keys to unset.\n"
 msgstr "Ezabatu nahi diren gakoak zehaztu behar dira.\n"
 
-#: ../gconf/gconftool.c:2565
+#: ../gconf/gconftool.c:2713
 #, c-format
 msgid "Error unsetting `%s': %s\n"
 msgstr "Errorea '%s' ezabatzean: %s\n"
 
 #
-#: ../gconf/gconftool.c:2585
+#: ../gconf/gconftool.c:2733
 #, c-format
 msgid "Must specify one or more keys to recursively unset.\n"
 msgstr "Errekurtsiboki ezabatu nahi diren gakoak zehaztu behar dira.\n"
 
-#: ../gconf/gconftool.c:2599
+#: ../gconf/gconftool.c:2747
 #, c-format
 msgid "Failure during recursive unset of \"%s\": %s\n"
 msgstr "Huts egin du \"%s\" errekurtsiboki ezabatzean: %s\n"
 
-#: ../gconf/gconftool.c:2619
+#: ../gconf/gconftool.c:2767
 #, c-format
 msgid "Must specify one or more directories to get subdirs from.\n"
 msgstr ""
 "Direktorio bat edo gehiago zehaztu behar dira handik azpidirektorioak "
 "lortzeko.\n"
 
-#: ../gconf/gconftool.c:2653
+#: ../gconf/gconftool.c:2801
 #, c-format
 msgid "Error listing dirs: %s\n"
 msgstr "Errorea direktorioak zerrendatzean: %s\n"
 
-#: ../gconf/gconftool.c:2789
+#: ../gconf/gconftool.c:2937
 #, c-format
 msgid "WARNING: must specify both a <car> and a <cdr> in a <pair>\n"
 msgstr "KONTUZ: <car> eta <cdr> zehaztu behar dira <pair> batean\n"
 
-#: ../gconf/gconftool.c:2816
+#: ../gconf/gconftool.c:2964
 #, c-format
 msgid "WARNING: key specified (%s) for schema under a <value> - ignoring\n"
 msgstr ""
 "KONTUZ: <value> bateko eskemarako zehaztutako gakoari (%s) ez ikusi egingo "
 "zaio\n"
 
-#: ../gconf/gconftool.c:2849
+#: ../gconf/gconftool.c:2997
 #, c-format
 msgid "WARNING: must have a child node under <value>\n"
 msgstr "KONTUZ: nodo umea eduki behar da <value>-n\n"
 
-#: ../gconf/gconftool.c:2855
+#: ../gconf/gconftool.c:3003
 #, c-format
 msgid "WARNING: node <%s> not understood\n"
 msgstr "KONTUZ: <%s> nodoa ez da ulertzen\n"
 
-#: ../gconf/gconftool.c:2873
+#: ../gconf/gconftool.c:3021
 #, c-format
 msgid "WARNING: Failed to parse int value `%s'\n"
 msgstr "KONTUZ: ezin izan da '%s' balio osoa analizatu\n"
 
-#: ../gconf/gconftool.c:2894
+#: ../gconf/gconftool.c:3042
 #, c-format
 msgid "WARNING: Failed to parse float value `%s'\n"
 msgstr "KONTUZ: ezin izan da '%s' balio flotatzailea analizatu\n"
 
-#: ../gconf/gconftool.c:2916
+#: ../gconf/gconftool.c:3064
 #, c-format
 msgid "WARNING: Failed to parse string value `%s'\n"
 msgstr "KONTUZ: ezin izan da '%s' kate-balioa analizatu\n"
 
-#: ../gconf/gconftool.c:2937
+#: ../gconf/gconftool.c:3085
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
 msgstr "KONTUZ: ezin izan da '%s' balio boolearra analizatu\n"
 
-#: ../gconf/gconftool.c:3046 ../gconf/gconftool.c:3588
+#: ../gconf/gconftool.c:3194 ../gconf/gconftool.c:3736
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
 msgstr "KONTUZ: ezin izan da '%s' eskema '%s' gakoarekin asoziatu: %s\n"
 
-#: ../gconf/gconftool.c:3161
+#: ../gconf/gconftool.c:3309
 #, c-format
 msgid "WARNING: invalid or missing type for schema (%s)\n"
 msgstr "KONTUZ: eskemaren mota okerra da edo falta da (%s)\n"
 
-#: ../gconf/gconftool.c:3170
+#: ../gconf/gconftool.c:3318
 #, c-format
 msgid "WARNING: invalid or missing list_type for schema (%s)\n"
 msgstr "KONTUZ: eskemaren list_type okerra da edo falta da (%s)\n"
 
-#: ../gconf/gconftool.c:3181 ../gconf/gconftool.c:3211
-#: ../gconf/gconftool.c:3240
+#: ../gconf/gconftool.c:3329 ../gconf/gconftool.c:3359
+#: ../gconf/gconftool.c:3388
 #, c-format
 msgid "WARNING: Failed to parse default value `%s' for schema (%s)\n"
 msgstr "KONTUZ: ezin izan da eskemaren '%s' balio lehenetsia analizatu (%s)\n"
 
-#: ../gconf/gconftool.c:3199
+#: ../gconf/gconftool.c:3347
 #, c-format
 msgid "WARNING: invalid or missing car_type or cdr_type for schema (%s)\n"
 msgstr "KONTUZ: eskemaren car-type edo cdr-type okerra da edo falta da (%s)\n"
 
-#: ../gconf/gconftool.c:3224
+#: ../gconf/gconftool.c:3372
 #, c-format
 msgid "WARNING: You cannot set a default value for a schema\n"
 msgstr "KONTUZ: Ezin duzu eskemarako balio lehenetsia ezarri\n"
 
-#: ../gconf/gconftool.c:3253
+#: ../gconf/gconftool.c:3401
 #, c-format
 msgid "WARNING: gconftool internal error, unknown GConfValueType\n"
 msgstr "KONTUZ: gconftool-en barne-errorea, GconfValueType ezezaguna\n"
 
-#: ../gconf/gconftool.c:3301 ../gconf/gconftool.c:3322
-#: ../gconf/gconftool.c:3343 ../gconf/gconftool.c:3364
+#: ../gconf/gconftool.c:3449 ../gconf/gconftool.c:3470
+#: ../gconf/gconftool.c:3491 ../gconf/gconftool.c:3512
 #, c-format
 msgid "WARNING: failed to parse type name `%s'\n"
 msgstr "KONTUZ: huts egin du '%s' mota-izena analizatzean\n"
 
-#: ../gconf/gconftool.c:3318
+#: ../gconf/gconftool.c:3466
 #, c-format
 msgid "WARNING: list_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "KONTUZ: list_type hauek egon daitezke bakarrik: int, float, string edo bool "
 "eta ez '%s'\n"
 
-#: ../gconf/gconftool.c:3339
+#: ../gconf/gconftool.c:3487
 #, c-format
 msgid "WARNING: car_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "KONTUZ: car_type hauek egon daitezke bakarrik: int, float, string edo bool "
 "eta ez '%s'\n"
 
-#: ../gconf/gconftool.c:3360
+#: ../gconf/gconftool.c:3508
 #, c-format
 msgid "WARNING: cdr_type can only be int, float, string or bool and not `%s'\n"
 msgstr ""
 "KONTUZ: cdr_type hauek egon daitezke bakarrik: int, float, string edo bool "
 "eta ez '%s'\n"
 
-#: ../gconf/gconftool.c:3400
+#: ../gconf/gconftool.c:3548
 #, c-format
 msgid "WARNING: empty <applyto> node"
 msgstr "KONTUZ: <applyto> nodoa hutsik"
 
-#: ../gconf/gconftool.c:3403 ../gconf/gconftool.c:3661
+#: ../gconf/gconftool.c:3551 ../gconf/gconftool.c:3809
 #, c-format
 msgid "WARNING: node <%s> not understood below <schema>\n"
 msgstr "KONTUZ: <%s> nodoa ulertezina <schema>ren barruan\n"
 
 #
-#: ../gconf/gconftool.c:3414
+#: ../gconf/gconftool.c:3562
 #, c-format
 msgid "WARNING: no <list_type> specified for schema of type list\n"
 msgstr "KONTUZ: ez dago <list_type>rik zehaztuta zerrenda-motako eskeman\n"
 
 #
-#: ../gconf/gconftool.c:3420
+#: ../gconf/gconftool.c:3568
 #, c-format
 msgid "WARNING: no <car_type> specified for schema of type pair\n"
 msgstr "KONTUZ: ez dago <car_type>rik zehaztuta bikote-motako eskeman\n"
 
 #
-#: ../gconf/gconftool.c:3426
+#: ../gconf/gconftool.c:3574
 #, c-format
 msgid "WARNING: no <cdr_type> specified for schema of type pair\n"
 msgstr "KONTUZ: ez dago <cdr_type>rik zehaztuta bikote-motako eskeman\n"
 
-#: ../gconf/gconftool.c:3455
+#: ../gconf/gconftool.c:3603
 #, c-format
 msgid "WARNING: <locale> node has no `name=\"locale\"' attribute, ignoring\n"
 msgstr "KONTUZ: <locale> nodoak ez du 'izena=\"locale\"' atributua, jaramonik ez\n"
 
-#: ../gconf/gconftool.c:3461
+#: ../gconf/gconftool.c:3609
 #, c-format
 msgid "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
 msgstr ""
 "KONTUZ: <locale> nodo bat baino gehiago daude '%s' locale-rako; lehena ez "
 "beste guztiei ez ikusia egin\n"
 
-#: ../gconf/gconftool.c:3559
+#: ../gconf/gconftool.c:3707
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
 msgstr "KONTUZ: <%s> nodo baliogabea <locale> nodoan\n"
 
-#: ../gconf/gconftool.c:3596
+#: ../gconf/gconftool.c:3744
 #, c-format
 msgid "Attached schema `%s' to key `%s'\n"
 msgstr "'%s' eskema '%s' gakoari erantsi zaio\n"
 
-#: ../gconf/gconftool.c:3670
+#: ../gconf/gconftool.c:3818
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
 msgstr "Gutxienez <locale> sarrera batek egon behar du <schema>n\n"
 
-#: ../gconf/gconftool.c:3705
+#: ../gconf/gconftool.c:3853
 #, c-format
 msgid "WARNING: failed to install schema `%s', locale `%s': %s\n"
 msgstr "KONTUZ: huts egin du '%s' eskema '%s' locale-an instalatzean: %s\n"
 
-#: ../gconf/gconftool.c:3713
+#: ../gconf/gconftool.c:3861
 #, c-format
 msgid "Installed schema `%s' for locale `%s'\n"
 msgstr "'%s' eskema '%s' locale-an instalatu da\n"
 
-#: ../gconf/gconftool.c:3723
+#: ../gconf/gconftool.c:3871
 #, c-format
 msgid "WARNING: failed to uninstall schema `%s', locale `%s': %s\n"
 msgstr "KONTUZ: huts egin du '%s' eskema '%s' locale-tik desinstalatzean: %s\n"
 
-#: ../gconf/gconftool.c:3731
+#: ../gconf/gconftool.c:3879
 #, c-format
 msgid "Uninstalled schema `%s' from locale `%s'\n"
 msgstr "'%s' eskema '%s' locale-tik desinstalatu da\n"
 
-#: ../gconf/gconftool.c:3769
+#: ../gconf/gconftool.c:3917
 #, c-format
 msgid "WARNING: no key specified for schema\n"
 msgstr "KONTUZ: eskemak ez du gakoa zehaztuta\n"
 
-#: ../gconf/gconftool.c:3810
+#: ../gconf/gconftool.c:3958
 #, c-format
 msgid "WARNING: node <%s> not understood below <%s>\n"
 msgstr "KONTUZ: <%s> nodoa ulertezina <%s>(r)en barruan\n"
 
-#: ../gconf/gconftool.c:3842
+#: ../gconf/gconftool.c:3990
 #, c-format
 msgid "Failed to open `%s': %s\n"
 msgstr "Huts egin du '%s' irekitzean: %s\n"
 
-#: ../gconf/gconftool.c:3849
+#: ../gconf/gconftool.c:3997
 #, c-format
 msgid "Document `%s' is empty?\n"
 msgstr "'%s' dokumentua hutsik dago?\n"
 
-#: ../gconf/gconftool.c:3861
+#: ../gconf/gconftool.c:4009
 #, c-format
 msgid "Document `%s' has the wrong type of root node (<%s>, should be <%s>)\n"
 msgstr "'%s' dokumentuak mota okerreko erro-nodoa du (<%s> <%s> izan beharko luke)\n"
 
-#: ../gconf/gconftool.c:3874
+#: ../gconf/gconftool.c:4022
 #, c-format
 msgid "Document `%s' has no top level <%s> node\n"
 msgstr "'%s' dokumentuak ez du goi-mailako <%s> nodorik\n"
 
-#: ../gconf/gconftool.c:3888
+#: ../gconf/gconftool.c:4036
 #, c-format
 msgid "WARNING: node <%s> below <%s> not understood\n"
 msgstr "KONTUZ: <%s> nodoa ulertezina <%s>(r)en barruan\n"
 
-#: ../gconf/gconftool.c:3909
+#: ../gconf/gconftool.c:4057
 #, c-format
 msgid "Error syncing configuration data: %s"
 msgstr "Errorea konfigurazio-datuak sinkronizatzean: %s"
 
-#: ../gconf/gconftool.c:3925
+#: ../gconf/gconftool.c:4073
 #, c-format
 msgid "Must specify some schema files to install\n"
 msgstr "Instalatu beharreko eskema-fitxategiak zehaztu behar dituzu\n"
 
-#: ../gconf/gconftool.c:3953
+#: ../gconf/gconftool.c:4101
 #, c-format
 msgid ""
 "\n"
@@ -2619,17 +2665,17 @@ msgstr ""
 "\n"
 "%s\n"
 
-#: ../gconf/gconftool.c:3973
+#: ../gconf/gconftool.c:4121
 #, c-format
 msgid "Failed to unset breakage key %s: %s\n"
 msgstr "Huts egin du %s apurketa-gakoa ezabatzean: %s\n"
 
-#: ../gconf/gconftool.c:4099
+#: ../gconf/gconftool.c:4247
 #, c-format
 msgid "Must specify some keys to break\n"
 msgstr "Apurtzeko gakoak zehaztu behar dira\n"
 
-#: ../gconf/gconftool.c:4105
+#: ../gconf/gconftool.c:4253
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for key:\n"
@@ -2639,12 +2685,12 @@ msgstr ""
 "ezarriz:\n"
 " %s\n"
 
-#: ../gconf/gconftool.c:4123
+#: ../gconf/gconftool.c:4271
 #, c-format
 msgid "Must specify some directories to break\n"
 msgstr "Apurtzeko direktorioak zehaztu behar dira\n"
 
-#: ../gconf/gconftool.c:4142
+#: ../gconf/gconftool.c:4290
 #, c-format
 msgid ""
 "Trying to break your application by setting bad values for keys in "
