@@ -1,3 +1,10 @@
+2009-02-10  Michael Meeks  <michael.meeks@novell.com>
+
+	* backends/markup-tree.c: instead of indenting with spaces, use
+	tabs for a 50% size saving in the generated XML, and a nice
+	parsing speedup. Also accelerate writing by avoiding lots of
+	un-necessary memory allocation.
+
 2009-01-27  Tor Lillqvist  <tml@novell.com>
 
 	* gconf/Makefile.am (gconfd_2_LDFLAGS): Use the -mwindows flag

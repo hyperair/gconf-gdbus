@@ -3660,7 +3660,7 @@ parse_tree (MarkupDir   *root,
  * Save
  */
 
-#define INDENT_SPACES 8
+#define INDENT_SPACES 1
 
 static gboolean write_list_children   (GConfValue  *value,
                                        FILE        *f,
@@ -3674,6 +3674,17 @@ static gboolean write_schema_children (GConfValue  *value,
                                        GSList      *local_schemas,
                                        gboolean     save_as_subtree);
 
+/* the common case - before we start interning */
+static const char write_indents_static[] = 
+  "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"  /* 16 */
+  "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"; /* 32 */
+
+static const char *make_whitespace (int indent)
+{
+  int idx = MAX (sizeof (write_indents_static) - 1 - indent, 0);
+  return &write_indents_static[idx];
+}
+
 static gboolean
 write_value_element (GConfValue *value,
                      const char *closing_element,
@@ -3682,8 +3693,7 @@ write_value_element (GConfValue *value,
                      GSList     *local_schemas,
                      gboolean    save_as_subtree)
 {
-  char *whitespace;
-
+  gboolean single_element = FALSE;
   /* We are at the "<foo bar="whatever"" stage here,
    * <foo> still missing the closing >
    */
@@ -3811,17 +3821,13 @@ write_value_element (GConfValue *value,
         
         s = g_markup_escape_text (gconf_value_get_string (value),
                                   -1);
-	whitespace = g_strnfill (indent + INDENT_SPACES, ' ');
-        
         if (fprintf (f, "%s<stringvalue>%s</stringvalue>\n",
-                     whitespace, s) < 0)
+                     make_whitespace (indent + INDENT_SPACES), s) < 0)
           {
-	    g_free (whitespace);
             g_free (s);
             return FALSE;
           }
         
-	g_free (whitespace);
         g_free (s);
       }
       break;
@@ -3852,13 +3858,8 @@ write_value_element (GConfValue *value,
       break;
     }
 
-  whitespace =  g_strnfill (indent, ' ');
-  if (fprintf (f, "%s</%s>\n", whitespace, closing_element) < 0)
-    {
-      g_free (whitespace);
+  if (fprintf (f, "%s</%s>\n", make_whitespace (indent), closing_element) < 0)
       return FALSE;
-    }
-  g_free (whitespace);
 
   return TRUE;
 }    
@@ -3870,16 +3871,13 @@ write_list_children (GConfValue  *value,
 {
   GSList *tmp;
   gboolean retval = FALSE;
-  char *whitespace;
-
-  whitespace = g_strnfill (indent, ' ');
 
   tmp = gconf_value_get_list (value);
   while (tmp != NULL)
     {
       GConfValue *li = tmp->data;
 
-      if (fputs (whitespace, f) < 0)
+      if (fputs (make_whitespace (indent), f) < 0)
 	goto out;
       
       if (fputs ("<li", f) < 0)
@@ -3895,8 +3893,6 @@ write_list_children (GConfValue  *value,
 
  out:
 
-  g_free (whitespace);
-
   return retval;
 }
 
@@ -3907,15 +3903,12 @@ write_pair_children (GConfValue  *value,
 {
   GConfValue *child;
   gboolean retval = FALSE;
-  char *whitespace;
 
-  whitespace = g_strnfill (indent, ' ');
-  
   child = gconf_value_get_car (value);
 
   if (child != NULL)
     {
-      if (fputs (whitespace, f) < 0)
+      if (fputs (make_whitespace (indent), f) < 0)
 	goto out;
 
       if (fputs ("<car", f) < 0)
@@ -3929,7 +3922,7 @@ write_pair_children (GConfValue  *value,
 
   if (child != NULL)
     {
-      if (fputs (whitespace, f) < 0)
+      if (fputs (make_whitespace (indent), f) < 0)
 	goto out;
       
       if (fputs ("<cdr", f) < 0)
@@ -3943,8 +3936,6 @@ write_pair_children (GConfValue  *value,
  
  out:
 
-  g_free (whitespace);
-  
   return retval;
 }
 
@@ -3956,7 +3947,7 @@ write_local_schema_info (LocalSchemaInfo *local_schema,
                          gboolean         write_descs)
 {
   gboolean retval;
-  char *whitespace1, *whitespace2;
+  const char *whitespace1, *whitespace2;
   char *s;
 
   if (!write_descs && local_schema->default_value == NULL)
@@ -3964,8 +3955,8 @@ write_local_schema_info (LocalSchemaInfo *local_schema,
 
   retval = FALSE;
 
-  whitespace1 = g_strnfill (indent, ' ');
-  whitespace2 = g_strnfill (indent + INDENT_SPACES, ' ');
+  whitespace1 = make_whitespace (indent);
+  whitespace2 = make_whitespace (indent + INDENT_SPACES);
 
   if (fputs (whitespace1, f) < 0)
     goto out;
@@ -4049,9 +4040,6 @@ write_local_schema_info (LocalSchemaInfo *local_schema,
   retval = TRUE;
 
  out:
-
-  g_free (whitespace1);
-  g_free (whitespace2);
 
   return retval;
 }
@@ -4150,7 +4138,6 @@ write_entry (MarkupEntry *entry,
 {
   LocalSchemaInfo *local_schema_info;
   gboolean         retval;
-  char            *whitespace;
 
   retval = FALSE;
   local_schema_info = NULL;
@@ -4169,11 +4156,9 @@ write_entry (MarkupEntry *entry,
 	}
     }
 
-  whitespace = g_strnfill (indent, ' ');
-
   g_assert (entry->name != NULL);
   
-  if (fprintf (f, "%s<entry name=\"%s\"", whitespace, entry->name) < 0)
+  if (fprintf (f, "%s<entry name=\"%s\"", make_whitespace (indent), entry->name) < 0)
     goto out;
 
   if (local_schema_info == NULL)
@@ -4221,7 +4206,7 @@ write_entry (MarkupEntry *entry,
                                     TRUE))
         goto out;
                                     
-      if (fprintf (f, "%s</entry>\n", whitespace) < 0)
+      if (fprintf (f, "%s</entry>\n", make_whitespace (indent)) < 0)
         goto out;
     }
 
@@ -4229,8 +4214,6 @@ write_entry (MarkupEntry *entry,
 
  out:
 
-  g_free (whitespace);
-  
   return retval;
 }
 
@@ -4244,18 +4227,16 @@ write_dir (MarkupDir  *dir,
 {
   GSList *tmp;
   gboolean retval = FALSE;
-  char *whitespace;
 
   dir->not_in_filesystem = TRUE;
 
   if (save_as_subtree && locale != NULL && dir->is_dir_empty)
     return TRUE;
 
-  whitespace = g_strnfill (indent, ' ');
-
   g_assert (dir->name != NULL);
   
-  if (fprintf (f, "%s<dir name=\"%s\">\n", whitespace, dir->name) < 0)
+  if (fprintf (f, "%s<dir name=\"%s\">\n",
+	       make_whitespace (indent), dir->name) < 0)
     goto out;
 
   tmp = dir->entries;
@@ -4290,14 +4271,12 @@ write_dir (MarkupDir  *dir,
       tmp = tmp->next;
     }
 
-  if (fprintf (f, "%s</dir>\n", whitespace) < 0)
+  if (fprintf (f, "%s</dir>\n", make_whitespace (indent)) < 0)
     return FALSE;
 
   retval = TRUE;
 
  out:
-
-  g_free (whitespace);
 
   return retval;
 }
