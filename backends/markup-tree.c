@@ -2383,9 +2383,10 @@ parse_value_element (GMarkupParseContext  *context,
 
   if (type == NULL)
     {
-      set_error (error, context, GCONF_ERROR_PARSE_ERROR,
+	/* in fact this is a rather common case */
+/*      set_error (error, context, GCONF_ERROR_PARSE_ERROR,
                  _("No \"%s\" attribute on element <%s>"),
-                 "type", element_name);
+                 "type", element_name); */
       return;
     }
   

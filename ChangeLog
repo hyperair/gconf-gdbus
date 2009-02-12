@@ -1,3 +1,10 @@
+2009-02-12  Michael Meeks  <michael.meeks@novell.com>
+
+	* backends/markup-tree.c (parse_value_element): turn off a
+	bogus error message for missing types, which we don't use,
+	saves creating, l10n'ing & destroying 11k bogus messages on
+	login.
+
 2009-02-10  Michael Meeks  <michael.meeks@novell.com>
 
 	* backends/markup-tree.c (write_value_element): close empty
