@@ -854,7 +854,7 @@ xs_new       (const gchar* root_dir, guint dir_mode, guint file_mode, GConfLock*
 
   xs->cache = cache_get(xs->root_dir, dir_mode, file_mode);
 
-  xs->timeout_id = g_timeout_add(1000*60*5, /* 1 sec * 60 s/min * 5 min */
+  xs->timeout_id = g_timeout_add_seconds(60*5, /* 1 sec * 60 s/min * 5 min */
                                  cleanup_timeout,
                                  xs);
 
