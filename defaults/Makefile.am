@@ -15,6 +15,7 @@ gconf_defaults_mechanism_SOURCES = \
 INCLUDES = \
 	-I$(top_srcdir) \
 	-I$(top_builddir) \
+	-DSYSGCONFDIR=\"$(sysgconfdir)\" \
 	$(DEFAULTS_CFLAGS)
 
 gconf_defaults_mechanism_LDADD = \

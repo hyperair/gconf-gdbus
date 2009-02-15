@@ -502,12 +502,12 @@ do_copy (GConfDefaults          *mechanism,
 	if (mandatory) {
 		annotation_key = "org.gnome.gconf.defaults.set-mandatory.prefix"; 
 		default_action = "org.gnome.gconf.defaults.set-mandatory";
-		dest_address = "xml:merged:/etc/gconf/gconf.xml.mandatory";
+		dest_address = "xml:merged:" SYSGCONFDIR "/gconf.xml.mandatory";
 	}
 	else {
 		annotation_key = "org.gnome.gconf.defaults.set-system.prefix"; 
 		default_action = "org.gnome.gconf.defaults.set-system";
-		dest_address = "xml:merged:/etc/gconf/gconf.xml.system";
+		dest_address = "xml:merged:" SYSGCONFDIR "/gconf.xml.system";
 	}
 
 	for (i = 0; includes[i]; i++) {
@@ -734,7 +734,7 @@ gconf_defaults_unset_mandatory (GConfDefaults          *mechanism,
 	}
 
 	error = NULL;
-	unset_in_db (mechanism,"xml:merged:/etc/gconf/gconf.xml.mandatory", 
+	unset_in_db (mechanism, "xml:merged:" SYSGCONFDIR "/gconf.xml.mandatory", 
 		     includes, excludes, &error);
 
 	if (error) {

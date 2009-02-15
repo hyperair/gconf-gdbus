@@ -1,3 +1,14 @@
+2009-02-15  Matthias Clasen  <mclasen@redhat.com>
+
+	Bug 558490 – New policykit mechanism uses hard-coded gconf path
+
+	* gconf/default.path.in: Add the directory that is used by the
+	defaults mechanism
+
+	* defaults/Makefile.am: Define SYSGCONFDIR
+	* defaults/gconf-defaults.c: Use SYSGCONFDIR instead of hardcoding
+	/etc/gconf. Pointed out by Vincent Untz
+
 2009-02-12  Michael Meeks  <michael.meeks@novell.com>
 
 	* backends/markup-tree.c (parse_value_element): turn off a
