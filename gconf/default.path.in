@@ -13,15 +13,15 @@ xml:readonly:@sysgconfdir@/gconf.xml.mandatory
 # wide sources in this file.
 include @sysgconfdir@/2/local-mandatory.path
 
-# Location for system-wide settings that are set by the defaults mechanism
-xml:readonly:/etc/gconf/gconf.xml.system
-
 # Now see where users want us to look - basically the user can stick arbitrary 
 # sources in a ~/.gconf.path file and they're inserted here
 include "$(HOME)/.gconf.path"
 
 # Give users a default storage location, ~/.gconf
 xml:readwrite:$(HOME)/.gconf
+
+# Location for system-wide settings that are set by the defaults mechanism
+xml:readonly:/etc/gconf/gconf.xml.system
 
 # To read in any defaults settings that the Sys Admin may have created
 # prior to a desktop system upgrade. The SysAdmin can stick default values
