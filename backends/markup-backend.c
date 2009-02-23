@@ -429,14 +429,14 @@ tree_lookup_entry (MarkupTree *tree,
   else
     dir = markup_tree_lookup_dir (tree, parent, &error);
 
+  g_free (parent);
+  parent = NULL;
+  
   if (error != NULL)
     {
       g_propagate_error (err, error);
       return NULL;
     }
-  
-  g_free (parent);
-  parent = NULL;
   
   if (dir != NULL)
     {

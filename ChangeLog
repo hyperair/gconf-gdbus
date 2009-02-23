@@ -1,5 +1,12 @@
 2009-02-23  Matthias Clasen  <mclasen@redhat.com>
 
+	Bug 572402 – Potential memory leak in markup backend
+
+	* backends/markup-backend.c (tree_lookup_entry): Free parent
+	before checking for error. Pointed out by Tommi Rantala.
+
+2009-02-23  Matthias Clasen  <mclasen@redhat.com>
+
 	Bug 572187 – Remove deprecated GTK+ symbols
 
 	* gconf/gnome-testclient.c:
