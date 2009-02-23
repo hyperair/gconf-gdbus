@@ -181,7 +181,7 @@ addsub_callback(GtkWidget* button, gpointer data)
   gconf_client_add_dir(client, "/apps/gnome/testgconfclient/subdir", GCONF_CLIENT_PRELOAD_NONE, NULL);
 
   s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
-  gtk_label_set(GTK_LABEL(label), s);
+  gtk_label_set_text(GTK_LABEL(label), s);
   g_free(s);
 }
 
@@ -202,7 +202,7 @@ removesub_callback(GtkWidget* button, gpointer data)
   gconf_client_remove_dir(client, "/apps/gnome/testgconfclient/subdir", NULL);
 
   s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
-  gtk_label_set(GTK_LABEL(label), s);
+  gtk_label_set_text(GTK_LABEL(label), s);
   g_free(s);
 }
 
@@ -223,7 +223,7 @@ addmain_callback(GtkWidget* button, gpointer data)
   gconf_client_add_dir(client, "/apps/gnome/testgconfclient", GCONF_CLIENT_PRELOAD_NONE, NULL);
 
   s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
-  gtk_label_set(GTK_LABEL(label), s);
+  gtk_label_set_text(GTK_LABEL(label), s);
   g_free(s);
 }
   
@@ -244,7 +244,7 @@ removemain_callback(GtkWidget* button, gpointer data)
   gconf_client_remove_dir(client, "/apps/gnome/testgconfclient", NULL);
 
   s = g_strdup_printf("Maindir added %d times\nSubdir added %d times", maindir, subdir);
-  gtk_label_set(GTK_LABEL(label), s);
+  gtk_label_set_text(GTK_LABEL(label), s);
   g_free(s);
 }
 

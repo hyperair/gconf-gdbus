@@ -107,14 +107,14 @@ main(int argc, char* argv[])
 
   gnome_app_set_contents(GNOME_APP(app), entry);
 
-  gtk_signal_connect(GTK_OBJECT(entry), 
+  g_signal_connect(G_OBJECT(entry), 
                      "changed", 
-                     GTK_SIGNAL_FUNC(changed_cb),
+                     G_CALLBACK(changed_cb),
                      conf);
 
-  gtk_signal_connect(GTK_OBJECT(app),
+  g_signal_connect(G_OBJECT(app),
                      "delete_event",
-                     GTK_SIGNAL_FUNC(gtk_main_quit),
+                     G_CALLBACK(gtk_main_quit),
                      NULL);
 
   cnxn = gconf_engine_notify_add(conf, "/gnome/gconf-testclient/entry_contents", notify_func, entry);
