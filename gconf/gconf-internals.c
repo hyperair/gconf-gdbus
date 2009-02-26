@@ -2880,7 +2880,7 @@ gconf_activate_server (gboolean  start_if_not_found,
     g_set_error (error,
                  GCONF_ERROR,
                  GCONF_ERROR_NO_SERVER,
-                 _("Failed to contact configuration server; some possible causes are that you need to enable TCP/IP networking for ORBit, or you have stale NFS locks due to a system crash. See http://project.gnome.org/gconf/ for information. (Details - %s)"),
+                 _("Failed to contact configuration server; some possible causes are that you need to enable TCP/IP networking for ORBit, or you have stale NFS locks due to a system crash. See http://projects.gnome.org/gconf/ for information. (Details - %s)"),
                  failure_log->len > 0 ? failure_log->str : _("none"));
 
   g_string_free (failure_log, TRUE);
