@@ -1153,12 +1153,11 @@ gconf_client_key_is_writable (GConfClient* client,
   g_return_val_if_fail (key != NULL, FALSE);
   g_return_val_if_fail (err == NULL || *err == NULL, FALSE);
 
-  trace ("Checking whether key '%s' is writable...", key);
-
   if (gconf_client_lookup (client, key, &entry))
     {
       g_assert (entry != NULL);
 
+      trace ("Checking in cache whether key '%s' is writable", key);
       return gconf_entry_get_is_writable (entry);
     }
   
@@ -1169,6 +1168,8 @@ gconf_client_key_is_writable (GConfClient* client,
   else
     g_assert (error == NULL);
 
+  trace ("Checking whether key '%s' is writable...", key);
+
   if (entry == NULL)
     is_writable = FALSE;
   else
@@ -1176,11 +1177,6 @@ gconf_client_key_is_writable (GConfClient* client,
 
   if (entry)
     gconf_entry_free (entry);
-
-  if (is_writable)
-    trace ("'%s' is writable", key);
-  else
-    trace ("'%s' is not writable", key);
   
   return is_writable;
 }
@@ -1755,6 +1751,7 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
 
+  trace ("Setting bool '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_bool (client->engine, key, val, &error);
   POP_USE_ENGINE (client);

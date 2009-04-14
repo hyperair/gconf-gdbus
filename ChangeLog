@@ -1,5 +1,15 @@
 2009-04-14  Behdad Esfahbod  <behdad@gnome.org>
 
+	* gconf/gconf-client.c (gconf_client_key_is_writable): Also trace
+	if key is in cache.  Don't trace the writable result, that's not
+	interesting.
+
+	* gconf/gconf-client.c (gconf_client_set_bool): Trace this function.
+	Somehow it was missing the trace line that other set_* functions
+	have.
+
+2009-04-14  Behdad Esfahbod  <behdad@gnome.org>
+
 	* gconf/gconf-client.c: Consistently surround string parameters in
 	single-quotes in trace output.
 
