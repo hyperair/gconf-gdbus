@@ -35,7 +35,6 @@ trace (const char *format, ...)
 {
   va_list args;
   gchar *str;
-  FILE *out;
 
   if (!do_trace)
     return;
@@ -930,7 +929,7 @@ gconf_client_preload    (GConfClient* client,
 #ifdef GCONF_ENABLE_DEBUG
   if (!key_being_monitored (client, dirname))
     {
-      g_warning("Can only preload directories you've added with gconf_client_add_dir() (tried to preload %s)",
+      g_warning("Can only preload directories you've added with gconf_client_add_dir() (tried to preload '%s')",
                 dirname);
       return;
     }
@@ -1135,9 +1134,9 @@ gconf_client_dir_exists(GConfClient* client,
   handle_error (client, error, err);
 
   if (retval)
-    trace ("%s exists\n", dir);
+    trace ("'%s' exists\n", dir);
   else
-    trace ("%s doesn't exist\n", dir);
+    trace ("'%s' doesn't exist\n", dir);
   
   return retval;
 }
@@ -1179,9 +1178,9 @@ gconf_client_key_is_writable (GConfClient* client,
     gconf_entry_free (entry);
 
   if (is_writable)
-    trace ("%s is writable", key);
+    trace ("'%s' is writable", key);
   else
-    trace ("%s is not writable", key);
+    trace ("'%s' is not writable", key);
   
   return is_writable;
 }
@@ -1219,7 +1218,7 @@ get (GConfClient *client,
   if (gconf_client_lookup (client, key, &entry))
 
     {
-      trace ("%s was in the client-side cache", key);
+      trace ("'%s' was in the client-side cache", key);
       
       g_assert (entry != NULL);
       
@@ -1232,7 +1231,7 @@ get (GConfClient *client,
   g_assert (entry == NULL); /* if it was in the cache we should have returned */
 
   /* Check the GConfEngine */
-  trace ("Doing remote query for %s", key);
+  trace ("Doing remote query for '%s'", key);
   PUSH_USE_ENGINE (client);
   entry = gconf_engine_get_entry (client->engine, key,
                                   gconf_current_locale(),
@@ -1360,7 +1359,7 @@ gconf_client_get_default_from_schema (GConfClient* client,
   g_return_val_if_fail (GCONF_IS_CLIENT(client), NULL);
   g_return_val_if_fail (key != NULL, NULL);
   
-  trace ("Getting default for %s from schema", key);
+  trace ("Getting default for '%s' from schema", key);
   
   /* Check our client-side cache to see if the default is the same as
    * the regular value (FIXME put a default_value field in the
@@ -1680,7 +1679,7 @@ gconf_client_set_float   (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
 
-  trace ("Setting float %s", key);
+  trace ("Setting float '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_float (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
@@ -1705,7 +1704,7 @@ gconf_client_set_int     (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
 
-  trace ("Setting int %s", key);
+  trace ("Setting int '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_int (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
@@ -1731,7 +1730,7 @@ gconf_client_set_string  (GConfClient* client, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
 
-  trace ("Setting string %s", key);
+  trace ("Setting string '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_string(client->engine, key, val, &error);
   POP_USE_ENGINE (client);
@@ -1781,7 +1780,7 @@ gconf_client_set_schema  (GConfClient* client, const gchar* key,
   g_return_val_if_fail(key != NULL, FALSE);
   g_return_val_if_fail(val != NULL, FALSE);
 
-  trace ("Setting schema %s", key);
+  trace ("Setting schema '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_schema(client->engine, key, val, &error);
   POP_USE_ENGINE (client);
@@ -1808,7 +1807,7 @@ gconf_client_set_list    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
 
-  trace ("Setting list %s", key);
+  trace ("Setting list '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_list(client->engine, key, list_type, list, &error);
   POP_USE_ENGINE (client);
@@ -1836,7 +1835,7 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
   g_return_val_if_fail(GCONF_IS_CLIENT(client), FALSE);  
   g_return_val_if_fail(key != NULL, FALSE);
 
-  trace ("Setting pair %s", key);
+  trace ("Setting pair '%s'", key);
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_pair (client->engine, key, car_type, cdr_type,
                                   address_of_car, address_of_cdr, &error);
@@ -2348,7 +2347,7 @@ static void
 gconf_client_queue_notify (GConfClient *client,
                            const char  *key)
 {
-  trace ("Queing notify on %s, %d pending already", key,
+  trace ("Queing notify on '%s', %d pending already", key,
          client->pending_notify_count);
   
   if (client->notify_handler == 0)
@@ -2443,18 +2442,18 @@ gconf_client_flush_notifies (GConfClient *client)
         {
           if (entry != last_entry)
             {
-              trace ("Doing notification for %s", entry->key);
+              trace ("Doing notification for '%s'", entry->key);
               notify_one_entry (client, entry);
               last_entry = entry;
             }
           else
             {
-              trace ("Ignoring duplicate notify for %s", entry->key);
+              trace ("Ignoring duplicate notify for '%s'", entry->key);
             }
         }
       else
         {
-          trace ("Key %s was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
+          trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
                  tmp->data);
         }
       
