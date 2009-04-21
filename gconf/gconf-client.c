@@ -230,6 +230,8 @@ gconf_client_init (GConfClient *client)
   client->error_mode = GCONF_CLIENT_HANDLE_UNRETURNED;
   client->dir_hash = g_hash_table_new (g_str_hash, g_str_equal);
   client->cache_hash = g_hash_table_new (g_str_hash, g_str_equal);
+  client->cache_dirs = g_hash_table_new_full (g_str_hash, g_str_equal,
+					      g_free, NULL);
   /* We create the listeners only if they're actually used */
   client->listeners = NULL;
   client->notify_list = NULL;
@@ -306,6 +308,9 @@ gconf_client_finalize (GObject* object)
   
   g_hash_table_destroy (client->cache_hash);
   client->cache_hash = NULL;
+
+  g_hash_table_destroy (client->cache_dirs);
+  client->cache_dirs = NULL;
 
   unregister_client (client);
 
@@ -653,6 +658,19 @@ clear_dir_cache_foreach (char* key, GConfEntry* entry, char *dir)
     return FALSE;
 }
 
+static gboolean
+clear_cache_dirs_foreach (char *key, gpointer value, char *dir)
+{
+  if (strcmp (dir, key) == 0 ||
+      gconf_key_is_below (dir, key))
+    {
+      trace ("'%s' no longer fully cached", dir);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
 static void
 gconf_client_real_remove_dir    (GConfClient* client,
                                  Dir* d,
@@ -679,7 +697,9 @@ gconf_client_real_remove_dir    (GConfClient* client,
   g_hash_table_foreach_remove (client->cache_hash,
                                (GHRFunc)clear_dir_cache_foreach,
                                d->name);
-
+  g_hash_table_foreach_remove (client->cache_dirs,
+                               (GHRFunc)clear_cache_dirs_foreach,
+                               d->name);
   dir_destroy(d);
 
   ad.client = client;
@@ -709,7 +729,7 @@ gconf_client_remove_dir  (GConfClient* client,
       found->add_count -= 1;
 
       if (found->add_count == 0) 
-        gconf_client_real_remove_dir(client, found, err);
+        gconf_client_real_remove_dir (client, found, err);
     }
 #ifndef G_DISABLE_CHECKS
   else
@@ -806,7 +826,7 @@ gconf_client_clear_cache(GConfClient* client)
   g_hash_table_foreach_remove (client->cache_hash, (GHRFunc)clear_cache_foreach,
                                client);
 
-  g_assert (g_hash_table_size(client->cache_hash) == 0);
+  g_hash_table_remove_all (client->cache_dirs);
 }
 
 static void
@@ -913,6 +933,8 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
     }
 
   cache_entry_list_destructively (client, pairs);
+  trace ("Mark '%s' as fully cached", dir);
+  g_hash_table_insert (client->cache_dirs, g_strdup (dir), GINT_TO_POINTER (1));
 }
 
 void
@@ -1060,16 +1082,31 @@ gconf_client_all_entries    (GConfClient* client,
 {
   GError *error = NULL;
   GSList *retval;
-  
+  int dirlen;
+
   trace ("Getting all values in '%s'", dir);
 
-  /* We could just use the cache to get all the entries,
-   * iff we have previously done an all_entries and the
-   * cache hasn't since been tossed out, and if we are monitoring
-   * this directory.
-   * FIXME
-   */
-  
+  if (g_hash_table_lookup (client->cache_dirs, dir))
+    {
+      GHashTableIter iter;
+      gchar *key;
+      GConfEntry *entry;
+
+      trace ("Using cached values");
+
+      dirlen = strlen (dir);
+      retval = NULL;
+      g_hash_table_iter_init (&iter, client->cache_hash);
+      while (g_hash_table_iter_next (&iter, &key, &entry))
+        {
+          if (g_str_has_prefix (key, dir) &&
+              key + dirlen == strrchr (key, '/'))
+            retval = g_slist_prepend (retval, gconf_entry_copy (entry));
+        }
+
+      return retval;
+    }
+
   PUSH_USE_ENGINE (client);
   retval = gconf_engine_all_entries (client->engine, dir, &error);
   POP_USE_ENGINE (client);
@@ -1080,8 +1117,12 @@ gconf_client_all_entries    (GConfClient* client,
     return NULL;
 
   if (key_being_monitored (client, dir))
-    cache_entry_list_destructively (client, copy_entry_list (retval));
-  
+    {
+      cache_entry_list_destructively (client, copy_entry_list (retval));
+      trace ("Mark '%s' as fully cached", dir);
+      g_hash_table_insert (client->cache_dirs, g_strdup (dir), GINT_TO_POINTER (1));
+    }
+
   return retval;
 }
 
@@ -1134,9 +1175,9 @@ gconf_client_dir_exists(GConfClient* client,
   handle_error (client, error, err);
 
   if (retval)
-    trace ("'%s' exists\n", dir);
+    trace ("'%s' exists", dir);
   else
-    trace ("'%s' doesn't exist\n", dir);
+    trace ("'%s' doesn't exist", dir);
   
   return retval;
 }
@@ -1216,7 +1257,8 @@ get (GConfClient *client,
     {
       trace ("'%s' was in the client-side cache", key);
       
-      g_assert (entry != NULL);
+      if (entry == NULL)
+        return NULL;
       
       if (gconf_entry_get_is_default (entry) && !use_default)
         return NULL;
@@ -1964,7 +2006,26 @@ gconf_client_lookup (GConfClient *client,
   entry = g_hash_table_lookup (client->cache_hash, key);
 
   *entryp = entry;
-      
+
+  if (!entry)
+  {
+    char *dir, *last_slash;
+
+    dir = g_strdup (key);
+    last_slash = strrchr (dir, '/');
+    g_assert (last_slash != NULL);
+    *last_slash = 0;
+
+    if (g_hash_table_lookup (client->cache_dirs, dir))
+    {
+      g_free (dir);
+      trace ("Negative cache hit on %s", key);
+      return TRUE;
+    }
+
+    g_free (dir);
+  }
+
   return entry != NULL;
 }
 

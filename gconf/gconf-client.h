@@ -100,8 +100,8 @@ struct _GConfClient
   GSList *notify_list;
   guint notify_handler;
   int pending_notify_count;
-  gpointer pad1;
-  int pad2;  
+  GHashTable *cache_dirs;
+  int pad2;
 };
 
 struct _GConfClientClass
