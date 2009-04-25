@@ -2167,51 +2167,40 @@ locate_attributes (GMarkupParseContext *context,
 
   retval = TRUE;
 
-  i = 0;
-  while (attribute_names[i])
+  for (i = 0; attribute_names[i]; i++)
     {
       int j;
-      gboolean found;
 
-      found = FALSE;
-      j = 0;
-      while (j < n_attrs)
+      for (j = 0; j < n_attrs; j++)
         {
+	  /* already matched */
+	  if (attrs[j].name == NULL)
+	    continue;
+
           if (strcmp (attrs[j].name, attribute_names[i]) == 0)
             {
               retloc = attrs[j].retloc;
+	      attrs[j].name = NULL;
 
-              if (*retloc != NULL)
-                {
-                  set_error (error, context,
-                             GCONF_ERROR_PARSE_ERROR,
-                             _("Attribute \"%s\" repeated twice on the same <%s> element"),
-                             attrs[j].name, element_name);
-                  retval = FALSE;
-                  goto out;
-                }
+	      /* if this fails we passed the same retloc twice */
+	      g_assert (*retloc == NULL);
 
               *retloc = attribute_values[i];
-              found = TRUE;
+	      break;
             }
-
-          ++j;
         }
 
-      if (!found)
+      if (j >= n_attrs)
         {
           set_error (error, context,
                      GCONF_ERROR_PARSE_ERROR,
-                     _("Attribute \"%s\" is invalid on <%s> element in this context"),
+                     _("Attribute \"%s\" is invalid, or duplicated on <%s> element in this context"),
                      attribute_names[i], element_name);
           retval = FALSE;
-          goto out;
+	  break;
         }
-      
-      ++i;
     }
 
- out:
   return retval;
 }
 
@@ -3494,10 +3483,9 @@ all_whitespace (const char *text,
 
   while (p != end)
     {
-      if (!g_ascii_isspace (*p))
-        return FALSE;
-
-      p = g_utf8_next_char (p);
+      if (G_UNLIKELY (*p != ' ' && *p != '\t' && *p != '\n' && *p != '\r'))
+	return FALSE;
+      p++;
     }
 
   return TRUE;
