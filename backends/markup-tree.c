@@ -2194,7 +2194,7 @@ locate_attributes (GMarkupParseContext *context,
         {
           set_error (error, context,
                      GCONF_ERROR_PARSE_ERROR,
-                     _("Attribute \"%s\" is invalid, or duplicated on <%s> element in this context"),
+                     _("Attribute \"%s\" is invalid on <%s> element in this context"),
                      attribute_names[i], element_name);
           retval = FALSE;
 	  break;
