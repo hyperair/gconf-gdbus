@@ -2549,10 +2549,12 @@ gconf_get_lock_or_current_holder (const gchar  *lock_directory,
   if (g_mkdir (lock_directory, 0700) < 0 &&
       errno != EEXIST)
     {
+      int errsv = errno;
+
       gconf_set_error (err,
                        GCONF_ERROR_LOCK_FAILED,
                        _("couldn't create directory `%s': %s"),
-                       lock_directory, g_strerror (errno));
+                       lock_directory, g_strerror (errsv));
 
       return NULL;
     }
