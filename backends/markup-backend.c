@@ -17,7 +17,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "config.h"
+#include <config.h>
 #include "gconf/gconf-backend.h"
 #include "gconf/gconf-internals.h"
 #include "gconf/gconf.h"

@@ -20,7 +20,7 @@
  *     Mark McLoughlin <mark@skynet.ie>
  */
 
-#include "config.h"
+#include <config.h>
 #include <locale.h>
 
 #include "markup-tree.c"
