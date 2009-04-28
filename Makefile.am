@@ -5,7 +5,7 @@ if ENABLE_DEFAULTS_SERVICE
 SUBDIRS += defaults
 endif
 
-DIST_SUBDIRS=tests $(SUBDIRS) 
+DIST_SUBDIRS = tests $(SUBDIRS) defaults
 
 EXTRA_DIST =                \
 	TODO                \
