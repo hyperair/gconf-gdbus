@@ -177,9 +177,6 @@ void   gconf_unquote_string_inplace (gchar        *str,
                                      gchar       **end,
                                      GError      **err);
 
-GConfValue* gconf_value_decode (const gchar *encoded);
-gchar*      gconf_value_encode (GConfValue  *val);
-
 /*
  * List/pair conversion stuff
  */

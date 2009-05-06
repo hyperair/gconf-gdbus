@@ -112,6 +112,9 @@ gchar*      gconf_value_to_string            (const GConfValue* value);
 int         gconf_value_compare              (const GConfValue* value_a,
                                               const GConfValue* value_b);
 
+GConfValue* gconf_value_decode               (const gchar *encoded);
+gchar*      gconf_value_encode               (GConfValue  *val);
+
 /* Meta-information about a key. Not the same as a schema; this is
  * information stored on the key, the schema is a specification
  * that may apply to this key.

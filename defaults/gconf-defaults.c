@@ -50,9 +50,9 @@
 static gboolean
 do_exit (gpointer user_data)
 {
-        g_debug ("Exiting due to inactivity");
-        exit (1);
-        return FALSE;
+	g_debug ("Exiting due to inactivity");
+	exit (1);
+	return FALSE;
 }
 
 static guint timer_id = 0;
@@ -60,24 +60,24 @@ static guint timer_id = 0;
 static void
 stop_killtimer (void)
 {
-        if (timer_id > 0) {
-                g_source_remove (timer_id);
+	if (timer_id > 0) {
+		g_source_remove (timer_id);
 		timer_id = 0;
-        }
+	}
 }
 
 static void
 start_killtimer (void)
 {
-        g_debug ("Setting killtimer to 30 seconds...");
-        timer_id = g_timeout_add_seconds (30, do_exit, NULL);
+	g_debug ("Setting killtimer to 30 seconds...");
+	timer_id = g_timeout_add_seconds (30, do_exit, NULL);
 }
 
 struct GConfDefaultsPrivate
 {
-        DBusGConnection *system_bus_connection;
-        DBusGProxy      *system_bus_proxy;
-        PolKitContext   *pol_ctx;
+	DBusGConnection *system_bus_connection;
+	DBusGProxy      *system_bus_proxy;
+	PolKitContext   *pol_ctx;
 };
 
 static void gconf_defaults_finalize (GObject *object);
@@ -89,13 +89,13 @@ G_DEFINE_TYPE (GConfDefaults, gconf_defaults, G_TYPE_OBJECT)
 GQuark
 gconf_defaults_error_quark (void)
 {
-        static GQuark ret = 0;
+	static GQuark ret = 0;
 
-        if (ret == 0) {
-                ret = g_quark_from_static_string ("gconf_defaults_error");
-        }
+	if (ret == 0) {
+		ret = g_quark_from_static_string ("gconf_defaults_error");
+	}
 
-        return ret;
+	return ret;
 }
 
 
@@ -104,23 +104,21 @@ gconf_defaults_error_quark (void)
 GType
 gconf_defaults_error_get_type (void)
 {
-        static GType etype = 0;
-        
-        if (etype == 0)
-        {
-                static const GEnumValue values[] =
-                        {
-                                ENUM_ENTRY (GCONF_DEFAULTS_ERROR_GENERAL, "GeneralError"),
-                                ENUM_ENTRY (GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED, "NotPrivileged"),
-                                { 0, 0, 0 }
-                        };
-                
-                g_assert (GCONF_DEFAULTS_NUM_ERRORS == G_N_ELEMENTS (values) - 1);
-                
-                etype = g_enum_register_static ("GConfDefaultsError", values);
-        }
-        
-        return etype;
+	static GType etype = 0;
+
+	if (etype == 0) {
+		static const GEnumValue values[] = {
+			ENUM_ENTRY (GCONF_DEFAULTS_ERROR_GENERAL, "GeneralError"),
+			ENUM_ENTRY (GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED, "NotPrivileged"),
+			{ 0, 0, 0 }
+		};
+
+		g_assert (GCONF_DEFAULTS_NUM_ERRORS == G_N_ELEMENTS (values) - 1);
+
+		etype = g_enum_register_static ("GConfDefaultsError", values);
+	}
+
+	return etype;
 }
 
 
@@ -129,17 +127,17 @@ gconf_defaults_constructor (GType                  type,
                             guint                  n_construct_properties,
                             GObjectConstructParam *construct_properties)
 {
-        GConfDefaults      *mechanism;
-        GConfDefaultsClass *klass;
+	GConfDefaults      *mechanism;
+	GConfDefaultsClass *klass;
 
-        klass = GCONF_DEFAULTS_CLASS (g_type_class_peek (GCONF_TYPE_DEFAULTS));
+	klass = GCONF_DEFAULTS_CLASS (g_type_class_peek (GCONF_TYPE_DEFAULTS));
 
-        mechanism = GCONF_DEFAULTS (G_OBJECT_CLASS (gconf_defaults_parent_class)->constructor (
-                                                type,
-                                                n_construct_properties,
-                                                construct_properties));
+	mechanism = GCONF_DEFAULTS (G_OBJECT_CLASS (gconf_defaults_parent_class)->constructor (
+						type,
+						n_construct_properties,
+						construct_properties));
 
-        return G_OBJECT (mechanism);
+	return G_OBJECT (mechanism);
 }
 
 enum {
@@ -152,10 +150,10 @@ static guint signals[LAST_SIGNAL] = { 0 };
 static void
 gconf_defaults_class_init (GConfDefaultsClass *klass)
 {
-        GObjectClass   *object_class = G_OBJECT_CLASS (klass);
+	GObjectClass   *object_class = G_OBJECT_CLASS (klass);
 
-        object_class->constructor = gconf_defaults_constructor;
-        object_class->finalize = gconf_defaults_finalize;
+	object_class->constructor = gconf_defaults_constructor;
+	object_class->finalize = gconf_defaults_finalize;
 
 	signals[SYSTEM_SET] = g_signal_new ("system-set",
 					    G_OBJECT_CLASS_TYPE (object_class),
@@ -164,126 +162,127 @@ gconf_defaults_class_init (GConfDefaultsClass *klass)
 					    NULL, NULL,
 					    g_cclosure_marshal_VOID__BOXED,
 					    G_TYPE_NONE, 1, G_TYPE_STRV);
- 
-        g_type_class_add_private (klass, sizeof (GConfDefaultsPrivate));
 
-        dbus_g_object_type_install_info (GCONF_TYPE_DEFAULTS, &dbus_glib_gconf_defaults_object_info);
+	g_type_class_add_private (klass, sizeof (GConfDefaultsPrivate));
 
-        dbus_g_error_domain_register (GCONF_DEFAULTS_ERROR, NULL, GCONF_DEFAULTS_TYPE_ERROR);
+	dbus_g_object_type_install_info (GCONF_TYPE_DEFAULTS, &dbus_glib_gconf_defaults_object_info);
 
+	dbus_g_error_domain_register (GCONF_DEFAULTS_ERROR, NULL, GCONF_DEFAULTS_TYPE_ERROR);
 }
 
 static void
 gconf_defaults_init (GConfDefaults *mechanism)
 {
-        mechanism->priv = GCONF_DEFAULTS_GET_PRIVATE (mechanism);
+	mechanism->priv = GCONF_DEFAULTS_GET_PRIVATE (mechanism);
 }
 
 static void
 gconf_defaults_finalize (GObject *object)
 {
-        GConfDefaults *mechanism;
+	GConfDefaults *mechanism;
 
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (GCONF_IS_DEFAULTS (object));
+	g_return_if_fail (object != NULL);
+	g_return_if_fail (GCONF_IS_DEFAULTS (object));
 
-        mechanism = GCONF_DEFAULTS (object);
+	mechanism = GCONF_DEFAULTS (object);
 
-        g_return_if_fail (mechanism->priv != NULL);
+	g_return_if_fail (mechanism->priv != NULL);
 
-        g_object_unref (mechanism->priv->system_bus_proxy);
+	g_object_unref (mechanism->priv->system_bus_proxy);
 
-        G_OBJECT_CLASS (gconf_defaults_parent_class)->finalize (object);
+	G_OBJECT_CLASS (gconf_defaults_parent_class)->finalize (object);
 }
 
 static gboolean
-pk_io_watch_have_data (GIOChannel *channel, GIOCondition condition, gpointer user_data)
+pk_io_watch_have_data (GIOChannel   *channel,
+                       GIOCondition  condition,
+                       gpointer      user_data)
 {
-        int fd;
-        PolKitContext *pk_context = user_data;
-        fd = g_io_channel_unix_get_fd (channel);
-        polkit_context_io_func (pk_context, fd);
-        return TRUE;
+	int fd;
+	PolKitContext *pk_context = user_data;
+	fd = g_io_channel_unix_get_fd (channel);
+	polkit_context_io_func (pk_context, fd);
+	return TRUE;
 }
 
-static int 
+static int
 pk_io_add_watch (PolKitContext *pk_context, int fd)
 {
-        guint id = 0;
-        GIOChannel *channel;
-        channel = g_io_channel_unix_new (fd);
-        if (channel == NULL)
-                goto out;
-        id = g_io_add_watch (channel, G_IO_IN, pk_io_watch_have_data, pk_context);
-        if (id == 0) {
-                g_io_channel_unref (channel);
-                goto out;
-        }
-        g_io_channel_unref (channel);
+	guint id = 0;
+	GIOChannel *channel;
+	channel = g_io_channel_unix_new (fd);
+	if (channel == NULL)
+		goto out;
+	id = g_io_add_watch (channel, G_IO_IN, pk_io_watch_have_data, pk_context);
+	if (id == 0) {
+		g_io_channel_unref (channel);
+		goto out;
+	}
+	g_io_channel_unref (channel);
 out:
-        return id;
+	return id;
 }
 
-static void 
+static void
 pk_io_remove_watch (PolKitContext *pk_context, int watch_id)
 {
-        g_source_remove (watch_id);
+	g_source_remove (watch_id);
 }
 
 static gboolean
 register_mechanism (GConfDefaults *mechanism)
 {
-        GError *error = NULL;
+	GError *error = NULL;
 
-        mechanism->priv->pol_ctx = polkit_context_new ();
-        polkit_context_set_io_watch_functions (mechanism->priv->pol_ctx, pk_io_add_watch, pk_io_remove_watch);
-        if (!polkit_context_init (mechanism->priv->pol_ctx, NULL)) {
-                g_critical ("cannot initialize libpolkit");
-                goto error;
-        }
+	mechanism->priv->pol_ctx = polkit_context_new ();
+	polkit_context_set_io_watch_functions (mechanism->priv->pol_ctx, pk_io_add_watch, pk_io_remove_watch);
+	if (!polkit_context_init (mechanism->priv->pol_ctx, NULL)) {
+		g_critical ("cannot initialize libpolkit");
+		goto error;
+	}
 
-        error = NULL;
-        mechanism->priv->system_bus_connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
-        if (mechanism->priv->system_bus_connection == NULL) {
-                if (error != NULL) {
-                        g_critical ("error getting system bus: %s", error->message);
-                        g_error_free (error);
-                }
-                goto error;
-        }
+	error = NULL;
+	mechanism->priv->system_bus_connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
+	if (mechanism->priv->system_bus_connection == NULL) {
+		if (error != NULL) {
+			g_critical ("error getting system bus: %s", error->message);
+			g_error_free (error);
+		}
+		goto error;
+	}
 
-        dbus_g_connection_register_g_object (mechanism->priv->system_bus_connection, "/", 
-                                             G_OBJECT (mechanism));
+	dbus_g_connection_register_g_object (mechanism->priv->system_bus_connection, "/",
+					     G_OBJECT (mechanism));
 
-        mechanism->priv->system_bus_proxy = dbus_g_proxy_new_for_name (mechanism->priv->system_bus_connection,
-                                                                      DBUS_SERVICE_DBUS,
-                                                                      DBUS_PATH_DBUS,
-                                                                      DBUS_INTERFACE_DBUS);
+	mechanism->priv->system_bus_proxy = dbus_g_proxy_new_for_name (mechanism->priv->system_bus_connection,
+								       DBUS_SERVICE_DBUS,
+								       DBUS_PATH_DBUS,
+								       DBUS_INTERFACE_DBUS);
 
-        start_killtimer ();
+	start_killtimer ();
 
-        return TRUE;
+	return TRUE;
 
 error:
-        return FALSE;
+	return FALSE;
 }
 
 
 GConfDefaults *
 gconf_defaults_new (void)
 {
-        GObject *object;
-        gboolean res;
+	GObject *object;
+	gboolean res;
 
-        object = g_object_new (GCONF_TYPE_DEFAULTS, NULL);
+	object = g_object_new (GCONF_TYPE_DEFAULTS, NULL);
 
-        res = register_mechanism (GCONF_DEFAULTS (object));
-        if (! res) {
-                g_object_unref (object);
-                return NULL;
-        }
+	res = register_mechanism (GCONF_DEFAULTS (object));
+	if (! res) {
+		g_object_unref (object);
+		return NULL;
+	}
 
-        return GCONF_DEFAULTS (object);
+	return GCONF_DEFAULTS (object);
 }
 
 static const char *
@@ -296,7 +295,7 @@ polkit_action_for_gconf_path (GConfDefaults *mechanism,
 	char *prefix, *p;
 	const char *action;
 
-	cache = polkit_context_get_policy_cache (mechanism->priv->pol_ctx);	
+	cache = polkit_context_get_policy_cache (mechanism->priv->pol_ctx);
 	prefix = g_strdup (path);
 
 	while (1) {
@@ -307,14 +306,14 @@ polkit_action_for_gconf_path (GConfDefaults *mechanism,
 			action = polkit_policy_file_entry_get_id (entry);
 			break;
 		}
-		
+
 		p = strrchr (prefix, '/');
 
 		if (p == NULL || p == prefix) {
 			action = NULL;
 			break;
 		}
-	
+
 		*p = 0;
 	}
 
@@ -328,51 +327,51 @@ check_polkit_for_action (GConfDefaults         *mechanism,
                          DBusGMethodInvocation *context,
                          const char            *action)
 {
-        const char *sender;
-        GError *error;
-        DBusError dbus_error;
-        PolKitCaller *pk_caller;
-        PolKitAction *pk_action;
-        PolKitResult pk_result;
+	const char *sender;
+	GError *error;
+	DBusError dbus_error;
+	PolKitCaller *pk_caller;
+	PolKitAction *pk_action;
+	PolKitResult pk_result;
 
-        error = NULL;
+	error = NULL;
 
-        /* Check that caller is privileged */
-        sender = dbus_g_method_get_sender (context);
-        dbus_error_init (&dbus_error);
-        pk_caller = polkit_caller_new_from_dbus_name (
-                dbus_g_connection_get_connection (mechanism->priv->system_bus_connection),
-                sender,
-                &dbus_error);
-        if (pk_caller == NULL) {
-                error = g_error_new (GCONF_DEFAULTS_ERROR,
-                                     GCONF_DEFAULTS_ERROR_GENERAL,
-                                     "Error getting information about caller: %s: %s",
-                                     dbus_error.name, dbus_error.message);
-                dbus_error_free (&dbus_error);
-                dbus_g_method_return_error (context, error);
-                g_error_free (error);
-                return FALSE;
-        }
+	/* Check that caller is privileged */
+	sender = dbus_g_method_get_sender (context);
+	dbus_error_init (&dbus_error);
+	pk_caller = polkit_caller_new_from_dbus_name (
+	dbus_g_connection_get_connection (mechanism->priv->system_bus_connection),
+					  sender,
+					  &dbus_error);
+	if (pk_caller == NULL) {
+		error = g_error_new (GCONF_DEFAULTS_ERROR,
+				     GCONF_DEFAULTS_ERROR_GENERAL,
+				     "Error getting information about caller: %s: %s",
+				     dbus_error.name, dbus_error.message);
+		dbus_error_free (&dbus_error);
+		dbus_g_method_return_error (context, error);
+		g_error_free (error);
+		return FALSE;
+	}
 
-        pk_action = polkit_action_new ();
-        polkit_action_set_action_id (pk_action, action);
-        pk_result = polkit_context_is_caller_authorized (mechanism->priv->pol_ctx, pk_action, pk_caller, TRUE, NULL);
-        polkit_caller_unref (pk_caller);
+	pk_action = polkit_action_new ();
+	polkit_action_set_action_id (pk_action, action);
+	pk_result = polkit_context_is_caller_authorized (mechanism->priv->pol_ctx, pk_action, pk_caller, TRUE, NULL);
+	polkit_caller_unref (pk_caller);
 
-        if (pk_result != POLKIT_RESULT_YES) {
+	if (pk_result != POLKIT_RESULT_YES) {
 		dbus_error_init (&dbus_error);
 		polkit_dbus_error_generate (pk_action, pk_result, &dbus_error);
 		dbus_set_g_error (&error, &dbus_error);
-                dbus_g_method_return_error (context, error);
-                dbus_error_free (&dbus_error);
-                g_error_free (error);
-        	polkit_action_unref (pk_action);
-                return FALSE;
-        }
+		dbus_g_method_return_error (context, error);
+		dbus_error_free (&dbus_error);
+		g_error_free (error);
+		polkit_action_unref (pk_action);
+		return FALSE;
+	}
 
-        polkit_action_unref (pk_action);
-        return TRUE;
+	polkit_action_unref (pk_action);
+	return TRUE;
 }
 
 static char *
@@ -380,7 +379,7 @@ gconf_address_for_caller (GConfDefaults          *mechanism,
 			  DBusGMethodInvocation  *context,
 			  GError                **gerror)
 {
-        char *sender;
+	char *sender;
 	DBusConnection *conn;
 	uid_t uid;
 	struct passwd *pwd;
@@ -388,7 +387,7 @@ gconf_address_for_caller (GConfDefaults          *mechanism,
 	DBusError error;
 
 	conn = dbus_g_connection_get_connection (mechanism->priv->system_bus_connection);
-        sender = dbus_g_method_get_sender (context);
+	sender = dbus_g_method_get_sender (context);
 
 	dbus_error_init (&error);
 	uid = dbus_bus_get_unix_user (conn, sender, &error);
@@ -398,11 +397,11 @@ gconf_address_for_caller (GConfDefaults          *mechanism,
 		dbus_error_free (&error);
 		return NULL;
 	}
-	
+
 	pwd = getpwuid (uid);
 	if (pwd == NULL) {
-		g_set_error (gerror, 
-			     0, 0, 
+		g_set_error (gerror,
+			     0, 0,
 			     "Failed to get passwd information for uid %d", uid);
 		return NULL;
 	}
@@ -434,13 +433,13 @@ copy_tree (GConfClient     *src,
 	GSList *list, *l;
 	GConfEntry *entry;
 
-	if (path_is_excluded (path, excludes)) 
+	if (path_is_excluded (path, excludes))
 		return;
 
 	list = gconf_client_all_entries (src, path, NULL);
 	for (l = list; l; l = l->next) {
 		entry = l->data;
-		if (!path_is_excluded (entry->key, excludes)) 
+		if (!path_is_excluded (entry->key, excludes))
 			gconf_change_set_set (changes, entry->key, entry->value);
 	}
 	g_slist_foreach (list, (GFunc)gconf_entry_free, NULL);
@@ -461,7 +460,7 @@ copy_entry (GConfClient     *src,
 {
 	GConfValue *value;
 
-	if (path_is_excluded (path, excludes)) 
+	if (path_is_excluded (path, excludes))
 		return;
 
 	value = gconf_client_get (src, path, NULL);
@@ -481,7 +480,7 @@ do_copy (GConfDefaults          *mechanism,
 	 GConfChangeSet        **changeset_out)
 {
         char *address = NULL;
-	GConfClient *source = NULL; 
+	GConfClient *source = NULL;
 	GConfClient *dest = NULL;
 	GConfChangeSet *changes = NULL;
 	GConfEngine *engine;
@@ -505,35 +504,35 @@ do_copy (GConfDefaults          *mechanism,
 		dest_address = "xml:merged:" SYSGCONFDIR "/gconf.xml.mandatory";
 	}
 	else {
-		annotation_key = "org.gnome.gconf.defaults.set-system.prefix"; 
+		annotation_key = "org.gnome.gconf.defaults.set-system.prefix";
 		default_action = "org.gnome.gconf.defaults.set-system";
 		dest_address = "xml:merged:" SYSGCONFDIR "/gconf.xml.system";
 	}
 
 	for (i = 0; includes[i]; i++) {
 		action = polkit_action_for_gconf_path (mechanism, annotation_key, includes[i]);
-		if (action == NULL) 
+		if (action == NULL)
 			action = default_action;
 
-		if (!check_polkit_for_action (mechanism, context, action)) 
+		if (!check_polkit_for_action (mechanism, context, action))
 			goto out;
 	}
 
 	error = NULL;
 	engine = gconf_engine_get_local (dest_address, &error);
-	if (error) 
-		goto cleanup;	
+	if (error)
+		goto cleanup;
 
 	dest = gconf_client_get_for_engine (engine);
 	gconf_engine_unref (engine);
 
 	/* find the address to from the caller id */
-        address = gconf_address_for_caller (mechanism, context, &error);
+	address = gconf_address_for_caller (mechanism, context, &error);
 	if (error)
 		goto cleanup;
 
 	engine = gconf_engine_get_local (address, &error);
-	if (error) 
+	if (error)
 		goto cleanup;
 
 	source = gconf_client_get_for_engine (engine);
@@ -561,7 +560,7 @@ cleanup:
 	g_free (address);
 	if (changes)
 		gconf_change_set_unref (changes);
-	if (dest) 
+	if (dest)
 		g_object_unref (dest);
 	if (source)
 		g_object_unref (source);
@@ -577,7 +576,7 @@ cleanup:
 		g_error_free (error2);
 	}
 	else
-        	dbus_g_method_return (context);
+		dbus_g_method_return (context);
 
 out:
 	start_killtimer ();
@@ -594,16 +593,11 @@ append_key (GConfChangeSet *cs,
 	g_ptr_array_add (keys, (gpointer) key);
 }
 
-void
-gconf_defaults_set_system (GConfDefaults          *mechanism,
-			   const char            **includes,
-			   const char            **excludes,
-			   DBusGMethodInvocation  *context)
+static void
+emit_system_set_signal (GConfDefaults  *mechanism,
+                        GConfChangeSet *changes)
 {
-	GConfChangeSet *changes = NULL;
 	GPtrArray *keys;
-
-	do_copy (mechanism, FALSE, includes, excludes, context, &changes);
 
 	if (!changes)
 		return;
@@ -615,6 +609,19 @@ gconf_defaults_set_system (GConfDefaults          *mechanism,
 	g_signal_emit (mechanism, signals[SYSTEM_SET], 0, keys->pdata);
 
 	g_ptr_array_free (keys, TRUE);
+}
+
+void
+gconf_defaults_set_system (GConfDefaults          *mechanism,
+			   const char            **includes,
+			   const char            **excludes,
+			   DBusGMethodInvocation  *context)
+{
+	GConfChangeSet *changes = NULL;
+
+	do_copy (mechanism, FALSE, includes, excludes, context, &changes);
+
+	emit_system_set_signal (mechanism, changes);
 	gconf_change_set_unref (changes);
 }
 
@@ -624,7 +631,120 @@ gconf_defaults_set_mandatory (GConfDefaults          *mechanism,
                               const char            **excludes,
                               DBusGMethodInvocation  *context)
 {
-	do_copy (mechanism, TRUE, includes, excludes, context, NULL);
+	do_copy (mechanism, FALSE, includes, excludes, context, NULL);
+}
+
+static void
+do_set_value (GConfDefaults          *mechanism,
+              gboolean                mandatory,
+              const char             *path,
+              const char             *value,
+              DBusGMethodInvocation  *context,
+              GConfChangeSet        **changeset_out)
+{
+	GConfClient *dest = NULL;
+	GConfChangeSet *changes = NULL;
+	GConfEngine *engine;
+	GConfValue *gvalue;
+	GError *error;
+	GError *error2;
+	const char *action;
+	const char *annotation_key;
+	const char *default_action;
+	const char *dest_address;
+
+	if (changeset_out)
+		*changeset_out = NULL;
+
+	stop_killtimer ();
+
+	if (mandatory) {
+		annotation_key = "org.gnome.gconf.defaults.set-mandatory.prefix";
+		default_action = "org.gnome.gconf.defaults.set-mandatory";
+		dest_address = "xml:merged:/etc/gconf/gconf.xml.mandatory";
+	}
+	else {
+		annotation_key = "org.gnome.gconf.defaults.set-system.prefix";
+		default_action = "org.gnome.gconf.defaults.set-system";
+		dest_address = "xml:merged:/etc/gconf/gconf.xml.system";
+	}
+
+	action = polkit_action_for_gconf_path (mechanism, annotation_key, path);
+	if (action == NULL)
+		action = default_action;
+
+	if (!check_polkit_for_action (mechanism, context, action))
+		goto out;
+
+	error = NULL;
+	engine = gconf_engine_get_local (dest_address, &error);
+	if (error)
+		goto cleanup;
+
+	dest = gconf_client_get_for_engine (engine);
+	gconf_engine_unref (engine);
+
+	changes = gconf_change_set_new ();
+
+	gvalue = gconf_value_decode (value);
+	if (!gvalue)
+		goto cleanup;
+
+	gconf_change_set_set (changes, path, gvalue);
+	gconf_value_free (gvalue);
+
+	gconf_client_commit_change_set (dest, changes, FALSE, &error);
+	gconf_client_suggest_sync (dest, NULL);
+
+	if (changeset_out) {
+		*changeset_out = changes;
+		changes = NULL;
+	}
+
+cleanup:
+	if (changes)
+		gconf_change_set_unref (changes);
+	if (dest)
+		g_object_unref (dest);
+
+	if (error) {
+		g_print ("failed to set GConf values:  %s\n", error->message);
+		error2 = g_error_new_literal (GCONF_DEFAULTS_ERROR,
+					      GCONF_DEFAULTS_ERROR_GENERAL,
+					      error->message);
+		g_error_free (error);
+
+		dbus_g_method_return_error (context, error2);
+		g_error_free (error2);
+	}
+	else
+		dbus_g_method_return (context);
+
+out:
+	start_killtimer ();
+}
+
+void
+gconf_defaults_set_system_value (GConfDefaults         *mechanism,
+                                 const char            *path,
+                                 const char            *value,
+                                 DBusGMethodInvocation *context)
+{
+	GConfChangeSet *changes = NULL;
+
+	do_set_value (mechanism, FALSE, path, value, context, &changes);
+
+        emit_system_set_signal (mechanism, changes);
+	gconf_change_set_unref (changes);
+}
+
+void
+gconf_defaults_set_mandatory_value (GConfDefaults         *mechanism,
+                                    const char            *path,
+                                    const char            *value,
+                                    DBusGMethodInvocation *context)
+{
+	do_set_value (mechanism, TRUE, path, value, context, NULL);
 }
 
 static void

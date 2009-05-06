@@ -2,12 +2,12 @@
 <node name="/">
   <interface name="org.gnome.GConf.Defaults">
     <!--
-      includes: an array of GConf paths to copy from the 
+      includes: an array of GConf paths to copy from the
                 callers GConf database to the system database
       excludes: an array of GConf paths to omit
 
-      Copies values from the callers GConf database to the system-wide 
-      database. The subtree below each included path is copied recursively, 
+      Copies values from the callers GConf database to the system-wide
+      database. The subtree below each included path is copied recursively,
       skipping the excluded subtrees.
       To decide which PolicyKit privilege to require for the copying of
       each path in includes, the mechanism looks for a privilege with an
@@ -21,16 +21,33 @@
       <arg name="excludes" direction="in" type="as"/>
     </method>
 
+    <!--
+      path: a path to a gconf key
+      value: a value, as encoded by gconf_value_encode
+
+      Sets the key at path to value in the system-wide database.
+      To decide which PolicyKit privilege to require for the copying of
+      each path in includes, the mechanism looks for a privilege with an
+      annotation with key org.gnome.gconf.defaults.set-system.prefix whose
+      value is a prefix of the path. If no privilege is found this way, the
+      org.gnome.gconf.defaults.set-system privilege is required.
+    -->
+    <method name="SetSystemValue">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg name="path"  direction="in" type="s"/>
+      <arg name="value" direction="in" type="s"/>
+    </method>
+
     <signal name="SystemSet">
       <arg name="keys" type="as"/>
     </signal>
     <!--
-      includes: an array of GConf paths to copy from the 
+      includes: an array of GConf paths to copy from the
                 callers GConf database to the mandatory database
       excludes: an array of GConf paths to omit
 
-      Copies values from the callers GConf database to the system-wide 
-      mandatory database. The subtree below each included path is copied 
+      Copies values from the callers GConf database to the system-wide
+      mandatory database. The subtree below each included path is copied
       recursively, skipping the excluded subtrees.
       To decide which PolicyKit privilege to require for the copying of
       each path in includes, the mechanism looks for a privilege with an
@@ -45,8 +62,25 @@
     </method>
 
     <!--
+      path: a path to a gconf key
+      value: a value, as encoded by gconf_value_encode
+
+      Sets the key at path to value in the system-wide mandatory database.
+      To decide which PolicyKit privilege to require for the copying of
+      each path in includes, the mechanism looks for a privilege with an
+      annotation with key org.gnome.gconf.defaults.set-mandatory.prefix whose
+      value is a prefix of the path. If no privilege is found this way, the
+      org.gnome.gconf.defaults.set-mandatory privilege is required.
+    -->
+    <method name="SetMandatoryValue">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg name="path"  direction="in" type="s"/>
+      <arg name="value" direction="in" type="s"/>
+    </method>
+
+    <!--
       Unsets keys in the system-wide mandatory GConf database, making the
-      keys writable again. The subtree below each included path is copied 
+      keys writable again. The subtree below each included path is copied
       recursively, skipping the excluded subtrees.
       To decide which PolicyKit privilege to require for the copying of
       each path in includes, the mechanism looks for a privilege with an

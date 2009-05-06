@@ -68,20 +68,30 @@ GType          gconf_defaults_get_type       (void);
 GConfDefaults *gconf_defaults_new            (void);
 
 /* exported methods */
-void           gconf_defaults_set_system        (GConfDefaults          *mechanism,
-                                                 const char            **includes,
-                                                 const char            **excludes,
-                                                 DBusGMethodInvocation  *context);
+void           gconf_defaults_set_system          (GConfDefaults          *mechanism,
+                                                   const char            **includes,
+                                                   const char            **excludes,
+                                                   DBusGMethodInvocation  *context);
 
-void           gconf_defaults_set_mandatory     (GConfDefaults          *mechanism,
-                                                 const char            **includes,
-                                                 const char            **excludes,
-                                                 DBusGMethodInvocation  *context);
+void           gconf_defaults_set_system_value    (GConfDefaults          *mechanism,
+                                                   const char             *path,
+                                                   const char             *value,
+                                                   DBusGMethodInvocation  *context);
 
-void           gconf_defaults_unset_mandatory   (GConfDefaults          *mechanism,
-                                                 const char            **includes,
-                                                 const char            **excludes,
-                                                 DBusGMethodInvocation  *context);
+void           gconf_defaults_set_mandatory       (GConfDefaults          *mechanism,
+                                                   const char            **includes,
+                                                   const char            **excludes,
+                                                   DBusGMethodInvocation  *context);
+
+void           gconf_defaults_set_mandatory_value (GConfDefaults          *mechanism,
+                                                   const char             *path,
+                                                   const char             *value,
+                                                   DBusGMethodInvocation  *context);
+
+void           gconf_defaults_unset_mandatory     (GConfDefaults          *mechanism,
+                                                   const char            **includes,
+                                                   const char            **excludes,
+                                                   DBusGMethodInvocation  *context);
 
 G_END_DECLS
 
