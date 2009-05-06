@@ -2465,7 +2465,7 @@ get_ior (gboolean start_if_not_found,
         if (dbus_error_is_set (&bus_error)) {
                 if (failure_log)
                     g_string_append_printf (failure_log,
-                                            _("Could not send message to gconf daemon: %s"),
+                                            _("Could not send message to GConf daemon: %s"),
                                             bus_error.message);
                 dbus_error_free (&bus_error);
                 return NULL;
