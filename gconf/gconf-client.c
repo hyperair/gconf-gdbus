@@ -1199,7 +1199,8 @@ gconf_client_key_is_writable (GConfClient* client,
 
   if (gconf_client_lookup (client, key, &entry))
     {
-      g_assert (entry != NULL);
+      if (!entry)
+        return FALSE;
 
       trace ("CACHED: Checking whether key '%s' is writable", key);
       return gconf_entry_get_is_writable (entry);
@@ -1406,7 +1407,8 @@ gconf_client_get_default_from_schema (GConfClient* client,
    */
   if (gconf_client_lookup (client, key, &entry))
     {
-      g_assert (entry != NULL);
+      if (!entry)
+        return NULL;
 
       if (gconf_entry_get_is_default (entry))
         {
@@ -2498,7 +2500,7 @@ gconf_client_flush_notifies (GConfClient *client)
     {
       GConfEntry *entry = NULL;
 
-      if (gconf_client_lookup (client, tmp->data, &entry))
+      if (gconf_client_lookup (client, tmp->data, &entry) && entry != NULL)
         {
           if (entry != last_entry)
             {
