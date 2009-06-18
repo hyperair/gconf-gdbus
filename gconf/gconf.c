@@ -122,9 +122,8 @@ struct _GConfEngine {
      local engines don't do notification! */
   GConfSources* local_sources;
   
-  /* A list of addresses that make up this db
-   * if this is not the default engine;
-   * NULL if it's the default
+  /* A list of addresses that make up this db;
+   * NULL if it uses the default db
    */
   GSList *addresses;
 
@@ -137,8 +136,6 @@ struct _GConfEngine {
 
   gpointer owner;
   int owner_use_count;
-  
-  guint is_default : 1;
 
   /* If TRUE, this is a local engine (and therefore
    * has no ctable and no notifications)
@@ -247,7 +244,6 @@ gconf_engine_blank (gboolean remote)
       conf->ctable = ctable_new();
       conf->local_sources = NULL;
       conf->is_local = FALSE;
-      conf->is_default = TRUE;
     }
   else
     {
@@ -255,7 +251,6 @@ gconf_engine_blank (gboolean remote)
       conf->ctable = NULL;
       conf->local_sources = NULL;
       conf->is_local = TRUE;
-      conf->is_default = FALSE;
     }
   
   return conf;
@@ -366,7 +361,7 @@ gconf_engine_connect (GConfEngine *conf,
   if (cs == CORBA_OBJECT_NIL)
     return FALSE; /* Error should already be set */
 
-  if (conf->is_default)
+  if (conf->addresses == NULL)
     {
       db = ConfigServer_get_default_database (cs, &ev);      
     }
@@ -556,6 +551,8 @@ GConfEngine*
 gconf_engine_get_default (void)
 {
   GConfEngine* conf = NULL;
+  const gchar* source_path;
+  GError* err = NULL;
   
   if (default_engine)
     conf = default_engine;
@@ -564,10 +561,22 @@ gconf_engine_get_default (void)
     {
       conf = gconf_engine_blank(TRUE);
 
-      conf->is_default = TRUE;
-
       default_engine = conf;
-      
+
+      source_path = g_getenv ("GCONF_DEFAULT_SOURCE_PATH");
+      if (source_path != NULL)
+	{
+	  conf->addresses = gconf_load_source_path (source_path, &err);
+	  if (err)
+	    {
+	      g_warning ("Could not parse GCONF_DEFAULT_SOURCE_PATH: %s",
+			 err->message);
+	      g_error_free (err);
+	    }
+	}
+      else
+	conf->addresses = NULL;
+
       /* Ignore errors, we never return a NULL default database, and
        * since we aren't starting if it isn't found, we'll probably
        * get errors half the time anyway.
@@ -595,7 +604,6 @@ gconf_engine_get_for_address (const char  *address,
     {
       conf = gconf_engine_blank (TRUE);
 
-      conf->is_default = FALSE;
       conf->addresses = addresses;
 
       if (!gconf_engine_connect (conf, TRUE, err))
@@ -629,7 +637,6 @@ gconf_engine_get_for_addresses (GSList *addresses, GError** err)
 
       conf = gconf_engine_blank (TRUE);
 
-      conf->is_default = FALSE;
       conf->addresses = NULL;
 
       tmp = addresses;
