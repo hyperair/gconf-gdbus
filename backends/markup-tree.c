@@ -2588,9 +2588,9 @@ parse_value_element (GMarkupParseContext  *context,
     case GCONF_VALUE_BOOL:
     case GCONF_VALUE_FLOAT:
       {
-        double fval;
-        gboolean bval;
-        int ival;
+        double fval = 0.0;
+        gboolean bval = FALSE;
+        int ival = 0;
 
         if (value == NULL)
           {

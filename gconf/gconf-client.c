@@ -1090,18 +1090,19 @@ gconf_client_all_entries    (GConfClient* client,
   if (g_hash_table_lookup (client->cache_dirs, dir))
     {
       GHashTableIter iter;
-      gchar *key;
-      GConfEntry *entry;
+      gpointer key, value;
 
       trace ("CACHED: Getting all values in '%s'", dir);
 
       dirlen = strlen (dir);
       retval = NULL;
       g_hash_table_iter_init (&iter, client->cache_hash);
-      while (g_hash_table_iter_next (&iter, &key, &entry))
+      while (g_hash_table_iter_next (&iter, &key, &value))
         {
-          if (g_str_has_prefix (key, dir) &&
-              key + dirlen == strrchr (key, '/'))
+          const gchar *id = key;
+          GConfEntry *entry = value;
+          if (g_str_has_prefix (id, dir) &&
+              id + dirlen == strrchr (id, '/'))
             retval = g_slist_prepend (retval, gconf_entry_copy (entry));
         }
 
