@@ -25,6 +25,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#ifdef __sun
+#include <lber.h>
+#endif
 #include <ldap.h>
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
