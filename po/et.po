@@ -1,18 +1,19 @@
 # GConf'i eesti keele tõlge.
 # Estonian translation of GConf.
 #
-# Copyright (C) 2005-2008 the Gnome Foundation
+# Copyright (C) 2005-2009 the Gnome Foundation
 # This file is distributed under the same license as the gconf package.
 #
 # kitt <peroona@hot.ee>, 2005.
-# Ivar Smolin <okul@linux.ee>, 2005-2008.
+# Ivar Smolin <okul@linux.ee>, 2005-2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-11 16:34+0000\n"
-"PO-Revision-Date: 2008-08-20 22:09+0300\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
+"product=gconf&component=general\n"
+"POT-Creation-Date: 2009-05-06 03:42+0000\n"
+"PO-Revision-Date: 2009-07-29 11:55+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
 "MIME-Version: 1.0\n"
@@ -173,10 +174,6 @@ msgid "Line %d character %d: %s"
 msgstr "Rida %d  tähemärk %d: %s"
 
 #, c-format
-msgid "Attribute \"%s\" repeated twice on the same <%s> element"
-msgstr "Atribuuti \"%s\" on kasutatud kaks korda sama elemendi <%s> korral"
-
-#, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
 msgstr ""
 
@@ -197,11 +194,11 @@ msgid "Didn't understand `%s' (expected real number)"
 msgstr "`%s' on arusaamatu (oodatud reaalarv)"
 
 #, c-format
-msgid "No \"%s\" attribute on element <%s>"
+msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
 msgstr ""
 
 #, c-format
-msgid "Unknown value \"%s\" for \"%s\" attribute on element <%s>"
+msgid "No \"%s\" attribute on element <%s>"
 msgstr ""
 
 #, c-format
@@ -271,6 +268,10 @@ msgstr "Tõrge \"%s\" avamisel: %s\n"
 #, c-format
 msgid "Error reading \"%s\": %s\n"
 msgstr "Viga \"%s\" lugemisel: %s\n"
+
+#, c-format
+msgid "Could not flush file '%s' to disk: %s"
+msgstr "Faili '%s' kirjutamispuhvrit pole võimalik kettale salvestada: %s"
 
 #, c-format
 msgid "Error writing file \"%s\": %s"
@@ -743,15 +744,15 @@ msgstr "Tõrge '%s' eemaldamisel: %s"
 
 #, c-format
 msgid "Not running within active session"
-msgstr ""
+msgstr "Ei tööta aktiivse seansi all"
 
 #, c-format
 msgid "Failed to get connection to session: %s"
 msgstr "Tõrge seansiga ühenduse saamisel: %s"
 
 #, c-format
-msgid "Could not send message to gconf daemon: %s"
-msgstr "Gconf-deemonile pole võimalik sõnumit saata: %s"
+msgid "Could not send message to GConf daemon: %s"
+msgstr "GConf-deemonile pole võimalik sõnumit saata: %s"
 
 #, c-format
 msgid "daemon gave erroneous reply: %s"
@@ -803,7 +804,7 @@ msgstr "Serveri pingimise viga: %s"
 msgid ""
 "Failed to contact configuration server; some possible causes are that you "
 "need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://www.gnome.org/projects/gconf/ for information. "
+"to a system crash. See http://projects.gnome.org/gconf/ for information. "
 "(Details - %s)"
 msgstr ""
 
@@ -1198,6 +1199,12 @@ msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Salvestatud olekufaili '%s' pole võimalik kirjutada, fd: %d: %s"
 
 #, c-format
+msgid "Could not flush saved state file '%s' to disk: %s"
+msgstr ""
+"Salvestatud olekufaili '%s' kirjutamispuhvrit pole võimalik kettale "
+"kirjutada: %s"
+
+#, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Uut salvestatud olekufaili '%s' pole võimalik sulgeda: %s"
 
@@ -1273,6 +1280,9 @@ msgstr "Võtmete väärtuste eemaldamine käsurealt"
 msgid ""
 "Recursively unset all keys at or below the key/directory names on the "
 "command line"
+msgstr ""
+
+msgid "Toggles a boolean key."
 msgstr ""
 
 msgid "Print all key/value pairs in a directory."
@@ -1492,15 +1502,19 @@ msgstr "Käsureavõtmete täieliku nimekirja jaoks käivita '%s --help'.\n"
 
 #, c-format
 msgid "Can't get and set/unset simultaneously\n"
-msgstr "Rööbiti pole võimalik väärtust hankida ja määrata/kustutada\n"
+msgstr "Korraga pole võimalik väärtust hankida ja määrata/kustutada\n"
 
 #, c-format
 msgid "Can't set and get/unset simultaneously\n"
-msgstr "Rööbiti pole võimalik väärtust määrata ja hankida/kustutada\n"
+msgstr "Korraga pole võimalik väärtust määrata ja hankida/kustutada\n"
 
 #, c-format
 msgid "Can't get type and set/unset simultaneously\n"
 msgstr ""
+
+#, c-format
+msgid "Can't toggle and get/set/unset simultaneously\n"
+msgstr "Korraga pole võimalik väärtust hankida ja määrata/kustutada\n"
 
 #, c-format
 msgid "Can't use --all-entries with --get or --set\n"
@@ -1593,7 +1607,15 @@ msgstr "(väärtus määramata)"
 
 #, c-format
 msgid "Must specify a key pattern to search for.\n"
-msgstr "Pead täpsustama otsitavate võtmete mustrit.\n"
+msgstr "Pead määrama otsingu võtmemustri.\n"
+
+#, c-format
+msgid "Must specify a PCRE regex to search for.\n"
+msgstr "Pead määrama otsingu PCRE regulaaravaldise.\n"
+
+#, c-format
+msgid "Error compiling regex: %s\n"
+msgstr "Viga regulaaravaldise kompileerimisel: %s\n"
 
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
@@ -1605,7 +1627,7 @@ msgstr "Tõrge seadistusteserveri (gconfd) loomisel: %s\n"
 
 #, c-format
 msgid "Must specify a key or keys to get\n"
-msgstr "Pead täpsustama võtme või võtmed, mida hankida\n"
+msgstr "Pead määrama hangitava(d) võtme(d)\n"
 
 #, c-format
 msgid "Type: %s\n"
@@ -1686,6 +1708,18 @@ msgstr "Viga väärtuse määramisel: %s\n"
 #, c-format
 msgid "Error syncing: %s\n"
 msgstr "Viga sünkimisel: %s\n"
+
+#, c-format
+msgid "Must specify one or more keys as arguments\n"
+msgstr "Argumendiks tuleb määrata vähemalt üks võti\n"
+
+#, c-format
+msgid "No value found for key %s\n"
+msgstr "Võtmele %s ei leitud väärtust\n"
+
+#, c-format
+msgid "Not a boolean value: %s\n"
+msgstr "Pole tõeväärtuse tüüpi väärtus: %s\n"
 
 #, c-format
 msgid "Must specify a key or keys to get type\n"
@@ -1838,7 +1872,7 @@ msgstr "HOIATUS: Tõrge stringiväärtuse `%s' parsimisel\n"
 
 #, c-format
 msgid "WARNING: Failed to parse boolean value `%s'\n"
-msgstr "HOIATUS: Tõge tõeväärtuse `%s' parsimisel\n"
+msgstr "HOIATUS: Tõrge tõeväärtuse `%s' parsimisel\n"
 
 #, c-format
 msgid "WARNING: failed to associate schema `%s' with key `%s': %s\n"
@@ -2015,6 +2049,9 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
+
+#~ msgid "Attribute \"%s\" repeated twice on the same <%s> element"
+#~ msgstr "Atribuuti \"%s\" on kasutatud kaks korda sama elemendi <%s> korral"
 
 #~ msgid "gconftool or other non-gconfd process has the lock file '%s'"
 #~ msgstr ""
