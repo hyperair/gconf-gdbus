@@ -20,13 +20,13 @@ INCLUDES = \
 
 gconf_defaults_mechanism_LDADD = \
 	$(top_builddir)/gconf/libgconf-2.la \
-	$(DEFAULTS_LIBS) 
+	$(DEFAULTS_LIBS)
 
 BUILT_SOURCES = gconf-defaults-glue.h
 
 dbus_servicesdir = $(datadir)/dbus-1/system-services
 dbus_confdir = $(sysconfdir)/dbus-1/system.d
-polkitdir = $(datadir)/PolicyKit/policy
+polkitdir = $(datadir)/polkit-1/actions
 
 dbus_services_in_files = org.gnome.GConf.Defaults.service.in
 polkit_in_files = org.gnome.gconf.defaults.policy.in
@@ -40,9 +40,6 @@ dbus_conf_DATA = org.gnome.GConf.Defaults.conf
 
 @INTLTOOL_POLICY_RULE@
 polkit_DATA = $(polkit_in_files:.policy.in=.policy)
-
-check:
-	$(POLKIT_POLICY_FILE_VALIDATE) $(polkit_DATA)
 
 EXTRA_DIST =					\
 	$(dbus_services_in_files)		\

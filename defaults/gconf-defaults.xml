@@ -38,6 +38,12 @@
       <arg name="value" direction="in" type="s"/>
     </method>
 
+    <method name="CanSetSystem">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg name="includes" direction="in" type="as"/>
+      <arg name="result" direction="out" type="u"/>
+     </method>
+
     <signal name="SystemSet">
       <arg name="keys" type="as"/>
     </signal>
@@ -93,6 +99,12 @@
       <arg name="includes" direction="in" type="as"/>
       <arg name="excludes" direction="in" type="as"/>
     </method>
-   
+
+    <method name="CanSetMandatory">
+      <annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+      <arg name="includes" direction="in" type="as"/>
+      <arg name="result" direction="out" type="u"/>
+    </method>
+
   </interface>
 </node>

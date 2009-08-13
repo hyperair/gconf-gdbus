@@ -93,6 +93,14 @@ void           gconf_defaults_unset_mandatory     (GConfDefaults          *mecha
                                                    const char            **excludes,
                                                    DBusGMethodInvocation  *context);
 
+void		gconf_defaults_can_set_system    (GConfDefaults         *mechanism,
+						  const char	       **includes,
+                                                  DBusGMethodInvocation  *context);
+
+void		gconf_defaults_can_set_mandatory (GConfDefaults         *mechanism,
+						  const char	       **includes,
+                                                  DBusGMethodInvocation  *context);
+
 G_END_DECLS
 
 #endif /* GCONF_DEFAULTS_H */

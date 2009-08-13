@@ -122,6 +122,29 @@ get_system_bus (void)
         return bus;
 }
 
+extern gboolean disable_killtimer;
+gboolean debug = FALSE;
+
+GOptionEntry entries [] = {
+	{ "debug", 0, 0, G_OPTION_ARG_NONE, &debug, "Emit debug output", NULL },
+	{ "no-kill", 0, 0, G_OPTION_ARG_NONE, &disable_killtimer, "Don't exit when idle", NULL },
+	{ NULL, }
+};
+
+static gint log_levels = (G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL | G_LOG_LEVEL_WARNING);
+
+void
+log_default_handler (const gchar   *log_domain,
+                     GLogLevelFlags log_level,
+                     const gchar   *message,
+                     gpointer       unused_data)
+{
+	if ((log_level & log_levels) != 0) {
+		g_log_default_handler (log_domain, log_level, message, unused_data);
+	}
+}
+
+
 int
 main (int argc, char **argv)
 {
@@ -130,6 +153,8 @@ main (int argc, char **argv)
         DBusGProxy          *bus_proxy;
         DBusGConnection     *connection;
         int                  ret;
+	GOptionContext      *options;
+	GError              *error = NULL;
 
         ret = 1;
 
@@ -139,8 +164,22 @@ main (int argc, char **argv)
         dbus_g_thread_init ();
         g_type_init ();
 
+	options = g_option_context_new (NULL);
+	g_option_context_add_main_entries (options, entries, NULL);
+	if (!g_option_context_parse (options, &argc, &argv, &error)) {
+		g_warning ("Failed to parse options: %s\n", error->message);
+		g_error_free (error);
+	}
+	g_option_context_free (options);
+
+	g_log_set_default_handler (log_default_handler, NULL);
+	if (debug) {
+		log_levels = log_levels | G_LOG_LEVEL_DEBUG;
+	}
+
         connection = get_system_bus ();
         if (connection == NULL) {
+                g_warning ("Could not get system bus connection; bailing out");
                 goto out;
         }
 
