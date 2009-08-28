@@ -101,7 +101,7 @@ struct _GConfClient
   guint notify_handler;
   int pending_notify_count;
   GHashTable *cache_dirs;
-  int pad2;
+  GHashTable *cache_recursive_dirs;
 };
 
 struct _GConfClientClass

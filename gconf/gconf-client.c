@@ -239,6 +239,8 @@ gconf_client_init (GConfClient *client)
   client->cache_hash = g_hash_table_new (g_str_hash, g_str_equal);
   client->cache_dirs = g_hash_table_new_full (g_str_hash, g_str_equal,
 					      g_free, NULL);
+  client->cache_recursive_dirs = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                                        g_free, NULL);
   /* We create the listeners only if they're actually used */
   client->listeners = NULL;
   client->notify_list = NULL;
@@ -315,6 +317,9 @@ gconf_client_finalize (GObject* object)
   
   g_hash_table_destroy (client->cache_hash);
   client->cache_hash = NULL;
+
+  g_hash_table_destroy (client->cache_recursive_dirs);
+  client->cache_recursive_dirs = NULL;
 
   g_hash_table_destroy (client->cache_dirs);
   client->cache_dirs = NULL;
@@ -871,7 +876,7 @@ gconf_client_clear_cache(GConfClient* client)
 }
 
 static void
-cache_pairs_in_dir(GConfClient* client, const gchar* path);
+cache_pairs_in_dir(GConfClient* client, const gchar* path, gboolean recursive);
 
 static void 
 recurse_subdir_list(GConfClient* client, GSList* subdirs)
@@ -884,7 +889,7 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs)
     {
       gchar* s = tmp->data;
       
-      cache_pairs_in_dir(client, s);
+      cache_pairs_in_dir(client, s, TRUE);
 
       trace ("REMOTE: All dirs at '%s'", s);
       PUSH_USE_ENGINE (client);
@@ -955,7 +960,7 @@ cache_entry_list_destructively (GConfClient *client,
 }
 
 static void 
-cache_pairs_in_dir(GConfClient* client, const gchar* dir)
+cache_pairs_in_dir(GConfClient* client, const gchar* dir, gboolean recursive)
 {
   GSList* pairs;
   GError* error = NULL;
@@ -977,6 +982,9 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
   cache_entry_list_destructively (client, pairs);
   trace ("Mark '%s' as fully cached", dir);
   g_hash_table_insert (client->cache_dirs, g_strdup (dir), GINT_TO_POINTER (1));
+  
+  if (recursive)
+    g_hash_table_insert (client->cache_recursive_dirs, g_strdup (dir), GINT_TO_POINTER (1));
 }
 
 void
@@ -1009,7 +1017,7 @@ gconf_client_preload    (GConfClient* client,
       {
         trace ("Onelevel preload of '%s'", dirname);
         
-        cache_pairs_in_dir (client, dirname);
+        cache_pairs_in_dir (client, dirname, FALSE);
       }
       break;
 
@@ -1024,7 +1032,7 @@ gconf_client_preload    (GConfClient* client,
         subdirs = gconf_engine_all_dirs(client->engine, dirname, NULL);
         POP_USE_ENGINE (client);
         
-        cache_pairs_in_dir(client, dirname);
+        cache_pairs_in_dir(client, dirname, TRUE);
           
         recurse_subdir_list(client, subdirs);
       }
@@ -2362,12 +2370,30 @@ gconf_client_lookup (GConfClient *client,
     *last_slash = 0;
 
     if (g_hash_table_lookup (client->cache_dirs, dir))
-    {
-      g_free (dir);
-      trace ("Negative cache hit on %s", key);
-      return TRUE;
-    }
-
+      {
+        g_free (dir);
+        trace ("Negative cache hit on %s", key);
+        return TRUE;
+      }
+    else 
+      {
+        gboolean not_cached = FALSE;
+        while(not_cached || (!g_hash_table_lookup (client->cache_recursive_dirs, dir)))
+          {
+            last_slash = strrchr (dir, '/');
+            if (last_slash == NULL)
+              break;
+            else
+              *last_slash = 0;
+            if (g_hash_table_lookup (client->cache_recursive_dirs, dir))
+              {
+                g_free (dir);
+                trace ("Non-existing dir for %s", key);
+                return TRUE;
+              }
+            not_cached = TRUE;
+          }
+      }
     g_free (dir);
   }
 
