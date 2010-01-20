@@ -286,8 +286,8 @@ polkit_action_for_gconf_path (GConfDefaults *mechanism,
         PolkitActionDescription *action_description;
 	const gchar *annotation;
 
+	g_debug ("finding action for path '%s'", path);
 	prefix = g_strdup (path);
-
 	while (1) {
                 for (l = action_descriptions; l; l = l->next) {
 			action_description = l->data;
@@ -295,8 +295,8 @@ polkit_action_for_gconf_path (GConfDefaults *mechanism,
 			annotation = polkit_action_description_get_annotation (action_description, annotation_key);
 			if (g_strcmp0 (prefix, annotation) == 0) {
 				action = polkit_action_description_get_action_id (action_description);
-				g_debug ("action for path '%s': '%s'\n", action, path);
-				break;
+				g_debug ("action for prefix '%s': '%s'\n", prefix, action);
+				goto found;
 			}
 		}
 
@@ -310,6 +310,7 @@ polkit_action_for_gconf_path (GConfDefaults *mechanism,
 		*p = 0;
 	}
 
+ found:
 	g_free (prefix);
 
 	return action;
