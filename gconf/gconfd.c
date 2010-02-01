@@ -119,8 +119,6 @@ static GConfDatabase*       obtain_database (GSList *addresses,
 static void                 drop_old_databases (void);
 static gboolean             no_databases_in_use (void);
 
-static void gconf_handle_segv (int signum);
-
 /*
  * Flag indicating that we are shutting down, so return errors
  * on any attempted operation. We do this instead of unregistering with
@@ -431,22 +429,6 @@ signal_handler (int signo)
   ++in_fatal;
   
   switch (signo) {
-    /* Fast cleanup only */
-  case SIGSEGV:
-#ifdef SIGBUS
-  case SIGBUS:
-#endif
-  case SIGILL:
-    enter_shutdown ();
-#ifndef G_OS_WIN32
-    if (g_getenv ("DISPLAY"))
-      gconf_handle_segv (signo);
-#else
-    gconf_handle_segv (signo);
-#endif
-    abort ();
-    break;
-
   case SIGFPE:
 #ifdef SIGPIPE
   case SIGPIPE:
@@ -844,28 +826,16 @@ main(int argc, char** argv)
   act.sa_mask    = empty_mask;
   act.sa_flags   = 0;
   sigaction (SIGTERM,  &act, NULL);
-  sigaction (SIGILL,  &act, NULL);
-  sigaction (SIGBUS,  &act, NULL);
-  sigaction (SIGFPE,  &act, NULL);
   sigaction (SIGHUP,  &act, NULL);
-  sigaction (SIGSEGV, &act, NULL);
-  sigaction (SIGABRT, &act, NULL);
   sigaction (SIGUSR1,  &act, NULL);
 
   act.sa_handler = SIG_IGN;
   sigaction (SIGINT, &act, NULL);
 #else
   signal (SIGTERM, signal_handler);
-  signal (SIGILL,  signal_handler);
-#ifdef SIGBUS
-  signal (SIGBUS,  signal_handler);
-#endif
-  signal (SIGFPE,  signal_handler);
 #ifdef SIGHUP
   signal (SIGHUP,  signal_handler);
 #endif
-  signal (SIGSEGV, signal_handler);
-  signal (SIGABRT, signal_handler);
 #ifdef SIGUSR1
   signal (SIGUSR1,  signal_handler);
 #endif
@@ -2708,12 +2678,5 @@ client_count (void)
     return 0;
   else
     return g_hash_table_size (client_table);
-}
-
-
-static void
-gconf_handle_segv (int signum)
-{
-  return;
 }
 
