@@ -511,6 +511,7 @@ gconf_engine_get_local      (const gchar* address,
 {
   GConfEngine* conf;
   GConfSource* source;
+  GConfSources* sources;
 
   g_return_val_if_fail(address != NULL, NULL);
   g_return_val_if_fail(err == NULL || *err == NULL, NULL);
@@ -519,10 +520,14 @@ gconf_engine_get_local      (const gchar* address,
 
   if (source == NULL)
     return NULL;
-  
+
+  sources = gconf_sources_new_from_source(source);
+  if (sources == NULL)
+    return NULL;
+
   conf = gconf_engine_blank(FALSE);
 
-  conf->local_sources = gconf_sources_new_from_source(source);
+  conf->local_sources = sources;
 
   g_assert (gconf_engine_is_local (conf));
   
@@ -534,13 +539,19 @@ gconf_engine_get_local_for_addresses (GSList  *addresses,
 				      GError **err)
 {
   GConfEngine *conf;
+  GConfSources* sources;
 
   g_return_val_if_fail (addresses != NULL, NULL);
   g_return_val_if_fail (err == NULL || *err == NULL, NULL);
   
+  sources = gconf_sources_new_from_addresses (addresses, err);
+
+  if (sources == NULL)
+    return NULL;
+
   conf = gconf_engine_blank (FALSE);
 
-  conf->local_sources = gconf_sources_new_from_addresses (addresses, err);
+  conf->local_sources = sources;
 
   g_assert (gconf_engine_is_local (conf));
   
