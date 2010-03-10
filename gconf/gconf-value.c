@@ -710,6 +710,18 @@ copy_value_list(GSList* list)
   return copy;
 }
 
+GType
+gconf_value_get_type ()
+{
+  static GType type = 0;
+
+  if (type == 0)
+    type = g_boxed_type_register_static (g_intern_static_string ("GConfValue"),
+                                         (GBoxedCopyFunc) gconf_value_copy,
+                                         (GBoxedFreeFunc) gconf_value_free);
+  return type;
+}
+
 GConfValue* 
 gconf_value_copy (const GConfValue* src)
 {
@@ -1438,6 +1450,18 @@ typedef struct {
 } GConfRealEntry;
 
 #define REAL_ENTRY(x) ((GConfRealEntry*)(x))
+
+GType
+gconf_entry_get_type ()
+{
+  static GType type = 0;
+
+  if (type == 0)
+    type = g_boxed_type_register_static (g_intern_static_string ("GConfEntry"),
+                                         (GBoxedCopyFunc) gconf_entry_ref,
+                                         (GBoxedFreeFunc) gconf_entry_unref);
+  return type;
+}
 
 GConfEntry*
 gconf_entry_new (const char *key,
