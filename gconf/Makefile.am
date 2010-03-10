@@ -29,6 +29,11 @@ else
 SANITY_CHECK=
 endif
 
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_COMPILER_ARGS= \
+	--includedir=$(srcdir)
+
 lib_LTLIBRARIES = libgconf-2.la
 
 bin_PROGRAMS = gconftool-2 
@@ -119,6 +124,27 @@ libgconf_2_la_SOURCES = \
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) -no-undefined
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
+
+if HAVE_INTROSPECTION
+introspection_files = \
+	$(gconf_headers)
+GConf-2.0.gir: $(INTROSPECTION_SCANNER) libgconf-2.la Makefile
+GConf_2_0_gir_SCANNERFLAGS = --strip-prefix=GConf
+GConf_2_0_gir_INCLUDES = GObject-2.0
+GConf_2_0_gir_CFLAGS = \
+	$(INCLUDES)
+GConf_2_0_gir_LIBS = libgconf-2.la
+GConf_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
+INTROSPECTION_GIRS += GConf-2.0.gir
+
+girdir = $(INTROSPECTION_GIRDIR)
+dist_gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibsdir = $(INTROSPECTION_TYPELIBDIR)
+typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES += $(dist_gir_DATA) $(typelibs_DATA)
+endif
 
 EXTRA_DIST=GConfX.idl default.path.in org.gnome.GConf.service.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
 

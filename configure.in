@@ -266,6 +266,8 @@ AM_GLIB_GNU_GETTEXT
 
 AC_CHECK_FUNCS(bind_textdomain_codeset)
 
+GOBJECT_INTROSPECTION_CHECK([0.6.7])
+
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
@@ -297,5 +299,6 @@ echo "
 	gtk+:		${HAVE_GTK}
 	ldap:		${have_ldap}
 	policykit:	${HAVE_POLKIT}
+	introspection:  ${found_introspection}
 
 "
