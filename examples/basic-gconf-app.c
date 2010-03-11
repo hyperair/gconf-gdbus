@@ -457,7 +457,7 @@ create_prefs_dialog (GtkWidget   *parent,
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
   
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox),
+  gtk_box_pack_start (GTK_BOX (gtk_dialog_get_content_area(dialog)),
                       vbox, TRUE, TRUE, 0);
 
   entry = create_config_entry (dialog, client, "/apps/basic-gconf-app/foo",
