@@ -19,7 +19,7 @@ DISTCLEANFILES =          \
 	intltool-merge    \
 	intltool-extract
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-defaults-service
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection --enable-defaults-service
 
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysgconfdir)/gconf.xml.defaults

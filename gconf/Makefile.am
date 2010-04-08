@@ -29,11 +29,6 @@ else
 SANITY_CHECK=
 endif
 
--include $(INTROSPECTION_MAKEFILE)
-INTROSPECTION_GIRS =
-INTROSPECTION_COMPILER_ARGS= \
-	--includedir=$(srcdir)
-
 lib_LTLIBRARIES = libgconf-2.la
 
 bin_PROGRAMS = gconftool-2 
@@ -125,9 +120,14 @@ libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF
 
 libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS =
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_COMPILER_ARGS= --includedir=$(srcdir)
+
 if HAVE_INTROSPECTION
 introspection_files = \
-	$(gconf_headers)
+	$(gconfinclude_HEADERS)
 GConf-2.0.gir: $(INTROSPECTION_SCANNER) libgconf-2.la Makefile
 GConf_2_0_gir_SCANNERFLAGS = --strip-prefix=GConf
 GConf_2_0_gir_INCLUDES = GObject-2.0
