@@ -128,8 +128,7 @@ INTROSPECTION_COMPILER_ARGS= --includedir=$(srcdir)
 if HAVE_INTROSPECTION
 introspection_files = \
 	$(gconfinclude_HEADERS)
-GConf-2.0.gir: $(INTROSPECTION_SCANNER) libgconf-2.la Makefile
-GConf_2_0_gir_SCANNERFLAGS = --strip-prefix=GConf
+GConf-2.0.gir: libgconf-2.la Makefile
 GConf_2_0_gir_INCLUDES = GObject-2.0
 GConf_2_0_gir_CFLAGS = \
 	$(INCLUDES)
