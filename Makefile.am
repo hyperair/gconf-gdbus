@@ -1,10 +1,14 @@
 
 SUBDIRS = gconf backends po doc examples
 
-DIST_SUBDIRS = tests gconf backends po doc examples defaults
+DIST_SUBDIRS = tests gconf backends po doc examples defaults gsettings
 
 if ENABLE_DEFAULTS_SERVICE
 SUBDIRS += defaults
+endif
+
+if ENABLE_GSETTINGS_BACKEND
+SUBDIRS += gsettings
 endif
 
 EXTRA_DIST =                \
@@ -19,7 +23,7 @@ DISTCLEANFILES =          \
 	intltool-merge    \
 	intltool-extract
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection --enable-defaults-service
+DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-introspection --enable-defaults-service --enable-gsettings-backend
 
 install-data-local:
 	-mkdir -p $(DESTDIR)$(sysgconfdir)/gconf.xml.defaults
