@@ -463,7 +463,7 @@ gconf_settings_backend_write_one_helper (const gchar *key,
   return FALSE;
 }
 
-static void
+static gboolean
 gconf_settings_backend_write (GSettingsBackend *backend,
                               const gchar      *key,
                               GVariant         *value,
@@ -476,19 +476,20 @@ gconf_settings_backend_write (GSettingsBackend *backend,
 
   //FIXME: need to keep failed value in memory so we can return it if it's being requested before we do the second event
   //FIXME: eat gconf notification for the change we just did
-  g_settings_backend_changed (backend, key, origin_tag);
+  if (success)
+    g_settings_backend_changed (backend, key, origin_tag);
 
-  if (!success)
-    g_settings_backend_changed (backend, key, NULL);
+  return success;
 }
 
-static void
+static gboolean
 gconf_settings_backend_write_keys (GSettingsBackend *backend,
                                    GTree            *tree,
                                    gpointer          origin_tag)
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
   GConfSettingsBackendWriteHelper helper;
+  gboolean success;
 
   helper.gconf = gconf;
   helper.failed_keys = g_tree_new ((GCompareFunc) g_strcmp0);
@@ -496,32 +497,39 @@ gconf_settings_backend_write_keys (GSettingsBackend *backend,
   g_tree_foreach (tree, (GTraverseFunc) gconf_settings_backend_write_one_helper, &helper);
   g_settings_backend_changed_tree (backend, tree, origin_tag);
 
-  if (g_tree_nnodes (helper.failed_keys) > 0)
+  success = g_tree_nnodes (helper.failed_keys) == 0;
+
+  if (!success)
     g_settings_backend_changed_tree (backend, helper.failed_keys, NULL);
 
   g_tree_unref (helper.failed_keys);
+
+  return success;
 }
 
 static void
 gconf_settings_backend_reset (GSettingsBackend *backend,
-                              const gchar      *name,
+                              const gchar      *key,
                               gpointer          origin_tag)
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
 
-  if (name[strlen(name) - 1] == '/')
-    {
-      /* We have no way to know if it was completely successful or if it
-       * completely failed, or if only some keys were unset, so we just send
-       * one big changed signal. */
-      gconf_client_recursive_unset (gconf->priv->client, name, 0, NULL);
-      g_settings_backend_path_changed (backend, name, origin_tag);
-    }
-  else
-    {
-      if (gconf_client_unset (gconf->priv->client, name, NULL))
-        g_settings_backend_changed (backend, name, origin_tag);
-    }
+  if (gconf_client_unset (gconf->priv->client, key, NULL))
+    g_settings_backend_changed (backend, key, origin_tag);
+}
+
+static void
+gconf_settings_backend_reset_path (GSettingsBackend *backend,
+                                   const gchar      *path,
+                                   gpointer          origin_tag)
+{
+  GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
+
+  /* We have no way to know if it was completely successful or if it
+   * completely failed, or if only some keys were unset, so we just send
+   * one big changed signal. */
+  gconf_client_recursive_unset (gconf->priv->client, path, 0, NULL);
+  g_settings_backend_path_changed (backend, path, origin_tag);
 }
 
 static gboolean
@@ -621,6 +629,7 @@ gconf_settings_backend_class_init (GConfSettingsBackendClass *class)
   backend_class->write = gconf_settings_backend_write;
   backend_class->write_keys = gconf_settings_backend_write_keys;
   backend_class->reset = gconf_settings_backend_reset;
+  backend_class->reset_path = gconf_settings_backend_reset_path;
   backend_class->get_writable = gconf_settings_backend_get_writable;
   backend_class->subscribe = gconf_settings_backend_subscribe;
   backend_class->unsubscribe = gconf_settings_backend_unsubscribe;
@@ -634,7 +643,7 @@ gconf_settings_backend_register (GIOModule *module)
 {
   gconf_settings_backend_register_type (G_TYPE_MODULE (module));
   g_io_extension_point_implement (G_SETTINGS_BACKEND_EXTENSION_POINT_NAME,
-				  GCONF_TYPE_SETTINGS_BACKEND,
-				  "gconf",
-				  -1);
+                                  GCONF_TYPE_SETTINGS_BACKEND,
+                                  "gconf",
+                                  -1);
 }
