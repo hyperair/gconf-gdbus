@@ -421,12 +421,14 @@ gconf_settings_backend_read (GSettingsBackend   *backend,
 }
 
 static gboolean
-gconf_settings_backend_write_one (const gchar          *key,
-                                  GVariant             *value,
-                                  GConfSettingsBackend *gconf)
+gconf_settings_backend_write (GSettingsBackend *backend,
+                              const gchar      *key,
+                              GVariant         *value,
+                              gpointer          origin_tag)
 {
-  GConfValue *gconf_value;
-  GError     *error;
+  GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
+  GConfValue           *gconf_value;
+  GError               *error;
 
   gconf_value = gconf_settings_backend_gvariant_to_gconf_value (value);
   if (gconf_value == NULL)
@@ -434,52 +436,34 @@ gconf_settings_backend_write_one (const gchar          *key,
 
   error = NULL;
   gconf_client_set (gconf->priv->client, key, gconf_value, &error);
+  gconf_value_free (gconf_value);
+
   if (error != NULL)
     {
       g_error_free (error);
       return FALSE;
     }
 
+  g_settings_backend_changed (backend, key, origin_tag);
+
   return TRUE;
+  //FIXME: eat gconf notification for the change we just did
 }
 
-typedef struct {
-  GConfSettingsBackend *gconf;
-  GTree                *failed_keys;
-} GConfSettingsBackendWriteHelper;
-
 static gboolean
-gconf_settings_backend_write_one_helper (const gchar *key,
-                                         GVariant    *value,
-                                         GConfSettingsBackendWriteHelper *helper)
+gconf_settings_backend_write_one_to_changeset (const gchar    *key,
+                                               GVariant       *value,
+                                               GConfChangeSet *changeset)
 {
-  gboolean success;
+  GConfValue *gconf_value;
 
-  success = gconf_settings_backend_write_one (key, value, helper->gconf);
+  gconf_value = gconf_settings_backend_gvariant_to_gconf_value (value);
+  if (gconf_value == NULL)
+    return TRUE;
 
-  if (!success)
-    g_tree_insert (helper->failed_keys, (gpointer) key, GINT_TO_POINTER(1));
+  gconf_change_set_set_nocopy (changeset, key, gconf_value);
 
   return FALSE;
-}
-
-static gboolean
-gconf_settings_backend_write (GSettingsBackend *backend,
-                              const gchar      *key,
-                              GVariant         *value,
-                              gpointer          origin_tag)
-{
-  GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
-  gboolean success;
-
-  success = gconf_settings_backend_write_one (key, value, gconf);
-
-  //FIXME: need to keep failed value in memory so we can return it if it's being requested before we do the second event
-  //FIXME: eat gconf notification for the change we just did
-  if (success)
-    g_settings_backend_changed (backend, key, origin_tag);
-
-  return success;
 }
 
 static gboolean
@@ -488,21 +472,30 @@ gconf_settings_backend_write_keys (GSettingsBackend *backend,
                                    gpointer          origin_tag)
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
-  GConfSettingsBackendWriteHelper helper;
-  gboolean success;
+  GConfChangeSet       *changeset;
+  GConfChangeSet       *reversed;
+  gboolean              success;
 
-  helper.gconf = gconf;
-  helper.failed_keys = g_tree_new ((GCompareFunc) g_strcmp0);
+  changeset = gconf_change_set_new ();
 
-  g_tree_foreach (tree, (GTraverseFunc) gconf_settings_backend_write_one_helper, &helper);
-  g_settings_backend_changed_tree (backend, tree, origin_tag);
+  g_tree_foreach (tree, (GTraverseFunc) gconf_settings_backend_write_one_to_changeset, changeset);
 
-  success = g_tree_nnodes (helper.failed_keys) == 0;
+  if (gconf_change_set_size (changeset) != g_tree_nnodes (tree))
+    {
+      gconf_change_set_unref (changeset);
+      return FALSE;
+    }
+
+  reversed = gconf_client_reverse_change_set (gconf->priv->client, changeset, NULL);
+  success = gconf_client_commit_change_set (gconf->priv->client, changeset, FALSE, NULL);
 
   if (!success)
-    g_settings_backend_changed_tree (backend, helper.failed_keys, NULL);
+    gconf_client_commit_change_set (gconf->priv->client, reversed, FALSE, NULL);
+  else
+    g_settings_backend_changed_tree (backend, tree, origin_tag);
 
-  g_tree_unref (helper.failed_keys);
+  gconf_change_set_unref (changeset);
+  gconf_change_set_unref (reversed);
 
   return success;
 }
