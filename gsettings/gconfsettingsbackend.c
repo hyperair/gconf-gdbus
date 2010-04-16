@@ -34,6 +34,11 @@ G_DEFINE_DYNAMIC_TYPE (GConfSettingsBackend, gconf_settings_backend, G_TYPE_SETT
 struct _GConfSettingsBackendPrivate
 {
   GConfClient *client;
+  /* By definition, with GSettings, we can't write to a key if we're not
+   * subscribed to it or its parent. This means we'll be monitoring it, and
+   * that we'll get a change notification for the write. That's something that
+   * should get ignored. */
+  GHashTable  *ignore_notifications;
 };
 
 static gboolean
@@ -446,8 +451,10 @@ gconf_settings_backend_write (GSettingsBackend *backend,
 
   g_settings_backend_changed (backend, key, origin_tag);
 
+  g_hash_table_replace (gconf->priv->ignore_notifications,
+                        g_strdup (key), GINT_TO_POINTER (1));
+
   return TRUE;
-  //FIXME: eat gconf notification for the change we just did
 }
 
 static gboolean
@@ -463,6 +470,26 @@ gconf_settings_backend_write_one_to_changeset (const gchar    *key,
 
   gconf_change_set_set_nocopy (changeset, key, gconf_value);
 
+  return FALSE;
+}
+
+static gboolean
+gconf_settings_backend_add_ignore_notifications (const gchar          *key,
+                                                 GVariant             *value,
+                                                 GConfSettingsBackend *gconf)
+{
+  g_hash_table_replace (gconf->priv->ignore_notifications,
+                        g_strdup (key), GINT_TO_POINTER (1));
+  return FALSE;
+}
+
+static gboolean
+gconf_settings_backend_remove_ignore_notifications (GConfChangeSet       *changeset,
+                                                    const gchar          *key,
+                                                    GConfValue           *value,
+                                                    GConfSettingsBackend *gconf)
+{
+  g_hash_table_remove (gconf->priv->ignore_notifications, key);
   return FALSE;
 }
 
@@ -487,10 +514,23 @@ gconf_settings_backend_write_keys (GSettingsBackend *backend,
     }
 
   reversed = gconf_client_reverse_change_set (gconf->priv->client, changeset, NULL);
-  success = gconf_client_commit_change_set (gconf->priv->client, changeset, FALSE, NULL);
+  success = gconf_client_commit_change_set (gconf->priv->client, changeset, TRUE, NULL);
+
+  g_tree_foreach (tree, (GTraverseFunc) gconf_settings_backend_add_ignore_notifications, gconf);
 
   if (!success)
-    gconf_client_commit_change_set (gconf->priv->client, reversed, FALSE, NULL);
+    {
+      /* This is a tricky situation: when committing, some keys will have been
+       * changed, so there will be notifications that we'll want to ignore. But
+       * we can't ignore notifications for what was not committed. Note that
+       * when we'll commit the reversed changeset, it should fail for the same
+       * key, so there'll be no other notifications created. And in the worst
+       * case, it's no big deal... */
+      gconf_change_set_foreach (changeset,
+                                (GConfChangeSetForeachFunc) gconf_settings_backend_remove_ignore_notifications,
+                                gconf);
+      gconf_client_commit_change_set (gconf->priv->client, reversed, FALSE, NULL);
+    }
   else
     g_settings_backend_changed_tree (backend, tree, origin_tag);
 
@@ -555,6 +595,24 @@ gconf_settings_backend_get_gconf_path_from_name (const gchar *name)
     return g_strndup (name, strlen(name) - 1);
 }
 
+#if 0
+static void
+gconf_settings_backend_notified (GConfClient          *client,
+                                 guint                 cnxn_id,
+                                 GConfEntry           *entry,
+                                 GConfSettingsBackend *gconf)
+{
+  if (g_hash_table_lookup_extended (gconf->priv->ignore_notifications, entry->key,
+                                    NULL, NULL))
+    {
+      g_hash_table_remove (gconf->priv->ignore_notifications, entry->key);
+      return;
+    }
+
+  g_settings_backend_changed (G_SETTINGS_BACKEND (gconf), entry->key, NULL);
+}
+#endif
+
 static void
 gconf_settings_backend_subscribe (GSettingsBackend *backend,
                                   const gchar      *name)
@@ -565,7 +623,7 @@ gconf_settings_backend_subscribe (GSettingsBackend *backend,
   path = gconf_settings_backend_get_gconf_path_from_name (name);
   gconf_client_add_dir (gconf->priv->client, path, GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
   g_free (path);
-  //FIXME notify
+  //FIXME notify: we need to be careful: we only want to receive one notification per key
 }
 
 static void
@@ -594,6 +652,9 @@ gconf_settings_backend_finalize (GObject *object)
   g_object_unref (gconf->priv->client);
   gconf->priv->client = NULL;
 
+  g_hash_table_unref (gconf->priv->ignore_notifications);
+  gconf->priv->ignore_notifications = NULL;
+
   G_OBJECT_CLASS (gconf_settings_backend_parent_class)
     ->finalize (object);
 }
@@ -605,6 +666,8 @@ gconf_settings_backend_init (GConfSettingsBackend *gconf)
                                              GCONF_TYPE_SETTINGS_BACKEND,
                                              GConfSettingsBackendPrivate);
   gconf->priv->client = gconf_client_get_default ();
+  gconf->priv->ignore_notifications = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                                             g_free, NULL);
 }
 
 static void
