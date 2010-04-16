@@ -338,7 +338,12 @@ gconf_settings_backend_simple_gconf_value_type_to_gvariant (GConfValue         *
       variant = g_variant_new_uint64 (value);
     }
   else if (g_variant_type_equal (expected_type, G_VARIANT_TYPE_HANDLE))
-    variant = g_variant_new_handle (gconf_value_get_int (gconf_value));
+    {
+      int value = gconf_value_get_int (gconf_value);
+      if (value < 0)
+        return NULL;
+      variant = g_variant_new_handle (value);
+    }
   else if (g_variant_type_equal (expected_type, G_VARIANT_TYPE_DOUBLE))
     variant = g_variant_new_double (gconf_value_get_float (gconf_value));
   else if (g_variant_type_equal (expected_type, G_VARIANT_TYPE_STRING))
@@ -519,7 +524,9 @@ gconf_settings_backend_simple_gvariant_to_gconf_value (GVariant           *value
     }
   else if (g_variant_type_equal (type, G_VARIANT_TYPE_HANDLE))
     {
-      gint32 i = g_variant_get_handle (value);
+      guint32 i = g_variant_get_handle (value);
+      if (i > G_MAXINT)
+        return NULL;
       gconf_value = gconf_value_new (GCONF_VALUE_INT);
       gconf_value_set_int (gconf_value, i);
     }
