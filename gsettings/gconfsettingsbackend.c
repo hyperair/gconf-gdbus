@@ -31,14 +31,33 @@
 
 G_DEFINE_DYNAMIC_TYPE (GConfSettingsBackend, gconf_settings_backend, G_TYPE_SETTINGS_BACKEND);
 
+typedef struct _GConfSettingsBackendNotifier GConfSettingsBackendNotifier;
+
 struct _GConfSettingsBackendPrivate
 {
   GConfClient *client;
+  GList       *notifiers;
   /* By definition, with GSettings, we can't write to a key if we're not
    * subscribed to it or its parent. This means we'll be monitoring it, and
    * that we'll get a change notification for the write. That's something that
    * should get ignored. */
   GHashTable  *ignore_notifications;
+};
+
+/* The rationale behind the non-trivial handling of notifiers here is that we
+ * only want to receive one notification when a key changes. The naive approach
+ * would be to register one notifier per subscribed path, but in gconf, we get
+ * notificiations for all keys living below the path. So subscribing to
+ * /apps/panel and /apps/panel/general will lead to two notifications for a key
+ * living under /apps/panel/general. We want to avoid that, so we will only
+ * have a notifier for /apps/panel in such a case. */
+struct _GConfSettingsBackendNotifier
+{
+  GConfSettingsBackendNotifier *parent;
+  gchar *path;
+  guint  refcount;
+  guint  notify_id;
+  GList *subpaths;
 };
 
 static gboolean
@@ -595,7 +614,6 @@ gconf_settings_backend_get_gconf_path_from_name (const gchar *name)
     return g_strndup (name, strlen(name) - 1);
 }
 
-#if 0
 static void
 gconf_settings_backend_notified (GConfClient          *client,
                                  guint                 cnxn_id,
@@ -611,7 +629,171 @@ gconf_settings_backend_notified (GConfClient          *client,
 
   g_settings_backend_changed (G_SETTINGS_BACKEND (gconf), entry->key, NULL);
 }
-#endif
+
+static GConfSettingsBackendNotifier *
+gconf_settings_backend_find_notifier_or_parent (GConfSettingsBackend *gconf,
+                                                const gchar          *path)
+{
+  GConfSettingsBackendNotifier *parent;
+  GList *l;
+
+  l = gconf->priv->notifiers;
+  parent = NULL;
+
+  while (l != NULL)
+    {
+      GConfSettingsBackendNotifier *notifier;
+      notifier = l->data;
+      if (g_str_equal (path, notifier->path))
+        return notifier;
+      if (g_str_has_prefix (path, notifier->path))
+        {
+          parent = notifier;
+          l = parent->subpaths;
+          continue;
+        }
+      if (g_str_has_prefix (notifier->path, path))
+        break;
+
+      l = l->next;
+    }
+
+  return parent;
+}
+
+static void
+gconf_settings_backend_free_notifier (GConfSettingsBackendNotifier *notifier,
+                                      GConfSettingsBackend         *gconf)
+{
+  if (notifier->path)
+    g_free (notifier->path);
+  notifier->path = NULL;
+
+  if (notifier->notify_id)
+    gconf_client_notify_remove (gconf->priv->client, notifier->notify_id);
+  notifier->notify_id = 0;
+
+  g_list_foreach (notifier->subpaths, (GFunc) gconf_settings_backend_free_notifier, gconf);
+  g_list_free (notifier->subpaths);
+  notifier->subpaths = NULL;
+
+  g_slice_free (GConfSettingsBackendNotifier, notifier);
+}
+
+/* Returns: TRUE if the notifier was created, FALSE if it was already existing. */
+static gboolean
+gconf_settings_backend_add_notifier (GConfSettingsBackend *gconf,
+                                     const gchar          *path)
+{
+  GConfSettingsBackendNotifier *n_or_p;
+  GConfSettingsBackendNotifier *notifier;
+  GList *siblings;
+  GList *l;
+
+  n_or_p = gconf_settings_backend_find_notifier_or_parent (gconf, path);
+
+  if (n_or_p && g_str_equal (path, n_or_p->path))
+    {
+      n_or_p->refcount += 1;
+      return FALSE;
+    }
+
+  notifier = g_slice_new0 (GConfSettingsBackendNotifier);
+  notifier->parent = n_or_p;
+  notifier->path = g_strdup (path);
+  notifier->refcount = 1;
+
+  if (notifier->parent == NULL)
+    notifier->notify_id = gconf_client_notify_add (gconf->priv->client, path,
+                                                   (GConfClientNotifyFunc) gconf_settings_backend_notified, gconf,
+                                                   NULL, NULL);
+  else
+    notifier->notify_id = 0;
+
+  /* Move notifiers living at the same level but that are subpaths below this
+   * new notifier, removing their notify handler if necessary. */
+  if (notifier->parent)
+    siblings = notifier->parent->subpaths;
+  else
+    siblings = gconf->priv->notifiers;
+
+  l = siblings;
+  while (l != NULL)
+    {
+      GConfSettingsBackendNotifier *sibling;
+      GList *next;
+
+      sibling = l->data;
+      next = l->next;
+
+      if (g_str_has_prefix (sibling->path, notifier->path))
+        {
+          if (sibling->notify_id)
+            {
+              gconf_client_notify_remove (gconf->priv->client,
+                                          sibling->notify_id);
+              sibling->notify_id = 0;
+            }
+
+          siblings = g_list_remove_link (siblings, l);
+          l->next = notifier->subpaths;
+          notifier->subpaths = l;
+        }
+
+      l = next;
+    }
+
+  if (notifier->parent)
+    notifier->parent->subpaths = siblings;
+  else
+    gconf->priv->notifiers = siblings;
+
+  return TRUE;
+}
+
+/* Returns: TRUE if the notifier was removed, FALSE if it is still referenced. */
+static gboolean
+gconf_settings_backend_remove_notifier (GConfSettingsBackend *gconf,
+                                        const gchar          *path)
+{
+  GConfSettingsBackendNotifier *notifier;
+
+  notifier = gconf_settings_backend_find_notifier_or_parent (gconf, path);
+
+  g_assert (g_str_equal (path, notifier->path));
+
+  notifier->refcount -= 1;
+
+  if (notifier->refcount > 0)
+    return FALSE;
+
+  /* Move subpaths to the parent, and add a notify handler for each of them if
+   * they have no parent anymore. */
+  if (notifier->parent)
+    notifier->parent->subpaths = g_list_concat (notifier->parent->subpaths,
+                                                notifier->subpaths);
+  else
+    {
+      GList *l;
+
+      for (l = notifier->subpaths; l != NULL; l = l->next)
+        {
+          GConfSettingsBackendNotifier *child = l->data;
+          child->notify_id = gconf_client_notify_add (gconf->priv->client, child->path,
+                                                      (GConfClientNotifyFunc) gconf_settings_backend_notified, gconf,
+                                                      NULL, NULL);
+        }
+
+      gconf->priv->notifiers = g_list_concat (gconf->priv->notifiers,
+                                              notifier->subpaths);
+    }
+
+  notifier->subpaths = NULL;
+
+  gconf_settings_backend_free_notifier (notifier, gconf);
+
+  return TRUE;
+}
 
 static void
 gconf_settings_backend_subscribe (GSettingsBackend *backend,
@@ -621,9 +803,9 @@ gconf_settings_backend_subscribe (GSettingsBackend *backend,
   gchar                *path;
 
   path = gconf_settings_backend_get_gconf_path_from_name (name);
-  gconf_client_add_dir (gconf->priv->client, path, GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
+  if (gconf_settings_backend_add_notifier (gconf, path))
+    gconf_client_add_dir (gconf->priv->client, path, GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
   g_free (path);
-  //FIXME notify: we need to be careful: we only want to receive one notification per key
 }
 
 static void
@@ -634,7 +816,8 @@ gconf_settings_backend_unsubscribe (GSettingsBackend *backend,
   gchar                *path;
 
   path = gconf_settings_backend_get_gconf_path_from_name (name);
-  gconf_client_remove_dir (gconf->priv->client, path, NULL);
+  if (gconf_settings_backend_remove_notifier (gconf, path))
+    gconf_client_remove_dir (gconf->priv->client, path, NULL);
   g_free (path);
 }
 
@@ -648,6 +831,10 @@ static void
 gconf_settings_backend_finalize (GObject *object)
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (object);
+
+  g_list_foreach (gconf->priv->notifiers, (GFunc) gconf_settings_backend_free_notifier, gconf);
+  g_list_free (gconf->priv->notifiers);
+  gconf->priv->notifiers = NULL;
 
   g_object_unref (gconf->priv->client);
   gconf->priv->client = NULL;
@@ -666,6 +853,7 @@ gconf_settings_backend_init (GConfSettingsBackend *gconf)
                                              GCONF_TYPE_SETTINGS_BACKEND,
                                              GConfSettingsBackendPrivate);
   gconf->priv->client = gconf_client_get_default ();
+  gconf->priv->notifiers = NULL;
   gconf->priv->ignore_notifications = g_hash_table_new_full (g_str_hash, g_str_equal,
                                                              g_free, NULL);
 }
