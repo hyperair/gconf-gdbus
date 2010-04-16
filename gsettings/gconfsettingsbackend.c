@@ -538,7 +538,8 @@ gconf_settings_backend_get_writable (GSettingsBackend *backend,
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
 
-  /* we don't support checking writabality for a whole subpath */
+  /* We don't support checking writabality for a whole subpath, so we just say
+   * it's not writable in such a case. */
   if (name[strlen(name) - 1] == '/')
     return FALSE;
 
@@ -548,7 +549,8 @@ gconf_settings_backend_get_writable (GSettingsBackend *backend,
 static char *
 gconf_settings_backend_get_gconf_path_from_name (const gchar *name)
 {
-  /* Note: we don't want trailing slash */
+  /* We don't want trailing slash since gconf directories shouldn't have a
+   * trailing slash. */
   if (name[strlen(name) - 1] != '/')
     {
       const gchar *slash;
