@@ -222,7 +222,7 @@ if test "x$enable_gsettings_backend" != "xno" ; then
   AC_DEFINE(ENABLE_GSETTINGS_BACKEND, 1, [enable defaults DBus service])
 fi
 
-AM_CONDITIONAL(ENABLE_GSETTINGS_BACKEND, [test "x$enable_gsettings_backend" != "xno"])
+AM_CONDITIONAL(ENABLE_GSETTINGS_BACKEND, [test "x$enable_gsettings_backend" = "xyes"])
 
 ORBIT_IDL="`$PKG_CONFIG --variable=orbit_idl ORBit-2.0`"
 AC_SUBST(ORBIT_IDL)
