@@ -22,7 +22,36 @@ libgsettingsgconfbackend_la_LIBADD =        \
 	$(GSETTINGS_LIBS)                   \
 	$(NULL)
 
+bin_PROGRAMS = gsettings-data-convert
+
+AM_CPPFLAGS = \
+	-I$(top_srcdir)         \
+	-I$(top_builddir)       \
+	$(GSETTINGS_CFLAGS)
+
+gsettings_data_convert_SOURCES = gsettings-data-convert.c
+gsettings_data_convert_LDADD =              \
+	$(top_builddir)/gconf/libgconf-2.la \
+	$(GSETTINGS_LIBS)                   \
+	$(NULL)
+
+man_MANS =                       \
+	gsettings-data-convert.1 \
+	$(NULL)
+
+gsettings-data-convert.1 : gsettings-data-convert.xml
+	xsltproc -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
+
+BUILT_EXTRA_DIST = $(man_MANS)
+
+dist-hook-local: $(BUILT_EXTRA_DIST)
+	files='$(BUILT_EXTRA_DIST)';                      \
+	for f in $$files; do                              \
+	  if test -f $$f; then d=.; else d=$(srcdir); fi; \
+	  cp $$d/$$f $(distdir) || exit 1; done
+
 install-data-hook:
 	if test -z "$(DESTDIR)" -a "$(GIO_QUERYMODULES)" != "no" ; then                         \
 		$(GIO_QUERYMODULES) $(GIO_MODULE_DIR) ;                                         \
 	fi
+
