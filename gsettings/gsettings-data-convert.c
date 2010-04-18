@@ -19,6 +19,7 @@
  * Author: Matthias Clasen <mclasen@redhat.com>
  */
 
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -28,10 +29,12 @@
 #include <gio/gio.h>
 #include <gconf/gconf-client.h>
 
-static const gchar convert_dir[] = "/usr/share/gsettings-data-convert";
+static const gchar convert_dir[] = "/usr/share/gconf/gsettings";
 
 static gboolean verbose = FALSE;
 static gboolean dry_run = FALSE;
+
+extern const gchar *gconf_value_type_to_string (int type);
 
 static gboolean
 handle_file (const gchar *filename)
@@ -43,7 +46,6 @@ handle_file (const gchar *filename)
   gchar *gconf_key;
   gchar **groups;
   gchar **keys;
-  GConfValueType list_type;
   GVariantBuilder *builder;
   GVariant *v;
   const gchar *s;
@@ -71,10 +73,18 @@ handle_file (const gchar *filename)
   groups = g_key_file_get_groups (keyfile, NULL);
   for (i = 0; groups[i]; i++)
     {
-      if (verbose)
-        g_print ("collecting settings for schema '%s'\n", groups[i]);
+      gchar **schema_path;
 
-      settings = g_settings_new (groups[i]);
+      schema_path = g_strsplit (groups[i], ":", 2);
+
+      if (verbose)
+        {
+          g_print ("collecting settings for schema '%s'\n", schema_path[0]);
+          if (schema_path[1])
+            g_print ("for storage at '%s'\n", schema_path[1]);
+        }
+
+      settings = g_settings_new_with_path (schema_path[0], schema_path[1]);
       g_settings_delay (settings);
 
       error = NULL;
@@ -102,13 +112,15 @@ handle_file (const gchar *filename)
             {
               if (error)
                 {
-                  g_printerr ("Failed to get GConf key '%s': %s\n", gconf_key, error->message);
+                  g_printerr ("Failed to get GConf key '%s': %s\n",
+                              gconf_key, error->message);
                   g_error_free (error);
                 }
               else
                 {
                   if (verbose)
-                    g_print ("Skipping GConf key '%s', no user value\n", gconf_key);
+                    g_print ("Skipping GConf key '%s', no user value\n",
+                             gconf_key);
                 }
 
               g_free (gconf_key);
@@ -120,30 +132,38 @@ handle_file (const gchar *filename)
             {
             case GCONF_VALUE_STRING:
               if (dry_run)
-                g_print ("set key '%s' to string '%s'\n", keys[j], gconf_value_get_string (value));
+                g_print ("set key '%s' to string '%s'\n", keys[j],
+                         gconf_value_get_string (value));
               else
-                g_settings_set (settings, keys[j], "s", gconf_value_get_string (value));
+                g_settings_set (settings, keys[j], "s",
+                                gconf_value_get_string (value));
               break;
 
             case GCONF_VALUE_INT:
               if (dry_run)
-                g_print ("set key '%s' to integer '%d'\n", keys[j], gconf_value_get_int (value));
+                g_print ("set key '%s' to integer '%d'\n",
+                         keys[j], gconf_value_get_int (value));
               else
-                g_settings_set (settings, keys[j], "i", gconf_value_get_int (value));
+                g_settings_set (settings, keys[j], "i",
+                                gconf_value_get_int (value));
               break;
 
             case GCONF_VALUE_BOOL:
               if (dry_run)
-                g_print ("set key '%s' to boolean '%d'\n", keys[j], gconf_value_get_bool (value));
+                g_print ("set key '%s' to boolean '%d'\n",
+                         keys[j], gconf_value_get_bool (value));
               else
-                g_settings_set (settings, keys[j], "b", gconf_value_get_bool (value));
+                g_settings_set (settings, keys[j], "b",
+                                gconf_value_get_bool (value));
               break;
 
             case GCONF_VALUE_FLOAT:
               if (dry_run)
-                g_print ("set key '%s' to double '%g'\n", keys[j], gconf_value_get_float (value));
+                g_print ("set key '%s' to double '%g'\n",
+                         keys[j], gconf_value_get_float (value));
               else
-                g_settings_set (settings, keys[j], "d", gconf_value_get_float (value));
+                g_settings_set (settings, keys[j], "d",
+                                gconf_value_get_float (value));
               break;
 
             case GCONF_VALUE_LIST:
@@ -163,7 +183,8 @@ handle_file (const gchar *filename)
                   if (dry_run)
                     {
                       str = g_variant_print (v, FALSE);
-                      g_print ("set key '%s' to a list of strings: %s\n", keys[j], str);
+                      g_print ("set key '%s' to a list of strings: %s\n",
+                               keys[j], str);
                       g_free (str);
                     }
                   else
@@ -187,7 +208,8 @@ handle_file (const gchar *filename)
                   if (dry_run)
                     {
                       str = g_variant_print (v, FALSE);
-                      g_print ("set key '%s' to a list of integers: %s\n", keys[j], str);
+                      g_print ("set key '%s' to a list of integers: %s\n",
+                               keys[j], str);
                       g_free (str);
                     }
                   else
@@ -198,13 +220,15 @@ handle_file (const gchar *filename)
                   break;
 
                 default:
-                  g_printerr ("Keys of type 'list of %s' not handled yet\n", gconf_value_type_to_string (gconf_value_get_list_type (value)));
+                  g_printerr ("Keys of type 'list of %s' not handled yet\n",
+                              gconf_value_type_to_string (gconf_value_get_list_type (value)));
                   break;
                 }
               break;
 
             default:
-              g_printerr ("Keys of type %s not handled yet\n", gconf_value_type_to_string (value->type));
+              g_printerr ("Keys of type %s not handled yet\n",
+                          gconf_value_type_to_string (value->type));
               break;
             }
 
@@ -218,6 +242,7 @@ handle_file (const gchar *filename)
         g_settings_apply (settings);
 
       g_object_unref (settings);
+      g_strfreev (schema_path);
     }
 
   g_strfreev (groups);
@@ -332,19 +357,14 @@ save_state (time_t   mtime,
 int
 main (int argc, char *argv[])
 {
-  gchar *state_filename;
   time_t stored_mtime;
   time_t dir_mtime;
   struct stat statbuf;
-  gchar *contents;
   GError *error;
-  gchar *converted_filename;
   gchar **converted;
-  GConfClient *client;
   GDir *dir;
   const gchar *name;
   gchar *filename;
-  GString *string;
   gint i;
   GOptionContext *context;
   GOptionEntry entries[] = {
@@ -390,7 +410,7 @@ main (int argc, char *argv[])
   dir = g_dir_open (convert_dir, 0, &error);
   if (dir == NULL)
     {
-      g_printerr ("Failed to open '%s': %s\n", error->message);
+      g_printerr ("Failed to open '%s': %s\n", convert_dir, error->message);
       return 1;
     }
 
