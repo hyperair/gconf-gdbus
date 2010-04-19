@@ -1,3 +1,20 @@
+2.31.1
+======
+
+  Features
+   - Add a GSettings backend. This is meant as a tool to ease the
+     transition from GConf to GSettings/DConf, not as a permanent solution.
+     To use this backend with GSettings, set GSETTINGS_BACKEND=gconf in
+     your environment. Note that you still need to convert your GConf
+     schema to a GSettings schema and install it (Vincent Untz)
+   - Add a utility to migrate existing user settings from GConf to
+     GSettings. For details, see gsettings-data-convert(1) (Matthias Clasen)
+   - Add boxed types for GConfEntry and GConfValue (Florian Müllner)
+   - Add introspection support (Florian Müllner)
+
+  Fixes
+   - Plug a memory leak when ignoring default values (Alberto Garcia)
+
 2.28.1
 ======
 
