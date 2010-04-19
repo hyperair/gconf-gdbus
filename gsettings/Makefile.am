@@ -42,7 +42,7 @@ man_MANS =                       \
 gsettings-data-convert.1 : gsettings-data-convert.xml
 	xsltproc -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
-BUILT_EXTRA_DIST = $(man_MANS)
+EXTRA_DIST = gsettings-data-convert.xml gsettings-data-convert.1
 
 dist-hook-local: $(BUILT_EXTRA_DIST)
 	files='$(BUILT_EXTRA_DIST)';                      \
