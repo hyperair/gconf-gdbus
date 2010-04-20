@@ -29,7 +29,7 @@
 #include <gio/gio.h>
 #include <gconf/gconf-client.h>
 
-static const gchar convert_dir[] = "/usr/share/gconf/gsettings";
+static const gchar convert_dir[] = "/usr/share/GConf/gsettings";
 
 static gboolean verbose = FALSE;
 static gboolean dry_run = FALSE;
