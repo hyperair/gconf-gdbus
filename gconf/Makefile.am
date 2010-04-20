@@ -136,13 +136,13 @@ GConf_2_0_gir_LIBS = libgconf-2.la
 GConf_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
 INTROSPECTION_GIRS += GConf-2.0.gir
 
-girdir = $(INTROSPECTION_GIRDIR)
-dist_gir_DATA = $(INTROSPECTION_GIRS)
+girdir = $(datadir)/gir-1.0/
+gir_DATA = $(INTROSPECTION_GIRS)
 
-typelibsdir = $(INTROSPECTION_TYPELIBDIR)
+typelibsdir = $(libdir)/girepository-1.0/
 typelibs_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 
-CLEANFILES += $(dist_gir_DATA) $(typelibs_DATA)
+CLEANFILES += $(gir_DATA) $(typelibs_DATA)
 endif
 
 EXTRA_DIST=GConfX.idl default.path.in org.gnome.GConf.service.in gconfmarshal.list regenerate-enum-header.sh regenerate-enum-footer.sh
