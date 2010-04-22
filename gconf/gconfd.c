@@ -2233,7 +2233,7 @@ read_line (FILE *f)
         }
 
       len = strlen (buf);
-      if (buf[len - 1] == '\n')
+      if (len > 0 && buf[len - 1] == '\n')
 	buf[--len] = '\0';
 
       if (retval == NULL)
