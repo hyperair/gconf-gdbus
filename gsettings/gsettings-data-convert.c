@@ -98,6 +98,13 @@ handle_file (const gchar *filename)
 
       for (j = 0; keys[j]; j++)
         {
+          if (strchr (keys[j], '/') != 0)
+            {
+              g_printerr ("Key '%s' contains a '/'\n", keys[j]);
+
+              continue;
+            }
+
           error = NULL;
           if ((gconf_key = g_key_file_get_string (keyfile, groups[i], keys[j], &error)) ==  NULL)
             {
