@@ -799,11 +799,18 @@ gconf_settings_backend_get_writable (GSettingsBackend *backend,
                                      const gchar      *name)
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
+  GConfValue *value;
 
   /* We don't support checking writabality for a whole subpath, so we just say
    * it's not writable in such a case. */
   if (name[strlen(name) - 1] == '/')
     return FALSE;
+
+  value = gconf_client_get (gconf->priv->client, name, NULL);
+  if (value == NULL)
+    return TRUE;
+  else
+    gconf_value_free (value);
 
   return gconf_client_key_is_writable (gconf->priv->client, name, NULL);
 }
