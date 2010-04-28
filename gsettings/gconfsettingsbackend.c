@@ -634,7 +634,8 @@ gconf_settings_backend_gvariant_to_gconf_value (GVariant *value)
 static GVariant *
 gconf_settings_backend_read (GSettingsBackend   *backend,
                              const gchar        *key,
-                             const GVariantType *expected_type)
+                             const GVariantType *expected_type,
+                             gboolean            default_value)
 {
   GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
   GConfValue *gconf_value;
