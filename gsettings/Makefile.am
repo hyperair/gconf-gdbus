@@ -27,6 +27,7 @@ bin_PROGRAMS = gsettings-data-convert
 AM_CPPFLAGS = \
 	-I$(top_srcdir)         \
 	-I$(top_builddir)       \
+	-DDATADIR=\"$(datadir)\" \
 	$(GSETTINGS_CFLAGS)
 
 gsettings_data_convert_SOURCES = gsettings-data-convert.c
