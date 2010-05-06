@@ -740,7 +740,15 @@ gconf_client_remove_dir  (GConfClient* client,
 #endif
 }
 
-
+/**
+ * gconf_client_notify_add:
+ * @client:
+ * @namespace_section
+ * @func: (scope notified) (closure user_data) (destroy destroy_notify):
+ * @user_data:
+ * @destroy_notify:
+ * @err:
+ */
 guint
 gconf_client_notify_add (GConfClient* client,
                          const gchar* namespace_section,
