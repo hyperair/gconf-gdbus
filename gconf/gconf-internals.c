@@ -36,7 +36,7 @@
 #include <time.h>
 #include <math.h>
 
-#include <dbus/dbus.h>
+#include <gio/gio.h>
 
 #ifdef G_OS_WIN32
 #include <windows.h>
@@ -2424,10 +2424,10 @@ static char *
 get_ior (gboolean start_if_not_found,
          GString  *failure_log)
 {
-        DBusMessage *message, *reply;
-        DBusConnection *connection;
-        DBusError bus_error;
+        GDBusConnection *connection;
+        GVariant *value;
         char *ior;
+        GError *error = NULL;
 
         /* if the bus isn't running and we don't want to start gconfd then
          * we don't want to autolaunch the bus either, so bail early.
@@ -2440,52 +2440,44 @@ get_ior (gboolean start_if_not_found,
                 return NULL;
         }
 
-        dbus_error_init (&bus_error);
-        connection = dbus_bus_get (DBUS_BUS_SESSION, &bus_error);
+        g_type_init ();
 
-        if (dbus_error_is_set (&bus_error)) {
+        connection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, &error);
+        if (connection == NULL) {
                 if (failure_log)
                     g_string_append_printf (failure_log,
                                             _("Failed to get connection to session: %s"),
-                                            bus_error.message);
-                dbus_error_free (&bus_error);
+                                            error->message);
+                g_error_free (error);
                 return NULL;
         }
 
-        message = dbus_message_new_method_call ("org.gnome.GConf",
-                                                "/org/gnome/GConf",
-                                                "org.gnome.GConf",
-                                                "GetIOR");
-        dbus_message_set_auto_start (message, start_if_not_found);
+        value = g_dbus_connection_call_sync (connection,
+                                             "org.gnome.GConf",
+                                             "/org/gnome/GConf",
+                                             "org.gnome.GConf",
+                                             "GetIOR",
+                                             g_variant_new ("()"),
+                                             G_VARIANT_TYPE ("(s)"),
+                                             start_if_not_found ? G_DBUS_CALL_FLAGS_NONE 
+                                                                : G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                             -1,
+                                             NULL,
+                                             &error);
+        g_object_unref (connection);
 
-        reply = dbus_connection_send_with_reply_and_block (connection, message, -1,
-                                                           &bus_error);
-        dbus_message_unref (message);
-
-        if (dbus_error_is_set (&bus_error)) {
+        if (value == NULL) {
                 if (failure_log)
                     g_string_append_printf (failure_log,
-                                            _("Could not send message to GConf daemon: %s"),
-                                            bus_error.message);
-                dbus_error_free (&bus_error);
+                                            _("GetIOR failed: %s"),
+                                            error->message);
+
+                g_error_free (error);
                 return NULL;
         }
 
-        ior = NULL;
-        if (!dbus_message_get_args (reply, &bus_error, DBUS_TYPE_STRING,
-                                    &ior, DBUS_TYPE_INVALID)) {
-                if (failure_log)
-                    g_string_append_printf (failure_log,
-                                            _("daemon gave erroneous reply: %s"),
-                                            bus_error.message);
-                dbus_error_free (&bus_error);
-                return NULL;
-        }
-
-        ior = g_strdup (ior);
-
-        dbus_message_unref (reply);
-        dbus_connection_unref (connection);
+        g_variant_get (value, "(s)", &ior, NULL);
+        g_variant_unref (value);
 
         return ior;
 }

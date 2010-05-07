@@ -78,17 +78,19 @@ if OS_WIN32
 gconfd_2_LDFLAGS = -mwindows
 endif
 
-gconfd_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) libgconf-$(MAJOR_VERSION).la
+gconfd_2_CFLAGS = $(INCLUDES) $(DEPENDENT_DBUS_CFLAGS)
+
+gconfd_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS)
 
 gconftool_2_SOURCES = \
 	gconftool.c
 
-gconftool_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS) libgconf-$(MAJOR_VERSION).la
+gconftool_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_LIBS)
 
 gconf_sanity_check_2_SOURCES = \
 	gconf-sanity-check.c
 
-gconf_sanity_check_2_LDADD = $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_LIBS) libgconf-$(MAJOR_VERSION).la
+gconf_sanity_check_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) $(DEPENDENT_WITH_XML_AND_GTK_LIBS)
 
 $(CORBA_SOURCECODE): $(srcdir)/GConfX.idl $(ORBIT_IDL)
 	$(ORBIT_IDL) $(srcdir)/GConfX.idl
