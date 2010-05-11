@@ -112,7 +112,9 @@ if test "x${with_sysconfsubdir}" != "x"; then
 else
   sysgconfdir='${sysconfdir}'
 fi
+gconfdefaultpath="$sysconfdir/$with_sysconfsubdir/$MAJOR_VERSION/path"
 AC_SUBST(sysgconfdir)
+AC_SUBST(gconfdefaultpath)
 
 dnl Save flags to aclocal
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
