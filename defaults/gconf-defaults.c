@@ -1,6 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
  *
  * Copyright (C) 2008, 2009 Matthias Clasen <mclasen@redhat.com>
+ * Copyright © 2010 Christian Persch
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,10 +33,7 @@
 #include <pwd.h>
 
 #include <glib.h>
-#include <glib-object.h>
-
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-lowlevel.h>
+#include <gio/gio.h>
 
 #include <polkit/polkit.h>
 
@@ -44,7 +42,113 @@
 #include <gconf/gconf-engine.h>
 
 #include "gconf-defaults.h"
-#include "gconf-defaults-glue.h"
+
+static const char introspection_xml[] =
+  "<node name='/'>"
+    "<interface name='org.gnome.GConf.Defaults'>"
+#if 0
+      "<!--"
+        "includes: an array of GConf paths to copy from the"
+        "callers GConf database to the system database"
+        "excludes: an array of GConf paths to omit"
+
+        "Copies values from the callers GConf database to the system-wide"
+        "database. The subtree below each included path is copied recursively,"
+        "skipping the excluded subtrees."
+        "To decide which PolicyKit privilege to require for the copying of"
+        "each path in includes, the mechanism looks for a privilege with an"
+        "annotation with key org.gnome.gconf.defaults.set-system.prefix whose"
+        "value is a prefix of the path. If no privilege is found this way, the"
+        "org.gnome.gconf.defaults.set-system privilege is required."
+        "-->"
+#endif
+      "<method name='SetSystem'>"
+        "<arg name='includes' direction='in' type='as'/>"
+        "<arg name='excludes' direction='in' type='as'/>"
+      "</method>"
+#if 0
+      "<!--"
+        "path: a path to a gconf key"
+        "value: a value, as encoded by gconf_value_encode"
+
+        "Sets the key at path to value in the system-wide database."
+        "To decide which PolicyKit privilege to require for the copying of"
+        "each path in includes, the mechanism looks for a privilege with an"
+        "annotation with key org.gnome.gconf.defaults.set-system.prefix whose"
+        "value is a prefix of the path. If no privilege is found this way, the"
+        "org.gnome.gconf.defaults.set-system privilege is required."
+        "-->"
+#endif
+      "<method name='SetSystemValue'>"
+        "<arg name='path'  direction='in' type='s'/>"
+        "<arg name='value' direction='in' type='s'/>"
+      "</method>"
+      "<method name='CanSetSystem'>"
+        "<arg name='includes' direction='in' type='as'/>"
+        "<arg name='result' direction='out' type='u'/>"
+      "</method>"
+      "<signal name='SystemSet'>"
+        "<arg name='keys' type='as'/>"
+      "</signal>"
+#if 0
+      "<!--"
+        "includes: an array of GConf paths to copy from the"
+        "callers GConf database to the mandatory database"
+        "excludes: an array of GConf paths to omit"
+
+        "Copies values from the callers GConf database to the system-wide"
+        "mandatory database. The subtree below each included path is copied"
+        "recursively, skipping the excluded subtrees."
+        "To decide which PolicyKit privilege to require for the copying of"
+        "each path in includes, the mechanism looks for a privilege with an"
+        "annotation with key org.gnome.gconf.defaults.set-mandatory.prefix whose"
+        "value is a prefix of the path. If no privilege is found this way, the"
+        "org.gnome.gconf.defaults.set-mandatory privilege is required."
+        "-->"
+#endif
+      "<method name='SetMandatory'>"
+        "<arg name='includes' direction='in' type='as'/>"
+        "<arg name='excludes' direction='in' type='as'/>"
+      "</method>"
+#if 0
+      "<!--"
+        "path: a path to a gconf key"
+        "value: a value, as encoded by gconf_value_encode"
+
+        "Sets the key at path to value in the system-wide mandatory database."
+        "To decide which PolicyKit privilege to require for the copying of"
+        "each path in includes, the mechanism looks for a privilege with an"
+        "annotation with key org.gnome.gconf.defaults.set-mandatory.prefix whose"
+        "value is a prefix of the path. If no privilege is found this way, the"
+        "org.gnome.gconf.defaults.set-mandatory privilege is required."
+        "-->"
+#endif
+      "<method name='SetMandatoryValue'>"
+        "<arg name='path'  direction='in' type='s'/>"
+        "<arg name='value' direction='in' type='s'/>"
+      "</method>"
+#if 0
+      "<!--"
+        "Unsets keys in the system-wide mandatory GConf database, making the"
+        "keys writable again. The subtree below each included path is copied"
+        "recursively, skipping the excluded subtrees."
+        "To decide which PolicyKit privilege to require for the copying of"
+        "each path in includes, the mechanism looks for a privilege with an"
+        "annotation with key org.gnome.gconf.defaults.set-mandatory.prefix whose"
+        "value is a prefix of the path. If no privilege is found this way, the"
+        "org.gnome.gconf.defaults.set-mandatory privilege is required."
+        "-->"
+#endif
+      "<method name='UnsetMandatory'>"
+        "<arg name='includes' direction='in' type='as'/>"
+        "<arg name='excludes' direction='in' type='as'/>"
+      "</method>"
+      "<method name='CanSetMandatory'>"
+        "<arg name='includes' direction='in' type='as'/>"
+        "<arg name='result' direction='out' type='u'/>"
+      "</method>"
+    "</interface>"
+  "</node>";
 
 static gboolean
 do_exit (gpointer user_data)
@@ -101,9 +205,9 @@ stop_operation (void)
 
 struct GConfDefaultsPrivate
 {
-        DBusGConnection *system_bus_connection;
-        DBusGProxy      *system_bus_proxy;
+        GDBusConnection  *system_bus_connection;
         PolkitAuthority *auth;
+        guint registration_id;
 };
 
 static void gconf_defaults_finalize (GObject *object);
@@ -115,15 +219,23 @@ G_DEFINE_TYPE (GConfDefaults, gconf_defaults, G_TYPE_OBJECT)
 GQuark
 gconf_defaults_error_quark (void)
 {
-        static GQuark ret = 0;
+        static volatile gsize quark_volatile = 0;
 
-        if (ret == 0) {
-                ret = g_quark_from_static_string ("gconf_defaults_error");
+        if (quark_volatile == 0) {
+                static const GDBusErrorEntry error_entries[] =
+                {
+                        { GCONF_DEFAULTS_ERROR_GENERAL,        "org.gnome.GConf.Defaults.Error.GeneralError"  },
+                        { GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED, "org.gnome.GConf.Defaults.Error.NotPrivileged" }
+                };
+           
+                g_dbus_error_register_error_domain ("gconf-defaults-error-quark",
+                                                    &quark_volatile,
+                                                    error_entries,
+                                                    G_N_ELEMENTS (error_entries));
         }
 
-        return ret;
+        return (GQuark) quark_volatile;
 }
-
 
 #define ENUM_ENTRY(NAME, DESC) { NAME, "" #NAME "", DESC }
 
@@ -168,12 +280,72 @@ gconf_defaults_constructor (GType                  type,
         return G_OBJECT (mechanism);
 }
 
-enum {
-	SYSTEM_SET,
-	LAST_SIGNAL
-};
+static void
+method_call_cb (GDBusConnection       *connection,
+                const gchar           *sender,
+                const gchar           *object_path,
+                const gchar           *interface_name,
+                const gchar           *method_name,
+                GVariant              *parameters,
+                GDBusMethodInvocation *invocation,
+                gpointer               user_data)
+{
+        GConfDefaults *mechanism = GCONF_DEFAULTS (user_data);
 
-static guint signals[LAST_SIGNAL] = { 0 };
+        if (g_strcmp0 (interface_name, "org.gnome.GConf.Defaults") != 0)
+                return;
+
+        if (g_strcmp0 (method_name, "SetSystem") == 0) {
+                char **includes, **excludes;
+
+                g_variant_get (parameters, "(^a&s^a&s)", &includes, &excludes);
+                gconf_defaults_set_system (mechanism, (const char **) includes, (const char**) excludes, invocation);
+                g_free (includes);
+                g_free (excludes);
+        } else if (g_strcmp0 (method_name, "SetSystemValue") == 0) {
+                const char *path, *value;
+
+                g_variant_get (parameters, "(&s&s)", &path, &value);
+                gconf_defaults_set_system_value (mechanism, path, value, invocation);
+        } else if (g_strcmp0 (method_name, "CanSetSystem") == 0) {
+                char **includes;
+
+                g_variant_get (parameters, "(^a&s)", &includes);
+                gconf_defaults_can_set_system (mechanism, (const char **) includes, invocation);
+                g_free (includes);
+        } else if (g_strcmp0 (method_name, "SetMandatory") == 0) {
+                char **includes, **excludes;
+
+                g_variant_get (parameters, "(^a&s^a&s)", &includes, &excludes);
+                gconf_defaults_set_mandatory (mechanism, (const char **) includes, (const char**) excludes, invocation);
+                g_free (includes);
+                g_free (excludes);
+        } else if (g_strcmp0 (method_name, "UnsetMandatory") == 0) {
+                char **includes, **excludes;
+
+                g_variant_get (parameters, "(^a&s^a&s)", &includes, &excludes);
+                gconf_defaults_unset_mandatory (mechanism, (const char **) includes, (const char**) excludes, invocation);
+                g_free (includes);
+                g_free (excludes);
+        } else if (g_strcmp0 (method_name, "SetMandatoryValue") == 0) {
+                const char *path, *value;
+
+                g_variant_get (parameters, "(&s&s)", &path, &value);
+                gconf_defaults_set_mandatory_value (mechanism, path, value, invocation);
+        } else if (g_strcmp0 (method_name, "CanSetMandatory") == 0) {
+                char **includes;
+
+                g_variant_get (parameters, "(^a&s)", &includes);
+                gconf_defaults_can_set_mandatory (mechanism, (const char **) includes, invocation);
+                g_free (includes);
+        }
+}
+
+static const GDBusInterfaceVTable interface_vtable = {
+        method_call_cb,
+        NULL,
+        NULL
+};
 
 static void
 gconf_defaults_class_init (GConfDefaultsClass *klass)
@@ -183,20 +355,7 @@ gconf_defaults_class_init (GConfDefaultsClass *klass)
         object_class->constructor = gconf_defaults_constructor;
         object_class->finalize = gconf_defaults_finalize;
 
-	signals[SYSTEM_SET] = g_signal_new ("system-set",
-					    G_OBJECT_CLASS_TYPE (object_class),
-					    G_SIGNAL_RUN_FIRST,
-					    G_STRUCT_OFFSET (GConfDefaultsClass, system_set),
-					    NULL, NULL,
-					    g_cclosure_marshal_VOID__BOXED,
-					    G_TYPE_NONE, 1, G_TYPE_STRV);
- 
         g_type_class_add_private (klass, sizeof (GConfDefaultsPrivate));
-
-        dbus_g_object_type_install_info (GCONF_TYPE_DEFAULTS, &dbus_glib_gconf_defaults_object_info);
-
-        dbus_g_error_domain_register (GCONF_DEFAULTS_ERROR, NULL, GCONF_DEFAULTS_TYPE_ERROR);
-
 }
 
 static void
@@ -208,64 +367,61 @@ gconf_defaults_init (GConfDefaults *mechanism)
 static void
 gconf_defaults_finalize (GObject *object)
 {
-        GConfDefaults *mechanism;
+        GConfDefaults *mechanism = GCONF_DEFAULTS (object);
+        GConfDefaultsPrivate *priv = mechanism->priv;
 
-        g_return_if_fail (object != NULL);
-        g_return_if_fail (GCONF_IS_DEFAULTS (object));
+        if (priv->registration_id != 0) {
+                g_dbus_connection_unregister_object (priv->system_bus_connection, priv->registration_id);
+        }
 
-        mechanism = GCONF_DEFAULTS (object);
-
-        g_return_if_fail (mechanism->priv != NULL);
-
-	g_object_unref (mechanism->priv->auth);
-        g_object_unref (mechanism->priv->system_bus_proxy);
+	g_object_unref (priv->auth);
+        g_object_unref (priv->system_bus_connection);
 
         G_OBJECT_CLASS (gconf_defaults_parent_class)->finalize (object);
 }
 
 static gboolean
-register_mechanism (GConfDefaults *mechanism)
+register_mechanism (GConfDefaults *mechanism,
+                    GDBusConnection *connection)
 {
+        GConfDefaultsPrivate *priv = mechanism->priv;
+        GDBusNodeInfo *introspection_data;
         GError *error = NULL;
 
-        mechanism->priv->auth = polkit_authority_get ();
+        priv->auth = polkit_authority_get ();
+        priv->system_bus_connection = g_object_ref (connection);
 
-        error = NULL;
-        mechanism->priv->system_bus_connection = dbus_g_bus_get (DBUS_BUS_SYSTEM, &error);
-        if (mechanism->priv->system_bus_connection == NULL) {
-                if (error != NULL) {
-                        g_critical ("error getting system bus: %s", error->message);
-                        g_error_free (error);
-                }
-                goto error;
+        introspection_data = g_dbus_node_info_new_for_xml (introspection_xml, NULL);
+        g_assert (introspection_data != NULL);
+
+        priv->registration_id = g_dbus_connection_register_object
+                                    (connection,
+                                     "/",
+                                     introspection_data->interfaces[0],
+                                     &interface_vtable,
+                                     mechanism,
+                                     (GDestroyNotify) g_object_unref,
+                                     &error);
+        if (priv->registration_id == 0) {
+                g_warning ("Failed to register object: %s", error->message);
+                g_error_free (error);
+                return FALSE;
         }
-
-        dbus_g_connection_register_g_object (mechanism->priv->system_bus_connection, "/",
-                                             G_OBJECT (mechanism));
-
-        mechanism->priv->system_bus_proxy = dbus_g_proxy_new_for_name (mechanism->priv->system_bus_connection,
-                                                                      DBUS_SERVICE_DBUS,
-                                                                      DBUS_PATH_DBUS,
-                                                                      DBUS_INTERFACE_DBUS);
 
         start_killtimer ();
 
         return TRUE;
-
-error:
-        return FALSE;
 }
 
-
 GConfDefaults *
-gconf_defaults_new (void)
+gconf_defaults_new (GDBusConnection *connection)
 {
         GObject *object;
         gboolean res;
 
         object = g_object_new (GCONF_TYPE_DEFAULTS, NULL);
 
-        res = register_mechanism (GCONF_DEFAULTS (object));
+        res = register_mechanism (GCONF_DEFAULTS (object), connection);
         if (! res) {
                 g_object_unref (object);
                 return NULL;
@@ -316,36 +472,14 @@ polkit_action_for_gconf_path (GConfDefaults *mechanism,
 	return action;
 }
 
-static void
-throw_error (DBusGMethodInvocation *context,
-             gint                   error_code,
-             const gchar           *format,
-             ...)
-{
-	GError *error;
-	va_list args;
-	gchar *message;
-
-	va_start (args, format);
-	message = g_strdup_vprintf (format, args);
-	va_end (args);
-
-	error = g_error_new (GCONF_DEFAULTS_ERROR,
-			     error_code,
-			     "%s", message);
-	dbus_g_method_return_error (context, error);
-	g_error_free (error);
-	g_free (message);
-}
-
 typedef void (*AuthObtainedCallback) (GConfDefaults          *mechanism,
-                                      DBusGMethodInvocation  *context,
+                                      GDBusMethodInvocation  *context,
                                       gpointer                user_data);
 
 typedef struct
 {
 	GConfDefaults                   *mechanism;
-	DBusGMethodInvocation           *context;
+	GDBusMethodInvocation           *context;
 	gchar                          **actions;
 	gint				 id;
 	gint				 flags;
@@ -365,6 +499,7 @@ check_auth_data_free (CheckAuthData *data)
 	if (data->destroy)
 		data->destroy (data->user_data);
         g_object_unref (data->subject);
+        g_object_unref (data->context);
 	g_free (data);
 }
 
@@ -388,9 +523,10 @@ check_authorization_callback (PolkitAuthority *authority,
 							      &error);
 	if (error != NULL) {
 		g_debug ("error checking action '%s'\n", error->message);
-		throw_error (data->context,
-                             GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
-                             "Not Authorized: %s", error->message);
+                g_dbus_method_invocation_return_error (data->context,
+                                                       GCONF_DEFAULTS_ERROR,
+                                                       GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
+                                                       "Not Authorized: %s", error->message);
 		g_error_free (error);
 	}
 	else {
@@ -402,16 +538,18 @@ check_authorization_callback (PolkitAuthority *authority,
 		else if (polkit_authorization_result_get_is_challenge (result)) {
 			g_debug ("result for '%s': challenge\n",
 				 data->actions[data->id]);
-			throw_error (data->context,
-                                     GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
-                                     "Authorization is required");
+                        g_dbus_method_invocation_return_error_literal (data->context,
+                                                                       GCONF_DEFAULTS_ERROR,
+                                                                       GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
+                                                                       "Authorization is required");
 		}
 		else {
 			g_debug ("result for '%s': not authorized\n",
 				 data->actions[data->id]);
-			throw_error (data->context,
-                                     GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
-                                     "Not Authorized");
+                        g_dbus_method_invocation_return_error_literal (data->context,
+                                                                       GCONF_DEFAULTS_ERROR,
+                                                                       GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
+                                                                       "Not Authorized");
 		}
 	}
 
@@ -448,7 +586,7 @@ check_next_action (CheckAuthData *data)
 
 static void
 check_polkit_for_actions (GConfDefaults                   *mechanism,
-                          DBusGMethodInvocation           *context,
+                          GDBusMethodInvocation           *context,
                           gchar                          **actions,
                           AuthObtainedCallback             auth_obtained_callback,
                           gpointer                         user_data,
@@ -458,7 +596,7 @@ check_polkit_for_actions (GConfDefaults                   *mechanism,
 
 	data = g_new0 (CheckAuthData, 1);
 	data->mechanism = g_object_ref (mechanism);
-	data->context = context;
+	data->context = g_object_ref (context);
 	data->actions = actions;
         data->flags = POLKIT_CHECK_AUTHORIZATION_FLAGS_ALLOW_USER_INTERACTION;
 	data->id = 0;
@@ -466,7 +604,7 @@ check_polkit_for_actions (GConfDefaults                   *mechanism,
 	data->check_auth_callback = (GAsyncReadyCallback)check_authorization_callback;
 	data->user_data = user_data;
 	data->destroy = destroy;
-	data->subject = polkit_system_bus_name_new (dbus_g_method_get_sender (context));
+	data->subject = polkit_system_bus_name_new (g_dbus_method_invocation_get_sender (context));
 	data->challenge = FALSE;
 
 	check_next_action (data);
@@ -474,33 +612,39 @@ check_polkit_for_actions (GConfDefaults                   *mechanism,
 
 static char *
 gconf_address_for_caller (GConfDefaults          *mechanism,
-			  DBusGMethodInvocation  *context,
-			  GError                **gerror)
+			  GDBusMethodInvocation  *context)
 {
-        char *sender;
-	DBusConnection *conn;
+        GDBusConnection *connection;
+        GCredentials *credentials;
 	uid_t uid;
 	struct passwd *pwd;
 	char *result;
-	DBusError error;
+        GError *error = NULL;
 
-	conn = dbus_g_connection_get_connection (mechanism->priv->system_bus_connection);
-        sender = dbus_g_method_get_sender (context);
+        connection = g_dbus_method_invocation_get_connection (context);
+        credentials = g_dbus_connection_get_peer_credentials (connection);
+        if (credentials == NULL) {
+                g_dbus_method_invocation_return_error_literal (context,
+                                                               GCONF_DEFAULTS_ERROR,
+                                                               GCONF_DEFAULTS_ERROR_GENERAL,
+                                                               "Failed to get credentials");
+                return NULL;
+        }
 
-	dbus_error_init (&error);
-	uid = dbus_bus_get_unix_user (conn, sender, &error);
-	g_free (sender);
-	if (uid == (unsigned)-1) {
-		dbus_set_g_error (gerror, &error);
-		dbus_error_free (&error);
-		return NULL;
-	}
+        uid = g_credentials_get_unix_user (credentials, &error);
+        g_object_unref (credentials);
+        if (error) {
+                g_dbus_method_invocation_return_gerror (context, error);
+                g_error_free (error);
+                return NULL;
+        }
 
 	pwd = getpwuid (uid);
 	if (pwd == NULL) {
-		g_set_error (gerror,
-			     0, 0,
-			     "Failed to get passwd information for uid %d", uid);
+                g_dbus_method_invocation_return_error (context,
+                                                       GCONF_DEFAULTS_ERROR,
+                                                       GCONF_DEFAULTS_ERROR_GENERAL,
+                                                       "Failed to get passwd information for uid %d", (int) uid);
 		return NULL;
 	}
 
@@ -575,7 +719,7 @@ typedef void (*ChangeSetCallback) (GConfDefaults  *mechanism,
 typedef struct
 {
 	GConfDefaults                   *mechanism;
-	DBusGMethodInvocation           *context;
+	GDBusMethodInvocation           *context;
 	const char 			*dest_address;
 	char 			       **actions;
 	char            	       **includes;
@@ -599,12 +743,13 @@ copy_data_free (gpointer user_data)
 		gconf_value_free (data->value);
 	if (data->destroy)
 		data->destroy (data->user_data);
+        g_object_unref (data->context);
 	g_free (data);
 }
 
 static void
 do_copy_authorized (GConfDefaults          *mechanism,
-                    DBusGMethodInvocation  *context,
+                    GDBusMethodInvocation  *context,
 		    gpointer                user_data)
 {
         CopyData    *data = user_data;
@@ -616,6 +761,11 @@ do_copy_authorized (GConfDefaults          *mechanism,
         gint i;
 	GError *error;
 
+	/* find the address to from the caller id */
+        address = gconf_address_for_caller (data->mechanism, data->context);
+        if (address == NULL)
+                return;
+
 	error = NULL;
 	engine = gconf_engine_get_local (data->dest_address, &error);
 	if (error)
@@ -623,11 +773,6 @@ do_copy_authorized (GConfDefaults          *mechanism,
 
 	dest = gconf_client_get_for_engine (engine);
 	gconf_engine_unref (engine);
-
-	/* find the address to from the caller id */
-        address = gconf_address_for_caller (data->mechanism, data->context, &error);
-	if (error)
-		goto cleanup;
 
 	engine = gconf_engine_get_local (address, &error);
 	if (error)
@@ -671,17 +816,18 @@ cleanup:
 		g_object_unref (source);
 
 	if (error) {
-		throw_error (data->context,
-			     GCONF_DEFAULTS_ERROR_GENERAL,
-			     "%s", error->message);
+                g_dbus_method_invocation_return_error_literal (data->context,
+                                                               GCONF_DEFAULTS_ERROR,
+                                                               GCONF_DEFAULTS_ERROR_GENERAL,
+                                                               error->message);
 		g_error_free (error);
 	}
 	else
-        	dbus_g_method_return (data->context);
+        	g_dbus_method_invocation_return_value (data->context, NULL);
 }
 
 typedef void (*ActionsReadyCallback) (GConfDefaults          *mechanism,
-				      DBusGMethodInvocation  *context,
+				      GDBusMethodInvocation  *context,
 				      gchar                 **actions,
                           	      AuthObtainedCallback    auth_obtained_callback,
 				      gpointer                data,
@@ -690,7 +836,7 @@ typedef void (*ActionsReadyCallback) (GConfDefaults          *mechanism,
 typedef struct
 {
 	GConfDefaults 			*mechanism;
-	DBusGMethodInvocation           *context;
+	GDBusMethodInvocation           *context;
 	char                           **includes;
 	const char			*default_action;
 	const char			*annotation_key;
@@ -707,6 +853,7 @@ action_data_free (ActionData *data)
 	g_strfreev (data->includes);
 	if (data->destroy)
 		data->destroy (data->data);
+        g_object_unref (data->context);
 	g_free (data);
 }
 
@@ -728,9 +875,10 @@ actions_ready_cb (GObject      *source,
 	action_descriptions = polkit_authority_enumerate_actions_finish (data->mechanism->priv->auth, res, &error);
 
 	if (error) {
-		throw_error (data->context,
-                             GCONF_DEFAULTS_ERROR_GENERAL,
-                             "Failed to get action descriptions: %s", error->message);
+                g_dbus_method_invocation_return_error (data->context,
+                                                       GCONF_DEFAULTS_ERROR,
+                                                       GCONF_DEFAULTS_ERROR_GENERAL,
+                                                       "Failed to get action descriptions: %s", error->message);
 		g_error_free (error);
 		action_data_free (data);
 		stop_operation ();
@@ -772,7 +920,7 @@ do_copy (GConfDefaults          *mechanism,
 	 const gchar           **includes,
 	 const gchar           **excludes,
 	 GConfValue             *value,
-	 DBusGMethodInvocation  *context,
+	 GDBusMethodInvocation  *context,
 	 ChangeSetCallback       changeset_callback,
 	 gpointer                user_data,
          GDestroyNotify          destroy)
@@ -784,7 +932,7 @@ do_copy (GConfDefaults          *mechanism,
 
 	cdata = g_new0 (CopyData, 1);
 	cdata->mechanism = g_object_ref (mechanism);
-	cdata->context = context;
+	cdata->context = g_object_ref (context);
 	cdata->includes = g_strdupv ((gchar **)includes);
 	cdata->excludes = g_strdupv ((gchar **)excludes);
         cdata->value = value;
@@ -795,7 +943,7 @@ do_copy (GConfDefaults          *mechanism,
 
 	adata = g_new0 (ActionData, 1);
 	adata->mechanism = g_object_ref (mechanism);
-	adata->context = context;
+	adata->context = g_object_ref (context);
 	adata->includes = g_strdupv ((gchar **)includes);
 	adata->actions_ready_callback = check_polkit_for_actions;
 	adata->auth_obtained_callback = do_copy_authorized;
@@ -826,9 +974,9 @@ append_key (GConfChangeSet *cs,
 	    GConfValue *value,
 	    gpointer user_data)
 {
-	GPtrArray *keys = (GPtrArray *) user_data;
+	GVariantBuilder *builder = (GVariantBuilder *) user_data;
 
-	g_ptr_array_add (keys, (gpointer) key);
+        g_variant_builder_add (builder, "s", key);
 }
 
 static void
@@ -836,22 +984,26 @@ set_system_changes (GConfDefaults  *mechanism,
 		    GConfChangeSet *changes,
                     gpointer        data)
 {
-	GPtrArray *keys;
+        GConfDefaultsPrivate *priv = mechanism->priv;
+	GVariantBuilder builder;
 
-	keys = g_ptr_array_new ();
-	gconf_change_set_foreach (changes, append_key, keys);
-	g_ptr_array_add (keys, NULL);
+	g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
+	gconf_change_set_foreach (changes, append_key, &builder);
 
-	g_signal_emit (mechanism, signals[SYSTEM_SET], 0, keys->pdata);
-
-	g_ptr_array_free (keys, TRUE);
+        g_dbus_connection_emit_signal (priv->system_bus_connection,
+                                       NULL /* FIXME? */,
+                                       "/",
+                                       "org.gnome.GConf.Defaults",
+                                       "SystemSet",
+                                       g_variant_builder_end (&builder),
+                                       NULL);
 }
 
 void
 gconf_defaults_set_system (GConfDefaults          *mechanism,
 			   const char            **includes,
 			   const char            **excludes,
-			   DBusGMethodInvocation  *context)
+			   GDBusMethodInvocation  *context)
 {
 	do_copy (mechanism, FALSE, includes, excludes, NULL, context, set_system_changes, NULL, NULL);
 }
@@ -860,7 +1012,7 @@ void
 gconf_defaults_set_mandatory (GConfDefaults          *mechanism,
                               const char            **includes,
                               const char            **excludes,
-                              DBusGMethodInvocation  *context)
+                              GDBusMethodInvocation  *context)
 {
 	do_copy (mechanism, TRUE, includes, excludes, NULL, context, NULL, NULL, NULL);
 }
@@ -947,7 +1099,7 @@ out:
 typedef struct
 {
 	GConfDefaults          *mechanism;
-        DBusGMethodInvocation  *context;
+        GDBusMethodInvocation  *context;
         char                  **includes;
         char                  **excludes;
 } UnsetData;
@@ -960,12 +1112,13 @@ unset_data_free (gpointer user_data)
 	g_object_unref (data->mechanism);
 	g_strfreev (data->includes);
 	g_strfreev (data->excludes);
+        g_object_unref (data->context);
 	g_free (data);
 }
 
 static void
 do_unset_authorized (GConfDefaults          *mechanism,
-                     DBusGMethodInvocation  *context,
+                     GDBusMethodInvocation  *context,
 		     gpointer 		     user_data)
 {
         UnsetData *data = user_data;
@@ -977,21 +1130,21 @@ do_unset_authorized (GConfDefaults          *mechanism,
 		     (const gchar **)data->excludes, &error);
 
 	if (error) {
-		throw_error (data->context,
-			     GCONF_DEFAULTS_ERROR,
-			     GCONF_DEFAULTS_ERROR_GENERAL,
-			     "%s", error->message);
+                g_dbus_method_invocation_return_error_literal (data->context,
+                                                               GCONF_DEFAULTS_ERROR,
+                                                               GCONF_DEFAULTS_ERROR_GENERAL,
+                                                               error->message);
 		g_error_free (error);
 	}
 	else
-        	dbus_g_method_return (data->context);
+        	g_dbus_method_invocation_return_value (data->context, NULL);
 }
 
 void
 gconf_defaults_unset_mandatory (GConfDefaults          *mechanism,
                                 const char            **includes,
                                 const char            **excludes,
-                                DBusGMethodInvocation  *context)
+                                GDBusMethodInvocation  *context)
 {
 	UnsetData *udata;
 	ActionData *adata;
@@ -1000,13 +1153,13 @@ gconf_defaults_unset_mandatory (GConfDefaults          *mechanism,
 
 	udata = g_new0 (UnsetData, 1);
 	udata->mechanism = g_object_ref (mechanism);
-	udata->context = context;
+	udata->context = g_object_ref (context);
 	udata->includes = g_strdupv ((gchar **)includes);
 	udata->excludes = g_strdupv ((gchar **)excludes);
 
 	adata = g_new0 (ActionData, 1);
 	adata->mechanism = g_object_ref (mechanism);
-	adata->context = context;
+	adata->context = g_object_ref (context);
 	adata->includes = g_strdupv ((gchar **)includes);
 	adata->auth_obtained_callback = do_unset_authorized;
 	adata->data = udata;
@@ -1039,9 +1192,10 @@ check_authorization_only_callback (PolkitAuthority *authority,
 							      &error);
 	if (error != NULL) {
 		g_debug ("error checking action '%s'\n", error->message);
-		throw_error (data->context,
-                             GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
-                             "Not Authorized: %s", error->message);
+		g_dbus_method_invocation_return_error (data->context,
+                                                       GCONF_DEFAULTS_ERROR,
+                                                       GCONF_DEFAULTS_ERROR_NOT_PRIVILEGED,
+                                                       "Not Authorized: %s", error->message);
 		g_error_free (error);
 		goto out;
 	}
@@ -1071,7 +1225,7 @@ check_authorization_only_callback (PolkitAuthority *authority,
 
 			result = data->challenge ? 1 : 2;
 			g_debug ("return %d\n", result);
-			dbus_g_method_return (data->context, result);
+			g_dbus_method_invocation_return_value (data->context, g_variant_new ("(u)", (guint32) result));
 		}
 		else {
 			check_next_action (data);
@@ -1080,7 +1234,7 @@ check_authorization_only_callback (PolkitAuthority *authority,
 	}
 	else {
 		g_debug ("return 0\n");
-		dbus_g_method_return (data->context, 0);
+		g_dbus_method_invocation_return_value (data->context, g_variant_new ("(u)", 0));
 	}
 
 out:
@@ -1091,7 +1245,7 @@ out:
 
 static void
 check_permissions_only (GConfDefaults                   *mechanism,
-                        DBusGMethodInvocation           *context,
+                        GDBusMethodInvocation           *context,
                         gchar                          **actions,
                         AuthObtainedCallback             auth_obtained_callback,
                         gpointer                         user_data,
@@ -1101,7 +1255,7 @@ check_permissions_only (GConfDefaults                   *mechanism,
 
 	data = g_new0 (CheckAuthData, 1);
 	data->mechanism = g_object_ref (mechanism);
-	data->context = context;
+	data->context = g_object_ref (context);
 	data->actions = actions;
 	data->flags = 0;
 	data->id = 0;
@@ -1109,7 +1263,7 @@ check_permissions_only (GConfDefaults                   *mechanism,
 	data->auth_obtained_callback = NULL;
 	data->user_data = NULL;
 	data->destroy = NULL;
-	data->subject = polkit_system_bus_name_new (dbus_g_method_get_sender (context));
+	data->subject = polkit_system_bus_name_new (g_dbus_method_invocation_get_sender (context));
 	data->challenge = FALSE;
 
 	check_next_action (data);
@@ -1119,7 +1273,7 @@ static void
 do_check (GConfDefaults          *mechanism,
           gboolean                mandatory,
           const gchar           **includes,
-          DBusGMethodInvocation  *context)
+          GDBusMethodInvocation  *context)
 {
 	ActionData *adata;
 
@@ -1127,7 +1281,7 @@ do_check (GConfDefaults          *mechanism,
 
 	adata = g_new0 (ActionData, 1);
 	adata->mechanism = g_object_ref (mechanism);
-	adata->context = context;
+	adata->context = g_object_ref (context);
 	adata->includes = g_strdupv ((gchar **)includes);
 	adata->actions_ready_callback = check_permissions_only;
 	adata->auth_obtained_callback = NULL;
@@ -1152,7 +1306,7 @@ do_check (GConfDefaults          *mechanism,
 void
 gconf_defaults_can_set_system (GConfDefaults          *mechanism,
 			       const char            **includes,
-			       DBusGMethodInvocation  *context)
+			       GDBusMethodInvocation  *context)
 {
 	do_check (mechanism, FALSE, includes, context);
 }
@@ -1160,7 +1314,7 @@ gconf_defaults_can_set_system (GConfDefaults          *mechanism,
 void
 gconf_defaults_can_set_mandatory (GConfDefaults          *mechanism,
 			          const char            **includes,
-			          DBusGMethodInvocation  *context)
+			          GDBusMethodInvocation  *context)
 {
 	do_check (mechanism, TRUE, includes, context);
 }
@@ -1169,7 +1323,7 @@ void
 gconf_defaults_set_system_value (GConfDefaults         *mechanism,
                                  const char            *path,
                                  const char            *value,
-                                 DBusGMethodInvocation *context)
+                                 GDBusMethodInvocation *context)
 {
 	GConfValue *gvalue;
  	const char *includes[] = { NULL, NULL };
@@ -1178,14 +1332,19 @@ gconf_defaults_set_system_value (GConfDefaults         *mechanism,
 	if (gvalue) {
 		includes[0] = path;
 		do_copy (mechanism, FALSE, includes, NULL, gvalue, context, set_system_changes, NULL, NULL);
-	}
+	} else {
+                g_dbus_method_invocation_return_error_literal (context,
+                                                               GCONF_DEFAULTS_ERROR,
+                                                               GCONF_DEFAULTS_ERROR_GENERAL,
+                                                               "Failed to parse value as GConf value");
+        }
 }
 
 void
 gconf_defaults_set_mandatory_value (GConfDefaults         *mechanism,
                                     const char            *path,
                                     const char            *value,
-                                    DBusGMethodInvocation *context)
+                                    GDBusMethodInvocation *context)
 {
 	GConfValue *gvalue;
  	const char *includes[] = { NULL, NULL };
@@ -1194,6 +1353,10 @@ gconf_defaults_set_mandatory_value (GConfDefaults         *mechanism,
 	if (gvalue) {
 		includes[0] = path;
 		do_copy (mechanism, TRUE, includes, NULL, gvalue, context, NULL, NULL, NULL);
-	}
+	} else {
+                g_dbus_method_invocation_return_error_literal (context,
+                                                               GCONF_DEFAULTS_ERROR,
+                                                               GCONF_DEFAULTS_ERROR_GENERAL,
+                                                               "Failed to parse value as GConf value");
+        }
 }
-

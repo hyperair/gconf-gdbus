@@ -1,15 +1,8 @@
 libexec_PROGRAMS = gconf-defaults-mechanism
 
-gconf-defaults-glue.h: $(srcdir)/gconf-defaults.xml
-	dbus-binding-tool --prefix=gconf_defaults --mode=glib-server      \
-			  --output=gconf-defaults-glue.h                  \
-			  $(srcdir)/gconf-defaults.xml
-
-
 gconf_defaults_mechanism_SOURCES = \
 	gconf-defaults.h \
 	gconf-defaults.c \
-	gconf-defaults-glue.h \
 	gconf-defaults-main.c
 
 INCLUDES = \
@@ -21,8 +14,6 @@ INCLUDES = \
 gconf_defaults_mechanism_LDADD = \
 	$(top_builddir)/gconf/libgconf-2.la \
 	$(DEFAULTS_LIBS)
-
-BUILT_SOURCES = gconf-defaults-glue.h
 
 dbus_servicesdir = $(datadir)/dbus-1/system-services
 dbus_confdir = $(sysconfdir)/dbus-1/system.d
@@ -44,8 +35,7 @@ polkit_DATA = $(polkit_in_files:.policy.in=.policy)
 EXTRA_DIST =					\
 	$(dbus_services_in_files)		\
 	org.gnome.GConf.Defaults.conf		\
-	$(polkit_in_files)			\
-	gconf-defaults.xml
+	$(polkit_in_files)
 
 CLEANFILES =			\
 	$(BUILT_SOURCES)	\
@@ -53,4 +43,3 @@ CLEANFILES =			\
 	$(dbus_services_DATA)
 
 DISTCLEANFILES = org.gnome.gconf.defaults.policy
-

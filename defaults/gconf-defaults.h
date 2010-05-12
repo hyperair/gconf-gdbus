@@ -22,7 +22,7 @@
 #define GCONF_DEFAULTS_H
 
 #include <glib-object.h>
-#include <dbus/dbus-glib.h>
+#include <gio/gio.h>
 
 G_BEGIN_DECLS
 
@@ -65,41 +65,42 @@ GType gconf_defaults_error_get_type (void);
 
 GQuark         gconf_defaults_error_quark    (void);
 GType          gconf_defaults_get_type       (void);
-GConfDefaults *gconf_defaults_new            (void);
+
+GConfDefaults *gconf_defaults_new            (GDBusConnection *connection);
 
 /* exported methods */
 void           gconf_defaults_set_system          (GConfDefaults          *mechanism,
                                                    const char            **includes,
                                                    const char            **excludes,
-                                                   DBusGMethodInvocation  *context);
+                                                   GDBusMethodInvocation  *context);
 
 void           gconf_defaults_set_system_value    (GConfDefaults          *mechanism,
                                                    const char             *path,
                                                    const char             *value,
-                                                   DBusGMethodInvocation  *context);
+                                                   GDBusMethodInvocation  *context);
 
 void           gconf_defaults_set_mandatory       (GConfDefaults          *mechanism,
                                                    const char            **includes,
                                                    const char            **excludes,
-                                                   DBusGMethodInvocation  *context);
+                                                   GDBusMethodInvocation  *context);
 
 void           gconf_defaults_set_mandatory_value (GConfDefaults          *mechanism,
                                                    const char             *path,
                                                    const char             *value,
-                                                   DBusGMethodInvocation  *context);
+                                                   GDBusMethodInvocation  *context);
 
 void           gconf_defaults_unset_mandatory     (GConfDefaults          *mechanism,
                                                    const char            **includes,
                                                    const char            **excludes,
-                                                   DBusGMethodInvocation  *context);
+                                                   GDBusMethodInvocation  *context);
 
 void		gconf_defaults_can_set_system    (GConfDefaults         *mechanism,
 						  const char	       **includes,
-                                                  DBusGMethodInvocation  *context);
+                                                  GDBusMethodInvocation  *context);
 
 void		gconf_defaults_can_set_mandatory (GConfDefaults         *mechanism,
 						  const char	       **includes,
-                                                  DBusGMethodInvocation  *context);
+                                                  GDBusMethodInvocation  *context);
 
 G_END_DECLS
 
