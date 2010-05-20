@@ -275,6 +275,10 @@ load_state (time_t  *mtime,
   filename = g_build_filename (g_get_user_data_dir (), "gsettings-data-convert", NULL);
   keyfile = g_key_file_new ();
 
+  /* ensure file exists */
+  if (!g_file_test (filename, G_FILE_TEST_EXISTS))
+    return;
+
   error = NULL;
   if (!g_key_file_load_from_file (keyfile, filename, 0, &error))
     {
