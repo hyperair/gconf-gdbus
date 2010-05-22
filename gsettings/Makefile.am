@@ -36,6 +36,9 @@ gsettings_data_convert_LDADD =              \
 	$(GSETTINGS_LIBS)                   \
 	$(NULL)
 
+autostartdir = $(sysconfdir)/xdg/autostart
+autostart_DATA = gsettings-data-convert.desktop
+
 man_MANS =                       \
 	gsettings-data-convert.1 \
 	$(NULL)
@@ -43,7 +46,7 @@ man_MANS =                       \
 gsettings-data-convert.1 : gsettings-data-convert.xml
 	xsltproc -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
-EXTRA_DIST = gsettings-data-convert.xml gsettings-data-convert.1
+EXTRA_DIST = gsettings-data-convert.xml gsettings-data-convert.1 gsettings-data-convert.desktop
 
 dist-hook-local: $(BUILT_EXTRA_DIST)
 	files='$(BUILT_EXTRA_DIST)';                      \
