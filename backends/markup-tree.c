@@ -34,6 +34,43 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef G_OS_WIN32
+#include <io.h>
+#include <conio.h>
+#define _WIN32_WINNT 0x0500 
+#include <windows.h>
+
+static int
+fsync (int fd)
+{
+  HANDLE h = (HANDLE) _get_osfhandle (fd);
+  DWORD err;
+
+  if (h == INVALID_HANDLE_VALUE)
+    {
+      errno = EBADF;
+      return -1;
+    }
+
+  if (!FlushFileBuffers (h))
+    {
+      err = GetLastError ();
+      switch (err)
+        {
+           case ERROR_INVALID_HANDLE:
+             errno = EINVAL;
+             break;
+
+           default:
+             errno = EIO;
+        }
+      return -1;
+    }
+
+  return 0;
+}
+#endif
+
 typedef struct
 {
   char       *locale;
