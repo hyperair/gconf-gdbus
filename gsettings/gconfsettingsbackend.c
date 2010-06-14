@@ -665,7 +665,9 @@ gconf_settings_backend_write (GSettingsBackend *backend,
   GConfValue           *gconf_value;
   GError               *error;
 
+  g_variant_ref_sink (value);
   gconf_value = gconf_settings_backend_gvariant_to_gconf_value (value);
+  g_variant_unref (value);
   if (gconf_value == NULL)
     return FALSE;
 
