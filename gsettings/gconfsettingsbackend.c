@@ -876,12 +876,6 @@ gconf_settings_backend_unsubscribe (GSettingsBackend *backend,
   g_free (path);
 }
 
-static gboolean
-gconf_settings_backend_supports_context (const gchar *context)
-{
-  return FALSE;
-}
-
 static void
 gconf_settings_backend_finalize (GObject *object)
 {
@@ -934,7 +928,6 @@ gconf_settings_backend_class_init (GConfSettingsBackendClass *class)
   backend_class->get_writable = gconf_settings_backend_get_writable;
   backend_class->subscribe = gconf_settings_backend_subscribe;
   backend_class->unsubscribe = gconf_settings_backend_unsubscribe;
-  backend_class->supports_context = gconf_settings_backend_supports_context;
 
   g_type_class_add_private (class, sizeof (GConfSettingsBackendPrivate));
 }
