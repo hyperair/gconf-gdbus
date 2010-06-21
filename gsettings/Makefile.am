@@ -22,6 +22,7 @@ libgsettingsgconfbackend_la_LIBADD =        \
 	$(GSETTINGS_LIBS)                   \
 	$(NULL)
 
+dist_bin_SCRIPTS = gsettings-schema-convert
 bin_PROGRAMS = gsettings-data-convert
 
 AM_CPPFLAGS = \
@@ -40,13 +41,14 @@ autostartdir = $(sysconfdir)/xdg/autostart
 autostart_DATA = gsettings-data-convert.desktop
 
 man_MANS =                       \
+	gsettings-schema-convert.1 \
 	gsettings-data-convert.1 \
 	$(NULL)
 
-gsettings-data-convert.1 : gsettings-data-convert.xml
+%.1 : %.xml
 	xsltproc -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
-EXTRA_DIST = gsettings-data-convert.xml gsettings-data-convert.1 gsettings-data-convert.desktop
+EXTRA_DIST = gsettings-data-convert.xml gsettings-schema-convert.xml gsettings-data-convert.1 gsettings-schema-convert.1 gsettings-data-convert.desktop
 
 dist-hook-local: $(BUILT_EXTRA_DIST)
 	files='$(BUILT_EXTRA_DIST)';                      \
