@@ -84,7 +84,11 @@ handle_file (const gchar *filename)
             g_print ("for storage at '%s'\n", schema_path[1]);
         }
 
-      settings = g_settings_new_with_path (schema_path[0], schema_path[1]);
+      if (schema_path[1] != NULL)
+        settings = g_settings_new_with_path (schema_path[0], schema_path[1]);
+      else
+        settings = g_settings_new (schema_path[0]);
+
       g_settings_delay (settings);
 
       error = NULL;
