@@ -1039,12 +1039,11 @@ def main(args):
 
         if options.xml:
             node = schema_root.get_xml_node()
-            tree = ET.ElementTree(node)
             try:
-                output = ET.tostring(tree, pretty_print = True)
+                output = ET.tostring(node, pretty_print = True)
             except TypeError:
                 # pretty_print only works with lxml
-                output = ET.tostring(tree)
+                output = ET.tostring(node)
         else:
             output = schema_root.get_simple_string()
 
