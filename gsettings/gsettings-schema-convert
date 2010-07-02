@@ -946,14 +946,16 @@ class GConfSchemaParser:
     def parse(self):
         # reset the state of the parser
         self.root = GSettingsSchemaRoot()
+        if self.default_gettext_domain:
+            self.root.gettext_domain = self.default_gettext_domain
         self.default_schema_id_count = 0
 
         gconfschemafile_node = ET.parse(self.file).getroot()
         for schemalist_node in gconfschemafile_node.findall('schemalist'):
             for schema_node in schemalist_node.findall('schema'):
                 gconf_schema = GConfSchema(schema_node)
-                if gconf_schema.localized:
-                    self.root.gettext_domain = self.default_gettext_domain or 'FIXME'
+                if gconf_schema.localized and not self.root.gettext_domain:
+                    self.root.gettext_domain = 'FIXME'
                 self._insert_schema(gconf_schema)
 
         self._fix_hierarchy()
