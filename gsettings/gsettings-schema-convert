@@ -761,12 +761,37 @@ def map_gconf_type_to_variant_type(gconftype, gconfsubtype):
 
 
 def fix_value_for_simple_gconf_type(gconftype, gconfvalue):
+    '''If there is no value, then we choose a 'neutral' value (false, 0, empty
+       string).
+    '''
     if gconftype == 'string':
         if not gconfvalue:
             return '\'\''
-        else:
-            return '\'' + gconfvalue.replace('\'', '\\\'') + '\''
+        return '\'' + gconfvalue.replace('\'', '\\\'') + '\''
+    elif gconftype == 'int':
+        if not gconfvalue:
+            return '0'
+
+        try:
+            int(gconfvalue)
+        except ValueError:
+            raise GSettingsSchemaConvertException()
+
+        return gconfvalue
+    elif gconftype == 'float':
+        if not gconfvalue:
+            return '0.0'
+
+        try:
+            float(gconfvalue)
+        except ValueError:
+            raise GSettingsSchemaConvertException()
+
+        return gconfvalue
     elif gconftype == 'bool':
+        if not gconfvalue:
+            return 'false'
+
         value = gconfvalue.lower()
         # gconf schemas can have 0/1 for false/true
         if value == '0':
@@ -813,9 +838,9 @@ class GConfSchema:
         except:
             try:
                 self.default = node.find('default').text
-                self.localized = None
             except:
-                raise GSettingsSchemaConvertException('No default value for key \'%s\'. A default value is always required in GSettings schemas.' % self.applyto or self.key)
+                self.default = ''
+            self.localized = None
         self.typed_default = None
 
         self.short = self._get_value_with_locale(node, locale_node, 'short')
@@ -826,11 +851,14 @@ class GConfSchema:
         if self.long:
             self.long = self._oneline(self.long)
 
-        # Fix the default to be parsable by GVariant
+        # Fix the default value to be parsable by GVariant
         if self.type == 'list':
             l = self.default.strip()
             if not (l[0] == '[' and l[-1] == ']'):
-                raise GSettingsSchemaConvertException('Cannot parse default list value \'%s\' for key \'%s\'.' % (self.default, self.applyto or self.key))
+                if not l:
+                    l = '[]'
+                else:
+                    raise GSettingsSchemaConvertException('Cannot parse default list value \'%s\' for key \'%s\'.' % (self.default, self.applyto or self.key))
             values = l[1:-1].strip()
             if not values:
                 self.default = '[]'
