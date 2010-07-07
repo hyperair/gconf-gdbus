@@ -867,6 +867,10 @@ class GConfSchema:
             result += ' ' + line.lstrip()
         return result.strip()
 
+    def convert_underscores(self):
+        self.prefix = self.prefix.replace('_', '-')
+        self.keyname = self.keyname.replace('_', '-')
+
     def get_gsettings_schema_key(self):
         key = GSettingsSchemaKey()
         key.fill(self.keyname, self.varianttype, self.default, self.typed_default, self.localized, self.keyname, self.short, self.long, None, None)
@@ -878,15 +882,19 @@ class GConfSchema:
 
 class GConfSchemaParser:
 
-    def __init__(self, file, default_gettext_domain, default_schema_id):
+    def __init__(self, file, default_gettext_domain, default_schema_id, keep_underscores):
         self.file = file
         self.default_gettext_domain = default_gettext_domain
         self.default_schema_id = default_schema_id
+        self.keep_underscores = keep_underscores
 
         self.root = None
         self.default_schema_id_count = 0
 
     def _insert_schema(self, gconf_schema):
+        if not self.keep_underscores:
+            gconf_schema.convert_underscores()
+
         schemas_only = (gconf_schema.applyto is None)
 
         dirpath = gconf_schema.prefix
@@ -1007,6 +1015,8 @@ def main(args):
                       help="default gettext domain to use when converting gconf schema file")
     parser.add_option("-i", "--schema-id", dest="schema_id",
                       help="default schema ID to use when converting gconf schema file")
+    parser.add_option("-u", "--keep-underscores", action="store_true", dest="keep_underscores",
+                      help="keep underscores in key names instead of replacing them with dashes when converting gconf schema file")
     parser.add_option("-s", "--simple", action="store_true", dest="simple",
                       default=False, help="use the simple schema format as output (only for gconf schema conversion)")
     parser.add_option("-x", "--xml", action="store_true", dest="xml",
@@ -1035,6 +1045,10 @@ def main(args):
         print >> sys.stderr, 'Default schema ID can only be specified when converting a gconf schema.'
         return 1
 
+    if not options.gconf and options.keep_underscores:
+        print >> sys.stderr, 'The --keep-underscores option can only be specified when converting a gconf schema.'
+        return 1
+
     argfile = os.path.expanduser(args[0])
     if not os.path.exists(argfile):
         print >> sys.stderr, '\'%s\' does not exist.' % argfile
@@ -1052,7 +1066,7 @@ def main(args):
                 options.simple = True
 
             try:
-                parser = GConfSchemaParser(argfile, options.gettext_domain, options.schema_id)
+                parser = GConfSchemaParser(argfile, options.gettext_domain, options.schema_id, options.keep_underscores)
                 schema_root = parser.parse()
             except SyntaxError, e:
                 raise GSettingsSchemaConvertException('\'%s\' does not look like a valid gconf schema file: %s' % (argfile, e))
