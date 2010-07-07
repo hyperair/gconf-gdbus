@@ -746,9 +746,17 @@ class XMLSchemaParser:
 
 def map_gconf_type_to_variant_type(gconftype, gconfsubtype):
     typemap = { 'string': 's', 'int': 'i', 'float': 'd', 'bool': 'b', 'list': 'a' }
-    result = typemap[gconftype]
+    try:
+        result = typemap[gconftype]
+    except KeyError:
+        raise GSettingsSchemaConvertException('Type \'%s\' is not a known gconf type.' % gconftype)
+
     if gconftype == 'list':
-        result = result + typemap[gconfsubtype]
+        try:
+            result = result + typemap[gconfsubtype]
+        except KeyError:
+            raise GSettingsSchemaConvertException('Type \'%s\' is not a known gconf type.' % gconfsubtype)
+
     return result
 
 
