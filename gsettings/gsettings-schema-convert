@@ -1091,7 +1091,7 @@ def main(args):
 
         if options.gconf:
             if not options.simple and not options.xml:
-                options.simple = True
+                options.xml = True
 
             try:
                 parser = GConfSchemaParser(argfile, options.gettext_domain, options.schema_id, options.keep_underscores)

@@ -65,8 +65,9 @@ The input file is a GConf schema.
 <varlistentry>
 <term><option>-s</option>, <option>--simple</option></term>
 <listitem><para>
-The input file is a simple GSettings schema. If the input
-format is not explicitly specified, this is the default.
+Produce a GSettings schema in simple format. The simple format
+is easier to edit and can be converted into the XML format with
+<command>gsettings-schema-convert</command> later on.
 </para></listitem>
 </varlistentry>
 
@@ -74,9 +75,7 @@ format is not explicitly specified, this is the default.
 <term><option>-x</option>, <option>--xml</option></term>
 <listitem><para>
 Produce a GSettings schema in XML format. If the output format
-is not explicitly specified, a GConf schema will be converted
-into a simple Gsettings schema, and a simple GSettings schema
-will be converted into XML.
+is not explicitly specified, this is the default.
 </para></listitem>
 </varlistentry>
 
