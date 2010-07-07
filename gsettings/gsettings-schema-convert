@@ -752,6 +752,27 @@ def map_gconf_type_to_variant_type(gconftype, gconfsubtype):
     return result
 
 
+def fix_value_for_simple_gconf_type(gconftype, gconfvalue):
+    if gconftype == 'string':
+        if not gconfvalue:
+            return '\'\''
+        else:
+            return '\'' + gconfvalue.replace('\'', '\\\'') + '\''
+    elif gconftype == 'bool':
+        value = gconfvalue.lower()
+        # gconf schemas can have 0/1 for false/true
+        if value == '0':
+            return 'false'
+        elif value == '1':
+            return 'true'
+        elif value in ['false', 'true']:
+            return value
+        else:
+            raise GSettingsSchemaConvertException()
+    else:
+        return gconfvalue
+
+
 class GConfSchema:
 
     def __init__(self, node):
@@ -798,26 +819,27 @@ class GConfSchema:
             self.long = self._oneline(self.long)
 
         # Fix the default to be parsable by GVariant
-        if self.type == 'string':
-            if not self.default:
-                self.default = '\'\''
-            else:
-                self.default.replace('\'', '\\\'')
-                self.default = '\'%s\'' % self.default
-        elif self.type == 'bool':
-            self.default = self.default.lower()
-        elif self.type == 'list':
+        if self.type == 'list':
             l = self.default.strip()
             if not (l[0] == '[' and l[-1] == ']'):
                 raise GSettingsSchemaConvertException('Cannot parse default list value \'%s\' for key \'%s\'.' % (self.default, self.applyto or self.key))
             values = l[1:-1].strip()
             if not values:
+                self.default = '[]'
                 self.typed_default = '@%s []' % self.varianttype
-            elif self.list_type == 'string':
+            else:
                 items = [ item.strip() for item in values.split(',') ]
-                items = [ item.replace('\'', '\\\'') for item in items ]
-                values = ', '.join([ '\'%s\'' % item for item in items ])
+                try:
+                    items = [ fix_value_for_simple_gconf_type(self.list_type, item) for item in items ]
+                except GSettingsSchemaConvertException:
+                    raise GSettingsSchemaConvertException('Invalid item(s) of type \'%s\' in default list \'%s\' for key \'%s\'.' % (self.list_type, self.default, self.applyto or self.key))
+                values = ', '.join(items)
                 self.default = '[ %s ]' % values
+        else:
+            try:
+                self.default = fix_value_for_simple_gconf_type(self.type, self.default)
+            except GSettingsSchemaConvertException:
+                raise GSettingsSchemaConvertException('Invalid default value \'%s\' of type \'%s\' for key \'%s\'.' % (self.default, self.type, self.applyto or self.key))
 
     def _get_value_with_locale(self, node, locale_node, element):
         element_node = None
