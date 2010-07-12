@@ -449,7 +449,7 @@ main (int argc, char *argv[])
 
           /* Add the the file to the converted list */
           len = g_strv_length (converted);
-          converted = g_realloc (converted, len + 1);
+          converted = g_realloc (converted, (len + 2) * sizeof (gchar *));
           converted[len] = g_strdup (name);
           converted[len + 1] = NULL;
         }
