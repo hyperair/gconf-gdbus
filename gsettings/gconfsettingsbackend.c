@@ -726,7 +726,7 @@ gconf_settings_backend_remove_ignore_notifications (GConfChangeSet       *change
 }
 
 static gboolean
-gconf_settings_backend_write_keys (GSettingsBackend *backend,
+gconf_settings_backend_write_tree (GSettingsBackend *backend,
                                    GTree            *tree,
                                    gpointer          origin_tag)
 {
@@ -781,20 +781,6 @@ gconf_settings_backend_reset (GSettingsBackend *backend,
 
   if (gconf_client_unset (gconf->priv->client, key, NULL))
     g_settings_backend_changed (backend, key, origin_tag);
-}
-
-static void
-gconf_settings_backend_reset_path (GSettingsBackend *backend,
-                                   const gchar      *path,
-                                   gpointer          origin_tag)
-{
-  GConfSettingsBackend *gconf = GCONF_SETTINGS_BACKEND (backend);
-
-  /* We have no way to know if it was completely successful or if it
-   * completely failed, or if only some keys were unset, so we just send
-   * one big changed signal. */
-  gconf_client_recursive_unset (gconf->priv->client, path, 0, NULL);
-  g_settings_backend_path_changed (backend, path, origin_tag);
 }
 
 static gboolean
@@ -922,9 +908,8 @@ gconf_settings_backend_class_init (GConfSettingsBackendClass *class)
 
   backend_class->read = gconf_settings_backend_read;
   backend_class->write = gconf_settings_backend_write;
-  backend_class->write_keys = gconf_settings_backend_write_keys;
+  backend_class->write_tree = gconf_settings_backend_write_tree;
   backend_class->reset = gconf_settings_backend_reset;
-  backend_class->reset_path = gconf_settings_backend_reset_path;
   backend_class->get_writable = gconf_settings_backend_get_writable;
   backend_class->subscribe = gconf_settings_backend_subscribe;
   backend_class->unsubscribe = gconf_settings_backend_unsubscribe;
