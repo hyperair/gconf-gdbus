@@ -190,6 +190,7 @@ handle_file (const gchar *filename)
                       g_variant_builder_add (builder, "s", s);
                     }
                   v = g_variant_new ("as", builder);
+                  g_variant_ref_sink (v);
 
                   if (dry_run)
                     {
@@ -215,6 +216,7 @@ handle_file (const gchar *filename)
                       g_variant_builder_add (builder, "i", ii);
                     }
                   v = g_variant_new ("ai", builder);
+                  g_variant_ref_sink (v);
 
                   if (dry_run)
                     {
