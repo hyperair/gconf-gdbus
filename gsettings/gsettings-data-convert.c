@@ -183,13 +183,18 @@ handle_file (const gchar *filename)
                 case GCONF_VALUE_STRING:
                   builder = g_variant_builder_new (G_VARIANT_TYPE_ARRAY);
                   list = gconf_value_get_list (value);
-                  for (l = list; l; l = l->next)
+                  if (list != NULL)
                     {
-                      GConfValue *lv = l->data;
-                      s = gconf_value_get_string (lv);
-                      g_variant_builder_add (builder, "s", s);
+                      for (l = list; l; l = l->next)
+                        {
+                          GConfValue *lv = l->data;
+                          s = gconf_value_get_string (lv);
+                          g_variant_builder_add (builder, "s", s);
+                        }
+                      v = g_variant_new ("as", builder);
                     }
-                  v = g_variant_new ("as", builder);
+                  else
+                    v = g_variant_new_array (G_VARIANT_TYPE_STRING, NULL, 0);
                   g_variant_ref_sink (v);
 
                   if (dry_run)
@@ -209,13 +214,18 @@ handle_file (const gchar *filename)
                 case GCONF_VALUE_INT:
                   builder = g_variant_builder_new (G_VARIANT_TYPE_ARRAY);
                   list = gconf_value_get_list (value);
-                  for (l = list; l; l = l->next)
+                  if (list != NULL)
                     {
-                      GConfValue *lv = l->data;
-                      ii = gconf_value_get_int (lv);
-                      g_variant_builder_add (builder, "i", ii);
+                      for (l = list; l; l = l->next)
+                        {
+                          GConfValue *lv = l->data;
+                          ii = gconf_value_get_int (lv);
+                          g_variant_builder_add (builder, "i", ii);
+                        }
+                      v = g_variant_new ("ai", builder);
                     }
-                  v = g_variant_new ("ai", builder);
+                  else
+                    v = g_variant_new_array (G_VARIANT_TYPE_INT32, NULL, 0);
                   g_variant_ref_sink (v);
 
                   if (dry_run)
