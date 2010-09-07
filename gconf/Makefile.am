@@ -124,7 +124,7 @@ libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_SCANNER_ARGS = --warn-all --add-include-path=$(srcdir)
 INTROSPECTION_COMPILER_ARGS= --includedir=$(srcdir)
 
 if HAVE_INTROSPECTION
@@ -137,6 +137,7 @@ GConf_2_0_gir_CFLAGS = \
 	$(INCLUDES)
 GConf_2_0_gir_LIBS = libgconf-2.la
 GConf_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
+GConf_2_0_gir_SCANNERFLAGS = --identifier-prefix=GConf --symbol-prefix=gconf
 INTROSPECTION_GIRS += GConf-2.0.gir
 
 girdir = $(datadir)/gir-1.0/
