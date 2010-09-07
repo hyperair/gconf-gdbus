@@ -178,16 +178,12 @@ If @key is not in the change set, this function has no effect.
 
 <!-- ##### FUNCTION gconf_change_set_foreach ##### -->
 <para>
-Iterates over a #GConfChangeSet by calling a
-#GConfChangeSetForeachFunc for each change in the set. See the
-description of #GConfChangeSetForeachFunc for details.  You may not
-call gconf_change_set_remove() during the iteration, because you'll
-confuse the internal data structures and cause memory corruption.
+
 </para>
 
-@cs: a #GConfChangeSet.
-@func: function to call for each change in the change set.
-@user_data: user data to pass to the #GConfChangeSetForeachFunc.
+@cs: 
+@func: 
+@user_data: 
 
 
 <!-- ##### FUNCTION gconf_change_set_check_value ##### -->
@@ -323,21 +319,20 @@ the pair of values being set for the key.
 
 <!-- ##### FUNCTION gconf_change_set_set_user_data ##### -->
 <para>
-Sets the user_data and the destroy notification function fields of the 
-#GConfChangeSet.
+
 </para>
 
-@cs: a #GConfChangeSet.
-@data: a #gpointer.
-@dnotify: a pointer to the function to be called during destroy.
+@cs: 
+@data: 
+@dnotify: 
 
 
 <!-- ##### FUNCTION gconf_change_set_get_user_data ##### -->
 <para>
-Returns the user_data field of the #GConfChangeSet.
+
 </para>
 
-@cs: a #GConfChangeSet.
-@Returns: a pointer to the user_data.
+@cs: 
+@Returns: 
 
 

@@ -27,6 +27,13 @@
 
 G_BEGIN_DECLS
 
+/* Skipped from introspection because it's not registered as boxed */
+/**
+ * GConfSchema: (skip)
+ *
+ * An opaque data type representing a description of a key-value pair.
+ */
+
 /*
  *  A "schema" is a value that describes a key-value pair.
  *  It might include the type of the pair, documentation describing 

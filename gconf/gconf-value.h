@@ -126,6 +126,11 @@ gchar*      gconf_value_encode               (GConfValue  *val);
  * info into GConfEntry, though the transition isn't complete.
  */
 
+/* Skipped from introspection because it's not registered as boxed */
+/**
+ * GConfMetaInfo: (skip)
+ *
+ */
 typedef struct _GConfMetaInfo GConfMetaInfo;
 
 struct _GConfMetaInfo {

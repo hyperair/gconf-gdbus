@@ -895,6 +895,18 @@ gconf_value_get_list_type (const GConfValue *value)
   return REAL_VALUE (value)->d.list_data.type;
 }
 
+/**
+ * gconf_value_get_list:
+ * @value: a #GConfValue.
+ *
+ * Returns a #GSList containing #GConfValue objects. Each #GConfValue in
+ * the returned list will have the type returned by
+ * gconf_value_get_list_type(). Remember that the empty #GSList is equal to
+ * <symbol>NULL</symbol>.  The list is not a copy; it is "owned" by the
+ * #GConfValue and will be destroyed when the #GConfValue is destroyed.
+ *
+ * Return value: (element-type GConfValue) (transfer none): a #GList.
+ */
 GSList*
 gconf_value_get_list (const GConfValue *value)
 {

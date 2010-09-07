@@ -56,6 +56,13 @@ trace (const char *format, ...)
 
 static GConfClientErrorHandlerFunc global_error_handler = NULL;
 
+/**
+ * gconf_client_set_global_default_error_handler: (skip)
+ * @func: pointer to the function to be called for error handling.
+ *
+ * Set @func as the default error handler for the #GConfClient. This handler would be called
+ * for all #GConfClient internal errors.
+ */
 void
 gconf_client_set_global_default_error_handler(GConfClientErrorHandlerFunc func)
 {
@@ -422,6 +429,18 @@ notify_from_server_callback (GConfEngine* conf, guint cnxn_id,
  */
 
 
+/**
+ * gconf_client_get_default:
+ *
+ * Creates a new #GConfClient using the default #GConfEngine. Normally this is the
+ * engine you want. If someone else is already using the default
+ * #GConfClient, this function returns the same one they're using, but
+ * with the reference count incremented. So you have to unref either way.
+ *
+ * It's important to call g_type_init() before using this GObject, to initialize the type system.
+ *
+ * Return value: (transfer full): a new #GConfClient. g_object_unref() when you're done.
+ */
 GConfClient*
 gconf_client_get_default (void)
 {
@@ -451,6 +470,18 @@ gconf_client_get_default (void)
   return client;
 }
 
+/**
+ * gconf_client_get_for_engine:
+ * @engine: the #GConfEngine to use.
+ *
+ * Creates a new #GConfClient with a specific #GConfEngine. Only specialized
+ * configuration-related programs should need to call this function. The
+ * returned #GConfClient should be unref'd when you're done with g_object_unref().
+ * Remember to avoid using the #GConfEngine directly once you have a #GConfClient
+ * wrapper.
+ *
+ * Return value: (transfer full): a new #GConfClient.
+ */
 GConfClient*
 gconf_client_get_for_engine (GConfEngine* engine)
 {
@@ -1086,6 +1117,22 @@ copy_entry_list (GSList *list)
   return copy;
 }
 
+/**
+ * gconf_client_all_entries:
+ * @client: a #GConfClient.
+ * @dir: directory to list.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Lists the key-value pairs in @dir. Does not list subdirectories; for
+ * that use gconf_client_all_dirs(). The returned list contains #GConfEntry
+ * objects. A #GConfEntry contains an <emphasis>absolute</emphasis> key
+ * and a value. The list is not recursive, it contains only the immediate
+ * children of @dir.  To free the returned list, gconf_entry_free()
+ * each list element, then g_slist_free() the list itself.
+ * Just like gconf_engine_all_entries (), but uses #GConfClient caching and error-handling features.
+ *
+ * Return value: (element-type GConfEntry) (transfer full): List of #GConfEntry.
+ */
 GSList*
 gconf_client_all_entries    (GConfClient* client,
                              const gchar* dir,
@@ -1138,6 +1185,20 @@ gconf_client_all_entries    (GConfClient* client,
   return retval;
 }
 
+/**
+ * gconf_client_all_dirs:
+ * @client: a #GConfClient.
+ * @dir: directory to get subdirectories from.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Lists the subdirectories in @dir. The returned list contains
+ * allocated strings. Each string is the absolute path of a
+ * subdirectory. You should g_free() each string in the list, then
+ * g_slist_free() the list itself.  Just like gconf_engine_all_dirs(),
+ * but uses #GConfClient caching and error-handling features.
+ *
+ * Return value: (element-type utf8) (transfer full): List of allocated subdirectory names.
+ */
 GSList*
 gconf_client_all_dirs       (GConfClient* client,
                              const gchar* dir, GError** err)
@@ -1628,6 +1689,72 @@ gconf_client_get_schema  (GConfClient* client,
     }
 }
 
+/**
+ * gconf_client_get_list: (skip)
+ * @client: a #GConfClient.
+ * @key: key you want the value of.
+ * @list_type: type of each list element.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Requests the list (%GCONF_VALUE_LIST) stored at @key.  Automatically
+ * performs type-checking, so if a non-list is stored at @key, or the
+ * list does not contain elements of type @list_type, an error is
+ * returned. If no value is set or an error occurs, <symbol>NULL</symbol>
+ * is returned. Note that <symbol>NULL</symbol> is also the empty list,
+ * so if you need to distinguish the empty list from an unset value, you
+ * must use gconf_client_get () to obtain a raw #GConfValue.
+ *
+ * <emphasis>Remember that GConf lists can only store primitive types:
+ * %GCONF_VALUE_FLOAT, %GCONF_VALUE_INT, %GCONF_VALUE_BOOL,
+ * %GCONF_VALUE_STRING, %GCONF_VALUE_SCHEMA.</emphasis> Also remember
+ * that lists must be uniform, you may not mix types in the same list.
+ *
+ * The type of the list elements depends on @list_type. A #GConfValue
+ * with type %GCONF_VALUE_LIST normally stores a list of more #GConfValue
+ * objects. gconf_client_get_list() automatically converts to primitive C
+ * types. Thus, the list-&gt;data fields in the returned list
+ * contain:
+ *  
+ * <informaltable pgwide="1" frame="none">
+ * <tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
+ * <tbody>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_INT</entry>
+ * <entry>The integer itself, converted with GINT_TO_POINTER()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_BOOL</entry>
+ * <entry>The bool itself, converted with GINT_TO_POINTER()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_FLOAT</entry>
+ * <entry>A pointer to #gdouble, which should be freed with g_free()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_STRING</entry>
+ * <entry>A pointer to #gchar, which should be freed with g_free()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_SCHEMA</entry>
+ * <entry>A pointer to #GConfSchema, which should be freed with gconf_schema_free()</entry>
+ * </row>
+ *  
+ * </tbody></tgroup></informaltable>
+ *  
+ * In the %GCONF_VALUE_FLOAT and %GCONF_VALUE_STRING cases, you must
+ * g_free() each list element. In the %GCONF_VALUE_SCHEMA case you must
+ * gconf_schema_free() each element. In all cases you must free the
+ * list itself with g_slist_free().
+ *
+ * Just like gconf_engine_get_list (), but uses #GConfClient caching and error-handling features.
+ *
+* Return value: an allocated list, with elements as described above.
+*/
 GSList*
 gconf_client_get_list    (GConfClient* client, const gchar* key,
                           GConfValueType list_type, GError** err)
