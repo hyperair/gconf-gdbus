@@ -1501,12 +1501,14 @@ gconf_entry_new_nocopy (char* key, GConfValue* val)
   return (GConfEntry*) real;
 }
 
-void
+GConfEntry *
 gconf_entry_ref (GConfEntry *entry)
 {
   g_return_if_fail (entry != NULL);
   
   REAL_ENTRY (entry)->refcount += 1;
+
+  return entry;
 }
 
 void

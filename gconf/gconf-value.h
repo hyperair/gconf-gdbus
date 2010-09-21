@@ -186,7 +186,7 @@ GConfEntry* gconf_entry_copy             (const GConfEntry *src);
 #ifndef GCONF_DISABLE_DEPRECATED
 void        gconf_entry_free             (GConfEntry  *entry);
 #endif
-void        gconf_entry_ref   (GConfEntry *entry);
+GConfEntry* gconf_entry_ref   (GConfEntry *entry);
 void        gconf_entry_unref (GConfEntry *entry);
 
 /* Transfer ownership of value to the caller. */

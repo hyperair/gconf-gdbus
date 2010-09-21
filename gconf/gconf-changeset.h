@@ -70,7 +70,7 @@ GConfChangeSet* gconf_engine_change_set_from_current (GConfEngine* conf,
 
 GType           gconf_change_set_get_type (void);
 GConfChangeSet* gconf_change_set_new      (void);
-void            gconf_change_set_ref      (GConfChangeSet* cs);
+GConfChangeSet* gconf_change_set_ref      (GConfChangeSet* cs);
 
 void            gconf_change_set_unref    (GConfChangeSet* cs);
 

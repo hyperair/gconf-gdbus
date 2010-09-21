@@ -77,12 +77,14 @@ gconf_change_set_new      (void)
   return cs;
 }
 
-void
+GConfChangeSet*
 gconf_change_set_ref      (GConfChangeSet* cs)
 {
   g_return_if_fail(cs != NULL);
   
   cs->refcount += 1;
+
+  return cs;
 }
 
 void
