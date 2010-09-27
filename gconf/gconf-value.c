@@ -1504,7 +1504,7 @@ gconf_entry_new_nocopy (char* key, GConfValue* val)
 GConfEntry *
 gconf_entry_ref (GConfEntry *entry)
 {
-  g_return_if_fail (entry != NULL);
+  g_return_val_if_fail (entry != NULL, NULL);
   
   REAL_ENTRY (entry)->refcount += 1;
 

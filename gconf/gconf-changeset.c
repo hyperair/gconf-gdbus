@@ -80,7 +80,7 @@ gconf_change_set_new      (void)
 GConfChangeSet*
 gconf_change_set_ref      (GConfChangeSet* cs)
 {
-  g_return_if_fail(cs != NULL);
+  g_return_val_if_fail(cs != NULL, NULL);
   
   cs->refcount += 1;
 
