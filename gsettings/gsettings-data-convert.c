@@ -155,8 +155,23 @@ handle_file (const gchar *filename)
                 g_print ("set key '%s' to integer '%d'\n",
                          keys[j], gconf_value_get_int (value));
               else
-                g_settings_set (settings, keys[j], "i",
-                                gconf_value_get_int (value));
+                {
+                  GVariant *range;
+                  gchar *type;
+
+                  range = g_settings_get_range (settings, keys[j]);
+                  g_variant_get (range, "(&sv)", &type, NULL);
+
+                  if (strcmp (type, "enum") == 0)
+                    g_settings_set_enum (settings, keys[j], gconf_value_get_int (value));
+                  else if (strcmp (type, "flags") == 0)
+                    g_settings_set_flags (settings, keys[j], gconf_value_get_int (value));
+                  else
+                    g_settings_set (settings, keys[j], "i",
+                                    gconf_value_get_int (value));
+
+                  g_variant_unref (range);
+                }
               break;
 
             case GCONF_VALUE_BOOL:
