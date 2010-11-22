@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: "
 "http://bugzilla.gnome.org/enter_bug.cgi?product=gconf&component=general\n"
-"POT-Creation-Date: 2010-08-18 09:51+0000\n"
-"PO-Revision-Date: 2010-09-25 13:03+0300\n"
+"POT-Creation-Date: 2010-10-19 05:58+0000\n"
+"PO-Revision-Date: 2010-11-22 19:54+0300\n"
 "Last-Translator: Lucian Adrian Grijincu <lucian.grijincu@gmail.com>\n"
 "Language-Team: Romanian Gnome Team <gnomero-list@lists.sourceforge.net>\n"
 "Language: ro\n"
@@ -24,7 +24,6 @@ msgstr ""
 #, c-format
 msgid "Failed to get configuration file path from '%s'"
 msgstr "Nu s-a putut obține calea fișierului de configurare din „%s”"
-
 
 #: ../backends/evoldap-backend.c:173
 #, c-format
@@ -623,17 +622,17 @@ msgstr "Nu s-a putut localiza modulul backend pentru „%s”"
 msgid "Failed to shut down backend"
 msgstr "Oprirea backendului a eșuat"
 
-#: ../gconf/gconf-client.c:346 ../gconf/gconf-client.c:364
+#: ../gconf/gconf-client.c:353 ../gconf/gconf-client.c:371
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "Eroare GConf: %s\n"
 
-#: ../gconf/gconf-client.c:940
+#: ../gconf/gconf-client.c:971
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Atenționare GConf: eroare la listarea perechilor în „%s”: %s"
 
-#: ../gconf/gconf-client.c:1244
+#: ../gconf/gconf-client.c:1305
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Se aștepta „%s”, dar s-a primit „%s” pentru cheia %s"
@@ -884,7 +883,7 @@ msgstr "Eroare de citire a fișierului „%s”: %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1692
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Textul conține UTF-8 nevalid"
@@ -1026,16 +1025,20 @@ msgstr "Eroare la ping către server: %s"
 
 #: ../gconf/gconf-internals.c:2877
 #, c-format
+#| msgid ""
+#| "Failed to contact configuration server; some possible causes are that you "
+#| "need to enable TCP/IP networking for ORBit, or you have stale NFS locks "
+#| "due to a system crash. See http://projects.gnome.org/gconf/ for "
+#| "information. (Details - %s)"
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"Nu s-a putut contacta serverul configurărilor. Probabil e nevoie să activați "
-"facilitățile TCP/IP pentru ORBit. Sau poate aveți fișiere de tip „lock” NFS "
-"rămase în urma unei blocări a sistemului. Pentru mai multe informații  "
-"vizitați http://projects.gnome.org/gconf/ (detalii: %s)."
+"Nu s-a putut contacta serverul configurărilor; cea mai probabilă cauză este "
+"lipsa unui server de sesiune D-Bus sau un server D-Bus configurat greșit. "
+"Pentru mai multe informații vizitați http://projects.gnome.org/gconf/ "
+"(Detalii - %s)."
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -1336,73 +1339,73 @@ msgstr "„%s”: %s"
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Serverul nu a putut rezolva adresa „%s”"
 
-#: ../gconf/gconf.c:819
+#: ../gconf/gconf.c:854
 msgid "Can't add notifications to a local configuration source"
 msgstr "Nu se pot adăuga notificări unei surse locale de configurări"
 
-#: ../gconf/gconf.c:2269
+#: ../gconf/gconf.c:2332
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "A eșuat adăugarea unui client la lista serverului, eroare CORBA: %s"
 
-#: ../gconf/gconf.c:2641
+#: ../gconf/gconf.c:2704
 msgid "Must begin with a slash '/'"
 msgstr "Trebuie să inceapă cu un slash „/”"
 
-#: ../gconf/gconf.c:2663
+#: ../gconf/gconf.c:2726
 msgid "Can't have two slashes '/' in a row"
 msgstr "Nu poate avea două slash-uri „/” pe un rând"
 
-#: ../gconf/gconf.c:2665
+#: ../gconf/gconf.c:2728
 msgid "Can't have a period '.' right after a slash '/'"
 msgstr "Nu poate avea punct „.” imediat după un slash „/”"
 
-#: ../gconf/gconf.c:2685
+#: ../gconf/gconf.c:2748
 #, c-format
 msgid "'\\%o' is not an ASCII character and thus isn't allowed in key names"
 msgstr ""
 "„\\%o” nu este un caracter ASCII, deci nu este permis în numele cheilor"
 
-#: ../gconf/gconf.c:2695
+#: ../gconf/gconf.c:2758
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "„%c” este un caracter nevalid in numele cheii sau al directorului"
 
-#: ../gconf/gconf.c:2709
+#: ../gconf/gconf.c:2772
 msgid "Key/directory may not end with a slash '/'"
 msgstr "Cheia sau directorul nu se pot termina cu un slash „/”"
 
-#: ../gconf/gconf.c:3080
+#: ../gconf/gconf.c:3143
 #, c-format
 msgid "Failure shutting down configuration server: %s"
 msgstr "Încercarea de a închide serverul configurărilor a eșuat: %s"
 
-#: ../gconf/gconf.c:3141
+#: ../gconf/gconf.c:3204
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Se aștepta o valoare „float”, s-a obținut %s"
 
-#: ../gconf/gconf.c:3176
+#: ../gconf/gconf.c:3239
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Se aștepta o valoare „int”, s-a obținut %s"
 
-#: ../gconf/gconf.c:3211
+#: ../gconf/gconf.c:3274
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Se aștepta un șir, s-a obținut %s"
 
-#: ../gconf/gconf.c:3245
+#: ../gconf/gconf.c:3308
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Se aștepta o valoare booleană, s-a obținut %s"
 
-#: ../gconf/gconf.c:3278
+#: ../gconf/gconf.c:3355
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Se aștepta o schemă, s-a obținut %s"
 
-#: ../gconf/gconf.c:3617
+#: ../gconf/gconf.c:3758
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Eroare CORBA: %s"
