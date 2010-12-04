@@ -2,15 +2,18 @@
 # Copyright (C) 2002, 04, 05 Free Software Foundation, Inc.
 # Ben Wu <hpwu@redhat.com>, 2002.
 # Li-Jen Hsin <hsin@med.cgu.edu.tw>, 2004.
+# Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>, 2010.
+# Wei-Lun Chao <chaoweilun@gmail.com>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gconf 2.31.90\n"
+"Project-Id-Version: gconf 2.32.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-21 19:39+0800\n"
-"PO-Revision-Date: 2010-08-19 20:16+0800\n"
+"POT-Creation-Date: 2010-12-04 19:47+0800\n"
+"PO-Revision-Date: 2010-12-03 20:19+0800\n"
 "Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Chinese (Taiwan) <zh-l10n@lists.linux.org.tw>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -194,7 +197,7 @@ msgstr "無法載入檔案 “%s”：%s"
 #: ../backends/markup-tree.c:2006
 #, c-format
 msgid "Line %d character %d: %s"
-msgstr "第 %d 行第 %d 字：%s"
+msgstr "第 %d 列第 %d 字：%s"
 
 #: ../backends/markup-tree.c:2234 ../backends/markup-tree.c:2255
 #, c-format
@@ -606,17 +609,17 @@ msgstr "找不到 ‘%s’ 的後端模組"
 msgid "Failed to shut down backend"
 msgstr "關閉後端失敗"
 
-#: ../gconf/gconf-client.c:346 ../gconf/gconf-client.c:364
+#: ../gconf/gconf-client.c:353 ../gconf/gconf-client.c:371
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "GConf 發生錯誤：%s\n"
 
-#: ../gconf/gconf-client.c:940
+#: ../gconf/gconf-client.c:971
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "GConf 警告：無法列出 ‘%s’ 中的配對 (pair)：%s"
 
-#: ../gconf/gconf-client.c:1244
+#: ../gconf/gconf-client.c:1305
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "設定鍵 %3$s 的值應該是「%1$s」但實際上是「%2$s」"
@@ -650,8 +653,8 @@ msgstr "無法同步一個或更多的資料來源：%s"
 #: ../gconf/gconf-database.c:1047
 #, c-format
 msgid ""
-"Error obtaining new value for `%s' after change notification from backend `%"
-"s': %s"
+"Error obtaining new value for `%s' after change notification from backend `"
+"%s': %s"
 msgstr "在後端模組‘%s’發出設定變更的通知之後，擷取‘%s’的新設定值時發生錯誤：%s"
 
 #: ../gconf/gconf-database.c:1120
@@ -859,7 +862,7 @@ msgstr "讀取 ‘%s’ 檔案發生錯誤：%s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1692
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "文字包含無效的 UTF-8 字串"
@@ -1000,14 +1003,12 @@ msgstr "ping 伺服程式時發生錯誤：%s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"無法連繫設定伺服器；可能是您需要啟用 ORBit 的 TCP/IP 網路連線，或由於上次系統"
-"當機導致有殘留的 NFS 鎖定檔。 請參考 http://projects.gnome.org/gconf/ 以取得"
-"更多資訊。（詳情 - %s）"
+"無法連繫設定伺服器；最可能的原因是缺少或錯誤設定 D-Bus 作業階段伺服程式。請參"
+"考 http://projects.gnome.org/gconf/ 以取得更多資訊。（詳情 - %s）"
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -1286,72 +1287,72 @@ msgstr "“%s”：%s"
 msgid "Server couldn't resolve the address `%s'"
 msgstr "伺服程式無法辨析‘%s’位址"
 
-#: ../gconf/gconf.c:819
+#: ../gconf/gconf.c:854
 msgid "Can't add notifications to a local configuration source"
 msgstr "無法增加提示到本機的設定來源"
 
-#: ../gconf/gconf.c:2269
+#: ../gconf/gconf.c:2332
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "無法新增客戶端到伺服器清單中，CORBA 錯誤：%s"
 
-#: ../gconf/gconf.c:2641
+#: ../gconf/gconf.c:2704
 msgid "Must begin with a slash '/'"
 msgstr "必須以斜線 (/) 為首"
 
-#: ../gconf/gconf.c:2663
+#: ../gconf/gconf.c:2726
 msgid "Can't have two slashes '/' in a row"
 msgstr "不能有兩個斜線 (/) 在同一列"
 
-#: ../gconf/gconf.c:2665
+#: ../gconf/gconf.c:2728
 msgid "Can't have a period '.' right after a slash '/'"
 msgstr "句號 (.) 不可緊接在斜線 (/) 之後"
 
-#: ../gconf/gconf.c:2685
+#: ../gconf/gconf.c:2748
 #, c-format
 msgid "'\\%o' is not an ASCII character and thus isn't allowed in key names"
 msgstr "‘\\%o’不是一個 ASCII 的字元，所以不能作為設定鍵名稱"
 
-#: ../gconf/gconf.c:2695
+#: ../gconf/gconf.c:2758
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "在設定鍵或目錄名稱中‘%c’是一個無效的字元"
 
-#: ../gconf/gconf.c:2709
+#: ../gconf/gconf.c:2772
 msgid "Key/directory may not end with a slash '/'"
 msgstr "設定鍵或目錄不能以斜線 (/) 結尾"
 
-#: ../gconf/gconf.c:3080
+#: ../gconf/gconf.c:3143
 #, c-format
 msgid "Failure shutting down configuration server: %s"
 msgstr "關閉設定伺服器失敗：%s"
 
-#: ../gconf/gconf.c:3141
+#: ../gconf/gconf.c:3204
 #, c-format
 msgid "Expected float, got %s"
 msgstr "預期是浮點數，實際上卻是 %s"
 
-#: ../gconf/gconf.c:3176
+#: ../gconf/gconf.c:3239
 #, c-format
 msgid "Expected int, got %s"
 msgstr "預期是整數，實際上卻是 %s"
 
-#: ../gconf/gconf.c:3211
+#: ../gconf/gconf.c:3274
 #, c-format
 msgid "Expected string, got %s"
 msgstr "預期是字串，實際上卻是 %s"
 
-#: ../gconf/gconf.c:3245
+#: ../gconf/gconf.c:3308
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "預期是 bool，實際上卻是 %s"
 
-#: ../gconf/gconf.c:3278
+#: ../gconf/gconf.c:3355
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "預期是 schema，實際上卻是 %s"
 
-#: ../gconf/gconf.c:3617
+#: ../gconf/gconf.c:3758
 #, c-format
 msgid "CORBA error: %s"
 msgstr "CORBA 錯誤：%s"
@@ -1427,8 +1428,8 @@ msgstr "無法擷取 ConfigServer 的 object reference"
 #: ../gconf/gconfd.c:919
 #, c-format
 msgid ""
-"Failed to write byte to pipe file descriptor %d so client program may hang: %"
-"s"
+"Failed to write byte to pipe file descriptor %d so client program may hang: "
+"%s"
 msgstr "無法寫入位元組到 pipe fd %d，所以客戶端程式也許會當掉：%s"
 
 #: ../gconf/gconfd.c:965
@@ -1810,7 +1811,7 @@ msgstr "顯示版本"
 
 #: ../gconf/gconftool.c:523
 msgid "[FILE...]|[KEY...]|[DIR...]"
-msgstr "[檔案...][設定鍵...][目錄...]"
+msgstr "[檔案…][設定鍵…][目錄…]"
 
 #: ../gconf/gconftool.c:585
 msgid "- Tool to manipulate a GConf configuration"
