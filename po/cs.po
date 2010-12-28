@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: gconf master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=gconf&component=general\n"
-"POT-Creation-Date: 2010-08-29 19:46+0000\n"
-"PO-Revision-Date: 2010-08-30 06:25+0200\n"
+"POT-Creation-Date: 2010-12-25 16:38+0000\n"
+"PO-Revision-Date: 2010-12-27 11:48+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -627,17 +627,17 @@ msgstr "Nepodařilo se nalézt podpůrný modul pro „%s“"
 msgid "Failed to shut down backend"
 msgstr "Nepodařilo se ukončit podpůrnou vrstvu"
 
-#: ../gconf/gconf-client.c:346 ../gconf/gconf-client.c:364
+#: ../gconf/gconf-client.c:353 ../gconf/gconf-client.c:371
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "Chyba GConfu: %s\n"
 
-#: ../gconf/gconf-client.c:940
+#: ../gconf/gconf-client.c:971
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Varování GConfu: selhání při výpisu párů v „%s“: %s"
 
-#: ../gconf/gconf-client.c:1244
+#: ../gconf/gconf-client.c:1305
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "Bylo očekáváno %s, ale bylo obdrženo %s (pro klíč %s)"
@@ -882,7 +882,7 @@ msgstr "Chyba při čtení souboru „%s“: %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1692
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Text obsahuje neplatné UTF-8"
@@ -1026,15 +1026,13 @@ msgstr "Chyba při volání „ping“ serveru: %s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"Nepodařilo se kontaktovat server nastavení; příčinou může být nutnost "
-"povolení sítě TCP/IP pro ORBit, nebo existují staré zámky NFS po pádu "
-"systému. Více informací najdete na http://projects.gnome.org/gconf/. "
-"(Podrobnosti: %s.)"
+"Nepodařilo se kontaktovat server nastavení. Obvyklou příčinou bývá chybějící "
+"nebo špatně nastavený démon sběrnice sezení D-Bus. Více informací najdete na "
+"http://projects.gnome.org/gconf/. (Podrobnosti – %s)"
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -1329,72 +1327,72 @@ msgstr "„%s“: %s"
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Server nemohl zjistit adresu „%s“"
 
-#: ../gconf/gconf.c:819
+#: ../gconf/gconf.c:854
 msgid "Can't add notifications to a local configuration source"
 msgstr "Nepodařilo se přidat upozornění do místního zdroje nastavení"
 
-#: ../gconf/gconf.c:2269
+#: ../gconf/gconf.c:2332
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr "Nepodařilo se přidat klienta do seznamu serveru, chyba CORBA: %s"
 
-#: ../gconf/gconf.c:2641
+#: ../gconf/gconf.c:2704
 msgid "Must begin with a slash '/'"
 msgstr "Musí začínat lomítkem („/“)"
 
-#: ../gconf/gconf.c:2663
+#: ../gconf/gconf.c:2726
 msgid "Can't have two slashes '/' in a row"
 msgstr "Dva znaky lomítka („/“) nesmí být v jednom řádku"
 
-#: ../gconf/gconf.c:2665
+#: ../gconf/gconf.c:2728
 msgid "Can't have a period '.' right after a slash '/'"
 msgstr "Tečka („.“) nesmí být bezprostředně za lomítkem „/“"
 
-#: ../gconf/gconf.c:2685
+#: ../gconf/gconf.c:2748
 #, c-format
 msgid "'\\%o' is not an ASCII character and thus isn't allowed in key names"
 msgstr "„\\%o“ není znak ASCII, takže není povolen v názvech klíčů"
 
-#: ../gconf/gconf.c:2695
+#: ../gconf/gconf.c:2758
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "„%c“ není platný znak názvu klíče nebo adresáře"
 
-#: ../gconf/gconf.c:2709
+#: ../gconf/gconf.c:2772
 msgid "Key/directory may not end with a slash '/'"
 msgstr "Klíč nebo adresář nesmí končit lomítkem („/“)"
 
-#: ../gconf/gconf.c:3080
+#: ../gconf/gconf.c:3143
 #, c-format
 msgid "Failure shutting down configuration server: %s"
 msgstr "Nepodařilo se ukončit server nastavení: %s"
 
-#: ../gconf/gconf.c:3141
+#: ../gconf/gconf.c:3204
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Bylo očekáváno reálné číslo, ale bylo obdrženo %s"
 
-#: ../gconf/gconf.c:3176
+#: ../gconf/gconf.c:3239
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Bylo očekáváno celé číslo, ale bylo obdrženo %s"
 
-#: ../gconf/gconf.c:3211
+#: ../gconf/gconf.c:3274
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Byl očekáván řetězec, ale bylo obdrženo %s"
 
-#: ../gconf/gconf.c:3245
+#: ../gconf/gconf.c:3308
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Byla očekávána logická hodnota, ale bylo obdrženo %s"
 
-#: ../gconf/gconf.c:3278
+#: ../gconf/gconf.c:3355
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Bylo očekáváno schéma, ale bylo obdrženo %s"
 
-#: ../gconf/gconf.c:3617
+#: ../gconf/gconf.c:3758
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Chyba CORBA: %s"
