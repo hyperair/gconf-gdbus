@@ -37,8 +37,10 @@ gsettings_data_convert_LDADD =              \
 	$(GSETTINGS_LIBS)                   \
 	$(NULL)
 
+@INTLTOOL_DESKTOP_RULE@
 autostartdir = $(sysconfdir)/xdg/autostart
-autostart_DATA = gsettings-data-convert.desktop
+autostart_in_files = gsettings-data-convert.desktop.in
+autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
 man_MANS =                       \
 	gsettings-schema-convert.1 \
@@ -48,7 +50,7 @@ man_MANS =                       \
 %.1 : %.xml
 	xsltproc -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
 
-EXTRA_DIST = gsettings-data-convert.xml gsettings-schema-convert.xml gsettings-data-convert.1 gsettings-schema-convert.1 gsettings-data-convert.desktop
+EXTRA_DIST = gsettings-data-convert.xml gsettings-schema-convert.xml gsettings-data-convert.1 gsettings-schema-convert.1 gsettings-data-convert.desktop.in
 
 dist-hook-local: $(BUILT_EXTRA_DIST)
 	files='$(BUILT_EXTRA_DIST)';                      \
@@ -61,3 +63,4 @@ install-data-hook:
 		$(GIO_QUERYMODULES) $(GIO_MODULE_DIR) ;                                         \
 	fi
 
+CLEANFILES = $(autostart_DATA)
