@@ -1,16 +1,16 @@
 # Bulgarian translation of gconf po-file.
-# Copyright (C) 2002, 2004, 2005, 2006, 2007  Free Software Foundation, Inc.
-# Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2008, 2009, 2010, 2011 Free Software Foundation, Inc.
 # Borislav Aleksandrov <B.Aleksandrov@cnsys.bg>, 2002.
 # Rostislav Raykov <zbrox@i-space.org>, 2004.
-# Alexander Shopov <ash@kambanaria.org>, 2004, 2005, 2006, 2007, 2008, 2009, 2010.
+# Alexander Shopov <ash@kambanaria.org>, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-22 22:49+0300\n"
-"PO-Revision-Date: 2010-08-22 23:12+0300\n"
+"POT-Creation-Date: 2011-01-12 07:14+0200\n"
+"PO-Revision-Date: 2011-01-12 07:14+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaria.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
@@ -623,17 +623,17 @@ msgstr "Модулът за обработка на „%s“ не може да 
 msgid "Failed to shut down backend"
 msgstr "Неуспех при спиране на модула за обработка"
 
-#: ../gconf/gconf-client.c:346 ../gconf/gconf-client.c:364
+#: ../gconf/gconf-client.c:353 ../gconf/gconf-client.c:371
 #, c-format
 msgid "GConf Error: %s\n"
 msgstr "Грешка на GConf: %s\n"
 
-#: ../gconf/gconf-client.c:940
+#: ../gconf/gconf-client.c:971
 #, c-format
 msgid "GConf warning: failure listing pairs in `%s': %s"
 msgstr "Предупреждение на GConf: неуспех при изброяването на двойки в „%s“: %s"
 
-#: ../gconf/gconf-client.c:1244
+#: ../gconf/gconf-client.c:1305
 #, c-format
 msgid "Expected `%s' got `%s' for key %s"
 msgstr "За ключа %3$s се очакваше „%1$s“, а се получи „%2$s“"
@@ -883,7 +883,7 @@ msgstr "Грешка при четене от файла „%s“: %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1692
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Текстът съдържа неправилен UTF-8"
@@ -1027,15 +1027,13 @@ msgstr "Грешка при ping на сървър: %s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"Неуспех при свързването със сървър за настройки. Може би трябва да разрешите "
-"мрежовите връзка по TCP/IP за ORBit, или имате остарели заключвания за NFS "
-"поради сривове в работата. За повече информация: http://www.gnome.org/"
-"projects/gconf/. (Подробности — %s)"
+"Неуспех при свързването със сървър за настройки. Най-честата причина за това "
+"е липсващ или лошо настроен демон на сесийната шина — D-Bus. За повече "
+"информация: http://projects.gnome.org/gconf/. (Подробности — %s)"
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -1337,74 +1335,74 @@ msgstr "„%s“: %s"
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Сървърът не успя да открие обект по адреса „%s“"
 
-#: ../gconf/gconf.c:819
+#: ../gconf/gconf.c:854
 msgid "Can't add notifications to a local configuration source"
 msgstr "Не може да се добави уведомяване в локален източник на настройки"
 
-#: ../gconf/gconf.c:2269
+#: ../gconf/gconf.c:2332
 #, c-format
 msgid "Adding client to server's list failed, CORBA error: %s"
 msgstr ""
 "Неуспех при добавяне на клиент към списъка със сървъри, грешка на CORBA: %s"
 
-#: ../gconf/gconf.c:2641
+#: ../gconf/gconf.c:2704
 msgid "Must begin with a slash '/'"
 msgstr "Трябва да започва с наклонена черта: „/“"
 
-#: ../gconf/gconf.c:2663
+#: ../gconf/gconf.c:2726
 msgid "Can't have two slashes '/' in a row"
 msgstr "Не може да има две наклонени черти една след друга: „//“"
 
-#: ../gconf/gconf.c:2665
+#: ../gconf/gconf.c:2728
 msgid "Can't have a period '.' right after a slash '/'"
 msgstr "Не може веднага след наклонена черта „/“ да следва точка „.“"
 
-#: ../gconf/gconf.c:2685
+#: ../gconf/gconf.c:2748
 #, c-format
 msgid "'\\%o' is not an ASCII character and thus isn't allowed in key names"
 msgstr ""
 "„\\%o“ не е знак от ASCII и не може да се използва в имената на ключовете"
 
-#: ../gconf/gconf.c:2695
+#: ../gconf/gconf.c:2758
 #, c-format
 msgid "`%c' is an invalid character in key/directory names"
 msgstr "„%c“ не е валиден знак в името на ключ/папка"
 
-#: ../gconf/gconf.c:2709
+#: ../gconf/gconf.c:2772
 msgid "Key/directory may not end with a slash '/'"
 msgstr "Ключовете и папките не трябва да завършват с наклонена черта „/“"
 
-#: ../gconf/gconf.c:3080
+#: ../gconf/gconf.c:3143
 #, c-format
 msgid "Failure shutting down configuration server: %s"
 msgstr "Неуспех при спиране на сървъра за настройки: %s"
 
-#: ../gconf/gconf.c:3141
+#: ../gconf/gconf.c:3204
 #, c-format
 msgid "Expected float, got %s"
 msgstr "Очаква се число с плаваща точка, а бе получено %s"
 
-#: ../gconf/gconf.c:3176
+#: ../gconf/gconf.c:3239
 #, c-format
 msgid "Expected int, got %s"
 msgstr "Очаква се цяло число, а бе получено %s"
 
-#: ../gconf/gconf.c:3211
+#: ../gconf/gconf.c:3274
 #, c-format
 msgid "Expected string, got %s"
 msgstr "Очаква се низ, а бе получено %s"
 
-#: ../gconf/gconf.c:3245
+#: ../gconf/gconf.c:3308
 #, c-format
 msgid "Expected bool, got %s"
 msgstr "Очаква се булева стойност, а бе получено %s"
 
-#: ../gconf/gconf.c:3278
+#: ../gconf/gconf.c:3355
 #, c-format
 msgid "Expected schema, got %s"
 msgstr "Очаква се схема, а бе получено %s"
 
-#: ../gconf/gconf.c:3617
+#: ../gconf/gconf.c:3758
 #, c-format
 msgid "CORBA error: %s"
 msgstr "Грешка на CORBA: %s"
