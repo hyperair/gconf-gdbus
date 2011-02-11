@@ -7,14 +7,14 @@
 # Tino Meinen <a.t.meinen@chello.nl>, 2002, 2003, 2004, 2005, 2008.
 # Daniel van Eeden <daniel_e@dds.nl>, 2003, 2004
 # Reinout van Schouwen <reinout@cs.vu.nl>, 2004, 2005 (spelfouten eruit)
-# Wouter Bolsterlee <wbolster@gnome.org>, 2007, 2009, 2010
+# Wouter Bolsterlee <wbolster@gnome.org>, 2007, 2009–2011
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-12 14:42+0200\n"
-"PO-Revision-Date: 2010-09-12 14:42+0200\n"
+"POT-Creation-Date: 2011-02-11 22:11+0100\n"
+"PO-Revision-Date: 2011-02-11 22:11+0100\n"
 "Last-Translator: Wouter Bolsterlee <wbolster@gnome.org>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -895,7 +895,7 @@ msgstr "Leesfout op bestand ‘%s’: %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1704
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Tekst bevat ongeldige UTF-8"
@@ -1042,15 +1042,13 @@ msgstr "Server ping-fout: %s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"Niet gelukt contact te leggen met de configuratieserver; een van de "
-"mogelijke oorzaken is dat u TCP/IP-netwerken voor ORBit moet aanzetten, of "
-"dat er verouderde NFS-locks zijn, veroorzaakt door een systeemcrash. Bekijk "
-"http://projects.gnome.org/gconf/ voor informatie. (Details — %s) "
+"Niet gelukt contact te leggen met de configuratieserver; meestal komt dit "
+"door een onjuist functionerende D-Bus-sessiebus. Zie http://projects.gnome."
+"org/gconf/ voor meer informatie. Details: %s"
 
 # niets/geen/geen enkel
 #: ../gconf/gconf-internals.c:2878
@@ -2727,6 +2725,14 @@ msgstr ""
 "Proberen uw toepassing kapot te maken door het instellen van onjuiste "
 "waarden voor sleutels in map:\n"
 "  %s\n"
+
+#: ../gsettings/gsettings-data-convert.desktop.in.h:1
+msgid "GSettings Data Conversion"
+msgstr "GSettings-dataconversie"
+
+#: ../gsettings/gsettings-data-convert.desktop.in.h:2
+msgid "Migrates user settings from GConf to dconf"
+msgstr "Gebruikersgegegevens van GConf naar dconf migreren"
 
 #~ msgid "Could not send message to GConf daemon: %s"
 #~ msgstr "Kon bericht niet naar de GConf-daemon verzenden: %s"
