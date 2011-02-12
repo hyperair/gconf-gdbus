@@ -1,20 +1,21 @@
 # gconf  Korean message translation
 # This file is distributed under the same license as the gconf package.
 # Chideok Hwang <hwang@mizi.co.kr>, 2000.
-# Changwoo Ryu <cwryu@debian.org>, 2002-2008, 2009, 2010.
+# Changwoo Ryu <cwryu@debian.org>, 2002-2008, 2009, 2010, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gconf&component=general\n"
-"POT-Creation-Date: 2010-09-10 01:45+0900\n"
-"PO-Revision-Date: 2010-09-10 01:46+0900\n"
+"POT-Creation-Date: 2011-01-17 22:08+0000\n"
+"PO-Revision-Date: 2011-02-13 07:07+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
-"Language: \n"
+"Language: Korean\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../backends/evoldap-backend.c:162
 #, c-format
@@ -653,8 +654,8 @@ msgstr "한 개 이상의 소스를 쓰는데 실패했습니다: %s"
 #: ../gconf/gconf-database.c:1047
 #, c-format
 msgid ""
-"Error obtaining new value for `%s' after change notification from backend `"
-"%s': %s"
+"Error obtaining new value for `%s' after change notification from backend `%"
+"s': %s"
 msgstr ""
 "`%s':%s 백엔드에서 바뀜 알림을 받은 다음에 `%s'의 값을 얻어내는데 오류가 발생"
 "했습니다."
@@ -863,7 +864,7 @@ msgstr "`%s'파일을 읽는데 오류가 발생했습니다: %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1704
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "텍스트에 잘못된 UTF-8이 들어 있습니다"
@@ -1006,15 +1007,10 @@ msgstr "서버 ping 오류: %s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
-msgstr ""
-"설정 서버에 연결하는데 실패했습니다. 원인은 ORBit에 TCP/IP 네트워크를 사용하"
-"는 경우이거나, 아니면 시스템의 이상 종료로 인해 NFS 잠금이 동작하지 않게 되었"
-"을 경우입니다. 자세한 정보는 <http://projects.gnome.org/gconf/> 페이지를 참조"
-"하십시오. (자세한 정보 - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
+msgstr "설정 서버에 연결하는데 실패했습니다. 보통 원인은 D-bus 세션 버스 데몬이 없거나 잘못 설정되었기 때문입니다. 자세한 정보는 <http://projects.gnome.org/gconf/> 페이지를 참조하십시오. (자세한 정보 - %s)"
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -1220,8 +1216,8 @@ msgid ""
 "in individual storage locations such as ~/.gconf"
 msgstr ""
 "키 '%s'에 값을 저장할 수 없습니다. 설정 서버에 쓰기 가능한 데이터베이스가 없"
-"기 때문입니다. 이 문제에 대한 몇 가지 흔한 원인이 있습니다: 설정 경로 파일 "
-"%s/path에 데이터베이스가 하나도 없거나 이 파일이 없습니다 2) 무슨 이유에선가 "
+"기 때문입니다. 이 문제에 대한 몇 가지 흔한 원인이 있습니다: 설정 경로 파일 %"
+"s/path에 데이터베이스가 하나도 없거나 이 파일이 없습니다 2) 무슨 이유에선가 "
 "gconfd 프로세스를 두 개 만들 지 못했습니다 3) 운영 체제가 잘못 설정해 NFS 파"
 "일 잠금이 홈 디렉터리에서 동작하지 않습니다 4) NFS 클라이언트 기계가 이상 종"
 "료하는 바람에 파일 잠금을 버려야 한다는 사실을 서버에 통보하지 못했습니다. 만"
@@ -1456,8 +1452,8 @@ msgstr "ConfigServer에 대한 오브젝트 참조를 얻지 못했습니다"
 #: ../gconf/gconfd.c:919
 #, c-format
 msgid ""
-"Failed to write byte to pipe file descriptor %d so client program may hang: "
-"%s"
+"Failed to write byte to pipe file descriptor %d so client program may hang: %"
+"s"
 msgstr ""
 "바이트를 파이프 fd %d에 쓰는데 실패하여 클라이언트 프로그램이 이상 종료할 수 "
 "있습니다: %s"
@@ -2286,8 +2282,8 @@ msgstr ""
 #, c-format
 msgid "Error associating schema name '%s' with key name '%s': %s\n"
 msgstr ""
-"스키마 이름 '%s'을(를) 키 이름 '%s'과(와) 연결하는데 오류가 발생했습니다: "
-"%s\n"
+"스키마 이름 '%s'을(를) 키 이름 '%s'과(와) 연결하는데 오류가 발생했습니다: %"
+"s\n"
 
 #: ../gconf/gconftool.c:2527
 #, c-format
@@ -2635,8 +2631,10 @@ msgstr ""
 "디렉터리의 키에 잘못된 값을 설정하여 응용 프로그램을 중단하도록 시도합니다:\n"
 "  %s\n"
 
-#~ msgid "Could not send message to GConf daemon: %s"
-#~ msgstr "GConf 데몬에 메시지를 보낼 수 없습니다: %s"
+#: ../gsettings/gsettings-data-convert.desktop.in.h:1
+msgid "GSettings Data Conversion"
+msgstr "GSettings 데이터 변환"
 
-#~ msgid "daemon gave erroneous reply: %s"
-#~ msgstr "데몬에서 오류가 들어 있는 응답을 했습니다: %s"
+#: ../gsettings/gsettings-data-convert.desktop.in.h:2
+msgid "Migrates user settings from GConf to dconf"
+msgstr "사용자 설정을 GConf에서 dconf로 변환합니다"
