@@ -1,22 +1,23 @@
 # GConf ja.po.
-# Copyright (C) 2000-2010 Free Software Foundation, Inc.
+# Copyright (C) 2000-2011 Free Software Foundation, Inc.
 # Takeshi AIHANA <takeshi.aihana@gmail.com>, 2000-2009.
 # KAMAGASAKO Masatoshi <emerald@gnome.gr.jp>, 2003
 # Satoru SATOH <ss@gnome.gr.jp>, 2006
-# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2009-2010.
+# Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>, 2009-2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gconf master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=gconf&component=general\n"
-"POT-Creation-Date: 2010-09-19 15:35+0000\n"
-"PO-Revision-Date: 2010-09-19 15:21+0900\n"
+"POT-Creation-Date: 2011-02-12 22:02+0000\n"
+"PO-Revision-Date: 2011-02-16 23:41+0900\n"
 "Last-Translator: Takayuki KUSANO <AE5T-KSN@asahi-net.or.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja\n"
 
 #: ../backends/evoldap-backend.c:162
 #, c-format
@@ -878,7 +879,7 @@ msgstr "ファイル '%s' 上にエラーがあります: %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1704
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "テキストの中身にある UTF-8 が正しくありません"
@@ -1022,15 +1023,13 @@ msgstr "サーバの Ping エラー: %s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"設定サーバ (gconfd) に接続できませんでした: いくつか考えられる原因として、"
-"ORBit の TCP/IP ネットワークを有効にしていない、あるいはお使いのシステムで古"
-"い NFS のロックがクラッシュを引き起こしたことが考えられます。これに関連する情"
-"報については http://projects.gnome.org/gconf/ を参照してください: (詳細 - %s)"
+"設定サーバに接続できませんでした。もっとも良くあるのは、D-Bus セッション・バ"
+"ス・デーモンが無い、あるいは設定に問題があるというものです。http://projects."
+"gnome.org/\"gconf/ の情報をご覧ください (詳細は: %s)。"
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -2668,6 +2667,14 @@ msgstr ""
 "ディレクトリのキーにおかしな値を設定する事によって アプリケーションを終了させ"
 "ようとしています:\n"
 "  %s\n"
+
+#: ../gsettings/gsettings-data-convert.desktop.in.h:1
+msgid "GSettings Data Conversion"
+msgstr "GSettings データ変換"
+
+#: ../gsettings/gsettings-data-convert.desktop.in.h:2
+msgid "Migrates user settings from GConf to dconf"
+msgstr "ユーザの設定を GConf から dconf に移行します"
 
 #~ msgid "Could not send message to GConf daemon: %s"
 #~ msgstr "GConf デーモンにメッセージを送信できませんでした: %s"
