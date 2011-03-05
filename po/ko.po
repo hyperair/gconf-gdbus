@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gconf\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gconf&component=general\n"
 "POT-Creation-Date: 2011-01-17 22:08+0000\n"
-"PO-Revision-Date: 2011-02-13 07:07+0900\n"
+"PO-Revision-Date: 2011-03-06 01:52+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: Korean\n"
@@ -242,22 +242,22 @@ msgstr "<%s> 원소에 \"%s\"속성값이 없습니다"
 #: ../backends/markup-tree.c:2457
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
-msgstr "<%2$s>에 ltype(\"%1$s\")이 잘못되었습니다"
+msgstr "<%2$s>에 ltype이 (\"%1$s\") 잘못되었습니다"
 
 #: ../backends/markup-tree.c:2537
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
-msgstr "<%2$s>에 first-element type(\"%1$s\")이 잘못되었습니다"
+msgstr "<%2$s>에 first-element type이 (\"%1$s\") 잘못되었습니다"
 
 #: ../backends/markup-tree.c:2551
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
-msgstr "<%2$s>에 cdr_type(\"%1$s\")이 잘못되었습니다"
+msgstr "<%2$s>에 cdr_type이 (\"%1$s\") 잘못되었습니다"
 
 #: ../backends/markup-tree.c:2587
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
-msgstr "<%2$s>에 list_type(\"%1$s\")이 잘못되었습니다"
+msgstr "<%2$s>에 list_type이 (\"%1$s\") 잘못되었습니다"
 
 #: ../backends/markup-tree.c:2954
 msgid "Two <default> elements below a <local_schema>"
@@ -493,7 +493,7 @@ msgstr "XML 리스트 노드 내의 XML 노드 <%s>을(를) 해석할 수 없습
 
 #: ../backends/xml-entry.c:1061
 msgid "Invalid type (list, pair, or unknown) in a list node"
-msgstr "잘못된 타입(리스트, 쌍, 혹은 알 수 없음)이 리스트 노드 안에 있습니다"
+msgstr "잘못된 타입이 (list, pair, 혹은 알 수 없는 타입) 리스트 노드 안에 있습니다"
 
 #: ../backends/xml-entry.c:1084
 #, c-format
@@ -503,7 +503,7 @@ msgstr "틀린 XML 노드: %s"
 #: ../backends/xml-entry.c:1092
 #, c-format
 msgid "List contains a badly-typed node (%s, should be %s)"
-msgstr "리스트에 틀린 종류의 노드가 들어 있습니다 (%s, %s이(가) 되어야 합니다)"
+msgstr "리스트에 잘못된 타입의 노드가 들어 있습니다 (%s, %s이(가) 되어야 합니다)"
 
 #: ../backends/xml-entry.c:1144
 #, c-format
@@ -594,12 +594,12 @@ msgstr "동적 모듈 지원 기능 (gmodule) 없이는 GConf가 동작하지 �
 #: ../gconf/gconf-backend.c:346
 #, c-format
 msgid "Error opening module `%s': %s\n"
-msgstr "모듈 `%s'을(를) 여는데 오류: %s\n"
+msgstr "`%s' 모듈을 여는데 오류: %s\n"
 
 #: ../gconf/gconf-backend.c:357
 #, c-format
 msgid "Error initializing module `%s': %s\n"
-msgstr "모듈 `%s'을(를) 초기화하는데 오류: %s\n"
+msgstr "`%s' 모듈을 초기화하는데 오류: %s\n"
 
 #: ../gconf/gconf-backend.c:388
 #, c-format
@@ -666,10 +666,7 @@ msgid ""
 "Failed to log addition of listener %s (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
-msgstr ""
-"리스너 %s 추가하기를 기록하는데 실패했습니다 (%s):gconf가 다시 시작할 때 이 "
-"리스너를 복구하지 못할 것이므로, 설정 변화에 대해 안정적으로 통고할 수 없습니"
-"다."
+msgstr "리스너 %s 추가하기를 기록하는데 실패했습니다 (%s). gconf가 다시 시작할 때 이 리스너를 복구하지 못할 것이므로, 설정 변화에 대해 안정적으로 통고할 수 없습니다."
 
 #: ../gconf/gconf-database.c:1154
 #, c-format
@@ -681,9 +678,7 @@ msgstr "리스너 ID %lu이(가) 존재하지 않습니다"
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
-msgstr ""
-"리스너의 제거를 로그파일에 기록하는데 실패했습니다 (대부분 해가 될 것은 없으"
-"나, 통고가 이상하게 다시 나타날 수도 있습니다): %s"
+msgstr "리스너의 제거를 로그파일에 기록하는데 실패했습니다 (대부분 문제가 없지만, 알림이 이상하게 다시 나타날 수도 있습니다): %s"
 
 #: ../gconf/gconf-database.c:1301 ../gconf/gconf-sources.c:1737
 #, c-format
@@ -733,12 +728,12 @@ msgstr "`%s'에 있는 모든 엔트리를 얻는데 실패했습니다: %s"
 #: ../gconf/gconf-database.c:1649
 #, c-format
 msgid "Error listing dirs in `%s': %s"
-msgstr "`%s' 내의 디렉터리를 나열하는데 오류가 발생했습니다: %s"
+msgstr "`%s'에 들어 있는 디렉터리를 나열하는데 오류가 발생했습니다: %s"
 
 #: ../gconf/gconf-database.c:1670
 #, c-format
 msgid "Error setting schema for `%s': %s"
-msgstr "`%s'을(를) 위한 스키마 설정에 오류가 발생했습니다: %s"
+msgstr "`%s'에 대한 스키마 설정에 오류가 발생했습니다: %s"
 
 #: ../gconf/gconf-error.c:26
 msgid "Success"
@@ -1038,9 +1033,7 @@ msgid ""
 "in your home directory. The error was \"%s\" (errno = %d)."
 msgstr ""
 "시스템 관리자에게 접촉해 다음 문제를 해결하십시오: \n"
-"\"%s' 파일을 열거나 만들 수 없습니다; 설정 사항에 문제가 있다는 뜻일 수 있습"
-"니다. 많은 프로그램이 홈 디렉터리 내에 파일을 만들어야 합니다. 오류는 \"%s"
-"\" (errno = %d)."
+"\"%s' 파일을 열거나 만들 수 없습니다. 설정 사항에 문제가 있다는 뜻일 수 있습니다. 많은 프로그램이 홈 디렉터리 내에 파일을 만들어야 합니다. 오류는 \"%s\" (errno = %d)."
 
 #: ../gconf/gconf-sanity-check.c:182
 #, c-format
@@ -1054,10 +1047,7 @@ msgid ""
 "%d)."
 msgstr ""
 "시스템 관리자에게 접촉해 다음 문제를 해결하십시오: \n"
-"\"%s' 파일을 잠글 수 없습니다; 운영 체제의 설정 사항에 문제가 있을 수 있습니"
-"다. 홈 디렉터리를 NFS에 마운트했다면, 클라이언트 혹은 서버를 잘못 설정했을 것"
-"입니다. rpc.statd와 rpc.lockd 문서를 참조하십시오. 이 오류의 대부분의 원인은 "
-"\"nfslock\" 서비스를 사용하지 않았기 때문입니다. 오류는 \"%s\" (errno = %d)."
+"\"%s' 파일을 잠글 수 없습니다. 운영 체제의 설정 사항에 문제가 있을 수 있습니다. 홈 디렉터리를 NFS에 마운트했다면, 클라이언트 혹은 서버를 잘못 설정했을 것입니다. rpc.statd와 rpc.lockd 문서를 참조하십시오. 이 오류의 대부분의 원인은 \"nfslock\" 서비스를 사용하지 않았기 때문입니다. 오류는 \"%s\" (errno = %d)."
 
 #: ../gconf/gconf-sanity-check.c:199
 #, c-format
@@ -1072,8 +1062,7 @@ msgid ""
 "preferences and other settings can't be saved. %s%s"
 msgstr ""
 "시스템 관리자에게 접촉해 다음 문제를 해결하십시오: \n"
-"설정 파일 \"%s\"에 설정 소스가 없습니다; 기본 설정과 그 외의 설정 사항을 저장"
-"할 수 없다는 뜻입니다. %s%s"
+"설정 파일 \"%s\"에 설정 소스가 없습니다. 기본 설정과 그 외의 설정 사항을 저장할 수 없다는 뜻입니다. %s%s"
 
 #: ../gconf/gconf-sanity-check.c:238
 msgid "Error reading the file: "
@@ -1174,9 +1163,7 @@ msgstr ""
 msgid ""
 "None of the resolved addresses are writable; saving configuration settings "
 "will not be possible"
-msgstr ""
-"확인 된 주소 중 어느 것도 쓰기 가능하지 않습니다; 설정 사항을 저장하는 것이 "
-"불가능합니다"
+msgstr "확인된 주소 중 쓰기 가능한 주소가 없습니다. 설정 저장이 불가능합니다"
 
 #: ../gconf/gconf-sources.c:690
 #, c-format
@@ -1381,9 +1368,7 @@ msgstr "끝내라는 요청을 받았습니다"
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
-msgstr ""
-"gconfd가 디버깅 용으로 컴파일되었습니다; 소스 디렉터리에서 gconf.path를 읽어"
-"들이도록 시도합니다"
+msgstr "gconfd가 디버깅 용으로 컴파일되었습니다. 소스 디렉터리에서 gconf.path를 읽어들이도록 시도합니다"
 
 #: ../gconf/gconfd.c:388
 #, c-format
@@ -1421,9 +1406,7 @@ msgstr ""
 msgid ""
 "No writable configuration sources successfully resolved. May be unable to "
 "save some configuration changes"
-msgstr ""
-"쓰기 가능한 설정 소스를 확인할 수 없습니다. 설정 사항의 변화를 저장하지 못할 "
-"것입니다"
+msgstr "쓰기 가능한 설정 소스를 확인할 수 없습니다. 바뀐 설정을 저장하지 못할 것입니다"
 
 #: ../gconf/gconfd.c:603
 #, c-format
@@ -1490,17 +1473,13 @@ msgstr "예외가 발생했습니다: %s"
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
-msgstr ""
-"gconfd 로그파일을 여는데 실패했습니다; gconfd 셧다운 후에 리스너를 복구하지 "
-"못할 것입니다 (%s)"
+msgstr "gconfd 로그파일을 여는데 실패했습니다. gconfd 셧다운 후에 리스너를 복구하지 못할 것입니다 (%s)"
 
 #: ../gconf/gconfd.c:1619
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
-msgstr ""
-"gconfd 로그파일을 닫는데 실패했습니다; 데이터를 올바르게 저장하지 못할 수도 "
-"있습니다 (%s)"
+msgstr "gconfd 로그파일을 닫는데 실패했습니다. 데이터를 올바르게 저장하지 못할 수도 있습니다 (%s)"
 
 #: ../gconf/gconfd.c:1681
 #, c-format
@@ -1561,18 +1540,14 @@ msgstr "저장된 상태 파일 '%s'을(를) 열 수 없습니다: %s"
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
-"리스너 추가하기를 gconfd 로그파일에 기록하는데 실패했습니다; gconfd나 끝나거"
-"나 셧다운할 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
+msgstr "리스너 추가를 gconfd 로그 파일에 기록하는데 실패했습니다. gconfd가 끝나거나 강제 종료하면 리스너를 다시 추가할 수 없을 것입니다 (%s)"
 
 #: ../gconf/gconfd.c:2433
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
-"리스너의 제거를 gconfd 로그파일에 기록하는데 실패했습니다; gconfd나 끝나거나 "
-"셧다운할 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
+msgstr "리스너 제거를 gconfd 로그 파일에 기록하는데 실패했습니다. gconfd가 끝나거나 강제 종료하면 때 리스너를 다시 추가할 수 없을 것입니다 (%s)"
 
 #: ../gconf/gconfd.c:2456 ../gconf/gconfd.c:2630
 #, c-format
@@ -1737,17 +1712,13 @@ msgstr "int|bool|float|string"
 msgid ""
 "Specify the type of the car pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
-msgstr ""
-"설정할 car 쌍의 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유"
-"일하다면 줄여서 써도 상관없습니다."
+msgstr "설정할 car 쌍의 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유일하다면 줄여서 써도 상관없습니다."
 
 #: ../gconf/gconftool.c:355
 msgid ""
 "Specify the type of the cdr pair value being set, or the type of the value a "
 "schema describes. Unique abbreviations OK."
-msgstr ""
-"설정할 cdr 쌍의 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유"
-"일하다면 줄여서 써도 상관없습니다."
+msgstr "설정할 cdr 쌍의 값의 타입, 혹은 스키마가 설명하는 값의 타입을 지정합니다. 유일하다면 줄여서 써도 상관없습니다."
 
 #: ../gconf/gconftool.c:370
 msgid "Specify a schema file to be installed"
@@ -1798,9 +1769,7 @@ msgstr ""
 msgid ""
 "Torture-test an application by setting and unsetting a bunch of values of "
 "different types for keys on the command line."
-msgstr ""
-"명령행에서 여러가지 타입의 많은 값들의 설정 및 설정 해제를 반복하는 테스트를 "
-"수행합니다."
+msgstr "명령행에서 여러가지 타입의 값 여러 개에 대해 설정 및 설정 해제를 반복하는 테스트를 수행합니다."
 
 #: ../gconf/gconftool.c:430
 msgid ""
@@ -1872,11 +1841,11 @@ msgstr "클라이언트 옵션 표시"
 
 #: ../gconf/gconftool.c:595
 msgid "Key type options:"
-msgstr "키 종류 옵션:"
+msgstr "키 타입 옵션:"
 
 #: ../gconf/gconftool.c:595
 msgid "Show key type options"
-msgstr "키 종류 옵션 표시"
+msgstr "키 타입 옵션 표시"
 
 #: ../gconf/gconftool.c:600
 msgid "Load/Save options:"
@@ -2093,17 +2062,17 @@ msgstr "타입: %s\n"
 #: ../gconf/gconftool.c:1939
 #, c-format
 msgid "List Type: %s\n"
-msgstr "List 타입: %s\n"
+msgstr "list 타입: %s\n"
 
 #: ../gconf/gconftool.c:1940
 #, c-format
 msgid "Car Type: %s\n"
-msgstr "Car 타입: %s\n"
+msgstr "car 타입: %s\n"
 
 #: ../gconf/gconftool.c:1941
 #, c-format
 msgid "Cdr Type: %s\n"
-msgstr "Cdr 타입: %s\n"
+msgstr "cdr 타입: %s\n"
 
 #: ../gconf/gconftool.c:1946
 #, c-format
@@ -2167,13 +2136,13 @@ msgstr "값으로서 스키마를 사용할 수는 없습니다\n"
 #: ../gconf/gconftool.c:2088
 #, c-format
 msgid "When setting a list you must specify a primitive list-type\n"
-msgstr "리스트 값을 설정할 때 내장된 리스트타입을 지정해야 합니다\n"
+msgstr "리스트 값을 설정할 때 내장된 리스트 타입을 지정해야 합니다\n"
 
 #: ../gconf/gconftool.c:2102
 #, c-format
 msgid ""
 "When setting a pair you must specify a primitive car-type and cdr-type\n"
-msgstr "쌍의 값을 설정할 때 내장된 car-타입과 cdr-타입을 지정해야 합니다\n"
+msgstr "쌍의 값을 설정할 때 내장된 car-type과 cdr-type을 지정해야 합니다\n"
 
 #: ../gconf/gconftool.c:2117
 #, c-format
@@ -2303,17 +2272,17 @@ msgstr "키(스키마 이름)를 유일한 인자로 지정해야 합니다\n"
 #: ../gconf/gconftool.c:2604
 #, c-format
 msgid "List type must be a primitive type: string, int, float or bool\n"
-msgstr "List 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
+msgstr "list 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
 
 #: ../gconf/gconftool.c:2624
 #, c-format
 msgid "Pair car type must be a primitive type: string, int, float or bool\n"
-msgstr "Pair car 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
+msgstr "pair car 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
 
 #: ../gconf/gconftool.c:2644
 #, c-format
 msgid "Pair cdr type must be a primitive type: string, int, float or bool\n"
-msgstr "Pair cdr 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
+msgstr "pair cdr 타입은 기본타입(문자열, 정수, 실수, 참/거짓)이어야합니다\n"
 
 #: ../gconf/gconftool.c:2659
 #, c-format
@@ -2502,9 +2471,7 @@ msgstr "경고: <locale> 노드에 `name=\"locale\"' 속성이 없습니다. 무
 #, c-format
 msgid ""
 "WARNING: multiple <locale> nodes for locale `%s', ignoring all past first\n"
-msgstr ""
-"경고: 로캘 `%s'에 대하여 <locale> 노드가 여러 개 있습니다, 맨 처음을 제외하"
-"고 무시합니다\n"
+msgstr "경고: 로캘 `%s'에 대하여 <locale> 노드가 여러 개 있습니다. 맨 처음을 제외하고 무시합니다\n"
 
 #: ../gconf/gconftool.c:3707
 #, c-format
@@ -2519,7 +2486,7 @@ msgstr "스키마 `%s'에 키 `%s'을(를) 할당합니다\n"
 #: ../gconf/gconftool.c:3818
 #, c-format
 msgid "You must have at least one <locale> entry in a <schema>\n"
-msgstr "한 <schema>안에는 오직 한개의 <locale>엔트리만을 가지고 있어야합니다\n"
+msgstr "한 <schema> 안에는 최소 한 개의 <locale> 엔트리가 있어야 합니다\n"
 
 #: ../gconf/gconftool.c:3853
 #, c-format
