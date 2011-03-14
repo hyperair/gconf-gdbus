@@ -667,7 +667,7 @@ system_bus_message_handler (DBusConnection *connection,
 
 	  gconf_log (GCL_DEBUG, "System defaults changed.  Notifying.");
 
-	  addresses.data = "xml:merged:/etc/gconf/gconf.xml.system";
+	  addresses.data = "xml:merged:" GCONF_ETCDIR "/gconf.xml.system";
 	  addresses.next = NULL;
 	  system_sources = gconf_sources_new_from_addresses (&addresses, NULL);
 

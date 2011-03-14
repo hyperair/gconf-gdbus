@@ -21,7 +21,7 @@ include "$(HOME)/.gconf.path"
 xml:readwrite:$(HOME)/.gconf
 
 # Location for system-wide settings that are set by the defaults mechanism
-xml:readonly:/etc/gconf/gconf.xml.system
+xml:readonly:@sysgconfdir@/gconf.xml.system
 
 # To read in any defaults settings that the Sys Admin may have created
 # prior to a desktop system upgrade. The SysAdmin can stick default values
