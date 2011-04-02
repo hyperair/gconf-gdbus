@@ -26,10 +26,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GConf\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-19 17:34+0200\n"
-"PO-Revision-Date: 2010-09-18 17:49+0200\n"
+"POT-Creation-Date: 2011-04-02 19:31+0200\n"
+"PO-Revision-Date: 2011-03-30 23:48+0200\n"
 "Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -676,8 +677,8 @@ msgstr "Det mislykkedes at synkronise af en eller flere kilder: %s"
 #: ../gconf/gconf-database.c:1047
 #, c-format
 msgid ""
-"Error obtaining new value for `%s' after change notification from backend `%"
-"s': %s"
+"Error obtaining new value for `%s' after change notification from backend `"
+"%s': %s"
 msgstr ""
 "Fejl ved hentning af ny værdi for \"%s\" efter ændringsunderettelse fra "
 "bagenden \"%s\": %s"
@@ -886,7 +887,7 @@ msgstr "Læsefejl på fil \"%s\": %s\n"
 
 #: ../gconf/gconf-internals.c:1188 ../gconf/gconf-internals.c:1254
 #: ../gconf/gconf-value.c:155 ../gconf/gconf-value.c:254
-#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1704
+#: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
 msgstr "Tekst indeholder ugyldig UTF-8"
@@ -1026,15 +1027,13 @@ msgstr "Serverpingfejl: %s"
 #: ../gconf/gconf-internals.c:2877
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
-"Kunne ikke kontakte konfigurationsserver; nogle mulige årsager er at du skal "
-"aktivere TCP/IP-netværk i ORBit, eller at du har gamle NFS-låse pga. et "
-"systemnedbrud. Se http://www.gnome.org/projects/gconf/ for yderligere "
-"oplysninger (detaljer - %s)."
+"Kunne ikke kontakte konfigurationsserver; den mest almindelige årsag er at "
+"sessionsbussen D-Bus' dæmon mangler eller er fejlkonfigureret. Se http://"
+"projects.gnome.org/gconf/ for yderligere oplysninger. (Detaljer - %s)."
 
 #: ../gconf/gconf-internals.c:2878
 msgid "none"
@@ -1482,8 +1481,8 @@ msgstr "Kunne ikke hente objektreference til ConfigServer"
 #: ../gconf/gconfd.c:919
 #, c-format
 msgid ""
-"Failed to write byte to pipe file descriptor %d so client program may hang: %"
-"s"
+"Failed to write byte to pipe file descriptor %d so client program may hang: "
+"%s"
 msgstr ""
 "Kunne ikke skrive byte til kanal-fildeskriptor %d så klientprogramet hænger "
 "muligvis: %s"
@@ -2665,6 +2664,14 @@ msgstr ""
 "Forsøger at ødelægge dit program ved at sætte forkerte værdier til nøgler i "
 "mappen:\n"
 "  %s\n"
+
+#: ../gsettings/gsettings-data-convert.desktop.in.h:1
+msgid "GSettings Data Conversion"
+msgstr "Datakonvertering til GSettings"
+
+#: ../gsettings/gsettings-data-convert.desktop.in.h:2
+msgid "Migrates user settings from GConf to dconf"
+msgstr "Overflytter brugerindstillinger fra GConf til dconf"
 
 #~ msgid "Could not send message to GConf daemon: %s"
 #~ msgstr "Kunne ikke sende besked til GConf-dæmonen: %s"
