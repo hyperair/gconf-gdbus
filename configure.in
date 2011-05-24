@@ -242,8 +242,8 @@ if test "x$enable_gsettings_backend" != "xno" ; then
     fi
   else
     enable_gsettings_backend=yes
-    AC_SUBST(GIO_MODULE_DIR,
-             `pkg-config --variable giomoduledir gio-2.0`)
+    GIO_MODULE_DIR=$libdir/gio/modules
+    AC_SUBST(GIO_MODULE_DIR)
     AC_PATH_PROG(GIO_QUERYMODULES, gio-querymodules, no)
   fi
 fi
