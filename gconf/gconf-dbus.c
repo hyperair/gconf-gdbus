@@ -548,20 +548,20 @@ ensure_database (GConfEngine  *conf,
 			 DBUS_TYPE_STRING, &db,
 			 DBUS_TYPE_INVALID);
 
-  dbus_message_unref (reply);
-
   if (db == NULL)
     {
       if (err)
         *err = gconf_error_new (GCONF_ERROR_BAD_ADDRESS,
 				_("Server couldn't resolve the address `%s'"),
 				conf->persistent_address);
-      
+
+      dbus_message_unref (reply);
       return FALSE;
     }
 
   gconf_engine_set_database (conf, db);
 
+  dbus_message_unref (reply);
   return TRUE;
 }
 
