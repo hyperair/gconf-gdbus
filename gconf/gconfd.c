@@ -1665,13 +1665,7 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
 static void
 get_log_names (gchar **logdir, gchar **logfile)
 {
-#ifndef G_OS_WIN32
-      const char *home = g_get_home_dir ();
-#else
-      const char *home = _gconf_win32_get_home_dir ();
-#endif
-
-  *logdir = g_build_filename (home, ".gconfd", NULL);
+  *logdir = gconf_get_daemon_dir ();
   *logfile = g_build_filename (*logdir, "saved_state", NULL);
 }
 
