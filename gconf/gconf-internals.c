@@ -2796,13 +2796,18 @@ gconf_get_daemon_dir (void)
       const char *tmpdir;
 
       subdir = g_strconcat ("gconfd-", g_get_user_name (), NULL);
-      
-      if (g_getenv ("GCONF_TMPDIR")) {
-	tmpdir = g_getenv ("GCONF_TMPDIR");
-      } else {
-	tmpdir = g_get_tmp_dir ();
-      }
-      
+
+      if (g_getenv ("GCONF_TMPDIR"))
+        tmpdir = g_getenv ("GCONF_TMPDIR");
+      else if (g_getenv ("XDG_RUNTIME_DIR"))
+        {
+          g_free (subdir);
+          subdir = g_strdup ("gconfd");
+          tmpdir = g_getenv ("XDG_RUNTIME_DIR");
+        }
+      else
+        tmpdir = g_get_tmp_dir ();
+
       s = g_build_filename (tmpdir, subdir, NULL);
 
       g_free (subdir);
