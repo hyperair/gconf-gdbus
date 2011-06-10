@@ -65,6 +65,8 @@
 
 #include <dbus/dbus-glib-lowlevel.h>
 
+static void logfile_remove (void);
+
 #ifdef G_OS_WIN32
 #include <io.h>
 #include <conio.h>
@@ -173,6 +175,12 @@ static gboolean in_shutdown = FALSE;
  * all sources during the next periodic_cleanup()
  */
 static gboolean need_db_reload = FALSE;
+
+/*
+ * Flag indicating whether to prepare for respawn or logout
+ * when exiting
+ */
+static gboolean clean_shutdown_requested = FALSE;
 
 #ifdef HAVE_CORBA
 /* 
@@ -346,6 +354,7 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
   
   gconf_log(GCL_DEBUG, _("Shutdown request received"));
 
+  clean_shutdown_requested = TRUE;
   gconfd_main_quit();
 }
 #endif /* HAVE_CORBA */
@@ -488,6 +497,8 @@ signal_handler (int signo)
      */
     enter_shutdown ();
 
+    clean_shutdown_requested = FALSE;
+
     /* let the fatal signals interrupt us */
     --in_fatal;
     
@@ -498,6 +509,8 @@ signal_handler (int signo)
 
   case SIGTERM:
     enter_shutdown ();
+
+    clean_shutdown_requested = TRUE;
 
     /* let the fatal signals interrupt us */
     --in_fatal;
@@ -525,6 +538,7 @@ signal_handler (int signo)
 #endif
     
   default:
+    clean_shutdown_requested = FALSE;
 #ifndef HAVE_SIGACTION
     signal (signo, signal_handler);
 #endif
@@ -573,6 +587,10 @@ bus_message_handler (DBusConnection *connection,
                               DBUS_INTERFACE_LOCAL,
                               "Disconnected"))
     {
+      /* Since the log file is per-session, we should make sure it's
+       * removed when the session is over.
+       */
+      clean_shutdown_requested = TRUE;
       gconfd_main_quit ();
       return DBUS_HANDLER_RESULT_HANDLED;
     }
@@ -991,9 +1009,13 @@ main(int argc, char** argv)
 
 #ifdef HAVE_CORBA
   /* Save current state in logfile (may compress the logfile a good
-   * bit)
+   * bit) if we're exiting but may respawn.  Clean up the logfile, if
+   * the session is going away.
    */
-  logfile_save ();
+  if (clean_shutdown_requested)
+    logfile_remove ();
+  else
+    logfile_save ();
 #endif
   
   shutdown_databases ();
@@ -1637,6 +1659,30 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
  * Logging
  */
 
+static const char *
+get_session_guid (void)
+{
+  const char *session_bus_address;
+  const char *guid;
+
+  /* FIXME: we may want to use dbus-address.h functions here
+   */
+  session_bus_address = g_getenv ("DBUS_SESSION_BUS_ADDRESS");
+
+  if (session_bus_address == NULL)
+    return NULL;
+
+  guid = g_strrstr (session_bus_address, "guid=");
+
+  if (guid == NULL)
+    return NULL;
+
+  if (guid[0] == '\0')
+    return NULL;
+
+  return guid + strlen ("guid=");
+}
+
 /*
    The log file records the current listeners we have registered,
    so we can restore them if we exit and restart.
@@ -1665,8 +1711,23 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
 static void
 get_log_names (gchar **logdir, gchar **logfile)
 {
+  const char *session_guid;
+  char *state_file;
+
   *logdir = gconf_get_daemon_dir ();
-  *logfile = g_build_filename (*logdir, "saved_state", NULL);
+
+  /* We make the state file per-session so multiple gconfds
+   * don't stomp over each other.
+   */
+  session_guid = get_session_guid ();
+
+  if (session_guid != NULL)
+    state_file = g_strdup_printf ("saved_state_%s", session_guid);
+  else
+    state_file = g_strdup ("saved_state");
+
+  *logfile = g_build_filename (*logdir, state_file, NULL);
+  g_free (state_file);
 }
 
 static void close_append_handle (void);
@@ -1888,6 +1949,21 @@ logfile_save (void)
   if (fd >= 0)
     close (fd);
 }
+
+static void
+logfile_remove (void)
+{
+  gchar *logdir = NULL;
+  gchar *logfile = NULL;
+
+  get_log_names (&logdir, &logfile);
+
+  g_unlink (logfile);
+
+  g_free (logdir);
+  g_free (logfile);
+}
+
 
 typedef struct _ListenerLogEntry ListenerLogEntry;
 
