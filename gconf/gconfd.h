@@ -50,6 +50,7 @@ void
 gconfd_clear_cache_for_sources (GConfSources *sources);
 
 void gconfd_need_log_cleanup (void);
+void gconfd_main_quit        (void);
 
 G_END_DECLS
 

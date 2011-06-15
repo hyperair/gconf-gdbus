@@ -121,7 +121,6 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  */
 
 static void     gconf_main            (void);
-static void     gconf_main_quit       (void);
 static gboolean gconf_main_is_running (void);
 
 static void logfile_save (void);
@@ -335,7 +334,7 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
   
   gconf_log(GCL_DEBUG, _("Shutdown request received"));
 
-  gconf_main_quit();
+  gconfd_main_quit();
 }
 
 /*
@@ -472,7 +471,7 @@ signal_handler (int signo)
     --in_fatal;
     
     if (gconf_main_is_running ())
-      gconf_main_quit ();
+      gconfd_main_quit ();
     
     break;
 
@@ -483,7 +482,7 @@ signal_handler (int signo)
     --in_fatal;
     
     if (gconf_main_is_running ())
-      gconf_main_quit ();
+      gconfd_main_quit ();
     break;
 
 #ifdef SIGHUP
@@ -550,7 +549,7 @@ bus_message_handler (DBusConnection *connection,
                               DBUS_INTERFACE_LOCAL,
                               "Disconnected"))
     {
-      gconf_main_quit ();
+      gconfd_main_quit ();
       return DBUS_HANDLER_RESULT_HANDLED;
     }
   else if (dbus_message_is_method_call (message,
@@ -1006,7 +1005,7 @@ periodic_cleanup_timeout(gpointer data)
   if (no_databases_in_use () && client_count () == 0)
     {
       gconf_log (GCL_INFO, _("GConf server is not in use, shutting down."));
-      gconf_main_quit ();
+      gconfd_main_quit ();
       return FALSE;
     }
   
@@ -1067,8 +1066,8 @@ gconf_main(void)
   g_main_loop_unref (loop);
 }
 
-static void 
-gconf_main_quit(void)
+void
+gconfd_main_quit(void)
 {
   g_return_if_fail(main_loops != NULL);
 
