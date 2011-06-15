@@ -220,10 +220,6 @@ gboolean   gconf_release_lock (GConfLock    *lock,
 GConfLock* gconf_get_lock_or_current_holder (const gchar  *lock_directory,
                                              ConfigServer *current_server,
                                              GError      **err);
-ConfigServer gconf_get_current_lock_holder  (const gchar *lock_directory,
-                                             GString     *failure_log);
-
-void gconf_daemon_blow_away_locks (void);
 
 GError*  gconf_error_new  (GConfError en,
                            const gchar* format, ...) G_GNUC_PRINTF (2, 3);
