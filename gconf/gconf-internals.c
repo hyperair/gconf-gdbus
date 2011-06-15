@@ -2526,7 +2526,7 @@ gconf_get_server (gboolean  start_if_not_found,
   return server;
 }
 
-GConfLock*
+static GConfLock *
 gconf_get_lock_or_current_holder (const gchar  *lock_directory,
                                   ConfigServer *current_server,
                                   GError      **err)
