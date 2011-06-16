@@ -143,8 +143,6 @@ static void                 set_default_database (GConfDatabase* db);
 static void                 register_database (GConfDatabase* db);
 static void                 unregister_database (GConfDatabase* db);
 static GConfDatabase*       lookup_database (GSList *addresses);
-static GConfDatabase*       obtain_database (GSList *addresses,
-                                             GError **err);
 static void                 drop_old_databases (void);
 static gboolean             no_databases_in_use (void);
 
@@ -255,7 +253,7 @@ gconfd_get_database(PortableServer_Servant servant,
     return CORBA_OBJECT_NIL;
   
   addresses = g_slist_append (NULL, (char *) address);
-  db = obtain_database (addresses, &error);
+  db = gconfd_obtain_database (addresses, &error);
   g_slist_free (addresses);
 
   if (db != NULL)
@@ -283,7 +281,7 @@ gconfd_get_database_for_addresses (PortableServer_Servant           servant,
   while (i < seq->_length)
     addresses = g_slist_append (addresses, seq->_buffer [i++]);
 
-  db = obtain_database (addresses, &error);
+  db = gconfd_obtain_database (addresses, &error);
 
   g_slist_free (addresses);
 
@@ -1156,9 +1154,9 @@ lookup_database (GSList *addresses)
   return retval;
 }
 
-static GConfDatabase*
-obtain_database (GSList  *addresses,
-                 GError **err)
+GConfDatabase *
+gconfd_obtain_database (GSList  *addresses,
+                        GError **err)
 {
   GConfSources* sources;
   GError* error = NULL;
@@ -2211,7 +2209,7 @@ listener_logentry_restore_and_destroy_foreach (gpointer key,
 
       addresses = gconf_persistent_name_get_address_list (lle->address);
 
-      db = obtain_database (addresses, NULL);
+      db = gconfd_obtain_database (addresses, NULL);
 
       gconf_address_list_free (addresses);
     }

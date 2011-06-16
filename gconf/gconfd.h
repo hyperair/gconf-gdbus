@@ -52,6 +52,9 @@ gconfd_clear_cache_for_sources (GConfSources *sources);
 void gconfd_need_log_cleanup (void);
 void gconfd_main_quit        (void);
 
+GConfDatabase* gconfd_obtain_database (GSList  *addresses,
+                                       GError **err);
+
 G_END_DECLS
 
 #endif
