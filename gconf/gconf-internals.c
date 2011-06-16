@@ -131,6 +131,7 @@ gconf_key_key        (const gchar* key)
  *  Random stuff 
  */
 
+#if HAVE_CORBA
 GConfValue* 
 gconf_value_from_corba_value(const ConfigValue* value)
 {
@@ -611,6 +612,7 @@ gconf_schema_from_corba_schema(const ConfigSchema* cs)
   
   return sc;
 }
+#endif /* HAVE_CORBA */
 
 const gchar* 
 gconf_value_type_to_string(GConfValueType type)
@@ -2140,6 +2142,7 @@ gconf_value_encode (GConfValue* val)
   return retval;
 }
 
+#ifdef HAVE_CORBA
 
 /*
  * Locks
@@ -2910,6 +2913,8 @@ gconf_CORBA_Object_hash (gconstpointer key)
 
   return retval;
 }
+
+#endif /* HAVE_CORBA */
 
 void
 _gconf_init_i18n (void)
