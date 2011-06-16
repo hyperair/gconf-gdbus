@@ -2707,3 +2707,8 @@ client_count (void)
     return g_hash_table_size (client_table);
 }
 
+gboolean
+gconfd_in_shutdown (void)
+{
+  return in_shutdown;
+}

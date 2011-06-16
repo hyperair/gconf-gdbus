@@ -49,8 +49,10 @@ void gconfd_notify_other_listeners (GConfDatabase *modified_db,
 void
 gconfd_clear_cache_for_sources (GConfSources *sources);
 
-void gconfd_need_log_cleanup (void);
-void gconfd_main_quit        (void);
+
+void     gconfd_need_log_cleanup (void);
+void     gconfd_main_quit        (void);
+gboolean gconfd_in_shutdown      (void);
 
 GConfDatabase* gconfd_obtain_database (GSList  *addresses,
                                        GError **err);
