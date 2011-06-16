@@ -79,8 +79,6 @@
  */ 
 
  /* Be clean and pure */
-#define GTK_DISABLE_DEPRECATED
-#define G_DISABLE_DEPRECATED
 
 #include <gconf/gconf-client.h>
 #include <gtk/gtk.h>
