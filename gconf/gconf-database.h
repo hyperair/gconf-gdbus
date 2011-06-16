@@ -30,6 +30,9 @@ G_BEGIN_DECLS
 #include "gconf-sources.h"
 #include "gconf-internals.h"
 
+
+#include "gconf-locale.h"
+
 typedef struct _GConfDatabase GConfDatabase;
 
 struct _GConfDatabase
