@@ -340,6 +340,7 @@ resolve_address (const char *address,
     else
       flags |= GCONF_SOURCE_NEVER_WRITEABLE;
 
+#ifdef HAVE_CORBA
     /* We only do locking if it's writable,
      * and if not using local locks,
      * which is sort of broken but close enough
@@ -364,6 +365,7 @@ resolve_address (const char *address,
             return NULL;
           }
       }
+#endif
   }
 
   {
@@ -906,10 +908,13 @@ ms_new (const char* root_dir,
 static void
 ms_destroy (MarkupSource* ms)
 {
+#ifdef HAVE_CORBA
   GError* error = NULL;
-  
+#endif
+
   g_return_if_fail (ms != NULL);
 
+#ifdef HAVE_CORBA
   /* do this first in case we're in a "fast cleanup just before exit"
    * situation
    */
@@ -920,7 +925,8 @@ ms_destroy (MarkupSource* ms)
       g_error_free(error);
       error = NULL;
     }
-  
+#endif
+
   markup_tree_unref (ms->tree);
 
   g_free (ms->root_dir);
