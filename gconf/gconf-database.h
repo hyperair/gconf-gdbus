@@ -137,6 +137,7 @@ void     gconf_database_clear_cache_for_sources (GConfDatabase  *db,
 						 GConfSources   *sources,
 						 GError        **err);
 
+GConfLocaleList* gconfd_locale_cache_lookup (const gchar *locale);
 
 void gconfd_locale_cache_expire (void);
 void gconfd_locale_cache_drop  (void);

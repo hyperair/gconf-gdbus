@@ -32,8 +32,6 @@
  * Forward decls
  */
 
-static GConfLocaleList* locale_cache_lookup(const gchar* locale);
-
 typedef struct _Listener Listener;
 
 struct _Listener {
@@ -95,7 +93,7 @@ impl_ConfigDatabase_lookup_with_locale(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return gconf_invalid_corba_value ();
   
-  locale_list = locale_cache_lookup(locale);
+  locale_list = gconfd_locale_cache_lookup(locale);
   
   val = gconf_database_query_value(db, key, locale_list->list,
                                    use_schema_default,
@@ -154,7 +152,7 @@ impl_ConfigDatabase_lookup_default_value(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return gconf_invalid_corba_value ();
   
-  locale_list = locale_cache_lookup(locale);
+  locale_list = gconfd_locale_cache_lookup(locale);
   
   val = gconf_database_query_default_value(db, key,
                                            locale_list->list,
@@ -336,7 +334,7 @@ impl_ConfigDatabase_all_entries(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  locale_list = locale_cache_lookup(locale);
+  locale_list = gconfd_locale_cache_lookup(locale);
   
   pairs = gconf_database_all_entries(db, dir, locale_list->list, &error);
   
@@ -548,7 +546,7 @@ impl_ConfigDatabase2_lookup_with_schema_name(PortableServer_Servant servant,
   if (gconfd_check_in_shutdown (ev))
     return gconf_invalid_corba_value ();
   
-  locale_list = locale_cache_lookup(locale);
+  locale_list = gconfd_locale_cache_lookup(locale);
 
   s = NULL;
   val = gconf_database_query_value(db, key, locale_list->list,
@@ -614,7 +612,7 @@ impl_ConfigDatabase2_all_entries_with_schema_name(PortableServer_Servant servant
   if (gconfd_check_in_shutdown (ev))
     return;
   
-  locale_list = locale_cache_lookup(locale);
+  locale_list = gconfd_locale_cache_lookup(locale);
   
   pairs = gconf_database_all_entries(db, dir, locale_list->list, &error);
   
@@ -1855,8 +1853,8 @@ gconf_database_log_listeners_to_string (GConfDatabase *db,
 
 static GConfLocaleCache* locale_cache = NULL;
 
-static GConfLocaleList*
-locale_cache_lookup(const gchar* locale)
+GConfLocaleList*
+gconfd_locale_cache_lookup (const gchar *locale)
 {
   GConfLocaleList* locale_list;
   
