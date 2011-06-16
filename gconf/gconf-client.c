@@ -1036,6 +1036,128 @@ gconf_client_preload    (GConfClient* client,
     }
 }
 
+#ifdef HAVE_DBUS
+
+/*
+ * Add functions for manipulating the internal cache of values - under the
+ * D-BUS environment we update the internal cache when changes happen to
+ * ensure a consistent state
+ */
+static gboolean
+remove_key_from_cache_foreach (const gchar *cached_key,
+                               GConfEntry  *entry,
+                               const gchar *key)
+{
+  if (strcmp (cached_key, key) == 0)
+    {
+      gconf_entry_free (entry);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+static gboolean
+remove_key_from_cache_recursively_foreach (const gchar *cached_key,
+                                           GConfEntry  *entry,
+                                           const gchar *key)
+{
+  if (gconf_key_is_below (cached_key, key) == 0 || strcmp (cached_key, key) == 0)
+    {
+      /* Not sure why a null entry would be in the cache, but it happens
+       * sometimes, workaround for now to avoid crashing.
+       */
+      if (entry)
+        gconf_entry_free (entry);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+static gboolean
+remove_dir_from_cache_foreach (char     *cached_dir,
+                               gpointer  value,
+                               char     *dir)
+{
+  if (strcmp (dir, cached_dir) == 0)
+    {
+      trace ("'%s' no longer fully cached", dir);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+/* The dbus version cleans the cache after modifying a value. So we will
+ * remove current dir (where the key is in) from the cache_dirs
+ * when removing the key from the cache_hash.
+ * This is a workaround. It will degrade the performance of querying negative keys in the same dir. 
+ */
+static void remove_dir_from_cache (GConfClient *client,
+                                   const gchar *key)
+{
+  char *dir, *last_slash;
+  dir = g_strdup (key);
+  last_slash = strrchr (dir, '/');
+  g_assert (last_slash != NULL);
+  *last_slash = 0;
+  trace ("Remove dir '%s' from cache since one of keys is changed", dir);
+  g_hash_table_foreach_remove (client->cache_dirs,
+                               (GHRFunc) remove_dir_from_cache_foreach,
+                               dir);
+  g_free (dir);
+}
+
+static void
+remove_key_from_cache (GConfClient *client,
+                       const gchar *key)
+{
+  g_hash_table_foreach_remove (client->cache_hash,
+                               (GHRFunc) remove_key_from_cache_foreach,
+                               (char *) key);
+  remove_dir_from_cache (client, key);
+}
+
+static void
+remove_key_from_cache_recursively (GConfClient *client,
+                                   const gchar *key)
+{
+  g_hash_table_foreach_remove (client->cache_hash,
+                               (GHRFunc) remove_key_from_cache_recursively_foreach,
+                               (char *) key);
+  remove_dir_from_cache (client, key);
+}
+
+static gboolean
+cache_key_value (GConfClient      *client,
+                 const gchar      *key,
+                 const GConfValue *val)
+{
+  GConfEntry *entry;
+
+  entry = gconf_entry_new (key, val);
+  return gconf_client_cache (client, TRUE, entry, TRUE);
+}
+
+static void
+cache_key_value_and_notify (GConfClient *client,
+                            const gchar *key,
+                            GConfValue  *val,
+                            gboolean     free_value)
+{
+  if (cache_key_value (client, key, val))
+    {
+      if (key_being_monitored (client, key))
+        gconf_client_queue_notify (client, key);
+    }
+
+  if (free_value)
+    gconf_value_free (val);
+}
+
+#endif
+
 /*
  * Basic key-manipulation facilities
  */
@@ -1052,6 +1174,11 @@ gconf_client_set             (GConfClient* client,
   PUSH_USE_ENGINE (client);
   gconf_engine_set (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (!error)
+    cache_key_value_and_notify (client, key, (GConfValue *) val, FALSE);
+#endif
   
   handle_error(client, error, err);
 }
@@ -1066,7 +1193,12 @@ gconf_client_unset          (GConfClient* client,
   PUSH_USE_ENGINE (client);
   gconf_engine_unset(client->engine, key, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (!error)
+    remove_key_from_cache (client, key);
+#endif
+
   handle_error(client, error, err);
 
   if (error != NULL)
@@ -1088,7 +1220,12 @@ gconf_client_recursive_unset (GConfClient *client,
   PUSH_USE_ENGINE (client);
   gconf_engine_recursive_unset(client->engine, key, flags, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (!error)
+    remove_key_from_cache_recursively (client, key);
+#endif
+
   handle_error(client, error, err);
 
   if (error != NULL)
@@ -1836,6 +1973,9 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
     }
 }
 
+#ifdef HAVE_DBUS
+#define MAKE_VALUE(v, TYPE, type, val) GConfValue *v = gconf_value_new (GCONF_VALUE_##TYPE); gconf_value_set_##type (v, val)
+#endif
 
 /*
  * For the set functions, we just set normally, and wait for the
@@ -1865,6 +2005,14 @@ gconf_client_set_float   (GConfClient* client, const gchar* key,
   result = gconf_engine_set_float (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
 
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, FLOAT, float, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1889,7 +2037,15 @@ gconf_client_set_int     (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_int (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, INT, int, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1915,7 +2071,15 @@ gconf_client_set_string  (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_string(client->engine, key, val, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, STRING, string, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1940,6 +2104,14 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_bool (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, BOOL, bool, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
 
   if (result)
     return TRUE;
@@ -1966,7 +2138,15 @@ gconf_client_set_schema  (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_schema(client->engine, key, val, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, SCHEMA, schema, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1993,6 +2173,14 @@ gconf_client_set_list    (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_list(client->engine, key, list_type, list, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      GConfValue *v = gconf_value_list_from_primitive_list (list_type, list, err);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
 
   if (result)
     return TRUE;
@@ -2022,6 +2210,20 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
   result = gconf_engine_set_pair (client->engine, key, car_type, cdr_type,
                                   address_of_car, address_of_cdr, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      GConfValue *v = gconf_value_pair_from_primitive_pair (car_type, cdr_type, address_of_car, address_of_cdr, &error);
+      if (!v)
+        {
+          handle_error (client, error, err);
+          return FALSE;
+        }
+
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
 
   if (result)
     return TRUE;
@@ -2654,8 +2856,34 @@ gconf_client_flush_notifies (GConfClient *client)
         }
       else
         {
-          trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
-                 tmp->data);
+#ifdef HAVE_DBUS
+          /* The dbus version cleans the cache after modifying a value so a get
+           * directly after a set doesn't return a stale value. That means we
+           * have to check if the key is supposed to be monitored here, we can't
+           * just rely on it being in the cache.
+           */
+          if (key_being_monitored (client, tmp->data))
+            {
+              trace ("Key %s was in notify queue but not in cache, but is being monitored",
+                     tmp->data);
+
+              entry = gconf_client_get_entry (client, tmp->data, NULL, TRUE, NULL);
+              if (entry != NULL)
+                {
+                  notify_one_entry (client, entry);
+                  gconf_entry_unref (entry);
+                  last_entry = NULL;
+                }
+            }
+          else
+            {
+              trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
+                     tmp->data);
+            }
+#else
+              trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
+                     tmp->data);
+#endif
         }
       
       tmp = tmp->next;
