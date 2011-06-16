@@ -163,11 +163,12 @@ AC_ARG_ENABLE(gtk,
     [Enable GTK+ support (for gconf-sanity-check) @<:@default=auto@:>@]),
   , enable_gtk=auto)
 
-PKGCONFIG_MODULES='glib-2.0 > 2.14.0 gio-2.0 >= 2.25.9 gthread-2.0 gmodule-2.0 >= 2.7.0 gobject-2.0 >= 2.7.0 ORBit-2.0 >= 2.4.0'
+PKGCONFIG_MODULES='glib-2.0 > 2.14.0 gio-2.0 >= 2.25.9 gthread-2.0 gmodule-2.0 >= 2.7.0 gobject-2.0 >= 2.7.0'
 PKGCONFIG_MODULES_WITH_XML="$PKGCONFIG_MODULES libxml-2.0"
 PKGCONFIG_MODULES_WITH_GTK=" $PKGCONFIG_MODULES gtk+-$GTK_API_VERSION >= $GTK_REQUIRED"
 PKGCONFIG_MODULES_WITH_XML_AND_GTK=" $PKGCONFIG_MODULES gtk+-$GTK_API_VERSION >= $GTK_REQUIRED libxml-2.0"
 PKGCONFIG_MODULES_DBUS=" dbus-1 >= 1.0.0 dbus-glib-1 >= 0.74"
+PKGCONFIG_MODULES_ORBIT=" ORBit-2.0 >= 2.4.0"
 
 PKG_CHECK_MODULES(DEPENDENT, $PKGCONFIG_MODULES)
 PKG_CHECK_MODULES(DEPENDENT_WITH_XML, $PKGCONFIG_MODULES_WITH_XML)
@@ -188,6 +189,29 @@ else
 fi
 
 PKG_CHECK_MODULES([DEPENDENT_DBUS],[$PKGCONFIG_MODULES_DBUS])
+
+AC_ARG_ENABLE(orbit,
+              AS_HELP_STRING([--disable-orbit],
+                             [Disable using ORBit for IPC]),
+              [],
+              [enable_orbit=yes])
+AS_IF([test "x$enable_orbit" = "xyes"],
+      [
+        PKG_CHECK_MODULES([DEPENDENT_ORBIT], [$PKGCONFIG_MODULES_ORBIT])
+        AM_CONDITIONAL(HAVE_CORBA, [true])
+        AM_CONDITIONAL(HAVE_DBUS, [false])
+        AC_DEFINE(HAVE_CORBA, 1, [Use ORBit IPC mechanism])
+        AC_SUBST(HAVE_CORBA)
+        AC_SUBST(HAVE_DBUS)
+      ],
+      [
+        AM_CONDITIONAL(HAVE_CORBA, [false])
+        AM_CONDITIONAL(HAVE_DBUS, [true])
+        AC_DEFINE(HAVE_DBUS, 1, [Use D-BUS IPC mechanism])
+        AC_SUBST(HAVE_CORBA)
+        AC_SUBST(HAVE_DBUS)
+      ])
+
 
 AM_CONDITIONAL(GTK, [test "x$HAVE_GTK" != "xno"])
 
