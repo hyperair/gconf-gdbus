@@ -6,6 +6,8 @@ INCLUDES=								\
 	-I$(top_srcdir)							\
 	-I$(top_builddir)						\
 	$(DEPENDENT_WITH_XML_AND_GTK_CFLAGS) 				\
+	$(DEPENDENT_DBUS_CFLAGS)				\
+	$(DEPENDENT_ORBIT_CFLAGS)				\
 	-DG_LOG_DOMAIN=\"GConf\"					\
 	-DPREFIX=\""$(prefix)"\"					\
 	-DGCONF_LOCALE_DIR=\""$(datadir)/locale"\"			\
@@ -80,7 +82,8 @@ endif
 
 gconfd_2_CFLAGS = $(INCLUDES) $(DEPENDENT_DBUS_CFLAGS)
 
-gconfd_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS)
+gconfd_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) \
+		 $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS) $(DEPENDENT_ORBIT_LIBS)
 
 gconftool_2_SOURCES = \
 	gconftool.c
@@ -120,7 +123,7 @@ libgconf_2_la_SOURCES = \
 
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) -no-undefined
 
-libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
+libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS) $(DEPENDENT_ORBIT_LIBS)
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
