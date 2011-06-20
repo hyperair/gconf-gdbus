@@ -17,7 +17,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#if HAVE_CORBA
 #include "GConfX.h"
+#endif
+
 #include "gconf.h"
 #include "gconf-internals.h"
 #include "gconf-sources.h"
@@ -34,6 +37,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#ifdef HAVE_CORBA
 /* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err);
 /* just returns TRUE if there's an exception indicating the server is
@@ -43,6 +47,7 @@ static void gconf_detach_config_server(void);
 
 /* Maximum number of times to try re-spawning the server if it's down. */
 #define MAX_RETRIES 1
+#endif /* HAVE_CORBA */
 
 /* copied from gutf8.c where it exists as a (unfortunately) non-exported function */
 static gchar *
@@ -109,6 +114,7 @@ gconf_key_check(const gchar* key, GError** err)
   return TRUE;
 }
 
+#ifdef HAVE_CORBA
 typedef struct _CnxnTable CnxnTable;
 
 struct _GConfEngine {
@@ -2636,7 +2642,8 @@ gconf_get_config_listener(void)
   
   return listener;
 }
-     
+#endif /* HAVE_CORBA */
+
 void
 gconf_preinit (gpointer app, gpointer mod_info)
 {
@@ -2971,6 +2978,7 @@ gconf_unique_key (void)
   return key;
 }
 
+#ifdef HAVE_CORBA
 /*
  * Table of connections 
  */ 
@@ -3175,6 +3183,7 @@ gconf_spawn_daemon(GError** err)
   else
     return TRUE;
 }
+#endif /* HAVE_CORBA */
 
 /*
  * Sugar functions 
@@ -3682,6 +3691,7 @@ gconf_engine_set_pair    (GConfEngine* conf, const gchar* key,
   return error_checked_set(conf, key, pair, err);
 }
 
+#ifdef HAVE_CORBA
 /* CORBA Util */
 
 /* Set GConfError from an exception, free exception, etc. */
@@ -3776,6 +3786,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GError** err)
       return TRUE;
     }
 }
+#endif
 
 /*
  * Enumeration conversions
