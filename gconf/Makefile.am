@@ -36,7 +36,9 @@ lib_LTLIBRARIES = libgconf-2.la
 bin_PROGRAMS = gconftool-2 
 libexec_PROGRAMS = gconfd-2 $(SANITY_CHECK)
 
+if HAVE_CORBA
 CORBA_SOURCECODE = GConfX-common.c GConfX-skels.c GConfX-stubs.c GConfX.h
+endif
 
 BUILT_SOURCES = 			\
 	$(CORBA_SOURCECODE)		\
@@ -76,6 +78,13 @@ gconfd_2_SOURCES = \
 	gconfd.h		\
 	gconfd.c
 
+if HAVE_DBUS
+gconfd_2_SOURCES += \
+	gconfd-dbus.c \
+	gconfd-dbus.h \
+	gconf-database-dbus.h \
+	gconf-database-dbus.c
+endif
 if OS_WIN32
 gconfd_2_LDFLAGS = -mwindows
 endif
@@ -120,6 +129,13 @@ libgconf_2_la_SOURCES = \
 	gconf-enum-types.c	\
 	$(CORBA_SOURCECODE)	\
 	$(WIN32_SOURCECODE)
+
+if HAVE_DBUS
+libgconf_2_la_SOURCES += \
+	gconf-dbus.c \
+	gconf-dbus-utils.c \
+	gconf-dbus-utils.h
+endif
 
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) -no-undefined
 
