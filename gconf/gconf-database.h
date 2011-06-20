@@ -32,6 +32,9 @@ G_BEGIN_DECLS
 #include "gconf-sources.h"
 #include "gconf-internals.h"
 
+#ifdef HAVE_DBUS
+#include <dbus/dbus.h>
+#endif
 
 #include "gconf-locale.h"
 
@@ -47,7 +50,14 @@ struct _GConfDatabase
   ConfigDatabase objref;
 #endif
 
+#ifdef HAVE_DBUS
+  char           *object_path;
   
+  /* Information about clients that want notification. */
+  GHashTable     *notifications;
+  GHashTable     *listening_clients;
+#endif
+
   GConfListeners* listeners;
   GConfSources* sources;
 

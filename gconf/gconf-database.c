@@ -19,10 +19,16 @@
 
 #include <config.h>
 #include "gconf-database.h"
+#ifdef HAVE_DBUS
+#include "gconf-database-dbus.h"
+#endif
 #include "gconf-listeners.h"
 #include "gconf-sources.h"
 #include "gconf-locale.h"
 #include "gconfd.h"
+#ifdef HAVE_DBUS
+#include "gconfd-dbus.h"
+#endif
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
@@ -815,6 +821,9 @@ gconf_database_new (GConfSources  *sources)
     }
 #endif
 
+#ifdef HAVE_DBUS
+  gconf_database_dbus_setup (db);
+#endif
 
   db->listeners = gconf_listeners_new();
 
@@ -860,6 +869,10 @@ gconf_database_free (GConfDatabase *db)
   CORBA_free (oid);
 
   CORBA_exception_free (&ev);
+#endif
+
+#ifdef HAVE_DBUS
+  gconf_database_dbus_teardown (db);
 #endif
 
   if (db->listeners != NULL)
@@ -1078,6 +1091,15 @@ source_notify_cb (GConfSource   *source,
       CORBA_free (cvalue);
 #endif
 
+#ifdef HAVE_DBUS
+      gconf_database_dbus_notify_listeners (db,
+					    NULL,
+					    location,
+					    value,
+					    is_default,
+					    is_writable,
+					    FALSE);
+#endif
       gconf_value_free (value);
     }
 }
@@ -1392,6 +1414,15 @@ gconf_database_set   (GConfDatabase      *db,
 				       TRUE,
 				       TRUE);
 #endif
+#ifdef HAVE_DBUS
+      gconf_database_dbus_notify_listeners (db,
+					    modified_sources,
+					    key,
+					    value,
+					    FALSE,
+					    TRUE,
+					    TRUE);
+#endif
     }
 }
 
@@ -1476,6 +1507,19 @@ gconf_database_unset (GConfDatabase      *db,
       CORBA_free(val);
 #endif
 
+#ifdef HAVE_DBUS
+      gconf_database_schedule_sync(db);
+
+      gconf_database_dbus_notify_listeners(db,
+					   modified_sources,
+					   key,
+					   def_value,
+					   TRUE,
+					   is_writable,
+					   TRUE);
+      if (def_value)
+	      gconf_value_free(def_value);
+#endif
     }
 }
 
@@ -1572,6 +1616,19 @@ gconf_database_recursive_unset (GConfDatabase      *db,
 				       TRUE);
       
       CORBA_free (val);
+#endif
+#ifdef HAVE_DBUS
+      gconf_database_schedule_sync (db);
+      
+      gconf_database_dbus_notify_listeners (db,
+					    notify->modified_sources,
+					    notify->key,
+					    new_value,
+					    is_default,
+					    is_writable,
+					    TRUE);
+      if (new_value)
+	      gconf_value_free (new_value);
 #endif
 
       g_free (notify->key);
