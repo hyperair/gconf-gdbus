@@ -25,9 +25,14 @@
 G_BEGIN_DECLS
 
 #include "gconf-error.h"
+
+#ifdef HAVE_CORBA
 #include "GConfX.h"
+#endif
+
 #include "gconf-database.h"
 
+#ifdef HAVE_CORBA
 PortableServer_POA gconf_get_poa (void);
 
 /* return TRUE if the exception was set, clear err if needed */
@@ -41,6 +46,7 @@ gboolean gconfd_logfile_change_listener (GConfDatabase *db,
                                          GError **err);
 
 gboolean gconfd_check_in_shutdown (CORBA_Environment *ev);
+#endif
 
 void gconfd_notify_other_listeners (GConfDatabase *modified_db,
 				    GConfSources  *modified_sources,
