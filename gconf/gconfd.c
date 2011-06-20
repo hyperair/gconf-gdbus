@@ -36,6 +36,11 @@
 #include "gconfd.h"
 #include "gconf-database.h"
 
+#ifdef HAVE_DBUS
+#include "gconf-database-dbus.h"
+#include "gconfd-dbus.h"
+#endif
+
 #ifdef HAVE_CORBA
 #include <orbit/orbit.h>
 
@@ -888,6 +893,10 @@ main(int argc, char** argv)
 
   init_databases ();
 
+#ifdef HAVE_DBUS
+  if (!gconfd_dbus_init ())
+    return 1;
+#endif
 
 #ifdef HAVE_CORBA
   orb = gconf_orb_get ();
@@ -924,6 +933,9 @@ main(int argc, char** argv)
     }
 #endif
 
+#ifdef HAVE_DBUS
+  gconf_server_load_sources ();
+#endif
 
 #ifdef HAVE_CORBA
   /* notify caller that we're done either getting the lock
@@ -1034,7 +1046,11 @@ periodic_cleanup_timeout(gpointer data)
 #endif
   drop_old_databases ();
 
+#ifdef HAVE_DBUS
+  if (no_databases_in_use () && gconfd_dbus_client_count () == 0)
+#else
   if (no_databases_in_use () && client_count () == 0)
+#endif
     {
       gconf_log (GCL_INFO, _("GConf server is not in use, shutting down."));
       gconfd_main_quit ();
@@ -1053,6 +1069,7 @@ periodic_cleanup_timeout(gpointer data)
   
   /* Compress the running state file */
   logfile_save ();
+#endif
 
   need_log_cleanup = FALSE;
   
@@ -1390,6 +1407,15 @@ gconfd_notify_other_listeners (GConfDatabase *modified_db,
 						   is_writable,
 						   FALSE);
 		  CORBA_free (cvalue);
+#endif
+#ifdef HAVE_DBUS
+		  gconf_database_dbus_notify_listeners (db,
+							NULL,
+							key,
+							value,
+							is_default,
+							is_writable,
+							FALSE);
 #endif
 		}
 
