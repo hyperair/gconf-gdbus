@@ -36,14 +36,15 @@ lib_LTLIBRARIES = libgconf-2.la
 bin_PROGRAMS = gconftool-2 
 libexec_PROGRAMS = gconfd-2 $(SANITY_CHECK)
 
-if HAVE_CORBA
 CORBA_SOURCECODE = GConfX-common.c GConfX-skels.c GConfX-stubs.c GConfX.h
-endif
 
 BUILT_SOURCES = 			\
-	$(CORBA_SOURCECODE)		\
 	gconfmarshal.h			\
 	gconfmarshal.c
+if HAVE_CORBA
+BUILT_SOURCES += $(CORBA_SOURCECODE)
+endif
+
 
 $(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
 
@@ -127,8 +128,11 @@ libgconf_2_la_SOURCES = \
 	gconf.c			\
 	gconf-client.c		\
 	gconf-enum-types.c	\
-	$(CORBA_SOURCECODE)	\
 	$(WIN32_SOURCECODE)
+
+if HAVE_CORBA
+libgconf_2_la_SOURCES += $(CORBA_SOURCECODE)
+endif
 
 if HAVE_DBUS
 libgconf_2_la_SOURCES += \
