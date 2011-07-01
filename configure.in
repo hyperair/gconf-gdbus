@@ -203,8 +203,7 @@ AS_IF([test "x$enable_orbit" = "xyes"],
         AM_CONDITIONAL(HAVE_CORBA, [true])
         AM_CONDITIONAL(HAVE_DBUS, [false])
         AC_DEFINE(HAVE_CORBA, 1, [Use ORBit IPC mechanism])
-        AC_SUBST(HAVE_CORBA)
-        AC_SUBST(HAVE_DBUS)
+        IPC_REQUIRES="ORBit-2.0"
         IPC="ORBit"
       ],
       [
@@ -212,10 +211,12 @@ AS_IF([test "x$enable_orbit" = "xyes"],
         AM_CONDITIONAL(HAVE_CORBA, [false])
         AM_CONDITIONAL(HAVE_DBUS, [true])
         AC_DEFINE(HAVE_DBUS, 1, [Use D-BUS IPC mechanism])
-        AC_SUBST(HAVE_CORBA)
-        AC_SUBST(HAVE_DBUS)
+        IPC_REQUIRES="dbus-1"
         IPC="DBus"
       ])
+AC_SUBST(HAVE_CORBA)
+AC_SUBST(HAVE_DBUS)
+AC_SUBST(IPC_REQUIRES)
 
 
 AM_CONDITIONAL(GTK, [test "x$HAVE_GTK" != "xno"])
