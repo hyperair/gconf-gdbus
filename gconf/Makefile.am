@@ -153,7 +153,7 @@ INTROSPECTION_COMPILER_ARGS= --includedir=$(srcdir)
 if HAVE_INTROSPECTION
 introspection_files =				\
 	$(gconfinclude_HEADERS)			\
-	$(filter %.c,$(libgconf_2_la_SOURCES))
+	$(filter-out $(CORBA_SOURCECODE), $(filter %.c,$(libgconf_2_la_SOURCES)))
 GConf-2.0.gir: libgconf-2.la Makefile
 GConf_2_0_gir_INCLUDES = GObject-2.0
 GConf_2_0_gir_CFLAGS = \
