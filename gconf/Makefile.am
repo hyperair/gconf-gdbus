@@ -158,7 +158,8 @@ GConf_2_0_gir_CFLAGS = \
 	$(INCLUDES)
 GConf_2_0_gir_LIBS = libgconf-2.la
 GConf_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
-GConf_2_0_gir_SCANNERFLAGS = --identifier-prefix=GConf --symbol-prefix=gconf
+GConf_2_0_gir_SCANNERFLAGS = --identifier-prefix=GConf --symbol-prefix=gconf --c-include "gconf/gconf.h"
+GConf_2_0_gir_EXPORT_PACKAGES = gconf-2.0
 INTROSPECTION_GIRS += GConf-2.0.gir
 
 girdir = $(datadir)/gir-1.0/
