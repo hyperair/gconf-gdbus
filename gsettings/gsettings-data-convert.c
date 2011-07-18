@@ -415,6 +415,8 @@ main (int argc, char *argv[])
     { NULL }
   };
 
+  g_type_init();
+
   context = g_option_context_new ("");
 
   g_option_context_set_summary (context,
