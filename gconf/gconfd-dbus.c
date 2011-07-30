@@ -140,7 +140,7 @@ server_real_handle_get_db (DBusConnection *connection,
 
   str = gconf_database_dbus_get_path (db);
   dbus_message_append_args (reply,
-			    DBUS_TYPE_STRING, &str,
+			    DBUS_TYPE_OBJECT_PATH, &str,
 			    DBUS_TYPE_INVALID);
   
   if (!dbus_connection_send (connection, reply, NULL)) 

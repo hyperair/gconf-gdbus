@@ -545,7 +545,7 @@ ensure_database (GConfEngine  *conf,
 
   dbus_message_get_args (reply,
 			 NULL,
-			 DBUS_TYPE_STRING, &db,
+			 DBUS_TYPE_OBJECT_PATH, &db,
 			 DBUS_TYPE_INVALID);
 
   if (db == NULL)
