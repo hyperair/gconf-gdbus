@@ -37,6 +37,20 @@ static gboolean dry_run = FALSE;
 extern const gchar *gconf_value_type_to_string (int type);
 
 static gboolean
+type_uint32 (GSettings   *settings,
+             const gchar *key)
+{
+  const GVariantType *type;
+  GVariant *value;
+
+  value = g_settings_get_value (settings, key);
+  type = g_variant_get_type (value);
+  g_variant_unref (value);
+
+  return g_variant_type_equal (type, G_VARIANT_TYPE_UINT32);
+}
+
+static gboolean
 handle_file (const gchar *filename)
 {
   GKeyFile *keyfile;
@@ -166,6 +180,9 @@ handle_file (const gchar *filename)
                     g_settings_set_enum (settings, keys[j], gconf_value_get_int (value));
                   else if (strcmp (type, "flags") == 0)
                     g_settings_set_flags (settings, keys[j], gconf_value_get_int (value));
+                  else if (type_uint32 (settings, keys[j]))
+                    g_settings_set (settings, keys[j], "u",
+                                    gconf_value_get_int (value));
                   else
                     g_settings_set (settings, keys[j], "i",
                                     gconf_value_get_int (value));
