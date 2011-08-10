@@ -420,6 +420,7 @@ main (int argc, char *argv[])
   struct stat statbuf;
   GError *error;
   gchar **converted;
+  gboolean changed;
   GDir *dir;
   const gchar *name;
   gchar *filename;
@@ -448,6 +449,7 @@ main (int argc, char *argv[])
     }
 
   load_state (&stored_mtime, &converted);
+  changed = FALSE;
 
   /* If the directory is not newer, exit */
   if (stat (convert_dir, &statbuf) == 0)
@@ -497,6 +499,7 @@ main (int argc, char *argv[])
           converted = g_realloc (converted, (len + 2) * sizeof (gchar *));
           converted[len] = g_strdup (name);
           converted[len + 1] = NULL;
+          changed = TRUE;
         }
 
       g_free (filename);
@@ -504,7 +507,7 @@ main (int argc, char *argv[])
  next: ;
     }
 
-  if (!dry_run)
+  if (changed && !dry_run)
     {
       if (!save_state (converted))
         return 1;
