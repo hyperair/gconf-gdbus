@@ -364,8 +364,7 @@ load_state (time_t  *mtime,
 }
 
 static gboolean
-save_state (time_t   mtime,
-            gchar  **converted)
+save_state (gchar  **converted)
 {
   gchar *filename;
   GKeyFile *keyfile;
@@ -384,7 +383,7 @@ save_state (time_t   mtime,
   filename = g_build_filename (g_get_user_data_dir (), "gsettings-data-convert", NULL);
   keyfile = g_key_file_new ();
 
-  str = g_strdup_printf ("%ld", mtime);
+  str = g_strdup_printf ("%ld", time (NULL));
   g_key_file_set_string (keyfile,
                          "State", "timestamp", str);
   g_free (str);
@@ -507,7 +506,7 @@ main (int argc, char *argv[])
 
   if (!dry_run)
     {
-      if (!save_state (dir_mtime, converted))
+      if (!save_state (converted))
         return 1;
     }
 
