@@ -40,10 +40,8 @@ CORBA_SOURCECODE = GConfX-common.c GConfX-skels.c GConfX-stubs.c GConfX.h
 
 BUILT_SOURCES = 			\
 	gconfmarshal.h			\
-	gconfmarshal.c
-if HAVE_CORBA
-BUILT_SOURCES += $(CORBA_SOURCECODE)
-endif
+	gconfmarshal.c 			\
+	$(CORBA_SOURCECODE)
 
 
 $(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
