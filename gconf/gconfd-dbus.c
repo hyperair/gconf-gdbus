@@ -75,8 +75,8 @@ server_message_func (DBusConnection *connection,
       return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     }
                                                                                 
-  if (strcmp (dbus_message_get_interface (message),
-	      GCONF_DBUS_SERVER_INTERFACE) != 0) 
+  if (g_strcmp0 (dbus_message_get_interface (message),
+	         GCONF_DBUS_SERVER_INTERFACE) != 0)
     {
       g_print ("Not correct interface: \"%s\"\n",
 	       dbus_message_get_interface (message));
