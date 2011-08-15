@@ -531,9 +531,11 @@ main (int argc, char *argv[])
   GError *error;
   GHashTable *converted;
   GOptionContext *context;
+  const gchar *extra_file = NULL;
   GOptionEntry entries[] = {
     { "verbose", 0, 0, G_OPTION_ARG_NONE, &verbose, "show verbose messages", NULL },
     { "dry-run", 0, 0, G_OPTION_ARG_NONE, &dry_run, "do not perform any changes", NULL },
+    { "file", 0, 0, G_OPTION_ARG_STRING, &extra_file, "perform conversions from an extra file", NULL },
     { NULL }
   };
 
@@ -554,6 +556,31 @@ main (int argc, char *argv[])
     }
 
   converted = load_state (&stored_mtime);
+
+  if (extra_file)
+    {
+      gchar *base;
+
+      base = g_path_get_basename (extra_file);
+
+      if (g_hash_table_lookup (converted, base))
+        {
+          if (verbose)
+            g_print ("'%s' is already converted.  Skipping.\n", base);
+        }
+      else
+        {
+          if (handle_file (extra_file))
+            {
+              gchar *myname = g_strdup (base);
+
+              g_hash_table_insert (converted, myname, myname);
+              changed = TRUE;
+            }
+        }
+
+      g_free (base);
+    }
 
   data_dirs = g_get_system_data_dirs ();
   for (i = 0; data_dirs[i]; i++)
