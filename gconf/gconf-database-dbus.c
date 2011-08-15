@@ -929,7 +929,7 @@ gconf_database_dbus_notify_listeners (GConfDatabase    *db,
 						      "Notify");
 
 	      dbus_message_append_args (message,
-					DBUS_TYPE_STRING, &db->object_path,
+					DBUS_TYPE_OBJECT_PATH, &db->object_path,
 					DBUS_TYPE_STRING, &dir,
 					DBUS_TYPE_INVALID);
 
