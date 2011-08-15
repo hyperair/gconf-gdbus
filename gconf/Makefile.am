@@ -48,7 +48,7 @@ endif
 
 $(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
 
-CLEANFILES = $(BUILT_SOURCES) $(service_DATA)
+CLEANFILES = $(BUILT_SOURCES) $(service_DATA) $(CORBA_SOURCECODE)
 
 DISTCLEANFILES = default.path
 
