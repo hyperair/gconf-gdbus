@@ -307,32 +307,77 @@ handle_file (const gchar *filename)
   return TRUE;
 }
 
-static void
-load_state (time_t  *mtime,
-            gchar ***converted)
+/* get_string_set() and set_string_set() could be GKeyFile API */
+static GHashTable *
+get_string_set (GKeyFile     *keyfile,
+                const gchar  *group,
+                const gchar  *key,
+                GError      **error)
 {
+  GHashTable *converted;
+  gchar **list;
+  gint i;
+
+  list = g_key_file_get_string_list (keyfile, group, key, NULL, error);
+
+  if (list == NULL)
+    return NULL;
+
+  converted = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+  for (i = 0; list[i]; i++)
+    g_hash_table_insert (converted, list[i], list[i]);
+
+  /* The hashtable now owns the strings, so only free the array */
+  g_free (list);
+
+  return converted;
+}
+
+static void
+set_string_set (GKeyFile    *keyfile,
+                const gchar *group,
+                const gchar *key,
+                GHashTable  *set)
+{
+  GHashTableIter iter;
+  GString *list;
+  gpointer item;
+
+  list = g_string_new (NULL);
+  g_hash_table_iter_init (&iter, set);
+  while (g_hash_table_iter_next (&iter, &item, NULL))
+    g_string_append_printf (list, "%s;", (const gchar *) item);
+
+  g_key_file_set_value (keyfile, group, key, list->str);
+  g_string_free (list, TRUE);
+}
+
+static GHashTable *
+load_state (time_t *mtime)
+{
+  GHashTable *converted;
+  GHashTable *tmp;
   gchar *filename;
   GKeyFile *keyfile;
   GError *error;
   gchar *str;
-  gchar **list;
 
+  converted = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
   *mtime = 0;
-  *converted = g_new0 (gchar *, 1);
 
   filename = g_build_filename (g_get_user_data_dir (), "gsettings-data-convert", NULL);
   keyfile = g_key_file_new ();
 
   /* ensure file exists */
   if (!g_file_test (filename, G_FILE_TEST_EXISTS))
-    return;
+    return converted;
 
   error = NULL;
   if (!g_key_file_load_from_file (keyfile, filename, 0, &error))
     {
       g_printerr ("%s\n", error->message);
       g_error_free (error);
-      return;
+      return converted;
     }
 
   error = NULL;
@@ -348,23 +393,25 @@ load_state (time_t  *mtime,
     }
 
   error = NULL;
-  if ((list = g_key_file_get_string_list (keyfile, "State", "converted", NULL, &error)) == NULL)
+  if ((tmp = get_string_set (keyfile, "State", "converted", &error)) == NULL)
     {
       g_printerr ("%s\n", error->message);
       g_error_free (error);
     }
   else
     {
-      g_strfreev (*converted);
-      *converted = list;
+      g_hash_table_unref (converted);
+      converted = tmp;
     }
 
   g_key_file_free (keyfile);
   g_free (filename);
+
+  return converted;
 }
 
 static gboolean
-save_state (gchar  **converted)
+save_state (GHashTable *converted)
 {
   gchar *filename;
   GKeyFile *keyfile;
@@ -388,9 +435,7 @@ save_state (gchar  **converted)
                          "State", "timestamp", str);
   g_free (str);
 
-  g_key_file_set_string_list (keyfile,
-                              "State", "converted",
-                              (const gchar * const *)converted, g_strv_length (converted));
+  set_string_set (keyfile, "State", "converted", converted);
 
   str = g_key_file_to_data (keyfile, NULL, NULL);
   g_key_file_free (keyfile);
@@ -419,12 +464,11 @@ main (int argc, char *argv[])
   time_t dir_mtime;
   struct stat statbuf;
   GError *error;
-  gchar **converted;
+  GHashTable *converted;
   gboolean changed;
   GDir *dir;
   const gchar *name;
   gchar *filename;
-  gint i;
   GOptionContext *context;
   GOptionEntry entries[] = {
     { "verbose", 0, 0, G_OPTION_ARG_NONE, &verbose, "show verbose messages", NULL },
@@ -448,7 +492,7 @@ main (int argc, char *argv[])
       return 1;
     }
 
-  load_state (&stored_mtime, &converted);
+  converted = load_state (&stored_mtime);
   changed = FALSE;
 
   /* If the directory is not newer, exit */
@@ -478,27 +522,21 @@ main (int argc, char *argv[])
 
   while ((name = g_dir_read_name (dir)) != NULL)
     {
-       for (i = 0; converted[i]; i++)
-         {
-           if (strcmp (name, converted[i]) == 0)
-             {
-               if (verbose)
-                 g_print ("File '%s already converted, skipping\n", name);
-               goto next;
-             }
-         }
+      if (g_hash_table_lookup (converted, name))
+        {
+          if (verbose)
+            g_print ("File '%s already converted, skipping\n", name);
+          goto next;
+        }
 
       filename = g_build_filename (convert_dir, name, NULL);
 
       if (handle_file (filename))
         {
-          gint len;
+          gchar *myname = g_strdup (name);
 
           /* Add the the file to the converted list */
-          len = g_strv_length (converted);
-          converted = g_realloc (converted, (len + 2) * sizeof (gchar *));
-          converted[len] = g_strdup (name);
-          converted[len + 1] = NULL;
+          g_hash_table_insert (converted, myname, myname);
           changed = TRUE;
         }
 
