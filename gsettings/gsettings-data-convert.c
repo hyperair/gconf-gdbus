@@ -31,6 +31,7 @@
 
 static const gchar convert_dir[] = DATADIR "/GConf/gsettings";
 
+static gboolean changed = FALSE;
 static gboolean verbose = FALSE;
 static gboolean dry_run = FALSE;
 
@@ -307,6 +308,71 @@ handle_file (const gchar *filename)
   return TRUE;
 }
 
+static gboolean
+handle_dir (const gchar *dirname,
+            time_t       stored_mtime,
+            GHashTable  *converted)
+{
+  time_t dir_mtime;
+  struct stat statbuf;
+  GDir *dir;
+  const gchar *name;
+  gchar *filename;
+  GError *error;
+
+  /* If the directory is not newer, exit */
+  if (stat (dirname, &statbuf) == 0)
+    dir_mtime = statbuf.st_mtime;
+ else
+    {
+      if (verbose)
+        g_print ("Directory '%s' does not exist, nothing to do\n", dirname);
+      return TRUE;
+    }
+
+  if (dir_mtime <= stored_mtime)
+    {
+      if (verbose)
+        g_print ("Directory '%s' all uptodate, nothing to do\n", dirname);
+      return TRUE;
+    }
+
+  error = NULL;
+  dir = g_dir_open (dirname, 0, &error);
+  if (dir == NULL)
+    {
+      g_printerr ("Failed to open '%s': %s\n", dirname, error->message);
+      return FALSE;
+    }
+
+  while ((name = g_dir_read_name (dir)) != NULL)
+    {
+      if (g_hash_table_lookup (converted, name))
+        {
+          if (verbose)
+            g_print ("File '%s already converted, skipping\n", name);
+          goto next;
+        }
+
+      filename = g_build_filename (dirname, name, NULL);
+
+      if (handle_file (filename))
+        {
+          gchar *myname = g_strdup (name);
+
+          /* Add the the file to the converted list */
+          g_hash_table_insert (converted, myname, myname);
+          changed = TRUE;
+        }
+
+      g_free (filename);
+
+ next: ;
+    }
+
+  return TRUE;
+}
+
 /* get_string_set() and set_string_set() could be GKeyFile API */
 static GHashTable *
 get_string_set (GKeyFile     *keyfile,
@@ -461,14 +527,8 @@ int
 main (int argc, char *argv[])
 {
   time_t stored_mtime;
-  time_t dir_mtime;
-  struct stat statbuf;
   GError *error;
   GHashTable *converted;
-  gboolean changed;
-  GDir *dir;
-  const gchar *name;
-  gchar *filename;
   GOptionContext *context;
   GOptionEntry entries[] = {
     { "verbose", 0, 0, G_OPTION_ARG_NONE, &verbose, "show verbose messages", NULL },
@@ -493,57 +553,9 @@ main (int argc, char *argv[])
     }
 
   converted = load_state (&stored_mtime);
-  changed = FALSE;
 
-  /* If the directory is not newer, exit */
-  if (stat (convert_dir, &statbuf) == 0)
-    dir_mtime = statbuf.st_mtime;
- else
-    {
-      if (verbose)
-        g_print ("Directory '%s' does not exist, nothing to do\n", convert_dir);
-      return 0;
-    }
-
-  if (dir_mtime <= stored_mtime)
-    {
-      if (verbose)
-        g_print ("All uptodate, nothing to do\n");
-      return 0;
-    }
-
-  error = NULL;
-  dir = g_dir_open (convert_dir, 0, &error);
-  if (dir == NULL)
-    {
-      g_printerr ("Failed to open '%s': %s\n", convert_dir, error->message);
-      return 1;
-    }
-
-  while ((name = g_dir_read_name (dir)) != NULL)
-    {
-      if (g_hash_table_lookup (converted, name))
-        {
-          if (verbose)
-            g_print ("File '%s already converted, skipping\n", name);
-          goto next;
-        }
-
-      filename = g_build_filename (convert_dir, name, NULL);
-
-      if (handle_file (filename))
-        {
-          gchar *myname = g_strdup (name);
-
-          /* Add the the file to the converted list */
-          g_hash_table_insert (converted, myname, myname);
-          changed = TRUE;
-        }
-
-      g_free (filename);
-
- next: ;
-    }
+  if (!handle_dir (convert_dir, stored_mtime, converted))
+    return 1;
 
   if (changed && !dry_run)
     {
