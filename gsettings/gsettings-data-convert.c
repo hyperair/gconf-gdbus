@@ -75,7 +75,8 @@ handle_file (const gchar *filename)
   error = NULL;
   if (!g_key_file_load_from_file (keyfile, filename, 0, &error))
     {
-      g_printerr ("%s\n", error->message);
+      if (verbose)
+        g_printerr ("%s: %s\n", filename, error->message);
       g_error_free (error);
 
       g_key_file_free (keyfile);
@@ -441,7 +442,7 @@ load_state (time_t *mtime)
   error = NULL;
   if (!g_key_file_load_from_file (keyfile, filename, 0, &error))
     {
-      g_printerr ("%s\n", error->message);
+      g_printerr ("%s: %s\n", filename, error->message);
       g_error_free (error);
       return converted;
     }
