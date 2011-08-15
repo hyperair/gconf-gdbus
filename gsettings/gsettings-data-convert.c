@@ -29,8 +29,6 @@
 #include <gio/gio.h>
 #include <gconf/gconf-client.h>
 
-static const gchar convert_dir[] = DATADIR "/GConf/gsettings";
-
 static gboolean changed = FALSE;
 static gboolean verbose = FALSE;
 static gboolean dry_run = FALSE;
@@ -528,6 +526,8 @@ int
 main (int argc, char *argv[])
 {
   time_t stored_mtime;
+  const gchar * const *data_dirs;
+  gint i;
   GError *error;
   GHashTable *converted;
   GOptionContext *context;
@@ -555,8 +555,18 @@ main (int argc, char *argv[])
 
   converted = load_state (&stored_mtime);
 
-  if (!handle_dir (convert_dir, stored_mtime, converted))
-    return 1;
+  data_dirs = g_get_system_data_dirs ();
+  for (i = 0; data_dirs[i]; i++)
+    {
+      gchar *convert_dir;
+
+      convert_dir = g_build_filename (data_dirs[i], "GConf", "gsettings", NULL);
+
+      if (!handle_dir (convert_dir, stored_mtime, converted))
+        return 1;
+
+      g_free (convert_dir);
+    }
 
   if (changed && !dry_run)
     {
