@@ -543,10 +543,23 @@ ensure_database (GConfEngine  *conf,
   if (gconf_handle_dbus_exception (reply, &error, err))
     return FALSE;
 
-  dbus_message_get_args (reply,
-			 NULL,
-			 DBUS_TYPE_OBJECT_PATH, &db,
-			 DBUS_TYPE_INVALID);
+  /* Previously we used "s" for the type here - this is for compatability
+   * See: https://bugzilla.gnome.org/show_bug.cgi?id=655656 */
+  if (g_str_equal (dbus_message_get_signature (reply), "s"))
+    {
+      g_warning (G_STRLOC ": Using compatability for older daemon");
+      dbus_message_get_args (reply,
+                             NULL,
+                             DBUS_TYPE_STRING, &db,
+                             DBUS_TYPE_INVALID);
+    }
+  else
+    {
+      dbus_message_get_args (reply,
+                             NULL,
+                             DBUS_TYPE_OBJECT_PATH, &db,
+                             DBUS_TYPE_INVALID);
+    }
 
   if (db == NULL)
     {
