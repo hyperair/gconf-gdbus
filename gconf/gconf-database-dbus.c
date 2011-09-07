@@ -349,8 +349,7 @@ database_handle_lookup_ext (DBusConnection *conn,
 
   dbus_message_iter_init_append (reply, &iter);
 
-  if (value)
-    gconf_dbus_utils_append_entry_values (&iter,
+  gconf_dbus_utils_append_entry_values (&iter,
 					  key,
 					  value,
 					  value_is_default,
