@@ -1110,7 +1110,8 @@ gconf_engine_notify_remove (GConfEngine* conf,
   
   g_free (namespace_section);
   
-  dbus_message_unref (reply);
+  if (reply != NULL)
+    dbus_message_unref (reply);
 }
 
 GConfValue *
