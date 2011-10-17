@@ -881,6 +881,12 @@ gconf_database_dbus_teardown (GConfDatabase *db)
 				 db);
   g_free (db->object_path);
   db->object_path = NULL;
+
+  g_hash_table_destroy (db->notifications);
+  db->notifications = NULL;
+
+  g_hash_table_destroy (db->listening_clients);
+  db->listening_clients = NULL;
 }
 
 const char *
