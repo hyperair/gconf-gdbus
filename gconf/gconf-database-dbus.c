@@ -873,6 +873,7 @@ gconf_database_dbus_teardown (GConfDatabase *db)
 
   conn = gconfd_dbus_get_connection ();
 
+  gconfd_emit_db_gone (db->object_path);
   dbus_connection_unregister_object_path (conn, db->object_path);
   
   dbus_connection_remove_filter (conn,

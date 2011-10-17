@@ -39,4 +39,6 @@ gboolean gconfd_dbus_check_in_shutdown        (DBusConnection *connection,
 					       DBusMessage    *message);
 DBusConnection *gconfd_dbus_get_connection    (void);
 
+void gconfd_emit_db_gone (const char *object_path);
+
 #endif

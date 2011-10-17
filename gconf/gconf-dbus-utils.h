@@ -35,6 +35,7 @@
 #define GCONF_DBUS_SERVER_GET_DEFAULT_DB    "GetDefaultDatabase"
 #define GCONF_DBUS_SERVER_GET_DB            "GetDatabase"
 #define GCONF_DBUS_SERVER_SHUTDOWN          "Shutdown"
+#define GCONF_DBUS_SERVER_BYE_SIGNAL        "Bye"
 
 #define GCONF_DBUS_DATABASE_LOOKUP          "Lookup"
 #define GCONF_DBUS_DATABASE_LOOKUP_EXTENDED "LookupExtended" 

@@ -46,6 +46,8 @@
     "type='method_call',interface='org.gnome.GConf.Database',member='Notify'"
 #define DAEMON_DISCONNECTED_RULE \
     "type='signal',member='Disconnected'"
+#define BYE_RULE \
+    "type='signal',interface='org.gnome.GConf.Server',member='Bye'"
 
 struct _GConfEngine {
   guint refcount;
@@ -416,6 +418,7 @@ ensure_dbus_connection (void)
 
   dbus_bus_add_match (global_conn, DAEMON_NAME_OWNER_CHANGED_RULE, NULL);
   dbus_bus_add_match (global_conn, NOTIFY_RULE, NULL);
+  dbus_bus_add_match (global_conn, BYE_RULE, NULL);
   dbus_bus_add_match (global_conn, DAEMON_DISCONNECTED_RULE, NULL);
 
   dbus_connection_add_filter (global_conn, gconf_dbus_message_filter,
@@ -2313,6 +2316,45 @@ gconf_dbus_message_filter (DBusConnection    *dbus_conn,
 	}
       
       return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;      
+    }
+  else if (dbus_message_is_signal (message,
+				   GCONF_DBUS_SERVER_INTERFACE,
+				   "Bye"))
+    {
+      char *db;
+      GConfEngine *conf;
+
+      dbus_message_get_args (message,
+			     NULL,
+			     DBUS_TYPE_OBJECT_PATH, &db,
+			     DBUS_TYPE_INVALID);
+
+      conf = lookup_engine_by_database (db);
+      if (conf != NULL)
+        {
+	  g_hash_table_remove (engines_by_db, db);
+
+	  if (g_hash_table_size (conf->notify_ids) > 0)
+	    {
+	      GList *cnxns, *l;
+
+	      cnxns = NULL;
+	      g_hash_table_foreach (conf->notify_ids,
+				    cnxn_get_all_func,
+				    &cnxns);
+
+	      for (l = cnxns; l; l = l->next)
+		{
+		  GConfCnxn *cnxn = l->data;
+
+		  send_notify_add (conf, cnxn, NULL);
+		}
+
+	      g_list_free (cnxns);
+	    }
+        }
+
+      return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     }
 
   return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;

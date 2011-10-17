@@ -390,3 +390,19 @@ gconfd_dbus_get_connection (void)
   return bus_conn;
 }
 
+void
+gconfd_emit_db_gone (const char *object_path)
+{
+  DBusMessage *signal;
+
+  signal = dbus_message_new_signal (server_path,
+				    GCONF_DBUS_SERVER_INTERFACE,
+				    GCONF_DBUS_SERVER_BYE_SIGNAL);
+
+  dbus_message_append_args (signal,
+			    DBUS_TYPE_OBJECT_PATH, &object_path,
+			    DBUS_TYPE_INVALID);
+
+  dbus_connection_send (bus_conn, signal, NULL);
+  dbus_message_unref (signal);
+}
