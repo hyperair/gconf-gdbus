@@ -1280,6 +1280,10 @@ drop_old_databases(void)
       
       if (db->listeners &&                             /* not already hibernating */
           gconf_listeners_count(db->listeners) == 0 && /* Can hibernate */
+#ifdef HAVE_DBUS
+          db->listening_clients &&
+          g_hash_table_size (db->listening_clients) == 0 &&
+#endif
           (now - db->last_access) > (60*20))           /* 20 minutes without access */
         {
           dead = g_list_prepend (dead, db);
