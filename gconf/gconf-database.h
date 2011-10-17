@@ -71,6 +71,9 @@ struct _GConfDatabase
 GConfDatabase* gconf_database_new     (GConfSources  *sources);
 void           gconf_database_free (GConfDatabase *db);
 
+void           gconf_database_set_sources (GConfDatabase *db,
+					   GConfSources  *sources);
+
 void                gconf_database_drop_dead_listeners (GConfDatabase *db);
 
 #ifdef HAVE_CORBA

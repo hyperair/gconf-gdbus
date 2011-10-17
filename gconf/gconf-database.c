@@ -791,6 +791,29 @@ static void source_notify_cb           (GConfSource   *source,
 					const gchar   *location,
 					GConfDatabase *db);
 
+void
+gconf_database_set_sources (GConfDatabase *db,
+                            GConfSources  *sources)
+{
+  if (db->sources != NULL)
+    {
+#ifdef HAVE_CORBA
+      /* this function should only be used when creating the db with the corba
+       * backend */
+      g_assert_not_reached ();
+#endif
+
+      gconf_sources_clear_cache(db->sources);
+      gconf_sources_free(db->sources);
+    }
+
+  db->sources = sources;
+
+  gconf_sources_set_notify_func (db->sources,
+				 (GConfSourceNotifyFunc) source_notify_cb,
+				 db);
+}
+
 GConfDatabase*
 gconf_database_new (GConfSources  *sources)
 {
@@ -827,11 +850,7 @@ gconf_database_new (GConfSources  *sources)
 
   db->listeners = gconf_listeners_new();
 
-  db->sources = sources;
-
-  gconf_sources_set_notify_func (db->sources,
-				 (GConfSourceNotifyFunc) source_notify_cb,
-				 db);
+  gconf_database_set_sources(db, sources);
 
   db->last_access = time(NULL);
 

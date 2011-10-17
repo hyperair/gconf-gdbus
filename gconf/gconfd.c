@@ -149,6 +149,9 @@ static void    enter_shutdown          (void);
 
 static void                 init_databases (void);
 static void                 shutdown_databases (void);
+#ifdef HAVE_DBUS
+static void                 reload_databases (void);
+#endif
 static void                 set_default_database (GConfDatabase* db);
 static void                 register_database (GConfDatabase* db);
 static void                 unregister_database (GConfDatabase* db);
@@ -353,8 +356,8 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 
 /* This needs to be called before we register with OAF
  */
-static void
-gconf_server_load_sources(void)
+static GConfSources *
+gconf_server_get_default_sources(void)
 {
   GSList* addresses;
   GList* tmp;
@@ -406,8 +409,7 @@ gconf_server_load_sources(void)
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(NULL, NULL);
 
-      /* Install the sources as the default database */
-      set_default_database (gconf_database_new(sources));
+      return sources;
     }
   else
     {
@@ -446,10 +448,19 @@ gconf_server_load_sources(void)
       if (!have_writable)
         gconf_log(GCL_WARNING, _("No writable configuration sources successfully resolved. May be unable to save some configuration changes"));
 
-        
-      /* Install the sources as the default database */
-      set_default_database (gconf_database_new(sources));
+      return sources;
     }
+}
+
+static void
+gconf_server_load_sources(void)
+{
+  GConfSources* sources;
+
+  sources = gconf_server_get_default_sources();
+
+  /* Install the sources as the default database */
+  set_default_database (gconf_database_new(sources));
 }
 
 /*
@@ -1030,12 +1041,13 @@ periodic_cleanup_timeout(gpointer data)
       need_db_reload = FALSE;
 #ifdef HAVE_CORBA
       logfile_save ();
-#endif
       shutdown_databases ();
       init_databases ();
       gconf_server_load_sources ();
-#ifdef HAVE_CORBA
       logfile_read ();
+#endif
+#ifdef HAVE_DBUS
+      reload_databases ();
 #endif
     }
   
@@ -1318,6 +1330,56 @@ shutdown_databases (void)
   dbs_by_addresses = NULL;
   default_db = NULL;
 }
+
+#ifdef HAVE_DBUS
+static void
+reload_databases (void)
+{
+  GConfSources* sources;
+  GList *tmp_list;
+
+  sources = gconf_server_get_default_sources ();
+  gconf_database_set_sources (default_db, sources);
+
+  tmp_list = db_list;
+  while (tmp_list)
+    {
+      GConfDatabase* db = tmp_list->data;
+      GList *l;
+      GConfSource *source;
+      GSList *addresses = NULL;
+      GError *error = NULL;
+
+      if (db == default_db)
+	{
+	  tmp_list = g_list_next (tmp_list);
+	  continue;
+	}
+
+      for (l = db->sources->sources; l != NULL; l = l->next)
+        {
+          source = l->data;
+          addresses = g_slist_prepend (addresses, source->address);
+        }
+
+      addresses = g_slist_reverse (addresses);
+      sources = gconf_sources_new_from_addresses (addresses, &error);
+
+      if (error == NULL)
+        {
+          gconf_database_set_sources (db, sources);
+        }
+      else
+        {
+          /* if we got an error, keep our old sources -- that's better than
+           * nothing */
+          g_error_free (error);
+        }
+
+      tmp_list = g_list_next (tmp_list);
+    }
+}
+#endif
 
 static gboolean
 no_databases_in_use (void)
