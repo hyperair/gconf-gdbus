@@ -259,7 +259,7 @@ gconf_handle_dbus_exception (DBusMessage *message, DBusError *derr, GError **ger
 	  GConfError en;
 	  
 	  en = dbus_error_name_to_gconf_errno (name);
-	  *gerr = gconf_error_new (en, error_string);
+	  *gerr = gconf_error_new (en, "%s", error_string);
 	}
     }
   else
