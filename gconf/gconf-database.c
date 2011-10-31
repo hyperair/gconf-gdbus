@@ -797,14 +797,15 @@ gconf_database_set_sources (GConfDatabase *db,
 {
   if (db->sources != NULL)
     {
-      /* this function should only be used when creating the db with the corba
-       * backend */
 #ifdef HAVE_CORBA
-      gconf_sources_clear_cache(db->sources);
-      gconf_sources_free(db->sources);
-#else
+      /* in the corba backend, this function should only be used when creating
+       * the db; so assert when it was already created earlier (ie, when the
+       * sources are already set) */
       g_assert_not_reached ();
 #endif
+
+      gconf_sources_clear_cache(db->sources);
+      gconf_sources_free(db->sources);
     }
 
   db->sources = sources;
