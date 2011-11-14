@@ -76,8 +76,6 @@ struct _GConfEngine {
 
   gpointer owner;
   int owner_use_count;
-  
-  guint is_default : 1;
 
   /* If TRUE, this is a local engine (and therefore
    * has no ctable and no notifications)
@@ -299,7 +297,6 @@ gconf_engine_blank (gboolean remote)
       
       conf->local_sources = NULL;
       conf->is_local = FALSE;
-      conf->is_default = TRUE;
     }
   else
     {
@@ -308,7 +305,6 @@ gconf_engine_blank (gboolean remote)
       conf->notify_dirs = NULL;
       conf->local_sources = NULL;
       conf->is_local = TRUE;
-      conf->is_default = FALSE;
     }
   
   return conf;
@@ -512,8 +508,8 @@ ensure_database (GConfEngine  *conf,
   
   if (conf->database != NULL)
     return TRUE;
-  
-  if (conf->is_default)
+
+  if (conf->addresses == NULL)
     {
       message = dbus_message_new_method_call (GCONF_DBUS_SERVICE,
 					      GCONF_DBUS_SERVER_OBJECT,
@@ -811,7 +807,9 @@ GConfEngine*
 gconf_engine_get_default (void)
 {
   GConfEngine* conf = NULL;
-  
+  const gchar* source_path;
+  GError* err = NULL;
+
   if (default_engine)
     conf = default_engine;
   
@@ -819,9 +817,21 @@ gconf_engine_get_default (void)
     {
       conf = gconf_engine_blank (TRUE);
 
-      conf->is_default = TRUE;
-
       default_engine = conf;
+
+      source_path = g_getenv ("GCONF_DEFAULT_SOURCE_PATH");
+      if (source_path != NULL)
+       {
+         conf->addresses = gconf_load_source_path (source_path, &err);
+         if (err)
+           {
+             g_warning ("Could not parse GCONF_DEFAULT_SOURCE_PATH: %s",
+                        err->message);
+             g_error_free (err);
+           }
+       }
+      else
+       conf->addresses = NULL;
     }
   else
     conf->refcount += 1;
@@ -843,7 +853,6 @@ gconf_engine_get_for_address (const gchar* address, GError** err)
     {
       conf = gconf_engine_blank (TRUE);
 
-      conf->is_default = FALSE;
       conf->addresses = addresses;
 
       if (!ensure_database (conf, TRUE, err))
@@ -877,7 +886,6 @@ gconf_engine_get_for_addresses (GSList *addresses, GError** err)
 
       conf = gconf_engine_blank (TRUE);
 
-      conf->is_default = FALSE;
       conf->addresses = NULL;
 
       tmp = addresses;
