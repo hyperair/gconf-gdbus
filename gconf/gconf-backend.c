@@ -21,6 +21,7 @@
 #include <config.h>
 #include "gconf-backend.h"
 #include "gconf-internals.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -171,6 +172,7 @@ gconf_backend_file(const gchar* address)
   gchar* back;
   gchar* file;
   gchar* retval;
+  const gchar* backenddir;
 
   g_return_val_if_fail(address != NULL, NULL);
 
@@ -179,9 +181,13 @@ gconf_backend_file(const gchar* address)
   if (back == NULL)
     return NULL;
 
+  backenddir = g_getenv("GCONF_BACKEND_DIR");
+  if (backenddir == NULL)
+    backenddir = GCONF_BACKEND_DIR;
+
   file = g_strconcat("gconfbackend-", back, NULL);
   
-  retval = g_module_build_path(GCONF_BACKEND_DIR, file);
+  retval = g_module_build_path(backenddir, file);
 
   g_free(back);
 
