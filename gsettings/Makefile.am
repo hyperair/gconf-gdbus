@@ -42,10 +42,14 @@ autostartdir = $(sysconfdir)/xdg/autostart
 autostart_in_files = gsettings-data-convert.desktop.in
 autostart_DATA = $(autostart_in_files:.desktop.in=.desktop)
 
-man_MANS =                       \
+man_MANS =
+
+if ENABLE_DOCUMENTATION
+man_MANS +=			\
 	gsettings-schema-convert.1 \
 	gsettings-data-convert.1 \
 	$(NULL)
+endif
 
 %.1 : %.xml
 	xsltproc -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
