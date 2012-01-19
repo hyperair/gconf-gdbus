@@ -65,6 +65,8 @@ handle_file (const gchar *filename)
   gchar *str;
   gint ii;
   GSList *list, *l;
+  GSettingsSchemaSource *source;
+  GSettingsSchema *schema;
   GSettings *settings;
   GError *error;
 
@@ -83,6 +85,7 @@ handle_file (const gchar *filename)
     }
 
   client = gconf_client_get_default ();
+  source = g_settings_schema_source_get_default ();
 
   groups = g_key_file_get_groups (keyfile, NULL);
   for (i = 0; groups[i]; i++)
@@ -90,6 +93,20 @@ handle_file (const gchar *filename)
       gchar **schema_path;
 
       schema_path = g_strsplit (groups[i], ":", 2);
+
+      schema = g_settings_schema_source_lookup (source, schema_path[0], FALSE);
+      if (schema == NULL)
+        {
+          if (verbose)
+            {
+              g_print ("Schema '%s' not found, skipping\n", schema_path[0]);
+            }
+
+          g_strfreev (schema_path);
+          continue;
+        }
+
+      g_settings_schema_unref (schema);
 
       if (verbose)
         {
