@@ -93,7 +93,7 @@ handle_file (const gchar *filename)
 
       if (verbose)
         {
-          g_print ("collecting settings for schema '%s'\n", schema_path[0]);
+          g_print ("Collecting settings for schema '%s'\n", schema_path[0]);
           if (schema_path[1])
             g_print ("for storage at '%s'\n", schema_path[1]);
         }
@@ -157,7 +157,7 @@ handle_file (const gchar *filename)
             {
             case GCONF_VALUE_STRING:
               if (dry_run)
-                g_print ("set key '%s' to string '%s'\n", keys[j],
+                g_print ("Set key '%s' to string '%s'\n", keys[j],
                          gconf_value_get_string (value));
               else
                 g_settings_set (settings, keys[j], "s",
@@ -166,7 +166,7 @@ handle_file (const gchar *filename)
 
             case GCONF_VALUE_INT:
               if (dry_run)
-                g_print ("set key '%s' to integer '%d'\n",
+                g_print ("Set key '%s' to integer '%d'\n",
                          keys[j], gconf_value_get_int (value));
               else
                 {
@@ -193,7 +193,7 @@ handle_file (const gchar *filename)
 
             case GCONF_VALUE_BOOL:
               if (dry_run)
-                g_print ("set key '%s' to boolean '%d'\n",
+                g_print ("Set key '%s' to boolean '%d'\n",
                          keys[j], gconf_value_get_bool (value));
               else
                 g_settings_set (settings, keys[j], "b",
@@ -202,7 +202,7 @@ handle_file (const gchar *filename)
 
             case GCONF_VALUE_FLOAT:
               if (dry_run)
-                g_print ("set key '%s' to double '%g'\n",
+                g_print ("Set key '%s' to double '%g'\n",
                          keys[j], gconf_value_get_float (value));
               else
                 g_settings_set (settings, keys[j], "d",
@@ -232,7 +232,7 @@ handle_file (const gchar *filename)
                   if (dry_run)
                     {
                       str = g_variant_print (v, FALSE);
-                      g_print ("set key '%s' to a list of strings: %s\n",
+                      g_print ("Set key '%s' to a list of strings: %s\n",
                                keys[j], str);
                       g_free (str);
                     }
@@ -263,7 +263,7 @@ handle_file (const gchar *filename)
                   if (dry_run)
                     {
                       str = g_variant_print (v, FALSE);
-                      g_print ("set key '%s' to a list of integers: %s\n",
+                      g_print ("Set key '%s' to a list of integers: %s\n",
                                keys[j], str);
                       g_free (str);
                     }
