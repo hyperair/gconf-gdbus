@@ -1,21 +1,20 @@
-# Norwegian translation of GConf (bokmål dialect).
+# Norwegian bokmål translation of GConf.
 # Copyright (C) 1999-2003 Free Software Foundation, Inc.
 #
-# Kjartan Maraas <kmaraas@gnome.org>, 1999-2010.
+# Kjartan Maraas <kmaraas@gnome.org>, 1999-2012.
 # Torstein Adolf Winterseth <kvikende@fsfe.org>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: GConf 2.32.x\n"
+"Project-Id-Version: GConf 3.2.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-02 00:08+0200\n"
-"PO-Revision-Date: 2011-07-02 00:11+0200\n"
-"Last-Translator: Torstein Adolf Winterseth <kvikende@fsfe.org>\n"
-"Language-Team: Norwegian Bokmål <i18n-nb@lister.ping.uio.no>\n"
+"POT-Creation-Date: 2012-01-24 15:04+0100\n"
+"PO-Revision-Date: 2012-01-24 15:11+0100\n"
+"Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
+"Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: no\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../backends/evoldap-backend.c:162
@@ -557,57 +556,57 @@ msgstr "Du må ha rettigheter for å endre obligatoriske verdier i GConf"
 msgid "Privileges are required to change GConf system values"
 msgstr "Du må ha rettigheter for å endre systemverdier i GConf"
 
-#: ../gconf/gconf-backend.c:62
+#: ../gconf/gconf-backend.c:63
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr "«%c» er et ugyldig tegn i en adresse for konfigurasjonslager"
 
 #. -- end debug only
-#: ../gconf/gconf-backend.c:216
+#: ../gconf/gconf-backend.c:222
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "Ingen slik fil «%s»\n"
 
-#: ../gconf/gconf-backend.c:261
+#: ../gconf/gconf-backend.c:267
 #, c-format
 msgid "Backend `%s' failed to return a vtable\n"
 msgstr "Motor «%s» returnerte ikke et vtable\n"
 
-#: ../gconf/gconf-backend.c:276
+#: ../gconf/gconf-backend.c:282
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "Motor «%s» mangler nødvendig vtable-medlem «%s»\n"
 
-#: ../gconf/gconf-backend.c:302
+#: ../gconf/gconf-backend.c:308
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "Ugyldig adresse «%s»: %s"
 
-#: ../gconf/gconf-backend.c:312
+#: ../gconf/gconf-backend.c:318
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Ugyldig adresse «%s»"
 
-#: ../gconf/gconf-backend.c:337
+#: ../gconf/gconf-backend.c:343
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "GConf virker ikke uten støtte for dynmiske moduler (gmodule)"
 
-#: ../gconf/gconf-backend.c:346
+#: ../gconf/gconf-backend.c:352
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Feil under åpning av modul «%s»: %s\n"
 
-#: ../gconf/gconf-backend.c:357
+#: ../gconf/gconf-backend.c:363
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Feil under initiering av modul «%s»: %s\n"
 
-#: ../gconf/gconf-backend.c:388
+#: ../gconf/gconf-backend.c:394
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "Kunne ikke finne backend modul for «%s»"
 
-#: ../gconf/gconf-backend.c:425
+#: ../gconf/gconf-backend.c:431
 msgid "Failed to shut down backend"
 msgstr "Kunne ikke stenge ned motoren"
 
@@ -644,16 +643,16 @@ msgstr "Mottok forespørsel om å slippe alle mellomlagrede data"
 msgid "Received request to sync synchronously"
 msgstr "Mottok forespørsel om å utføre synkron synkronisering"
 
-#: ../gconf/gconf-database.c:818
+#: ../gconf/gconf-database.c:842
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr "Fatal feil: kunne ikke hente objektreferanse for ConfigDatabase"
 
-#: ../gconf/gconf-database.c:999
+#: ../gconf/gconf-database.c:1019
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Kunne ikke synkronisere en eller flere kilder: %s"
 
-#: ../gconf/gconf-database.c:1074
+#: ../gconf/gconf-database.c:1094
 #, c-format
 msgid ""
 "Error obtaining new value for `%s' after change notification from backend `"
@@ -662,88 +661,82 @@ msgstr ""
 "Feil ved henting av ny verdi for «%s» etter endringsmelding fra motor «%s»: "
 "%s"
 
-#: ../gconf/gconf-database.c:1160
+#: ../gconf/gconf-database.c:1180
 #, c-format
 msgid ""
 "Failed to log addition of listener %s (%s); will not be able to restore this "
 "listener on gconfd restart, resulting in unreliable notification of "
 "configuration changes."
-msgstr ""
-"Klarte ikke å logge ny lytter %s (%s); vil ikke kunne gjenoprette denne "
-"lytteren ved gjenstart av gconfd, noe som vil resultere i upålitelig "
-"notifikasjon av konfigurasjonsendringer."
+msgstr "Klarte ikke å logge ny lytter %s (%s); vil ikke kunne gjenoprette denne lytteren ved omstart av gconfd-2. Dette vil resultere i upålitelig varsling av konfigurasjonsendringer."
 
-#: ../gconf/gconf-database.c:1194
+#: ../gconf/gconf-database.c:1214
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "Lytter-ID %lu eksisterer ikke"
 
-#: ../gconf/gconf-database.c:1208
+#: ../gconf/gconf-database.c:1228
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
 "result in a notification weirdly reappearing): %s"
-msgstr ""
-"Klarte ikke å logge fjerning av lytter til loggfil (mest sannsynlig "
-"harmløst, kan resultere i at notifikasjon gjenintreffer på uforklarlig vis): "
-"%s"
+msgstr "Klarte ikke å logge fjerning av lytter til loggfil (mest sannsynlig harmløst, men kan resultere i at varsling gjenintreffer på uforklarlig vis): %s"
 
-#: ../gconf/gconf-database.c:1342 ../gconf/gconf-sources.c:1737
+#: ../gconf/gconf-database.c:1362 ../gconf/gconf-sources.c:1737
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Feil under henting av verdi for «%s»: %s"
 
-#: ../gconf/gconf-database.c:1394
+#: ../gconf/gconf-database.c:1414
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Feil under setting av verdi for «%s»: %s"
 
-#: ../gconf/gconf-database.c:1455
+#: ../gconf/gconf-database.c:1475
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Feil under nullstilling av «%s»: %s"
 
-#: ../gconf/gconf-database.c:1484
+#: ../gconf/gconf-database.c:1504
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Feil under henting av standardverdi for «%s»: %s"
 
-#: ../gconf/gconf-database.c:1560
+#: ../gconf/gconf-database.c:1580
 #, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Feil under fjerning av verdi for «%s»: %s"
 
-#: ../gconf/gconf-database.c:1591
+#: ../gconf/gconf-database.c:1611
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "Feil under henting av ny verdi for «%s»: %s"
 
-#: ../gconf/gconf-database.c:1662
+#: ../gconf/gconf-database.c:1682
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Feil ved sjekking av eksisterende «%s»: %s"
 
-#: ../gconf/gconf-database.c:1686
+#: ../gconf/gconf-database.c:1706
 #, c-format
 msgid "Error removing directory \"%s\": %s"
 msgstr "Feil under fjerning av katalog «%s»: %s"
 
-#: ../gconf/gconf-database.c:1713
+#: ../gconf/gconf-database.c:1733
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Fikk ikke alle oppføringene i «%s»: %s"
 
-#: ../gconf/gconf-database.c:1739
+#: ../gconf/gconf-database.c:1759
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Feil under listing av kataloger i «%s»: %s"
 
-#: ../gconf/gconf-database.c:1760
+#: ../gconf/gconf-database.c:1780
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Feil under setting av schema for «%s»: %s"
 
-#: ../gconf/gconf-database-dbus.c:789
+#: ../gconf/gconf-database-dbus.c:788
 #, c-format
 msgid "Notification on %s doesn't exist"
 msgstr "Varsling på %s eksisterer ikke"
@@ -753,7 +746,7 @@ msgstr "Varsling på %s eksisterer ikke"
 msgid "D-BUS error: %s"
 msgstr "D-BUS feil: %s"
 
-#: ../gconf/gconf-dbus.c:226 ../gconf/gconf-dbus.c:466
+#: ../gconf/gconf-dbus.c:226 ../gconf/gconf-dbus.c:465
 msgid "Unknown error"
 msgstr "Ukjent feil"
 
@@ -762,26 +755,26 @@ msgstr "Ukjent feil"
 msgid "Unknown error %s: %s"
 msgstr "Ukjent feil %s: %s"
 
-#: ../gconf/gconf-dbus.c:439
+#: ../gconf/gconf-dbus.c:438
 #, c-format
 msgid "No D-BUS daemon running\n"
 msgstr "D-BUS-tjenesten kjører ikke\n"
 
-#: ../gconf/gconf-dbus.c:470
+#: ../gconf/gconf-dbus.c:469
 #, c-format
 msgid "Failed to activate configuration server: %s\n"
 msgstr "Klarte ikke å aktivere konfigurasjonstjener: %s\n"
 
-#: ../gconf/gconf-dbus.c:557 ../gconf/gconf.c:424
+#: ../gconf/gconf-dbus.c:567 ../gconf/gconf.c:424
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "Tjener kunne ikke finne adressen `%s'"
 
-#: ../gconf/gconf-dbus.c:1031 ../gconf/gconf.c:860
+#: ../gconf/gconf-dbus.c:1055 ../gconf/gconf.c:860
 msgid "Can't add notifications to a local configuration source"
 msgstr "Kan ikke legge til meldinger til en lokal konfigurasjonskilde"
 
-#: ../gconf/gconf-dbus.c:1217 ../gconf/gconf-dbus.c:1399
+#: ../gconf/gconf-dbus.c:1242 ../gconf/gconf-dbus.c:1424
 #, c-format
 msgid "Couldn't get value"
 msgstr "Kunne ikke hente verdi"
@@ -871,7 +864,7 @@ msgstr "Ugyldig type for listeelement i %s"
 
 #: ../gconf/gconf-internals.c:257
 msgid "Received list from gconfd with a bad list type"
-msgstr "Mottatt liste fra gconfd med ugyldig listetype"
+msgstr "Mottok liste fra gconfd-2 med ugyldig listetype"
 
 #: ../gconf/gconf-internals.c:438
 msgid "Failed to convert object to IOR"
@@ -1002,7 +995,7 @@ msgstr "GetIOR feilet: %s"
 #: ../gconf/gconf-internals.c:2512
 #, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
-msgstr "kunne ikke kontakte ORB for å finne eksisterende gconfd-referanse"
+msgstr "kunne ikke kontakte ORB for å finne eksisterende gconfd-2-referanse"
 
 #: ../gconf/gconf-internals.c:2524
 #, c-format
@@ -1266,23 +1259,7 @@ msgid ""
 "details on problems gconfd encountered. There can only be one gconfd per "
 "home directory, and it must own a lockfile in ~/.gconfd and also lockfiles "
 "in individual storage locations such as ~/.gconf"
-msgstr ""
-"Kan ikke lagre verdi i nøkkel «%s», siden konfigurasjonstjeneren ikke har "
-"noen skrivbare databaser. Det er flere vanlige årsaker for dette problemet: "
-"1) din konfigurasjonsstifil %s/path inneholder ingen databaser eller ble "
-"ikke funnet 2) på en eller annen måte har vi opprettet to gconfd prosesser "
-"3) operativsystemet ditt er feilkonfigurert slik at låsing av filer over NFS "
-"ikke virker i din hjemmekatalog eller 4) NFS-klienten krasjet og ga ikke "
-"beskjed til tjeneren om at fillåsene skulle slippes ved omstart. Hvis du har "
-"to gconfd prosesser (eller hadde to i det den andre ble startet), vil det "
-"hjelpe å logge ut og drepe alle instanser av gconfd for så å logge inn "
-"igjen. Hvis du har gamle låsfiler, fjern ~/.gconf*/*lock. Kanskje problemet "
-"er at du har forsøkt å bruke GConf fra to maskiner på samme tid, og ORBit "
-"fremdeles har sin standardkonfigurasjon som forhindrer eksterne CORBA-"
-"forbindelser - legg inn «ORBIIOPIPv4=1» i /etc/orbitrc. Som alltid, sjekk "
-"user.* syslog for detaljer om problemer gconfd kan ha møtt. Du kan kun ha en "
-"gconfd per hjemmekatalog, og denne må ha en låsfil i ~/.gconfd i tillegg til "
-"individuelle lagringsadresser slik som ~/.gconf"
+msgstr "Kan ikke lagre verdi i nøkkel «%s», siden konfigurasjonstjeneren ikke har noen skrivbare databaser. Det er flere vanlige årsaker for dette problemet: 1) din konfigurasjonsstifil %s/path inneholder ingen databaser eller ble ikke funnet 2) på en eller annen måte har vi opprettet to gconfd-2 prosesser 3) operativsystemet ditt er feilkonfigurert slik at låsing av filer over NFS ikke virker i din hjemmekatalog eller 4) NFS-klienten krasjet og ga ikke beskjed til tjeneren om at fillåsene skulle slippes ved omstart. Hvis du har to gconfd-2 prosesser (eller hadde to i det den andre ble startet), vil det hjelpe å logge ut og drepe alle instanser av gconfd-2 for så å logge inn igjen. Hvis du har gamle låsfiler, fjern ~/.gconf*/*lock. Kanskje problemet er at du har forsøkt å bruke GConf fra to maskiner på samme tid, og ORBit fremdeles har sin standardkonfigurasjon som forhindrer eksterne CORBA-forbindelser - legg inn «ORBIIOPIPv4=1» i /etc/orbitrc. Som alltid, sjekk user.* syslog for detaljer om problemer gconfd-2 kan ha møtt. Du kan kun ha en gconfd-2 per hjemmekatalog, og denne må ha en låsfil i ~/.gconfd i tillegg til individuelle lagringsadresser slik som ~/.gconf"
 
 #: ../gconf/gconf-sources.c:1610
 #, c-format
@@ -1414,18 +1391,18 @@ msgstr "Forventet schema, mottok %s"
 msgid "CORBA error: %s"
 msgstr "CORBA feil: %s"
 
-#: ../gconf/gconfd.c:344 ../gconf/gconfd-dbus.c:186
+#: ../gconf/gconfd.c:347 ../gconf/gconfd-dbus.c:186
 msgid "Shutdown request received"
 msgstr "Anmodning om nedstenging mottatt"
 
-#: ../gconf/gconfd.c:377
+#: ../gconf/gconfd.c:380
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
 msgstr ""
 "gconfd kompilert med debugging; forsøker å laste gconf.sh fra kildekatalogen"
 
-#: ../gconf/gconfd.c:397
+#: ../gconf/gconfd.c:400
 #, c-format
 msgid ""
 "No configuration files found. Trying to use the default configuration source "
@@ -1437,7 +1414,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: ../gconf/gconfd.c:405
+#: ../gconf/gconfd.c:408
 #, c-format
 msgid ""
 "No configuration sources in the source path. Configuration won't be saved; "
@@ -1446,12 +1423,12 @@ msgstr ""
 "Ingen konfigurasjonskilder i kildestien. Konfigurasjonen vil ikke bli "
 "lagret; edit %s%s"
 
-#: ../gconf/gconfd.c:418
+#: ../gconf/gconfd.c:420
 #, c-format
 msgid "Error loading some configuration sources: %s"
 msgstr "Feil under lasting av noen konfigurasjonskilder: %s"
 
-#: ../gconf/gconfd.c:430
+#: ../gconf/gconfd.c:432
 msgid ""
 "No configuration source addresses successfully resolved. Can't load or store "
 "configuration data"
@@ -1459,7 +1436,7 @@ msgstr ""
 "Kunne ikke slå opp adresser for konfigurasjonskilder. Kan ikke laste eller "
 "lagre konfigurasjonsdata"
 
-#: ../gconf/gconfd.c:447
+#: ../gconf/gconfd.c:449
 msgid ""
 "No writable configuration sources successfully resolved. May be unable to "
 "save some configuration changes"
@@ -1467,31 +1444,31 @@ msgstr ""
 "Ingen skrivbare konfigurasjonskilder funnet. Kan ikke lagre deler av "
 "konfigurasjonsendringene"
 
-#: ../gconf/gconfd.c:615
+#: ../gconf/gconfd.c:626
 #, c-format
 msgid "Could not connect to session bus: %s"
 msgstr "Kunne ikke koble til øktbussen: %s"
 
-#: ../gconf/gconfd.c:637
+#: ../gconf/gconfd.c:648
 #, c-format
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "Fant ikke navn på buss for tjenesten, avslutter: %s"
 
-#: ../gconf/gconfd.c:719
+#: ../gconf/gconfd.c:730
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "Kunne ikke koble til systembussen: %s"
 
-#: ../gconf/gconfd.c:858
+#: ../gconf/gconfd.c:869
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "starter (versjon %s), pid %u bruker «%s»"
 
-#: ../gconf/gconfd.c:914
+#: ../gconf/gconfd.c:925
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Kunne ikke hente objektreferanse for ConfigServer"
 
-#: ../gconf/gconfd.c:949
+#: ../gconf/gconfd.c:960
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: "
@@ -1500,80 +1477,78 @@ msgstr ""
 "Feil under skriving av byte til fildeskriptor for rør %d. Klientprogrammer "
 "vil kunne henge: %s"
 
-#: ../gconf/gconfd.c:1001
+#: ../gconf/gconfd.c:1012
 #, c-format
 msgid "Error releasing lockfile: %s"
-msgstr "Feil under løslating av låsfil: %s"
+msgstr "Feil ved frigjøring av låsfil: %s"
 
-#: ../gconf/gconfd.c:1010
+#: ../gconf/gconfd.c:1021
 msgid "Exiting"
 msgstr "Avslutter"
 
-#: ../gconf/gconfd.c:1028
+#: ../gconf/gconfd.c:1039
 msgid "SIGHUP received, reloading all databases"
 msgstr "SIGHUP mottatt, laster alle databaser på nytt"
 
-#: ../gconf/gconfd.c:1055
+#: ../gconf/gconfd.c:1067
 msgid "GConf server is not in use, shutting down."
 msgstr "GConf-tjeneren er ikke i bruk, stenger ned."
 
-#: ../gconf/gconfd.c:1385
+#: ../gconf/gconfd.c:1451
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Feil under henting av ny verdi for «%s»: %s"
 
-#: ../gconf/gconfd.c:1541
+#: ../gconf/gconfd.c:1607
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Returnerer unntak: %s"
 
-#: ../gconf/gconfd.c:1647
+#: ../gconf/gconfd.c:1713
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
 "gconfd shutdown (%s)"
-msgstr ""
-"Klarte ikke å åpne gconfd loggfil; vil ikke kunne gjenopprette lyttere etter "
-"nedkjøring av gconfd (%s)"
+msgstr "Klarte ikke å åpne loggfil for gconfd-2; vil ikke kunne gjenopprette lyttere etter nedstenging av gconfd-2 (%s)"
 
-#: ../gconf/gconfd.c:1682
+#: ../gconf/gconfd.c:1748
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
 "Klarte ikke å lukke gconfd loggfil; data ble kanskje ikke lagret riktig (%s)"
 
-#: ../gconf/gconfd.c:1744
+#: ../gconf/gconfd.c:1810
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil «%s» for skriving: %s"
 
-#: ../gconf/gconfd.c:1758
+#: ../gconf/gconfd.c:1824
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "Kunne ikke skrive lagret tilstandsfil «%s» fd: %d: %s"
 
-#: ../gconf/gconfd.c:1767
+#: ../gconf/gconfd.c:1833
 #, c-format
 msgid "Could not flush saved state file '%s' to disk: %s"
 msgstr "Kunne ikke skrive endringer i lagret tilstandsfil «%s» til disk: %s"
 
-#: ../gconf/gconfd.c:1774
+#: ../gconf/gconfd.c:1840
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Kunne ikke lukke ny lagret tilstandsfil «%s»: %s"
 
-#: ../gconf/gconfd.c:1788
+#: ../gconf/gconfd.c:1854
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "Kunne ikke flytte gammel lagret tilstandsfil «%s»: %s"
 
-#: ../gconf/gconfd.c:1798
+#: ../gconf/gconfd.c:1864
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "Kunne ikke flytte ny lagret tilstandsfil på plass: %s"
 
-#: ../gconf/gconfd.c:1807
+#: ../gconf/gconfd.c:1873
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1581,7 +1556,7 @@ msgstr ""
 "Kunne ikke gjenopprette opprinnelig lagret tilstandsfil som har blitt "
 "flyttet til «%s»: %s"
 
-#: ../gconf/gconfd.c:2286
+#: ../gconf/gconfd.c:2352
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1589,55 +1564,51 @@ msgstr ""
 "Kunne ikke gjenopprette en lytter på adresse «%s», kunne ikke gjøre "
 "databaseoppslag"
 
-#: ../gconf/gconfd.c:2322
+#: ../gconf/gconfd.c:2388
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Feil under lesing av lagret tilstandsfil: %s"
 
-#: ../gconf/gconfd.c:2372
+#: ../gconf/gconfd.c:2438
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil «%s»: %s"
 
-#: ../gconf/gconfd.c:2491
+#: ../gconf/gconfd.c:2557
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
 "add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
-"Klarte ikke å logge tillegg av lytter til gconfd loggfilen; vil ikke kunne "
-"legge til lytteren hvis gconfd avslutter eller stenger ned (%s)"
+msgstr "Klarte ikke å logge tillegg av lytter til gconfd-2 loggfilen; vil ikke kunne legge til lytteren hvis gconfd-2 avslutter eller stenger ned (%s)"
 
-#: ../gconf/gconfd.c:2496
+#: ../gconf/gconfd.c:2562
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
 "add the listener if gconfd exits or shuts down (%s)"
-msgstr ""
-"Klarte ikke å logge fjerning av lytter i gconfd-loggfilen; kan medføre at "
-"lytter legges inn igjen hvis gconfd avsluttes eller maskinen stenges av (%s)."
+msgstr "Klarte ikke å logge fjerning av lytter i gconfd-2-loggfilen; kan medføre at lytter legges inn igjen hvis gconfd-2 avsluttes eller maskinen stenges av (%s)."
 
-#: ../gconf/gconfd.c:2519 ../gconf/gconfd.c:2693
+#: ../gconf/gconfd.c:2585 ../gconf/gconfd.c:2759
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Kunne ikke hente IOR for klient: %s"
 
-#: ../gconf/gconfd.c:2534
+#: ../gconf/gconfd.c:2600
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "Kunne ikke åpne lagret tilstandsfil: %s"
 
-#: ../gconf/gconfd.c:2547
+#: ../gconf/gconfd.c:2613
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr "Kunne ikke skrive tillegg av klient til lagret tilstandsfil: %s"
 
-#: ../gconf/gconfd.c:2555
+#: ../gconf/gconfd.c:2621
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Kunne ikke synkronisere tillegg av klient til lagret tilstandsfil: %s"
 
-#: ../gconf/gconfd.c:2654
+#: ../gconf/gconfd.c:2720
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1756,18 +1727,17 @@ msgstr "Hent navn på forvalgt kilde"
 
 #: ../gconf/gconftool.c:268
 msgid "Shut down gconfd. DON'T USE THIS OPTION WITHOUT GOOD REASON."
-msgstr "Steng ned gconfd. IKKE BRUK DETTE VALGET UTEN GOD GRUNN."
+msgstr "Steng ned gconfd-2. IKKE BRUK DETTE VALGET UTEN GOD GRUNN."
 
 #: ../gconf/gconftool.c:277
 msgid "Return 0 if gconfd is running, 2 if not."
-msgstr "Returner 0 hvis gconfd kjører, 2 hvis ikke."
+msgstr "Returner 0 hvis gconfd-2 kjører, 2 hvis ikke."
 
 #: ../gconf/gconftool.c:286
 msgid ""
 "Launch the configuration server (gconfd). (Normally happens automatically "
 "when needed.)"
-msgstr ""
-"Start konfigurasjonstjeneren (gconfd). (Skjer normalt automatisk ved behov.)"
+msgstr "Start konfigurasjonstjeneren (gconfd-2). (Startes vanligvis automatisk ved behov.)"
 
 #: ../gconf/gconftool.c:301
 msgid ""
@@ -1842,9 +1812,7 @@ msgstr "KILDE"
 msgid ""
 "Bypass server, and access the configuration database directly. Requires that "
 "gconfd is not running."
-msgstr ""
-"Gå utenom tjeneren og bruk konfigurasjonsdatabasen direkte. Det kreves at "
-"gconfd ikke kjører."
+msgstr "Gå utenom tjeneren og bruk konfigurasjonsdatabasen direkte. Det kreves at gconfd-2 ikke kjører."
 
 #: ../gconf/gconftool.c:397
 msgid ""
@@ -2155,7 +2123,7 @@ msgstr "Må spesifisere en eller flere kataloger som skal dumpes.\n"
 #: ../gconf/gconftool.c:1874
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
-msgstr "Feil under kjøring av konfigurasjonstjeneren (gconfd): %s\n"
+msgstr "Feil under kjøring av konfigurasjonstjeneren (gconfd-2): %s\n"
 
 #: ../gconf/gconftool.c:1903
 #, c-format
