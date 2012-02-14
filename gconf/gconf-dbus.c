@@ -2029,6 +2029,7 @@ gconf_engine_suggest_sync(GConfEngine* conf, GError** err)
   if (db == NULL)
     {
       g_return_if_fail (err == NULL || *err != NULL);
+      return;
     }
   
   message = dbus_message_new_method_call (GCONF_DBUS_SERVICE,
