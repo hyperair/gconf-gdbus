@@ -2483,7 +2483,13 @@ gconf_shutdown_daemon (GError** err)
 {
   DBusMessage *message;
 
-  /* Don't want to spawn it if it's already down */
+  /* If we haven't reached out to it yet,
+   * reach out now.
+   */
+  if (global_conn == NULL)
+    gconf_ping_daemon();
+
+  /* But we don't want to spawn it if it's already down */
   if (global_conn == NULL || !service_running)
     return;
   
