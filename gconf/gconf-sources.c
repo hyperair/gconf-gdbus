@@ -398,9 +398,7 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
   {
     GList *tmp;
     int i;
-    gboolean some_writable;
 
-    some_writable = FALSE;
     i = 0;
     tmp = sources->sources;
     while (tmp != NULL)
@@ -409,7 +407,6 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
 
         if (source->flags & GCONF_SOURCE_ALL_WRITEABLE)
           {
-            some_writable = TRUE;
             gconf_log (GCL_DEBUG,
                        _("Resolved address \"%s\" to a writable configuration source at position %d"),
                        source->address, i);
@@ -422,7 +419,6 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
           }
         else
           {
-            some_writable = TRUE;
             gconf_log (GCL_DEBUG,
                        _("Resolved address \"%s\" to a partially writable configuration source at position %d"),
                        source->address, i);
@@ -431,9 +427,6 @@ gconf_sources_new_from_addresses(GSList * addresses, GError** err)
         ++i;
         tmp = tmp->next;
       }
-
-    if (!some_writable)
-      gconf_log (GCL_WARNING, _("None of the resolved addresses are writable; saving configuration settings will not be possible"));
   }
   
   return sources;
