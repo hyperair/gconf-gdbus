@@ -27,13 +27,74 @@
 
 #include <glib.h>
 #include <gio/gio.h>
+#define GCONF_ENABLE_INTERNALS
+#include <gconf/gconf-internals.h>
 #include <gconf/gconf-client.h>
 
 static gboolean changed = FALSE;
 static gboolean verbose = FALSE;
 static gboolean dry_run = FALSE;
 
-extern const gchar *gconf_value_type_to_string (int type);
+/* We only want to migrate settings that were in writable databases (in
+ * order to avoid 'lifting' system defaults into the user's database).
+ *
+ * We also want to perform the access to those readwrite databases
+ * readonly, since we're not making any changes.
+ *
+ * For that reason, we compile our own source list by scanning the
+ * default list.  We take all :readwrite: sources, changing them to
+ * :readonly: as we do so.
+ */
+static GSList *
+get_writable_source_path (void)
+{
+  GSList *result = NULL;
+  gchar *config_file;
+  GSList *addresses;
+  GSList *node;
+
+  config_file = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+  addresses = gconf_load_source_path (config_file, NULL);
+  g_free (config_file);
+
+  for (node = addresses; node; node = node->next)
+    {
+      const gchar *address = node->data;
+      const gchar *match;
+
+      match = strstr (address, ":readwrite:");
+
+      if (match)
+        {
+          gchar *copy;
+
+          copy = g_malloc (strlen (match) - 1 + 1);
+          memcpy (copy, address, match - address);
+          memcpy (copy + (match - address), ":readonly:", 10);
+          strcpy (copy + (match - address) + 10, match + 11);
+          result = g_slist_prepend (result, copy);
+        }
+    }
+
+  result = g_slist_reverse (result);
+
+  gconf_address_list_free (addresses);
+
+  return result;
+}
+
+static GConfClient *
+get_writable_client (void)
+{
+  GConfEngine *engine;
+  GSList *addresses;
+
+  addresses = get_writable_source_path ();
+  engine = gconf_engine_get_local_for_addresses (addresses, NULL);
+  gconf_address_list_free (addresses);
+
+  return gconf_client_get_for_engine (engine);
+}
 
 static gboolean
 type_uint32 (GSettings   *settings,
@@ -84,7 +145,7 @@ handle_file (const gchar *filename)
       return FALSE;
     }
 
-  client = gconf_client_get_default ();
+  client = get_writable_client ();
   source = g_settings_schema_source_get_default ();
 
   groups = g_key_file_get_groups (keyfile, NULL);

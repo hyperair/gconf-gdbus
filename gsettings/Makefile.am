@@ -29,6 +29,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)         \
 	-I$(top_builddir)       \
 	-DDATADIR=\"$(datadir)\" \
+	-DGCONF_CONFDIR=\""$(sysgconfdir)/$(MAJOR_VERSION)"\" \
 	$(GSETTINGS_CFLAGS)
 
 gsettings_data_convert_SOURCES = gsettings-data-convert.c
