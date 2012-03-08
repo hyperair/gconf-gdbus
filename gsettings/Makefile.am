@@ -69,4 +69,9 @@ install-data-hook:
 		$(GIO_QUERYMODULES) $(GIO_MODULE_DIR) ;                                         \
 	fi
 
+uninstall-hook:
+	if test -z "$(DESTDIR)" -a "$(GIO_QUERYMODULES)" != "no" ; then                         \
+		$(GIO_QUERYMODULES) $(GIO_MODULE_DIR) ;                                         \
+	fi
+
 CLEANFILES = $(autostart_DATA)
