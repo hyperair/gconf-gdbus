@@ -68,7 +68,7 @@ get_writable_source_path (void)
         {
           gchar *copy;
 
-          copy = g_malloc (strlen (match) - 1 + 1);
+          copy = g_malloc (strlen (address) - 1 + 1);
           memcpy (copy, address, match - address);
           memcpy (copy + (match - address), ":readonly:", 10);
           strcpy (copy + (match - address) + 10, match + 11);
