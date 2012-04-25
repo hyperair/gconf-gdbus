@@ -238,7 +238,6 @@ CORBA_ORB gconf_orb_get (void);
 ConfigServer gconf_activate_server (gboolean  start_if_not_found,
                                     GError  **error);
 
-char*     gconf_get_lock_dir (void);
 char*     gconf_get_daemon_dir (void);
 
 GConfLock* gconf_get_lock     (const gchar  *lock_directory,

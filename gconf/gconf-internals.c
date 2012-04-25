@@ -2825,19 +2825,6 @@ gconf_get_daemon_dir (void)
     }
 }
 
-char*
-gconf_get_lock_dir (void)
-{
-  char *gconfd_dir;
-  char *lock_dir;
-  
-  gconfd_dir = gconf_get_daemon_dir ();
-  lock_dir = g_strconcat (gconfd_dir, "/lock", NULL);
-
-  g_free (gconfd_dir);
-  return lock_dir;
-}
-
 ConfigServer
 gconf_activate_server (gboolean  start_if_not_found,
                        GError  **error)
