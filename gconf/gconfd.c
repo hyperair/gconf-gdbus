@@ -1755,9 +1755,9 @@ open_append_handle (GError **err)
 
       get_log_names (&logdir, &logfile);
       
-      g_mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-			       * that matter on open()
-			       */
+      g_mkdir_with_parents (logdir, 0700); /* ignore failure, we'll catch failures
+                                            * that matter on open()
+                                            */
       
       append_handle = g_fopen (logfile, "a");
 
@@ -1832,9 +1832,9 @@ logfile_save (void)
   
   get_log_names (&logdir, &logfile);
 
-  g_mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-			   * that matter on open()
-			   */
+  g_mkdir_with_parents (logdir, 0700); /* ignore failure, we'll catch failures
+                                        * that matter on open()
+                                        */
 
   saveme = g_string_new (NULL);
 
