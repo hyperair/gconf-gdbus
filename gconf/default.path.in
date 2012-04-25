@@ -14,11 +14,14 @@ xml:readonly:@sysgconfdir@/gconf.xml.mandatory
 include @sysgconfdir@/2/local-mandatory.path
 
 # Now see where users want us to look - basically the user can stick arbitrary 
-# sources in a ~/.gconf.path file and they're inserted here
+# sources in a ~/.config/gconf.path file and they're inserted here
+include "$(USERCONFIGDIR)/gconf/path"
+# Legacy file location
 include "$(HOME)/.gconf.path"
 
-# Give users a default storage location, ~/.gconf
-xml:readwrite:$(HOME)/.gconf
+# Give users a default storage location,
+# $(USERCONFIGDIR)/gconf (or $(HOME)/.gconf when it exists, for backward compatibility)
+xml:readwrite:$(DEFAULTUSERSOURCE)
 
 # Location for system-wide settings that are set by the defaults mechanism
 xml:readonly:@sysgconfdir@/gconf.xml.system
