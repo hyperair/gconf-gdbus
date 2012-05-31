@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gconf.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=gconf&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-01 13:13+0000\n"
+"POT-Creation-Date: 2012-03-08 16:22+0000\n"
 "PO-Revision-Date: 2011-07-01 15:32+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
@@ -215,7 +215,7 @@ msgstr "La línea %d carácter %d: %s"
 #: ../backends/markup-tree.c:2234 ../backends/markup-tree.c:2255
 #, c-format
 msgid "Attribute \"%s\" is invalid on <%s> element in this context"
-msgstr "El atributo «%s» es inválido en el elemento <%s> en este contexto"
+msgstr "El atributo «%s» no es válido en el elemento <%s> en este contexto"
 
 #: ../backends/markup-tree.c:2280 ../gconf/gconf-value.c:111
 #, c-format
@@ -254,22 +254,22 @@ msgstr "No está definido el atributo «%s» en el elemento <%s>"
 #: ../backends/markup-tree.c:2457
 #, c-format
 msgid "Invalid ltype \"%s\" on <%s>"
-msgstr "Ltype inválido «%s» en <%s>"
+msgstr "Ltype no válido «%s» en <%s>"
 
 #: ../backends/markup-tree.c:2537
 #, c-format
 msgid "Invalid first-element type \"%s\" on <%s>"
-msgstr "El tipo «%s» del primer elemento es inválido en <%s>"
+msgstr "El tipo «%s» del primer elemento no es válido en <%s>"
 
 #: ../backends/markup-tree.c:2551
 #, c-format
 msgid "Invalid cdr_type \"%s\" on <%s>"
-msgstr "Tipo cdr_type «%s» inválido en <%s>"
+msgstr "Tipo cdr_type «%s» no válido en <%s>"
 
 #: ../backends/markup-tree.c:2587
 #, c-format
 msgid "Invalid list_type \"%s\" on <%s>"
-msgstr "Tipo list_type «%s» inválido en <%s>"
+msgstr "Tipo list_type «%s» no válido en <%s>"
 
 #: ../backends/markup-tree.c:2954
 msgid "Two <default> elements below a <local_schema>"
@@ -301,7 +301,7 @@ msgstr "Se han dado dos elementos <cdr> para el mismo par"
 #: ../backends/markup-tree.c:3152
 #, c-format
 msgid "<li> has wrong type %s"
-msgstr "<li> tiene el tipo inválido %s"
+msgstr "<li> tiene el tipo no válido %s"
 
 #: ../backends/markup-tree.c:3183
 #, c-format
@@ -474,7 +474,7 @@ msgstr "Ignorando el nodo XML con el nombre «%s»: %s"
 #: ../backends/xml-entry.c:329
 #, c-format
 msgid "Ignoring schema name `%s', invalid: %s"
-msgstr "Ignorando el nombre de esquema «%s», inválido: %s"
+msgstr "Ignorando el nombre de esquema «%s», no válido: %s"
 
 #: ../backends/xml-entry.c:377
 #, c-format
@@ -507,7 +507,7 @@ msgstr "No se entiende el nodo XML <%s> dentro de una lista de nodos XML"
 
 #: ../backends/xml-entry.c:1061
 msgid "Invalid type (list, pair, or unknown) in a list node"
-msgstr "Tipo inválido (lista, pareja, o desconocido) en un nodo lista"
+msgstr "Tipo no válido (lista, pareja, o desconocido) en un nodo lista"
 
 #: ../backends/xml-entry.c:1084
 #, c-format
@@ -557,75 +557,75 @@ msgid "Missing both car and cdr values from pair in XML file"
 msgstr "Faltan ambos valores, car y cdr, del par en el archivo XML"
 
 #: ../defaults/org.gnome.gconf.defaults.policy.in.h:1
-msgid "Change GConf mandatory values"
-msgstr "Cambiar los valores obligatorios de GConf"
-
-#: ../defaults/org.gnome.gconf.defaults.policy.in.h:2
 msgid "Change GConf system values"
 msgstr "Cambiar los valores de GConf del sistema"
 
+#: ../defaults/org.gnome.gconf.defaults.policy.in.h:2
+msgid "Privileges are required to change GConf system values"
+msgstr "Se necesitan privilegios para cambiar los valores de GConf del sistema"
+
 #: ../defaults/org.gnome.gconf.defaults.policy.in.h:3
+msgid "Change GConf mandatory values"
+msgstr "Cambiar los valores obligatorios de GConf"
+
+#: ../defaults/org.gnome.gconf.defaults.policy.in.h:4
 msgid "Privileges are required to change GConf mandatory values"
 msgstr ""
 "Se necesitan privilegios para cambiar los valores obligatorios de GConf"
 
-#: ../defaults/org.gnome.gconf.defaults.policy.in.h:4
-msgid "Privileges are required to change GConf system values"
-msgstr "Se necesitan privilegios para cambiar los valores de GConf del sistema"
-
-#: ../gconf/gconf-backend.c:62
+#: ../gconf/gconf-backend.c:63
 #, c-format
 msgid "`%c' is an invalid character in a configuration storage address"
 msgstr ""
-"`%c' es un carácter inválido en una dirección de configuración de "
+"`%c' es un carácter no válido en una dirección de configuración de "
 "almacenamiento"
 
 #. -- end debug only
-#: ../gconf/gconf-backend.c:216
+#: ../gconf/gconf-backend.c:222
 #, c-format
 msgid "No such file `%s'\n"
 msgstr "No existe el archivo «%s»\n"
 
-#: ../gconf/gconf-backend.c:261
+#: ../gconf/gconf-backend.c:267
 #, c-format
 msgid "Backend `%s' failed to return a vtable\n"
 msgstr "El backend «%s» falló al devolver una vtable\n"
 
-#: ../gconf/gconf-backend.c:276
+#: ../gconf/gconf-backend.c:282
 #, c-format
 msgid "Backend `%s' missing required vtable member `%s'\n"
 msgstr "Al backend «%s» le falta un miembro vtable requerido «%s»\n"
 
-#: ../gconf/gconf-backend.c:302
+#: ../gconf/gconf-backend.c:308
 #, c-format
 msgid "Bad address `%s': %s"
 msgstr "Dirección errónea «%s»: %s"
 
-#: ../gconf/gconf-backend.c:312
+#: ../gconf/gconf-backend.c:318
 #, c-format
 msgid "Bad address `%s'"
 msgstr "Dirección errónea «%s»"
 
-#: ../gconf/gconf-backend.c:337
+#: ../gconf/gconf-backend.c:343
 msgid "GConf won't work without dynamic module support (gmodule)"
 msgstr "GConf no funcionará sin el soporte de módulos dinámicos (gmodule)"
 
-#: ../gconf/gconf-backend.c:346
+#: ../gconf/gconf-backend.c:352
 #, c-format
 msgid "Error opening module `%s': %s\n"
 msgstr "Falló al abrir el módulo «%s»: %s\n"
 
-#: ../gconf/gconf-backend.c:357
+#: ../gconf/gconf-backend.c:363
 #, c-format
 msgid "Error initializing module `%s': %s\n"
 msgstr "Falló al inicializar el módulo «%s»: %s\n"
 
-#: ../gconf/gconf-backend.c:388
+#: ../gconf/gconf-backend.c:394
 #, c-format
 msgid "Couldn't locate backend module for `%s'"
 msgstr "No pude encontrar el módulo del backend para «%s»"
 
-#: ../gconf/gconf-backend.c:425
+#: ../gconf/gconf-backend.c:431
 msgid "Failed to shut down backend"
 msgstr "Falló al apagar el backend"
 
@@ -663,18 +663,18 @@ msgstr "Se ha recibido una petición para eliminar todos los datos del caché"
 msgid "Received request to sync synchronously"
 msgstr "Se ha recibido una petición para sincronizar síncronamente"
 
-#: ../gconf/gconf-database.c:818
+#: ../gconf/gconf-database.c:842
 msgid "Fatal error: failed to get object reference for ConfigDatabase"
 msgstr ""
 "Error fatal: ha ocurrido un error al obtener la referencia del objeto "
 "ConfigDatabase"
 
-#: ../gconf/gconf-database.c:999
+#: ../gconf/gconf-database.c:1019
 #, c-format
 msgid "Failed to sync one or more sources: %s"
 msgstr "Falló al sincronizar uno o más recursos: %s"
 
-#: ../gconf/gconf-database.c:1074
+#: ../gconf/gconf-database.c:1094
 #, c-format
 msgid ""
 "Error obtaining new value for `%s' after change notification from backend `%"
@@ -683,7 +683,7 @@ msgstr ""
 "Error al obtener un valor nuevo para «%s» después de cambiar la notificación "
 "desde el backend «%s»: %s"
 
-#: ../gconf/gconf-database.c:1160
+#: ../gconf/gconf-database.c:1180
 #, c-format
 msgid ""
 "Failed to log addition of listener %s (%s); will not be able to restore this "
@@ -694,12 +694,12 @@ msgstr ""
 "este control al reiniciar gconfd, por consiguiente no será confiable la "
 "notificación de los cambios de configuración."
 
-#: ../gconf/gconf-database.c:1194
+#: ../gconf/gconf-database.c:1214
 #, c-format
 msgid "Listener ID %lu doesn't exist"
 msgstr "El ID %lu de control no existe"
 
-#: ../gconf/gconf-database.c:1208
+#: ../gconf/gconf-database.c:1228
 #, c-format
 msgid ""
 "Failed to log removal of listener to logfile (most likely harmless, may "
@@ -709,104 +709,100 @@ msgstr ""
 "(aunque lo más probable es que no ocurra nada, puede que surjan extrañas "
 "notificaciones): %s"
 
-#: ../gconf/gconf-database.c:1342 ../gconf/gconf-sources.c:1737
+#: ../gconf/gconf-database.c:1362 ../gconf/gconf-sources.c:1730
 #, c-format
 msgid "Error getting value for `%s': %s"
 msgstr "Falló al obtener el valor para «%s»: %s"
 
-#: ../gconf/gconf-database.c:1394
+#: ../gconf/gconf-database.c:1414
 #, c-format
 msgid "Error setting value for `%s': %s"
 msgstr "Falló al establecer el valor para «%s»: %s"
 
-#: ../gconf/gconf-database.c:1455
+#: ../gconf/gconf-database.c:1475
 #, c-format
 msgid "Error unsetting `%s': %s"
 msgstr "Falló al eliminar «%s»: %s"
 
-#: ../gconf/gconf-database.c:1484
+#: ../gconf/gconf-database.c:1504
 #, c-format
 msgid "Error getting default value for `%s': %s"
 msgstr "Falló al obtener el valor predeterminado para «%s»: %s"
 
-#: ../gconf/gconf-database.c:1560
+#: ../gconf/gconf-database.c:1580
 #, c-format
 msgid "Error unsetting \"%s\": %s"
 msgstr "Falló al eliminar «%s»: %s"
 
-#: ../gconf/gconf-database.c:1591
+#: ../gconf/gconf-database.c:1611
 #, c-format
 msgid "Error getting new value for \"%s\": %s"
 msgstr "Falló al obtener un nuevo valor para «%s»: %s"
 
-#: ../gconf/gconf-database.c:1662
+#: ../gconf/gconf-database.c:1682
 #, c-format
 msgid "Error checking existence of `%s': %s"
 msgstr "Falló al comprobar la existencia de «%s»: %s"
 
-#: ../gconf/gconf-database.c:1686
+#: ../gconf/gconf-database.c:1706
 #, c-format
 msgid "Error removing directory \"%s\": %s"
 msgstr "Falló al eliminar el directorio «%s»: %s"
 
-#: ../gconf/gconf-database.c:1713
+#: ../gconf/gconf-database.c:1733
 #, c-format
 msgid "Failed to get all entries in `%s': %s"
 msgstr "Falló al establecer todos los registros en «%s»: %s"
 
-#: ../gconf/gconf-database.c:1739
+#: ../gconf/gconf-database.c:1759
 #, c-format
 msgid "Error listing dirs in `%s': %s"
 msgstr "Falló al listar directorios en «%s»: %s"
 
-#: ../gconf/gconf-database.c:1760
+#: ../gconf/gconf-database.c:1780
 #, c-format
 msgid "Error setting schema for `%s': %s"
 msgstr "Falló al establecer el esquema para «%s»: %s"
 
-#: ../gconf/gconf-database-dbus.c:789
+#: ../gconf/gconf-database-dbus.c:788
 #, c-format
-#| msgid "Listener ID %lu doesn't exist"
 msgid "Notification on %s doesn't exist"
 msgstr "La notificación en %s no existe"
 
 #: ../gconf/gconf-dbus.c:219 ../gconf/gconf-dbus.c:250
 #, c-format
-#| msgid "CORBA error: %s"
 msgid "D-BUS error: %s"
 msgstr "Error de D-Bus: %s"
 
-#: ../gconf/gconf-dbus.c:226 ../gconf/gconf-dbus.c:466
+#: ../gconf/gconf-dbus.c:226 ../gconf/gconf-dbus.c:465
 msgid "Unknown error"
 msgstr "Error desconocido"
 
 #: ../gconf/gconf-dbus.c:266
 #, c-format
-#| msgid "Shutdown error: %s\n"
 msgid "Unknown error %s: %s"
 msgstr "Error %s desconocido: %s"
 
-#: ../gconf/gconf-dbus.c:439
+#: ../gconf/gconf-dbus.c:438
 #, c-format
 msgid "No D-BUS daemon running\n"
 msgstr "El demonio de D-Bus no está en ejecución\n"
 
-#: ../gconf/gconf-dbus.c:470
+#: ../gconf/gconf-dbus.c:469
 #, c-format
-#| msgid "Failed to access configuration source(s): %s\n"
 msgid "Failed to activate configuration server: %s\n"
 msgstr "Falló al activar la configuración del servidor: %s\n"
 
-#: ../gconf/gconf-dbus.c:557 ../gconf/gconf.c:424
+#: ../gconf/gconf-dbus.c:567 ../gconf/gconf.c:424
 #, c-format
 msgid "Server couldn't resolve the address `%s'"
 msgstr "El servidor no pudo resolver la dirección «%s»"
 
-#: ../gconf/gconf-dbus.c:1031 ../gconf/gconf.c:860
+#: ../gconf/gconf-dbus.c:1055 ../gconf/gconf.c:860
 msgid "Can't add notifications to a local configuration source"
 msgstr "No se puede añadir notificaciones a una fuente de configuración local"
 
-#: ../gconf/gconf-dbus.c:1217 ../gconf/gconf-dbus.c:1399
+#: ../gconf/gconf-dbus.c:1242 ../gconf/gconf-dbus.c:1424
 #, c-format
 msgid "Couldn't get value"
 msgstr "No se pudo obtener el valor"
@@ -883,7 +879,7 @@ msgstr "No hay '/' en la clave «%s»"
 #: ../gconf/gconf-internals.c:183
 #, c-format
 msgid "Invalid UTF-8 in string value in '%s'"
-msgstr "UTF-8 inválido en el valor de la cadena en «%s»"
+msgstr "UTF-8 no válido en el valor de la cadena en «%s»"
 
 #: ../gconf/gconf-internals.c:242
 msgid "Couldn't interpret CORBA value for list element"
@@ -938,7 +934,7 @@ msgstr "Falló de lectura en el archivo «%s»: %s\n"
 #: ../gconf/gconf-value.c:396 ../gconf/gconf-value.c:1706
 #, c-format
 msgid "Text contains invalid UTF-8"
-msgstr "El texto contiene UTF-8 inválido"
+msgstr "El texto contiene UTF-8 no válido"
 
 #: ../gconf/gconf-internals.c:1341
 #, c-format
@@ -1071,12 +1067,12 @@ msgstr "Falló al borrar el archivo «%s»: %s"
 msgid "Failed to remove lock directory `%s': %s"
 msgstr "Falló el eliminar el bloqueo al directorio «%s»: %s"
 
-#: ../gconf/gconf-internals.c:2861
+#: ../gconf/gconf-internals.c:2866
 #, c-format
 msgid "Server ping error: %s"
 msgstr "Falló al hacer ping al servidor: %s"
 
-#: ../gconf/gconf-internals.c:2880
+#: ../gconf/gconf-internals.c:2885
 #, c-format
 msgid ""
 "Failed to contact configuration server; the most common cause is a missing "
@@ -1087,7 +1083,7 @@ msgstr ""
 "un demonio de sesión D-Bus mal configurado o faltante. Para obtener más "
 "información consulte http://projects.gnome.org/gconf/. (Detalles: %s)"
 
-#: ../gconf/gconf-internals.c:2881
+#: ../gconf/gconf-internals.c:2886
 msgid "none"
 msgstr "ninguna"
 
@@ -1211,7 +1207,7 @@ msgstr "%s ¿Continuar (s/n)?"
 #: ../gconf/gconf-schema.c:227 ../gconf/gconf-schema.c:235
 #, c-format
 msgid "Schema contains invalid UTF-8"
-msgstr "El esquema contiene UTF-8 inválido"
+msgstr "El esquema contiene UTF-8 no válido"
 
 #: ../gconf/gconf-schema.c:244
 #, c-format
@@ -1235,7 +1231,7 @@ msgstr ""
 msgid "Failed to load source \"%s\": %s"
 msgstr "Falló al cargar la fuente «%s»: %s"
 
-#: ../gconf/gconf-sources.c:414
+#: ../gconf/gconf-sources.c:411
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a writable configuration source at position %d"
@@ -1243,7 +1239,7 @@ msgstr ""
 "Se resolvió la dirección «%s» a una fuente de configuración escribible en la "
 "posición %d"
 
-#: ../gconf/gconf-sources.c:420
+#: ../gconf/gconf-sources.c:417
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a read-only configuration source at position %d"
@@ -1251,7 +1247,7 @@ msgstr ""
 "Se resolvió la dirección «%s» a una fuente de configuración de sólo lectura "
 "en la posición %d"
 
-#: ../gconf/gconf-sources.c:427
+#: ../gconf/gconf-sources.c:423
 #, c-format
 msgid ""
 "Resolved address \"%s\" to a partially writable configuration source at "
@@ -1259,24 +1255,16 @@ msgid ""
 msgstr ""
 "La dirección «%s» resuelve una fuente de escritura parcial en la posición %d"
 
-#: ../gconf/gconf-sources.c:436
-msgid ""
-"None of the resolved addresses are writable; saving configuration settings "
-"will not be possible"
-msgstr ""
-"Ninguna de las direcciones resueltas son de escritura. No será posible "
-"guardar la configuración"
-
-#: ../gconf/gconf-sources.c:690
+#: ../gconf/gconf-sources.c:683
 #, c-format
 msgid "Schema `%s' specified for `%s' stores a non-schema value"
 msgstr "Esquema «%s» especificado por «%s» guarda un valor no esquemático"
 
-#: ../gconf/gconf-sources.c:752
+#: ../gconf/gconf-sources.c:745
 msgid "The '/' name can only be a directory, not a key"
 msgstr "El nombre '/' solo puede ser un directorio, no una clave"
 
-#: ../gconf/gconf-sources.c:794
+#: ../gconf/gconf-sources.c:787
 #, c-format
 msgid ""
 "Value for `%s' set in a read-only source at the front of your configuration "
@@ -1285,7 +1273,7 @@ msgstr ""
 "El valor de «%s» es una fuente sólo de lectura en la parte superior de su "
 "configuración"
 
-#: ../gconf/gconf-sources.c:806
+#: ../gconf/gconf-sources.c:799
 #, c-format
 msgid ""
 "Unable to store a value at key '%s', as the configuration server has no "
@@ -1325,17 +1313,17 @@ msgstr ""
 "bloqueo en ~/.gconfd y también archivos de bloqueo en los sitios de "
 "almacenamiento locales como ~/.gconf"
 
-#: ../gconf/gconf-sources.c:1610
+#: ../gconf/gconf-sources.c:1603
 #, c-format
 msgid "Error finding metainfo: %s"
 msgstr "Falló al buscar la meta-información: %s"
 
-#: ../gconf/gconf-sources.c:1679
+#: ../gconf/gconf-sources.c:1672
 #, c-format
 msgid "Error getting metainfo: %s"
 msgstr "Falló al obtener la meta-información: %s"
 
-#: ../gconf/gconf-sources.c:1703
+#: ../gconf/gconf-sources.c:1696
 #, c-format
 msgid "Key `%s' listed as schema for key `%s' actually stores type `%s'"
 msgstr "La clave «%s» listada como esquema por la clave «%s» es de tipo «%s»"
@@ -1455,11 +1443,11 @@ msgstr "Se esperaba un esquema, sin embargo se obtuvo %s"
 msgid "CORBA error: %s"
 msgstr "Error CORBA: %s"
 
-#: ../gconf/gconfd.c:344 ../gconf/gconfd-dbus.c:186
+#: ../gconf/gconfd.c:355 ../gconf/gconfd-dbus.c:186
 msgid "Shutdown request received"
 msgstr "Se ha recibido una petición de finalización"
 
-#: ../gconf/gconfd.c:377
+#: ../gconf/gconfd.c:389
 msgid ""
 "gconfd compiled with debugging; trying to load gconf.path from the source "
 "directory"
@@ -1467,7 +1455,7 @@ msgstr ""
 "gconfd ha sido compilado con opciones de depuración: tratando de cargar "
 "gconf.path desde el directorio de fuente"
 
-#: ../gconf/gconfd.c:397
+#: ../gconf/gconfd.c:409
 #, c-format
 msgid ""
 "No configuration files found. Trying to use the default configuration source "
@@ -1479,7 +1467,7 @@ msgstr ""
 #. We want to stay alive but do nothing, because otherwise every
 #. request would result in another failed gconfd being spawned.
 #.
-#: ../gconf/gconfd.c:405
+#: ../gconf/gconfd.c:417
 #, c-format
 msgid ""
 "No configuration sources in the source path. Configuration won't be saved; "
@@ -1488,12 +1476,12 @@ msgstr ""
 "No hay fuentes de configuración en la ruta de fuentes. La configuración no "
 "se guardará; edite %s%s"
 
-#: ../gconf/gconfd.c:418
+#: ../gconf/gconfd.c:429
 #, c-format
 msgid "Error loading some configuration sources: %s"
 msgstr "Error al cargar algunas fuentes de configuración: %s"
 
-#: ../gconf/gconfd.c:430
+#: ../gconf/gconfd.c:441
 msgid ""
 "No configuration source addresses successfully resolved. Can't load or store "
 "configuration data"
@@ -1501,7 +1489,7 @@ msgstr ""
 "No se ha resuelto ninguna dirección de origen satisfactoriamente. No se "
 "pueden cargar ni guardar datos de configuración"
 
-#: ../gconf/gconfd.c:447
+#: ../gconf/gconfd.c:458
 msgid ""
 "No writable configuration sources successfully resolved. May be unable to "
 "save some configuration changes"
@@ -1509,31 +1497,31 @@ msgstr ""
 "No se resolvió satisfactoriamente ninguna fuente en modo de escritura. Puede "
 "que no sea posible guardar los cambios de la configuración"
 
-#: ../gconf/gconfd.c:615
+#: ../gconf/gconfd.c:644
 #, c-format
 msgid "Could not connect to session bus: %s"
 msgstr "No se pudo conectar con el bus de la sesión: %s"
 
-#: ../gconf/gconfd.c:637
+#: ../gconf/gconfd.c:666
 #, c-format
 msgid "Failed to get bus name for daemon, exiting: %s"
 msgstr "Falló al obtener el nombre del bus para el demonio, saliendo: %s"
 
-#: ../gconf/gconfd.c:719
+#: ../gconf/gconfd.c:748
 #, c-format
 msgid "Could not connect to system bus: %s"
 msgstr "No se pudo conectar con el bus del sistema: %s"
 
-#: ../gconf/gconfd.c:858
+#: ../gconf/gconfd.c:887
 #, c-format
 msgid "starting (version %s), pid %u user '%s'"
 msgstr "comenzando (versión  %s), pid %u usuario «%s»"
 
-#: ../gconf/gconfd.c:914
+#: ../gconf/gconfd.c:943
 msgid "Failed to get object reference for ConfigServer"
 msgstr "Falló al obtener la referencia de un objeto para ConfigServer"
 
-#: ../gconf/gconfd.c:949
+#: ../gconf/gconfd.c:978
 #, c-format
 msgid ""
 "Failed to write byte to pipe file descriptor %d so client program may hang: %"
@@ -1542,34 +1530,34 @@ msgstr ""
 "Falló al escribir el byte al descriptor de archivo del pipe %d así que el "
 "programa cliente puede que se cuelgue: %s"
 
-#: ../gconf/gconfd.c:1001
+#: ../gconf/gconfd.c:1034
 #, c-format
 msgid "Error releasing lockfile: %s"
 msgstr "Falló al liberar el bloqueo: %s"
 
-#: ../gconf/gconfd.c:1010
+#: ../gconf/gconfd.c:1043
 msgid "Exiting"
 msgstr "Finalizando"
 
-#: ../gconf/gconfd.c:1028
+#: ../gconf/gconfd.c:1061
 msgid "SIGHUP received, reloading all databases"
 msgstr "Se recibió la señal SIGHUP, recargando todas las bases de datos"
 
-#: ../gconf/gconfd.c:1055
+#: ../gconf/gconfd.c:1089
 msgid "GConf server is not in use, shutting down."
 msgstr "El servidor GConf no está en uso, cerrándolo."
 
-#: ../gconf/gconfd.c:1385
+#: ../gconf/gconfd.c:1473
 #, c-format
 msgid "Error obtaining new value for `%s': %s"
 msgstr "Falló al obtener un nuevo valor para «%s»: %s"
 
-#: ../gconf/gconfd.c:1541
+#: ../gconf/gconfd.c:1629
 #, c-format
 msgid "Returning exception: %s"
 msgstr "Devolviendo la excepción: %s"
 
-#: ../gconf/gconfd.c:1647
+#: ../gconf/gconfd.c:1768
 #, c-format
 msgid ""
 "Failed to open gconfd logfile; won't be able to restore listeners after "
@@ -1578,7 +1566,7 @@ msgstr ""
 "Falló al abrir el archivo de registro de gconfd. No será posible restaurar "
 "los servicios después de terminar gconfd (%s)"
 
-#: ../gconf/gconfd.c:1682
+#: ../gconf/gconfd.c:1803
 #, c-format
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
@@ -1586,37 +1574,37 @@ msgstr ""
 "Falló al cerrar el archivo de registro de gconfd. Es probable que los datos "
 "no se hayan guardado apropiadamente (%s)"
 
-#: ../gconf/gconfd.c:1744
+#: ../gconf/gconfd.c:1865
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
 msgstr "No se puede abrir el archivo de estado «%s» para escritura: %s"
 
-#: ../gconf/gconfd.c:1758
+#: ../gconf/gconfd.c:1879
 #, c-format
 msgid "Could not write saved state file '%s' fd: %d: %s"
 msgstr "No puede escribir en el archivo de estado guardado «%s» fd: %d: %s"
 
-#: ../gconf/gconfd.c:1767
+#: ../gconf/gconfd.c:1888
 #, c-format
 msgid "Could not flush saved state file '%s' to disk: %s"
 msgstr "No se pudo volcar el estado guardado del archivo «%s» al disco: %s"
 
-#: ../gconf/gconfd.c:1774
+#: ../gconf/gconfd.c:1895
 #, c-format
 msgid "Failed to close new saved state file '%s': %s"
 msgstr "Falló al cerrar el nuevo archivo de estado «%s»: %s"
 
-#: ../gconf/gconfd.c:1788
+#: ../gconf/gconfd.c:1909
 #, c-format
 msgid "Could not move aside old saved state file '%s': %s"
 msgstr "No se puede apartar el antiguo archivo de estado «%s»: %s"
 
-#: ../gconf/gconfd.c:1798
+#: ../gconf/gconfd.c:1919
 #, c-format
 msgid "Failed to move new saved state file into place: %s"
 msgstr "Falló al mover el nuevo archivo de estado a su sitio: %s"
 
-#: ../gconf/gconfd.c:1807
+#: ../gconf/gconfd.c:1928
 #, c-format
 msgid ""
 "Failed to restore original saved state file that had been moved to '%s': %s"
@@ -1624,7 +1612,7 @@ msgstr ""
 "Falló al reponer el archivo de estado original que había sido movido a «%s»: %"
 "s"
 
-#: ../gconf/gconfd.c:2286
+#: ../gconf/gconfd.c:2422
 #, c-format
 msgid ""
 "Unable to restore a listener on address '%s', couldn't resolve the database"
@@ -1632,17 +1620,17 @@ msgstr ""
 "No se puede reponer un servicio en la dirección «%s», no se encuentra la base "
 "de datos"
 
-#: ../gconf/gconfd.c:2322
+#: ../gconf/gconfd.c:2458
 #, c-format
 msgid "Error reading saved state file: %s"
 msgstr "Falló al leer el archivo de estado: %s"
 
-#: ../gconf/gconfd.c:2372
+#: ../gconf/gconfd.c:2508
 #, c-format
 msgid "Unable to open saved state file '%s': %s"
 msgstr "No se puede abrir el archivo de estado «%s»: %s"
 
-#: ../gconf/gconfd.c:2491
+#: ../gconf/gconfd.c:2627
 #, c-format
 msgid ""
 "Failed to log addition of listener to gconfd logfile; won't be able to re-"
@@ -1651,7 +1639,7 @@ msgstr ""
 "Falló al anotar la adición de un servicio al archivo de registro de gconfd. "
 "No será posible restaurar el servicio si se cierra gconfd (%s)"
 
-#: ../gconf/gconfd.c:2496
+#: ../gconf/gconfd.c:2632
 #, c-format
 msgid ""
 "Failed to log removal of listener to gconfd logfile; might erroneously re-"
@@ -1660,28 +1648,28 @@ msgstr ""
 "Error al anotar la sustracción de un servicio al archivo de registro de "
 "gconfd. Puede que restaure erróneamente el servicio si se cierra gconfd (%s)"
 
-#: ../gconf/gconfd.c:2519 ../gconf/gconfd.c:2693
+#: ../gconf/gconfd.c:2655 ../gconf/gconfd.c:2829
 #, c-format
 msgid "Failed to get IOR for client: %s"
 msgstr "Falló al obtener el IOR para el cliente: %s"
 
-#: ../gconf/gconfd.c:2534
+#: ../gconf/gconfd.c:2670
 #, c-format
 msgid "Failed to open saved state file: %s"
 msgstr "No puede abrir el archivo de estado guardado: %s"
 
-#: ../gconf/gconfd.c:2547
+#: ../gconf/gconfd.c:2683
 #, c-format
 msgid "Failed to write client add to saved state file: %s"
 msgstr ""
 "Falló al escribir la adición del cliente al archivo de estado guardado: %s"
 
-#: ../gconf/gconfd.c:2555
+#: ../gconf/gconfd.c:2691
 #, c-format
 msgid "Failed to flush client add to saved state file: %s"
 msgstr "Falló al volcar los datos del cliente al archivo de estado: %s"
 
-#: ../gconf/gconfd.c:2654
+#: ../gconf/gconfd.c:2790
 msgid ""
 "Some client removed itself from the GConf server when it hadn't been added."
 msgstr ""
@@ -1715,7 +1703,6 @@ msgid "Got a malformed message."
 msgstr "Se obtuvo un mensaje mal formado."
 
 #: ../gconf/gconfd-dbus.c:377
-#| msgid "GConf server is not in use, shutting down."
 msgid "The GConf daemon is currently shutting down."
 msgstr "El demonio de GConf se está apagando en este momento."
 
@@ -2656,7 +2643,7 @@ msgstr ""
 #: ../gconf/gconftool.c:3707
 #, c-format
 msgid "WARNING: Invalid node <%s> in a <locale> node\n"
-msgstr "ADVERTENCIA: Nodo <%s> inválido en un nodo <locale>\n"
+msgstr "ADVERTENCIA: Nodo <%s> no válido en un nodo <locale>\n"
 
 #: ../gconf/gconftool.c:3744
 #, c-format
@@ -2790,6 +2777,13 @@ msgstr "Conversión de datos de GSettings"
 #: ../gsettings/gsettings-data-convert.desktop.in.h:2
 msgid "Migrates user settings from GConf to dconf"
 msgstr "Migra la configuración del usuario de GConf a dconf"
+
+#~ msgid ""
+#~ "None of the resolved addresses are writable; saving configuration "
+#~ "settings will not be possible"
+#~ msgstr ""
+#~ "Ninguna de las direcciones resueltas son de escritura. No será posible "
+#~ "guardar la configuración"
 
 #~| msgid "Could not send message to gconf daemon: %s"
 #~ msgid "Could not send message to GConf daemon: %s"
