@@ -569,11 +569,11 @@ gconf_dbus_utils_get_entry_values (DBusMessageIter  *main_iter,
 				   gchar           **schema_name_p)
 {
   DBusMessageIter  struct_iter;
-  gchar           *key;
+  const gchar     *key;
   GConfValue      *value;
   gboolean         is_default;
   gboolean         is_writable;
-  gchar           *schema_name;
+  const gchar     *schema_name;
 
   g_return_val_if_fail (dbus_message_iter_get_arg_type (main_iter) == DBUS_TYPE_STRUCT,
 			FALSE);
@@ -587,7 +587,7 @@ gconf_dbus_utils_get_entry_values (DBusMessageIter  *main_iter,
   value = utils_get_value (&struct_iter);
 
   dbus_message_iter_next (&struct_iter);
-  schema_name = (gchar *) utils_get_optional_string (&struct_iter);
+  schema_name = utils_get_optional_string (&struct_iter);
 
   dbus_message_iter_next (&struct_iter);
   dbus_message_iter_get_basic (&struct_iter, &is_default);
@@ -596,7 +596,7 @@ gconf_dbus_utils_get_entry_values (DBusMessageIter  *main_iter,
   dbus_message_iter_get_basic (&struct_iter, &is_writable);
 
   if (key_p)
-    *key_p = key;
+    *key_p = g_strdup (key);
 
   if (value_p)
     *value_p = value;
@@ -604,7 +604,7 @@ gconf_dbus_utils_get_entry_values (DBusMessageIter  *main_iter,
     gconf_value_free (value);
 
   if (schema_name_p)
-    *schema_name_p = schema_name;
+    *schema_name_p = g_strdup (schema_name);
   
   if (is_default_p)
     *is_default_p = is_default;
