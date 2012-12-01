@@ -17,7 +17,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#if HAVE_CORBA
 #include "GConfX.h"
+#endif
+
 #include "gconf.h"
 #include "gconf-internals.h"
 #include "gconf-sources.h"
@@ -34,6 +37,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#ifdef HAVE_CORBA
 /* Returns TRUE if there was an error, frees exception, sets err */
 static gboolean gconf_handle_corba_exception(CORBA_Environment* ev, GError** err);
 /* just returns TRUE if there's an exception indicating the server is
@@ -43,6 +47,7 @@ static void gconf_detach_config_server(void);
 
 /* Maximum number of times to try re-spawning the server if it's down. */
 #define MAX_RETRIES 1
+#endif /* HAVE_CORBA */
 
 /* copied from gutf8.c where it exists as a (unfortunately) non-exported function */
 static gchar *
@@ -109,6 +114,7 @@ gconf_key_check(const gchar* key, GError** err)
   return TRUE;
 }
 
+#ifdef HAVE_CORBA
 typedef struct _CnxnTable CnxnTable;
 
 struct _GConfEngine {
@@ -558,6 +564,19 @@ gconf_engine_get_local_for_addresses (GSList  *addresses,
   return conf;
 }
 
+/**
+ * gconf_engine_get_default: (skip)
+ *
+ * Returns the default #GConfEngine. All clients should use this, unless 
+ * they are special configuration-related tools. The caller of this
+ * function assumes one reference count, and must call
+ * gconf_engine_unref() at some point. It's fairly important to unref the
+ * #GConfEngine, to cleanly close the connection to
+ * <application>gconfd</application>. So if possible close the connection
+ * before exiting your application.
+ *
+ * Return value: (transfer full): the default #GConfEngine.
+ */
 GConfEngine*
 gconf_engine_get_default (void)
 {
@@ -791,6 +810,28 @@ gconf_engine_get_user_data  (GConfEngine   *engine)
   return engine->user_data;
 }
 
+/**
+ * gconf_engine_notify_add: (skip)
+ * @conf: a #GConfEngine to monitor for changes.
+ * @namespace_section: the directory or key to watch; you will be notified of changes at or below this point.
+ * @func: the callback to invoke when a notification is received from the server.
+ * @user_data: the data to pass to the callback.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ * Return value: an ID for the notification request, or 0 on error.
+ *
+ * Registers a notification request with the <application>gconfd</application>
+ * server.  The server will notify the client when any key at or below
+ * @namespace_section is set or unset. Try to watch the smallest possible part of
+ * the namespace; otherwise you will slow down the server and your application with
+ * unnecessary notifications. Note that you should prefer gconf_client_notify_add()
+ * if you're using the #GObject wrapper library, because
+ * gconf_client_notify_add() does not require a client-server conversation for
+ * every callback. gconf_engine_notify_add() requests a different server notification for
+ * every callback. The function returns an ID you can use to remove the
+ * notification request; 0 is an invalid ID, and is returned if an error occurs.
+ *
+ * Returns value: an ID for the notification request, or 0 on error.
+ */
 guint
 gconf_engine_notify_add(GConfEngine* conf,
                         const gchar* namespace_section,
@@ -1604,6 +1645,21 @@ qualify_entries (GSList *entries, const char *dir)
     }
 }
 
+/**
+ * gconf_engine_all_entries:
+ * @conf: a #GConfEngine.
+ * @dir: Directory to list.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Lists the key-value pairs in @dir. Does not list subdirectories; for
+ * that use gconf_engine_all_dirs(). The returned list contains #GConfEntry
+ * objects. A #GConfEntry contains an <emphasis>absolute</emphasis> key
+ * and a value. The list is not recursive, it contains only the immediate
+ * children of @dir.  To free the returned list, gconf_entry_free()
+ * each list element, then g_slist_free() the list itself.
+ *
+ * Returns value: (element-type GConfEntry) (transfer full): List of #GConfEntry.
+ */
 GSList*      
 gconf_engine_all_entries(GConfEngine* conf, const gchar* dir, GError** err)
 {
@@ -1774,6 +1830,19 @@ qualify_keys (GSList *keys, const char *dir)
     }
 }
 
+/**
+ * gconf_engine_all_dirs:
+ * @conf: a #GConfEngine.
+ * @dir: Directory to get subdirectories from.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Lists the subdirectories in @dir. The returned list contains
+ * allocated strings. Each string is the absolute path of a
+ * subdirectory. You should g_free() each string in the list, then
+ * g_slist_free() the list itself.
+ *
+ * Returns value: (element-type utf8) (transfer full): List of allocated subdirectory names.
+ */
 GSList*      
 gconf_engine_all_dirs(GConfEngine* conf, const gchar* dir, GError** err)
 {
@@ -2573,7 +2642,8 @@ gconf_get_config_listener(void)
   
   return listener;
 }
-     
+#endif /* HAVE_CORBA */
+
 void
 gconf_preinit (gpointer app, gpointer mod_info)
 {
@@ -2908,6 +2978,7 @@ gconf_unique_key (void)
   return key;
 }
 
+#ifdef HAVE_CORBA
 /*
  * Table of connections 
  */ 
@@ -3112,6 +3183,7 @@ gconf_spawn_daemon(GError** err)
   else
     return TRUE;
 }
+#endif /* HAVE_CORBA */
 
 /*
  * Sugar functions 
@@ -3256,6 +3328,20 @@ gconf_engine_get_bool  (GConfEngine* conf, const gchar* key,
     }
 }
 
+/**
+ * gconf_engine_get_schema: (skip)
+ * @conf: a #GConfEngine.
+ * @key: key you want the value of.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ * @Returns: the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained.
+ *
+ * Requests the schema (%GCONF_VALUE_SCHEMA) stored at @key.
+ * Automatically performs type-checking, so if a non-schema is stored at
+ * @key, an error is returned. If no value is set or an error occurs,
+ * <symbol>NULL</symbol> is returned.
+ *
+ * Return value: (transfer full): the value of @key as an allocated #GConfSchema, or <symbol>NULL</symbol> if no value was obtained.
+ */
 GConfSchema* 
 gconf_engine_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
 {
@@ -3288,6 +3374,70 @@ gconf_engine_get_schema  (GConfEngine* conf, const gchar* key, GError** err)
     }
 }
 
+/**
+ * gconf_engine_get_list: (skip)
+ * @conf: a #GConfEngine.
+ * @key: key you want the value of.
+ * @list_type: type of each list element.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Requests the list (%GCONF_VALUE_LIST) stored at @key.  Automatically
+ * performs type-checking, so if a non-list is stored at @key, or the
+ * list does not contain elements of type @list_type, an error is
+ * returned. If no value is set or an error occurs, <symbol>NULL</symbol>
+ * is returned. Note that <symbol>NULL</symbol> is also the empty list,
+ * so if you need to distinguish the empty list from an unset value, you
+ * must use gconf_engine_get () to obtain a raw #GConfValue.
+ *
+ * <emphasis>Remember that GConf lists can only store primitive types:
+ * %GCONF_VALUE_FLOAT, %GCONF_VALUE_INT, %GCONF_VALUE_BOOL,
+ * %GCONF_VALUE_STRING, %GCONF_VALUE_SCHEMA.</emphasis> Also remember
+ * that lists must be uniform, you may not mix types in the same list.
+ *
+ * The type of the list elements depends on @list_type. A #GConfValue
+ * with type %GCONF_VALUE_LIST normally stores a list of more #GConfValue
+ * objects. gconf_engine_get_list() automatically converts to primitive C
+ * types. Thus, the list-&gt;data fields in the returned list
+ * contain:
+ *  
+ * <informaltable pgwide="1" frame="none">
+ * <tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
+ * <tbody>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_INT</entry>
+ * <entry>The integer itself, converted with GINT_TO_POINTER()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_BOOL</entry>
+ * <entry>The bool itself, converted with GINT_TO_POINTER()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_FLOAT</entry>
+ * <entry>A pointer to #gdouble, which should be freed with g_free()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_STRING</entry>
+ * <entry>A pointer to #gchar, which should be freed with g_free()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_SCHEMA</entry>
+ * <entry>A pointer to #GConfSchema, which should be freed with gconf_schema_free()</entry>
+ * </row>
+ *  
+ * </tbody></tgroup></informaltable>
+ *  
+ * In the %GCONF_VALUE_FLOAT and %GCONF_VALUE_STRING cases, you must
+ * g_free() each list element. In the %GCONF_VALUE_SCHEMA case you must
+ * gconf_schema_free() each element. In all cases you must free the
+ * list itself with g_slist_free().
+ *
+ * Return value: an allocated list, with elements as described above.
+ */
 GSList*
 gconf_engine_get_list    (GConfEngine* conf, const gchar* key,
                           GConfValueType list_type, GError** err)
@@ -3541,6 +3691,7 @@ gconf_engine_set_pair    (GConfEngine* conf, const gchar* key,
   return error_checked_set(conf, key, pair, err);
 }
 
+#ifdef HAVE_CORBA
 /* CORBA Util */
 
 /* Set GConfError from an exception, free exception, etc. */
@@ -3635,6 +3786,7 @@ gconf_handle_corba_exception(CORBA_Environment* ev, GError** err)
       return TRUE;
     }
 }
+#endif
 
 /*
  * Enumeration conversions

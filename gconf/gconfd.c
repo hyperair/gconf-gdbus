@@ -35,9 +35,17 @@
 #include "gconf.h"
 #include "gconfd.h"
 #include "gconf-database.h"
+
+#ifdef HAVE_DBUS
+#include "gconf-database-dbus.h"
+#include "gconfd-dbus.h"
+#endif
+
+#ifdef HAVE_CORBA
 #include <orbit/orbit.h>
 
 #include "GConfX.h"
+#endif
 
 #include <sys/types.h>
 #include <stdio.h>
@@ -56,6 +64,8 @@
 #include <locale.h>
 
 #include <gio/gio.h>
+
+static void logfile_remove (void);
 
 #ifdef G_OS_WIN32
 #include <io.h>
@@ -121,9 +131,9 @@ safe_g_hash_table_insert(GHashTable* ht, gpointer key, gpointer value)
  */
 
 static void     gconf_main            (void);
-static void     gconf_main_quit       (void);
 static gboolean gconf_main_is_running (void);
 
+#ifdef HAVE_CORBA
 static void logfile_save (void);
 static void logfile_read (void);
 static void log_client_add (const ConfigListener client);
@@ -135,17 +145,19 @@ static GSList *list_clients          (void);
 static void    log_clients_to_string (GString              *str);
 static void    drop_old_clients      (void);
 static guint   client_count          (void);
+#endif
 
 static void    enter_shutdown          (void);
 
 static void                 init_databases (void);
 static void                 shutdown_databases (void);
+#ifdef HAVE_DBUS
+static void                 reload_databases (void);
+#endif
 static void                 set_default_database (GConfDatabase* db);
 static void                 register_database (GConfDatabase* db);
 static void                 unregister_database (GConfDatabase* db);
 static GConfDatabase*       lookup_database (GSList *addresses);
-static GConfDatabase*       obtain_database (GSList *addresses,
-                                             GError **err);
 static void                 drop_old_databases (void);
 static gboolean             no_databases_in_use (void);
 
@@ -164,6 +176,13 @@ static gboolean in_shutdown = FALSE;
  */
 static gboolean need_db_reload = FALSE;
 
+/*
+ * Flag indicating whether to prepare for respawn or logout
+ * when exiting
+ */
+static gboolean clean_shutdown_requested = FALSE;
+
+#ifdef HAVE_CORBA
 /* 
  * CORBA goo
  */
@@ -256,7 +275,7 @@ gconfd_get_database(PortableServer_Servant servant,
     return CORBA_OBJECT_NIL;
   
   addresses = g_slist_append (NULL, (char *) address);
-  db = obtain_database (addresses, &error);
+  db = gconfd_obtain_database (addresses, &error);
   g_slist_free (addresses);
 
   if (db != NULL)
@@ -284,7 +303,7 @@ gconfd_get_database_for_addresses (PortableServer_Servant           servant,
   while (i < seq->_length)
     addresses = g_slist_append (addresses, seq->_buffer [i++]);
 
-  db = obtain_database (addresses, &error);
+  db = gconfd_obtain_database (addresses, &error);
 
   g_slist_free (addresses);
 
@@ -335,8 +354,10 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
   
   gconf_log(GCL_DEBUG, _("Shutdown request received"));
 
-  gconf_main_quit();
+  clean_shutdown_requested = TRUE;
+  gconfd_main_quit();
 }
+#endif /* HAVE_CORBA */
 
 /*
  * Main code
@@ -344,8 +365,8 @@ gconfd_shutdown(PortableServer_Servant servant, CORBA_Environment *ev)
 
 /* This needs to be called before we register with OAF
  */
-static void
-gconf_server_load_sources(void)
+static GConfSources *
+gconf_server_get_default_sources(void)
 {
   GSList* addresses;
   GList* tmp;
@@ -376,14 +397,10 @@ gconf_server_load_sources(void)
 
   if (addresses == NULL)
     {      
-#ifndef G_OS_WIN32
-      const char *home = g_get_home_dir ();
-#else
-      const char *home = _gconf_win32_get_home_dir ();
-#endif
+      const char *configdir = g_get_user_config_dir ();
 
-      /* Try using the default address xml:readwrite:$(HOME)/.gconf */
-      addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", home, "/.gconf", NULL));
+      /* Try using the default address xml:readwrite:$(USERCONFIGDIR)/gconf */
+      addresses = g_slist_append(addresses, g_strconcat("xml:readwrite:", configdir, "/gconf", NULL));
 
       gconf_log(GCL_DEBUG, _("No configuration files found. Trying to use the default configuration source `%s'"), (char *)addresses->data);
     }
@@ -397,8 +414,7 @@ gconf_server_load_sources(void)
       /* don't request error since there aren't any addresses */
       sources = gconf_sources_new_from_addresses(NULL, NULL);
 
-      /* Install the sources as the default database */
-      set_default_database (gconf_database_new(sources));
+      return sources;
     }
   else
     {
@@ -437,10 +453,19 @@ gconf_server_load_sources(void)
       if (!have_writable)
         gconf_log(GCL_WARNING, _("No writable configuration sources successfully resolved. May be unable to save some configuration changes"));
 
-        
-      /* Install the sources as the default database */
-      set_default_database (gconf_database_new(sources));
+      return sources;
     }
+}
+
+static void
+gconf_server_load_sources(void)
+{
+  GConfSources* sources;
+
+  sources = gconf_server_get_default_sources();
+
+  /* Install the sources as the default database */
+  set_default_database (gconf_database_new(sources));
 }
 
 /*
@@ -468,22 +493,26 @@ signal_handler (int signo)
      */
     enter_shutdown ();
 
+    clean_shutdown_requested = FALSE;
+
     /* let the fatal signals interrupt us */
     --in_fatal;
     
     if (gconf_main_is_running ())
-      gconf_main_quit ();
+      gconfd_main_quit ();
     
     break;
 
   case SIGTERM:
     enter_shutdown ();
 
+    clean_shutdown_requested = TRUE;
+
     /* let the fatal signals interrupt us */
     --in_fatal;
     
     if (gconf_main_is_running ())
-      gconf_main_quit ();
+      gconfd_main_quit ();
     break;
 
 #ifdef SIGHUP
@@ -505,6 +534,7 @@ signal_handler (int signo)
 #endif
     
   default:
+    clean_shutdown_requested = FALSE;
 #ifndef HAVE_SIGACTION
     signal (signo, signal_handler);
 #endif
@@ -512,12 +542,15 @@ signal_handler (int signo)
   }
 }
 
+#ifdef HAVE_CORBA
 PortableServer_POA
 gconf_get_poa (void)
 {
   return the_poa;
 }
+#endif
 
+#ifdef HAVE_CORBA
 static void
 handle_method_call (GDBusConnection       *connection,
                     const gchar           *sender,
@@ -541,7 +574,7 @@ on_name_acquired (GDBusConnection *connection,
                   gpointer         user_data)
 {
   * (gboolean *) user_data = TRUE;
-  gconf_main_quit ();
+  gconfd_main_quit ();
 }
 
 static void
@@ -554,7 +587,7 @@ on_name_lost (GDBusConnection *connection,
   gconf_log (GCL_WARNING,
              _("Failed to get bus name for daemon, exiting."));
 
-  gconf_main_quit ();
+  gconfd_main_quit ();
 }
 
 static GDBusConnection *
@@ -609,7 +642,7 @@ own_org_gnome_GConf (void)
     }
 
   g_dbus_connection_set_exit_on_close (connection, FALSE);
-  g_signal_connect (connection, "closed", G_CALLBACK (gconf_main_quit), NULL);
+  g_signal_connect (connection, "closed", G_CALLBACK (gconfd_main_quit), NULL);
 
   do_own_ptr = g_new (gboolean, 1);
   *do_own_ptr = FALSE;
@@ -629,6 +662,7 @@ own_org_gnome_GConf (void)
   g_object_unref (connection);
   return NULL;
 }
+#endif
 
 #ifdef ENABLE_DEFAULTS_SERVICE
 /* listen on system bus for defaults changes */
@@ -659,7 +693,7 @@ system_set_cb (GDBusConnection *connection,
 
 	  gconf_log (GCL_DEBUG, "System defaults changed.  Notifying.");
 
-	  addresses.data = "xml:merged:/etc/gconf/gconf.xml.system";
+	  addresses.data = "xml:merged:" GCONF_ETCDIR "/gconf.xml.system";
 	  addresses.next = NULL;
 	  system_sources = gconf_sources_new_from_addresses (&addresses, NULL);
 
@@ -755,15 +789,21 @@ main(int argc, char** argv)
   sigset_t empty_mask;
   sigset_t full_mask;
 #endif
+
+#ifdef HAVE_CORBA
   CORBA_Environment ev;
   CORBA_ORB orb;
   gchar* ior;
-  int exit_code = 0;
-  GError *err;
-  int dev_null_fd;
-  int write_byte_fd;
   GDBusConnection *connection;
+#endif
+
+  int dev_null_fd;
+  int exit_code = 0;
+  int write_byte_fd;
+
+#ifdef ENABLE_DEFAULTS_SERVICE
   DefaultsData *defaults_data;
+#endif
 
   _gconf_init_i18n ();
   setlocale (LC_ALL, "");
@@ -875,10 +915,18 @@ main(int argc, char** argv)
 #endif
 #endif
 
+#ifdef HAVE_CORBA
   CORBA_exception_init(&ev);
+#endif
 
   init_databases ();
 
+#ifdef HAVE_DBUS
+  if (!gconfd_dbus_init ())
+    return 1;
+#endif
+
+#ifdef HAVE_CORBA
   orb = gconf_orb_get ();
   
   POA_ConfigServer2__init (&poa_server_servant, &ev);
@@ -910,7 +958,13 @@ main(int argc, char** argv)
        */
       gconf_server_load_sources ();
     }
-  
+#endif
+
+#ifdef HAVE_DBUS
+  gconf_server_load_sources ();
+#endif
+
+#ifdef HAVE_CORBA
   /* notify caller that we're done either getting the lock
    * or not getting it
    */
@@ -935,7 +989,8 @@ main(int argc, char** argv)
 
   /* Read saved log file, if any */
   logfile_read ();
- 
+#endif
+
 #ifdef ENABLE_DEFAULTS_SERVICE 
   defaults_data = get_on_system_bus ();
 #endif
@@ -945,11 +1000,13 @@ main(int argc, char** argv)
   g_object_unref (connection);
   connection = NULL;
 
+#ifdef ENABLE_DEFAULTS_SERVICE
   if (defaults_data->subscription_id != 0) {
     g_dbus_connection_signal_unsubscribe (connection , defaults_data->subscription_id);
   }
   g_bus_unwatch_name (defaults_data->watch_id);
   g_free (defaults_data);
+#endif
 
   if (in_shutdown)
     exit_code = 1; /* means someone already called enter_shutdown() */
@@ -959,17 +1016,26 @@ main(int argc, char** argv)
    */
   enter_shutdown ();
 
+#ifdef HAVE_CORBA
   /* Save current state in logfile (may compress the logfile a good
-   * bit)
+   * bit) if we're exiting but may respawn.  Clean up the logfile, if
+   * the session is going away.
    */
-  logfile_save ();
+  if (clean_shutdown_requested)
+    logfile_remove ();
+  else
+    logfile_save ();
+#endif
   
   shutdown_databases ();
 
   gconfd_locale_cache_drop ();
 
+#ifdef HAVE_CORBA
   if (daemon_lock)
     {
+      GError *err;
+
       err = NULL;
       gconf_release_lock (daemon_lock, &err);
       if (err != NULL)
@@ -981,6 +1047,7 @@ main(int argc, char** argv)
     }
 
   daemon_lock = NULL;
+#endif
   
   gconf_log (GCL_DEBUG, _("Exiting"));
 
@@ -1003,28 +1070,40 @@ periodic_cleanup_timeout(gpointer data)
       gconf_log (GCL_INFO, _("SIGHUP received, reloading all databases"));
 
       need_db_reload = FALSE;
+#ifdef HAVE_CORBA
       logfile_save ();
       shutdown_databases ();
       init_databases ();
       gconf_server_load_sources ();
       logfile_read ();
+#endif
+#ifdef HAVE_DBUS
+      reload_databases ();
+#endif
     }
   
   gconf_log (GCL_DEBUG, "Performing periodic cleanup, expiring cache cruft");
   
+#ifdef HAVE_CORBA
   drop_old_clients ();
+#endif
   drop_old_databases ();
 
+#ifdef HAVE_DBUS
+  if (no_databases_in_use () && gconfd_dbus_client_count () == 0)
+#else
   if (no_databases_in_use () && client_count () == 0)
+#endif
     {
       gconf_log (GCL_INFO, _("GConf server is not in use, shutting down."));
-      gconf_main_quit ();
+      gconfd_main_quit ();
       return FALSE;
     }
   
   /* expire old locale cache entries */
   gconfd_locale_cache_expire ();
 
+#ifdef HAVE_CORBA
   if (!need_log_cleanup)
     {
       gconf_log (GCL_DEBUG, "No log file saving needed in periodic cleanup handler");
@@ -1033,6 +1112,7 @@ periodic_cleanup_timeout(gpointer data)
   
   /* Compress the running state file */
   logfile_save ();
+#endif
 
   need_log_cleanup = FALSE;
   
@@ -1079,8 +1159,8 @@ gconf_main(void)
   g_main_loop_unref (loop);
 }
 
-static void 
-gconf_main_quit(void)
+void
+gconfd_main_quit(void)
 {
   g_return_if_fail(main_loops != NULL);
 
@@ -1169,9 +1249,9 @@ lookup_database (GSList *addresses)
   return retval;
 }
 
-static GConfDatabase*
-obtain_database (GSList  *addresses,
-                 GError **err)
+GConfDatabase *
+gconfd_obtain_database (GSList  *addresses,
+                        GError **err)
 {
   GConfSources* sources;
   GError* error = NULL;
@@ -1231,6 +1311,10 @@ drop_old_databases(void)
       
       if (db->listeners &&                             /* not already hibernating */
           gconf_listeners_count(db->listeners) == 0 && /* Can hibernate */
+#ifdef HAVE_DBUS
+          db->listening_clients &&
+          g_hash_table_size (db->listening_clients) == 0 &&
+#endif
           (now - db->last_access) > (60*20))           /* 20 minutes without access */
         {
           dead = g_list_prepend (dead, db);
@@ -1282,6 +1366,56 @@ shutdown_databases (void)
   default_db = NULL;
 }
 
+#ifdef HAVE_DBUS
+static void
+reload_databases (void)
+{
+  GConfSources* sources;
+  GList *tmp_list;
+
+  sources = gconf_server_get_default_sources ();
+  gconf_database_set_sources (default_db, sources);
+
+  tmp_list = db_list;
+  while (tmp_list)
+    {
+      GConfDatabase* db = tmp_list->data;
+      GList *l;
+      GConfSource *source;
+      GSList *addresses = NULL;
+      GError *error = NULL;
+
+      if (db == default_db)
+	{
+	  tmp_list = g_list_next (tmp_list);
+	  continue;
+	}
+
+      for (l = db->sources->sources; l != NULL; l = l->next)
+        {
+          source = l->data;
+          addresses = g_slist_prepend (addresses, source->address);
+        }
+
+      addresses = g_slist_reverse (addresses);
+      sources = gconf_sources_new_from_addresses (addresses, &error);
+
+      if (error == NULL)
+        {
+          gconf_database_set_sources (db, sources);
+        }
+      else
+        {
+          /* if we got an error, keep our old sources -- that's better than
+           * nothing */
+          g_error_free (error);
+        }
+
+      tmp_list = g_list_next (tmp_list);
+    }
+}
+#endif
+
 static gboolean
 no_databases_in_use (void)
 {
@@ -1326,7 +1460,9 @@ gconfd_notify_other_listeners (GConfDatabase *modified_db,
 	      if (gconf_sources_is_affected (db->sources, modified_source, key))
 		{
 		  GConfValue  *value;
+#ifdef HAVE_CORBA
 		  ConfigValue *cvalue;
+#endif
 		  GError      *error;
 		  gboolean     is_default;
 		  gboolean     is_writable;
@@ -1349,6 +1485,7 @@ gconfd_notify_other_listeners (GConfDatabase *modified_db,
 		      return;
 		    }
 
+#if HAVE_CORBA
 		  if (value != NULL)
 		    {
 		      cvalue = gconf_corba_value_from_gconf_value (value);
@@ -1367,6 +1504,16 @@ gconfd_notify_other_listeners (GConfDatabase *modified_db,
 						   is_writable,
 						   FALSE);
 		  CORBA_free (cvalue);
+#endif
+#ifdef HAVE_DBUS
+		  gconf_database_dbus_notify_listeners (db,
+							NULL,
+							key,
+							value,
+							is_default,
+							is_writable,
+							FALSE);
+#endif
 		}
 
 	      tmp2 = tmp2->next;
@@ -1404,6 +1551,7 @@ enter_shutdown(void)
 }
 
 
+#ifdef HAVE_CORBA
 /* Exceptions */
 
 gboolean
@@ -1520,6 +1668,30 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
  * Logging
  */
 
+static const char *
+get_session_guid (void)
+{
+  const char *session_bus_address;
+  const char *guid;
+
+  /* FIXME: we may want to use dbus-address.h functions here
+   */
+  session_bus_address = g_getenv ("DBUS_SESSION_BUS_ADDRESS");
+
+  if (session_bus_address == NULL)
+    return NULL;
+
+  guid = g_strrstr (session_bus_address, "guid=");
+
+  if (guid == NULL)
+    return NULL;
+
+  if (guid[0] == '\0')
+    return NULL;
+
+  return guid + strlen ("guid=");
+}
+
 /*
    The log file records the current listeners we have registered,
    so we can restore them if we exit and restart.
@@ -1548,14 +1720,23 @@ gconfd_check_in_shutdown (CORBA_Environment *ev)
 static void
 get_log_names (gchar **logdir, gchar **logfile)
 {
-#ifndef G_OS_WIN32
-      const char *home = g_get_home_dir ();
-#else
-      const char *home = _gconf_win32_get_home_dir ();
-#endif
+  const char *session_guid;
+  char *state_file;
 
-  *logdir = g_build_filename (home, ".gconfd", NULL);
-  *logfile = g_build_filename (*logdir, "saved_state", NULL);
+  *logdir = gconf_get_daemon_dir ();
+
+  /* We make the state file per-session so multiple gconfds
+   * don't stomp over each other.
+   */
+  session_guid = get_session_guid ();
+
+  if (session_guid != NULL)
+    state_file = g_strdup_printf ("saved_state_%s", session_guid);
+  else
+    state_file = g_strdup ("saved_state");
+
+  *logfile = g_build_filename (*logdir, state_file, NULL);
+  g_free (state_file);
 }
 
 static void close_append_handle (void);
@@ -1583,9 +1764,9 @@ open_append_handle (GError **err)
 
       get_log_names (&logdir, &logfile);
       
-      g_mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-			       * that matter on open()
-			       */
+      g_mkdir_with_parents (logdir, 0700); /* ignore failure, we'll catch failures
+                                            * that matter on open()
+                                            */
       
       append_handle = g_fopen (logfile, "a");
 
@@ -1660,9 +1841,9 @@ logfile_save (void)
   
   get_log_names (&logdir, &logfile);
 
-  g_mkdir (logdir, 0700); /* ignore failure, we'll catch failures
-			   * that matter on open()
-			   */
+  g_mkdir_with_parents (logdir, 0700); /* ignore failure, we'll catch failures
+                                        * that matter on open()
+                                        */
 
   saveme = g_string_new (NULL);
 
@@ -1777,6 +1958,21 @@ logfile_save (void)
   if (fd >= 0)
     close (fd);
 }
+
+static void
+logfile_remove (void)
+{
+  gchar *logdir = NULL;
+  gchar *logfile = NULL;
+
+  get_log_names (&logdir, &logfile);
+
+  g_unlink (logfile);
+
+  g_free (logdir);
+  g_free (logfile);
+}
+
 
 typedef struct _ListenerLogEntry ListenerLogEntry;
 
@@ -2224,7 +2420,7 @@ listener_logentry_restore_and_destroy_foreach (gpointer key,
 
       addresses = gconf_persistent_name_get_address_list (lle->address);
 
-      db = obtain_database (addresses, NULL);
+      db = gconfd_obtain_database (addresses, NULL);
 
       gconf_address_list_free (addresses);
     }
@@ -2721,4 +2917,10 @@ client_count (void)
   else
     return g_hash_table_size (client_table);
 }
+#endif
 
+gboolean
+gconfd_in_shutdown (void)
+{
+  return in_shutdown;
+}

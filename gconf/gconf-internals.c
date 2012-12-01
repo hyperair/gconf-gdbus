@@ -131,6 +131,7 @@ gconf_key_key        (const gchar* key)
  *  Random stuff 
  */
 
+#if HAVE_CORBA
 GConfValue* 
 gconf_value_from_corba_value(const ConfigValue* value)
 {
@@ -611,6 +612,7 @@ gconf_schema_from_corba_schema(const ConfigSchema* cs)
   
   return sc;
 }
+#endif /* HAVE_CORBA */
 
 const gchar* 
 gconf_value_type_to_string(GConfValueType type)
@@ -717,6 +719,38 @@ _gconf_win32_get_home_dir (void)
 
 #endif
 
+static const gchar *
+get_user_source_dir (void)
+{
+  static const gchar *user_source = NULL;
+
+  if (user_source == NULL)
+    {
+      gchar *path_new;
+      gchar *path_old;
+
+      path_new = g_build_filename (g_get_user_config_dir (), "gconf", NULL);
+#ifndef G_OS_WIN32
+      path_old = g_build_filename (g_get_home_dir (), ".gconf", NULL);
+#else
+      path_old = g_build_filename (_gconf_win32_get_home_dir (), ".gconf", NULL);
+#endif
+      if ((g_file_test (path_new, G_FILE_TEST_IS_DIR))
+          || (! g_file_test (path_old, G_FILE_TEST_IS_DIR)))
+        {
+          user_source = path_new;
+          g_free (path_old);
+        }
+      else
+        {
+          g_free (path_new);
+          user_source = path_old;
+        }
+    }
+
+  return user_source;
+}
+
 static const gchar*
 get_variable(const gchar* varname)
 {
@@ -730,6 +764,14 @@ get_variable(const gchar* varname)
 #else
       return _gconf_win32_get_home_dir ();
 #endif
+    }
+  else if (strcmp(varname, "USERCONFIGDIR") == 0)
+    {
+      return g_get_user_config_dir();
+    }
+  else if (strcmp(varname, "DEFAULTUSERSOURCE") == 0)
+    {
+      return get_user_source_dir();
     }
   else if (strcmp(varname, "USER") == 0)
     {
@@ -2140,6 +2182,7 @@ gconf_value_encode (GConfValue* val)
   return retval;
 }
 
+#ifdef HAVE_CORBA
 
 /*
  * Locks
@@ -2432,7 +2475,7 @@ get_ior (gboolean start_if_not_found,
         /* if the bus isn't running and we don't want to start gconfd then
          * we don't want to autolaunch the bus either, so bail early.
          */
-        if (g_getenv ("DBUS_SESSION_BUS_ADDRESS") == NULL &&
+        if ((g_getenv ("DBUS_SESSION_BUS_ADDRESS") == NULL && g_getenv ("DBUS_LAUNCHD_SESSION_BUS_SOCKET") == NULL ) &&
            (!start_if_not_found || g_getenv ("DISPLAY") == NULL)) {
                 if (failure_log)
                     g_string_append_printf (failure_log,
@@ -2526,7 +2569,7 @@ gconf_get_server (gboolean  start_if_not_found,
   return server;
 }
 
-GConfLock*
+static GConfLock *
 gconf_get_lock_or_current_holder (const gchar  *lock_directory,
                                   ConfigServer *current_server,
                                   GError      **err)
@@ -2793,13 +2836,18 @@ gconf_get_daemon_dir (void)
       const char *tmpdir;
 
       subdir = g_strconcat ("gconfd-", g_get_user_name (), NULL);
-      
-      if (g_getenv ("GCONF_TMPDIR")) {
-	tmpdir = g_getenv ("GCONF_TMPDIR");
-      } else {
-	tmpdir = g_get_tmp_dir ();
-      }
-      
+
+      if (g_getenv ("GCONF_TMPDIR"))
+        tmpdir = g_getenv ("GCONF_TMPDIR");
+      else if (g_getenv ("XDG_RUNTIME_DIR"))
+        {
+          g_free (subdir);
+          subdir = g_strdup ("gconfd");
+          tmpdir = g_getenv ("XDG_RUNTIME_DIR");
+        }
+      else
+        tmpdir = g_get_tmp_dir ();
+
       s = g_build_filename (tmpdir, subdir, NULL);
 
       g_free (subdir);
@@ -2815,19 +2863,6 @@ gconf_get_daemon_dir (void)
 #endif
       return g_strconcat (home, "/.gconfd", NULL);
     }
-}
-
-char*
-gconf_get_lock_dir (void)
-{
-  char *gconfd_dir;
-  char *lock_dir;
-  
-  gconfd_dir = gconf_get_daemon_dir ();
-  lock_dir = g_strconcat (gconfd_dir, "/lock", NULL);
-
-  g_free (gconfd_dir);
-  return lock_dir;
 }
 
 ConfigServer
@@ -2874,7 +2909,7 @@ gconf_activate_server (gboolean  start_if_not_found,
     g_set_error (error,
                  GCONF_ERROR,
                  GCONF_ERROR_NO_SERVER,
-                 _("Failed to contact configuration server; some possible causes are that you need to enable TCP/IP networking for ORBit, or you have stale NFS locks due to a system crash. See http://projects.gnome.org/gconf/ for information. (Details - %s)"),
+                 _("Failed to contact configuration server; the most common cause is a missing or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/gconf/ for information. (Details - %s)"),
                  failure_log->len > 0 ? failure_log->str : _("none"));
 
   g_string_free (failure_log, TRUE);
@@ -2910,6 +2945,8 @@ gconf_CORBA_Object_hash (gconstpointer key)
 
   return retval;
 }
+
+#endif /* HAVE_CORBA */
 
 void
 _gconf_init_i18n (void)

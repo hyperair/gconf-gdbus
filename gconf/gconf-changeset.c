@@ -77,12 +77,14 @@ gconf_change_set_new      (void)
   return cs;
 }
 
-void
+GConfChangeSet*
 gconf_change_set_ref      (GConfChangeSet* cs)
 {
-  g_return_if_fail(cs != NULL);
+  g_return_val_if_fail(cs != NULL, NULL);
   
   cs->refcount += 1;
+
+  return cs;
 }
 
 void
@@ -106,6 +108,15 @@ gconf_change_set_unref    (GConfChangeSet* cs)
     }
 }
 
+/**
+ * gconf_change_set_set_user_data: (skip)
+ * @cs: a #GConfChangeSet.
+ * @data: a #gpointer.
+ * @dnotify: a pointer to the function to be called during destroy.
+ *
+ * Sets the user_data and the destroy notification function fields of the
+ * #GConfChangeSet.
+ */
 void
 gconf_change_set_set_user_data (GConfChangeSet *cs,
                                 gpointer        data,
@@ -118,6 +129,14 @@ gconf_change_set_set_user_data (GConfChangeSet *cs,
   cs->dnotify = dnotify;
 }
 
+/**
+ * gconf_change_set_get_user_data: (skip)
+ * @cs: a #GConfChangeSet.
+ *
+ * Returns the user_data field of the #GConfChangeSet.
+ *
+ * Return value: a pointer to the user_data.
+ */
 gpointer
 gconf_change_set_get_user_data (GConfChangeSet *cs)
 {
@@ -207,6 +226,18 @@ foreach(gpointer key, gpointer value, gpointer user_data)
   (* fd->func) (fd->cs, c->key, c->value, fd->user_data);
 }
 
+/**
+ * gconf_change_set_foreach:
+ * @cs: a #GConfChangeSet.
+ * @func: (scope call): function to call for each change in the change set.
+ * @user_data: user data to pass to the #GConfChangeSetForeachFunc.
+ *
+ * Iterates over a #GConfChangeSet by calling a
+ * #GConfChangeSetForeachFunc for each change in the set. See the
+ * description of #GConfChangeSetForeachFunc for details.  You may not
+ * call gconf_change_set_remove() during the iteration, because you'll
+ * confuse the internal data structures and cause memory corruption.
+ */
 void
 gconf_change_set_foreach  (GConfChangeSet* cs,
                            GConfChangeSetForeachFunc func,

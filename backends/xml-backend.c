@@ -394,6 +394,7 @@ resolve_address (const gchar* address, GError** err)
     if (writable)
       flags |= GCONF_SOURCE_ALL_WRITEABLE;
 
+#ifdef HAVE_CORBA
     /* We only do locking if it's writable,
      * and if not using local locks,
      * which is sort of broken but close enough
@@ -417,6 +418,7 @@ resolve_address (const gchar* address, GError** err)
             return NULL;
           }
       }
+#endif
   }
 
   {
@@ -869,10 +871,13 @@ xs_new       (const gchar* root_dir, guint dir_mode, guint file_mode, GConfLock*
 static void
 xs_destroy   (XMLSource* xs)
 {
+#ifdef HAVE_CORBA
   GError* error = NULL;
-  
+#endif
+
   g_return_if_fail(xs != NULL);
 
+#ifdef HAVE_CORBA
   /* do this first in case we're in a "fast cleanup just before exit"
      situation */
   if (xs->lock != NULL && !gconf_release_lock(xs->lock, &error))
@@ -882,7 +887,8 @@ xs_destroy   (XMLSource* xs)
       g_error_free(error);
       error = NULL;
     }
-  
+#endif
+
   if (!g_source_remove(xs->timeout_id))
     {
       /* should not happen, don't translate */

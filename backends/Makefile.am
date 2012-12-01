@@ -1,5 +1,6 @@
 INCLUDES= -I$(top_srcdir) -I$(top_builddir) -I$(top_builddir)/gconf \
 	$(DEPENDENT_WITH_XML_CFLAGS) \
+	$(DEPENDENT_ORBIT_CFLAGS) \
 	-DGCONF_ENABLE_INTERNALS=1 -DG_LOG_DOMAIN=\"GConf-Backends\"
 
 backenddir = $(pkglibdir)/$(MAJOR_VERSION)

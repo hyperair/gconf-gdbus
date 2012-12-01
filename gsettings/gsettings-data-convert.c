@@ -27,14 +27,88 @@
 
 #include <glib.h>
 #include <gio/gio.h>
+#define GCONF_ENABLE_INTERNALS
+#include <gconf/gconf-internals.h>
 #include <gconf/gconf-client.h>
 
-static const gchar convert_dir[] = DATADIR "/GConf/gsettings";
-
+static gboolean changed = FALSE;
 static gboolean verbose = FALSE;
 static gboolean dry_run = FALSE;
 
-extern const gchar *gconf_value_type_to_string (int type);
+/* We only want to migrate settings that were in writable databases (in
+ * order to avoid 'lifting' system defaults into the user's database).
+ *
+ * We also want to perform the access to those readwrite databases
+ * readonly, since we're not making any changes.
+ *
+ * For that reason, we compile our own source list by scanning the
+ * default list.  We take all :readwrite: sources, changing them to
+ * :readonly: as we do so.
+ */
+static GSList *
+get_writable_source_path (void)
+{
+  GSList *result = NULL;
+  gchar *config_file;
+  GSList *addresses;
+  GSList *node;
+
+  config_file = g_strconcat (GCONF_CONFDIR, "/path", NULL);
+  addresses = gconf_load_source_path (config_file, NULL);
+  g_free (config_file);
+
+  for (node = addresses; node; node = node->next)
+    {
+      const gchar *address = node->data;
+      const gchar *match;
+
+      match = strstr (address, ":readwrite:");
+
+      if (match)
+        {
+          gchar *copy;
+
+          copy = g_malloc (strlen (address) - 1 + 1);
+          memcpy (copy, address, match - address);
+          memcpy (copy + (match - address), ":readonly:", 10);
+          strcpy (copy + (match - address) + 10, match + 11);
+          result = g_slist_prepend (result, copy);
+        }
+    }
+
+  result = g_slist_reverse (result);
+
+  gconf_address_list_free (addresses);
+
+  return result;
+}
+
+static GConfClient *
+get_writable_client (void)
+{
+  GConfEngine *engine;
+  GSList *addresses;
+
+  addresses = get_writable_source_path ();
+  engine = gconf_engine_get_local_for_addresses (addresses, NULL);
+  gconf_address_list_free (addresses);
+
+  return gconf_client_get_for_engine (engine);
+}
+
+static gboolean
+type_uint32 (GSettings   *settings,
+             const gchar *key)
+{
+  const GVariantType *type;
+  GVariant *value;
+
+  value = g_settings_get_value (settings, key);
+  type = g_variant_get_type (value);
+  g_variant_unref (value);
+
+  return g_variant_type_equal (type, G_VARIANT_TYPE_UINT32);
+}
 
 static gboolean
 handle_file (const gchar *filename)
@@ -52,6 +126,8 @@ handle_file (const gchar *filename)
   gchar *str;
   gint ii;
   GSList *list, *l;
+  GSettingsSchemaSource *source;
+  GSettingsSchema *schema;
   GSettings *settings;
   GError *error;
 
@@ -60,7 +136,8 @@ handle_file (const gchar *filename)
   error = NULL;
   if (!g_key_file_load_from_file (keyfile, filename, 0, &error))
     {
-      g_printerr ("%s\n", error->message);
+      if (verbose)
+        g_printerr ("%s: %s\n", filename, error->message);
       g_error_free (error);
 
       g_key_file_free (keyfile);
@@ -68,7 +145,8 @@ handle_file (const gchar *filename)
       return FALSE;
     }
 
-  client = gconf_client_get_default ();
+  client = get_writable_client ();
+  source = g_settings_schema_source_get_default ();
 
   groups = g_key_file_get_groups (keyfile, NULL);
   for (i = 0; groups[i]; i++)
@@ -77,9 +155,23 @@ handle_file (const gchar *filename)
 
       schema_path = g_strsplit (groups[i], ":", 2);
 
+      schema = g_settings_schema_source_lookup (source, schema_path[0], FALSE);
+      if (schema == NULL)
+        {
+          if (verbose)
+            {
+              g_print ("Schema '%s' not found, skipping\n", schema_path[0]);
+            }
+
+          g_strfreev (schema_path);
+          continue;
+        }
+
+      g_settings_schema_unref (schema);
+
       if (verbose)
         {
-          g_print ("collecting settings for schema '%s'\n", schema_path[0]);
+          g_print ("Collecting settings for schema '%s'\n", schema_path[0]);
           if (schema_path[1])
             g_print ("for storage at '%s'\n", schema_path[1]);
         }
@@ -143,7 +235,7 @@ handle_file (const gchar *filename)
             {
             case GCONF_VALUE_STRING:
               if (dry_run)
-                g_print ("set key '%s' to string '%s'\n", keys[j],
+                g_print ("Set key '%s' to string '%s'\n", keys[j],
                          gconf_value_get_string (value));
               else
                 g_settings_set (settings, keys[j], "s",
@@ -152,16 +244,34 @@ handle_file (const gchar *filename)
 
             case GCONF_VALUE_INT:
               if (dry_run)
-                g_print ("set key '%s' to integer '%d'\n",
+                g_print ("Set key '%s' to integer '%d'\n",
                          keys[j], gconf_value_get_int (value));
               else
-                g_settings_set (settings, keys[j], "i",
-                                gconf_value_get_int (value));
+                {
+                  GVariant *range;
+                  gchar *type;
+
+                  range = g_settings_get_range (settings, keys[j]);
+                  g_variant_get (range, "(&sv)", &type, NULL);
+
+                  if (strcmp (type, "enum") == 0)
+                    g_settings_set_enum (settings, keys[j], gconf_value_get_int (value));
+                  else if (strcmp (type, "flags") == 0)
+                    g_settings_set_flags (settings, keys[j], gconf_value_get_int (value));
+                  else if (type_uint32 (settings, keys[j]))
+                    g_settings_set (settings, keys[j], "u",
+                                    gconf_value_get_int (value));
+                  else
+                    g_settings_set (settings, keys[j], "i",
+                                    gconf_value_get_int (value));
+
+                  g_variant_unref (range);
+                }
               break;
 
             case GCONF_VALUE_BOOL:
               if (dry_run)
-                g_print ("set key '%s' to boolean '%d'\n",
+                g_print ("Set key '%s' to boolean '%d'\n",
                          keys[j], gconf_value_get_bool (value));
               else
                 g_settings_set (settings, keys[j], "b",
@@ -170,7 +280,7 @@ handle_file (const gchar *filename)
 
             case GCONF_VALUE_FLOAT:
               if (dry_run)
-                g_print ("set key '%s' to double '%g'\n",
+                g_print ("Set key '%s' to double '%g'\n",
                          keys[j], gconf_value_get_float (value));
               else
                 g_settings_set (settings, keys[j], "d",
@@ -200,7 +310,7 @@ handle_file (const gchar *filename)
                   if (dry_run)
                     {
                       str = g_variant_print (v, FALSE);
-                      g_print ("set key '%s' to a list of strings: %s\n",
+                      g_print ("Set key '%s' to a list of strings: %s\n",
                                keys[j], str);
                       g_free (str);
                     }
@@ -231,7 +341,7 @@ handle_file (const gchar *filename)
                   if (dry_run)
                     {
                       str = g_variant_print (v, FALSE);
-                      g_print ("set key '%s' to a list of integers: %s\n",
+                      g_print ("Set key '%s' to a list of integers: %s\n",
                                keys[j], str);
                       g_free (str);
                     }
@@ -275,32 +385,142 @@ handle_file (const gchar *filename)
   return TRUE;
 }
 
-static void
-load_state (time_t  *mtime,
-            gchar ***converted)
+static gboolean
+handle_dir (const gchar *dirname,
+            time_t       stored_mtime,
+            GHashTable  *converted)
 {
+  time_t dir_mtime;
+  struct stat statbuf;
+  GDir *dir;
+  const gchar *name;
+  gchar *filename;
+  GError *error;
+
+  /* If the directory is not newer, exit */
+  if (stat (dirname, &statbuf) == 0)
+    dir_mtime = statbuf.st_mtime;
+ else
+    {
+      if (verbose)
+        g_print ("Directory '%s' does not exist, nothing to do\n", dirname);
+      return TRUE;
+    }
+
+  if (dir_mtime <= stored_mtime)
+    {
+      if (verbose)
+        g_print ("Directory '%s' all uptodate, nothing to do\n", dirname);
+      return TRUE;
+    }
+
+  error = NULL;
+  dir = g_dir_open (dirname, 0, &error);
+  if (dir == NULL)
+    {
+      g_printerr ("Failed to open '%s': %s\n", dirname, error->message);
+      return FALSE;
+    }
+
+  while ((name = g_dir_read_name (dir)) != NULL)
+    {
+      if (g_hash_table_lookup (converted, name))
+        {
+          if (verbose)
+            g_print ("File '%s already converted, skipping\n", name);
+          goto next;
+        }
+
+      filename = g_build_filename (dirname, name, NULL);
+
+      if (handle_file (filename))
+        {
+          gchar *myname = g_strdup (name);
+
+          /* Add the the file to the converted list */
+          g_hash_table_insert (converted, myname, myname);
+          changed = TRUE;
+        }
+
+      g_free (filename);
+
+ next: ;
+    }
+
+  return TRUE;
+}
+
+/* get_string_set() and set_string_set() could be GKeyFile API */
+static GHashTable *
+get_string_set (GKeyFile     *keyfile,
+                const gchar  *group,
+                const gchar  *key,
+                GError      **error)
+{
+  GHashTable *converted;
+  gchar **list;
+  gint i;
+
+  list = g_key_file_get_string_list (keyfile, group, key, NULL, error);
+
+  if (list == NULL)
+    return NULL;
+
+  converted = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+  for (i = 0; list[i]; i++)
+    g_hash_table_insert (converted, list[i], list[i]);
+
+  /* The hashtable now owns the strings, so only free the array */
+  g_free (list);
+
+  return converted;
+}
+
+static void
+set_string_set (GKeyFile    *keyfile,
+                const gchar *group,
+                const gchar *key,
+                GHashTable  *set)
+{
+  GHashTableIter iter;
+  GString *list;
+  gpointer item;
+
+  list = g_string_new (NULL);
+  g_hash_table_iter_init (&iter, set);
+  while (g_hash_table_iter_next (&iter, &item, NULL))
+    g_string_append_printf (list, "%s;", (const gchar *) item);
+
+  g_key_file_set_value (keyfile, group, key, list->str);
+  g_string_free (list, TRUE);
+}
+
+static GHashTable *
+load_state (time_t *mtime)
+{
+  GHashTable *converted;
+  GHashTable *tmp;
   gchar *filename;
   GKeyFile *keyfile;
   GError *error;
   gchar *str;
-  gchar **list;
 
+  converted = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
   *mtime = 0;
-  *converted = g_new0 (gchar *, 1);
 
   filename = g_build_filename (g_get_user_data_dir (), "gsettings-data-convert", NULL);
   keyfile = g_key_file_new ();
 
   /* ensure file exists */
   if (!g_file_test (filename, G_FILE_TEST_EXISTS))
-    return;
+    return converted;
 
   error = NULL;
   if (!g_key_file_load_from_file (keyfile, filename, 0, &error))
     {
-      g_printerr ("%s\n", error->message);
+      g_printerr ("%s: %s\n", filename, error->message);
       g_error_free (error);
-      return;
+      return converted;
     }
 
   error = NULL;
@@ -316,24 +536,25 @@ load_state (time_t  *mtime,
     }
 
   error = NULL;
-  if ((list = g_key_file_get_string_list (keyfile, "State", "converted", NULL, &error)) == NULL)
+  if ((tmp = get_string_set (keyfile, "State", "converted", &error)) == NULL)
     {
       g_printerr ("%s\n", error->message);
       g_error_free (error);
     }
   else
     {
-      g_strfreev (*converted);
-      *converted = list;
+      g_hash_table_unref (converted);
+      converted = tmp;
     }
 
   g_key_file_free (keyfile);
   g_free (filename);
+
+  return converted;
 }
 
 static gboolean
-save_state (time_t   mtime,
-            gchar  **converted)
+save_state (GHashTable *converted)
 {
   gchar *filename;
   GKeyFile *keyfile;
@@ -352,14 +573,12 @@ save_state (time_t   mtime,
   filename = g_build_filename (g_get_user_data_dir (), "gsettings-data-convert", NULL);
   keyfile = g_key_file_new ();
 
-  str = g_strdup_printf ("%ld", mtime);
+  str = g_strdup_printf ("%ld", time (NULL));
   g_key_file_set_string (keyfile,
                          "State", "timestamp", str);
   g_free (str);
 
-  g_key_file_set_string_list (keyfile,
-                              "State", "converted",
-                              (const gchar * const *)converted, g_strv_length (converted));
+  set_string_set (keyfile, "State", "converted", converted);
 
   str = g_key_file_to_data (keyfile, NULL, NULL);
   g_key_file_free (keyfile);
@@ -385,20 +604,20 @@ int
 main (int argc, char *argv[])
 {
   time_t stored_mtime;
-  time_t dir_mtime;
-  struct stat statbuf;
-  GError *error;
-  gchar **converted;
-  GDir *dir;
-  const gchar *name;
-  gchar *filename;
+  const gchar * const *data_dirs;
   gint i;
+  GError *error;
+  GHashTable *converted;
   GOptionContext *context;
+  const gchar *extra_file = NULL;
   GOptionEntry entries[] = {
     { "verbose", 0, 0, G_OPTION_ARG_NONE, &verbose, "show verbose messages", NULL },
     { "dry-run", 0, 0, G_OPTION_ARG_NONE, &dry_run, "do not perform any changes", NULL },
+    { "file", 0, 0, G_OPTION_ARG_STRING, &extra_file, "perform conversions from an extra file", NULL },
     { NULL }
   };
+
+  g_type_init();
 
   context = g_option_context_new ("");
 
@@ -414,66 +633,49 @@ main (int argc, char *argv[])
       return 1;
     }
 
-  load_state (&stored_mtime, &converted);
+  converted = load_state (&stored_mtime);
 
-  /* If the directory is not newer, exit */
-  if (stat (convert_dir, &statbuf) == 0)
-    dir_mtime = statbuf.st_mtime;
- else
+  if (extra_file)
     {
-      if (verbose)
-        g_print ("Directory '%s' does not exist, nothing to do\n", convert_dir);
-      return 0;
-    }
+      gchar *base;
 
-  if (dir_mtime <= stored_mtime)
-    {
-      if (verbose)
-        g_print ("All uptodate, nothing to do\n");
-      return 0;
-    }
+      base = g_path_get_basename (extra_file);
 
-  error = NULL;
-  dir = g_dir_open (convert_dir, 0, &error);
-  if (dir == NULL)
-    {
-      g_printerr ("Failed to open '%s': %s\n", convert_dir, error->message);
-      return 1;
-    }
-
-  while ((name = g_dir_read_name (dir)) != NULL)
-    {
-       for (i = 0; converted[i]; i++)
-         {
-           if (strcmp (name, converted[i]) == 0)
-             {
-               if (verbose)
-                 g_print ("File '%s already converted, skipping\n", name);
-               goto next;
-             }
-         }
-
-      filename = g_build_filename (convert_dir, name, NULL);
-
-      if (handle_file (filename))
+      if (g_hash_table_lookup (converted, base))
         {
-          gint len;
+          if (verbose)
+            g_print ("'%s' is already converted.  Skipping.\n", base);
+        }
+      else
+        {
+          if (handle_file (extra_file))
+            {
+              gchar *myname = g_strdup (base);
 
-          /* Add the the file to the converted list */
-          len = g_strv_length (converted);
-          converted = g_realloc (converted, (len + 2) * sizeof (gchar *));
-          converted[len] = g_strdup (name);
-          converted[len + 1] = NULL;
+              g_hash_table_insert (converted, myname, myname);
+              changed = TRUE;
+            }
         }
 
-      g_free (filename);
-
- next: ;
+      g_free (base);
     }
 
-  if (!dry_run)
+  data_dirs = g_get_system_data_dirs ();
+  for (i = 0; data_dirs[i]; i++)
     {
-      if (!save_state (dir_mtime, converted))
+      gchar *convert_dir;
+
+      convert_dir = g_build_filename (data_dirs[i], "GConf", "gsettings", NULL);
+
+      if (!handle_dir (convert_dir, stored_mtime, converted))
+        return 1;
+
+      g_free (convert_dir);
+    }
+
+  if (changed && !dry_run)
+    {
+      if (!save_state (converted))
         return 1;
     }
 

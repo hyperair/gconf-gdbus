@@ -12,10 +12,11 @@ msgstr ""
 "Project-Id-Version: Gconf HEAD\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=gconf&component=general\n"
-"POT-Creation-Date: 2009-05-06 03:42+0000\n"
-"PO-Revision-Date: 2010-06-27 16:01+0300\n"
+"POT-Creation-Date: 2010-12-04 11:48+0000\n"
+"PO-Revision-Date: 2010-09-27 22:53+0300\n"
 "Last-Translator: Ivar Smolin <okul@linux.ee>\n"
 "Language-Team: Estonian <gnome-et@linux.ee>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -526,8 +527,8 @@ msgstr "Tõrge ühe või enama allika sünkimisel: %s"
 
 #, c-format
 msgid ""
-"Error obtaining new value for `%s' after change notification from backend `%"
-"s': %s"
+"Error obtaining new value for `%s' after change notification from backend `"
+"%s': %s"
 msgstr ""
 
 #, c-format
@@ -735,8 +736,8 @@ msgid ""
 "operating system has NFS file locking misconfigured (%s)"
 msgstr ""
 "Tõrge '%s' lukustamisel: arvatavasti on mõni teine protsess juba selle "
-"lukustanud või on sinu operatsioonisüsteemil NFS-tugi valesti seadistatud (%"
-"s)"
+"lukustanud või on sinu operatsioonisüsteemil NFS-tugi valesti seadistatud "
+"(%s)"
 
 #, c-format
 msgid "Failed to remove '%s': %s"
@@ -751,12 +752,8 @@ msgid "Failed to get connection to session: %s"
 msgstr "Tõrge seansiga ühenduse saamisel: %s"
 
 #, c-format
-msgid "Could not send message to GConf daemon: %s"
-msgstr "GConf-deemonile pole võimalik sõnumit saata: %s"
-
-#, c-format
-msgid "daemon gave erroneous reply: %s"
-msgstr "deemonilt saabus vigane vastus: %s"
+msgid "GetIOR failed: %s"
+msgstr ""
 
 #, c-format
 msgid "couldn't contact ORB to resolve existing gconfd object reference"
@@ -802,10 +799,9 @@ msgstr "Serveri pingimise viga: %s"
 
 #, c-format
 msgid ""
-"Failed to contact configuration server; some possible causes are that you "
-"need to enable TCP/IP networking for ORBit, or you have stale NFS locks due "
-"to a system crash. See http://projects.gnome.org/gconf/ for information. "
-"(Details - %s)"
+"Failed to contact configuration server; the most common cause is a missing "
+"or misconfigured D-Bus session bus daemon. See http://projects.gnome.org/"
+"gconf/ for information. (Details - %s)"
 msgstr ""
 
 msgid "none"
@@ -1152,8 +1148,8 @@ msgstr "Tõrge ConfigServer'i jaoks objektiviite hankimisel"
 
 #, c-format
 msgid ""
-"Failed to write byte to pipe file descriptor %d so client program may hang: %"
-"s"
+"Failed to write byte to pipe file descriptor %d so client program may hang: "
+"%s"
 msgstr ""
 
 #, c-format
@@ -1187,8 +1183,8 @@ msgstr ""
 msgid ""
 "Failed to close gconfd logfile; data may not have been properly saved (%s)"
 msgstr ""
-"Tõrge gconfd logifaili sulgemisel; andmed võivad olla valesti salvestatud (%"
-"s)"
+"Tõrge gconfd logifaili sulgemisel; andmed võivad olla valesti salvestatud "
+"(%s)"
 
 #, c-format
 msgid "Could not open saved state file '%s' for writing: %s"
@@ -1385,7 +1381,7 @@ msgid "FILENAME"
 msgstr "FAILINIMI"
 
 msgid "Specify a configuration source to use rather than the default path"
-msgstr ""
+msgstr "Vaikimisi raja asemel seadistusallika määramine"
 
 msgid "SOURCE"
 msgstr "ALLIKAS"
@@ -1435,7 +1431,7 @@ msgid "Specify a several-line description to go in a schema."
 msgstr "Skeemile lisatava mõnerealise kirjelduse määramine."
 
 msgid "Specify the owner of a schema"
-msgstr "Skeemi omaniku täpsustamine"
+msgstr "Skeemi omaniku määramine"
 
 msgid "OWNER"
 msgstr "OMANIK"
@@ -1463,43 +1459,43 @@ msgid "Client options:"
 msgstr "Kliendi valikud:"
 
 msgid "Show client options"
-msgstr "Kliendi valikute näitamine"
+msgstr "Kliendi võtmete näitamine"
 
 msgid "Key type options:"
 msgstr "Võtme liigi valikud:"
 
 msgid "Show key type options"
-msgstr "Võtme liigi valikute näitamine"
+msgstr "Seadistusvõtme liigi võtmete näitamine"
 
 msgid "Load/Save options:"
 msgstr "Valikute laadimine/salvestamine:"
 
 msgid "Show load/save options"
-msgstr "Laadimise/salvestamise valikute näitamine"
+msgstr "Laadimise/salvestamise võtmete näitamine"
 
 msgid "Server options:"
 msgstr "Serveri valikud:"
 
 msgid "Show server options"
-msgstr "Serveri valikute näitamine"
+msgstr "Serveri võtmete näitamine"
 
 msgid "Installation options:"
 msgstr "Paigaldusvalikud:"
 
 msgid "Show installation options"
-msgstr "Paigaldusvalikute näitamine"
+msgstr "Paigaldusvõtmete näitamine"
 
 msgid "Test options:"
 msgstr "Testvalikud:"
 
 msgid "Show test options"
-msgstr "Testvalikute näitamine"
+msgstr "Testvõtmete näitamine"
 
 msgid "Schema options:"
 msgstr "Skeemi valikud:"
 
 msgid "Show schema options"
-msgstr "Skeemi valikute näitamine"
+msgstr "Skeemi võtmete näitamine"
 
 #, c-format
 msgid "Run '%s --help' to see a full list of available command line options.\n"
@@ -1624,7 +1620,7 @@ msgstr "Viga regulaaravaldise kompileerimisel: %s\n"
 
 #, c-format
 msgid "Must specify one or more directories to dump.\n"
-msgstr "Dump'iks vajalik ühe või enama kataloogi täpsustamine.\n"
+msgstr "Tõmmise väljastamiseks on vajalik ühe või enama kataloogi määramine.\n"
 
 #, c-format
 msgid "Failed to spawn the configuration server (gconfd): %s\n"
@@ -2054,6 +2050,12 @@ msgid ""
 "directory:\n"
 "  %s\n"
 msgstr ""
+
+#~ msgid "Could not send message to GConf daemon: %s"
+#~ msgstr "GConf-deemonile pole võimalik sõnumit saata: %s"
+
+#~ msgid "daemon gave erroneous reply: %s"
+#~ msgstr "deemonilt saabus vigane vastus: %s"
 
 #~ msgid "Attribute \"%s\" repeated twice on the same <%s> element"
 #~ msgstr "Atribuuti \"%s\" on kasutatud kaks korda sama elemendi <%s> korral"

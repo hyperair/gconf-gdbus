@@ -6,6 +6,8 @@ INCLUDES=								\
 	-I$(top_srcdir)							\
 	-I$(top_builddir)						\
 	$(DEPENDENT_WITH_XML_AND_GTK_CFLAGS) 				\
+	$(DEPENDENT_DBUS_CFLAGS)				\
+	$(DEPENDENT_ORBIT_CFLAGS)				\
 	-DG_LOG_DOMAIN=\"GConf\"					\
 	-DPREFIX=\""$(prefix)"\"					\
 	-DGCONF_LOCALE_DIR=\""$(datadir)/locale"\"			\
@@ -37,13 +39,16 @@ libexec_PROGRAMS = gconfd-2 $(SANITY_CHECK)
 CORBA_SOURCECODE = GConfX-common.c GConfX-skels.c GConfX-stubs.c GConfX.h
 
 BUILT_SOURCES = 			\
-	$(CORBA_SOURCECODE)		\
 	gconfmarshal.h			\
 	gconfmarshal.c
+if HAVE_CORBA
+BUILT_SOURCES += $(CORBA_SOURCECODE)
+endif
+
 
 $(libgconf_2_la_OBJECTS) $(gconftool_2_OBJECTS) $(gconfd_2_OBJECTS): $(built_sourcecode)
 
-CLEANFILES = $(BUILT_SOURCES) $(service_DATA)
+CLEANFILES = $(BUILT_SOURCES) $(service_DATA) $(CORBA_SOURCECODE)
 
 DISTCLEANFILES = default.path
 
@@ -74,13 +79,21 @@ gconfd_2_SOURCES = \
 	gconfd.h		\
 	gconfd.c
 
+if HAVE_DBUS
+gconfd_2_SOURCES += \
+	gconfd-dbus.c \
+	gconfd-dbus.h \
+	gconf-database-dbus.h \
+	gconf-database-dbus.c
+endif
 if OS_WIN32
 gconfd_2_LDFLAGS = -mwindows
 endif
 
 gconfd_2_CFLAGS = $(INCLUDES) $(DEPENDENT_DBUS_CFLAGS)
 
-gconfd_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS)
+gconfd_2_LDADD = libgconf-$(MAJOR_VERSION).la $(EFENCE) $(INTLLIBS) \
+		 $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS) $(DEPENDENT_ORBIT_LIBS)
 
 gconftool_2_SOURCES = \
 	gconftool.c
@@ -115,28 +128,40 @@ libgconf_2_la_SOURCES = \
 	gconf.c			\
 	gconf-client.c		\
 	gconf-enum-types.c	\
-	$(CORBA_SOURCECODE)	\
 	$(WIN32_SOURCECODE)
+
+if HAVE_CORBA
+libgconf_2_la_SOURCES += $(CORBA_SOURCECODE)
+endif
+
+if HAVE_DBUS
+libgconf_2_la_SOURCES += \
+	gconf-dbus.c \
+	gconf-dbus-utils.c \
+	gconf-dbus-utils.h
+endif
 
 libgconf_2_la_LDFLAGS = -version-info $(GCONF_CURRENT):$(GCONF_REVISION):$(GCONF_AGE) -no-undefined
 
-libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS)
+libgconf_2_la_LIBADD = $(INTLLIBS) $(DEPENDENT_LIBS) $(DEPENDENT_DBUS_LIBS) $(DEPENDENT_ORBIT_LIBS)
 
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS =
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)
+INTROSPECTION_SCANNER_ARGS = --warn-all --add-include-path=$(srcdir)
 INTROSPECTION_COMPILER_ARGS= --includedir=$(srcdir)
 
 if HAVE_INTROSPECTION
 introspection_files =				\
 	$(gconfinclude_HEADERS)			\
-	$(filter %.c,$(libgconf_2_la_SOURCES))
+	$(filter-out $(CORBA_SOURCECODE), $(filter %.c,$(libgconf_2_la_SOURCES)))
 GConf-2.0.gir: libgconf-2.la Makefile
 GConf_2_0_gir_INCLUDES = GObject-2.0
 GConf_2_0_gir_CFLAGS = \
 	$(INCLUDES)
 GConf_2_0_gir_LIBS = libgconf-2.la
 GConf_2_0_gir_FILES = $(addprefix $(srcdir)/, $(introspection_files))
+GConf_2_0_gir_SCANNERFLAGS = --identifier-prefix=GConf --symbol-prefix=gconf --c-include "gconf/gconf.h"
+GConf_2_0_gir_EXPORT_PACKAGES = gconf-2.0
 INTROSPECTION_GIRS += GConf-2.0.gir
 
 girdir = $(datadir)/gir-1.0/

@@ -25,6 +25,13 @@
 
 G_BEGIN_DECLS
 
+/* Skipped from introspection because it's not an object or registered as boxed */
+/**
+ * GConfEngine: (skip)
+ *
+ * An opaque data type representing one or more configuration sources.
+ */
+
 /* A configuration engine (stack of config sources); normally there's
  * just one of these on the system.  
  */

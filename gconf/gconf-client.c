@@ -56,6 +56,13 @@ trace (const char *format, ...)
 
 static GConfClientErrorHandlerFunc global_error_handler = NULL;
 
+/**
+ * gconf_client_set_global_default_error_handler: (skip)
+ * @func: pointer to the function to be called for error handling.
+ *
+ * Set @func as the default error handler for the #GConfClient. This handler would be called
+ * for all #GConfClient internal errors.
+ */
 void
 gconf_client_set_global_default_error_handler(GConfClientErrorHandlerFunc func)
 {
@@ -232,6 +239,8 @@ gconf_client_init (GConfClient *client)
   client->cache_hash = g_hash_table_new (g_str_hash, g_str_equal);
   client->cache_dirs = g_hash_table_new_full (g_str_hash, g_str_equal,
 					      g_free, NULL);
+  client->cache_recursive_dirs = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                                        g_free, NULL);
   /* We create the listeners only if they're actually used */
   client->listeners = NULL;
   client->notify_list = NULL;
@@ -308,6 +317,9 @@ gconf_client_finalize (GObject* object)
   
   g_hash_table_destroy (client->cache_hash);
   client->cache_hash = NULL;
+
+  g_hash_table_destroy (client->cache_recursive_dirs);
+  client->cache_recursive_dirs = NULL;
 
   g_hash_table_destroy (client->cache_dirs);
   client->cache_dirs = NULL;
@@ -422,6 +434,18 @@ notify_from_server_callback (GConfEngine* conf, guint cnxn_id,
  */
 
 
+/**
+ * gconf_client_get_default:
+ *
+ * Creates a new #GConfClient using the default #GConfEngine. Normally this is the
+ * engine you want. If someone else is already using the default
+ * #GConfClient, this function returns the same one they're using, but
+ * with the reference count incremented. So you have to unref either way.
+ *
+ * It's important to call g_type_init() before using this GObject, to initialize the type system.
+ *
+ * Return value: (transfer full): a new #GConfClient. g_object_unref() when you're done.
+ */
 GConfClient*
 gconf_client_get_default (void)
 {
@@ -451,6 +475,18 @@ gconf_client_get_default (void)
   return client;
 }
 
+/**
+ * gconf_client_get_for_engine:
+ * @engine: the #GConfEngine to use.
+ *
+ * Creates a new #GConfClient with a specific #GConfEngine. Only specialized
+ * configuration-related programs should need to call this function. The
+ * returned #GConfClient should be unref'd when you're done with g_object_unref().
+ * Remember to avoid using the #GConfEngine directly once you have a #GConfClient
+ * wrapper.
+ *
+ * Return value: (transfer full): a new #GConfClient.
+ */
 GConfClient*
 gconf_client_get_for_engine (GConfEngine* engine)
 {
@@ -840,7 +876,7 @@ gconf_client_clear_cache(GConfClient* client)
 }
 
 static void
-cache_pairs_in_dir(GConfClient* client, const gchar* path);
+cache_pairs_in_dir(GConfClient* client, const gchar* path, gboolean recursive);
 
 static void 
 recurse_subdir_list(GConfClient* client, GSList* subdirs)
@@ -853,7 +889,7 @@ recurse_subdir_list(GConfClient* client, GSList* subdirs)
     {
       gchar* s = tmp->data;
       
-      cache_pairs_in_dir(client, s);
+      cache_pairs_in_dir(client, s, TRUE);
 
       trace ("REMOTE: All dirs at '%s'", s);
       PUSH_USE_ENGINE (client);
@@ -924,7 +960,7 @@ cache_entry_list_destructively (GConfClient *client,
 }
 
 static void 
-cache_pairs_in_dir(GConfClient* client, const gchar* dir)
+cache_pairs_in_dir(GConfClient* client, const gchar* dir, gboolean recursive)
 {
   GSList* pairs;
   GError* error = NULL;
@@ -946,6 +982,9 @@ cache_pairs_in_dir(GConfClient* client, const gchar* dir)
   cache_entry_list_destructively (client, pairs);
   trace ("Mark '%s' as fully cached", dir);
   g_hash_table_insert (client->cache_dirs, g_strdup (dir), GINT_TO_POINTER (1));
+  
+  if (recursive)
+    g_hash_table_insert (client->cache_recursive_dirs, g_strdup (dir), GINT_TO_POINTER (1));
 }
 
 void
@@ -978,7 +1017,7 @@ gconf_client_preload    (GConfClient* client,
       {
         trace ("Onelevel preload of '%s'", dirname);
         
-        cache_pairs_in_dir (client, dirname);
+        cache_pairs_in_dir (client, dirname, FALSE);
       }
       break;
 
@@ -993,7 +1032,7 @@ gconf_client_preload    (GConfClient* client,
         subdirs = gconf_engine_all_dirs(client->engine, dirname, NULL);
         POP_USE_ENGINE (client);
         
-        cache_pairs_in_dir(client, dirname);
+        cache_pairs_in_dir(client, dirname, TRUE);
           
         recurse_subdir_list(client, subdirs);
       }
@@ -1004,6 +1043,128 @@ gconf_client_preload    (GConfClient* client,
       break;
     }
 }
+
+#ifdef HAVE_DBUS
+
+/*
+ * Add functions for manipulating the internal cache of values - under the
+ * D-BUS environment we update the internal cache when changes happen to
+ * ensure a consistent state
+ */
+static gboolean
+remove_key_from_cache_foreach (const gchar *cached_key,
+                               GConfEntry  *entry,
+                               const gchar *key)
+{
+  if (strcmp (cached_key, key) == 0)
+    {
+      gconf_entry_free (entry);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+static gboolean
+remove_key_from_cache_recursively_foreach (const gchar *cached_key,
+                                           GConfEntry  *entry,
+                                           const gchar *key)
+{
+  if (gconf_key_is_below (cached_key, key) == 0 || strcmp (cached_key, key) == 0)
+    {
+      /* Not sure why a null entry would be in the cache, but it happens
+       * sometimes, workaround for now to avoid crashing.
+       */
+      if (entry)
+        gconf_entry_free (entry);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+static gboolean
+remove_dir_from_cache_foreach (char     *cached_dir,
+                               gpointer  value,
+                               char     *dir)
+{
+  if (strcmp (dir, cached_dir) == 0)
+    {
+      trace ("'%s' no longer fully cached", dir);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+/* The dbus version cleans the cache after modifying a value. So we will
+ * remove current dir (where the key is in) from the cache_dirs
+ * when removing the key from the cache_hash.
+ * This is a workaround. It will degrade the performance of querying negative keys in the same dir. 
+ */
+static void remove_dir_from_cache (GConfClient *client,
+                                   const gchar *key)
+{
+  char *dir, *last_slash;
+  dir = g_strdup (key);
+  last_slash = strrchr (dir, '/');
+  g_assert (last_slash != NULL);
+  *last_slash = 0;
+  trace ("Remove dir '%s' from cache since one of keys is changed", dir);
+  g_hash_table_foreach_remove (client->cache_dirs,
+                               (GHRFunc) remove_dir_from_cache_foreach,
+                               dir);
+  g_free (dir);
+}
+
+static void
+remove_key_from_cache (GConfClient *client,
+                       const gchar *key)
+{
+  g_hash_table_foreach_remove (client->cache_hash,
+                               (GHRFunc) remove_key_from_cache_foreach,
+                               (char *) key);
+  remove_dir_from_cache (client, key);
+}
+
+static void
+remove_key_from_cache_recursively (GConfClient *client,
+                                   const gchar *key)
+{
+  g_hash_table_foreach_remove (client->cache_hash,
+                               (GHRFunc) remove_key_from_cache_recursively_foreach,
+                               (char *) key);
+  remove_dir_from_cache (client, key);
+}
+
+static gboolean
+cache_key_value (GConfClient      *client,
+                 const gchar      *key,
+                 const GConfValue *val)
+{
+  GConfEntry *entry;
+
+  entry = gconf_entry_new (key, val);
+  return gconf_client_cache (client, TRUE, entry, TRUE);
+}
+
+static void
+cache_key_value_and_notify (GConfClient *client,
+                            const gchar *key,
+                            GConfValue  *val,
+                            gboolean     free_value)
+{
+  if (cache_key_value (client, key, val))
+    {
+      if (key_being_monitored (client, key))
+        gconf_client_queue_notify (client, key);
+    }
+
+  if (free_value)
+    gconf_value_free (val);
+}
+
+#endif
 
 /*
  * Basic key-manipulation facilities
@@ -1021,6 +1182,11 @@ gconf_client_set             (GConfClient* client,
   PUSH_USE_ENGINE (client);
   gconf_engine_set (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (!error)
+    cache_key_value_and_notify (client, key, (GConfValue *) val, FALSE);
+#endif
   
   handle_error(client, error, err);
 }
@@ -1035,7 +1201,12 @@ gconf_client_unset          (GConfClient* client,
   PUSH_USE_ENGINE (client);
   gconf_engine_unset(client->engine, key, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (!error)
+    remove_key_from_cache (client, key);
+#endif
+
   handle_error(client, error, err);
 
   if (error != NULL)
@@ -1057,7 +1228,12 @@ gconf_client_recursive_unset (GConfClient *client,
   PUSH_USE_ENGINE (client);
   gconf_engine_recursive_unset(client->engine, key, flags, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (!error)
+    remove_key_from_cache_recursively (client, key);
+#endif
+
   handle_error(client, error, err);
 
   if (error != NULL)
@@ -1086,6 +1262,22 @@ copy_entry_list (GSList *list)
   return copy;
 }
 
+/**
+ * gconf_client_all_entries:
+ * @client: a #GConfClient.
+ * @dir: directory to list.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Lists the key-value pairs in @dir. Does not list subdirectories; for
+ * that use gconf_client_all_dirs(). The returned list contains #GConfEntry
+ * objects. A #GConfEntry contains an <emphasis>absolute</emphasis> key
+ * and a value. The list is not recursive, it contains only the immediate
+ * children of @dir.  To free the returned list, gconf_entry_free()
+ * each list element, then g_slist_free() the list itself.
+ * Just like gconf_engine_all_entries (), but uses #GConfClient caching and error-handling features.
+ *
+ * Return value: (element-type GConfEntry) (transfer full): List of #GConfEntry.
+ */
 GSList*
 gconf_client_all_entries    (GConfClient* client,
                              const gchar* dir,
@@ -1138,6 +1330,20 @@ gconf_client_all_entries    (GConfClient* client,
   return retval;
 }
 
+/**
+ * gconf_client_all_dirs:
+ * @client: a #GConfClient.
+ * @dir: directory to get subdirectories from.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Lists the subdirectories in @dir. The returned list contains
+ * allocated strings. Each string is the absolute path of a
+ * subdirectory. You should g_free() each string in the list, then
+ * g_slist_free() the list itself.  Just like gconf_engine_all_dirs(),
+ * but uses #GConfClient caching and error-handling features.
+ *
+ * Return value: (element-type utf8) (transfer full): List of allocated subdirectory names.
+ */
 GSList*
 gconf_client_all_dirs       (GConfClient* client,
                              const gchar* dir, GError** err)
@@ -1628,6 +1834,72 @@ gconf_client_get_schema  (GConfClient* client,
     }
 }
 
+/**
+ * gconf_client_get_list: (skip)
+ * @client: a #GConfClient.
+ * @key: key you want the value of.
+ * @list_type: type of each list element.
+ * @err: the return location for an allocated #GError, or <symbol>NULL</symbol> to ignore errors.
+ *
+ * Requests the list (%GCONF_VALUE_LIST) stored at @key.  Automatically
+ * performs type-checking, so if a non-list is stored at @key, or the
+ * list does not contain elements of type @list_type, an error is
+ * returned. If no value is set or an error occurs, <symbol>NULL</symbol>
+ * is returned. Note that <symbol>NULL</symbol> is also the empty list,
+ * so if you need to distinguish the empty list from an unset value, you
+ * must use gconf_client_get () to obtain a raw #GConfValue.
+ *
+ * <emphasis>Remember that GConf lists can only store primitive types:
+ * %GCONF_VALUE_FLOAT, %GCONF_VALUE_INT, %GCONF_VALUE_BOOL,
+ * %GCONF_VALUE_STRING, %GCONF_VALUE_SCHEMA.</emphasis> Also remember
+ * that lists must be uniform, you may not mix types in the same list.
+ *
+ * The type of the list elements depends on @list_type. A #GConfValue
+ * with type %GCONF_VALUE_LIST normally stores a list of more #GConfValue
+ * objects. gconf_client_get_list() automatically converts to primitive C
+ * types. Thus, the list-&gt;data fields in the returned list
+ * contain:
+ *  
+ * <informaltable pgwide="1" frame="none">
+ * <tgroup cols="2"><colspec colwidth="2*"/><colspec colwidth="8*"/>
+ * <tbody>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_INT</entry>
+ * <entry>The integer itself, converted with GINT_TO_POINTER()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_BOOL</entry>
+ * <entry>The bool itself, converted with GINT_TO_POINTER()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_FLOAT</entry>
+ * <entry>A pointer to #gdouble, which should be freed with g_free()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_STRING</entry>
+ * <entry>A pointer to #gchar, which should be freed with g_free()</entry>
+ * </row>
+ *  
+ * <row>
+ * <entry>%GCONF_VALUE_SCHEMA</entry>
+ * <entry>A pointer to #GConfSchema, which should be freed with gconf_schema_free()</entry>
+ * </row>
+ *  
+ * </tbody></tgroup></informaltable>
+ *  
+ * In the %GCONF_VALUE_FLOAT and %GCONF_VALUE_STRING cases, you must
+ * g_free() each list element. In the %GCONF_VALUE_SCHEMA case you must
+ * gconf_schema_free() each element. In all cases you must free the
+ * list itself with g_slist_free().
+ *
+ * Just like gconf_engine_get_list (), but uses #GConfClient caching and error-handling features.
+ *
+* Return value: an allocated list, with elements as described above.
+*/
 GSList*
 gconf_client_get_list    (GConfClient* client, const gchar* key,
                           GConfValueType list_type, GError** err)
@@ -1709,6 +1981,9 @@ gconf_client_get_pair    (GConfClient* client, const gchar* key,
     }
 }
 
+#ifdef HAVE_DBUS
+#define MAKE_VALUE(v, TYPE, type, val) GConfValue *v = gconf_value_new (GCONF_VALUE_##TYPE); gconf_value_set_##type (v, val)
+#endif
 
 /*
  * For the set functions, we just set normally, and wait for the
@@ -1738,6 +2013,14 @@ gconf_client_set_float   (GConfClient* client, const gchar* key,
   result = gconf_engine_set_float (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
 
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, FLOAT, float, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1762,7 +2045,15 @@ gconf_client_set_int     (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_int (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, INT, int, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1788,7 +2079,15 @@ gconf_client_set_string  (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_string(client->engine, key, val, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, STRING, string, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1813,6 +2112,14 @@ gconf_client_set_bool    (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_bool (client->engine, key, val, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, BOOL, bool, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
 
   if (result)
     return TRUE;
@@ -1839,7 +2146,15 @@ gconf_client_set_schema  (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_schema(client->engine, key, val, &error);
   POP_USE_ENGINE (client);
-  
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      MAKE_VALUE (v, SCHEMA, schema, val);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
+
   if (result)
     return TRUE;
   else
@@ -1866,6 +2181,14 @@ gconf_client_set_list    (GConfClient* client, const gchar* key,
   PUSH_USE_ENGINE (client);
   result = gconf_engine_set_list(client->engine, key, list_type, list, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      GConfValue *v = gconf_value_list_from_primitive_list (list_type, list, err);
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
 
   if (result)
     return TRUE;
@@ -1895,6 +2218,20 @@ gconf_client_set_pair    (GConfClient* client, const gchar* key,
   result = gconf_engine_set_pair (client->engine, key, car_type, cdr_type,
                                   address_of_car, address_of_cdr, &error);
   POP_USE_ENGINE (client);
+
+#ifdef HAVE_DBUS
+  if (result)
+    {
+      GConfValue *v = gconf_value_pair_from_primitive_pair (car_type, cdr_type, address_of_car, address_of_cdr, &error);
+      if (!v)
+        {
+          handle_error (client, error, err);
+          return FALSE;
+        }
+
+      cache_key_value_and_notify (client, key, v, TRUE);
+    }
+#endif
 
   if (result)
     return TRUE;
@@ -2033,12 +2370,30 @@ gconf_client_lookup (GConfClient *client,
     *last_slash = 0;
 
     if (g_hash_table_lookup (client->cache_dirs, dir))
-    {
-      g_free (dir);
-      trace ("Negative cache hit on %s", key);
-      return TRUE;
-    }
-
+      {
+        g_free (dir);
+        trace ("Negative cache hit on %s", key);
+        return TRUE;
+      }
+    else 
+      {
+        gboolean not_cached = FALSE;
+        while(not_cached || (!g_hash_table_lookup (client->cache_recursive_dirs, dir)))
+          {
+            last_slash = strrchr (dir, '/');
+            if (last_slash == NULL)
+              break;
+            else
+              *last_slash = 0;
+            if (g_hash_table_lookup (client->cache_recursive_dirs, dir))
+              {
+                g_free (dir);
+                trace ("Non-existing dir for %s", key);
+                return TRUE;
+              }
+            not_cached = TRUE;
+          }
+      }
     g_free (dir);
   }
 
@@ -2527,8 +2882,34 @@ gconf_client_flush_notifies (GConfClient *client)
         }
       else
         {
-          trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
-                 tmp->data);
+#ifdef HAVE_DBUS
+          /* The dbus version cleans the cache after modifying a value so a get
+           * directly after a set doesn't return a stale value. That means we
+           * have to check if the key is supposed to be monitored here, we can't
+           * just rely on it being in the cache.
+           */
+          if (key_being_monitored (client, tmp->data))
+            {
+              trace ("Key %s was in notify queue but not in cache, but is being monitored",
+                     tmp->data);
+
+              entry = gconf_client_get_entry (client, tmp->data, NULL, TRUE, NULL);
+              if (entry != NULL)
+                {
+                  notify_one_entry (client, entry);
+                  gconf_entry_unref (entry);
+                  last_entry = NULL;
+                }
+            }
+          else
+            {
+              trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
+                     tmp->data);
+            }
+#else
+              trace ("Key '%s' was in notify queue but not in cache; we must have stopped monitoring it; not notifying",
+                     tmp->data);
+#endif
         }
       
       tmp = tmp->next;

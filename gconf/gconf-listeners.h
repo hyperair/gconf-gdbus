@@ -24,6 +24,17 @@
 
 G_BEGIN_DECLS
 
+/* Skipped from introspection because it's not registered as boxed */
+/**
+ * GConfListeners: (skip)
+ *
+ * The #GConfListeners structure contains nothing other than a dummy pointer. Internally 
+ * the data about listeners is maintained through a listener table structure,
+ * LTable which contains data like the namespace, an array to hold the listeners, count of
+ * active listeners,value to be given to the next connection and the list of connection indices
+ * to be recycled. There is also a Listener structure maintaining data pertaining to listeners.
+ */
+
 /*
  * The listeners object is used to store listeners who want notification
  * of changes in a namespace section.

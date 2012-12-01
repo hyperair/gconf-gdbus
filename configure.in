@@ -1,6 +1,6 @@
 AC_PREREQ(2.60)
 AC_INIT([GConf],
-  [2.31.90],
+  [3.2.6],
   [http://bugzilla.gnome.org/enter_bug.cgi?product=GConf],
   [GConf])
 
@@ -9,9 +9,9 @@ AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.9 no-dist-gzip dist-bzip2 -Wall])
 
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([no])])
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-AM_MAINTAINER_MODE
+AM_MAINTAINER_MODE([enable])
 
 AC_CANONICAL_HOST
 case "$host" in
@@ -139,15 +139,40 @@ fi
 
 GTK_DOC_CHECK([1.0])
 
+AC_ARG_ENABLE([documentation],
+	AS_HELP_STRING([--enable-documentation], [enable documentation generated via XSLT]),
+	[], [enable_documentation=yes])
+AM_CONDITIONAL(ENABLE_DOCUMENTATION, test x$enable_documentation = xyes)
+
+AC_MSG_CHECKING([which gtk+ version to compile against])
+AC_ARG_WITH([gtk],
+  [AS_HELP_STRING([--with-gtk=2.0|3.0],[which gtk+ version to compile against (default: 3.0)])],
+  [case "$with_gtk" in
+     2.0|3.0) ;;
+     *) AC_MSG_ERROR([invalid gtk version specified]) ;;
+   esac],
+  [with_gtk=3.0])
+AC_MSG_RESULT([$with_gtk])
+
+case "$with_gtk" in
+  2.0) GTK_API_VERSION=2.0
+       GTK_REQUIRED=2.14
+       ;;
+  3.0) GTK_API_VERSION=3.0
+       GTK_REQUIRED=2.90
+       ;;
+esac
+
 AC_ARG_ENABLE(gtk,
   AS_HELP_STRING([--enable-gtk],
     [Enable GTK+ support (for gconf-sanity-check) @<:@default=auto@:>@]),
   , enable_gtk=auto)
 
-PKGCONFIG_MODULES='glib-2.0 > 2.14.0 gio-2.0 >= 2.25.9 gthread-2.0 gmodule-2.0 >= 2.7.0 gobject-2.0 >= 2.7.0 ORBit-2.0 >= 2.4.0'
+PKGCONFIG_MODULES='glib-2.0 > 2.14.0 gio-2.0 >= 2.31.0 gthread-2.0 gmodule-2.0 >= 2.7.0 gobject-2.0 >= 2.7.0'
 PKGCONFIG_MODULES_WITH_XML="$PKGCONFIG_MODULES libxml-2.0"
-PKGCONFIG_MODULES_WITH_GTK=" $PKGCONFIG_MODULES gtk+-2.0 >= 2.14.0"
-PKGCONFIG_MODULES_WITH_XML_AND_GTK=" $PKGCONFIG_MODULES gtk+-2.0 libxml-2.0"
+PKGCONFIG_MODULES_WITH_GTK=" $PKGCONFIG_MODULES gtk+-$GTK_API_VERSION >= $GTK_REQUIRED"
+PKGCONFIG_MODULES_WITH_XML_AND_GTK=" $PKGCONFIG_MODULES gtk+-$GTK_API_VERSION >= $GTK_REQUIRED libxml-2.0"
+PKGCONFIG_MODULES_ORBIT=" ORBit-2.0 >= 2.4.0"
 
 PKG_CHECK_MODULES(DEPENDENT, $PKGCONFIG_MODULES)
 PKG_CHECK_MODULES(DEPENDENT_WITH_XML, $PKGCONFIG_MODULES_WITH_XML)
@@ -158,7 +183,7 @@ if test "x$enable_gtk" != "xno"; then
 
   if test "x$enable_gtk" = "xyes" && test "x$HAVE_GTK" = "xno"; then
     AC_MSG_ERROR([[
-*** Could not find GTK+ 2.14 or greater.
+*** Could not find GTK+ $GTK_REQUIRED.
 *** Go to http://www.gtk.org/ to get it.]])
   fi
 else
@@ -166,6 +191,35 @@ else
   DEPENDENT_WITH_XML_AND_GTK_CFLAGS=$DEPENDENT_WITH_XML_CFLAGS
   DEPENDENT_WITH_XML_AND_GTK_LIBS=$DEPENDENT_WITH_XML_LIBS
 fi
+
+AC_MSG_CHECKING([whether to use ORBit])
+AC_ARG_ENABLE(orbit,
+              AS_HELP_STRING([--disable-orbit],
+                             [Disable using ORBit for IPC]),
+              [],
+              [enable_orbit=yes])
+AS_IF([test "x$enable_orbit" = "xyes"],
+      [
+        AC_MSG_RESULT([yes])
+        PKG_CHECK_MODULES([DEPENDENT_ORBIT], [$PKGCONFIG_MODULES_ORBIT])
+        AM_CONDITIONAL(HAVE_CORBA, [true])
+        AM_CONDITIONAL(HAVE_DBUS, [false])
+        AC_DEFINE(HAVE_CORBA, 1, [Use ORBit IPC mechanism])
+        IPC_REQUIRES="ORBit-2.0"
+        IPC="ORBit"
+      ],
+      [
+        AC_MSG_RESULT([no])
+        AM_CONDITIONAL(HAVE_CORBA, [false])
+        AM_CONDITIONAL(HAVE_DBUS, [true])
+        AC_DEFINE(HAVE_DBUS, 1, [Use D-BUS IPC mechanism])
+        IPC_REQUIRES="dbus-1"
+        IPC="DBus"
+      ])
+AC_SUBST(HAVE_CORBA)
+AC_SUBST(HAVE_DBUS)
+AC_SUBST(IPC_REQUIRES)
+
 
 AM_CONDITIONAL(GTK, [test "x$HAVE_GTK" != "xno"])
 
@@ -177,6 +231,8 @@ AC_SUBST(DEPENDENT_WITH_GTK_LIBS)
 AC_SUBST(DEPENDENT_WITH_GTK_CFLAGS)
 AC_SUBST(DEPENDENT_WITH_XML_AND_GTK_LIBS)
 AC_SUBST(DEPENDENT_WITH_XML_AND_GTK_CFLAGS)
+AC_SUBST([DEPENDENT_ORBIT_CFLAGS])
+AC_SUBST([DEPENDENT_ORBIT_LIBS])
 
 HAVE_POLKIT=no
 AC_ARG_ENABLE(defaults_service,
@@ -218,8 +274,8 @@ if test "x$enable_gsettings_backend" != "xno" ; then
     fi
   else
     enable_gsettings_backend=yes
-    AC_SUBST(GIO_MODULE_DIR,
-             `pkg-config --variable giomoduledir gio-2.0`)
+    GIO_MODULE_DIR=$libdir/gio/modules
+    AC_SUBST(GIO_MODULE_DIR)
     AC_PATH_PROG(GIO_QUERYMODULES, gio-querymodules, no)
   fi
 fi
@@ -298,7 +354,7 @@ AM_GLIB_GNU_GETTEXT
 
 AC_CHECK_FUNCS(bind_textdomain_codeset)
 
-GOBJECT_INTROSPECTION_CHECK([0.6.7])
+GOBJECT_INTROSPECTION_CHECK([0.9.5])
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
@@ -329,6 +385,7 @@ AC_OUTPUT
 echo "
 	sysconfsubdir:	${with_sysconfsubdir}
 
+        IPC:            ${IPC}
 	gtk+:		${HAVE_GTK}
 	ldap:		${have_ldap}
 	policykit:	${HAVE_POLKIT}

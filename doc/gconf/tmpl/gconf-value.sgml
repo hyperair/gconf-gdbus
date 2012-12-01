@@ -131,15 +131,11 @@ Returns the type of the list elements in a #GConfValue with type
 
 <!-- ##### FUNCTION gconf_value_get_list ##### -->
 <para>
-Returns a #GSList containing #GConfValue objects. Each #GConfValue in
-the returned list will have the type returned by
-gconf_value_get_list_type(). Remember that the empty #GSList is equal to
-<symbol>NULL</symbol>.  The list is not a copy; it is "owned" by the
-#GConfValue and will be destroyed when the #GConfValue is destroyed.
+
 </para>
 
-@value: a #GConfValue.
-@Returns: a #GList.
+@value: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gconf_value_get_car ##### -->
@@ -603,6 +599,7 @@ Increases the refcount of a #GConfEntry by one.
 </para>
 
 @entry: a #GConfEntry.
+@Returns: the referenced #GConfEntry.
 
 
 <!-- ##### FUNCTION gconf_entry_unref ##### -->
